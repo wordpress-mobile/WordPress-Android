@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.reader.usecases
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -9,14 +9,12 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType
-import org.wordpress.android.test
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ReaderGetPostUseCaseTest : BaseUnitTest() {
     @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
     private val readerPostId = 1L
@@ -38,7 +36,10 @@ class ReaderGetPostUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        useCase = ReaderGetPostUseCase(TEST_DISPATCHER, readerPostTableWrapper)
+        useCase = ReaderGetPostUseCase(
+                testDispatcher(),
+                readerPostTableWrapper
+        )
     }
 
     @Test

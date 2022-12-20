@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs.homepage
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -9,6 +10,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -17,11 +19,11 @@ import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PageStore.OnPageChanged
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
-import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDataLoader.LoadingResult
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class HomepageSettingsDataLoaderTest {
+class HomepageSettingsDataLoaderTest : BaseUnitTest() {
     @Mock lateinit var pageStore: PageStore
     private val siteModel = SiteModel()
     private lateinit var homepageSettingsDataLoader: HomepageSettingsDataLoader

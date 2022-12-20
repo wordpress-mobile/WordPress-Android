@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -10,17 +11,15 @@ import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import javax.inject.Provider
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class BaseStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var localDataProvider: Provider<String?>
     @Mock lateinit var remoteDataProvider: Provider<String?>
@@ -49,8 +48,9 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         assertThat(result).isEmpty()
 
         block.fetch(false, false)
+        advanceUntilIdle()
 
-        assertData(1, localData)
+        assertData(0, localData)
     }
 
     @Test
@@ -59,6 +59,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         whenever(localDataProvider.get()).thenReturn(null)
 
         block.fetch(false, false)
+        advanceUntilIdle()
 
         assertThat(result).hasSize(1)
         assertThat(result[0]!!.data).isNull()
@@ -70,19 +71,21 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         assertThat(result).isEmpty()
 
         block.fetch(true, false)
+        advanceUntilIdle()
 
-        assertThat(result.size).isEqualTo(2)
+        assertThat(result.size).isEqualTo(1)
         assertData(0, localData)
-        assertThat(result[1]?.state).isEqualTo(UseCaseState.SUCCESS)
     }
 
     @Test
     fun `live data value is cleared`() = test {
         block.fetch(false, false)
+        advanceUntilIdle()
 
-        assertData(1, localData)
+        assertData(0, localData)
 
         block.clear()
+        advanceUntilIdle()
 
         assertThat(block.liveData.value?.state).isEqualTo(UseCaseState.LOADING)
     }
@@ -98,15 +101,14 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         assertThat(firstItem.text).isEqualTo(data)
     }
 
-    @InternalCoroutinesApi
     class TestUseCase(
         private val localDataProvider: Provider<String?>,
         private val remoteDataProvider: Provider<String?>,
         private val loadingItems: List<BlockListItem>
     ) : BaseStatsUseCase<String, Int>(
             ALL_TIME_STATS,
-            Dispatchers.Unconfined,
-            TEST_DISPATCHER,
+            UnconfinedTestDispatcher(),
+            UnconfinedTestDispatcher(),
             0,
             listOf()
     ) {

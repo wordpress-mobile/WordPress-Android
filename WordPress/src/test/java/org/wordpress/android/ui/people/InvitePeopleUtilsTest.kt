@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.people
 
 import android.content.Context
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -22,6 +23,7 @@ import org.wordpress.android.viewmodel.ContextProvider
 import java.text.DateFormat
 import java.util.Date
 
+@ExperimentalCoroutinesApi
 class InvitePeopleUtilsTest : BaseUnitTest() {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var siteModel: SiteModel

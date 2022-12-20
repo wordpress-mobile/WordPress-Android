@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-18 20:18:58+0000
+Translation-Revision-Date: 2022-12-09 17:13:57+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sq_AL
@@ -727,7 +727,7 @@ Language: sq_AL
     <string name="scan_here_to_help">këtu për t’ju ndihmuar</string>
     <string name="scan_idle_threats_description_singular">Kontrolli gjeti një kërcënim potencial me %1$s. Ju lutemi, shqyrtojeni më poshtë dhe ndërmerrni një veprim ose prekni butonin “Ndreqe”. Jemi %2$s, nëse keni nevojë për ne.</string>
     <string name="scan_idle_manual_scan_description">Që ta shqyrtoni sajtin tuaj sërish, bëni një kontroll dorazi, ose prisni që Jetpack-u të kontrollojë sajtin tuaj më vonë sot.</string>
-    <string name="scan_provisioning_description">Mirë se vini te Jetpack Scan! Po e shohim sajtin tuaj me vëmendje, teksa ujdisim kryerjen e një kontroll të plotë. Do t’ju vëmë në dijeni, nëse kapim çfarëdo problemi që mund të ketë ndikim te kontrolli, mandej do të fillojë i pari kontroll i juaji i plotë.</string>
+    <string name="scan_provisioning_description">Mirë se vini te Jetpack Scan! Po e shohim sajtin tuaj me vëmendje, teksa ujdisim kryerjen e një kontrolli të plotë. Do t’ju vëmë në dijeni, nëse kapim çfarëdo problemi që mund të ketë ndikim te kontrolli, mandej do të fillojë i pari kontroll i juaji i plotë.</string>
     <string name="scan_scanning_is_initial_description">Mirë se vini te Jetpack Scan, tani po i hedhim një sy paraprak sajtit tuaj dhe së shpejti do të keni përfundimin.</string>
     <string name="scan_fixing_threats_description_singular">Jemi duke punuar fort për t’i zgjidhur pa zhurmë këtë kërcënim. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kurdo qoftë.</string>
     <string name="scan_scanning_description">Do t’ju dërgojmë një njoftim, nëse gjendet një kërcënim. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kur të doni.</string>

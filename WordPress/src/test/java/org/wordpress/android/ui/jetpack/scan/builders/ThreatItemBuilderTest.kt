@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.builders
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.CU
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel.Extension.ExtensionType
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.TEST_FILE_NAME
 import org.wordpress.android.ui.jetpack.scan.TEST_SIGNATURE
 import org.wordpress.android.ui.jetpack.scan.TEST_VULNERABLE_THREAT_SLUG
@@ -31,7 +30,7 @@ import java.text.DateFormat
 
 private const val TEST_FIXED_ON_DATE = "2 January, 2020"
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ThreatItemBuilderTest : BaseUnitTest() {
     private lateinit var builder: ThreatItemBuilder
 

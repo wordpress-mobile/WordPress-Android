@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.details.usecases
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -8,18 +8,16 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ScanAction.IGNORE_THREAT
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatError
 import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.store.ScanStore.OnIgnoreThreatStarted
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase.IgnoreThreatState.Failure
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase.IgnoreThreatState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class IgnoreThreatUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: IgnoreThreatUseCase
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
@@ -30,7 +28,11 @@ class IgnoreThreatUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setup() = test {
-        useCase = IgnoreThreatUseCase(networkUtilsWrapper, scanStore, TEST_DISPATCHER)
+        useCase = IgnoreThreatUseCase(
+                networkUtilsWrapper,
+                scanStore,
+                testDispatcher()
+        )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
 

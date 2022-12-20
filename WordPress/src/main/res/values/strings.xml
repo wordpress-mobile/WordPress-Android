@@ -2052,8 +2052,10 @@
     <string name="reader_menu_tags">Edit topics and sites</string>
     <string name="reader_menu_block_blog">Block this site</string>
     <string name="reader_menu_report_post">Report this post</string>
+    <string name="reader_menu_report_user">Report this user</string>
     <string name="reader_menu_mark_as_seen">Mark as seen</string>
     <string name="reader_menu_mark_as_unseen">Mark as unseen</string>
+    <string name="reader_menu_block_user">Block user</string>
 
     <!-- button text -->
     <string name="reader_btn_share">Share</string>
@@ -2147,6 +2149,7 @@
     <string name="reader_toast_err_unfollow_blog">Unable to unfollow this site</string>
     <string name="reader_toast_blog_blocked" tools:ignore="UnusedResources">Posts from this site will no longer be shown</string>
     <string name="reader_toast_err_block_blog" tools:ignore="UnusedResources">Unable to block this site</string>
+    <string name="reader_toast_user_blocked">Posts from this user will no longer be shown</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
     <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
     <string name="reader_toast_err_comment_not_found">Comment not found!</string>
@@ -4269,7 +4272,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_notifications_disabled_in_wp_message">We\'ll turn off notifications from the WordPress app.</string>
     <string name="jp_migration_done_title">Thanks for switching to Jetpack!</string>
     <string name="jp_migration_done_subtitle">We’ve transferred all your data and settings. Everything is right where you left it.</string>
-    <string name="jp_migration_done_delete_wp_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to&lt;br&gt;avoid data conflicts.</string>
+    <string name="jp_migration_done_delete_wp_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to avoid data conflicts.</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Remove WordPress App icon</string>
     <string name="jp_migration_finish_button">Finish</string>
     <string name="jp_migration_try_again_button">Try again</string>
@@ -4281,7 +4284,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_network_error_message">We are unable to transfer your data and settings without a network connection.</string>
     <string name="jp_migration_delete_title">You no longer need the WordPress app</string>
     <string name="jp_migration_delete_subtitle">It looks like you still have the WordPress app installed. We recommend you delete the WordPress app to avoid data conflicts.</string>
-    <string name="jp_migration_delete_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to&lt;br&gt;avoid data conflicts.</string>
+    <string name="jp_migration_delete_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to avoid data conflicts.</string>
     <string name="jp_migration_got_it_button">Got it</string>
     <string name="jp_migration_need_help_button">Need help?</string>
 

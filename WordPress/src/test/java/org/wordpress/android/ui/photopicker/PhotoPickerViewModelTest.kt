@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.photopicker
 
 import android.content.Context
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -13,10 +13,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.test
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.posts.editor.media.CopyMediaToAppStorageUseCase
 import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase
@@ -29,6 +27,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
+@ExperimentalCoroutinesApi
 class PhotoPickerViewModelTest : BaseUnitTest() {
     @Suppress("DEPRECATION")
     @Mock lateinit var deviceMediaListBuilder: DeviceMediaListBuilder
@@ -51,12 +50,11 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     @Suppress("DEPRECATION") private lateinit var secondItem: PhotoPickerItem
 
     @Before
-    @InternalCoroutinesApi
     @Suppress("DEPRECATION")
     fun setUp() {
         viewModel = PhotoPickerViewModel(
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 deviceMediaListBuilder,
                 analyticsUtilsWrapper,
                 analyticsTrackerWrapper,

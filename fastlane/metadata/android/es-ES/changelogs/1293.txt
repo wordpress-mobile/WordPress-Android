@@ -1,2 +1,0 @@
-21.2:
-Si ya has activado las estadísticas del sitio, no volverás a ver un aviso para habilitarlas al tocar el widget de estadísticas en la pantalla de inicio de tu dispositivo. Perfecto.

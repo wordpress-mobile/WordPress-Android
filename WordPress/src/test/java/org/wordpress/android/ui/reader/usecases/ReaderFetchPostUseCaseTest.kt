@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.reader.usecases
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +11,6 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.test
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Failed
@@ -21,7 +20,7 @@ import java.net.HttpURLConnection
 
 private const val REQUEST_BLOG_LISTENER_PARAM_POSITION = 2
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper

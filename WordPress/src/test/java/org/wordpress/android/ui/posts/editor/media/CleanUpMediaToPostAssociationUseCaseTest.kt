@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.posts.editor.media
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,13 +14,11 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload
-import org.wordpress.android.test
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.posts.editor.AztecEditorFragmentStaticWrapper
 import org.wordpress.android.ui.posts.editor.media.CleanUpMediaToPostAssociationUseCaseTest.Fixtures.createAztecEditorWrapper
@@ -28,7 +26,7 @@ import org.wordpress.android.ui.posts.editor.media.CleanUpMediaToPostAssociation
 import org.wordpress.android.ui.posts.editor.media.CleanUpMediaToPostAssociationUseCaseTest.Fixtures.createPostUtilsWrapper
 import org.wordpress.android.ui.posts.editor.media.CleanUpMediaToPostAssociationUseCaseTest.Fixtures.createUploadStore
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(Parameterized::class)
 class CleanUpMediaToPostAssociationUseCaseTest(private val containsGutenbergBlocks: Boolean) : BaseUnitTest() {
     @Test
@@ -113,7 +111,7 @@ class CleanUpMediaToPostAssociationUseCaseTest(private val containsGutenbergBloc
             uploadStore,
             createAztecEditorWrapper(mediaInPost),
             createPostUtilsWrapper(mediaInPost, containsGutenbergBlocks),
-            TEST_DISPATCHER
+            testDispatcher()
     )
 
     companion object {

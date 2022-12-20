@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.engagement.usecases
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -11,6 +12,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.CommentAction.FETCHED_COMMENT_LIKES
@@ -25,7 +27,6 @@ import org.wordpress.android.fluxc.store.CommentStore.OnCommentLikesChanged
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostLikesChanged
 import org.wordpress.android.fluxc.store.PostStore.PostError
-import org.wordpress.android.test
 import org.wordpress.android.ui.engagement.GetLikesUseCase
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.GENERIC
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.NO_NETWORK
@@ -41,8 +42,9 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class GetLikesUseCaseTest {
+class GetLikesUseCaseTest : BaseUnitTest() {
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var commentStore: CommentStore

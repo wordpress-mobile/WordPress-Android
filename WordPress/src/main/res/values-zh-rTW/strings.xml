@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-30 14:54:27+0000
+Translation-Revision-Date: 2022-12-06 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_TW
@@ -687,8 +687,8 @@ Language: zh_TW
     <string name="gutenberg_native_add_button_text">新增按鈕文字</string>
     <string name="reader_title_interests">追蹤主題</string>
     <string name="stories_intro_main_subtitle">在網站創作並發布引人注目內容的全新方式。</string>
-    <string name="activity_log_backup_download_notice_dismiss_action">忽略</string>
     <string name="activity_log_backup_download_notice_download_action">下載</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">關閉</string>
     <string name="threat_fix_all_status_success_message_plural">已成功修正威脅。</string>
     <string name="threat_fix_all_confirmation_message_plural">請確認你要修正所有 %s 個作用中威脅。</string>
     <string name="scan_idle_threats_description_plural">掃描作業發現 %2$s 有 %1$s 個潛在威脅。 請檢閱以下威脅並採取行動，或點選「修復所有威脅」按鈕。 如果你有需要，我們 %3$s。</string>
@@ -1406,7 +1406,7 @@ Language: zh_TW
     <string name="notifications_tab_title_comments">留言</string>
     <string name="notifications_tab_title_unread_notifications">未讀</string>
     <string name="dlg_cancel_action_dont_trash">不要移至垃圾桶</string>
-    <string name="dlg_confirm_action_trash">垃圾桶</string>
+    <string name="dlg_confirm_action_trash">回收桶</string>
     <string name="stats_insights_management_activity">活動</string>
     <string name="stats_insights_management_posts_and_pages">文章與頁面</string>
     <string name="stats_insights_management_general">一般</string>
@@ -1724,10 +1724,10 @@ Language: zh_TW
     <string name="domain_registration_privacy_protection_title">隱私權保護</string>
     <string name="domain_registration_contact_form_input_error">請輸入有效的 %s</string>
     <string name="stats_management_new">新增</string>
-    <string name="stats_management_dismiss_insights_news_card">忽略</string>
     <string name="stats_management_try_it_now">立即試試</string>
     <string name="stats_management_news_card_message">選擇想查看的統計資料，並專注於你最在乎的資料。點選「洞察報告」底端的 %1$s，自訂你的統計資料。</string>
     <string name="stats_manage_your_stats">管理你的統計資料</string>
+    <string name="stats_management_dismiss_insights_news_card">關閉</string>
     <string name="history_fetching_revisions">正在擷取修訂版本…</string>
     <string name="editor_failed_to_insert_media_tap_for_options">無法插入媒體。\n請點選以顯示選項。</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">無法插入媒體。\n請點選以重試。</string>
@@ -2181,7 +2181,6 @@ Language: zh_TW
     <string name="media_preview_desc">預覽</string>
     <string name="media_preview_audio_desc">音訊</string>
     <string name="media_grid_item_play_video_desc">播放影片</string>
-    <string name="media_grid_item_trash_desc">移至垃圾桶</string>
     <string name="media_grid_item_retry_desc">重試</string>
     <string name="media_grid_item_image_desc">媒體預覽，檔案名稱 %s</string>
     <string name="invite_user_delete_desc">移除 %s</string>
@@ -2189,6 +2188,7 @@ Language: zh_TW
     <string name="comment_checkmark_desc">檢查標記</string>
     <string name="signup_with_google_progress">透過 Google 註冊…</string>
     <string name="open_external_link_desc">開啟外部連結</string>
+    <string name="media_grid_item_trash_desc">移至回收桶</string>
     <string name="jetpack_connection_failed_with_reason">無法連結至 Jetpack：%s</string>
     <string name="jetpack_already_connected_toast">你已連結至 Jetpack</string>
     <string name="menu_visual_mode">視覺化模式</string>
@@ -3080,11 +3080,11 @@ Language: zh_TW
     <string name="connectionbar_no_connection">沒有連線</string>
     <string name="post_trashed">文章已移至垃圾桶</string>
     <string name="button_stats">統計</string>
-    <string name="button_trash">垃圾桶</string>
     <string name="button_preview">預覽</string>
     <string name="button_view">檢視</string>
     <string name="button_edit">編輯</string>
-    <string name="button_publish">發表</string>
+    <string name="button_trash">移至回收桶</string>
+    <string name="button_publish">上架</string>
     <string name="reader_toast_err_follow_blog_not_authorized">你沒有存取此網站的權限</string>
     <string name="reader_toast_err_follow_blog_not_found">找不到這個網站</string>
     <string name="undo">復原</string>
@@ -3109,9 +3109,9 @@ Language: zh_TW
     <string name="site_picker_title">選擇網站</string>
     <string name="my_site_btn_switch_site">切換網站</string>
     <string name="my_site_header_look_and_feel">外觀和風格</string>
-    <string name="my_site_header_publish">發表</string>
     <string name="my_site_btn_site_settings">網站設定</string>
     <string name="my_site_btn_blog_posts">文章</string>
+    <string name="my_site_header_publish">發佈</string>
     <string name="my_site_header_configuration">組態</string>
     <string name="reader_label_new_posts_subtitle">點選以顯示</string>
     <string name="deselect_all">取消全選</string>
@@ -3242,9 +3242,7 @@ Language: zh_TW
     <string name="mnu_comment_approve">核准</string>
     <string name="mnu_comment_unapprove">駁回</string>
     <string name="mnu_comment_spam">垃圾</string>
-    <string name="mnu_comment_trash">垃圾桶</string>
     <string name="dlg_confirm_trash_comments">移至垃圾桶？</string>
-    <string name="trash">垃圾桶</string>
     <string name="saving_changes">正在儲存變更</string>
     <string name="sure_to_cancel_edit_comment">取消編輯此回應？</string>
     <string name="content_required">必須發表回應</string>
@@ -3274,6 +3272,8 @@ Language: zh_TW
     <string name="delete_page">是否要刪除頁面？</string>
     <string name="reader_toast_err_add_tag">無法新增此主題</string>
     <string name="reader_toast_err_remove_tag">無法移除此主題</string>
+    <string name="trash">移至回收桶</string>
+    <string name="mnu_comment_trash">移至垃圾桶</string>
     <string name="share_link">分享連結</string>
     <string name="reader_empty_posts_in_tag_updating">正在擷取文章…</string>
     <string name="reader_likes_you_and_multi">你和其他 %,d 個人都說這個讚</string>

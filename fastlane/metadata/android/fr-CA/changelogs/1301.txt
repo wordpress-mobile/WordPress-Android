@@ -1,0 +1,3 @@
+21.3 :
+- Vous pouvez maintenant migrer le contenu de votre site vers l’application Jetpack sans problème.
+- Le bouton bascule des réglages de notification désactive les résumés hebdomadaires, les rappels de blog et les notifications du site.

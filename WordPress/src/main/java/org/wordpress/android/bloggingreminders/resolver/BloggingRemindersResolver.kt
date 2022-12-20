@@ -12,6 +12,9 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.LocalContentEntity.BloggingReminders
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.BloggingRemindersData
 import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
+import org.wordpress.android.localcontentmigration.LocalMigrationResult.Companion.EmptyResult
+import org.wordpress.android.localcontentmigration.otherwise
+import org.wordpress.android.localcontentmigration.thenWith
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersModelMapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -35,14 +38,17 @@ class BloggingRemindersResolver @Inject constructor(
             onFailure()
             return
         }
-        val (reminders) = localMigrationContentResolver.getDataForEntityType<BloggingRemindersData>(BloggingReminders)
-        if (reminders.isNotEmpty()) {
-            val success = setBloggingReminders(reminders)
-            if (success) onSuccess() else onFailure()
-        } else {
-            bloggingRemindersSyncAnalyticsTracker.trackSuccess(0)
-            onSuccess()
-        }
+        localMigrationContentResolver.getResultForEntityType<BloggingRemindersData>(BloggingReminders)
+                .thenWith { (reminders) ->
+                    if (reminders.isNotEmpty()) {
+                        val success = setBloggingReminders(reminders)
+                        if (success) onSuccess() else onFailure()
+                    } else {
+                        bloggingRemindersSyncAnalyticsTracker.trackSuccess(0)
+                        onSuccess()
+                    }
+                    EmptyResult
+        }.otherwise { onFailure() }
     }
 
     @Suppress("ReturnCount")
