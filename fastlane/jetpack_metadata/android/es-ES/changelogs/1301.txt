@@ -1,0 +1,4 @@
+21.3:
+- El texto que se encuentre en el proceso de escaneo de código QR se traduce al idioma de tu aplicación.
+- El conmutador Ajustes de notificaciones desactiva los resúmenes semanales, el recordatorio de blogueo y las notificaciones del sitio.
+- Hemos solucionado un problema en Mi sitio > Comentarios que bloqueaba la aplicación para sitios autoalojados con ciertos plugins.

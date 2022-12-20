@@ -5,14 +5,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ScanFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.SCAN_SCREEN_HELP
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
@@ -25,6 +27,7 @@ import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.FullScreenLoa
 import org.wordpress.android.ui.jetpack.scan.adapters.HorizontalMarginItemDecoration
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.EmptyViewRecyclerView
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.image.ImageManager
@@ -32,24 +35,28 @@ import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ScanFragment : Fragment(R.layout.scan_fragment) {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: ScanViewModel
+    private lateinit var listView: EmptyViewRecyclerView
     private var fixThreatsConfirmationDialog: AlertDialog? = null
+    private val viewModel: ScanViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(ScanFragmentBinding.bind(view)) {
-            initDagger()
             initRecyclerView()
+            listView = recyclerView
             initViewModel(getSite(savedInstanceState))
         }
     }
 
-    private fun initDagger() {
-        (requireActivity().application as WordPress).component().inject(this)
+    override fun onResume() {
+        super.onResume()
+        if (activity is ScrollableViewInitializedListener) {
+            (activity as ScrollableViewInitializedListener).onScrollableViewInitialized(listView.id)
+        }
     }
 
     private fun ScanFragmentBinding.initRecyclerView() {
@@ -71,7 +78,6 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     }
 
     private fun ScanFragmentBinding.initViewModel(site: SiteModel) {
-        viewModel = ViewModelProvider(this@ScanFragment, viewModelFactory).get(ScanViewModel::class.java)
         setupObservers()
         viewModel.start(site)
     }

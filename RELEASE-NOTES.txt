@@ -5,6 +5,7 @@
 * [**] Adds the functionality to Add, Edit and Delete categories from site settings. [https://github.com/wordpress-mobile/WordPress-Android/pull/17652]
 * [**] [internal] Upgrade React Native from 0.66.2 to 0.69.4 [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5193]
 * [*] Reader: Fix translations not applying on some texts when the language is changed via App Settings. [https://github.com/wordpress-mobile/WordPress-Android/pull/17524]
+* [*] [Jetpack-only] Hiding Scan Login QR Code when logged into an account with 2FA. [https://github.com/wordpress-mobile/WordPress-Android/pull/17662]
 
 21.3
 -----
@@ -15,6 +16,8 @@
 * [*] [internal] Fix an issue preventing the text and button on the 'WordPress is Better with Jetpack' overlay to be entirely visible with big fonts. [https://github.com/wordpress-mobile/WordPress-Android/pull/17503]
 * [***] [internal] Disable notifications on WP in migration flow when JP app is installed, behind a feature flag. [https://github.com/wordpress-mobile/WordPress-Android/pull/17513 and https://github.com/wordpress-mobile/WordPress-Android/pull/17371]
 * [*] [internal] Avoid truncation of the 'Try the new Jetpack app' button text on the Jetpack Powered bottom sheets with big fonts. [https://github.com/wordpress-mobile/WordPress-Android/pull/17511]
+* [*] Reader: Adds option to block reader user [https://github.com/wordpress-mobile/WordPress-Android/pull/17604]
+* [*] Reader: Adds option to report reader user [https://github.com/wordpress-mobile/WordPress-Android/pull/17606]
 
 21.2
 -----

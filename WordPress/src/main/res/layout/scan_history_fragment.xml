@@ -40,4 +40,8 @@
         android:layout_height="match_parent"
         layout="@layout/fullscreen_error_with_retry" />
 
+    <include
+        android:id="@+id/jetpack_banner"
+        layout="@layout/jetpack_banner" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
