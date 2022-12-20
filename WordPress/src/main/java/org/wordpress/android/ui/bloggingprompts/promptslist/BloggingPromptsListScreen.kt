@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
@@ -26,10 +26,17 @@ fun BloggingPromptsListScreen(
                         backgroundColor = MaterialTheme.colors.surface,
                         contentColor = MaterialTheme.colors.onSurface,
                         elevation = 0.dp,
-                        title = { Text(stringResource(string.blogging_prompts_list_title)) },
+                        title = {
+                            Text(stringResource(R.string.blogging_prompts_list_title))
+                        },
                         navigationIcon = {
-                            IconButton(onClick = { onNavigateUp() }) {
-                                Icon(Icons.Default.ArrowBack, "Back")
+                            IconButton(
+                                    onClick = { onNavigateUp() }
+                            ) {
+                                Icon(
+                                        Icons.Default.ArrowBack,
+                                        contentDescription = stringResource(R.string.navigate_up_desc)
+                                )
                             }
                         }
                 )
