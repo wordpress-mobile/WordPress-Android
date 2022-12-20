@@ -103,6 +103,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.JetpackBrandingUtils
@@ -178,7 +179,8 @@ class MySiteViewModel @Inject constructor(
     private val appStatus: AppStatus,
     private val wordPressPublicData: WordPressPublicData,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker
+    private val jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -446,11 +448,11 @@ class MySiteViewModel @Inject constructor(
                 onRemindMeLaterItemClick = ListItemInteraction.create(this::onJetpackFeatureCardRemindMeLaterClick),
                 onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick)
         ).takeIf {
-            // todo: enhance this to include checking app pref for hide and remind later prefs
             val isWordPressApp = !buildConfigWrapper.isJetpackApp
             val isPhase3 = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == JetpackFeatureRemovalPhase.PhaseThree
             val shouldHideJetpackFeatureCard = appPrefsWrapper.getShouldHideJetpackFeatureCard()
-            isWordPressApp && isPhase3 && !shouldHideJetpackFeatureCard
+            val exceedsShowFrequency = exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded()
+            isWordPressApp && isPhase3 && !shouldHideJetpackFeatureCard && exceedsShowFrequency
         }
 
         val migrationSuccessCard = SingleActionCard(
@@ -1338,7 +1340,7 @@ class MySiteViewModel @Inject constructor(
                 mapOf(PHASE to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName)
         )
         // todo: - create the event to refresh
-        // todo: - save the value in the app prefs
+        appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(System.currentTimeMillis())
     }
 
     private fun onJetpackFeatureCardMoreMenuClick() {
@@ -1464,6 +1466,24 @@ class MySiteViewModel @Inject constructor(
         return !((uiModel.value?.state as? SiteSelected)?.siteInfoHeaderState?.siteInfoHeader?.equals(
                 nextSiteInfoHeaderCard
         ) ?: false)
+    }
+
+    // todo: annmarie
+    private fun exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded() : Boolean {
+        val frequencyInDays = 4
+        val lastShownTimestamp = appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()
+        if (lastShownTimestamp == 0L) return true
+
+        val lastShownDate = Date(lastShownTimestamp)
+        val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
+                lastShownDate,
+                Date(System.currentTimeMillis()))
+
+        val exceedsFrequency = daysPastOverlayShown >= frequencyInDays
+        if (exceedsFrequency) {
+            appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(0L)
+        }
+        return exceedsFrequency
     }
 
     // FluxC events
