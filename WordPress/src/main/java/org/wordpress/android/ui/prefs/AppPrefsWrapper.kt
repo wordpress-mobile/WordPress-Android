@@ -274,6 +274,12 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setShouldHideJetpackFeatureCard(isHidden: Boolean) = AppPrefs.setShouldHideJetpackFeatureCard(isHidden)
 
+    fun getJetpackFeatureCardLastShownTimestamp(): Long = AppPrefs.getJetpackFeatureCardLastShownTimestamp()
+
+    fun setJetpackFeatureCardLastShownTimestamp(lastShownTimestamp: Long) {
+        AppPrefs.setJetpackFeatureCardLastShownTimestamp(lastShownTimestamp)
+    }
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {
