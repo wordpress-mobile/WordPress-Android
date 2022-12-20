@@ -135,6 +135,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.JetpackBrandingUtils
@@ -201,6 +203,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var wordPressPublicData: WordPressPublicData
     @Mock lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
     @Mock lateinit var jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker
+    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -401,7 +404,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 appStatus,
                 wordPressPublicData,
                 jetpackFeatureRemovalPhaseHelper,
-                jetpackFeatureCardShownTracker
+                jetpackFeatureCardShownTracker,
+                dateTimeUtilsWrapper
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -2765,6 +2769,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
+        whenever(appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()).thenReturn(0L)
 
         initSelectedSite()
 
@@ -2778,6 +2783,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseTwo)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
+        whenever(appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()).thenReturn(0L)
 
         initSelectedSite()
 
@@ -2791,6 +2797,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
+        whenever(appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()).thenReturn(0L)
 
         initSelectedSite()
 
@@ -2803,6 +2810,35 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseTwo)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(true)
+        whenever(appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()).thenReturn(0L)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems()[0]).isNotInstanceOf(JetpackFeatureCard::class.java)
+        assertThat(getLastItems()[0]).isNotInstanceOf(JetpackFeatureCard::class.java)
+        assertThat(getDashboardTabLastItems()[0]).isNotInstanceOf(JetpackFeatureCard::class.java)
+    }
+
+    @Test
+    fun `given wordpress app, when remind later has been set, then jetpack feature card is not shown`() = test {
+        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseTwo)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
+        whenever(appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()).thenReturn(getDateXDaysAgoInMilliseconds(1))
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems()[0]).isNotInstanceOf(JetpackFeatureCard::class.java)
+        assertThat(getLastItems()[0]).isNotInstanceOf(JetpackFeatureCard::class.java)
+        assertThat(getDashboardTabLastItems()[0]).isNotInstanceOf(JetpackFeatureCard::class.java)
+    }
+
+    @Test
+    fun `given wordpress app, when remind later has been set and exceeds, then jetpack feature card is shown`() = test {
+        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseTwo)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
+        whenever(appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()).thenReturn(getDateXDaysAgoInMilliseconds(5))
 
         initSelectedSite()
 
@@ -2816,6 +2852,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
+        whenever(appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()).thenReturn(0L)
         initSelectedSite()
 
         verify(jetpackFeatureCardShownTracker, atLeastOnce()).trackShown(MySiteCardAndItem.Type.JETPACK_FEATURE_CARD)
@@ -2826,6 +2863,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
+        whenever(appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()).thenReturn(0L)
         initSelectedSite()
 
         findJetpackFeatureCard()?.onClick?.click()
@@ -2839,6 +2877,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
+        whenever(appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()).thenReturn(0L)
         initSelectedSite()
 
         findJetpackFeatureCard()?.onLearnMoreClick?.click()
@@ -2852,6 +2891,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
+        whenever(appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()).thenReturn(0L)
         initSelectedSite()
 
         findJetpackFeatureCard()?.onMoreMenuClick?.click()
@@ -2865,6 +2905,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
+        whenever(appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()).thenReturn(0L)
         initSelectedSite()
 
         findJetpackFeatureCard()?.onHideMenuItemClick?.click()
@@ -2878,6 +2919,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
+        whenever(appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()).thenReturn(0L)
         initSelectedSite()
 
         findJetpackFeatureCard()?.onRemindMeLaterItemClick?.click()
@@ -2885,6 +2927,16 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(analyticsTrackerWrapper).track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED,
                 mapOf("phase" to JetpackFeatureRemovalPhase.PhaseThree.trackingName))
     }
+
+    private fun setDaysBetween(lastShownTimestamp: Long) {
+        val between =
+                DateTimeUtils.daysBetween(Date(lastShownTimestamp), Date(getDateXDaysAgoInMilliseconds(0)))
+
+        whenever(dateTimeUtilsWrapper.daysBetween(any(), any())).thenReturn(between)
+    }
+
+    private fun getDateXDaysAgoInMilliseconds(daysAgo: Int) =
+            System.currentTimeMillis().minus(86400000 * daysAgo)
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
