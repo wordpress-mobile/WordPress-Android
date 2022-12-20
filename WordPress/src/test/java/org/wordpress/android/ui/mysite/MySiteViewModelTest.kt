@@ -2764,6 +2764,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when jetpack app, then jetpack feature card is not shown`() = test {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
 
         initSelectedSite()
 
@@ -2776,6 +2777,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given wordpress app, when not third phase, then jetpack feature card is not shown`() = test {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseTwo)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
 
         initSelectedSite()
 
@@ -2788,6 +2790,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given wordpress app, when flag is on, then jetpack feature card is shown`() = test {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
 
         initSelectedSite()
 
@@ -2796,9 +2799,23 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given wordpress app, when hide card has been set, then jetpack feature card is not shown`() = test {
+        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseTwo)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(true)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems()[0]).isNotInstanceOf(JetpackFeatureCard::class.java)
+        assertThat(getLastItems()[0]).isNotInstanceOf(JetpackFeatureCard::class.java)
+        assertThat(getDashboardTabLastItems()[0]).isNotInstanceOf(JetpackFeatureCard::class.java)
+    }
+
+    @Test
     fun `when jetpack feature card is shown, then jetpack feature card shown is tracked`() = test {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
         initSelectedSite()
 
         verify(jetpackFeatureCardShownTracker, atLeastOnce()).trackShown(MySiteCardAndItem.Type.JETPACK_FEATURE_CARD)
@@ -2808,6 +2825,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when Jetpack feature card is clicked, then jetpack feature card clicked is tracked`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
         initSelectedSite()
 
         findJetpackFeatureCard()?.onClick?.click()
@@ -2820,6 +2838,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when Jetpack feature card learn more is clicked, then learn more is tracked`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
         initSelectedSite()
 
         findJetpackFeatureCard()?.onLearnMoreClick?.click()
@@ -2832,6 +2851,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when Jetpack feature card menu is clicked, then menu clicked is tracked`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
         initSelectedSite()
 
         findJetpackFeatureCard()?.onMoreMenuClick?.click()
@@ -2844,6 +2864,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when Jetpack feature card hide this is clicked, then hide is tracked`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
         initSelectedSite()
 
         findJetpackFeatureCard()?.onHideMenuItemClick?.click()
@@ -2856,6 +2877,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when Jetpack feature card remind later is clicked, then remind later is tracked`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(false)
         initSelectedSite()
 
         findJetpackFeatureCard()?.onRemindMeLaterItemClick?.click()
