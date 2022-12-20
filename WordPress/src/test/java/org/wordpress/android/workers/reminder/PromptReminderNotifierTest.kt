@@ -1,5 +1,6 @@
 package org.wordpress.android.workers.reminder
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -8,13 +9,13 @@ import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
@@ -22,7 +23,8 @@ import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.workers.reminder.prompt.PromptReminderNotifier
 
-class PromptReminderNotifierTest {
+@ExperimentalCoroutinesApi
+class PromptReminderNotifierTest : BaseUnitTest() {
     private val contextProvider: ContextProvider = mock()
     private val resourceProvider: ResourceProvider = mock()
     private val siteStore: SiteStore = mock()

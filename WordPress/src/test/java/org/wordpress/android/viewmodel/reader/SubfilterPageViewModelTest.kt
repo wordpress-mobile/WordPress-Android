@@ -1,14 +1,14 @@
 package org.wordpress.android.viewmodel.reader
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.AccountStore
@@ -24,11 +24,9 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class SubfilterPageViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class SubfilterPageViewModelTest : BaseUnitTest() {
     @Mock private lateinit var accountStore: AccountStore
 
     private lateinit var viewModel: SubfilterPageViewModel

@@ -245,6 +245,22 @@ class ReaderTracker @Inject constructor(
         track(stat, properties)
     }
 
+    fun trackBlogPostAuthor(
+        stat: AnalyticsTracker.Stat,
+        blogId: Long,
+        postId: Long,
+        isJetpack: Boolean,
+        userId: Long
+    ) {
+        val properties = mutableMapOf<String, Any>(
+                BLOG_ID_KEY to blogId,
+                POST_ID_KEY to postId,
+                IS_JETPACK_KEY to isJetpack,
+                USER_ID_KEY to userId
+        )
+        track(stat, properties)
+    }
+
     fun trackBlogPost(
         stat: AnalyticsTracker.Stat,
         blogId: String,
@@ -375,6 +391,7 @@ class ReaderTracker @Inject constructor(
     companion object {
         private const val BLOG_ID_KEY = "blog_id"
         private const val POST_ID_KEY = "post_id"
+        private const val USER_ID_KEY = "user_id"
         private const val IS_JETPACK_KEY = "is_jetpack"
         private const val COMMENT_ID_KEY = "comment_id"
         private const val FEED_ID_KEY = "feed_id"

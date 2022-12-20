@@ -12,7 +12,7 @@
         android:pathData="M94.73,50.86C94.73,52.17 94.32,53.06 93.7,53.66C93.05,54.25 92.04,54.64 90.46,54.64C88.88,54.64 87.86,54.26 87.16,53.64C86.51,53.04 86.11,52.17 86.11,50.86C86.11,49.45 86.5,48.6 87.13,48.02C87.79,47.41 88.81,46.99 90.46,46.99C92.12,46.99 93.12,47.42 93.73,48C94.34,48.58 94.73,49.45 94.73,50.86ZM124.5,35.5C124.5,16.72 109.29,1.5 90.5,1.5C71.72,1.5 56.5,16.72 56.5,35.5C56.5,54.28 71.72,69.5 90.5,69.5C109.29,69.5 124.5,54.28 124.5,35.5ZM87.33,39.61L86.07,16.36H94.93L93.67,39.61H87.33Z"
         android:strokeWidth="3"
         android:fillColor="#E65054"
-        android:strokeColor="#ffffff"/>
+        android:strokeColor="@color/jetpack_powered_bottom_sheet_background"/>
     <path
         android:pathData="M148.5,1.5L148.5,1.5A34,34 0,0 1,182.5 35.5L182.5,35.5A34,34 0,0 1,148.5 69.5L148.5,69.5A34,34 0,0 1,114.5 35.5L114.5,35.5A34,34 0,0 1,148.5 1.5z"
         android:fillColor="#ffffff"/>
@@ -23,5 +23,5 @@
         android:pathData="M148.5,1.5L148.5,1.5A34,34 0,0 1,182.5 35.5L182.5,35.5A34,34 0,0 1,148.5 69.5L148.5,69.5A34,34 0,0 1,114.5 35.5L114.5,35.5A34,34 0,0 1,148.5 1.5z"
         android:strokeWidth="3"
         android:fillColor="#00000000"
-        android:strokeColor="#ffffff"/>
+        android:strokeColor="@color/jetpack_powered_bottom_sheet_background"/>
 </vector>

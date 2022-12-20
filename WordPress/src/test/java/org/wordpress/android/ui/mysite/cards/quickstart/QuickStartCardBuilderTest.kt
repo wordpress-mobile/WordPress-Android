@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.quickstart
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -16,7 +16,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class QuickStartCardBuilderTest : BaseUnitTest() {
     private lateinit var builder: QuickStartCardBuilder
 

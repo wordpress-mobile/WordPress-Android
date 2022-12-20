@@ -31,16 +31,6 @@ class LocalMigrationContentResolver @Inject constructor(
     @PublishedApi internal val wordPressPublicData: WordPressPublicData,
     @PublishedApi internal val queryResult: QueryResult,
 ){
-    inline fun <reified T : LocalContentEntityData> getDataForEntityType(
-        entityType: LocalContentEntity,
-        entityId: Int? = null
-    ) = getResultForEntityType<T>(entityType, entityId).let {
-        when (it) {
-            is Success -> it.value
-            is Failure -> error(it.error)
-        }
-    }
-
     @PublishedApi internal inline fun <reified T : LocalContentEntityData> Cursor.getValue() =
             queryResult.getValue<T>(this)
 

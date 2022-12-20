@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.quickactions
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -13,7 +13,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class QuickActionsCardBuilderTest : BaseUnitTest() {
     @Mock lateinit var siteModel: SiteModel
     private lateinit var builder: QuickActionsCardBuilder

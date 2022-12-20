@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -14,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.util.NetworkUtilsWrapper
 
+@ExperimentalCoroutinesApi
 class UiModelMapperTest : BaseUnitTest() {
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     private lateinit var mapper: UiModelMapper

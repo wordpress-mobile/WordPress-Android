@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +10,6 @@ import org.mockito.kotlin.isNull
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Day
@@ -22,7 +20,6 @@ import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
@@ -35,6 +32,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
+@ExperimentalCoroutinesApi
 class PostDayViewsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: PostDetailStore
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
@@ -50,12 +48,12 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var model: PostDetailStatsModel
     private lateinit var useCase: PostDayViewsUseCase
     private val postId = 1L
-    @InternalCoroutinesApi
+
     @Before
     fun setUp() {
         useCase = PostDayViewsUseCase(
-                Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 mapper,
                 statsDateFormatter,
                 selectedDateProvider,
@@ -157,6 +155,7 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(refresh, forced)
+        advanceUntilIdle()
         return checkNotNull(result)
     }
 }

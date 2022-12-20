@@ -1,7 +1,7 @@
 package org.wordpress.android.viewmodel.pages
 
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -38,6 +38,7 @@ import java.util.Locale
 
 private const val HOUR_IN_MILLISECONDS = 3600000L
 
+@ExperimentalCoroutinesApi
 class PageListViewModelTest : BaseUnitTest() {
     @Mock lateinit var mediaStore: MediaStore
     @Mock lateinit var dispatcher: Dispatcher
@@ -64,7 +65,7 @@ class PageListViewModelTest : BaseUnitTest() {
                 dispatcher,
                 localeManagerWrapper,
                 accountStore,
-                Dispatchers.Unconfined
+                testDispatcher()
         )
 
         whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(

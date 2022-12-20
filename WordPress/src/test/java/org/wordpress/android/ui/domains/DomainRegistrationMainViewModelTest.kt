@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.domains
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -15,6 +16,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenD
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainSuggestions
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
+@ExperimentalCoroutinesApi
 class DomainRegistrationMainViewModelTest : BaseUnitTest() {
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var site: SiteModel

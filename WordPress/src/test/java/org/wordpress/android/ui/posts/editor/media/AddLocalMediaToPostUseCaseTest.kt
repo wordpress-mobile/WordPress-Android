@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts.editor.media
 
 import android.content.Context
 import android.net.Uri
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,12 +18,12 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.QUEUED
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.test
 import org.wordpress.android.ui.posts.editor.media.CopyMediaToAppStorageUseCase.CopyMediaResult
 import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase.CreateMediaModelsResult
 import org.wordpress.android.ui.posts.editor.media.OptimizeMediaUseCase.OptimizeMediaResult
 import org.wordpress.android.util.MediaUtilsWrapper
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
     @Test

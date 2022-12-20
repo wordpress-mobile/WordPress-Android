@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mediapicker.loader
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -12,7 +13,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.isNull
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
@@ -22,6 +22,7 @@ import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
+@ExperimentalCoroutinesApi
 class MediaLoaderTest : BaseUnitTest() {
     @Mock lateinit var mediaSource: MediaSource
     @Mock lateinit var identifier1: Identifier

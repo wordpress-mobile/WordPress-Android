@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-30 09:23:35+0000
+Translation-Revision-Date: 2022-12-02 21:16:48+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ro
@@ -1567,12 +1567,12 @@ Language: ro
     <string name="error_media_recover_post_not_submitted">Nu am putut încărca acest element media și nu am trimis acest articol pentru verificare.</string>
     <string name="post_preview_remote_auto_saving_post">Generez previzualizarea…</string>
     <string name="remote_preview_operation_error">Eroare în timpul încercării de a salva articolul înainte de previzualizare</string>
-    <string name="preview_unavailable_self_hosted_sites">Previzualizare indisponibilă</string>
     <string name="error_preview_empty_draft">Nu pot previzualiza o ciornă goală</string>
     <string name="error_preview_empty_page">Nu pot previzualiza o pagină goală</string>
     <string name="error_preview_empty_post">Nu pot previzualiza un articol gol</string>
     <string name="error_generic_error">Nu am putut finaliza această acțiune.</string>
     <string name="error_generic_error_retrying">Nu am putut finaliza această acțiune, dar vom încerca din nou mai târziu.</string>
+    <string name="preview_unavailable_self_hosted_sites">Previzualizarea nu este disponibilă</string>
     <string name="post_preview_saving_draft">Salvez…</string>
     <string name="local_post_autosave_revision_available">Ai modificări nesalvate la acest articol</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Versiunea din această aplicație</string>

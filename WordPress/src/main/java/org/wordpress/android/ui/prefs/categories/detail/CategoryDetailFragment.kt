@@ -15,10 +15,10 @@ import android.widget.AdapterView
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog.Builder
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.CategoryDetailFragmentBinding
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.ActivityLauncher
@@ -34,9 +34,9 @@ import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: CategoryDetailViewModel
+    private val viewModel: CategoryDetailViewModel by viewModels()
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var categoryAdapter: ParentCategorySpinnerAdapter
 
@@ -48,7 +48,6 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-        initDagger()
 
         val categoryId = getCategoryId(savedInstanceState)
 
@@ -73,10 +72,6 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
             return null
         isInEditMode = true
         return categoryId
-    }
-
-    private fun initDagger() {
-        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun CategoryDetailFragmentBinding.initAdapter() {
@@ -139,8 +134,6 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     }
 
     private fun CategoryDetailFragmentBinding.initViewModel(categoryId: Long?) {
-        viewModel = ViewModelProvider(this@CategoryDetailFragment, viewModelFactory)
-                .get(CategoryDetailViewModel::class.java)
         startObserving()
         viewModel.start(categoryId)
     }

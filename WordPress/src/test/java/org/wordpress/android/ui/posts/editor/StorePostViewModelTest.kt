@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.content.Context
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +12,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.editor.gutenberg.DialogVisibility
 import org.wordpress.android.editor.gutenberg.DialogVisibility.Hidden
 import org.wordpress.android.editor.gutenberg.DialogVisibility.Showing
@@ -32,6 +32,7 @@ import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
+@ExperimentalCoroutinesApi
 class StorePostViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var postUtils: PostUtilsWrapper
@@ -53,11 +54,10 @@ class StorePostViewModelTest : BaseUnitTest() {
     private val localSiteId = 1
     private val postId = 2
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         viewModel = StorePostViewModel(
-                TEST_DISPATCHER,
+                testDispatcher(),
                 siteStore,
                 postUtils,
                 uploadService,
@@ -84,7 +84,7 @@ class StorePostViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `delays save call`() {
+    fun `delays save call`() = test {
         var event: Event<Unit>? = null
         viewModel.onSavePostTriggered.observeForever {
             event = it
@@ -92,6 +92,7 @@ class StorePostViewModelTest : BaseUnitTest() {
         assertThat(event).isNull()
 
         viewModel.savePostWithDelay()
+        advanceUntilIdle()
 
         assertThat(event).isNotNull()
     }

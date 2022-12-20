@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.jetpack.scan.details
 
 import android.text.SpannedString
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatMo
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
@@ -46,7 +45,7 @@ private const val SERVER_CREDS_MSG_WITH_CLICKABLE_LINK =
         "<a href=\"${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID}\">Enter your server credentials&lt</a> " +
                 "to fix threat."
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Mock
     private lateinit var htmlMessageUtils: HtmlMessageUtils

@@ -1,20 +1,18 @@
 package org.wordpress.android.ui.reader
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class TagUpdateClientUtilsProviderTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class TagUpdateClientUtilsProviderTest : BaseUnitTest() {
     private lateinit var clientProvider: TagUpdateClientUtilsProvider
 
     @Before

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.todaysstats
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -36,6 +37,7 @@ private const val GET_MORE_VIEWS_MSG_WITH_CLICKABLE_LINK =
         "If you want to try get more views and traffic check out our " +
                 "<a href=\"${URL_GET_MORE_VIEWS_AND_TRAFFIC}\">top tips</a>."
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class TodaysStatsCardBuilderTest : BaseUnitTest() {
     @Mock private lateinit var statsUtils: StatsUtils
