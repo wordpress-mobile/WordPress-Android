@@ -1627,9 +1627,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    @Suppress("SimplifyBooleanWithConstants")
-    @InternalCoroutinesApi
     @Test
+    @Suppress("SimplifyBooleanWithConstants")
     fun `given blogging prompt card, when prompts list FF is ON, view more action is shown`() = test {
         initSelectedSite(isBloggingPromptsListFeatureConfigEnabled = true)
 
@@ -1643,9 +1642,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    @Suppress("SimplifyBooleanWithConstants")
-    @InternalCoroutinesApi
     @Test
+    @Suppress("SimplifyBooleanWithConstants")
     fun `given blogging prompt card, when prompts list FF is OFF, view more action is not shown`() = test {
         initSelectedSite(isBloggingPromptsListFeatureConfigEnabled = false)
 
