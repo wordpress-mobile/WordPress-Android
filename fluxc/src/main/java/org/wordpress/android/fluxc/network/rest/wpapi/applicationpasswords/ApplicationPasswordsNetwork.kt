@@ -19,6 +19,7 @@ import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
 private const val AUTHORIZATION_HEADER = "Authorization"
@@ -45,6 +46,33 @@ class ApplicationPasswordsNetwork @Inject constructor(
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
         forced: Boolean = false
     ): WPAPIResponse<T> {
+        fun buildRequest(
+            continuation: Continuation<WPAPIResponse<T>>,
+            authorizationHeader: String
+        ): WPAPIGsonRequest<T> {
+            val request = WPAPIGsonRequest(
+                method.toVolleyMethod(),
+                (site.wpApiRestUrl ?: site.url.slashJoin("wp-json")).slashJoin(path),
+                params,
+                body,
+                clazz,
+                /* listener = */ { continuation.resume(WPAPIResponse.Success(it)) },
+                /* errorListener = */ { continuation.resume(WPAPIResponse.Error(it)) }
+            )
+
+            request.addHeader(AUTHORIZATION_HEADER, authorizationHeader)
+            request.setUserAgent(userAgent.userAgent)
+
+            if (enableCaching) {
+                request.enableCaching(cacheTimeToLive)
+            }
+            if (forced) {
+                request.setShouldForceUpdate()
+            }
+
+            return request
+        }
+
         val credentialsResult = mApplicationPasswordsManager.getApplicationCredentials(site)
         val credentials = when (credentialsResult) {
             is ApplicationPasswordCreationResult.Existing -> credentialsResult.credentials
@@ -68,29 +96,7 @@ class ApplicationPasswordsNetwork @Inject constructor(
         val authorizationHeader = Credentials.basic(credentials.userName, credentials.password)
 
         val response = suspendCancellableCoroutine<WPAPIResponse<T>> { continuation ->
-            val request = WPAPIGsonRequest(
-                method.toVolleyMethod(),
-                (site.wpApiRestUrl ?: site.url.slashJoin("wp-json")).slashJoin(path),
-                params,
-                body,
-                clazz,
-                {
-                    continuation.resume(WPAPIResponse.Success(it))
-                },
-                {
-                    continuation.resume(WPAPIResponse.Error(it))
-                }
-            )
-
-            request.addHeader(AUTHORIZATION_HEADER, authorizationHeader)
-            request.setUserAgent(userAgent.userAgent)
-
-            if (enableCaching) {
-                request.enableCaching(cacheTimeToLive)
-            }
-            if (forced) {
-                request.setShouldForceUpdate()
-            }
+            val request = buildRequest(continuation, authorizationHeader)
             requestQueue.add(request)
 
             continuation.invokeOnCancellation {
