@@ -367,6 +367,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         is SiteNavigationAction.OpenJetpackPoweredBottomSheet -> showJetpackPoweredBottomSheet()
         is SiteNavigationAction.OpenJetpackMigrationDeleteWP -> showJetpackMigrationDeleteWP()
         is SiteNavigationAction.OpenJetpackFeatureOverlay -> showJetpackFeatureOverlay()
+        is SiteNavigationAction.OpenJetpackFeatureCardLearnMoreLink ->
+            ActivityLauncher.openUrlExternal(requireActivity(), action.url)
     }
 
     private fun showJetpackPoweredBottomSheet() {

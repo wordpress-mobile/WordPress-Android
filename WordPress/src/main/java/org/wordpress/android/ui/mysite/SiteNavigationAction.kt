@@ -81,4 +81,5 @@ sealed class SiteNavigationAction {
     object OpenJetpackPoweredBottomSheet : SiteNavigationAction()
     object OpenJetpackMigrationDeleteWP : SiteNavigationAction()
     object OpenJetpackFeatureOverlay : SiteNavigationAction()
+    data class OpenJetpackFeatureCardLearnMoreLink(val url: String) : SiteNavigationAction()
 }
