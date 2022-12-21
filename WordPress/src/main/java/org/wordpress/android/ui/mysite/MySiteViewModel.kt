@@ -37,8 +37,6 @@ import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTrac
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
@@ -75,6 +73,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
+import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -101,9 +100,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.JetpackBrandingUtils
@@ -136,7 +133,7 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("LargeClass", "LongMethod", "LongParameterList", "ForbiddenComment")
+@Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -178,9 +175,8 @@ class MySiteViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val appStatus: AppStatus,
     private val wordPressPublicData: WordPressPublicData,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val jetpackFeatureCardHelper: JetpackFeatureCardHelper
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -448,11 +444,7 @@ class MySiteViewModel @Inject constructor(
                 onRemindMeLaterItemClick = ListItemInteraction.create(this::onJetpackFeatureCardRemindMeLaterClick),
                 onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick)
         ).takeIf {
-            val isWordPressApp = !buildConfigWrapper.isJetpackApp
-            val isPhase3 = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == JetpackFeatureRemovalPhase.PhaseThree
-            val shouldHideJetpackFeatureCard = appPrefsWrapper.getShouldHideJetpackFeatureCard()
-            val exceedsShowFrequency = exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded()
-            isWordPressApp && isPhase3 && !shouldHideJetpackFeatureCard && exceedsShowFrequency
+            jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()
         }
 
         val migrationSuccessCard = SingleActionCard(
@@ -1308,49 +1300,29 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onJetpackFeatureCardClick() {
-        analyticsTrackerWrapper.track(
-                Stat.REMOVE_FEATURE_CARD_TAPPED,
-                mapOf(PHASE to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName)
-        )
-        // todo: create the navigation event
-        // todo: show the overlay
+        jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_TAPPED)
+        // create the navigation event to show the overlay
     }
 
     private fun onJetpackFeatureCardHideMenuItemClick() {
-        analyticsTrackerWrapper.track(
-                Stat.REMOVE_FEATURE_CARD_HIDE_TAPPED,
-                mapOf(PHASE to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName)
-        )
-        // todo: - create the event to refresh the feed
+        jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_HIDE_TAPPED)
         appPrefsWrapper.setShouldHideJetpackFeatureCard(true)
+        // create the navigation event o refresh the UI
     }
 
     private fun onJetpackFeatureCardLearnMoreClick() {
-        analyticsTrackerWrapper.track(
-                Stat.REMOVE_FEATURE_CARD_LINK_TAPPED,
-                mapOf(PHASE to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName)
-        )
-        // todo: - create the navigation event
-        // todo: - link out to URL
+        jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_LINK_TAPPED)
+        // create the navigation event to link out to the URL
     }
 
     private fun onJetpackFeatureCardRemindMeLaterClick() {
-        analyticsTrackerWrapper.track(
-                Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED,
-                mapOf(PHASE to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName)
-        )
-        // todo: - create the event to refresh
+        jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED)
         appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(System.currentTimeMillis())
+        // create the navigation event o refresh the UI
     }
 
     private fun onJetpackFeatureCardMoreMenuClick() {
-        analyticsTrackerWrapper.track(
-                Stat.REMOVE_FEATURE_CARD_MENU_ACCESSED,
-                mapOf(PHASE to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName)
-        )
-        _onSnackbarMessage.value = Event(
-                SnackbarMessageHolder(UiStringText("Jetpack Feature Card More Menu Click"))
-        )
+        jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_MENU_ACCESSED)
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
@@ -1468,24 +1440,6 @@ class MySiteViewModel @Inject constructor(
         ) ?: false)
     }
 
-    // todo: annmarie
-    private fun exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded() : Boolean {
-        val frequencyInDays = 4
-        val lastShownTimestamp = appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()
-        if (lastShownTimestamp == 0L) return true
-
-        val lastShownDate = Date(lastShownTimestamp)
-        val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
-                lastShownDate,
-                Date(System.currentTimeMillis()))
-
-        val exceedsFrequency = daysPastOverlayShown >= frequencyInDays
-        if (exceedsFrequency) {
-            appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(0L)
-        }
-        return exceedsFrequency
-    }
-
     // FluxC events
     @Subscribe(threadMode = MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
@@ -1593,6 +1547,5 @@ class MySiteViewModel @Inject constructor(
         const val LIST_SCROLL_DELAY_MS = 500L
         const val MY_SITE_TAB = "tab"
         const val TAB_SOURCE = "tab_source"
-        const val PHASE = "phase"
     }
 }
