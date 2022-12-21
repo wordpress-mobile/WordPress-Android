@@ -387,6 +387,14 @@ class WPMainActivityViewModel @Inject constructor(
         selectedSiteRepository.removeSite()
     }
 
+    fun onMainBottomSheetCreated() {
+        _mainActions.value?.let { actions ->
+            if (actions.any { it is AnswerBloggingPromptAction }) {
+                analyticsTracker.track(Stat.BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED)
+            }
+        }
+    }
+
     data class FocusPointInfo(
         val task: QuickStartTask,
         val isVisible: Boolean
