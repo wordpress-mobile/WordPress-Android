@@ -1301,7 +1301,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onJetpackFeatureCardClick() {
         jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_TAPPED)
-        // create the navigation event to show the overlay
+        _onNavigation.value = Event(SiteNavigationAction.OpenJetpackFeatureOverlay)
     }
 
     private fun onJetpackFeatureCardHideMenuItemClick() {
