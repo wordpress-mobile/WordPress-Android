@@ -132,7 +132,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onRemindMeLaterItemClick: ListItemInteraction,
             val onHideMenuItemClick: ListItemInteraction,
             val onLearnMoreClick: ListItemInteraction,
-            val onMoreMenuClick: ListItemInteraction
+            val onMoreMenuClick: ListItemInteraction,
+            val learnMoreUrl: String?,
         ) : Card(JETPACK_FEATURE_CARD)
 
         data class DashboardCards(
