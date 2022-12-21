@@ -2345,6 +2345,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blogging_prompts_my_site_card_menu_remove_from_dashboard_undo_tapped";
             case BLOGGING_PROMPTS_MY_SITE_CARD_MENU_LEARN_MORE_CLICKED:
                 return "blogging_prompts_my_site_card_menu_learn_more_tapped";
+            case BLOGGING_PROMPTS_MY_SITE_CARD_VIEWED:
+                return "blogging_prompts_my_site_card_viewed";
             case BLOGGING_PROMPTS_INTRODUCTION_SCREEN_VIEWED:
                 return "blogging_prompts_introduction_modal_viewed";
             case BLOGGING_PROMPTS_INTRODUCTION_SCREEN_DISMISSED:
