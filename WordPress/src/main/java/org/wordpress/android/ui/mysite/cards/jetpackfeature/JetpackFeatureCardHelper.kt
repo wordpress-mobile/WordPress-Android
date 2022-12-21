@@ -7,6 +7,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
 import java.util.Date
 import javax.inject.Inject
 
@@ -15,7 +16,8 @@ class JetpackFeatureCardHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
+    private val phaseThreeBlogPostLinkConfig: PhaseThreeBlogPostLinkConfig
 ) {
     fun shouldShowJetpackFeatureCard() = showCard()
 
@@ -24,6 +26,18 @@ class JetpackFeatureCardHelper @Inject constructor(
                 stat,
                 mapOf(PHASE to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName)
         )
+    }
+
+    fun getLearnMoreUrl(): String {
+       val url = phaseThreeBlogPostLinkConfig.getValue<String>()
+
+        if (url.isEmpty())
+            return url
+
+        return if (!url.contains(HOST)) {
+            "$HOST$url"
+        } else
+            url
     }
 
     private fun showCard(): Boolean {
@@ -55,5 +69,6 @@ class JetpackFeatureCardHelper @Inject constructor(
         const val PHASE = "phase"
         const val FREQUENCY_IN_DAYS = 4
         const val DEFAULT_LAST_SHOWN_TIMESTAMP = 0L
+        const val HOST = "https://"
     }
 }
