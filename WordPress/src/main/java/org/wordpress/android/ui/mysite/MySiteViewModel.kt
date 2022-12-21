@@ -1307,7 +1307,7 @@ class MySiteViewModel @Inject constructor(
     private fun onJetpackFeatureCardHideMenuItemClick() {
         jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_HIDE_TAPPED)
         appPrefsWrapper.setShouldHideJetpackFeatureCard(true)
-        // create the navigation event o refresh the UI
+        refresh()
     }
 
     private fun onJetpackFeatureCardLearnMoreClick() {
@@ -1318,7 +1318,7 @@ class MySiteViewModel @Inject constructor(
     private fun onJetpackFeatureCardRemindMeLaterClick() {
         jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED)
         appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(System.currentTimeMillis())
-        // create the navigation event o refresh the UI
+        refresh()
     }
 
     private fun onJetpackFeatureCardMoreMenuClick() {
