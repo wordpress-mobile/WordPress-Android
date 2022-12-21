@@ -39,11 +39,15 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/my_site_jetpack_feature_card_content"
-            style="@style/MySiteCardItemSubtitle"
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:maxLines="5"
+            android:ellipsize="end"
+            android:layout_marginTop="@dimen/margin_medium"
             android:text="@string/jetpack_feature_card_content"
+            android:lineSpacingMultiplier="1.2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/my_site_jetpack_feature_card_logo"
