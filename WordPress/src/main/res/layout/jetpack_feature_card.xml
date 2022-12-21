@@ -57,7 +57,7 @@
             android:paddingTop="@dimen/margin_medium"
             android:text="@string/jetpack_feature_card_learn_more"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="@color/primary_emphasis_medium_selector"
+            android:textColor="@color/hetpack_feature_card_emphasis_medium_selector"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
