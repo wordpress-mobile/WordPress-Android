@@ -3091,6 +3091,7 @@
     <string name="notification_settings_switch_desc">Notifications</string>
     <string name="notifications_tab_dialog_switch_desc">Notifications</string>
     <string name="navigate_up_desc">navigate up</string>
+    <string name="close_desc">close</string>
     <string name="fab_add_tag_desc">Create Tag</string>
     <string name="fab_create_desc">Create a post</string>
     <string name="reader_avatar_desc">profile picture</string>
