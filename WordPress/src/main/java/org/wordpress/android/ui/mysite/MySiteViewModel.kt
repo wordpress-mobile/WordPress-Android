@@ -440,9 +440,13 @@ class MySiteViewModel @Inject constructor(
         val jetpackFeatureCard =  JetpackFeatureCard(
                 onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
                 onHideMenuItemClick = ListItemInteraction.create(this::onJetpackFeatureCardHideMenuItemClick),
-                onLearnMoreClick = ListItemInteraction.create(this::onJetpackFeatureCardLearnMoreClick),
+                onLearnMoreClick = ListItemInteraction.create(
+                        jetpackFeatureCardHelper.getLearnMoreUrl(),
+                        this::onJetpackFeatureCardLearnMoreClick
+                ),
                 onRemindMeLaterItemClick = ListItemInteraction.create(this::onJetpackFeatureCardRemindMeLaterClick),
-                onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick)
+                onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick),
+                learnMoreUrl = jetpackFeatureCardHelper.getLearnMoreUrl()
         ).takeIf {
             jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()
         }
@@ -1310,9 +1314,9 @@ class MySiteViewModel @Inject constructor(
         refresh()
     }
 
-    private fun onJetpackFeatureCardLearnMoreClick() {
+    private fun onJetpackFeatureCardLearnMoreClick(url: String) {
         jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_LINK_TAPPED)
-        // create the navigation event to link out to the URL
+        _onNavigation.value = Event(SiteNavigationAction.OpenJetpackFeatureCardLearnMoreLink(url))
     }
 
     private fun onJetpackFeatureCardRemindMeLaterClick() {
