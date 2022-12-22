@@ -19,7 +19,9 @@ import org.wordpress.android.util.config.PhaseTwoBlogPostLinkConfig
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class JetpackFeatureOverlayContentBuilder @Inject constructor(
     private val jpDeadlineConfig: JPDeadlineConfig,
     private val phaseTwoBlogPostLinkConfig: PhaseTwoBlogPostLinkConfig,
