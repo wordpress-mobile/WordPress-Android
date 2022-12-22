@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel
 
-import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RetryPolicy
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.wordpress.android.fluxc.model.SiteModel
@@ -18,21 +17,6 @@ import kotlin.coroutines.resume
 
 @Singleton
 class JetpackTunnelGsonRequestBuilder @Inject constructor() {
-    companion object {
-        const val DEFAULT_JETPACK_TUNNEL_TIMEOUT_MS = 15000
-        const val DEFAULT_JETPACK_TUNNEL_MAX_RETRIES = 1
-    }
-
-    fun buildDefaultTimeoutRetryPolicy(
-        timeout: Int = DEFAULT_JETPACK_TUNNEL_TIMEOUT_MS,
-        retries: Int = DEFAULT_JETPACK_TUNNEL_MAX_RETRIES
-    ): DefaultRetryPolicy =
-        DefaultRetryPolicy(
-            timeout,
-            retries,
-            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-        )
-
     /**
      * Creates a new GET request.
      * @param url the request URL
