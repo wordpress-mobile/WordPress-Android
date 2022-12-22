@@ -35,6 +35,7 @@ import static org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErr
 
 public abstract class BaseRequest<T> extends Request<T> {
     public static final int DEFAULT_REQUEST_TIMEOUT = 30000;
+    public static final int DEFAULT_MAX_RETRIES = DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
     public static final int UPLOAD_REQUEST_READ_TIMEOUT = 60000;
 
     // Only used when enabledCaching is called - caching is off by default for all requests
