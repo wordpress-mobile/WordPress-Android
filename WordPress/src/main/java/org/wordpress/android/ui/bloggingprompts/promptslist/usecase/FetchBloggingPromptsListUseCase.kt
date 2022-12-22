@@ -7,6 +7,8 @@ import java.util.Date
 import javax.inject.Inject
 import kotlin.random.Random
 
+// TODO thomashorta remove this suppress annotation when this has a real implementation
+@Suppress("MagicNumber")
 class FetchBloggingPromptsListUseCase @Inject constructor() {
     suspend fun execute(): List<BloggingPromptsListItemModel> {
         // delay a bit to simulate a fetch
