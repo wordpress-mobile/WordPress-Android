@@ -279,12 +279,12 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment), MenuProv
         }
     }
 
-    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_preview_fragment, menu)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_preview_fragment, menu)
         cropActionMenu = menu.findItem(R.id.menu_crop)
     }
 
-    override fun onMenuItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_crop) {
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean = if (menuItem.itemId == R.id.menu_crop) {
         viewModel.onCropMenuClicked()
         true
     } else {
