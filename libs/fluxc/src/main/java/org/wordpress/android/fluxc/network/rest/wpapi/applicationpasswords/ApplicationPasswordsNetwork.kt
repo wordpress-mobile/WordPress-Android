@@ -4,6 +4,7 @@ import com.android.volley.RequestQueue
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Credentials
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.HttpMethod
 import org.wordpress.android.fluxc.network.UserAgent
@@ -18,6 +19,7 @@ import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
 private const val AUTHORIZATION_HEADER = "Authorization"
@@ -39,8 +41,38 @@ class ApplicationPasswordsNetwork @Inject constructor(
         path: String,
         clazz: Class<T>,
         params: Map<String, String> = emptyMap(),
-        body: Map<String, Any> = emptyMap()
+        body: Map<String, Any> = emptyMap(),
+        enableCaching: Boolean = false,
+        cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
+        forced: Boolean = false
     ): WPAPIResponse<T> {
+        fun buildRequest(
+            continuation: Continuation<WPAPIResponse<T>>,
+            authorizationHeader: String
+        ): WPAPIGsonRequest<T> {
+            val request = WPAPIGsonRequest(
+                method.toVolleyMethod(),
+                (site.wpApiRestUrl ?: site.url.slashJoin("wp-json")).slashJoin(path),
+                params,
+                body,
+                clazz,
+                /* listener = */ { continuation.resume(WPAPIResponse.Success(it)) },
+                /* errorListener = */ { continuation.resume(WPAPIResponse.Error(it)) }
+            )
+
+            request.addHeader(AUTHORIZATION_HEADER, authorizationHeader)
+            request.setUserAgent(userAgent.userAgent)
+
+            if (enableCaching) {
+                request.enableCaching(cacheTimeToLive)
+            }
+            if (forced) {
+                request.setShouldForceUpdate()
+            }
+
+            return request
+        }
+
         val credentialsResult = mApplicationPasswordsManager.getApplicationCredentials(site)
         val credentials = when (credentialsResult) {
             is ApplicationPasswordCreationResult.Existing -> credentialsResult.credentials
@@ -64,23 +96,7 @@ class ApplicationPasswordsNetwork @Inject constructor(
         val authorizationHeader = Credentials.basic(credentials.userName, credentials.password)
 
         val response = suspendCancellableCoroutine<WPAPIResponse<T>> { continuation ->
-            val request = WPAPIGsonRequest(
-                method.toVolleyMethod(),
-                (site.wpApiRestUrl ?: site.url.slashJoin("wp-json")).slashJoin(path),
-                params,
-                body,
-                clazz,
-                {
-                    continuation.resume(WPAPIResponse.Success(it))
-                },
-                {
-                    continuation.resume(WPAPIResponse.Error(it))
-                }
-            )
-
-            request.addHeader(AUTHORIZATION_HEADER, authorizationHeader)
-            request.setUserAgent(userAgent.userAgent)
-
+            val request = buildRequest(continuation, authorizationHeader)
             requestQueue.add(request)
 
             continuation.invokeOnCancellation {
@@ -90,7 +106,8 @@ class ApplicationPasswordsNetwork @Inject constructor(
 
         return if (credentialsResult is ApplicationPasswordCreationResult.Existing &&
             response is WPAPIResponse.Error &&
-            response.error.volleyError?.networkResponse?.statusCode == UNAUTHORIZED) {
+            response.error.volleyError?.networkResponse?.statusCode == UNAUTHORIZED
+        ) {
             AppLog.w(
                 AppLog.T.MAIN,
                 "Authentication failure using application password, maybe revoked?" +
@@ -111,8 +128,20 @@ class ApplicationPasswordsNetwork @Inject constructor(
         site: SiteModel,
         path: String,
         clazz: Class<T>,
-        params: Map<String, String> = emptyMap()
-    ) = executeGsonRequest(site, HttpMethod.GET, path, clazz, params)
+        params: Map<String, String> = emptyMap(),
+        enableCaching: Boolean = false,
+        cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
+        forced: Boolean = false
+    ) = executeGsonRequest(
+        site = site,
+        method = HttpMethod.GET,
+        path = path,
+        clazz = clazz,
+        params = params,
+        enableCaching = enableCaching,
+        cacheTimeToLive = cacheTimeToLive,
+        forced = forced
+    )
 
     suspend fun <T> executePostGsonRequest(
         site: SiteModel,
