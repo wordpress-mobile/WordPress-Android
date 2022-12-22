@@ -110,18 +110,20 @@ class CropFragment : Fragment(), MenuProvider, UCropFragmentCallback {
         doneMenu = menu.findItem(R.id.menu_done)
     }
 
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean = if (menuItem.itemId == R.id.menu_done) {
-        viewModel.onDoneMenuClicked()
-        true
-    } else if (menuItem.itemId == android.R.id.home) {
-        if (navArgs.shouldReturnToPreviewScreen) {
-            findNavController().popBackStack()
+    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+        R.id.menu_done -> {
+            viewModel.onDoneMenuClicked()
             true
-        } else {
-            false
         }
-    } else {
-        false
+        android.R.id.home -> {
+            if (navArgs.shouldReturnToPreviewScreen) {
+                findNavController().popBackStack()
+                true
+            } else {
+                false
+            }
+        }
+        else -> false
     }
 
     private fun showThirdPartyCropFragmentWithBundle(bundle: Bundle) {
