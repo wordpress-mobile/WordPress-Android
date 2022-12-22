@@ -65,7 +65,7 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
     fun `given unsuccessful fetch, when start, then update uiState to Loading then FetchError`() = test {
         whenever(fetchBloggingPromptsListUseCase.execute()).doSuspendableAnswer {
             delay(10)
-            throw Exception("test")
+            error("test exception")
         }
         mockNetworkAvailability(true)
 
