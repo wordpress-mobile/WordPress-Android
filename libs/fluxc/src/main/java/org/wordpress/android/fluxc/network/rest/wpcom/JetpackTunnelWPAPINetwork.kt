@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom
 
 import android.content.Context
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -35,7 +36,9 @@ class JetpackTunnelWPAPINetwork @Inject constructor(
         params: Map<String, String> = emptyMap(),
         enableCaching: Boolean = false,
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
-        forced: Boolean = false
+        forced: Boolean = false,
+        requestTimeout: Int = BaseRequest.DEFAULT_REQUEST_TIMEOUT,
+        retries: Int = BaseRequest.DEFAULT_MAX_RETRIES
     ): JetpackResponse<T> {
         return jetpackTunnelGsonRequestBuilder.syncGetRequest(
             restClient = this,
@@ -45,7 +48,12 @@ class JetpackTunnelWPAPINetwork @Inject constructor(
             clazz = clazz,
             enableCaching = enableCaching,
             cacheTimeToLive = cacheTimeToLive,
-            forced = forced
+            forced = forced,
+            retryPolicy = DefaultRetryPolicy(
+                requestTimeout,
+                retries,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+            )
         )
     }
 
