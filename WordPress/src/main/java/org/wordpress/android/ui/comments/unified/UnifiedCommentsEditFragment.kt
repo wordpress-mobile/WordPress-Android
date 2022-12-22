@@ -213,13 +213,12 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
         }
     }
 
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        when (menuItem.itemId) {
-            android.R.id.home -> {
-                viewModel.onBackPressed()
-            }
+    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+        android.R.id.home -> {
+            viewModel.onBackPressed()
+            true
         }
-        return true
+        else -> true
     }
 
     companion object {
