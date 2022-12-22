@@ -35,10 +35,6 @@ public class WPComEndpoint {
         return WPCOM_PREFIX_V1_1 + mEndpoint;
     }
 
-    public String getJitmPath() {
-        return "/jetpack/v4/jitm";
-    }
-
     public String getUrlV1_2() {
         return WPCOM_PREFIX_V1_2 + mEndpoint;
     }
