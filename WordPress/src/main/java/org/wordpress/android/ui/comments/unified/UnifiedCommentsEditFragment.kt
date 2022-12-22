@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -36,7 +37,7 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_fragment) {
+class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_fragment), MenuProvider {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
@@ -53,6 +54,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
 
         val site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
         val commentIdentifier = requireNotNull(
@@ -68,8 +70,6 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
     }
 
     private fun UnifiedCommentsEditFragmentBinding.setupToolbar() {
-        setHasOptionsMenu(true)
-
         val activity = (requireActivity() as AppCompatActivity)
         activity.setSupportActionBar(toolbarMain)
         activity.supportActionBar?.let {
@@ -198,8 +198,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.edit_comment_menu, menu)
 
         menu.findItem(R.id.action_item)?.let { actionMenu ->
@@ -214,7 +213,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
                 viewModel.onBackPressed()
