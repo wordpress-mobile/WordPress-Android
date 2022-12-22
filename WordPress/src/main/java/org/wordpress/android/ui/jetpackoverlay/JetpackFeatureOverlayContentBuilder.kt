@@ -98,7 +98,6 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         return JetpackFeatureOverlayUIState(componentVisibility, content)
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun getStateForPhaseTwoStats(
         params: JetpackFeatureOverlayContentBuilderParams,
         jpDeadlineDate: String,
@@ -116,7 +115,6 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         )
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun getStateForPhaseTwoReader(
         params: JetpackFeatureOverlayContentBuilderParams,
         jpDeadlineDate: String,
@@ -134,7 +132,6 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         )
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun getStateForPhaseTwoNotifications(
         params: JetpackFeatureOverlayContentBuilderParams,
         jpDeadlineDate: String,
