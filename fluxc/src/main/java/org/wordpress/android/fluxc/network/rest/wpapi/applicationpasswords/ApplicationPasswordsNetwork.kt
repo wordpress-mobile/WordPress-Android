@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Credentials
@@ -44,7 +45,9 @@ class ApplicationPasswordsNetwork @Inject constructor(
         body: Map<String, Any> = emptyMap(),
         enableCaching: Boolean = false,
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
-        forced: Boolean = false
+        forced: Boolean = false,
+        requestTimeout: Int = BaseRequest.DEFAULT_REQUEST_TIMEOUT,
+        retries: Int = BaseRequest.DEFAULT_MAX_RETRIES
     ): WPAPIResponse<T> {
         fun buildRequest(
             continuation: Continuation<WPAPIResponse<T>>,
@@ -69,6 +72,12 @@ class ApplicationPasswordsNetwork @Inject constructor(
             if (forced) {
                 request.setShouldForceUpdate()
             }
+
+            request.retryPolicy = DefaultRetryPolicy(
+                requestTimeout,
+                retries,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+            )
 
             return request
         }
@@ -131,7 +140,9 @@ class ApplicationPasswordsNetwork @Inject constructor(
         params: Map<String, String> = emptyMap(),
         enableCaching: Boolean = false,
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
-        forced: Boolean = false
+        forced: Boolean = false,
+        requestTimeout: Int = BaseRequest.DEFAULT_REQUEST_TIMEOUT,
+        retries: Int = BaseRequest.DEFAULT_MAX_RETRIES
     ) = executeGsonRequest(
         site = site,
         method = HttpMethod.GET,
@@ -140,7 +151,9 @@ class ApplicationPasswordsNetwork @Inject constructor(
         params = params,
         enableCaching = enableCaching,
         cacheTimeToLive = cacheTimeToLive,
-        forced = forced
+        forced = forced,
+        requestTimeout = requestTimeout,
+        retries = retries
     )
 
     suspend fun <T> executePostGsonRequest(
