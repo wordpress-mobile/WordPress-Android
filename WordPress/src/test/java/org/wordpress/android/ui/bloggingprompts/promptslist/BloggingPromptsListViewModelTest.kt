@@ -6,7 +6,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.internal.verification.Times
 import org.mockito.kotlin.doSuspendableAnswer
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.bloggingprompts.promptslist.model.BloggingPromptsListItemModel
@@ -17,6 +19,7 @@ import java.util.Date
 @ExperimentalCoroutinesApi
 class BloggingPromptsListViewModelTest : BaseUnitTest() {
     @Mock private lateinit var fetchBloggingPromptsListUseCase: FetchBloggingPromptsListUseCase
+    @Mock private lateinit var tracker: BloggingPromptsListAnalyticsTracker
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     lateinit var viewModel: BloggingPromptsListViewModel
 
@@ -24,13 +27,20 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
     fun setUp() {
         viewModel = BloggingPromptsListViewModel(
                 fetchBloggingPromptsListUseCase,
+                tracker,
                 networkUtilsWrapper,
                 testDispatcher()
         )
     }
 
     @Test
-    fun `given successful fetch, when fetchPrompts, then update uiState to Loading then Content`() = test {
+    fun `when start, then track screen seen event`() = test {
+        viewModel.start()
+        verify(tracker, Times(1)).trackScreenShown()
+    }
+
+    @Test
+    fun `given successful fetch, when start, then update uiState to Loading then Content`() = test {
         val promptsList = listOf(BloggingPromptsListItemModel(0, "prompt", Date(), false, 0))
         whenever(fetchBloggingPromptsListUseCase.execute()).doSuspendableAnswer {
             delay(10)
@@ -40,7 +50,7 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.uiStateFlow.value).isEqualTo(BloggingPromptsListViewModel.UiState.None)
 
-        viewModel.fetchPrompts()
+        viewModel.start()
 
         assertThat(viewModel.uiStateFlow.value).isEqualTo(BloggingPromptsListViewModel.UiState.Loading)
 
@@ -52,7 +62,7 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given unsuccessful fetch, when fetchPrompts, then update uiState to Loading then FetchError`() = test {
+    fun `given unsuccessful fetch, when start, then update uiState to Loading then FetchError`() = test {
         whenever(fetchBloggingPromptsListUseCase.execute()).doSuspendableAnswer {
             delay(10)
             throw Exception("test")
@@ -61,7 +71,7 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.uiStateFlow.value).isEqualTo(BloggingPromptsListViewModel.UiState.None)
 
-        viewModel.fetchPrompts()
+        viewModel.start()
 
         assertThat(viewModel.uiStateFlow.value).isEqualTo(BloggingPromptsListViewModel.UiState.Loading)
 
@@ -72,16 +82,15 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given network unavailable, when fetchPrompts, then update uiState to Loading then FetchError`() = test {
+    fun `given network unavailable, when start, then update uiState to Loading then FetchError`() = test {
         mockNetworkAvailability(false)
 
         assertThat(viewModel.uiStateFlow.value).isEqualTo(BloggingPromptsListViewModel.UiState.None)
 
-        viewModel.fetchPrompts()
+        viewModel.start()
 
         assertThat(viewModel.uiStateFlow.value).isEqualTo(BloggingPromptsListViewModel.UiState.NetworkError)
     }
-
 
     private fun mockNetworkAvailability(isNetworkAvailable: Boolean) {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(isNetworkAvailable)

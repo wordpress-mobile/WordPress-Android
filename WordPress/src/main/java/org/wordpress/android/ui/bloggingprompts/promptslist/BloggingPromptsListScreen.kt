@@ -6,12 +6,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
+import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListViewModel.UiState
+import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListViewModel.UiState.None
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
 fun BloggingPromptsListScreen(
+    uiState: UiState,
     onNavigateUp: () -> Unit,
 ) {
     Scaffold(
@@ -23,7 +26,7 @@ fun BloggingPromptsListScreen(
                 )
             },
     ) {
-        Text("This is just a placeholder for now...")
+        Text("This is just a placeholder for now: ${uiState::class.simpleName}")
     }
 }
 
@@ -31,6 +34,6 @@ fun BloggingPromptsListScreen(
 @Composable
 fun BloggingPromptsListScreenPreview() {
     AppTheme {
-        BloggingPromptsListScreen(onNavigateUp = {})
+        BloggingPromptsListScreen(uiState = None, onNavigateUp = {})
     }
 }

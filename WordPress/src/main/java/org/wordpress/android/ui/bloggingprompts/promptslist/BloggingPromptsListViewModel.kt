@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.bloggingprompts.promptslist
 
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,15 +13,22 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+@HiltViewModel
 class BloggingPromptsListViewModel @Inject constructor(
     private val fetchBloggingPromptsList: FetchBloggingPromptsListUseCase,
+    private val tracker: BloggingPromptsListAnalyticsTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow = MutableStateFlow<UiState>(UiState.None)
     val uiStateFlow = _uiStateFlow.asStateFlow()
 
-    fun fetchPrompts() {
+    fun start() {
+        tracker.trackScreenShown()
+        fetchPrompts()
+    }
+
+    private fun fetchPrompts() {
         launch {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 _uiStateFlow.update { UiState.NetworkError }
