@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.jetpack.scan.history
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
@@ -29,7 +32,7 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), ScrollableViewInitializedListener {
+class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvider, ScrollableViewInitializedListener {
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
@@ -52,6 +55,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
         binding = ScanHistoryFragmentBinding.bind(view).apply {
             initViewModel(getSite(savedInstanceState))
             initToolbar()
@@ -102,7 +106,6 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     }
 
     private fun ScanHistoryFragmentBinding.initToolbar() {
-        setHasOptionsMenu(true)
         val activity = (requireActivity() as AppCompatActivity)
         toolbarMain.title = getString(R.string.scan_history)
         activity.setSupportActionBar(toolbarMain)
@@ -125,12 +128,16 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
         super.onSaveInstanceState(outState)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        // Do nothing
+    }
+
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             requireActivity().onBackPressed()
             return true
         }
-        return super.onOptionsItemSelected(item)
+        return false
     }
 
     private class ScanHistoryTabAdapter(
