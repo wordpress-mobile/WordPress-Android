@@ -41,6 +41,7 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation "androidx.fragment:fragment:$androidxFragmentVersion"
     implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
     implementation "androidx.viewpager2:viewpager2:$androidxViewpager2Version"
