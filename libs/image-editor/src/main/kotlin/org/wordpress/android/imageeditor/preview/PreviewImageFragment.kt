@@ -159,9 +159,9 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
     }
 
     private fun PreviewImageFragmentBinding.setupObservers() {
-        viewModel.uiState.observe(viewLifecycleOwner, { state -> updateUiState(state) })
+        viewModel.uiState.observe(viewLifecycleOwner) { state -> updateUiState(state) }
 
-        viewModel.loadIntoFile.observe(viewLifecycleOwner, { fileStateEvent ->
+        viewModel.loadIntoFile.observe(viewLifecycleOwner) { fileStateEvent ->
             fileStateEvent?.getContentIfNotHandled()?.let { fileState ->
                 when (fileState) {
                     is ImageLoadToFileIdleState -> { // Do nothing
@@ -176,15 +176,15 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
                     }
                 }
             }
-        })
+        }
 
-        viewModel.navigateToCropScreenWithFileInfo.observe(viewLifecycleOwner, { fileInfoEvent ->
+        viewModel.navigateToCropScreenWithFileInfo.observe(viewLifecycleOwner) { fileInfoEvent ->
             fileInfoEvent?.getContentIfNotHandled()?.let { fileInfo ->
                 navigateToCropScreenWithFileInfo(fileInfo)
             }
-        })
+        }
 
-        parentViewModel.cropResult.observe(viewLifecycleOwner, { cropResult ->
+        parentViewModel.cropResult.observe(viewLifecycleOwner) { cropResult ->
             cropResult?.getContentIfNotHandled()?.let {
                 if (it.resultCode == RESULT_OK) {
                     val data: Intent = it.data
@@ -196,15 +196,15 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
                     }
                 }
             }
-        })
+        }
 
-        viewModel.finishAction.observe(viewLifecycleOwner, { event ->
+        viewModel.finishAction.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 val intent = Intent().apply { putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, ArrayList(it)) }
                 requireActivity().setResult(RESULT_OK, intent)
                 requireActivity().finish()
             }
-        })
+        }
     }
 
     private fun PreviewImageFragmentBinding.updateUiState(state: UiState) {
