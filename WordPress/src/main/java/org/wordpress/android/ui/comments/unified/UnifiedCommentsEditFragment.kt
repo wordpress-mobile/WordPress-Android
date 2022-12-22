@@ -97,7 +97,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
         site: SiteModel,
         commentIdentifier: CommentIdentifier
     ) {
-        viewModel.uiActionEvent.observeEvent(viewLifecycleOwner, {
+        viewModel.uiActionEvent.observeEvent(viewLifecycleOwner) {
             when (it) {
                 CLOSE -> {
                     requireActivity().finish()
@@ -112,13 +112,13 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
                     EditCancelDialogFragment.newInstance().show(childFragmentManager, EDIT_CANCEL_DIALOG_TAG)
                 }
             }
-        })
+        }
 
-        viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner, { messageHolder ->
+        viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner) { messageHolder ->
             showSnackbar(messageHolder)
-        })
+        }
 
-        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             if (uiState.showProgress) {
                 loadingView.visibility = View.VISIBLE
                 scrollView.visibility = View.GONE
@@ -156,7 +156,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
                 commentEditEmailAddress.isEnabled = enableEditEmail
                 userName.isEnabled = enableEditName
             }
-        })
+        }
 
         viewModel.start(site, commentIdentifier)
     }
@@ -208,9 +208,9 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
                 true
             }
 
-            viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
+            viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
                 actionMenu.isEnabled = uiState.canSaveChanges
-            })
+            }
         }
     }
 
