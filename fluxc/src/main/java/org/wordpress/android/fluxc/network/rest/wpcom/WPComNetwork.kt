@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom
 import android.content.Context
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import javax.inject.Inject
@@ -27,13 +28,19 @@ class WPComNetwork @Inject constructor(
     suspend fun <T : Any> executeGetGsonRequest(
         url: String,
         clazz: Class<T>,
-        params: Map<String, String> = emptyMap()
+        params: Map<String, String> = emptyMap(),
+        enableCaching: Boolean = false,
+        cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
+        forced: Boolean = false
     ): WPComGsonRequestBuilder.Response<T> {
         return wpComGsonRequestBuilder.syncGetRequest(
             restClient = this,
             url = url,
             params = params,
-            clazz = clazz
+            clazz = clazz,
+            enableCaching = enableCaching,
+            cacheTimeToLive = cacheTimeToLive,
+            forced = forced
         )
     }
 
