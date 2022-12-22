@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListViewModel.UiState
@@ -98,8 +99,10 @@ private fun LoadingContent() {
 
 @Preview
 @Composable
-fun BloggingPromptsListScreenPreview() {
+fun BloggingPromptsListScreenPreview(
+    @PreviewParameter(provider = BloggingPromptsListScreenPreviewProvider::class) uiState: UiState
+) {
     AppTheme {
-        BloggingPromptsListScreen(uiState = None, onNavigateUp = {})
+        BloggingPromptsListScreen(uiState = uiState, onNavigateUp = {})
     }
 }
