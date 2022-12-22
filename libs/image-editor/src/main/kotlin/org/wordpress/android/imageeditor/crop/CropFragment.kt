@@ -9,6 +9,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -32,7 +33,7 @@ import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
 /**
  * Container fragment for displaying third party crop fragment and done menu item.
  */
-class CropFragment : Fragment(), UCropFragmentCallback {
+class CropFragment : Fragment(), MenuProvider, UCropFragmentCallback {
     private lateinit var viewModel: CropViewModel
     private var doneMenu: MenuItem? = null
     private val navArgs: CropFragmentArgs by navArgs()
@@ -40,11 +41,6 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     companion object {
         private val TAG = CropFragment::class.java.simpleName
         const val CROP_RESULT = "crop_result"
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -55,6 +51,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
         initializeViewModels()
     }
 
@@ -108,13 +105,12 @@ class CropFragment : Fragment(), UCropFragmentCallback {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_crop_fragment, menu)
         doneMenu = menu.findItem(R.id.menu_done)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_done) {
+    override fun onMenuItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_done) {
         viewModel.onDoneMenuClicked()
         true
     } else if (item.itemId == android.R.id.home) {
@@ -122,10 +118,10 @@ class CropFragment : Fragment(), UCropFragmentCallback {
             findNavController().popBackStack()
             true
         } else {
-            super.onOptionsItemSelected(item)
+            false
         }
     } else {
-        super.onOptionsItemSelected(item)
+        false
     }
 
     private fun showThirdPartyCropFragmentWithBundle(bundle: Bundle) {
