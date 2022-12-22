@@ -69,7 +69,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     }
 
     private fun ScanHistoryFragmentBinding.setupObservers() {
-        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             uiHelpers.updateVisibility(tabLayout, uiState.contentVisible)
             uiHelpers.updateVisibility(viewPager, uiState.contentVisible)
             uiHelpers.updateVisibility(fullscreenErrorWithRetry.errorLayout, uiState.errorVisible)
@@ -79,7 +79,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
                 }
                 is ErrorUiState -> fullscreenErrorWithRetry.updateErrorLayout(uiState)
             }
-        })
+        }
     }
 
     private fun FullscreenErrorWithRetryBinding.updateErrorLayout(uiState: ErrorUiState) {
