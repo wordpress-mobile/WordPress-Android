@@ -198,8 +198,8 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
         }
     }
 
-    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.edit_comment_menu, menu)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.edit_comment_menu, menu)
 
         menu.findItem(R.id.action_item)?.let { actionMenu ->
             actionMenu.setOnMenuItemClickListener {
@@ -213,8 +213,8 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
         }
     }
 
-    override fun onMenuItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
             android.R.id.home -> {
                 viewModel.onBackPressed()
             }
