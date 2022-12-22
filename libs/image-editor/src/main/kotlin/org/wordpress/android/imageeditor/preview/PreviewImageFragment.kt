@@ -22,7 +22,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
 import com.yalantis.ucrop.UCrop
 import kotlinx.parcelize.Parcelize
@@ -48,7 +47,7 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
     private lateinit var parentViewModel: EditImageViewModel
     private lateinit var tabLayoutMediator: TabLayoutMediator
     private var pagerAdapterObserver: PagerAdapterObserver? = null
-    private lateinit var pageChangeCallback: OnPageChangeCallback
+    private lateinit var pageChangeCallback: ViewPager2.OnPageChangeCallback
 
     private var cropActionMenu: MenuItem? = null
 
