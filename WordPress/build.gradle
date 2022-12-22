@@ -376,6 +376,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidxLifecycleVersion"
+    implementation "androidx.activity:activity:$androidxActivityVersion"
+    implementation "androidx.activity:activity-ktx:$androidxActivityVersion"
     implementation "androidx.fragment:fragment:$androidxFragmentVersion"
     implementation "androidx.fragment:fragment-ktx:$androidxFragmentVersion"
     implementation "androidx.multidex:multidex:$androidXMultidexVersion"
