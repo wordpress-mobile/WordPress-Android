@@ -1351,6 +1351,7 @@ class MySiteViewModel @Inject constructor(
         _onSnackbarMessage.value = Event(
                 SnackbarMessageHolder(UiStringText("Jetpack Feature Card More Menu Click"))
         )
+    }
 
     private fun onBloggingPromptViewMoreClicked() {
         _onBloggingPromptsViewMore.value = Event(Unit)
