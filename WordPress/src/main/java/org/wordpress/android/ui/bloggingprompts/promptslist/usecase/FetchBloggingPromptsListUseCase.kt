@@ -10,7 +10,7 @@ import kotlin.random.Random
 class FetchBloggingPromptsListUseCase @Inject constructor() {
     suspend fun execute(): List<BloggingPromptsListItemModel> {
         // delay a bit to simulate a fetch
-        delay(500)
+        delay(1500)
         return generateFakePrompts()
     }
 
