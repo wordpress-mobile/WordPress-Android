@@ -10,7 +10,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -72,7 +71,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             when (uiState) {
                 is UiStartLoadingWithBundleState -> {
                     showThirdPartyCropFragmentWithBundle(uiState.bundle)
@@ -81,9 +80,9 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                 }
             }
             doneMenu?.isVisible = uiState.doneMenuVisible
-        })
+        }
 
-        viewModel.cropAndSaveImageStateEvent.observe(viewLifecycleOwner, Observer { stateEvent ->
+        viewModel.cropAndSaveImageStateEvent.observe(viewLifecycleOwner) { stateEvent ->
             stateEvent?.getContentIfNotHandled()?.let { state ->
                 when (state) {
                     is ImageCropAndSaveStartState -> {
@@ -102,11 +101,11 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                     }
                 }
             }
-        })
+        }
 
-        viewModel.navigateBackWithCropResult.observe(viewLifecycleOwner, Observer { cropResult ->
+        viewModel.navigateBackWithCropResult.observe(viewLifecycleOwner) { cropResult ->
             navigateBackWithCropResult(cropResult)
-        })
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
