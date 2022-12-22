@@ -13,6 +13,8 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.bloggingprompts.promptslist.model.BloggingPromptsListItemModel
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase
+import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Failure
+import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
 
@@ -44,7 +46,7 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
         val promptsList = listOf(BloggingPromptsListItemModel(0, "prompt", Date(), false, 0))
         whenever(fetchBloggingPromptsListUseCase.execute()).doSuspendableAnswer {
             delay(10)
-            promptsList
+            Success(promptsList)
         }
         mockNetworkAvailability(true)
 
@@ -65,7 +67,7 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
     fun `given unsuccessful fetch, when start, then update uiState to Loading then FetchError`() = test {
         whenever(fetchBloggingPromptsListUseCase.execute()).doSuspendableAnswer {
             delay(10)
-            error("test exception")
+            Failure
         }
         mockNetworkAvailability(true)
 

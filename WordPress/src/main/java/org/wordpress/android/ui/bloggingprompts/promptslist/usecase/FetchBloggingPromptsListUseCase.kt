@@ -2,6 +2,7 @@ package org.wordpress.android.ui.bloggingprompts.promptslist.usecase
 
 import kotlinx.coroutines.delay
 import org.wordpress.android.ui.bloggingprompts.promptslist.model.BloggingPromptsListItemModel
+import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Success
 import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
@@ -10,10 +11,25 @@ import kotlin.random.Random
 // TODO thomashorta remove this suppress annotation when this has a real implementation
 @Suppress("MagicNumber")
 class FetchBloggingPromptsListUseCase @Inject constructor() {
-    suspend fun execute(): List<BloggingPromptsListItemModel> {
+    suspend fun execute(): Result {
         // delay a bit to simulate a fetch
         delay(1500)
-        return generateFakePrompts()
+        return Success(generateFakePrompts())
+    }
+
+    sealed class Result {
+        class Success(val content: List<BloggingPromptsListItemModel>) : Result()
+        object Failure : Result()
+
+        inline fun onSuccess(block: (List<BloggingPromptsListItemModel>) -> Unit): Result {
+            if (this is Success) block(this.content)
+            return this
+        }
+
+        fun onFailure(block: () -> Unit): Result {
+            if (this is Failure) block()
+            return this
+        }
     }
 
     // FAKE DATA GENERATION BELOW

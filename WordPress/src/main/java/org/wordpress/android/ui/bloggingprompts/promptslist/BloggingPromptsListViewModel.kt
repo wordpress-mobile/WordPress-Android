@@ -37,12 +37,13 @@ class BloggingPromptsListViewModel @Inject constructor(
 
             _uiStateFlow.update { UiState.Loading }
 
-            try {
-                val prompts = fetchBloggingPromptsList.execute()
-                _uiStateFlow.update { UiState.Content(prompts) }
-            } catch (e: Exception) {
-                _uiStateFlow.update { UiState.FetchError }
-            }
+            fetchBloggingPromptsList.execute()
+                    .onSuccess { prompts ->
+                        _uiStateFlow.update { UiState.Content(prompts) }
+                    }
+                    .onFailure {
+                        _uiStateFlow.update { UiState.FetchError }
+                    }
         }
     }
 

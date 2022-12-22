@@ -5,6 +5,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result
+import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Success
 
 @ExperimentalCoroutinesApi
 class FetchBloggingPromptsListUseCaseTest : BaseUnitTest() {
@@ -18,8 +20,13 @@ class FetchBloggingPromptsListUseCaseTest : BaseUnitTest() {
     @Test
     fun `when execute is called, then return 11 items`() = test {
         val result = useCase.execute()
+
         advanceUntilIdle()
-        assertThat(result).hasSize(11)
-        assertThat(result).allMatch { it.text.isNotBlank() }
+
+        assertThat(result).isInstanceOf(Success::class.java)
+
+        val content = (result as Success).content
+        assertThat(content).hasSize(11)
+        assertThat(content).allMatch { it.text.isNotBlank() }
     }
 }
