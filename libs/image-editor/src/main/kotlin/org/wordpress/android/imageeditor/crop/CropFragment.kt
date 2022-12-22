@@ -105,15 +105,15 @@ class CropFragment : Fragment(), MenuProvider, UCropFragmentCallback {
         }
     }
 
-    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_crop_fragment, menu)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_crop_fragment, menu)
         doneMenu = menu.findItem(R.id.menu_done)
     }
 
-    override fun onMenuItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_done) {
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean = if (menuItem.itemId == R.id.menu_done) {
         viewModel.onDoneMenuClicked()
         true
-    } else if (item.itemId == android.R.id.home) {
+    } else if (menuItem.itemId == android.R.id.home) {
         if (navArgs.shouldReturnToPreviewScreen) {
             findNavController().popBackStack()
             true
