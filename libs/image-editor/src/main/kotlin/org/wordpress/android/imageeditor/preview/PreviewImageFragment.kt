@@ -284,11 +284,12 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment), MenuProv
         cropActionMenu = menu.findItem(R.id.menu_crop)
     }
 
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean = if (menuItem.itemId == R.id.menu_crop) {
-        viewModel.onCropMenuClicked()
-        true
-    } else {
-        false
+    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+        R.id.menu_crop -> {
+            viewModel.onCropMenuClicked()
+            true
+        }
+        else -> false
     }
 
     override fun onDestroyView() {
