@@ -38,9 +38,11 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
 
     private val onTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabReselected(tab: Tab) {
+            // Do nothing
         }
 
         override fun onTabUnselected(tab: Tab) {
+            // Do nothing
         }
 
         override fun onTabSelected(tab: Tab) {
