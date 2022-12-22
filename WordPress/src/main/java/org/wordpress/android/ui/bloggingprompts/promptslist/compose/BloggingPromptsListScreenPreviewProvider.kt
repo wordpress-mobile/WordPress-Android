@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.bloggingprompts.promptslist
+package org.wordpress.android.ui.bloggingprompts.promptslist.compose
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListViewModel.UiState
