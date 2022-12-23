@@ -48,8 +48,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
@@ -109,6 +107,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingP
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder.Companion.NOT_SET
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
+import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -199,8 +198,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock lateinit var appStatus: AppStatus
     @Mock lateinit var wordPressPublicData: WordPressPublicData
-    @Mock lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
     @Mock lateinit var jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker
+    @Mock lateinit var jetpackFeatureCardHelper: JetpackFeatureCardHelper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -400,8 +399,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 dispatcher,
                 appStatus,
                 wordPressPublicData,
-                jetpackFeatureRemovalPhaseHelper,
-                jetpackFeatureCardShownTracker
+                jetpackFeatureCardShownTracker,
+                jetpackFeatureCardHelper
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -2777,9 +2776,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* JETPACK FEATURE CARD */
     @Test
-    fun `when jetpack app, then jetpack feature card is not shown`() = test {
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+    fun `when feature card criteria is not met, then items does not contain feature card`() = test {
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(false)
 
         initSelectedSite()
 
@@ -2789,21 +2787,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wordpress app, when not third phase, then jetpack feature card is not shown`() = test {
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseTwo)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-
-        initSelectedSite()
-
-        assertThat(getSiteMenuTabLastItems()[0]).isNotInstanceOf(JetpackFeatureCard::class.java)
-        assertThat(getLastItems()[0]).isNotInstanceOf(JetpackFeatureCard::class.java)
-        assertThat(getDashboardTabLastItems()[0]).isNotInstanceOf(JetpackFeatureCard::class.java)
-    }
-
-    @Test
-    fun `given wordpress app, when flag is on, then jetpack feature card is shown`() = test {
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+    fun `when feature card criteria is met, then items do contain feature card`() = test {
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
 
         initSelectedSite()
 
@@ -2813,8 +2798,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when jetpack feature card is shown, then jetpack feature card shown is tracked`() = test {
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+
         initSelectedSite()
 
         verify(jetpackFeatureCardShownTracker, atLeastOnce()).trackShown(MySiteCardAndItem.Type.JETPACK_FEATURE_CARD)
@@ -2822,62 +2807,52 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when Jetpack feature card is clicked, then jetpack feature card clicked is tracked`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
         initSelectedSite()
 
         findJetpackFeatureCard()?.onClick?.click()
 
-        verify(analyticsTrackerWrapper).track(Stat.REMOVE_FEATURE_CARD_TAPPED,
-                mapOf("phase" to JetpackFeatureRemovalPhase.PhaseThree.trackingName))
+        verify(jetpackFeatureCardHelper).track(Stat.REMOVE_FEATURE_CARD_TAPPED)
     }
 
     @Test
     fun `when Jetpack feature card learn more is clicked, then learn more is tracked`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
         initSelectedSite()
 
         findJetpackFeatureCard()?.onLearnMoreClick?.click()
 
-        verify(analyticsTrackerWrapper).track(Stat.REMOVE_FEATURE_CARD_LINK_TAPPED,
-                mapOf("phase" to JetpackFeatureRemovalPhase.PhaseThree.trackingName))
+        verify(jetpackFeatureCardHelper).track(Stat.REMOVE_FEATURE_CARD_LINK_TAPPED)
     }
 
     @Test
     fun `when Jetpack feature card menu is clicked, then menu clicked is tracked`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
         initSelectedSite()
 
         findJetpackFeatureCard()?.onMoreMenuClick?.click()
 
-        verify(analyticsTrackerWrapper).track(Stat.REMOVE_FEATURE_CARD_MENU_ACCESSED,
-                mapOf("phase" to JetpackFeatureRemovalPhase.PhaseThree.trackingName))
+        verify(jetpackFeatureCardHelper).track(Stat.REMOVE_FEATURE_CARD_MENU_ACCESSED)
     }
 
     @Test
     fun `when Jetpack feature card hide this is clicked, then hide is tracked`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
         initSelectedSite()
 
         findJetpackFeatureCard()?.onHideMenuItemClick?.click()
 
-        verify(analyticsTrackerWrapper).track(Stat.REMOVE_FEATURE_CARD_HIDE_TAPPED,
-                mapOf("phase" to JetpackFeatureRemovalPhase.PhaseThree.trackingName))
+        verify(jetpackFeatureCardHelper).track(Stat.REMOVE_FEATURE_CARD_HIDE_TAPPED)
     }
 
     @Test
     fun `when Jetpack feature card remind later is clicked, then remind later is tracked`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(JetpackFeatureRemovalPhase.PhaseThree)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
         initSelectedSite()
 
         findJetpackFeatureCard()?.onRemindMeLaterItemClick?.click()
 
-        verify(analyticsTrackerWrapper).track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED,
-                mapOf("phase" to JetpackFeatureRemovalPhase.PhaseThree.trackingName))
+        verify(jetpackFeatureCardHelper).track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED)
     }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
