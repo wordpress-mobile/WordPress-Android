@@ -109,8 +109,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         activity?.let { viewModel.onScreenInBackground(it.isChangingConfigurations) }
     }
 
-    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.reader_home, menu)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.reader_home, menu)
         menu.findItem(R.id.menu_search).apply {
             searchMenuItem = this
             this.isVisible = viewModel.uiState.value?.searchMenuItemUiState?.isVisible ?: false
@@ -125,8 +125,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         }
     }
 
-    override fun onMenuItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        return when (menuItem.itemId) {
             R.id.menu_search -> {
                 viewModel.onSearchActionClicked()
                 true
