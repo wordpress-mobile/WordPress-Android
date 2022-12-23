@@ -955,9 +955,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         moreMenuPopup?.dismiss()
     }
 
-    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menu.clear()
-        inflater.inflate(R.menu.reader_detail, menu)
+        menuInflater.inflate(R.menu.reader_detail, menu)
     }
 
     override fun onPrepareMenu(menu: Menu) {
@@ -973,8 +973,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    override fun onMenuItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
             R.id.menu_browse -> {
                 if (viewModel.hasPost) {
                     readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
