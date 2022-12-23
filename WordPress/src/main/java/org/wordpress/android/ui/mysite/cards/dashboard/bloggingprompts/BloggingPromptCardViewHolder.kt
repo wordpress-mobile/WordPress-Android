@@ -92,7 +92,10 @@ class BloggingPromptCardViewHolder(
         PopupMenu(bloggingPromptCardMenu.context, bloggingPromptCardMenu).apply {
             setOnMenuItemClickListener {
                 when (it.itemId) {
-                    R.id.view_more -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuViewMorePromptsClicked()
+                    R.id.view_more -> {
+                        bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuViewMorePromptsClicked()
+                        card.onViewMoreClick.invoke()
+                    }
                     R.id.skip -> {
                         bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
                         card.onSkipClick.invoke()

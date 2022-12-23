@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
+import org.wordpress.android.databinding.DebugSettingsRemoteFieldBinding
 import org.wordpress.android.databinding.DebugSettingsRowBinding
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
@@ -66,6 +67,17 @@ sealed class DebugSettingsItemViewHolder(
         fun bind(item: UiItem.Row) = with(DebugSettingsRowBinding.bind(itemView)) {
             title.setText(item.title)
             root.setOnClickListener { item.onClick.click() }
+        }
+    }
+
+    class RemoteFieldConfigViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(
+            parent,
+            R.layout.debug_settings_remote_field
+    ) {
+        fun bind(item: UiItem.Field) = with(DebugSettingsRemoteFieldBinding.bind(itemView)) {
+            remoteFieldKey.setText(item.remoteFieldKey)
+            remoteFieldValue.setText(item.remoteFieldValue)
+            remoteFieldSource.setText(item.remoteFieldSource)
         }
     }
 }
