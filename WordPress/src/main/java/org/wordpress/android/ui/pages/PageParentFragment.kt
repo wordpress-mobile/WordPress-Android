@@ -11,6 +11,7 @@ import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -29,7 +30,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineScope {
+class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider, CoroutineScope {
     private var job: Job = Job()
 
     override val coroutineContext: CoroutineContext
@@ -56,7 +57,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             activity?.onBackPressed()
             return true
@@ -65,7 +66,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
             return true
         }
 
-        return super.onOptionsItemSelected(item)
+        return false
     }
 
     private fun returnParentChoiceAndExit() {
@@ -76,13 +77,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
         activity?.onBackPressed()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.page_parent_menu, menu)
 
         saveButton = menu.findItem(R.id.save_parent)
@@ -140,6 +135,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
 
         pageId = activity?.intent?.getLongExtra(EXTRA_PAGE_REMOTE_ID_KEY, 0)
 
