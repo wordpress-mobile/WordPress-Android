@@ -294,6 +294,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    @Suppress("RedundantNullableReturnType")
     override fun getScrollableViewForUniqueIdProvision(): View? {
         return scrollView
     }
