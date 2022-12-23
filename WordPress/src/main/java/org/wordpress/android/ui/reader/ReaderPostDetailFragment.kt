@@ -148,6 +148,7 @@ import java.util.EnumSet
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@Suppress("LargeClass")
 class ReaderPostDetailFragment : ViewPagerFragment(),
         WPMainActivity.OnActivityBackPressedListener,
         ScrollDirectionListener,
