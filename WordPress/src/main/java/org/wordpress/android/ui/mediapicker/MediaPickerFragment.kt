@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.text.HtmlCompat
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -77,7 +78,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-class MediaPickerFragment : Fragment() {
+class MediaPickerFragment : Fragment(), MenuProvider {
     enum class MediaPickerIconType {
         ANDROID_CHOOSE_FROM_DEVICE,
         SWITCH_SOURCE,
@@ -196,7 +197,6 @@ class MediaPickerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MediaPickerViewModel::class.java)
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -211,8 +211,10 @@ class MediaPickerFragment : Fragment() {
         )
     }
 
+    @Suppress("LongMethod")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
 
         val mediaPickerSetup = MediaPickerSetup.fromBundle(requireArguments())
         val site = requireArguments().getSerializable(WordPress.SITE) as? SiteModel
@@ -330,8 +332,7 @@ class MediaPickerFragment : Fragment() {
         binding = null
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_media_picker, menu)
 
         val searchMenuItem = checkNotNull(menu.findItem(R.id.action_search)) {
@@ -377,7 +378,7 @@ class MediaPickerFragment : Fragment() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.mnu_browse_item -> {
                 viewModel.onMenuItemClicked(SYSTEM_PICKER)
