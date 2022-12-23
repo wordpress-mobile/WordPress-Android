@@ -24,8 +24,8 @@ class InsightsManagementFragment : DaggerFragment(R.layout.insights_management_f
 
     private var menu: Menu? = null
 
-    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_insights_management, menu)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_insights_management, menu)
         this.menu = menu
     }
 
@@ -44,8 +44,8 @@ class InsightsManagementFragment : DaggerFragment(R.layout.insights_management_f
         })
     }
 
-    override fun onMenuItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
             android.R.id.home -> viewModel.onBackPressed()
             R.id.save_insights -> viewModel.onSaveInsights()
         }
