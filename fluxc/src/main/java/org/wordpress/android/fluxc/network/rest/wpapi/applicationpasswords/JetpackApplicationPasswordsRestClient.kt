@@ -77,7 +77,14 @@ internal class JetpackApplicationPasswordsRestClient @Inject constructor(
 
         return when (response) {
             is JetpackSuccess<ApplicationPasswordDeleteResponse> -> {
-                ApplicationPasswordDeletionPayload(response.data!!.deleted)
+                response.data?.let {
+                    ApplicationPasswordDeletionPayload(it.deleted)
+                } ?: ApplicationPasswordDeletionPayload(
+                    BaseNetworkError(
+                        GenericErrorType.UNKNOWN,
+                        "Response is empty"
+                    )
+                )
             }
             is JetpackError<ApplicationPasswordDeleteResponse> -> {
                 ApplicationPasswordDeletionPayload(response.error)
@@ -105,7 +112,14 @@ internal class JetpackApplicationPasswordsRestClient @Inject constructor(
 
         return when (response) {
             is JetpackSuccess<UserApiResponse> -> {
-                UsernameFetchPayload(response.data!!.username)
+                response.data?.let {
+                    UsernameFetchPayload(it.username)
+                } ?: UsernameFetchPayload(
+                    BaseNetworkError(
+                        GenericErrorType.UNKNOWN,
+                        "Response is empty"
+                    )
+                )
             }
             is JetpackError<UserApiResponse> -> {
                 UsernameFetchPayload(response.error)
