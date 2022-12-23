@@ -7,7 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -280,7 +279,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     private inner class ReaderTabConfigurationStrategy(
         private val uiState: ContentUiState
     ) : TabLayoutMediator.TabConfigurationStrategy {
-        override fun onConfigureTab(@NonNull tab: TabLayout.Tab, position: Int) {
+        override fun onConfigureTab(tab: TabLayout.Tab, position: Int) {
             binding?.updateTab(tab, uiState.tabUiStates[position])
         }
     }
