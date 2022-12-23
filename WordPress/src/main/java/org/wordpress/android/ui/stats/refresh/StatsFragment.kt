@@ -217,6 +217,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         }
     }
 
+    @Suppress("MagicNumber")
     private fun StatsFragmentBinding.handleSelectedSection(
         selectedSection: StatsSection
     ) {
