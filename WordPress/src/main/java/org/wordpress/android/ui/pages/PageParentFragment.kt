@@ -50,6 +50,8 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
     private var binding: PageParentFragmentBinding? = null
 
     companion object {
+        private const val SEARCH_ACTION_LEFT_MARGIN_DP = -8
+
         fun newInstance(): PageParentFragment {
             return PageParentFragment()
         }
@@ -126,7 +128,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
 
         val searchEditFrame = searchAction.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
         (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
-                .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
+                .apply { this.leftMargin = DisplayUtils.dpToPx(activity, SEARCH_ACTION_LEFT_MARGIN_DP) }
 
         viewModel.isSearchExpanded.observe(this@PageParentFragment, Observer {
             if (it == true) {
