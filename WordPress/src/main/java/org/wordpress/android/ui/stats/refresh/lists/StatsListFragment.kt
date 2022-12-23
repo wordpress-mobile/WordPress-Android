@@ -57,6 +57,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -78,11 +79,13 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         super.onSaveInstanceState(outState)
     }
 
+    @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.stats_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.add_new_stats_card -> {
