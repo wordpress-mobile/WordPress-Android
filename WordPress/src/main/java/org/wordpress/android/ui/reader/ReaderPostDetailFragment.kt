@@ -1705,9 +1705,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onScrollUp(distanceY: Float) {
+        // Do nothing
     }
 
     override fun onScrollDown(distanceY: Float) {
+        // Do nothing
     }
 
     override fun onScrollCompleted() {
