@@ -509,7 +509,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     @Suppress("LongMethod")
     private fun initObservers(binding: ReaderFragmentPostDetailBinding) {
-        viewModel.uiState.observe(viewLifecycleOwner, {
+        viewModel.uiState.observe(viewLifecycleOwner) {
             uiHelpers.updateVisibility(binding.textError, it.errorVisible)
             uiHelpers.updateVisibility(binding.progressLoading, it.loadingVisible)
             when (it) {
@@ -521,22 +521,24 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     showError(message?.toString())
                 }
             }
-        })
-
-        if (likesEnhancementsFeatureConfig.isEnabled()) {
-            viewModel.likesUiState.observe(viewLifecycleOwner, { state ->
-                manageLikesUiState(state)
-            })
         }
 
-        viewModel.refreshPost.observeEvent(viewLifecycleOwner, {} /* Do nothing */)
+        if (likesEnhancementsFeatureConfig.isEnabled()) {
+            viewModel.likesUiState.observe(viewLifecycleOwner) { state ->
+                manageLikesUiState(state)
+            }
+        }
 
-        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar(binding) })
+        viewModel.refreshPost.observeEvent(viewLifecycleOwner) {
+            // Do nothing
+        }
 
-        viewModel.navigationEvents.observeEvent(viewLifecycleOwner, { it.handleNavigationEvent() })
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { it.showSnackbar(binding) }
+
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner) { it.handleNavigationEvent() }
 
         if (commentsSnippetFeatureConfig.isEnabled()) {
-            conversationViewModel.snackbarEvents.observe(viewLifecycleOwner, { event ->
+            conversationViewModel.snackbarEvents.observe(viewLifecycleOwner) { event ->
                 if (!isAdded) return@observe
 
                 val fm: FragmentManager = childFragmentManager
@@ -546,9 +548,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 event.applyIfNotHandled {
                     this.showSnackbar(binding)
                 }
-            })
+            }
 
-            conversationViewModel.showBottomSheetEvent.observeEvent(viewLifecycleOwner, { showBottomSheetData ->
+            conversationViewModel.showBottomSheetEvent.observeEvent(viewLifecycleOwner) { showBottomSheetData ->
                 if (!isAdded) return@observeEvent
 
                 val fm: FragmentManager = childFragmentManager
@@ -563,15 +565,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 } else if (!showBottomSheetData.show && bottomSheet != null) {
                     bottomSheet.dismiss()
                 }
-            })
+            }
 
-            conversationViewModel.updateFollowUiState.observe(viewLifecycleOwner, { uiState ->
+            conversationViewModel.updateFollowUiState.observe(viewLifecycleOwner) { uiState ->
                 manageFollowConversationUiState(uiState, binding)
-            })
+            }
 
-            viewModel.commentSnippetState.observe(viewLifecycleOwner, { state ->
+            viewModel.commentSnippetState.observe(viewLifecycleOwner) { state ->
                 manageCommentSnippetUiState(state)
-            })
+            }
         }
 
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
