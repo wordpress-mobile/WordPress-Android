@@ -1242,6 +1242,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel.post?.let { ReaderPostActions.updatePost(it, resultListener) }
     }
 
+    @Suppress("ReturnCount")
     private fun doLikePost() {
         if (!isAdded) {
             return
@@ -1294,6 +1295,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    @Suppress("ReturnCount")
     private fun showPhotoViewer(
         imageUrl: String,
         sourceView: View,

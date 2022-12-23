@@ -187,10 +187,6 @@
     <ID>ReturnCount:PostListFeaturedImageTracker.kt$PostListFeaturedImageTracker$fun getFeaturedImageUrl(site: SiteModel, featuredImageId: Long): String?</ID>
     <ID>ReturnCount:PostsListActivity.kt$PostsListActivity$override fun onOptionsItemSelected(item: MenuItem): Boolean</ID>
     <ID>ReturnCount:PublishNotificationReceiverViewModel.kt$PublishNotificationReceiverViewModel$fun loadNotification(notificationId: Int): NotificationUiModel?</ID>
-    <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$/* * returns True if the passed URL should be opened in the external browser app */ private fun shouldOpenExternal(url: String): Boolean</ID>
-    <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$override fun onOptionsItemSelected(item: MenuItem): Boolean</ID>
-    <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun doLikePost()</ID>
-    <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun showPhotoViewer( imageUrl: String, sourceView: View, startX: Int, startY: Int ): Boolean</ID>
     <ID>ReturnCount:ReaderSiteNotificationsUseCase.kt$ReaderSiteNotificationsUseCase$suspend fun toggleNotification( blogId: Long, feedId: Long ): SiteNotificationState</ID>
     <ID>ReturnCount:RemotePreviewLogicHelper.kt$RemotePreviewLogicHelper$fun runPostPreviewLogic( activity: Activity, site: SiteModel, post: PostImmutableModel, helperFunctions: RemotePreviewHelperFunctions ): PreviewLogicOperationResult</ID>
     <ID>ReturnCount:StoriesMediaPickerResultHandler.kt$StoriesMediaPickerResultHandler$@Deprecated("Use rather the other handle method and the live data navigation.") fun handleMediaPickerResultForStories( data: Intent, activity: Activity?, selectedSite: SiteModel?, source: PagePostCreationSourcesDetail ): Boolean</ID>
