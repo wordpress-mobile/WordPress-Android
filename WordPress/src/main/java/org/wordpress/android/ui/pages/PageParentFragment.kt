@@ -57,11 +57,11 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
         }
     }
 
-    override fun onMenuItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        if (menuItem.itemId == android.R.id.home) {
             activity?.onBackPressed()
             return true
-        } else if (item.itemId == R.id.save_parent) {
+        } else if (menuItem.itemId == R.id.save_parent) {
             viewModel.onSaveButtonTapped()
             return true
         }
@@ -77,8 +77,8 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
         activity?.onBackPressed()
     }
 
-    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.page_parent_menu, menu)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.page_parent_menu, menu)
 
         saveButton = menu.findItem(R.id.save_parent)
         viewModel.isSaveButtonVisible.value?.let { saveButton?.isVisible = it }
