@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
+@ExperimentalCoroutinesApi
 class PostListCreateMenuViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PostListCreateMenuViewModel
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper

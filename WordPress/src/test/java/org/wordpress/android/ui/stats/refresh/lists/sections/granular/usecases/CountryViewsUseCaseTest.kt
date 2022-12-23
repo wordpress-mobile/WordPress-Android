@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +10,6 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.anyNullable
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
@@ -22,7 +20,6 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.time.CountryViewsStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
@@ -52,6 +49,7 @@ private val selectedDate = Date(0)
 
 private val limitMode = Top(ITEMS_TO_LOAD)
 
+@ExperimentalCoroutinesApi
 class CountryViewsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: CountryViewsStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
@@ -62,13 +60,13 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsUtils: StatsUtils
     private lateinit var useCase: CountryViewsUseCase
     private val country = Country("CZ", "Czech Republic", 500, "flag.jpg", "flatFlag.jpg")
-    @InternalCoroutinesApi
+
     @Before
     fun setUp() {
         useCase = CountryViewsUseCase(
                 statsGranularity,
-                Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 store,
                 statsSiteProvider,
                 selectedDateProvider,
@@ -236,6 +234,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(refresh, forced)
+        advanceUntilIdle()
         return checkNotNull(result)
     }
 }

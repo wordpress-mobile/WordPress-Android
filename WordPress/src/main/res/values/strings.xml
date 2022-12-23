@@ -937,6 +937,7 @@
     <string name="preference_open_debug_settings" translatable="false">Debug settings</string>
     <string name="debug_settings_remote_features" translatable="false">Remote features</string>
     <string name="debug_settings_features_in_development" translatable="false">Features in development</string>
+    <string name="debug_settings_remote_field_configs" translatable="false">Remote Field configs</string>
     <string name="debug_settings_restart_app" translatable="false">Restart the app</string>
     <string name="debug_settings_missing_developed_feature" translatable="false">Don\'t see a feature you\'re working on? Check that your feature config file is annotated with the FeatureInDevelopment annotation.</string>
     <string name="debug_settings_tools" translatable="false">Tools</string>
@@ -4097,7 +4098,12 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Back icon</string>
     <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">App icon</string>
 
-    <!-- Blogging prompts -->
+    <!-- Blogging Prompts -->
+    <string name="blogging_prompts_answer_prompt_notification_title">Daily Prompt</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Answer</string>
+    <string name="blogging_prompts_notification_dismiss">Dismiss</string>
+
+    <!-- Blogging Prompts Onboarding -->
     <string name="blogging_prompts_onboarding_header_title">Introducing Prompts</string>
     <string name="blogging_prompts_onboarding_content_top">The best way to become a better writer is to build a writing habit and share with others — that’s where Prompts come in!</string>
     <string name="blogging_prompts_onboarding_content_bottom">We’ll show you a new prompt each day on your dashboard to help get those creative juices flowing!</string>
@@ -4111,9 +4117,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_notification_title">New in the WordPress mobile app: Prompts</string>
     <string name="blogging_prompts_onboarding_notification_text">Become a better writer by building a writing habit. Tap to learn more.</string>
     <string name="blogging_prompts_onboarding_notification_action">Learn more</string>
-    <string name="blogging_prompts_answer_prompt_notification_title">Daily Prompt</string>
-    <string name="blogging_prompts_answer_prompt_notification_answer_action">Answer</string>
-    <string name="blogging_prompts_notification_dismiss">Dismiss</string>
+
+    <!-- Blogging Prompts List -->
+    <string name="blogging_prompts_list_title">Prompts</string>
 
     <!-- Editor module -->
     <string name="post_content" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Content</string>

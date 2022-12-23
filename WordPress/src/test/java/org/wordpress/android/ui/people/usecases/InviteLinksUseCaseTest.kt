@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.people.usecases
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -12,7 +13,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.people.InviteLinksApiCallsProvider
 import org.wordpress.android.ui.people.InviteLinksApiCallsProvider.InviteLinksCallResult.Failure
 import org.wordpress.android.ui.people.InviteLinksApiCallsProvider.InviteLinksCallResult.Success
@@ -30,6 +30,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
+@ExperimentalCoroutinesApi
 class InviteLinksUseCaseTest : BaseUnitTest() {
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var inviteLinksApiCallsProvider: InviteLinksApiCallsProvider

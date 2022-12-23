@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.engagement
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
+@ExperimentalCoroutinesApi
 class UserProfileViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper

@@ -1,13 +1,11 @@
 package org.wordpress.android.viewmodel.mlp
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
@@ -16,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
@@ -26,7 +25,6 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
 import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
-import org.wordpress.android.test
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
 import org.wordpress.android.ui.mlp.ModalLayoutPickerDimensionProvider
@@ -44,10 +42,7 @@ import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageReques
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class ModalLayoutPickerViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class ModalLayoutPickerViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ModalLayoutPickerViewModel
 
     @Mock lateinit var dispatcher: Dispatcher

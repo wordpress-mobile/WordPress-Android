@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.jetpack.backup.download.usecases
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -8,7 +8,6 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ActivityLogAction.BACKUP_DOWNLOAD
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
@@ -18,14 +17,13 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadErrorTyp
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnBackupDownload
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.OtherRequestRunning
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class PostBackupDownloadUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: PostBackupDownloadUseCase
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
@@ -34,7 +32,11 @@ class PostBackupDownloadUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setup() = test {
-        useCase = PostBackupDownloadUseCase(networkUtilsWrapper, activityLogStore, TEST_DISPATCHER)
+        useCase = PostBackupDownloadUseCase(
+                networkUtilsWrapper,
+                activityLogStore,
+                testDispatcher()
+        )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
 

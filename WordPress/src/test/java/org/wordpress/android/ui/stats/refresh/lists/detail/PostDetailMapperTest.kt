@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -26,6 +27,7 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Calendar
 import java.util.Locale
 
+@ExperimentalCoroutinesApi
 class PostDetailMapperTest : BaseUnitTest() {
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var statsDateFormatter: StatsDateFormatter

@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.domains
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -14,7 +14,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
@@ -23,7 +22,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsR
 import org.wordpress.android.fluxc.store.ProductsStore
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
-import org.wordpress.android.test
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
@@ -33,6 +31,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 import org.wordpress.android.util.helpers.Debouncer
 
+@ExperimentalCoroutinesApi
 class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var debouncer: Debouncer
@@ -46,7 +45,6 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: DomainSuggestionsViewModel
     private lateinit var onDomainSelectedEvents: MutableList<DomainProductDetails>
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         site = SiteModel().also { it.name = "Test Site" }
@@ -58,7 +56,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
                 debouncer,
                 siteDomainsFeatureConfig,
                 createCartUseCase,
-                TEST_DISPATCHER
+                testDispatcher()
         )
 
         whenever(debouncer.debounce(any(), any(), any(), any())).thenAnswer { invocation ->

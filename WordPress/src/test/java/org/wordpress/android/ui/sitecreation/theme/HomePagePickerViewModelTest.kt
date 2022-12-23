@@ -1,12 +1,11 @@
 package org.wordpress.android.ui.sitecreation.theme
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
@@ -18,6 +17,7 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesign
@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesignCategor
 import org.wordpress.android.fluxc.store.ThemeStore.OnStarterDesignsFetched
 import org.wordpress.android.fluxc.store.ThemeStore.ThemeErrorType
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError
-import org.wordpress.android.test
 import org.wordpress.android.ui.PreviewMode
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction
@@ -41,12 +40,10 @@ private const val MOCKED_DESIGN_SLUG = "mockedDesignSlug"
 private const val MOCKED_DESIGN_SEGMENT_ID = 1L
 private const val MOCKED_DESIGN_DEMO_URL = "mockedDemoUrl"
 
-@RunWith(MockitoJUnitRunner::class)
 @InternalCoroutinesApi
-class HomePagePickerViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+@ExperimentalCoroutinesApi
+@RunWith(MockitoJUnitRunner::class)
+class HomePagePickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var networkUtils: NetworkUtilsWrapper
     @Mock lateinit var fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase

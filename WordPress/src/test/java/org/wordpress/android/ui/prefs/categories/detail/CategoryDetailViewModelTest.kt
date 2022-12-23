@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.prefs.categories.detail
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -9,7 +9,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.TaxonomyAction.REMOVE_TERM
 import org.wordpress.android.fluxc.model.SiteModel
@@ -32,7 +31,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class CategoryDetailViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: CategoryDetailViewModel
 
@@ -55,7 +54,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     fun setUp() {
         setUpMockResponse()
         viewModel = CategoryDetailViewModel(
-                TEST_DISPATCHER,
+                testDispatcher(),
                 networkUtilsWrapper,
                 getCategoriesUseCase,
                 addCategoryUseCase,

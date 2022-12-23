@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -9,7 +10,6 @@ import org.mockito.Mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
@@ -20,8 +20,6 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
-import org.wordpress.android.test
-import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
@@ -76,7 +74,7 @@ private val CARDS_MODEL: List<CardModel> = listOf(
 private val DEFAULT_CARD_TYPE = listOf(CardModel.Type.POSTS)
 private val STATS_FEATURED_ENABLED_CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.POSTS)
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class CardsSourceTest : BaseUnitTest() {
     @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock private lateinit var cardsStore: CardsStore
@@ -103,7 +101,7 @@ class CardsSourceTest : BaseUnitTest() {
                 selectedSiteRepository,
                 cardsStore,
                 todaysStatsCardFeatureConfig,
-                TEST_DISPATCHER
+                testDispatcher()
         )
     }
 
@@ -130,7 +128,9 @@ class CardsSourceTest : BaseUnitTest() {
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(flowOf(data))
 
-        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
 
         verify(cardsStore).getCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)
     }
@@ -141,7 +141,9 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         cardSource.refresh.observeForever { }
 
-        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
 
         assertThat(result.size).isEqualTo(1)
         assertThat(result.first()).isEqualTo(CardsUpdate(data.model))
@@ -155,6 +157,7 @@ class CardsSourceTest : BaseUnitTest() {
         cardSource.refresh.observeForever { }
 
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
+        advanceUntilIdle()
 
         verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
     }
@@ -166,7 +169,9 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(CardsResult())
         cardSource.refresh.observeForever { }
 
-        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
 
         assertThat(result.size).isEqualTo(1)
         assertThat(result.first()).isEqualTo(CardsUpdate(data.model))
@@ -181,7 +186,10 @@ class CardsSourceTest : BaseUnitTest() {
                 whenever(cardsStore.fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(success)
                 cardSource.refresh.observeForever { }
 
-                cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+                cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+                    it?.let { result.add(it) }
+                }
+                advanceUntilIdle()
 
                 verify(cardsStore).fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)
             }
@@ -193,10 +201,20 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(apiError)
         cardSource.refresh.observeForever { }
 
-        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
+        advanceUntilIdle()
 
-        assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(
+        assertThat(result.size).isEqualTo(2)
+        assertThat(result[0]).isEqualTo(
+                CardsUpdate(
+                        cards = data.model,
+                        showSnackbarError = false,
+                        showStaleMessage = false
+                )
+        )
+        assertThat(result[1]).isEqualTo(
                 CardsUpdate(
                         cards = data.model,
                         showSnackbarError = true,
@@ -211,7 +229,9 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(success)
         cardSource.refresh.observeForever { }
-        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
 
         cardSource.refresh()
 
@@ -225,9 +245,12 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(apiError)
         cardSource.refresh.observeForever { }
-        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
 
         cardSource.refresh()
+        advanceUntilIdle()
 
         assertThat(result.size).isEqualTo(2)
         assertThat(result.first()).isEqualTo(CardsUpdate(data.model))
@@ -263,12 +286,13 @@ class CardsSourceTest : BaseUnitTest() {
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         cardSource.refresh()
+        advanceUntilIdle()
 
         assertThat(result.size).isEqualTo(5)
         assertThat(result[0]).isFalse // init
         assertThat(result[1]).isTrue // build(...) -> refresh()
-        assertThat(result[2]).isFalse // build(...) -> cardsStore.fetchCards(...) -> success
-        assertThat(result[3]).isTrue // refresh()
+        assertThat(result[2]).isTrue // build(...) -> cardsStore.fetchCards(...) -> success
+        assertThat(result[3]).isFalse // refresh()
         assertThat(result[4]).isFalse // refreshData(...) -> cardsStore.fetchCards(...) -> success
     }
 
@@ -281,12 +305,13 @@ class CardsSourceTest : BaseUnitTest() {
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         cardSource.refresh()
+        advanceUntilIdle()
 
         assertThat(result.size).isEqualTo(5)
         assertThat(result[0]).isFalse // init
         assertThat(result[1]).isTrue // build(...) -> refresh()
-        assertThat(result[2]).isFalse // build(...) -> cardsStore.fetchCards(...) -> success
-        assertThat(result[3]).isTrue // refresh()
+        assertThat(result[2]).isTrue // build(...) -> cardsStore.fetchCards(...) -> success
+        assertThat(result[3]).isFalse // refresh()
         assertThat(result[4]).isFalse // refreshData(...) -> cardsStore.fetchCards(...) -> success
     }
 
@@ -299,12 +324,13 @@ class CardsSourceTest : BaseUnitTest() {
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         cardSource.refresh()
+        advanceUntilIdle()
 
         assertThat(result.size).isEqualTo(5)
         assertThat(result[0]).isFalse // init
         assertThat(result[1]).isTrue // build(...) -> refresh()
-        assertThat(result[2]).isFalse // build(...) -> cardsStore.fetchCards(...) -> error
-        assertThat(result[3]).isTrue // refresh()
+        assertThat(result[2]).isTrue // build(...) -> cardsStore.fetchCards(...) -> error
+        assertThat(result[3]).isFalse // refresh()
         assertThat(result[4]).isFalse // refreshData(...) -> cardsStore.fetchCards(...) -> error
     }
 
@@ -316,7 +342,9 @@ class CardsSourceTest : BaseUnitTest() {
         val result = mutableListOf<CardsUpdate>()
         cardSource.refresh.observeForever { }
 
-        cardSource.build(testScope(), invalidSiteLocalId).observeForever { it?.let { result.add(it) } }
+        cardSource.build(testScope(), invalidSiteLocalId).observeForever {
+            it?.let { result.add(it) }
+        }
 
         assertThat(result.size).isEqualTo(1)
         assertThat(result.first()).isEqualTo(CardsUpdate(showErrorCard = true))
@@ -327,7 +355,9 @@ class CardsSourceTest : BaseUnitTest() {
         val invalidSiteLocalId = 2
         val result = mutableListOf<CardsUpdate>()
         cardSource.refresh.observeForever { }
-        cardSource.build(testScope(), invalidSiteLocalId).observeForever { result.add(it) }
+        cardSource.build(testScope(), invalidSiteLocalId).observeForever {
+            result.add(it)
+        }
 
         cardSource.refresh()
 

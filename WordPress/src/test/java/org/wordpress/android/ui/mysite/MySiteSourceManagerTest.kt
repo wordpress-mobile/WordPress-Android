@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MediatorLiveData
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -15,8 +15,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.test
-import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
@@ -32,6 +30,7 @@ import org.wordpress.android.ui.quickstart.QuickStartTracker
 
 const val SITE_LOCAL_ID = 1
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class MySiteSourceManagerTest : BaseUnitTest() {
     @Mock lateinit var quickStartTracker: QuickStartTracker
@@ -54,7 +53,6 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     private lateinit var selectRefreshedMySiteSources: List<MySiteSource<*>>
     private lateinit var siteDependentMySiteSources: List<MySiteSource<*>>
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() = test {
         selectedSite.value = null

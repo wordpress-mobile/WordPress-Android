@@ -1,0 +1,16 @@
+{
+  "request": {
+    "urlPathPattern": "/wpcom/v2/mobile/remote-config/?",
+    "method": "GET",
+    "queryParameters": {
+        "_locale": {
+          "matches": "(.*)"
+        }
+    }
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+    }
+  }
+}

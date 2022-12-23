@@ -5,7 +5,7 @@ import com.tenor.android.core.model.impl.Media
 import com.tenor.android.core.model.impl.MediaCollection
 import com.tenor.android.core.model.impl.Result
 import com.tenor.android.core.response.impl.GifsResponse
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
@@ -18,7 +18,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.loader.GifMediaDataSourceTest.GifResponseTestScenario.EmptyList
 import org.wordpress.android.ui.mediapicker.loader.GifMediaDataSourceTest.GifResponseTestScenario.PopulatedList
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
@@ -28,7 +27,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.UriUtilsWrapper
 import org.wordpress.android.util.UriWrapper
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class GifMediaDataSourceTest : BaseUnitTest() {
     @Mock lateinit var context: Context
     @Mock internal lateinit var tenorClient: TenorGifClient

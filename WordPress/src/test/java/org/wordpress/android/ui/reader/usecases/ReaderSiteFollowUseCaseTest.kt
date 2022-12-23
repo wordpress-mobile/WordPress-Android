@@ -1,12 +1,10 @@
 package org.wordpress.android.ui.reader.usecases
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
@@ -18,8 +16,8 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
-import org.wordpress.android.test
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
 import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -33,12 +31,9 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 private const val FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION = 3
 private const val SOURCE = "source"
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class ReaderSiteFollowUseCaseTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class ReaderSiteFollowUseCaseTest : BaseUnitTest() {
     lateinit var useCase: ReaderSiteFollowUseCase
     @Mock lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
