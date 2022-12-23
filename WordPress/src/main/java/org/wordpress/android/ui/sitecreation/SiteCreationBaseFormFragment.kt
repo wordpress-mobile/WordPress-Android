@@ -45,12 +45,12 @@ abstract class SiteCreationBaseFormFragment : Fragment(R.layout.site_creation_fo
         }
     }
 
-    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_site_creation, menu)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_site_creation, menu)
     }
 
-    override fun onMenuItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.help) {
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        if (menuItem.itemId == R.id.help) {
             onHelp()
             return true
         }
