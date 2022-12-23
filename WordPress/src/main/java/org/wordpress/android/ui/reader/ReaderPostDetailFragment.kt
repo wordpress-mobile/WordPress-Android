@@ -31,6 +31,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
+import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -151,6 +152,7 @@ import javax.inject.Inject
 @Suppress("LargeClass")
 class ReaderPostDetailFragment : ViewPagerFragment(),
         WPMainActivity.OnActivityBackPressedListener,
+        MenuProvider,
         ScrollDirectionListener,
         ReaderCustomViewListener,
         ReaderWebViewPageFinishedListener,
@@ -452,13 +454,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
         val binding = ReaderFragmentPostDetailBinding.bind(view)
 
         initLikeFacesRecycler(savedInstanceState)
         initCommentSnippetRecycler(savedInstanceState)
         initViewModel(binding, savedInstanceState)
         restoreState(savedInstanceState)
-        setHasOptionsMenu(true)
 
         showPost()
     }
@@ -953,15 +955,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         moreMenuPopup?.dismiss()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.reader_detail, menu)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-
+    override fun onPrepareMenu(menu: Menu) {
         // browse & share require the post to have a URL (some feed-based posts don't have one)
         val postHasUrl = viewModel.post?.hasUrl() == true
         val mnuBrowse = menu.findItem(R.id.menu_browse)
@@ -974,7 +973,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_browse -> {
                 if (viewModel.hasPost) {
@@ -996,7 +995,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 viewModel.onMoreButtonClicked()
                 return true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> return false
         }
     }
 
