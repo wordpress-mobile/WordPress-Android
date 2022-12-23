@@ -69,14 +69,6 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
         return false
     }
 
-    private fun returnParentChoiceAndExit() {
-        val result = Intent()
-        result.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, pageId)
-        result.putExtra(EXTRA_PAGE_PARENT_ID_KEY, viewModel.currentParent.id)
-        activity?.setResult(Activity.RESULT_OK, result)
-        activity?.onBackPressed()
-    }
-
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.page_parent_menu, menu)
 
@@ -87,6 +79,14 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
         }
 
         binding!!.initializeSearchView()
+    }
+
+    private fun returnParentChoiceAndExit() {
+        val result = Intent()
+        result.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, pageId)
+        result.putExtra(EXTRA_PAGE_PARENT_ID_KEY, viewModel.currentParent.id)
+        activity?.setResult(Activity.RESULT_OK, result)
+        activity?.onBackPressed()
     }
 
     private fun PageParentFragmentBinding.initializeSearchView() {
