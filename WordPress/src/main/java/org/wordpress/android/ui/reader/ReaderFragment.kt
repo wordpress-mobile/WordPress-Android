@@ -125,20 +125,16 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         }
     }
 
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        return when (menuItem.itemId) {
-            R.id.menu_search -> {
-                viewModel.onSearchActionClicked()
-                true
-            }
-            R.id.menu_settings -> {
-                viewModel.onSettingsActionClicked()
-                true
-            }
-            else -> {
-                false
-            }
+    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+        R.id.menu_search -> {
+            viewModel.onSearchActionClicked()
+            true
         }
+        R.id.menu_settings -> {
+            viewModel.onSettingsActionClicked()
+            true
+        }
+        else -> false
     }
 
     private fun ReaderFragmentLayoutBinding.initToolbar() {
