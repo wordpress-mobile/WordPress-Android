@@ -378,25 +378,28 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         }
     }
 
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        when (menuItem.itemId) {
-            R.id.mnu_browse_item -> {
-                viewModel.onMenuItemClicked(SYSTEM_PICKER)
-            }
-            R.id.mnu_choose_from_media_library -> {
-                viewModel.onMenuItemClicked(WP_MEDIA_LIBRARY)
-            }
-            R.id.mnu_choose_from_device -> {
-                viewModel.onMenuItemClicked(DEVICE)
-            }
-            R.id.mnu_choose_from_stock_library -> {
-                viewModel.onMenuItemClicked(STOCK_LIBRARY)
-            }
-            R.id.mnu_choose_from_tenor_library -> {
-                viewModel.onMenuItemClicked(GIF_LIBRARY)
-            }
+    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+        R.id.mnu_browse_item -> {
+            viewModel.onMenuItemClicked(SYSTEM_PICKER)
+            true
         }
-        return true
+        R.id.mnu_choose_from_media_library -> {
+            viewModel.onMenuItemClicked(WP_MEDIA_LIBRARY)
+            true
+        }
+        R.id.mnu_choose_from_device -> {
+            viewModel.onMenuItemClicked(DEVICE)
+            true
+        }
+        R.id.mnu_choose_from_stock_library -> {
+            viewModel.onMenuItemClicked(STOCK_LIBRARY)
+            true
+        }
+        R.id.mnu_choose_from_tenor_library -> {
+            viewModel.onMenuItemClicked(GIF_LIBRARY)
+            true
+        }
+        else -> true
     }
 
     fun urisSelectedFromSystemPicker(uris: List<Uri>) {
