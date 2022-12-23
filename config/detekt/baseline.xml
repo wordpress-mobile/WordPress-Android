@@ -19,7 +19,6 @@
     <ID>ComplexMethod:NoticonUtils.kt$NoticonUtils$fun noticonToGridicon(noticon: String): Int</ID>
     <ID>ComplexMethod:PostActionHandler.kt$PostActionHandler$fun handlePostButton(buttonType: PostListButtonType, post: PostModel, hasAutoSave: Boolean)</ID>
     <ID>ComplexMethod:PostListActionTracker.kt$fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postData: PostModel, statsEvent: Stat)</ID>
-    <ID>ComplexMethod:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun ReaderNavigationEvents.handleNavigationEvent()</ID>
     <ID>ComplexMethod:ReferrersUseCase.kt$ReferrersUseCase$override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List&lt;BlockListItem></ID>
     <ID>ComplexMethod:SystemNotificationsTracker.kt$SystemNotificationsTracker$private fun NotificationType.toTypeValue(): String</ID>
     <ID>ComplexMethod:UiModelMapper.kt$UiModelMapper$fun mapInsights( useCaseModels: List&lt;UseCaseModel>, showError: (Int) -> Unit ): UiModel</ID>
