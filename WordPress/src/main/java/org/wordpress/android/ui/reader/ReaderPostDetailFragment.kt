@@ -465,7 +465,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun initLikeFacesRecycler(savedInstanceState: Bundle?) {
         if (!likesEnhancementsFeatureConfig.isEnabled()) return
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        savedInstanceState?.getParcelable<Parcelable>(ReaderPostDetailFragment.KEY_LIKERS_LIST_STATE)?.let {
+        savedInstanceState?.getParcelable<Parcelable>(KEY_LIKERS_LIST_STATE)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 
@@ -483,7 +483,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (!commentsSnippetFeatureConfig.isEnabled()) return
         val layoutManager = LinearLayoutManager(activity)
 
-        savedInstanceState?.getParcelable<Parcelable>(ReaderPostDetailFragment.KEY_COMMENTS_SNIPPET_LIST_STATE)?.let {
+        savedInstanceState?.getParcelable<Parcelable>(KEY_COMMENTS_SNIPPET_LIST_STATE)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 
