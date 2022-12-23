@@ -6,7 +6,6 @@
     <ID>ComplexCondition:FollowersUseCase.kt$FollowersUseCase$wpComModel.followers.size >= VIEW_ALL_PAGE_SIZE &amp;&amp; uiState.selectedTab == 0 || emailModel.followers.size >= VIEW_ALL_PAGE_SIZE &amp;&amp; uiState.selectedTab == 1</ID>
     <ID>ComplexCondition:FollowersUseCase.kt$FollowersUseCase$wpComModel.hasMore &amp;&amp; uiState.selectedTab == 0 || emailModel.hasMore &amp;&amp; uiState.selectedTab == 1</ID>
     <ID>ComplexCondition:MinifiedWidgetUpdater.kt$MinifiedWidgetUpdater$networkAvailable &amp;&amp; hasAccessToken &amp;&amp; siteModel != null &amp;&amp; dataType != null</ID>
-    <ID>ComplexCondition:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$activity != null &amp;&amp; requestCode == READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE &amp;&amp; grantResults.isNotEmpty() &amp;&amp; grantResults[0] == PackageManager.PERMISSION_GRANTED</ID>
     <ID>ComplexCondition:TodayStatsUseCase.kt$TodayStatsUseCase$!hasViews &amp;&amp; !hasVisitors &amp;&amp; !hasLikes &amp;&amp; !hasComments</ID>
     <ID>ComplexMethod:BarChartViewHolder.kt$BarChartViewHolder$private fun BarChart.draw( item: BarChartItem, labelStart: TextView, labelEnd: TextView ): BarCount</ID>
     <ID>ComplexMethod:BlockDiffCallback.kt$BlockDiffCallback$override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any?</ID>

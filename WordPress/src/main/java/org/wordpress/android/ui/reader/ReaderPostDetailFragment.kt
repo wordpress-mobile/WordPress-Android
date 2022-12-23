@@ -1667,7 +1667,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
+    @Suppress("OVERRIDE_DEPRECATION", "ComplexCondition")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
