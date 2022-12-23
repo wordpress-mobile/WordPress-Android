@@ -24,11 +24,6 @@ class InsightsManagementFragment : DaggerFragment(R.layout.insights_management_f
 
     private var menu: Menu? = null
 
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        menuInflater.inflate(R.menu.menu_insights_management, menu)
-        this.menu = menu
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().addMenuProvider(this, viewLifecycleOwner)
@@ -42,6 +37,11 @@ class InsightsManagementFragment : DaggerFragment(R.layout.insights_management_f
                 viewModel.onBackPressed()
             }
         })
+    }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_insights_management, menu)
+        this.menu = menu
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
