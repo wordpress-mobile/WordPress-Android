@@ -13,7 +13,6 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -130,13 +129,13 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
         (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
                 .apply { this.leftMargin = DisplayUtils.dpToPx(activity, SEARCH_ACTION_LEFT_MARGIN_DP) }
 
-        viewModel.isSearchExpanded.observe(this@PageParentFragment, Observer {
+        viewModel.isSearchExpanded.observe(this@PageParentFragment) {
             if (it == true) {
                 showSearchList(searchAction)
             } else {
                 hideSearchList(searchAction)
             }
-        })
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -197,17 +196,17 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
     }
 
     private fun PageParentFragmentBinding.setupObservers() {
-        viewModel.pages.observe(viewLifecycleOwner, { pages ->
+        viewModel.pages.observe(viewLifecycleOwner) { pages ->
             pages?.let { setPages(pages) }
-        })
+        }
 
-        viewModel.isSaveButtonVisible.observe(viewLifecycleOwner, { isVisible ->
+        viewModel.isSaveButtonVisible.observe(viewLifecycleOwner) { isVisible ->
             isVisible?.let { saveButton?.isVisible = isVisible }
-        })
+        }
 
-        viewModel.saveParent.observe(viewLifecycleOwner, {
+        viewModel.saveParent.observe(viewLifecycleOwner) {
             returnParentChoiceAndExit()
-        })
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
