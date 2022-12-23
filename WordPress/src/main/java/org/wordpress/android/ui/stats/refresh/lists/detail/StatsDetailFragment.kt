@@ -21,11 +21,6 @@ class StatsDetailFragment : DaggerFragment(R.layout.stats_detail_fragment) {
     private lateinit var viewModel: StatsDetailViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
