@@ -311,9 +311,11 @@ class StatsPagerAdapter(private val parent: Fragment) : FragmentStateAdapter(par
 
 private class SelectedTabListener(val viewModel: StatsViewModel) : OnTabSelectedListener {
     override fun onTabReselected(tab: Tab?) {
+        // Do nothing
     }
 
     override fun onTabUnselected(tab: Tab?) {
+        // Do nothing
     }
 
     override fun onTabSelected(tab: Tab) {
