@@ -157,40 +157,40 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     }
 
     private fun StatsFragmentBinding.setupObservers(activity: FragmentActivity) {
-        viewModel.isRefreshing.observe(viewLifecycleOwner, {
+        viewModel.isRefreshing.observe(viewLifecycleOwner) {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
             }
-        })
+        }
 
-        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, { holder ->
+        viewModel.showSnackbarMessage.observe(viewLifecycleOwner) { holder ->
             showSnackbar(activity, holder)
-        })
+        }
 
-        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, { hasShadow ->
+        viewModel.toolbarHasShadow.observe(viewLifecycleOwner) { hasShadow ->
             appBarLayout.showShadow(hasShadow == true)
-        })
+        }
 
-        viewModel.siteChanged.observeEvent(viewLifecycleOwner, { siteUpdateResult ->
+        viewModel.siteChanged.observeEvent(viewLifecycleOwner) { siteUpdateResult ->
             when (siteUpdateResult) {
                 is SiteUpdateResult.SiteConnected -> viewModel.onSiteChanged()
                 is SiteUpdateResult.NotConnectedJetpackSite -> getActivity()?.finish()
             }
-        })
+        }
 
-        viewModel.hideToolbar.observeEvent(viewLifecycleOwner, { hideToolbar ->
+        viewModel.hideToolbar.observeEvent(viewLifecycleOwner) { hideToolbar ->
             appBarLayout.setExpanded(!hideToolbar, true)
-        })
+        }
 
-        viewModel.selectedSection.observe(viewLifecycleOwner, { selectedSection ->
+        viewModel.selectedSection.observe(viewLifecycleOwner) { selectedSection ->
             selectedSection?.let {
                 handleSelectedSection(selectedSection)
             }
-        })
+        }
 
-        viewModel.statsModuleUiModel.observeEvent(viewLifecycleOwner, { event ->
+        viewModel.statsModuleUiModel.observeEvent(viewLifecycleOwner) { event ->
             updateUi(event)
-        })
+        }
 
         viewModel.showUpgradeAlert.observeEvent(viewLifecycleOwner) {
             UpdateAlertDialogFragment.newInstance().show(childFragmentManager, UPDATE_ALERT_DIALOG_TAG)
