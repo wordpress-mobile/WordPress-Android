@@ -82,7 +82,14 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
 
         return when (val response = payload.response) {
             is WPAPIResponse.Success<ApplicationPasswordDeleteResponse> -> {
-                ApplicationPasswordDeletionPayload(response.data!!.deleted)
+                response.data?.let {
+                    ApplicationPasswordDeletionPayload(it.deleted)
+                } ?: ApplicationPasswordDeletionPayload(
+                    BaseNetworkError(
+                        GenericErrorType.UNKNOWN,
+                        "Response is empty"
+                    )
+                )
             }
             is WPAPIResponse.Error<ApplicationPasswordDeleteResponse> -> {
                 ApplicationPasswordDeletionPayload(response.error)
