@@ -46,7 +46,7 @@ fun Context.getColorStateListFromAttribute(@AttrRes attribute: Int): ColorStateL
 
 // https://developer.android.com/reference/android/content/res/Configuration.html#locale
 val Context.currentLocale: Locale
-    get() = ConfigurationCompat.getLocales(resources.configuration)[0]
+    get() = ConfigurationCompat.getLocales(resources.configuration)[0] ?: Locale.getDefault()
 
 /**
  * Gets the clipboard manager system service
