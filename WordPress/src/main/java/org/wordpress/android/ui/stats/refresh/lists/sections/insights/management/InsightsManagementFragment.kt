@@ -6,6 +6,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,21 +18,20 @@ import org.wordpress.android.databinding.InsightsManagementFragmentBinding
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem
 import javax.inject.Inject
 
-class InsightsManagementFragment : DaggerFragment(R.layout.insights_management_fragment) {
+class InsightsManagementFragment : DaggerFragment(R.layout.insights_management_fragment), MenuProvider {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: InsightsManagementViewModel
 
     private var menu: Menu? = null
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_insights_management, menu)
         this.menu = menu
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
         with(InsightsManagementFragmentBinding.bind(view)) {
             val siteId = activity?.intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
             initializeViews()
@@ -44,7 +44,7 @@ class InsightsManagementFragment : DaggerFragment(R.layout.insights_management_f
         })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> viewModel.onBackPressed()
             R.id.save_insights -> viewModel.onSaveInsights()
