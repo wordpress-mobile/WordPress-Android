@@ -65,11 +65,6 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
     private var binding: StatsFragmentBinding? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
