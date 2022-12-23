@@ -332,8 +332,8 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         binding = null
     }
 
-    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_media_picker, menu)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_media_picker, menu)
 
         val searchMenuItem = checkNotNull(menu.findItem(R.id.action_search)) {
             "Menu does not contain mandatory search item"
@@ -378,8 +378,8 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         }
     }
 
-    override fun onMenuItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
             R.id.mnu_browse_item -> {
                 viewModel.onMenuItemClicked(SYSTEM_PICKER)
             }
