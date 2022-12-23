@@ -1524,7 +1524,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     }
                     viewModel.onRelatedPostsRequested(it)
                 }
-            }, 300)
+            }, ON_PAGE_FINISHED_DELAY_MILLIS)
         } else {
             url?.let { AppLog.w(T.READER, "reader post detail > page finished - $it") }
         }
@@ -1725,6 +1725,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     companion object {
+        private const val ON_PAGE_FINISHED_DELAY_MILLIS = 300L
+
         private const val KEY_LIKERS_LIST_STATE = "likers_list_state"
         private const val KEY_COMMENTS_SNIPPET_LIST_STATE = "comments_snippet_list_state"
         private const val NOTIFICATIONS_BOTTOM_SHEET_TAG = "NOTIFICATIONS_BOTTOM_SHEET_TAG"
