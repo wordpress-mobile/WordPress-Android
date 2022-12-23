@@ -10,7 +10,7 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import java.util.Locale
 
-class RemoteConfigCheckBuilder(private val remoteFeatures: List<TypeName>) {
+class RemoteFeatureConfigCheckBuilder(private val remoteFeatures: List<TypeName>) {
     @Suppress("DEPRECATION")
     fun getContent(): FileSpec {
         val remoteFeaturesWithNames = remoteFeatures.map {
@@ -24,7 +24,7 @@ class RemoteConfigCheckBuilder(private val remoteFeatures: List<TypeName>) {
                     .initializer(CodeBlock.of("$constructor(appConfig)".trimIndent()))
                     .build()
         }
-        val remoteConfigDefaults = TypeSpec.classBuilder("RemoteConfigCheck")
+        val remoteFeatureConfigDefaults = TypeSpec.classBuilder("RemoteFeatureConfigCheck")
                 .addProperties(propertySpecs)
                 .primaryConstructor(
                         listOf(
@@ -40,8 +40,8 @@ class RemoteConfigCheckBuilder(private val remoteFeatures: List<TypeName>) {
                                 .build()
                 )
                 .build()
-        return FileSpec.builder("org.wordpress.android.util.config", "RemoteConfigCheck")
-                .addType(remoteConfigDefaults)
+        return FileSpec.builder("org.wordpress.android.util.config", "RemoteFeatureConfigCheck")
+                .addType(remoteFeatureConfigDefaults)
                 .addComment("Automatically generated file. DO NOT MODIFY")
                 .indent("    ")
                 .build()

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.login
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -16,6 +17,7 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 
+@ExperimentalCoroutinesApi
 class LoginPrologueViewModelTest : BaseUnitTest() {
     @Mock lateinit var unifiedLoginTracker: UnifiedLoginTracker
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
