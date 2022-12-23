@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -242,7 +241,7 @@ class MediaPickerFragment : Fragment() {
             }
 
             var isShowingActionMode = false
-            viewModel.uiState.observe(viewLifecycleOwner, Observer {
+            viewModel.uiState.observe(viewLifecycleOwner) {
                 it?.let { uiState ->
                     setupPhotoList(uiState.photoListUiModel)
                     setupSoftAskView(uiState.softAskViewUiModel)
@@ -259,21 +258,21 @@ class MediaPickerFragment : Fragment() {
                     setupFab(uiState.fabUiModel)
                     swipeToRefreshHelper.isRefreshing = uiState.isRefreshing
                 }
-            })
+            }
 
             viewModel.onNavigate.observeEvent(viewLifecycleOwner) { navigationEvent ->
                 navigateEvent(navigationEvent)
             }
 
-            viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner, {
+            viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner) {
                 when (it) {
                     CAMERA -> requestCameraPermission()
                     STORAGE -> requestStoragePermission()
                 }
-            })
-            viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner, { messageHolder ->
+            }
+            viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner) { messageHolder ->
                 showSnackbar(messageHolder)
-            })
+            }
 
             setupProgressDialog()
 
@@ -355,7 +354,7 @@ class MediaPickerFragment : Fragment() {
         }
 
         initializeSearchView(searchMenuItem)
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             val searchView = searchMenuItem.actionView as SearchView
 
             if (uiState.searchUiModel is SearchUiModel.Expanded && !searchMenuItem.isActionViewExpanded) {
@@ -375,7 +374,7 @@ class MediaPickerFragment : Fragment() {
             deviceMenuItem.isVisible = shownActions.contains(DEVICE)
             stockLibraryMenuItem.isVisible = shownActions.contains(STOCK_LIBRARY)
             tenorLibraryMenuItem.isVisible = shownActions.contains(GIF_LIBRARY)
-        })
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -547,7 +546,7 @@ class MediaPickerFragment : Fragment() {
 
     private fun setupProgressDialog() {
         var progressDialog: AlertDialog? = null
-        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+        viewModel.uiState.observe(viewLifecycleOwner) {
             it?.progressDialogUiModel?.apply {
                 when (this) {
                     is Visible -> {
@@ -572,7 +571,7 @@ class MediaPickerFragment : Fragment() {
                     }
                 }
             }
-        })
+        }
     }
 
     private fun MediaPickerFragmentBinding.showSnackbar(holder: SnackbarMessageHolder) {
@@ -586,7 +585,7 @@ class MediaPickerFragment : Fragment() {
                         holder.buttonTitle?.let {
                             Action(
                                     textRes = holder.buttonTitle,
-                                    clickListener = View.OnClickListener { holder.buttonAction() }
+                                    clickListener = { holder.buttonAction() }
                             )
                         },
                         dismissCallback = { _, event -> holder.onDismissAction(event) }
