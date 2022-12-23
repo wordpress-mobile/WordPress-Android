@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -66,7 +65,7 @@ class InsightsManagementFragment : DaggerFragment(R.layout.insights_management_f
     }
 
     private fun InsightsManagementFragmentBinding.setupObservers() {
-        viewModel.addedInsights.observe(viewLifecycleOwner, Observer {
+        viewModel.addedInsights.observe(viewLifecycleOwner) {
             it?.let { items ->
                 updateAddedInsights(items)
 
@@ -76,17 +75,17 @@ class InsightsManagementFragment : DaggerFragment(R.layout.insights_management_f
                     insightCards.visibility = View.VISIBLE
                 }
             }
-        })
+        }
 
-        viewModel.closeInsightsManagement.observe(viewLifecycleOwner, Observer {
+        viewModel.closeInsightsManagement.observe(viewLifecycleOwner) {
             requireActivity().finish()
-        })
+        }
 
-        viewModel.isMenuVisible.observe(viewLifecycleOwner, Observer { isMenuVisible ->
+        viewModel.isMenuVisible.observe(viewLifecycleOwner) { isMenuVisible ->
             isMenuVisible?.let {
                 menu?.findItem(R.id.save_insights)?.isVisible = isMenuVisible
             }
-        })
+        }
     }
 
     private fun InsightsManagementFragmentBinding.updateAddedInsights(insights: List<InsightListItem>) {
