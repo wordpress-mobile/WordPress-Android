@@ -63,6 +63,7 @@ import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsU
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
@@ -108,6 +109,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     private val fakeCommunicationChannel = MutableLiveData<Event<ReaderDiscoverCommunication>>()
     private val fakeNavigationFeed = MutableLiveData<Event<ReaderNavigationEvents>>()
     private val fakeSnackBarFeed = MutableLiveData<Event<SnackbarMessageHolder>>()
+    private val fakePreloadPostFeed = MutableLiveData<Event<PreLoadPostContent>>()
 
     private lateinit var viewModel: ReaderDiscoverViewModel
 
@@ -131,6 +133,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         whenever(readerDiscoverDataProvider.discoverFeed).thenReturn(fakeDiscoverFeed)
         whenever(readerPostCardActionsHandler.navigationEvents).thenReturn(fakeNavigationFeed)
         whenever(readerPostCardActionsHandler.snackbarEvents).thenReturn(fakeSnackBarFeed)
+        whenever(readerPostCardActionsHandler.preloadPostEvents).thenReturn(fakePreloadPostFeed)
         whenever(readerUtilsWrapper.getTagFromTagName(anyOrNull(), anyOrNull())).thenReturn(mock())
         whenever(menuUiStateBuilder.buildMoreMenuItems(anyOrNull(), anyOrNull())).thenReturn(mock())
         whenever(

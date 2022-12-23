@@ -37,6 +37,7 @@ class ConversationNotificationsViewModelTest : BaseUnitTest() {
     private val postId = 1000L
     private var snackbarEvents = MutableLiveData<Event<SnackbarMessageHolder>>()
     private var followStatusUpdate = MutableLiveData<FollowCommentsState>()
+    private var pushNotificationsStatusUpdate = MutableLiveData<FollowCommentsState.FollowStateChanged>()
     private var uiState: FollowConversationUiState? = null
 
     private val internalPost = ReaderPost().also { it.isExternal = false }
@@ -46,6 +47,7 @@ class ConversationNotificationsViewModelTest : BaseUnitTest() {
     fun setUp() {
         whenever(followCommentsHandler.snackbarEvents).thenReturn(snackbarEvents)
         whenever(followCommentsHandler.followStatusUpdate).thenReturn(followStatusUpdate)
+        whenever(followCommentsHandler.pushNotificationsStatusUpdate).thenReturn(pushNotificationsStatusUpdate)
         whenever(readerPostTableWrapper.getBlogPost(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(internalPost)
 
         viewModel = ConversationNotificationsViewModel(
