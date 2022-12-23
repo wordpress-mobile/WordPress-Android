@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -55,7 +56,7 @@ import java.util.EnumSet
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableViewInitializedListener {
+class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
@@ -82,7 +83,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
             initToolbar()
             initViewPager()
@@ -108,7 +109,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         activity?.let { viewModel.onScreenInBackground(it.isChangingConfigurations) }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.reader_home, menu)
         menu.findItem(R.id.menu_search).apply {
             searchMenuItem = this
@@ -124,7 +125,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_search -> {
                 viewModel.onSearchActionClicked()
@@ -135,7 +136,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                 true
             }
             else -> {
-                super.onOptionsItemSelected(item)
+                false
             }
         }
     }
