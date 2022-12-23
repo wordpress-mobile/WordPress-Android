@@ -973,30 +973,28 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        when (menuItem.itemId) {
-            R.id.menu_browse -> {
-                if (viewModel.hasPost) {
-                    readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
-                    ReaderActivityLauncher.openPost(context, viewModel.post)
-                } else if (viewModel.interceptedUri != null) {
-                    readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, viewModel.interceptedUri!!)
-                    ReaderActivityLauncher.openUrl(activity, viewModel.interceptedUri, OpenUrlType.EXTERNAL)
-                    requireActivity().finish()
-                }
-                return true
+    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+        R.id.menu_browse -> {
+            if (viewModel.hasPost) {
+                readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
+                ReaderActivityLauncher.openPost(context, viewModel.post)
+            } else if (viewModel.interceptedUri != null) {
+                readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, viewModel.interceptedUri!!)
+                ReaderActivityLauncher.openUrl(activity, viewModel.interceptedUri, OpenUrlType.EXTERNAL)
+                requireActivity().finish()
             }
-            R.id.menu_share -> {
-                readerTracker.track(AnalyticsTracker.Stat.SHARED_ITEM)
-                ReaderActivityLauncher.sharePost(context, viewModel.post)
-                return true
-            }
-            R.id.menu_more -> {
-                viewModel.onMoreButtonClicked()
-                return true
-            }
-            else -> return false
+            true
         }
+        R.id.menu_share -> {
+            readerTracker.track(AnalyticsTracker.Stat.SHARED_ITEM)
+            ReaderActivityLauncher.sharePost(context, viewModel.post)
+            true
+        }
+        R.id.menu_more -> {
+            viewModel.onMoreButtonClicked()
+            true
+        }
+        else -> false
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
