@@ -19,7 +19,13 @@ class JetpackFeatureCardHelper @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val phaseThreeBlogPostLinkConfig: PhaseThreeBlogPostLinkConfig
 ) {
-    fun shouldShowJetpackFeatureCard() = showCard()
+    fun shouldShowJetpackFeatureCard() : Boolean{
+        val isWordPressApp = !buildConfigWrapper.isJetpackApp
+        val isPhase3 = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == JetpackFeatureRemovalPhase.PhaseThree
+        val shouldHideJetpackFeatureCard = appPrefsWrapper.getShouldHideJetpackFeatureCard()
+        val exceedsShowFrequency = exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded()
+        return isWordPressApp && isPhase3 && !shouldHideJetpackFeatureCard && exceedsShowFrequency
+    }
 
     fun track(stat: Stat) {
         analyticsTrackerWrapper.track(
@@ -29,7 +35,7 @@ class JetpackFeatureCardHelper @Inject constructor(
     }
 
     fun getLearnMoreUrl(): String {
-       val url = phaseThreeBlogPostLinkConfig.getValue<String>()
+        val url = phaseThreeBlogPostLinkConfig.getValue<String>()
 
         if (url.isEmpty())
             return url
@@ -38,14 +44,6 @@ class JetpackFeatureCardHelper @Inject constructor(
             "$HOST$url"
         } else
             url
-    }
-
-    private fun showCard(): Boolean {
-        val isWordPressApp = !buildConfigWrapper.isJetpackApp
-        val isPhase3 = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == JetpackFeatureRemovalPhase.PhaseThree
-        val shouldHideJetpackFeatureCard = appPrefsWrapper.getShouldHideJetpackFeatureCard()
-        val exceedsShowFrequency = exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded()
-        return isWordPressApp && isPhase3 && !shouldHideJetpackFeatureCard && exceedsShowFrequency
     }
 
     private fun exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded(): Boolean {
