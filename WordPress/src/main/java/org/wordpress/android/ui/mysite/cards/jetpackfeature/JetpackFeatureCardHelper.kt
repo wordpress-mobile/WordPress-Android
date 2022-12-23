@@ -17,21 +17,19 @@ class JetpackFeatureCardHelper @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
-    fun shouldShowJetpackFeatureCard() = showCard()
+    fun shouldShowJetpackFeatureCard() : Boolean{
+        val isWordPressApp = !buildConfigWrapper.isJetpackApp
+        val isPhase3 = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == JetpackFeatureRemovalPhase.PhaseThree
+        val shouldHideJetpackFeatureCard = appPrefsWrapper.getShouldHideJetpackFeatureCard()
+        val exceedsShowFrequency = exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded()
+        return isWordPressApp && isPhase3 && !shouldHideJetpackFeatureCard && exceedsShowFrequency
+    }
 
     fun track(stat: Stat) {
         analyticsTrackerWrapper.track(
                 stat,
                 mapOf(PHASE to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName)
         )
-    }
-
-    private fun showCard(): Boolean {
-        val isWordPressApp = !buildConfigWrapper.isJetpackApp
-        val isPhase3 = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == JetpackFeatureRemovalPhase.PhaseThree
-        val shouldHideJetpackFeatureCard = appPrefsWrapper.getShouldHideJetpackFeatureCard()
-        val exceedsShowFrequency = exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded()
-        return isWordPressApp && isPhase3 && !shouldHideJetpackFeatureCard && exceedsShowFrequency
     }
 
     private fun exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded(): Boolean {
