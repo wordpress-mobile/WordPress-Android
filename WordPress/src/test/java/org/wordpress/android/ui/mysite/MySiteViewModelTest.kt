@@ -2461,6 +2461,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given dashboard tab is selected and there is a blogging prompt card, prompt card viewed is tracked`() {
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
+
+        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD))
+
+        verify(bloggingPromptsCardAnalyticsTracker).trackMySiteCardViewed()
+    }
+      @Test
     fun `given selected site, when site menu cards and items, then site info header has updates`() {
         initSelectedSite()
 
