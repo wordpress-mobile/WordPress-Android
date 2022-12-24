@@ -59,6 +59,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
@@ -106,6 +107,8 @@ import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingP
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder.Companion.NOT_SET
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
+import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
+import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -195,6 +198,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock lateinit var appStatus: AppStatus
     @Mock lateinit var wordPressPublicData: WordPressPublicData
+    @Mock lateinit var jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker
+    @Mock lateinit var jetpackFeatureCardHelper: JetpackFeatureCardHelper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -393,7 +398,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                 contentMigrationAnalyticsTracker,
                 dispatcher,
                 appStatus,
-                wordPressPublicData
+                wordPressPublicData,
+                jetpackFeatureCardShownTracker,
+                jetpackFeatureCardHelper
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -2775,12 +2782,96 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(bloggingPromptsLearnMore).containsOnly(Unit)
     }
 
+    /* JETPACK FEATURE CARD */
+    @Test
+    fun `when feature card criteria is not met, then items does not contain feature card`() = test {
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(false)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems()[0]).isNotInstanceOf(JetpackFeatureCard::class.java)
+        assertThat(getLastItems()[0]).isNotInstanceOf(JetpackFeatureCard::class.java)
+        assertThat(getDashboardTabLastItems()[0]).isNotInstanceOf(JetpackFeatureCard::class.java)
+    }
+
+    @Test
+    fun `when feature card criteria is met, then items do contain feature card`() = test {
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems()[0]).isInstanceOf(JetpackFeatureCard::class.java)
+        assertThat(getLastItems()[0]).isInstanceOf(JetpackFeatureCard::class.java)
+    }
+
+    @Test
+    fun `when jetpack feature card is shown, then jetpack feature card shown is tracked`() = test {
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+
+        initSelectedSite()
+
+        verify(jetpackFeatureCardShownTracker, atLeastOnce()).trackShown(MySiteCardAndItem.Type.JETPACK_FEATURE_CARD)
+    }
+
+    @Test
+    fun `when Jetpack feature card is clicked, then jetpack feature card clicked is tracked`() {
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+        initSelectedSite()
+
+        findJetpackFeatureCard()?.onClick?.click()
+
+        verify(jetpackFeatureCardHelper).track(Stat.REMOVE_FEATURE_CARD_TAPPED)
+    }
+
+    @Test
+    fun `when Jetpack feature card learn more is clicked, then learn more is tracked`() {
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+        initSelectedSite()
+
+        findJetpackFeatureCard()?.onLearnMoreClick?.click()
+
+        verify(jetpackFeatureCardHelper).track(Stat.REMOVE_FEATURE_CARD_LINK_TAPPED)
+    }
+
+    @Test
+    fun `when Jetpack feature card menu is clicked, then menu clicked is tracked`() {
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+        initSelectedSite()
+
+        findJetpackFeatureCard()?.onMoreMenuClick?.click()
+
+        verify(jetpackFeatureCardHelper).track(Stat.REMOVE_FEATURE_CARD_MENU_ACCESSED)
+    }
+
+    @Test
+    fun `when Jetpack feature card hide this is clicked, then hide is tracked`() {
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+        initSelectedSite()
+
+        findJetpackFeatureCard()?.onHideMenuItemClick?.click()
+
+        verify(jetpackFeatureCardHelper).track(Stat.REMOVE_FEATURE_CARD_HIDE_TAPPED)
+    }
+
+    @Test
+    fun `when Jetpack feature card remind later is clicked, then remind later is tracked`() {
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+        initSelectedSite()
+
+        findJetpackFeatureCard()?.onRemindMeLaterItemClick?.click()
+
+        verify(jetpackFeatureCardHelper).track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED)
+    }
+
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
 
     private fun findDomainRegistrationCard() =
             getLastItems().find { it is DomainRegistrationCard } as DomainRegistrationCard?
+
+    private fun findJetpackFeatureCard() =
+            getLastItems().find { it is JetpackFeatureCard } as JetpackFeatureCard?
 
     private fun SiteSelected.findDashboardTabUiState() =
             tabsUiState.tabUiStates.first { it.tabType == MySiteTabType.DASHBOARD }
@@ -2832,6 +2923,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         clickAction!!.invoke(action)
     }
 
+    @Suppress("LongParameterList")
     private fun initSelectedSite(
         isMySiteTabsBuildConfigEnabled: Boolean = true,
         isQuickStartDynamicCardEnabled: Boolean = false,
