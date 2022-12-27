@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import androidx.annotation.StringRes
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
@@ -17,7 +17,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.R.string
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.eventToList
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.FRIDAY
@@ -26,7 +25,6 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.WEDNESDAY
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.test
 import org.wordpress.android.toList
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
@@ -47,6 +45,7 @@ import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import java.time.DayOfWeek
 
+@ExperimentalCoroutinesApi
 class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingRemindersManager: BloggingRemindersManager
     @Mock lateinit var bloggingRemindersStore: BloggingRemindersStore
@@ -64,11 +63,10 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     private lateinit var events: MutableList<Boolean>
     private lateinit var uiState: MutableList<UiState>
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         viewModel = BloggingRemindersViewModel(
-                TEST_DISPATCHER,
+                testDispatcher(),
                 bloggingRemindersManager,
                 bloggingRemindersStore,
                 prologueBuilder,

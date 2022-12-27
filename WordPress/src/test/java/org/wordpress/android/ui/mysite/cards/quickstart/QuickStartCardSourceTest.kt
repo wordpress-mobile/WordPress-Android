@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.quickstart
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -12,7 +12,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
@@ -28,8 +27,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.U
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
-import org.wordpress.android.test
-import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -53,6 +50,7 @@ import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
+@ExperimentalCoroutinesApi
 class QuickStartCardSourceTest : BaseUnitTest() {
     @Mock lateinit var quickStartStore: QuickStartStore
     @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
@@ -81,7 +79,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
 
     private lateinit var isRefreshing: MutableList<Boolean>
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() = test {
         site = SiteModel()
@@ -91,7 +88,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         whenever(quickStartExistingUsersV2FeatureConfig.isEnabled()).thenReturn(false)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         quickStartRepository = QuickStartRepository(
-                TEST_DISPATCHER,
+                testDispatcher(),
                 quickStartStore,
                 quickStartUtilsWrapper,
                 appPrefsWrapper,

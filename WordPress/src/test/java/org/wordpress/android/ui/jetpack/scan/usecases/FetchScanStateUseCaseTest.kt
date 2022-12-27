@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.usecases
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -12,7 +12,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ScanAction.FETCH_SCAN_STATE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
@@ -21,12 +20,12 @@ import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.OnScanStateFetched
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Failure
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.util.function.Consumer
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class FetchScanStateUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: FetchScanStateUseCase
     @Mock private lateinit var site: SiteModel
@@ -36,7 +35,11 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setup() = test {
-        useCase = FetchScanStateUseCase(networkUtilsWrapper, scanStore, TEST_DISPATCHER)
+        useCase = FetchScanStateUseCase(
+                networkUtilsWrapper,
+                scanStore,
+                testDispatcher()
+        )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModel)
     }
@@ -148,6 +151,6 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
 
         val result = useCase.fetchScanState(site = site).toList(mutableListOf())
 
-        assertThat(result).allSatisfy { it is Success }
+        assertThat(result).allSatisfy(Consumer { it is Success })
     }
 }

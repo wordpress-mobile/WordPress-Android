@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite.dynamiccards
 
-import kotlinx.coroutines.InternalCoroutinesApi
-import org.assertj.core.api.Java6Assertions.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -14,11 +14,10 @@ import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardsModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.DynamicCardStore
-import org.wordpress.android.test
-import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 
+@ExperimentalCoroutinesApi
 class DynamicCardsSourceTest : BaseUnitTest() {
     @Mock lateinit var dynamicCardStore: DynamicCardStore
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -29,7 +28,6 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     private val pinnedItem = GROW_QUICK_START
     private val dynamicCardTypes = listOf(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() = test {
         isRefreshing = mutableListOf()
@@ -40,7 +38,9 @@ class DynamicCardsSourceTest : BaseUnitTest() {
         initDynamicCardsSource(hasSelectedSite = true)
 
         var result: DynamicCardsUpdate? = null
-        dynamicCardsSource.build(testScope(), siteLocalId).observeForever { result = it }
+        dynamicCardsSource.build(testScope(), siteLocalId).observeForever {
+            result = it
+        }
 
         assertThat(result?.pinnedDynamicCard).isEqualTo(pinnedItem)
         assertThat(result?.cards).isEqualTo(dynamicCardTypes)

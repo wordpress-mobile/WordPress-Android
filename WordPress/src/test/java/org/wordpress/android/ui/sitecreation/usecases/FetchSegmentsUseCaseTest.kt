@@ -1,25 +1,22 @@
 package org.wordpress.android.ui.sitecreation.usecases
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.VerticalStore
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
-import org.wordpress.android.test
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class FetchSegmentsUseCaseTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class FetchSegmentsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var store: VerticalStore
     private lateinit var useCase: FetchSegmentsUseCase

@@ -30,9 +30,11 @@ class BloggingPromptCardBuilder @Inject constructor() {
                 isAnswered = params.bloggingPrompt.isAnswered,
                 promptId = params.bloggingPrompt.id,
                 attribution = BloggingPromptAttribution.fromString(params.bloggingPrompt.attribution),
+                showViewMoreAction = params.showViewMoreAction,
                 onShareClick = params.onShareClick,
                 onAnswerClick = params.onAnswerClick,
-                onSkipClick = params.onSkipClick
+                onSkipClick = params.onSkipClick,
+                onViewMoreClick = params.onViewMoreClick,
         )
     }
 }

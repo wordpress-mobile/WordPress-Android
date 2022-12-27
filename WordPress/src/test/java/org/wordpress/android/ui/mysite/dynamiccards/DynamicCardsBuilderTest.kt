@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.dynamiccards
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 
+@ExperimentalCoroutinesApi
 class DynamicCardsBuilderTest : BaseUnitTest() {
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
     @Mock lateinit var quickStartItemBuilder: QuickStartItemBuilder

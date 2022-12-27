@@ -44,6 +44,7 @@ import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
+import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
@@ -158,7 +159,7 @@ public class ActivityLauncher {
     public static final String SOURCE_TRACK_EVENT_PROPERTY_KEY = "source";
     public static final String BACKUP_TRACK_EVENT_PROPERTY_VALUE = "backup";
     public static final String ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE = "activity_log";
-    private static final String CATEGORY_DETAIL_ID = "category_detail_key";
+    public static final String CATEGORY_DETAIL_ID = "category_detail_key";
 
     public static void showMainActivity(Context context) {
         Intent intent = getMainActivityInNewStack(context);
@@ -1423,6 +1424,11 @@ public class ActivityLauncher {
             intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
         }
         return intent;
+    }
+
+    public static void showBloggingPromptsListActivity(final Activity activity) {
+        final Intent intent = BloggingPromptsListActivity.createIntent(activity);
+        activity.startActivity(intent);
     }
 
     public static void showSignInForResult(Activity activity) {

@@ -1,38 +1,34 @@
 package org.wordpress.android.ui.reader.reblog
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
-import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.test
 import org.wordpress.android.ui.reader.reblog.ReblogState.MultipleSites
 import org.wordpress.android.ui.reader.reblog.ReblogState.NoSite
 import org.wordpress.android.ui.reader.reblog.ReblogState.SingleSite
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class ReblogUseCaseTest {
-    @Rule
-    @JvmField
-    val rule = InstantTaskExecutorRule()
-
+class ReblogUseCaseTest : BaseUnitTest() {
     @Mock private lateinit var siteStore: SiteStore
 
     private lateinit var reblogUseCase: ReblogUseCase
 
     @Before
     fun setUp() = test {
-        reblogUseCase = ReblogUseCase(siteStore, TEST_DISPATCHER)
+        reblogUseCase = ReblogUseCase(
+                siteStore,
+                testDispatcher()
+        )
     }
 
     @Test

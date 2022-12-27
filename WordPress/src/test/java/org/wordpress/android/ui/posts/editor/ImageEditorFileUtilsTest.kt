@@ -1,18 +1,21 @@
 package org.wordpress.android.ui.posts.editor
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import org.wordpress.android.test
+import org.wordpress.android.BaseUnitTest
 import java.io.File
 
 private const val TEST_OUTPUT_FOLDER = "outputFolder"
 private const val TEST_OUTPUT_FILE_NAME = "outputFile"
 private const val DURATION = 24 * 60 * 60 * 1000.toLong()
-class ImageEditorFileUtilsTest {
+
+@ExperimentalCoroutinesApi
+class ImageEditorFileUtilsTest : BaseUnitTest() {
     @Rule
     @JvmField val temporaryFolder = TemporaryFolder()
 

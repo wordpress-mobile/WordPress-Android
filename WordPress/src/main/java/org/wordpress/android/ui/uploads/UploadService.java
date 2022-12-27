@@ -12,7 +12,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -57,6 +56,9 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class UploadService extends Service {
     private static final String KEY_CHANGE_STATUS_TO_PUBLISH = "shouldPublish";
     private static final String KEY_SHOULD_RETRY = "shouldRetry";
@@ -91,7 +93,6 @@ public class UploadService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        ((WordPress) getApplication()).component().inject(this);
         AppLog.i(T.MAIN, "UploadService > Created");
         mDispatcher.register(this);
         sInstance = this;
@@ -197,8 +198,8 @@ public class UploadService extends Service {
                 // Otherwise, this flag should be true, and we need to keep the error notification as
                 // it might be a separate action (user is editing a Post and including media there)
                 PostUploadNotifier.cancelFinalNotificationForMedia(this,
-                                                                   mSiteStore.getSiteByLocalId(
-                                                                           mediaList.get(0).getLocalSiteId()));
+                        mSiteStore.getSiteByLocalId(
+                                mediaList.get(0).getLocalSiteId()));
 
                 // add these media items so we can use them in WRITE POST once they end up loading successfully
                 mMediaBatchUploaded.addAll(mediaList);
@@ -616,6 +617,7 @@ public class UploadService extends Service {
         }
         return post;
     }
+
     private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
                                                                  MediaUploadReadyListener processor) {
         if (media != null && post != null && processor != null && sInstance != null) {

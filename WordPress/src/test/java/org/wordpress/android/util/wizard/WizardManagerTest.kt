@@ -1,16 +1,16 @@
 package org.wordpress.android.util.wizard
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.sitecreation.SiteCreationStep
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_DESIGNS
@@ -19,11 +19,9 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 private val STEPS = listOf(SITE_DESIGNS, DOMAINS, SITE_PREVIEW)
 private val LAST_STEP_INDEX = STEPS.size - 1
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class WizardManagerTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class WizardManagerTest : BaseUnitTest() {
     private lateinit var manager: WizardManager<SiteCreationStep>
     @Mock private lateinit var navigatorLiveDataObserver: Observer<SiteCreationStep>
 

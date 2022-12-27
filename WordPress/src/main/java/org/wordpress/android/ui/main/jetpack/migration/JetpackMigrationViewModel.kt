@@ -78,6 +78,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val _refreshAppTheme = MutableLiveData<Unit>()
     val refreshAppTheme: LiveData<Unit> = _refreshAppTheme
 
+    private var isStarted = false
     private val migrationStateFlow = MutableStateFlow<LocalMigrationState>(Initial)
     private val continueClickedFlow = MutableStateFlow(false)
     private val notificationContinueClickedFlow = MutableStateFlow(false)
@@ -107,6 +108,9 @@ class JetpackMigrationViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.Lazily, Loading)
 
     fun start(showDeleteState: Boolean) {
+        if (isStarted) return
+        isStarted = true
+
         this.showDeleteState = showDeleteState
         tryMigration()
     }

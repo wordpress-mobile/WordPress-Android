@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
@@ -8,20 +8,18 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.JetpackAction.ACTIVATE_STATS_MODULE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.JetpackStore
 import org.wordpress.android.fluxc.store.JetpackStore.ActivateStatsModuleError
 import org.wordpress.android.fluxc.store.JetpackStore.ActivateStatsModuleErrorType
 import org.wordpress.android.fluxc.store.JetpackStore.OnActivateStatsModule
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class StatsModuleActivateUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: StatsModuleActivateUseCase
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
@@ -30,7 +28,11 @@ class StatsModuleActivateUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setup() = test {
-        useCase = StatsModuleActivateUseCase(networkUtilsWrapper, jetpackStore, TEST_DISPATCHER)
+        useCase = StatsModuleActivateUseCase(
+                networkUtilsWrapper,
+                jetpackStore,
+                testDispatcher()
+        )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
 

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs.timezone
 
 import android.content.Context
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -9,6 +10,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.viewmodel.ResourceProvider
 
+@ExperimentalCoroutinesApi
 class SiteSettingsTimezoneViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var context: Context

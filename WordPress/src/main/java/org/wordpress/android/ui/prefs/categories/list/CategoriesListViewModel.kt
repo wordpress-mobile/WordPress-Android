@@ -2,6 +2,7 @@ package org.wordpress.android.ui.prefs.categories.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.Subscribe
@@ -15,6 +16,7 @@ import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.prefs.categories.list.CategoryDetailNavigation.CreateCategory
+import org.wordpress.android.ui.prefs.categories.list.CategoryDetailNavigation.EditCategory
 import org.wordpress.android.ui.prefs.categories.list.UiState.Content
 import org.wordpress.android.ui.prefs.categories.list.UiState.Error.GenericError
 import org.wordpress.android.ui.prefs.categories.list.UiState.Error.NoConnection
@@ -29,6 +31,7 @@ import javax.inject.Named
 
 private const val RETRY_DELAY = 300L
 
+@HiltViewModel
 class CategoriesListViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -94,7 +97,12 @@ class CategoriesListViewModel @Inject constructor(
                 "An error occurred while updating taxonomy with type: " + event.error.type
         )
 
-        if (event.causeOfChange == TaxonomyAction.FETCH_CATEGORIES) processFetchCategoriesCallback(event)
+        if (event.causeOfChange == TaxonomyAction.FETCH_CATEGORIES)
+            processFetchCategoriesCallback(event)
+        if (event.causeOfChange == TaxonomyAction.UPDATE_TERM)
+            launch { fetchCategoriesFromNetwork() }
+        if (event.causeOfChange == TaxonomyAction.REMOVE_TERM)
+            launch { fetchCategoriesFromNetwork() }
     }
 
     @Suppress("unused")
@@ -109,7 +117,7 @@ class CategoriesListViewModel @Inject constructor(
 
     @Suppress("unused", "UNUSED_PARAMETER")
     fun onCategoryClicked(categoryNode: CategoryNode) {
-        // todo implement the logic of navigation to category detail page
+        _navigation.postValue(EditCategory(categoryNode.categoryId))
     }
 
     private fun processFetchCategoriesCallback(event: OnTaxonomyChanged) {

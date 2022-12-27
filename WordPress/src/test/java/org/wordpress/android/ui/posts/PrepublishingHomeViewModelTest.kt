@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -13,7 +14,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
@@ -31,6 +31,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 
+@ExperimentalCoroutinesApi
 class PrepublishingHomeViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingHomeViewModel
     @Mock lateinit var postSettingsUtils: PostSettingsUtils
@@ -43,7 +44,6 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
 
     @Before
-    @InternalCoroutinesApi
     @Suppress("UNCHECKED_CAST")
     fun setUp() {
         viewModel = PrepublishingHomeViewModel(
@@ -54,7 +54,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
                 storyRepositoryWrapper,
                 updateStoryTitleUseCase,
                 getCategoriesUseCase,
-                TEST_DISPATCHER
+                testDispatcher()
         )
         whenever(
                 getButtonUiStateUseCase.getUiState(
@@ -353,27 +353,29 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify that if storyTitleChanged then setCurrentStoryTitle is called`() {
+    fun `verify that if storyTitleChanged then setCurrentStoryTitle is called`() = test {
         val storyTitle = "Story Title"
 
         viewModel.start(editPostRepository, site, true)
         getStoryTitleUiState()?.onStoryTitleChanged?.invoke(storyTitle)
+        advanceUntilIdle()
 
         verify(storyRepositoryWrapper).setCurrentStoryTitle(eq(storyTitle))
     }
 
     @Test
-    fun `verify that if storyTitleChanged then updateStoryPostTitleUseCase is called`() {
+    fun `verify that if storyTitleChanged then updateStoryPostTitleUseCase is called`() = test {
         val storyTitle = "Story Title"
 
         viewModel.start(editPostRepository, site, true)
         getStoryTitleUiState()?.onStoryTitleChanged?.invoke(storyTitle)
+        advanceUntilIdle()
 
         verify(updateStoryTitleUseCase).updateStoryTitle(eq(storyTitle), any())
     }
 
     @Test
-    fun `verify story title is correctly updated when title is changed and publish is tapped `() {
+    fun `verify story title is correctly updated when title is changed and publish is tapped `() = test {
         // arrange
         var event: Event<PublishPost>? = null
         val storyTitle = "Story Title"
@@ -386,6 +388,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         getStoryTitleUiState()?.onStoryTitleChanged?.invoke(storyTitle)
         val buttonUiState = getButtonUiState()
         buttonUiState?.onButtonClicked?.invoke(true)
+        advanceUntilIdle()
 
         // assert
         assertThat(event).isNotNull

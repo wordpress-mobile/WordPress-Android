@@ -89,24 +89,30 @@ class BloggingPromptCardViewHolder(
     }
 
     private fun MySiteBloggingPromptCardBinding.showCardMenu(card: BloggingPromptCardWithData) {
-        val quickStartPopupMenu = PopupMenu(bloggingPromptCardMenu.context, bloggingPromptCardMenu)
-        quickStartPopupMenu.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.view_more -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuViewMorePromptsClicked()
-                R.id.skip -> {
-                    bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
-                    card.onSkipClick.invoke()
+        PopupMenu(bloggingPromptCardMenu.context, bloggingPromptCardMenu).apply {
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.view_more -> {
+                        bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuViewMorePromptsClicked()
+                        card.onViewMoreClick.invoke()
+                    }
+                    R.id.skip -> {
+                        bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
+                        card.onSkipClick.invoke()
+                    }
+                    R.id.remove -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuRemoveFromDashboardClicked()
+                    R.id.learn_more -> {
+                        bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuLearnMoreClicked()
+                        learnMoreClicked()
+                    }
                 }
-                R.id.remove -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuRemoveFromDashboardClicked()
-                R.id.learn_more -> {
-                    bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuLearnMoreClicked()
-                    learnMoreClicked()
-                }
+                return@setOnMenuItemClickListener true
             }
-            return@setOnMenuItemClickListener true
+            inflate(R.menu.blogging_prompt_card_menu)
+            menu.findItem(R.id.view_more)?.isVisible = card.showViewMoreAction
+            MenuCompat.setGroupDividerEnabled(menu, true)
+        }.also {
+            it.show()
         }
-        quickStartPopupMenu.inflate(R.menu.blogging_prompt_card_menu)
-        MenuCompat.setGroupDividerEnabled(quickStartPopupMenu.menu, true)
-        quickStartPopupMenu.show()
     }
 }

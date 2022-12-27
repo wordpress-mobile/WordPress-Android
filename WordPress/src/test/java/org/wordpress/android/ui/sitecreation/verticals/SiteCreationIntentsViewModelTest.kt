@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -14,15 +13,14 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Locale
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class SiteCreationIntentsViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class SiteCreationIntentsViewModelTest : BaseUnitTest() {
     @Mock lateinit var analyticsTracker: SiteCreationTracker
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var dispatcher: CoroutineDispatcher

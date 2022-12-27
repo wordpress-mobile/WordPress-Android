@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +10,6 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
@@ -21,7 +19,6 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
@@ -46,6 +43,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
+@ExperimentalCoroutinesApi
 class FollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: FollowersStore
     @Mock lateinit var statsSinceLabelFormatter: StatsSinceLabelFormatter
@@ -71,12 +69,12 @@ class FollowersUseCaseTest : BaseUnitTest() {
     private val viewAllMoreLoadMode = PagedMode(viewAllPageSize, true)
     private val message = "Total followers count is 50"
     private val contentDescription = "title, views"
-    @InternalCoroutinesApi
+
     @Before
     fun setUp() {
         useCaseFactory = FollowersUseCaseFactory(
-                Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 insightsStore,
                 statsSiteProvider,
                 statsSinceLabelFormatter,
@@ -313,6 +311,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(refresh, forced)
+        advanceUntilIdle()
         return checkNotNull(result)
     }
 
@@ -351,7 +350,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     private fun List<BlockListItem>.assertViewAllFollowersSecondLoad() {
         assertThat(this).hasSize(14)
 
-        val follower = this[13] as ListItemWithIcon
+        val follower = this[12] as ListItemWithIcon
         assertThat(follower.showDivider).isEqualTo(false)
     }
 

@@ -1,17 +1,16 @@
 package org.wordpress.android.viewmodel
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
-import org.wordpress.android.test
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.PreviewMode
 import org.wordpress.android.ui.PreviewMode.DESKTOP
 import org.wordpress.android.ui.PreviewMode.MOBILE
@@ -29,11 +28,9 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUi
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState.WebPreviewFullscreenErrorUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState.WebPreviewFullscreenNotAvailableUiState
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class WPWebViewViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class WPWebViewViewModelTest : BaseUnitTest() {
     @Mock private lateinit var connectionStatus: LiveData<ConnectionStatus>
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
     @Mock private lateinit var uiStateObserver: Observer<WebPreviewUiState>

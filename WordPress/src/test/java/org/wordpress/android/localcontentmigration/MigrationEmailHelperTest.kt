@@ -1,20 +1,18 @@
 package org.wordpress.android.localcontentmigration
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.store.mobile.JetpackMigrationStore
 import org.wordpress.android.fluxc.store.mobile.MigrationCompleteFetchedPayload
-import org.wordpress.android.test
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class MigrationEmailHelperTest : BaseUnitTest() {
     private val jetpackMigrationStore: JetpackMigrationStore = mock()
     private val migrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()
@@ -22,7 +20,7 @@ class MigrationEmailHelperTest : BaseUnitTest() {
     private val classToTest = MigrationEmailHelper(
             jetpackMigrationStore,
             migrationAnalyticsTracker,
-            TEST_DISPATCHER,
+            testDispatcher(),
     )
 
     @Test

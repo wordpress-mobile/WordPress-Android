@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.prefs.accountsettings
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
@@ -12,13 +12,11 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R.string
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore.AccountError
 import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
-import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.SiteUiModel
 import org.wordpress.android.ui.prefs.accountsettings.usecase.FetchAccountSettingsUseCase
@@ -30,7 +28,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class AccountSettingsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: AccountSettingsViewModel
     @Mock private lateinit var resourceProvider: ResourceProvider
@@ -63,14 +61,7 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
         whenever(account.usernameCanBeChanged).thenReturn(false)
         whenever(getAccountUseCase.account).thenReturn(account)
 
-        val sites = siteViewModels.map {
-            SiteModel().apply {
-                this.siteId = it.siteId
-                this.name = it.siteName
-                this.url = it.homeURLOrHostName
-            }
-        }
-        whenever(getSitesUseCase.get()).thenReturn(sites)
+        mockSites(siteViewModels)
         initialiseViewModel()
     }
 
@@ -311,19 +302,48 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
                 whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.first().siteId)
                 viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
                 // Then
+
                 assertThat(uiStateChanges.last().primarySiteSettingsUiState.primarySite?.siteId)
                         .isEqualTo(siteViewModels.first().siteId)
+            }
+
+    @Test
+    fun `when there are multiple sites, the user should be shown sites to choose primary site when requested`() =
+            testUiStateChanges {
+                val mUiState = viewModel.accountSettingsUiState.value
+                mUiState.primarySiteSettingsUiState.canShowChoosePrimarySiteDialog.let {
+                    assertThat(it).isEqualTo(true)
+                }
+            }
+
+    @Test
+    fun `when there are one or no sites, the user should not be shown empty dialog or dialog with one site`() =
+            testUiStateChanges {
+                mockSites(emptyList())
+                initialiseViewModel()
+                val mUiState = viewModel.accountSettingsUiState.value
+                mUiState.primarySiteSettingsUiState.canShowChoosePrimarySiteDialog.let {
+                    assertThat(it).isEqualTo(false)
+                }
+            }
+
+    // Web Address default
+    @Test
+    fun `If Web Address is available, Should show webaddress from the account information`() =
+            testUiStateChanges {
+                val mUiState = viewModel.accountSettingsUiState.value
+                assertThat(mUiState.webAddressSettingsUiState.webAddress).isEqualTo("http://old_wordpressuser.com")
             }
 
     @Test
     fun `When a new webaddress is entered, then new webaddress is shown optimistically`() =
             testUiStateChanges {
                 // Given
-                whenever(getAccountUseCase.account.webAddress).thenReturn("old_webaddress")
+                whenever(getAccountUseCase.account.webAddress).thenReturn("http://old_wordpressuser.com")
                 // When
                 whenever(pushAccountSettingsUseCase.updateWebAddress("new_webaddress"))
                         .thenReturn(mockErrorResponse())
-                whenever(getAccountUseCase.account.webAddress).thenReturn("old_webaddress")
+                whenever(getAccountUseCase.account.webAddress).thenReturn("http://old_wordpressuser.com")
                 viewModel.onWebAddressChanged("new_webaddress")
                 // Then
                 assertThat(uiStateChanges[uiStateChanges.lastIndex - 1].webAddressSettingsUiState.webAddress)
@@ -380,7 +400,7 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
         test {
             uiStateChanges.clear()
             initialiseViewModel()
-            val job = launch(TEST_DISPATCHER) {
+            val job = launch(testDispatcher()) {
                 viewModel.accountSettingsUiState.toList(uiStateChanges)
             }
             this.block()
@@ -402,12 +422,23 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
         viewModel = AccountSettingsViewModel(
                 resourceProvider,
                 networkUtilsWrapper,
-                TEST_DISPATCHER,
+                testDispatcher(),
                 fetchAccountSettingsUseCase,
                 pushAccountSettingsUseCase,
                 getAccountUseCase,
                 getSitesUseCase,
                 optimisticUpdateHandler
         )
+    }
+
+    private suspend fun mockSites(siteViewModels: List<SiteUiModel>) {
+        val sites = siteViewModels.map {
+            SiteModel().apply {
+                this.siteId = it.siteId
+                this.name = it.siteName
+                this.url = it.homeURLOrHostName
+            }
+        }
+        whenever(getSitesUseCase.get()).thenReturn(sites)
     }
 }
