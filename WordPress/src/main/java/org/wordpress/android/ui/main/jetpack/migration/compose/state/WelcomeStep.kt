@@ -192,17 +192,13 @@ private fun SiteListScaffold(
     }
 }
 
-private val previewSiteListItems = mutableListOf<SiteListItemUiState>().apply {
-    repeat(10) {
-        add(
-                SiteListItemUiState(
-                        id = it.toLong(),
-                        name = "Site $it",
-                        url = "site-$it-name.com",
-                        iconUrl = "",
-                )
-        )
-    }
+private val previewSiteListItems = List(10) {
+    SiteListItemUiState(
+            id = it,
+            name = "Site $it",
+            url = "site-$it-name.com",
+            iconUrl = "",
+    )
 }
 
 private val previewUiState = UiState.Content.Welcome(
