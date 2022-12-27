@@ -6,7 +6,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.internal.verification.Times
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -38,7 +37,7 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
     @Test
     fun `when start, then track screen seen event`() = test {
         viewModel.start()
-        verify(tracker, Times(1)).trackScreenShown()
+        verify(tracker).trackScreenShown()
     }
 
     @Test
