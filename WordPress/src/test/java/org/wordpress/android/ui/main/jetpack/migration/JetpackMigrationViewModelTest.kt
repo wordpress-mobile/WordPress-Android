@@ -273,8 +273,8 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     fun `Should have correct message for Welcome Content when sites size IS GREATER than 1`() {
         val welcomeContent = Content.Welcome(
                 sites = listOf(
-                        SiteListItemUiState(123L, "name", "url", "iconUrl"),
-                        SiteListItemUiState(456L, "name", "url", "iconUrl")
+                        SiteListItemUiState(123, "name", "url", "iconUrl"),
+                        SiteListItemUiState(456, "name", "url", "iconUrl")
                 ),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
@@ -288,7 +288,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct message for Welcome Content when sites size IS NOT GREATER than 1`() {
         val welcomeContent = Content.Welcome(
-                sites = listOf(SiteListItemUiState(123L, "name", "url", "iconUrl")),
+                sites = listOf(SiteListItemUiState(123, "name", "url", "iconUrl")),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
                 onAvatarClicked = {},
