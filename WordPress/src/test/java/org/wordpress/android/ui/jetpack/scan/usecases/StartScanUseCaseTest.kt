@@ -25,17 +25,21 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @ExperimentalCoroutinesApi
 class StartScanUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: StartScanUseCase
-    @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var scanStateModel: ScanStateModel
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var scanStore: ScanStore
+    @Mock
+    private lateinit var site: SiteModel
+    @Mock
+    private lateinit var scanStateModel: ScanStateModel
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    lateinit var scanStore: ScanStore
 
     @Before
     fun setup() = test {
         useCase = StartScanUseCase(
-                networkUtilsWrapper,
-                scanStore,
-                testDispatcher()
+            networkUtilsWrapper,
+            scanStore,
+            testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModel)
@@ -59,27 +63,27 @@ class StartScanUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `when scan start is triggered, then scan starts optimistically by updating scanning scan state in db`() =
-            testWithSuccessResponse {
-                val scanStateModelInIdleState = ScanStateModel(
-                        state = ScanStateModel.State.IDLE,
-                        reason = Reason.NO_REASON
-                )
-                val expectedScanStateModel = scanStateModelInIdleState.copy(state = ScanStateModel.State.SCANNING)
-                whenever(scanStore.getScanStateForSite(any())).thenReturn(scanStateModel)
+        testWithSuccessResponse {
+            val scanStateModelInIdleState = ScanStateModel(
+                state = ScanStateModel.State.IDLE,
+                reason = Reason.NO_REASON
+            )
+            val expectedScanStateModel = scanStateModelInIdleState.copy(state = ScanStateModel.State.SCANNING)
+            whenever(scanStore.getScanStateForSite(any())).thenReturn(scanStateModel)
 
-                val result = useCase.startScan(site).toList(mutableListOf())
+            val result = useCase.startScan(site).toList(mutableListOf())
 
-                verify(scanStore).addOrUpdateScanStateModelForSite(START_SCAN, site, expectedScanStateModel)
-                assertThat(result).contains(StartScanState.ScanningStateUpdatedInDb(expectedScanStateModel))
-            }
+            verify(scanStore).addOrUpdateScanStateModelForSite(START_SCAN, site, expectedScanStateModel)
+            assertThat(result).contains(StartScanState.ScanningStateUpdatedInDb(expectedScanStateModel))
+        }
 
     @Test
     fun `given server is unavailable, when scan is started, then RemoteRequestFailure is returned`() =
-            testWithErrorResponse {
-                val result = useCase.startScan(site).toList(mutableListOf())
+        testWithErrorResponse {
+            val result = useCase.startScan(site).toList(mutableListOf())
 
-                assertThat(result).contains(StartScanState.Failure.RemoteRequestFailure)
-            }
+            assertThat(result).contains(StartScanState.Failure.RemoteRequestFailure)
+        }
 
     private fun <T> testWithSuccessResponse(block: suspend CoroutineScope.() -> T) {
         test {
@@ -91,7 +95,7 @@ class StartScanUseCaseTest : BaseUnitTest() {
     private fun <T> testWithErrorResponse(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(scanStore.startScan(any())).thenReturn(
-                    OnScanStarted(ScanStartError(ScanStartErrorType.GENERIC_ERROR), START_SCAN)
+                OnScanStarted(ScanStartError(ScanStartErrorType.GENERIC_ERROR), START_SCAN)
             )
             block()
         }

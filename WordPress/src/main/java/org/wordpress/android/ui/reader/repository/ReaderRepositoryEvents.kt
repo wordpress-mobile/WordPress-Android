@@ -22,6 +22,7 @@ sealed class ReaderRepositoryCommunication {
 
 sealed class ReaderDiscoverCommunication {
     abstract val task: DiscoverTasks
+
     data class Started(override val task: DiscoverTasks) : ReaderDiscoverCommunication()
     data class Success(override val task: DiscoverTasks) : ReaderDiscoverCommunication()
     sealed class Error : ReaderDiscoverCommunication() {

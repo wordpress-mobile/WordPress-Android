@@ -33,9 +33,9 @@ class UserFlagsHelper @Inject constructor(
         userFlagsAnalyticsTracker.trackStart()
         localMigrationContentResolver.getResultForEntityType<UserFlagsData>(UserFlags)
     }
-            .thenWith(::checkIfEmpty)
-            .thenWith(::updateUserFlagsData)
-            .thenWith(::success)
+        .thenWith(::checkIfEmpty)
+        .thenWith(::updateUserFlagsData)
+        .thenWith(::success)
 
     private fun checkIfEmpty(userFlagsData: UserFlagsData) = if (userFlagsData.flags.isEmpty()) {
         userFlagsAnalyticsTracker.trackFailed(ErrorType.NoUserFlagsFoundError)

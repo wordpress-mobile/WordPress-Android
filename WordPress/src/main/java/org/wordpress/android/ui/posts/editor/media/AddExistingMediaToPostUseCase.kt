@@ -26,13 +26,13 @@ class AddExistingMediaToPostUseCase @Inject constructor(
         editorMediaListener: EditorMediaListener
     ) {
         getMediaModelUseCase
-                .loadMediaByRemoteId(site, mediaIdList)
-                .onEach { media ->
-                    editorTracker.trackAddMediaEvent(site, source, media.isVideo)
-                }
-                .let {
-                    appendMediaToEditorUseCase.addMediaToEditor(editorMediaListener, it)
-                    editorMediaListener.syncPostObjectWithUiAndSaveIt()
-                }
+            .loadMediaByRemoteId(site, mediaIdList)
+            .onEach { media ->
+                editorTracker.trackAddMediaEvent(site, source, media.isVideo)
+            }
+            .let {
+                appendMediaToEditorUseCase.addMediaToEditor(editorMediaListener, it)
+                editorMediaListener.syncPostObjectWithUiAndSaveIt()
+            }
     }
 }

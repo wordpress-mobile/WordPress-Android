@@ -14,7 +14,6 @@ import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingH
 import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingSubmitButtonViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 private const val headerViewType: Int = 1
@@ -23,8 +22,10 @@ private const val submitButtonViewType: Int = 3
 
 class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<PrepublishingHomeViewHolder>() {
     private var items: List<PrepublishingHomeItemUiState> = listOf()
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var imageManager: ImageManager
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
@@ -41,10 +42,10 @@ class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<Prepubli
 
     fun update(newItems: List<PrepublishingHomeItemUiState>) {
         val diffResult = DiffUtil.calculateDiff(
-                PrepublishingHomeDiffCallback(
-                        this.items,
-                        newItems
-                )
+            PrepublishingHomeDiffCallback(
+                this.items,
+                newItems
+            )
         )
         this.items = newItems
         diffResult.dispatchUpdatesTo(this)

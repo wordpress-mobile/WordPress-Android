@@ -19,15 +19,18 @@ import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 import javax.inject.Inject
 
 class StoriesIntroDialogFragment : DialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject internal lateinit var mediaPickerLauncher: MediaPickerLauncher
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    internal lateinit var mediaPickerLauncher: MediaPickerLauncher
 
     private lateinit var viewModel: StoriesIntroViewModel
 
     companion object {
         const val TAG = "STORIES_INTRO_DIALOG_FRAGMENT"
 
-        @JvmStatic fun newInstance(site: SiteModel?): StoriesIntroDialogFragment {
+        @JvmStatic
+        fun newInstance(site: SiteModel?): StoriesIntroDialogFragment {
             val args = Bundle()
             if (site != null) {
                 args.putSerializable(WordPress.SITE, site)
@@ -43,7 +46,7 @@ class StoriesIntroDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(StoriesIntroViewModel::class.java)
+            .get(StoriesIntroViewModel::class.java)
         dialog.setStatusBarAsSurfaceColor()
         return dialog
     }

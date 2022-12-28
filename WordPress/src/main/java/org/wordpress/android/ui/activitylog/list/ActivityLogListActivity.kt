@@ -26,7 +26,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ActivityLogListActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
-    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Inject
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     private var binding: ActivityLogListActivityBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +54,7 @@ class ActivityLogListActivity : LocaleAwareActivity(), ScrollableViewInitialized
             binding?.root?.post {
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
                 val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
-                        ?: return@post
+                    ?: return@post
 
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
@@ -62,8 +63,8 @@ class ActivityLogListActivity : LocaleAwareActivity(), ScrollableViewInitialized
                     binding?.jetpackBanner?.root?.setOnClickListener {
                         jetpackBrandingUtils.trackBannerTapped(ACTIVITY_LOG)
                         JetpackPoweredBottomSheetFragment
-                                .newInstance()
-                                .show(supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                            .newInstance()
+                            .show(supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
                     }
                 }
             }
@@ -123,7 +124,7 @@ class ActivityLogListActivity : LocaleAwareActivity(), ScrollableViewInitialized
         val rewindId = data?.getStringExtra(KEY_BACKUP_DOWNLOAD_REWIND_ID)
         val downloadId = data?.getLongExtra(KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID, 0)
         val actionState = data?.getIntExtra(KEY_BACKUP_DOWNLOAD_ACTION_STATE_ID, 0)
-                ?: JetpackBackupDownloadActionState.CANCEL.id
+            ?: JetpackBackupDownloadActionState.CANCEL.id
         if (actionState != JetpackBackupDownloadActionState.CANCEL.id && rewindId != null && downloadId != null) {
             passQueryBackupDownloadStatus(rewindId, downloadId, actionState)
         }

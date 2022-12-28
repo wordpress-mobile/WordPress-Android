@@ -40,45 +40,45 @@ class SubfilterPageViewModel @Inject constructor(
     fun onSubFiltersChanged(isEmpty: Boolean) {
         _emptyState.value = if (isEmpty) {
             VisibleEmptyUiState(
-                    title = UiStringRes(
-                        if (category == SITES) {
-                            if (accountStore.hasAccessToken()) {
-                                R.string.reader_filter_empty_sites_list
-                            } else {
-                                R.string.reader_filter_self_hosted_empty_sites_list
-                            }
+                title = UiStringRes(
+                    if (category == SITES) {
+                        if (accountStore.hasAccessToken()) {
+                            R.string.reader_filter_empty_sites_list
                         } else {
-                            if (accountStore.hasAccessToken()) {
-                                R.string.reader_filter_empty_tags_list
-                            } else {
-                                R.string.reader_filter_self_hosted_empty_tagss_list
-                            }
-                        }
-                    ),
-                    buttonText = UiStringRes(
-                        if (category == SITES) {
-                            if (accountStore.hasAccessToken()) {
-                                R.string.reader_filter_empty_sites_action
-                            } else {
-                                R.string.reader_filter_self_hosted_empty_sites_tags_action
-                            }
-                        } else {
-                            if (accountStore.hasAccessToken()) {
-                                R.string.reader_filter_empty_tags_action
-                            } else {
-                                R.string.reader_filter_self_hosted_empty_sites_tags_action
-                            }
-                        }
-                    ),
-                    action = if (accountStore.hasAccessToken()) {
-                        if (category == SITES) {
-                            OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
-                        } else {
-                            OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
+                            R.string.reader_filter_self_hosted_empty_sites_list
                         }
                     } else {
-                        OpenLoginPage
+                        if (accountStore.hasAccessToken()) {
+                            R.string.reader_filter_empty_tags_list
+                        } else {
+                            R.string.reader_filter_self_hosted_empty_tagss_list
+                        }
                     }
+                ),
+                buttonText = UiStringRes(
+                    if (category == SITES) {
+                        if (accountStore.hasAccessToken()) {
+                            R.string.reader_filter_empty_sites_action
+                        } else {
+                            R.string.reader_filter_self_hosted_empty_sites_tags_action
+                        }
+                    } else {
+                        if (accountStore.hasAccessToken()) {
+                            R.string.reader_filter_empty_tags_action
+                        } else {
+                            R.string.reader_filter_self_hosted_empty_sites_tags_action
+                        }
+                    }
+                ),
+                action = if (accountStore.hasAccessToken()) {
+                    if (category == SITES) {
+                        OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
+                    } else {
+                        OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
+                    }
+                } else {
+                    OpenLoginPage
+                }
             )
         } else {
             HiddenEmptyUiState

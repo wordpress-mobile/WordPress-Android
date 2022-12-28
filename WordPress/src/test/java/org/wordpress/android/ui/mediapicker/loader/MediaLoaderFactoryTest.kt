@@ -20,39 +20,46 @@ import org.wordpress.android.ui.mediapicker.loader.MediaLibraryDataSource.MediaL
 
 @RunWith(MockitoJUnitRunner::class)
 class MediaLoaderFactoryTest {
-    @Mock lateinit var deviceListBuilderFactory: DeviceListBuilderFactory
-    @Mock lateinit var deviceListBuilder: DeviceListBuilder
-    @Mock lateinit var mediaLibraryDataSourceFactory: MediaLibraryDataSourceFactory
-    @Mock lateinit var mediaLibraryDataSource: MediaLibraryDataSource
-    @Mock lateinit var stockMediaDataSource: StockMediaDataSource
-    @Mock lateinit var gifMediaDataSource: GifMediaDataSource
-    @Mock lateinit var site: SiteModel
+    @Mock
+    lateinit var deviceListBuilderFactory: DeviceListBuilderFactory
+    @Mock
+    lateinit var deviceListBuilder: DeviceListBuilder
+    @Mock
+    lateinit var mediaLibraryDataSourceFactory: MediaLibraryDataSourceFactory
+    @Mock
+    lateinit var mediaLibraryDataSource: MediaLibraryDataSource
+    @Mock
+    lateinit var stockMediaDataSource: StockMediaDataSource
+    @Mock
+    lateinit var gifMediaDataSource: GifMediaDataSource
+    @Mock
+    lateinit var site: SiteModel
     private lateinit var mediaLoaderFactory: MediaLoaderFactory
 
     @Before
     fun setUp() {
         mediaLoaderFactory = MediaLoaderFactory(
-                deviceListBuilderFactory,
-                mediaLibraryDataSourceFactory,
-                stockMediaDataSource,
-                gifMediaDataSource
+            deviceListBuilderFactory,
+            mediaLibraryDataSourceFactory,
+            stockMediaDataSource,
+            gifMediaDataSource
         )
     }
 
     @Test
     fun `returns device list builder on DEVICE source`() {
         val mediaPickerSetup = MediaPickerSetup(
-                DEVICE,
-                availableDataSources = setOf(),
-                canMultiselect = true,
-                requiresStoragePermissions = true,
-                allowedTypes = setOf(),
-                cameraSetup = HIDDEN,
-                systemPickerEnabled = true,
-                editingEnabled = true,
-                queueResults = false,
-                defaultSearchView = false,
-                title = string.wp_media_title
+            DEVICE,
+            availableDataSources = setOf(),
+            canMultiselect = true,
+            requiresStoragePermissions = true,
+            allowedTypes = setOf(),
+            cameraSetup = HIDDEN,
+            systemPickerEnabled = true,
+            editingEnabled = true,
+            queueResults = false,
+            defaultSearchView = false,
+            title = string.wp_media_title
         )
         whenever(deviceListBuilderFactory.build(setOf(), site)).thenReturn(deviceListBuilder)
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
@@ -63,17 +70,17 @@ class MediaLoaderFactoryTest {
     @Test
     fun `returns WP media source on WP_LIBRARY source`() {
         val mediaPickerSetup = MediaPickerSetup(
-                WP_LIBRARY,
-                availableDataSources = setOf(),
-                canMultiselect = true,
-                requiresStoragePermissions = false,
-                allowedTypes = setOf(),
-                cameraSetup = HIDDEN,
-                systemPickerEnabled = false,
-                editingEnabled = false,
-                queueResults = false,
-                defaultSearchView = false,
-                title = string.wp_media_title
+            WP_LIBRARY,
+            availableDataSources = setOf(),
+            canMultiselect = true,
+            requiresStoragePermissions = false,
+            allowedTypes = setOf(),
+            cameraSetup = HIDDEN,
+            systemPickerEnabled = false,
+            editingEnabled = false,
+            queueResults = false,
+            defaultSearchView = false,
+            title = string.wp_media_title
         )
         whenever(mediaLibraryDataSourceFactory.build(site, setOf())).thenReturn(mediaLibraryDataSource)
 
@@ -85,17 +92,17 @@ class MediaLoaderFactoryTest {
     @Test
     fun `returns stock media source on STOCK_LIBRARY source`() {
         val mediaPickerSetup = MediaPickerSetup(
-                STOCK_LIBRARY,
-                availableDataSources = setOf(),
-                canMultiselect = true,
-                requiresStoragePermissions = false,
-                allowedTypes = setOf(),
-                cameraSetup = HIDDEN,
-                systemPickerEnabled = false,
-                editingEnabled = false,
-                queueResults = false,
-                defaultSearchView = false,
-                title = string.wp_media_title
+            STOCK_LIBRARY,
+            availableDataSources = setOf(),
+            canMultiselect = true,
+            requiresStoragePermissions = false,
+            allowedTypes = setOf(),
+            cameraSetup = HIDDEN,
+            systemPickerEnabled = false,
+            editingEnabled = false,
+            queueResults = false,
+            defaultSearchView = false,
+            title = string.wp_media_title
         )
 
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
@@ -106,17 +113,17 @@ class MediaLoaderFactoryTest {
     @Test
     fun `returns gif media source on GIF_LIBRARY source`() {
         val mediaPickerSetup = MediaPickerSetup(
-                GIF_LIBRARY,
-                availableDataSources = setOf(),
-                canMultiselect = true,
-                requiresStoragePermissions = false,
-                allowedTypes = setOf(),
-                cameraSetup = HIDDEN,
-                systemPickerEnabled = false,
-                editingEnabled = false,
-                queueResults = false,
-                defaultSearchView = true,
-                title = string.photo_picker_gif
+            GIF_LIBRARY,
+            availableDataSources = setOf(),
+            canMultiselect = true,
+            requiresStoragePermissions = false,
+            allowedTypes = setOf(),
+            cameraSetup = HIDDEN,
+            systemPickerEnabled = false,
+            editingEnabled = false,
+            queueResults = false,
+            defaultSearchView = true,
+            title = string.photo_picker_gif
         )
 
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)

@@ -100,15 +100,24 @@ private val DOWNLOAD_VALID_UNTIL = Date()
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var store: ActivityLogStore
-    @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var getRestoreStatusUseCase: GetRestoreStatusUseCase
-    @Mock private lateinit var getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase
-    @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var mStatsDateUtils: StatsDateUtils
-    @Mock private lateinit var activityLogTracker: ActivityLogTracker
-    @Mock private lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
-    @Mock private lateinit var postDismissBackupDownloadUseCase: PostDismissBackupDownloadUseCase
+    @Mock
+    private lateinit var store: ActivityLogStore
+    @Mock
+    private lateinit var site: SiteModel
+    @Mock
+    private lateinit var getRestoreStatusUseCase: GetRestoreStatusUseCase
+    @Mock
+    private lateinit var getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+    @Mock
+    private lateinit var mStatsDateUtils: StatsDateUtils
+    @Mock
+    private lateinit var activityLogTracker: ActivityLogTracker
+    @Mock
+    private lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+    @Mock
+    private lateinit var postDismissBackupDownloadUseCase: PostDismissBackupDownloadUseCase
 
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
     private lateinit var formatDateRangeTimezoneCaptor: KArgumentCaptor<String>
@@ -128,14 +137,14 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() = test {
         viewModel = ActivityLogViewModel(
-                store,
-                getRestoreStatusUseCase,
-                getBackupDownloadStatusUseCase,
-                postDismissBackupDownloadUseCase,
-                resourceProvider,
-                mStatsDateUtils,
-                activityLogTracker,
-                jetpackCapabilitiesUseCase
+            store,
+            getRestoreStatusUseCase,
+            getBackupDownloadStatusUseCase,
+            postDismissBackupDownloadUseCase,
+            resourceProvider,
+            mStatsDateUtils,
+            activityLogTracker,
+            jetpackCapabilitiesUseCase
         )
         viewModel.site = site
         viewModel.rewindableOnly = rewindableOnly
@@ -156,7 +165,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         whenever(site.hasFreePlan).thenReturn(false)
         whenever(site.siteId).thenReturn(SITE_ID)
         whenever(jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(anyLong()))
-                .thenReturn(JetpackPurchasedProducts(scan = false, backup = false))
+            .thenReturn(JetpackPurchasedProducts(scan = false, backup = false))
     }
 
     @Test
@@ -183,17 +192,17 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun onDataFetchedPostsDataAndChangesStatusIfCanLoadMore() = test {
         val canLoadMore = true
         whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
+            .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.start(site, rewindableOnly)
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        rewindDisabled = false,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = canLoadMore
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                rewindDisabled = false,
+                isLastPageAndFreeSite = false,
+                canLoadMore = canLoadMore
+            )
         )
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.CAN_LOAD_MORE)
     }
@@ -202,11 +211,11 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun onDataFetchedLoadsMoreDataIfCanLoadMore() = test {
         val canLoadMore = true
         whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
+            .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
         viewModel.start(site, rewindableOnly)
         reset(store)
         whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
+            .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.onScrolledToBottom()
 
@@ -217,7 +226,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun onDataFetchedPostsDataAndChangesStatusIfCannotLoadMore() = test {
         val canLoadMore = false
         whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
+            .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.start(site, rewindableOnly)
 
@@ -230,7 +239,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         val canLoadMore = false
         whenever(site.hasFreePlan).thenReturn(true)
         whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
+            .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.start(site, rewindableOnly)
 
@@ -242,7 +251,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun onDataFetchedDoesNotLoadMoreDataIfCannotLoadMore() = test {
         val canLoadMore = false
         whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
+            .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
         viewModel.start(site, rewindableOnly)
         reset(store)
 
@@ -255,7 +264,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun onDataFetchedGoesToTopWhenSomeRowsAffected() = test {
         assertTrue(moveToTopEvents.isEmpty())
         whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(10, true, ActivityLogAction.FETCH_ACTIVITIES))
+            .thenReturn(OnActivityLogFetched(10, true, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.start(site, rewindableOnly)
 
@@ -266,7 +275,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun onDataFetchedDoesNotLoadMoreDataIfNoRowsAffected() = test {
         val canLoadMore = true
         whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(0, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
+            .thenReturn(OnActivityLogFetched(0, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.start(site, rewindableOnly)
 
@@ -277,7 +286,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun headerIsDisplayedForFirstItemOrWhenDifferentThenPrevious() = test {
         val canLoadMore = true
         whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(3, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
+            .thenReturn(OnActivityLogFetched(3, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.start(site, rewindableOnly)
 
@@ -299,11 +308,11 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun loadsNextPageOnScrollToBottom() = test {
         val canLoadMore = true
         whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(10, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
+            .thenReturn(OnActivityLogFetched(10, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
         viewModel.start(site, rewindableOnly)
         reset(store)
         whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(10, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
+            .thenReturn(OnActivityLogFetched(10, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.onScrolledToBottom()
 
@@ -332,7 +341,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupProduct() = test {
         whenever(site.hasFreePlan).thenReturn(true)
         whenever(jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(SITE_ID))
-                .thenReturn(JetpackPurchasedProducts(scan = false, backup = true))
+            .thenReturn(JetpackPurchasedProducts(scan = false, backup = true))
 
         viewModel.start(site, rewindableOnly)
 
@@ -356,8 +365,8 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     @Test
     fun onActivityTypeFilterClickPreviouslySelectedTypesPassed() {
         val selectedItems = listOf(
-                ActivityTypeModel("user", "User", 10),
-                ActivityTypeModel("backup", "Backup", 5)
+            ActivityTypeModel("user", "User", 10),
+            ActivityTypeModel("backup", "Backup", 5)
         )
         viewModel.onActivityTypesSelected(selectedItems)
 
@@ -371,7 +380,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         viewModel.onSecondaryActionClicked(ActivityLogListItem.SecondaryAction.RESTORE, event())
 
         assertThat(navigationEvents.last().peekContent())
-                .isInstanceOf(ActivityLogNavigationEvents.ShowRestore::class.java)
+            .isInstanceOf(ActivityLogNavigationEvents.ShowRestore::class.java)
     }
 
     @Test
@@ -379,7 +388,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         viewModel.onSecondaryActionClicked(ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP, event())
 
         assertThat(navigationEvents.last().peekContent())
-                .isInstanceOf(ActivityLogNavigationEvents.ShowBackupDownload::class.java)
+            .isInstanceOf(ActivityLogNavigationEvents.ShowBackupDownload::class.java)
     }
 
     @Test
@@ -427,7 +436,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         viewModel.onDateRangeSelected(null)
 
         assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
-                .isEqualTo(UiStringRes(R.string.activity_log_date_range_filter_label))
+            .isEqualTo(UiStringRes(R.string.activity_log_date_range_filter_label))
     }
 
     @Test
@@ -442,7 +451,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     @Test
     fun dateRangeLabelFormattingUsesGMT0Timezone() {
         whenever(mStatsDateUtils.formatDateRange(anyOrNull(), anyOrNull(), formatDateRangeTimezoneCaptor.capture()))
-                .thenReturn("TEST")
+            .thenReturn("TEST")
 
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
@@ -464,7 +473,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         viewModel.dateRangePickerClicked()
 
         assertThat(showDateRangePickerEvents[0].initialSelection)
-                .isEqualTo(Pair(DATE_1_IN_MILLIS, DATE_2_IN_MILLIS + ONE_DAY_WITHOUT_SECOND_IN_MILLIS))
+            .isEqualTo(Pair(DATE_1_IN_MILLIS, DATE_2_IN_MILLIS + ONE_DAY_WITHOUT_SECOND_IN_MILLIS))
     }
 
     @Test
@@ -498,7 +507,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         viewModel.onActivityTypesSelected(listOf())
 
         assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
-                .isEqualTo(UiStringRes(R.string.activity_log_activity_type_filter_label))
+            .isEqualTo(UiStringRes(R.string.activity_log_activity_type_filter_label))
     }
 
     @Test
@@ -508,21 +517,21 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("backup", activityTypeName, activityTypeCount)))
 
         assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
-                .isEqualTo(UiStringText(activityTypeName))
+            .isEqualTo(UiStringText(activityTypeName))
     }
 
     @Test
     fun activityTypeLabelWithCountShownWhenFilterHasMoreThanOneItem() {
         viewModel.onActivityTypesSelected(
-                listOf(
-                        ActivityTypeModel("user", "User", 10),
-                        ActivityTypeModel("backup", "Backup", 5)
-                )
+            listOf(
+                ActivityTypeModel("user", "User", 10),
+                ActivityTypeModel("backup", "Backup", 5)
+            )
         )
 
         val params = listOf(UiStringText("2"))
         assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
-                .isEqualTo(UiStringResWithParams(R.string.activity_log_activity_type_filter_active_label, params))
+            .isEqualTo(UiStringResWithParams(R.string.activity_log_activity_type_filter_active_label, params))
     }
 
     @Test
@@ -582,23 +591,23 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         val displayRestoreProgressItem = false
 
         viewModel.reloadEvents(
-                done = false,
-                restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem)
+            done = false,
+            restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem)
         )
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = displayRestoreProgressItem,
-                        restoreProgressWithDate = false,
-                        displayBackupProgress = false,
-                        backupProgressWithDate = false,
-                        emptyList = false,
-                        rewindDisabled = displayRestoreProgressItem,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = displayRestoreProgressItem,
+                restoreProgressWithDate = false,
+                displayBackupProgress = false,
+                backupProgressWithDate = false,
+                emptyList = false,
+                rewindDisabled = displayRestoreProgressItem,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -607,23 +616,23 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         val displayRestoreProgressItem = false
 
         viewModel.reloadEvents(
-                done = false,
-                restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem)
+            done = false,
+            restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem)
         )
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = displayRestoreProgressItem,
-                        restoreProgressWithDate = false,
-                        displayBackupProgress = false,
-                        backupProgressWithDate = false,
-                        emptyList = false,
-                        rewindDisabled = displayRestoreProgressItem,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = displayRestoreProgressItem,
+                restoreProgressWithDate = false,
+                displayBackupProgress = false,
+                backupProgressWithDate = false,
+                emptyList = false,
+                rewindDisabled = displayRestoreProgressItem,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -632,8 +641,8 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         val displayRestoreProgressItem = false
 
         viewModel.reloadEvents(
-                done = false,
-                restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem)
+            done = false,
+            restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem)
         )
 
         assertTrue(moveToTopEvents.isEmpty())
@@ -646,23 +655,23 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         initRestoreProgressMocks(displayRestoreProgressWithDate)
 
         viewModel.reloadEvents(
-                done = false,
-                restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem)
+            done = false,
+            restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem)
         )
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = displayRestoreProgressItem,
-                        restoreProgressWithDate = displayRestoreProgressWithDate,
-                        displayBackupProgress = false,
-                        backupProgressWithDate = false,
-                        emptyList = false,
-                        rewindDisabled = displayRestoreProgressItem,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = displayRestoreProgressItem,
+                restoreProgressWithDate = displayRestoreProgressWithDate,
+                displayBackupProgress = false,
+                backupProgressWithDate = false,
+                emptyList = false,
+                rewindDisabled = displayRestoreProgressItem,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -673,23 +682,23 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         initRestoreProgressMocks(displayRestoreProgressWithDate)
 
         viewModel.reloadEvents(
-                done = false,
-                restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem, rewindId = REWIND_ID)
+            done = false,
+            restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem, rewindId = REWIND_ID)
         )
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = displayRestoreProgressItem,
-                        restoreProgressWithDate = displayRestoreProgressWithDate,
-                        displayBackupProgress = false,
-                        backupProgressWithDate = false,
-                        emptyList = false,
-                        rewindDisabled = displayRestoreProgressItem,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = displayRestoreProgressItem,
+                restoreProgressWithDate = displayRestoreProgressWithDate,
+                displayBackupProgress = false,
+                backupProgressWithDate = false,
+                emptyList = false,
+                rewindDisabled = displayRestoreProgressItem,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -700,23 +709,23 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         initRestoreProgressMocks(displayRestoreProgressWithDate)
 
         viewModel.reloadEvents(
-                done = false,
-                restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem)
+            done = false,
+            restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem)
         )
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = displayRestoreProgressItem,
-                        restoreProgressWithDate = displayRestoreProgressWithDate,
-                        displayBackupProgress = false,
-                        backupProgressWithDate = false,
-                        emptyList = false,
-                        rewindDisabled = displayRestoreProgressItem,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = displayRestoreProgressItem,
+                restoreProgressWithDate = displayRestoreProgressWithDate,
+                displayBackupProgress = false,
+                backupProgressWithDate = false,
+                emptyList = false,
+                rewindDisabled = displayRestoreProgressItem,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -725,8 +734,8 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         initRestoreProgressMocks()
 
         viewModel.reloadEvents(
-                done = false,
-                restoreEvent = RestoreEvent(displayProgress = true, rewindId = REWIND_ID)
+            done = false,
+            restoreEvent = RestoreEvent(displayProgress = true, rewindId = REWIND_ID)
         )
 
         assertTrue(moveToTopEvents.isNotEmpty())
@@ -738,13 +747,13 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         initRestoreProgressFinishedMocks(date, true)
 
         viewModel.reloadEvents(
-                done = false,
-                restoreEvent = RestoreEvent(
-                        displayProgress = false,
-                        isCompleted = true,
-                        rewindId = REWIND_ID,
-                        published = date
-                )
+            done = false,
+            restoreEvent = RestoreEvent(
+                displayProgress = false,
+                isCompleted = true,
+                rewindId = REWIND_ID,
+                published = date
+            )
         )
 
         assertEquals(snackbarMessages.firstOrNull(), RESTORED_DATE_TIME)
@@ -756,13 +765,13 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         initRestoreProgressFinishedMocks(date, false)
 
         viewModel.reloadEvents(
-                done = false,
-                restoreEvent = RestoreEvent(
-                        displayProgress = false,
-                        isCompleted = true,
-                        rewindId = REWIND_ID,
-                        published = date
-                )
+            done = false,
+            restoreEvent = RestoreEvent(
+                displayProgress = false,
+                isCompleted = true,
+                rewindId = REWIND_ID,
+                published = date
+            )
         )
 
         assertEquals(snackbarMessages.firstOrNull(), RESTORED_NO_DATE)
@@ -776,26 +785,26 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         val displayNoticeItem = false
 
         viewModel.reloadEvents(
-                done = false,
-                backupDownloadEvent = BackupDownloadEvent(
-                        displayProgress = displayBackupProgressItem,
-                        displayNotice = displayNoticeItem
-                )
+            done = false,
+            backupDownloadEvent = BackupDownloadEvent(
+                displayProgress = displayBackupProgressItem,
+                displayNotice = displayNoticeItem
+            )
         )
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = false,
-                        restoreProgressWithDate = false,
-                        displayBackupProgress = displayBackupProgressItem,
-                        backupProgressWithDate = false,
-                        emptyList = false,
-                        rewindDisabled = displayBackupProgressItem,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = false,
+                restoreProgressWithDate = false,
+                displayBackupProgress = displayBackupProgressItem,
+                backupProgressWithDate = false,
+                emptyList = false,
+                rewindDisabled = displayBackupProgressItem,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -805,26 +814,26 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         val displayNoticeItem = false
 
         viewModel.reloadEvents(
-                done = false,
-                backupDownloadEvent = BackupDownloadEvent(
-                        displayProgress = displayBackupProgressItem,
-                        displayNotice = displayNoticeItem
-                )
+            done = false,
+            backupDownloadEvent = BackupDownloadEvent(
+                displayProgress = displayBackupProgressItem,
+                displayNotice = displayNoticeItem
+            )
         )
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = false,
-                        restoreProgressWithDate = false,
-                        displayBackupProgress = displayBackupProgressItem,
-                        backupProgressWithDate = false,
-                        emptyList = false,
-                        rewindDisabled = displayBackupProgressItem,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = false,
+                restoreProgressWithDate = false,
+                displayBackupProgress = displayBackupProgressItem,
+                backupProgressWithDate = false,
+                emptyList = false,
+                rewindDisabled = displayBackupProgressItem,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -834,11 +843,11 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         val displayNoticeItem = false
 
         viewModel.reloadEvents(
-                done = false,
-                backupDownloadEvent = BackupDownloadEvent(
-                        displayProgress = displayBackupProgressItem,
-                        displayNotice = displayNoticeItem
-                )
+            done = false,
+            backupDownloadEvent = BackupDownloadEvent(
+                displayProgress = displayBackupProgressItem,
+                displayNotice = displayNoticeItem
+            )
         )
 
         assertTrue(moveToTopEvents.isEmpty())
@@ -852,26 +861,26 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         initBackupProgressMocks(displayBackupProgressWithDate)
 
         viewModel.reloadEvents(
-                done = false,
-                backupDownloadEvent = BackupDownloadEvent(
-                        displayProgress = displayBackupProgressItem,
-                        displayNotice = displayNoticeItem
-                )
+            done = false,
+            backupDownloadEvent = BackupDownloadEvent(
+                displayProgress = displayBackupProgressItem,
+                displayNotice = displayNoticeItem
+            )
         )
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = false,
-                        restoreProgressWithDate = false,
-                        displayBackupProgress = displayBackupProgressItem,
-                        backupProgressWithDate = displayBackupProgressWithDate,
-                        emptyList = false,
-                        rewindDisabled = displayBackupProgressItem,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = false,
+                restoreProgressWithDate = false,
+                displayBackupProgress = displayBackupProgressItem,
+                backupProgressWithDate = displayBackupProgressWithDate,
+                emptyList = false,
+                rewindDisabled = displayBackupProgressItem,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -883,27 +892,27 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         initBackupProgressMocks(displayBackupProgressWithDate)
 
         viewModel.reloadEvents(
-                done = false,
-                backupDownloadEvent = BackupDownloadEvent(
-                        displayProgress = displayBackupProgressItem,
-                        displayNotice = displayNoticeItem,
-                        rewindId = REWIND_ID
-                )
+            done = false,
+            backupDownloadEvent = BackupDownloadEvent(
+                displayProgress = displayBackupProgressItem,
+                displayNotice = displayNoticeItem,
+                rewindId = REWIND_ID
+            )
         )
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = false,
-                        restoreProgressWithDate = false,
-                        displayBackupProgress = displayBackupProgressItem,
-                        backupProgressWithDate = displayBackupProgressWithDate,
-                        emptyList = false,
-                        rewindDisabled = displayBackupProgressItem,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = false,
+                restoreProgressWithDate = false,
+                displayBackupProgress = displayBackupProgressItem,
+                backupProgressWithDate = displayBackupProgressWithDate,
+                emptyList = false,
+                rewindDisabled = displayBackupProgressItem,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -915,26 +924,26 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         initBackupProgressMocks(displayBackupProgressWithDate)
 
         viewModel.reloadEvents(
-                done = false,
-                backupDownloadEvent = BackupDownloadEvent(
-                        displayProgress = displayBackupProgressItem,
-                        displayNotice = displayNoticeItem
-                )
+            done = false,
+            backupDownloadEvent = BackupDownloadEvent(
+                displayProgress = displayBackupProgressItem,
+                displayNotice = displayNoticeItem
+            )
         )
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = false,
-                        restoreProgressWithDate = false,
-                        displayBackupProgress = displayBackupProgressItem,
-                        backupProgressWithDate = displayBackupProgressWithDate,
-                        emptyList = false,
-                        rewindDisabled = displayBackupProgressItem,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = false,
+                restoreProgressWithDate = false,
+                displayBackupProgress = displayBackupProgressItem,
+                backupProgressWithDate = displayBackupProgressWithDate,
+                emptyList = false,
+                rewindDisabled = displayBackupProgressItem,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -943,12 +952,12 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         initBackupProgressMocks()
 
         viewModel.reloadEvents(
-                done = false,
-                backupDownloadEvent = BackupDownloadEvent(
-                        displayProgress = true,
-                        displayNotice = false,
-                        rewindId = REWIND_ID
-                )
+            done = false,
+            backupDownloadEvent = BackupDownloadEvent(
+                displayProgress = true,
+                displayNotice = false,
+                rewindId = REWIND_ID
+            )
         )
 
         assertTrue(moveToTopEvents.isNotEmpty())
@@ -990,10 +999,10 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         viewModel.reloadEvents(done = false, backupDownloadEvent = backupDownloadCompleteEvent())
 
         events.first()
-                ?.filterIsInstance<Notice>()
-                ?.first()
-                ?.secondaryAction
-                ?.invoke()
+            ?.filterIsInstance<Notice>()
+            ?.first()
+            ?.secondaryAction
+            ?.invoke()
         assertThat(events.last()?.filterIsInstance<Notice>()).isEmpty()
     }
 
@@ -1003,10 +1012,10 @@ class ActivityLogViewModelTest : BaseUnitTest() {
 
         viewModel.reloadEvents(done = false, backupDownloadEvent = backupDownloadCompleteEvent())
         events.first()
-                ?.filterIsInstance<Notice>()
-                ?.first()
-                ?.secondaryAction
-                ?.invoke()
+            ?.filterIsInstance<Notice>()
+            ?.first()
+            ?.secondaryAction
+            ?.invoke()
 
         verify(activityLogTracker).trackDownloadBackupDismissButtonClicked(rewindableOnly)
     }
@@ -1029,27 +1038,27 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         initBackupProgressMocks(displayBackupProgressWithDate)
 
         viewModel.reloadEvents(
-                done = false,
-                backupDownloadEvent = BackupDownloadEvent(
-                        displayProgress = displayBackupProgressItem,
-                        displayNotice = displayNoticeItem,
-                        rewindId = REWIND_ID
-                )
+            done = false,
+            backupDownloadEvent = BackupDownloadEvent(
+                displayProgress = displayBackupProgressItem,
+                displayNotice = displayNoticeItem,
+                rewindId = REWIND_ID
+            )
         )
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = false,
-                        restoreProgressWithDate = false,
-                        displayBackupProgress = displayBackupProgressItem,
-                        backupProgressWithDate = displayBackupProgressWithDate,
-                        emptyList = false,
-                        rewindDisabled = displayBackupProgressItem,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = false,
+                restoreProgressWithDate = false,
+                displayBackupProgress = displayBackupProgressItem,
+                backupProgressWithDate = displayBackupProgressWithDate,
+                emptyList = false,
+                rewindDisabled = displayBackupProgressItem,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -1066,31 +1075,31 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         initBackupProgressMocks(displayBackupProgressWithDate)
 
         viewModel.reloadEvents(
-                done = false,
-                restoreEvent = RestoreEvent(
-                        displayProgress = displayRestoreProgressItem,
-                        rewindId = REWIND_ID
-                ),
-                backupDownloadEvent = BackupDownloadEvent(
-                        displayProgress = displayBackupProgressItem,
-                        displayNotice = displayNoticeItem,
-                        rewindId = REWIND_ID
-                )
+            done = false,
+            restoreEvent = RestoreEvent(
+                displayProgress = displayRestoreProgressItem,
+                rewindId = REWIND_ID
+            ),
+            backupDownloadEvent = BackupDownloadEvent(
+                displayProgress = displayBackupProgressItem,
+                displayNotice = displayNoticeItem,
+                rewindId = REWIND_ID
+            )
         )
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = displayRestoreProgressItem,
-                        restoreProgressWithDate = displayRestoreProgressWithDate,
-                        displayBackupProgress = displayBackupProgressItem,
-                        backupProgressWithDate = displayBackupProgressWithDate,
-                        emptyList = false,
-                        rewindDisabled = displayRestoreProgressItem || displayBackupProgressItem,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = displayRestoreProgressItem,
+                restoreProgressWithDate = displayRestoreProgressWithDate,
+                displayBackupProgress = displayBackupProgressItem,
+                backupProgressWithDate = displayBackupProgressWithDate,
+                emptyList = false,
+                rewindDisabled = displayRestoreProgressItem || displayBackupProgressItem,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -1104,18 +1113,18 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         viewModel.reloadEvents(done)
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = false,
-                        restoreProgressWithDate = false,
-                        displayBackupProgress = false,
-                        backupProgressWithDate = false,
-                        emptyList = true,
-                        rewindDisabled = false,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = false,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = false,
+                restoreProgressWithDate = false,
+                displayBackupProgress = false,
+                backupProgressWithDate = false,
+                emptyList = true,
+                rewindDisabled = false,
+                isLastPageAndFreeSite = false,
+                canLoadMore = false,
+                withFooter = false
+            )
         )
     }
 
@@ -1127,18 +1136,18 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         viewModel.reloadEvents(done)
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = false,
-                        restoreProgressWithDate = false,
-                        displayBackupProgress = false,
-                        backupProgressWithDate = false,
-                        emptyList = false,
-                        rewindDisabled = false,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = false,
+                restoreProgressWithDate = false,
+                displayBackupProgress = false,
+                backupProgressWithDate = false,
+                emptyList = false,
+                rewindDisabled = false,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -1150,18 +1159,18 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         viewModel.reloadEvents(done)
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = false,
-                        restoreProgressWithDate = false,
-                        displayBackupProgress = false,
-                        backupProgressWithDate = false,
-                        emptyList = true,
-                        rewindDisabled = false,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = false,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = false,
+                restoreProgressWithDate = false,
+                displayBackupProgress = false,
+                backupProgressWithDate = false,
+                emptyList = true,
+                rewindDisabled = false,
+                isLastPageAndFreeSite = false,
+                canLoadMore = false,
+                withFooter = false
+            )
         )
     }
 
@@ -1173,18 +1182,18 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         viewModel.reloadEvents(done)
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = false,
-                        restoreProgressWithDate = false,
-                        displayBackupProgress = false,
-                        backupProgressWithDate = false,
-                        emptyList = false,
-                        rewindDisabled = false,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = false,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = false,
+                restoreProgressWithDate = false,
+                displayBackupProgress = false,
+                backupProgressWithDate = false,
+                emptyList = false,
+                rewindDisabled = false,
+                isLastPageAndFreeSite = false,
+                canLoadMore = false,
+                withFooter = false
+            )
         )
     }
 
@@ -1197,18 +1206,18 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         viewModel.reloadEvents(done)
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = false,
-                        restoreProgressWithDate = false,
-                        displayBackupProgress = false,
-                        backupProgressWithDate = false,
-                        emptyList = false,
-                        rewindDisabled = false,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = false,
-                        withFooter = true
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = false,
+                restoreProgressWithDate = false,
+                displayBackupProgress = false,
+                backupProgressWithDate = false,
+                emptyList = false,
+                rewindDisabled = false,
+                isLastPageAndFreeSite = false,
+                canLoadMore = false,
+                withFooter = true
+            )
         )
     }
 
@@ -1224,23 +1233,23 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     @Test
     fun `given status is multisite, when query restore status, then reload events for multisite`() = test {
         whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID))
-                .thenReturn(flow { emit(RestoreRequestState.Multisite) })
+            .thenReturn(flow { emit(RestoreRequestState.Multisite) })
         initRestoreProgressMocks()
 
         viewModel.onQueryRestoreStatus(REWIND_ID, RESTORE_ID)
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = false,
-                        restoreProgressWithDate = false,
-                        emptyList = false,
-                        rewindDisabled = false,
-                        isRestoreHidden = true,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = false,
+                restoreProgressWithDate = false,
+                emptyList = false,
+                rewindDisabled = false,
+                isRestoreHidden = true,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -1253,16 +1262,16 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         viewModel.onQueryRestoreStatus(REWIND_ID, RESTORE_ID)
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = true,
-                        restoreProgressWithDate = true,
-                        emptyList = false,
-                        rewindDisabled = true,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = true,
+                restoreProgressWithDate = true,
+                emptyList = false,
+                rewindDisabled = true,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -1271,24 +1280,24 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         val progress = RestoreRequestState.Progress(REWIND_ID, 50)
         val complete = RestoreRequestState.Complete(REWIND_ID, RESTORE_ID)
         whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID))
-                .thenReturn(flow { emit(progress); emit(complete) })
+            .thenReturn(flow { emit(progress); emit(complete) })
         initRestoreProgressMocks()
         whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(10, false, ActivityLogAction.FETCH_ACTIVITIES))
+            .thenReturn(OnActivityLogFetched(10, false, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.onQueryRestoreStatus(REWIND_ID, RESTORE_ID)
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = false,
-                        restoreProgressWithDate = false,
-                        emptyList = false,
-                        rewindDisabled = false,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = false,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = false,
+                restoreProgressWithDate = false,
+                emptyList = false,
+                rewindDisabled = false,
+                isLastPageAndFreeSite = false,
+                canLoadMore = false,
+                withFooter = false
+            )
         )
     }
 
@@ -1306,7 +1315,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun `when query restore status, then show restore started message`() {
         whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
         whenever(resourceProvider.getString(eq(R.string.activity_log_rewind_started_snackbar_message), any(), any()))
-                .thenReturn(RESTORE_STARTED)
+            .thenReturn(RESTORE_STARTED)
 
         viewModel.onQueryRestoreStatus(REWIND_ID, RESTORE_ID)
 
@@ -1326,24 +1335,24 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun `given status is a progress, when query backup status, then reload events for progress`() = test {
         val progress = BackupDownloadRequestState.Progress(REWIND_ID, 50)
         whenever(getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, DOWNLOAD_ID))
-                .thenReturn(flow { emit(progress) })
+            .thenReturn(flow { emit(progress) })
         initBackupProgressMocks()
 
         viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID, JetpackBackupDownloadActionState.PROGRESS.id)
 
         assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayRestoreProgress = false,
-                        restoreProgressWithDate = false,
-                        displayBackupProgress = true,
-                        backupProgressWithDate = true,
-                        emptyList = false,
-                        rewindDisabled = true,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
+            viewModel.events.value,
+            expectedActivityList(
+                displayRestoreProgress = false,
+                restoreProgressWithDate = false,
+                displayBackupProgress = true,
+                backupProgressWithDate = true,
+                emptyList = false,
+                rewindDisabled = true,
+                isLastPageAndFreeSite = false,
+                canLoadMore = true,
+                withFooter = false
+            )
         )
     }
 
@@ -1351,37 +1360,37 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun `given status is a complete, when query backup status, then request events update for complete`() = test {
         val progress = BackupDownloadRequestState.Progress(REWIND_ID, 50)
         val complete = BackupDownloadRequestState.Complete(
-                REWIND_ID,
-                DOWNLOAD_ID,
-                DOWNLOAD_URL,
-                DOWNLOAD_PUBLISHED,
-                DOWNLOAD_VALID_UNTIL,
-                DOWNLOAD_IS_VALID
+            REWIND_ID,
+            DOWNLOAD_ID,
+            DOWNLOAD_URL,
+            DOWNLOAD_PUBLISHED,
+            DOWNLOAD_VALID_UNTIL,
+            DOWNLOAD_IS_VALID
         )
         whenever(getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, DOWNLOAD_ID))
-                .thenReturn(flow { emit(progress); emit(complete) })
+            .thenReturn(flow { emit(progress); emit(complete) })
         initBackupProgressMocks()
         initBackupDownloadCompleteMocks()
         whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(10, false, ActivityLogAction.FETCH_ACTIVITIES))
+            .thenReturn(OnActivityLogFetched(10, false, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID, JetpackBackupDownloadActionState.COMPLETE.id)
 
         assertThat(viewModel.events.value?.first() as? Notice).isNotNull
         val events = viewModel.events.value?.filterNot { it is Notice }
         assertEquals(
-                events,
-                expectedActivityList(
-                        displayRestoreProgress = false,
-                        restoreProgressWithDate = false,
-                        displayBackupProgress = false,
-                        backupProgressWithDate = false,
-                        emptyList = false,
-                        rewindDisabled = false,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = false,
-                        withFooter = false
-                )
+            events,
+            expectedActivityList(
+                displayRestoreProgress = false,
+                restoreProgressWithDate = false,
+                displayBackupProgress = false,
+                backupProgressWithDate = false,
+                emptyList = false,
+                rewindDisabled = false,
+                isLastPageAndFreeSite = false,
+                canLoadMore = false,
+                withFooter = false
+            )
         )
     }
 
@@ -1389,7 +1398,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun `given status is something else, when query backup status, then do not trigger anything`() = test {
         val success = BackupDownloadRequestState.Success(REWIND_ID, REWIND_ID, DOWNLOAD_ID)
         whenever(getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, DOWNLOAD_ID))
-                .thenReturn(flow { emit(success) })
+            .thenReturn(flow { emit(success) })
 
         viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID, JetpackBackupDownloadActionState.CANCEL.id)
 
@@ -1400,7 +1409,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun `when query backup status in progress, then show backup download started message`() {
         whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
         whenever(resourceProvider.getString(eq(R.string.activity_log_backup_started_snackbar_message), any(), any()))
-                .thenReturn(BACKUP_STARTED)
+            .thenReturn(BACKUP_STARTED)
 
         viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID, JetpackBackupDownloadActionState.PROGRESS.id)
 
@@ -1411,7 +1420,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun `given published date, when query backup status complete, then show dates backup finished message`() {
         whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
         whenever(resourceProvider.getString(eq(R.string.activity_log_backup_finished_snackbar_message), any(), any()))
-                .thenReturn(BACKED_UP_DATE_TIME)
+            .thenReturn(BACKED_UP_DATE_TIME)
 
         viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID, JetpackBackupDownloadActionState.COMPLETE.id)
 
@@ -1422,7 +1431,7 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     fun `given no published date, when query backup status complete, then show no dates backup finished message`() {
         whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(null)
         whenever(resourceProvider.getString(eq(R.string.activity_log_backup_finished_snackbar_message_no_dates)))
-                .thenReturn(BACKED_UP_NO_DATE)
+            .thenReturn(BACKED_UP_NO_DATE)
 
         viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID, JetpackBackupDownloadActionState.COMPLETE.id)
 
@@ -1441,17 +1450,17 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         rewindable: Boolean = true,
         published: Date = activityPublishedTime(1985, 8, 27)
     ) = ActivityLogModel(
-            activityID = "activityId",
-            summary = "",
-            content = null,
-            name = "",
-            type = "",
-            gridicon = "",
-            status = "",
-            rewindable = rewindable,
-            rewindID = "",
-            published = published,
-            actor = null
+        activityID = "activityId",
+        summary = "",
+        content = null,
+        name = "",
+        type = "",
+        gridicon = "",
+        status = "",
+        rewindable = rewindable,
+        rewindID = "",
+        published = published,
+        actor = null
     )
 
     private fun activityPublishedTime(year: Int, month: Int, date: Int): Date {
@@ -1515,21 +1524,21 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     }
 
     private fun firstItem(rewindDisabled: Boolean, isRestoreHidden: Boolean) = ActivityLogListItem.Event(
-            model = activityList[0],
-            rewindDisabled = rewindDisabled,
-            isRestoreHidden = isRestoreHidden
+        model = activityList[0],
+        rewindDisabled = rewindDisabled,
+        isRestoreHidden = isRestoreHidden
     )
 
     private fun secondItem(rewindDisabled: Boolean, isRestoreHidden: Boolean) = ActivityLogListItem.Event(
-            model = activityList[1],
-            rewindDisabled = rewindDisabled,
-            isRestoreHidden = isRestoreHidden
+        model = activityList[1],
+        rewindDisabled = rewindDisabled,
+        isRestoreHidden = isRestoreHidden
     )
 
     private fun thirdItem(rewindDisabled: Boolean, isRestoreHidden: Boolean) = ActivityLogListItem.Event(
-            model = activityList[2],
-            rewindDisabled = rewindDisabled,
-            isRestoreHidden = isRestoreHidden
+        model = activityList[2],
+        rewindDisabled = rewindDisabled,
+        isRestoreHidden = isRestoreHidden
     )
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {
@@ -1542,28 +1551,28 @@ class ActivityLogViewModelTest : BaseUnitTest() {
     }
 
     private fun event() = ActivityLogListItem.Event(
-            activityId = "activityId",
-            title = "",
-            description = ",",
-            gridIcon = null,
-            eventStatus = null,
-            isRewindable = true,
-            rewindId = null,
-            date = Date(),
-            isButtonVisible = true,
-            buttonIcon = ActivityLogListItem.Icon.DEFAULT,
-            isRestoreHidden = false
+        activityId = "activityId",
+        title = "",
+        description = ",",
+        gridIcon = null,
+        eventStatus = null,
+        isRewindable = true,
+        rewindId = null,
+        date = Date(),
+        isButtonVisible = true,
+        buttonIcon = ActivityLogListItem.Icon.DEFAULT,
+        isRestoreHidden = false
     )
 
     private fun backupDownloadCompleteEvent() = BackupDownloadEvent(
-            displayProgress = false,
-            displayNotice = true,
-            isCompleted = true,
-            rewindId = REWIND_ID,
-            published = activity().published,
-            url = "www.wordpress.com",
-            validUntil = activity().published,
-            downloadId = 10L
+        displayProgress = false,
+        displayNotice = true,
+        isCompleted = true,
+        rewindId = REWIND_ID,
+        published = activity().published,
+        url = "www.wordpress.com",
+        validUntil = activity().published,
+        downloadId = 10L
     )
 
     private fun initRestoreProgressMocks(displayProgressWithDate: Boolean = true) {
@@ -1572,13 +1581,13 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         }
         whenever(resourceProvider.getString(R.string.now)).thenReturn(NOW)
         whenever(resourceProvider.getString(R.string.activity_log_currently_restoring_title))
-                .thenReturn(RESTORING_CURRENTLY)
+            .thenReturn(RESTORING_CURRENTLY)
         if (displayProgressWithDate) {
             whenever(resourceProvider.getString(eq(R.string.activity_log_currently_restoring_message), any(), any()))
-                    .thenReturn(RESTORING_DATE_TIME)
+                .thenReturn(RESTORING_DATE_TIME)
         } else {
             whenever(resourceProvider.getString(R.string.activity_log_currently_restoring_message_no_dates))
-                    .thenReturn(RESTORING_NO_DATE)
+                .thenReturn(RESTORING_NO_DATE)
         }
     }
 
@@ -1588,50 +1597,50 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         }
         whenever(resourceProvider.getString(R.string.now)).thenReturn(NOW)
         whenever(resourceProvider.getString(R.string.activity_log_currently_backing_up_title))
-                .thenReturn(BACKING_UP_CURRENTLY)
+            .thenReturn(BACKING_UP_CURRENTLY)
         if (displayProgressWithDate) {
             whenever(resourceProvider.getString(eq(R.string.activity_log_currently_backing_up_message), any(), any()))
-                    .thenReturn(BACKING_UP_DATE_TIME)
+                .thenReturn(BACKING_UP_DATE_TIME)
         } else {
             whenever(resourceProvider.getString(R.string.activity_log_currently_backing_up_message_no_dates))
-                    .thenReturn(BACKING_UP_NO_DATE)
+                .thenReturn(BACKING_UP_NO_DATE)
         }
     }
 
     private fun initRestoreProgressFinishedMocks(date: Date?, displayProgressWithDate: Boolean) {
         initRestoreProgressMocks(displayProgressWithDate)
         viewModel.reloadEvents(
-                done = false,
-                restoreEvent = RestoreEvent(displayProgress = true, rewindId = REWIND_ID)
+            done = false,
+            restoreEvent = RestoreEvent(displayProgress = true, rewindId = REWIND_ID)
         )
         if (date != null) {
             whenever(
-                    resourceProvider.getString(
-                            eq(R.string.activity_log_rewind_finished_snackbar_message),
-                            any(),
-                            any()
-                    )
+                resourceProvider.getString(
+                    eq(R.string.activity_log_rewind_finished_snackbar_message),
+                    any(),
+                    any()
+                )
             ).thenReturn(RESTORED_DATE_TIME)
         } else {
             whenever(resourceProvider.getString(R.string.activity_log_rewind_finished_snackbar_message_no_dates))
-                    .thenReturn(RESTORED_NO_DATE)
+                .thenReturn(RESTORED_NO_DATE)
         }
     }
 
     private fun initBackupDownloadCompleteMocks() {
         whenever(
-                resourceProvider.getString(
-                        eq(R.string.activity_log_backup_download_notice_description_with_two_params),
-                        any(),
-                        any()
-                )
+            resourceProvider.getString(
+                eq(R.string.activity_log_backup_download_notice_description_with_two_params),
+                any(),
+                any()
+            )
         ).thenReturn(BACKUP_NOTICE)
         whenever(
-                resourceProvider.getString(
-                        eq(R.string.activity_log_backup_finished_snackbar_message),
-                        any(),
-                        any()
-                )
+            resourceProvider.getString(
+                eq(R.string.activity_log_backup_finished_snackbar_message),
+                any(),
+                any()
+            )
         ).thenReturn(BACKED_UP_DATE_TIME)
     }
 }

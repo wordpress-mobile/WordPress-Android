@@ -18,8 +18,10 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
 class DomainRegistrationMainViewModelTest : BaseUnitTest() {
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var site: SiteModel
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var site: SiteModel
 
     private lateinit var viewModel: DomainRegistrationMainViewModel
 

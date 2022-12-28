@@ -18,7 +18,7 @@ class ActionListItemViewHolder(
     internal val parent: ViewGroup,
     val imageManager: ImageManager
 ) : AddContentViewHolder<MainActionListItemBinding>(
-        parent.viewBinding(MainActionListItemBinding::inflate)
+    parent.viewBinding(MainActionListItemBinding::inflate)
 ) {
     private val regularTypeface = Typeface.create("sans-serif", Typeface.NORMAL)
     private val mediumTypeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
@@ -60,13 +60,13 @@ class ActionListItemViewHolder(
 
         if (action.showQuickStartFocusPoint) {
             val focusPointSize = actionRowContainer.resources.getDimensionPixelOffset(
-                    dimen.quick_start_focus_point_size
+                dimen.quick_start_focus_point_size
             )
             actionRowContainer.post {
                 val verticalOffset = (actionRowContainer.width - focusPointSize) / 2
                 QuickStartUtils.addQuickStartFocusPointAboveTheView(
-                        actionRowContainer, actionTitle,
-                        verticalOffset, 0
+                    actionRowContainer, actionTitle,
+                    verticalOffset, 0
                 )
             }
         }

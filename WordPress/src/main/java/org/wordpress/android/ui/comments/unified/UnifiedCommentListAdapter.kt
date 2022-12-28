@@ -20,14 +20,20 @@ import javax.inject.Inject
 
 class UnifiedCommentListAdapter(context: Context) : ListAdapter<UnifiedCommentListItem,
         UnifiedCommentListViewHolder<*>>(
-        diffCallback
+    diffCallback
 ) {
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var commentListUiUtils: CommentListUiUtils
-    @Inject lateinit var resourceProvider: ResourceProvider
-    @Inject lateinit var gravatarUtilsWrapper: GravatarUtilsWrapper
-    @Inject lateinit var animationUtilsWrapper: AnimationUtilsWrapper
+    @Inject
+    lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var commentListUiUtils: CommentListUiUtils
+    @Inject
+    lateinit var resourceProvider: ResourceProvider
+    @Inject
+    lateinit var gravatarUtilsWrapper: GravatarUtilsWrapper
+    @Inject
+    lateinit var animationUtilsWrapper: AnimationUtilsWrapper
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
@@ -37,13 +43,13 @@ class UnifiedCommentListAdapter(context: Context) : ListAdapter<UnifiedCommentLi
         return when (viewType) {
             SUB_HEADER.ordinal -> UnifiedCommentSubHeaderViewHolder(parent)
             COMMENT.ordinal -> UnifiedCommentViewHolder(
-                    parent,
-                    imageManager,
-                    uiHelpers,
-                    commentListUiUtils,
-                    resourceProvider,
-                    gravatarUtilsWrapper,
-                    animationUtilsWrapper
+                parent,
+                imageManager,
+                uiHelpers,
+                commentListUiUtils,
+                resourceProvider,
+                gravatarUtilsWrapper,
+                animationUtilsWrapper
             )
             NEXT_PAGE_LOADER.ordinal -> LoadStateViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view holder in UnifiedCommentListAdapter")

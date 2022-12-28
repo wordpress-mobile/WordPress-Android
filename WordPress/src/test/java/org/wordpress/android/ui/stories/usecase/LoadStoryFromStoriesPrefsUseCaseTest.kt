@@ -20,18 +20,23 @@ import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
 @RunWith(MockitoJUnitRunner::class)
 class LoadStoryFromStoriesPrefsUseCaseTest {
     private lateinit var loadStoryFromStoriesPrefsUseCase: LoadStoryFromStoriesPrefsUseCase
-    @Mock lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
-    @Mock lateinit var mediaStore: MediaStore
-    @Mock lateinit var storiesPrefs: StoriesPrefs
-    @Mock lateinit var context: Context
-    @Mock lateinit var siteModel: SiteModel
+    @Mock
+    lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
+    @Mock
+    lateinit var mediaStore: MediaStore
+    @Mock
+    lateinit var storiesPrefs: StoriesPrefs
+    @Mock
+    lateinit var context: Context
+    @Mock
+    lateinit var siteModel: SiteModel
 
     @Before
     fun setUp() {
         loadStoryFromStoriesPrefsUseCase = LoadStoryFromStoriesPrefsUseCase(
-                storyRepositoryWrapper,
-                storiesPrefs,
-                mediaStore
+            storyRepositoryWrapper,
+            storiesPrefs,
+            mediaStore
         )
     }
 
@@ -43,7 +48,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
 
         // When
         val mediaIds = loadStoryFromStoriesPrefsUseCase.getMediaIdsFromStoryBlockBridgeMediaFiles(
-                mediaFiles as ArrayList<Any>
+            mediaFiles as ArrayList<Any>
         )
 
         // Then
@@ -58,7 +63,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
 
         // When
         val mediaIds = loadStoryFromStoriesPrefsUseCase.getMediaIdsFromStoryBlockBridgeMediaFiles(
-                mediaFiles as ArrayList<Any>
+            mediaFiles as ArrayList<Any>
         )
 
         // Then
@@ -171,16 +176,17 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
                 whenever(storiesPrefs.isValidSlide(siteModel.id.toLong(), TempId(mediaId))).thenReturn(markAsValid)
             } else if (useRemoteId) {
                 whenever(
-                        storiesPrefs.isValidSlide(
-                                siteModel.id.toLong(),
-                                RemoteId(mediaId.toLong())
-                        )
+                    storiesPrefs.isValidSlide(
+                        siteModel.id.toLong(),
+                        RemoteId(mediaId.toLong())
+                    )
                 ).thenReturn(markAsValid)
             } else {
-                whenever(storiesPrefs.isValidSlide(
-                            siteModel.id.toLong(),
-                            LocalId(mediaId.toInt())
-                        )
+                whenever(
+                    storiesPrefs.isValidSlide(
+                        siteModel.id.toLong(),
+                        LocalId(mediaId.toInt())
+                    )
                 ).thenReturn(markAsValid)
             }
         }

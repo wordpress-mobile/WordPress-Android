@@ -31,25 +31,28 @@ import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostU
 
 @RunWith(MockitoJUnitRunner::class)
 class CreatePageListItemLabelsUseCaseTest {
-    @Mock private lateinit var autoSaveConflictResolver: AutoSaveConflictResolver
-    @Mock private lateinit var labelColorUseCase: PostPageListLabelColorUseCase
-    @Mock private lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+    @Mock
+    private lateinit var autoSaveConflictResolver: AutoSaveConflictResolver
+    @Mock
+    private lateinit var labelColorUseCase: PostPageListLabelColorUseCase
+    @Mock
+    private lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private lateinit var useCase: CreatePageListItemLabelsUseCase
 
     @Before
     fun setUp() {
         useCase = CreatePageListItemLabelsUseCase(
-                autoSaveConflictResolver,
-                labelColorUseCase,
-                uploadUtilsWrapper
+            autoSaveConflictResolver,
+            labelColorUseCase,
+            uploadUtilsWrapper
         )
     }
 
     @Test
     fun `private label shown for private pages`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply { setStatus(PRIVATE.toString()) },
-                mock()
+            PostModel().apply { setStatus(PRIVATE.toString()) },
+            mock()
         )
         assertThat(labels).contains(UiStringRes(R.string.page_status_page_private))
     }
@@ -57,8 +60,8 @@ class CreatePageListItemLabelsUseCaseTest {
     @Test
     fun `pending review label shown for pages pending review`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply { setStatus(PENDING.toString()) },
-                mock()
+            PostModel().apply { setStatus(PENDING.toString()) },
+            mock()
         )
         assertThat(labels).contains(UiStringRes(R.string.page_status_pending_review))
     }
@@ -109,12 +112,12 @@ class CreatePageListItemLabelsUseCaseTest {
     @Test
     fun `error uploading media label shown when the media upload fails`() {
         val (labels, _) = useCase.createLabels(
-                PostModel(),
-                PostUploadUiState.UploadFailed(
-                        error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
-                        isEligibleForAutoUpload = false,
-                        retryWillPushChanges = false
-                )
+            PostModel(),
+            PostUploadUiState.UploadFailed(
+                error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                isEligibleForAutoUpload = false,
+                retryWillPushChanges = false
+            )
         )
         assertThat(labels).contains(UiStringRes(R.string.error_media_recover_page))
     }
@@ -122,29 +125,29 @@ class CreatePageListItemLabelsUseCaseTest {
     @Test
     fun `given a mix of info and error statuses, only the error status is shown`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply { setIsLocallyChanged(true) },
-                PostUploadUiState.UploadFailed(
-                        error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
-                        isEligibleForAutoUpload = false,
-                        retryWillPushChanges = false
-                )
+            PostModel().apply { setIsLocallyChanged(true) },
+            PostUploadUiState.UploadFailed(
+                error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                isEligibleForAutoUpload = false,
+                retryWillPushChanges = false
+            )
         )
         assertThat(labels)
-                .containsOnly(UiStringRes(R.string.error_media_recover_page))
+            .containsOnly(UiStringRes(R.string.error_media_recover_page))
     }
 
     @Test
     fun `media upload error shown with specific message for pending page eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply {
-                    setIsLocallyChanged(true)
-                    setStatus(PENDING.toString())
-                },
-                PostUploadUiState.UploadFailed(
-                        error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
-                        isEligibleForAutoUpload = true,
-                        retryWillPushChanges = true
-                )
+            PostModel().apply {
+                setIsLocallyChanged(true)
+                setStatus(PENDING.toString())
+            },
+            PostUploadUiState.UploadFailed(
+                error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                isEligibleForAutoUpload = true,
+                retryWillPushChanges = true
+            )
         )
         assertThat(labels).containsOnly(UiStringRes(R.string.error_media_recover_page_not_submitted_retrying))
     }
@@ -152,15 +155,15 @@ class CreatePageListItemLabelsUseCaseTest {
     @Test
     fun `media upload error shown with specific message for pending page not eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply {
-                    setIsLocallyChanged(true)
-                    setStatus(PENDING.toString())
-                },
-                PostUploadUiState.UploadFailed(
-                        error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
-                        isEligibleForAutoUpload = false,
-                        retryWillPushChanges = true
-                )
+            PostModel().apply {
+                setIsLocallyChanged(true)
+                setStatus(PENDING.toString())
+            },
+            PostUploadUiState.UploadFailed(
+                error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                isEligibleForAutoUpload = false,
+                retryWillPushChanges = true
+            )
         )
         assertThat(labels).containsOnly(UiStringRes(R.string.error_media_recover_page_not_submitted))
     }
@@ -168,32 +171,32 @@ class CreatePageListItemLabelsUseCaseTest {
     @Test
     fun `media upload error shown with specific message for scheduled page eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply {
-                    setIsLocallyChanged(true)
-                    setStatus(SCHEDULED.toString())
-                },
-                PostUploadUiState.UploadFailed(
-                        error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
-                        isEligibleForAutoUpload = true,
-                        retryWillPushChanges = true
-                )
+            PostModel().apply {
+                setIsLocallyChanged(true)
+                setStatus(SCHEDULED.toString())
+            },
+            PostUploadUiState.UploadFailed(
+                error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                isEligibleForAutoUpload = true,
+                retryWillPushChanges = true
+            )
         )
         assertThat(labels)
-                .containsOnly(UiStringRes(R.string.error_media_recover_page_not_scheduled_retrying))
+            .containsOnly(UiStringRes(R.string.error_media_recover_page_not_scheduled_retrying))
     }
 
     @Test
     fun `media upload error shown with specific message for scheduled page not eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply {
-                    setIsLocallyChanged(true)
-                    setStatus(SCHEDULED.toString())
-                },
-                PostUploadUiState.UploadFailed(
-                        error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
-                        isEligibleForAutoUpload = false,
-                        retryWillPushChanges = true
-                )
+            PostModel().apply {
+                setIsLocallyChanged(true)
+                setStatus(SCHEDULED.toString())
+            },
+            PostUploadUiState.UploadFailed(
+                error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                isEligibleForAutoUpload = false,
+                retryWillPushChanges = true
+            )
         )
         assertThat(labels).containsOnly(UiStringRes(R.string.error_media_recover_page_not_scheduled))
     }
@@ -201,15 +204,15 @@ class CreatePageListItemLabelsUseCaseTest {
     @Test
     fun `retrying media upload shown for draft eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply {
-                    setIsLocallyChanged(true)
-                    setStatus(DRAFT.toString())
-                },
-                PostUploadUiState.UploadFailed(
-                        error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
-                        isEligibleForAutoUpload = true,
-                        retryWillPushChanges = true
-                )
+            PostModel().apply {
+                setIsLocallyChanged(true)
+                setStatus(DRAFT.toString())
+            },
+            PostUploadUiState.UploadFailed(
+                error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                isEligibleForAutoUpload = true,
+                retryWillPushChanges = true
+            )
         )
         assertThat(labels).containsOnly(UiStringRes(R.string.error_generic_error_retrying))
     }
@@ -217,15 +220,15 @@ class CreatePageListItemLabelsUseCaseTest {
     @Test
     fun `base media upload error shown for draft not eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply {
-                    setIsLocallyChanged(true)
-                    setStatus(DRAFT.toString())
-                },
-                PostUploadUiState.UploadFailed(
-                        error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
-                        isEligibleForAutoUpload = false,
-                        retryWillPushChanges = false
-                )
+            PostModel().apply {
+                setIsLocallyChanged(true)
+                setStatus(DRAFT.toString())
+            },
+            PostUploadUiState.UploadFailed(
+                error = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                isEligibleForAutoUpload = false,
+                retryWillPushChanges = false
+            )
         )
         assertThat(labels).containsOnly(UiStringRes(R.string.error_media_recover_page))
     }
@@ -233,11 +236,11 @@ class CreatePageListItemLabelsUseCaseTest {
     @Test
     fun `multiple info labels are being shown together`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply {
-                    setIsLocallyChanged(true)
-                    setStatus(PRIVATE.toString())
-                },
-                mock()
+            PostModel().apply {
+                setIsLocallyChanged(true)
+                setStatus(PRIVATE.toString())
+            },
+            mock()
         )
         assertThat(labels).contains(UiStringRes(R.string.page_local_changes))
         assertThat(labels).contains(UiStringRes(R.string.page_status_page_private))
@@ -246,11 +249,11 @@ class CreatePageListItemLabelsUseCaseTest {
     @Test
     fun `pending publish page label shown when page eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply {
-                    setIsLocallyChanged(true)
-                    setStatus(PUBLISHED.toString())
-                },
-                PostUploadUiState.UploadWaitingForConnection(PUBLISHED)
+            PostModel().apply {
+                setIsLocallyChanged(true)
+                setStatus(PUBLISHED.toString())
+            },
+            PostUploadUiState.UploadWaitingForConnection(PUBLISHED)
         )
 
         assertThat((labels[0] as UiStringRes).stringRes).isEqualTo(R.string.page_waiting_for_connection_publish)
@@ -259,11 +262,11 @@ class CreatePageListItemLabelsUseCaseTest {
     @Test
     fun `pending schedule label shown when page eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply {
-                    setIsLocallyChanged(true)
-                    setStatus(SCHEDULED.toString())
-                },
-                PostUploadUiState.UploadWaitingForConnection(SCHEDULED)
+            PostModel().apply {
+                setIsLocallyChanged(true)
+                setStatus(SCHEDULED.toString())
+            },
+            PostUploadUiState.UploadWaitingForConnection(SCHEDULED)
         )
 
         assertThat((labels[0] as UiStringRes).stringRes).isEqualTo(R.string.page_waiting_for_connection_scheduled)
@@ -272,11 +275,11 @@ class CreatePageListItemLabelsUseCaseTest {
     @Test
     fun `pending publish private page label shown when page eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply {
-                    setIsLocallyChanged(true)
-                    setStatus(PRIVATE.toString())
-                },
-                PostUploadUiState.UploadWaitingForConnection(PRIVATE)
+            PostModel().apply {
+                setIsLocallyChanged(true)
+                setStatus(PRIVATE.toString())
+            },
+            PostUploadUiState.UploadWaitingForConnection(PRIVATE)
         )
 
         assertThat((labels[0] as UiStringRes).stringRes).isEqualTo(R.string.page_waiting_for_connection_private)
@@ -285,11 +288,11 @@ class CreatePageListItemLabelsUseCaseTest {
     @Test
     fun `pending submit page label shown when page eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply {
-                    setIsLocallyChanged(true)
-                    setStatus(PENDING.toString())
-                },
-                PostUploadUiState.UploadWaitingForConnection(PENDING)
+            PostModel().apply {
+                setIsLocallyChanged(true)
+                setStatus(PENDING.toString())
+            },
+            PostUploadUiState.UploadWaitingForConnection(PENDING)
         )
 
         assertThat((labels[0] as UiStringRes).stringRes).isEqualTo(R.string.page_waiting_for_connection_pending)
@@ -298,11 +301,11 @@ class CreatePageListItemLabelsUseCaseTest {
     @Test
     fun `local changes page label shown when draft eligible for auto-upload`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply {
-                    setIsLocallyChanged(true)
-                    setStatus(PostStatus.DRAFT.toString())
-                },
-                PostUploadUiState.UploadWaitingForConnection(PostStatus.DRAFT)
+            PostModel().apply {
+                setIsLocallyChanged(true)
+                setStatus(PostStatus.DRAFT.toString())
+            },
+            PostUploadUiState.UploadWaitingForConnection(PostStatus.DRAFT)
         )
         assertThat((labels[0] as UiStringRes).stringRes).isEqualTo(R.string.page_waiting_for_connection_draft)
     }
@@ -310,11 +313,11 @@ class CreatePageListItemLabelsUseCaseTest {
     @Test
     fun `when a page is locally changed and is local draft only 'Local draft' label is displayed`() {
         val (labels, _) = useCase.createLabels(
-                PostModel().apply {
-                    setIsLocallyChanged(true)
-                    setIsLocalDraft(true)
-                },
-                mock()
+            PostModel().apply {
+                setIsLocallyChanged(true)
+                setIsLocalDraft(true)
+            },
+            mock()
         )
 
         assertThat(labels).containsOnly(UiStringRes(R.string.page_local_draft))
@@ -322,70 +325,77 @@ class CreatePageListItemLabelsUseCaseTest {
 
     @Test
     fun `UploadUtils getErrorMessageResIdFromPostError invoked when post upload fails`() {
-        whenever(uploadUtilsWrapper
+        whenever(
+            uploadUtilsWrapper
                 .getErrorMessageResIdFromPostError(anyOrNull(), anyBoolean(), anyOrNull(), anyBoolean())
         ).thenReturn(mock())
 
         val (_, _) = useCase.createLabels(
-                PostModel(),
-                PostUploadUiState.UploadFailed(
-                        error = UploadError(PostError(PostErrorType.GENERIC_ERROR, "testing error message")),
-                        isEligibleForAutoUpload = false,
-                        retryWillPushChanges = false
-                )
+            PostModel(),
+            PostUploadUiState.UploadFailed(
+                error = UploadError(PostError(PostErrorType.GENERIC_ERROR, "testing error message")),
+                isEligibleForAutoUpload = false,
+                retryWillPushChanges = false
+            )
         )
         verify(uploadUtilsWrapper).getErrorMessageResIdFromPostError(
-                anyOrNull(),
-                anyBoolean(),
-                anyOrNull(),
-                anyBoolean()
+            anyOrNull(),
+            anyBoolean(),
+            anyOrNull(),
+            anyBoolean()
         )
     }
 
     @Test
     fun `UploadUtils is invoked with isPage set to true when post upload fails`() {
-        whenever(uploadUtilsWrapper
-                .getErrorMessageResIdFromPostError(anyOrNull(), anyBoolean(), anyOrNull(), anyBoolean()))
-                .thenReturn(UiStringRes(0)
-                )
+        whenever(
+            uploadUtilsWrapper
+                .getErrorMessageResIdFromPostError(anyOrNull(), anyBoolean(), anyOrNull(), anyBoolean())
+        )
+            .thenReturn(
+                UiStringRes(0)
+            )
 
         val (_, _) = useCase.createLabels(
-                PostModel(),
-                PostUploadUiState.UploadFailed(
-                        error = UploadError(PostError(PostErrorType.GENERIC_ERROR, "testing error message")),
-                        isEligibleForAutoUpload = false,
-                        retryWillPushChanges = false
-                )
+            PostModel(),
+            PostUploadUiState.UploadFailed(
+                error = UploadError(PostError(PostErrorType.GENERIC_ERROR, "testing error message")),
+                isEligibleForAutoUpload = false,
+                retryWillPushChanges = false
+            )
         )
         verify(uploadUtilsWrapper).getErrorMessageResIdFromPostError(
-                postStatus = anyOrNull(),
-                isPage = eq(true),
-                postError = anyOrNull(),
-                isEligibleForAutoUpload = anyBoolean()
+            postStatus = anyOrNull(),
+            isPage = eq(true),
+            postError = anyOrNull(),
+            isEligibleForAutoUpload = anyBoolean()
         )
     }
 
     @Test
     fun `IsEligibleForAutoUpload is propagated to uploadUtils`() {
         val isEligibleForAutoUpload = true
-        whenever(uploadUtilsWrapper
-                .getErrorMessageResIdFromPostError(anyOrNull(), anyBoolean(), anyOrNull(), anyBoolean()))
-                .thenReturn(UiStringRes(0)
-                )
+        whenever(
+            uploadUtilsWrapper
+                .getErrorMessageResIdFromPostError(anyOrNull(), anyBoolean(), anyOrNull(), anyBoolean())
+        )
+            .thenReturn(
+                UiStringRes(0)
+            )
 
         val (_, _) = useCase.createLabels(
-                PostModel(),
-                PostUploadUiState.UploadFailed(
-                        error = UploadError(PostError(PostErrorType.GENERIC_ERROR, "testing error message")),
-                        isEligibleForAutoUpload = isEligibleForAutoUpload,
-                        retryWillPushChanges = false
-                )
+            PostModel(),
+            PostUploadUiState.UploadFailed(
+                error = UploadError(PostError(PostErrorType.GENERIC_ERROR, "testing error message")),
+                isEligibleForAutoUpload = isEligibleForAutoUpload,
+                retryWillPushChanges = false
+            )
         )
         verify(uploadUtilsWrapper).getErrorMessageResIdFromPostError(
-                postStatus = anyOrNull(),
-                isPage = eq(true),
-                postError = anyOrNull(),
-                isEligibleForAutoUpload = eq(isEligibleForAutoUpload)
+            postStatus = anyOrNull(),
+            isPage = eq(true),
+            postError = anyOrNull(),
+            isEligibleForAutoUpload = eq(isEligibleForAutoUpload)
         )
     }
 }

@@ -79,21 +79,21 @@ class JetpackBrandingUtils @Inject constructor(
      * Tracks
      */
     fun trackBadgeTapped(screen: Screen) = analyticsTrackerWrapper.track(
-            Stat.JETPACK_POWERED_BADGE_TAPPED,
-            mapOf(SCREEN_KEY to screen.trackingName)
+        Stat.JETPACK_POWERED_BADGE_TAPPED,
+        mapOf(SCREEN_KEY to screen.trackingName)
     )
 
     fun trackBannerTapped(screen: Screen) = analyticsTrackerWrapper.track(
-            Stat.JETPACK_POWERED_BANNER_TAPPED,
-            mapOf(SCREEN_KEY to screen.trackingName)
+        Stat.JETPACK_POWERED_BANNER_TAPPED,
+        mapOf(SCREEN_KEY to screen.trackingName)
     )
 
     fun trackGetJetpackAppTapped() = analyticsTrackerWrapper.track(
-            Stat.JETPACK_POWERED_BOTTOM_SHEET_GET_JETPACK_APP_TAPPED
+        Stat.JETPACK_POWERED_BOTTOM_SHEET_GET_JETPACK_APP_TAPPED
     )
 
     fun trackDismissTapped() = analyticsTrackerWrapper.track(
-            Stat.JETPACK_POWERED_BOTTOM_SHEET_CONTINUE_TAPPED
+        Stat.JETPACK_POWERED_BOTTOM_SHEET_CONTINUE_TAPPED
     )
 
     enum class Screen(val trackingName: String) {

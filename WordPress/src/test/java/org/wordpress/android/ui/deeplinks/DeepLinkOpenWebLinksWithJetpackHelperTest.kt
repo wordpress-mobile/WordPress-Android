@@ -23,24 +23,30 @@ import java.util.Date
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
-    @Mock lateinit var openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock lateinit var firebaseRemoteConfigWrapper: FirebaseRemoteConfigWrapper
-    @Mock lateinit var packageManagerWrapper: PackageManagerWrapper
-    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
-    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock
+    lateinit var openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    lateinit var firebaseRemoteConfigWrapper: FirebaseRemoteConfigWrapper
+    @Mock
+    lateinit var packageManagerWrapper: PackageManagerWrapper
+    @Mock
+    lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    @Mock
+    lateinit var buildConfigWrapper: BuildConfigWrapper
 
     private lateinit var helper: DeepLinkOpenWebLinksWithJetpackHelper
 
     @Before
     fun setUp() {
         helper = DeepLinkOpenWebLinksWithJetpackHelper(
-                openWebLinksWithJetpackFlowFeatureConfig,
-                appPrefsWrapper,
-                firebaseRemoteConfigWrapper,
-                packageManagerWrapper,
-                dateTimeUtilsWrapper,
-                buildConfigWrapper
+            openWebLinksWithJetpackFlowFeatureConfig,
+            appPrefsWrapper,
+            firebaseRemoteConfigWrapper,
+            packageManagerWrapper,
+            dateTimeUtilsWrapper,
+            buildConfigWrapper
         )
     }
 
@@ -56,8 +62,8 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     @Test
     fun `given flow enabled, when JP is not installed, then show overlay is false`() {
         setTest(
-                isFeatureFlagEnabled = true,
-                isJetpackInstalled = false
+            isFeatureFlagEnabled = true,
+            isJetpackInstalled = false
         )
 
         val result = helper.shouldShowOpenLinksInJetpackOverlay()
@@ -68,9 +74,9 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     @Test
     fun `given flow enabled & JP is installed, when isOpenWebLinks setting is enabled, then show overlay is false`() {
         setTest(
-                isFeatureFlagEnabled = true,
-                isJetpackInstalled = true,
-                isOpenWebLinksWithJetpack = true
+            isFeatureFlagEnabled = true,
+            isJetpackInstalled = true,
+            isOpenWebLinksWithJetpack = true
         )
 
         val result = helper.shouldShowOpenLinksInJetpackOverlay()
@@ -82,10 +88,10 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     @Suppress("MaxLineLength")
     fun `given flow enabled, JP install, isOpenWebLinks disabled, when overlay never been shown, then show overlay is true`() {
         setTest(
-                isFeatureFlagEnabled = true,
-                isJetpackInstalled = true,
-                isOpenWebLinksWithJetpack = false,
-                overlayLastShownTimestamp = 0L
+            isFeatureFlagEnabled = true,
+            isJetpackInstalled = true,
+            isOpenWebLinksWithJetpack = false,
+            overlayLastShownTimestamp = 0L
         )
 
         val result = helper.shouldShowOpenLinksInJetpackOverlay()
@@ -97,11 +103,11 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     @Suppress("MaxLineLength")
     fun `given flow enabled, JP install, isOpenWebLinks disabled, overlay shown before, when frequency is only once, then show overlay is false`() {
         setTest(
-                isFeatureFlagEnabled = true,
-                isJetpackInstalled = true,
-                isOpenWebLinksWithJetpack = false,
-                overlayLastShownTimestamp = getDateXDaysAgoInMilliseconds(5),
-                flowFrequency = 0L
+            isFeatureFlagEnabled = true,
+            isJetpackInstalled = true,
+            isOpenWebLinksWithJetpack = false,
+            overlayLastShownTimestamp = getDateXDaysAgoInMilliseconds(5),
+            flowFrequency = 0L
         )
 
         val result = helper.shouldShowOpenLinksInJetpackOverlay()
@@ -112,11 +118,11 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     @Test
     fun `given flow is accessed after frequency, when showOverlay is invoked, then show overlay is true`() {
         setTest(
-                isFeatureFlagEnabled = true,
-                isJetpackInstalled = true,
-                isOpenWebLinksWithJetpack = false,
-                overlayLastShownTimestamp = getDateXDaysAgoInMilliseconds(9),
-                flowFrequency = 5L
+            isFeatureFlagEnabled = true,
+            isJetpackInstalled = true,
+            isOpenWebLinksWithJetpack = false,
+            overlayLastShownTimestamp = getDateXDaysAgoInMilliseconds(9),
+            flowFrequency = 5L
         )
 
         val result = helper.shouldShowOpenLinksInJetpackOverlay()
@@ -127,11 +133,11 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     @Test
     fun `given flow is accessed before frequency, when showOverlay is invoked, then show overlay is false`() {
         setTest(
-                isFeatureFlagEnabled = true,
-                isJetpackInstalled = true,
-                isOpenWebLinksWithJetpack = false,
-                overlayLastShownTimestamp = getDateXDaysAgoInMilliseconds(3),
-                flowFrequency = 5L
+            isFeatureFlagEnabled = true,
+            isJetpackInstalled = true,
+            isOpenWebLinksWithJetpack = false,
+            overlayLastShownTimestamp = getDateXDaysAgoInMilliseconds(3),
+            flowFrequency = 5L
         )
         val result = helper.shouldShowOpenLinksInJetpackOverlay()
 
@@ -141,11 +147,11 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     @Test
     fun `given flow is accessed equal to frequency, when showOverlay is invoked, then show overlay is true`() {
         setTest(
-                isFeatureFlagEnabled = true,
-                isJetpackInstalled = true,
-                isOpenWebLinksWithJetpack = false,
-                overlayLastShownTimestamp = getDateXDaysAgoInMilliseconds(1),
-                flowFrequency = 1L
+            isFeatureFlagEnabled = true,
+            isJetpackInstalled = true,
+            isOpenWebLinksWithJetpack = false,
+            overlayLastShownTimestamp = getDateXDaysAgoInMilliseconds(1),
+            flowFrequency = 1L
         )
 
         val result = helper.shouldShowOpenLinksInJetpackOverlay()
@@ -164,8 +170,10 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
 
     @Test
     fun `given flow ff is enabled, when jetpack is not installed, then show app setting is false`() {
-        setTest(isFeatureFlagEnabled = true,
-            isJetpackInstalled = false)
+        setTest(
+            isFeatureFlagEnabled = true,
+            isJetpackInstalled = false
+        )
 
         val result = helper.shouldShowAppSetting()
 
@@ -174,8 +182,10 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
 
     @Test
     fun `given flow ff is enabled, when jetpack is installed, then show app setting is true`() {
-        setTest(isFeatureFlagEnabled = true,
-                isJetpackInstalled = true)
+        setTest(
+            isFeatureFlagEnabled = true,
+            isJetpackInstalled = true
+        )
 
         val result = helper.shouldShowAppSetting()
 
@@ -218,7 +228,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
 
     private fun setDaysBetween(lastShownTimestamp: Long) {
         val between =
-                DateTimeUtils.daysBetween(Date(lastShownTimestamp), Date(getDateXDaysAgoInMilliseconds(0)))
+            DateTimeUtils.daysBetween(Date(lastShownTimestamp), Date(getDateXDaysAgoInMilliseconds(0)))
 
         whenever(dateTimeUtilsWrapper.daysBetween(any(), any())).thenReturn(between)
     }
@@ -232,7 +242,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     }
 
     private fun getDateXDaysAgoInMilliseconds(daysAgo: Int) =
-            System.currentTimeMillis().minus(DAY_IN_MILLISECONDS * daysAgo)
+        System.currentTimeMillis().minus(DAY_IN_MILLISECONDS * daysAgo)
 
     companion object {
         private const val DAY_IN_MILLISECONDS = 86400000

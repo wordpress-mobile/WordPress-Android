@@ -23,7 +23,8 @@ class PlansListAdapter(
     private val itemClickListener: (PlanOffersModel) -> Unit
 ) : Adapter<PlansItemViewHolder>() {
     private val list = mutableListOf<PlanOffersModel>()
-    @Inject lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var imageManager: ImageManager
 
     init {
         (activity.applicationContext as WordPress).component().inject(this)
@@ -56,7 +57,7 @@ class PlansListAdapter(
         private val itemClickListener: (PlanOffersModel) -> Unit,
         val imageManager: ImageManager
     ) : RecyclerView.ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.plans_list_item, parent, false)
+        LayoutInflater.from(parent.context).inflate(R.layout.plans_list_item, parent, false)
     ) {
         private val planImage: ImageView = itemView.findViewById(R.id.plan_image)
         private val title: TextView = itemView.findViewById(R.id.plan_title)
@@ -65,7 +66,7 @@ class PlansListAdapter(
         fun bind(planOffersModel: PlanOffersModel) {
             itemView.setOnClickListener {
                 itemView.performAccessibilityAction(
-                        AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS, null
+                    AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS, null
                 )
                 itemClickListener(planOffersModel)
             }
@@ -74,8 +75,8 @@ class PlansListAdapter(
 
             if (!TextUtils.isEmpty(planOffersModel.iconUrl)) {
                 imageManager.loadIntoCircle(
-                        planImage, ImageType.PLAN,
-                        StringUtils.notNullStr(planOffersModel.iconUrl)
+                    planImage, ImageType.PLAN,
+                    StringUtils.notNullStr(planOffersModel.iconUrl)
                 )
             }
         }

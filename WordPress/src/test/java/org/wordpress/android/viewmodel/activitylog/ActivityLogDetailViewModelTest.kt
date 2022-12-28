@@ -34,11 +34,16 @@ import java.util.Date
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogDetailViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var dispatcher: Dispatcher
-    @Mock private lateinit var activityLogStore: ActivityLogStore
-    @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
-    @Mock private lateinit var site: SiteModel
+    @Mock
+    private lateinit var dispatcher: Dispatcher
+    @Mock
+    private lateinit var activityLogStore: ActivityLogStore
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+    @Mock
+    private lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Mock
+    private lateinit var site: SiteModel
     private lateinit var viewModel: ActivityLogDetailViewModel
 
     private val areButtonsVisible = true
@@ -52,23 +57,23 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
     private val actorIcon = "image.jpg"
 
     private val activityLogModel = ActivityLogModel(
-            activityID = activityID,
-            actor = ActivityLogModel.ActivityActor(
-                    displayName = actorName,
-                    avatarURL = actorIcon,
-                    role = actorRole,
-                    type = null,
-                    wpcomUserID = null
-            ),
-            type = "Type",
-            content = FormattableContent(text = text),
-            summary = summary,
-            gridicon = null,
-            name = null,
-            published = Date(10),
-            rewindable = false,
-            rewindID = null,
-            status = null
+        activityID = activityID,
+        actor = ActivityLogModel.ActivityActor(
+            displayName = actorName,
+            avatarURL = actorIcon,
+            role = actorRole,
+            type = null,
+            wpcomUserID = null
+        ),
+        type = "Type",
+        content = FormattableContent(text = text),
+        summary = summary,
+        gridicon = null,
+        name = null,
+        published = Date(10),
+        rewindable = false,
+        rewindID = null,
+        status = null
     )
 
     private var lastEmittedItem: ActivityLogDetailModel? = null
@@ -80,10 +85,10 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = ActivityLogDetailViewModel(
-                dispatcher,
-                activityLogStore,
-                resourceProvider,
-                htmlMessageUtils
+            dispatcher,
+            activityLogStore,
+            resourceProvider,
+            htmlMessageUtils
         )
         viewModel.activityLogItem.observeForever { lastEmittedItem = it }
         viewModel.restoreVisible.observeForever { restoreVisible = it }
@@ -200,11 +205,11 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
     @Test
     fun showsJetpackIconWhenActorIconEmptyAndNameIsJetpackAndTypeIsApplication() {
         val updatedActivity = activityLogModel.copy(
-                actor = activityLogModel.actor?.copy(
-                        avatarURL = null,
-                        displayName = "Jetpack",
-                        type = "Application"
-                )
+            actor = activityLogModel.actor?.copy(
+                avatarURL = null,
+                displayName = "Jetpack",
+                type = "Application"
+            )
         )
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(updatedActivity))
 
@@ -220,11 +225,11 @@ class ActivityLogDetailViewModelTest : BaseUnitTest() {
     @Test
     fun showsJetpackIconWhenActorIconEmptyAndNameAndTypeIsHappinessEngineer() {
         val updatedActivity = activityLogModel.copy(
-                actor = activityLogModel.actor?.copy(
-                        avatarURL = null,
-                        displayName = "Happiness Engineer",
-                        type = "Happiness Engineer"
-                )
+            actor = activityLogModel.actor?.copy(
+                avatarURL = null,
+                displayName = "Happiness Engineer",
+                type = "Happiness Engineer"
+            )
         )
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(updatedActivity))
 

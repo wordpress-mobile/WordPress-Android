@@ -21,9 +21,12 @@ import java.util.Date
 
 @ExperimentalCoroutinesApi
 class StatsDateSelectorTest : BaseUnitTest() {
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
-    @Mock lateinit var siteProvider: StatsSiteProvider
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
+    @Mock
+    lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock
+    lateinit var siteProvider: StatsSiteProvider
     private val selectedDate = Date(0)
     private val selectedDateLabel = "Jan 1"
     private val statsSection = StatsSection.DAYS
@@ -43,10 +46,10 @@ class StatsDateSelectorTest : BaseUnitTest() {
         whenever(selectedDateProvider.granularSelectedDateChanged(statsSection)).thenReturn(dateProviderSelectedDate)
 
         dateSelector = StatsDateSelector(
-                selectedDateProvider,
-                statsDateFormatter,
-                siteProvider,
-                statsSection
+            selectedDateProvider,
+            statsDateFormatter,
+            siteProvider,
+            statsSection
         )
         whenever(selectedDateProvider.getSelectedDate(statsSection)).thenReturn(selectedDate)
         whenever(statsDateFormatter.printGranularDate(selectedDate, statsGranularity)).thenReturn(selectedDateLabel)
@@ -109,13 +112,13 @@ class StatsDateSelectorTest : BaseUnitTest() {
     @Test
     fun `verify date selector hidden for insights`() {
         whenever(selectedDateProvider.granularSelectedDateChanged(StatsSection.INSIGHTS)).thenReturn(
-                dateProviderSelectedDate
+            dateProviderSelectedDate
         )
         dateSelector = StatsDateSelector(
-                selectedDateProvider,
-                statsDateFormatter,
-                siteProvider,
-                StatsSection.INSIGHTS
+            selectedDateProvider,
+            statsDateFormatter,
+            siteProvider,
+            StatsSection.INSIGHTS
         )
         var model: DateSelectorUiModel? = null
         dateSelector.dateSelectorData.observeForever { model = it }

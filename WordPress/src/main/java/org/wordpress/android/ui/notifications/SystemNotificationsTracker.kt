@@ -61,8 +61,8 @@ class SystemNotificationsTracker
     fun track(stat: Stat) {
         val notificationsEnabled = notificationManager.areNotificationsEnabled()
         analyticsTracker.track(
-                stat,
-                mapOf(SYSTEM_NOTIFICATIONS_ENABLED to notificationsEnabled)
+            stat,
+            mapOf(SYSTEM_NOTIFICATIONS_ENABLED to notificationsEnabled)
         )
     }
 

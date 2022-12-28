@@ -15,12 +15,15 @@ import org.wordpress.android.ui.FilteredRecyclerView
 
 @RunWith(MockitoJUnitRunner::class)
 class ReaderUtilsTest {
-    @Mock lateinit var currentTag: ReaderTag
-    @Mock lateinit var filteredRecyclerView: FilteredRecyclerView
+    @Mock
+    lateinit var currentTag: ReaderTag
+    @Mock
+    lateinit var filteredRecyclerView: FilteredRecyclerView
 
     private fun getShuffledTagList(): ReaderTagList {
         val tagList = ReaderTagList()
-        tagList.addAll(listOf(
+        tagList.addAll(
+            listOf(
                 ReaderTag("", "", "", ReaderTag.LIKED_PATH, DEFAULT),
                 ReaderTag("", "", "", "https://genericendpoint2.com", FOLLOWED),
                 ReaderTag("", "", "", ReaderTag.DISCOVER_PATH, DEFAULT),
@@ -28,14 +31,16 @@ class ReaderUtilsTest {
                 ReaderTag("", "", "", "", BOOKMARKED),
                 ReaderTag("", "", "", ReaderTag.FOLLOWING_PATH, DEFAULT),
                 ReaderTag("", "", "", "https://genericendpoint7.com", DEFAULT)
-        ))
+            )
+        )
 
         return tagList
     }
 
     private fun getExpectedTagList(): ReaderTagList {
         val tagList = ReaderTagList()
-        tagList.addAll(listOf(
+        tagList.addAll(
+            listOf(
                 ReaderTag("", "", "", ReaderTag.FOLLOWING_PATH, DEFAULT),
                 ReaderTag("", "", "", ReaderTag.DISCOVER_PATH, DEFAULT),
                 ReaderTag("", "", "", ReaderTag.LIKED_PATH, DEFAULT),
@@ -43,7 +48,8 @@ class ReaderUtilsTest {
                 ReaderTag("", "", "", "https://genericendpoint2.com", FOLLOWED),
                 ReaderTag("", "", "", "https://genericendpoint4.com", DEFAULT),
                 ReaderTag("", "", "", "https://genericendpoint7.com", DEFAULT)
-        ))
+            )
+        )
 
         return tagList
     }

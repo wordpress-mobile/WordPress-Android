@@ -21,10 +21,14 @@ import java.util.Locale
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SiteCreationIntentsViewModelTest : BaseUnitTest() {
-    @Mock lateinit var analyticsTracker: SiteCreationTracker
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var dispatcher: CoroutineDispatcher
-    @Mock private lateinit var resources: Resources
+    @Mock
+    lateinit var analyticsTracker: SiteCreationTracker
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    lateinit var dispatcher: CoroutineDispatcher
+    @Mock
+    private lateinit var resources: Resources
 
     private lateinit var viewModel: SiteCreationIntentsViewModel
     private lateinit var searchResultsProvider: VerticalsSearchResultsProvider
@@ -126,7 +130,7 @@ class SiteCreationIntentsViewModelTest : BaseUnitTest() {
         viewModel.onSearchTextChanged(valueOfSearchInput)
         assertThat(viewModel.uiState.value?.content?.items?.size).isEqualTo(4)
         assertThat(viewModel.uiState.value?.content?.items?.getOrNull(0)?.verticalText)
-                .isEqualTo(valueOfSearchInput)
+            .isEqualTo(valueOfSearchInput)
     }
 
     @Test
@@ -146,7 +150,7 @@ class SiteCreationIntentsViewModelTest : BaseUnitTest() {
         viewModel.onSearchTextChanged(valueOfSearchInput)
         assertThat(viewModel.uiState.value?.content?.items?.size).isEqualTo(1)
         assertThat(viewModel.uiState.value?.content?.items?.getOrNull(0)?.verticalText)
-                .isEqualTo(valueOfSearchInput)
+            .isEqualTo(valueOfSearchInput)
     }
 
     @Test
@@ -158,6 +162,6 @@ class SiteCreationIntentsViewModelTest : BaseUnitTest() {
         viewModel.onSearchTextChanged(valueOfSearchInput)
         assertThat(viewModel.uiState.value?.content?.items?.size).isEqualTo(1)
         assertThat(viewModel.uiState.value?.content?.items?.getOrNull(0)?.verticalText)
-                .isEqualTo(matchingItem)
+            .isEqualTo(matchingItem)
     }
 }

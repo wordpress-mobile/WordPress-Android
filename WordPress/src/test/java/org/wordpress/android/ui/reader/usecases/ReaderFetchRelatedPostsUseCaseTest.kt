@@ -21,9 +21,12 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @RunWith(MockitoJUnitRunner::class)
 class ReaderFetchRelatedPostsUseCaseTest : BaseUnitTest() {
     lateinit var useCase: ReaderFetchRelatedPostsUseCase
-    @Mock lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var readerPost: ReaderPost
+    @Mock
+    lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    lateinit var readerPost: ReaderPost
 
     @Before
     fun setup() {
@@ -45,7 +48,7 @@ class ReaderFetchRelatedPostsUseCaseTest : BaseUnitTest() {
     fun `given related posts fetch succeeds, when related posts are fetched, then success is returned`() = test {
         val successEvent = RelatedPostsUpdated(readerPost, mock(), mock(), true)
         whenever(readerPostActionsWrapper.requestRelatedPosts(readerPost))
-                .then { useCase.onRelatedPostUpdated(successEvent) }
+            .then { useCase.onRelatedPostUpdated(successEvent) }
 
         val result = useCase.fetchRelatedPosts(readerPost)
 
@@ -56,7 +59,7 @@ class ReaderFetchRelatedPostsUseCaseTest : BaseUnitTest() {
     fun `given related posts fetch fails, when related posts are fetched, then request failed is returned`() = test {
         val failedEvent = RelatedPostsUpdated(readerPost, mock(), mock(), false)
         whenever(readerPostActionsWrapper.requestRelatedPosts(readerPost))
-                .then { useCase.onRelatedPostUpdated(failedEvent) }
+            .then { useCase.onRelatedPostUpdated(failedEvent) }
 
         val result = useCase.fetchRelatedPosts(readerPost)
 

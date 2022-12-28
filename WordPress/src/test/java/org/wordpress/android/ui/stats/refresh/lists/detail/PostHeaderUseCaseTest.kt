@@ -20,8 +20,10 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
 class PostHeaderUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var statsPostProvider: StatsPostProvider
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var statsPostProvider: StatsPostProvider
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: PostHeaderUseCase
     private val postTitle: String = "Post title"
     private val postId: Long = 1L
@@ -32,10 +34,10 @@ class PostHeaderUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = PostHeaderUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                statsPostProvider,
-                tracker
+            testDispatcher(),
+            testDispatcher(),
+            statsPostProvider,
+            tracker
         )
     }
 

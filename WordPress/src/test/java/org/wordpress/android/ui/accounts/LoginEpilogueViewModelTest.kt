@@ -15,9 +15,12 @@ import org.wordpress.android.util.BuildConfigWrapper
 class LoginEpilogueViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: LoginEpilogueViewModel
 
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
-    @Mock lateinit var siteStore: SiteStore
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock
+    lateinit var siteStore: SiteStore
 
     @Before
     fun setUp() {
@@ -53,7 +56,7 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
         viewModel.onContinue()
 
         assertThat(navigationEvents.first())
-                .isInstanceOf(LoginNavigationEvents.ShowPostSignupInterstitialScreen::class.java)
+            .isInstanceOf(LoginNavigationEvents.ShowPostSignupInterstitialScreen::class.java)
     }
 
     @Test
@@ -64,7 +67,7 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
         viewModel.onContinue()
 
         assertThat(
-                navigationEvents.filterIsInstance(LoginNavigationEvents.ShowPostSignupInterstitialScreen::class.java)
+            navigationEvents.filterIsInstance(LoginNavigationEvents.ShowPostSignupInterstitialScreen::class.java)
         ).isEmpty()
     }
 
@@ -76,7 +79,7 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
         viewModel.onContinue()
 
         assertThat(
-                navigationEvents.filterIsInstance(LoginNavigationEvents.ShowPostSignupInterstitialScreen::class.java)
+            navigationEvents.filterIsInstance(LoginNavigationEvents.ShowPostSignupInterstitialScreen::class.java)
         ).isEmpty()
     }
 
@@ -99,7 +102,7 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
         viewModel.onLoginEpilogueResume(doLoginUpdate = true)
 
         assertThat(
-                navigationEvents.filterIsInstance(LoginNavigationEvents.CloseWithResultOk::class.java)
+            navigationEvents.filterIsInstance(LoginNavigationEvents.CloseWithResultOk::class.java)
         ).isEmpty()
     }
 
@@ -122,7 +125,7 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
         viewModel.onContinue()
 
         assertThat(navigationEvents.last())
-                .isInstanceOf(LoginNavigationEvents.CloseWithResultOk::class.java)
+            .isInstanceOf(LoginNavigationEvents.CloseWithResultOk::class.java)
     }
 
     @Test
@@ -164,7 +167,7 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
         viewModel.onLoginEpilogueResume(doLoginUpdate = true)
 
         assertThat(
-                navigationEvents.filterIsInstance(LoginNavigationEvents.ShowNoJetpackSites::class.java)
+            navigationEvents.filterIsInstance(LoginNavigationEvents.ShowNoJetpackSites::class.java)
         ).isEmpty()
     }
 
@@ -182,10 +185,10 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     @Test
     fun `given jp app no site + signup disabled, when continued, then screen closes with ok result`() {
         init(
-                isJetpackApp = true,
-                hasSite = false,
-                isSiteCreationEnabled = true,
-                isSignupEnabled = false
+            isJetpackApp = true,
+            hasSite = false,
+            isSiteCreationEnabled = true,
+            isSignupEnabled = false
         )
         val navigationEvents = initObservers().navigationEvents
 
@@ -197,28 +200,28 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     @Test
     fun `given jp app no site + signup enabled, when continued 1st time, then signup interstitial shown`() {
         init(
-                isJetpackApp = true,
-                hasSite = false,
-                isSiteCreationEnabled = true,
-                isSignupEnabled = true,
-                postSignupInterstitialShownEarlier = false
+            isJetpackApp = true,
+            hasSite = false,
+            isSiteCreationEnabled = true,
+            isSignupEnabled = true,
+            postSignupInterstitialShownEarlier = false
         )
         val navigationEvents = initObservers().navigationEvents
 
         viewModel.onContinue()
 
         assertThat(navigationEvents.first())
-                .isInstanceOf(LoginNavigationEvents.ShowPostSignupInterstitialScreen::class.java)
+            .isInstanceOf(LoginNavigationEvents.ShowPostSignupInterstitialScreen::class.java)
     }
 
     @Test
     fun `given jp app no site + signup enabled, when continued next time, then screen closes with ok result`() {
         init(
-                isJetpackApp = true,
-                hasSite = false,
-                isSiteCreationEnabled = true,
-                isSignupEnabled = true,
-                postSignupInterstitialShownEarlier = true
+            isJetpackApp = true,
+            hasSite = false,
+            isSiteCreationEnabled = true,
+            isSignupEnabled = true,
+            postSignupInterstitialShownEarlier = true
         )
         val navigationEvents = initObservers().navigationEvents
 

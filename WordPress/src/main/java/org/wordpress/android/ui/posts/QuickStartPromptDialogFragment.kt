@@ -33,7 +33,8 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
         private const val SITE_IMAGE_CORNER_RADIUS_IN_DP = 4
     }
 
-    @DrawableRes private var drawableResId: Int = UNDEFINED_RES_ID
+    @DrawableRes
+    private var drawableResId: Int = UNDEFINED_RES_ID
     private lateinit var fragmentTag: String
     private lateinit var message: String
     private lateinit var negativeButtonLabel: String
@@ -41,8 +42,10 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
     private lateinit var title: String
     private lateinit var siteRecord: SiteRecord
 
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Inject
+    lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var selectedSiteRepository: SelectedSiteRepository
 
     override fun getTheme() = R.style.WordPress_FullscreenDialog_NoTitle
 
@@ -131,10 +134,10 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
         txtTitle.text = siteRecord.blogNameOrHomeURL
         txtDomain.text = siteRecord.homeURL
         imageManager.loadImageWithCorners(
-                imgBlavatar,
-                siteRecord.blavatarType,
-                siteRecord.blavatarUrl,
-                DisplayUtils.dpToPx(requireContext(), SITE_IMAGE_CORNER_RADIUS_IN_DP)
+            imgBlavatar,
+            siteRecord.blavatarType,
+            siteRecord.blavatarUrl,
+            DisplayUtils.dpToPx(requireContext(), SITE_IMAGE_CORNER_RADIUS_IN_DP)
         )
     }
 

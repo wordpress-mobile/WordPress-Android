@@ -32,11 +32,16 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 
 @ExperimentalCoroutinesApi
 class TodayStatsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: TodayInsightsStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
-    @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
-    @Mock lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var insightsStore: TodayInsightsStore
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock
+    lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock
+    lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+    @Mock
+    lateinit var statsUtils: StatsUtils
     private lateinit var useCase: TodayStatsUseCase
     private val views = 10
     private val visitors = 15
@@ -48,13 +53,13 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = TodayStatsUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                insightsStore,
-                statsSiteProvider,
-                statsWidgetUpdaters,
-                statsUtils,
-                popupMenuHandler
+            testDispatcher(),
+            testDispatcher(),
+            insightsStore,
+            statsSiteProvider,
+            statsWidgetUpdaters,
+            statsUtils,
+            popupMenuHandler
         )
         site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -68,9 +73,9 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         val model = VisitsModel("2018-10-02", views, visitors, likes, 0, comments, 0)
         whenever(insightsStore.getTodayInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadTodayStats(refresh, forced)
@@ -91,9 +96,9 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
-                OnStatsFetched(
-                        VisitsModel("2018-10-02", 0, 0, 0, 0, 0, 0)
-                )
+            OnStatsFetched(
+                VisitsModel("2018-10-02", 0, 0, 0, 0, 0, 0)
+            )
         )
 
         val result = loadTodayStats(refresh, forced)
@@ -112,9 +117,9 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         val refresh = true
         val message = "Generic error"
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadTodayStats(refresh, forced)

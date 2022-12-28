@@ -25,11 +25,16 @@ import org.wordpress.android.util.image.ImageManager
 
 @RunWith(MockitoJUnitRunner::class)
 class ListScenarioUtilsTest {
-    @Mock lateinit var imageManager: ImageManager
-    @Mock lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
-    @Mock lateinit var note: Note
-    @Mock lateinit var context: Context
-    @Mock lateinit var spannableBuilder: SpannableStringBuilder
+    @Mock
+    lateinit var imageManager: ImageManager
+    @Mock
+    lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
+    @Mock
+    lateinit var note: Note
+    @Mock
+    lateinit var context: Context
+    @Mock
+    lateinit var spannableBuilder: SpannableStringBuilder
 
     private lateinit var listScenarioUtils: ListScenarioUtils
 
@@ -44,11 +49,11 @@ class ListScenarioUtilsTest {
         whenever(note.postId).thenReturn(postId.toInt())
         whenever(note.siteId).thenReturn(siteId.toInt())
         whenever(
-                spannableBuilder.getSpans(anyInt(), anyInt(), eq(NoteBlockClickableSpan::class.java))
+            spannableBuilder.getSpans(anyInt(), anyInt(), eq(NoteBlockClickableSpan::class.java))
         ).thenReturn(listOf<NoteBlockClickableSpan>().toTypedArray())
         whenever(spannableBuilder.length).thenReturn(0)
         whenever(
-                notificationsUtilsWrapper.getSpannableContentForRanges(anyOrNull<FormattableContent>())
+            notificationsUtilsWrapper.getSpannableContentForRanges(anyOrNull<FormattableContent>())
         ).thenReturn(spannableBuilder)
 
         listScenarioUtils = ListScenarioUtils(imageManager, notificationsUtilsWrapper)

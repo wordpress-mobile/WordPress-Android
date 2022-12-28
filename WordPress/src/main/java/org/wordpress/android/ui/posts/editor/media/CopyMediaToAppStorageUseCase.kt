@@ -29,30 +29,31 @@ class CopyMediaToAppStorageUseCase @Inject constructor(
     suspend fun copyFilesToAppStorageIfNecessary(uriList: List<Uri>): CopyMediaResult {
         return withContext(bgDispatcher) {
             uriList
-                    .map { mediaUri ->
-                        if (!mediaUtilsWrapper.isInMediaStore(mediaUri) &&
-                                // don't copy existing local files
-                                !mediaUtilsWrapper.isFile(mediaUri)) {
-                            copyToAppStorage(mediaUri)
-                        } else {
-                            mediaUri
-                        }
+                .map { mediaUri ->
+                    if (!mediaUtilsWrapper.isInMediaStore(mediaUri) &&
+                        // don't copy existing local files
+                        !mediaUtilsWrapper.isFile(mediaUri)
+                    ) {
+                        copyToAppStorage(mediaUri)
+                    } else {
+                        mediaUri
                     }
-                    .toList()
-                    .let {
-                        CopyMediaResult(
-                                permanentlyAccessibleUris = it.filterNotNull(),
-                                copyingSomeMediaFailed = it.contains(null)
-                        )
-                    }
+                }
+                .toList()
+                .let {
+                    CopyMediaResult(
+                        permanentlyAccessibleUris = it.filterNotNull(),
+                        copyingSomeMediaFailed = it.contains(null)
+                    )
+                }
         }
     }
 
     private fun copyToAppStorage(mediaUri: Uri): Uri? {
         return try {
             mediaUtilsWrapper.copyFileToAppStorage(
-                    mediaUri,
-                    authenticationUtils.getAuthHeaders(mediaUri.toString())
+                mediaUri,
+                authenticationUtils.getAuthHeaders(mediaUri.toString())
             )
         } catch (e: IllegalStateException) {
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823

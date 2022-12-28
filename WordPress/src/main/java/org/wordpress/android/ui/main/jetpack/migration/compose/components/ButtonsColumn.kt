@@ -16,11 +16,11 @@ fun ButtonsColumn(
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
-            modifier = modifier.padding(bottom = 10.dp)
+        modifier = modifier.padding(bottom = 10.dp)
     ) {
         Divider(
-                color = colorResource(color.gray_10),
-                thickness = 0.5.dp,
+            color = colorResource(color.gray_10),
+            thickness = 0.5.dp,
         )
         content()
     }

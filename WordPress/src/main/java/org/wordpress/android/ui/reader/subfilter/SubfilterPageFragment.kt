@@ -40,10 +40,14 @@ import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class SubfilterPageFragment : DaggerFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
-    @Inject lateinit var statsUtils: StatsUtils
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
+    @Inject
+    lateinit var statsUtils: StatsUtils
 
     private lateinit var subFilterViewModel: SubFilterViewModel
     private lateinit var viewModel: SubfilterPageViewModel
@@ -88,8 +92,8 @@ class SubfilterPageFragment : DaggerFragment() {
         actionButton = emptyStateContainer.findViewById(R.id.action_button)
 
         subFilterViewModel = ViewModelProvider(
-                requireParentFragment().parentFragment as ViewModelStoreOwner,
-                viewModelFactory
+            requireParentFragment().parentFragment as ViewModelStoreOwner,
+            viewModelFactory
         ).get(subfilterVmKey, SubFilterViewModel::class.java)
 
         subFilterViewModel.subFilters.observe(viewLifecycleOwner, Observer {

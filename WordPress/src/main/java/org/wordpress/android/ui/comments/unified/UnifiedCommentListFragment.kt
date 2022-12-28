@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
@@ -38,12 +37,18 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
 
 class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var snackbarSequencer: SnackbarSequencer
-    @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Inject lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Inject lateinit var unifiedCommentsDetailFeatureConfig: UnifiedCommentsDetailFeatureConfig
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var snackbarSequencer: SnackbarSequencer
+    @Inject
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Inject
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Inject
+    lateinit var unifiedCommentsDetailFeatureConfig: UnifiedCommentsDetailFeatureConfig
 
     private lateinit var viewModel: UnifiedCommentListViewModel
     private lateinit var activityViewModel: UnifiedCommentActivityViewModel
@@ -62,8 +67,8 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(UnifiedCommentListViewModel::class.java)
         activityViewModel = ViewModelProvider(
-                requireActivity(),
-                viewModelFactory
+            requireActivity(),
+            viewModelFactory
         ).get(UnifiedCommentActivityViewModel::class.java)
         arguments?.let {
             commentListFilter = it.getSerializable(KEY_COMMENT_LIST_FILTER) as CommentFilter
@@ -104,10 +109,10 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                 if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
                     isShowingActionMode = true
                     (activity as AppCompatActivity).startSupportActionMode(
-                            CommentListActionModeCallback(
-                                    viewModel,
-                                    activityViewModel
-                            )
+                        CommentListActionModeCallback(
+                            viewModel,
+                            activityViewModel
+                        )
                     )
                 } else if (uiState.actionModeUiModel is ActionModeUiModel.Hidden && isShowingActionMode) {
                     isShowingActionMode = false
@@ -118,24 +123,24 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.onSnackbarMessage.collect { snackbarMessage ->
                 snackbarSequencer.enqueue(
-                        SnackbarItem(
-                                Info(
-                                        view = coordinator,
-                                        textRes = snackbarMessage.message,
-                                        duration = Snackbar.LENGTH_LONG
-                                ),
-                                snackbarMessage.buttonTitle?.let {
-                                    Action(
-                                            textRes = snackbarMessage.buttonTitle,
-                                            clickListener = { snackbarMessage.buttonAction() }
-                                    )
-                                },
-                                dismissCallback = { _, event ->
-                                    currentSnackbar = null
-                                    snackbarMessage.onDismissAction(event)
-                                },
-                                showCallback = { snackbar -> currentSnackbar = snackbar }
-                        )
+                    SnackbarItem(
+                        Info(
+                            view = coordinator,
+                            textRes = snackbarMessage.message,
+                            duration = Snackbar.LENGTH_LONG
+                        ),
+                        snackbarMessage.buttonTitle?.let {
+                            Action(
+                                textRes = snackbarMessage.buttonTitle,
+                                clickListener = { snackbarMessage.buttonAction() }
+                            )
+                        },
+                        dismissCallback = { _, event ->
+                            currentSnackbar = null
+                            snackbarMessage.onDismissAction(event)
+                        },
+                        showCallback = { snackbar -> currentSnackbar = snackbar }
+                    )
                 )
             }
         }
@@ -155,17 +160,18 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
             ActivityLauncher.viewUnifiedCommentsDetails(context, selectedSiteRepository.getSelectedSite())
         } else {
             commentDetails.launch(
-                    CommentDetailsActivityRequest(
-                            commentId,
-                            commentStatus,
-                            selectedSiteRepository.getSelectedSite()!!
-                    )
+                CommentDetailsActivityRequest(
+                    commentId,
+                    commentStatus,
+                    selectedSiteRepository.getSelectedSite()!!
+                )
             )
         }
     }
 
-    val commentDetails = registerForActivityResult(CommentDetailsActivityContract()) { response:
-    CommentDetailsActivityResponse? ->
+    val commentDetails = registerForActivityResult(
+        CommentDetailsActivityContract()
+    ) { response: CommentDetailsActivityResponse? ->
         if (response != null) {
             viewModel.performSingleCommentModeration(response.commentId, response.commentStatus)
         }
@@ -182,7 +188,8 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                 commentsRecyclerView.post {
                     (commentsRecyclerView.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
                         if (layoutManager.findFirstVisibleItemPosition() <
-                                MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION) {
+                            MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION
+                        ) {
                             layoutManager.onRestoreInstanceState(recyclerViewState)
                         }
                     }
@@ -195,7 +202,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         uiHelpers.updateVisibility(loadingView, uiModel == CommentsListUiModel.Loading)
         uiHelpers.updateVisibility(actionableEmptyView, uiModel is CommentsListUiModel.Empty)
         uiHelpers.updateVisibility(
-                commentsRecyclerView, uiModel is WithData || uiModel is CommentsListUiModel.Refreshing
+            commentsRecyclerView, uiModel is WithData || uiModel is CommentsListUiModel.Refreshing
         )
         ptrLayout.isRefreshing = uiModel is CommentsListUiModel.Refreshing
 
@@ -209,8 +216,8 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                 }
 
                 actionableEmptyView.title.text = uiHelpers.getTextOfUiString(
-                        requireContext(),
-                        uiModel.title
+                    requireContext(),
+                    uiModel.title
                 )
             }
 

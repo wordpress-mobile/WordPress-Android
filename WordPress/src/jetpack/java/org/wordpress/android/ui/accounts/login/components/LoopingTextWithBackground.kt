@@ -24,20 +24,20 @@ fun LoopingTextWithBackground(
     blurModifier: Modifier = Modifier,
 ) {
     Box(
-            modifier
-                    .background(colorResource(R.color.bg_jetpack_login_splash))
-                    .paint(
-                            painter = painterResource(R.drawable.bg_jetpack_login_splash),
-                            sizeToIntrinsics = true,
-                            contentScale = ContentScale.FillBounds,
-                    )
-                    .then(blurModifier)
+        modifier
+            .background(colorResource(R.color.bg_jetpack_login_splash))
+            .paint(
+                painter = painterResource(R.drawable.bg_jetpack_login_splash),
+                sizeToIntrinsics = true,
+                contentScale = ContentScale.FillBounds,
+            )
+            .then(blurModifier)
     ) {
         LoopingText(
-                modifier = Modifier
-                        .clearAndSetSemantics {}
-                        .fillMaxSize()
-                        .padding(horizontal = dimensionResource(R.dimen.login_prologue_revamped_prompts_padding))
+            modifier = Modifier
+                .clearAndSetSemantics {}
+                .fillMaxSize()
+                .padding(horizontal = dimensionResource(R.dimen.login_prologue_revamped_prompts_padding))
         )
     }
 }

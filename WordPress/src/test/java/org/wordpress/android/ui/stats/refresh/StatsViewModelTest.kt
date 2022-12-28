@@ -50,21 +50,36 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class StatsViewModelTest : BaseUnitTest() {
-    @Mock lateinit var baseListUseCase: BaseListUseCase
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var statsSectionManager: SelectedSectionManager
-    @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var statsStore: StatsStore
-    @Mock lateinit var newsCardHandler: NewsCardHandler
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var statsModuleActivateUseCase: StatsModuleActivateUseCase
-    @Mock lateinit var notificationsTracker: SystemNotificationsTracker
-    @Mock lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
-    @Mock lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-    @Mock lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+    @Mock
+    lateinit var baseListUseCase: BaseListUseCase
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
+    @Mock
+    lateinit var statsSectionManager: SelectedSectionManager
+    @Mock
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock
+    lateinit var statsStore: StatsStore
+    @Mock
+    lateinit var newsCardHandler: NewsCardHandler
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var statsModuleActivateUseCase: StatsModuleActivateUseCase
+    @Mock
+    lateinit var notificationsTracker: SystemNotificationsTracker
+    @Mock
+    lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
+    @Mock
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Mock
+    lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
     private lateinit var viewModel: StatsViewModel
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
     private val liveSelectedSection: LiveData<StatsSection> = _liveSelectedSection
@@ -75,21 +90,21 @@ class StatsViewModelTest : BaseUnitTest() {
         whenever(statsSectionManager.liveSelectedSection).thenReturn(liveSelectedSection)
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         viewModel = StatsViewModel(
-                mapOf(DAYS to baseListUseCase),
-                testDispatcher(),
-                testDispatcher(),
-                selectedDateProvider,
-                statsSectionManager,
-                analyticsTracker,
-                networkUtilsWrapper,
-                statsSiteProvider,
-                statsStore,
-                newsCardHandler,
-                statsModuleActivateUseCase,
-                notificationsTracker,
-                todaysStatsCardFeatureConfig,
-                jetpackBrandingUtils,
-                jetpackFeatureRemovalOverlayUtil
+            mapOf(DAYS to baseListUseCase),
+            testDispatcher(),
+            testDispatcher(),
+            selectedDateProvider,
+            statsSectionManager,
+            analyticsTracker,
+            networkUtilsWrapper,
+            statsSiteProvider,
+            statsStore,
+            newsCardHandler,
+            statsModuleActivateUseCase,
+            notificationsTracker,
+            todaysStatsCardFeatureConfig,
+            jetpackBrandingUtils,
+            jetpackFeatureRemovalOverlayUtil
         )
 
         viewModel.start(1, false, null, null, false, null)
@@ -173,6 +188,7 @@ class StatsViewModelTest : BaseUnitTest() {
 
         verify(baseListUseCase).refreshData(true)
     }
+
     @Test
     fun `given stats module enabled, when started, then state reflects enabled view`() = test {
         val uiModel = initObservers().uiModelObserver
@@ -237,7 +253,8 @@ class StatsViewModelTest : BaseUnitTest() {
         assertThat(uiModel.last().disabledStatsViewVisible).isFalse
     }
 
-    @Ignore("Disabled until next sprint") @Test
+    @Ignore("Disabled until next sprint")
+    @Test
     fun `given wp app, when jetpack powered bottom sheet feature is on, then jp powered bottom sheet is shown`() {
         val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>()
         viewModel.showJetpackPoweredBottomSheet.observeForever {

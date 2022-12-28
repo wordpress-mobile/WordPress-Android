@@ -50,12 +50,12 @@ class CountryViewsUseCase constructor(
     private val statsUtils: StatsUtils,
     private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<CountryViewsModel>(
-        COUNTRIES,
-        mainDispatcher,
-        backgroundDispatcher,
-        selectedDateProvider,
-        statsSiteProvider,
-        statsGranularity
+    COUNTRIES,
+    mainDispatcher,
+    backgroundDispatcher,
+    selectedDateProvider,
+    statsSiteProvider,
+    statsGranularity
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
@@ -63,10 +63,10 @@ class CountryViewsUseCase constructor(
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): CountryViewsModel? {
         return store.getCountryViews(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate
         )
     }
 
@@ -76,11 +76,11 @@ class CountryViewsUseCase constructor(
         forced: Boolean
     ): State<CountryViewsModel> {
         val response = store.fetchCountryViews(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate,
-                forced
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate,
+            forced
         )
         val model = response.model
         val error = response.error
@@ -126,26 +126,26 @@ class CountryViewsUseCase constructor(
             items.add(header)
             domainModel.countries.forEachIndexed { index, group ->
                 items.add(
-                        ListItemWithIcon(
-                                iconUrl = group.flagIconUrl,
-                                text = group.fullName,
-                                value = statsUtils.toFormattedString(group.views),
-                                showDivider = index < domainModel.countries.size - 1,
-                                contentDescription = contentDescriptionHelper.buildContentDescription(
-                                        header,
-                                        group.fullName,
-                                        group.views
-                                )
+                    ListItemWithIcon(
+                        iconUrl = group.flagIconUrl,
+                        text = group.fullName,
+                        value = statsUtils.toFormattedString(group.views),
+                        showDivider = index < domainModel.countries.size - 1,
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                            header,
+                            group.fullName,
+                            group.views
                         )
+                    )
                 )
             }
 
             if (useCaseMode != VIEW_ALL && domainModel.hasMore) {
                 items.add(
-                        Link(
-                                text = R.string.stats_insights_view_more,
-                                navigateAction = create(statsGranularity, this::onViewMoreClick)
-                        )
+                    Link(
+                        text = R.string.stats_insights_view_more,
+                        navigateAction = create(statsGranularity, this::onViewMoreClick)
+                    )
                 )
             }
         }
@@ -155,10 +155,10 @@ class CountryViewsUseCase constructor(
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_COUNTRIES_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(
-                ViewCountries(
-                        statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
-                )
+            ViewCountries(
+                statsGranularity,
+                selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+            )
         )
     }
 
@@ -174,17 +174,17 @@ class CountryViewsUseCase constructor(
         private val contentDescriptionHelper: ContentDescriptionHelper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
-                CountryViewsUseCase(
-                        granularity,
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        store,
-                        statsSiteProvider,
-                        selectedDateProvider,
-                        analyticsTracker,
-                        contentDescriptionHelper,
-                        statsUtils,
-                        useCaseMode
-                )
+            CountryViewsUseCase(
+                granularity,
+                mainDispatcher,
+                backgroundDispatcher,
+                store,
+                statsSiteProvider,
+                selectedDateProvider,
+                analyticsTracker,
+                contentDescriptionHelper,
+                statsUtils,
+                useCaseMode
+            )
     }
 }

@@ -43,28 +43,37 @@ private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = "empty_result_query" to 0
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SiteCreationDomainsViewModelTest : BaseUnitTest() {
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var fetchDomainsUseCase: FetchDomainsUseCase
-    @Mock private lateinit var tracker: SiteCreationTracker
-    @Mock private lateinit var uiStateObserver: Observer<DomainsUiState>
-    @Mock private lateinit var createSiteBtnObserver: Observer<String>
-    @Mock private lateinit var clearBtnObserver: Observer<Unit>
-    @Mock private lateinit var onHelpClickedObserver: Observer<Unit>
-    @Mock private lateinit var networkUtils: NetworkUtilsWrapper
-    @Mock private lateinit var mSiteCreationDomainSanitizer: SiteCreationDomainSanitizer
+    @Mock
+    lateinit var dispatcher: Dispatcher
+    @Mock
+    lateinit var fetchDomainsUseCase: FetchDomainsUseCase
+    @Mock
+    private lateinit var tracker: SiteCreationTracker
+    @Mock
+    private lateinit var uiStateObserver: Observer<DomainsUiState>
+    @Mock
+    private lateinit var createSiteBtnObserver: Observer<String>
+    @Mock
+    private lateinit var clearBtnObserver: Observer<Unit>
+    @Mock
+    private lateinit var onHelpClickedObserver: Observer<Unit>
+    @Mock
+    private lateinit var networkUtils: NetworkUtilsWrapper
+    @Mock
+    private lateinit var mSiteCreationDomainSanitizer: SiteCreationDomainSanitizer
 
     private lateinit var viewModel: SiteCreationDomainsViewModel
 
     @Before
     fun setUp() {
         viewModel = SiteCreationDomainsViewModel(
-                networkUtils = networkUtils,
-                domainSanitizer = mSiteCreationDomainSanitizer,
-                dispatcher = dispatcher,
-                fetchDomainsUseCase = fetchDomainsUseCase,
-                tracker = tracker,
-                bgDispatcher = testDispatcher(),
-                mainDispatcher = testDispatcher()
+            networkUtils = networkUtils,
+            domainSanitizer = mSiteCreationDomainSanitizer,
+            dispatcher = dispatcher,
+            fetchDomainsUseCase = fetchDomainsUseCase,
+            tracker = tracker,
+            bgDispatcher = testDispatcher(),
+            mainDispatcher = testDispatcher()
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.createSiteBtnClicked.observeForever(createSiteBtnObserver)
@@ -80,22 +89,22 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     ) {
         test {
             whenever(mSiteCreationDomainSanitizer.getName(any())).thenReturn(
-                    "${MULTI_RESULT_DOMAIN_FETCH_QUERY.first}-1"
+                "${MULTI_RESULT_DOMAIN_FETCH_QUERY.first}-1"
             )
             whenever(mSiteCreationDomainSanitizer.getDomain(any())).thenReturn(
-                    ".wordpress.com"
+                ".wordpress.com"
             )
             whenever(mSiteCreationDomainSanitizer.sanitizeDomainQuery(any())).thenReturn(
-                    createSanitizedDomainResult(isDomainAvailableInSuggestions)
+                createSanitizedDomainResult(isDomainAvailableInSuggestions)
             )
             whenever(
-                    fetchDomainsUseCase.fetchDomains(
-                            eq(queryResultSizePair.first),
-                            isNull(),
-                            eq(true),
-                            eq(true),
-                            any()
-                    )
+                fetchDomainsUseCase.fetchDomains(
+                    eq(queryResultSizePair.first),
+                    isNull(),
+                    eq(true),
+                    eq(true),
+                    any()
+                )
             ).thenReturn(createSuccessfulOnSuggestedDomains(queryResultSizePair))
             block()
         }
@@ -129,7 +138,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
      */
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithEmptyResults() = testWithSuccessResponse(
-            queryResultSizePair = EMPTY_RESULT_DOMAIN_FETCH_QUERY
+        queryResultSizePair = EMPTY_RESULT_DOMAIN_FETCH_QUERY
     ) {
         viewModel.start()
         viewModel.updateQuery(EMPTY_RESULT_DOMAIN_FETCH_QUERY.first)
@@ -138,8 +147,8 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
         verify(uiStateObserver, times(3)).onChanged(captor.capture())
         verifyEmptyItemsContentUiState(
-                captor.thirdValue,
-                showClearButton = true
+            captor.thirdValue,
+            showClearButton = true
         )
     }
 
@@ -163,7 +172,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
      */
     @Test
     fun verifyDomainUnavailableUiStateAfterResponseWithMultipleResults() = testWithSuccessResponse(
-            isDomainAvailableInSuggestions = false
+        isDomainAvailableInSuggestions = false
     ) {
         viewModel.start()
         viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
@@ -172,7 +181,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
         verify(uiStateObserver, times(3)).onChanged(captor.capture())
         verifyContentAndDomainValidityUiStatesAreVisible(
-                captor.thirdValue
+            captor.thirdValue
         )
     }
 
@@ -183,13 +192,13 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponse() = test {
         val queryResultErrorPair = "error_result_query" to "GENERIC_ERROR"
         whenever(
-                fetchDomainsUseCase.fetchDomains(
-                        eq(queryResultErrorPair.first),
-                        isNull(),
-                        eq(true),
-                        eq(true),
-                        any()
-                )
+            fetchDomainsUseCase.fetchDomains(
+                eq(queryResultErrorPair.first),
+                isNull(),
+                eq(true),
+                eq(true),
+                any()
+            )
         ).thenReturn(createFailedOnSuggestedDomains(queryResultErrorPair))
 
         viewModel.start()
@@ -199,12 +208,12 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(3)).onChanged(captor.capture())
         verifyVisibleItemsContentUiState(
-                captor.thirdValue,
-                showClearButton = true,
-                numberOfItems = 1
+            captor.thirdValue,
+            showClearButton = true,
+            numberOfItems = 1
         )
         assertThat(captor.thirdValue.contentState.items[0])
-                .isInstanceOf(DomainsFetchSuggestionsErrorUiState::class.java)
+            .isInstanceOf(DomainsFetchSuggestionsErrorUiState::class.java)
     }
 
     /**
@@ -214,13 +223,13 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponseOfTypeInvalidQuery() = test {
         val queryResultErrorPair = "empty_result_query_invalid" to "INVALID_QUERY"
         whenever(
-                fetchDomainsUseCase.fetchDomains(
-                        eq(queryResultErrorPair.first),
-                        isNull(),
-                        eq(true),
-                        eq(true),
-                        any()
-                )
+            fetchDomainsUseCase.fetchDomains(
+                eq(queryResultErrorPair.first),
+                isNull(),
+                eq(true),
+                eq(true),
+                any()
+            )
         ).thenReturn(createFailedOnSuggestedDomains(queryResultErrorPair))
 
         viewModel.start()
@@ -230,9 +239,9 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(3)).onChanged(captor.capture())
         verifyEmptyItemsContentUiState(
-                captor.thirdValue,
-                showClearButton = true,
-                isInvalidQuery = true
+            captor.thirdValue,
+            showClearButton = true,
+            isInvalidQuery = true
         )
     }
 
@@ -320,7 +329,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         uiState: DomainsUiState
     ) {
         assertThat(uiState.contentState.items.first())
-                .isInstanceOf(DomainsModelUnavailabilityUiState::class.java)
+            .isInstanceOf(DomainsModelUnavailabilityUiState::class.java)
     }
 
     /**
@@ -362,9 +371,9 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
      */
     private fun createFailedOnSuggestedDomains(queryResultErrorPair: Pair<String, String>): OnSuggestedDomains {
         return OnSuggestedDomains(queryResultErrorPair.first, emptyList())
-                .apply {
-                    error = SuggestDomainError(queryResultErrorPair.second, "test")
-                }
+            .apply {
+                error = SuggestDomainError(queryResultErrorPair.second, "test")
+            }
     }
 
     /**
@@ -374,9 +383,9 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
      *  [DomainsModelUnavailabilityUiState] state is activated.
      */
     private fun createSanitizedDomainResult(isDomainAvailableInSuggestions: Boolean) =
-            if (isDomainAvailableInSuggestions) {
-                "${MULTI_RESULT_DOMAIN_FETCH_QUERY.first}-1"
-            } else {
-                "invaliddomain"
-            }
+        if (isDomainAvailableInSuggestions) {
+            "${MULTI_RESULT_DOMAIN_FETCH_QUERY.first}-1"
+        } else {
+            "invaliddomain"
+        }
 }

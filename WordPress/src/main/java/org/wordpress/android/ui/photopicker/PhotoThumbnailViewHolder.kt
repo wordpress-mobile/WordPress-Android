@@ -14,8 +14,8 @@ import org.wordpress.android.util.image.ImageType.PHOTO
 
 @Suppress("DEPRECATION")
 @Deprecated(
-        "This class is being refactored, if you implement any change, please also update " +
-                "{@link org.wordpress.android.ui.mediapicker.PhotoThumbnailViewHolder}"
+    "This class is being refactored, if you implement any change, please also update " +
+            "{@link org.wordpress.android.ui.mediapicker.PhotoThumbnailViewHolder}"
 )
 class PhotoThumbnailViewHolder(
     parent: ViewGroup,
@@ -29,11 +29,11 @@ class PhotoThumbnailViewHolder(
     fun bind(item: PhotoPickerUiItem.PhotoItem, animateSelection: Boolean, updateCount: Boolean) {
         val isSelected = item.isSelected
         thumbnailViewUtils.setupTextSelectionCount(
-                txtSelectionCount,
-                isSelected,
-                item.selectedOrder,
-                item.showOrderCounter,
-                animateSelection
+            txtSelectionCount,
+            isSelected,
+            item.selectedOrder,
+            item.showOrderCounter,
+            animateSelection
         )
         // Only count is updated so do not redraw the whole item
         if (updateCount) {
@@ -41,18 +41,18 @@ class PhotoThumbnailViewHolder(
         }
         imageManager.cancelRequestAndClearImageView(imgThumbnail)
         imageManager.load(
-                imgThumbnail,
-                PHOTO,
-                item.uri.toString(),
-                FIT_CENTER
+            imgThumbnail,
+            PHOTO,
+            item.uri.toString(),
+            FIT_CENTER
         )
         thumbnailViewUtils.setupListeners(
-                imgThumbnail,
-                false,
-                item.isSelected,
-                item.toggleAction,
-                item.clickAction,
-                animateSelection
+            imgThumbnail,
+            false,
+            item.isSelected,
+            item.toggleAction,
+            item.clickAction,
+            animateSelection
         )
     }
 }

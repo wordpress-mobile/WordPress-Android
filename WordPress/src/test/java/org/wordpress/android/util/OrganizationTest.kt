@@ -1,7 +1,7 @@
 package org.wordpress.android.util
 
-import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Test
 import org.wordpress.android.ui.Organization
 
 class OrganizationTest {

@@ -18,9 +18,12 @@ import org.wordpress.android.fluxc.store.XPostsStore
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class XPostsCapabilityCheckerTest : BaseUnitTest() {
-    @Mock lateinit var mockXPostsStore: XPostsStore
-    @Mock lateinit var mockSite: SiteModel
-    @InjectMocks lateinit var xPostsCapabilityChecker: XPostsCapabilityChecker
+    @Mock
+    lateinit var mockXPostsStore: XPostsStore
+    @Mock
+    lateinit var mockSite: SiteModel
+    @InjectMocks
+    lateinit var xPostsCapabilityChecker: XPostsCapabilityChecker
 
     @Test
     fun `if has xposts in db, is capable`() = test {

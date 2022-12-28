@@ -36,9 +36,12 @@ const val KEY_RESTORE_REWIND_ID = "key_restore_rewind_id"
 const val KEY_RESTORE_RESTORE_ID = "key_restore_restore_id"
 
 class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var imageManager: ImageManager
     private lateinit var viewModel: RestoreViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,14 +60,14 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
 
     private fun initBackPressHandler() {
         requireActivity().onBackPressedDispatcher.addCallback(
-                viewLifecycleOwner,
-                object : OnBackPressedCallback(
-                        true
-                ) {
-                    override fun handleOnBackPressed() {
-                        onBackPressed()
-                    }
-                })
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(
+                true
+            ) {
+                override fun handleOnBackPressed() {
+                    onBackPressed()
+                }
+            })
     }
 
     private fun onBackPressed() {
@@ -75,7 +78,7 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
         recyclerView.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
         recyclerView.itemAnimator = null
         recyclerView.addItemDecoration(
-                HorizontalMarginItemDecoration(resources.getDimensionPixelSize(dimen.margin_extra_large))
+            HorizontalMarginItemDecoration(resources.getDimensionPixelSize(dimen.margin_extra_large))
         )
     }
 
@@ -86,7 +89,7 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
             requireActivity().intent?.extras != null -> {
                 val site = requireNotNull(requireActivity().intent.extras).getSerializable(WordPress.SITE) as SiteModel
                 val activityId = requireNotNull(requireActivity().intent.extras).getString(
-                        KEY_RESTORE_ACTIVITY_ID_KEY
+                    KEY_RESTORE_ACTIVITY_ID_KEY
                 ) as String
                 site to activityId
             }
@@ -151,16 +154,16 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
     private fun SnackbarMessageHolder.showSnackbar() {
         activity?.findViewById<View>(R.id.coordinator_layout)?.let { coordinator ->
             val snackbar = WPSnackbar.make(
-                    coordinator,
-                    uiHelpers.getTextOfUiString(requireContext(), this.message),
-                    Snackbar.LENGTH_LONG
+                coordinator,
+                uiHelpers.getTextOfUiString(requireContext(), this.message),
+                Snackbar.LENGTH_LONG
             )
             if (this.buttonTitle != null) {
                 snackbar.setAction(
-                        uiHelpers.getTextOfUiString(
-                                requireContext(),
-                                this.buttonTitle
-                        )
+                    uiHelpers.getTextOfUiString(
+                        requireContext(),
+                        this.buttonTitle
+                    )
                 ) {
                     this.buttonAction.invoke()
                 }

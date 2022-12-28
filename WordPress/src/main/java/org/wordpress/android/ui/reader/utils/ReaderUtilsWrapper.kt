@@ -19,7 +19,7 @@ class ReaderUtilsWrapper @Inject constructor(
     private val tagUpdateClientUtilsProvider: TagUpdateClientUtilsProvider
 ) {
     fun getResizedImageUrl(imageUrl: String?, width: Int, height: Int, isPrivate: Boolean, isAtomic: Boolean): String? =
-            ReaderUtils.getResizedImageUrl(imageUrl, width, height, isPrivate, isAtomic)
+        ReaderUtils.getResizedImageUrl(imageUrl, width, height, isPrivate, isAtomic)
 
     fun getResizedImageUrl(
         imageUrl: String?,
@@ -29,13 +29,13 @@ class ReaderUtilsWrapper @Inject constructor(
     ): String? = ReaderUtils.getResizedImageUrl(imageUrl, width, height, siteAccessibilityInfo)
 
     fun getTagFromTagName(tagName: String, tagType: ReaderTagType): ReaderTag =
-            ReaderUtils.getTagFromTagName(tagName, tagType)
+        ReaderUtils.getTagFromTagName(tagName, tagType)
 
     fun getDefaultTagFromDbOrCreateInMemory() =
-            ReaderUtils.getDefaultTagFromDbOrCreateInMemory(contextProvider.getContext(), tagUpdateClientUtilsProvider)
+        ReaderUtils.getDefaultTagFromDbOrCreateInMemory(contextProvider.getContext(), tagUpdateClientUtilsProvider)
 
     fun getLongLikeLabelText(numLikes: Int, isLikedByCurrentUser: Boolean): String =
-            ReaderUtils.getLongLikeLabelText(contextProvider.getContext(), numLikes, isLikedByCurrentUser)
+        ReaderUtils.getLongLikeLabelText(contextProvider.getContext(), numLikes, isLikedByCurrentUser)
 
     fun isExternalFeed(blogId: Long, feedId: Long): Boolean = ReaderUtils.isExternalFeed(blogId, feedId)
 
@@ -56,7 +56,7 @@ class ReaderUtilsWrapper @Inject constructor(
     ) = ReaderUtils.commentExists(blogId, postId, commentId)
 
     fun getTextForCommentSnippet(numComments: Int): String? = ReaderUtils.getTextForCommentSnippet(
-            contextProvider.getContext(),
-            numComments
+        contextProvider.getContext(),
+        numComments
     )
 }

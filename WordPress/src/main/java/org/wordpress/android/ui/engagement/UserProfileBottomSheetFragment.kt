@@ -30,10 +30,14 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var resourceProvider: ResourceProvider
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var resourceProvider: ResourceProvider
 
     private lateinit var viewModel: UserProfileViewModel
 
@@ -67,7 +71,7 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
         ViewCompat.setAccessibilityPaneTitle(view, getString(R.string.user_profile_bottom_sheet_description))
 
         viewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory)
-                .get(vmKey, UserProfileViewModel::class.java)
+            .get(vmKey, UserProfileViewModel::class.java)
 
         initObservers(view)
 
@@ -75,7 +79,7 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
             val sheetDialog = dialogInterface as? BottomSheetDialog
 
             val bottomSheet = sheetDialog?.findViewById<View>(
-                    com.google.android.material.R.id.design_bottom_sheet
+                com.google.android.material.R.id.design_bottom_sheet
             ) as? FrameLayout
 
             bottomSheet?.let {
@@ -104,9 +108,9 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
                     val blavatarSz = resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_medium)
 
                     imageManager.loadIntoCircle(
-                            userAvatar,
-                            AVATAR_WITH_BACKGROUND,
-                            GravatarUtils.fixGravatarUrl(state.userAvatarUrl, avatarSz)
+                        userAvatar,
+                        AVATAR_WITH_BACKGROUND,
+                        GravatarUtils.fixGravatarUrl(state.userAvatarUrl, avatarSz)
                     )
                     userName.text = state.userName
                     userLogin.text = if (state.userLogin.isNotBlank()) {
@@ -122,9 +126,9 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
                     }
 
                     imageManager.load(
-                            blavatar,
-                            BLAVATAR,
-                            PhotonUtils.getPhotonImageUrl(state.blavatarUrl, blavatarSz, blavatarSz, HIGH)
+                        blavatar,
+                        BLAVATAR,
+                        PhotonUtils.getPhotonImageUrl(state.blavatarUrl, blavatarSz, blavatarSz, HIGH)
                     )
 
                     if (state.hasSiteUrl) {
@@ -132,9 +136,9 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
                         siteUrl.text = UrlUtils.getHost(state.siteUrl)
                         siteData.setOnClickListener {
                             state.onSiteClickListener?.invoke(
-                                    state.siteId,
-                                    state.siteUrl,
-                                    state.blogPreviewSource
+                                state.siteId,
+                                state.siteUrl,
+                                state.blogPreviewSource
                             )
                         }
                         siteSectionHeader.visibility = View.VISIBLE

@@ -58,29 +58,29 @@ class PostListCreateMenuViewModel @Inject constructor(
         val actionsList = ArrayList<MainActionListItem>()
 
         actionsList.add(
-                CreateAction(
-                        actionType = NO_ACTION,
-                        iconRes = 0,
-                        labelRes = R.string.my_site_bottom_sheet_title,
-                        onClickAction = null
-                )
+            CreateAction(
+                actionType = NO_ACTION,
+                iconRes = 0,
+                labelRes = R.string.my_site_bottom_sheet_title,
+                onClickAction = null
+            )
         )
         actionsList.add(
-                CreateAction(
-                        actionType = CREATE_NEW_STORY,
-                        iconRes = R.drawable.ic_story_icon_24dp,
-                        labelRes = R.string.my_site_bottom_sheet_add_story,
-                        onClickAction = ::onCreateActionClicked
+            CreateAction(
+                actionType = CREATE_NEW_STORY,
+                iconRes = R.drawable.ic_story_icon_24dp,
+                labelRes = R.string.my_site_bottom_sheet_add_story,
+                onClickAction = ::onCreateActionClicked
 
-                )
+            )
         )
         actionsList.add(
-                CreateAction(
-                        actionType = CREATE_NEW_POST,
-                        iconRes = R.drawable.ic_posts_white_24dp,
-                        labelRes = R.string.my_site_bottom_sheet_add_post,
-                        onClickAction = ::onCreateActionClicked
-                )
+            CreateAction(
+                actionType = CREATE_NEW_POST,
+                iconRes = R.drawable.ic_posts_white_24dp,
+                labelRes = R.string.my_site_bottom_sheet_add_post,
+                onClickAction = ::onCreateActionClicked
+            )
         )
 
         _mainActions.postValue(actionsList)
@@ -95,9 +95,9 @@ class PostListCreateMenuViewModel @Inject constructor(
 
     private fun setMainFabUiState() {
         val newState = MainFabUiState(
-                isFabVisible = true,
-                isFabTooltipVisible = !appPrefsWrapper.isPostListFabTooltipDisabled(),
-                CreateContentMessageId = getCreateContentMessageId()
+            isFabVisible = true,
+            isFabTooltipVisible = !appPrefsWrapper.isPostListFabTooltipDisabled(),
+            CreateContentMessageId = getCreateContentMessageId()
         )
 
         _fabUiState.value = newState
@@ -124,9 +124,9 @@ class PostListCreateMenuViewModel @Inject constructor(
         val oldState = _fabUiState.value
         oldState?.let {
             _fabUiState.value = MainFabUiState(
-                    isFabVisible = it.isFabVisible,
-                    isFabTooltipVisible = false,
-                    CreateContentMessageId = getCreateContentMessageId()
+                isFabVisible = it.isFabVisible,
+                isFabTooltipVisible = false,
+                CreateContentMessageId = getCreateContentMessageId()
             )
         }
     }
@@ -135,9 +135,9 @@ class PostListCreateMenuViewModel @Inject constructor(
         val oldState = _fabUiState.value
         oldState?.let {
             _fabUiState.value = MainFabUiState(
-                    isFabVisible = it.isFabVisible,
-                    isFabTooltipVisible = it.isFabTooltipVisible,
-                    CreateContentMessageId = getCreateContentMessageId()
+                isFabVisible = it.isFabVisible,
+                isFabTooltipVisible = it.isFabTooltipVisible,
+                CreateContentMessageId = getCreateContentMessageId()
             )
         }
     }

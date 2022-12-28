@@ -25,8 +25,10 @@ import org.wordpress.android.util.analytics.ScanTracker
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ScanHistoryViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var scanTracker: ScanTracker
-    @Mock private lateinit var fetchScanHistoryUseCase: FetchScanHistoryUseCase
+    @Mock
+    private lateinit var scanTracker: ScanTracker
+    @Mock
+    private lateinit var fetchScanHistoryUseCase: FetchScanHistoryUseCase
 
     private val site: SiteModel = SiteModel()
 
@@ -35,12 +37,12 @@ class ScanHistoryViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() = test {
         viewModel = ScanHistoryViewModel(
-                scanTracker,
-                fetchScanHistoryUseCase,
-                testDispatcher()
+            scanTracker,
+            fetchScanHistoryUseCase,
+            testDispatcher()
         )
         whenever(fetchScanHistoryUseCase.fetch(site))
-                .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Success(listOf(mock())))
+            .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Success(listOf(mock())))
     }
 
     @Test
@@ -62,14 +64,14 @@ class ScanHistoryViewModelTest : BaseUnitTest() {
         val observers = init()
 
         assertThat((observers.uiStates[0] as ContentUiState).tabs.map { it.type }).isEqualTo(
-                listOf(ALL, FIXED, IGNORED)
+            listOf(ALL, FIXED, IGNORED)
         )
     }
 
     @Test
     fun `No connection error shown, when network not available`() = test {
         whenever(fetchScanHistoryUseCase.fetch(site))
-                .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Failure.NetworkUnavailable)
+            .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Failure.NetworkUnavailable)
 
         val observers = init()
 
@@ -79,7 +81,7 @@ class ScanHistoryViewModelTest : BaseUnitTest() {
     @Test
     fun `RequestFailed error shown, when network request fails`() = test {
         whenever(fetchScanHistoryUseCase.fetch(site))
-                .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Failure.RemoteRequestFailure)
+            .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Failure.RemoteRequestFailure)
 
         val observers = init()
 
@@ -89,11 +91,11 @@ class ScanHistoryViewModelTest : BaseUnitTest() {
     @Test
     fun `Threats fetched, when user clicks on Retry button on NoConnection screen`() = test {
         whenever(fetchScanHistoryUseCase.fetch(site))
-                .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Failure.NetworkUnavailable)
+            .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Failure.NetworkUnavailable)
         val observers = init()
 
         whenever(fetchScanHistoryUseCase.fetch(site))
-                .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Success(listOf(mock())))
+            .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Success(listOf(mock())))
         (observers.uiStates.last() as NoConnection).retry.invoke()
         advanceUntilIdle()
 
@@ -103,11 +105,11 @@ class ScanHistoryViewModelTest : BaseUnitTest() {
     @Test
     fun `Threats fetched, when user clicks on Retry button on RequestFailed screen`() = test {
         whenever(fetchScanHistoryUseCase.fetch(site))
-                .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Failure.RemoteRequestFailure)
+            .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Failure.RemoteRequestFailure)
         val observers = init()
 
         whenever(fetchScanHistoryUseCase.fetch(site))
-                .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Success(listOf(mock())))
+            .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Success(listOf(mock())))
         (observers.uiStates.last() as RequestFailed).retry.invoke()
         advanceUntilIdle()
 

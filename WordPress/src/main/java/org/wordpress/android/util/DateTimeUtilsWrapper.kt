@@ -9,7 +9,7 @@ class DateTimeUtilsWrapper @Inject constructor(
     private val contextProvider: ContextProvider
 ) {
     fun currentTimeInIso8601(): String =
-            DateTimeUtils.iso8601FromTimestamp(localeManagerWrapper.getCurrentCalendar().timeInMillis / 1000)
+        DateTimeUtils.iso8601FromTimestamp(localeManagerWrapper.getCurrentCalendar().timeInMillis / 1000)
 
     fun javaDateToTimeSpan(date: Date?): String = DateTimeUtils.javaDateToTimeSpan(date, contextProvider.getContext())
 

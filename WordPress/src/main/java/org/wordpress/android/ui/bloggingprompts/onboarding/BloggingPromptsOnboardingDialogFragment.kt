@@ -46,15 +46,17 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragment() {
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var snackbarSequencer: SnackbarSequencer
+    @Inject
+    lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: BloggingPromptsOnboardingViewModel
     private lateinit var dialogType: DialogType
     private val sitePickerLauncher = registerForActivityResult(StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val selectedSiteLocalId = result.data?.getIntExtra(
-                    SitePickerActivity.KEY_SITE_LOCAL_ID,
-                    SelectedSiteRepository.UNAVAILABLE
+                SitePickerActivity.KEY_SITE_LOCAL_ID,
+                SelectedSiteRepository.UNAVAILABLE
             ) ?: SelectedSiteRepository.UNAVAILABLE
             viewModel.onSiteSelected(selectedSiteLocalId)
             (activity as? UpdateSelectedSiteListener)?.onUpdateSelectedSiteResult(result.resultCode, result.data)
@@ -72,11 +74,11 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
 
         @JvmStatic
         fun newInstance(type: DialogType): BloggingPromptsOnboardingDialogFragment =
-                BloggingPromptsOnboardingDialogFragment().apply {
-                    arguments = Bundle().apply {
-                        putSerializable(KEY_DIALOG_TYPE, type)
-                    }
+            BloggingPromptsOnboardingDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable(KEY_DIALOG_TYPE, type)
                 }
+            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -99,7 +101,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
         (requireActivity().applicationContext as WordPress).component().inject(this)
         if (dialogType == ONBOARDING && context !is BloggingPromptsReminderSchedulerListener) {
             throw IllegalStateException(
-                    "$context must implement ${BloggingPromptsReminderSchedulerListener::class.simpleName}"
+                "$context must implement ${BloggingPromptsReminderSchedulerListener::class.simpleName}"
             )
         }
     }
@@ -121,18 +123,18 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
             promptCard.promptContent.text = getString(readyState.promptRes)
 
             val layoutManager = FlexboxLayoutManager(
-                    context,
-                    FlexDirection.ROW,
-                    FlexWrap.NOWRAP
+                context,
+                FlexDirection.ROW,
+                FlexWrap.NOWRAP
             ).apply { justifyContent = JustifyContent.CENTER }
             promptCard.answeredUsersRecycler.addItemDecoration(
-                    AvatarItemDecorator(RtlUtils.isRtl(context), requireContext(), AVATAR_LEFT_OFFSET_DIMEN)
+                AvatarItemDecorator(RtlUtils.isRtl(context), requireContext(), AVATAR_LEFT_OFFSET_DIMEN)
             )
             promptCard.answeredUsersRecycler.layoutManager = layoutManager
 
             val adapter = TrainOfAvatarsAdapter(
-                    imageManager,
-                    uiHelpers
+                imageManager,
+                uiHelpers
             )
             promptCard.answeredUsersRecycler.adapter = adapter
             adapter.loadData(readyState.respondents)
@@ -171,9 +173,9 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                 is OpenEditor -> {
                     activity?.let {
                         startActivity(
-                                ActivityLauncher.openEditorWithBloggingPrompt(
-                                        it, action.promptId, BLOGGING_PROMPTS_INTRODUCTION
-                                )
+                            ActivityLauncher.openEditorWithBloggingPrompt(
+                                it, action.promptId, BLOGGING_PROMPTS_INTRODUCTION
+                            )
                         )
                     }
                 }
@@ -188,7 +190,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                     activity?.let {
                         dismiss()
                         (it as BloggingPromptsReminderSchedulerListener)
-                                .onSetPromptReminderClick(action.selectedSiteLocalId)
+                            .onSetPromptReminderClick(action.selectedSiteLocalId)
                     }
                 }
                 is DismissDialog -> {
@@ -202,20 +204,20 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     private fun setupSnackbarObserver() {
         viewModel.snackBarMessage.observeEvent(viewLifecycleOwner) { holder ->
             snackbarSequencer.enqueue(
-                    SnackbarItem(
-                            Info(
-                                    view = getSuperBinding().coordinatorLayout,
-                                    textRes = holder.message,
-                                    duration = Snackbar.LENGTH_LONG
-                            ),
-                            holder.buttonTitle?.let {
-                                Action(
-                                        textRes = holder.buttonTitle,
-                                        clickListener = { holder.buttonAction() }
-                                )
-                            },
-                            dismissCallback = { _, event -> holder.onDismissAction(event) }
-                    )
+                SnackbarItem(
+                    Info(
+                        view = getSuperBinding().coordinatorLayout,
+                        textRes = holder.message,
+                        duration = Snackbar.LENGTH_LONG
+                    ),
+                    holder.buttonTitle?.let {
+                        Action(
+                            textRes = holder.buttonTitle,
+                            clickListener = { holder.buttonAction() }
+                        )
+                    },
+                    dismissCallback = { _, event -> holder.onDismissAction(event) }
+                )
             )
         }
     }

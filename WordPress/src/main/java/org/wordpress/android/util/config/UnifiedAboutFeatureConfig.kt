@@ -9,9 +9,9 @@ import javax.inject.Inject
 class UnifiedAboutFeatureConfig @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.UNIFIED_ABOUT,
-        UNIFIED_ABOUT_REMOTE_FIELD
+    appConfig,
+    BuildConfig.UNIFIED_ABOUT,
+    UNIFIED_ABOUT_REMOTE_FIELD
 ) {
     companion object {
         const val UNIFIED_ABOUT_REMOTE_FIELD = "unified_about_enabled"

@@ -41,13 +41,20 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
 class CommentsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: CommentsStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
-    @Mock lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var insightsStore: CommentsStore
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock
+    lateinit var statsUtils: StatsUtils
     private lateinit var useCase: CommentsUseCase
     private val postId: Long = 10
     private val postTitle = "Post"
@@ -61,20 +68,22 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = CommentsUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                insightsStore,
-                statsSiteProvider,
-                popupMenuHandler,
-                statsUtils,
-                contentDescriptionHelper
+            testDispatcher(),
+            testDispatcher(),
+            insightsStore,
+            statsSiteProvider,
+            popupMenuHandler,
+            statsUtils,
+            contentDescriptionHelper
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<String>(),
                 any()
-        )).thenReturn(contentDescription)
+            )
+        ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
@@ -82,16 +91,16 @@ class CommentsUseCaseTest : BaseUnitTest() {
     fun `maps posts comments to UI model`() = test {
         val forced = false
         val model = CommentsModel(
-                listOf(Post(postId, postTitle, totalCount, url)),
-                listOf(),
-                hasMorePosts = false,
-                hasMoreAuthors = false
+            listOf(Post(postId, postTitle, totalCount, url)),
+            listOf(),
+            hasMorePosts = false,
+            hasMoreAuthors = false
         )
         whenever(insightsStore.getComments(eq(statsSiteProvider.siteModel), any())).thenReturn(model)
         whenever(insightsStore.fetchComments(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadComments(true, forced)
@@ -111,16 +120,16 @@ class CommentsUseCaseTest : BaseUnitTest() {
     fun `maps comment authors to UI model`() = test {
         val forced = false
         val model = CommentsModel(
-                listOf(),
-                listOf(CommentsModel.Author(user, totalCount, url, avatar)),
-                hasMorePosts = false,
-                hasMoreAuthors = false
+            listOf(),
+            listOf(CommentsModel.Author(user, totalCount, url, avatar)),
+            hasMorePosts = false,
+            hasMoreAuthors = false
         )
         whenever(insightsStore.getComments(eq(statsSiteProvider.siteModel), any())).thenReturn(model)
         whenever(insightsStore.fetchComments(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadComments(true, forced)
@@ -141,9 +150,9 @@ class CommentsUseCaseTest : BaseUnitTest() {
     fun `maps empty comments to UI model`() = test {
         val forced = false
         whenever(insightsStore.fetchComments(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
-                OnStatsFetched(
-                        CommentsModel(listOf(), listOf(), hasMorePosts = false, hasMoreAuthors = false)
-                )
+            OnStatsFetched(
+                CommentsModel(listOf(), listOf(), hasMorePosts = false, hasMoreAuthors = false)
+            )
         )
 
         val result = loadComments(true, forced)
@@ -156,9 +165,9 @@ class CommentsUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(insightsStore.fetchComments(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadComments(true, forced)

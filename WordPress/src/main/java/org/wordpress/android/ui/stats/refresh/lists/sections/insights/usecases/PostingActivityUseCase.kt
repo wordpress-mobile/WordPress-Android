@@ -46,7 +46,7 @@ class PostingActivityUseCase
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
             model != null && model.months.isNotEmpty() -> State.Data(
-                    model
+                model
             )
             else -> State.Empty()
         }
@@ -56,8 +56,8 @@ class PostingActivityUseCase
         val items = mutableListOf<BlockListItem>()
         items.add(buildTitle())
         val activityItem = postingActivityMapper.buildActivityItem(
-                domainModel.months,
-                domainModel.max
+            domainModel.months,
+            domainModel.max
         )
         items.add(activityItem)
         return items
@@ -68,9 +68,9 @@ class PostingActivityUseCase
     private fun getEndDate(): Day {
         val endDate = Calendar.getInstance()
         return Day(
-                endDate.get(Calendar.YEAR),
-                endDate.get(Calendar.MONTH),
-                endDate.getActualMaximum(Calendar.DAY_OF_MONTH)
+            endDate.get(Calendar.YEAR),
+            endDate.get(Calendar.MONTH),
+            endDate.getActualMaximum(Calendar.DAY_OF_MONTH)
         )
     }
 
@@ -78,9 +78,9 @@ class PostingActivityUseCase
         val startDate = Calendar.getInstance()
         startDate.add(Calendar.MONTH, -2)
         return Day(
-                startDate.get(Calendar.YEAR),
-                startDate.get(Calendar.MONTH),
-                startDate.getActualMinimum(Calendar.DAY_OF_MONTH)
+            startDate.get(Calendar.YEAR),
+            startDate.get(Calendar.MONTH),
+            startDate.getActualMinimum(Calendar.DAY_OF_MONTH)
         )
     }
 

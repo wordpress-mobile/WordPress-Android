@@ -22,8 +22,10 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 
 @RunWith(MockitoJUnitRunner::class)
 class PostMediaHandlerTest {
-    @Mock lateinit var mediaStore: MediaStore
-    @Mock lateinit var dispatcher: Dispatcher
+    @Mock
+    lateinit var mediaStore: MediaStore
+    @Mock
+    lateinit var dispatcher: Dispatcher
     private lateinit var postMediaHandler: PostMediaHandler
     private val site = SiteModel()
     private lateinit var post: PostModel

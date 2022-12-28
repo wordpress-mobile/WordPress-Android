@@ -13,8 +13,10 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarU
 
 @ExperimentalCoroutinesApi
 class CurrentAvatarSourceTest : BaseUnitTest() {
-    @Mock lateinit var accountStore: AccountStore
-    @Mock lateinit var accountModel: AccountModel
+    @Mock
+    lateinit var accountStore: AccountStore
+    @Mock
+    lateinit var accountModel: AccountModel
     private lateinit var currentAvatarSource: CurrentAvatarSource
     private lateinit var isRefreshing: MutableList<Boolean>
 

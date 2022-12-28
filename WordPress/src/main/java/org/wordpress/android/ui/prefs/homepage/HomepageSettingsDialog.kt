@@ -25,8 +25,10 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class HomepageSettingsDialog : DialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: HomepageSettingsViewModel
     private var siteId: Int? = null
 
@@ -53,7 +55,7 @@ class HomepageSettingsDialog : DialogFragment() {
             builder.setView(root)
 
             viewModel = ViewModelProvider(this@HomepageSettingsDialog, viewModelFactory)
-                    .get(HomepageSettingsViewModel::class.java)
+                .get(HomepageSettingsViewModel::class.java)
             viewModel.uiState.observe(this@HomepageSettingsDialog) { uiState ->
                 uiState?.let {
                     loadingPages.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
@@ -89,16 +91,16 @@ class HomepageSettingsDialog : DialogFragment() {
                 if (uiState.pageForPostsState != null && uiState.pageOnFrontState != null) {
                     dropdownContainer.visibility = View.VISIBLE
                     setupDropdownItem(
-                            uiState.pageOnFrontState,
-                            selectedHomepage,
-                            viewModel::onPageOnFrontDialogOpened,
-                            viewModel::onPageOnFrontSelected
+                        uiState.pageOnFrontState,
+                        selectedHomepage,
+                        viewModel::onPageOnFrontDialogOpened,
+                        viewModel::onPageOnFrontSelected
                     )
                     setupDropdownItem(
-                            uiState.pageForPostsState,
-                            selectedPostsPage,
-                            viewModel::onPageForPostsDialogOpened,
-                            viewModel::onPageForPostsSelected
+                        uiState.pageForPostsState,
+                        selectedPostsPage,
+                        viewModel::onPageForPostsDialogOpened,
+                        viewModel::onPageForPostsSelected
                     )
                 } else {
                     dropdownContainer.visibility = View.GONE

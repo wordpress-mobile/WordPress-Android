@@ -40,28 +40,36 @@ import java.util.Locale
 
 @ExperimentalCoroutinesApi
 class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: MostPopularInsightsStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var annualStatsMapper: AnnualStatsMapper
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock
+    lateinit var insightsStore: MostPopularInsightsStore
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    lateinit var annualStatsMapper: AnnualStatsMapper
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var popupMenuHandler: ItemPopupMenuHandler
     private val year2019 = YearInsights(null, null, null, null, 0, 0, 0, 0, 0, "2019")
     private val year2018 = year2019.copy(year = "2018")
     private lateinit var useCase: AnnualSiteStatsUseCase
+
     @Before
     fun setUp() {
         useCase = AnnualSiteStatsUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                insightsStore,
-                statsSiteProvider,
-                selectedDateProvider,
-                annualStatsMapper,
-                localeManagerWrapper,
-                popupMenuHandler,
-                BLOCK
+            testDispatcher(),
+            testDispatcher(),
+            insightsStore,
+            statsSiteProvider,
+            selectedDateProvider,
+            annualStatsMapper,
+            localeManagerWrapper,
+            popupMenuHandler,
+            BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
@@ -74,9 +82,9 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
         val model = YearsInsightsModel(listOf(year2019))
         whenever(insightsStore.getYearsInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchYearsInsights(site, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         whenever(annualStatsMapper.mapYearInBlock(year2019)).thenReturn(listOf(Empty()))
 
@@ -103,9 +111,9 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
         val model = YearsInsightsModel(listOf(year2018, year2019))
         whenever(insightsStore.getYearsInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchYearsInsights(site, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         whenever(annualStatsMapper.mapYearInBlock(year2019)).thenReturn(listOf(Empty()))
 
@@ -129,24 +137,24 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     @Test
     fun `hide title and view more block in view all mode`() = test {
         useCase = AnnualSiteStatsUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                insightsStore,
-                statsSiteProvider,
-                selectedDateProvider,
-                annualStatsMapper,
-                localeManagerWrapper,
-                popupMenuHandler,
-                VIEW_ALL
+            testDispatcher(),
+            testDispatcher(),
+            insightsStore,
+            statsSiteProvider,
+            selectedDateProvider,
+            annualStatsMapper,
+            localeManagerWrapper,
+            popupMenuHandler,
+            VIEW_ALL
         )
         val forced = false
         val refresh = true
         val model = YearsInsightsModel(listOf(year2018, year2019))
         whenever(insightsStore.getYearsInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchYearsInsights(site, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         whenever(annualStatsMapper.mapYearInViewAll(year2019)).thenReturn(listOf(Empty()))
 
@@ -164,13 +172,13 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         val model = YearsInsightsModel(
-                listOf()
+            listOf()
         )
         whenever(insightsStore.getYearsInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchYearsInsights(site, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadMostPopularInsights(refresh, forced)
@@ -184,9 +192,9 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
         val refresh = true
         val message = "Generic error"
         whenever(insightsStore.fetchYearsInsights(site, forced)).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadMostPopularInsights(refresh, forced)

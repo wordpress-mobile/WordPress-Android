@@ -26,24 +26,30 @@ import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseTwoConfig
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
-    @Mock private lateinit var buildConfigWrapper: BuildConfigWrapper
-    @Mock private lateinit var jetpackFeatureRemovalPhaseOneConfig: JetpackFeatureRemovalPhaseOneConfig
-    @Mock private lateinit var jetpackFeatureRemovalPhaseTwoConfig: JetpackFeatureRemovalPhaseTwoConfig
-    @Mock private lateinit var jetpackFeatureRemovalPhaseThreeConfig: JetpackFeatureRemovalPhaseThreeConfig
-    @Mock private lateinit var jetpackFeatureRemovalPhaseFourConfig: JetpackFeatureRemovalPhaseFourConfig
-    @Mock private lateinit var jetpackFeatureRemovalNewUsersConfig: JetpackFeatureRemovalNewUsersConfig
+    @Mock
+    private lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock
+    private lateinit var jetpackFeatureRemovalPhaseOneConfig: JetpackFeatureRemovalPhaseOneConfig
+    @Mock
+    private lateinit var jetpackFeatureRemovalPhaseTwoConfig: JetpackFeatureRemovalPhaseTwoConfig
+    @Mock
+    private lateinit var jetpackFeatureRemovalPhaseThreeConfig: JetpackFeatureRemovalPhaseThreeConfig
+    @Mock
+    private lateinit var jetpackFeatureRemovalPhaseFourConfig: JetpackFeatureRemovalPhaseFourConfig
+    @Mock
+    private lateinit var jetpackFeatureRemovalNewUsersConfig: JetpackFeatureRemovalNewUsersConfig
 
     private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Before
     fun setup() {
         jetpackFeatureRemovalPhaseHelper = JetpackFeatureRemovalPhaseHelper(
-                buildConfigWrapper,
-                jetpackFeatureRemovalPhaseOneConfig,
-                jetpackFeatureRemovalPhaseTwoConfig,
-                jetpackFeatureRemovalPhaseThreeConfig,
-                jetpackFeatureRemovalPhaseFourConfig,
-                jetpackFeatureRemovalNewUsersConfig
+            buildConfigWrapper,
+            jetpackFeatureRemovalPhaseOneConfig,
+            jetpackFeatureRemovalPhaseTwoConfig,
+            jetpackFeatureRemovalPhaseThreeConfig,
+            jetpackFeatureRemovalPhaseFourConfig,
+            jetpackFeatureRemovalNewUsersConfig
         )
     }
 

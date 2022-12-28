@@ -44,20 +44,34 @@ import java.util.Calendar
 
 @ExperimentalCoroutinesApi
 class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var store: VisitsAndViewsStore
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
-    @Mock lateinit var viewsAndVisitorsMapper: ViewsAndVisitorsMapper
-    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var title: ValuesItem
-    @Mock lateinit var chips: Chips
-    @Mock lateinit var lineChartItem: LineChartItem
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var useCaseMode: UseCaseMode
+    @Mock
+    lateinit var store: VisitsAndViewsStore
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
+    @Mock
+    lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock
+    lateinit var viewsAndVisitorsMapper: ViewsAndVisitorsMapper
+    @Mock
+    lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var title: ValuesItem
+    @Mock
+    lateinit var chips: Chips
+    @Mock
+    lateinit var lineChartItem: LineChartItem
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    lateinit var useCaseMode: UseCaseMode
     private lateinit var useCase: ViewsAndVisitorsUseCase
     private val site = SiteModel()
     private val siteId = 1L
@@ -70,27 +84,29 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = ViewsAndVisitorsUseCase(
-                VIEWS_AND_VISITORS,
-                statsGranularity,
-                store,
-                selectedDateProvider,
-                statsSiteProvider,
-                statsDateFormatter,
-                viewsAndVisitorsMapper,
-                testDispatcher(),
-                testDispatcher(),
-                analyticsTrackerWrapper,
-                statsWidgetUpdaters,
-                localeManagerWrapper,
-                resourceProvider,
-                useCaseMode
+            VIEWS_AND_VISITORS,
+            statsGranularity,
+            store,
+            selectedDateProvider,
+            statsSiteProvider,
+            statsDateFormatter,
+            viewsAndVisitorsMapper,
+            testDispatcher(),
+            testDispatcher(),
+            analyticsTrackerWrapper,
+            statsWidgetUpdaters,
+            localeManagerWrapper,
+            resourceProvider,
+            useCaseMode
         )
         site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(viewsAndVisitorsMapper.buildTitle(any(), any(), any(), any(), any())).thenReturn(title)
-        whenever(viewsAndVisitorsMapper
-                .buildChart(any(), any(), any(), any(), any(), any()))
-                .thenReturn(listOf(lineChartItem))
+        whenever(
+            viewsAndVisitorsMapper
+                .buildChart(any(), any(), any(), any(), any(), any())
+        )
+            .thenReturn(listOf(lineChartItem))
         whenever(viewsAndVisitorsMapper.buildInformation(any(), any(), any())).thenReturn(Text(text = ""))
         whenever(viewsAndVisitorsMapper.buildChips(any(), any())).thenReturn(chips)
         whenever(resourceProvider.getString(string.stats_loading_card)).thenReturn("Loading")
@@ -102,9 +118,9 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
         setupCalendar()
         whenever(store.getVisits(site, statsGranularity, limitMode)).thenReturn(model)
         whenever(store.fetchVisits(site, statsGranularity, limitMode, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadData(true, forced)
@@ -124,9 +140,9 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(store.fetchVisits(site, statsGranularity, limitMode, forced)).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadData(true, forced)
@@ -139,9 +155,9 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
         val forced = false
         setupCalendar(1)
         whenever(store.fetchVisits(site, statsGranularity, limitMode, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         loadData(true, forced)
@@ -154,22 +170,22 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
         val forced = false
         setupCalendar(2)
         whenever(store.fetchVisits(site, statsGranularity, limitMode, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         loadData(true, forced)
 
         verify(analyticsTrackerWrapper).track(
-                STATS_VIEWS_AND_VISITORS_ERROR, mapOf(
+            STATS_VIEWS_AND_VISITORS_ERROR, mapOf(
                 "stats_last_date" to "2020-12-13",
                 "stats_current_date" to "2020-12-15",
                 "stats_age_in_days" to 2,
                 "is_jetpack_connected" to false,
                 "is_atomic" to false,
                 "action_source" to "remote"
-        )
+            )
         )
     }
 
@@ -187,7 +203,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
         lastItemAge.set(Calendar.HOUR_OF_DAY, 22)
         whenever(localeManagerWrapper.getCurrentCalendar()).then {
             Calendar.getInstance()
-                    .apply { this.time = today.time }
+                .apply { this.time = today.time }
         }
         whenever(statsDateFormatter.parseStatsDate(any(), any())).thenReturn(lastItemAge.time)
         whenever(statsDateFormatter.printStatsDate(lastItemAge.time)).thenReturn("2020-12-$lastItemDay")

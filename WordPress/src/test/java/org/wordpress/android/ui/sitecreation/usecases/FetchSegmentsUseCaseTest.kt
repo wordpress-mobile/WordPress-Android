@@ -17,8 +17,10 @@ import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class FetchSegmentsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var store: VerticalStore
+    @Mock
+    lateinit var dispatcher: Dispatcher
+    @Mock
+    lateinit var store: VerticalStore
     private lateinit var useCase: FetchSegmentsUseCase
     private val event = OnSegmentsFetched(emptyList(), null)
 

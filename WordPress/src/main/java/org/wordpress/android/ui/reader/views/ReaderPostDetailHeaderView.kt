@@ -12,8 +12,8 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
-import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.extensions.setVisible
+import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 /**
@@ -26,8 +26,10 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
     private val binding = ReaderPostDetailHeaderViewBinding.inflate(LayoutInflater.from(context), this, true)
 
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var uiHelpers: UiHelpers
 
     init {
         (context.applicationContext as WordPress).component().inject(this)

@@ -27,9 +27,9 @@ import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.posts.PostListItemAction
 import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.viewmodel.posts.PostListItemAction.SingleItem
-import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateData
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.WPTextView
 import java.util.concurrent.atomic.AtomicBoolean
@@ -48,8 +48,9 @@ sealed class PostListItemViewHolder(
     private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
     private val container: ConstraintLayout = itemView.findViewById(R.id.container)
     private val selectableBackground: Drawable? = parent.context.getDrawableFromAttribute(
-            android.R.attr.selectableItemBackground
+        android.R.attr.selectableItemBackground
     )
+
     /**
      * Url of an image loaded in the `featuredImageView`.
      */
@@ -68,9 +69,9 @@ sealed class PostListItemViewHolder(
     ) : PostListItemViewHolder(R.layout.post_list_item, parent, imageManager, uiHelpers) {
         private val excerptTextView: WPTextView = itemView.findViewById(R.id.excerpt)
         private val actionButtons: List<PostListButton> = listOf(
-                itemView.findViewById(R.id.btn_primary),
-                itemView.findViewById(R.id.btn_secondary),
-                itemView.findViewById(R.id.btn_ternary)
+            itemView.findViewById(R.id.btn_primary),
+            itemView.findViewById(R.id.btn_secondary),
+            itemView.findViewById(R.id.btn_ternary)
         )
 
         override fun onBind(item: PostListItemUiState) {
@@ -167,10 +168,10 @@ sealed class PostListItemViewHolder(
         val menu = PopupMenu(v.context, v)
         actions.forEach { singleItemAction ->
             val menuItem = menu.menu.add(
-                    Menu.NONE,
-                    singleItemAction.buttonType.value,
-                    Menu.NONE,
-                    singleItemAction.buttonType.textResId
+                Menu.NONE,
+                singleItemAction.buttonType.value,
+                Menu.NONE,
+                singleItemAction.buttonType.textResId
             )
             menuItem.setOnMenuItemClickListener {
                 singleItemAction.onButtonClicked.invoke(singleItemAction.buttonType)
@@ -202,10 +203,10 @@ sealed class PostListItemViewHolder(
         view.text = statuses.joinToString(separator) { uiHelpers.getTextOfUiString(view.context, it) }
         color?.let { statusColor ->
             view.setTextColor(
-                    ContextCompat.getColor(
-                            itemView.context,
-                            statusColor
-                    )
+                ContextCompat.getColor(
+                    itemView.context,
+                    statusColor
+                )
             )
         }
     }

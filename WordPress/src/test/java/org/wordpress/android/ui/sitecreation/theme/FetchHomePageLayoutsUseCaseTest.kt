@@ -27,10 +27,14 @@ import org.wordpress.android.util.config.BetaSiteDesignsFeatureConfig
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class FetchHomePageLayoutsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var store: ThemeStore
-    @Mock lateinit var thumbDimensionProvider: SiteDesignRecommendedDimensionProvider
-    @Mock lateinit var betaSiteDesigns: BetaSiteDesignsFeatureConfig
+    @Mock
+    lateinit var dispatcher: Dispatcher
+    @Mock
+    lateinit var store: ThemeStore
+    @Mock
+    lateinit var thumbDimensionProvider: SiteDesignRecommendedDimensionProvider
+    @Mock
+    lateinit var betaSiteDesigns: BetaSiteDesignsFeatureConfig
 
     private lateinit var useCase: FetchHomePageLayoutsUseCase
     private lateinit var dispatchCaptor: KArgumentCaptor<Action<SuggestDomainsPayload>>
@@ -58,10 +62,10 @@ class FetchHomePageLayoutsUseCaseTest : BaseUnitTest() {
         useCase.fetchStarterDesigns()
         verify(dispatcher).dispatch(dispatchCaptor.capture())
         assertThat(requireNotNull(dispatchCaptor.firstValue.payload as FetchStarterDesignsPayload).groups).isEqualTo(
-                arrayOf(
-                        GROUP.STABLE.key,
-                        GROUP.BETA.key
-                )
+            arrayOf(
+                GROUP.STABLE.key,
+                GROUP.BETA.key
+            )
         )
     }
 
@@ -73,7 +77,7 @@ class FetchHomePageLayoutsUseCaseTest : BaseUnitTest() {
         useCase.fetchStarterDesigns()
         verify(dispatcher).dispatch(dispatchCaptor.capture())
         assertThat(requireNotNull(dispatchCaptor.firstValue.payload as FetchStarterDesignsPayload).groups).isEqualTo(
-                emptyArray<String>()
+            emptyArray<String>()
         )
     }
 }

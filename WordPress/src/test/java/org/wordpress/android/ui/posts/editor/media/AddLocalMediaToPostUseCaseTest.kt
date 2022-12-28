@@ -32,7 +32,7 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
         val localUris = listOf<Uri>(mock(), mock())
         // Act
         val result = createAddLocalMediaToPostUseCase()
-                .addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock())
+            .addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock())
         // Assert
         assertThat(result).isTrue()
     }
@@ -50,9 +50,9 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
 
         // Act
         val useCase = createAddLocalMediaToPostUseCase(
-                appendMediaToEditorUseCase = appendMediaToEditorUseCase,
-                uploadMediaUseCase = uploadMediaUseCase,
-                updateMediaModelUseCase = updateMediaModelUseCase
+            appendMediaToEditorUseCase = appendMediaToEditorUseCase,
+            uploadMediaUseCase = uploadMediaUseCase,
+            updateMediaModelUseCase = updateMediaModelUseCase
         )
 
         useCase.addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock(), doUploadAfterAdding)
@@ -76,9 +76,9 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
 
         // Act
         val useCase = createAddLocalMediaToPostUseCase(
-                appendMediaToEditorUseCase = appendMediaToEditorUseCase,
-                uploadMediaUseCase = uploadMediaUseCase,
-                updateMediaModelUseCase = updateMediaModelUseCase
+            appendMediaToEditorUseCase = appendMediaToEditorUseCase,
+            uploadMediaUseCase = uploadMediaUseCase,
+            updateMediaModelUseCase = updateMediaModelUseCase
         )
 
         useCase.addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock(), doUploadAfterAdding)
@@ -94,13 +94,13 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
         // Arrange
         val localUris = listOf<Uri>(mock(), mock())
         val optimizeMediaUseCase = createOptimizeMediaUseCase(
-                createOptimizeMediaResult(
-                        loadingSomeMediaFailed = true
-                )
+            createOptimizeMediaResult(
+                loadingSomeMediaFailed = true
+            )
         )
         // Act
         val result = createAddLocalMediaToPostUseCase(optimizeMediaUseCase = optimizeMediaUseCase)
-                .addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock())
+            .addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock())
         // Assert
         assertThat(result).isFalse()
     }
@@ -110,11 +110,11 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
         // Arrange
         val localUris = listOf<Uri>(mock(), mock())
         val copyMediaToAppStorageUseCase = createCopyMediaToAppStorageUseCase(
-                createCopyMediaResult(copyingSomeMediaFailed = true)
+            createCopyMediaResult(copyingSomeMediaFailed = true)
         )
         // Act
         val result = createAddLocalMediaToPostUseCase(copyMediaToAppStorageUseCase = copyMediaToAppStorageUseCase)
-                .addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock())
+            .addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock())
         // Assert
         assertThat(result).isFalse()
     }
@@ -124,13 +124,13 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
         // Arrange
         val localUris = listOf<Uri>(mock(), mock())
         val getMediaModelUseCase = createGetMediaModelUseCase(
-                createMediaModelResult(
-                        loadingSomeMediaFailed = true
-                )
+            createMediaModelResult(
+                loadingSomeMediaFailed = true
+            )
         )
         // Act
         val result = createAddLocalMediaToPostUseCase(getMediaModelUseCase = getMediaModelUseCase)
-                .addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock())
+            .addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock())
         // Assert
         assertThat(result).isFalse()
     }
@@ -141,21 +141,21 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
         val localUris = listOf<Uri>(mock(), mock())
         val urisOfCopiedFiles = listOf<Uri>(mock())
         val copyMediaToAppStorageUseCase = createCopyMediaToAppStorageUseCase(
-                createCopyMediaResult(uris = urisOfCopiedFiles)
+            createCopyMediaResult(uris = urisOfCopiedFiles)
         )
 
         val optimizeMediaUseCase = createOptimizeMediaUseCase()
         // Act
         createAddLocalMediaToPostUseCase(
-                copyMediaToAppStorageUseCase = copyMediaToAppStorageUseCase,
-                optimizeMediaUseCase = optimizeMediaUseCase
+            copyMediaToAppStorageUseCase = copyMediaToAppStorageUseCase,
+            optimizeMediaUseCase = optimizeMediaUseCase
         ).addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock())
         // Assert
         verify(optimizeMediaUseCase).optimizeMediaIfSupportedAsync(
-                any(),
-                eq(FRESHLY_TAKEN),
-                eq(urisOfCopiedFiles),
-                any()
+            any(),
+            eq(FRESHLY_TAKEN),
+            eq(urisOfCopiedFiles),
+            any()
         )
     }
 
@@ -169,13 +169,13 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
         val getMediaModelUseCase = createGetMediaModelUseCase()
         // Act
         createAddLocalMediaToPostUseCase(
-                optimizeMediaUseCase = optimizeMediaUseCase,
-                getMediaModelUseCase = getMediaModelUseCase
+            optimizeMediaUseCase = optimizeMediaUseCase,
+            getMediaModelUseCase = getMediaModelUseCase
         ).addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock())
         // Assert
         verify(getMediaModelUseCase).createMediaModelFromUri(
-                eq(LOCAL_SITE_ID),
-                eq(urisOfOptimizedFiles)
+            eq(LOCAL_SITE_ID),
+            eq(urisOfOptimizedFiles)
         )
     }
 
@@ -186,7 +186,7 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
         val updateMediaModelUseCase = mock<UpdateMediaModelUseCase>()
         // Act
         createAddLocalMediaToPostUseCase(updateMediaModelUseCase = updateMediaModelUseCase)
-                .addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock())
+            .addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock())
         // Assert
         verify(updateMediaModelUseCase).updateMediaModel(any(), anyOrNull(), eq(QUEUED))
     }
@@ -203,31 +203,31 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
         val optimizeMediaUseCase = createOptimizeMediaUseCase()
 
         val inOrder = inOrder(
-                getMediaModelUseCase,
-                updateMediaModelUseCase,
-                appendMediaToEditorUseCase,
-                uploadMediaUseCase,
-                copyMediaToAppStorageUseCase,
-                optimizeMediaUseCase
+            getMediaModelUseCase,
+            updateMediaModelUseCase,
+            appendMediaToEditorUseCase,
+            uploadMediaUseCase,
+            copyMediaToAppStorageUseCase,
+            optimizeMediaUseCase
         )
         val siteModel = SiteModel().apply { id = LOCAL_SITE_ID }
         // Act
         createAddLocalMediaToPostUseCase(
-                getMediaModelUseCase = getMediaModelUseCase,
-                updateMediaModelUseCase = updateMediaModelUseCase,
-                appendMediaToEditorUseCase = appendMediaToEditorUseCase,
-                uploadMediaUseCase = uploadMediaUseCase,
-                copyMediaToAppStorageUseCase = copyMediaToAppStorageUseCase,
-                optimizeMediaUseCase = optimizeMediaUseCase
+            getMediaModelUseCase = getMediaModelUseCase,
+            updateMediaModelUseCase = updateMediaModelUseCase,
+            appendMediaToEditorUseCase = appendMediaToEditorUseCase,
+            uploadMediaUseCase = uploadMediaUseCase,
+            copyMediaToAppStorageUseCase = copyMediaToAppStorageUseCase,
+            optimizeMediaUseCase = optimizeMediaUseCase
         ).addNewMediaToEditorAsync(localUris, siteModel, FRESHLY_TAKEN, mock())
 
         // Assert
         inOrder.verify(copyMediaToAppStorageUseCase).copyFilesToAppStorageIfNecessary(localUris)
         inOrder.verify(optimizeMediaUseCase).optimizeMediaIfSupportedAsync(any(), any(), any(), any())
         inOrder.verify(getMediaModelUseCase)
-                .createMediaModelFromUri(eq(LOCAL_SITE_ID), any<List<Uri>>())
+            .createMediaModelFromUri(eq(LOCAL_SITE_ID), any<List<Uri>>())
         inOrder.verify(updateMediaModelUseCase)
-                .updateMediaModel(any(), anyOrNull(), any())
+            .updateMediaModel(any(), anyOrNull(), any())
         inOrder.verify(appendMediaToEditorUseCase).addMediaToEditor(any(), any())
         inOrder.verify(uploadMediaUseCase).saveQueuedPostAndStartUpload(any(), any())
     }
@@ -242,22 +242,22 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
         val uploadMediaUseCase = mock<UploadMediaUseCase>()
 
         val inOrder = inOrder(
-                getMediaModelUseCase,
-                updateMediaModelUseCase,
-                appendMediaToEditorUseCase,
-                uploadMediaUseCase
+            getMediaModelUseCase,
+            updateMediaModelUseCase,
+            appendMediaToEditorUseCase,
+            uploadMediaUseCase
         )
         // Act
         createAddLocalMediaToPostUseCase(
-                getMediaModelUseCase = getMediaModelUseCase,
-                updateMediaModelUseCase = updateMediaModelUseCase,
-                appendMediaToEditorUseCase = appendMediaToEditorUseCase,
-                uploadMediaUseCase = uploadMediaUseCase
+            getMediaModelUseCase = getMediaModelUseCase,
+            updateMediaModelUseCase = updateMediaModelUseCase,
+            appendMediaToEditorUseCase = appendMediaToEditorUseCase,
+            uploadMediaUseCase = uploadMediaUseCase
         ).addLocalMediaToEditorAsync(localIds, mock())
         // Assert
         inOrder.verify(getMediaModelUseCase).loadMediaByLocalId(localIds)
         inOrder.verify(updateMediaModelUseCase, times(localIds.size))
-                .updateMediaModel(any(), anyOrNull(), any())
+            .updateMediaModel(any(), anyOrNull(), any())
         inOrder.verify(appendMediaToEditorUseCase).addMediaToEditor(any(), any())
         inOrder.verify(uploadMediaUseCase).saveQueuedPostAndStartUpload(any(), any())
     }
@@ -277,23 +277,23 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
             context: Context = mock()
         ): AddLocalMediaToPostUseCase {
             return AddLocalMediaToPostUseCase(
-                    copyMediaToAppStorageUseCase = copyMediaToAppStorageUseCase,
-                    optimizeMediaUseCase = optimizeMediaUseCase,
-                    getMediaModelUseCase = getMediaModelUseCase,
-                    updateMediaModelUseCase = updateMediaModelUseCase,
-                    appendMediaToEditorUseCase = appendMediaToEditorUseCase,
-                    uploadMediaUseCase = uploadMediaUseCase,
-                    mediaUtilsWrapper = mediaUtilsWrapper,
-                    context = context
+                copyMediaToAppStorageUseCase = copyMediaToAppStorageUseCase,
+                optimizeMediaUseCase = optimizeMediaUseCase,
+                getMediaModelUseCase = getMediaModelUseCase,
+                updateMediaModelUseCase = updateMediaModelUseCase,
+                appendMediaToEditorUseCase = appendMediaToEditorUseCase,
+                uploadMediaUseCase = uploadMediaUseCase,
+                mediaUtilsWrapper = mediaUtilsWrapper,
+                context = context
             )
         }
 
         fun createCopyMediaToAppStorageUseCase(copyMediaResult: CopyMediaResult = createCopyMediaResult()) =
-                mock<CopyMediaToAppStorageUseCase> {
-                    onBlocking { copyFilesToAppStorageIfNecessary(any()) }.thenReturn(
-                            copyMediaResult
-                    )
-                }
+            mock<CopyMediaToAppStorageUseCase> {
+                onBlocking { copyFilesToAppStorageIfNecessary(any()) }.thenReturn(
+                    copyMediaResult
+                )
+            }
 
         private fun createCopyMediaResult(
             copyingSomeMediaFailed: Boolean = false,
@@ -304,16 +304,16 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
         }
 
         fun createOptimizeMediaUseCase(optimizeMediaResult: OptimizeMediaResult = createOptimizeMediaResult()) =
-                mock<OptimizeMediaUseCase> {
-                    onBlocking {
-                        optimizeMediaIfSupportedAsync(
-                                any(),
-                                eq(FRESHLY_TAKEN),
-                                any(),
-                                any()
-                        )
-                    }.thenReturn(optimizeMediaResult)
-                }
+            mock<OptimizeMediaUseCase> {
+                onBlocking {
+                    optimizeMediaIfSupportedAsync(
+                        any(),
+                        eq(FRESHLY_TAKEN),
+                        any(),
+                        any()
+                    )
+                }.thenReturn(optimizeMediaResult)
+            }
 
         fun createOptimizeMediaResult(
             loadingSomeMediaFailed: Boolean = false,
@@ -323,16 +323,16 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
         }
 
         fun createGetMediaModelUseCase(createMediaModelResult: CreateMediaModelsResult = createMediaModelResult()) =
-                mock<GetMediaModelUseCase> {
-                    onBlocking { loadMediaByLocalId(any()) }.thenAnswer { invocation ->
-                        val result = mutableListOf<MediaModel>()
-                        (invocation.getArgument(0) as List<Int>).forEach { result.add(mock()) }
-                        result
-                    }
-                    onBlocking {
-                        createMediaModelFromUri(eq(LOCAL_SITE_ID), any<List<Uri>>())
-                    }.thenReturn(createMediaModelResult)
+            mock<GetMediaModelUseCase> {
+                onBlocking { loadMediaByLocalId(any()) }.thenAnswer { invocation ->
+                    val result = mutableListOf<MediaModel>()
+                    (invocation.getArgument(0) as List<Int>).forEach { result.add(mock()) }
+                    result
                 }
+                onBlocking {
+                    createMediaModelFromUri(eq(LOCAL_SITE_ID), any<List<Uri>>())
+                }.thenReturn(createMediaModelResult)
+            }
 
         fun createMediaModelResult(loadingSomeMediaFailed: Boolean = false): CreateMediaModelsResult {
             return CreateMediaModelsResult(listOf(mock()), loadingSomeMediaFailed)

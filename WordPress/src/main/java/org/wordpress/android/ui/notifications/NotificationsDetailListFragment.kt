@@ -67,7 +67,6 @@ import org.wordpress.android.util.getRangeIdOrZero
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.util.image.ImageType.BLAVATAR
-import java.util.ArrayList
 import javax.inject.Inject
 
 class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
@@ -81,9 +80,12 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private var noteBlockAdapter: NoteBlockAdapter? = null
     private var confettiShown = false
 
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
-    @Inject lateinit var listScenarioUtils: ListScenarioUtils
+    @Inject
+    lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
+    @Inject
+    lateinit var listScenarioUtils: ListScenarioUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -237,9 +239,9 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
             requireNotNull(notification).let { note ->
                 ReaderActivityLauncher.showReaderComments(
-                        activity, note.siteId.toLong(), note.postId.toLong(),
-                        note.commentId,
-                        COMMENT_NOTIFICATION.sourceDescription
+                    activity, note.siteId.toLong(), note.postId.toLong(),
+                    note.commentId,
+                    COMMENT_NOTIFICATION.sourceDescription
                 )
             }
         }
@@ -273,12 +275,13 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 COMMENT ->
                     // Load the comment in the reader list if it exists, otherwise show a webview
                     if (ReaderUtils.postAndCommentExists(
-                                    clickedSpan.siteId, clickedSpan.postId,
-                                    clickedSpan.id
-                            )) {
+                            clickedSpan.siteId, clickedSpan.postId,
+                            clickedSpan.id
+                        )
+                    ) {
                         activity.showReaderCommentsList(
-                                clickedSpan.siteId, clickedSpan.postId,
-                                clickedSpan.id
+                            clickedSpan.siteId, clickedSpan.postId,
+                            clickedSpan.id
                         )
                     } else {
                         activity.showWebViewActivityForUrl(clickedSpan.url)
@@ -325,13 +328,13 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         private fun addHeaderNoteBlock(note: Note, noteList: MutableList<NoteBlock>) {
             val imageType = if (note.isFollowType) BLAVATAR else AVATAR_WITH_BACKGROUND
             val headerNoteBlock = HeaderNoteBlock(
-                    activity,
-                    listScenarioUtils.transformToFormattableContentList(note.header),
-                    imageType,
-                    mOnNoteBlockTextClickListener,
-                    mOnGravatarClickedListener,
-                    imageManager,
-                    notificationsUtilsWrapper
+                activity,
+                listScenarioUtils.transformToFormattableContentList(note.header),
+                imageType,
+                mOnNoteBlockTextClickListener,
+                mOnGravatarClickedListener,
+                imageManager,
+                notificationsUtilsWrapper
             )
             headerNoteBlock.setIsComment(note.isCommentType)
             noteList.add(headerNoteBlock)
@@ -355,18 +358,18 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 // Next item in the bodyArray is comment text
                 if (index + 1 < bodyArray.length()) {
                     commentTextBlock = notificationsUtilsWrapper
-                            .mapJsonToFormattableContent(bodyArray.getJSONObject(index + 1))
+                        .mapJsonToFormattableContent(bodyArray.getJSONObject(index + 1))
                     index++
                 }
                 noteBlock = CommentUserNoteBlock(
-                        activity,
-                        noteObject,
-                        commentTextBlock,
-                        note.timestamp,
-                        mOnNoteBlockTextClickListener,
-                        mOnGravatarClickedListener,
-                        imageManager,
-                        notificationsUtilsWrapper
+                    activity,
+                    noteObject,
+                    commentTextBlock,
+                    note.timestamp,
+                    mOnNoteBlockTextClickListener,
+                    mOnGravatarClickedListener,
+                    imageManager,
+                    notificationsUtilsWrapper
                 )
                 pingbackUrl = noteBlock.metaSiteUrl
 
@@ -377,12 +380,12 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 commentUserNoteBlock.configureResources(activity)
             } else {
                 noteBlock = UserNoteBlock(
-                        activity,
-                        noteObject,
-                        mOnNoteBlockTextClickListener,
-                        mOnGravatarClickedListener,
-                        imageManager,
-                        notificationsUtilsWrapper
+                    activity,
+                    noteObject,
+                    mOnNoteBlockTextClickListener,
+                    mOnGravatarClickedListener,
+                    imageManager,
+                    notificationsUtilsWrapper
                 )
             }
 
@@ -400,7 +403,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             while (i < bodyArray.length()) {
                 try {
                     val noteObject = notificationsUtilsWrapper
-                            .mapJsonToFormattableContent(bodyArray.getJSONObject(i))
+                        .mapJsonToFormattableContent(bodyArray.getJSONObject(i))
 
                     // Determine NoteBlock type and add it to the array
                     var noteBlock: NoteBlock
@@ -412,8 +415,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                         pingbackUrl = manageUserBlockResults.pingbackUrl
                     } else if (isFooterBlock(noteObject)) {
                         noteBlock = FooterNoteBlock(
-                                noteObject, imageManager, notificationsUtilsWrapper,
-                                mOnNoteBlockTextClickListener
+                            noteObject, imageManager, notificationsUtilsWrapper,
+                            mOnNoteBlockTextClickListener
                         ).also {
                             if (noteObject.ranges != null && noteObject.ranges!!.isNotEmpty()) {
                                 val range = noteObject.ranges!![noteObject.ranges!!.size - 1]
@@ -422,8 +425,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                         }
                     } else {
                         noteBlock = NoteBlock(
-                                noteObject, imageManager, notificationsUtilsWrapper,
-                                mOnNoteBlockTextClickListener
+                            noteObject, imageManager, notificationsUtilsWrapper,
+                            mOnNoteBlockTextClickListener
                         )
                     }
 
@@ -472,8 +475,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 if (isPingback) {
                     // Remove this when we start receiving "Read the source post block" from the backend
                     val generatedBlock = buildGeneratedLinkBlock(
-                            mOnNoteBlockTextClickListener, pingbackUrl,
-                            activity!!.getString(string.comment_read_source_post)
+                        mOnNoteBlockTextClickListener, pingbackUrl,
+                        activity!!.getString(string.comment_read_source_post)
                     )
                     generatedBlock.setIsPingback()
                     noteList.add(generatedBlock)
@@ -506,11 +509,11 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             message: String
         ): NoteBlock {
             return GeneratedNoteBlock(
-                    message,
-                    imageManager,
-                    notificationsUtilsWrapper,
-                    onNoteBlockTextClickListener,
-                    pingbackUrl!!
+                message,
+                imageManager,
+                notificationsUtilsWrapper,
+                onNoteBlockTextClickListener,
+                pingbackUrl!!
             )
         }
 
@@ -590,9 +593,10 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
         // Request the reader post so that loading reader activities will work.
         if (notification!!.isUserList && !ReaderPostTable.postExists(
-                        notification!!.siteId.toLong(),
-                        notification!!.postId.toLong()
-                )) {
+                notification!!.siteId.toLong(),
+                notification!!.postId.toLong()
+            )
+        ) {
             ReaderPostActions.requestBlogPost(notification!!.siteId.toLong(), notification!!.postId.toLong(), null)
         }
 
@@ -600,17 +604,17 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             // Request reader comments until we retrieve the comment for this note
             val isReplyOrCommentLike = note.isCommentLikeType || note.isCommentReplyType || note.isCommentWithUserReply
             val commentNotExists = !ReaderCommentTable.commentExists(
-                    note.siteId.toLong(),
-                    note.postId.toLong(),
-                    note.commentId
+                note.siteId.toLong(),
+                note.postId.toLong(),
+                note.commentId
             )
 
             if (isReplyOrCommentLike && commentNotExists) {
                 ReaderCommentService.startServiceForComment(
-                        activity,
-                        note.siteId.toLong(),
-                        note.postId.toLong(),
-                        note.commentId
+                    activity,
+                    note.siteId.toLong(),
+                    note.postId.toLong(),
+                    note.commentId
                 )
             }
         }

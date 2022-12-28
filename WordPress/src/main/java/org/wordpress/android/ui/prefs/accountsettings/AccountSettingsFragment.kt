@@ -18,7 +18,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.signup.BaseUsernameChangerFullScreenDialogFragment
@@ -58,18 +57,24 @@ private const val EMPTY_STRING = ""
 
 @Suppress("DEPRECATION")
 class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
-        OnPreferenceChangeListener, OnPreferenceClickListener {
-    @set:Inject lateinit var uiHelpers: UiHelpers
-    @set:Inject lateinit var viewModel: AccountSettingsViewModel
-    @set:Inject lateinit var snackbarSequencer: SnackbarSequencer
-    @set:Inject lateinit var analyticsTracker: AccountSettingsAnalyticsTracker
-    @set:Inject lateinit var navigationHandler: AccountSettingsNavigationHandler
+    OnPreferenceChangeListener, OnPreferenceClickListener {
+    @set:Inject
+    lateinit var uiHelpers: UiHelpers
+    @set:Inject
+    lateinit var viewModel: AccountSettingsViewModel
+    @set:Inject
+    lateinit var snackbarSequencer: SnackbarSequencer
+    @set:Inject
+    lateinit var analyticsTracker: AccountSettingsAnalyticsTracker
+    @set:Inject
+    lateinit var navigationHandler: AccountSettingsNavigationHandler
     private lateinit var usernamePreference: Preference
     private lateinit var emailPreference: EditTextPreferenceWithValidation
     private lateinit var primarySitePreference: DetailListPreference
     private lateinit var webAddressPreference: EditTextPreferenceWithValidation
     private lateinit var changePasswordPreference: EditTextPreferenceWithValidation
-    @Suppress("DEPRECATION") private var changePasswordProgressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION")
+    private var changePasswordProgressDialog: ProgressDialog? = null
     private var emailSnackbar: Snackbar? = null
 
     @Deprecated("Deprecated")
@@ -81,18 +86,18 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         bindPreferences()
         setUpListeners()
         emailPreference.configure(
-                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
-                validationType = EMAIL
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
+            validationType = EMAIL
         )
         webAddressPreference.configure(
-                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI,
-                validationType = URL,
-                dialogMessage = R.string.web_address_dialog_hint
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI,
+            validationType = URL,
+            dialogMessage = R.string.web_address_dialog_hint
         )
         changePasswordPreference.configure(
-                inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD,
-                validationType = PASSWORD,
-                dialogMessage = R.string.change_password_dialog_hint
+            inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD,
+            validationType = PASSWORD,
+            dialogMessage = R.string.change_password_dialog_hint
         )
     }
 
@@ -220,7 +225,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     private fun showUserNameSnackBar(userName: SnackbarMessageHolder) {
         view?.let {
             snackbarSequencer.enqueue(
-                    SnackbarItem(Info(view = it, textRes = userName.message, duration = userName.duration))
+                SnackbarItem(Info(view = it, textRes = userName.message, duration = userName.duration))
             )
         }
     }
@@ -233,17 +238,17 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         } ?: run {
             view?.let {
                 emailSnackbar = WPSnackbar.make(
-                        it,
-                        uiHelpers.getTextOfUiString(context, snackBarMessage.message),
-                        BaseTransientBottomBar.LENGTH_INDEFINITE
+                    it,
+                    uiHelpers.getTextOfUiString(context, snackBarMessage.message),
+                    BaseTransientBottomBar.LENGTH_INDEFINITE
                 )
                 snackBarMessage.buttonTitle?.let {
                     emailSnackbar?.setAction(
-                            uiHelpers.getTextOfUiString(context, snackBarMessage.buttonTitle)
+                        uiHelpers.getTextOfUiString(context, snackBarMessage.buttonTitle)
                     ) { snackBarMessage.buttonAction }
                 }
                 val textView = emailSnackbar?.view
-                        ?.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                    ?.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
                 textView?.maxLines = SNACKBAR_NO_OF_LINES_FOUR
             }
         }
@@ -263,14 +268,14 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 }
             }
             navigationHandler.showUsernameChangerScreen(
-                    activity,
-                    UserNameChangeScreenRequest(
-                            userName = viewModel.accountSettingsUiState.value.userNameSettingsUiState.userName,
-                            displayName = viewModel.accountSettingsUiState.value.userNameSettingsUiState.displayName,
-                            onConfirm = onUserNameConfirmed,
-                            onShown = { analyticsTracker.track(USERNAME_CHANGE_SCREEN_DISPLAYED) },
-                            onDismiss = { analyticsTracker.track(USERNAME_CHANGE_SCREEN_DISMISSED) }
-                    )
+                activity,
+                UserNameChangeScreenRequest(
+                    userName = viewModel.accountSettingsUiState.value.userNameSettingsUiState.userName,
+                    displayName = viewModel.accountSettingsUiState.value.userNameSettingsUiState.displayName,
+                    onConfirm = onUserNameConfirmed,
+                    onShown = { analyticsTracker.track(USERNAME_CHANGE_SCREEN_DISPLAYED) },
+                    onDismiss = { analyticsTracker.track(USERNAME_CHANGE_SCREEN_DISMISSED) }
+                )
             )
         }
         return true

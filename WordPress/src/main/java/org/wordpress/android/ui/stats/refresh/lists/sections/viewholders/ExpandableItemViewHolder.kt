@@ -13,12 +13,12 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Expan
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
-import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.extensions.setVisible
+import org.wordpress.android.util.image.ImageManager
 
 class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_list_item
+    parent,
+    R.layout.stats_block_list_item
 ) {
     private val iconContainer = itemView.findViewById<LinearLayout>(id.icon_container)
     private val text = itemView.findViewById<TextView>(id.text)

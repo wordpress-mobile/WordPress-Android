@@ -46,8 +46,8 @@ class LoginPrologueRevampedFragment : Fragment() {
         setContent {
             AppTheme {
                 LoginScreenRevamped(
-                        onWpComLoginClicked = loginPrologueListener::showEmailLoginScreen,
-                        onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
+                    onWpComLoginClicked = loginPrologueListener::showEmailLoginScreen,
+                    onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
                 )
             }
         }
@@ -87,32 +87,32 @@ fun LoginScreenRevamped(
     val offsetY = with(LocalDensity.current) { 75.dp.toPx() }
 
     Box(modifier = Modifier
-            .background(color = colorResource(id = color.login_prologue_revamped_background))
-            .drawBehind {
-                scale(scaleX = scaleX, scaleY = 1f) {
-                    translate(
-                            left = size.width - brushStrokePainter.intrinsicSize.width - offsetX,
-                            top = -offsetY
-                    ) {
-                        with(brushStrokePainter) {
-                            draw(intrinsicSize)
-                        }
+        .background(color = colorResource(id = color.login_prologue_revamped_background))
+        .drawBehind {
+            scale(scaleX = scaleX, scaleY = 1f) {
+                translate(
+                    left = size.width - brushStrokePainter.intrinsicSize.width - offsetX,
+                    top = -offsetY
+                ) {
+                    with(brushStrokePainter) {
+                        draw(intrinsicSize)
                     }
                 }
             }
+        }
     ) {
         Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(vertical = 45.dp)
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(vertical = 45.dp)
         ) {
             Tagline(text = stringResource(string.login_prologue_revamped_tagline))
             PrimaryButton(
-                    text = stringResource(string.continue_with_wpcom),
-                    onClick = onWpComLoginClicked,
+                text = stringResource(string.continue_with_wpcom),
+                onClick = onWpComLoginClicked,
             )
             SecondaryButton(
-                    text = stringResource(string.enter_your_site_address),
-                    onClick = onSiteAddressLoginClicked,
+                text = stringResource(string.enter_your_site_address),
+                onClick = onSiteAddressLoginClicked,
             )
         }
     }

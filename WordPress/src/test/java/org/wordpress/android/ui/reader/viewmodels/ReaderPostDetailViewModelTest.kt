@@ -124,30 +124,54 @@ private const val INTERCEPTED_URI = "intercepted uri"
 class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ReaderPostDetailViewModel
 
-    @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
-    @Mock private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
-    @Mock private lateinit var postDetailsUiStateBuilder: ReaderPostDetailUiStateBuilder
-    @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
-    @Mock private lateinit var menuUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
-    @Mock private lateinit var reblogUseCase: ReblogUseCase
-    @Mock private lateinit var readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase
-    @Mock private lateinit var readerGetPostUseCase: ReaderGetPostUseCase
-    @Mock private lateinit var readerFetchPostUseCase: ReaderFetchPostUseCase
-    @Mock private lateinit var eventBusWrapper: EventBusWrapper
-    @Mock private lateinit var readerSimplePost: ReaderSimplePost
-    @Mock private lateinit var readerTracker: ReaderTracker
-    @Mock private lateinit var siteStore: SiteStore
-    @Mock private lateinit var accountStore: AccountStore
-    @Mock private lateinit var wpUrlUtilsWrapper: WpUrlUtilsWrapper
-    @Mock private lateinit var getLikesHandler: GetLikesHandler
-    @Mock private lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
-    @Mock private lateinit var contextProvider: ContextProvider
-    @Mock private lateinit var engagementUtils: EngagementUtils
-    @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
-    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock private lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
-    @Mock private lateinit var readerCommentTableWrapper: ReaderCommentTableWrapper
-    @Mock private lateinit var readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
+    @Mock
+    private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
+    @Mock
+    private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+    @Mock
+    private lateinit var postDetailsUiStateBuilder: ReaderPostDetailUiStateBuilder
+    @Mock
+    private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
+    @Mock
+    private lateinit var menuUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
+    @Mock
+    private lateinit var reblogUseCase: ReblogUseCase
+    @Mock
+    private lateinit var readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase
+    @Mock
+    private lateinit var readerGetPostUseCase: ReaderGetPostUseCase
+    @Mock
+    private lateinit var readerFetchPostUseCase: ReaderFetchPostUseCase
+    @Mock
+    private lateinit var eventBusWrapper: EventBusWrapper
+    @Mock
+    private lateinit var readerSimplePost: ReaderSimplePost
+    @Mock
+    private lateinit var readerTracker: ReaderTracker
+    @Mock
+    private lateinit var siteStore: SiteStore
+    @Mock
+    private lateinit var accountStore: AccountStore
+    @Mock
+    private lateinit var wpUrlUtilsWrapper: WpUrlUtilsWrapper
+    @Mock
+    private lateinit var getLikesHandler: GetLikesHandler
+    @Mock
+    private lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
+    @Mock
+    private lateinit var contextProvider: ContextProvider
+    @Mock
+    private lateinit var engagementUtils: EngagementUtils
+    @Mock
+    private lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    private lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
+    @Mock
+    private lateinit var readerCommentTableWrapper: ReaderCommentTableWrapper
+    @Mock
+    private lateinit var readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -169,32 +193,32 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     @Suppress("LongMethod")
     fun setUp() = test {
         viewModel = ReaderPostDetailViewModel(
-                readerPostCardActionsHandler,
-                readerUtilsWrapper,
-                readerPostTableWrapper,
-                menuUiStateBuilder,
-                postDetailsUiStateBuilder,
-                reblogUseCase,
-                readerFetchRelatedPostsUseCase,
-                readerGetPostUseCase,
-                readerFetchPostUseCase,
-                siteStore,
-                accountStore,
-                readerTracker,
-                eventBusWrapper,
-                wpUrlUtilsWrapper,
-                testDispatcher(),
-                testDispatcher(),
-                testDispatcher(),
-                getLikesHandler,
-                likesEnhancementsFeatureConfig,
-                engagementUtils,
-                htmlMessageUtils,
-                contextProvider,
-                networkUtilsWrapper,
-                commentsSnippetFeatureConfig,
-                readerCommentTableWrapper,
-                readerCommentServiceStarterWrapper
+            readerPostCardActionsHandler,
+            readerUtilsWrapper,
+            readerPostTableWrapper,
+            menuUiStateBuilder,
+            postDetailsUiStateBuilder,
+            reblogUseCase,
+            readerFetchRelatedPostsUseCase,
+            readerGetPostUseCase,
+            readerFetchPostUseCase,
+            siteStore,
+            accountStore,
+            readerTracker,
+            eventBusWrapper,
+            wpUrlUtilsWrapper,
+            testDispatcher(),
+            testDispatcher(),
+            testDispatcher(),
+            getLikesHandler,
+            likesEnhancementsFeatureConfig,
+            engagementUtils,
+            htmlMessageUtils,
+            contextProvider,
+            networkUtilsWrapper,
+            commentsSnippetFeatureConfig,
+            readerCommentTableWrapper,
+            readerCommentServiceStarterWrapper
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
         whenever(readerPostCardActionsHandler.followStatusUpdated).thenReturn(fakePostFollowStatusChangedFeed)
@@ -206,64 +230,64 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         whenever(readerUtilsWrapper.getTagFromTagName(anyOrNull(), anyOrNull())).thenReturn(mock())
 
         whenever(
-                readerPostTableWrapper.getBlogPost(
-                        anyOrNull(),
-                        anyOrNull(),
-                        anyOrNull()
-                )
+            readerPostTableWrapper.getBlogPost(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull()
+            )
         ).thenReturn(readerPost)
 
         whenever(
-                readerCommentTableWrapper.getCommentsForPostSnippet(
-                        anyOrNull(),
-                        anyOrNull()
-                )
+            readerCommentTableWrapper.getCommentsForPostSnippet(
+                anyOrNull(),
+                anyOrNull()
+            )
         ).thenReturn(readerCommentSnippetList)
 
         whenever(
-                postDetailsUiStateBuilder.mapPostToUiState(
-                        anyOrNull(),
-                        anyOrNull(),
-                        anyOrNull(),
-                        anyOrNull(),
-                        anyOrNull(),
-                        anyOrNull()
-                )
+            postDetailsUiStateBuilder.mapPostToUiState(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull()
+            )
         ).thenAnswer {
             val post = it.getArgument<ReaderPost>(POST_PARAM_POSITION)
             // propagate some of the arguments
             createDummyReaderPostDetailsUiState(
-                    post,
-                    it.getArgument(ON_TAG_CLICKED_PARAM_POSITION),
-                    it.getArgument(ON_BUTTON_CLICKED_PARAM_POSITION),
-                    it.getArgument(ON_POST_BLOG_SECTION_CLICKED_PARAM_POSITION),
-                    it.getArgument(ON_POST_FOLLOW_BUTTON_CLICKED_PARAM_POSITION)
+                post,
+                it.getArgument(ON_TAG_CLICKED_PARAM_POSITION),
+                it.getArgument(ON_BUTTON_CLICKED_PARAM_POSITION),
+                it.getArgument(ON_POST_BLOG_SECTION_CLICKED_PARAM_POSITION),
+                it.getArgument(ON_POST_FOLLOW_BUTTON_CLICKED_PARAM_POSITION)
             )
         }
 
         relatedPosts = ReaderSimplePostList().apply { add(readerSimplePost) }
 
         whenever(
-                postDetailsUiStateBuilder.mapRelatedPostsToUiState(
-                        anyOrNull(),
-                        anyOrNull(),
-                        anyOrNull(),
-                        anyOrNull()
-                )
+            postDetailsUiStateBuilder.mapRelatedPostsToUiState(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull()
+            )
         ).thenAnswer {
             // propagate some of the arguments
             createDummyRelatedPostsUiState(
-                    it.getArgument(IS_GLOBAL_RELATED_POSTS_PARAM_POSITION),
-                    it.getArgument(ON_RELATED_POST_ITEM_CLICKED_PARAM_POSITION)
+                it.getArgument(IS_GLOBAL_RELATED_POSTS_PARAM_POSITION),
+                it.getArgument(ON_RELATED_POST_ITEM_CLICKED_PARAM_POSITION)
             )
         }
 
         whenever(
-                postDetailsUiStateBuilder.buildCommentSnippetUiState(
-                        anyOrNull(),
-                        anyOrNull(),
-                        anyOrNull()
-                )
+            postDetailsUiStateBuilder.buildCommentSnippetUiState(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull()
+            )
         ).thenAnswer {
             createDummyCommentSnippetUiState()
         }
@@ -283,13 +307,13 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     /* SHOW POST - LOADING */
     @Test
     fun `given local post not found, when show post is triggered, then loading state is shown`() =
-            testWithoutLocalPost {
-                val observers = init(showPost = false)
+        testWithoutLocalPost {
+            val observers = init(showPost = false)
 
-                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-                assertThat(observers.uiStates.first()).isEqualTo(LoadingUiState)
-            }
+            assertThat(observers.uiStates.first()).isEqualTo(LoadingUiState)
+        }
 
     @Test
     fun `given local post found, when show post is triggered, then loading state is not shown`() = test {
@@ -324,23 +348,23 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given local post not found, when show post is triggered, then post is fetched from remote server`() =
-            testWithoutLocalPost {
-                init(showPost = false)
+        testWithoutLocalPost {
+            init(showPost = false)
 
-                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-                verify(readerFetchPostUseCase).fetchPost(readerPost.blogId, readerPost.postId, false)
-            }
+            verify(readerFetchPostUseCase).fetchPost(readerPost.blogId, readerPost.postId, false)
+        }
 
     /* SHOW POST - FETCH SUCCESS HANDLING */
     @Test
     fun `given request succeeded, when post is fetched, then post details ui is updated`() = test {
         val observers = init()
         whenever(readerGetPostUseCase.get(any(), any(), any()))
-                .thenReturn(Pair(null, false))
-                .thenReturn(Pair(readerPost, false))
+            .thenReturn(Pair(null, false))
+            .thenReturn(Pair(readerPost, false))
         whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
-                .thenReturn(FetchReaderPostState.Success)
+            .thenReturn(FetchReaderPostState.Success)
 
         viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
@@ -352,10 +376,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     fun `given request succeeded, when post is fetched, then post is shown in web view`() = test {
         val observers = init()
         whenever(readerGetPostUseCase.get(any(), any(), any()))
-                .thenReturn(Pair(null, false))
-                .thenReturn(Pair(readerPost, false))
+            .thenReturn(Pair(null, false))
+            .thenReturn(Pair(readerPost, false))
         whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
-                .thenReturn(FetchReaderPostState.Success)
+            .thenReturn(FetchReaderPostState.Success)
 
         viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
@@ -377,7 +401,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     fun `given request failed, when post is fetched, then request failed message is shown`() = testWithoutLocalPost {
         val observers = init()
         whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
-                .thenReturn(Failed.RequestFailed)
+            .thenReturn(Failed.RequestFailed)
 
         viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
@@ -386,33 +410,33 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given request already running, when post is fetched, then no error is shown`() =
-            testWithoutLocalPost {
-                val observers = init()
-                whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
-                        .thenReturn(AlreadyRunning)
+        testWithoutLocalPost {
+            val observers = init()
+            whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(AlreadyRunning)
 
-                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-                assertThat(observers.uiStates.filterIsInstance<ErrorUiState>().last().message).isNull()
-            }
+            assertThat(observers.uiStates.filterIsInstance<ErrorUiState>().last().message).isNull()
+        }
 
     @Test
     fun `given post not found, when post is fetched, then post not found message is shown`() = testWithoutLocalPost {
         val observers = init()
         whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
-                .thenReturn(Failed.PostNotFound)
+            .thenReturn(Failed.PostNotFound)
 
         viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
         assertThat(observers.uiStates.last())
-                .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found)))
+            .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found)))
     }
 
     @Test
     fun `given unauthorised, when post is fetched, then error ui is shown`() = testWithoutLocalPost {
         val observers = init()
         whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
-                .thenReturn(Failed.PostNotFound)
+            .thenReturn(Failed.PostNotFound)
 
         viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
@@ -421,79 +445,79 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given unauthorised with signin offer, when error ui shown, then sign in button is visible`() =
-            testWithoutLocalPost {
-                val observers = init(offerSignIn = true)
-                whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
-                        .thenReturn(Failed.NotAuthorised)
+        testWithoutLocalPost {
+            val observers = init(offerSignIn = true)
+            whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(Failed.NotAuthorised)
 
-                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-                assertThat((observers.uiStates.last() as ErrorUiState).signInButtonVisibility).isEqualTo(true)
-            }
+            assertThat((observers.uiStates.last() as ErrorUiState).signInButtonVisibility).isEqualTo(true)
+        }
 
     @Test
     fun `given unauthorised without signin offer, when error ui shown, then sign in button is not visible`() =
-            testWithoutLocalPost {
-                val observers = init(offerSignIn = false)
-                whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
-                        .thenReturn(Failed.NotAuthorised)
+        testWithoutLocalPost {
+            val observers = init(offerSignIn = false)
+            whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(Failed.NotAuthorised)
 
-                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-                assertThat((observers.uiStates.last() as ErrorUiState).signInButtonVisibility).isEqualTo(false)
-            }
+            assertThat((observers.uiStates.last() as ErrorUiState).signInButtonVisibility).isEqualTo(false)
+        }
 
     @Test
     fun `given unauthorised with no signin offer and no intercept uri, when error ui shown, then correct msg exists`() =
-            testWithoutLocalPost {
-                val observers = init(offerSignIn = false, interceptedUrPresent = false)
-                whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
-                        .thenReturn(Failed.NotAuthorised)
+        testWithoutLocalPost {
+            val observers = init(offerSignIn = false, interceptedUrPresent = false)
+            whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(Failed.NotAuthorised)
 
-                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-                assertThat((observers.uiStates.last() as ErrorUiState).message)
-                        .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized))
-            }
+            assertThat((observers.uiStates.last() as ErrorUiState).message)
+                .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized))
+        }
 
     @Test
     fun `given unauthorised with no signin offer and intercept uri, when error ui shown, then correct msg exists`() =
-            testWithoutLocalPost {
-                val observers = init(offerSignIn = false, interceptedUrPresent = true)
-                whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
-                        .thenReturn(Failed.NotAuthorised)
+        testWithoutLocalPost {
+            val observers = init(offerSignIn = false, interceptedUrPresent = true)
+            whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(Failed.NotAuthorised)
 
-                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-                assertThat((observers.uiStates.last() as ErrorUiState).message)
-                        .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized_fallback))
-            }
+            assertThat((observers.uiStates.last() as ErrorUiState).message)
+                .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized_fallback))
+        }
 
     @Test
     fun `given unauthorised with signin offer and no intercept uri, when error ui shown, then correct msg exists`() =
-            testWithoutLocalPost {
-                val observers = init(offerSignIn = true, interceptedUrPresent = false)
-                whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
-                        .thenReturn(Failed.NotAuthorised)
+        testWithoutLocalPost {
+            val observers = init(offerSignIn = true, interceptedUrPresent = false)
+            whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(Failed.NotAuthorised)
 
-                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-                assertThat((observers.uiStates.last() as ErrorUiState).message)
-                        .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized_signin))
-            }
+            assertThat((observers.uiStates.last() as ErrorUiState).message)
+                .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized_signin))
+        }
 
     @Test
     fun `given unauthorised with signin offer and intercept uri, when error ui shown, then correct msg exists`() =
-            testWithoutLocalPost {
-                val observers = init(offerSignIn = true, interceptedUrPresent = true)
-                whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
-                        .thenReturn(Failed.NotAuthorised)
+        testWithoutLocalPost {
+            val observers = init(offerSignIn = true, interceptedUrPresent = true)
+            whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(Failed.NotAuthorised)
 
-                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-                assertThat((observers.uiStates.last() as ErrorUiState).message)
-                        .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized_signin_fallback))
-            }
+            assertThat((observers.uiStates.last() as ErrorUiState).message)
+                .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized_signin_fallback))
+        }
 
     /* UPDATE POST */
     @Test
@@ -522,7 +546,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         viewModel.onFeaturedImageClicked(blogId = readerPost.blogId, featuredImageUrl = readerPost.featuredImage)
 
         assertThat(observers.navigation.last().peekContent() as ShowMediaPreview).isEqualTo(
-                ShowMediaPreview(site = site, featuredImage = readerPost.featuredImage)
+            ShowMediaPreview(site = site, featuredImage = readerPost.featuredImage)
         )
     }
 
@@ -552,10 +576,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         viewModel.onMoreMenuItemClicked(FOLLOW)
 
         verify(readerPostCardActionsHandler).onAction(
-                eq(readerPost),
-                eq(FOLLOW),
-                eq(false),
-                anyString()
+            eq(readerPost),
+            eq(FOLLOW),
+            eq(false),
+            anyString()
         )
     }
 
@@ -575,12 +599,12 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         val uiState = (init().uiStates.last() as ReaderPostDetailsUiState)
 
         uiState.headerUiState.blogSectionUiState.blogSectionClickData!!.onBlogSectionClicked!!
-                .invoke(readerPost.postId, readerPost.blogId)
+            .invoke(readerPost.postId, readerPost.blogId)
 
         verify(readerPostCardActionsHandler).handleHeaderClicked(
-                eq(readerPost.blogId),
-                eq(readerPost.feedId),
-                eq(readerPost.isFollowedByCurrentUser)
+            eq(readerPost.blogId),
+            eq(readerPost.feedId),
+            eq(readerPost.isFollowedByCurrentUser)
         )
     }
 
@@ -591,10 +615,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         uiState.headerUiState.followButtonUiState.onFollowButtonClicked!!.invoke()
 
         verify(readerPostCardActionsHandler).onAction(
-                eq(readerPost),
-                eq(FOLLOW),
-                eq(false),
-                anyString()
+            eq(readerPost),
+            eq(FOLLOW),
+            eq(false),
+            anyString()
         )
     }
 
@@ -611,166 +635,166 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     /* RELATED POSTS */
     @Test
     fun `given local related posts fetch succeeds, when related posts are requested, then local related posts shown`() =
-            test {
-                val localRelatedPostsUiState = createDummyRelatedPostsUiState(isGlobal = false)
-                whenever(
-                        postDetailsUiStateBuilder.mapRelatedPostsToUiState(
-                                sourcePost = eq(readerPost),
-                                relatedPosts = eq(relatedPosts),
-                                isGlobal = eq(false),
-                                onItemClicked = any()
-                        )
-                ).thenReturn(localRelatedPostsUiState)
-                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
-                        .thenReturn(
-                                FetchRelatedPostsState.Success(
-                                        localRelatedPosts = relatedPosts,
-                                        globalRelatedPosts = ReaderSimplePostList()
-                                )
-                        )
-                val uiStates = init().uiStates
+        test {
+            val localRelatedPostsUiState = createDummyRelatedPostsUiState(isGlobal = false)
+            whenever(
+                postDetailsUiStateBuilder.mapRelatedPostsToUiState(
+                    sourcePost = eq(readerPost),
+                    relatedPosts = eq(relatedPosts),
+                    isGlobal = eq(false),
+                    onItemClicked = any()
+                )
+            ).thenReturn(localRelatedPostsUiState)
+            whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                .thenReturn(
+                    FetchRelatedPostsState.Success(
+                        localRelatedPosts = relatedPosts,
+                        globalRelatedPosts = ReaderSimplePostList()
+                    )
+                )
+            val uiStates = init().uiStates
 
-                viewModel.onRelatedPostsRequested(readerPost)
+            viewModel.onRelatedPostsRequested(readerPost)
 
-                val uiState = (uiStates.last() as ReaderPostDetailsUiState)
-                assertThat(uiState.localRelatedPosts).isEqualTo(localRelatedPostsUiState)
-            }
+            val uiState = (uiStates.last() as ReaderPostDetailsUiState)
+            assertThat(uiState.localRelatedPosts).isEqualTo(localRelatedPostsUiState)
+        }
 
     @Test
     fun `given global related posts fetch succeeds, when related posts requested, then global related posts shown`() =
-            test {
-                val globalRelatedPostsUiState = createDummyRelatedPostsUiState(isGlobal = false)
-                whenever(
-                        postDetailsUiStateBuilder.mapRelatedPostsToUiState(
-                                sourcePost = eq(readerPost),
-                                relatedPosts = eq(relatedPosts),
-                                isGlobal = eq(true),
-                                onItemClicked = any()
-                        )
-                ).thenReturn(globalRelatedPostsUiState)
-                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
-                        .thenReturn(
-                                FetchRelatedPostsState.Success(
-                                        localRelatedPosts = ReaderSimplePostList(),
-                                        globalRelatedPosts = relatedPosts
-                                )
-                        )
-                val uiStates = init().uiStates
+        test {
+            val globalRelatedPostsUiState = createDummyRelatedPostsUiState(isGlobal = false)
+            whenever(
+                postDetailsUiStateBuilder.mapRelatedPostsToUiState(
+                    sourcePost = eq(readerPost),
+                    relatedPosts = eq(relatedPosts),
+                    isGlobal = eq(true),
+                    onItemClicked = any()
+                )
+            ).thenReturn(globalRelatedPostsUiState)
+            whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                .thenReturn(
+                    FetchRelatedPostsState.Success(
+                        localRelatedPosts = ReaderSimplePostList(),
+                        globalRelatedPosts = relatedPosts
+                    )
+                )
+            val uiStates = init().uiStates
 
-                viewModel.onRelatedPostsRequested(readerPost)
+            viewModel.onRelatedPostsRequested(readerPost)
 
-                val uiState = (uiStates.last() as ReaderPostDetailsUiState)
-                assertThat(uiState.globalRelatedPosts).isEqualTo(globalRelatedPostsUiState)
-            }
+            val uiState = (uiStates.last() as ReaderPostDetailsUiState)
+            assertThat(uiState.globalRelatedPosts).isEqualTo(globalRelatedPostsUiState)
+        }
 
     @Test
     fun `given related posts fetch fails, when related posts are requested, then related posts are not shown`() =
-            test {
-                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
-                        .thenReturn(FetchRelatedPostsState.Failed.RequestFailed)
-                val uiStates = init().uiStates
+        test {
+            whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                .thenReturn(FetchRelatedPostsState.Failed.RequestFailed)
+            val uiStates = init().uiStates
 
-                viewModel.onRelatedPostsRequested(readerPost)
+            viewModel.onRelatedPostsRequested(readerPost)
 
-                val uiState = (uiStates.last() as ReaderPostDetailsUiState)
-                with(uiState) {
-                    assertThat(localRelatedPosts).isNull()
-                    assertThat(globalRelatedPosts).isNull()
-                }
+            val uiState = (uiStates.last() as ReaderPostDetailsUiState)
+            with(uiState) {
+                assertThat(localRelatedPosts).isNull()
+                assertThat(globalRelatedPosts).isNull()
             }
+        }
 
     @Test
     fun `given no network, when related posts are requested, then related posts are not shown`() =
-            test {
-                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
-                        .thenReturn(FetchRelatedPostsState.Failed.NoNetwork)
-                val uiStates = init().uiStates
+        test {
+            whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                .thenReturn(FetchRelatedPostsState.Failed.NoNetwork)
+            val uiStates = init().uiStates
 
-                viewModel.onRelatedPostsRequested(readerPost)
+            viewModel.onRelatedPostsRequested(readerPost)
 
-                val uiState = (uiStates.last() as ReaderPostDetailsUiState)
-                with(uiState) {
-                    assertThat(localRelatedPosts).isNull()
-                    assertThat(globalRelatedPosts).isNull()
-                }
+            val uiState = (uiStates.last() as ReaderPostDetailsUiState)
+            with(uiState) {
+                assertThat(localRelatedPosts).isNull()
+                assertThat(globalRelatedPosts).isNull()
             }
+        }
 
     @Test
     fun `given related posts fetch in progress, when related posts are requested, then related posts are not shown`() =
-            test {
-                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
-                        .thenReturn(FetchRelatedPostsState.AlreadyRunning)
-                val uiStates = init().uiStates
+        test {
+            whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                .thenReturn(FetchRelatedPostsState.AlreadyRunning)
+            val uiStates = init().uiStates
 
-                viewModel.onRelatedPostsRequested(readerPost)
+            viewModel.onRelatedPostsRequested(readerPost)
 
-                val uiState = (uiStates.last() as ReaderPostDetailsUiState)
-                with(uiState) {
-                    assertThat(localRelatedPosts).isNull()
-                    assertThat(globalRelatedPosts).isNull()
-                }
+            val uiState = (uiStates.last() as ReaderPostDetailsUiState)
+            with(uiState) {
+                assertThat(localRelatedPosts).isNull()
+                assertThat(globalRelatedPosts).isNull()
             }
+        }
 
     @Test
     fun `given wp com post, when related posts are requested, then related posts are fetched`() =
-            test {
-                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost)).thenReturn(mock())
+        test {
+            whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost)).thenReturn(mock())
 
-                viewModel.onRelatedPostsRequested(readerPost)
+            viewModel.onRelatedPostsRequested(readerPost)
 
-                verify(readerFetchRelatedPostsUseCase).fetchRelatedPosts(readerPost)
-            }
+            verify(readerFetchRelatedPostsUseCase).fetchRelatedPosts(readerPost)
+        }
 
     @Test
     fun `given non wp com post, when related posts are requested, then related posts are not fetched`() =
-            test {
-                val nonWpComPost = createDummyReaderPost(id = 1, isWpComPost = false)
+        test {
+            val nonWpComPost = createDummyReaderPost(id = 1, isWpComPost = false)
 
-                viewModel.onRelatedPostsRequested(nonWpComPost)
+            viewModel.onRelatedPostsRequested(nonWpComPost)
 
-                verify(readerFetchRelatedPostsUseCase, times(0)).fetchRelatedPosts(readerPost)
-            }
+            verify(readerFetchRelatedPostsUseCase, times(0)).fetchRelatedPosts(readerPost)
+        }
 
     @Test
     fun `when related post is clicked from non related post details screen, then related post details screen shown`() =
-            test {
-                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
-                        .thenReturn(
-                                FetchRelatedPostsState.Success(
-                                        localRelatedPosts = ReaderSimplePostList(),
-                                        globalRelatedPosts = relatedPosts
-                                )
-                        )
-                val observers = init(isRelatedPost = false)
+        test {
+            whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                .thenReturn(
+                    FetchRelatedPostsState.Success(
+                        localRelatedPosts = ReaderSimplePostList(),
+                        globalRelatedPosts = relatedPosts
+                    )
+                )
+            val observers = init(isRelatedPost = false)
 
-                viewModel.onRelatedPostsRequested(readerPost)
-                val uiState = (observers.uiStates.last() as ReaderPostDetailsUiState)
-                val relatedPost = uiState.globalRelatedPosts?.cards?.first()
-                relatedPost?.onItemClicked?.invoke(relatedPost.postId, relatedPost.blogId, relatedPost.isGlobal)
+            viewModel.onRelatedPostsRequested(readerPost)
+            val uiState = (observers.uiStates.last() as ReaderPostDetailsUiState)
+            val relatedPost = uiState.globalRelatedPosts?.cards?.first()
+            relatedPost?.onItemClicked?.invoke(relatedPost.postId, relatedPost.blogId, relatedPost.isGlobal)
 
-                assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowRelatedPostDetails::class.java)
-            }
+            assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowRelatedPostDetails::class.java)
+        }
 
     @Test
     fun `when related post is clicked from related post screen, then related post replaced with history`() =
-            test {
-                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
-                        .thenReturn(
-                                FetchRelatedPostsState.Success(
-                                        localRelatedPosts = ReaderSimplePostList(),
-                                        globalRelatedPosts = relatedPosts
-                                )
-                        )
-                val observers = init(isRelatedPost = true)
+        test {
+            whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                .thenReturn(
+                    FetchRelatedPostsState.Success(
+                        localRelatedPosts = ReaderSimplePostList(),
+                        globalRelatedPosts = relatedPosts
+                    )
+                )
+            val observers = init(isRelatedPost = true)
 
-                viewModel.onRelatedPostsRequested(readerPost)
-                val uiState = (observers.uiStates.last() as ReaderPostDetailsUiState)
-                val relatedPost = uiState.globalRelatedPosts?.cards?.first()
-                relatedPost?.onItemClicked?.invoke(relatedPost.postId, relatedPost.blogId, relatedPost.isGlobal)
+            viewModel.onRelatedPostsRequested(readerPost)
+            val uiState = (observers.uiStates.last() as ReaderPostDetailsUiState)
+            val relatedPost = uiState.globalRelatedPosts?.cards?.first()
+            relatedPost?.onItemClicked?.invoke(relatedPost.postId, relatedPost.blogId, relatedPost.isGlobal)
 
-                assertThat(observers.navigation.last().peekContent())
-                        .isInstanceOf(ReplaceRelatedPostDetailsWithHistory::class.java)
-            }
+            assertThat(observers.navigation.last().peekContent())
+                .isInstanceOf(ReplaceRelatedPostDetailsWithHistory::class.java)
+        }
 
     /* FOOTER */
     @Test
@@ -780,10 +804,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         uiState.actions.likeAction.onClicked!!.invoke(readerPost.postId, 200, LIKE)
 
         verify(readerPostCardActionsHandler).onAction(
-                eq(readerPost),
-                eq(LIKE),
-                eq(false),
-                anyString()
+            eq(readerPost),
+            eq(LIKE),
+            eq(false),
+            anyString()
         )
     }
 
@@ -794,10 +818,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         uiState.actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, COMMENTS)
 
         verify(readerPostCardActionsHandler).onAction(
-                eq(readerPost),
-                eq(COMMENTS),
-                eq(false),
-                anyString()
+            eq(readerPost),
+            eq(COMMENTS),
+            eq(false),
+            anyString()
         )
     }
 
@@ -808,10 +832,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         uiState.actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, REBLOG)
 
         verify(readerPostCardActionsHandler).onAction(
-                eq(readerPost),
-                eq(REBLOG),
-                eq(false),
-                anyString()
+            eq(readerPost),
+            eq(REBLOG),
+            eq(false),
+            anyString()
         )
     }
 
@@ -832,10 +856,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         uiState.actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, BOOKMARK)
 
         verify(readerPostCardActionsHandler).onAction(
-                eq(readerPost),
-                eq(BOOKMARK),
-                eq(false),
-                anyString()
+            eq(readerPost),
+            eq(BOOKMARK),
+            eq(false),
+            anyString()
         )
     }
 
@@ -849,8 +873,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         viewModel.onRefreshLikersData(viewModel.post!!)
         verify(
-                getLikesHandler,
-                times(1)
+            getLikesHandler,
+            times(1)
         ).handleGetLikesForPost(anyOrNull(), anyBoolean(), anyInt())
     }
 
@@ -874,8 +898,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         viewModel.onRefreshLikersData(post, true)
 
         verify(
-                getLikesHandler,
-                times(0)
+            getLikesHandler,
+            times(0)
         ).handleGetLikesForPost(anyOrNull(), anyBoolean(), anyInt())
 
         val listOfFaces = likesCaptor.lastValue
@@ -904,12 +928,12 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         with(likeObserver.first()) {
             assertThat(showLoading).isFalse
             assertThat(engageItemsList).isEqualTo(
-                    likers + TrailingLabelTextItem(
-                            UiStringText(
-                                    testTextString
-                            ),
-                            R.attr.wpColorOnSurfaceMedium
-                    )
+                likers + TrailingLabelTextItem(
+                    UiStringText(
+                        testTextString
+                    ),
+                    R.attr.wpColorOnSurfaceMedium
+                )
             )
             assertThat(showEmptyState).isFalse
             assertThat(emptyStateTitle).isNull()
@@ -957,19 +981,19 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         val modifiedPost = createDummyReaderPost(readerPost.postId)
         modifiedPost.numReplies = 10
         whenever(
-                readerPostTableWrapper.getBlogPost(
-                        anyOrNull(),
-                        anyOrNull(),
-                        anyOrNull()
-                )
+            readerPostTableWrapper.getBlogPost(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull()
+            )
         ).thenReturn(modifiedPost)
 
         whenever(
-                postDetailsUiStateBuilder.buildCommentSnippetUiState(
-                        anyOrNull(),
-                        anyOrNull(),
-                        anyOrNull()
-                )
+            postDetailsUiStateBuilder.buildCommentSnippetUiState(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull()
+            )
         ).thenAnswer {
             createDummyCommentSnippetUiState(10)
         }
@@ -988,19 +1012,19 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     fun `onRefreshCommentsData does not start comment snippet service for external posts`() {
         val externalPost = createDummyReaderPost(1, isWpComPost = false)
         whenever(
-                readerPostTableWrapper.getBlogPost(
-                        anyOrNull(),
-                        anyOrNull(),
-                        anyOrNull()
-                )
+            readerPostTableWrapper.getBlogPost(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull()
+            )
         ).thenReturn(externalPost)
 
         viewModel.onRefreshCommentsData(1, 1)
 
         verify(readerCommentServiceStarterWrapper, never()).startServiceForCommentSnippet(
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull()
+            anyOrNull(),
+            anyOrNull(),
+            anyOrNull()
         )
     }
 
@@ -1012,24 +1036,24 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     }
 
     private fun createDummyReaderPost(id: Long, isWpComPost: Boolean = true): ReaderPost =
-            ReaderPost().apply {
-                this.postId = id
-                this.blogId = id * 100
-                this.feedId = id * 1000
-                this.title = "DummyPost"
-                this.featuredVideo = id.toString()
-                this.featuredImage = "/featured_image/$id/url"
-                this.isExternal = !isWpComPost
-                this.numReplies = 1
-            }
+        ReaderPost().apply {
+            this.postId = id
+            this.blogId = id * 100
+            this.feedId = id * 1000
+            this.title = "DummyPost"
+            this.featuredVideo = id.toString()
+            this.featuredImage = "/featured_image/$id/url"
+            this.isExternal = !isWpComPost
+            this.numReplies = 1
+        }
 
     private fun createDummyReaderPostCommentSnippetList(): ReaderCommentList =
-            ReaderCommentList().apply {
-                val comment = ReaderComment()
-                comment.commentId = 3
+        ReaderCommentList().apply {
+            val comment = ReaderComment()
+            comment.commentId = 3
 
-                add(comment)
-            }
+            add(comment)
+        }
 
     private fun createDummyReaderPostDetailsUiState(
         post: ReaderPost,
@@ -1039,42 +1063,42 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         onFollowButtonClicked: (() -> Unit)
     ): ReaderPostDetailsUiState {
         return ReaderPostDetailsUiState(
-                postId = post.postId,
-                blogId = post.blogId,
-                featuredImageUiState = mock(),
-                headerUiState = ReaderPostDetailsHeaderUiState(
-                        UiStringText(post.title),
-                        post.authorName,
-                        listOf(TagUiState("", "", false, onTagClicked)),
-                        true,
-                        ReaderBlogSectionUiState(
-                                postId = post.postId,
-                                blogId = post.blogId,
-                                dateLine = "",
-                                blogName = mock(),
-                                blogUrl = "",
-                                avatarOrBlavatarUrl = "",
-                                authorAvatarUrl = "",
-                                isAuthorAvatarVisible = false,
-                                blavatarType = BLAVATAR_CIRCULAR,
-                                blogSectionClickData = ReaderBlogSectionClickData(onBlogSectionClicked, 0)
-                        ),
-                        FollowButtonUiState(
-                                onFollowButtonClicked = onFollowButtonClicked,
-                                isFollowed = false,
-                                isEnabled = true,
-                                isVisible = true
-                        ),
-                        ""
+            postId = post.postId,
+            blogId = post.blogId,
+            featuredImageUiState = mock(),
+            headerUiState = ReaderPostDetailsHeaderUiState(
+                UiStringText(post.title),
+                post.authorName,
+                listOf(TagUiState("", "", false, onTagClicked)),
+                true,
+                ReaderBlogSectionUiState(
+                    postId = post.postId,
+                    blogId = post.blogId,
+                    dateLine = "",
+                    blogName = mock(),
+                    blogUrl = "",
+                    avatarOrBlavatarUrl = "",
+                    authorAvatarUrl = "",
+                    isAuthorAvatarVisible = false,
+                    blavatarType = BLAVATAR_CIRCULAR,
+                    blogSectionClickData = ReaderBlogSectionClickData(onBlogSectionClicked, 0)
                 ),
-                excerptFooterUiState = mock(),
-                moreMenuItems = mock(),
-                actions = ReaderPostActions(
-                        bookmarkAction = PrimaryAction(true, onClicked = onButtonClicked, type = BOOKMARK),
-                        likeAction = PrimaryAction(true, onClicked = onButtonClicked, type = LIKE),
-                        reblogAction = PrimaryAction(true, onClicked = onButtonClicked, type = REBLOG),
-                        commentsAction = PrimaryAction(true, onClicked = onButtonClicked, type = COMMENTS)
-                )
+                FollowButtonUiState(
+                    onFollowButtonClicked = onFollowButtonClicked,
+                    isFollowed = false,
+                    isEnabled = true,
+                    isVisible = true
+                ),
+                ""
+            ),
+            excerptFooterUiState = mock(),
+            moreMenuItems = mock(),
+            actions = ReaderPostActions(
+                bookmarkAction = PrimaryAction(true, onClicked = onButtonClicked, type = BOOKMARK),
+                likeAction = PrimaryAction(true, onClicked = onButtonClicked, type = LIKE),
+                reblogAction = PrimaryAction(true, onClicked = onButtonClicked, type = REBLOG),
+                commentsAction = PrimaryAction(true, onClicked = onButtonClicked, type = COMMENTS)
+            )
         )
     }
 
@@ -1082,28 +1106,28 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         isGlobal: Boolean,
         onRelatedPostItemClicked: ((Long, Long, Boolean) -> Unit)? = null
     ) = RelatedPostsUiState(
-            cards = relatedPosts.map {
-                ReaderRelatedPostUiState(
-                        postId = it.postId,
-                        blogId = it.siteId,
-                        isGlobal = isGlobal,
-                        title = UiStringText(""),
-                        excerpt = UiStringText(""),
-                        featuredImageUrl = "",
-                        featuredImageVisibility = false,
-                        featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
-                        onItemClicked = onRelatedPostItemClicked ?: mock()
-                )
-            },
-            isGlobal = isGlobal,
-            headerLabel = UiStringText(""),
-            railcarJsonStrings = emptyList()
+        cards = relatedPosts.map {
+            ReaderRelatedPostUiState(
+                postId = it.postId,
+                blogId = it.siteId,
+                isGlobal = isGlobal,
+                title = UiStringText(""),
+                excerpt = UiStringText(""),
+                featuredImageUrl = "",
+                featuredImageVisibility = false,
+                featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
+                onItemClicked = onRelatedPostItemClicked ?: mock()
+            )
+        },
+        isGlobal = isGlobal,
+        headerLabel = UiStringText(""),
+        railcarJsonStrings = emptyList()
     )
 
     private fun createDummyCommentSnippetUiState(numberOfComments: Int = 1) = CommentSnippetUiState(
-            commentsNumber = numberOfComments,
-            showFollowConversation = true,
-            emptyList()
+        commentsNumber = numberOfComments,
+        showFollowConversation = true,
+        emptyList()
     )
 
     private fun init(
@@ -1151,11 +1175,11 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         }
 
         return Observers(
-                uiStates,
-                navigation,
-                msgs,
-                likesUiStates,
-                commentSnippetUiStates
+            uiStates,
+            navigation,
+            msgs,
+            likesUiStates,
+            commentSnippetUiStates
         )
     }
 

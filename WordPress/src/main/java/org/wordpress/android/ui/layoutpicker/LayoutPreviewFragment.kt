@@ -38,8 +38,10 @@ private const val JS_EVALUATION_DELAY = 250L
 private const val JS_READY_CALLBACK_ID = 926L
 
 abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
-    @Inject lateinit var displayUtilsWrapper: DisplayUtilsWrapper
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: LayoutPickerViewModel
     private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
@@ -86,11 +88,11 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
                     binding?.webView?.setVisible(true)
                     binding?.errorView?.setVisible(false)
                     binding?.desktopPreviewHint?.setText(
-                            when (viewModel.selectedPreviewMode()) {
-                                MOBILE -> R.string.web_preview_mobile
-                                TABLET -> R.string.web_preview_tablet
-                                DESKTOP -> R.string.web_preview_desktop
-                            }
+                        when (viewModel.selectedPreviewMode()) {
+                            MOBILE -> R.string.web_preview_mobile
+                            TABLET -> R.string.web_preview_tablet
+                            DESKTOP -> R.string.web_preview_desktop
+                        }
                     )
                     AniUtils.animateBottomBar(binding?.desktopPreviewHint, true)
                 }

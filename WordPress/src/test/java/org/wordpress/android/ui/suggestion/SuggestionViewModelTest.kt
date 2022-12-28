@@ -29,15 +29,23 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class SuggestionViewModelTest {
-    @Mock lateinit var mockSuggestionSourceProvider: SuggestionSourceProvider
-    @Mock lateinit var mockResourceProvider: ResourceProvider
-    @Mock lateinit var mockNetworkUtils: NetworkUtilsWrapper
-    @Mock lateinit var mockAnalyticsTracker: AnalyticsTrackerWrapper
-    @Mock lateinit var mockSite: SiteModel
-    @Mock lateinit var mockLiveData: LiveData<SuggestionResult>
-    @Mock lateinit var mockSuggestionSource: SuggestionSource
+    @Mock
+    lateinit var mockSuggestionSourceProvider: SuggestionSourceProvider
+    @Mock
+    lateinit var mockResourceProvider: ResourceProvider
+    @Mock
+    lateinit var mockNetworkUtils: NetworkUtilsWrapper
+    @Mock
+    lateinit var mockAnalyticsTracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var mockSite: SiteModel
+    @Mock
+    lateinit var mockLiveData: LiveData<SuggestionResult>
+    @Mock
+    lateinit var mockSuggestionSource: SuggestionSource
 
-    @InjectMocks lateinit var viewModel: SuggestionViewModel
+    @InjectMocks
+    lateinit var viewModel: SuggestionViewModel
 
     private val xpostSuggestionTypeString = "xpost_suggestion_type_string"
     private val userSuggestionTypeString = "user_suggestion_type_string"
@@ -116,7 +124,7 @@ class SuggestionViewModelTest {
         whenever(mockLiveData.value).thenReturn(SuggestionResult(nonEmptyList, false))
         val expectedText = "expected_text"
         whenever(mockResourceProvider.getString(R.string.suggestion_no_matching, viewModel.suggestionTypeString))
-                .thenReturn(expectedText)
+            .thenReturn(expectedText)
 
         val actual = viewModel.getEmptyViewState(emptyList())
         assertThat(expectedText).isEqualTo(actual.string)
@@ -141,7 +149,7 @@ class SuggestionViewModelTest {
         whenever(mockLiveData.value).thenReturn(SuggestionResult(emptyList(), false))
         val expectedText = "expected_text"
         whenever(mockResourceProvider.getString(R.string.suggestion_none, viewModel.suggestionTypeString))
-                .thenReturn(expectedText)
+            .thenReturn(expectedText)
 
         val actual = viewModel.getEmptyViewState(emptyList())
         assertThat(expectedText).isEqualTo(actual.string)
@@ -154,7 +162,7 @@ class SuggestionViewModelTest {
         whenever(mockSuggestionSource.isFetchInProgress()).thenReturn(true)
         val expectedText = "expected_text"
         whenever(mockResourceProvider.getString(R.string.loading))
-                .thenReturn(expectedText)
+            .thenReturn(expectedText)
 
         val actual = viewModel.getEmptyViewState(emptyList())
         assertThat(expectedText).isEqualTo(actual.string)
@@ -167,7 +175,7 @@ class SuggestionViewModelTest {
         whenever(mockNetworkUtils.isNetworkAvailable()).thenReturn(false)
         val expectedText = "expected_text"
         whenever(mockResourceProvider.getString(R.string.suggestion_no_connection))
-                .thenReturn(expectedText)
+            .thenReturn(expectedText)
 
         val actual = viewModel.getEmptyViewState(emptyList())
         assertThat(expectedText).isEqualTo(actual.string)
@@ -179,12 +187,12 @@ class SuggestionViewModelTest {
         val userInput = "user_input"
         val expectedMesage = "expected_message"
         whenever(
-                mockResourceProvider.getString(
-                        R.string.suggestion_invalid,
-                        userInput, viewModel.suggestionTypeString
-                )
+            mockResourceProvider.getString(
+                R.string.suggestion_invalid,
+                userInput, viewModel.suggestionTypeString
+            )
         )
-                .thenReturn(expectedMesage)
+            .thenReturn(expectedMesage)
 
         val actual = viewModel.onAttemptToFinish(emptyList(), userInput)
 
@@ -198,7 +206,7 @@ class SuggestionViewModelTest {
         val emptyUserInput = "+"
         val expectedMesage = "expected_message"
         whenever(mockResourceProvider.getString(R.string.suggestion_selection_needed))
-                .thenReturn(expectedMesage)
+            .thenReturn(expectedMesage)
 
         val listWithMoreThanOne = listOf<Suggestion>(mock(), mock())
         val actual = viewModel.onAttemptToFinish(listWithMoreThanOne, emptyUserInput)
@@ -213,12 +221,12 @@ class SuggestionViewModelTest {
         val userInput = "user_input"
         val expectedMesage = "expected_message"
         whenever(
-                mockResourceProvider.getString(
-                        R.string.suggestion_invalid,
-                        userInput, viewModel.suggestionTypeString
-                )
+            mockResourceProvider.getString(
+                R.string.suggestion_invalid,
+                userInput, viewModel.suggestionTypeString
+            )
         )
-                .thenReturn(expectedMesage)
+            .thenReturn(expectedMesage)
 
         val listWithMoreThanOne = listOf<Suggestion>(mock(), mock())
         val actual = viewModel.onAttemptToFinish(listWithMoreThanOne, userInput)
@@ -247,8 +255,8 @@ class SuggestionViewModelTest {
         viewModel.trackExit(withSuggestion)
 
         val props = mapOf(
-                "did_select_suggestion" to withSuggestion,
-                "suggestion_type" to "xpost"
+            "did_select_suggestion" to withSuggestion,
+            "suggestion_type" to "xpost"
         )
         verify(mockAnalyticsTracker).track(AnalyticsTracker.Stat.SUGGESTION_SESSION_FINISHED, props)
     }
@@ -261,8 +269,8 @@ class SuggestionViewModelTest {
         viewModel.trackExit(withSuggestion)
 
         val props = mapOf(
-                "did_select_suggestion" to withSuggestion,
-                "suggestion_type" to "xpost"
+            "did_select_suggestion" to withSuggestion,
+            "suggestion_type" to "xpost"
         )
         verify(mockAnalyticsTracker).track(AnalyticsTracker.Stat.SUGGESTION_SESSION_FINISHED, props)
     }
@@ -275,8 +283,8 @@ class SuggestionViewModelTest {
         viewModel.trackExit(withSuggestion)
 
         val props = mapOf(
-                "did_select_suggestion" to withSuggestion,
-                "suggestion_type" to "user"
+            "did_select_suggestion" to withSuggestion,
+            "suggestion_type" to "user"
         )
         verify(mockAnalyticsTracker).track(AnalyticsTracker.Stat.SUGGESTION_SESSION_FINISHED, props)
     }
@@ -289,8 +297,8 @@ class SuggestionViewModelTest {
         viewModel.trackExit(withSuggestion)
 
         val props = mapOf(
-                "did_select_suggestion" to withSuggestion,
-                "suggestion_type" to "user"
+            "did_select_suggestion" to withSuggestion,
+            "suggestion_type" to "user"
         )
         verify(mockAnalyticsTracker).track(AnalyticsTracker.Stat.SUGGESTION_SESSION_FINISHED, props)
     }

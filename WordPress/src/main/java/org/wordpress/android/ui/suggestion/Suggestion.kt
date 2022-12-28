@@ -6,9 +6,9 @@ import org.wordpress.android.models.UserSuggestion
 data class Suggestion(val avatarUrl: String, val value: String, val displayValue: String) {
     companion object {
         fun fromUserSuggestions(userSuggestions: List<UserSuggestion>): List<Suggestion> =
-                userSuggestions.map {
-                    Suggestion(it.imageUrl, it.userLogin, it.displayName)
-                }
+            userSuggestions.map {
+                Suggestion(it.imageUrl, it.userLogin, it.displayName)
+            }
 
         fun fromXpost(xpost: XPostSiteModel): Suggestion = Suggestion(xpost.blavatar, xpost.subdomain, xpost.title)
     }

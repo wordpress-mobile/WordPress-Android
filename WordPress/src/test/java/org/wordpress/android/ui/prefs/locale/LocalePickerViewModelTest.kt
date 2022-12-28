@@ -20,18 +20,27 @@ import java.util.Locale
 
 @ExperimentalCoroutinesApi
 class LocalePickerViewModelTest : BaseUnitTest() {
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var localeProvider: LocaleProvider
-    @Mock lateinit var context: Context
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var localeProvider: LocaleProvider
+    @Mock
+    lateinit var context: Context
 
-    @Mock lateinit var currentLocale: Locale
+    @Mock
+    lateinit var currentLocale: Locale
 
-    @Mock lateinit var selectedLocaleObserver: Observer<String>
+    @Mock
+    lateinit var selectedLocaleObserver: Observer<String>
 
-    @Mock lateinit var dismissBottomSheetObserver: Observer<Unit>
-    @Mock lateinit var expandBottomSheetObserver: Observer<Unit>
-    @Mock lateinit var hideKeyboardObserver: Observer<Unit>
-    @Mock lateinit var clearSearchFieldObserver: Observer<Unit>
+    @Mock
+    lateinit var dismissBottomSheetObserver: Observer<Unit>
+    @Mock
+    lateinit var expandBottomSheetObserver: Observer<Unit>
+    @Mock
+    lateinit var hideKeyboardObserver: Observer<Unit>
+    @Mock
+    lateinit var clearSearchFieldObserver: Observer<Unit>
 
     private lateinit var viewModel: LocalePickerViewModel
 
@@ -42,9 +51,9 @@ class LocalePickerViewModelTest : BaseUnitTest() {
     private val localizedLanguageNames = arrayOf("English (United States)", "Italiano", "Русский")
 
     private val dummyLocales = Triple(
-            languageNames,
-            languageCodes,
-            localizedLanguageNames
+        languageNames,
+        languageCodes,
+        localizedLanguageNames
     )
 
     @Before

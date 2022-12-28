@@ -41,11 +41,11 @@ class GlideMShotsLoader(noRedirectsRequestQueue: RequestQueue) : ModelLoader<MSh
     override fun handles(item: MShot) = true
 
     override fun buildLoadData(model: MShot, width: Int, height: Int, options: Options): LoadData<InputStream>? =
-            loader.buildLoadData(GlideUrl(model.url), width, height, options)
+        loader.buildLoadData(GlideUrl(model.url), width, height, options)
 
     class Factory(private val noRedirectsRequestQueue: RequestQueue) : ModelLoaderFactory<MShot, InputStream> {
         override fun build(multiFactory: MultiModelLoaderFactory): ModelLoader<MShot, InputStream> =
-                GlideMShotsLoader(noRedirectsRequestQueue)
+            GlideMShotsLoader(noRedirectsRequestQueue)
 
         override fun teardown() {}
     }

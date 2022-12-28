@@ -20,10 +20,14 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteInfoHeaderCardBuilderTest {
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var quickStartRepository: QuickStartRepository
-    @Mock lateinit var quickStartType: QuickStartType
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var quickStartRepository: QuickStartRepository
+    @Mock
+    lateinit var quickStartType: QuickStartType
     private lateinit var siteInfoHeaderCardBuilder: SiteInfoHeaderCardBuilder
 
     @Before
@@ -35,7 +39,7 @@ class SiteInfoHeaderCardBuilderTest {
     @Test
     fun `shows title quick start focus point when showUpdateSiteTitleFocusPoint is true`() {
         val buildSiteInfoCard = buildSiteInfoCard(
-                showUpdateSiteTitleFocusPoint = true
+            showUpdateSiteTitleFocusPoint = true
         )
 
         assertThat(buildSiteInfoCard.showTitleFocusPoint).isTrue()
@@ -44,7 +48,7 @@ class SiteInfoHeaderCardBuilderTest {
     @Test
     fun `hides title quick start focus point when showUpdateSiteTitleFocusPoint is false`() {
         val buildSiteInfoCard = buildSiteInfoCard(
-                showUpdateSiteTitleFocusPoint = false
+            showUpdateSiteTitleFocusPoint = false
         )
 
         assertThat(buildSiteInfoCard.showTitleFocusPoint).isFalse()
@@ -53,7 +57,7 @@ class SiteInfoHeaderCardBuilderTest {
     @Test
     fun `shows icon quick start focus point when showUploadSiteIconFocusPoint is true`() {
         val buildSiteInfoCard = buildSiteInfoCard(
-                showUploadSiteIconFocusPoint = true
+            showUploadSiteIconFocusPoint = true
         )
 
         assertThat(buildSiteInfoCard.showIconFocusPoint).isTrue()
@@ -62,7 +66,7 @@ class SiteInfoHeaderCardBuilderTest {
     @Test
     fun `hides icon quick start focus point when showUploadSiteIconFocusPoint is false`() {
         val buildSiteInfoCard = buildSiteInfoCard(
-                showUploadSiteIconFocusPoint = false
+            showUploadSiteIconFocusPoint = false
         )
 
         assertThat(buildSiteInfoCard.showIconFocusPoint).isFalse()
@@ -71,8 +75,8 @@ class SiteInfoHeaderCardBuilderTest {
     @Test
     fun `given new site QS + View Site active task, when card built, then showSubtitleFocusPoint is true`() {
         val buildSiteInfoCard = buildSiteInfoCard(
-                showViewSiteFocusPoint = true,
-                isNewSiteQuickStart = true
+            showViewSiteFocusPoint = true,
+            isNewSiteQuickStart = true
         )
 
         assertThat(buildSiteInfoCard.showSubtitleFocusPoint).isTrue
@@ -81,8 +85,8 @@ class SiteInfoHeaderCardBuilderTest {
     @Test
     fun `given new site QS + View Site not active task, when card built, then showSubtitleFocusPoint is false`() {
         val buildSiteInfoCard = buildSiteInfoCard(
-                showViewSiteFocusPoint = false,
-                isNewSiteQuickStart = true
+            showViewSiteFocusPoint = false,
+            isNewSiteQuickStart = true
         )
 
         assertThat(buildSiteInfoCard.showSubtitleFocusPoint).isFalse
@@ -91,8 +95,8 @@ class SiteInfoHeaderCardBuilderTest {
     @Test
     fun `given existing site QS + View Site active task, when card built, then showSubtitleFocusPoint is true`() {
         val buildSiteInfoCard = buildSiteInfoCard(
-                showViewSiteFocusPoint = true,
-                isNewSiteQuickStart = false
+            showViewSiteFocusPoint = true,
+            isNewSiteQuickStart = false
         )
 
         assertThat(buildSiteInfoCard.showSubtitleFocusPoint).isTrue
@@ -101,8 +105,8 @@ class SiteInfoHeaderCardBuilderTest {
     @Test
     fun `given existing site QS + View Site not active task, when card built, then showSubtitleFocusPoint is false`() {
         val buildSiteInfoCard = buildSiteInfoCard(
-                showViewSiteFocusPoint = false,
-                isNewSiteQuickStart = false
+            showViewSiteFocusPoint = false,
+            isNewSiteQuickStart = false
         )
 
         assertThat(buildSiteInfoCard.showSubtitleFocusPoint).isFalse
@@ -120,22 +124,22 @@ class SiteInfoHeaderCardBuilderTest {
             QuickStartExistingSiteTask.VIEW_SITE
         }
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL))
-                .thenReturn(viewSiteTask)
+            .thenReturn(viewSiteTask)
         return siteInfoHeaderCardBuilder.buildSiteInfoCard(
-                SiteInfoCardBuilderParams(
-                        site = site,
-                        showSiteIconProgressBar = showUploadSiteIconFocusPoint,
-                        titleClick = {},
-                        iconClick = {},
-                        urlClick = {},
-                        switchSiteClick = {},
-                        setActiveTask(
-                                showUpdateSiteTitleFocusPoint,
-                                showViewSiteFocusPoint,
-                                showUploadSiteIconFocusPoint,
-                                viewSiteTask
-                        )
+            SiteInfoCardBuilderParams(
+                site = site,
+                showSiteIconProgressBar = showUploadSiteIconFocusPoint,
+                titleClick = {},
+                iconClick = {},
+                urlClick = {},
+                switchSiteClick = {},
+                setActiveTask(
+                    showUpdateSiteTitleFocusPoint,
+                    showViewSiteFocusPoint,
+                    showUploadSiteIconFocusPoint,
+                    viewSiteTask
                 )
+            )
         )
     }
 

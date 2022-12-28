@@ -26,9 +26,9 @@ constructor(
     val dateSelectorData: LiveData<DateSelectorUiModel> = _dateSelectorUiModel
 
     val selectedDate = selectedDateProvider.granularSelectedDateChanged(this.statsSection)
-            .perform {
-                updateDateSelector()
-            }
+        .perform {
+            updateDateSelector()
+        }
 
     fun start(startDate: SelectedDate) {
         selectedDateProvider.updateSelectedDate(startDate, statsSection)
@@ -44,11 +44,11 @@ constructor(
         } else {
             val timeZone = statsDateFormatter.printTimeZone(siteProvider.siteModel)
             val updatedState = DateSelectorUiModel(
-                    shouldShowDateSelection,
-                    updatedDate,
-                    enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsSection),
-                    enableSelectNext = selectedDateProvider.hasNextDate(statsSection),
-                    timeZone = timeZone
+                shouldShowDateSelection,
+                updatedDate,
+                enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsSection),
+                enableSelectNext = selectedDateProvider.hasNextDate(statsSection),
+                timeZone = timeZone
             )
             emitValue(currentState, updatedState)
         }
@@ -65,8 +65,8 @@ constructor(
 
     private fun getDateLabelForSection(): String? {
         return statsDateFormatter.printGranularDate(
-                selectedDateProvider.getSelectedDate(statsSection) ?: selectedDateProvider.getCurrentDate(),
-                toStatsGranularity()
+            selectedDateProvider.getSelectedDate(statsSection) ?: selectedDateProvider.getCurrentDate(),
+            toStatsGranularity()
         )
     }
 
@@ -110,10 +110,10 @@ constructor(
     ) {
         fun build(statsSection: StatsSection): StatsDateSelector {
             return StatsDateSelector(
-                    selectedDateProvider,
-                    statsDateFormatter,
-                    siteProvider,
-                    statsSection
+                selectedDateProvider,
+                statsDateFormatter,
+                siteProvider,
+                statsSection
             )
         }
     }

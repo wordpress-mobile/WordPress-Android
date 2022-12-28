@@ -41,9 +41,12 @@ private const val EXTRA_POST_LIST_TYPE = "post_list_type"
 private const val MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION = 2
 
 class PostListFragment : ViewPagerFragment() {
-    @Inject internal lateinit var imageManager: ImageManager
-    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject internal lateinit var uiHelpers: UiHelpers
+    @Inject
+    internal lateinit var imageManager: ImageManager
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    internal lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: PostListViewModel
     private lateinit var mainViewModel: PostListMainViewModel
 
@@ -63,9 +66,9 @@ class PostListFragment : ViewPagerFragment() {
 
     private val postListAdapter: PostListAdapter by lazy {
         PostListAdapter(
-                context = nonNullActivity,
-                imageManager = imageManager,
-                uiHelpers = uiHelpers
+            context = nonNullActivity,
+            imageManager = imageManager,
+            uiHelpers = uiHelpers
         )
     }
 
@@ -99,7 +102,7 @@ class PostListFragment : ViewPagerFragment() {
         }
 
         mainViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
-                .get(PostListMainViewModel::class.java)
+            .get(PostListMainViewModel::class.java)
 
         mainViewModel.viewLayoutType.observe(viewLifecycleOwner, Observer { optionaLayoutType ->
             optionaLayoutType?.let { layoutType ->
@@ -140,10 +143,10 @@ class PostListFragment : ViewPagerFragment() {
 
         // since the MainViewModel has been already started, we need to manually update the authorFilterSelection value
         viewModel.start(
-                postListViewModelConnector,
-                mainViewModel.authorSelectionUpdated.value!!,
-                photonWidth = displayWidth - contentSpacing * 2,
-                photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height)
+            postListViewModelConnector,
+            mainViewModel.authorSelectionUpdated.value!!,
+            photonWidth = displayWidth - contentSpacing * 2,
+            photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height)
         )
 
         initObservers()
@@ -191,12 +194,12 @@ class PostListFragment : ViewPagerFragment() {
 
         val context = nonNullActivity
         itemDecorationStandardLayout = RecyclerItemDecoration(
-                0,
-                context.resources.getDimensionPixelSize(R.dimen.margin_medium)
+            0,
+            context.resources.getDimensionPixelSize(R.dimen.margin_medium)
         )
         itemDecorationCompactLayout = RecyclerItemDecoration(
-                0,
-                context.resources.getDimensionPixelSize(R.dimen.list_divider_height)
+            0,
+            context.resources.getDimensionPixelSize(R.dimen.list_divider_height)
         )
         recyclerView?.layoutManager = LinearLayoutManager(context)
         recyclerView?.adapter = postListAdapter

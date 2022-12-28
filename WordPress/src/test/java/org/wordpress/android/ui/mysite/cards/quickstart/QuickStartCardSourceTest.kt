@@ -52,22 +52,38 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class QuickStartCardSourceTest : BaseUnitTest() {
-    @Mock lateinit var quickStartStore: QuickStartStore
-    @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var eventBus: EventBusWrapper
-    @Mock lateinit var dynamicCardStore: DynamicCardStore
-    @Mock lateinit var htmlCompat: HtmlCompatWrapper
-    @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
-    @Mock lateinit var contextProvider: ContextProvider
-    @Mock lateinit var htmlMessageUtils: HtmlMessageUtils
-    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
-    @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
-    @Mock lateinit var quickStartExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
-    @Mock lateinit var quickStartTracker: QuickStartTracker
+    @Mock
+    lateinit var quickStartStore: QuickStartStore
+    @Mock
+    lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var dispatcher: Dispatcher
+    @Mock
+    lateinit var eventBus: EventBusWrapper
+    @Mock
+    lateinit var dynamicCardStore: DynamicCardStore
+    @Mock
+    lateinit var htmlCompat: HtmlCompatWrapper
+    @Mock
+    lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
+    @Mock
+    lateinit var contextProvider: ContextProvider
+    @Mock
+    lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Mock
+    lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock
+    lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+    @Mock
+    lateinit var quickStartExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
+    @Mock
+    lateinit var quickStartTracker: QuickStartTracker
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var quickStartCardSource: QuickStartCardSource
@@ -88,34 +104,35 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         whenever(quickStartExistingUsersV2FeatureConfig.isEnabled()).thenReturn(false)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         quickStartRepository = QuickStartRepository(
-                testDispatcher(),
-                quickStartStore,
-                quickStartUtilsWrapper,
-                appPrefsWrapper,
-                selectedSiteRepository,
-                resourceProvider,
-                dispatcher,
-                eventBus,
-                dynamicCardStore,
-                htmlCompat,
-                quickStartDynamicCardsFeatureConfig,
-                contextProvider,
-                htmlMessageUtils,
-                quickStartTracker,
-                buildConfigWrapper,
-                mySiteDashboardTabsFeatureConfig,
-                quickStartExistingUsersV2FeatureConfig
+            testDispatcher(),
+            quickStartStore,
+            quickStartUtilsWrapper,
+            appPrefsWrapper,
+            selectedSiteRepository,
+            resourceProvider,
+            dispatcher,
+            eventBus,
+            dynamicCardStore,
+            htmlCompat,
+            quickStartDynamicCardsFeatureConfig,
+            contextProvider,
+            htmlMessageUtils,
+            quickStartTracker,
+            buildConfigWrapper,
+            mySiteDashboardTabsFeatureConfig,
+            quickStartExistingUsersV2FeatureConfig
         )
         quickStartCardSource = QuickStartCardSource(
-                quickStartRepository,
-                quickStartStore,
-                quickStartUtilsWrapper,
-                selectedSiteRepository)
+            quickStartRepository,
+            quickStartStore,
+            quickStartUtilsWrapper,
+            selectedSiteRepository
+        )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
         quickStartRepository.onSnackbar.observeForever { event ->
             event?.getContentIfNotHandled()
-                    ?.let { snackbars.add(it) }
+                ?.let { snackbars.add(it) }
         }
         quickStartRepository.onQuickStartMySitePrompts.observeForever { event ->
             event?.getContentIfNotHandled()?.let { quickStartPrompts.add(it) }
@@ -136,25 +153,25 @@ class QuickStartCardSourceTest : BaseUnitTest() {
 
     @Test
     fun `given dynamic card enabled + same type tasks done, when refresh started, then completion msg shown`() =
-            test {
-                whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
-                initStore()
+        test {
+            whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
+            initStore()
 
-                triggerQSRefreshAfterSameTypeTasksAreComplete()
+            triggerQSRefreshAfterSameTypeTasksAreComplete()
 
-                assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringText(ALL_TASKS_COMPLETED_MESSAGE)))
-            }
+            assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringText(ALL_TASKS_COMPLETED_MESSAGE)))
+        }
 
     @Test
     fun `given dynamic card disabled + same type tasks done, when refresh started, then completion msg not shown`() =
-            test {
-                whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
-                initStore()
+        test {
+            whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+            initStore()
 
-                triggerQSRefreshAfterSameTypeTasksAreComplete()
+            triggerQSRefreshAfterSameTypeTasksAreComplete()
 
-                assertThat(snackbars).doesNotContain(SnackbarMessageHolder(UiStringText(ALL_TASKS_COMPLETED_MESSAGE)))
-            }
+            assertThat(snackbars).doesNotContain(SnackbarMessageHolder(UiStringText(ALL_TASKS_COMPLETED_MESSAGE)))
+        }
 
     @Test
     fun `given dynamic card enabled + same type tasks done, when refresh started, then dynamic card removed`() = test {
@@ -168,25 +185,25 @@ class QuickStartCardSourceTest : BaseUnitTest() {
 
     @Test
     fun `given dynamic card disabled + same type tasks done, when refresh started, then dynamic card not removed`() =
-            test {
-                whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
-                initStore()
+        test {
+            whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+            initStore()
 
-                triggerQSRefreshAfterSameTypeTasksAreComplete()
+            triggerQSRefreshAfterSameTypeTasksAreComplete()
 
-                verify(dynamicCardStore, never()).removeCard(siteLocalId, GROW_QUICK_START)
-            }
+            verify(dynamicCardStore, never()).removeCard(siteLocalId, GROW_QUICK_START)
+        }
 
     @Test
     fun `given dynamic card disabled + same type tasks done, when refresh started, then both task types exists`() =
-            test {
-                whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
-                initStore()
+        test {
+            whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+            initStore()
 
-                triggerQSRefreshAfterSameTypeTasksAreComplete()
+            triggerQSRefreshAfterSameTypeTasksAreComplete()
 
-                assertThat(result.last().categories.map { it.taskType }).isEqualTo(listOf(CUSTOMIZE, GROW))
-            }
+            assertThat(result.last().categories.map { it.taskType }).isEqualTo(listOf(CUSTOMIZE, GROW))
+        }
 
     @Test
     fun `refresh does not show completion message if not all tasks of a same type have been completed`() = test {
@@ -294,14 +311,14 @@ class QuickStartCardSourceTest : BaseUnitTest() {
 
     @Test
     fun `given uncompleted task, when quick start notice button action is clicked, then the task is marked active`() =
-            test {
-                initStore(nextUncompletedTask = PUBLISH_POST)
-                quickStartRepository.checkAndShowQuickStartNotice()
+        test {
+            initStore(nextUncompletedTask = PUBLISH_POST)
+            quickStartRepository.checkAndShowQuickStartNotice()
 
-                snackbars.last().buttonAction.invoke()
+            snackbars.last().buttonAction.invoke()
 
-                assertThat(result.last().activeTask).isEqualTo(PUBLISH_POST)
-            }
+            assertThat(result.last().activeTask).isEqualTo(PUBLISH_POST)
+        }
 
     @Test
     fun `when source is invoked, then refresh is false`() = test {
@@ -378,34 +395,34 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     ) {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(dynamicCardStore.getCards(siteLocalId)).thenReturn(
-                DynamicCardsModel(
-                        dynamicCardTypes = listOf(
-                                CUSTOMIZE_QUICK_START,
-                                GROW_QUICK_START
-                        )
+            DynamicCardsModel(
+                dynamicCardTypes = listOf(
+                    CUSTOMIZE_QUICK_START,
+                    GROW_QUICK_START
                 )
+            )
         )
         whenever(quickStartType.isQuickStartInProgress(quickStartStore, siteLocalId.toLong())).thenReturn(true)
         whenever(appPrefsWrapper.isQuickStartNoticeRequired()).thenReturn(true)
         whenever(quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), CUSTOMIZE)).thenReturn(
-                listOf(
-                        CREATE_SITE
-                )
+            listOf(
+                CREATE_SITE
+            )
         )
         whenever(quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), CUSTOMIZE)).thenReturn(
-                listOf(
-                        UPDATE_SITE_TITLE
-                )
+            listOf(
+                UPDATE_SITE_TITLE
+            )
         )
         whenever(
-                quickStartStore.getUncompletedTasksByType(
-                        siteLocalId.toLong(),
-                        GROW
-                )
+            quickStartStore.getUncompletedTasksByType(
+                siteLocalId.toLong(),
+                GROW
+            )
         ).thenReturn(listOf(ENABLE_POST_SHARING))
         whenever(quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), GROW)).thenReturn(listOf(PUBLISH_POST))
         whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(quickStartType, siteLocalId.toLong()))
-                .thenReturn(nextUncompletedTask)
+            .thenReturn(nextUncompletedTask)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormat(anyOrNull())).thenReturn("")
         initBuild()
     }

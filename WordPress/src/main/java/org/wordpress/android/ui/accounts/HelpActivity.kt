@@ -41,20 +41,26 @@ import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import org.wordpress.android.viewmodel.observeEvent
-import java.util.ArrayList
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HelpActivity : LocaleAwareActivity() {
-    @Inject lateinit var accountStore: AccountStore
-    @Inject lateinit var siteStore: SiteStore
-    @Inject lateinit var supportHelper: SupportHelper
-    @Inject lateinit var zendeskHelper: ZendeskHelper
-    @Inject lateinit var meGravatarLoader: MeGravatarLoader
-    @Inject lateinit var mDispatcher: Dispatcher
+    @Inject
+    lateinit var accountStore: AccountStore
+    @Inject
+    lateinit var siteStore: SiteStore
+    @Inject
+    lateinit var supportHelper: SupportHelper
+    @Inject
+    lateinit var zendeskHelper: ZendeskHelper
+    @Inject
+    lateinit var meGravatarLoader: MeGravatarLoader
+    @Inject
+    lateinit var mDispatcher: Dispatcher
 
     private lateinit var binding: HelpActivityBinding
-    @Suppress("DEPRECATION") private var signingOutProgressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION")
+    private var signingOutProgressDialog: ProgressDialog? = null
 
     private val viewModel: HelpViewModel by viewModels()
 
@@ -94,16 +100,16 @@ class HelpActivity : LocaleAwareActivity() {
                 var emailSuggestion = AppPrefs.getSupportEmail()
                 if (emailSuggestion.isNullOrEmpty()) {
                     emailSuggestion = supportHelper
-                            .getSupportEmailAndNameSuggestion(
-                                    accountStore.account,
-                                    selectedSiteFromExtras
-                            ).first
+                        .getSupportEmailAndNameSuggestion(
+                            accountStore.account,
+                            selectedSiteFromExtras
+                        ).first
                 }
 
                 supportHelper.showSupportIdentityInputDialog(
-                        this@HelpActivity,
-                        emailSuggestion,
-                        isNameInputHidden = true
+                    this@HelpActivity,
+                    emailSuggestion,
+                    isNameInputHidden = true
                 ) { email, _ ->
                     zendeskHelper.setSupportEmail(email)
                     refreshContactEmailText()
@@ -152,19 +158,19 @@ class HelpActivity : LocaleAwareActivity() {
 
     private fun createNewZendeskTicket() {
         zendeskHelper.createNewTicket(
-                this,
-                originFromExtras,
-                selectedSiteFromExtras,
-                extraTagsFromExtras
+            this,
+            originFromExtras,
+            selectedSiteFromExtras,
+            extraTagsFromExtras
         )
     }
 
     private fun showZendeskTickets() {
         zendeskHelper.showAllTickets(
-                this,
-                originFromExtras,
-                selectedSiteFromExtras,
-                extraTagsFromExtras
+            this,
+            originFromExtras,
+            selectedSiteFromExtras,
+            extraTagsFromExtras
         )
     }
 
@@ -221,8 +227,9 @@ class HelpActivity : LocaleAwareActivity() {
             return
         }
         if (originFromExtras == Origin.JETPACK_MIGRATION_HELP &&
-                event.causeOfChange == FETCH_ACCOUNT &&
-                !TextUtils.isEmpty(accountStore.account.userName)) {
+            event.causeOfChange == FETCH_ACCOUNT &&
+            !TextUtils.isEmpty(accountStore.account.userName)
+        ) {
             binding.loadAccountDataForJetpackMigrationHelp(accountStore.account)
         }
     }
@@ -242,12 +249,12 @@ class HelpActivity : LocaleAwareActivity() {
 
     private fun HelpActivityBinding.loadAvatar(avatarUrl: String) {
         meGravatarLoader.load(
-                false,
-                meGravatarLoader.constructGravatarUrl(avatarUrl),
-                null,
-                userAvatar,
-                AVATAR_WITHOUT_BACKGROUND,
-                null
+            false,
+            meGravatarLoader.constructGravatarUrl(avatarUrl),
+            null,
+            userAvatar,
+            AVATAR_WITHOUT_BACKGROUND,
+            null
         )
     }
 
@@ -258,10 +265,10 @@ class HelpActivity : LocaleAwareActivity() {
     @Suppress("DEPRECATION")
     private fun showSigningOutDialog() {
         signingOutProgressDialog = ProgressDialog.show(
-                this,
-                null,
-                getText(R.string.signing_out),
-                false
+            this,
+            null,
+            getText(R.string.signing_out),
+            false
         )
     }
 

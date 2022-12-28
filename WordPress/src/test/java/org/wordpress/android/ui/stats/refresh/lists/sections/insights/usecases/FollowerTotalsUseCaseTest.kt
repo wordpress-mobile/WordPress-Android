@@ -32,44 +32,56 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 
 @ExperimentalCoroutinesApi
 class FollowerTotalsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var followersStore: FollowersStore
-    @Mock lateinit var publicizeStore: PublicizeStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
-    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
-    @Mock lateinit var statsUtils: StatsUtils
-    @Mock lateinit var site: SiteModel
+    @Mock
+    lateinit var followersStore: FollowersStore
+    @Mock
+    lateinit var publicizeStore: PublicizeStore
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock
+    lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock
+    lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var site: SiteModel
     private lateinit var useCase: FollowerTotalsUseCase
 
     private val emailModel = FollowersModel(7, emptyList(), false)
     private val wpModel = FollowersModel(3, emptyList(), false)
-    private val socialModel = PublicizeModel(listOf(
+    private val socialModel = PublicizeModel(
+        listOf(
             Service("Twitter", 10),
-            Service("FB", 5)),
-            false)
+            Service("FB", 5)
+        ),
+        false
+    )
     private val contentDescription = "title, views"
 
     @Before
     fun setUp() {
         useCase = FollowerTotalsUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                followersStore,
-                publicizeStore,
-                statsSiteProvider,
-                contentDescriptionHelper,
-                statsUtils,
-                popupMenuHandler
+            testDispatcher(),
+            testDispatcher(),
+            followersStore,
+            publicizeStore,
+            statsSiteProvider,
+            contentDescriptionHelper,
+            statsUtils,
+            popupMenuHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
 
         whenever(followersStore.getEmailFollowers(site, LimitMode.Top(0))).thenReturn(emailModel)
         whenever(followersStore.getWpComFollowers(site, LimitMode.Top(0))).thenReturn(wpModel)
         whenever(publicizeStore.getPublicizeData(site, LimitMode.All)).thenReturn(socialModel)
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<Int>()
-        )).thenReturn(contentDescription)
+            )
+        ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 

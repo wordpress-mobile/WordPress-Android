@@ -20,10 +20,12 @@ import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 class SearchListFragment : Fragment(R.layout.pages_list_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: SearchListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
-    @Inject lateinit var uiHelper: UiHelpers
+    @Inject
+    lateinit var uiHelper: UiHelpers
 
     private val listStateKey = "list_state"
 
@@ -83,8 +85,9 @@ class SearchListFragment : Fragment(R.layout.pages_list_fragment) {
         val adapter: PageSearchAdapter
         if (recyclerView.adapter == null) {
             adapter = PageSearchAdapter(
-                    { action, page -> viewModel.onMenuAction(action, page, requireContext()) },
-                    { page -> viewModel.onItemTapped(page) }, uiHelper)
+                { action, page -> viewModel.onMenuAction(action, page, requireContext()) },
+                { page -> viewModel.onItemTapped(page) }, uiHelper
+            )
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as PageSearchAdapter

@@ -87,23 +87,23 @@ class FollowerTotalsUseCase
     ): State<Map<FollowerType, Int>> {
         val deferredWpComResponse = async(bgDispatcher) {
             followersStore.fetchWpComFollowers(
-                    statsSiteProvider.siteModel,
-                    fetchMode,
-                    forced
+                statsSiteProvider.siteModel,
+                fetchMode,
+                forced
             )
         }
         val deferredEmailResponse = async(bgDispatcher) {
             followersStore.fetchEmailFollowers(
-                    statsSiteProvider.siteModel,
-                    fetchMode,
-                    forced
+                statsSiteProvider.siteModel,
+                fetchMode,
+                forced
             )
         }
         val deferredPublicizeResponse = async(bgDispatcher) {
             publicizeStore.fetchPublicizeData(
-                    statsSiteProvider.siteModel,
-                    LimitMode.All,
-                    forced
+                statsSiteProvider.siteModel,
+                LimitMode.All,
+                forced
             )
         }
 
@@ -148,16 +148,16 @@ class FollowerTotalsUseCase
             domainModel.entries.forEach {
                 val title = getTitle(it.key)
                 items.add(
-                        ListItemWithIcon(
-                                icon = getIcon(it.key),
-                                textResource = title,
-                                value = statsUtils.toFormattedString(it.value),
-                                showDivider = domainModel.entries.indexOf(it) < domainModel.size - 1,
-                                contentDescription = contentDescriptionHelper.buildContentDescription(
-                                        title,
-                                        it.value
-                                )
+                    ListItemWithIcon(
+                        icon = getIcon(it.key),
+                        textResource = title,
+                        value = statsUtils.toFormattedString(it.value),
+                        showDivider = domainModel.entries.indexOf(it) < domainModel.size - 1,
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                            title,
+                            it.value
                         )
+                    )
                 )
             }
         } else {

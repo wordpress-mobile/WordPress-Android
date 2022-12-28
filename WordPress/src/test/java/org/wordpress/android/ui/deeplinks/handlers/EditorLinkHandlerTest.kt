@@ -17,8 +17,10 @@ import org.wordpress.android.ui.deeplinks.buildUri
 
 @ExperimentalCoroutinesApi
 class EditorLinkHandlerTest : BaseUnitTest() {
-    @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
-    @Mock lateinit var postStore: PostStore
+    @Mock
+    lateinit var deepLinkUriUtils: DeepLinkUriUtils
+    @Mock
+    lateinit var postStore: PostStore
     private lateinit var editorLinkHandler: EditorLinkHandler
     private lateinit var site: SiteModel
     private lateinit var post: PostModel
@@ -151,8 +153,8 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `applink - opens editor and shows toast when site not found`() {
         val uri = buildUri(
-                host = "post",
-                queryParam1 = "blogId" to blogId
+            host = "post",
+            queryParam1 = "blogId" to blogId
         )
 
         val navigateAction = editorLinkHandler.buildNavigateAction(uri)
@@ -164,8 +166,8 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `applink - opens editor for a site from ID when post missing in URL`() {
         val uri = buildUri(
-                host = "post",
-                queryParam1 = "blogId" to blogId
+            host = "post",
+            queryParam1 = "blogId" to blogId
         )
         whenever(deepLinkUriUtils.blogIdToSite(blogId)).thenReturn(site)
 
@@ -178,8 +180,8 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `applink - opens editor for a site from URL`() {
         val uri = buildUri(
-                host = "post",
-                queryParam1 = "blogId" to siteUrl
+            host = "post",
+            queryParam1 = "blogId" to siteUrl
         )
         whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
@@ -192,9 +194,9 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `applink - opens editor for a post when both site and post exist`() {
         val uri = buildUri(
-                host = "post",
-                queryParam1 = "blogId" to blogId,
-                queryParam2 = "postId" to remotePostId.toString()
+            host = "post",
+            queryParam1 = "blogId" to blogId,
+            queryParam2 = "postId" to remotePostId.toString()
         )
         whenever(deepLinkUriUtils.blogIdToSite(blogId)).thenReturn(site)
         whenever(postStore.getPostByRemotePostId(remotePostId, site)).thenReturn(post)
@@ -208,9 +210,9 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `applink - opens editor for a site and shows toast when post not found`() {
         val uri = buildUri(
-                host = "post",
-                queryParam1 = "blogId" to blogId,
-                queryParam2 = "postId" to remotePostId.toString()
+            host = "post",
+            queryParam1 = "blogId" to blogId,
+            queryParam2 = "postId" to remotePostId.toString()
         )
         whenever(deepLinkUriUtils.blogIdToSite(blogId)).thenReturn(site)
         whenever(postStore.getPostByRemotePostId(remotePostId, site)).thenReturn(null)
@@ -224,9 +226,9 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `applink - strips full uri`() {
         val uri = buildUri(
-                host = "post",
-                queryParam1 = "blogId" to blogId,
-                queryParam2 = "postId" to remotePostId.toString()
+            host = "post",
+            queryParam1 = "blogId" to blogId,
+            queryParam2 = "postId" to remotePostId.toString()
         )
 
         val strippedUrl = editorLinkHandler.stripUrl(uri)
@@ -237,8 +239,8 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `applink - strips uri with blog ID`() {
         val uri = buildUri(
-                host = "post",
-                queryParam1 = "blogId" to blogId
+            host = "post",
+            queryParam1 = "blogId" to blogId
         )
 
         val strippedUrl = editorLinkHandler.stripUrl(uri)
@@ -249,7 +251,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `applink - strips uri without params`() {
         val uri = buildUri(
-                host = "post"
+            host = "post"
         )
 
         val strippedUrl = editorLinkHandler.stripUrl(uri)

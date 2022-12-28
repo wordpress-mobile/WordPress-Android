@@ -12,7 +12,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class BloggingPromptsListActivity : AppCompatActivity() {
-    @Inject lateinit var tracker: BloggingPromptsListAnalyticsTracker
+    @Inject
+    lateinit var tracker: BloggingPromptsListAnalyticsTracker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

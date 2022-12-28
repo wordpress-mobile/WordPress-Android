@@ -43,19 +43,32 @@ import java.util.Calendar
 
 @ExperimentalCoroutinesApi
 class TotalCommentsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var store: VisitsAndViewsStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
-    @Mock lateinit var totalStatsMapper: TotalStatsMapper
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var valueWithChart: ValueWithChartItem
-    @Mock lateinit var information: Text
-    @Mock lateinit var useCaseMode: UseCaseMode
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
+    @Mock
+    lateinit var store: VisitsAndViewsStore
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock
+    lateinit var totalStatsMapper: TotalStatsMapper
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    lateinit var valueWithChart: ValueWithChartItem
+    @Mock
+    lateinit var information: Text
+    @Mock
+    lateinit var useCaseMode: UseCaseMode
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
     private lateinit var useCase: TotalCommentsUseCase
     private val periodData = PeriodData("2018-10-08", 10, 15, 20, 25, 30, 35)
     private val modelPeriod = "2018-10-10"
@@ -65,17 +78,17 @@ class TotalCommentsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = TotalCommentsUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                store,
-                statsSiteProvider,
-                resourceProvider,
-                statsDateFormatter,
-                totalStatsMapper,
-                analyticsTrackerWrapper,
-                statsWidgetUpdaters,
-                localeManagerWrapper,
-                useCaseMode
+            testDispatcher(),
+            testDispatcher(),
+            store,
+            statsSiteProvider,
+            resourceProvider,
+            statsDateFormatter,
+            totalStatsMapper,
+            analyticsTrackerWrapper,
+            statsWidgetUpdaters,
+            localeManagerWrapper,
+            useCaseMode
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(totalStatsMapper.buildTotalCommentsValue(any())).thenReturn(valueWithChart)
@@ -107,7 +120,7 @@ class TotalCommentsUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(store.fetchVisits(site, DAYS, limitMode, forced)).thenReturn(
-                OnStatsFetched(StatsError(GENERIC_ERROR, message))
+            OnStatsFetched(StatsError(GENERIC_ERROR, message))
         )
 
         val result = loadData(true, forced)
@@ -135,15 +148,15 @@ class TotalCommentsUseCaseTest : BaseUnitTest() {
         loadData(true, forced)
 
         verify(analyticsTrackerWrapper).track(
-                STATS_TOTAL_COMMENTS_ERROR,
-                mapOf(
-                        "stats_last_date" to "2020-12-13",
-                        "stats_current_date" to "2020-12-15",
-                        "stats_age_in_days" to 2,
-                        "is_jetpack_connected" to false,
-                        "is_atomic" to false,
-                        "action_source" to "remote"
-                )
+            STATS_TOTAL_COMMENTS_ERROR,
+            mapOf(
+                "stats_last_date" to "2020-12-13",
+                "stats_current_date" to "2020-12-15",
+                "stats_age_in_days" to 2,
+                "is_jetpack_connected" to false,
+                "is_atomic" to false,
+                "action_source" to "remote"
+            )
         )
     }
 

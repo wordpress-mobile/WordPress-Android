@@ -63,11 +63,13 @@ class DomainRegistrationDetailsFragment : Fragment() {
         }
     }
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainRegistrationDetailsViewModel
     private lateinit var mainViewModel: DomainRegistrationMainViewModel
 
-    @Suppress("DEPRECATION") private var loadingProgressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION")
+    private var loadingProgressDialog: ProgressDialog? = null
     private var binding: DomainRegistrationDetailsFragmentBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,15 +90,15 @@ class DomainRegistrationDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         mainViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(DomainRegistrationMainViewModel::class.java)
+            .get(DomainRegistrationMainViewModel::class.java)
         viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(DomainRegistrationDetailsViewModel::class.java)
+            .get(DomainRegistrationDetailsViewModel::class.java)
         with(DomainRegistrationDetailsFragmentBinding.bind(view)) {
             binding = this
             setupObservers()
 
             val domainProductDetails = requireNotNull(
-                    arguments?.getParcelable<DomainProductDetails?>(EXTRA_DOMAIN_PRODUCT_DETAILS)
+                arguments?.getParcelable<DomainProductDetails?>(EXTRA_DOMAIN_PRODUCT_DETAILS)
             )
             val site = requireActivity().intent?.getSerializableExtra(WordPress.SITE) as SiteModel
 
@@ -139,16 +141,16 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     private fun DomainRegistrationDetailsFragmentBinding.setupInputFieldTextWatchers() {
         arrayOf(
-                firstNameInput,
-                lastNameInput,
-                organizationInput,
-                emailInput,
-                countryCodeInput,
-                phoneNumberInput,
-                addressFirstLineInput,
-                addressSecondLineInput,
-                cityInput,
-                postalCodeInput
+            firstNameInput,
+            lastNameInput,
+            organizationInput,
+            emailInput,
+            countryCodeInput,
+            phoneNumberInput,
+            addressFirstLineInput,
+            addressSecondLineInput,
+            cityInput,
+            postalCodeInput
         ).forEach {
             it.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
@@ -167,12 +169,12 @@ class DomainRegistrationDetailsFragment : Fragment() {
     // make link to ToS clickable
     private fun DomainRegistrationDetailsFragmentBinding.setupTosLink() {
         tosExplanation.text = HtmlCompat.fromHtml(
-                String.format(
-                        resources.getString(R.string.domain_registration_privacy_protection_tos),
-                        "<u>",
-                        "</u>"
-                ),
-                HtmlCompat.FROM_HTML_MODE_LEGACY
+            String.format(
+                resources.getString(R.string.domain_registration_privacy_protection_tos),
+                "<u>",
+                "</u>"
+            ),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         tosExplanation.movementMethod = LinkMovementMethod.getInstance()
         tosExplanation.setOnClickListener {
@@ -182,52 +184,52 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     private fun DomainRegistrationDetailsFragmentBinding.setupObservers() {
         viewModel.uiState.observe(viewLifecycleOwner,
-                {
-                    it?.let { uiState -> loadState(uiState) }
-                })
+            {
+                it?.let { uiState -> loadState(uiState) }
+            })
 
         viewModel.domainContactForm.observe(
-                viewLifecycleOwner,
-                { domainContactFormModel ->
-                    val currentModel = getDomainContactFormModel()
-                    if (currentModel != domainContactFormModel) {
-                        populateContactForm(domainContactFormModel!!)
-                    }
-                })
+            viewLifecycleOwner,
+            { domainContactFormModel ->
+                val currentModel = getDomainContactFormModel()
+                if (currentModel != domainContactFormModel) {
+                    populateContactForm(domainContactFormModel!!)
+                }
+            })
 
         viewModel.showCountryPickerDialog.observe(viewLifecycleOwner,
-                {
-                    if (it != null && it.isNotEmpty()) {
-                        showCountryPicker(it)
-                    }
-                })
+            {
+                if (it != null && it.isNotEmpty()) {
+                    showCountryPicker(it)
+                }
+            })
 
         viewModel.showStatePickerDialog.observe(viewLifecycleOwner,
-                {
-                    if (it != null && it.isNotEmpty()) {
-                        showStatePicker(it)
-                    }
-                })
+            {
+                if (it != null && it.isNotEmpty()) {
+                    showStatePicker(it)
+                }
+            })
 
         observeFormError(viewModel)
 
         viewModel.showErrorMessage.observe(viewLifecycleOwner,
-                { errorMessage ->
-                    ToastUtils.showToast(context, errorMessage)
-                })
+            { errorMessage ->
+                ToastUtils.showToast(context, errorMessage)
+            })
 
         viewModel.handleCompletedDomainRegistration.observe(viewLifecycleOwner,
-                { domainRegisteredEvent ->
-                    mainViewModel.completeDomainRegistration(domainRegisteredEvent)
-                })
+            { domainRegisteredEvent ->
+                mainViewModel.completeDomainRegistration(domainRegisteredEvent)
+            })
 
         viewModel.showTos.observe(viewLifecycleOwner,
-                {
-                    ActivityLauncher.openUrlExternal(
-                            context,
-                            WPUrlUtils.buildTermsOfServiceUrl(context)
-                    )
-                })
+            {
+                ActivityLauncher.openUrlExternal(
+                    context,
+                    WPUrlUtils.buildTermsOfServiceUrl(context)
+                )
+            })
     }
 
     private fun DomainRegistrationDetailsFragmentBinding.loadState(uiState: DomainRegistrationDetailsUiState) {
@@ -258,33 +260,33 @@ class DomainRegistrationDetailsFragment : Fragment() {
         viewModel: DomainRegistrationDetailsViewModel
     ) {
         viewModel.formError.observe(viewLifecycleOwner,
-                { error ->
-                    var affectedInputFields: Array<TextInputEditText>? = null
+            { error ->
+                var affectedInputFields: Array<TextInputEditText>? = null
 
-                    when (error?.type) {
-                        FIRST_NAME -> affectedInputFields = arrayOf(firstNameInput)
-                        LAST_NAME -> affectedInputFields = arrayOf(lastNameInput)
-                        ORGANIZATION -> affectedInputFields = arrayOf(organizationInput)
-                        ADDRESS_1 -> affectedInputFields = arrayOf(addressFirstLineInput)
-                        ADDRESS_2 -> affectedInputFields = arrayOf(addressSecondLineInput)
-                        POSTAL_CODE -> affectedInputFields = arrayOf(postalCodeInput)
-                        CITY -> affectedInputFields = arrayOf(cityInput)
-                        STATE -> affectedInputFields = arrayOf(stateInput)
-                        COUNTRY_CODE -> affectedInputFields = arrayOf(countryInput)
-                        EMAIL -> affectedInputFields = arrayOf(emailInput)
-                        PHONE -> affectedInputFields = arrayOf(
-                                countryCodeInput,
-                                phoneNumberInput
-                        )
-                        else -> {
-                        } // Something else, will just show a Toast with an error message
-                    }
-                    affectedInputFields?.forEach {
-                        @Suppress("DEPRECATION")
-                        showFieldError(it, StringEscapeUtils.unescapeHtml4(error?.message))
-                    }
-                    affectedInputFields?.firstOrNull { it.requestFocus() }
-                })
+                when (error?.type) {
+                    FIRST_NAME -> affectedInputFields = arrayOf(firstNameInput)
+                    LAST_NAME -> affectedInputFields = arrayOf(lastNameInput)
+                    ORGANIZATION -> affectedInputFields = arrayOf(organizationInput)
+                    ADDRESS_1 -> affectedInputFields = arrayOf(addressFirstLineInput)
+                    ADDRESS_2 -> affectedInputFields = arrayOf(addressSecondLineInput)
+                    POSTAL_CODE -> affectedInputFields = arrayOf(postalCodeInput)
+                    CITY -> affectedInputFields = arrayOf(cityInput)
+                    STATE -> affectedInputFields = arrayOf(stateInput)
+                    COUNTRY_CODE -> affectedInputFields = arrayOf(countryInput)
+                    EMAIL -> affectedInputFields = arrayOf(emailInput)
+                    PHONE -> affectedInputFields = arrayOf(
+                        countryCodeInput,
+                        phoneNumberInput
+                    )
+                    else -> {
+                    } // Something else, will just show a Toast with an error message
+                }
+                affectedInputFields?.forEach {
+                    @Suppress("DEPRECATION")
+                    showFieldError(it, StringEscapeUtils.unescapeHtml4(error?.message))
+                }
+                affectedInputFields?.firstOrNull { it.requestFocus() }
+            })
     }
 
     private fun DomainRegistrationDetailsFragmentBinding.populateContactForm(formModel: DomainContactFormModel) {
@@ -305,15 +307,15 @@ class DomainRegistrationDetailsFragment : Fragment() {
         var formIsCompleted = true
 
         val requiredFields = arrayOf(
-                firstNameInput,
-                lastNameInput,
-                emailInput,
-                countryCodeInput,
-                phoneNumberInput,
-                countryInput,
-                addressFirstLineInput,
-                cityInput,
-                postalCodeInput
+            firstNameInput,
+            lastNameInput,
+            emailInput,
+            countryCodeInput,
+            phoneNumberInput,
+            countryInput,
+            addressFirstLineInput,
+            cityInput,
+            postalCodeInput
         )
 
         var fieldToFocusOn: TextInputEditText? = null
@@ -342,8 +344,8 @@ class DomainRegistrationDetailsFragment : Fragment() {
         val parent = editText.parent.parent
         if (parent is TextInputLayout) {
             showFieldError(
-                    editText,
-                    getString(R.string.domain_registration_contact_form_input_error, parent.hint)
+                editText,
+                getString(R.string.domain_registration_contact_form_input_error, parent.hint)
             )
         }
     }
@@ -361,18 +363,18 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     private fun getDomainContactFormModel(): DomainContactFormModel = with(binding!!) {
         return DomainContactFormModel(
-                firstNameInput.text.toString(),
-                lastNameInput.text.toString(),
-                StringUtils.notNullStr(organizationInput.text.toString()),
-                addressFirstLineInput.text.toString(),
-                addressSecondLineInput.text.toString(),
-                postalCodeInput.text.toString(),
-                cityInput.text.toString(),
-                null, // state code will be added in ViewModel
-                null, // country code will be added in ViewModel
-                emailInput.text.toString(),
-                countryCodeInput.text.toString(),
-                phoneNumberInput.text.toString()
+            firstNameInput.text.toString(),
+            lastNameInput.text.toString(),
+            StringUtils.notNullStr(organizationInput.text.toString()),
+            addressFirstLineInput.text.toString(),
+            addressSecondLineInput.text.toString(),
+            postalCodeInput.text.toString(),
+            cityInput.text.toString(),
+            null, // state code will be added in ViewModel
+            null, // country code will be added in ViewModel
+            emailInput.text.toString(),
+            countryCodeInput.text.toString(),
+            phoneNumberInput.text.toString()
         )
     }
 
@@ -386,9 +388,9 @@ class DomainRegistrationDetailsFragment : Fragment() {
     @Suppress("DEPRECATION")
     private fun showCountryPicker(countries: List<SupportedDomainCountry>) {
         val dialogFragment = CountryPickerDialogFragment.newInstance(
-                countries.toCollection(
-                        ArrayList()
-                )
+            countries.toCollection(
+                ArrayList()
+            )
         )
         dialogFragment.setTargetFragment(this, 0)
         dialogFragment.show(requireFragmentManager(), CountryPickerDialogFragment.TAG)
@@ -429,7 +431,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
             loadingProgressDialog!!.setCancelable(false)
 
             loadingProgressDialog!!
-                    .setMessage(getString(R.string.domain_registration_registering_domain_name_progress_dialog_message))
+                .setMessage(getString(R.string.domain_registration_registering_domain_name_progress_dialog_message))
         }
         if (!loadingProgressDialog!!.isShowing) {
             loadingProgressDialog!!.show()
@@ -444,7 +446,8 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     class StatePickerDialogFragment : DialogFragment() {
         private lateinit var states: ArrayList<SupportedStateResponse>
-        @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+        @Inject
+        lateinit var viewModelFactory: ViewModelProvider.Factory
         private lateinit var viewModel: DomainRegistrationDetailsViewModel
 
         companion object {
@@ -473,7 +476,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
             }
 
             viewModel = ViewModelProvider(targetFragment!!, viewModelFactory)
-                    .get(DomainRegistrationDetailsViewModel::class.java)
+                .get(DomainRegistrationDetailsViewModel::class.java)
             val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(R.string.domain_registration_state_picker_dialog_title)
             builder.setItems(states.map { it.name }.toTypedArray()) { _, which ->
@@ -495,7 +498,8 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     class CountryPickerDialogFragment : DialogFragment() {
         private lateinit var countries: ArrayList<SupportedDomainCountry>
-        @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+        @Inject
+        lateinit var viewModelFactory: ViewModelProvider.Factory
         private lateinit var viewModel: DomainRegistrationDetailsViewModel
 
         companion object {
@@ -524,7 +528,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
             }
 
             viewModel = ViewModelProvider(targetFragment!!, viewModelFactory)
-                    .get(DomainRegistrationDetailsViewModel::class.java)
+                .get(DomainRegistrationDetailsViewModel::class.java)
             val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(R.string.domain_registration_country_picker_dialog_title)
             builder.setItems(countries.map { it.name }.toTypedArray()) { _, which ->
@@ -547,7 +551,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         (activity as? ScrollableViewInitializedListener)?.onScrollableViewInitialized(
-                R.id.domain_registration_details_container
+            R.id.domain_registration_details_container
         )
     }
 }

@@ -25,10 +25,10 @@ import org.wordpress.android.util.UrlUtilsWrapper
 
 private const val SITE_TITLE = "site title"
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
-        123,
-        "slug",
-        "domain",
-        SITE_TITLE
+    123,
+    "slug",
+    "domain",
+    SITE_TITLE
 )
 private const val LANGUAGE_ID = "lang_id"
 private const val TIMEZONE_ID = "timezone_id"
@@ -36,9 +36,12 @@ private const val TIMEZONE_ID = "timezone_id"
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class CreateSiteUseCaseTest : BaseUnitTest() {
-    @Mock private lateinit var dispatcher: Dispatcher
-    @Mock private lateinit var store: SiteStore
-    @Mock private lateinit var urlUtilsWrapper: UrlUtilsWrapper
+    @Mock
+    private lateinit var dispatcher: Dispatcher
+    @Mock
+    private lateinit var store: SiteStore
+    @Mock
+    private lateinit var urlUtilsWrapper: UrlUtilsWrapper
     private lateinit var useCase: CreateSiteUseCase
     private lateinit var event: OnNewSiteCreated
 

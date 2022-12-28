@@ -34,24 +34,24 @@ class CleanUpMediaToPostAssociationUseCaseTest(private val containsGutenbergBloc
         // Arrange
         val mediaList = createMediaList()
         val uploadStore = createUploadStore(
-                failedMedia = setOf(mediaList[0]),
-                uploadedMedia = setOf(mediaList[1]),
-                uploadingMedia = setOf(mediaList[2])
+            failedMedia = setOf(mediaList[0]),
+            uploadedMedia = setOf(mediaList[1]),
+            uploadingMedia = setOf(mediaList[2])
         )
         val mediaInPost = mediaList.slice(3..9).toSet()
         val dispatcher = mock<Dispatcher>()
         // Act
         createUseCase(
-                dispatcher,
-                uploadStore,
-                mediaInPost
+            dispatcher,
+            uploadStore,
+            mediaInPost
         ).purgeMediaToPostAssociationsIfNotInPostAnymore(mock())
 
         // Assert
         val captor = argumentCaptor<Action<ClearMediaPayload>>()
         verify(dispatcher).dispatch(captor.capture())
         assertThat(captor.firstValue.payload.media)
-                .isEqualTo(setOf(mediaList[0], mediaList[1], mediaList[2]))
+            .isEqualTo(setOf(mediaList[0], mediaList[1], mediaList[2]))
     }
 
     @Test
@@ -61,15 +61,15 @@ class CleanUpMediaToPostAssociationUseCaseTest(private val containsGutenbergBloc
 
         val dispatcher = mock<Dispatcher>()
         val uploadStore = createUploadStore(
-                failedMedia = setOf(mediaList[0]),
-                uploadedMedia = setOf(mediaList[1]),
-                uploadingMedia = setOf(mediaList[2])
+            failedMedia = setOf(mediaList[0]),
+            uploadedMedia = setOf(mediaList[1]),
+            uploadingMedia = setOf(mediaList[2])
         )
         // Act
         createUseCase(
-                dispatcher,
-                uploadStore,
-                mediaInPost = mediaList.toSet()
+            dispatcher,
+            uploadStore,
+            mediaInPost = mediaList.toSet()
         ).purgeMediaToPostAssociationsIfNotInPostAnymore(mock())
 
         // Assert
@@ -82,24 +82,24 @@ class CleanUpMediaToPostAssociationUseCaseTest(private val containsGutenbergBloc
         val mediaList = createMediaList()
         val dispatcher = mock<Dispatcher>()
         val uploadStore = createUploadStore(
-                failedMedia = setOf(mediaList[0]),
-                uploadedMedia = setOf(mediaList[1]),
-                uploadingMedia = setOf(mediaList[2])
+            failedMedia = setOf(mediaList[0]),
+            uploadedMedia = setOf(mediaList[1]),
+            uploadingMedia = setOf(mediaList[2])
         )
         mediaList[0].markedLocallyAsFeatured = true
         val mediaInPost = mediaList.slice(3..9).toSet()
         // Act
         createUseCase(
-                dispatcher,
-                uploadStore,
-                mediaInPost
+            dispatcher,
+            uploadStore,
+            mediaInPost
         ).purgeMediaToPostAssociationsIfNotInPostAnymore(mock())
 
         // Assert
         val captor = argumentCaptor<Action<ClearMediaPayload>>()
         verify(dispatcher).dispatch(captor.capture())
         assertThat(captor.firstValue.payload.media)
-                .isEqualTo(setOf(mediaList[1], mediaList[2]))
+            .isEqualTo(setOf(mediaList[1], mediaList[2]))
     }
 
     private fun createUseCase(
@@ -107,19 +107,19 @@ class CleanUpMediaToPostAssociationUseCaseTest(private val containsGutenbergBloc
         uploadStore: UploadStore = mock(),
         mediaInPost: Set<MediaModel>
     ) = CleanUpMediaToPostAssociationUseCase(
-            dispatcher,
-            uploadStore,
-            createAztecEditorWrapper(mediaInPost),
-            createPostUtilsWrapper(mediaInPost, containsGutenbergBlocks),
-            testDispatcher()
+        dispatcher,
+        uploadStore,
+        createAztecEditorWrapper(mediaInPost),
+        createPostUtilsWrapper(mediaInPost, containsGutenbergBlocks),
+        testDispatcher()
     )
 
     companion object {
         @JvmStatic
         @Parameterized.Parameters
         fun parameters() = listOf(
-                arrayOf(true), // Test with posts containing gutenberg blocks
-                arrayOf(false) // Test with posts not containing gutenberg blocks
+            arrayOf(true), // Test with posts containing gutenberg blocks
+            arrayOf(false) // Test with posts not containing gutenberg blocks
         )
     }
 
@@ -138,25 +138,25 @@ class CleanUpMediaToPostAssociationUseCaseTest(private val containsGutenbergBloc
             mediaInPost: Set<MediaModel>,
             containsGutenbergBlocks: Boolean
         ) =
-                mock<PostUtilsWrapper> {
-                    on { isMediaInGutenbergPostBody(anyOrNull(), anyOrNull()) }
-                            .doAnswer { invocation ->
-                                mediaInPost.map { it.id }
-                                        .contains((invocation.arguments[1] as String).toInt())
-                            }
-                    on { contentContainsGutenbergBlocks(anyOrNull()) }.doReturn(
-                            containsGutenbergBlocks
-                    )
-                }
+            mock<PostUtilsWrapper> {
+                on { isMediaInGutenbergPostBody(anyOrNull(), anyOrNull()) }
+                    .doAnswer { invocation ->
+                        mediaInPost.map { it.id }
+                            .contains((invocation.arguments[1] as String).toInt())
+                    }
+                on { contentContainsGutenbergBlocks(anyOrNull()) }.doReturn(
+                    containsGutenbergBlocks
+                )
+            }
 
         fun createAztecEditorWrapper(mediaInPost: Set<MediaModel>) =
-                mock<AztecEditorFragmentStaticWrapper> {
-                    on { isMediaInPostBody(anyOrNull(), anyOrNull()) }
-                            .doAnswer { invocation ->
-                                mediaInPost.map { it.id }
-                                        .contains((invocation.arguments[1] as String).toInt())
-                            }
-                }
+            mock<AztecEditorFragmentStaticWrapper> {
+                on { isMediaInPostBody(anyOrNull(), anyOrNull()) }
+                    .doAnswer { invocation ->
+                        mediaInPost.map { it.id }
+                            .contains((invocation.arguments[1] as String).toInt())
+                    }
+            }
 
         fun createMediaList(): List<MediaModel> {
             val list = mutableListOf<MediaModel>()

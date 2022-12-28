@@ -28,9 +28,12 @@ import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ThreatDetailsViewModel
     private var threatActionDialog: AlertDialog? = null
 
@@ -53,8 +56,8 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
 
     private fun ThreatDetailsFragmentBinding.initViewModel() {
         viewModel = ViewModelProvider(
-                this@ThreatDetailsFragment,
-                viewModelFactory
+            this@ThreatDetailsFragment,
+            viewModelFactory
         ).get(ThreatDetailsViewModel::class.java)
         setupObservers()
         val threatId = requireActivity().intent.getLongExtra(ARG_THREAT_ID, 0)
@@ -63,38 +66,38 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
 
     private fun ThreatDetailsFragmentBinding.setupObservers() {
         viewModel.uiState.observe(
-                viewLifecycleOwner,
-                { uiState ->
-                    if (uiState is Content) {
-                        refreshContentScreen(uiState)
-                    }
+            viewLifecycleOwner,
+            { uiState ->
+                if (uiState is Content) {
+                    refreshContentScreen(uiState)
                 }
+            }
         )
 
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar() })
 
         viewModel.navigationEvents.observeEvent(
-                viewLifecycleOwner,
-                { events ->
-                    when (events) {
-                        is OpenThreatActionDialog -> showThreatActionDialog(events)
+            viewLifecycleOwner,
+            { events ->
+                when (events) {
+                    is OpenThreatActionDialog -> showThreatActionDialog(events)
 
-                        is ShowUpdatedScanStateWithMessage -> {
-                            val site = requireNotNull(requireActivity().intent.extras)
-                                    .getSerializable(WordPress.SITE) as SiteModel
-                            ActivityLauncher.viewScanRequestScanState(requireActivity(), site, events.messageRes)
-                        }
-                        is ShowUpdatedFixState -> {
-                            val site = requireNotNull(requireActivity().intent.extras)
-                                    .getSerializable(WordPress.SITE) as SiteModel
-                            ActivityLauncher.viewScanRequestFixState(requireActivity(), site, events.threatId)
-                        }
-                        is ShowGetFreeEstimate -> {
-                            ActivityLauncher.openUrlExternal(context, events.url())
-                        }
-                        is ShowJetpackSettings -> ActivityLauncher.openUrlExternal(context, events.url)
+                    is ShowUpdatedScanStateWithMessage -> {
+                        val site = requireNotNull(requireActivity().intent.extras)
+                            .getSerializable(WordPress.SITE) as SiteModel
+                        ActivityLauncher.viewScanRequestScanState(requireActivity(), site, events.messageRes)
                     }
+                    is ShowUpdatedFixState -> {
+                        val site = requireNotNull(requireActivity().intent.extras)
+                            .getSerializable(WordPress.SITE) as SiteModel
+                        ActivityLauncher.viewScanRequestFixState(requireActivity(), site, events.threatId)
+                    }
+                    is ShowGetFreeEstimate -> {
+                        ActivityLauncher.openUrlExternal(context, events.url())
+                    }
+                    is ShowJetpackSettings -> ActivityLauncher.openUrlExternal(context, events.url)
                 }
+            }
         )
     }
 
@@ -105,9 +108,9 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
     private fun SnackbarMessageHolder.showSnackbar() {
         view?.let {
             val snackbar = WPSnackbar.make(
-                    it,
-                    uiHelpers.getTextOfUiString(requireContext(), message),
-                    Snackbar.LENGTH_LONG
+                it,
+                uiHelpers.getTextOfUiString(requireContext(), message),
+                Snackbar.LENGTH_LONG
             )
             snackbar.show()
         }
@@ -115,12 +118,12 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
 
     private fun showThreatActionDialog(holder: OpenThreatActionDialog) {
         threatActionDialog = MaterialAlertDialogBuilder(requireActivity())
-                .setTitle(uiHelpers.getTextOfUiString(requireContext(), holder.title))
-                .setMessage(uiHelpers.getTextOfUiString(requireContext(), holder.message))
-                .setPositiveButton(holder.positiveButtonLabel) { _, _ -> holder.okButtonAction.invoke() }
-                .setNegativeButton(holder.negativeButtonLabel) { _, _ -> threatActionDialog?.dismiss() }
-                .setCancelable(true)
-                .create()
+            .setTitle(uiHelpers.getTextOfUiString(requireContext(), holder.title))
+            .setMessage(uiHelpers.getTextOfUiString(requireContext(), holder.message))
+            .setPositiveButton(holder.positiveButtonLabel) { _, _ -> holder.okButtonAction.invoke() }
+            .setNegativeButton(holder.negativeButtonLabel) { _, _ -> threatActionDialog?.dismiss() }
+            .setCancelable(true)
+            .create()
         threatActionDialog?.show()
     }
 

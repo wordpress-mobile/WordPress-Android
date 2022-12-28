@@ -20,9 +20,10 @@ sealed class ReaderNavigationEvents {
         val postId: Long,
         val source: ThreadedCommentsActionSource
     ) : ReaderNavigationEvents()
+
     object ShowNoSitesToReblog : ReaderNavigationEvents()
     data class ShowSitePickerForResult(val preselectedSite: SiteModel, val post: ReaderPost, val mode: SitePickerMode) :
-            ReaderNavigationEvents()
+        ReaderNavigationEvents()
 
     data class OpenEditorForReblog(
         val site: SiteModel,
@@ -32,9 +33,12 @@ sealed class ReaderNavigationEvents {
 
     object ShowBookmarkedTab : ReaderNavigationEvents()
     class ShowBookmarkedSavedOnlyLocallyDialog(val okButtonAction: () -> Unit) : ReaderNavigationEvents() {
-        @StringRes val title: Int = R.string.reader_save_posts_locally_dialog_title
-        @StringRes val message: Int = R.string.reader_save_posts_locally_dialog_message
-        @StringRes val buttonLabel: Int = R.string.dialog_button_ok
+        @StringRes
+        val title: Int = R.string.reader_save_posts_locally_dialog_title
+        @StringRes
+        val message: Int = R.string.reader_save_posts_locally_dialog_message
+        @StringRes
+        val buttonLabel: Int = R.string.dialog_button_ok
     }
 
     data class ShowVideoViewer(val videoUrl: String) : ReaderNavigationEvents()
@@ -48,10 +52,10 @@ sealed class ReaderNavigationEvents {
     data class ShowReportUser(val url: String, val authorId: Long) : ReaderNavigationEvents()
     object ShowReaderSubs : ReaderNavigationEvents()
     data class ShowRelatedPostDetails(val postId: Long, val blogId: Long) :
-            ReaderNavigationEvents()
+        ReaderNavigationEvents()
 
     data class ReplaceRelatedPostDetailsWithHistory(val postId: Long, val blogId: Long, val isGlobal: Boolean) :
-            ReaderNavigationEvents()
+        ReaderNavigationEvents()
 
     data class ShowMediaPreview(val site: SiteModel?, val featuredImage: String) : ReaderNavigationEvents()
     data class OpenUrl(val url: String) : ReaderNavigationEvents()

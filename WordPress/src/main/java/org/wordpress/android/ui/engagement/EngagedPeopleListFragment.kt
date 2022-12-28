@@ -45,13 +45,20 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class EngagedPeopleListFragment : Fragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var resourceProvider: ResourceProvider
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var snackbarSequencer: SnackbarSequencer
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var readerTracker: ReaderTracker
-    @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var resourceProvider: ResourceProvider
+    @Inject
+    lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var snackbarSequencer: SnackbarSequencer
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var readerTracker: ReaderTracker
+    @Inject
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     private lateinit var viewModel: EngagedPeopleListViewModel
     private lateinit var userProfileViewModel: UserProfileViewModel
@@ -65,7 +72,7 @@ class EngagedPeopleListFragment : Fragment() {
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(EngagedPeopleListViewModel::class.java)
         userProfileViewModel = ViewModelProvider(this, viewModelFactory)
-                .get(USER_PROFILE_VM_KEY, UserProfileViewModel::class.java)
+            .get(USER_PROFILE_VM_KEY, UserProfileViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -142,12 +149,12 @@ class EngagedPeopleListFragment : Fragment() {
             when (event) {
                 is PreviewSiteById -> {
                     ReaderActivityLauncher.showReaderBlogPreview(
-                            this,
-                            event.siteId,
-                            // TODO: this can be true if we use this fragment for NOTE_FOLLOW_TYPE notifications
-                            false,
-                            event.source,
-                            readerTracker
+                        this,
+                        event.siteId,
+                        // TODO: this can be true if we use this fragment for NOTE_FOLLOW_TYPE notifications
+                        false,
+                        event.source,
+                        readerTracker
                     )
                 }
                 is PreviewSiteByUrl -> {
@@ -156,11 +163,11 @@ class EngagedPeopleListFragment : Fragment() {
                 }
                 is PreviewCommentInReader -> {
                     ReaderActivityLauncher.showReaderComments(
-                            this,
-                            event.siteId,
-                            event.commentPostId,
-                            event.postOrCommentId,
-                            event.source.sourceDescription
+                        this,
+                        event.siteId,
+                        event.commentPostId,
+                        event.postOrCommentId,
+                        event.source.sourceDescription
                     )
                 }
                 is PreviewPostInReader -> {
@@ -199,15 +206,15 @@ class EngagedPeopleListFragment : Fragment() {
 
             when (serviceRequest) {
                 is RequestBlogPost -> ReaderPostActions.requestBlogPost(
-                        serviceRequest.siteId,
-                        serviceRequest.postId,
-                        null
+                    serviceRequest.siteId,
+                    serviceRequest.postId,
+                    null
                 )
                 is RequestComment -> ReaderCommentService.startServiceForComment(
-                        this,
-                        serviceRequest.siteId,
-                        serviceRequest.postId,
-                        serviceRequest.commentId
+                    this,
+                    serviceRequest.siteId,
+                    serviceRequest.postId,
+                    serviceRequest.commentId
                 )
             }
         }
@@ -224,8 +231,8 @@ class EngagedPeopleListFragment : Fragment() {
 
     private fun setupAdapter(items: List<EngageItem>) {
         val adapter = recycler.adapter as? EngagedPeopleAdapter ?: EngagedPeopleAdapter(
-                imageManager,
-                resourceProvider
+            imageManager,
+            resourceProvider
         ).also {
             recycler.adapter = it
         }
@@ -237,20 +244,20 @@ class EngagedPeopleListFragment : Fragment() {
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
         snackbarSequencer.enqueue(
-                SnackbarItem(
-                        Info(
-                                view = rootView,
-                                textRes = holder.message,
-                                duration = Snackbar.LENGTH_LONG
-                        ),
-                        holder.buttonTitle?.let {
-                            Action(
-                                    textRes = holder.buttonTitle,
-                                    clickListener = { holder.buttonAction() }
-                            )
-                        },
-                        dismissCallback = { _, event -> holder.onDismissAction(event) }
-                )
+            SnackbarItem(
+                Info(
+                    view = rootView,
+                    textRes = holder.message,
+                    duration = Snackbar.LENGTH_LONG
+                ),
+                holder.buttonTitle?.let {
+                    Action(
+                        textRes = holder.buttonTitle,
+                        clickListener = { holder.buttonAction() }
+                    )
+                },
+                dismissCallback = { _, event -> holder.onDismissAction(event) }
+            )
         )
     }
 

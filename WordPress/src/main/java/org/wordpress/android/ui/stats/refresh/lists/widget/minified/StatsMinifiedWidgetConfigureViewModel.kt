@@ -25,14 +25,14 @@ class StatsMinifiedWidgetConfigureViewModel
 ) : ScopedViewModel(mainDispatcher) {
     val settingsModel: LiveData<WidgetSettingsModel> by lazy {
         merge(
-                siteSelectionViewModel.selectedSite,
-                colorSelectionViewModel.viewMode,
-                dataTypeSelectionViewModel.dataType
+            siteSelectionViewModel.selectedSite,
+            colorSelectionViewModel.viewMode,
+            dataTypeSelectionViewModel.dataType
         ) { selectedSite, viewMode, dataType ->
             WidgetSettingsModel(
-                    selectedSite?.title,
-                    viewMode ?: LIGHT,
-                    dataType ?: VIEWS
+                selectedSite?.title,
+                viewMode ?: LIGHT,
+                dataType ?: VIEWS
             )
         }
     }

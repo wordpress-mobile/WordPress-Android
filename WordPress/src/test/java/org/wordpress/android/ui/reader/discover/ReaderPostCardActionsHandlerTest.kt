@@ -87,44 +87,60 @@ private const val SOURCE = "source"
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     private lateinit var actionHandler: ReaderPostCardActionsHandler
-    @Mock private lateinit var readerTracker: ReaderTracker
-    @Mock private lateinit var reblogUseCase: ReblogUseCase
-    @Mock private lateinit var bookmarkUseCase: ReaderPostBookmarkUseCase
-    @Mock private lateinit var followUseCase: ReaderSiteFollowUseCase
-    @Mock private lateinit var blockBlogUseCase: BlockBlogUseCase
-    @Mock private lateinit var blockUserUseCase: BlockUserUseCase
-    @Mock private lateinit var likeUseCase: PostLikeUseCase
-    @Mock private lateinit var siteNotificationsUseCase: ReaderSiteNotificationsUseCase
-    @Mock private lateinit var seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase
-    @Mock private lateinit var undoBlockBlogUseCase: UndoBlockBlogUseCase
-    @Mock private lateinit var fetchSiteUseCase: ReaderFetchSiteUseCase
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock private lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
-    @Mock private lateinit var dispatcher: Dispatcher
-    @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Mock
+    private lateinit var readerTracker: ReaderTracker
+    @Mock
+    private lateinit var reblogUseCase: ReblogUseCase
+    @Mock
+    private lateinit var bookmarkUseCase: ReaderPostBookmarkUseCase
+    @Mock
+    private lateinit var followUseCase: ReaderSiteFollowUseCase
+    @Mock
+    private lateinit var blockBlogUseCase: BlockBlogUseCase
+    @Mock
+    private lateinit var blockUserUseCase: BlockUserUseCase
+    @Mock
+    private lateinit var likeUseCase: PostLikeUseCase
+    @Mock
+    private lateinit var siteNotificationsUseCase: ReaderSiteNotificationsUseCase
+    @Mock
+    private lateinit var seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase
+    @Mock
+    private lateinit var undoBlockBlogUseCase: UndoBlockBlogUseCase
+    @Mock
+    private lateinit var fetchSiteUseCase: ReaderFetchSiteUseCase
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    private lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
+    @Mock
+    private lateinit var dispatcher: Dispatcher
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+    @Mock
+    private lateinit var htmlMessageUtils: HtmlMessageUtils
 
     @Before
     fun setUp() = test {
         actionHandler = ReaderPostCardActionsHandler(
-                readerTracker,
-                reblogUseCase,
-                bookmarkUseCase,
-                followUseCase,
-                blockBlogUseCase,
-                blockUserUseCase,
-                likeUseCase,
-                siteNotificationsUseCase,
-                undoBlockBlogUseCase,
-                fetchSiteUseCase,
-                appPrefsWrapper,
-                dispatcher,
-                resourceProvider,
-                htmlMessageUtils,
-                mock(),
-                seenStatusToggleUseCase,
-                readerBlogTableWrapper,
-                testDispatcher()
+            readerTracker,
+            reblogUseCase,
+            bookmarkUseCase,
+            followUseCase,
+            blockBlogUseCase,
+            blockUserUseCase,
+            likeUseCase,
+            siteNotificationsUseCase,
+            undoBlockBlogUseCase,
+            fetchSiteUseCase,
+            appPrefsWrapper,
+            dispatcher,
+            resourceProvider,
+            htmlMessageUtils,
+            mock(),
+            seenStatusToggleUseCase,
+            readerBlogTableWrapper,
+            testDispatcher()
         )
         actionHandler.initScope(testScope())
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)
@@ -137,17 +153,17 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `shows dialog when bookmark action is successful and shouldShowDialog returns true`() = test {
         // Arrange
         whenever(bookmarkUseCase.toggleBookmark(any(), anyBoolean(), anyString()))
-                .thenReturn(flowOf(Success(true)))
+            .thenReturn(flowOf(Success(true)))
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog())
-                .thenReturn(true)
+            .thenReturn(true)
 
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                BOOKMARK,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            BOOKMARK,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -158,17 +174,17 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `doesn't shows when dialog bookmark action is successful and shouldShowDialog returns false`() = test {
         // Arrange
         whenever(bookmarkUseCase.toggleBookmark(any(), anyBoolean(), anyString()))
-                .thenReturn(flowOf(Success(true)))
+            .thenReturn(flowOf(Success(true)))
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog())
-                .thenReturn(false)
+            .thenReturn(false)
 
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                BOOKMARK,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            BOOKMARK,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -179,15 +195,15 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `shows snackbar on successful bookmark action`() = test {
         // Arrange
         whenever(bookmarkUseCase.toggleBookmark(any(), anyBoolean(), anyString()))
-                .thenReturn(flowOf(Success(true)))
+            .thenReturn(flowOf(Success(true)))
 
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                BOOKMARK,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            BOOKMARK,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -198,16 +214,16 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Doesn't show snackbar on successful bookmark action when on bookmark(saved) tab`() = test {
         // Arrange
         whenever(bookmarkUseCase.toggleBookmark(any(), anyBoolean(), anyString()))
-                .thenReturn(flowOf(Success(true)))
+            .thenReturn(flowOf(Success(true)))
 
         val observedValues = startObserving()
         val isBookmarkList = true
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                BOOKMARK,
-                isBookmarkList,
-                SOURCE
+            dummyReaderPostModel(),
+            BOOKMARK,
+            isBookmarkList,
+            SOURCE
         )
 
         // Assert
@@ -218,16 +234,16 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Doesn't show snackbar on successful UNbookmark action`() = test {
         // Arrange
         whenever(bookmarkUseCase.toggleBookmark(any(), anyBoolean(), anyString()))
-                .thenReturn(flowOf(Success(false)))
+            .thenReturn(flowOf(Success(false)))
 
         val observedValues = startObserving()
         val isBookmarkList = true
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                BOOKMARK,
-                isBookmarkList,
-                SOURCE
+            dummyReaderPostModel(),
+            BOOKMARK,
+            isBookmarkList,
+            SOURCE
         )
 
         // Assert
@@ -238,15 +254,15 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `navigates to bookmark tab on bookmark snackbar action clicked`() = test {
         // Arrange
         whenever(bookmarkUseCase.toggleBookmark(any(), anyBoolean(), anyString()))
-                .thenReturn(flowOf(Success(true)))
+            .thenReturn(flowOf(Success(true)))
 
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                BOOKMARK,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            BOOKMARK,
+            false,
+            SOURCE
         )
         observedValues.snackbarMsgs[0].buttonAction.invoke()
 
@@ -260,15 +276,15 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Emit followStatusUpdated after follow status update`() = test {
         // Arrange
         whenever(followUseCase.toggleFollow(anyOrNull(), anyString()))
-                .thenReturn(flowOf(mock<FollowStatusChanged>()))
+            .thenReturn(flowOf(mock<FollowStatusChanged>()))
         val observedValues = startObserving()
 
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                FOLLOW,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            FOLLOW,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -279,14 +295,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Fetch subscriptions after follow status update`() = test {
         // Arrange
         whenever(followUseCase.toggleFollow(anyOrNull(), anyString()))
-                .thenReturn(flowOf(mock<FollowStatusChanged>()))
+            .thenReturn(flowOf(mock<FollowStatusChanged>()))
 
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                FOLLOW,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            FOLLOW,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -297,16 +313,16 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Enable notifications snackbar shown when user follows a post`() = test {
         // Arrange
         whenever(followUseCase.toggleFollow(anyOrNull(), anyString()))
-                .thenReturn(
-                        flowOf(FollowStatusChanged(-1, -1, following = true, showEnableNotification = true))
-                )
+            .thenReturn(
+                flowOf(FollowStatusChanged(-1, -1, following = true, showEnableNotification = true))
+            )
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                FOLLOW,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            FOLLOW,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -317,23 +333,23 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Post notifications are disabled when user unfollows a post`() = test {
         // Arrange
         whenever(followUseCase.toggleFollow(anyOrNull(), anyString()))
-                .thenReturn(
-                        flowOf(
-                                FollowStatusChanged(
-                                        -1,
-                                        -1,
-                                        following = false,
-                                        deleteNotificationSubscription = true
-                                )
-                        )
+            .thenReturn(
+                flowOf(
+                    FollowStatusChanged(
+                        -1,
+                        -1,
+                        following = false,
+                        deleteNotificationSubscription = true
+                    )
                 )
+            )
 
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                FOLLOW,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            FOLLOW,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -345,14 +361,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Post notifications are enabled when user clicks on enable notifications snackbar action`() = test {
         // Arrange
         whenever(followUseCase.toggleFollow(anyOrNull(), anyString()))
-                .thenReturn(flowOf(FollowStatusChanged(-1, -1, following = true, showEnableNotification = true)))
+            .thenReturn(flowOf(FollowStatusChanged(-1, -1, following = true, showEnableNotification = true)))
         val observedValues = startObserving()
 
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                FOLLOW,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            FOLLOW,
+            false,
+            SOURCE
         )
 
         // Act
@@ -367,15 +383,15 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Error message is shown when follow action fails with NoNetwork error`() = test {
         // Arrange
         whenever(followUseCase.toggleFollow(anyOrNull(), anyString()))
-                .thenReturn(flowOf(NoNetwork))
+            .thenReturn(flowOf(NoNetwork))
         val observedValues = startObserving()
 
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                FOLLOW,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            FOLLOW,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -386,15 +402,15 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Error message is shown when follow action fails with RequestFailed error`() = test {
         // Arrange
         whenever(followUseCase.toggleFollow(anyOrNull(), anyString()))
-                .thenReturn(flowOf(RequestFailed))
+            .thenReturn(flowOf(RequestFailed))
         val observedValues = startObserving()
 
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                FOLLOW,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            FOLLOW,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -405,14 +421,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `given site present in db, when follow action is requested, follow site is triggered`() = test {
         // Arrange
         whenever(followUseCase.toggleFollow(anyOrNull(), anyString()))
-                .thenReturn(flowOf(FollowSiteState.Success))
+            .thenReturn(flowOf(FollowSiteState.Success))
 
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                FOLLOW,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            FOLLOW,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -423,18 +439,18 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `given site not present in db, when follow action is requested, fetch site is triggered`() = test {
         // Arrange
         whenever(readerBlogTableWrapper.getReaderBlog(any(), any()))
-                .thenReturn(null)
+            .thenReturn(null)
         whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
-                .thenReturn(FetchSiteState.Success)
+            .thenReturn(FetchSiteState.Success)
         whenever(followUseCase.toggleFollow(anyOrNull(), anyString()))
-                .thenReturn(flowOf(FollowSiteState.Success))
+            .thenReturn(flowOf(FollowSiteState.Success))
 
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                FOLLOW,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            FOLLOW,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -445,17 +461,17 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `given fetch site request fails, when follow action is requested, error snackbar is shown`() = test {
         // Arrange
         whenever(readerBlogTableWrapper.getReaderBlog(any(), any()))
-                .thenReturn(null)
+            .thenReturn(null)
         whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
-                .thenReturn(FetchSiteState.Failed.RequestFailed)
+            .thenReturn(FetchSiteState.Failed.RequestFailed)
         val observedValues = startObserving()
 
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                FOLLOW,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            FOLLOW,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -466,18 +482,18 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `given fetch site request succeeds, when follow action is requested, follow site is triggered`() = test {
         // Arrange
         whenever(readerBlogTableWrapper.getReaderBlog(any(), any()))
-                .thenReturn(null)
+            .thenReturn(null)
         whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
-                .thenReturn(FetchSiteState.Success)
+            .thenReturn(FetchSiteState.Success)
         whenever(followUseCase.toggleFollow(anyOrNull(), anyString()))
-                .thenReturn(flowOf(FollowSiteState.Success))
+            .thenReturn(flowOf(FollowSiteState.Success))
 
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                FOLLOW,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            FOLLOW,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -490,13 +506,13 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `ToggleNotifications when user clicks on Notifcations button`() = test {
         // Arrange
         whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
-                .thenReturn(SiteNotificationState.Success)
+            .thenReturn(SiteNotificationState.Success)
         // Act
         actionHandler.onAction(
-                mock(),
-                SITE_NOTIFICATIONS,
-                false,
-                SOURCE
+            mock(),
+            SITE_NOTIFICATIONS,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -507,15 +523,15 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Show snackbar message when toggleNotification return network error`() = test {
         // Arrange
         whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
-                .thenReturn(SiteNotificationState.Failed.NoNetwork)
+            .thenReturn(SiteNotificationState.Failed.NoNetwork)
         val observedValues = startObserving()
 
         // Act
         actionHandler.onAction(
-                mock(),
-                SITE_NOTIFICATIONS,
-                false,
-                SOURCE
+            mock(),
+            SITE_NOTIFICATIONS,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -526,15 +542,15 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Show snackbar message when toggleNotification returns request error`() = test {
         // Arrange
         whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
-                .thenReturn(SiteNotificationState.Failed.RequestFailed)
+            .thenReturn(SiteNotificationState.Failed.RequestFailed)
         val observedValues = startObserving()
 
         // Act
         actionHandler.onAction(
-                mock(),
-                SITE_NOTIFICATIONS,
-                false,
-                SOURCE
+            mock(),
+            SITE_NOTIFICATIONS,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -545,15 +561,15 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Do not Show snackbar message when toggleNotification returns alreadyRunning error`() = test {
         // Arrange
         whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
-                .thenReturn(SiteNotificationState.Failed.AlreadyRunning)
+            .thenReturn(SiteNotificationState.Failed.AlreadyRunning)
         val observedValues = startObserving()
 
         // Act
         actionHandler.onAction(
-                mock(),
-                SITE_NOTIFICATIONS,
-                false,
-                SOURCE
+            mock(),
+            SITE_NOTIFICATIONS,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -562,39 +578,39 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
 
     @Test
     fun `given site present in db, when site notifications action is requested, toggle notifications is triggered`() =
-            test {
-                // Arrange
-                whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
-                        .thenReturn(SiteNotificationState.Success)
+        test {
+            // Arrange
+            whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
+                .thenReturn(SiteNotificationState.Success)
 
-                // Act
-                actionHandler.onAction(
-                        dummyReaderPostModel(),
-                        SITE_NOTIFICATIONS,
-                        false,
-                        SOURCE
-                )
+            // Act
+            actionHandler.onAction(
+                dummyReaderPostModel(),
+                SITE_NOTIFICATIONS,
+                false,
+                SOURCE
+            )
 
-                // Assert
-                verify(siteNotificationsUseCase, times(1)).toggleNotification(any(), any())
-            }
+            // Assert
+            verify(siteNotificationsUseCase, times(1)).toggleNotification(any(), any())
+        }
 
     @Test
     fun `given site not present in db, when site notifications action is requested, fetch site is triggered`() = test {
         // Arrange
         whenever(readerBlogTableWrapper.getReaderBlog(any(), any()))
-                .thenReturn(null)
+            .thenReturn(null)
         whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
-                .thenReturn(FetchSiteState.Success)
+            .thenReturn(FetchSiteState.Success)
         whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
-                .thenReturn(SiteNotificationState.Success)
+            .thenReturn(SiteNotificationState.Success)
 
         // Act
         actionHandler.onAction(
-                dummyReaderPostModel(),
-                SITE_NOTIFICATIONS,
-                false,
-                SOURCE
+            dummyReaderPostModel(),
+            SITE_NOTIFICATIONS,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -603,48 +619,48 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
 
     @Test
     fun `given fetch site request fails, when site notifications action is requested, error snackbar is shown`() =
-            test {
-                // Arrange
-                whenever(readerBlogTableWrapper.getReaderBlog(any(), any()))
-                        .thenReturn(null)
-                whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
-                        .thenReturn(FetchSiteState.Failed.RequestFailed)
-                val observedValues = startObserving()
+        test {
+            // Arrange
+            whenever(readerBlogTableWrapper.getReaderBlog(any(), any()))
+                .thenReturn(null)
+            whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
+                .thenReturn(FetchSiteState.Failed.RequestFailed)
+            val observedValues = startObserving()
 
-                // Act
-                actionHandler.onAction(
-                        dummyReaderPostModel(),
-                        SITE_NOTIFICATIONS,
-                        false,
-                        SOURCE
-                )
+            // Act
+            actionHandler.onAction(
+                dummyReaderPostModel(),
+                SITE_NOTIFICATIONS,
+                false,
+                SOURCE
+            )
 
-                // Assert
-                assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
-            }
+            // Assert
+            assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
+        }
 
     @Test
     fun `given fetch site request succeeds, when site notifications is requested, toggle notifications is triggered`() =
-            test {
-                // Arrange
-                whenever(readerBlogTableWrapper.getReaderBlog(any(), any()))
-                        .thenReturn(null)
-                whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
-                        .thenReturn(FetchSiteState.Success)
-                whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
-                        .thenReturn(SiteNotificationState.Success)
+        test {
+            // Arrange
+            whenever(readerBlogTableWrapper.getReaderBlog(any(), any()))
+                .thenReturn(null)
+            whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
+                .thenReturn(FetchSiteState.Success)
+            whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
+                .thenReturn(SiteNotificationState.Success)
 
-                // Act
-                actionHandler.onAction(
-                        dummyReaderPostModel(),
-                        SITE_NOTIFICATIONS,
-                        false,
-                        SOURCE
-                )
+            // Act
+            actionHandler.onAction(
+                dummyReaderPostModel(),
+                SITE_NOTIFICATIONS,
+                false,
+                SOURCE
+            )
 
-                // Assert
-                verify(siteNotificationsUseCase, times(1)).toggleNotification(any(), any())
-            }
+            // Assert
+            verify(siteNotificationsUseCase, times(1)).toggleNotification(any(), any())
+        }
     /** SITE NOTIFICATIONS ACTION end **/
 
     /** SHARE ACTION Begin **/
@@ -654,10 +670,10 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                SHARE,
-                false,
-                SOURCE
+            mock(),
+            SHARE,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -672,10 +688,10 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                VISIT_SITE,
-                false,
-                SOURCE
+            mock(),
+            VISIT_SITE,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -688,14 +704,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Posts are refreshed when site blocked in local db`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(anyLong(), anyLong()))
-                .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                BLOCK_SITE,
-                false,
-                SOURCE
+            mock(),
+            BLOCK_SITE,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -706,14 +722,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Snackbar shown when site blocked in local db`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(anyLong(), anyLong()))
-                .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                BLOCK_SITE,
-                false,
-                SOURCE
+            mock(),
+            BLOCK_SITE,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -724,14 +740,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Snackbar shown when request to block site failes with no network error`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(anyLong(), anyLong()))
-                .thenReturn(flowOf(Failed.NoNetwork))
+            .thenReturn(flowOf(Failed.NoNetwork))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                BLOCK_SITE,
-                false,
-                SOURCE
+            mock(),
+            BLOCK_SITE,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -742,14 +758,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Posts are refreshed when request to block site failes with request failed error`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(anyLong(), anyLong()))
-                .thenReturn(flowOf(Failed.RequestFailed))
+            .thenReturn(flowOf(Failed.RequestFailed))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                BLOCK_SITE,
-                false,
-                SOURCE
+            mock(),
+            BLOCK_SITE,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -760,14 +776,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Snackbar shown when request to block site failes with request failed error`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(anyLong(), anyLong()))
-                .thenReturn(flowOf(Failed.RequestFailed))
+            .thenReturn(flowOf(Failed.RequestFailed))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                BLOCK_SITE,
-                false,
-                SOURCE
+            mock(),
+            BLOCK_SITE,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -778,13 +794,13 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Undo action is invoked when user clicks on undo action in snackbar`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(anyLong(), anyLong()))
-                .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
         val observedValues = startObserving()
         actionHandler.onAction(
-                mock(),
-                BLOCK_SITE,
-                false,
-                SOURCE
+            mock(),
+            BLOCK_SITE,
+            false,
+            SOURCE
         )
         // Act
         observedValues.snackbarMsgs[0].buttonAction.invoke()
@@ -796,13 +812,13 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Post refreshed when user clicks on undo action in snackbar`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(anyLong(), anyLong()))
-                .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
         val observedValues = startObserving()
         actionHandler.onAction(
-                mock(),
-                BLOCK_SITE,
-                false,
-                SOURCE
+            mock(),
+            BLOCK_SITE,
+            false,
+            SOURCE
         )
         // Act
         observedValues.snackbarMsgs[0].buttonAction.invoke()
@@ -816,14 +832,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Posts are refreshed when user blocked in local db`() = test {
         // Arrange
         whenever(blockUserUseCase.blockUser(anyLong(), anyLong()))
-                .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                BLOCK_USER,
-                false,
-                SOURCE
+            mock(),
+            BLOCK_USER,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -834,14 +850,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Snackbar shown when user blocked in local db`() = test {
         // Arrange
         whenever(blockUserUseCase.blockUser(anyLong(), anyLong()))
-                .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                BLOCK_USER,
-                false,
-                SOURCE
+            mock(),
+            BLOCK_USER,
+            false,
+            SOURCE
         )
 
         // Assert
@@ -852,13 +868,13 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Undo action is invoked when user clicks on undo block user action in snackbar`() = test {
         // Arrange
         whenever(blockUserUseCase.blockUser(anyLong(), anyLong()))
-                .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
         val observedValues = startObserving()
         actionHandler.onAction(
-                mock(),
-                BLOCK_USER,
-                false,
-                SOURCE
+            mock(),
+            BLOCK_USER,
+            false,
+            SOURCE
         )
         // Act
         observedValues.snackbarMsgs[0].buttonAction.invoke()
@@ -870,13 +886,13 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Post refreshed when user clicks on undo block user action in snackbar`() = test {
         // Arrange
         whenever(blockUserUseCase.blockUser(anyLong(), anyLong()))
-                .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
         val observedValues = startObserving()
         actionHandler.onAction(
-                mock(),
-                BLOCK_USER,
-                false,
-                SOURCE
+            mock(),
+            BLOCK_USER,
+            false,
+            SOURCE
         )
         // Act
         observedValues.snackbarMsgs[0].buttonAction.invoke()
@@ -890,13 +906,13 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Like action is initiated when user clicks on like button`() = test {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
-                .thenReturn(flowOf())
+            .thenReturn(flowOf())
         // Act
         actionHandler.onAction(
-                mock(),
-                LIKE,
-                false,
-                SOURCE
+            mock(),
+            LIKE,
+            false,
+            SOURCE
         )
         // Assert
         verify(likeUseCase).perform(anyOrNull(), anyBoolean(), anyString())
@@ -906,15 +922,15 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Like use cases is initiated with like action when the post is not liked by the current user`() = test {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
-                .thenReturn(flowOf())
+            .thenReturn(flowOf())
         val isLiked = false
         val post = ReaderPost().apply { isLikedByCurrentUser = isLiked }
         // Act
         actionHandler.onAction(
-                post,
-                LIKE,
-                false,
-                SOURCE
+            post,
+            LIKE,
+            false,
+            SOURCE
         )
         // Assert
         verify(likeUseCase).perform(anyOrNull(), eq(!isLiked), anyString())
@@ -924,15 +940,15 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Like use cases is initiated with unlike action when the post is not liked by the current user`() = test {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
-                .thenReturn(flowOf())
+            .thenReturn(flowOf())
         val isLiked = true
         val post = ReaderPost().apply { isLikedByCurrentUser = isLiked }
         // Act
         actionHandler.onAction(
-                post,
-                LIKE,
-                false,
-                SOURCE
+            post,
+            LIKE,
+            false,
+            SOURCE
         )
         // Assert
         verify(likeUseCase).perform(anyOrNull(), eq(!isLiked), anyString())
@@ -942,14 +958,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Posts are refreshed when user likes a post`() = test {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
-                .thenReturn(flowOf(PostLikedInLocalDb))
+            .thenReturn(flowOf(PostLikedInLocalDb))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                LIKE,
-                false,
-                SOURCE
+            mock(),
+            LIKE,
+            false,
+            SOURCE
         )
         // Assert
         assertThat(observedValues.refreshPosts.size).isEqualTo(1)
@@ -959,14 +975,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Posts are refreshed when like action fails with RequestFailed error`() = test {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
-                .thenReturn(flowOf(PostLikeState.Failed.RequestFailed))
+            .thenReturn(flowOf(PostLikeState.Failed.RequestFailed))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                LIKE,
-                false,
-                SOURCE
+            mock(),
+            LIKE,
+            false,
+            SOURCE
         )
         // Assert
         assertThat(observedValues.refreshPosts.size).isEqualTo(1)
@@ -976,14 +992,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Snackbar shown when like action fails with no network error`() = test {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
-                .thenReturn(flowOf(PostLikeState.Failed.NoNetwork))
+            .thenReturn(flowOf(PostLikeState.Failed.NoNetwork))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                LIKE,
-                false,
-                SOURCE
+            mock(),
+            LIKE,
+            false,
+            SOURCE
         )
         // Assert
         assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
@@ -993,14 +1009,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Snackbar shown when like action fails with no RequestFailed error`() = test {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
-                .thenReturn(flowOf(PostLikeState.Failed.RequestFailed))
+            .thenReturn(flowOf(PostLikeState.Failed.RequestFailed))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                LIKE,
-                false,
-                SOURCE
+            mock(),
+            LIKE,
+            false,
+            SOURCE
         )
         // Assert
         assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
@@ -1010,14 +1026,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Nothing happens when like action succeeds`() = test {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
-                .thenReturn(flowOf(PostLikeState.Success))
+            .thenReturn(flowOf(PostLikeState.Success))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                LIKE,
-                false,
-                SOURCE
+            mock(),
+            LIKE,
+            false,
+            SOURCE
         )
         // Assert
         assertThat(observedValues.snackbarMsgs).isEmpty()
@@ -1031,14 +1047,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Nothing happens when like action results in Unchanged state`() = test {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
-                .thenReturn(flowOf(PostLikeState.Unchanged))
+            .thenReturn(flowOf(PostLikeState.Unchanged))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                LIKE,
-                false,
-                SOURCE
+            mock(),
+            LIKE,
+            false,
+            SOURCE
         )
         // Assert
         assertThat(observedValues.snackbarMsgs).isEmpty()
@@ -1052,14 +1068,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Nothing happens when like action results in AlreadyRunning`() = test {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
-                .thenReturn(flowOf(PostLikeState.AlreadyRunning))
+            .thenReturn(flowOf(PostLikeState.AlreadyRunning))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                LIKE,
-                false,
-                SOURCE
+            mock(),
+            LIKE,
+            false,
+            SOURCE
         )
         // Assert
         assertThat(observedValues.snackbarMsgs).isEmpty()
@@ -1076,15 +1092,15 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Reblog action is initiated when user clicks on reblog button`() = test {
         // Arrange
         whenever(reblogUseCase.onReblogButtonClicked(anyOrNull()))
-                .thenReturn(mock())
+            .thenReturn(mock())
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull()))
-                .thenReturn(mock())
+            .thenReturn(mock())
         // Act
         actionHandler.onAction(
-                mock(),
-                REBLOG,
-                false,
-                SOURCE
+            mock(),
+            REBLOG,
+            false,
+            SOURCE
         )
         // Assert
         verify(reblogUseCase).onReblogButtonClicked(anyOrNull())
@@ -1094,16 +1110,16 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Show NoSitesToReblog screen when user does not have any sites attached`() = test {
         // Arrange
         whenever(reblogUseCase.onReblogButtonClicked(anyOrNull()))
-                .thenReturn(NoSite)
+            .thenReturn(NoSite)
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull()))
-                .thenCallRealMethod()
+            .thenCallRealMethod()
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                REBLOG,
-                false,
-                SOURCE
+            mock(),
+            REBLOG,
+            false,
+            SOURCE
         )
         // Assert
         assertThat(observedValues.navigation[0]).isInstanceOf(ShowNoSitesToReblog::class.java)
@@ -1113,16 +1129,16 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Show SitePicker when user has multiple sites attached`() = test {
         // Arrange
         whenever(reblogUseCase.onReblogButtonClicked(anyOrNull()))
-                .thenReturn(MultipleSites(mock(), mock()))
+            .thenReturn(MultipleSites(mock(), mock()))
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull()))
-                .thenCallRealMethod()
+            .thenCallRealMethod()
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                REBLOG,
-                false,
-                SOURCE
+            mock(),
+            REBLOG,
+            false,
+            SOURCE
         )
         // Assert
         assertThat(observedValues.navigation[0]).isInstanceOf(ShowSitePickerForResult::class.java)
@@ -1132,16 +1148,16 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Show Editor when user has a single site attached or they selected a site they want to reblog to`() = test {
         // Arrange
         whenever(reblogUseCase.onReblogButtonClicked(anyOrNull()))
-                .thenReturn(SingleSite(mock(), mock()))
+            .thenReturn(SingleSite(mock(), mock()))
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull()))
-                .thenCallRealMethod()
+            .thenCallRealMethod()
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                REBLOG,
-                false,
-                SOURCE
+            mock(),
+            REBLOG,
+            false,
+            SOURCE
         )
         // Assert
         assertThat(observedValues.navigation[0]).isInstanceOf(OpenEditorForReblog::class.java)
@@ -1151,16 +1167,16 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Show snackbar when an error occurs`() = test {
         // Arrange
         whenever(reblogUseCase.onReblogButtonClicked(anyOrNull()))
-                .thenReturn(Unknown)
+            .thenReturn(Unknown)
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull()))
-                .thenCallRealMethod()
+            .thenCallRealMethod()
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                REBLOG,
-                false,
-                SOURCE
+            mock(),
+            REBLOG,
+            false,
+            SOURCE
         )
         // Assert
         assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
@@ -1174,10 +1190,10 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
-                mock(),
-                COMMENTS,
-                false,
-                SOURCE
+            mock(),
+            COMMENTS,
+            false,
+            SOURCE
         )
         // Assert
         assertThat(observedValues.navigation[0]).isInstanceOf(ShowReaderComments::class.java)

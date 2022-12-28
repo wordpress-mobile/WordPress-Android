@@ -41,9 +41,9 @@ class ActionableEmptyView : LinearLayout {
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
-            context,
-            attrs,
-            defStyle
+        context,
+        attrs,
+        defStyle
     ) {
         initView(context, attrs)
     }
@@ -65,19 +65,19 @@ class ActionableEmptyView : LinearLayout {
 
         attrs.let {
             val typedArray = context.obtainStyledAttributes(
-                    it,
-                    R.styleable.ActionableEmptyView,
-                    0,
-                    0
+                it,
+                R.styleable.ActionableEmptyView,
+                0,
+                0
             )
 
             val imageResource = typedArray.getResourceId(
-                    R.styleable.ActionableEmptyView_aevImage,
-                    0
+                R.styleable.ActionableEmptyView_aevImage,
+                0
             )
             val hideImageInLandscape = typedArray.getBoolean(
-                    R.styleable.ActionableEmptyView_aevImageHiddenInLandscape,
-                    false
+                R.styleable.ActionableEmptyView_aevImageHiddenInLandscape,
+                false
             )
             val titleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevTitle)
             val subtitleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevSubtitle)
@@ -126,10 +126,10 @@ class ActionableEmptyView : LinearLayout {
             params.height = MarginLayoutParams.WRAP_CONTENT
 
             layout.setPadding(
-                    0,
-                    context.resources.getDimensionPixelSize(R.dimen.margin_extra_extra_large),
-                    0,
-                    0
+                0,
+                context.resources.getDimensionPixelSize(R.dimen.margin_extra_extra_large),
+                0,
+                0
             )
 
             image.visibility = View.GONE

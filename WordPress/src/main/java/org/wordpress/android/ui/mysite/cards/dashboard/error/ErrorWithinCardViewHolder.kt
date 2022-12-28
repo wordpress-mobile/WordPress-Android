@@ -13,7 +13,7 @@ class ErrorWithinCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
 ) : CardViewHolder<MySiteErrorWithinCardBinding>(
-        parent.viewBinding(MySiteErrorWithinCardBinding::inflate)
+    parent.viewBinding(MySiteErrorWithinCardBinding::inflate)
 ) {
     fun bind(card: ErrorWithinCard) = with(binding) {
         mySiteToolbar.update(card.title)

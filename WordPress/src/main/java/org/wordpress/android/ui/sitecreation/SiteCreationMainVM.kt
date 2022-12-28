@@ -10,10 +10,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
@@ -86,10 +86,10 @@ class SiteCreationMainVM @Inject constructor(
 
     val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
         SingleEventObservable(
-                Transformations.map(wizardManager.navigatorLiveData) {
-                    clearOldSiteCreationState(it)
-                    WizardNavigationTarget(it, siteCreationState)
-                }
+            Transformations.map(wizardManager.navigatorLiveData) {
+                clearOldSiteCreationState(it)
+                WizardNavigationTarget(it, siteCreationState)
+            }
         )
     }
 
@@ -113,9 +113,9 @@ class SiteCreationMainVM @Inject constructor(
         if (savedInstanceState == null) {
             tracker.trackSiteCreationAccessed(siteCreationSource)
             siteCreationState = SiteCreationState()
-            if(jetpackFeatureRemovalOverlayUtil.shouldShowSiteCreationOverlay())
+            if (jetpackFeatureRemovalOverlayUtil.shouldShowSiteCreationOverlay())
                 showJetpackOverlay()
-            if(jetpackFeatureRemovalOverlayUtil.shouldDisableSiteCreation())
+            if (jetpackFeatureRemovalOverlayUtil.shouldDisableSiteCreation())
                 siteCreationDisabled = true
             else
                 showSiteCreationNextStep()
@@ -198,11 +198,11 @@ class SiteCreationMainVM @Inject constructor(
                 exitFlow(false)
             } else {
                 _dialogAction.value = DialogHolder(
-                        tag = TAG_WARNING_DIALOG,
-                        title = null,
-                        message = UiStringRes(R.string.new_site_creation_preview_back_pressed_warning),
-                        positiveButton = UiStringRes(R.string.exit),
-                        negativeButton = UiStringRes(R.string.cancel)
+                    tag = TAG_WARNING_DIALOG,
+                    title = null,
+                    message = UiStringRes(R.string.new_site_creation_preview_back_pressed_warning),
+                    positiveButton = UiStringRes(R.string.exit),
+                    negativeButton = UiStringRes(R.string.cancel)
                 )
             }
         } else {
@@ -240,9 +240,9 @@ class SiteCreationMainVM @Inject constructor(
             lastStep -> ScreenTitleEmpty
             singleInBetweenStepDomains -> ScreenTitleGeneral(R.string.new_site_creation_domain_header_title)
             else -> ScreenTitleStepCount(
-                    R.string.new_site_creation_screen_title_step_count,
-                    stepCount - 2, // -2 -> first = general title (Create Site), last item = empty title
-                    stepPosition - 1 // -1 -> first item has general title - Create Site
+                R.string.new_site_creation_screen_title_step_count,
+                stepCount - 2, // -2 -> first = general title (Create Site), last item = empty title
+                stepPosition - 1 // -1 -> first item has general title - Create Site
             )
         }
     }
@@ -285,10 +285,10 @@ class SiteCreationMainVM @Inject constructor(
 
     sealed class SiteCreationScreenTitle {
         data class ScreenTitleStepCount(@StringRes val resId: Int, val stepsCount: Int, val stepPosition: Int) :
-                SiteCreationScreenTitle()
+            SiteCreationScreenTitle()
 
         data class ScreenTitleGeneral(@StringRes val resId: Int) :
-                SiteCreationScreenTitle()
+            SiteCreationScreenTitle()
 
         object ScreenTitleEmpty : SiteCreationScreenTitle() {
             const val screenTitle = ""

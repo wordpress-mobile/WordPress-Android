@@ -17,13 +17,15 @@ import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class StatsWidgetColorSelectionDialogFragment : AppCompatDialogFragment() {
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsColorSelectionViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(StatsColorSelectionViewModel::class.java)
+            .get(StatsColorSelectionViewModel::class.java)
         val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity())
         val view = requireActivity().layoutInflater.inflate(R.layout.stats_color_selector, null) as RadioGroup
         view.setOnCheckedChangeListener { _, checkedId ->

@@ -12,8 +12,8 @@ class JetpackProgressViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : JetpackViewHolder<JetpackListProgressItemBinding>(
-        parent,
-        JetpackListProgressItemBinding::inflate
+    parent,
+    JetpackListProgressItemBinding::inflate
 ) {
     override fun onBind(itemUiState: JetpackListItemState) = with(binding) {
         val state = itemUiState as ProgressState

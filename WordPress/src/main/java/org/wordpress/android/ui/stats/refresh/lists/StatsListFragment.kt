@@ -33,10 +33,14 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var statsDateFormatter: StatsDateFormatter
-    @Inject lateinit var navigator: StatsNavigator
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var statsDateFormatter: StatsDateFormatter
+    @Inject
+    lateinit var navigator: StatsNavigator
     private lateinit var viewModel: StatsListViewModel
     private lateinit var statsSection: StatsSection
 
@@ -61,8 +65,8 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         super.onCreate(savedInstanceState)
 
         statsSection = arguments?.getSerializable(LIST_TYPE) as? StatsSection
-                ?: activity?.intent?.getSerializableExtra(LIST_TYPE) as? StatsSection
-                ?: StatsSection.INSIGHTS
+            ?: activity?.intent?.getSerializableExtra(LIST_TYPE) as? StatsSection
+                    ?: StatsSection.INSIGHTS
 
         setHasOptionsMenu(statsSection == StatsSection.INSIGHTS)
         (requireActivity().application as WordPress).component().inject(this)
@@ -107,14 +111,14 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         this@StatsListFragment.layoutManager = layoutManager
         recyclerView.layoutManager = this@StatsListFragment.layoutManager
         recyclerView.addItemDecoration(
-                StatsListItemDecoration(
-                        resources.getDimensionPixelSize(R.dimen.stats_list_card_horizontal_spacing),
-                        resources.getDimensionPixelSize(R.dimen.stats_list_card_top_spacing),
-                        resources.getDimensionPixelSize(R.dimen.stats_list_card_bottom_spacing),
-                        resources.getDimensionPixelSize(R.dimen.stats_list_card_first_spacing),
-                        resources.getDimensionPixelSize(R.dimen.stats_list_card_last_spacing),
-                        columns
-                )
+            StatsListItemDecoration(
+                resources.getDimensionPixelSize(R.dimen.stats_list_card_horizontal_spacing),
+                resources.getDimensionPixelSize(R.dimen.stats_list_card_top_spacing),
+                resources.getDimensionPixelSize(R.dimen.stats_list_card_bottom_spacing),
+                resources.getDimensionPixelSize(R.dimen.stats_list_card_first_spacing),
+                resources.getDimensionPixelSize(R.dimen.stats_list_card_last_spacing),
+                columns
+            )
         )
 
         emptyView.statsEmptyView.button.setOnClickListener {

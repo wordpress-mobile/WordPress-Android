@@ -15,8 +15,8 @@ class JetpackBackupRestoreFootnoteViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : JetpackViewHolder<JetpackBackupRestoreListFootnoteItemBinding>(
-        parent,
-        JetpackBackupRestoreListFootnoteItemBinding::inflate
+    parent,
+    JetpackBackupRestoreListFootnoteItemBinding::inflate
 ) {
     init {
         with(binding.footnote) {
@@ -51,9 +51,9 @@ class JetpackBackupRestoreFootnoteViewHolder(
                     imageManager.load(icon, it)
                 } else {
                     ColorUtils.setImageResourceWithTint(
-                            icon,
-                            it,
-                            state.iconColorResId
+                        icon,
+                        it,
+                        state.iconColorResId
                     )
                 }
                 icon.visibility = if (state.isVisible) View.VISIBLE else View.GONE

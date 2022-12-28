@@ -49,28 +49,28 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     private val saveFirstBloggingPromptsOnboardingUseCase: SaveFirstBloggingPromptsOnboardingUseCase = mock()
 
     private val bloggingPrompt = BloggingPromptsResult(
-            model = BloggingPromptModel(
-                    id = 123,
-                    text = "title",
-                    title = "",
-                    content = "content",
-                    date = Date(),
-                    isAnswered = false,
-                    attribution = "",
-                    respondentsCount = 5,
-                    respondentsAvatarUrls = listOf()
-            )
+        model = BloggingPromptModel(
+            id = 123,
+            text = "title",
+            title = "",
+            content = "content",
+            date = Date(),
+            isAnswered = false,
+            attribution = "",
+            respondentsCount = 5,
+            respondentsAvatarUrls = listOf()
+        )
     )
 
     private var classToTest = BloggingPromptsOnboardingViewModel(
-            siteStore,
-            uiStateMapper,
-            selectedSiteRepository,
-            bloggingPromptsStore,
-            analyticsTracker,
-            testDispatcher(),
-            getIsFirstBloggingPromptsOnboardingUseCase,
-            saveFirstBloggingPromptsOnboardingUseCase
+        siteStore,
+        uiStateMapper,
+        selectedSiteRepository,
+        bloggingPromptsStore,
+        analyticsTracker,
+        testDispatcher(),
+        getIsFirstBloggingPromptsOnboardingUseCase,
+        saveFirstBloggingPromptsOnboardingUseCase
     )
     private val actionObserver: Observer<BloggingPromptsOnboardingAction> = mock()
     private val snackbarObserver: Observer<Event<SnackbarMessageHolder>> = mock()
@@ -110,17 +110,17 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
 
     @Test
     fun `Should trigger OpenSitePicker if Remind Me is clicked, user has more than 1 site and is first onboarding`() =
-            test {
-                val selectedSiteModel = SiteModel()
-                whenever(selectedSiteRepository.getSelectedSite()).thenReturn(selectedSiteModel)
-                whenever(siteStore.sitesCount).thenReturn(2)
-                whenever(getIsFirstBloggingPromptsOnboardingUseCase.execute()).thenReturn(true)
-                classToTest.start(ONBOARDING)
-                val startState = viewStates[0]
-                (startState as Ready).onPrimaryButtonClick()
-                startState.onSecondaryButtonClick()
-                verify(actionObserver).onChanged(OpenSitePicker(selectedSiteModel))
-            }
+        test {
+            val selectedSiteModel = SiteModel()
+            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(selectedSiteModel)
+            whenever(siteStore.sitesCount).thenReturn(2)
+            whenever(getIsFirstBloggingPromptsOnboardingUseCase.execute()).thenReturn(true)
+            classToTest.start(ONBOARDING)
+            val startState = viewStates[0]
+            (startState as Ready).onPrimaryButtonClick()
+            startState.onSecondaryButtonClick()
+            verify(actionObserver).onChanged(OpenSitePicker(selectedSiteModel))
+        }
 
     @Test
     fun `Should trigger OpenRemindersIntro if Remind Me is clicked and user has only 1 site`() = test {

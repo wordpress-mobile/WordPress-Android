@@ -27,18 +27,21 @@ private const val SITE_ID = 1L
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class JetpackCapabilitiesUseCaseTest : BaseUnitTest() {
-    @Mock private lateinit var dispatcher: Dispatcher
-    @Mock private lateinit var store: SiteStore
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    private lateinit var dispatcher: Dispatcher
+    @Mock
+    private lateinit var store: SiteStore
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var useCase: JetpackCapabilitiesUseCase
     private lateinit var event: OnJetpackCapabilitiesFetched
 
     @Before
     fun setUp() {
         useCase = JetpackCapabilitiesUseCase(
-                store,
-                dispatcher,
-                appPrefsWrapper
+            store,
+            dispatcher,
+            appPrefsWrapper
         )
         event = buildCapabilitiesFetchedEvent(listOf(BACKUP_REALTIME))
     }
@@ -152,5 +155,5 @@ class JetpackCapabilitiesUseCaseTest : BaseUnitTest() {
     }
 
     private fun buildCapabilitiesFetchedEvent(capabilities: List<JetpackCapability>) =
-            OnJetpackCapabilitiesFetched(SITE_ID, capabilities, null)
+        OnJetpackCapabilitiesFetched(SITE_ID, capabilities, null)
 }

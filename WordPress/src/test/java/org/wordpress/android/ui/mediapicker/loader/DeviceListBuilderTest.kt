@@ -22,13 +22,20 @@ import org.wordpress.android.util.UriWrapper
 
 @ExperimentalCoroutinesApi
 class DeviceListBuilderTest : BaseUnitTest() {
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var deviceMediaLoader: DeviceMediaLoader
-    @Mock lateinit var mediaUtilsWrapper: MediaUtilsWrapper
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var uri1: UriWrapper
-    @Mock lateinit var uri2: UriWrapper
-    @Mock lateinit var uri3: UriWrapper
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    lateinit var deviceMediaLoader: DeviceMediaLoader
+    @Mock
+    lateinit var mediaUtilsWrapper: MediaUtilsWrapper
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var uri1: UriWrapper
+    @Mock
+    lateinit var uri2: UriWrapper
+    @Mock
+    lateinit var uri3: UriWrapper
     private lateinit var deviceListBuilder: DeviceListBuilder
     private lateinit var newestItem: DeviceMediaItem
     private lateinit var middleItem: DeviceMediaItem
@@ -295,25 +302,25 @@ class DeviceListBuilderTest : BaseUnitTest() {
 
     private fun setupMedia(type: MediaType, nextTimestamp: Long?, results: DeviceMediaList) {
         whenever(deviceMediaLoader.loadMedia(type, null, pageSize, nextTimestamp)).thenReturn(
-                results
+            results
         )
     }
 
     private fun setupDocuments(nextTimestamp: Long?, results: DeviceMediaList) {
         whenever(deviceMediaLoader.loadDocuments(null, pageSize, nextTimestamp)).thenReturn(
-                results
+            results
         )
     }
 
     private fun setUp(allowedTypes: Set<MediaType>) {
         deviceListBuilder = DeviceListBuilder(
-                localeManagerWrapper,
-                deviceMediaLoader,
-                mediaUtilsWrapper,
-                site,
-                testDispatcher(),
-                allowedTypes,
-                pageSize
+            localeManagerWrapper,
+            deviceMediaLoader,
+            mediaUtilsWrapper,
+            site,
+            testDispatcher(),
+            allowedTypes,
+            pageSize
         )
     }
 

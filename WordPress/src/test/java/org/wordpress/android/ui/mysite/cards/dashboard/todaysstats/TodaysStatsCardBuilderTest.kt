@@ -34,22 +34,25 @@ private const val TODAYS_STATS_VISITORS_FORMATTED_STRING = "1,000"
 private const val TODAYS_STATS_LIKES_FORMATTED_STRING = "100"
 
 private const val GET_MORE_VIEWS_MSG_WITH_CLICKABLE_LINK =
-        "If you want to try get more views and traffic check out our " +
-                "<a href=\"${URL_GET_MORE_VIEWS_AND_TRAFFIC}\">top tips</a>."
+    "If you want to try get more views and traffic check out our " +
+            "<a href=\"${URL_GET_MORE_VIEWS_AND_TRAFFIC}\">top tips</a>."
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class TodaysStatsCardBuilderTest : BaseUnitTest() {
-    @Mock private lateinit var statsUtils: StatsUtils
-    @Mock private lateinit var appLogWrapper: AppLogWrapper
-    @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Mock
+    private lateinit var statsUtils: StatsUtils
+    @Mock
+    private lateinit var appLogWrapper: AppLogWrapper
+    @Mock
+    private lateinit var htmlMessageUtils: HtmlMessageUtils
 
     private lateinit var builder: TodaysStatsCardBuilder
     private val todaysStatsCardModel = TodaysStatsCardModel(
-            views = TODAYS_STATS_VIEWS,
-            visitors = TODAYS_STATS_VISITORS,
-            likes = TODAYS_STATS_LIKES,
-            comments = TODAYS_STATS_COMMENTS
+        views = TODAYS_STATS_VIEWS,
+        visitors = TODAYS_STATS_VISITORS,
+        likes = TODAYS_STATS_LIKES,
+        comments = TODAYS_STATS_COMMENTS
     )
 
     @Before
@@ -69,7 +72,7 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
     @Test
     fun `given jetpack disconnected error, when card is built, then card not exists`() {
         val todaysStatsCardModel = TodaysStatsCardModel(
-                error = TodaysStatsCardError(TodaysStatsCardErrorType.JETPACK_DISCONNECTED)
+            error = TodaysStatsCardError(TodaysStatsCardErrorType.JETPACK_DISCONNECTED)
         )
 
         val todaysStatsCard = buildTodaysStatsCard(todaysStatsCardModel)
@@ -80,7 +83,7 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
     @Test
     fun `given jetpack disabled error, when card is built, then card not exists`() {
         val todaysStatsCardModel = TodaysStatsCardModel(
-                error = TodaysStatsCardError(TodaysStatsCardErrorType.JETPACK_DISABLED)
+            error = TodaysStatsCardError(TodaysStatsCardErrorType.JETPACK_DISABLED)
         )
 
         val todaysStatsCard = buildTodaysStatsCard(todaysStatsCardModel)
@@ -91,7 +94,7 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
     @Test
     fun `given today's stats unauth error, when card is built, then card not exists`() {
         val todaysStatsCardModel = TodaysStatsCardModel(
-                error = TodaysStatsCardError(TodaysStatsCardErrorType.UNAUTHORIZED)
+            error = TodaysStatsCardError(TodaysStatsCardErrorType.UNAUTHORIZED)
         )
 
         val todaysStatsCard = buildTodaysStatsCard(todaysStatsCardModel)
@@ -102,7 +105,7 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
     @Test
     fun `given today's stats generic error, when card is built, then error card exists`() {
         val todaysStatsCardModel = TodaysStatsCardModel(
-                error = TodaysStatsCardError(TodaysStatsCardErrorType.GENERIC_ERROR)
+            error = TodaysStatsCardError(TodaysStatsCardErrorType.GENERIC_ERROR)
         )
 
         val todaysStatsCard = buildTodaysStatsCard(todaysStatsCardModel)
@@ -139,15 +142,15 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
         whenever(statsUtils.toFormattedString(zeroCount)).thenReturn("$zeroCount")
 
         val todaysStatsCard = buildTodaysStatsCard(
-                TodaysStatsCardModel(
-                        views = zeroCount,
-                        visitors = zeroCount,
-                        likes = zeroCount
-                )
+            TodaysStatsCardModel(
+                views = zeroCount,
+                visitors = zeroCount,
+                likes = zeroCount
+            )
         )
 
         assertThat((todaysStatsCard as TodaysStatsCardWithData).message?.text)
-                .isEqualTo(UiStringText(GET_MORE_VIEWS_MSG_WITH_CLICKABLE_LINK))
+            .isEqualTo(UiStringText(GET_MORE_VIEWS_MSG_WITH_CLICKABLE_LINK))
     }
 
     @Test
@@ -159,18 +162,18 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
 
     private fun buildTodaysStatsCard(todaysStatsCardModel: TodaysStatsCardModel?): TodaysStatsCard? {
         whenever(
-                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                        R.string.my_site_todays_stats_get_more_views_message,
-                        URL_GET_MORE_VIEWS_AND_TRAFFIC
-                )
+            htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                R.string.my_site_todays_stats_get_more_views_message,
+                URL_GET_MORE_VIEWS_AND_TRAFFIC
+            )
         ).thenReturn(GET_MORE_VIEWS_MSG_WITH_CLICKABLE_LINK)
         return builder.build(
-                TodaysStatsCardBuilderParams(
-                        todaysStatsCardModel,
-                        onTodaysStatsCardClick,
-                        onGetMoreViewsClick,
-                        onTodaysStatsCardFooterLinkClick
-                )
+            TodaysStatsCardBuilderParams(
+                todaysStatsCardModel,
+                onTodaysStatsCardClick,
+                onGetMoreViewsClick,
+                onTodaysStatsCardFooterLinkClick
+            )
         )
     }
 
@@ -179,13 +182,13 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
     private val onTodaysStatsCardClick: () -> Unit = { }
 
     private val todaysStatsCard = TodaysStatsCardWithData(
-            views = UiStringText(TODAYS_STATS_VIEWS_FORMATTED_STRING),
-            visitors = UiStringText(TODAYS_STATS_VISITORS_FORMATTED_STRING),
-            likes = UiStringText(TODAYS_STATS_LIKES_FORMATTED_STRING),
-            onCardClick = onTodaysStatsCardClick,
-            footerLink = FooterLink(
-                    label = UiStringRes(R.string.my_site_todays_stats_card_footer_link_go_to_stats),
-                    onClick = onTodaysStatsCardFooterLinkClick
-            )
+        views = UiStringText(TODAYS_STATS_VIEWS_FORMATTED_STRING),
+        visitors = UiStringText(TODAYS_STATS_VISITORS_FORMATTED_STRING),
+        likes = UiStringText(TODAYS_STATS_LIKES_FORMATTED_STRING),
+        onCardClick = onTodaysStatsCardClick,
+        footerLink = FooterLink(
+            label = UiStringRes(R.string.my_site_todays_stats_card_footer_link_go_to_stats),
+            onClick = onTodaysStatsCardFooterLinkClick
+        )
     )
 }

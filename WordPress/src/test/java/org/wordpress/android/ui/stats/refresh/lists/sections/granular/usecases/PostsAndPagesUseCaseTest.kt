@@ -48,43 +48,52 @@ private val selectedDate = Date(0)
 
 @ExperimentalCoroutinesApi
 class PostsAndPagesUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var store: PostAndPageViewsStore
-    @Mock lateinit var siteModelProvider: StatsSiteProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
-    @Mock lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var store: PostAndPageViewsStore
+    @Mock
+    lateinit var siteModelProvider: StatsSiteProvider
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock
+    lateinit var statsUtils: StatsUtils
     private lateinit var useCase: PostsAndPagesUseCase
     private val contentDescription = "title, views"
 
     @Before
     fun setUp() {
         useCase = PostsAndPagesUseCase(
-                statsGranularity,
-                testDispatcher(),
-                testDispatcher(),
-                store,
-                siteModelProvider,
-                selectedDateProvider,
-                tracker,
-                contentDescriptionHelper,
-                statsUtils,
-                BLOCK
+            statsGranularity,
+            testDispatcher(),
+            testDispatcher(),
+            store,
+            siteModelProvider,
+            selectedDateProvider,
+            tracker,
+            contentDescriptionHelper,
+            statsUtils,
+            BLOCK
         )
         whenever(siteModelProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
-                SelectedDate(
-                        selectedDate,
-                        listOf(selectedDate)
-                )
+            SelectedDate(
+                selectedDate,
+                listOf(selectedDate)
+            )
         )
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<String>(),
                 any()
-        )).thenReturn(contentDescription)
+            )
+        ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
@@ -94,13 +103,13 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val refresh = true
         val message = "error"
         whenever(
-                store.fetchPostAndPageViews(
-                        site,
-                        statsGranularity,
-                        LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate,
-                        forced
-                )
+            store.fetchPostAndPageViews(
+                site,
+                statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate,
+                forced
+            )
         ).thenReturn(OnStatsFetched(StatsError(GENERIC_ERROR, message)))
 
         val result = loadData(refresh, forced)
@@ -115,13 +124,13 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val refresh = true
         val emptyModel = PostAndPageViewsModel(listOf(), false)
         whenever(
-                store.fetchPostAndPageViews(
-                        site,
-                        statsGranularity,
-                        LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate,
-                        forced
-                )
+            store.fetchPostAndPageViews(
+                site,
+                statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate,
+                forced
+            )
         ).thenReturn(OnStatsFetched(emptyModel))
 
         val result = loadData(refresh, forced)
@@ -142,21 +151,21 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val post = ViewsModel(1L, "Post 1", 10, POST, "post.com")
         val model = PostAndPageViewsModel(listOf(post), false)
         whenever(
-                store.getPostAndPageViews(
-                        site,
-                        statsGranularity,
-                        LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate
-                )
+            store.getPostAndPageViews(
+                site,
+                statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate
+            )
         ).thenReturn(model)
         whenever(
-                store.fetchPostAndPageViews(
-                        site,
-                        statsGranularity,
-                        LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate,
-                        forced
-                )
+            store.fetchPostAndPageViews(
+                site,
+                statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate,
+                forced
+            )
         ).thenReturn(OnStatsFetched(model))
 
         val result = loadData(refresh, forced)
@@ -186,21 +195,21 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val page = ViewsModel(2L, title, views, PAGE, "page.com")
         val model = PostAndPageViewsModel(listOf(page), false)
         whenever(
-                store.getPostAndPageViews(
-                        site,
-                        statsGranularity,
-                        LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate
-                )
+            store.getPostAndPageViews(
+                site,
+                statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate
+            )
         ).thenReturn(model)
         whenever(
-                store.fetchPostAndPageViews(
-                        site,
-                        statsGranularity,
-                        LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate,
-                        forced
-                )
+            store.fetchPostAndPageViews(
+                site,
+                statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate,
+                forced
+            )
         ).thenReturn(OnStatsFetched(model))
 
         val result = loadData(refresh, forced)
@@ -230,21 +239,21 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val homePage = ViewsModel(3L, title, views, HOMEPAGE, "homepage.com")
         val model = PostAndPageViewsModel(listOf(homePage), false)
         whenever(
-                store.getPostAndPageViews(
-                        site,
-                        statsGranularity,
-                        LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate
-                )
+            store.getPostAndPageViews(
+                site,
+                statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate
+            )
         ).thenReturn(model)
         whenever(
-                store.fetchPostAndPageViews(
-                        site,
-                        statsGranularity,
-                        LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate,
-                        forced
-                )
+            store.fetchPostAndPageViews(
+                site,
+                statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate,
+                forced
+            )
         ).thenReturn(OnStatsFetched(model))
 
         val result = loadData(refresh, forced)
@@ -272,21 +281,21 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val homePage = ViewsModel(3L, "Homepage 1", 20, HOMEPAGE, "homepage.com")
         val model = PostAndPageViewsModel(listOf(page, homePage), false)
         whenever(
-                store.getPostAndPageViews(
-                        site,
-                        statsGranularity,
-                        LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate
-                )
+            store.getPostAndPageViews(
+                site,
+                statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate
+            )
         ).thenReturn(model)
         whenever(
-                store.fetchPostAndPageViews(
-                        site,
-                        statsGranularity,
-                        LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate,
-                        forced
-                )
+            store.fetchPostAndPageViews(
+                site,
+                statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate,
+                forced
+            )
         ).thenReturn(OnStatsFetched(model))
 
         val result = loadData(refresh, forced)
@@ -310,21 +319,21 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val homePage = ViewsModel(3L, "Homepage 1", 20, HOMEPAGE, "homepage.com")
         val model = PostAndPageViewsModel(listOf(page, homePage), false)
         whenever(
-                store.getPostAndPageViews(
-                        site,
-                        statsGranularity,
-                        LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate
-                )
+            store.getPostAndPageViews(
+                site,
+                statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate
+            )
         ).thenReturn(model)
         whenever(
-                store.fetchPostAndPageViews(
-                        site,
-                        statsGranularity,
-                        LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate,
-                        forced
-                )
+            store.fetchPostAndPageViews(
+                site,
+                statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate,
+                forced
+            )
         ).thenReturn(OnStatsFetched(model))
 
         val result = loadData(refresh, forced)
@@ -354,21 +363,21 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val hasMore = true
         val model = PostAndPageViewsModel(listOf(page), hasMore)
         whenever(
-                store.getPostAndPageViews(
-                        site,
-                        statsGranularity,
-                        LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate
-                )
+            store.getPostAndPageViews(
+                site,
+                statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate
+            )
         ).thenReturn(model)
         whenever(
-                store.fetchPostAndPageViews(
-                        site,
-                        statsGranularity,
-                        LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate,
-                        forced
-                )
+            store.fetchPostAndPageViews(
+                site,
+                statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate,
+                forced
+            )
         ).thenReturn(OnStatsFetched(model))
 
         val result = loadData(refresh, forced)

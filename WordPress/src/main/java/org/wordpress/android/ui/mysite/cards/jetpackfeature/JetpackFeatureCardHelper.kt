@@ -17,7 +17,7 @@ class JetpackFeatureCardHelper @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
-    fun shouldShowJetpackFeatureCard() : Boolean{
+    fun shouldShowJetpackFeatureCard(): Boolean {
         val isWordPressApp = !buildConfigWrapper.isJetpackApp
         val isPhase3 = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == JetpackFeatureRemovalPhase.PhaseThree
         val shouldHideJetpackFeatureCard = appPrefsWrapper.getShouldHideJetpackFeatureCard()
@@ -27,8 +27,8 @@ class JetpackFeatureCardHelper @Inject constructor(
 
     fun track(stat: Stat) {
         analyticsTrackerWrapper.track(
-                stat,
-                mapOf(PHASE to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName)
+            stat,
+            mapOf(PHASE to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName)
         )
     }
 
@@ -38,8 +38,8 @@ class JetpackFeatureCardHelper @Inject constructor(
 
         val lastShownDate = Date(lastShownTimestamp)
         val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
-                lastShownDate,
-                Date(System.currentTimeMillis())
+            lastShownDate,
+            Date(System.currentTimeMillis())
         )
 
         val exceedsFrequency = daysPastOverlayShown >= FREQUENCY_IN_DAYS

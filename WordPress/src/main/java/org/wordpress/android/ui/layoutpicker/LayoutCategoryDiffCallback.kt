@@ -10,6 +10,7 @@ class LayoutCategoryDiffCallback(
     private val newList: List<LayoutCategoryUiState>
 ) : Callback() {
     object Payload
+
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return newList[newItemPosition].isRecommended == oldList[oldItemPosition].isRecommended &&
                 newList[newItemPosition].slug == oldList[oldItemPosition].slug

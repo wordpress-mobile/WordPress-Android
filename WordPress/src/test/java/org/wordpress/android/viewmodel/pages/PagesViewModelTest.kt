@@ -68,18 +68,30 @@ import java.util.SortedMap
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class PagesViewModelTest : BaseUnitTest() {
-    @Mock lateinit var pageStore: PageStore
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var actionPerformer: ActionPerformer
-    @Mock lateinit var networkUtils: NetworkUtilsWrapper
-    @Mock lateinit var uploadStarter: UploadStarter
-    @Mock lateinit var siteOptionsStore: SiteOptionsStore
-    @Mock lateinit var appLogWrapper: AppLogWrapper
-    @Mock lateinit var siteStore: SiteStore
-    @Mock lateinit var accountStore: AccountStore
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock lateinit var postSqlUtils: PostSqlUtils
+    @Mock
+    lateinit var pageStore: PageStore
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var dispatcher: Dispatcher
+    @Mock
+    lateinit var actionPerformer: ActionPerformer
+    @Mock
+    lateinit var networkUtils: NetworkUtilsWrapper
+    @Mock
+    lateinit var uploadStarter: UploadStarter
+    @Mock
+    lateinit var siteOptionsStore: SiteOptionsStore
+    @Mock
+    lateinit var appLogWrapper: AppLogWrapper
+    @Mock
+    lateinit var siteStore: SiteStore
+    @Mock
+    lateinit var accountStore: AccountStore
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    lateinit var postSqlUtils: PostSqlUtils
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
@@ -94,31 +106,31 @@ class PagesViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         postStore = PostStore(
-                dispatcher,
-                Mockito.mock(PostRestClient::class.java),
-                Mockito.mock(PostXMLRPCClient::class.java),
-                postSqlUtils
+            dispatcher,
+            Mockito.mock(PostRestClient::class.java),
+            Mockito.mock(PostXMLRPCClient::class.java),
+            postSqlUtils
         )
         viewModel = PagesViewModel(
-                pageStore = pageStore,
-                postStore = postStore,
-                dispatcher = dispatcher,
-                actionPerformer = actionPerformer,
-                networkUtils = networkUtils,
-                previewStateHelper = mock(),
-                analyticsTracker = mock(),
-                uploadStatusTracker = mock(),
-                autoSaveConflictResolver = mock(),
-                uiDispatcher = testDispatcher(),
-                defaultDispatcher = testDispatcher(),
-                eventBusWrapper = mock(),
-                uploadStarter = uploadStarter,
-                pageListEventListenerFactory = mock(),
-                siteOptionsStore = siteOptionsStore,
-                appLogWrapper = appLogWrapper,
-                siteStore = siteStore,
-                accountStore = accountStore,
-                prefs = appPrefsWrapper
+            pageStore = pageStore,
+            postStore = postStore,
+            dispatcher = dispatcher,
+            actionPerformer = actionPerformer,
+            networkUtils = networkUtils,
+            previewStateHelper = mock(),
+            analyticsTracker = mock(),
+            uploadStatusTracker = mock(),
+            autoSaveConflictResolver = mock(),
+            uiDispatcher = testDispatcher(),
+            defaultDispatcher = testDispatcher(),
+            eventBusWrapper = mock(),
+            uploadStarter = uploadStarter,
+            pageListEventListenerFactory = mock(),
+            siteOptionsStore = siteOptionsStore,
+            appLogWrapper = appLogWrapper,
+            siteStore = siteStore,
+            accountStore = accountStore,
+            prefs = appPrefsWrapper
         )
         listStates = mutableListOf()
         pages = mutableListOf()
@@ -241,7 +253,7 @@ class PagesViewModelTest : BaseUnitTest() {
         val intent = mock<Intent>()
         val pageModel = setUpPageStoreWithASinglePage(site)
         whenever(pageStore.getPageByLocalId(eq(pageModel.pageId), anyOrNull()))
-                .thenReturn(pageModel)
+            .thenReturn(pageModel)
 
         viewModel.start(site)
         // When
@@ -298,7 +310,7 @@ class PagesViewModelTest : BaseUnitTest() {
         val intent = mock<Intent>()
         val pageModel = setUpPageStoreWithASinglePage(site)
         whenever(pageStore.getPageByLocalId(eq(pageModel.pageId), anyOrNull()))
-                .thenReturn(pageModel)
+            .thenReturn(pageModel)
 
         viewModel.start(site)
         // When
@@ -313,15 +325,15 @@ class PagesViewModelTest : BaseUnitTest() {
         val homepageId = 1L
         val snackbarMessages = mutableListOf<SnackbarMessageHolder>()
         setupPageOnFrontUpdate(
-                snackbarMessages = snackbarMessages,
-                showOnFront = PAGE,
-                updatedPageOnFrontId = homepageId
+            snackbarMessages = snackbarMessages,
+            showOnFront = PAGE,
+            updatedPageOnFrontId = homepageId
         )
 
         // Act
         viewModel.onMenuAction(
-                SET_AS_HOMEPAGE,
-                getPublishedPage(homepageId)
+            SET_AS_HOMEPAGE,
+            getPublishedPage(homepageId)
         )
 
         // Assert
@@ -335,16 +347,16 @@ class PagesViewModelTest : BaseUnitTest() {
         val homepageId = 1L
         val snackbarMessages = mutableListOf<SnackbarMessageHolder>()
         setupPageOnFrontUpdate(
-                snackbarMessages = snackbarMessages,
-                showOnFront = PAGE,
-                updatedPageOnFrontId = homepageId,
-                isError = true
+            snackbarMessages = snackbarMessages,
+            showOnFront = PAGE,
+            updatedPageOnFrontId = homepageId,
+            isError = true
         )
 
         // Act
         viewModel.onMenuAction(
-                SET_AS_HOMEPAGE,
-                getPublishedPage(homepageId)
+            SET_AS_HOMEPAGE,
+            getPublishedPage(homepageId)
         )
 
         // Assert
@@ -358,15 +370,15 @@ class PagesViewModelTest : BaseUnitTest() {
         val pageForPostsId = 1L
         val snackbarMessages = mutableListOf<SnackbarMessageHolder>()
         setupPageForPostsUpdate(
-                snackbarMessages = snackbarMessages,
-                showOnFront = PAGE,
-                updatedPageForPostsId = pageForPostsId
+            snackbarMessages = snackbarMessages,
+            showOnFront = PAGE,
+            updatedPageForPostsId = pageForPostsId
         )
 
         // Act
         viewModel.onMenuAction(
-                SET_AS_POSTS_PAGE,
-                getPublishedPage(pageForPostsId)
+            SET_AS_POSTS_PAGE,
+            getPublishedPage(pageForPostsId)
         )
 
         // Assert
@@ -380,16 +392,16 @@ class PagesViewModelTest : BaseUnitTest() {
         val pageForPostsId = 1L
         val snackbarMessages = mutableListOf<SnackbarMessageHolder>()
         setupPageForPostsUpdate(
-                snackbarMessages = snackbarMessages,
-                showOnFront = PAGE,
-                updatedPageForPostsId = pageForPostsId,
-                isError = true
+            snackbarMessages = snackbarMessages,
+            showOnFront = PAGE,
+            updatedPageForPostsId = pageForPostsId,
+            isError = true
         )
 
         // Act
         viewModel.onMenuAction(
-                SET_AS_POSTS_PAGE,
-                getPublishedPage(pageForPostsId)
+            SET_AS_POSTS_PAGE,
+            getPublishedPage(pageForPostsId)
         )
 
         // Assert
@@ -398,13 +410,13 @@ class PagesViewModelTest : BaseUnitTest() {
     }
 
     private fun getPublishedPage(remoteId: Long): PublishedPage = PublishedPage(
-            remoteId = remoteId,
-            localId = 2,
-            title = "Published page",
-            date = Date(),
-            actions = emptySet(),
-            progressBarUiState = ProgressBarUiState.Hidden,
-            showOverlay = false
+        remoteId = remoteId,
+        localId = 2,
+        title = "Published page",
+        date = Date(),
+        actions = emptySet(),
+        progressBarUiState = ProgressBarUiState.Hidden,
+        showOverlay = false
     )
 
     private suspend fun setupPageForPostsUpdate(
@@ -421,11 +433,11 @@ class PagesViewModelTest : BaseUnitTest() {
         val settings = StaticPage(updatedPageForPostsId, -1)
         val homepageUpdatedPayload = if (!isError) HomepageUpdatedPayload(settings) else {
             HomepageUpdatedPayload(
-                    SiteOptionsError(INVALID_PARAMETERS, "Message")
+                SiteOptionsError(INVALID_PARAMETERS, "Message")
             )
         }
         whenever(siteOptionsStore.updatePageForPosts(eq(site), eq(updatedPageForPostsId))).thenReturn(
-                homepageUpdatedPayload
+            homepageUpdatedPayload
         )
         viewModel.showSnackbarMessage.observeForever {
             snackbarMessages.add(it)
@@ -445,11 +457,11 @@ class PagesViewModelTest : BaseUnitTest() {
         val settings = StaticPage(-1, updatedPageOnFrontId)
         val homepageUpdatedPayload = if (!isError) HomepageUpdatedPayload(settings) else {
             HomepageUpdatedPayload(
-                    SiteOptionsError(INVALID_PARAMETERS, "Message")
+                SiteOptionsError(INVALID_PARAMETERS, "Message")
             )
         }
         whenever(siteOptionsStore.updatePageOnFront(eq(site), eq(updatedPageOnFrontId))).thenReturn(
-                homepageUpdatedPayload
+            homepageUpdatedPayload
         )
         viewModel.showSnackbarMessage.observeForever {
             snackbarMessages.add(it)
@@ -459,7 +471,7 @@ class PagesViewModelTest : BaseUnitTest() {
     private suspend fun setUpPageStoreWithEmptyPages() {
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf())
         whenever(pageStore.requestPagesFromServer(any(), any())).thenReturn(
-                OnPageChanged.Success
+            OnPageChanged.Success
         )
     }
 
@@ -468,7 +480,7 @@ class PagesViewModelTest : BaseUnitTest() {
 
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf(pageModel))
         whenever(pageStore.requestPagesFromServer(any(), any())).thenReturn(
-                OnPageChanged.Success
+            OnPageChanged.Success
         )
 
         return pageModel
@@ -543,9 +555,9 @@ class PagesViewModelTest : BaseUnitTest() {
         whenever(page.remoteId).thenReturn(pageForPostsId)
         val snackbarMessages = mutableListOf<SnackbarMessageHolder>()
         setupPageForPostsUpdate(
-                snackbarMessages = snackbarMessages,
-                showOnFront = PAGE,
-                updatedPageForPostsId = pageForPostsId
+            snackbarMessages = snackbarMessages,
+            showOnFront = PAGE,
+            updatedPageForPostsId = pageForPostsId
         )
 
         // Act

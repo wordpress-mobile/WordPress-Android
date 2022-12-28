@@ -54,12 +54,17 @@ import javax.inject.Inject
 
 class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragment_layout) {
     private var bookmarksSavedLocallyDialog: AlertDialog? = null
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var imageManager: ImageManager
     private lateinit var viewModel: ReaderDiscoverViewModel
-    @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
-    @Inject lateinit var readerTracker: ReaderTracker
+    @Inject
+    lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+    @Inject
+    lateinit var readerTracker: ReaderTracker
     private lateinit var parentViewModel: ReaderViewModel
 
     private var binding: ReaderDiscoverFragmentLayoutBinding? = null
@@ -87,7 +92,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
 
     private fun ReaderDiscoverFragmentLayoutBinding.initViewModel() {
         viewModel = ViewModelProvider(this@ReaderDiscoverFragment, viewModelFactory)
-                .get(ReaderDiscoverViewModel::class.java)
+            .get(ReaderDiscoverViewModel::class.java)
         parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
 
         viewModel.uiState.observe(viewLifecycleOwner, {
@@ -128,44 +133,44 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         is SharePost -> ReaderActivityLauncher.sharePost(context, event.post)
         is OpenPost -> ReaderActivityLauncher.openPost(context, event.post)
         is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(
-                context,
-                event.blogId,
-                event.postId,
-                READER_POST_CARD.sourceDescription
+            context,
+            event.blogId,
+            event.postId,
+            READER_POST_CARD.sourceDescription
         )
         is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
         is ShowSitePickerForResult -> ActivityLauncher.showSitePickerForResult(
-                this@ReaderDiscoverFragment,
-                event.preselectedSite,
-                event.mode
+            this@ReaderDiscoverFragment,
+            event.preselectedSite,
+            event.mode
         )
         is OpenEditorForReblog -> ActivityLauncher.openEditorForReblog(activity, event.site, event.post, event.source)
         is ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
         is ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(event)
         is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
-                context,
-                event.tag,
-                ReaderTracker.SOURCE_DISCOVER,
-                readerTracker
+            context,
+            event.tag,
+            ReaderTracker.SOURCE_DISCOVER,
+            readerTracker
         )
         is ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(context, event.videoUrl)
         is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
-                context,
-                event.siteId,
-                event.feedId,
-                event.isFollowed,
-                ReaderTracker.SOURCE_DISCOVER,
-                readerTracker
+            context,
+            event.siteId,
+            event.feedId,
+            event.isFollowed,
+            ReaderTracker.SOURCE_DISCOVER,
+            readerTracker
         )
         is ShowReportPost -> ReaderActivityLauncher.openUrl(
-                context,
-                readerUtilsWrapper.getReportPostUrl(event.url),
-                OpenUrlType.INTERNAL
+            context,
+            readerUtilsWrapper.getReportPostUrl(event.url),
+            OpenUrlType.INTERNAL
         )
         is ShowReportUser -> ReaderActivityLauncher.openUrl(
-                context,
-                readerUtilsWrapper.getReportUserUrl(event.url, event.authorId),
-                OpenUrlType.INTERNAL
+            context,
+            readerUtilsWrapper.getReportUserUrl(event.url, event.authorId),
+            OpenUrlType.INTERNAL
         )
         is ShowReaderSubs -> ReaderActivityLauncher.showReaderSubs(context)
         else -> Unit // Do Nothing
@@ -174,29 +179,29 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     private fun showBookmarkSavedLocallyDialog(bookmarkDialog: ShowBookmarkedSavedOnlyLocallyDialog) {
         if (bookmarksSavedLocallyDialog == null) {
             MaterialAlertDialogBuilder(requireActivity())
-                    .setTitle(getString(bookmarkDialog.title))
-                    .setMessage(getString(bookmarkDialog.message))
-                    .setPositiveButton(getString(bookmarkDialog.buttonLabel)) { _, _ ->
-                        bookmarkDialog.okButtonAction.invoke()
-                    }
-                    .setOnDismissListener {
-                        bookmarksSavedLocallyDialog = null
-                    }
-                    .setCancelable(false)
-                    .create()
-                    .let {
-                        bookmarksSavedLocallyDialog = it
-                        it.show()
-                    }
+                .setTitle(getString(bookmarkDialog.title))
+                .setMessage(getString(bookmarkDialog.message))
+                .setPositiveButton(getString(bookmarkDialog.buttonLabel)) { _, _ ->
+                    bookmarkDialog.okButtonAction.invoke()
+                }
+                .setOnDismissListener {
+                    bookmarksSavedLocallyDialog = null
+                }
+                .setCancelable(false)
+                .create()
+                .let {
+                    bookmarksSavedLocallyDialog = it
+                    it.show()
+                }
         }
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
         activity?.findViewById<View>(R.id.coordinator)?.let { coordinator ->
             val snackbar = WPSnackbar.make(
-                    coordinator,
-                    uiHelpers.getTextOfUiString(requireContext(), this.message),
-                    Snackbar.LENGTH_LONG
+                coordinator,
+                uiHelpers.getTextOfUiString(requireContext(), this.message),
+                Snackbar.LENGTH_LONG
             )
             if (this.buttonTitle != null) {
                 snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), this.buttonTitle)) {
@@ -212,8 +217,8 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
 
         if (parentFragmentManager.findFragmentByTag(tag) == null) {
             parentFragmentManager.beginTransaction()
-                    .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
-                    .commit()
+                .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
+                .commit()
         }
     }
 
@@ -232,8 +237,8 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK && data != null) {
             val siteLocalId = data.getIntExtra(
-                    SitePickerActivity.KEY_SITE_LOCAL_ID,
-                    SelectedSiteRepository.UNAVAILABLE
+                SitePickerActivity.KEY_SITE_LOCAL_ID,
+                SelectedSiteRepository.UNAVAILABLE
             )
             viewModel.onReblogSiteSelected(siteLocalId)
         }

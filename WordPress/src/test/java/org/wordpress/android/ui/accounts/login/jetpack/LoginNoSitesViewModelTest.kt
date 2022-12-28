@@ -28,19 +28,23 @@ private const val AVATAR_URL = "avatar_url"
 
 @ExperimentalCoroutinesApi
 class LoginNoSitesViewModelTest : BaseUnitTest() {
-    @Mock lateinit var unifiedLoginTracker: UnifiedLoginTracker
-    @Mock lateinit var wordPress: WordPress
-    @Mock lateinit var accountStore: AccountStore
-    @Mock lateinit var savedInstanceState: Bundle
+    @Mock
+    lateinit var unifiedLoginTracker: UnifiedLoginTracker
+    @Mock
+    lateinit var wordPress: WordPress
+    @Mock
+    lateinit var accountStore: AccountStore
+    @Mock
+    lateinit var savedInstanceState: Bundle
     private lateinit var viewModel: LoginNoSitesViewModel
 
     @Before
     fun setUp() {
         viewModel = LoginNoSitesViewModel(
-                unifiedLoginTracker,
-                accountStore,
-                testDispatcher(),
-                testDispatcher()
+            unifiedLoginTracker,
+            accountStore,
+            testDispatcher(),
+            testDispatcher()
         )
     }
 
@@ -150,11 +154,11 @@ class LoginNoSitesViewModelTest : BaseUnitTest() {
 
     private fun setupInstanceStateForShowUser() {
         whenever(savedInstanceState.getSerializable(KEY_STATE)).thenReturn(
-                ShowUser(
-                        userName = USERNAME,
-                        displayName = DISPLAY_NAME,
-                        accountAvatarUrl = AVATAR_URL
-                )
+            ShowUser(
+                userName = USERNAME,
+                displayName = DISPLAY_NAME,
+                accountAvatarUrl = AVATAR_URL
+            )
         )
     }
 

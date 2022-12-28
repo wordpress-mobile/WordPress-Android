@@ -26,27 +26,36 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class AllTimeWidgetBlockListViewModelTest {
-    @Mock private lateinit var siteStore: SiteStore
-    @Mock private lateinit var allTimeStore: AllTimeInsightsStore
-    @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var statsUtils: StatsUtils
-    @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var context: Context
-    @Mock private lateinit var allTimeWidgetUpdater: AllTimeWidgetUpdater
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    private lateinit var siteStore: SiteStore
+    @Mock
+    private lateinit var allTimeStore: AllTimeInsightsStore
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+    @Mock
+    private lateinit var statsUtils: StatsUtils
+    @Mock
+    private lateinit var site: SiteModel
+    @Mock
+    private lateinit var context: Context
+    @Mock
+    private lateinit var allTimeWidgetUpdater: AllTimeWidgetUpdater
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var viewModel: AllTimeWidgetBlockListViewModel
     private val siteId: Int = 15
     private val appWidgetId: Int = 1
     private val color = Color.LIGHT
+
     @Before
     fun setUp() {
         viewModel = AllTimeWidgetBlockListViewModel(
-                siteStore,
-                allTimeStore,
-                resourceProvider,
-                allTimeWidgetUpdater,
-                appPrefsWrapper,
-                statsUtils
+            siteStore,
+            allTimeStore,
+            resourceProvider,
+            allTimeWidgetUpdater,
+            appPrefsWrapper,
+            statsUtils
         )
         viewModel.start(siteId, color, appWidgetId)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
@@ -68,15 +77,15 @@ class AllTimeWidgetBlockListViewModelTest {
         whenever(resourceProvider.getString(string.posts)).thenReturn(postsKey)
         whenever(resourceProvider.getString(string.stats_insights_best_ever)).thenReturn(bestKey)
         whenever(allTimeStore.getAllTimeInsights(site)).thenReturn(
-                InsightsAllTimeModel(
-                        150L,
-                        null,
-                        visitors,
-                        views,
-                        posts,
-                        "Monday",
-                        viewsBestDayTotal
-                )
+            InsightsAllTimeModel(
+                150L,
+                null,
+                visitors,
+                views,
+                posts,
+                "Monday",
+                viewsBestDayTotal
+            )
         )
         viewModel.onDataSetChanged(context)
 

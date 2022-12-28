@@ -20,16 +20,16 @@ class StoryTitleHeaderView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
     private val thumbnailCornerRadius =
-            context.resources.getDimension(R.dimen.prepublishing_site_blavatar_corner_radius)
-                    .toInt()
+        context.resources.getDimension(R.dimen.prepublishing_site_blavatar_corner_radius)
+            .toInt()
 
     fun init(uiHelpers: UiHelpers, imageManager: ImageManager, uiState: StoryTitleUiState) {
         with(PrepublishingStoryTitleListItemBinding.inflate(LayoutInflater.from(context), this, true)) {
             imageManager.loadImageWithCorners(
-                    storyThumbnail,
-                    ImageType.IMAGE,
-                    uiState.storyThumbnailUrl,
-                    thumbnailCornerRadius
+                storyThumbnail,
+                ImageType.IMAGE,
+                uiState.storyThumbnailUrl,
+                thumbnailCornerRadius
             )
 
             uiState.storyTitle?.let { title ->

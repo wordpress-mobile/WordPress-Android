@@ -15,36 +15,36 @@ class RemoteFeatureConfigCheckBuilder(private val remoteFeatures: List<TypeName>
     fun getContent(): FileSpec {
         val remoteFeaturesWithNames = remoteFeatures.map {
             it.toString()
-                    .substringAfterLast(".")
-                    .decapitalize(Locale.ROOT) to it
+                .substringAfterLast(".")
+                .decapitalize(Locale.ROOT) to it
         }
         val propertySpecs = remoteFeaturesWithNames.map { remoteFeature ->
             val constructor = remoteFeature.second.toString().substringAfterLast(".")
             PropertySpec.builder(remoteFeature.first, remoteFeature.second)
-                    .initializer(CodeBlock.of("$constructor(appConfig)".trimIndent()))
-                    .build()
+                .initializer(CodeBlock.of("$constructor(appConfig)".trimIndent()))
+                .build()
         }
         val remoteFeatureConfigDefaults = TypeSpec.classBuilder("RemoteFeatureConfigCheck")
-                .addProperties(propertySpecs)
-                .primaryConstructor(
-                        listOf(
-                                PropertySpec.builder(
-                                        "appConfig",
-                                        ClassName.bestGuess("org.wordpress.android.util.config.AppConfig")
-                                ).build()
-                        )
+            .addProperties(propertySpecs)
+            .primaryConstructor(
+                listOf(
+                    PropertySpec.builder(
+                        "appConfig",
+                        ClassName.bestGuess("org.wordpress.android.util.config.AppConfig")
+                    ).build()
                 )
-                .addFunction(
-                        FunSpec.builder("checkRemoteFields")
-                                .addCode(buildCheckFunction(remoteFeaturesWithNames))
-                                .build()
-                )
-                .build()
+            )
+            .addFunction(
+                FunSpec.builder("checkRemoteFields")
+                    .addCode(buildCheckFunction(remoteFeaturesWithNames))
+                    .build()
+            )
+            .build()
         return FileSpec.builder("org.wordpress.android.util.config", "RemoteFeatureConfigCheck")
-                .addType(remoteFeatureConfigDefaults)
-                .addComment("Automatically generated file. DO NOT MODIFY")
-                .indent("    ")
-                .build()
+            .addType(remoteFeatureConfigDefaults)
+            .addComment("Automatically generated file. DO NOT MODIFY")
+            .indent("    ")
+            .build()
     }
 
     private fun buildCheckFunction(remoteFeatures: List<Pair<String, TypeName>>): CodeBlock {
@@ -62,11 +62,11 @@ class RemoteFeatureConfigCheckBuilder(private val remoteFeatures: List<TypeName>
         val propertySpecs = properties.map { p -> p.toBuilder().initializer(p.name).build() }
         val parameters = propertySpecs.map { ParameterSpec.builder(it.name, it.type).build() }
         val constructor = FunSpec.constructorBuilder()
-                .addParameters(parameters)
-                .build()
+            .addParameters(parameters)
+            .build()
 
         return this
-                .primaryConstructor(constructor)
-                .addProperties(propertySpecs)
+            .primaryConstructor(constructor)
+            .addProperties(propertySpecs)
     }
 }

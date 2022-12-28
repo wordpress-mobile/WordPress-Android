@@ -29,10 +29,14 @@ import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 @ExperimentalCoroutinesApi
 class GetButtonUiStateUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: GetButtonUiStateUseCase
-    @Mock lateinit var editorActionsProvider: EditorActionsProvider
-    @Mock lateinit var uploadUtilsWrapper: UploadUtilsWrapper
-    @Mock lateinit var editPostRepository: EditPostRepository
-    @Mock lateinit var site: SiteModel
+    @Mock
+    lateinit var editorActionsProvider: EditorActionsProvider
+    @Mock
+    lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+    @Mock
+    lateinit var editPostRepository: EditPostRepository
+    @Mock
+    lateinit var site: SiteModel
 
     @Before
     fun setup() {

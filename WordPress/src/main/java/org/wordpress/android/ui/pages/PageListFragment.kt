@@ -25,12 +25,18 @@ import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject internal lateinit var imageManager: ImageManager
-    @Inject internal lateinit var uiHelper: UiHelpers
-    @Inject lateinit var dispatcher: Dispatcher
-    @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
-    @Inject lateinit var snackbarSequencer: SnackbarSequencer
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    internal lateinit var imageManager: ImageManager
+    @Inject
+    internal lateinit var uiHelper: UiHelpers
+    @Inject
+    lateinit var dispatcher: Dispatcher
+    @Inject
+    lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+    @Inject
+    lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: PageListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
     private var binding: PagesListFragmentBinding? = null
@@ -81,7 +87,7 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
 
         val listType = arguments?.getSerializable(typeKey) as PageListType
         viewModel = ViewModelProvider(this@PageListFragment, viewModelFactory)
-                .get(listType.name, PageListViewModel::class.java)
+            .get(listType.name, PageListViewModel::class.java)
 
         viewModel.start(listType, pagesViewModel)
 
@@ -124,13 +130,13 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
         val adapter: PageListAdapter
         if (recyclerView.adapter == null) {
             adapter = PageListAdapter(
-                    { action, page -> viewModel.onMenuAction(action, page, requireContext()) },
-                    { page -> viewModel.onItemTapped(page) },
-                    { viewModel.onEmptyListNewPageButtonTapped() },
-                    isSitePhotonCapable,
-                    isSitePrivateAt,
-                    imageManager,
-                    uiHelper
+                { action, page -> viewModel.onMenuAction(action, page, requireContext()) },
+                { page -> viewModel.onItemTapped(page) },
+                { viewModel.onEmptyListNewPageButtonTapped() },
+                isSitePhotonCapable,
+                isSitePrivateAt,
+                imageManager,
+                uiHelper
             )
             recyclerView.adapter = adapter
         } else {

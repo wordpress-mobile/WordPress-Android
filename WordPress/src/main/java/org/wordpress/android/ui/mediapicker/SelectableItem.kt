@@ -9,19 +9,19 @@ data class SelectableItem(val isSelected: Boolean, val showOrderCounter: Boolean
 fun MediaPickerUiItem.toSelectableItem(): SelectableItem? {
     return when (this) {
         is PhotoItem -> SelectableItem(
-                this.isSelected,
-                this.showOrderCounter,
-                this.selectedOrder
+            this.isSelected,
+            this.showOrderCounter,
+            this.selectedOrder
         )
         is VideoItem -> SelectableItem(
-                this.isSelected,
-                this.showOrderCounter,
-                this.selectedOrder
+            this.isSelected,
+            this.showOrderCounter,
+            this.selectedOrder
         )
         is FileItem -> SelectableItem(
-                this.isSelected,
-                this.showOrderCounter,
-                this.selectedOrder
+            this.isSelected,
+            this.showOrderCounter,
+            this.selectedOrder
         )
         else -> null
     }

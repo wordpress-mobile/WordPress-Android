@@ -42,7 +42,7 @@ sealed class MediaPickerUiItem(
     ) : MediaPickerUiItem(FILE)
 
     data class NextPageLoader(val isLoading: Boolean, val loadAction: () -> Unit) :
-            MediaPickerUiItem(NEXT_PAGE_LOADER, fullWidthItem = true)
+        MediaPickerUiItem(NEXT_PAGE_LOADER, fullWidthItem = true)
 
     data class ToggleAction(
         val identifier: Identifier,

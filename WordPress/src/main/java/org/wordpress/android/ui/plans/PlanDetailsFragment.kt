@@ -20,7 +20,8 @@ import javax.inject.Inject
 
 class PlanDetailsFragment : Fragment(), FullScreenDialogContent {
     private var plan: PlanOffersModel? = null
-    @Inject lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var imageManager: ImageManager
     private lateinit var dialogController: FullScreenDialogController
 
     companion object {
@@ -61,8 +62,8 @@ class PlanDetailsFragment : Fragment(), FullScreenDialogContent {
 
         if (!TextUtils.isEmpty(plan!!.iconUrl)) {
             imageManager.loadIntoCircle(
-                    planIcon, ImageType.PLAN,
-                    StringUtils.notNullStr(plan!!.iconUrl)
+                planIcon, ImageType.PLAN,
+                StringUtils.notNullStr(plan!!.iconUrl)
             )
         }
 

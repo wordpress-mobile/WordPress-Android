@@ -28,26 +28,33 @@ import org.wordpress.android.util.WPMediaUtilsWrapper
 
 @ExperimentalCoroutinesApi
 class GifMediaInsertUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var context: Context
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var uriWrapper: UriWrapper
-    @Mock lateinit var wpMediaUtilsWrapper: WPMediaUtilsWrapper
-    @Mock lateinit var mimeTypeMapUtilsWrapper: MimeTypeMapUtilsWrapper
-    @Mock lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
+    @Mock
+    lateinit var context: Context
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var dispatcher: Dispatcher
+    @Mock
+    lateinit var uriWrapper: UriWrapper
+    @Mock
+    lateinit var wpMediaUtilsWrapper: WPMediaUtilsWrapper
+    @Mock
+    lateinit var mimeTypeMapUtilsWrapper: MimeTypeMapUtilsWrapper
+    @Mock
+    lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
 
     private lateinit var gifMediaInsertUseCase: GifMediaInsertUseCase
 
     @Before
     fun setUp() {
         gifMediaInsertUseCase = GifMediaInsertUseCase(
-                context,
-                site,
-                dispatcher,
-                testDispatcher(),
-                wpMediaUtilsWrapper,
-                fluxCUtilsWrapper,
-                mimeTypeMapUtilsWrapper
+            context,
+            site,
+            dispatcher,
+            testDispatcher(),
+            wpMediaUtilsWrapper,
+            fluxCUtilsWrapper,
+            mimeTypeMapUtilsWrapper
         )
     }
 
@@ -63,11 +70,13 @@ class GifMediaInsertUseCaseTest : BaseUnitTest() {
         val mimeTypeMap: MimeTypeMap = mock()
         whenever(mimeTypeMap.getMimeTypeFromExtension(any())).thenReturn("image/png")
         whenever(mimeTypeMapUtilsWrapper.getSingleton()).thenReturn(mimeTypeMap)
-        whenever(fluxCUtilsWrapper.mediaModelFromLocalUri(
+        whenever(
+            fluxCUtilsWrapper.mediaModelFromLocalUri(
                 anyOrNull(),
                 anyOrNull(),
                 anyInt()
-        )).thenReturn(insertedMediaModel)
+            )
+        ).thenReturn(insertedMediaModel)
 
         val result = gifMediaInsertUseCase.insert(listOf(itemToInsert)).toList()
 

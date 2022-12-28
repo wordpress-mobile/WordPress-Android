@@ -15,6 +15,7 @@ sealed class JetpackFeatureOverlayComponentVisibility(
         class PhaseOne : SiteCreationPhase()
         class PhaseTwo(override val secondaryButton: Boolean = false) : SiteCreationPhase()
     }
+
     sealed class DeepLinkPhase : JetpackFeatureOverlayComponentVisibility() {
         class All : DeepLinkPhase()
     }

@@ -26,18 +26,21 @@ import org.wordpress.android.util.analytics.ScanTracker
 class FetchScanHistoryUseCaseTest : BaseUnitTest() {
     private lateinit var fetchScanHistoryUseCase: FetchScanHistoryUseCase
 
-    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock private lateinit var scanStore: ScanStore
-    @Mock private lateinit var scanTracker: ScanTracker
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    private lateinit var scanStore: ScanStore
+    @Mock
+    private lateinit var scanTracker: ScanTracker
     private val site: SiteModel = SiteModel()
 
     @Before
     fun setUp() {
         fetchScanHistoryUseCase = FetchScanHistoryUseCase(
-                networkUtilsWrapper,
-                scanStore,
-                scanTracker,
-                testDispatcher()
+            networkUtilsWrapper,
+            scanStore,
+            scanTracker,
+            testDispatcher()
         )
 
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
@@ -64,7 +67,7 @@ class FetchScanHistoryUseCaseTest : BaseUnitTest() {
     @Test
     fun `Request failure returned, when the request fails`() = test {
         whenever(scanStore.fetchScanHistory(anyOrNull())).thenReturn(
-                OnScanHistoryFetched(site.siteId, FetchScanHistoryError(GENERIC_ERROR), FETCH_SCAN_HISTORY)
+            OnScanHistoryFetched(site.siteId, FetchScanHistoryError(GENERIC_ERROR), FETCH_SCAN_HISTORY)
         )
 
         val result = fetchScanHistoryUseCase.fetch(site)
@@ -75,7 +78,7 @@ class FetchScanHistoryUseCaseTest : BaseUnitTest() {
     @Test
     fun `Request failure tracked, when the request fails`() = test {
         whenever(scanStore.fetchScanHistory(anyOrNull())).thenReturn(
-                OnScanHistoryFetched(site.siteId, FetchScanHistoryError(GENERIC_ERROR), FETCH_SCAN_HISTORY)
+            OnScanHistoryFetched(site.siteId, FetchScanHistoryError(GENERIC_ERROR), FETCH_SCAN_HISTORY)
         )
 
         fetchScanHistoryUseCase.fetch(site)
@@ -87,7 +90,7 @@ class FetchScanHistoryUseCaseTest : BaseUnitTest() {
     fun `Data from db returned, when the request succeeds`() = test {
         val threats = listOf<ThreatModel>(mock(), mock())
         whenever(scanStore.fetchScanHistory(anyOrNull())).thenReturn(
-                OnScanHistoryFetched(site.siteId, null, FETCH_SCAN_HISTORY)
+            OnScanHistoryFetched(site.siteId, null, FETCH_SCAN_HISTORY)
         )
         whenever(scanStore.getScanHistoryForSite(site)).thenReturn(threats)
 

@@ -30,23 +30,28 @@ import java.util.Date
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ExPlatTest : BaseUnitTest() {
-    @Mock lateinit var experiments: Lazy<Set<Experiment>>
-    @Mock lateinit var experimentStore: ExperimentStore
-    @Mock lateinit var appLog: AppLogWrapper
-    @Mock lateinit var accountStore: AccountStore
-    @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var experiments: Lazy<Set<Experiment>>
+    @Mock
+    lateinit var experimentStore: ExperimentStore
+    @Mock
+    lateinit var appLog: AppLogWrapper
+    @Mock
+    lateinit var accountStore: AccountStore
+    @Mock
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
     private lateinit var exPlat: ExPlat
     private lateinit var dummyExperiment: Experiment
 
     @Before
     fun setUp() {
         exPlat = ExPlat(
-                experiments,
-                experimentStore,
-                appLog,
-                accountStore,
-                analyticsTracker,
-                testScope()
+            experiments,
+            experimentStore,
+            appLog,
+            accountStore,
+            analyticsTracker,
+            testScope()
         )
         dummyExperiment = object : Experiment(DUMMY_EXPERIMENT_NAME, exPlat) {}
         whenever(accountStore.hasAccessToken()).thenReturn(true)
@@ -205,27 +210,29 @@ class ExPlatTest : BaseUnitTest() {
 
     @Test
     @Suppress("MaxLineLength")
-    fun `refreshIfNeeded does not interact with store if the user is not authorised and there is no anonymous id`() = test {
-        setupExperiments(setOf(dummyExperiment))
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
-        whenever(analyticsTracker.getAnonID()).thenReturn(null)
+    fun `refreshIfNeeded does not interact with store if the user is not authorised and there is no anonymous id`() =
+        test {
+            setupExperiments(setOf(dummyExperiment))
+            whenever(accountStore.hasAccessToken()).thenReturn(false)
+            whenever(analyticsTracker.getAnonID()).thenReturn(null)
 
-        exPlat.refreshIfNeeded()
+            exPlat.refreshIfNeeded()
 
-        verifyNoInteractions(experimentStore)
-    }
+            verifyNoInteractions(experimentStore)
+        }
 
     @Test
     @Suppress("MaxLineLength")
-    fun `forceRefresh does not interact with store if the user is not authorised and there is no anonymous id`() = test {
-        setupExperiments(setOf(dummyExperiment))
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
-        whenever(analyticsTracker.getAnonID()).thenReturn(null)
+    fun `forceRefresh does not interact with store if the user is not authorised and there is no anonymous id`() =
+        test {
+            setupExperiments(setOf(dummyExperiment))
+            whenever(accountStore.hasAccessToken()).thenReturn(false)
+            whenever(analyticsTracker.getAnonID()).thenReturn(null)
 
-        exPlat.forceRefresh()
+            exPlat.forceRefresh()
 
-        verifyNoInteractions(experimentStore)
-    }
+            verifyNoInteractions(experimentStore)
+        }
 
     @Test
     fun `refreshIfNeeded does interact with store if the user is authorised`() = test {
@@ -278,7 +285,7 @@ class ExPlatTest : BaseUnitTest() {
     private suspend fun setupAssignments(cachedAssignments: Assignments?, fetchedAssignments: Assignments) {
         whenever(experimentStore.getCachedAssignments()).thenReturn(cachedAssignments)
         whenever(experimentStore.fetchAssignments(any(), any(), anyOrNull()))
-                .thenReturn(OnAssignmentsFetched(fetchedAssignments))
+            .thenReturn(OnAssignmentsFetched(fetchedAssignments))
     }
 
     private fun buildAssignments(

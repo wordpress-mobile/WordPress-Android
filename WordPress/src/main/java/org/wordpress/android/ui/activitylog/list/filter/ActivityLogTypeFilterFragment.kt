@@ -46,8 +46,10 @@ private const val PRIMARY_ACTION_SHOW_ALWAYS = true
 private const val SECONDARY_ACTION_SHOW_ALWAYS = false
 
 class ActivityLogTypeFilterFragment : DialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var uiHelpers: UiHelpers
 
     private lateinit var viewModel: ActivityLogTypeFilterViewModel
 
@@ -73,8 +75,8 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
 
     private fun ActivityLogTypeFilterFragmentBinding.initToolbar() {
         toolbarMain.navigationIcon = ColorUtils.applyTintToDrawable(
-                toolbarMain.context, R.drawable.ic_close_white_24dp,
-                toolbarMain.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
+            toolbarMain.context, R.drawable.ic_close_white_24dp,
+            toolbarMain.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
         )
         toolbarMain.setNavigationContentDescription(R.string.close_dialog_button_desc)
         toolbarMain.setNavigationOnClickListener { dismiss() }
@@ -88,10 +90,10 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     @Suppress("UseCheckOrError")
     private fun ActivityLogTypeFilterFragmentBinding.initViewModel() {
         viewModel = ViewModelProvider(this@ActivityLogTypeFilterFragment, viewModelFactory)
-                .get(ActivityLogTypeFilterViewModel::class.java)
+            .get(ActivityLogTypeFilterViewModel::class.java)
 
         val parentViewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
-                .get(ActivityLogViewModel::class.java)
+            .get(ActivityLogViewModel::class.java)
 
         viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             uiHelpers.updateVisibility(actionableEmptyView, uiState.errorVisibility)
@@ -120,11 +122,11 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
             null
         }
         viewModel.start(
-                remoteSiteId = RemoteId(requireNotNull(arguments).getLong(WordPress.REMOTE_SITE_ID)),
-                initialSelection = requireNotNull(arguments).getStringArray(ARG_INITIAL_SELECTION)?.toList()
-                        ?: listOf(),
-                dateRange = dateRange,
-                parentViewModel = parentViewModel
+            remoteSiteId = RemoteId(requireNotNull(arguments).getLong(WordPress.REMOTE_SITE_ID)),
+            initialSelection = requireNotNull(arguments).getStringArray(ARG_INITIAL_SELECTION)?.toList()
+                ?: listOf(),
+            dateRange = dateRange,
+            parentViewModel = parentViewModel
         )
     }
 

@@ -35,10 +35,14 @@ import java.util.Date
 
 @ExperimentalCoroutinesApi
 class HomepageSettingsViewModelTest : BaseUnitTest() {
-    @Mock lateinit var homepageSettingsDataLoader: HomepageSettingsDataLoader
-    @Mock lateinit var siteStore: SiteStore
-    @Mock lateinit var siteOptionsStore: SiteOptionsStore
-    @Mock lateinit var dispatcher: Dispatcher
+    @Mock
+    lateinit var homepageSettingsDataLoader: HomepageSettingsDataLoader
+    @Mock
+    lateinit var siteStore: SiteStore
+    @Mock
+    lateinit var siteOptionsStore: SiteOptionsStore
+    @Mock
+    lateinit var dispatcher: Dispatcher
     private val siteModel = SiteModel()
     private val siteId = 1
     private val remoteId = 2L
@@ -54,12 +58,12 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = HomepageSettingsViewModel(
-                testDispatcher(),
-                testDispatcher(),
-                dispatcher,
-                homepageSettingsDataLoader,
-                siteStore,
-                siteOptionsStore
+            testDispatcher(),
+            testDispatcher(),
+            dispatcher,
+            homepageSettingsDataLoader,
+            siteStore,
+            siteOptionsStore
         )
         uiStates = mutableListOf()
         pageUiModel = PageUiModel(localId, remoteId, title)
@@ -84,8 +88,8 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel.start(siteId, null, null, null)
 
         assertThat(uiStates).containsOnly(
-                HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
-                HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel, isLoading = true)
+            HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
+            HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel, isLoading = true)
         )
     }
 
@@ -97,13 +101,13 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel.start(siteId, null, null, null)
 
         assertThat(uiStates).containsOnly(
-                HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
-                HomepageSettingsUiState(
-                        isClassicBlogState = true,
-                        siteModel = siteModel,
-                        pageForPostsState = selectorWithSelection(),
-                        pageOnFrontState = selectorWithoutSelection()
-                )
+            HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
+            HomepageSettingsUiState(
+                isClassicBlogState = true,
+                siteModel = siteModel,
+                pageForPostsState = selectorWithSelection(),
+                pageOnFrontState = selectorWithoutSelection()
+            )
         )
     }
 
@@ -115,13 +119,13 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel.start(siteId, null, null, null)
 
         assertThat(uiStates).containsOnly(
-                HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
-                HomepageSettingsUiState(
-                        isClassicBlogState = true,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithSelection(),
-                        pageForPostsState = selectorWithoutSelection()
-                )
+            HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
+            HomepageSettingsUiState(
+                isClassicBlogState = true,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithSelection(),
+                pageForPostsState = selectorWithoutSelection()
+            )
         )
     }
 
@@ -134,7 +138,7 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel.start(siteId, null, null, null)
 
         assertThat(uiStates).containsOnly(
-                HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel)
+            HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel)
         )
     }
 
@@ -147,7 +151,7 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel.start(siteId, null, null, null)
 
         assertThat(uiStates).containsOnly(
-                HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel)
+            HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel)
         )
     }
 
@@ -158,8 +162,8 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel.start(siteId, null, null, null)
 
         assertThat(uiStates).containsOnly(
-                HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
-                HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel, error = R.string.error)
+            HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
+            HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel, error = R.string.error)
         )
     }
 
@@ -172,8 +176,8 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel.classicBlogSelected()
 
         assertThat(uiStates).containsOnly(
-                HomepageSettingsUiState(isClassicBlogState = false, siteModel = siteModel),
-                HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel)
+            HomepageSettingsUiState(isClassicBlogState = false, siteModel = siteModel),
+            HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel)
         )
     }
 
@@ -186,8 +190,8 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel.staticHomepageSelected()
 
         assertThat(uiStates).containsOnly(
-                HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
-                HomepageSettingsUiState(isClassicBlogState = false, siteModel = siteModel)
+            HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
+            HomepageSettingsUiState(isClassicBlogState = false, siteModel = siteModel)
         )
     }
 
@@ -201,19 +205,19 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel.onPageOnFrontSelected(localId)
 
         assertThat(uiStates).containsOnly(
-                HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
-                HomepageSettingsUiState(
-                        isClassicBlogState = true,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithoutSelection(),
-                        pageForPostsState = selectorWithoutSelection()
-                ),
-                HomepageSettingsUiState(
-                        isClassicBlogState = true,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithSelection(),
-                        pageForPostsState = selectorWithoutSelection()
-                )
+            HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
+            HomepageSettingsUiState(
+                isClassicBlogState = true,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithoutSelection(),
+                pageForPostsState = selectorWithoutSelection()
+            ),
+            HomepageSettingsUiState(
+                isClassicBlogState = true,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithSelection(),
+                pageForPostsState = selectorWithoutSelection()
+            )
         )
     }
 
@@ -227,19 +231,19 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel.onPageForPostsSelected(localId)
 
         assertThat(uiStates).containsOnly(
-                HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
-                HomepageSettingsUiState(
-                        isClassicBlogState = true,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithoutSelection(),
-                        pageForPostsState = selectorWithoutSelection()
-                ),
-                HomepageSettingsUiState(
-                        isClassicBlogState = true,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithoutSelection(),
-                        pageForPostsState = selectorWithSelection()
-                )
+            HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
+            HomepageSettingsUiState(
+                isClassicBlogState = true,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithoutSelection(),
+                pageForPostsState = selectorWithoutSelection()
+            ),
+            HomepageSettingsUiState(
+                isClassicBlogState = true,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithoutSelection(),
+                pageForPostsState = selectorWithSelection()
+            )
         )
     }
 
@@ -255,31 +259,31 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel.onDialogHidden()
 
         assertThat(uiStates).containsOnly(
-                HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
-                HomepageSettingsUiState(
-                        isClassicBlogState = true,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithoutSelection(),
-                        pageForPostsState = selectorWithoutSelection()
-                ),
-                HomepageSettingsUiState(
-                        isClassicBlogState = true,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithoutSelection(isExpanded = true),
-                        pageForPostsState = selectorWithoutSelection()
-                ),
-                HomepageSettingsUiState(
-                        isClassicBlogState = true,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithoutSelection(),
-                        pageForPostsState = selectorWithoutSelection(isExpanded = true)
-                ),
-                HomepageSettingsUiState(
-                        isClassicBlogState = true,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithoutSelection(),
-                        pageForPostsState = selectorWithoutSelection()
-                )
+            HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
+            HomepageSettingsUiState(
+                isClassicBlogState = true,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithoutSelection(),
+                pageForPostsState = selectorWithoutSelection()
+            ),
+            HomepageSettingsUiState(
+                isClassicBlogState = true,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithoutSelection(isExpanded = true),
+                pageForPostsState = selectorWithoutSelection()
+            ),
+            HomepageSettingsUiState(
+                isClassicBlogState = true,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithoutSelection(),
+                pageForPostsState = selectorWithoutSelection(isExpanded = true)
+            ),
+            HomepageSettingsUiState(
+                isClassicBlogState = true,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithoutSelection(),
+                pageForPostsState = selectorWithoutSelection()
+            )
         )
     }
 
@@ -288,9 +292,9 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         val pageForPosts = buildPage(pageUiModel)
         initSiteStore(true, loadingResults = listOf(Data(listOf(pageForPosts))))
         whenever(siteOptionsStore.updateHomepage(eq(siteModel), any())).thenReturn(
-                HomepageUpdatedPayload(
-                        SiteHomepageSettings.Posts
-                )
+            HomepageUpdatedPayload(
+                SiteHomepageSettings.Posts
+            )
         )
 
         viewModel.start(siteId, null, null, null)
@@ -298,27 +302,27 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel.onAcceptClicked()
 
         assertThat(uiStates).containsOnly(
-                HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
-                HomepageSettingsUiState(
-                        isClassicBlogState = true,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithoutSelection(),
-                        pageForPostsState = selectorWithoutSelection()
-                ),
-                HomepageSettingsUiState(
-                        isClassicBlogState = true,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithoutSelection(),
-                        pageForPostsState = selectorWithoutSelection(),
-                        isLoading = true,
-                        isSaveEnabled = false
-                ),
-                HomepageSettingsUiState(
-                        isClassicBlogState = true,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithoutSelection(),
-                        pageForPostsState = selectorWithoutSelection()
-                )
+            HomepageSettingsUiState(isClassicBlogState = true, siteModel = siteModel),
+            HomepageSettingsUiState(
+                isClassicBlogState = true,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithoutSelection(),
+                pageForPostsState = selectorWithoutSelection()
+            ),
+            HomepageSettingsUiState(
+                isClassicBlogState = true,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithoutSelection(),
+                pageForPostsState = selectorWithoutSelection(),
+                isLoading = true,
+                isSaveEnabled = false
+            ),
+            HomepageSettingsUiState(
+                isClassicBlogState = true,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithoutSelection(),
+                pageForPostsState = selectorWithoutSelection()
+            )
         )
     }
 
@@ -327,9 +331,9 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         val pageForPosts = buildPage(pageUiModel)
         initSiteStore(false, loadingResults = listOf(Data(listOf(pageForPosts))))
         whenever(siteOptionsStore.updateHomepage(eq(siteModel), any())).thenReturn(
-                HomepageUpdatedPayload(
-                        SiteHomepageSettings.Posts
-                )
+            HomepageUpdatedPayload(
+                SiteHomepageSettings.Posts
+            )
         )
 
         viewModel.start(siteId, null, null, remoteId)
@@ -337,27 +341,27 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel.onAcceptClicked()
 
         assertThat(uiStates).containsOnly(
-                HomepageSettingsUiState(isClassicBlogState = false, siteModel = siteModel),
-                HomepageSettingsUiState(
-                        isClassicBlogState = false,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithSelection(),
-                        pageForPostsState = selectorWithoutSelection()
-                ),
-                HomepageSettingsUiState(
-                        isClassicBlogState = false,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithSelection(),
-                        pageForPostsState = selectorWithoutSelection(),
-                        isLoading = true,
-                        isSaveEnabled = false
-                ),
-                HomepageSettingsUiState(
-                        isClassicBlogState = false,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithSelection(),
-                        pageForPostsState = selectorWithoutSelection()
-                )
+            HomepageSettingsUiState(isClassicBlogState = false, siteModel = siteModel),
+            HomepageSettingsUiState(
+                isClassicBlogState = false,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithSelection(),
+                pageForPostsState = selectorWithoutSelection()
+            ),
+            HomepageSettingsUiState(
+                isClassicBlogState = false,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithSelection(),
+                pageForPostsState = selectorWithoutSelection(),
+                isLoading = true,
+                isSaveEnabled = false
+            ),
+            HomepageSettingsUiState(
+                isClassicBlogState = false,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithSelection(),
+                pageForPostsState = selectorWithoutSelection()
+            )
         )
 
         verify(siteOptionsStore).updateHomepage(eq(siteModel), eq(SiteHomepageSettings.StaticPage(0, remoteId)))
@@ -374,28 +378,28 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel.onAcceptClicked()
 
         assertThat(uiStates).containsOnly(
-                HomepageSettingsUiState(isClassicBlogState = false, siteModel = siteModel),
-                HomepageSettingsUiState(
-                        isClassicBlogState = false,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithSelection(),
-                        pageForPostsState = selectorWithSelection()
-                ),
-                HomepageSettingsUiState(
-                        isClassicBlogState = false,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithSelection(),
-                        pageForPostsState = selectorWithSelection(),
-                        isLoading = true,
-                        isSaveEnabled = false
-                ),
-                HomepageSettingsUiState(
-                        isClassicBlogState = false,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithSelection(),
-                        pageForPostsState = selectorWithSelection(),
-                        error = R.string.site_settings_page_for_posts_and_homepage_cannot_be_equal
-                )
+            HomepageSettingsUiState(isClassicBlogState = false, siteModel = siteModel),
+            HomepageSettingsUiState(
+                isClassicBlogState = false,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithSelection(),
+                pageForPostsState = selectorWithSelection()
+            ),
+            HomepageSettingsUiState(
+                isClassicBlogState = false,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithSelection(),
+                pageForPostsState = selectorWithSelection(),
+                isLoading = true,
+                isSaveEnabled = false
+            ),
+            HomepageSettingsUiState(
+                isClassicBlogState = false,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithSelection(),
+                pageForPostsState = selectorWithSelection(),
+                error = R.string.site_settings_page_for_posts_and_homepage_cannot_be_equal
+            )
         )
 
         verifyNoInteractions(siteOptionsStore)
@@ -407,9 +411,9 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         val pageForPosts = buildPage(pageUiModel)
         initSiteStore(false, loadingResults = listOf(Data(listOf(pageForPosts))))
         whenever(siteOptionsStore.updateHomepage(eq(siteModel), any())).thenReturn(
-                HomepageUpdatedPayload(
-                        SiteOptionsError(API_ERROR, "Api error")
-                )
+            HomepageUpdatedPayload(
+                SiteOptionsError(API_ERROR, "Api error")
+            )
         )
 
         viewModel.start(siteId, null, null, remoteId)
@@ -417,28 +421,28 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel.onAcceptClicked()
 
         assertThat(uiStates).containsOnly(
-                HomepageSettingsUiState(isClassicBlogState = false, siteModel = siteModel),
-                HomepageSettingsUiState(
-                        isClassicBlogState = false,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithSelection(),
-                        pageForPostsState = selectorWithoutSelection()
-                ),
-                HomepageSettingsUiState(
-                        isClassicBlogState = false,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithSelection(),
-                        pageForPostsState = selectorWithoutSelection(),
-                        isLoading = true,
-                        isSaveEnabled = false
-                ),
-                HomepageSettingsUiState(
-                        isClassicBlogState = false,
-                        siteModel = siteModel,
-                        pageOnFrontState = selectorWithSelection(),
-                        pageForPostsState = selectorWithoutSelection(),
-                        error = R.string.site_settings_failed_update_homepage_settings
-                )
+            HomepageSettingsUiState(isClassicBlogState = false, siteModel = siteModel),
+            HomepageSettingsUiState(
+                isClassicBlogState = false,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithSelection(),
+                pageForPostsState = selectorWithoutSelection()
+            ),
+            HomepageSettingsUiState(
+                isClassicBlogState = false,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithSelection(),
+                pageForPostsState = selectorWithoutSelection(),
+                isLoading = true,
+                isSaveEnabled = false
+            ),
+            HomepageSettingsUiState(
+                isClassicBlogState = false,
+                siteModel = siteModel,
+                pageOnFrontState = selectorWithSelection(),
+                pageForPostsState = selectorWithoutSelection(),
+                error = R.string.site_settings_failed_update_homepage_settings
+            )
         )
 
         verify(siteOptionsStore).updateHomepage(eq(siteModel), eq(SiteHomepageSettings.StaticPage(0, remoteId)))
@@ -456,29 +460,29 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         isExpanded: Boolean = false
     ): HomepageSettingsSelectorUiState {
         return HomepageSettingsSelectorUiState(
-                localPages,
-                UiStringRes(R.string.site_settings_select_page),
-                0,
-                isHighlighted = false,
-                isExpanded = isExpanded
+            localPages,
+            UiStringRes(R.string.site_settings_select_page),
+            0,
+            isHighlighted = false,
+            isExpanded = isExpanded
         )
     }
 
     private fun selectorWithSelection() = HomepageSettingsSelectorUiState(localPages, UiStringText(title), localId)
 
     private fun buildPage(pageUiModel: PageUiModel) =
-            PageModel(
-                    mock(),
-                    siteModel,
-                    pageUiModel.id,
-                    pageUiModel.title,
-                    PUBLISHED,
-                    Date(),
-                    false,
-                    pageUiModel.remoteId,
-                    null,
-                    -1
-            )
+        PageModel(
+            mock(),
+            siteModel,
+            pageUiModel.id,
+            pageUiModel.title,
+            PUBLISHED,
+            Date(),
+            false,
+            pageUiModel.remoteId,
+            null,
+            -1
+        )
 
     private suspend fun initSiteStore(
         isClassicBlog: Boolean,
@@ -495,9 +499,9 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         siteModel.pageForPosts = pageForPostsId ?: 0
         siteModel.pageOnFront = pageOnFrontId ?: 0
         whenever(homepageSettingsDataLoader.loadPages(siteModel)).thenReturn(
-                flow {
-                    loadingResults.forEach { emit(it) }
-                }
+            flow {
+                loadingResults.forEach { emit(it) }
+            }
         )
         viewModel.uiState.observeForever { uiStates.add(it) }
     }

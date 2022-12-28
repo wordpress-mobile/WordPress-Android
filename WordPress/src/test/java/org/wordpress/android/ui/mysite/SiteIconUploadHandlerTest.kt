@@ -23,12 +23,18 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
 class SiteIconUploadHandlerTest : BaseUnitTest() {
-    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var eventBusWrapper: EventBusWrapper
-    @Mock lateinit var postModel: PostModel
-    @Mock lateinit var mediaModel: MediaModel
-    @Mock lateinit var siteModel: SiteModel
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var eventBusWrapper: EventBusWrapper
+    @Mock
+    lateinit var postModel: PostModel
+    @Mock
+    lateinit var mediaModel: MediaModel
+    @Mock
+    lateinit var siteModel: SiteModel
     private var uploadedEvents = mutableListOf<ItemUploadedModel>()
     private lateinit var viewModel: SiteIconUploadHandler
 

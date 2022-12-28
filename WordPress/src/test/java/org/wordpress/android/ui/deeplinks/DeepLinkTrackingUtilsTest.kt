@@ -18,9 +18,12 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class DeepLinkTrackingUtilsTest {
-    @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
-    @Mock lateinit var deepLinkHandlers: DeepLinkHandlers
-    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock
+    lateinit var deepLinkUriUtils: DeepLinkUriUtils
+    @Mock
+    lateinit var deepLinkHandlers: DeepLinkHandlers
+    @Mock
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     private lateinit var deepLinkTrackingUtils: DeepLinkTrackingUtils
     private val action = "action"
 
@@ -95,12 +98,12 @@ class DeepLinkTrackingUtilsTest {
         sourceInfo: String? = null
     ) {
         verify(analyticsUtilsWrapper).trackWithDeepLinkData(
-                DEEP_LINKED,
-                action,
-                host,
-                source.value,
-                expectedUrl,
-                sourceInfo
+            DEEP_LINKED,
+            action,
+            host,
+            source.value,
+            expectedUrl,
+            sourceInfo
         )
     }
 }

@@ -106,7 +106,7 @@ class GetRestoreStatusUseCase @Inject constructor(
     }
 
     private suspend fun FlowCollector<RestoreRequestState>.emitFinished(rewind: Rewind) =
-            if (rewind.rewindId != null) emitComplete(rewind) else emitFailure()
+        if (rewind.rewindId != null) emitComplete(rewind) else emitFailure()
 
     private suspend fun FlowCollector<RestoreRequestState>.emitComplete(rewind: Rewind) {
         val rewindId = rewind.rewindId as String
@@ -117,7 +117,7 @@ class GetRestoreStatusUseCase @Inject constructor(
     private suspend fun FlowCollector<RestoreRequestState>.emitFailure() = emit(RemoteRequestFailure)
 
     private suspend fun FlowCollector<RestoreRequestState>.emitAwaitingCredentials(isAwaitingCredentials: Boolean) =
-            emit(AwaitingCredentials(isAwaitingCredentials))
+        emit(AwaitingCredentials(isAwaitingCredentials))
 
     private suspend fun FlowCollector<RestoreRequestState>.emitProgress(rewind: Rewind) {
         val rewindId = rewind.rewindId as String

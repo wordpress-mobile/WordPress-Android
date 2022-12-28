@@ -34,34 +34,42 @@ import org.wordpress.android.viewmodel.Event
 @ExperimentalCoroutinesApi
 class PrepublishingHomeViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingHomeViewModel
-    @Mock lateinit var postSettingsUtils: PostSettingsUtils
-    @Mock lateinit var editPostRepository: EditPostRepository
-    @Mock lateinit var getPostTagsUseCase: GetPostTagsUseCase
-    @Mock lateinit var getButtonUiStateUseCase: GetButtonUiStateUseCase
-    @Mock lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
-    @Mock lateinit var updateStoryTitleUseCase: UpdateStoryPostTitleUseCase
-    @Mock lateinit var getCategoriesUseCase: GetCategoriesUseCase
-    @Mock lateinit var site: SiteModel
+    @Mock
+    lateinit var postSettingsUtils: PostSettingsUtils
+    @Mock
+    lateinit var editPostRepository: EditPostRepository
+    @Mock
+    lateinit var getPostTagsUseCase: GetPostTagsUseCase
+    @Mock
+    lateinit var getButtonUiStateUseCase: GetButtonUiStateUseCase
+    @Mock
+    lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
+    @Mock
+    lateinit var updateStoryTitleUseCase: UpdateStoryPostTitleUseCase
+    @Mock
+    lateinit var getCategoriesUseCase: GetCategoriesUseCase
+    @Mock
+    lateinit var site: SiteModel
 
     @Before
     @Suppress("UNCHECKED_CAST")
     fun setUp() {
         viewModel = PrepublishingHomeViewModel(
-                getPostTagsUseCase,
-                postSettingsUtils,
-                getButtonUiStateUseCase,
-                mock(),
-                storyRepositoryWrapper,
-                updateStoryTitleUseCase,
-                getCategoriesUseCase,
-                testDispatcher()
+            getPostTagsUseCase,
+            postSettingsUtils,
+            getButtonUiStateUseCase,
+            mock(),
+            storyRepositoryWrapper,
+            updateStoryTitleUseCase,
+            getCategoriesUseCase,
+            testDispatcher()
         )
         whenever(
-                getButtonUiStateUseCase.getUiState(
-                        any(),
-                        any(),
-                        any()
-                )
+            getButtonUiStateUseCase.getUiState(
+                any(),
+                any(),
+                any()
+            )
         ).doAnswer {
             PublishButtonUiState(it.arguments[2] as (PublishPost) -> Unit)
         }
@@ -83,7 +91,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         // assert
         assertThat(viewModel.uiState.value?.filterIsInstance(HomeUiState::class.java)?.size).isEqualTo(
-                expectedActionsAmount
+            expectedActionsAmount
         )
     }
 
@@ -98,7 +106,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         // assert
         assertThat(viewModel.uiState.value?.filterIsInstance(HomeUiState::class.java)?.size).isEqualTo(
-                expectedActionsAmount
+            expectedActionsAmount
         )
     }
 
@@ -136,7 +144,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         // assert
         assertThat(viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.size).isEqualTo(
-                expectedActionsAmount
+            expectedActionsAmount
         )
     }
 
@@ -150,7 +158,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         // assert
         assertThat(viewModel.uiState.value?.filterIsInstance(ButtonUiState::class.java)?.size).isEqualTo(
-                expectedActionsAmount
+            expectedActionsAmount
         )
     }
 
@@ -221,7 +229,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         // assert
         assertThat((tagsAction?.actionResult as? UiStringRes)?.stringRes)
-                .isEqualTo(R.string.prepublishing_nudges_home_tags_not_set)
+            .isEqualTo(R.string.prepublishing_nudges_home_tags_not_set)
     }
 
     @Test
@@ -404,7 +412,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
     private fun getHomeUiState(actionType: ActionType): HomeUiState? {
         val actions = viewModel.uiState.value
-                ?.filterIsInstance(HomeUiState::class.java)
+            ?.filterIsInstance(HomeUiState::class.java)
         return actions?.find { it.actionType == actionType }
     }
 }

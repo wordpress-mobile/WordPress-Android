@@ -30,10 +30,10 @@ class LayoutCategoryAdapter(
 
     fun update(newItems: List<LayoutCategoryUiState>) {
         val diffResult = DiffUtil.calculateDiff(
-                LayoutCategoryDiffCallback(
-                        items,
-                        newItems
-                )
+            LayoutCategoryDiffCallback(
+                items,
+                newItems
+            )
         )
         items = newItems
         diffResult.dispatchUpdatesTo(this)
@@ -59,18 +59,18 @@ class LayoutCategoryAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            when (viewType) {
-                FOOTER.ordinal -> LayoutsFooterViewHolder(parent, footerLayoutResId!!)
-                else ->
-                    LayoutsItemViewHolder(
-                            parent = parent,
-                            nestedScrollStates = nestedScrollStates,
-                            thumbDimensionProvider = thumbDimensionProvider,
-                            recommendedDimensionProvider = recommendedDimensionProvider,
-                            showRowDividers = showRowDividers,
-                            useLargeCategoryHeading = useLargeCategoryHeading
-                    )
-            }
+        when (viewType) {
+            FOOTER.ordinal -> LayoutsFooterViewHolder(parent, footerLayoutResId!!)
+            else ->
+                LayoutsItemViewHolder(
+                    parent = parent,
+                    nestedScrollStates = nestedScrollStates,
+                    thumbDimensionProvider = thumbDimensionProvider,
+                    recommendedDimensionProvider = recommendedDimensionProvider,
+                    showRowDividers = showRowDividers,
+                    useLargeCategoryHeading = useLargeCategoryHeading
+                )
+        }
 
     fun onRestoreInstanceState(savedInstanceState: Bundle) {
         nestedScrollStates = savedInstanceState

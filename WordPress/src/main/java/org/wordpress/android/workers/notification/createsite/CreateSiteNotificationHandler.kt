@@ -23,23 +23,23 @@ class CreateSiteNotificationHandler @Inject constructor(
 ) : LocalNotificationHandler {
     override fun shouldShowNotification(): Boolean {
         val isNotificationSettingsEnabled = sharedPrefs.getBoolean(
-                resourceProvider.getString(R.string.wp_pref_notifications_main),
-                true
+            resourceProvider.getString(R.string.wp_pref_notifications_main),
+            true
         )
         return isNotificationSettingsEnabled && accountStore.hasAccessToken() && !siteStore.hasSite()
     }
 
     override fun buildFirstActionPendingIntent(context: Context, notificationId: Int): PendingIntent {
         val intent = ActivityLauncher.createMainActivityAndSiteCreationActivityIntent(
-                context,
-                CREATE_SITE,
-                SiteCreationSource.NOTIFICATION
+            context,
+            CREATE_SITE,
+            SiteCreationSource.NOTIFICATION
         )
         return PendingIntent.getActivity(
-                context,
-                notificationId + 1,
-                intent,
-                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            context,
+            notificationId + 1,
+            intent,
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
 

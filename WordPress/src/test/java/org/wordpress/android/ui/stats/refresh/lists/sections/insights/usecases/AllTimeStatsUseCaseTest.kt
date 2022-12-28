@@ -33,12 +33,18 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 
 @ExperimentalCoroutinesApi
 class AllTimeStatsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: AllTimeInsightsStore
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
-    @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
-    @Mock lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var insightsStore: AllTimeInsightsStore
+    @Mock
+    lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock
+    lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock
+    lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+    @Mock
+    lateinit var statsUtils: StatsUtils
     private val site = SiteModel()
     private lateinit var useCase: AllTimeStatsUseCase
     private val bestDay = "2018-11-25"
@@ -48,14 +54,14 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = AllTimeStatsUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                insightsStore,
-                statsSiteProvider,
-                statsDateFormatter,
-                statsWidgetUpdaters,
-                statsUtils,
-                popupMenuHandler
+            testDispatcher(),
+            testDispatcher(),
+            insightsStore,
+            statsSiteProvider,
+            statsDateFormatter,
+            statsWidgetUpdaters,
+            statsUtils,
+            popupMenuHandler
         )
         site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -69,10 +75,10 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val refresh = true
         val message = "error"
         whenever(
-                insightsStore.fetchAllTimeInsights(
-                        site,
-                        forced
-                )
+            insightsStore.fetchAllTimeInsights(
+                site,
+                forced
+            )
         ).thenReturn(OnStatsFetched(StatsError(GENERIC_ERROR, message)))
 
         val result = loadAllTimeInsights(refresh, forced)
@@ -87,10 +93,10 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val refresh = true
         val emptyModel = InsightsAllTimeModel(1L, null, 0, 0, 0, bestDay, 0)
         whenever(
-                insightsStore.fetchAllTimeInsights(
-                        site,
-                        forced
-                )
+            insightsStore.fetchAllTimeInsights(
+                site,
+                forced
+            )
         ).thenReturn(OnStatsFetched(emptyModel))
 
         val result = loadAllTimeInsights(refresh, forced)
@@ -115,10 +121,10 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val model = InsightsAllTimeModel(1L, null, visitors, views, posts, bestDay, viewsBestDayTotal)
         whenever(insightsStore.getAllTimeInsights(site)).thenReturn(model)
         whenever(
-                insightsStore.fetchAllTimeInsights(
-                        site,
-                        forced
-                )
+            insightsStore.fetchAllTimeInsights(
+                site,
+                forced
+            )
         ).thenReturn(OnStatsFetched(model))
 
         val result = loadAllTimeInsights(refresh, forced)
@@ -152,10 +158,10 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val model = InsightsAllTimeModel(1L, null, 1, 0, 0, "", 0)
         whenever(insightsStore.getAllTimeInsights(site)).thenReturn(model)
         whenever(
-                insightsStore.fetchAllTimeInsights(
-                        site,
-                        forced
-                )
+            insightsStore.fetchAllTimeInsights(
+                site,
+                forced
+            )
         ).thenReturn(OnStatsFetched(model))
 
         val result = loadAllTimeInsights(refresh, forced)

@@ -12,7 +12,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.helpers.DialogHolder
-import java.lang.NullPointerException
 
 private const val CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG"
 private const val CONFIRM_DELETE_PAGE_DIALOG_TAG = "CONFIRM_DELETE_PAGE_DIALOG_TAG"
@@ -30,11 +29,11 @@ class PageListDialogHelper(
     fun showAutoSaveRevisionDialog(page: PostModel) {
         analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN, mapOf(POST_TYPE to "page"))
         val dialogHolder = DialogHolder(
-                tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
-                title = UiStringRes(R.string.dialog_confirm_autosave_title),
-                message = PostUtils.getCustomStringForAutosaveRevisionDialog(page),
-                positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
-                negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
+            tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
+            title = UiStringRes(R.string.dialog_confirm_autosave_title),
+            message = PostUtils.getCustomStringForAutosaveRevisionDialog(page),
+            positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
+            negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
         )
         pageIdForAutosaveRevisionResolutionDialog = RemoteId(page.remotePostId)
         showDialog.invoke(dialogHolder)
@@ -42,14 +41,14 @@ class PageListDialogHelper(
 
     fun showDeletePageConfirmationDialog(pageId: RemoteId, pageTitle: String) {
         val dialogHolder = DialogHolder(
-                tag = CONFIRM_DELETE_PAGE_DIALOG_TAG,
-                title = UiStringRes(R.string.delete_page),
-                message = UiStringResWithParams(
-                        R.string.page_delete_dialog_message,
-                        listOf(UiStringText(pageTitle))
-                ),
-                positiveButton = UiStringRes(R.string.delete),
-                negativeButton = UiStringRes(R.string.cancel)
+            tag = CONFIRM_DELETE_PAGE_DIALOG_TAG,
+            title = UiStringRes(R.string.delete_page),
+            message = UiStringResWithParams(
+                R.string.page_delete_dialog_message,
+                listOf(UiStringText(pageTitle))
+            ),
+            positiveButton = UiStringRes(R.string.delete),
+            negativeButton = UiStringRes(R.string.cancel)
         )
         pageIdForDeleteDialog = pageId
         showDialog.invoke(dialogHolder)
@@ -57,11 +56,11 @@ class PageListDialogHelper(
 
     fun showCopyConflictDialog(page: PostModel) {
         val dialogHolder = DialogHolder(
-                tag = CONFIRM_COPY_CONFLICT_DIALOG_TAG,
-                title = UiStringRes(R.string.dialog_confirm_copy_local_title),
-                message = UiStringRes(R.string.dialog_confirm_copy_local_message),
-                positiveButton = UiStringRes(R.string.dialog_confirm_copy_local_edit_button),
-                negativeButton = UiStringRes(R.string.dialog_confirm_copy_local_copy_button)
+            tag = CONFIRM_COPY_CONFLICT_DIALOG_TAG,
+            title = UiStringRes(R.string.dialog_confirm_copy_local_title),
+            message = UiStringRes(R.string.dialog_confirm_copy_local_message),
+            positiveButton = UiStringRes(R.string.dialog_confirm_copy_local_edit_button),
+            negativeButton = UiStringRes(R.string.dialog_confirm_copy_local_copy_button)
         )
         pageIdForCopyDialog = RemoteId(page.remotePostId)
         showDialog.invoke(dialogHolder)
@@ -83,11 +82,11 @@ class PageListDialogHelper(
                 pageIdForAutosaveRevisionResolutionDialog = null
                 editPage(it, true)
                 analyticsTracker.track(
-                        UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED,
-                        mapOf(POST_TYPE to "page")
+                    UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED,
+                    mapOf(POST_TYPE to "page")
                 )
             }
-                    ?: throw NullPointerException("pageIdForAutosaveRevisionResolutionDialog shouldn't be null.")
+                ?: throw NullPointerException("pageIdForAutosaveRevisionResolutionDialog shouldn't be null.")
             CONFIRM_COPY_CONFLICT_DIALOG_TAG -> pageIdForCopyDialog?.let {
                 pageIdForCopyDialog = null
                 editPageFirst(it)
@@ -107,11 +106,11 @@ class PageListDialogHelper(
                 // open the editor with the local page (don't use the auto save version)
                 editPage(it, false)
                 analyticsTracker.track(
-                        UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED,
-                        mapOf(POST_TYPE to "page")
+                    UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED,
+                    mapOf(POST_TYPE to "page")
                 )
             }
-                    ?: throw NullPointerException("pageIdForAutosaveRevisionResolutionDialog shouldn't be null.")
+                ?: throw NullPointerException("pageIdForAutosaveRevisionResolutionDialog shouldn't be null.")
             CONFIRM_COPY_CONFLICT_DIALOG_TAG -> pageIdForCopyDialog?.let {
                 pageIdForCopyDialog = null
                 copyPage(it)

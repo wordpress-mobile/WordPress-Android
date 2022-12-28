@@ -31,12 +31,18 @@ import org.wordpress.android.util.DateTimeUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class SavePostToDbUseCaseTest {
-    @Mock lateinit var uploadUtils: UploadUtilsWrapper
-    @Mock lateinit var dateTimeUtils: DateTimeUtilsWrapper
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var pendingDraftsNotificationsUtils: PendingDraftsNotificationsUtilsWrapper
-    @Mock lateinit var postRepository: EditPostRepository
-    @Mock lateinit var context: Context
+    @Mock
+    lateinit var uploadUtils: UploadUtilsWrapper
+    @Mock
+    lateinit var dateTimeUtils: DateTimeUtilsWrapper
+    @Mock
+    lateinit var dispatcher: Dispatcher
+    @Mock
+    lateinit var pendingDraftsNotificationsUtils: PendingDraftsNotificationsUtilsWrapper
+    @Mock
+    lateinit var postRepository: EditPostRepository
+    @Mock
+    lateinit var context: Context
     private lateinit var siteModel: SiteModel
     private lateinit var postModel: PostModel
     private lateinit var savePostToDbUseCase: SavePostToDbUseCase
@@ -47,11 +53,11 @@ class SavePostToDbUseCaseTest {
     @Before
     fun setUp() {
         savePostToDbUseCase = SavePostToDbUseCase(
-                uploadUtils,
-                dateTimeUtils,
-                dispatcher,
-                pendingDraftsNotificationsUtils,
-                context
+            uploadUtils,
+            dateTimeUtils,
+            dispatcher,
+            pendingDraftsNotificationsUtils,
+            context
         )
         actionCaptor = argumentCaptor()
         whenever(dateTimeUtils.currentTimeInIso8601()).thenReturn(currentTime)
@@ -89,10 +95,10 @@ class SavePostToDbUseCaseTest {
     @Test
     fun `sets status PENDING when cannot publish and is PUBLISHED, SCHEDULED, PRIVATE, UNKNOWN`() {
         listOf(
-                UNKNOWN,
-                PUBLISHED,
-                SCHEDULED,
-                PRIVATE
+            UNKNOWN,
+            PUBLISHED,
+            SCHEDULED,
+            PRIVATE
         ).forEach { postStatus ->
             // Given
             setupPost(userCanPublish = false, postStatus = postStatus)
@@ -106,9 +112,9 @@ class SavePostToDbUseCaseTest {
     @Test
     fun `does not change status when cannot publish and is DRAFT, PENDING, TRASHED`() {
         listOf(
-                DRAFT,
-                PENDING,
-                TRASHED
+            DRAFT,
+            PENDING,
+            TRASHED
         ).forEach { postStatus ->
             // Given
             setupPost(userCanPublish = false, postStatus = postStatus)
@@ -122,13 +128,13 @@ class SavePostToDbUseCaseTest {
     @Test
     fun `does not change status when user can publish`() {
         listOf(
-                UNKNOWN,
-                PUBLISHED,
-                SCHEDULED,
-                PRIVATE,
-                DRAFT,
-                PENDING,
-                TRASHED
+            UNKNOWN,
+            PUBLISHED,
+            SCHEDULED,
+            PRIVATE,
+            DRAFT,
+            PENDING,
+            TRASHED
         ).forEach { postStatus ->
             // Given
             setupPost(userCanPublish = true, postStatus = postStatus)
@@ -158,9 +164,9 @@ class SavePostToDbUseCaseTest {
         savePostToDbUseCase.savePostToDb(postRepository, siteModel)
         // Then
         verify(pendingDraftsNotificationsUtils).scheduleNextNotifications(
-                context,
-                postId,
-                currentTime
+            context,
+            postId,
+            currentTime
         )
     }
 

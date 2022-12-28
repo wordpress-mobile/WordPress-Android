@@ -26,16 +26,19 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @ExperimentalCoroutinesApi
 class PostBackupDownloadUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: PostBackupDownloadUseCase
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var activityLogStore: ActivityLogStore
-    @Mock lateinit var siteModel: SiteModel
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    lateinit var activityLogStore: ActivityLogStore
+    @Mock
+    lateinit var siteModel: SiteModel
 
     @Before
     fun setup() = test {
         useCase = PostBackupDownloadUseCase(
-                networkUtilsWrapper,
-                activityLogStore,
-                testDispatcher()
+            networkUtilsWrapper,
+            activityLogStore,
+            testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
@@ -52,11 +55,11 @@ class PostBackupDownloadUseCaseTest : BaseUnitTest() {
     @Test
     fun `given invalid response, when download is triggered, then RemoteRequestFailure is returned`() = test {
         whenever(activityLogStore.backupDownload(any())).thenReturn(
-                OnBackupDownload(
-                        rewindId, BackupDownloadError(
-                        INVALID_RESPONSE
+            OnBackupDownload(
+                rewindId, BackupDownloadError(
+                    INVALID_RESPONSE
                 ), BACKUP_DOWNLOAD
-                )
+            )
         )
 
         val result = useCase.postBackupDownloadRequest(rewindId, siteModel, types)
@@ -67,11 +70,11 @@ class PostBackupDownloadUseCaseTest : BaseUnitTest() {
     @Test
     fun `given generic error response, when download is triggered, then RemoteRequestFailure is returned`() = test {
         whenever(activityLogStore.backupDownload(any())).thenReturn(
-                OnBackupDownload(
-                        rewindId, BackupDownloadError(
-                        GENERIC_ERROR
+            OnBackupDownload(
+                rewindId, BackupDownloadError(
+                    GENERIC_ERROR
                 ), BACKUP_DOWNLOAD
-                )
+            )
         )
 
         val result = useCase.postBackupDownloadRequest(rewindId, siteModel, types)
@@ -82,11 +85,11 @@ class PostBackupDownloadUseCaseTest : BaseUnitTest() {
     @Test
     fun `given api error response, when download is triggered, then RemoteRequestFailure is returned`() = test {
         whenever(activityLogStore.backupDownload(any())).thenReturn(
-                OnBackupDownload(
-                        rewindId, BackupDownloadError(
-                        API_ERROR
+            OnBackupDownload(
+                rewindId, BackupDownloadError(
+                    API_ERROR
                 ), BACKUP_DOWNLOAD
-                )
+            )
         )
 
         val result = useCase.postBackupDownloadRequest(rewindId, siteModel, types)
@@ -97,11 +100,11 @@ class PostBackupDownloadUseCaseTest : BaseUnitTest() {
     @Test
     fun `when download is triggered successfully, then Success is returned`() = test {
         whenever(activityLogStore.backupDownload(any())).thenReturn(
-                OnBackupDownload(
-                        rewindId = rewindId,
-                        downloadId = downloadId,
-                        causeOfChange = BACKUP_DOWNLOAD
-                )
+            OnBackupDownload(
+                rewindId = rewindId,
+                downloadId = downloadId,
+                causeOfChange = BACKUP_DOWNLOAD
+            )
         )
 
         val result = useCase.postBackupDownloadRequest(rewindId, siteModel, types)
@@ -112,11 +115,11 @@ class PostBackupDownloadUseCaseTest : BaseUnitTest() {
     @Test
     fun `given download success, when downloadId is null, then RemoteRequestFailure is returned`() = test {
         whenever(activityLogStore.backupDownload(any())).thenReturn(
-                OnBackupDownload(
-                        rewindId = rewindId,
-                        downloadId = null,
-                        causeOfChange = BACKUP_DOWNLOAD
-                )
+            OnBackupDownload(
+                rewindId = rewindId,
+                downloadId = null,
+                causeOfChange = BACKUP_DOWNLOAD
+            )
         )
 
         val result = useCase.postBackupDownloadRequest(rewindId, siteModel, types)
@@ -127,11 +130,11 @@ class PostBackupDownloadUseCaseTest : BaseUnitTest() {
     @Test
     fun `given download success, when unmatched rewindIds, then OtherRequestRunning is returned`() = test {
         whenever(activityLogStore.backupDownload(any())).thenReturn(
-                OnBackupDownload(
-                        rewindId = "unmatchedRewindId",
-                        downloadId = downloadId,
-                        causeOfChange = BACKUP_DOWNLOAD
-                )
+            OnBackupDownload(
+                rewindId = "unmatchedRewindId",
+                downloadId = downloadId,
+                causeOfChange = BACKUP_DOWNLOAD
+            )
         )
 
         val result = useCase.postBackupDownloadRequest(rewindId, siteModel, types)
@@ -143,11 +146,11 @@ class PostBackupDownloadUseCaseTest : BaseUnitTest() {
     private val downloadId = 100L
 
     private val types: BackupDownloadRequestTypes = BackupDownloadRequestTypes(
-            themes = true,
-            plugins = true,
-            uploads = true,
-            sqls = true,
-            roots = true,
-            contents = true
+        themes = true,
+        plugins = true,
+        uploads = true,
+        sqls = true,
+        roots = true,
+        contents = true
     )
 }

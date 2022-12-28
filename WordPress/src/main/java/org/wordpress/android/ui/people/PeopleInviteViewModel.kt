@@ -5,7 +5,6 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
@@ -63,7 +62,7 @@ class PeopleInviteViewModel @Inject constructor(
 
     private val _inviteLinksState = MediatorLiveData<InviteLinksState>()
     val inviteLinksUiState: LiveData<InviteLinksUiState> =
-            _inviteLinksState.map { state -> buildInviteLinksUiState(state) }
+        _inviteLinksState.map { state -> buildInviteLinksUiState(state) }
 
     private val _shareLink = MutableLiveData<Event<InviteLinksItem>>()
     val shareLink: LiveData<Event<InviteLinksItem>> = _shareLink
@@ -90,8 +89,8 @@ class PeopleInviteViewModel @Inject constructor(
             inviteLinksRequestJob?.cancel()
             inviteLinksRequestJob = launch(bgDispatcher) {
                 inviteLinksHandler.handleInviteLinksStatusRequest(
-                        siteModel.siteId,
-                        INITIALIZING
+                    siteModel.siteId,
+                    INITIALIZING
                 )
             }
         } else {
@@ -128,47 +127,47 @@ class PeopleInviteViewModel @Inject constructor(
         } else {
             AppLog.d(T.PEOPLE, "Could not get roles for site [${siteModel.siteId}]")
             _snackbarEvents.value = Event(
-                    SnackbarMessageHolder(
-                            UiStringText(
-                                    contextProvider.getContext()
-                                            .getString(string.invite_links_cannot_get_roles_error)
-                            )
+                SnackbarMessageHolder(
+                    UiStringText(
+                        contextProvider.getContext()
+                            .getString(string.invite_links_cannot_get_roles_error)
                     )
+                )
             )
         }
     }
 
     fun onLinksRoleSelected(roleDisplayName: String) {
         val selectedRole = invitePeopleUtils.getInviteLinkDataFromRoleDisplayName(
-                inviteLinksData,
-                siteModel,
-                roleDisplayName
+            inviteLinksData,
+            siteModel,
+            roleDisplayName
         )
 
         selectedRole?.let {
             _inviteLinksState.value = InviteLinksUserChangedRole(it)
         } ?: run {
             AppLog.d(
-                    T.PEOPLE,
-                    "Could not get data for site [${siteModel.siteId}] " +
-                            "role [$roleDisplayName] from ${inviteLinksData.map { it.role }}"
+                T.PEOPLE,
+                "Could not get data for site [${siteModel.siteId}] " +
+                        "role [$roleDisplayName] from ${inviteLinksData.map { it.role }}"
             )
             _snackbarEvents.value = Event(
-                    SnackbarMessageHolder(
-                            UiStringText(
-                                    contextProvider.getContext()
-                                            .getString(string.invite_links_cannot_get_role_data_error, roleDisplayName)
-                            )
+                SnackbarMessageHolder(
+                    UiStringText(
+                        contextProvider.getContext()
+                            .getString(string.invite_links_cannot_get_role_data_error, roleDisplayName)
                     )
+                )
             )
         }
     }
 
     fun onShareButtonClicked(roleDisplayName: String) {
         val selectedRole = invitePeopleUtils.getInviteLinkDataFromRoleDisplayName(
-                inviteLinksData,
-                siteModel,
-                roleDisplayName
+            inviteLinksData,
+            siteModel,
+            roleDisplayName
         )
 
         val properties = mutableMapOf<String, Any?>()
@@ -179,17 +178,17 @@ class PeopleInviteViewModel @Inject constructor(
             properties.addInviteLinksSharedRole(it.role)
         } ?: run {
             AppLog.d(
-                    T.PEOPLE,
-                    "Could not share link for site [${siteModel.siteId}] " +
-                            "role [$roleDisplayName] from ${inviteLinksData.map { it.role }}"
+                T.PEOPLE,
+                "Could not share link for site [${siteModel.siteId}] " +
+                        "role [$roleDisplayName] from ${inviteLinksData.map { it.role }}"
             )
             _snackbarEvents.value = Event(
-                    SnackbarMessageHolder(
-                            UiStringText(
-                                    contextProvider.getContext()
-                                            .getString(string.invite_links_cannot_get_role_data_error, roleDisplayName)
-                            )
+                SnackbarMessageHolder(
+                    UiStringText(
+                        contextProvider.getContext()
+                            .getString(string.invite_links_cannot_get_role_data_error, roleDisplayName)
                     )
+                )
             )
             properties.addInviteLinksActionResult(ERROR, NO_ROLE_DATA_MATCHED.errorMessage)
             properties.addInviteLinksSharedRole(roleDisplayName)
@@ -210,8 +209,8 @@ class PeopleInviteViewModel @Inject constructor(
 
             inviteLinksSelectedRole = links.firstOrNull() ?: InviteLinksUiItem.getEmptyItem()
         } else if (
-                inviteLinksState.scenarioContext != MANAGING_AVAILABLE_LINKS &&
-                inviteLinksState is InviteLinksError
+            inviteLinksState.scenarioContext != MANAGING_AVAILABLE_LINKS &&
+            inviteLinksState is InviteLinksError
         ) {
             inviteLinksData.clear()
             links = listOf()
@@ -222,16 +221,17 @@ class PeopleInviteViewModel @Inject constructor(
             val roleData = inviteLinksState.selectedRole
 
             inviteLinksSelectedRole = InviteLinksUiItem(
-                    roleName = roleData.role,
-                    roleDisplayName = invitePeopleUtils.getDisplayNameForRole(siteModel, roleData.role),
-                    expiryDate = formatter.format(dateTimeUtilsWrapper.dateFromTimestamp(roleData.expiry))
+                roleName = roleData.role,
+                roleDisplayName = invitePeopleUtils.getDisplayNameForRole(siteModel, roleData.role),
+                expiryDate = formatter.format(dateTimeUtilsWrapper.dateFromTimestamp(roleData.expiry))
             )
         }
 
         val uiStateType = mapUiStateType(inviteLinksState, links)
 
         val loadAndRetryUiState = if (inviteLinksState.scenarioContext != INITIALIZING ||
-                listOf(LINKS_AVAILABLE, LINKS_GENERATE).contains(uiStateType)) {
+            listOf(LINKS_AVAILABLE, LINKS_GENERATE).contains(uiStateType)
+        ) {
             LoadAndRetryUiState.HIDDEN
         } else {
             if (uiStateType == GET_STATUS_RETRY) {
@@ -242,14 +242,14 @@ class PeopleInviteViewModel @Inject constructor(
         }
 
         return InviteLinksUiState(
-                type = uiStateType,
-                isLinksSectionVisible = uiStateType != HIDDEN,
-                loadAndRetryUiState = loadAndRetryUiState,
-                isShimmerSectionVisible = loadAndRetryUiState == LoadAndRetryUiState.HIDDEN,
-                isRoleSelectionAllowed = links.count() > 1,
-                links = links,
-                inviteLinksSelectedRole = inviteLinksSelectedRole,
-                enableManageLinksActions = links.count() > 0
+            type = uiStateType,
+            isLinksSectionVisible = uiStateType != HIDDEN,
+            loadAndRetryUiState = loadAndRetryUiState,
+            isShimmerSectionVisible = loadAndRetryUiState == LoadAndRetryUiState.HIDDEN,
+            isRoleSelectionAllowed = links.count() > 1,
+            links = links,
+            inviteLinksSelectedRole = inviteLinksSelectedRole,
+            enableManageLinksActions = links.count() > 0
         )
     }
 

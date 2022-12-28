@@ -19,9 +19,12 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class PostSettingsUtilsTest : BaseUnitTest() {
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var mStatsDateUtils: StatsDateUtils
-    @Mock lateinit var dateProvider: DateProvider
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var mStatsDateUtils: StatsDateUtils
+    @Mock
+    lateinit var dateProvider: DateProvider
     private lateinit var postSettingsUtils: PostSettingsUtils
     private lateinit var postUtilsWrapper: PostUtilsWrapper
 
@@ -37,37 +40,37 @@ class PostSettingsUtilsTest : BaseUnitTest() {
         whenever(mStatsDateUtils.formatDateTime(any())).thenReturn(formattedDate)
         whenever(dateProvider.getCurrentDate()).thenReturn(DateTimeUtils.dateUTCFromIso8601(currentDate))
         whenever(
-                resourceProvider.getString(
-                        R.string.scheduled_for,
-                        formattedDate
-                )
+            resourceProvider.getString(
+                R.string.scheduled_for,
+                formattedDate
+            )
         ).thenReturn("Scheduled for $formattedDate")
         whenever(
-                resourceProvider.getString(
-                        R.string.published_on,
-                        formattedDate
-                )
+            resourceProvider.getString(
+                R.string.published_on,
+                formattedDate
+            )
         ).thenReturn("Published on $formattedDate")
         whenever(
-                resourceProvider.getString(
-                        R.string.backdated_for,
-                        formattedDate
-                )
+            resourceProvider.getString(
+                R.string.backdated_for,
+                formattedDate
+            )
         ).thenReturn("Backdated for $formattedDate")
         whenever(
-                resourceProvider.getString(R.string.immediately)
+            resourceProvider.getString(R.string.immediately)
         ).thenReturn("Immediately")
         whenever(
-                resourceProvider.getString(
-                        eq(R.string.publish_on),
-                        any()
-                )
+            resourceProvider.getString(
+                eq(R.string.publish_on),
+                any()
+            )
         ).thenReturn("Publish on $formattedDate")
         whenever(
-                resourceProvider.getString(
-                        eq(R.string.schedule_for),
-                        any()
-                )
+            resourceProvider.getString(
+                eq(R.string.schedule_for),
+                any()
+            )
         ).thenReturn("Schedule for $formattedDate")
         postModel = PostModel()
     }

@@ -12,8 +12,10 @@ import org.wordpress.android.util.config.BloggingRemindersFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class BloggingRemindersManagerTest {
-    @Mock lateinit var bloggingRemindersFeatureConfig: BloggingRemindersFeatureConfig
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    lateinit var bloggingRemindersFeatureConfig: BloggingRemindersFeatureConfig
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var bloggingRemindersManager: BloggingRemindersManager
     private val siteId = 123
 

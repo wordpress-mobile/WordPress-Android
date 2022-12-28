@@ -32,9 +32,11 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
-        PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
-    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject internal lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    internal lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var viewModel: PrepublishingViewModel
     private lateinit var keyboardResizeViewUtil: KeyboardResizeViewUtil
 
@@ -98,7 +100,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 val sheetDialog = dialogInterface as? BottomSheetDialog
 
                 val bottomSheet = sheetDialog?.findViewById<View>(
-                        com.google.android.material.R.id.design_bottom_sheet
+                    com.google.android.material.R.id.design_bottom_sheet
                 ) as? FrameLayout
 
                 bottomSheet?.let {
@@ -122,16 +124,16 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
         if (isPage) {
             prepublishingContentFragment.minimumHeight =
-                    resources.getDimensionPixelSize(R.dimen.prepublishing_fragment_container_min_height_for_page)
+                resources.getDimensionPixelSize(R.dimen.prepublishing_fragment_container_min_height_for_page)
         } else {
             prepublishingContentFragment.minimumHeight =
-                    resources.getDimensionPixelSize(R.dimen.prepublishing_fragment_container_min_height)
+                resources.getDimensionPixelSize(R.dimen.prepublishing_fragment_container_min_height)
         }
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(PrepublishingViewModel::class.java)
+            .get(PrepublishingViewModel::class.java)
 
         viewModel.navigationTarget.observeEvent(this, { navigationState ->
             navigateToScreen(navigationState)
@@ -150,7 +152,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         })
 
         val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(
-                KEY_SCREEN_STATE
+            KEY_SCREEN_STATE
         )
         val site = arguments?.getSerializable(SITE) as SiteModel
 
@@ -164,21 +166,21 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                     "arguments can't be null."
                 }
                 Pair(
-                        PrepublishingHomeFragment.newInstance(isStoryPost),
-                        PrepublishingHomeFragment.TAG
+                    PrepublishingHomeFragment.newInstance(isStoryPost),
+                    PrepublishingHomeFragment.TAG
                 )
             }
             PrepublishingScreen.PUBLISH -> Pair(
-                    PrepublishingPublishSettingsFragment.newInstance(),
-                    PrepublishingPublishSettingsFragment.TAG
+                PrepublishingPublishSettingsFragment.newInstance(),
+                PrepublishingPublishSettingsFragment.TAG
             )
             PrepublishingScreen.TAGS -> {
                 val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
                     "arguments can't be null."
                 }
                 Pair(
-                        PrepublishingTagsFragment.newInstance(navigationTarget.site, isStoryPost),
-                        PrepublishingTagsFragment.TAG
+                    PrepublishingTagsFragment.newInstance(navigationTarget.site, isStoryPost),
+                    PrepublishingTagsFragment.TAG
                 )
             }
             CATEGORIES -> {
@@ -186,12 +188,12 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                     "arguments can't be null."
                 }
                 Pair(
-                        PrepublishingCategoriesFragment.newInstance(
-                                navigationTarget.site,
-                                isStoryPost,
-                                navigationTarget.bundle
-                        ),
-                        PrepublishingCategoriesFragment.TAG
+                    PrepublishingCategoriesFragment.newInstance(
+                        navigationTarget.site,
+                        isStoryPost,
+                        navigationTarget.bundle
+                    ),
+                    PrepublishingCategoriesFragment.TAG
                 )
             }
             ADD_CATEGORY -> {
@@ -199,12 +201,12 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                     "arguments can't be null."
                 }
                 Pair(
-                        PrepublishingAddCategoryFragment.newInstance(
-                                navigationTarget.site,
-                                isStoryPost,
-                                navigationTarget.bundle
-                        ),
-                        PrepublishingAddCategoryFragment.TAG
+                    PrepublishingAddCategoryFragment.newInstance(
+                        navigationTarget.site,
+                        isStoryPost,
+                        navigationTarget.bundle
+                    ),
+                    PrepublishingAddCategoryFragment.TAG
                 )
             }
         }
@@ -217,10 +219,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             val fragmentTransaction = fragmentManager.beginTransaction()
             fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.run {
                 fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                        R.anim.prepublishing_fragment_fade_in,
-                        R.anim.prepublishing_fragment_fade_out,
-                        R.anim.prepublishing_fragment_fade_in,
-                        R.anim.prepublishing_fragment_fade_out
+                    R.anim.prepublishing_fragment_fade_in,
+                    R.anim.prepublishing_fragment_fade_out,
+                    R.anim.prepublishing_fragment_fade_in,
+                    R.anim.prepublishing_fragment_fade_out
                 )
             }
             fragmentTransaction.replace(R.id.prepublishing_content_fragment, fragment, tag)
@@ -253,12 +255,12 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
         @JvmStatic
         fun newInstance(@NonNull site: SiteModel, isPage: Boolean, isStoryPost: Boolean) =
-                PrepublishingBottomSheetFragment().apply {
-                    arguments = Bundle().apply {
-                        putSerializable(SITE, site)
-                        putBoolean(IS_PAGE, isPage)
-                        putBoolean(IS_STORY_POST, isStoryPost)
-                    }
+            PrepublishingBottomSheetFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable(SITE, site)
+                    putBoolean(IS_PAGE, isPage)
+                    putBoolean(IS_STORY_POST, isStoryPost)
                 }
+            }
     }
 }

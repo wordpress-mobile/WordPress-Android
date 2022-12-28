@@ -44,20 +44,34 @@ import java.util.Calendar
 
 @ExperimentalCoroutinesApi
 class TotalLikesUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var store: VisitsAndViewsStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var latestPostStore: LatestPostInsightsStore
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
-    @Mock lateinit var totalStatsMapper: TotalStatsMapper
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var valueWithChart: ValueWithChartItem
-    @Mock lateinit var information: Text
-    @Mock lateinit var useCaseMode: UseCaseMode
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
+    @Mock
+    lateinit var store: VisitsAndViewsStore
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock
+    lateinit var latestPostStore: LatestPostInsightsStore
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock
+    lateinit var totalStatsMapper: TotalStatsMapper
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    lateinit var valueWithChart: ValueWithChartItem
+    @Mock
+    lateinit var information: Text
+    @Mock
+    lateinit var useCaseMode: UseCaseMode
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
     private lateinit var useCase: TotalLikesUseCase
     private val periodData = PeriodData("2018-10-08", 10, 15, 20, 25, 30, 35)
     private val modelPeriod = "2018-10-10"
@@ -67,15 +81,15 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = TotalLikesUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                store,
-                latestPostStore,
-                statsSiteProvider,
-                resourceProvider,
-                totalStatsMapper,
-                analyticsTrackerWrapper,
-                statsWidgetUpdaters
+            testDispatcher(),
+            testDispatcher(),
+            store,
+            latestPostStore,
+            statsSiteProvider,
+            resourceProvider,
+            totalStatsMapper,
+            analyticsTrackerWrapper,
+            statsWidgetUpdaters
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(totalStatsMapper.buildTotalLikesValue(any())).thenReturn(valueWithChart)
@@ -107,7 +121,7 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(store.fetchVisits(site, DAYS, limitMode, forced)).thenReturn(
-                OnStatsFetched(StatsError(GENERIC_ERROR, message))
+            OnStatsFetched(StatsError(GENERIC_ERROR, message))
         )
 
         val result = loadData(true, forced)

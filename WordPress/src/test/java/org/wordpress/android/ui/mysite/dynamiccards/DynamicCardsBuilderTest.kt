@@ -23,15 +23,17 @@ import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 
 @ExperimentalCoroutinesApi
 class DynamicCardsBuilderTest : BaseUnitTest() {
-    @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
-    @Mock lateinit var quickStartItemBuilder: QuickStartItemBuilder
+    @Mock
+    lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
+    @Mock
+    lateinit var quickStartItemBuilder: QuickStartItemBuilder
 
     private lateinit var dynamicCardsBuilder: DynamicCardsBuilder
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
-                taskType = QuickStartTaskType.CUSTOMIZE,
-                uncompletedTasks = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE),
-                completedTasks = emptyList()
+            taskType = QuickStartTaskType.CUSTOMIZE,
+            uncompletedTasks = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE),
+            completedTasks = emptyList()
         )
 
     @Before
@@ -72,14 +74,14 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     ): List<DynamicCard> {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
         return dynamicCardsBuilder.build(
-                quickStartCategories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList(),
-                pinnedDynamicCard = mock(),
-                visibleDynamicCards = listOf(
-                        DynamicCardType.CUSTOMIZE_QUICK_START,
-                        DynamicCardType.GROW_QUICK_START
-                ),
-                onDynamicCardMoreClick = mock(),
-                onQuickStartTaskCardClick = mock()
+            quickStartCategories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList(),
+            pinnedDynamicCard = mock(),
+            visibleDynamicCards = listOf(
+                DynamicCardType.CUSTOMIZE_QUICK_START,
+                DynamicCardType.GROW_QUICK_START
+            ),
+            onDynamicCardMoreClick = mock(),
+            onQuickStartTaskCardClick = mock()
         )
     }
 
@@ -95,12 +97,12 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
 
     private fun initQuickStartDynamicCard(): QuickStartDynamicCard {
         return QuickStartDynamicCard(
-                id = DynamicCardType.CUSTOMIZE_QUICK_START,
-                title = UiStringRes(0),
-                taskCards = mock(),
-                accentColor = 0,
-                progress = 0,
-                onMoreClick = mock()
+            id = DynamicCardType.CUSTOMIZE_QUICK_START,
+            title = UiStringRes(0),
+            taskCards = mock(),
+            accentColor = 0,
+            progress = 0,
+            onMoreClick = mock()
         )
     }
 }

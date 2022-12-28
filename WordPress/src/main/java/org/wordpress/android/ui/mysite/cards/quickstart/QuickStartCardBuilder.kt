@@ -16,19 +16,19 @@ import kotlin.math.roundToInt
 
 class QuickStartCardBuilder @Inject constructor() {
     fun build(params: QuickStartCardBuilderParams) = QuickStartCard(
-            title = UiStringRes(R.string.quick_start_sites),
-            toolbarVisible = shouldShowCardToolbar(params.quickStartCategories),
-            onRemoveMenuItemClick = ListItemInteraction.create(params.onQuickStartBlockRemoveMenuItemClick),
-            taskTypeItems = params.quickStartCategories.map {
-                buildQuickStartTaskTypeItem(
-                        it,
-                        params.onQuickStartTaskTypeItemClick
-                )
-            }
+        title = UiStringRes(R.string.quick_start_sites),
+        toolbarVisible = shouldShowCardToolbar(params.quickStartCategories),
+        onRemoveMenuItemClick = ListItemInteraction.create(params.onQuickStartBlockRemoveMenuItemClick),
+        taskTypeItems = params.quickStartCategories.map {
+            buildQuickStartTaskTypeItem(
+                it,
+                params.onQuickStartTaskTypeItemClick
+            )
+        }
     )
 
     private fun shouldShowCardToolbar(quickStartCategories: List<QuickStartCategory>) =
-            !isNewQuickStartType(quickStartCategories)
+        !isNewQuickStartType(quickStartCategories)
 
     private fun isNewQuickStartType(quickStartCategories: List<QuickStartCategory>): Boolean {
         return quickStartCategories.any { it.taskType == QuickStartTaskType.GET_TO_KNOW_APP }
@@ -45,19 +45,19 @@ class QuickStartCardBuilder @Inject constructor() {
         val isNewQuickStartType = category.taskType == QuickStartTaskType.GET_TO_KNOW_APP
 
         return QuickStartTaskTypeItem(
-                quickStartTaskType = quickStartTaskType,
-                title = UiStringRes(getTitle(quickStartTaskType)),
-                titleEnabled = countUncompleted > 0,
-                subtitle = getSubtitle(
-                        isNewQuickStartType,
-                        progress,
-                        countCompleted,
-                        countCompleted + countUncompleted
-                ),
-                strikeThroughTitle = countUncompleted == 0,
-                progressColor = getProgressColor(progress, isNewQuickStartType),
-                progress = progress,
-                onClick = ListItemInteraction.create(quickStartTaskType, onItemClick)
+            quickStartTaskType = quickStartTaskType,
+            title = UiStringRes(getTitle(quickStartTaskType)),
+            titleEnabled = countUncompleted > 0,
+            subtitle = getSubtitle(
+                isNewQuickStartType,
+                progress,
+                countCompleted,
+                countCompleted + countUncompleted
+            ),
+            strikeThroughTitle = countUncompleted == 0,
+            progressColor = getProgressColor(progress, isNewQuickStartType),
+            progress = progress,
+            onClick = ListItemInteraction.create(quickStartTaskType, onItemClick)
         )
     }
 
@@ -69,15 +69,15 @@ class QuickStartCardBuilder @Inject constructor() {
     ): UiString {
         return if (progress == PERCENT_HUNDRED && isNewQuickStartType) {
             UiStringRes(
-                    R.string.quick_start_sites_type_all_tasks_completed
+                R.string.quick_start_sites_type_all_tasks_completed
             )
         } else {
             UiStringResWithParams(
-                    R.string.quick_start_sites_type_tasks_completed,
-                    listOf(
-                            UiStringText("$countCompleted"),
-                            UiStringText("$totalCount")
-                    )
+                R.string.quick_start_sites_type_tasks_completed,
+                listOf(
+                    UiStringText("$countCompleted"),
+                    UiStringText("$totalCount")
+                )
             )
         }
     }
@@ -100,7 +100,7 @@ class QuickStartCardBuilder @Inject constructor() {
     }
 
     private fun getProgress(countCompleted: Int, totalCount: Int) =
-            if (totalCount > 0) ((countCompleted / totalCount.toFloat()) * PERCENT_HUNDRED).roundToInt() else 0
+        if (totalCount > 0) ((countCompleted / totalCount.toFloat()) * PERCENT_HUNDRED).roundToInt() else 0
 
     companion object {
         private const val UNEXPECTED_QUICK_START_TYPE = "Unexpected quick start type"

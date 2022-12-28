@@ -51,41 +51,41 @@ class RestoreStateListItemBuilder @Inject constructor(
         onEnterServerCredsIconClicked: () -> Unit
     ): List<JetpackListItemState> {
         val items = mutableListOf(
-                buildIconState(
-                        R.drawable.ic_history_white_24dp,
-                        R.string.restore_details_icon_content_description,
-                        R.color.success
-                ),
-                buildHeaderState(R.string.restore_details_header),
-                buildDescriptionState(published, R.string.restore_details_description_with_two_parameters),
-                buildActionButtonState(
-                        titleRes = R.string.restore_details_action_button,
-                        contentDescRes = R.string.restore_details_action_button_content_description,
-                        isEnabled = !isAwaitingCredentials,
-                        onClick = onCreateDownloadClick
-                )
+            buildIconState(
+                R.drawable.ic_history_white_24dp,
+                R.string.restore_details_icon_content_description,
+                R.color.success
+            ),
+            buildHeaderState(R.string.restore_details_header),
+            buildDescriptionState(published, R.string.restore_details_description_with_two_parameters),
+            buildActionButtonState(
+                titleRes = R.string.restore_details_action_button,
+                contentDescRes = R.string.restore_details_action_button_content_description,
+                isEnabled = !isAwaitingCredentials,
+                onClick = onCreateDownloadClick
+            )
         )
         if (isAwaitingCredentials) {
             items.add(
-                    buildEnterServerCredsMessageState(
-                            onEnterServerCredsIconClicked,
-                            siteId = siteId,
-                            iconResId = R.drawable.ic_plus_white_24dp,
-                            iconColorResId = R.color.colorPrimary,
-                            iconSizeResId = R.dimen.jetpack_backup_restore_footnote_enter_server_creds_icon_size
-                    )
+                buildEnterServerCredsMessageState(
+                    onEnterServerCredsIconClicked,
+                    siteId = siteId,
+                    iconResId = R.drawable.ic_plus_white_24dp,
+                    iconColorResId = R.color.colorPrimary,
+                    iconSizeResId = R.dimen.jetpack_backup_restore_footnote_enter_server_creds_icon_size
+                )
             )
         }
         items.add(buildSubHeaderState(R.string.restore_details_choose_items_header))
 
         val availableItemsListItems: List<CheckboxState> = availableItems.map {
             CheckboxState(
-                    availableItemType = it.availableItemType,
-                    label = UiStringRes(it.labelResId),
-                    labelSpannable = checkboxSpannableLabel.buildSpannableLabel(it.labelResId, it.labelHintResId),
-                    checked = !isAwaitingCredentials,
-                    isEnabled = !isAwaitingCredentials,
-                    onClick = { onCheckboxItemClicked(it.availableItemType) }
+                availableItemType = it.availableItemType,
+                label = UiStringRes(it.labelResId),
+                labelSpannable = checkboxSpannableLabel.buildSpannableLabel(it.labelResId, it.labelHintResId),
+                checked = !isAwaitingCredentials,
+                isEnabled = !isAwaitingCredentials,
+                onClick = { onCheckboxItemClicked(it.availableItemType) }
             )
         }
         items.addAll(availableItemsListItems)
@@ -97,24 +97,24 @@ class RestoreStateListItemBuilder @Inject constructor(
         onConfirmRestoreClick: () -> Unit,
         onCancelClick: () -> Unit
     ): List<JetpackListItemState> = listOf(
-            buildIconState(
-                    R.drawable.ic_notice_white_24dp,
-                    R.string.restore_warning_icon_content_description,
-                    R.color.error
-            ),
-            buildHeaderState(R.string.restore_warning_header),
-            buildDescriptionState(published, R.string.restore_warning_description_with_two_parameters),
-            buildActionButtonState(
-                    titleRes = R.string.restore_warning_action_button,
-                    contentDescRes = R.string.restore_warning_action_button_content_description,
-                    onClick = onConfirmRestoreClick
-            ),
-            buildActionButtonState(
-                    titleRes = R.string.cancel,
-                    contentDescRes = R.string.cancel,
-                    isSecondary = true,
-                    onClick = onCancelClick
-            )
+        buildIconState(
+            R.drawable.ic_notice_white_24dp,
+            R.string.restore_warning_icon_content_description,
+            R.color.error
+        ),
+        buildHeaderState(R.string.restore_warning_header),
+        buildDescriptionState(published, R.string.restore_warning_description_with_two_parameters),
+        buildActionButtonState(
+            titleRes = R.string.restore_warning_action_button,
+            contentDescRes = R.string.restore_warning_action_button_content_description,
+            onClick = onConfirmRestoreClick
+        ),
+        buildActionButtonState(
+            titleRes = R.string.cancel,
+            contentDescRes = R.string.cancel,
+            isSecondary = true,
+            onClick = onCancelClick
+        )
     )
 
     fun buildProgressListStateItems(
@@ -123,19 +123,19 @@ class RestoreStateListItemBuilder @Inject constructor(
         isIndeterminate: Boolean = false
     ): List<JetpackListItemState> {
         return mutableListOf(
-                buildIconState(
-                        R.drawable.ic_history_white_24dp,
-                        R.string.restore_progress_icon_content_description,
-                        R.color.success
-                ),
-                buildHeaderState(R.string.restore_progress_header),
-                buildDescriptionState(published, R.string.restore_progress_description_with_two_parameters),
-                buildProgressState(progress, isIndeterminate),
-                buildFootnoteState(
-                        iconRes = R.drawable.ic_info_outline_white_24dp,
-                        iconSizeResId = R.dimen.jetpack_backup_restore_footnote_icon_size,
-                        textRes = R.string.restore_progress_footnote
-                )
+            buildIconState(
+                R.drawable.ic_history_white_24dp,
+                R.string.restore_progress_icon_content_description,
+                R.color.success
+            ),
+            buildHeaderState(R.string.restore_progress_header),
+            buildDescriptionState(published, R.string.restore_progress_description_with_two_parameters),
+            buildProgressState(progress, isIndeterminate),
+            buildFootnoteState(
+                iconRes = R.drawable.ic_info_outline_white_24dp,
+                iconSizeResId = R.dimen.jetpack_backup_restore_footnote_icon_size,
+                textRes = R.string.restore_progress_footnote
+            )
         )
     }
 
@@ -145,24 +145,24 @@ class RestoreStateListItemBuilder @Inject constructor(
         onVisitSiteClick: () -> Unit
     ): List<JetpackListItemState> {
         return listOf(
-                buildIconState(
-                        R.drawable.ic_history_white_24dp,
-                        R.string.restore_complete_icon_content_description,
-                        R.color.success
-                ),
-                buildHeaderState(R.string.restore_complete_header),
-                buildDescriptionState(published, R.string.restore_complete_description_with_two_parameters),
-                buildActionButtonState(
-                        titleRes = R.string.restore_complete_done_action_button,
-                        contentDescRes = R.string.restore_complete_done_button_content_description,
-                        onClick = onDoneClick
-                ),
-                buildActionButtonState(
-                        titleRes = R.string.restore_complete_visit_site_action_button,
-                        contentDescRes = R.string.restore_complete_visit_site_button_content_description,
-                        isSecondary = true,
-                        onClick = onVisitSiteClick
-                )
+            buildIconState(
+                R.drawable.ic_history_white_24dp,
+                R.string.restore_complete_icon_content_description,
+                R.color.success
+            ),
+            buildHeaderState(R.string.restore_complete_header),
+            buildDescriptionState(published, R.string.restore_complete_description_with_two_parameters),
+            buildActionButtonState(
+                titleRes = R.string.restore_complete_done_action_button,
+                contentDescRes = R.string.restore_complete_done_button_content_description,
+                onClick = onDoneClick
+            ),
+            buildActionButtonState(
+                titleRes = R.string.restore_complete_visit_site_action_button,
+                contentDescRes = R.string.restore_complete_visit_site_button_content_description,
+                isSecondary = true,
+                onClick = onVisitSiteClick
+            )
         )
     }
 
@@ -172,46 +172,46 @@ class RestoreStateListItemBuilder @Inject constructor(
             )
 
     private fun buildStatusErrorListStateItems(onDoneClick: () -> Unit) = listOf(
-            buildHeaderState(R.string.restore_status_failure_heading),
-            buildBulletState(
-                    R.drawable.ic_query_builder_white_24dp,
-                    R.string.restore_status_bullet_clock_icon_content_desc,
-                    R.color.warning,
-                    R.string.restore_status_failure_bullet1
-            ),
-            buildBulletState(
-                    R.drawable.ic_gridicons_checkmark_circle,
-                    R.string.restore_status_bullet_checkmark_icon_content_desc,
-                    R.color.success,
-                    R.string.restore_status_failure_bullet2
-            ),
-            buildBulletState(
-                    R.drawable.ic_gridicons_checkmark_circle,
-                    R.string.restore_status_bullet_checkmark_icon_content_desc,
-                    R.color.success,
-                    R.string.restore_status_failure_bullet3,
-                    R.dimen.jetpack_backup_restore_last_bullet_bottom_margin
-            ),
-            buildActionButtonState(
-                    titleRes = R.string.restore_complete_failed_action_button,
-                    contentDescRes = R.string.restore_complete_failed_action_button_content_description,
-                    onClick = onDoneClick
-            )
+        buildHeaderState(R.string.restore_status_failure_heading),
+        buildBulletState(
+            R.drawable.ic_query_builder_white_24dp,
+            R.string.restore_status_bullet_clock_icon_content_desc,
+            R.color.warning,
+            R.string.restore_status_failure_bullet1
+        ),
+        buildBulletState(
+            R.drawable.ic_gridicons_checkmark_circle,
+            R.string.restore_status_bullet_checkmark_icon_content_desc,
+            R.color.success,
+            R.string.restore_status_failure_bullet2
+        ),
+        buildBulletState(
+            R.drawable.ic_gridicons_checkmark_circle,
+            R.string.restore_status_bullet_checkmark_icon_content_desc,
+            R.color.success,
+            R.string.restore_status_failure_bullet3,
+            R.dimen.jetpack_backup_restore_last_bullet_bottom_margin
+        ),
+        buildActionButtonState(
+            titleRes = R.string.restore_complete_failed_action_button,
+            contentDescRes = R.string.restore_complete_failed_action_button_content_description,
+            onClick = onDoneClick
+        )
     )
 
     private fun buildGenericErrorListStateItems(onDoneClick: () -> Unit) = listOf(
-            buildIconState(
-                    R.drawable.ic_notice_white_24dp,
-                    R.string.restore_complete_failed_icon_content_description,
-                    R.color.error
-            ),
-            buildHeaderState(R.string.restore_complete_failed_description),
-            buildDescriptionState(descRes = R.string.request_failed_message),
-            buildActionButtonState(
-                    titleRes = R.string.restore_complete_failed_action_button,
-                    contentDescRes = R.string.restore_complete_failed_action_button_content_description,
-                    onClick = onDoneClick
-            )
+        buildIconState(
+            R.drawable.ic_notice_white_24dp,
+            R.string.restore_complete_failed_icon_content_description,
+            R.color.error
+        ),
+        buildHeaderState(R.string.restore_complete_failed_description),
+        buildDescriptionState(descRes = R.string.request_failed_message),
+        buildActionButtonState(
+            titleRes = R.string.restore_complete_failed_action_button,
+            contentDescRes = R.string.restore_complete_failed_action_button_content_description,
+            onClick = onDoneClick
+        )
     )
 
     private fun buildIconState(
@@ -219,25 +219,25 @@ class RestoreStateListItemBuilder @Inject constructor(
         @StringRes contentDescRes: Int,
         @ColorRes colorRes: Int
     ) = IconState(
-            icon = iconRes,
-            contentDescription = UiStringRes(contentDescRes),
-            colorResId = colorRes
+        icon = iconRes,
+        contentDescription = UiStringRes(contentDescRes),
+        colorResId = colorRes
     )
 
     private fun buildHeaderState(@StringRes titleRes: Int) = HeaderState(UiStringRes(titleRes))
 
     private fun buildDescriptionState(published: Date? = null, @StringRes descRes: Int) = DescriptionState(
-            if (published != null) {
-                UiStringResWithParams(
-                        descRes,
-                        listOf(
-                                UiStringText(published.toFormattedDateString()),
-                                UiStringText(published.toFormattedTimeString())
-                        )
+        if (published != null) {
+            UiStringResWithParams(
+                descRes,
+                listOf(
+                    UiStringText(published.toFormattedDateString()),
+                    UiStringText(published.toFormattedTimeString())
                 )
-            } else {
-                UiStringRes(descRes)
-            }
+            )
+        } else {
+            UiStringRes(descRes)
+        }
     )
 
     private fun buildActionButtonState(
@@ -247,11 +247,11 @@ class RestoreStateListItemBuilder @Inject constructor(
         isEnabled: Boolean = true,
         onClick: () -> Unit
     ) = ActionButtonState(
-            text = UiStringRes(titleRes),
-            contentDescription = UiStringRes(contentDescRes),
-            isSecondary = isSecondary,
-            onClick = onClick,
-            isEnabled = isEnabled
+        text = UiStringRes(titleRes),
+        contentDescription = UiStringRes(contentDescRes),
+        isSecondary = isSecondary,
+        onClick = onClick,
+        isEnabled = isEnabled
     )
 
     private fun buildEnterServerCredsMessageState(
@@ -262,16 +262,16 @@ class RestoreStateListItemBuilder @Inject constructor(
         @DimenRes iconSizeResId: Int? = null
     ): FootnoteState {
         return FootnoteState(
-                iconRes = iconResId,
-                iconColorResId = iconColorResId,
-                iconSizeResId = iconSizeResId,
-                text = UiStringText(
-                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                R.string.restore_details_enter_server_creds_msg,
-                                "${Constants.URL_JETPACK_SETTINGS}/$siteId"
-                        )
-                ),
-                onIconClick = onEnterServerCredsIconClicked
+            iconRes = iconResId,
+            iconColorResId = iconColorResId,
+            iconSizeResId = iconSizeResId,
+            text = UiStringText(
+                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                    R.string.restore_details_enter_server_creds_msg,
+                    "${Constants.URL_JETPACK_SETTINGS}/$siteId"
+                )
+            ),
+            onIconClick = onEnterServerCredsIconClicked
         )
     }
 
@@ -280,9 +280,9 @@ class RestoreStateListItemBuilder @Inject constructor(
         @DimenRes topMarginResId: Int? = null,
         @DimenRes bottomMarginResId: Int? = null
     ) = SubHeaderState(
-            text = UiStringRes(textResId),
-            itemTopMarginResId = topMarginResId,
-            itemBottomMarginResId = bottomMarginResId
+        text = UiStringRes(textResId),
+        itemTopMarginResId = topMarginResId,
+        itemBottomMarginResId = bottomMarginResId
     )
 
     private fun buildFootnoteState(
@@ -290,15 +290,15 @@ class RestoreStateListItemBuilder @Inject constructor(
         @DimenRes iconSizeResId: Int? = null,
         @StringRes textRes: Int
     ) = FootnoteState(
-            iconRes = iconRes,
-            iconSizeResId = iconSizeResId,
-            text = UiStringRes(textRes)
+        iconRes = iconRes,
+        iconSizeResId = iconSizeResId,
+        text = UiStringRes(textRes)
     )
 
     private fun buildProgressState(progress: Int, isIndeterminate: Boolean = false) = ProgressState(
-            progress = progress,
-            isIndeterminate = isIndeterminate,
-            progressLabel = UiStringText(percentFormatter.format(progress))
+        progress = progress,
+        isIndeterminate = isIndeterminate,
+        progressLabel = UiStringText(percentFormatter.format(progress))
     )
 
     private fun buildBulletState(
@@ -308,11 +308,11 @@ class RestoreStateListItemBuilder @Inject constructor(
         @StringRes labelRes: Int,
         @DimenRes itemBottomMarginResId: Int? = null
     ) = BulletState(
-            icon = iconRes,
-            contentDescription = UiStringRes(contentDescRes),
-            colorResId = colorRes,
-            label = UiStringRes(labelRes),
-            itemBottomMarginResId = itemBottomMarginResId
+        icon = iconRes,
+        contentDescription = UiStringRes(contentDescRes),
+        colorResId = colorRes,
+        label = UiStringRes(labelRes),
+        itemBottomMarginResId = itemBottomMarginResId
     )
 
     fun updateCheckboxes(

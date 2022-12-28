@@ -33,17 +33,23 @@ import java.io.Serializable
 import javax.inject.Inject
 
 class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_fragment),
-        FullScreenDialogContent {
+    FullScreenDialogContent {
     private var dialogController: FullScreenDialogController? = null
     private var tasksType: QuickStartTaskType = QuickStartTaskType.CUSTOMIZE
     private lateinit var quickStartAdapter: QuickStartAdapter
 
-    @Inject lateinit var quickStartTracker: QuickStartTracker
-    @Inject lateinit var quickStartStore: QuickStartStore
-    @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var quickStartCardBuilder: QuickStartCardBuilder
-    @Inject lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+    @Inject
+    lateinit var quickStartTracker: QuickStartTracker
+    @Inject
+    lateinit var quickStartStore: QuickStartStore
+    @Inject
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var quickStartCardBuilder: QuickStartCardBuilder
+    @Inject
+    lateinit var displayUtilsWrapper: DisplayUtilsWrapper
 
     private var _binding: QuickStartDialogFragmentBinding? = null
     private val binding get() = _binding!!
@@ -118,9 +124,9 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
     private fun showSnackbarIfNeeded(task: QuickStartTask?): Boolean {
         return if (task === CREATE_SITE) {
             make(
-                    requireView(),
-                    R.string.quick_start_list_create_site_message,
-                    Snackbar.LENGTH_LONG
+                requireView(),
+                R.string.quick_start_list_create_site_message,
+                Snackbar.LENGTH_LONG
             ).show()
             true
         } else {
@@ -134,8 +140,8 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
     }
 
     private fun buildHeaderCard() = QuickStartHeaderCard(
-            title = UiStringRes(quickStartCardBuilder.getTitle(tasksType)),
-            shouldShowHeaderImage = !displayUtilsWrapper.isPhoneLandscape()
+        title = UiStringRes(quickStartCardBuilder.getTitle(tasksType)),
+        shouldShowHeaderImage = !displayUtilsWrapper.isPhoneLandscape()
     )
 
     private fun buildTaskCards(): List<QuickStartTaskCard> {
@@ -147,10 +153,10 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
 
     private fun List<QuickStartTask>.mapToQuickStartTaskCard(tasksCompleted: List<QuickStartTask>) = this.map {
         QuickStartTaskCard(
-                task = it,
-                isCompleted = tasksCompleted.contains(it),
-                onTaskTapped = this@QuickStartFullScreenDialogFragment::onTaskTapped,
-                onSkipTaskTapped = this@QuickStartFullScreenDialogFragment::onSkipTaskTapped
+            task = it,
+            isCompleted = tasksCompleted.contains(it),
+            onTaskTapped = this@QuickStartFullScreenDialogFragment::onTaskTapped,
+            onSkipTaskTapped = this@QuickStartFullScreenDialogFragment::onSkipTaskTapped
         )
     }
 

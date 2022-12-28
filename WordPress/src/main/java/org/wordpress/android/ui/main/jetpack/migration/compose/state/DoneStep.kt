@@ -37,13 +37,13 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.components.Title
 @Composable
 fun DoneStep(uiState: UiState.Content.Done) = with(uiState) {
     Column(
-            modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         val scrollState = rememberScrollState()
         Column(
-                modifier = Modifier
-                        .verticalScroll(scrollState)
-                        .weight(1f)
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .weight(1f)
         ) {
             ScreenIcon(iconRes = screenIconRes)
             Title(text = uiStringText(title))
@@ -51,30 +51,30 @@ fun DoneStep(uiState: UiState.Content.Done) = with(uiState) {
 
             Spacer(modifier = Modifier.weight(0.5f))
             Image(
-                    painter = painterResource(deleteWpIcon),
-                    contentDescription = stringResource(R.string.jp_migration_remove_wp_app_icon_content_description),
-                    modifier = Modifier
-                            .padding(top = 10.dp, bottom = 10.dp)
-                            .size(70.dp)
-                            .align(Alignment.CenterHorizontally)
+                painter = painterResource(deleteWpIcon),
+                contentDescription = stringResource(R.string.jp_migration_remove_wp_app_icon_content_description),
+                modifier = Modifier
+                    .padding(top = 10.dp, bottom = 10.dp)
+                    .size(70.dp)
+                    .align(Alignment.CenterHorizontally)
             )
             Text(
-                    text = htmlToAnnotatedString(uiStringText(message)),
-                    textAlign = TextAlign.Center,
-                    fontSize = 14.sp,
-                    lineHeight = 18.sp,
-                    color = colorResource(R.color.gray_50),
-                    modifier = Modifier
-                            .fillMaxWidth(0.75f)
-                            .align(Alignment.CenterHorizontally)
-                            .padding(bottom = 10.dp)
+                text = htmlToAnnotatedString(uiStringText(message)),
+                textAlign = TextAlign.Center,
+                fontSize = 14.sp,
+                lineHeight = 18.sp,
+                color = colorResource(R.color.gray_50),
+                modifier = Modifier
+                    .fillMaxWidth(0.75f)
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 10.dp)
             )
             Spacer(modifier = Modifier.weight(0.5f))
         }
         ButtonsColumn {
             PrimaryButton(
-                    text = uiStringText(primaryActionButton.text),
-                    onClick = primaryActionButton.onClick,
+                text = uiStringText(primaryActionButton.text),
+                onClick = primaryActionButton.onClick,
             )
         }
     }

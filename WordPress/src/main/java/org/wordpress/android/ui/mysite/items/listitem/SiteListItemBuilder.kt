@@ -43,13 +43,13 @@ class SiteListItemBuilder @Inject constructor(
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
-                site
+            site
         ) || site.isJetpackConnected
         return if (site.hasCapabilityManageOptions && isWpComOrJetpack && !site.isWpForTeamsSite) {
             ListItem(
-                    R.drawable.ic_gridicons_clipboard_white_24dp,
-                    UiStringRes(R.string.activity_log),
-                    onClick = ListItemInteraction.create(ACTIVITY_LOG, onClick)
+                R.drawable.ic_gridicons_clipboard_white_24dp,
+                UiStringRes(R.string.activity_log),
+                onClick = ListItemInteraction.create(ACTIVITY_LOG, onClick)
             )
         } else null
     }
@@ -57,9 +57,9 @@ class SiteListItemBuilder @Inject constructor(
     fun buildBackupItemIfAvailable(onClick: (ListItemAction) -> Unit, isBackupAvailable: Boolean = false): ListItem? {
         return if (isBackupAvailable) {
             ListItem(
-                    R.drawable.ic_gridicons_cloud_upload_white_24dp,
-                    UiStringRes(R.string.backup),
-                    onClick = ListItemInteraction.create(BACKUP, onClick)
+                R.drawable.ic_gridicons_cloud_upload_white_24dp,
+                UiStringRes(R.string.backup),
+                onClick = ListItemInteraction.create(BACKUP, onClick)
             )
         } else null
     }
@@ -67,9 +67,9 @@ class SiteListItemBuilder @Inject constructor(
     fun buildScanItemIfAvailable(onClick: (ListItemAction) -> Unit, isScanAvailable: Boolean = false): ListItem? {
         return if (isScanAvailable) {
             ListItem(
-                    R.drawable.ic_baseline_security_white_24dp,
-                    UiStringRes(R.string.scan),
-                    onClick = ListItemInteraction.create(SCAN, onClick)
+                R.drawable.ic_baseline_security_white_24dp,
+                UiStringRes(R.string.scan),
+                onClick = ListItemInteraction.create(SCAN, onClick)
             )
         } else null
     }
@@ -81,9 +81,9 @@ class SiteListItemBuilder @Inject constructor(
                 site.hasCapabilityManageOptions // has permissions to manage the site
         return if (jetpackSettingsVisible) {
             ListItem(
-                    R.drawable.ic_cog_white_24dp,
-                    UiStringRes(R.string.my_site_btn_jetpack_settings),
-                    onClick = ListItemInteraction.create(JETPACK_SETTINGS, onClick)
+                R.drawable.ic_cog_white_24dp,
+                UiStringRes(R.string.my_site_btn_jetpack_settings),
+                onClick = ListItemInteraction.create(JETPACK_SETTINGS, onClick)
             )
         } else null
     }
@@ -96,15 +96,16 @@ class SiteListItemBuilder @Inject constructor(
     ): ListItem? {
         val planShortName = site.planShortName
         return if (!TextUtils.isEmpty(planShortName) &&
-                site.hasCapabilityManageOptions &&
-                !site.isWpForTeamsSite &&
-                (site.isWPCom || site.isAutomatedTransfer)) {
+            site.hasCapabilityManageOptions &&
+            !site.isWpForTeamsSite &&
+            (site.isWPCom || site.isAutomatedTransfer)
+        ) {
             ListItem(
-                    R.drawable.ic_plans_white_24dp,
-                    UiStringRes(R.string.plan),
-                    secondaryText = UiStringText(planShortName),
-                    onClick = ListItemInteraction.create(PLAN, onClick),
-                    showFocusPoint = showFocusPoint
+                R.drawable.ic_plans_white_24dp,
+                UiStringRes(R.string.plan),
+                secondaryText = UiStringText(planShortName),
+                onClick = ListItemInteraction.create(PLAN, onClick),
+                showFocusPoint = showFocusPoint
             )
         } else null
     }
@@ -116,10 +117,10 @@ class SiteListItemBuilder @Inject constructor(
     ): ListItem? {
         return if (site.isSelfHostedAdmin || site.hasCapabilityEditPages) {
             ListItem(
-                    R.drawable.ic_pages_white_24dp,
-                    UiStringRes(R.string.my_site_btn_site_pages),
-                    onClick = ListItemInteraction.create(PAGES, onClick),
-                    showFocusPoint = showFocusPoint
+                R.drawable.ic_pages_white_24dp,
+                UiStringRes(R.string.my_site_btn_site_pages),
+                onClick = ListItemInteraction.create(PAGES, onClick),
+                showFocusPoint = showFocusPoint
             )
         } else null
     }
@@ -127,10 +128,10 @@ class SiteListItemBuilder @Inject constructor(
     fun buildAdminItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (shouldShowWPAdmin(site)) {
             ListItem(
-                    R.drawable.ic_wordpress_white_24dp,
-                    UiStringRes(R.string.my_site_btn_view_admin),
-                    secondaryIcon = R.drawable.ic_external_white_24dp,
-                    onClick = ListItemInteraction.create(ADMIN, onClick)
+                R.drawable.ic_wordpress_white_24dp,
+                UiStringRes(R.string.my_site_btn_view_admin),
+                secondaryIcon = R.drawable.ic_external_white_24dp,
+                onClick = ListItemInteraction.create(ADMIN, onClick)
             )
         } else null
     }
@@ -138,9 +139,9 @@ class SiteListItemBuilder @Inject constructor(
     fun buildPeopleItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (site.hasCapabilityListUsers) {
             ListItem(
-                    R.drawable.ic_user_white_24dp,
-                    UiStringRes(R.string.people),
-                    onClick = ListItemInteraction.create(PEOPLE, onClick)
+                R.drawable.ic_user_white_24dp,
+                UiStringRes(R.string.people),
+                onClick = ListItemInteraction.create(PEOPLE, onClick)
             )
         } else null
     }
@@ -148,9 +149,9 @@ class SiteListItemBuilder @Inject constructor(
     fun buildPluginItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (pluginUtilsWrapper.isPluginFeatureAvailable(site)) {
             ListItem(
-                    R.drawable.ic_plugins_white_24dp,
-                    UiStringRes(R.string.my_site_btn_plugins),
-                    onClick = ListItemInteraction.create(PLUGINS, onClick)
+                R.drawable.ic_plugins_white_24dp,
+                UiStringRes(R.string.my_site_btn_plugins),
+                onClick = ListItemInteraction.create(PLUGINS, onClick)
             )
         } else null
     }
@@ -162,24 +163,24 @@ class SiteListItemBuilder @Inject constructor(
     ): ListItem? {
         return if (site.supportsSharing()) {
             ListItem(
-                    R.drawable.ic_share_white_24dp,
-                    UiStringRes(R.string.my_site_btn_sharing),
-                    showFocusPoint = showFocusPoint,
-                    onClick = ListItemInteraction.create(SHARING, onClick)
+                R.drawable.ic_share_white_24dp,
+                UiStringRes(R.string.my_site_btn_sharing),
+                showFocusPoint = showFocusPoint,
+                onClick = ListItemInteraction.create(SHARING, onClick)
             )
         } else null
     }
 
     fun buildDomainsItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (
-                buildConfigWrapper.isJetpackApp &&
-                siteDomainsFeatureConfig.isEnabled() &&
-                site.hasCapabilityManageOptions
+            buildConfigWrapper.isJetpackApp &&
+            siteDomainsFeatureConfig.isEnabled() &&
+            site.hasCapabilityManageOptions
         ) {
             ListItem(
-                    R.drawable.ic_domains_white_24dp,
-                    UiStringRes(R.string.my_site_btn_domains),
-                    onClick = ListItemInteraction.create(DOMAINS, onClick)
+                R.drawable.ic_domains_white_24dp,
+                UiStringRes(R.string.my_site_btn_domains),
+                onClick = ListItemInteraction.create(DOMAINS, onClick)
             )
         } else null
     }
@@ -187,9 +188,9 @@ class SiteListItemBuilder @Inject constructor(
     fun buildSiteSettingsItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (site.hasCapabilityManageOptions || !siteUtilsWrapper.isAccessedViaWPComRest(site)) {
             ListItem(
-                    R.drawable.ic_cog_white_24dp,
-                    UiStringRes(R.string.my_site_btn_site_settings),
-                    onClick = ListItemInteraction.create(SITE_SETTINGS, onClick)
+                R.drawable.ic_cog_white_24dp,
+                UiStringRes(R.string.my_site_btn_site_settings),
+                onClick = ListItemInteraction.create(SITE_SETTINGS, onClick)
             )
         } else null
     }
@@ -199,8 +200,8 @@ class SiteListItemBuilder @Inject constructor(
             true
         } else {
             val dateCreated = DateTimeUtils.dateFromIso8601(
-                    accountStore.account
-                            .date
+                accountStore.account
+                    .date
             )
             val calendar = GregorianCalendar(HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH, HIDE_WP_ADMIN_DAY)
             calendar.timeZone = TimeZone.getTimeZone(MySiteViewModel.HIDE_WP_ADMIN_GMT_TIME_ZONE)
@@ -211,9 +212,9 @@ class SiteListItemBuilder @Inject constructor(
     fun buildThemesItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): MySiteCardAndItem? {
         return if (themeBrowserUtils.isAccessible(site)) {
             ListItem(
-                    R.drawable.ic_themes_white_24dp,
-                    UiStringRes(R.string.themes),
-                    onClick = ListItemInteraction.create(THEMES, onClick)
+                R.drawable.ic_themes_white_24dp,
+                UiStringRes(R.string.themes),
+                onClick = ListItemInteraction.create(THEMES, onClick)
             )
         } else null
     }

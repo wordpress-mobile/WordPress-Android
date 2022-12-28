@@ -29,11 +29,16 @@ import org.wordpress.android.util.UriWrapper
 
 @ExperimentalCoroutinesApi
 class GifMediaDataSourceTest : BaseUnitTest() {
-    @Mock lateinit var context: Context
-    @Mock internal lateinit var tenorClient: TenorGifClient
-    @Mock lateinit var gifsResponse: GifsResponse
-    @Mock lateinit var uriUtilsWrapper: UriUtilsWrapper
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    lateinit var context: Context
+    @Mock
+    internal lateinit var tenorClient: TenorGifClient
+    @Mock
+    lateinit var gifsResponse: GifsResponse
+    @Mock
+    lateinit var uriUtilsWrapper: UriUtilsWrapper
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     private lateinit var gifMediaDataSource: GifMediaDataSource
 
@@ -51,7 +56,7 @@ class GifMediaDataSourceTest : BaseUnitTest() {
 
         (result as MediaLoadingResult.Empty).apply {
             Assertions.assertThat(
-                    (this.title as UiStringRes).stringRes
+                (this.title as UiStringRes).stringRes
             ).isEqualTo(R.string.gif_picker_initial_empty_text)
         }
     }
@@ -88,7 +93,7 @@ class GifMediaDataSourceTest : BaseUnitTest() {
 
         (result as MediaLoadingResult.Empty).apply {
             Assertions.assertThat(
-                    (this.title as UiStringRes).stringRes
+                (this.title as UiStringRes).stringRes
             ).isEqualTo(R.string.gif_picker_empty_search_list)
         }
     }

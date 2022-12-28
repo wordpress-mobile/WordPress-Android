@@ -8,8 +8,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips
 
 class ChipsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_two_chips_item
+    parent,
+    R.layout.stats_block_two_chips_item
 ) {
     private val chipGroup = itemView.findViewById<ChipGroup>(R.id.choice_chip_group)
 

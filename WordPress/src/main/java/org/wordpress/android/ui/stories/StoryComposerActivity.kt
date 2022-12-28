@@ -93,39 +93,55 @@ import java.util.Objects
 import javax.inject.Inject
 
 class StoryComposerActivity : ComposeLoopFrameActivity(),
-        SnackbarProvider,
-        MediaPickerProvider,
-        EditorMediaListener,
-        AuthenticationHeadersProvider,
-        NotificationIntentLoader,
-        MetadataProvider,
-        StoryDiscardListener,
-        EditPostActivityHook,
-        PrepublishingEventProvider,
-        PrepublishingBottomSheetListener,
-        PermanentPermissionDenialDialogProvider,
-        GenericAnnouncementDialogProvider {
+    SnackbarProvider,
+    MediaPickerProvider,
+    EditorMediaListener,
+    AuthenticationHeadersProvider,
+    NotificationIntentLoader,
+    MetadataProvider,
+    StoryDiscardListener,
+    EditPostActivityHook,
+    PrepublishingEventProvider,
+    PrepublishingBottomSheetListener,
+    PermanentPermissionDenialDialogProvider,
+    GenericAnnouncementDialogProvider {
     private var site: SiteModel? = null
 
-    @Inject lateinit var storyEditorMedia: StoryEditorMedia
-    @Inject lateinit var progressDialogHelper: ProgressDialogHelper
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var postStore: PostStore
-    @Inject lateinit var authenticationUtils: AuthenticationUtils
-    @Inject internal lateinit var editPostRepository: EditPostRepository
-    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
-    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject internal lateinit var mediaPickerLauncher: MediaPickerLauncher
-    @Inject lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
-    @Inject lateinit var mediaStore: MediaStore
-    @Inject lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
-    @Inject lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
-    @Inject lateinit var storiesPrefs: StoriesPrefs
+    @Inject
+    lateinit var storyEditorMedia: StoryEditorMedia
+    @Inject
+    lateinit var progressDialogHelper: ProgressDialogHelper
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var postStore: PostStore
+    @Inject
+    lateinit var authenticationUtils: AuthenticationUtils
+    @Inject
+    internal lateinit var editPostRepository: EditPostRepository
+    @Inject
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    internal lateinit var mediaPickerLauncher: MediaPickerLauncher
+    @Inject
+    lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
+    @Inject
+    lateinit var mediaStore: MediaStore
+    @Inject
+    lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
+    @Inject
+    lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
+    @Inject
+    lateinit var storiesPrefs: StoriesPrefs
 
     private lateinit var viewModel: StoryComposerViewModel
 
-    @Suppress("DEPRECATION") private var addingMediaToEditorProgressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION")
+    private var addingMediaToEditorProgressDialog: ProgressDialog? = null
     private val frameIdsToRemove = ArrayList<String>()
 
     override fun getSite() = site
@@ -192,7 +208,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             }
             if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_STORY_SAVE_RESULT)) {
                 originalStorySaveResult =
-                        savedInstanceState.getParcelable(STATE_KEY_ORIGINAL_STORY_SAVE_RESULT) as StorySaveResult?
+                    savedInstanceState.getParcelable(STATE_KEY_ORIGINAL_STORY_SAVE_RESULT) as StorySaveResult?
             }
         }
 
@@ -201,16 +217,16 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         }
 
         viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(StoryComposerViewModel::class.java)
+            .get(StoryComposerViewModel::class.java)
 
         site?.let {
             val postInitialized = viewModel.start(
-                    it,
-                    editPostRepository,
-                    LocalId(localPostId),
-                    postEditorAnalyticsSession,
-                    notificationType,
-                    originalStorySaveResult
+                it,
+                editPostRepository,
+                LocalId(localPostId),
+                postEditorAnalyticsSession,
+                notificationType,
+                originalStorySaveResult
             )
 
             // Ensure we have a valid post
@@ -241,18 +257,18 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             // finally if any of the files was a gif, warn the user
             if (filteredList.size != uriList.size) {
                 FrameSaveErrorDialog.newInstance(
-                        title = getString(R.string.dialog_edit_story_unsupported_format_title),
-                        message = getString(R.string.dialog_edit_story_unsupported_format_message),
-                        hideCancelButton = true,
-                        listener = object : FrameSaveErrorDialogOk {
-                            override fun OnOkClicked(dialog: DialogFragment) {
-                                if (filteredList.isEmpty()) {
-                                    onStoryDiscarded()
-                                    setResult(Activity.RESULT_CANCELED)
-                                    finish()
-                                }
+                    title = getString(R.string.dialog_edit_story_unsupported_format_title),
+                    message = getString(R.string.dialog_edit_story_unsupported_format_message),
+                    hideCancelButton = true,
+                    listener = object : FrameSaveErrorDialogOk {
+                        override fun OnOkClicked(dialog: DialogFragment) {
+                            if (filteredList.isEmpty()) {
+                                onStoryDiscarded()
+                                setResult(Activity.RESULT_CANCELED)
+                                finish()
                             }
                         }
+                    }
                 ).show(supportFragmentManager, FRAGMENT_ANNOUNCEMENT_DIALOG)
             }
         })
@@ -270,10 +286,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         viewModel.trackEditorCreatedPost.observeEvent(this, {
             site?.let {
                 analyticsUtilsWrapper.trackEditorCreatedPost(
-                        intent.action,
-                        intent,
-                        it,
-                        editPostRepository.getPost()
+                    intent.action,
+                    intent,
+                    it,
+                    editPostRepository.getPost()
                 )
             }
         })
@@ -281,9 +297,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     private fun showErrorAndFinish(errorMessageId: Int) {
         ToastUtils.showToast(
-                this,
-                errorMessageId,
-                ToastUtils.Duration.LONG
+            this,
+            errorMessageId,
+            ToastUtils.Duration.LONG
         )
         finish()
     }
@@ -341,7 +357,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         if (localPostId == 0) {
             if (intent.hasExtra(KEY_STORY_SAVE_RESULT)) {
                 val storySaveResult =
-                        intent.getParcelableExtra(KEY_STORY_SAVE_RESULT) as StorySaveResult?
+                    intent.getParcelableExtra(KEY_STORY_SAVE_RESULT) as StorySaveResult?
                 storySaveResult?.let {
                     localPostId = it.metadata?.getInt(KEY_POST_LOCAL_ID, 0) ?: 0
                 }
@@ -359,9 +375,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     override fun setupRequestCodes(requestCodes: ExternalMediaPickerRequestCodesAndExtraKeys) {
         requestCodes.PHOTO_PICKER = RequestCodes.PHOTO_PICKER
         requestCodes.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED =
-                MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
+            MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
         requestCodes.EXTRA_LAUNCH_WPSTORIES_MEDIA_PICKER_REQUESTED =
-                MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_MEDIA_PICKER_REQUESTED
+            MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_MEDIA_PICKER_REQUESTED
         // we're handling EXTRA_MEDIA_URIS at the app level (not at the Stories library level)
         // hence we set the requestCode to UNUSED
         requestCodes.EXTRA_MEDIA_URIS = UNUSED_KEY
@@ -369,8 +385,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun showProvidedMediaPicker() {
         mediaPickerLauncher.showStoriesPhotoPickerForResult(
-                this,
-                site
+            this,
+            site
         )
     }
 
@@ -396,9 +412,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             }
             data.hasExtra(MediaBrowserActivity.RESULT_IDS) -> {
                 val ids = ListUtils.fromLongArray(
-                        data.getLongArrayExtra(
-                                MediaBrowserActivity.RESULT_IDS
-                        )
+                    data.getLongArrayExtra(
+                        MediaBrowserActivity.RESULT_IDS
+                    )
                 )
                 if (ids == null || ids.size == 0) {
                     return
@@ -414,29 +430,29 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     private fun setupStoryEditorMediaObserver() {
         storyEditorMedia.uiState.observe(this,
-                Observer { uiState: AddMediaToStoryPostUiState? ->
-                    if (uiState != null) {
-                        updateAddingMediaToStoryComposerProgressDialogState(uiState.progressDialogUiState)
-                        if (uiState.editorOverlayVisibility) {
-                            showLoading()
-                        } else {
-                            hideLoading()
-                        }
+            Observer { uiState: AddMediaToStoryPostUiState? ->
+                if (uiState != null) {
+                    updateAddingMediaToStoryComposerProgressDialogState(uiState.progressDialogUiState)
+                    if (uiState.editorOverlayVisibility) {
+                        showLoading()
+                    } else {
+                        hideLoading()
                     }
                 }
+            }
         )
         storyEditorMedia.snackBarMessage.observeEvent(this,
-                { messageHolder ->
-                    findViewById<View>(R.id.compose_loop_frame_layout)?.let {
-                        WPSnackbar
-                                .make(
-                                        it,
-                                        uiHelpers.getTextOfUiString(this, messageHolder.message),
-                                        Snackbar.LENGTH_SHORT
-                                )
-                                .show()
-                    }
+            { messageHolder ->
+                findViewById<View>(R.id.compose_loop_frame_layout)?.let {
+                    WPSnackbar
+                        .make(
+                            it,
+                            uiHelpers.getTextOfUiString(this, messageHolder.message),
+                            Snackbar.LENGTH_SHORT
+                        )
+                        .show()
                 }
+            }
         )
     }
 
@@ -470,7 +486,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     private fun updateAddingMediaToStoryComposerProgressDialogState(uiState: ProgressDialogUiState) {
         addingMediaToEditorProgressDialog = progressDialogHelper
-                .updateProgressDialogState(this, addingMediaToEditorProgressDialog, uiState, uiHelpers)
+            .updateProgressDialogState(this, addingMediaToEditorProgressDialog, uiState, uiHelpers)
     }
 
     override fun getAuthHeaders(url: String): Map<String, String> {
@@ -491,11 +507,11 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun loadPendingIntentForErrorNotificationDeletion(notificationId: Int): PendingIntent? {
         return NotificationsProcessingService
-                .getPendingIntentForNotificationDismiss(
-                        applicationContext,
-                        notificationId,
-                        NotificationType.STORY_SAVE_ERROR
-                )
+            .getPendingIntentForNotificationDismiss(
+                applicationContext,
+                notificationId,
+                NotificationType.STORY_SAVE_ERROR
+            )
     }
 
     override fun setupErrorNotificationBaseId(): Int {
@@ -538,9 +554,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
         if (fragment == null) {
             val prepublishingFragment = PrepublishingBottomSheetFragment.newInstance(
-                    site = requireNotNull(site),
-                    isPage = editPostRepository.isPage,
-                    isStoryPost = true
+                site = requireNotNull(site),
+                isPage = editPostRepository.isPage,
+                isStoryPost = true
             )
             prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
         }
@@ -585,9 +601,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             // All of this while still keeping a valid "old" remote URl and mediaId so the block is still
             // rendered as non-empty on mobile gutenberg while the actual flattening happens on the service.
             val updatedStoryBlock =
-                    saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockStringFromStoryMediaFileData(
-                            buildStoryMediaFileDataListFromStoryFrameIndexes(storyIndex)
-                    )
+                saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockStringFromStoryMediaFileData(
+                    buildStoryMediaFileDataListFromStoryFrameIndexes(storyIndex)
+                )
 
             savedContentIntent.putExtra(ARG_STORY_BLOCK_UPDATED_CONTENT, updatedStoryBlock)
             setResult(Activity.RESULT_OK, savedContentIntent)
@@ -606,7 +622,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         for ((frameIndex, frame) in story.frames.withIndex()) {
             val newTempId = storiesPrefs.getNewIncrementalTempId()
             val assignedTempId = saveStoryGutenbergBlockUseCase.getTempIdForStoryFrame(
-                    newTempId, storyIndex, frameIndex
+                newTempId, storyIndex, frameIndex
             )
             when (frame.id) {
                 // if the frame.id is null, this is a new frame that has been added to an edited Story
@@ -615,8 +631,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 // save progress events to Gutenberg.
                 null -> {
                     val storyMediaFileData = buildStoryMediaFileDataForTemporarySlide(
-                            frame,
-                            assignedTempId
+                        frame,
+                        assignedTempId
                     )
                     frame.id = storyMediaFileData.id
                     storyMediaFileDataList.add(storyMediaFileData)
@@ -627,8 +643,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     frame.id?.let {
                         if (it.startsWith(TEMPORARY_ID_PREFIX)) {
                             val storyMediaFileData = buildStoryMediaFileDataForTemporarySlide(
-                                    frame,
-                                    it
+                                frame,
+                                it
                             )
                             storyMediaFileDataList.add(storyMediaFileData)
                         } else {
@@ -638,10 +654,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                                 mediaFile.alt = StoryFrameItem.getAltTextFromFrameAddedViews(frame)
                                 mediaModel.alt = mediaFile.alt
                                 val storyMediaFileData =
-                                        saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
-                                                mediaFile = mediafile,
-                                                temporaryId = assignedTempId
-                                        )
+                                    saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
+                                        mediaFile = mediafile,
+                                        temporaryId = assignedTempId
+                                    )
                                 frame.id = storyMediaFileData.id
                                 storyMediaFileDataList.add(storyMediaFileData)
                             }
@@ -655,13 +671,13 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     private fun buildStoryMediaFileDataForTemporarySlide(frame: StoryFrameItem, tempId: String): StoryMediaFileData {
         return saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryIdNoMediaFile(
-                temporaryId = tempId,
-                url = if (frame.source is FileBackgroundSource) {
-                    (frame.source as FileBackgroundSource).file.toString()
-                } else {
-                    (frame.source as UriBackgroundSource).contentUri.toString()
-                },
-                isVideo = (frame.frameItemType is VIDEO)
+            temporaryId = tempId,
+            url = if (frame.source is FileBackgroundSource) {
+                (frame.source as FileBackgroundSource).file.toString()
+            } else {
+                (frame.source as UriBackgroundSource).contentUri.toString()
+            },
+            isVideo = (frame.frameItemType is VIDEO)
         )
     }
 
@@ -678,8 +694,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             if (!intent.getBooleanExtra(KEY_ALL_UNFLATTENED_LOADED_SLIDES, false)) {
                 // not all slides in this Story could be unflattened so, show the warning informative dialog
                 FrameSaveErrorDialog.newInstance(
-                        title = getString(R.string.dialog_edit_story_limited_title),
-                        message = getString(R.string.dialog_edit_story_limited_message)
+                    title = getString(R.string.dialog_edit_story_limited_title),
+                    message = getString(R.string.dialog_edit_story_limited_message)
                 ).show(supportFragmentManager, FRAGMENT_ANNOUNCEMENT_DIALOG)
             }
         }

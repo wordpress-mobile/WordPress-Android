@@ -40,15 +40,24 @@ private const val HOUR_IN_MILLISECONDS = 3600000L
 
 @ExperimentalCoroutinesApi
 class PageListViewModelTest : BaseUnitTest() {
-    @Mock lateinit var mediaStore: MediaStore
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var pagesViewModel: PagesViewModel
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
-    @Mock lateinit var pageListItemActionsUseCase: CreatePageListItemActionsUseCase
-    @Mock lateinit var createUploadStateUseCase: PostModelUploadUiStateUseCase
-    @Mock lateinit var createLabelsUseCase: CreatePageListItemLabelsUseCase
-    @Mock lateinit var accountStore: AccountStore
+    @Mock
+    lateinit var mediaStore: MediaStore
+    @Mock
+    lateinit var dispatcher: Dispatcher
+    @Mock
+    lateinit var pagesViewModel: PagesViewModel
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    lateinit var pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
+    @Mock
+    lateinit var pageListItemActionsUseCase: CreatePageListItemActionsUseCase
+    @Mock
+    lateinit var createUploadStateUseCase: PostModelUploadUiStateUseCase
+    @Mock
+    lateinit var createLabelsUseCase: CreatePageListItemLabelsUseCase
+    @Mock
+    lateinit var accountStore: AccountStore
 
     private lateinit var viewModel: PageListViewModel
     private val site = SiteModel()
@@ -57,21 +66,21 @@ class PageListViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = PageListViewModel(
-                createLabelsUseCase,
-                createUploadStateUseCase,
-                pageListItemActionsUseCase,
-                pageItemProgressUiStateUseCase,
-                mediaStore,
-                dispatcher,
-                localeManagerWrapper,
-                accountStore,
-                testDispatcher()
+            createLabelsUseCase,
+            createUploadStateUseCase,
+            pageListItemActionsUseCase,
+            pageItemProgressUiStateUseCase,
+            mediaStore,
+            dispatcher,
+            localeManagerWrapper,
+            accountStore,
+            testDispatcher()
         )
 
         whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(
-                Pair(
-                        ProgressBarUiState.Hidden, false
-                )
+            Pair(
+                ProgressBarUiState.Hidden, false
+            )
         )
 
         val invalidateUploadStatus = MutableLiveData<List<LocalId>>()
@@ -82,7 +91,7 @@ class PageListViewModelTest : BaseUnitTest() {
         whenever(pagesViewModel.uploadStatusTracker).thenReturn(mock())
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.getDefault())
         whenever(createUploadStateUseCase.createUploadUiState(any(), any(), any())).thenReturn(
-                PostUploadUiState.NothingToUpload
+            PostUploadUiState.NothingToUpload
         )
         whenever(createLabelsUseCase.createLabels(any(), any())).thenReturn(Pair(emptyList(), 0))
         site.id = 10
@@ -246,12 +255,12 @@ class PageListViewModelTest : BaseUnitTest() {
         val pages = MutableLiveData<List<PageModel>>()
 
         whenever(
-                pageItemProgressUiStateUseCase.getProgressStateForPage(anyOrNull())
+            pageItemProgressUiStateUseCase.getProgressStateForPage(anyOrNull())
         ).thenReturn(
-                Pair(
-                        mock(),
-                        expectedShowOverlay
-                )
+            Pair(
+                mock(),
+                expectedShowOverlay
+            )
         )
         whenever(pagesViewModel.pages).thenReturn(pages)
 
@@ -273,10 +282,10 @@ class PageListViewModelTest : BaseUnitTest() {
         val pages = MutableLiveData<List<PageModel>>()
 
         whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(anyOrNull())).thenReturn(
-                Pair(
-                        expectedProgressBarUiState,
-                        true
-                )
+            Pair(
+                expectedProgressBarUiState,
+                true
+            )
         )
         whenever(pagesViewModel.pages).thenReturn(pages)
 
@@ -297,7 +306,7 @@ class PageListViewModelTest : BaseUnitTest() {
         val actions = setOf(mock<PageItem.Action>())
 
         whenever(pageListItemActionsUseCase.setupPageActions(anyOrNull(), anyOrNull(), anyOrNull(), any())).thenReturn(
-                actions
+            actions
         )
 
         val pages = MutableLiveData<List<PageModel>>()
@@ -337,9 +346,9 @@ class PageListViewModelTest : BaseUnitTest() {
         assertThat(pageItems).hasSize(13)
 
         authorFilterState.value = PagesAuthorFilterUIState(
-                authorFilterSelection = EVERYONE,
-                authorFilterItems = listOf(),
-                isAuthorFilterVisible = true
+            authorFilterSelection = EVERYONE,
+            authorFilterItems = listOf(),
+            isAuthorFilterVisible = true
         )
         authorFilterSelection.value = EVERYONE
 
@@ -370,9 +379,9 @@ class PageListViewModelTest : BaseUnitTest() {
         assertThat(pageItems).hasSize(13)
 
         authorFilterState.value = PagesAuthorFilterUIState(
-                authorFilterSelection = ME,
-                authorFilterItems = listOf(),
-                isAuthorFilterVisible = true
+            authorFilterSelection = ME,
+            authorFilterItems = listOf(),
+            isAuthorFilterVisible = true
         )
         authorFilterSelection.value = ME
 
@@ -398,16 +407,16 @@ class PageListViewModelTest : BaseUnitTest() {
 
         val pageModels = (0..1).map {
             buildPageModel(
-                    it, authorId = it.toLong(),
-                    authorDisplayName = authorDisplayName
+                it, authorId = it.toLong(),
+                authorDisplayName = authorDisplayName
             )
         }
         pages.value = pageModels
 
         authorFilterState.value = PagesAuthorFilterUIState(
-                authorFilterSelection = EVERYONE,
-                authorFilterItems = listOf(),
-                isAuthorFilterVisible = true
+            authorFilterSelection = EVERYONE,
+            authorFilterItems = listOf(),
+            isAuthorFilterVisible = true
         )
         authorFilterSelection.value = EVERYONE
 
@@ -435,9 +444,9 @@ class PageListViewModelTest : BaseUnitTest() {
         pages.value = pageModels
 
         authorFilterState.value = PagesAuthorFilterUIState(
-                authorFilterSelection = ME,
-                authorFilterItems = listOf(),
-                isAuthorFilterVisible = true
+            authorFilterSelection = ME,
+            authorFilterItems = listOf(),
+            isAuthorFilterVisible = true
         )
         authorFilterSelection.value = ME
 
@@ -457,13 +466,13 @@ class PageListViewModelTest : BaseUnitTest() {
     ): PageModel {
         val title = pageTitle ?: if (id < 10) "Title 0$id" else "Title $id"
         return PageModel(
-                PostModel().apply {
-                    this.setId(id)
-                    this.setAuthorId(authorId ?: 0)
-                    this.setAuthorDisplayName(authorDisplayName)
-                },
-                site, id, title, status, date, false, id.toLong(),
-                parent, id.toLong()
+            PostModel().apply {
+                this.setId(id)
+                this.setAuthorId(authorId ?: 0)
+                this.setAuthorDisplayName(authorDisplayName)
+            },
+            site, id, title, status, date, false, id.toLong(),
+            parent, id.toLong()
         )
     }
 

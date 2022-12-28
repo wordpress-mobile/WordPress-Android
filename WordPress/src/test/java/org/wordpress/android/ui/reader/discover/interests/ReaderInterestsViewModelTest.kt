@@ -44,10 +44,13 @@ private const val CURRENT_LANGUAGE = "en"
 @RunWith(MockitoJUnitRunner::class)
 class ReaderInterestsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ReaderInterestsViewModel
-    @Mock lateinit var parentViewModel: ReaderViewModel
+    @Mock
+    lateinit var parentViewModel: ReaderViewModel
 
-    @Mock lateinit var readerTagRepository: ReaderTagRepository
-    @Mock lateinit var readerTracker: ReaderTracker
+    @Mock
+    lateinit var readerTagRepository: ReaderTagRepository
+    @Mock
+    lateinit var readerTracker: ReaderTracker
 
     @Before
     fun setUp() {
@@ -56,51 +59,51 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `getUserTags invoked on start`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-                // When
-                initViewModel()
+            // When
+            initViewModel()
 
-                // Then
-                verify(readerTagRepository, times(1)).getUserTags()
-            }
+            // Then
+            verify(readerTagRepository, times(1)).getUserTags()
+        }
 
     @Test
     fun `getInterests invoked if empty user tags received from repo`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-                // When
-                initViewModel()
+            // When
+            initViewModel()
 
-                // Then
-                verify(readerTagRepository, times(1)).getInterests()
-            }
+            // Then
+            verify(readerTagRepository, times(1)).getInterests()
+        }
 
     @Test
     fun `discover close reader screen triggered if non empty user tags are received from repo`() =
-            testWithNonEmptyUserTags {
-                // When
-                initViewModel(EntryPoint.DISCOVER)
+        testWithNonEmptyUserTags {
+            // When
+            initViewModel(EntryPoint.DISCOVER)
 
-                // Then
-                verify(parentViewModel, times(1)).onCloseReaderInterests()
-            }
+            // Then
+            verify(parentViewModel, times(1)).onCloseReaderInterests()
+        }
 
     @Test
     fun `settings does not close reader screen triggered if non empty user tags are received from repo`() =
-            testWithNonEmptyUserTags {
-                // When
-                initViewModel(EntryPoint.SETTINGS)
+        testWithNonEmptyUserTags {
+            // When
+            initViewModel(EntryPoint.SETTINGS)
 
-                // Then
-                verify(parentViewModel, times(0)).onCloseReaderInterests()
-            }
+            // Then
+            verify(parentViewModel, times(0)).onCloseReaderInterests()
+        }
 
     @Test
     @Ignore("This test fails due to the way it is structured to test the initial state.")
@@ -142,51 +145,51 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `interests correctly shown on successful interests data load without excluded interests`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(ReaderTagList()))
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(ReaderTagList()))
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-                // When
-                initViewModel()
+            // When
+            initViewModel()
 
-                // Then
-                assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
-                assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).interests)
-                        .isEqualTo(interests)
+            // Then
+            assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
+            assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).interests)
+                .isEqualTo(interests)
 
-                val uiState = requireNotNull(viewModel.uiState.value) as ContentUiState
-                assertThat(uiState.interests).isEqualTo(interests)
-                assertThat(uiState.interestsUiState[0]).isInstanceOf(TagUiState::class.java)
-                assertThat(uiState.interestsUiState[0].title).isEqualTo(interests[0].tagTitle)
-            }
+            val uiState = requireNotNull(viewModel.uiState.value) as ContentUiState
+            assertThat(uiState.interests).isEqualTo(interests)
+            assertThat(uiState.interestsUiState[0]).isInstanceOf(TagUiState::class.java)
+            assertThat(uiState.interestsUiState[0].title).isEqualTo(interests[0].tagTitle)
+        }
 
     @Test
     fun `interests correctly shown on successful interests data load with excluded interests`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                val excludedInterests = getExcludedInterests()
-                whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(excludedInterests))
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            val excludedInterests = getExcludedInterests()
+            whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(excludedInterests))
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-                // When
-                initViewModel(
-                        entryPoint = EntryPoint.SETTINGS
-                )
+            // When
+            initViewModel(
+                entryPoint = EntryPoint.SETTINGS
+            )
 
-                // Then
-                interests.removeAll(excludedInterests)
-                assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
-                assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).interests)
-                        .isEqualTo(interests)
+            // Then
+            interests.removeAll(excludedInterests)
+            assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
+            assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).interests)
+                .isEqualTo(interests)
 
-                val uiState = requireNotNull(viewModel.uiState.value) as ContentUiState
-                assertThat(uiState.interests).isEqualTo(interests)
-                assertThat(uiState.interestsUiState[0]).isInstanceOf(TagUiState::class.java)
-                assertThat(uiState.interestsUiState[0].title).isEqualTo(interests[0].tagTitle)
-            }
+            val uiState = requireNotNull(viewModel.uiState.value) as ContentUiState
+            assertThat(uiState.interests).isEqualTo(interests)
+            assertThat(uiState.interestsUiState[0]).isInstanceOf(TagUiState::class.java)
+            assertThat(uiState.interestsUiState[0].title).isEqualTo(interests[0].tagTitle)
+        }
 
     @Test
     fun `discover title shown on start when interests tags received from repo`() = testWithEmptyUserTags {
@@ -215,350 +218,350 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
     @Test
     @Ignore("This test fails due to the way it is structured to test the initial state.")
     fun `discover done button hidden on start switches to disabled state when interests tags received from repo`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-                // Pause dispatcher so we can verify done button initial state
-                withContext(testDispatcher()) {
-                    // Trigger data load
-                    initViewModel(EntryPoint.DISCOVER)
-
-                    assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                            .isInstanceOf(DoneButtonHiddenUiState::class.java)
-                }
-                // Resume pending coroutines execution
+            // Pause dispatcher so we can verify done button initial state
+            withContext(testDispatcher()) {
+                // Trigger data load
+                initViewModel(EntryPoint.DISCOVER)
 
                 assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                        .isInstanceOf(DoneButtonDisabledUiState::class.java)
-                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
-                        .isEqualTo(R.string.reader_btn_select_few_interests)
+                    .isInstanceOf(DoneButtonHiddenUiState::class.java)
             }
+            // Resume pending coroutines execution
+
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                .isInstanceOf(DoneButtonDisabledUiState::class.java)
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                .isEqualTo(R.string.reader_btn_select_few_interests)
+        }
 
     @Test
     @Ignore("This test fails due to the way it is structured to test the initial state.")
     fun `settings done button hidden on start switches to disabled state when interests tags received from repo`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-                // Pause dispatcher so we can verify done button initial state
-                withContext(testDispatcher()) {
-                    // Trigger data load
-                    initViewModel(EntryPoint.SETTINGS)
-
-                    assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                            .isInstanceOf(DoneButtonHiddenUiState::class.java)
-                }
-                // Resume pending coroutines execution
+            // Pause dispatcher so we can verify done button initial state
+            withContext(testDispatcher()) {
+                // Trigger data load
+                initViewModel(EntryPoint.SETTINGS)
 
                 assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                        .isInstanceOf(DoneButtonDisabledUiState::class.java)
-                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
-                        .isEqualTo(R.string.reader_btn_done)
+                    .isInstanceOf(DoneButtonHiddenUiState::class.java)
             }
+            // Resume pending coroutines execution
+
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                .isInstanceOf(DoneButtonDisabledUiState::class.java)
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                .isEqualTo(R.string.reader_btn_done)
+        }
 
     @Test
     fun `interest selected if onInterestAtIndexToggled invoked on a deselected interest`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
-                val selectedIndex = 0
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+            val selectedIndex = 0
 
-                // When
-                initViewModel()
-                viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = true)
+            // When
+            initViewModel()
+            viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = true)
 
-                // Then
-                assertThat(
-                        requireNotNull(viewModel.uiState.value as ContentUiState)
-                                .interestsUiState[selectedIndex].isChecked
-                )
-                        .isEqualTo(true)
-            }
+            // Then
+            assertThat(
+                requireNotNull(viewModel.uiState.value as ContentUiState)
+                    .interestsUiState[selectedIndex].isChecked
+            )
+                .isEqualTo(true)
+        }
 
     @Test
     fun `interest deselected if onInterestAtIndexToggled invoked on a selected interest`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
-                val selectedIndex = 0
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+            val selectedIndex = 0
 
-                // When
-                initViewModel()
-                viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = true)
-                viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = false)
+            // When
+            initViewModel()
+            viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = true)
+            viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = false)
 
-                // Then
-                assertThat(
-                        requireNotNull(viewModel.uiState.value as ContentUiState)
-                                .interestsUiState[selectedIndex].isChecked
-                )
-                        .isEqualTo(false)
-            }
+            // Then
+            assertThat(
+                requireNotNull(viewModel.uiState.value as ContentUiState)
+                    .interestsUiState[selectedIndex].isChecked
+            )
+                .isEqualTo(false)
+        }
 
     @Test
     fun `when interest tag is toggled, then complete follow site quick start task if needed is invoked`() =
-            testWithEmptyUserTags {
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
-                val selectInterestAtIndex = 2
+        testWithEmptyUserTags {
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+            val selectInterestAtIndex = 2
 
-                initViewModel()
-                viewModel.onInterestAtIndexToggled(index = selectInterestAtIndex, isChecked = true)
+            initViewModel()
+            viewModel.onInterestAtIndexToggled(index = selectInterestAtIndex, isChecked = true)
 
-                // Then
-                verify(parentViewModel).completeQuickStartFollowSiteTaskIfNeeded()
-            }
+            // Then
+            verify(parentViewModel).completeQuickStartFollowSiteTaskIfNeeded()
+        }
 
     @Test
     fun `done button shown in enabled state if an interest is in selected state`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-                // When
-                initViewModel()
-                viewModel.onInterestAtIndexToggled(index = 0, isChecked = true)
+            // When
+            initViewModel()
+            viewModel.onInterestAtIndexToggled(index = 0, isChecked = true)
 
-                // Then
-                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                        .isInstanceOf(DoneButtonEnabledUiState::class.java)
-                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
-                        .isEqualTo(R.string.reader_btn_done)
-                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.enabled)
-                        .isEqualTo(true)
-            }
+            // Then
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                .isInstanceOf(DoneButtonEnabledUiState::class.java)
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                .isEqualTo(R.string.reader_btn_done)
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.enabled)
+                .isEqualTo(true)
+        }
 
     @Test
     fun `discover done button shown in disabled state if no interests are in selected state`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-                // When
-                initViewModel(EntryPoint.DISCOVER)
+            // When
+            initViewModel(EntryPoint.DISCOVER)
 
-                // Then
-                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                        .isInstanceOf(DoneButtonDisabledUiState::class.java)
-                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
-                        .isEqualTo(R.string.reader_btn_select_few_interests)
-            }
+            // Then
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                .isInstanceOf(DoneButtonDisabledUiState::class.java)
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                .isEqualTo(R.string.reader_btn_select_few_interests)
+        }
 
     @Test
     fun `settings done button shown in disabled state if no interests are in selected state`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-                // When
-                initViewModel(EntryPoint.SETTINGS)
+            // When
+            initViewModel(EntryPoint.SETTINGS)
 
-                // Then
-                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                        .isInstanceOf(DoneButtonDisabledUiState::class.java)
-                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
-                        .isEqualTo(R.string.reader_btn_done)
-            }
+            // Then
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                .isInstanceOf(DoneButtonDisabledUiState::class.java)
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                .isEqualTo(R.string.reader_btn_done)
+        }
 
     @Test
     fun `discover close reader interests screen triggered when interests are saved successfully`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
-                whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
 
-                // When
-                initViewModel(EntryPoint.DISCOVER)
-                viewModel.onDoneButtonClick()
+            // When
+            initViewModel(EntryPoint.DISCOVER)
+            viewModel.onDoneButtonClick()
 
-                // Then
-                verify(parentViewModel, times(1)).onCloseReaderInterests()
-            }
+            // Then
+            verify(parentViewModel, times(1)).onCloseReaderInterests()
+        }
 
     @Test
     fun `settings close reader interests screen triggered when interests are saved successfully`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
-                whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
 
-                // When
-                initViewModel(EntryPoint.SETTINGS)
-                viewModel.onDoneButtonClick()
+            // When
+            initViewModel(EntryPoint.SETTINGS)
+            viewModel.onDoneButtonClick()
 
-                // Then
-                assertThat(viewModel.closeReaderInterests.value).isNotNull
-            }
+            // Then
+            assertThat(viewModel.closeReaderInterests.value).isNotNull
+        }
 
     @Test
     fun `selected interests saved on done button click`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
-                val selectInterestAtIndex = 2
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+            val selectInterestAtIndex = 2
 
-                // When
-                initViewModel()
-                viewModel.onInterestAtIndexToggled(index = selectInterestAtIndex, isChecked = true)
-                viewModel.onDoneButtonClick()
+            // When
+            initViewModel()
+            viewModel.onInterestAtIndexToggled(index = selectInterestAtIndex, isChecked = true)
+            viewModel.onDoneButtonClick()
 
-                // Then
-                verify(readerTagRepository, times(1)).saveInterests(eq(listOf(interests[selectInterestAtIndex])))
-            }
+            // Then
+            verify(readerTagRepository, times(1)).saveInterests(eq(listOf(interests[selectInterestAtIndex])))
+        }
 
     @Test
     fun `get interests triggered on retry`() =
-            testWithEmptyUserTags {
-                // When
-                viewModel.onRetryButtonClick()
+        testWithEmptyUserTags {
+            // When
+            viewModel.onRetryButtonClick()
 
-                // Then
-                verify(readerTagRepository, times(1)).getInterests()
-            }
+            // Then
+            verify(readerTagRepository, times(1)).getInterests()
+        }
 
     @Test
     fun `get user tags re-triggered on retry if user tags request had failed earlier`() =
-            testWithFailedUserTags {
-                // When
-                initViewModel()
-                viewModel.onRetryButtonClick()
+        testWithFailedUserTags {
+            // When
+            initViewModel()
+            viewModel.onRetryButtonClick()
 
-                // Then
-                verify(readerTagRepository, times(2)).getUserTags()
-            }
+            // Then
+            verify(readerTagRepository, times(2)).getUserTags()
+        }
 
     @Test
     fun `get user tags not re-triggered on retry if user tags request had not failed earlier`() =
-            testWithEmptyUserTags {
-                // When
-                initViewModel()
-                viewModel.onRetryButtonClick()
+        testWithEmptyUserTags {
+            // When
+            initViewModel()
+            viewModel.onRetryButtonClick()
 
-                // Then
-                verify(readerTagRepository, times(1)).getUserTags()
-            }
+            // Then
+            verify(readerTagRepository, times(1)).getUserTags()
+        }
 
     @Test
     fun `error layout is shown on interests load error`() =
-            testWithEmptyUserTags {
-                // Given
-                whenever(readerTagRepository.getInterests()).thenReturn(NetworkUnavailable)
+        testWithEmptyUserTags {
+            // Given
+            whenever(readerTagRepository.getInterests()).thenReturn(NetworkUnavailable)
 
-                // When
-                initViewModel()
+            // When
+            initViewModel()
 
-                // Then
-                val contentLoadFailedUiState = requireNotNull(viewModel.uiState.value) as ConnectionErrorUiState
-                assertThat(contentLoadFailedUiState.errorLayoutVisible).isEqualTo(true)
-            }
+            // Then
+            val contentLoadFailedUiState = requireNotNull(viewModel.uiState.value) as ConnectionErrorUiState
+            assertThat(contentLoadFailedUiState.errorLayoutVisible).isEqualTo(true)
+        }
 
     @Test
     fun `network error shown when internet access not available on interests load`() =
-            testWithEmptyUserTags {
-                // Given
-                whenever(readerTagRepository.getInterests()).thenReturn(NetworkUnavailable)
+        testWithEmptyUserTags {
+            // Given
+            whenever(readerTagRepository.getInterests()).thenReturn(NetworkUnavailable)
 
-                // When
-                initViewModel()
+            // When
+            initViewModel()
 
-                // Then
-                assertThat(viewModel.uiState.value).isInstanceOf(ConnectionErrorUiState::class.java)
-                val errorUiState = requireNotNull(viewModel.uiState.value) as ConnectionErrorUiState
-                assertThat(errorUiState.titleRes).isEqualTo(R.string.no_network_message)
-            }
+            // Then
+            assertThat(viewModel.uiState.value).isInstanceOf(ConnectionErrorUiState::class.java)
+            val errorUiState = requireNotNull(viewModel.uiState.value) as ConnectionErrorUiState
+            assertThat(errorUiState.titleRes).isEqualTo(R.string.no_network_message)
+        }
 
     @Test
     fun `request failed error shown on load interests remote request failure`() =
-            testWithEmptyUserTags {
-                // Given
-                whenever(readerTagRepository.getInterests()).thenReturn(RemoteRequestFailure)
+        testWithEmptyUserTags {
+            // Given
+            whenever(readerTagRepository.getInterests()).thenReturn(RemoteRequestFailure)
 
-                // When
-                initViewModel()
+            // When
+            initViewModel()
 
-                // Then
-                assertThat(viewModel.uiState.value).isInstanceOf(RequestFailedErrorUiState::class.java)
-                val errorUiState = requireNotNull(viewModel.uiState.value) as RequestFailedErrorUiState
-                assertThat(errorUiState.titleRes).isEqualTo(R.string.reader_error_request_failed_title)
-            }
+            // Then
+            assertThat(viewModel.uiState.value).isInstanceOf(RequestFailedErrorUiState::class.java)
+            val errorUiState = requireNotNull(viewModel.uiState.value) as RequestFailedErrorUiState
+            assertThat(errorUiState.titleRes).isEqualTo(R.string.reader_error_request_failed_title)
+        }
 
     @Test
     fun `snackbar is shown on save interests error`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
-                whenever(readerTagRepository.saveInterests(any())).thenReturn(NetworkUnavailable)
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(NetworkUnavailable)
 
-                // When
-                initViewModel()
-                viewModel.onDoneButtonClick()
+            // When
+            initViewModel()
+            viewModel.onDoneButtonClick()
 
-                // Then
-                assertThat(viewModel.snackbarEvents.value).isNotNull
-            }
+            // Then
+            assertThat(viewModel.snackbarEvents.value).isNotNull
+        }
 
     @Test
     fun `snackbar is not shown when interests are saved successfully`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
-                whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
 
-                // When
-                initViewModel()
-                viewModel.onDoneButtonClick()
+            // When
+            initViewModel()
+            viewModel.onDoneButtonClick()
 
-                // Then
-                assertThat(viewModel.snackbarEvents.value).isNull()
-            }
+            // Then
+            assertThat(viewModel.snackbarEvents.value).isNull()
+        }
 
     @Test
     fun `network error shown when internet access not available on save interests`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
-                whenever(readerTagRepository.saveInterests(any())).thenReturn(NetworkUnavailable)
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(NetworkUnavailable)
 
-                // When
-                initViewModel()
-                viewModel.onDoneButtonClick()
+            // When
+            initViewModel()
+            viewModel.onDoneButtonClick()
 
-                // Then
-                assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
-                        .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
-            }
+            // Then
+            assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
+                .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
+        }
 
     @Test
     fun `request failed error shown on save interests remote request failure`() =
-            testWithEmptyUserTags {
-                // Given
-                val interests = getInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
-                whenever(readerTagRepository.saveInterests(any())).thenReturn(RemoteRequestFailure)
+        testWithEmptyUserTags {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(RemoteRequestFailure)
 
-                // When
-                initViewModel()
-                viewModel.onDoneButtonClick()
+            // When
+            initViewModel()
+            viewModel.onDoneButtonClick()
 
-                // Then
-                assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
-                        .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
-            }
+            // Then
+            assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
+                .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+        }
 
     @Test
     fun `discover close reader screen on back button click`() {
@@ -585,9 +588,9 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
     private fun initViewModel(
         entryPoint: EntryPoint = EntryPoint.DISCOVER
     ) = viewModel.start(
-            entryPoint = entryPoint,
-            currentLanguage = CURRENT_LANGUAGE,
-            parentViewModel = parentViewModel
+        entryPoint = entryPoint,
+        currentLanguage = CURRENT_LANGUAGE,
+        parentViewModel = parentViewModel
     )
 
     private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {
@@ -616,26 +619,26 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
     }
 
     private fun getInterests() =
-            ReaderTagList().apply {
-                for (c in 'A'..'Z')
-                    (add(
-                            ReaderTag(
-                                    c.toString(), c.toString(), c.toString(),
-                                    "https://public-api.wordpress.com/rest/v1.2/read/tags/$c/posts",
-                                    ReaderTagType.DEFAULT
-                            )
-                    ))
-            }
+        ReaderTagList().apply {
+            for (c in 'A'..'Z')
+                (add(
+                    ReaderTag(
+                        c.toString(), c.toString(), c.toString(),
+                        "https://public-api.wordpress.com/rest/v1.2/read/tags/$c/posts",
+                        ReaderTagType.DEFAULT
+                    )
+                ))
+        }
 
     private fun getExcludedInterests() =
-            ReaderTagList().apply {
-                for (c in 'A'..'C')
-                    (add(
-                            ReaderTag(
-                                    c.toString(), c.toString(), c.toString(),
-                                    "https://public-api.wordpress.com/rest/v1.2/read/tags/$c/posts",
-                                    ReaderTagType.DEFAULT
-                            )
-                    ))
-            }
+        ReaderTagList().apply {
+            for (c in 'A'..'C')
+                (add(
+                    ReaderTag(
+                        c.toString(), c.toString(), c.toString(),
+                        "https://public-api.wordpress.com/rest/v1.2/read/tags/$c/posts",
+                        ReaderTagType.DEFAULT
+                    )
+                ))
+        }
 }

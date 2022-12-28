@@ -16,7 +16,7 @@ class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialogMessage = activity?.getString(R.string.media_accessing_progress)
         return ProgressDialog.show(
-                activity, "", dialogMessage, true, true
+            activity, "", dialogMessage, true, true
         )
     }
 
@@ -50,7 +50,8 @@ class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
             fragmentManager?.let {
                 val thisFragment = fragmentManager.findFragmentByTag(TAG)
                 if (thisFragment == null ||
-                        (thisFragment is PrivateAtCookieRefreshProgressDialog && !thisFragment.isDialogVisible())) {
+                    (thisFragment is PrivateAtCookieRefreshProgressDialog && !thisFragment.isDialogVisible())
+                ) {
                     val progressFragment = PrivateAtCookieRefreshProgressDialog()
                     progressFragment.setTargetFragment(targetFragment, 0)
                     progressFragment.show(fragmentManager, TAG)

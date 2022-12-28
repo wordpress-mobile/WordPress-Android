@@ -45,11 +45,16 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class GetLikesUseCaseTest : BaseUnitTest() {
-    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock private lateinit var dispatcher: Dispatcher
-    @Mock private lateinit var commentStore: CommentStore
-    @Mock private lateinit var postStore: PostStore
-    @Mock private lateinit var accountStore: AccountStore
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    private lateinit var dispatcher: Dispatcher
+    @Mock
+    private lateinit var commentStore: CommentStore
+    @Mock
+    private lateinit var postStore: PostStore
+    @Mock
+    private lateinit var accountStore: AccountStore
 
     private lateinit var getLikesUseCase: GetLikesUseCase
     private val siteId = 100L
@@ -60,8 +65,8 @@ class GetLikesUseCaseTest : BaseUnitTest() {
     private val limitedPageLenght = 8
 
     private val pageInfo = PagingInfo(
-            20,
-            1
+        20,
+        1
     )
 
     @Before
@@ -69,11 +74,11 @@ class GetLikesUseCaseTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         getLikesUseCase = GetLikesUseCase(
-                networkUtilsWrapper,
-                dispatcher,
-                commentStore,
-                postStore,
-                accountStore
+            networkUtilsWrapper,
+            dispatcher,
+            commentStore,
+            postStore,
+            accountStore
         )
     }
 
@@ -92,18 +97,18 @@ class GetLikesUseCaseTest : BaseUnitTest() {
     fun `getLikesForPost emits Loading when not requesting next page`() = test {
         whenever(dispatcher.dispatch(any())).then {
             getLikesUseCase.onPostLikesChanged(
-                    OnPostLikesChanged(
-                            FetchPostLikes,
-                            siteId,
-                            postId,
-                            false
-                    )
+                OnPostLikesChanged(
+                    FetchPostLikes,
+                    siteId,
+                    postId,
+                    false
+                )
             )
         }
 
         val flow = getLikesUseCase.getLikesForPost(
-                LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght)
+            LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
+            PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList().firstOrNull() is Loading).isTrue
@@ -113,18 +118,18 @@ class GetLikesUseCaseTest : BaseUnitTest() {
     fun `getLikesForPost does not emit Loading when requesting next page`() = test {
         whenever(dispatcher.dispatch(any())).then {
             getLikesUseCase.onPostLikesChanged(
-                    OnPostLikesChanged(
-                            FetchPostLikes,
-                            siteId,
-                            postId,
-                            false
-                    )
+                OnPostLikesChanged(
+                    FetchPostLikes,
+                    siteId,
+                    postId,
+                    false
+                )
             )
         }
 
         val flow = getLikesUseCase.getLikesForPost(
-                LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
-                PaginationParams(true, defaultPageLenght)
+            LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
+            PaginationParams(true, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
@@ -136,39 +141,39 @@ class GetLikesUseCaseTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         whenever(dispatcher.dispatch(any())).then {
             getLikesUseCase.onPostLikesChanged(
-                    OnPostLikesChanged(
-                            FetchPostLikes,
-                            siteId,
-                            postId,
-                            false
-                    ).apply {
-                        error = PostError("GENERIC_ERROR", "Error occurred")
-                    }
+                OnPostLikesChanged(
+                    FetchPostLikes,
+                    siteId,
+                    postId,
+                    false
+                ).apply {
+                    error = PostError("GENERIC_ERROR", "Error occurred")
+                }
             )
         }
 
         val flow = getLikesUseCase.getLikesForPost(
-                LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght)
+            LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
+            PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        Loading,
-                        Failure(
-                                failureType = NO_NETWORK,
-                                error = UiStringRes(R.string.get_likes_no_network_error),
-                                cachedLikes = listOf(),
-                                emptyStateData = EmptyStateData(
-                                        showEmptyState = true,
-                                        title = UiStringRes(R.string.no_network_title)
-                                ),
-                                expectedNumLikes = expectedNumLikes,
-                                hasMore = false,
-                                pageInfo = pageInfo
-                        )
+            listOf(
+                Loading,
+                Failure(
+                    failureType = NO_NETWORK,
+                    error = UiStringRes(R.string.get_likes_no_network_error),
+                    cachedLikes = listOf(),
+                    emptyStateData = EmptyStateData(
+                        showEmptyState = true,
+                        title = UiStringRes(R.string.no_network_title)
+                    ),
+                    expectedNumLikes = expectedNumLikes,
+                    hasMore = false,
+                    pageInfo = pageInfo
                 )
+            )
         )
     }
 
@@ -177,39 +182,39 @@ class GetLikesUseCaseTest : BaseUnitTest() {
         val errorMessage = "User not authorized"
         whenever(dispatcher.dispatch(any())).then {
             getLikesUseCase.onPostLikesChanged(
-                    OnPostLikesChanged(
-                            FetchPostLikes,
-                            siteId,
-                            postId,
-                            false
-                    ).apply {
-                        error = PostError("UNAUTHORIZED", errorMessage)
-                    }
+                OnPostLikesChanged(
+                    FetchPostLikes,
+                    siteId,
+                    postId,
+                    false
+                ).apply {
+                    error = PostError("UNAUTHORIZED", errorMessage)
+                }
             )
         }
 
         val flow = getLikesUseCase.getLikesForPost(
-                LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght)
+            LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
+            PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        Loading,
-                        Failure(
-                                failureType = GENERIC,
-                                error = UiStringText(errorMessage),
-                                cachedLikes = listOf(),
-                                emptyStateData = EmptyStateData(
-                                        showEmptyState = true,
-                                        title = UiStringRes(R.string.get_likes_empty_state_title)
-                                ),
-                                expectedNumLikes = expectedNumLikes,
-                                hasMore = false,
-                                pageInfo = pageInfo
-                        )
+            listOf(
+                Loading,
+                Failure(
+                    failureType = GENERIC,
+                    error = UiStringText(errorMessage),
+                    cachedLikes = listOf(),
+                    emptyStateData = EmptyStateData(
+                        showEmptyState = true,
+                        title = UiStringRes(R.string.get_likes_empty_state_title)
+                    ),
+                    expectedNumLikes = expectedNumLikes,
+                    hasMore = false,
+                    pageInfo = pageInfo
                 )
+            )
         )
     }
 
@@ -218,39 +223,39 @@ class GetLikesUseCaseTest : BaseUnitTest() {
         val errorMessage = ""
         whenever(dispatcher.dispatch(any())).then {
             getLikesUseCase.onPostLikesChanged(
-                    OnPostLikesChanged(
-                            FetchPostLikes,
-                            siteId,
-                            postId,
-                            false
-                    ).apply {
-                        error = PostError("UNAUTHORIZED", errorMessage)
-                    }
+                OnPostLikesChanged(
+                    FetchPostLikes,
+                    siteId,
+                    postId,
+                    false
+                ).apply {
+                    error = PostError("UNAUTHORIZED", errorMessage)
+                }
             )
         }
 
         val flow = getLikesUseCase.getLikesForPost(
-                LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght)
+            LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
+            PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        Loading,
-                        Failure(
-                                failureType = GENERIC,
-                                error = UiStringRes(R.string.get_likes_unknown_error),
-                                cachedLikes = listOf(),
-                                emptyStateData = EmptyStateData(
-                                        showEmptyState = true,
-                                        title = UiStringRes(R.string.get_likes_empty_state_title)
-                                ),
-                                expectedNumLikes = expectedNumLikes,
-                                hasMore = false,
-                                pageInfo = pageInfo
-                        )
+            listOf(
+                Loading,
+                Failure(
+                    failureType = GENERIC,
+                    error = UiStringRes(R.string.get_likes_unknown_error),
+                    cachedLikes = listOf(),
+                    emptyStateData = EmptyStateData(
+                        showEmptyState = true,
+                        title = UiStringRes(R.string.get_likes_empty_state_title)
+                    ),
+                    expectedNumLikes = expectedNumLikes,
+                    hasMore = false,
+                    pageInfo = pageInfo
                 )
+            )
         )
     }
 
@@ -260,33 +265,33 @@ class GetLikesUseCaseTest : BaseUnitTest() {
 
         whenever(dispatcher.dispatch(any())).then {
             getLikesUseCase.onPostLikesChanged(
-                    OnPostLikesChanged(
-                            FetchPostLikes,
-                            siteId,
-                            postId,
-                            false
-                    ).apply {
-                        postLikes = likeData
-                    }
+                OnPostLikesChanged(
+                    FetchPostLikes,
+                    siteId,
+                    postId,
+                    false
+                ).apply {
+                    postLikes = likeData
+                }
             )
         }
 
         val flow = getLikesUseCase.getLikesForPost(
-                LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght)
+            LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
+            PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        Loading,
-                        LikesData(
-                                likes = likeData,
-                                expectedNumLikes = expectedNumLikes,
-                                hasMore = false,
-                                pageInfo = pageInfo
-                        )
+            listOf(
+                Loading,
+                LikesData(
+                    likes = likeData,
+                    expectedNumLikes = expectedNumLikes,
+                    hasMore = false,
+                    pageInfo = pageInfo
                 )
+            )
         )
     }
 
@@ -296,33 +301,33 @@ class GetLikesUseCaseTest : BaseUnitTest() {
 
         whenever(dispatcher.dispatch(any())).then {
             getLikesUseCase.onPostLikesChanged(
-                    OnPostLikesChanged(
-                            FetchPostLikes,
-                            siteId,
-                            postId,
-                            false
-                    ).apply {
-                        postLikes = likeData
-                    }
+                OnPostLikesChanged(
+                    FetchPostLikes,
+                    siteId,
+                    postId,
+                    false
+                ).apply {
+                    postLikes = likeData
+                }
             )
         }
 
         val flow = getLikesUseCase.getLikesForPost(
-                LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght)
+            LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
+            PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        Loading,
-                        LikesData(
-                                likes = likeData.take(limitedPageLenght),
-                                expectedNumLikes = expectedNumLikes,
-                                hasMore = false,
-                                pageInfo = pageInfo
-                        )
+            listOf(
+                Loading,
+                LikesData(
+                    likes = likeData.take(limitedPageLenght),
+                    expectedNumLikes = expectedNumLikes,
+                    hasMore = false,
+                    pageInfo = pageInfo
                 )
+            )
         )
     }
 
@@ -331,42 +336,42 @@ class GetLikesUseCaseTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         whenever(dispatcher.dispatch(any())).then {
             getLikesUseCase.onCommentLikesChanged(
-                    OnCommentLikesChanged(
-                            siteId,
-                            commentId,
-                            false
-                    ).apply {
-                        causeOfChange = FETCHED_COMMENT_LIKES
-                        error = CommentError(
-                                CommentErrorType.AUTHORIZATION_REQUIRED,
-                                "Error occurred"
-                        )
-                    }
+                OnCommentLikesChanged(
+                    siteId,
+                    commentId,
+                    false
+                ).apply {
+                    causeOfChange = FETCHED_COMMENT_LIKES
+                    error = CommentError(
+                        CommentErrorType.AUTHORIZATION_REQUIRED,
+                        "Error occurred"
+                    )
+                }
             )
         }
 
         val flow = getLikesUseCase.getLikesForComment(
-                LikeGroupFingerPrint(siteId, commentId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght)
+            LikeGroupFingerPrint(siteId, commentId, expectedNumLikes),
+            PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        Loading,
-                        Failure(
-                                failureType = NO_NETWORK,
-                                error = UiStringRes(R.string.get_likes_no_network_error),
-                                cachedLikes = listOf(),
-                                emptyStateData = EmptyStateData(
-                                        showEmptyState = true,
-                                        title = UiStringRes(R.string.no_network_title)
-                                ),
-                                expectedNumLikes = expectedNumLikes,
-                                hasMore = false,
-                                pageInfo = pageInfo
-                        )
+            listOf(
+                Loading,
+                Failure(
+                    failureType = NO_NETWORK,
+                    error = UiStringRes(R.string.get_likes_no_network_error),
+                    cachedLikes = listOf(),
+                    emptyStateData = EmptyStateData(
+                        showEmptyState = true,
+                        title = UiStringRes(R.string.no_network_title)
+                    ),
+                    expectedNumLikes = expectedNumLikes,
+                    hasMore = false,
+                    pageInfo = pageInfo
                 )
+            )
         )
     }
 
@@ -375,42 +380,42 @@ class GetLikesUseCaseTest : BaseUnitTest() {
         val errorMessage = "User not authorized"
         whenever(dispatcher.dispatch(any())).then {
             getLikesUseCase.onCommentLikesChanged(
-                    OnCommentLikesChanged(
-                            siteId,
-                            commentId,
-                            false
-                    ).apply {
-                        causeOfChange = FETCHED_COMMENT_LIKES
-                        error = CommentError(
-                                CommentErrorType.AUTHORIZATION_REQUIRED,
-                                errorMessage
-                        )
-                    }
+                OnCommentLikesChanged(
+                    siteId,
+                    commentId,
+                    false
+                ).apply {
+                    causeOfChange = FETCHED_COMMENT_LIKES
+                    error = CommentError(
+                        CommentErrorType.AUTHORIZATION_REQUIRED,
+                        errorMessage
+                    )
+                }
             )
         }
 
         val flow = getLikesUseCase.getLikesForComment(
-                LikeGroupFingerPrint(siteId, commentId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght)
+            LikeGroupFingerPrint(siteId, commentId, expectedNumLikes),
+            PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        Loading,
-                        Failure(
-                                failureType = GENERIC,
-                                error = UiStringText(errorMessage),
-                                cachedLikes = listOf(),
-                                emptyStateData = EmptyStateData(
-                                        showEmptyState = true,
-                                        title = UiStringRes(R.string.get_likes_empty_state_title)
-                                ),
-                                expectedNumLikes = expectedNumLikes,
-                                hasMore = false,
-                                pageInfo = pageInfo
-                        )
+            listOf(
+                Loading,
+                Failure(
+                    failureType = GENERIC,
+                    error = UiStringText(errorMessage),
+                    cachedLikes = listOf(),
+                    emptyStateData = EmptyStateData(
+                        showEmptyState = true,
+                        title = UiStringRes(R.string.get_likes_empty_state_title)
+                    ),
+                    expectedNumLikes = expectedNumLikes,
+                    hasMore = false,
+                    pageInfo = pageInfo
                 )
+            )
         )
     }
 
@@ -419,42 +424,42 @@ class GetLikesUseCaseTest : BaseUnitTest() {
         val errorMessage = ""
         whenever(dispatcher.dispatch(any())).then {
             getLikesUseCase.onCommentLikesChanged(
-                    OnCommentLikesChanged(
-                            siteId,
-                            commentId,
-                            false
-                    ).apply {
-                        causeOfChange = FETCHED_COMMENT_LIKES
-                        error = CommentError(
-                                CommentErrorType.AUTHORIZATION_REQUIRED,
-                                errorMessage
-                        )
-                    }
+                OnCommentLikesChanged(
+                    siteId,
+                    commentId,
+                    false
+                ).apply {
+                    causeOfChange = FETCHED_COMMENT_LIKES
+                    error = CommentError(
+                        CommentErrorType.AUTHORIZATION_REQUIRED,
+                        errorMessage
+                    )
+                }
             )
         }
 
         val flow = getLikesUseCase.getLikesForComment(
-                LikeGroupFingerPrint(siteId, commentId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght)
+            LikeGroupFingerPrint(siteId, commentId, expectedNumLikes),
+            PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        Loading,
-                        Failure(
-                                failureType = GENERIC,
-                                error = UiStringRes(R.string.get_likes_unknown_error),
-                                cachedLikes = listOf(),
-                                emptyStateData = EmptyStateData(
-                                        showEmptyState = true,
-                                        title = UiStringRes(R.string.get_likes_empty_state_title)
-                                ),
-                                expectedNumLikes = expectedNumLikes,
-                                hasMore = false,
-                                pageInfo = pageInfo
-                        )
+            listOf(
+                Loading,
+                Failure(
+                    failureType = GENERIC,
+                    error = UiStringRes(R.string.get_likes_unknown_error),
+                    cachedLikes = listOf(),
+                    emptyStateData = EmptyStateData(
+                        showEmptyState = true,
+                        title = UiStringRes(R.string.get_likes_empty_state_title)
+                    ),
+                    expectedNumLikes = expectedNumLikes,
+                    hasMore = false,
+                    pageInfo = pageInfo
                 )
+            )
         )
     }
 
@@ -464,33 +469,33 @@ class GetLikesUseCaseTest : BaseUnitTest() {
 
         whenever(dispatcher.dispatch(any())).then {
             getLikesUseCase.onCommentLikesChanged(
-                    OnCommentLikesChanged(
-                            siteId,
-                            commentId,
-                            false
-                    ).apply {
-                        causeOfChange = FETCHED_COMMENT_LIKES
-                        commentLikes = likeData
-                    }
+                OnCommentLikesChanged(
+                    siteId,
+                    commentId,
+                    false
+                ).apply {
+                    causeOfChange = FETCHED_COMMENT_LIKES
+                    commentLikes = likeData
+                }
             )
         }
 
         val flow = getLikesUseCase.getLikesForComment(
-                LikeGroupFingerPrint(siteId, commentId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght)
+            LikeGroupFingerPrint(siteId, commentId, expectedNumLikes),
+            PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        Loading,
-                        LikesData(
-                                likes = likeData,
-                                expectedNumLikes = expectedNumLikes,
-                                hasMore = false,
-                                pageInfo = pageInfo
-                        )
+            listOf(
+                Loading,
+                LikesData(
+                    likes = likeData,
+                    expectedNumLikes = expectedNumLikes,
+                    hasMore = false,
+                    pageInfo = pageInfo
                 )
+            )
         )
     }
 
@@ -500,33 +505,33 @@ class GetLikesUseCaseTest : BaseUnitTest() {
 
         whenever(dispatcher.dispatch(any())).then {
             getLikesUseCase.onCommentLikesChanged(
-                    OnCommentLikesChanged(
-                            siteId,
-                            commentId,
-                            false
-                    ).apply {
-                        causeOfChange = FETCHED_COMMENT_LIKES
-                        commentLikes = likeData
-                    }
+                OnCommentLikesChanged(
+                    siteId,
+                    commentId,
+                    false
+                ).apply {
+                    causeOfChange = FETCHED_COMMENT_LIKES
+                    commentLikes = likeData
+                }
             )
         }
 
         val flow = getLikesUseCase.getLikesForComment(
-                LikeGroupFingerPrint(siteId, commentId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght)
+            LikeGroupFingerPrint(siteId, commentId, expectedNumLikes),
+            PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        Loading,
-                        LikesData(
-                                likes = likeData.take(limitedPageLenght),
-                                expectedNumLikes = expectedNumLikes,
-                                hasMore = false,
-                                pageInfo = pageInfo
-                        )
+            listOf(
+                Loading,
+                LikesData(
+                    likes = likeData.take(limitedPageLenght),
+                    expectedNumLikes = expectedNumLikes,
+                    hasMore = false,
+                    pageInfo = pageInfo
                 )
+            )
         )
     }
 }

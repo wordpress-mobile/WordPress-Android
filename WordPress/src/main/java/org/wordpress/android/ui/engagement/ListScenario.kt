@@ -43,6 +43,7 @@ data class HeaderData constructor(
 sealed class AuthorName : Parcelable {
     @Parcelize
     data class AuthorNameString(val nameString: String?) : AuthorName()
+
     @Parcelize
     data class AuthorNameCharSequence(val nameCharSequence: CharSequence?) : AuthorName()
 }

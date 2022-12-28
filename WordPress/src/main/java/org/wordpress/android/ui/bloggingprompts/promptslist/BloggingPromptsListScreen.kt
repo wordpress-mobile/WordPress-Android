@@ -20,27 +20,27 @@ fun BloggingPromptsListScreen(
     onNavigateUp: () -> Unit,
 ) {
     Scaffold(
-            topBar = {
-                // TODO extract this logic to a common compose package and fix it to look exactly like the app toolbar
-                TopAppBar(
-                        backgroundColor = MaterialTheme.colors.surface,
-                        contentColor = MaterialTheme.colors.onSurface,
-                        elevation = 0.dp,
-                        title = {
-                            Text(stringResource(R.string.blogging_prompts_list_title))
-                        },
-                        navigationIcon = {
-                            IconButton(
-                                    onClick = { onNavigateUp() }
-                            ) {
-                                Icon(
-                                        Icons.Default.ArrowBack,
-                                        contentDescription = stringResource(R.string.navigate_up_desc)
-                                )
-                            }
-                        }
-                )
-            },
+        topBar = {
+            // TODO extract this logic to a common compose package and fix it to look exactly like the app toolbar
+            TopAppBar(
+                backgroundColor = MaterialTheme.colors.surface,
+                contentColor = MaterialTheme.colors.onSurface,
+                elevation = 0.dp,
+                title = {
+                    Text(stringResource(R.string.blogging_prompts_list_title))
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { onNavigateUp() }
+                    ) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = stringResource(R.string.navigate_up_desc)
+                        )
+                    }
+                }
+            )
+        },
     ) {
         Text("This is just a placeholder for now...")
     }

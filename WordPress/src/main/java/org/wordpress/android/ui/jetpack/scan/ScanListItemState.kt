@@ -11,7 +11,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 sealed class ScanListItemState(override val type: ViewType) : JetpackListItemState(type) {
     data class ThreatsHeaderItemState(val threatsCount: Int) : ScanListItemState(
-            ViewType.THREATS_HEADER
+        ViewType.THREATS_HEADER
     ) {
         val text = UiStringRes(if (threatsCount > 1) R.string.threats_found_plural else R.string.threats_found_singular)
     }
@@ -29,7 +29,7 @@ sealed class ScanListItemState(override val type: ViewType) : JetpackListItemSta
         @DrawableRes val iconBackground: Int,
         val onClick: () -> Unit
     ) : ScanListItemState(
-            ViewType.THREAT_ITEM
+        ViewType.THREAT_ITEM
     ) {
         val isLoadingVisible = isFixing
         val isIconVisible = !isFixing

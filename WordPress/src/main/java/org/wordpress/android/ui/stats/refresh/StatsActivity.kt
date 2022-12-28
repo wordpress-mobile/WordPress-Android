@@ -19,8 +19,10 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class StatsActivity : LocaleAwareActivity() {
-    @Inject lateinit var statsSiteProvider: StatsSiteProvider
-    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Inject
+    lateinit var statsSiteProvider: StatsSiteProvider
+    @Inject
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     private val viewModel: StatsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

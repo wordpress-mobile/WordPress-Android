@@ -24,9 +24,12 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var adapter: BloggingRemindersAdapter
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var adapter: BloggingRemindersAdapter
+    @Inject
+    lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: BloggingRemindersViewModel
 
     override fun onCreateView(
@@ -57,7 +60,7 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
                 }
             })
             viewModel =
-                    ViewModelProvider(requireActivity(), viewModelFactory).get(BloggingRemindersViewModel::class.java)
+                ViewModelProvider(requireActivity(), viewModelFactory).get(BloggingRemindersViewModel::class.java)
             viewModel.uiState.observe(this@BloggingReminderBottomSheetFragment) { uiState ->
                 (contentRecyclerView.adapter as? BloggingRemindersAdapter)?.submitList(uiState?.uiItems ?: listOf())
                 if (uiState?.primaryButton != null) {
@@ -73,18 +76,18 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
             viewModel.showBloggingPromptHelpDialogVisible.observeEvent(viewLifecycleOwner) { isShowing: Boolean ->
                 if (isShowing) {
                     BloggingPromptsOnboardingDialogFragment.newInstance(INFORMATION).show(
-                            parentFragmentManager, BloggingPromptsOnboardingDialogFragment.TAG
+                        parentFragmentManager, BloggingPromptsOnboardingDialogFragment.TAG
                     )
                 }
             }
 
             BloggingReminderUtils.observeTimePicker(
-                    viewModel.isTimePickerShowing,
-                    viewLifecycleOwner,
-                    BloggingReminderTimePicker.TAG,
-                    {
-                        requireActivity().supportFragmentManager
-                    }
+                viewModel.isTimePickerShowing,
+                viewLifecycleOwner,
+                BloggingReminderTimePicker.TAG,
+                {
+                    requireActivity().supportFragmentManager
+                }
             )
 
             savedInstanceState?.let { viewModel.restoreState(it) }

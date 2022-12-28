@@ -48,20 +48,34 @@ private const val LAST_STEP_INDEX = STEP_COUNT
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SiteCreationMainVMTest : BaseUnitTest() {
-    @Mock lateinit var tracker: SiteCreationTracker
-    @Mock lateinit var navigationTargetObserver: Observer<NavigationTarget>
-    @Mock lateinit var wizardFinishedObserver: Observer<CreateSiteState>
-    @Mock lateinit var wizardExitedObserver: Observer<Unit>
-    @Mock lateinit var dialogActionsObserver: Observer<DialogHolder>
-    @Mock lateinit var onBackPressedObserver: Observer<Unit>
-    @Mock lateinit var savedInstanceState: Bundle
-    @Mock lateinit var wizardManager: WizardManager<SiteCreationStep>
-    @Mock lateinit var siteCreationStep: SiteCreationStep
-    @Mock lateinit var networkUtils: NetworkUtilsWrapper
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
-    @Mock lateinit var imageManager: ImageManager
-    @Mock lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+    @Mock
+    lateinit var tracker: SiteCreationTracker
+    @Mock
+    lateinit var navigationTargetObserver: Observer<NavigationTarget>
+    @Mock
+    lateinit var wizardFinishedObserver: Observer<CreateSiteState>
+    @Mock
+    lateinit var wizardExitedObserver: Observer<Unit>
+    @Mock
+    lateinit var dialogActionsObserver: Observer<DialogHolder>
+    @Mock
+    lateinit var onBackPressedObserver: Observer<Unit>
+    @Mock
+    lateinit var savedInstanceState: Bundle
+    @Mock
+    lateinit var wizardManager: WizardManager<SiteCreationStep>
+    @Mock
+    lateinit var siteCreationStep: SiteCreationStep
+    @Mock
+    lateinit var networkUtils: NetworkUtilsWrapper
+    @Mock
+    lateinit var dispatcher: Dispatcher
+    @Mock
+    lateinit var fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
+    @Mock
+    lateinit var imageManager: ImageManager
+    @Mock
+    lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
     private val wizardManagerNavigatorLiveData = SingleLiveEvent<SiteCreationStep>()
 
     private lateinit var viewModel: SiteCreationMainVM
@@ -166,21 +180,21 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     fun titleForFirstStepIsGeneralSiteCreation() {
         whenever(wizardManager.stepPosition(siteCreationStep)).thenReturn(FIRST_STEP_INDEX)
         assertThat(viewModel.screenTitleForWizardStep(siteCreationStep))
-                .isInstanceOf(ScreenTitleGeneral::class.java)
+            .isInstanceOf(ScreenTitleGeneral::class.java)
     }
 
     @Test
     fun titleForLastStepIsEmptyTitle() {
         whenever(wizardManager.stepPosition(siteCreationStep)).thenReturn(LAST_STEP_INDEX)
         assertThat(viewModel.screenTitleForWizardStep(siteCreationStep))
-                .isInstanceOf(ScreenTitleEmpty::class.java)
+            .isInstanceOf(ScreenTitleEmpty::class.java)
     }
 
     @Test
     fun titleForDomainStepIsChooseADomain() {
         whenever(siteCreationStep.name).thenReturn(SiteCreationStep.DOMAINS.name)
         assertThat(viewModel.screenTitleForWizardStep(siteCreationStep))
-                .isEqualTo(ScreenTitleGeneral(R.string.new_site_creation_domain_header_title))
+            .isEqualTo(ScreenTitleGeneral(R.string.new_site_creation_domain_header_title))
     }
 
     @Test
@@ -189,7 +203,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
             whenever(wizardManager.stepPosition(siteCreationStep)).thenReturn(stepIndex)
 
             assertThat(viewModel.screenTitleForWizardStep(siteCreationStep))
-                    .isInstanceOf(ScreenTitleStepCount::class.java)
+                .isInstanceOf(ScreenTitleStepCount::class.java)
         }
     }
 
@@ -205,7 +219,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         this case). Otherwise, subsequent steps' state will be cleared and make the test fail. (issue #10189)*/
         val expectedState = SiteCreationState(segmentId = SEGMENT_ID)
         whenever(savedInstanceState.getParcelable<SiteCreationState>(KEY_SITE_CREATION_STATE))
-                .thenReturn(expectedState)
+            .thenReturn(expectedState)
 
         // we need to create a new instance of the VM as the `viewModel` has already been started in setUp()
         val newViewModel = getNewViewModel()
@@ -226,7 +240,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
         // siteCreationState is not nullable - we need to set it
         whenever(savedInstanceState.getParcelable<SiteCreationState>(KEY_SITE_CREATION_STATE))
-                .thenReturn(SiteCreationState())
+            .thenReturn(SiteCreationState())
 
         // we need to create a new instance of the VM as the `viewModel` has already been started in setUp()
         val newViewModel = getNewViewModel()
@@ -250,7 +264,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     fun `given instance state is not null, when start, then site creation accessed is not tracked`() {
         val expectedState = SiteCreationState(segmentId = SEGMENT_ID)
         whenever(savedInstanceState.getParcelable<SiteCreationState>(KEY_SITE_CREATION_STATE))
-                .thenReturn(expectedState)
+            .thenReturn(expectedState)
 
         val newViewModel = getNewViewModel()
         newViewModel.start(savedInstanceState, SiteCreationSource.UNSPECIFIED)
@@ -260,15 +274,15 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     private fun currentWizardState(vm: SiteCreationMainVM) =
-            vm.navigationTargetObservable.lastEvent!!.wizardState
+        vm.navigationTargetObservable.lastEvent!!.wizardState
 
     private fun getNewViewModel() = SiteCreationMainVM(
-            tracker,
-            wizardManager,
-            networkUtils,
-            dispatcher,
-            fetchHomePageLayoutsUseCase,
-            imageManager,
-            jetpackFeatureRemovalOverlayUtil
+        tracker,
+        wizardManager,
+        networkUtils,
+        dispatcher,
+        fetchHomePageLayoutsUseCase,
+        imageManager,
+        jetpackFeatureRemovalOverlayUtil
     )
 }

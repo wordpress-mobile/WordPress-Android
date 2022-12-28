@@ -152,31 +152,31 @@ class UploadStarter @Inject constructor(
             val list = posts.await() + pages.await()
 
             list.asSequence()
-                    .map { post ->
-                        val action = uploadActionUseCase.getAutoUploadAction(post, site)
-                        Pair(post, action)
-                    }
-                    .filter { (_, action) ->
-                        action != DO_NOTHING
-                    }
-                    .toList()
-                    .forEach { (post, action) ->
-                        trackAutoUploadAction(action, post.status, post.isPage)
-                        AppLog.d(
-                                AppLog.T.POSTS,
-                                "UploadStarter for post (isPage: ${post.isPage}) title: ${post.title}, action: $action"
+                .map { post ->
+                    val action = uploadActionUseCase.getAutoUploadAction(post, site)
+                    Pair(post, action)
+                }
+                .filter { (_, action) ->
+                    action != DO_NOTHING
+                }
+                .toList()
+                .forEach { (post, action) ->
+                    trackAutoUploadAction(action, post.status, post.isPage)
+                    AppLog.d(
+                        AppLog.T.POSTS,
+                        "UploadStarter for post (isPage: ${post.isPage}) title: ${post.title}, action: $action"
+                    )
+                    dispatcher.dispatch(
+                        UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(
+                            post
                         )
-                        dispatcher.dispatch(
-                                UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(
-                                        post
-                                )
-                        )
-                        uploadServiceFacade.uploadPost(
-                                context = context,
-                                post = post,
-                                trackAnalytics = false
-                        )
-                    }
+                    )
+                    uploadServiceFacade.uploadPost(
+                        context = context,
+                        post = post,
+                        trackAnalytics = false
+                    )
+                }
         } finally {
             // If the job of the current coroutine is cancelled while the `lock()` call is suspended,
             // it results in the mutex ending up unlocked.
@@ -194,11 +194,11 @@ class UploadStarter @Inject constructor(
         isPage: Boolean
     ) {
         tracker.track(
-                if (isPage) Stat.AUTO_UPLOAD_PAGE_INVOKED else Stat.AUTO_UPLOAD_POST_INVOKED,
-                mapOf(
-                        "upload_action" to action.toString(),
-                        "post_status" to status
-                )
+            if (isPage) Stat.AUTO_UPLOAD_PAGE_INVOKED else Stat.AUTO_UPLOAD_POST_INVOKED,
+            mapOf(
+                "upload_action" to action.toString(),
+                "post_status" to status
+            )
         )
     }
 }

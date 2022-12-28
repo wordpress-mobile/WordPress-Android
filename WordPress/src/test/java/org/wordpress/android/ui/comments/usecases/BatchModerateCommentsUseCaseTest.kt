@@ -44,10 +44,13 @@ import org.wordpress.android.util.NoDelayCoroutineDispatcher
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
-    @Mock private lateinit var commentStore: CommentsStore
-    @Mock private lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
+    @Mock
+    private lateinit var commentStore: CommentsStore
+    @Mock
+    private lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
 
-    @Mock private lateinit var moderateCommentsResourceProvider: ModerateCommentsResourceProvider
+    @Mock
+    private lateinit var moderateCommentsResourceProvider: ModerateCommentsResourceProvider
 
     private lateinit var batchModerateCommentsUseCase: BatchModerateCommentsUseCase
 
@@ -57,16 +60,16 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
     fun setup() = test {
         whenever(moderateCommentsResourceProvider.commentsStore).thenReturn(commentStore)
         whenever(moderateCommentsResourceProvider.localCommentCacheUpdateHandler).thenReturn(
-                localCommentCacheUpdateHandler
+            localCommentCacheUpdateHandler
         )
         whenever(moderateCommentsResourceProvider.bgDispatcher).thenReturn(NoDelayCoroutineDispatcher())
 
         `when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(1)))
-                .thenReturn(listOf(approvedComment))
+            .thenReturn(listOf(approvedComment))
         `when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(2)))
-                .thenReturn(listOf(pendingComment))
+            .thenReturn(listOf(pendingComment))
         `when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(3)))
-                .thenReturn(listOf(trashedComment))
+            .thenReturn(listOf(trashedComment))
 
         batchModerateCommentsUseCase = BatchModerateCommentsUseCase(moderateCommentsResourceProvider)
     }
@@ -76,7 +79,7 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
         val error = CommentError(INVALID_INPUT, "")
 
         whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
-                .thenReturn(CommentsActionPayload(error))
+            .thenReturn(CommentsActionPayload(error))
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, DoNotCare>>()
 
@@ -87,13 +90,13 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
         }
 
         batchModerateCommentsUseCase.manageAction(
-                OnModerateComments(
-                        ModerateCommentsParameters(
-                                site,
-                                listOf(1),
-                                UNAPPROVED
-                        )
+            OnModerateComments(
+                ModerateCommentsParameters(
+                    site,
+                    listOf(1),
+                    UNAPPROVED
                 )
+            )
         )
 
         assertThat(result).size().isEqualTo(1)
@@ -114,10 +117,10 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
         val error = CommentError(INVALID_INPUT, "")
 
         whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
-                .thenReturn(CommentsActionPayload(error))
+            .thenReturn(CommentsActionPayload(error))
 
         whenever(commentStore.moderateCommentLocally(eq(site), eq(2), eq(UNAPPROVED)))
-                .thenReturn(CommentsActionPayload(error))
+            .thenReturn(CommentsActionPayload(error))
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, DoNotCare>>()
 
@@ -128,13 +131,13 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
         }
 
         batchModerateCommentsUseCase.manageAction(
-                OnModerateComments(
-                        ModerateCommentsParameters(
-                                site,
-                                listOf(1, 2),
-                                UNAPPROVED
-                        )
+            OnModerateComments(
+                ModerateCommentsParameters(
+                    site,
+                    listOf(1, 2),
+                    UNAPPROVED
                 )
+            )
         )
 
         assertThat(result).size().isEqualTo(1)
@@ -155,27 +158,27 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
         val error = CommentError(INVALID_INPUT, "")
 
         whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
-                .thenReturn(CommentsActionPayload(error))
+            .thenReturn(CommentsActionPayload(error))
 
         whenever(commentStore.moderateCommentLocally(eq(site), eq(3), eq(UNAPPROVED)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        comments = listOf(trashedComment.copy(status = UNAPPROVED.toString())),
-                                        rowsAffected = 1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        comments = listOf(trashedComment.copy(status = UNAPPROVED.toString())),
+                        rowsAffected = 1
+                    )
                 )
+            )
 
         whenever(commentStore.pushLocalCommentByRemoteId(eq(site), eq(3)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        listOf(trashedComment.copy(status = UNAPPROVED.toString())),
-                                        1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        listOf(trashedComment.copy(status = UNAPPROVED.toString())),
+                        1
+                    )
                 )
+            )
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, DoNotCare>>()
 
@@ -186,13 +189,13 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
         }
 
         batchModerateCommentsUseCase.manageAction(
-                OnModerateComments(
-                        ModerateCommentsParameters(
-                                site,
-                                listOf(1, 3),
-                                UNAPPROVED
-                        )
+            OnModerateComments(
+                ModerateCommentsParameters(
+                    site,
+                    listOf(1, 3),
+                    UNAPPROVED
                 )
+            )
         )
 
         assertThat(result).size().isEqualTo(1)
@@ -212,44 +215,44 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
     @Suppress("LongMethod")
     fun `moderating multiple comments works as expected`() = test {
         whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
-                                        rowsAffected = 1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
+                        rowsAffected = 1
+                    )
                 )
+            )
 
         whenever(commentStore.moderateCommentLocally(eq(site), eq(3), eq(UNAPPROVED)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        comments = listOf(trashedComment.copy(status = UNAPPROVED.toString())),
-                                        rowsAffected = 1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        comments = listOf(trashedComment.copy(status = UNAPPROVED.toString())),
+                        rowsAffected = 1
+                    )
                 )
+            )
 
         whenever(commentStore.pushLocalCommentByRemoteId(eq(site), eq(1)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        listOf(approvedComment.copy(status = UNAPPROVED.toString())),
-                                        1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        listOf(approvedComment.copy(status = UNAPPROVED.toString())),
+                        1
+                    )
                 )
+            )
 
         whenever(commentStore.pushLocalCommentByRemoteId(eq(site), eq(3)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        listOf(trashedComment.copy(status = UNAPPROVED.toString())),
-                                        1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        listOf(trashedComment.copy(status = UNAPPROVED.toString())),
+                        1
+                    )
                 )
+            )
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, DoNotCare>>()
 
@@ -260,13 +263,13 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
         }
 
         batchModerateCommentsUseCase.manageAction(
-                OnModerateComments(
-                        ModerateCommentsParameters(
-                                site,
-                                listOf(1, 3),
-                                UNAPPROVED
-                        )
+            OnModerateComments(
+                ModerateCommentsParameters(
+                    site,
+                    listOf(1, 3),
+                    UNAPPROVED
                 )
+            )
         )
 
         result.forEach { assertThat(it).isNotInstanceOf(Failure::class.java) }
@@ -286,44 +289,44 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
     @Suppress("LongMethod")
     fun `if we are deleting comments deleteComment method of a store is called`() = test {
         whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(DELETED)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        comments = listOf(approvedComment.copy(status = DELETED.toString())),
-                                        rowsAffected = 1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        comments = listOf(approvedComment.copy(status = DELETED.toString())),
+                        rowsAffected = 1
+                    )
                 )
+            )
 
         whenever(commentStore.moderateCommentLocally(eq(site), eq(3), eq(DELETED)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        comments = listOf(trashedComment.copy(status = DELETED.toString())),
-                                        rowsAffected = 1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        comments = listOf(trashedComment.copy(status = DELETED.toString())),
+                        rowsAffected = 1
+                    )
                 )
+            )
 
         whenever(commentStore.deleteComment(eq(site), eq(1), anyOrNull()))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        listOf(approvedComment.copy(status = DELETED.toString())),
-                                        1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        listOf(approvedComment.copy(status = DELETED.toString())),
+                        1
+                    )
                 )
+            )
 
         whenever(commentStore.deleteComment(eq(site), eq(3), anyOrNull()))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        listOf(trashedComment.copy(status = DELETED.toString())),
-                                        1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        listOf(trashedComment.copy(status = DELETED.toString())),
+                        1
+                    )
                 )
+            )
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, DoNotCare>>()
 
@@ -334,13 +337,13 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
         }
 
         batchModerateCommentsUseCase.manageAction(
-                OnModerateComments(
-                        ModerateCommentsParameters(
-                                site,
-                                listOf(1, 3),
-                                DELETED
-                        )
+            OnModerateComments(
+                ModerateCommentsParameters(
+                    site,
+                    listOf(1, 3),
+                    DELETED
                 )
+            )
         )
 
         result.forEach { assertThat(it).isNotInstanceOf(Failure::class.java) }
@@ -362,38 +365,38 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
         val error = CommentError(INVALID_INPUT, "")
 
         whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
-                                        rowsAffected = 1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
+                        rowsAffected = 1
+                    )
                 )
+            )
 
         whenever(commentStore.moderateCommentLocally(eq(site), eq(3), eq(DELETED)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        comments = listOf(trashedComment.copy(status = DELETED.toString())),
-                                        rowsAffected = 1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        comments = listOf(trashedComment.copy(status = DELETED.toString())),
+                        rowsAffected = 1
+                    )
                 )
+            )
 
         whenever(commentStore.pushLocalCommentByRemoteId(eq(site), eq(1)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                error
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    error
                 )
+            )
 
         whenever(commentStore.deleteComment(eq(site), eq(3), anyOrNull()))
-                .thenReturn(
-                        CommentsActionPayload(
-                                error
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    error
                 )
+            )
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, DoNotCare>>()
 
@@ -404,23 +407,23 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
         }
 
         batchModerateCommentsUseCase.manageAction(
-                OnModerateComments(
-                        ModerateCommentsParameters(
-                                site,
-                                listOf(1),
-                                UNAPPROVED
-                        )
+            OnModerateComments(
+                ModerateCommentsParameters(
+                    site,
+                    listOf(1),
+                    UNAPPROVED
                 )
+            )
         )
 
         batchModerateCommentsUseCase.manageAction(
-                OnModerateComments(
-                        ModerateCommentsParameters(
-                                site,
-                                listOf(3),
-                                DELETED
-                        )
+            OnModerateComments(
+                ModerateCommentsParameters(
+                    site,
+                    listOf(3),
+                    DELETED
                 )
+            )
         )
 
         assertThat(result.size).isEqualTo(2)

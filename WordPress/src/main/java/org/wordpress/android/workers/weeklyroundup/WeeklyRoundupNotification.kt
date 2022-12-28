@@ -24,14 +24,14 @@ data class WeeklyRoundupNotification(
 ) {
     fun asNotificationCompatBuilder(context: Context): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, context.getString(channel))
-                .setContentIntent(contentIntentBuilder())
-                .setContentTitle(contentTitle)
-                .setContentText(contentText)
-                .setPriority(priority)
-                .setCategory(category)
-                .setAutoCancel(autoCancel)
-                .setColorized(colorized)
-                .setColor(ContextCompat.getColor(context, color))
-                .setSmallIcon(smallIcon)
+            .setContentIntent(contentIntentBuilder())
+            .setContentTitle(contentTitle)
+            .setContentText(contentText)
+            .setPriority(priority)
+            .setCategory(category)
+            .setAutoCancel(autoCancel)
+            .setColorized(colorized)
+            .setColor(ContextCompat.getColor(context, color))
+            .setSmallIcon(smallIcon)
     }
 }

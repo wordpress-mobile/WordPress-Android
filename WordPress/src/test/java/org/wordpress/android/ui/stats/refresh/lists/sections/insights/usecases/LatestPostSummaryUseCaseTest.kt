@@ -37,35 +37,45 @@ import java.util.Date
 
 @ExperimentalCoroutinesApi
 class LatestPostSummaryUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: LatestPostInsightsStore
-    @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
-    @Mock lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var insightsStore: LatestPostInsightsStore
+    @Mock
+    lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock
+    lateinit var statsUtils: StatsUtils
     private lateinit var useCase: LatestPostSummaryUseCase
 
     @Before
     fun setUp() = test {
         useCase = LatestPostSummaryUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                insightsStore,
-                statsSiteProvider,
-                latestPostSummaryMapper,
-                tracker,
-                popupMenuHandler,
-                statsUtils,
-                contentDescriptionHelper
+            testDispatcher(),
+            testDispatcher(),
+            insightsStore,
+            statsSiteProvider,
+            latestPostSummaryMapper,
+            tracker,
+            popupMenuHandler,
+            statsUtils,
+            contentDescriptionHelper
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         useCase.navigationTarget.observeForever {}
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<Int>()
-        )).thenReturn("likes: 10")
+            )
+        ).thenReturn("likes: 10")
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
@@ -75,12 +85,12 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         val refresh = true
         val message = "message"
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(
-                OnStatsFetched(
-                        StatsError(
-                                GENERIC_ERROR,
-                                message
-                        )
+            OnStatsFetched(
+                StatsError(
+                    GENERIC_ERROR,
+                    message
                 )
+            )
         )
 
         val result = loadLatestPostSummary(refresh, forced)
@@ -108,9 +118,9 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         val model = buildLatestPostModel(postTitle, viewsCount, listOf())
         whenever(insightsStore.getLatestPostInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         val textItem = mock<Text>()
         whenever(latestPostSummaryMapper.buildMessageItem(eq(model), any())).thenReturn(textItem)
@@ -144,9 +154,9 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         val model = buildLatestPostModel(postTitle, viewsCount, dayViews)
         whenever(insightsStore.getLatestPostInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         val textItem = mock<Text>()
         whenever(latestPostSummaryMapper.buildMessageItem(eq(model), any())).thenReturn(textItem)
@@ -207,16 +217,16 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         dayViews: List<Pair<String, Int>>
     ): InsightsLatestPostModel {
         return InsightsLatestPostModel(
-                1L,
-                postTitle,
-                "url",
-                Date(),
-                10L,
-                viewsCount,
-                0,
-                0,
-                dayViews,
-                ""
+            1L,
+            postTitle,
+            "url",
+            Date(),
+            10L,
+            viewsCount,
+            0,
+            0,
+            dayViews,
+            ""
         )
     }
 }

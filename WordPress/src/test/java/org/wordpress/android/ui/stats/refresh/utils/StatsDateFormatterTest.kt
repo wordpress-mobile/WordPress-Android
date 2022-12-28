@@ -24,9 +24,12 @@ import java.util.TimeZone
 
 @ExperimentalCoroutinesApi
 class StatsDateFormatterTest : BaseUnitTest() {
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
     private lateinit var statsDateFormatter: StatsDateFormatter
+
     @Before
     fun setUp() {
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
@@ -56,11 +59,11 @@ class StatsDateFormatterTest : BaseUnitTest() {
         val unparsedDate = "2018W12W19"
         val result = "Dec 17 - Dec 23"
         whenever(
-                resourceProvider.getString(
-                        R.string.stats_from_to_dates_in_week_label,
-                        "Dec 17",
-                        "Dec 23"
-                )
+            resourceProvider.getString(
+                R.string.stats_from_to_dates_in_week_label,
+                "Dec 17",
+                "Dec 23"
+            )
         ).thenReturn(result)
 
         val parsedDate = statsDateFormatter.printGranularDate(unparsedDate, WEEKS)
@@ -74,11 +77,11 @@ class StatsDateFormatterTest : BaseUnitTest() {
         calendar.set(2018, Calendar.DECEMBER, 20)
         val result = "Dec 17 - Dec 23"
         whenever(
-                resourceProvider.getString(
-                        R.string.stats_from_to_dates_in_week_label,
-                        "Dec 17",
-                        "Dec 23"
-                )
+            resourceProvider.getString(
+                R.string.stats_from_to_dates_in_week_label,
+                "Dec 17",
+                "Dec 23"
+            )
         ).thenReturn(result)
 
         val parsedDate = statsDateFormatter.printGranularDate(calendar.time, WEEKS)
@@ -91,11 +94,11 @@ class StatsDateFormatterTest : BaseUnitTest() {
         val unparsedDate = "2011W12W31"
         val result = "Dec 26, 2011 - Jan 1, 2012"
         whenever(
-                resourceProvider.getString(
-                        R.string.stats_from_to_dates_in_week_label,
-                        "Dec 26, 2011",
-                        "Jan 1, 2012"
-                )
+            resourceProvider.getString(
+                R.string.stats_from_to_dates_in_week_label,
+                "Dec 26, 2011",
+                "Jan 1, 2012"
+            )
         ).thenReturn(result)
 
         val parsedDate = statsDateFormatter.printGranularDate(unparsedDate, WEEKS)
@@ -145,11 +148,11 @@ class StatsDateFormatterTest : BaseUnitTest() {
     fun `prints a week date in another language`() {
         val result = "17.12 - 23.12"
         whenever(
-                resourceProvider.getString(
-                        R.string.stats_from_to_dates_in_week_label,
-                        "17. 12",
-                        "23. 12"
-                )
+            resourceProvider.getString(
+                R.string.stats_from_to_dates_in_week_label,
+                "17. 12",
+                "23. 12"
+            )
         ).thenReturn(result)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.forLanguageTag("cs"))
         val unparsedDate = "2018W12W19"

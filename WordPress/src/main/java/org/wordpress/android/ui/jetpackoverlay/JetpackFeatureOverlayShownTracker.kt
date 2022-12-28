@@ -40,6 +40,7 @@ enum class JetpackOverlayConnectedFeature(private val featureSpecificPreferenceK
     STATS("STATS_OVERLAY_SHOWN_TIME_STAMP_KEY"),
     NOTIFICATIONS("READER_OVERLAY_SHOWN_TIME_STAMP_KEY"),
     READER("NOTIFICATIONS_OVERLAY_SHOWN_TIME_STAMP_KEY");
+
     fun getPreferenceKey(phase: JetpackFeatureRemovalOverlayPhase): String {
         return featureSpecificPreferenceKey.plus(phase.preferenceKey)
     }

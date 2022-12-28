@@ -62,7 +62,7 @@ class ActionPerformer
     fun onPostUploaded(event: OnPostUploaded) {
         // negative local page ID used as a temp remote post ID for local-only pages (assigned by the PageStore)
         val continuation = continuations[event.post.remotePostId to UPLOAD]
-                ?: continuations[-event.post.id.toLong() to UPLOAD]
+            ?: continuations[-event.post.id.toLong() to UPLOAD]
         continuation?.resume(!event.isError to event.post.remotePostId)
     }
 
@@ -77,13 +77,13 @@ class ActionPerformer
     }
 
     private fun postCauseOfChangeToPostAction(postCauseOfChange: CauseOfOnPostChanged): Triple<Long, Int, EventType>? =
-            when (postCauseOfChange) {
-                is CauseOfOnPostChanged.DeletePost ->
-                    Triple(postCauseOfChange.remotePostId, postCauseOfChange.localPostId, DELETE)
-                is CauseOfOnPostChanged.UpdatePost ->
-                    Triple(postCauseOfChange.remotePostId, postCauseOfChange.localPostId, UPDATE)
-                else -> null
-            }
+        when (postCauseOfChange) {
+            is CauseOfOnPostChanged.DeletePost ->
+                Triple(postCauseOfChange.remotePostId, postCauseOfChange.localPostId, DELETE)
+            is CauseOfOnPostChanged.UpdatePost ->
+                Triple(postCauseOfChange.remotePostId, postCauseOfChange.localPostId, UPDATE)
+            else -> null
+        }
 
     @Suppress("DataClassShouldBeImmutable")
     data class PageAction(var remoteId: Long, val event: EventType, val perform: suspend () -> Unit) {

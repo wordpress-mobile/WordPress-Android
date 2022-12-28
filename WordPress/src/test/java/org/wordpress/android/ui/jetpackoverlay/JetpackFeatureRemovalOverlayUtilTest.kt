@@ -27,13 +27,20 @@ private const val ONE_DAY_TIME_IN_MILLIS = 1000L * 60L * 60L * 24L
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
-    @Mock private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
-    @Mock private lateinit var jetpackFeatureOverlayShownTracker: JetpackFeatureOverlayShownTracker
-    @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock private lateinit var siteUtilsWrapper: SiteUtilsWrapper
-    @Mock private lateinit var buildConfigWrapper: BuildConfigWrapper
-    @Mock private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
-    @Mock private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock
+    private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    @Mock
+    private lateinit var jetpackFeatureOverlayShownTracker: JetpackFeatureOverlayShownTracker
+    @Mock
+    private lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock
+    private lateinit var siteUtilsWrapper: SiteUtilsWrapper
+    @Mock
+    private lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock
+    private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    @Mock
+    private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
@@ -42,13 +49,13 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     @Before
     fun setup() {
         jetpackFeatureRemovalOverlayUtil = JetpackFeatureRemovalOverlayUtil(
-                jetpackFeatureRemovalPhaseHelper,
-                jetpackFeatureOverlayShownTracker,
-                selectedSiteRepository,
-                siteUtilsWrapper,
-                buildConfigWrapper,
-                dateTimeUtilsWrapper,
-                analyticsTrackerWrapper
+            jetpackFeatureRemovalPhaseHelper,
+            jetpackFeatureOverlayShownTracker,
+            selectedSiteRepository,
+            siteUtilsWrapper,
+            buildConfigWrapper,
+            dateTimeUtilsWrapper,
+            analyticsTrackerWrapper
         )
     }
 
@@ -58,7 +65,7 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-                .shouldShowFeatureSpecificJetpackOverlay(STATS)
+            .shouldShowFeatureSpecificJetpackOverlay(STATS)
 
         assertFalse(shouldShowOverlay)
     }
@@ -70,7 +77,7 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         whenever(siteUtilsWrapper.isAccessedViaWPComRest(fakeSiteModel)).thenReturn(false)
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-                .shouldShowFeatureSpecificJetpackOverlay(STATS)
+            .shouldShowFeatureSpecificJetpackOverlay(STATS)
 
         assertFalse(shouldShowOverlay)
     }
@@ -82,7 +89,7 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(null)
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-                .shouldShowFeatureSpecificJetpackOverlay(STATS)
+            .shouldShowFeatureSpecificJetpackOverlay(STATS)
 
         assertFalse(shouldShowOverlay)
     }
@@ -97,7 +104,7 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseTwo)
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-                .shouldShowFeatureSpecificJetpackOverlay(STATS)
+            .shouldShowFeatureSpecificJetpackOverlay(STATS)
 
         assertFalse(shouldShowOverlay)
     }
@@ -108,14 +115,14 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         setupMockForWpComSite()
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseOne)
         whenever(
-                jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(
-                        STATS,
-                        PHASE_ONE
-                )
+            jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(
+                STATS,
+                PHASE_ONE
+            )
         ).thenReturn(null)
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-                .shouldShowFeatureSpecificJetpackOverlay(STATS)
+            .shouldShowFeatureSpecificJetpackOverlay(STATS)
 
         assertTrue(shouldShowOverlay)
     }
@@ -128,7 +135,7 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         setupMockForFeatureAccessed(8)
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-                .shouldShowFeatureSpecificJetpackOverlay(STATS)
+            .shouldShowFeatureSpecificJetpackOverlay(STATS)
 
         assertTrue(shouldShowOverlay)
     }
@@ -143,7 +150,7 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         setUpMockForEarliestAccessedFeature(3L)
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-                .shouldShowFeatureSpecificJetpackOverlay(STATS)
+            .shouldShowFeatureSpecificJetpackOverlay(STATS)
 
         assertTrue(shouldShowOverlay)
     }
@@ -153,7 +160,7 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-                .shouldShowSiteCreationOverlay()
+            .shouldShowSiteCreationOverlay()
 
         assertFalse(shouldShowOverlay)
     }
@@ -164,7 +171,7 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         whenever(jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()).thenReturn(null)
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-                .shouldShowSiteCreationOverlay()
+            .shouldShowSiteCreationOverlay()
 
         assertFalse(shouldShowOverlay)
     }
@@ -173,10 +180,10 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     @Suppress("MaxLineLength")
     fun `given feature removal in phase one, when shouldShowSiteCreationOverlay invoked, then return false`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase())
-                .thenReturn(JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE)
+            .thenReturn(JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE)
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-                .shouldShowSiteCreationOverlay()
+            .shouldShowSiteCreationOverlay()
 
         assertTrue(shouldShowOverlay)
     }
@@ -185,10 +192,10 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     @Suppress("MaxLineLength")
     fun `given feature removal in phase four, when shouldShowSiteCreationOverlay invoked, then return false`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase())
-                .thenReturn(JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO)
+            .thenReturn(JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO)
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-                .shouldShowSiteCreationOverlay()
+            .shouldShowSiteCreationOverlay()
 
         assertTrue(shouldShowOverlay)
     }
@@ -206,26 +213,26 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
                 (noOfDaysPastFeatureAccessed * ONE_DAY_TIME_IN_MILLIS))
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseOne)
         whenever(
-                jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(
-                        STATS,
-                        PHASE_ONE
-                )
+            jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(
+                STATS,
+                PHASE_ONE
+            )
         ).thenReturn(featureAccessedMockedTimeinMillis)
         whenever(dateTimeUtilsWrapper.getTodaysDate()).thenReturn(currentMockedDate)
         whenever(
-                dateTimeUtilsWrapper.daysBetween(
-                        Date(featureAccessedMockedTimeinMillis),
-                        currentMockedDate
-                )
+            dateTimeUtilsWrapper.daysBetween(
+                Date(featureAccessedMockedTimeinMillis),
+                currentMockedDate
+            )
         ).thenReturn(noOfDaysPastFeatureAccessed.toInt())
     }
 
-    private fun setUpMockForEarliestAccessedFeature(noOfDaysPastFeatureAccessed:Long) {
+    private fun setUpMockForEarliestAccessedFeature(noOfDaysPastFeatureAccessed: Long) {
         val featureAccessedMockedTimeinMillis = (System.currentTimeMillis() -
                 (noOfDaysPastFeatureAccessed * ONE_DAY_TIME_IN_MILLIS))
 
         whenever(jetpackFeatureOverlayShownTracker.getEarliestOverlayShownTime(PHASE_ONE))
-                .thenReturn(featureAccessedMockedTimeinMillis)
+            .thenReturn(featureAccessedMockedTimeinMillis)
 
         setupMockForFeatureAccessed(noOfDaysPastFeatureAccessed)
     }

@@ -42,8 +42,8 @@ class WPCrashLoggingDataProvider @Inject constructor(
         }
 
         val hasUserAllowedReporting = sharedPreferences.getBoolean(
-                resourceProvider.getString(R.string.pref_key_send_crash),
-                true
+            resourceProvider.getString(R.string.pref_key_send_crash),
+            true
         )
         return hasUserAllowedReporting
     }
@@ -80,8 +80,8 @@ class WPCrashLoggingDataProvider @Inject constructor(
         logFileProvider.getLogFiles().lastOrNull()?.let { logFile ->
             if (logFile.exists()) {
                 encryptedLogging.encryptAndUploadLogFile(
-                        logFile = logFile,
-                        shouldStartUploadImmediately = eventLevel != EventLevel.FATAL
+                    logFile = logFile,
+                    shouldStartUploadImmediately = eventLevel != EventLevel.FATAL
                 )?.let { uuid ->
                     encryptedLogsUuid.put(EXTRA_UUID, uuid)
                 }
@@ -99,9 +99,9 @@ class WPCrashLoggingDataProvider @Inject constructor(
     override fun userProvider(): CrashLoggingUser? {
         return accountStore.account?.let { accountModel ->
             CrashLoggingUser(
-                    userID = accountModel.userId.toString(),
-                    email = accountModel.email,
-                    username = accountModel.userName
+                userID = accountModel.userId.toString(),
+                email = accountModel.email,
+                username = accountModel.userName
             )
         }
     }

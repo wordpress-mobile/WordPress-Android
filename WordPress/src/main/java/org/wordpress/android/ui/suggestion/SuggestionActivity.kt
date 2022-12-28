@@ -29,7 +29,8 @@ import javax.inject.Inject
 class SuggestionActivity : LocaleAwareActivity() {
     private var suggestionAdapter: SuggestionAdapter? = null
     private var siteId: Long? = null
-    @Inject lateinit var viewModel: SuggestionViewModel
+    @Inject
+    lateinit var viewModel: SuggestionViewModel
     private lateinit var binding: SuggestUsersActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -175,8 +176,8 @@ class SuggestionActivity : LocaleAwareActivity() {
 
     private fun exitIfOnlyOneMatchingUser() {
         when (val finishAttempt = viewModel.onAttemptToFinish(
-                suggestionAdapter?.filteredSuggestions,
-                binding.autocompleteText.text.toString()
+            suggestionAdapter?.filteredSuggestions,
+            binding.autocompleteText.text.toString()
         )) {
             is OnlyOneAvailable -> {
                 finishWithValue(finishAttempt.onlySelectedValue)

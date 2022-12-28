@@ -23,8 +23,8 @@ open class BlockListItemViewHolder(
     view: View
 ) : ViewHolder(view) {
     constructor(parent: ViewGroup, @LayoutRes layout: Int) : this(
-            LayoutInflater.from(parent.context)
-                    .inflate(layout, parent, false)
+        LayoutInflater.from(parent.context)
+            .inflate(layout, parent, false)
     )
 
     protected fun TextView.setTextOrHide(@StringRes resource: Int?, value: String?) {

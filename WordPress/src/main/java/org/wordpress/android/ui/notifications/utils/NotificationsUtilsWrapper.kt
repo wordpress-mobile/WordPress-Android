@@ -21,12 +21,12 @@ import javax.inject.Singleton
 class NotificationsUtilsWrapper @Inject constructor(private val formattableContentMapper: FormattableContentMapper) {
     @Suppress("CAST_NEVER_SUCCEEDS")
     fun getSpannableContentForRanges(subject: FormattableContent?): SpannableStringBuilder = NotificationsUtils
-            .getSpannableContentForRanges(subject, null, null as? NoteBlock.OnNoteBlockTextClickListener, false)
+        .getSpannableContentForRanges(subject, null, null as? NoteBlock.OnNoteBlockTextClickListener, false)
 
     fun getSpannableContentForRanges(subject: JSONObject): SpannableStringBuilder =
-            NotificationsUtils.getSpannableContentForRanges(
-                    formattableContentMapper, subject, null, null, false
-            )
+        NotificationsUtils.getSpannableContentForRanges(
+            formattableContentMapper, subject, null, null, false
+        )
 
     fun getSpannableContentForRanges(
         blockObject: JSONObject,
@@ -34,8 +34,8 @@ class NotificationsUtilsWrapper @Inject constructor(private val formattableConte
         onNoteBlockTextClickListener: NoteBlock.OnNoteBlockTextClickListener?,
         isFooter: Boolean
     ): SpannableStringBuilder = NotificationsUtils.getSpannableContentForRanges(
-            formattableContentMapper, blockObject, textView,
-            onNoteBlockTextClickListener, isFooter
+        formattableContentMapper, blockObject, textView,
+        onNoteBlockTextClickListener, isFooter
     )
 
     /**
@@ -53,8 +53,8 @@ class NotificationsUtilsWrapper @Inject constructor(private val formattableConte
         onNoteBlockTextClickListener: NoteBlock.OnNoteBlockTextClickListener?,
         isFooter: Boolean
     ): SpannableStringBuilder = NotificationsUtils.getSpannableContentForRanges(
-            formattableContent,
-            textView, onNoteBlockTextClickListener, isFooter
+        formattableContent,
+        textView, onNoteBlockTextClickListener, isFooter
     )
 
     fun getSpannableContentForRanges(
@@ -63,10 +63,10 @@ class NotificationsUtilsWrapper @Inject constructor(private val formattableConte
         clickHandler: (FormattableRange) -> Unit,
         isFooter: Boolean
     ): SpannableStringBuilder = NotificationsUtils.getSpannableContentForRanges(
-            formattableContent,
-            textView, clickHandler, isFooter
+        formattableContent,
+        textView, clickHandler, isFooter
     )
 
     fun mapJsonToFormattableContent(blockObject: JSONObject): FormattableContent = NotificationsUtils
-            .mapJsonToFormattableContent(formattableContentMapper, blockObject)
+        .mapJsonToFormattableContent(formattableContentMapper, blockObject)
 }

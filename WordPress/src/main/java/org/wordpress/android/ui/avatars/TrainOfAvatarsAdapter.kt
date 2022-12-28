@@ -18,7 +18,7 @@ class TrainOfAvatarsAdapter(
 
     fun loadData(items: List<TrainOfAvatarsItem>) {
         val diffResult = DiffUtil.calculateDiff(
-                TrainOfAvatarsAdapterDiffCallback(itemsList, items)
+            TrainOfAvatarsAdapterDiffCallback(itemsList, items)
         )
         itemsList = items
         diffResult.dispatchUpdatesTo(this)

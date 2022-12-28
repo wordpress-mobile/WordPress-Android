@@ -23,18 +23,21 @@ import java.util.Calendar
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class PageParentViewModelTest : BaseUnitTest() {
-    @Mock lateinit var pageStore: PageStore
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var site: SiteModel
+    @Mock
+    lateinit var pageStore: PageStore
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var site: SiteModel
     private lateinit var viewModel: PageParentViewModel
 
     @Before
     fun setUp() {
         viewModel = PageParentViewModel(
-                pageStore,
-                resourceProvider,
-                testDispatcher(),
-                testDispatcher()
+            pageStore,
+            resourceProvider,
+            testDispatcher(),
+            testDispatcher()
         )
 
         runBlocking {
@@ -71,14 +74,14 @@ class PageParentViewModelTest : BaseUnitTest() {
     @Test
     fun `page list shows all pages except local-only pages for newly created page that was never saved (no id)`() {
         val validIds = fakePublishedPageList()
-                .map { it.remoteId }
-                .filterNot { it < 0 }
+            .map { it.remoteId }
+            .filterNot { it < 0 }
 
         viewModel.start(site, 0L)
 
         val shownPageIds = viewModel.pages.value
-                ?.mapNotNull { (it as? ParentPage)?.id }
-                ?: emptyList()
+            ?.mapNotNull { (it as? ParentPage)?.id }
+            ?: emptyList()
 
         assertThat(shownPageIds).first().isEqualTo(0L)
         assertThat(shownPageIds).containsAll(validIds)
@@ -89,14 +92,14 @@ class PageParentViewModelTest : BaseUnitTest() {
         val pageId = 3L
         val childrenIds = listOf(4L, 5L)
         val validIds = fakePublishedPageList()
-                .map { it.remoteId }
-                .filterNot { it < 0 || it == pageId || it in childrenIds }
+            .map { it.remoteId }
+            .filterNot { it < 0 || it == pageId || it in childrenIds }
 
         viewModel.start(site, pageId)
 
         val shownPageIds = viewModel.pages.value
-                ?.mapNotNull { (it as? ParentPage)?.id }
-                ?: emptyList()
+            ?.mapNotNull { (it as? ParentPage)?.id }
+            ?: emptyList()
 
         assertThat(shownPageIds).first().isEqualTo(0L)
         assertThat(shownPageIds).containsAll(validIds)
@@ -167,16 +170,16 @@ class PageParentViewModelTest : BaseUnitTest() {
 
     private fun fakePublishedPageModel(id: Long, title: String, parent: PageModel? = null): PageModel {
         return PageModel(
-                post = PostModel().apply { },
-                site = site,
-                pageId = id.toInt(),
-                title = title,
-                status = PageStatus.PUBLISHED,
-                date = Calendar.getInstance().time,
-                hasLocalChanges = false,
-                remoteId = id,
-                parent = parent,
-                featuredImageId = 0L
+            post = PostModel().apply { },
+            site = site,
+            pageId = id.toInt(),
+            title = title,
+            status = PageStatus.PUBLISHED,
+            date = Calendar.getInstance().time,
+            hasLocalChanges = false,
+            remoteId = id,
+            parent = parent,
+            featuredImageId = 0L
         )
     }
 }

@@ -27,10 +27,14 @@ private const val SNACKBAR_DURATION_MS = 500L
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SnackbarSequencerConcurrentTest : BaseUnitTest() {
-    @Mock lateinit var wpSnackbarWrapper: WPSnackbarWrapper
-    @Mock lateinit var wpSnackbar: Snackbar
-    @Mock lateinit var view: View
-    @Mock lateinit var activity: Activity
+    @Mock
+    lateinit var wpSnackbarWrapper: WPSnackbarWrapper
+    @Mock
+    lateinit var wpSnackbar: Snackbar
+    @Mock
+    lateinit var view: View
+    @Mock
+    lateinit var activity: Activity
 
     private val uiHelper: UiHelpers = UiHelpers()
     private lateinit var sequencer: SnackbarSequencer
@@ -42,9 +46,9 @@ class SnackbarSequencerConcurrentTest : BaseUnitTest() {
         whenever(wpSnackbarWrapper.make(any(), any(), any())).thenReturn(wpSnackbar)
 
         sequencer = SnackbarSequencer(
-                uiHelper,
-                wpSnackbarWrapper,
-                testDispatcher()
+            uiHelper,
+            wpSnackbarWrapper,
+            testDispatcher()
         )
     }
 
@@ -109,11 +113,11 @@ class SnackbarSequencerConcurrentTest : BaseUnitTest() {
     private fun getItems(numItems: Int): List<SnackbarItem> {
         return List(numItems) { index ->
             SnackbarItem(
-                    Info(
-                        view = view,
-                        textRes = UiStringText(TEST_MESSAGE_TEMPLATE + index),
-                        duration = SNACKBAR_DURATION_MS.toInt()
-                    )
+                Info(
+                    view = view,
+                    textRes = UiStringText(TEST_MESSAGE_TEMPLATE + index),
+                    duration = SNACKBAR_DURATION_MS.toInt()
+                )
             )
         }
     }

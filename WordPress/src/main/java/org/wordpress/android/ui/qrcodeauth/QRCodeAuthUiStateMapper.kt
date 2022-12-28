@@ -19,27 +19,27 @@ class QRCodeAuthUiStateMapper @Inject constructor() {
     fun mapToScanning() = Scanning
     fun mapToAuthFailed(onScanAgainClicked: () -> Unit, onCancelClicked: () -> Unit) =
         Error.AuthFailed(
-                primaryActionButton = ErrorPrimaryActionButton(onScanAgainClicked),
-                secondaryActionButton = ErrorSecondaryActionButton(onCancelClicked)
+            primaryActionButton = ErrorPrimaryActionButton(onScanAgainClicked),
+            secondaryActionButton = ErrorSecondaryActionButton(onCancelClicked)
         )
 
     fun mapToExpired(onScanAgainClicked: () -> Unit, onCancelClicked: () -> Unit) =
-            Error.Expired(
-                    primaryActionButton = ErrorPrimaryActionButton(onScanAgainClicked),
-                    secondaryActionButton = ErrorSecondaryActionButton(onCancelClicked)
-            )
+        Error.Expired(
+            primaryActionButton = ErrorPrimaryActionButton(onScanAgainClicked),
+            secondaryActionButton = ErrorSecondaryActionButton(onCancelClicked)
+        )
 
     fun mapToInvalidData(onScanAgainClicked: () -> Unit, onCancelClicked: () -> Unit) =
-            Error.InvalidData(
-                    primaryActionButton = ErrorPrimaryActionButton(onScanAgainClicked),
-                    secondaryActionButton = ErrorSecondaryActionButton(onCancelClicked)
-            )
+        Error.InvalidData(
+            primaryActionButton = ErrorPrimaryActionButton(onScanAgainClicked),
+            secondaryActionButton = ErrorSecondaryActionButton(onCancelClicked)
+        )
 
     fun mapToNoInternet(onScanAgainClicked: () -> Unit, onCancelClicked: () -> Unit) =
-            Error.NoInternet(
-                    primaryActionButton = ErrorPrimaryActionButton(onScanAgainClicked),
-                    secondaryActionButton = ErrorSecondaryActionButton(onCancelClicked)
-            )
+        Error.NoInternet(
+            primaryActionButton = ErrorPrimaryActionButton(onScanAgainClicked),
+            secondaryActionButton = ErrorSecondaryActionButton(onCancelClicked)
+        )
 
     fun mapToValidated(
         location: String?,
@@ -47,32 +47,32 @@ class QRCodeAuthUiStateMapper @Inject constructor() {
         onAuthenticateClick: () -> Unit,
         onCancelClick: () -> Unit
     ) =
-            Content.Validated(
-                    primaryActionButton = ValidatedPrimaryActionButton(onAuthenticateClick),
-                    secondaryActionButton = ValidatedSecondaryActionButton(onCancelClick),
-                    location = location,
-                    browser = browser
-            )
+        Content.Validated(
+            primaryActionButton = ValidatedPrimaryActionButton(onAuthenticateClick),
+            secondaryActionButton = ValidatedSecondaryActionButton(onCancelClick),
+            location = location,
+            browser = browser
+        )
 
     fun mapToAuthenticating(fromValidated: Content.Validated) =
         Content.Authenticating(
-                primaryActionButton = AuthenticatingPrimaryActionButton,
-                secondaryActionButton = AuthenticatingSecondaryActionButton,
-                location = fromValidated.location,
-                browser = fromValidated.browser
+            primaryActionButton = AuthenticatingPrimaryActionButton,
+            secondaryActionButton = AuthenticatingSecondaryActionButton,
+            location = fromValidated.location,
+            browser = fromValidated.browser
         )
 
     fun mapToAuthenticating(location: String?, browser: String?) =
-            Content.Authenticating(
-                    primaryActionButton = AuthenticatingPrimaryActionButton,
-                    secondaryActionButton = AuthenticatingSecondaryActionButton,
-                    location = location,
-                    browser = browser
-            )
+        Content.Authenticating(
+            primaryActionButton = AuthenticatingPrimaryActionButton,
+            secondaryActionButton = AuthenticatingSecondaryActionButton,
+            location = location,
+            browser = browser
+        )
 
     fun mapToDone(onDismissClicked: () -> Unit) =
-            Content.Done(
-                    primaryActionButton = DonePrimaryActionButton(onDismissClicked),
-                    secondaryActionButton = DoneSecondaryActionButton
-            )
+        Content.Done(
+            primaryActionButton = DonePrimaryActionButton(onDismissClicked),
+            secondaryActionButton = DoneSecondaryActionButton
+        )
 }

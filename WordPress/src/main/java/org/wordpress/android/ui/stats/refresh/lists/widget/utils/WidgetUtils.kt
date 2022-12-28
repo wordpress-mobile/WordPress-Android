@@ -55,7 +55,7 @@ class WidgetUtils
         minWidthLimit: Int = MIN_WIDTH
     ): Boolean {
         val minWidth = appWidgetManager.getAppWidgetOptions(appWidgetId)
-                .getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 300)
+            .getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 300)
         return minWidth > minWidthLimit
     }
 
@@ -76,13 +76,13 @@ class WidgetUtils
         coroutineScope.launch {
             val awt = AppWidgetTarget(context, R.id.widget_site_icon, views, appWidgetId)
             imageManager.load(
-                    awt,
-                    context,
-                    ICON,
-                    siteModel?.iconUrl ?: "",
-                    FIT_START,
-                    ICON_MAX_DIMENSION,
-                    ICON_MAX_DIMENSION
+                awt,
+                context,
+                ICON,
+                siteModel?.iconUrl ?: "",
+                FIT_START,
+                ICON_MAX_DIMENSION,
+                ICON_MAX_DIMENSION
             )
         }
     }
@@ -100,13 +100,13 @@ class WidgetUtils
     ) {
         views.setViewVisibility(R.id.widget_site_icon, View.GONE)
         views.setOnClickPendingIntent(
-                R.id.widget_title_container,
-                PendingIntent.getActivity(
-                        context,
-                        0,
-                        Intent(),
-                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
+            R.id.widget_title_container,
+            PendingIntent.getActivity(
+                context,
+                0,
+                Intent(),
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
         )
         views.setViewVisibility(R.id.widget_content, View.GONE)
         views.setViewVisibility(R.id.widget_error, View.VISIBLE)
@@ -118,8 +118,8 @@ class WidgetUtils
             R.string.stats_widget_error_no_data
         }
         views.setTextViewText(
-                R.id.widget_error_message,
-                resourceProvider.getString(errorMessage)
+            R.id.widget_error_message,
+            resourceProvider.getString(errorMessage)
         )
         val pendingSync = getRetryIntent(context, widgetType, appWidgetId)
         views.setOnClickPendingIntent(R.id.widget_error, pendingSync)
@@ -136,10 +136,10 @@ class WidgetUtils
 
         intentSync.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         return PendingIntent.getBroadcast(
-                context,
-                Random(appWidgetId).nextInt(),
-                intentSync,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            context,
+            Random(appWidgetId).nextInt(),
+            intentSync,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
 
@@ -164,7 +164,7 @@ class WidgetUtils
         listIntent.putExtra(SITE_ID_KEY, siteId)
         listIntent.putExtra(IS_WIDE_VIEW_KEY, isWideView)
         listIntent.data = Uri.parse(
-                listIntent.toUri(Intent.URI_INTENT_SCHEME)
+            listIntent.toUri(Intent.URI_INTENT_SCHEME)
         )
         views.setRemoteAdapter(R.id.widget_content, listIntent)
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_content)
@@ -182,10 +182,10 @@ class WidgetUtils
         intent.putExtra(StatsActivity.ARG_DESIRED_TIMEFRAME, statsTimeframe)
         intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.STATS_WIDGET)
         return PendingIntent.getActivity(
-                context,
-                getRandomId(),
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            context,
+            getRandomId(),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
 
@@ -199,10 +199,10 @@ class WidgetUtils
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
 
         return PendingIntent.getActivity(
-                context,
-                getRandomId(),
-                intent,
-                templateFlags,
+            context,
+            getRandomId(),
+            intent,
+            templateFlags,
         )
     }
 

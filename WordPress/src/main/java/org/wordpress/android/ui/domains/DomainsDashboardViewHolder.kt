@@ -31,7 +31,7 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
         parent: ViewGroup,
         private val uiHelpers: UiHelpers
     ) : DomainsDashboardViewHolder<DomainFreeSiteAddressCardBinding>(
-            parent.viewBinding(DomainFreeSiteAddressCardBinding::inflate)
+        parent.viewBinding(DomainFreeSiteAddressCardBinding::inflate)
     ) {
         fun onBind(item: FreeDomain) = with(binding) {
             uiHelpers.setTextOrHide(primarySiteAddress, item.domain)
@@ -54,7 +54,7 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
         parent: ViewGroup,
         private val uiHelpers: UiHelpers
     ) : DomainsDashboardViewHolder<DomainSiteDomainsHeaderBinding>(
-            parent.viewBinding(DomainSiteDomainsHeaderBinding::inflate)
+        parent.viewBinding(DomainSiteDomainsHeaderBinding::inflate)
     ) {
         fun onBind(item: SiteDomainsHeader) = with(binding) {
             uiHelpers.setTextOrHide(siteDomainsHeader, item.title)
@@ -65,7 +65,7 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
         parent: ViewGroup,
         private val uiHelpers: UiHelpers
     ) : DomainsDashboardViewHolder<DomainSiteDomainsCardBinding>(
-            parent.viewBinding(DomainSiteDomainsCardBinding::inflate)
+        parent.viewBinding(DomainSiteDomainsCardBinding::inflate)
     ) {
         fun onBind(item: SiteDomains) = with(binding) {
             uiHelpers.setTextOrHide(siteDomain, item.domain)
@@ -77,7 +77,7 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
     class AddDomainViewHolder(
         parent: ViewGroup
     ) : DomainsDashboardViewHolder<DomainAddDomainCtaBinding>(
-            parent.viewBinding(DomainAddDomainCtaBinding::inflate)
+        parent.viewBinding(DomainAddDomainCtaBinding::inflate)
     ) {
         fun onBind(item: AddDomain) = with(binding) {
             addDomainButton.setOnClickListener { item.onClick.click() }
@@ -87,7 +87,7 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
     class ManageDomainsViewHolder(
         parent: ViewGroup
     ) : DomainsDashboardViewHolder<DomainManageDomainsCtaBinding>(
-            parent.viewBinding(DomainManageDomainsCtaBinding::inflate)
+        parent.viewBinding(DomainManageDomainsCtaBinding::inflate)
     ) {
         fun onBind(item: ManageDomains) = with(binding) {
             manageDomainsCard.setOnClickListener { item.onClick.click() }
@@ -99,7 +99,7 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
         parent: ViewGroup,
         private val uiHelpers: UiHelpers
     ) : DomainsDashboardViewHolder<DomainPurchaseCardBinding>(
-            parent.viewBinding(DomainPurchaseCardBinding::inflate)
+        parent.viewBinding(DomainPurchaseCardBinding::inflate)
     ) {
         fun onBind(item: PurchaseDomain) = with(binding) {
             uiHelpers.setImageOrHide(purchaseDomainImage, item.image)
@@ -113,7 +113,7 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
         parent: ViewGroup,
         private val uiHelpers: UiHelpers
     ) : DomainsDashboardViewHolder<DomainSiteDomainsBlurbBinding>(
-            parent.viewBinding(DomainSiteDomainsBlurbBinding::inflate)
+        parent.viewBinding(DomainSiteDomainsBlurbBinding::inflate)
     ) {
         fun onBind(item: DomainBlurb) = with(binding) {
             uiHelpers.setTextOrHide(primarySiteRedirectBlurb, item.blurb)

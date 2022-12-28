@@ -19,8 +19,10 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 
 @ExperimentalCoroutinesApi
 class SelectedSiteSourceTest : BaseUnitTest() {
-    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock lateinit var dispatcher: Dispatcher
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock
+    lateinit var dispatcher: Dispatcher
     private lateinit var source: SelectedSiteSource
     private val siteLocalId = 1
     private val site = SiteModel()

@@ -21,8 +21,10 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class UserProfileViewModelTest : BaseUnitTest() {
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     private lateinit var viewModel: UserProfileViewModel
 
@@ -32,8 +34,8 @@ class UserProfileViewModelTest : BaseUnitTest() {
     @Before
     fun setup() {
         viewModel = UserProfileViewModel(
-                resourceProvider,
-                analyticsUtilsWrapper
+            resourceProvider,
+            analyticsUtilsWrapper
         )
 
         setupObservers()
@@ -89,14 +91,14 @@ class UserProfileViewModelTest : BaseUnitTest() {
 
     private fun getDefaultUserProfile(): UserProfile {
         return UserProfile(
-                userAvatarUrl = "userAvatarUrl",
-                blavatarUrl = "blavatarUrl",
-                userName = "userName",
-                userLogin = "userLogin",
-                userBio = "userBio",
-                siteTitle = "siteTitle",
-                siteUrl = "siteUrl",
-                siteId = 100L
+            userAvatarUrl = "userAvatarUrl",
+            blavatarUrl = "blavatarUrl",
+            userName = "userName",
+            userLogin = "userLogin",
+            userBio = "userBio",
+            siteTitle = "siteTitle",
+            siteUrl = "siteUrl",
+            siteId = 100L
         )
     }
 

@@ -43,11 +43,15 @@ import org.wordpress.android.widgets.QuickStartFocusPoint
 import javax.inject.Inject
 
 class MySiteFragment : Fragment(R.layout.my_site_fragment),
-        QuickStartPromptClickInterface {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var meGravatarLoader: MeGravatarLoader
-    @Inject lateinit var imageManager: ImageManager
+    QuickStartPromptClickInterface {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var meGravatarLoader: MeGravatarLoader
+    @Inject
+    lateinit var imageManager: ImageManager
     private lateinit var viewModel: MySiteViewModel
 
     private var binding: MySiteFragmentBinding? = null
@@ -183,16 +187,16 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.loadGravatar(avatarUrl: String) =
-            root.findViewById<ImageView>(R.id.avatar)?.let {
-                meGravatarLoader.load(
-                        false,
-                        meGravatarLoader.constructGravatarUrl(avatarUrl),
-                        null,
-                        it,
-                        USER,
-                        null
-                )
-            }
+        root.findViewById<ImageView>(R.id.avatar)?.let {
+            meGravatarLoader.load(
+                false,
+                meGravatarLoader.constructGravatarUrl(avatarUrl),
+                null,
+                it,
+                USER,
+                null
+            )
+        }
 
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
         tabLayout.setVisible(state.tabsUiState.showTabs)
@@ -326,11 +330,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun ViewPager2.getCurrentFragment() =
-            this@MySiteFragment.childFragmentManager.findFragmentByTag("f$currentItem") as? MySiteTabFragment
+        this@MySiteFragment.childFragmentManager.findFragmentByTag("f$currentItem") as? MySiteTabFragment
 
     private fun MySiteFragmentBinding.createTabCustomView(tab: TabLayout.Tab): View {
         val customView = LayoutInflater.from(context)
-                .inflate(R.layout.tab_custom_view, tabLayout, false)
+            .inflate(R.layout.tab_custom_view, tabLayout, false)
         tab.customView = customView
         return customView
     }

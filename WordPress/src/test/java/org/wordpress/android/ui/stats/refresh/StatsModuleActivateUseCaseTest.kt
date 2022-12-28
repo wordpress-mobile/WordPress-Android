@@ -22,16 +22,19 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @ExperimentalCoroutinesApi
 class StatsModuleActivateUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: StatsModuleActivateUseCase
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var siteModel: SiteModel
-    @Mock lateinit var jetpackStore: JetpackStore
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    lateinit var siteModel: SiteModel
+    @Mock
+    lateinit var jetpackStore: JetpackStore
 
     @Before
     fun setup() = test {
         useCase = StatsModuleActivateUseCase(
-                networkUtilsWrapper,
-                jetpackStore,
-                testDispatcher()
+            networkUtilsWrapper,
+            jetpackStore,
+            testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
@@ -48,12 +51,12 @@ class StatsModuleActivateUseCaseTest : BaseUnitTest() {
     @Test
     fun `given invalid response, when activate is triggered, then RemoteRequestFailure is returned`() = test {
         whenever(jetpackStore.activateStatsModule(any()))
-                .thenReturn(
-                        OnActivateStatsModule(
-                                ActivateStatsModuleError(ActivateStatsModuleErrorType.INVALID_RESPONSE),
-                                ACTIVATE_STATS_MODULE
-                        )
+            .thenReturn(
+                OnActivateStatsModule(
+                    ActivateStatsModuleError(ActivateStatsModuleErrorType.INVALID_RESPONSE),
+                    ACTIVATE_STATS_MODULE
                 )
+            )
 
         val result = useCase.postActivateStatsModule(siteModel)
 
@@ -63,12 +66,12 @@ class StatsModuleActivateUseCaseTest : BaseUnitTest() {
     @Test
     fun `given generic error response, when activate is triggered, then RemoteRequestFailure is returned`() = test {
         whenever(jetpackStore.activateStatsModule(any()))
-                .thenReturn(
-                        OnActivateStatsModule(
-                                ActivateStatsModuleError(ActivateStatsModuleErrorType.GENERIC_ERROR),
-                                ACTIVATE_STATS_MODULE
-                        )
+            .thenReturn(
+                OnActivateStatsModule(
+                    ActivateStatsModuleError(ActivateStatsModuleErrorType.GENERIC_ERROR),
+                    ACTIVATE_STATS_MODULE
                 )
+            )
 
         val result = useCase.postActivateStatsModule(siteModel)
 
@@ -78,12 +81,12 @@ class StatsModuleActivateUseCaseTest : BaseUnitTest() {
     @Test
     fun `given api error response, when activate is triggered, then RemoteRequestFailure is returned`() = test {
         whenever(jetpackStore.activateStatsModule(any()))
-                .thenReturn(
-                        OnActivateStatsModule(
-                                ActivateStatsModuleError(ActivateStatsModuleErrorType.API_ERROR),
-                                ACTIVATE_STATS_MODULE
-                        )
+            .thenReturn(
+                OnActivateStatsModule(
+                    ActivateStatsModuleError(ActivateStatsModuleErrorType.API_ERROR),
+                    ACTIVATE_STATS_MODULE
                 )
+            )
 
         val result = useCase.postActivateStatsModule(siteModel)
 
@@ -93,12 +96,12 @@ class StatsModuleActivateUseCaseTest : BaseUnitTest() {
     @Test
     fun `given auth error response, when activate is triggered, then RemoteRequestFailure is returned`() = test {
         whenever(jetpackStore.activateStatsModule(any()))
-                .thenReturn(
-                        OnActivateStatsModule(
-                                ActivateStatsModuleError(ActivateStatsModuleErrorType.AUTHORIZATION_REQUIRED),
-                                ACTIVATE_STATS_MODULE
-                        )
+            .thenReturn(
+                OnActivateStatsModule(
+                    ActivateStatsModuleError(ActivateStatsModuleErrorType.AUTHORIZATION_REQUIRED),
+                    ACTIVATE_STATS_MODULE
                 )
+            )
 
         val result = useCase.postActivateStatsModule(siteModel)
 

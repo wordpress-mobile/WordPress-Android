@@ -20,10 +20,14 @@ import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class LatestPostSummaryMapperTest {
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var statsSinceLabelFormatter: StatsSinceLabelFormatter
-    @Mock lateinit var statsUtils: StatsUtils
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var statsSinceLabelFormatter: StatsSinceLabelFormatter
+    @Mock
+    lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var statsDateFormatter: StatsDateFormatter
     private lateinit var mapper: LatestPostSummaryMapper
     private val date = Date(10)
     private val postTitle = "post title"
@@ -31,13 +35,14 @@ class LatestPostSummaryMapperTest {
     private val postId = 10L
     private val postURL = "url"
     private val featuredImageURL = ""
+
     @Before
     fun setUp() {
         mapper = LatestPostSummaryMapper(
-                statsSinceLabelFormatter,
-                resourceProvider,
-                statsDateFormatter,
-                statsUtils
+            statsSinceLabelFormatter,
+            resourceProvider,
+            statsDateFormatter,
+            statsUtils
         )
     }
 
@@ -56,27 +61,27 @@ class LatestPostSummaryMapperTest {
     fun `builds message with no engagement and link`() {
         val viewCount = 0
         val model = InsightsLatestPostModel(
-                siteId,
-                postTitle,
-                postURL,
-                date,
-                postId,
-                viewCount,
-                0,
-                0,
-                listOf(),
-                featuredImageURL
+            siteId,
+            postTitle,
+            postURL,
+            date,
+            postId,
+            viewCount,
+            0,
+            0,
+            listOf(),
+            featuredImageURL
         )
 
         val sinceTimeLabel = "10 mins"
         whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
         val messageWithNoEngagement = "message with no engagement"
         whenever(
-                resourceProvider.getString(
-                        R.string.stats_insights_latest_post_with_no_engagement,
-                        sinceTimeLabel,
-                        postTitle
-                )
+            resourceProvider.getString(
+                R.string.stats_insights_latest_post_with_no_engagement,
+                sinceTimeLabel,
+                postTitle
+            )
         ).thenReturn(messageWithNoEngagement)
 
         var clickedPostId: Long? = null
@@ -99,27 +104,27 @@ class LatestPostSummaryMapperTest {
     fun `builds message with engagement`() {
         val viewCount = 10
         val model = InsightsLatestPostModel(
-                siteId,
-                postTitle,
-                postURL,
-                date,
-                postId,
-                viewCount,
-                0,
-                0,
-                listOf(),
-                featuredImageURL
+            siteId,
+            postTitle,
+            postURL,
+            date,
+            postId,
+            viewCount,
+            0,
+            0,
+            listOf(),
+            featuredImageURL
         )
 
         val sinceTimeLabel = "10 mins"
         whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
         val messageWithEngagement = "message with no engagement"
         whenever(
-                resourceProvider.getString(
-                        R.string.stats_insights_latest_post_message,
-                        sinceTimeLabel,
-                        postTitle
-                )
+            resourceProvider.getString(
+                R.string.stats_insights_latest_post_message,
+                sinceTimeLabel,
+                postTitle
+            )
         ).thenReturn(messageWithEngagement)
 
         val result = mapper.buildMessageItem(model) { }
@@ -169,27 +174,27 @@ class LatestPostSummaryMapperTest {
 
         val viewCount = 0
         val model = InsightsLatestPostModel(
-                siteId,
-                postTitleWithHtml,
-                postURL,
-                date,
-                postId,
-                viewCount,
-                0,
-                0,
-                listOf(),
-                featuredImageURL
+            siteId,
+            postTitleWithHtml,
+            postURL,
+            date,
+            postId,
+            viewCount,
+            0,
+            0,
+            listOf(),
+            featuredImageURL
         )
 
         val sinceTimeLabel = "10 mins"
         whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
 
         whenever(
-                resourceProvider.getString(
-                        eq(R.string.stats_insights_latest_post_with_no_engagement),
-                        eq(sinceTimeLabel),
-                        anyString()
-                )
+            resourceProvider.getString(
+                eq(R.string.stats_insights_latest_post_with_no_engagement),
+                eq(sinceTimeLabel),
+                anyString()
+            )
         ).thenAnswer { "message with no engagement for post ${it.getArgument<String>(2)}" }
 
         val result = mapper.buildMessageItem(model) {}

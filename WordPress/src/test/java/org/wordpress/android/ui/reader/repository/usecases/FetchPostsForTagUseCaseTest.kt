@@ -20,18 +20,21 @@ import org.wordpress.android.viewmodel.ContextProvider
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class FetchPostsForTagUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var contextProvider: ContextProvider
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var readerPostServiceStarterWrapper: ReaderPostServiceStarterWrapper
+    @Mock
+    lateinit var contextProvider: ContextProvider
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    lateinit var readerPostServiceStarterWrapper: ReaderPostServiceStarterWrapper
 
     private lateinit var useCase: FetchPostsForTagUseCase
 
     @Before
     fun setUp() {
         useCase = FetchPostsForTagUseCase(
-                networkUtilsWrapper,
-                contextProvider,
-                readerPostServiceStarterWrapper
+            networkUtilsWrapper,
+            contextProvider,
+            readerPostServiceStarterWrapper
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }

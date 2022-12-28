@@ -40,8 +40,8 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @Deprecated(
-        "This class is being refactored, if you implement any change, please also update " +
-                "{@link org.wordpress.android.ui.mediapicker.MediaPickerFragment}"
+    "This class is being refactored, if you implement any change, please also update " +
+            "{@link org.wordpress.android.ui.mediapicker.MediaPickerFragment}"
 )
 class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
     enum class PhotoPickerIcon(private val mRequiresUploadPermission: Boolean) {
@@ -70,10 +70,13 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
     private var listener: PhotoPickerListener? = null
 
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Suppress("DEPRECATION") private lateinit var viewModel: PhotoPickerViewModel
+    @Suppress("DEPRECATION")
+    private lateinit var viewModel: PhotoPickerViewModel
     private var binding: PhotoPickerFragmentBinding? = null
 
     @Suppress("DEPRECATION")
@@ -103,8 +106,8 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
             recycler.setHasFixedSize(true)
 
             val layoutManager = GridLayoutManager(
-                    activity,
-                    NUM_COLUMNS
+                activity,
+                NUM_COLUMNS
             )
 
             savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
@@ -146,7 +149,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
             val popup = PopupMenu(activity, uiModel.view.view)
             for (popupMenuItem in uiModel.items) {
                 val item = popup.menu
-                        .add(popupMenuItem.title.stringRes)
+                    .add(popupMenuItem.title.stringRes)
                 item.setOnMenuItemClickListener {
                     popupMenuItem.action()
                     true
@@ -171,9 +174,9 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
     private fun observeOnNavigateToPreview() {
         viewModel.onNavigateToPreview.observeEvent(viewLifecycleOwner) { uri ->
             MediaPreviewActivity.showPreview(
-                    requireContext(),
-                    null,
-                    uri.toString()
+                requireContext(),
+                null,
+                uri.toString()
             )
             AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(R.string.cancel))
         }
@@ -188,12 +191,12 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
                 setupBottomBar(uiState.bottomBarUiModel)
                 setupSoftAskView(uiState.softAskViewUiModel)
                 if (uiState.actionModeUiModel is PhotoPickerViewModel.ActionModeUiModel.Visible &&
-                        !isShowingActionMode
+                    !isShowingActionMode
                 ) {
                     isShowingActionMode = true
                     (activity as AppCompatActivity).startSupportActionMode(PhotoPickerActionModeCallback(viewModel))
                 } else if (uiState.actionModeUiModel is PhotoPickerViewModel.ActionModeUiModel.Hidden &&
-                        isShowingActionMode
+                    isShowingActionMode
                 ) {
                     isShowingActionMode = false
                 }
@@ -235,8 +238,8 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
         if (uiModel is PhotoPickerViewModel.PhotoListUiModel.Data) {
             if (recycler.adapter == null) {
                 recycler.adapter = PhotoPickerAdapter(
-                        imageManager,
-                        viewModel.viewModelScope
+                    imageManager,
+                    viewModel.viewModelScope
                 )
             }
             val adapter = recycler.adapter as PhotoPickerAdapter
@@ -271,8 +274,8 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
                 }
             }
             iconPicker.setOnClickListener {
-                        uiModel.onIconPickerClicked(ViewWrapper(it))
-                    }
+                uiModel.onIconPickerClicked(ViewWrapper(it))
+            }
 
             if (uiModel.showWPMediaIcon) {
                 iconWpmedia.setOnClickListener {
@@ -284,13 +287,13 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
         }
         if (uiModel.canShowInsertEditBottomBar) {
             textEdit
-                    .setOnClickListener {
-                        val inputData = WPMediaUtils.createListOfEditImageInputData(
-                                requireContext(),
-                                viewModel.selectedURIs().map { it.uri }
-                        )
-                        ActivityLauncher.openImageEditor(activity, inputData)
-                    }
+                .setOnClickListener {
+                    val inputData = WPMediaUtils.createListOfEditImageInputData(
+                        requireContext(),
+                        viewModel.selectedURIs().map { it.uri }
+                    )
+                    ActivityLauncher.openImageEditor(activity, inputData)
+                }
             textInsert.setOnClickListener { viewModel.performInsertAction() }
         }
         val editTextVisible = if (uiModel.insertEditTextBarVisible) View.VISIBLE else View.GONE
@@ -326,7 +329,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
                             builder.setTitle(this.title)
                             builder.setView(R.layout.media_picker_progress_dialog)
                             builder.setNegativeButton(
-                                    R.string.cancel
+                                R.string.cancel
                             ) { _, _ -> this.cancelAction() }
                             builder.setCancelable(false)
                             progressDialog = builder.show()
@@ -353,8 +356,8 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(
-                KEY_LAST_TAPPED_ICON,
-                viewModel.lastTappedIcon?.name
+            KEY_LAST_TAPPED_ICON,
+            viewModel.lastTappedIcon?.name
         )
         val selectedIds = viewModel.selectedIds.value
         if (selectedIds != null && selectedIds.isNotEmpty()) {
@@ -404,8 +407,8 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
     fun refresh() {
         if (!isAdded) {
             AppLog.w(
-                    POSTS,
-                    "Photo picker > can't refresh when not added"
+                POSTS,
+                "Photo picker > can't refresh when not added"
             )
             return
         }
@@ -414,7 +417,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
     private val isStoragePermissionAlwaysDenied: Boolean
         get() = WPPermissionUtils.isPermissionAlwaysDenied(
-                requireActivity(), permission.WRITE_EXTERNAL_STORAGE
+            requireActivity(), permission.WRITE_EXTERNAL_STORAGE
         )
 
     /*
@@ -432,7 +435,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
     private fun requestStoragePermission() {
         val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE)
         requestPermissions(
-                permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE
+            permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE
         )
     }
 
@@ -440,8 +443,8 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
     private fun requestCameraPermission() {
         // in addition to CAMERA permission we also need a storage permission, to store media from the camera
         val permissions = arrayOf(
-                permission.CAMERA,
-                permission.WRITE_EXTERNAL_STORAGE
+            permission.CAMERA,
+            permission.WRITE_EXTERNAL_STORAGE
         )
         requestPermissions(permissions, WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE)
     }
@@ -454,7 +457,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
     ) {
         val checkForAlwaysDenied = requestCode == WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE
         val allGranted = WPPermissionUtils.setPermissionListAsked(
-                requireActivity(), requestCode, permissions, grantResults, checkForAlwaysDenied
+            requireActivity(), requestCode, permissions, grantResults, checkForAlwaysDenied
         )
         when (requestCode) {
             WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE -> checkStoragePermission()
@@ -485,8 +488,10 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
         private const val KEY_SELECTED_POSITIONS = "selected_positions"
         private const val KEY_LIST_STATE = "list_state"
         const val NUM_COLUMNS = 3
+
         @Suppress("DEPRECATION")
-        @JvmStatic fun newInstance(
+        @JvmStatic
+        fun newInstance(
             listener: PhotoPickerListener,
             browserType: MediaBrowserType,
             site: SiteModel?

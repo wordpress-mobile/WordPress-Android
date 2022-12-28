@@ -27,10 +27,12 @@ import javax.inject.Inject
 class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_category_fragment) {
     private var closeListener: PrepublishingScreenClosedListener? = null
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingAddCategoryViewModel
     private lateinit var parentViewModel: PrepublishingViewModel
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var uiHelpers: UiHelpers
 
     var spinnerTouched: Boolean = false
 
@@ -101,9 +103,9 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
 
     private fun AddCategoryBinding.initAdapter() {
         val categoryAdapter = ParentCategorySpinnerAdapter(
-                activity,
-                R.layout.categories_row_parent,
-                arrayListOf<CategoryNode>()
+            activity,
+            R.layout.categories_row_parent,
+            arrayListOf<CategoryNode>()
         )
         parentCategory.adapter = categoryAdapter
     }
@@ -135,9 +137,9 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
 
     private fun PrepublishingAddCategoryFragmentBinding.initViewModel() {
         viewModel = ViewModelProvider(this@PrepublishingAddCategoryFragment, viewModelFactory)
-                .get(PrepublishingAddCategoryViewModel::class.java)
+            .get(PrepublishingAddCategoryViewModel::class.java)
         parentViewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
-                .get(PrepublishingViewModel::class.java)
+            .get(PrepublishingViewModel::class.java)
 
         startObserving()
 
@@ -197,15 +199,16 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
     private fun SnackbarMessageHolder.showToast() {
         val message = uiHelpers.getTextOfUiString(requireContext(), this.message).toString()
         ToastUtils.showToast(
-                requireContext(), message,
-                SHORT
+            requireContext(), message,
+            SHORT
         )
     }
 
     companion object {
         const val TAG = "prepublishing_add_category_fragment_tag"
         const val NEEDS_REQUEST_LAYOUT = "prepublishing_add_category_fragment_needs_request_layout"
-        @JvmStatic fun newInstance(
+        @JvmStatic
+        fun newInstance(
             site: SiteModel,
             needsRequestLayout: Boolean,
             bundle: Bundle? = null

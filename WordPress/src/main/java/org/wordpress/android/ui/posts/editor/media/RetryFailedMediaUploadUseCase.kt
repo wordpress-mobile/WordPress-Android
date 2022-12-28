@@ -18,23 +18,23 @@ class RetryFailedMediaUploadUseCase @Inject constructor(
         failedMediaLocalIds: List<Int>
     ) {
         getMediaModelUseCase
-                .loadMediaByLocalId(failedMediaLocalIds)
-                .map { media ->
-                    updateMediaModelUseCase.updateMediaModel(
-                            media,
-                            editorMediaListener.getImmutablePost(),
-                            QUEUED
+            .loadMediaByLocalId(failedMediaLocalIds)
+            .map { media ->
+                updateMediaModelUseCase.updateMediaModel(
+                    media,
+                    editorMediaListener.getImmutablePost(),
+                    QUEUED
+                )
+                media
+            }
+            .let { mediaModels ->
+                if (mediaModels.isNotEmpty()) {
+                    uploadMediaUseCase.saveQueuedPostAndStartUpload(
+                        editorMediaListener,
+                        mediaModels
                     )
-                    media
+                    tracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED)
                 }
-                .let { mediaModels ->
-                    if (mediaModels.isNotEmpty()) {
-                        uploadMediaUseCase.saveQueuedPostAndStartUpload(
-                                editorMediaListener,
-                                mediaModels
-                        )
-                        tracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED)
-                    }
-                }
+            }
     }
 }

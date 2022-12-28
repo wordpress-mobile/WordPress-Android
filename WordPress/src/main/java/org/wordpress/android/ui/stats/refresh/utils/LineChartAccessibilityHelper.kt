@@ -80,10 +80,10 @@ class LineChartAccessibilityHelper(
         val entry = dataSet.getEntryForIndex(virtualViewId)
         val position = lineChart.getPosition(entry, AxisDependency.LEFT)
         val entryRectF = RectF(
-                position.x - CIRCLE_RADIUS,
-                position.y - CIRCLE_RADIUS,
-                position.x + CIRCLE_RADIUS,
-                position.y + CIRCLE_RADIUS
+            position.x - CIRCLE_RADIUS,
+            position.y - CIRCLE_RADIUS,
+            position.x + CIRCLE_RADIUS,
+            position.y + CIRCLE_RADIUS
         )
         val entryRect = Rect()
         entryRectF.round(entryRect)

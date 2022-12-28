@@ -8,7 +8,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.util.extensions.viewBinding
 
 class SingleActionCardViewHolder(parent: ViewGroup) : MySiteCardAndItemViewHolder<MySiteSingleActionCardItemBinding>(
-        parent.viewBinding(MySiteSingleActionCardItemBinding::inflate)
+    parent.viewBinding(MySiteSingleActionCardItemBinding::inflate)
 ) {
     fun bind(singleActionCard: SingleActionCard) = with(binding) {
         val context = root.context

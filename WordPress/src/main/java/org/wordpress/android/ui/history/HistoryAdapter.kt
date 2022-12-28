@@ -18,7 +18,8 @@ class HistoryAdapter(
     private val itemClickListener: (HistoryListItem) -> Unit
 ) : Adapter<HistoryViewHolder>() {
     private val list = mutableListOf<HistoryListItem>()
-    @Inject lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var imageManager: ImageManager
 
     init {
         (activity.applicationContext as WordPress).component().inject(this)
@@ -54,9 +55,9 @@ class HistoryAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
         return when (viewType) {
             ViewType.REVISION.id -> RevisionItemViewHolder(
-                    parent,
-                    itemClickListener,
-                    imageManager
+                parent,
+                itemClickListener,
+                imageManager
             )
 
             ViewType.FOOTER.id -> FooterItemViewHolder(parent)

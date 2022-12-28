@@ -44,9 +44,9 @@ class StatsDateUtils @Inject constructor(
 
     fun formatDateTime(dateIso8601: String): String {
         return DateUtils.formatDateTime(
-                contextProvider.getContext(),
-                DateTimeUtils.timestampFromIso8601Millis(dateIso8601),
-                getDateTimeFlags()
+            contextProvider.getContext(),
+            DateTimeUtils.timestampFromIso8601Millis(dateIso8601),
+            getDateTimeFlags()
         )
     }
 
@@ -54,12 +54,12 @@ class StatsDateUtils @Inject constructor(
     fun formatDateRange(from: Long, to: Long, timezone: String): String {
         val formatter = Formatter(StringBuilder(50), localeManagerWrapper.getLocale())
         return DateUtils.formatDateRange(
-                contextProvider.getContext(),
-                formatter,
-                from,
-                to,
-                DateUtils.FORMAT_ABBREV_MONTH,
-                timezone
+            contextProvider.getContext(),
+            formatter,
+            from,
+            to,
+            DateUtils.FORMAT_ABBREV_MONTH,
+            timezone
         ).toString()
     }
 

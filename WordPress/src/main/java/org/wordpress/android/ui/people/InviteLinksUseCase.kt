@@ -41,31 +41,31 @@ class InviteLinksUseCase @Inject constructor(
         scenarioContext: UseCaseScenarioContext
     ): Flow<InviteLinksState> = flow {
         makeChecksAndApplyStrategy(
-                this,
-                blogId,
-                ::getInvitesStrategy,
-                scenarioContext,
-                Stat.INVITE_LINKS_GET_STATUS
+            this,
+            blogId,
+            ::getInvitesStrategy,
+            scenarioContext,
+            Stat.INVITE_LINKS_GET_STATUS
         )
     }
 
     suspend fun generateLinks(blogId: Long): Flow<InviteLinksState> = flow {
         makeChecksAndApplyStrategy(
-                this,
-                blogId,
-                ::generateInvitesStrategy,
-                GENERATING_LINKS,
-                Stat.INVITE_LINKS_GENERATE
+            this,
+            blogId,
+            ::generateInvitesStrategy,
+            GENERATING_LINKS,
+            Stat.INVITE_LINKS_GENERATE
         )
     }
 
     suspend fun disableLinks(blogId: Long): Flow<InviteLinksState> = flow {
         makeChecksAndApplyStrategy(
-                this,
-                blogId,
-                ::disableInvitesStrategy,
-                MANAGING_AVAILABLE_LINKS,
-                Stat.INVITE_LINKS_DISABLE
+            this,
+            blogId,
+            ::disableInvitesStrategy,
+            MANAGING_AVAILABLE_LINKS,
+            Stat.INVITE_LINKS_DISABLE
         )
     }
 
@@ -94,8 +94,8 @@ class InviteLinksUseCase @Inject constructor(
             } else {
                 val actionResult = strategy.invoke(flow, blogId, scenarioContext)
                 properties.addInviteLinksActionResult(
-                        actionResult,
-                        if (actionResult is Failure) actionResult.error else null
+                    actionResult,
+                    if (actionResult is Failure) actionResult.error else null
                 )
             }
         }

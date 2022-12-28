@@ -13,17 +13,17 @@ import org.wordpress.android.util.extensions.viewBinding
 class JetpackFeatureCardViewHolder(
     parent: ViewGroup
 ) : MySiteCardAndItemViewHolder<JetpackFeatureCardBinding>(
-        parent.viewBinding(JetpackFeatureCardBinding::inflate)
+    parent.viewBinding(JetpackFeatureCardBinding::inflate)
 ) {
     fun bind(card: JetpackFeatureCard) = with(binding) {
         mySiteJetpackFeatureCardCta.setOnClickListener { card.onClick.click() }
         mySiteJetpackFeatureCardLearnMore.setOnClickListener { card.onLearnMoreClick.click() }
         mySiteJetpackFeatureCardMore.setOnClickListener {
             showMoreMenu(
-                    card.onHideMenuItemClick,
-                    card.onRemindMeLaterItemClick,
-                    card.onMoreMenuClick,
-                    mySiteJetpackFeatureCardMore,
+                card.onHideMenuItemClick,
+                card.onRemindMeLaterItemClick,
+                card.onMoreMenuClick,
+                mySiteJetpackFeatureCardMore,
             )
         }
     }

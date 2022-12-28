@@ -157,8 +157,8 @@ class PostListMainViewModel @Inject constructor(
     val onFabLongPressedForPostList: LiveData<Event<Unit>> = _onFabLongPressedForPostList
 
     private val uploadStatusTracker = PostModelUploadStatusTracker(
-            uploadStore = uploadStore,
-            uploadActionUseCase = uploadActionUseCase
+        uploadStore = uploadStore,
+        uploadActionUseCase = uploadActionUseCase
     )
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
 
@@ -168,59 +168,60 @@ class PostListMainViewModel @Inject constructor(
 
     private val postListDialogHelper: PostListDialogHelper by lazy {
         PostListDialogHelper(
-                showDialog = { _dialogAction.postValue(it) },
-                checkNetworkConnection = this::checkNetworkConnection,
-                analyticsTracker = analyticsTracker
+            showDialog = { _dialogAction.postValue(it) },
+            checkNetworkConnection = this::checkNetworkConnection,
+            analyticsTracker = analyticsTracker
         )
     }
 
     private val postConflictResolver: PostConflictResolver by lazy {
         PostConflictResolver(
-                dispatcher = dispatcher,
-                site = site,
-                getPostByLocalPostId = postStore::getPostByLocalPostId,
-                invalidateList = this::invalidateAllLists,
-                checkNetworkConnection = this::checkNetworkConnection,
-                showSnackbar = { _snackBarMessage.postValue(it) },
-                showToast = { _toastMessage.postValue(it) }
+            dispatcher = dispatcher,
+            site = site,
+            getPostByLocalPostId = postStore::getPostByLocalPostId,
+            invalidateList = this::invalidateAllLists,
+            checkNetworkConnection = this::checkNetworkConnection,
+            showSnackbar = { _snackBarMessage.postValue(it) },
+            showToast = { _toastMessage.postValue(it) }
         )
     }
 
     private val postActionHandler: PostActionHandler by lazy {
         PostActionHandler(
-                dispatcher = dispatcher,
-                site = site,
-                postStore = postStore,
-                postListDialogHelper = postListDialogHelper,
-                doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
-                hasUnhandledAutoSave = postConflictResolver::hasUnhandledAutoSave,
-                triggerPostListAction = { _postListAction.postValue(it) },
-                triggerPostUploadAction = { _postUploadAction.postValue(it) },
-                triggerPublishAction = this::showPrepublishingBottomSheet,
-                invalidateList = this::invalidateAllLists,
-                checkNetworkConnection = this::checkNetworkConnection,
-                showSnackbar = { _snackBarMessage.postValue(it) },
-                showToast = { _toastMessage.postValue(it) },
-                triggerPreviewStateUpdate = this::updatePreviewAndDialogState,
-                copyPost = this::copyPost
+            dispatcher = dispatcher,
+            site = site,
+            postStore = postStore,
+            postListDialogHelper = postListDialogHelper,
+            doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
+            hasUnhandledAutoSave = postConflictResolver::hasUnhandledAutoSave,
+            triggerPostListAction = { _postListAction.postValue(it) },
+            triggerPostUploadAction = { _postUploadAction.postValue(it) },
+            triggerPublishAction = this::showPrepublishingBottomSheet,
+            invalidateList = this::invalidateAllLists,
+            checkNetworkConnection = this::checkNetworkConnection,
+            showSnackbar = { _snackBarMessage.postValue(it) },
+            showToast = { _toastMessage.postValue(it) },
+            triggerPreviewStateUpdate = this::updatePreviewAndDialogState,
+            copyPost = this::copyPost
         )
     }
 
     fun copyPost(site: SiteModel, postToCopy: PostModel, performChecks: Boolean = false) {
         if (performChecks && (postConflictResolver.doesPostHaveUnhandledConflict(postToCopy) ||
-                        postConflictResolver.hasUnhandledAutoSave(postToCopy))) {
+                    postConflictResolver.hasUnhandledAutoSave(postToCopy))
+        ) {
             postListDialogHelper.showCopyConflictDialog(postToCopy)
             return
         }
         val post = postStore.instantiatePostModel(
-                site,
-                false,
-                postToCopy.title,
-                postToCopy.content,
-                PostStatus.DRAFT.toString(),
-                postToCopy.categoryIdList,
-                postToCopy.postFormat,
-                true
+            site,
+            false,
+            postToCopy.title,
+            postToCopy.content,
+            PostStatus.DRAFT.toString(),
+            postToCopy.categoryIdList,
+            postToCopy.postFormat,
+            true
         )
         _postListAction.postValue(PostListAction.EditPost(site, post, loadAutoSaveRevision = false))
     }
@@ -264,37 +265,37 @@ class PostListMainViewModel @Inject constructor(
         }
 
         postListEventListenerFactory.createAndStartListening(
-                lifecycle = lifecycleOwner.lifecycle,
-                dispatcher = dispatcher,
-                bgDispatcher = bgDispatcher,
-                postStore = postStore,
-                site = site,
-                postActionHandler = postActionHandler,
-                handlePostUpdatedWithoutError = postConflictResolver::onPostSuccessfullyUpdated,
-                handlePostUploadedWithoutError = {
-                    refreshAllLists()
-                },
-                triggerPostUploadAction = { _postUploadAction.postValue(it) },
-                invalidateUploadStatus = {
-                    uploadStatusTracker.invalidateUploadStatus(it)
-                    invalidateAllLists()
-                },
-                invalidateFeaturedMedia = {
-                    featuredImageTracker.invalidateFeaturedMedia(it)
-                    invalidateAllLists()
-                },
-                triggerPreviewStateUpdate = this::updatePreviewAndDialogState,
-                isRemotePreviewingFromPostsList = this::isRemotePreviewingFromPostsList,
-                hasRemoteAutoSavePreviewError = this::hasRemoteAutoSavePreviewError
+            lifecycle = lifecycleOwner.lifecycle,
+            dispatcher = dispatcher,
+            bgDispatcher = bgDispatcher,
+            postStore = postStore,
+            site = site,
+            postActionHandler = postActionHandler,
+            handlePostUpdatedWithoutError = postConflictResolver::onPostSuccessfullyUpdated,
+            handlePostUploadedWithoutError = {
+                refreshAllLists()
+            },
+            triggerPostUploadAction = { _postUploadAction.postValue(it) },
+            invalidateUploadStatus = {
+                uploadStatusTracker.invalidateUploadStatus(it)
+                invalidateAllLists()
+            },
+            invalidateFeaturedMedia = {
+                featuredImageTracker.invalidateFeaturedMedia(it)
+                invalidateAllLists()
+            },
+            triggerPreviewStateUpdate = this::updatePreviewAndDialogState,
+            isRemotePreviewingFromPostsList = this::isRemotePreviewingFromPostsList,
+            hasRemoteAutoSavePreviewError = this::hasRemoteAutoSavePreviewError
         )
 
         _authorSelectionUpdated.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
-                isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()) &&
-                        isSearchExpanded.value != true,
-                isAuthorFilterVisible = isFilteringByAuthorSupported,
-                authorFilterSelection = authorFilterSelection,
-                authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
+            isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()) &&
+                    isSearchExpanded.value != true,
+            isAuthorFilterVisible = isFilteringByAuthorSupported,
+            authorFilterSelection = authorFilterSelection,
+            authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
         _previewState.value = _previewState.value ?: initPreviewState
 
@@ -329,14 +330,14 @@ class PostListMainViewModel @Inject constructor(
         postListType: PostListType
     ): PostListViewModelConnector {
         return PostListViewModelConnector(
-                site = site,
-                postListType = postListType,
-                postActionHandler = postActionHandler,
-                uploadStatusTracker = uploadStatusTracker,
-                doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
-                hasAutoSave = postConflictResolver::hasUnhandledAutoSave,
-                postFetcher = postFetcher,
-                getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
+            site = site,
+            postListType = postListType,
+            postActionHandler = postActionHandler,
+            uploadStatusTracker = uploadStatusTracker,
+            doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
+            hasAutoSave = postConflictResolver::hasUnhandledAutoSave,
+            postFetcher = postFetcher,
+            getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
         )
     }
 
@@ -395,8 +396,8 @@ class PostListMainViewModel @Inject constructor(
         val selection = AuthorFilterSelection.fromId(selectionId)
 
         updateViewStateTriggerPagerChange(
-                authorFilterSelection = selection,
-                authorFilterItems = getAuthorFilterItems(selection, accountStore.account?.avatarUrl)
+            authorFilterSelection = selection,
+            authorFilterItems = getAuthorFilterItems(selection, accountStore.account?.avatarUrl)
         )
         if (isFilteringByAuthorSupported) {
             prefs.postListAuthorSelection = selection
@@ -408,9 +409,9 @@ class PostListMainViewModel @Inject constructor(
         updateViewStateTriggerPagerChange(isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(currentPage))
 
         AnalyticsUtils.trackWithSiteDetails(
-                POST_LIST_TAB_CHANGED,
-                site,
-                mutableMapOf(TRACKS_SELECTED_TAB to currentPage.toString() as Any)
+            POST_LIST_TAB_CHANGED,
+            site,
+            mutableMapOf(TRACKS_SELECTED_TAB to currentPage.toString() as Any)
         )
     }
 
@@ -467,33 +468,33 @@ class PostListMainViewModel @Inject constructor(
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
         postListDialogHelper.onPositiveClickedForBasicDialog(
-                instanceTag = instanceTag,
-                trashPostWithLocalChanges = postActionHandler::trashPostWithLocalChanges,
-                trashPostWithUnsavedChanges = postActionHandler::trashPostWithUnsavedChanges,
-                deletePost = postActionHandler::deletePost,
-                publishPost = postActionHandler::publishPost,
-                updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion,
-                editRestoredAutoSavePost = this::editRestoredAutoSavePost,
-                moveTrashedPostToDraft = postActionHandler::moveTrashedPostToDraft,
-                resolveConflictsAndEditPost = postActionHandler::resolveConflictsAndEditPost
+            instanceTag = instanceTag,
+            trashPostWithLocalChanges = postActionHandler::trashPostWithLocalChanges,
+            trashPostWithUnsavedChanges = postActionHandler::trashPostWithUnsavedChanges,
+            deletePost = postActionHandler::deletePost,
+            publishPost = postActionHandler::publishPost,
+            updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion,
+            editRestoredAutoSavePost = this::editRestoredAutoSavePost,
+            moveTrashedPostToDraft = postActionHandler::moveTrashedPostToDraft,
+            resolveConflictsAndEditPost = postActionHandler::resolveConflictsAndEditPost
         )
     }
 
     fun onNegativeClickedForBasicDialog(instanceTag: String) {
         postListDialogHelper.onNegativeClickedForBasicDialog(
-                instanceTag = instanceTag,
-                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion,
-                editLocalPost = this::editLocalPost,
-                copyLocalPost = this::copyLocalPost
+            instanceTag = instanceTag,
+            updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion,
+            editLocalPost = this::editLocalPost,
+            copyLocalPost = this::copyLocalPost
         )
     }
 
     fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
         postListDialogHelper.onDismissByOutsideTouchForBasicDialog(
-                instanceTag = instanceTag,
-                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion,
-                editLocalPost = this::editLocalPost,
-                copyLocalPost = this::copyLocalPost
+            instanceTag = instanceTag,
+            updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion,
+            editLocalPost = this::editLocalPost,
+            copyLocalPost = this::copyLocalPost
         )
     }
 
@@ -518,19 +519,19 @@ class PostListMainViewModel @Inject constructor(
         }
 
         _viewState.value = PostListMainViewState(
-                isFabVisible ?: currentState.isFabVisible,
-                isAuthorFilterVisible ?: currentState.isAuthorFilterVisible,
-                authorFilterSelection ?: currentState.authorFilterSelection,
-                authorFilterItems ?: currentState.authorFilterItems
+            isFabVisible ?: currentState.isFabVisible,
+            isAuthorFilterVisible ?: currentState.isAuthorFilterVisible,
+            authorFilterSelection ?: currentState.authorFilterSelection,
+            authorFilterItems ?: currentState.authorFilterItems
         )
 
         if (authorFilterSelection != null && currentState.authorFilterSelection != authorFilterSelection) {
             _authorSelectionUpdated.value = authorFilterSelection
 
             AnalyticsUtils.trackWithSiteDetails(
-                    POST_LIST_AUTHOR_FILTER_CHANGED,
-                    site,
-                    mutableMapOf(TRACKS_SELECTED_AUTHOR_FILTER to authorFilterSelection.toString() as Any)
+                POST_LIST_AUTHOR_FILTER_CHANGED,
+                site,
+                mutableMapOf(TRACKS_SELECTED_AUTHOR_FILTER to authorFilterSelection.toString() as Any)
             )
         }
     }
@@ -552,12 +553,12 @@ class PostListMainViewModel @Inject constructor(
             _previewState.value == PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR
 
     private fun checkNetworkConnection(): Boolean =
-            if (networkUtilsWrapper.isNetworkAvailable()) {
-                true
-            } else {
-                _toastMessage.postValue(ToastMessageHolder(R.string.no_network_message, Duration.SHORT))
-                false
-            }
+        if (networkUtilsWrapper.isNetworkAvailable()) {
+            true
+        } else {
+            _toastMessage.postValue(ToastMessageHolder(R.string.no_network_message, Duration.SHORT))
+            false
+        }
 
     fun handleRemotePreviewClosing() {
         updatePreviewAndDialogState(PostListRemotePreviewState.NONE, PostInfoType.PostNoInfo)
@@ -568,8 +569,8 @@ class PostListMainViewModel @Inject constructor(
         if (_previewState.value == newState) return
 
         AppLog.d(
-                AppLog.T.POSTS,
-                "Posts list preview state machine: transition from ${_previewState.value} to $newState"
+            AppLog.T.POSTS,
+            "Posts list preview state machine: transition from ${_previewState.value} to $newState"
         )
 
         // update the state
@@ -578,10 +579,10 @@ class PostListMainViewModel @Inject constructor(
 
         // take care of exit actions on state transition
         previewStateHelper.managePreviewStateTransitions(
-                newState,
-                prevState,
-                postInfo,
-                postActionHandler::handleRemotePreview
+            newState,
+            prevState,
+            postInfo,
+            postActionHandler::handleRemotePreview
         )
     }
 

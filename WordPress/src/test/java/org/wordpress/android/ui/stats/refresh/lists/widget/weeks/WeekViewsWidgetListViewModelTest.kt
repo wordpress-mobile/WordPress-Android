@@ -26,24 +26,31 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class WeekViewsWidgetListViewModelTest {
-    @Mock private lateinit var siteStore: SiteStore
-    @Mock private lateinit var store: VisitsAndViewsStore
-    @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock private lateinit var statsUtils: StatsUtils
-    @Mock private lateinit var site: SiteModel
+    @Mock
+    private lateinit var siteStore: SiteStore
+    @Mock
+    private lateinit var store: VisitsAndViewsStore
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    private lateinit var statsUtils: StatsUtils
+    @Mock
+    private lateinit var site: SiteModel
     private lateinit var viewModel: WeekViewsWidgetListViewModel
     private val siteId: Int = 15
     private val appWidgetId: Int = 1
     private val color = Color.LIGHT
+
     @Before
     fun setUp() {
         viewModel = WeekViewsWidgetListViewModel(
-                siteStore,
-                store,
-                resourceProvider,
-                appPrefsWrapper,
-                statsUtils
+            siteStore,
+            store,
+            resourceProvider,
+            appPrefsWrapper,
+            statsUtils
         )
         viewModel.start(siteId, color, appWidgetId)
         whenever(statsUtils.toFormattedString(any<Long>(), any())).then { (it.arguments[0] as Long).toString() }
@@ -66,7 +73,7 @@ class WeekViewsWidgetListViewModelTest {
         whenever(resourceProvider.getString(string.likes)).thenReturn(likesKey)
         whenever(resourceProvider.getString(string.stats_comments)).thenReturn(commentsKey)
         whenever(store.getVisits(site, WEEKS, LimitMode.All)).thenReturn(
-                VisitsAndViewsModel("2019-10-10", listOf(periodData))
+            VisitsAndViewsModel("2019-10-10", listOf(periodData))
         )
 
         viewModel.onDataSetChanged { }

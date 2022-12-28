@@ -45,14 +45,22 @@ import java.util.Date
 
 @ExperimentalCoroutinesApi
 class FollowersUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: FollowersStore
-    @Mock lateinit var statsSinceLabelFormatter: StatsSinceLabelFormatter
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock
+    lateinit var insightsStore: FollowersStore
+    @Mock
+    lateinit var statsSinceLabelFormatter: StatsSinceLabelFormatter
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCaseFactory: FollowersUseCaseFactory
     private lateinit var useCase: FollowersUseCase
     private val avatar = "avatar.jpg"
@@ -73,54 +81,56 @@ class FollowersUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCaseFactory = FollowersUseCaseFactory(
-                testDispatcher(),
-                testDispatcher(),
-                insightsStore,
-                statsSiteProvider,
-                statsSinceLabelFormatter,
-                resourceProvider,
-                popupMenuHandler,
-                tracker,
-                contentDescriptionHelper
+            testDispatcher(),
+            testDispatcher(),
+            insightsStore,
+            statsSiteProvider,
+            statsSinceLabelFormatter,
+            resourceProvider,
+            popupMenuHandler,
+            tracker,
+            contentDescriptionHelper
         )
         useCase = useCaseFactory.build(BLOCK)
         whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)
         whenever(resourceProvider.getString(any())).thenReturn(wordPressLabel)
         whenever(resourceProvider.getString(eq(R.string.stats_followers_count_message), any(), any())).thenReturn(
-                message
+            message
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<String>(),
                 any()
-        )).thenReturn(contentDescription)
+            )
+        ).thenReturn(contentDescription)
     }
 
     @Test
     fun `maps followers from selected tab to UI model and select empty tab`() = test {
         val refresh = true
         val wpComModel = FollowersModel(
-                totalCount,
-                listOf(FollowerModel(avatar, user, url, dateSubscribed)),
-                hasMore = false
+            totalCount,
+            listOf(FollowerModel(avatar, user, url, dateSubscribed)),
+            hasMore = false
         )
         whenever(insightsStore.getWpComFollowers(site, LimitMode.Top(blockPageSize))).thenReturn(wpComModel)
         whenever(insightsStore.fetchWpComFollowers(site, blockInitialMode)).thenReturn(
-                OnStatsFetched(
-                        wpComModel
-                )
+            OnStatsFetched(
+                wpComModel
+            )
         )
         val emailModel = FollowersModel(
-                0,
-                listOf(),
-                hasMore = false
+            0,
+            listOf(),
+            hasMore = false
         )
         whenever(insightsStore.getEmailFollowers(site, LimitMode.Top(blockPageSize))).thenReturn(emailModel)
         whenever(insightsStore.fetchEmailFollowers(site, blockInitialMode)).thenReturn(
-                OnStatsFetched(
-                        model = emailModel
-                )
+            OnStatsFetched(
+                model = emailModel
+            )
         )
 
         val result = loadFollowers(refresh)
@@ -140,26 +150,26 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         val wpComModel = FollowersModel(
-                0,
-                listOf(),
-                hasMore = false
+            0,
+            listOf(),
+            hasMore = false
         )
         whenever(insightsStore.getWpComFollowers(site, LimitMode.Top(blockPageSize))).thenReturn(wpComModel)
         whenever(insightsStore.fetchWpComFollowers(site, blockInitialMode)).thenReturn(
-                OnStatsFetched(
-                        model = wpComModel
-                )
+            OnStatsFetched(
+                model = wpComModel
+            )
         )
         val emailModel = FollowersModel(
-                totalCount,
-                listOf(FollowerModel(avatar, user, url, dateSubscribed)),
-                hasMore = false
+            totalCount,
+            listOf(FollowerModel(avatar, user, url, dateSubscribed)),
+            hasMore = false
         )
         whenever(insightsStore.getEmailFollowers(site, LimitMode.Top(blockPageSize))).thenReturn(emailModel)
         whenever(insightsStore.fetchEmailFollowers(site, blockInitialMode)).thenReturn(
-                OnStatsFetched(
-                        emailModel
-                )
+            OnStatsFetched(
+                emailModel
+            )
         )
 
         val result = loadFollowers(refresh)
@@ -176,22 +186,22 @@ class FollowersUseCaseTest : BaseUnitTest() {
     fun `maps empty followers to UI model`() = test {
         val refresh = true
         whenever(insightsStore.fetchWpComFollowers(site, blockInitialMode)).thenReturn(
-                OnStatsFetched(
-                        model = FollowersModel(
-                                0,
-                                listOf(),
-                                hasMore = false
-                        )
+            OnStatsFetched(
+                model = FollowersModel(
+                    0,
+                    listOf(),
+                    hasMore = false
                 )
+            )
         )
         whenever(insightsStore.fetchEmailFollowers(site, blockInitialMode)).thenReturn(
-                OnStatsFetched(
-                        model = FollowersModel(
-                                0,
-                                listOf(),
-                                hasMore = false
-                        )
+            OnStatsFetched(
+                model = FollowersModel(
+                    0,
+                    listOf(),
+                    hasMore = false
                 )
+            )
         )
 
         val result = loadFollowers(refresh)
@@ -204,18 +214,18 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val refresh = true
         val message = "Generic error"
         whenever(insightsStore.fetchWpComFollowers(site, blockInitialMode)).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
         whenever(insightsStore.fetchEmailFollowers(site, blockInitialMode)).thenReturn(
-                OnStatsFetched(
-                        model = FollowersModel(
-                                0,
-                                listOf(),
-                                hasMore = false
-                        )
+            OnStatsFetched(
+                model = FollowersModel(
+                    0,
+                    listOf(),
+                    hasMore = false
                 )
+            )
         )
 
         val result = loadFollowers(refresh)
@@ -228,18 +238,18 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val refresh = true
         val message = "Generic error"
         whenever(insightsStore.fetchWpComFollowers(site, blockInitialMode)).thenReturn(
-                OnStatsFetched(
-                        model = FollowersModel(
-                                0,
-                                listOf(),
-                                hasMore = false
-                        )
+            OnStatsFetched(
+                model = FollowersModel(
+                    0,
+                    listOf(),
+                    hasMore = false
                 )
+            )
         )
         whenever(insightsStore.fetchEmailFollowers(site, blockInitialMode)).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadFollowers(refresh)
@@ -253,42 +263,42 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val refresh = true
         val wpComModel = FollowersModel(
-                0,
-                listOf(),
-                hasMore = false
+            0,
+            listOf(),
+            hasMore = false
         )
         whenever(insightsStore.getWpComFollowers(site, LimitMode.All)).thenReturn(wpComModel)
         whenever(insightsStore.fetchWpComFollowers(site, viewAllInitialLoadMode)).thenReturn(
-                OnStatsFetched(
-                        model = wpComModel
-                )
+            OnStatsFetched(
+                model = wpComModel
+            )
         )
         val emailModel = FollowersModel(
-                totalCount,
-                List(10) { FollowerModel(avatar, user, url, dateSubscribed) },
-                hasMore = true
+            totalCount,
+            List(10) { FollowerModel(avatar, user, url, dateSubscribed) },
+            hasMore = true
         )
         whenever(insightsStore.getEmailFollowers(site, LimitMode.All)).thenReturn(emailModel)
         whenever(insightsStore.fetchEmailFollowers(site, viewAllInitialLoadMode)).thenReturn(
-                OnStatsFetched(
-                        emailModel
-                )
+            OnStatsFetched(
+                emailModel
+            )
         )
 
         whenever(insightsStore.fetchWpComFollowers(site, viewAllMoreLoadMode, true)).thenReturn(
-                OnStatsFetched(
-                        model = wpComModel
-                )
+            OnStatsFetched(
+                model = wpComModel
+            )
         )
         val updatedEmailModel = FollowersModel(
-                totalCount,
-                List(11) { FollowerModel(avatar, user, url, dateSubscribed) },
-                hasMore = false
+            totalCount,
+            List(11) { FollowerModel(avatar, user, url, dateSubscribed) },
+            hasMore = false
         )
         whenever(insightsStore.fetchEmailFollowers(site, viewAllMoreLoadMode, true)).thenReturn(
-                OnStatsFetched(
-                        updatedEmailModel
-                )
+            OnStatsFetched(
+                updatedEmailModel
+            )
         )
 
         val result = loadFollowers(refresh)
@@ -328,10 +338,10 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
         assertThat(this[1]).isEqualTo(Information("Total followers count is 50"))
         assertThat(this[2]).isEqualTo(
-                Header(
-                        R.string.stats_follower_label,
-                        R.string.stats_follower_since_label
-                )
+            Header(
+                R.string.stats_follower_label,
+                R.string.stats_follower_since_label
+            )
         )
         val follower = this[3] as ListItemWithIcon
         assertThat(follower.iconUrl).isEqualTo(avatar)
@@ -363,10 +373,10 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
         assertThat(this[2]).isEqualTo(Information("Total followers count is 50"))
         assertThat(this[3]).isEqualTo(
-                Header(
-                        R.string.stats_follower_label,
-                        R.string.stats_follower_since_label
-                )
+            Header(
+                R.string.stats_follower_label,
+                R.string.stats_follower_since_label
+            )
         )
         val follower = this[4] as ListItemWithIcon
         assertThat(follower.iconUrl).isEqualTo(avatar)

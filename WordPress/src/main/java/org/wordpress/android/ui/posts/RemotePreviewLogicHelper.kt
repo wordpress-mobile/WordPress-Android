@@ -54,9 +54,9 @@ class RemotePreviewLogicHelper @Inject constructor(
     ): PreviewLogicOperationResult {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             activityLauncherWrapper.showActionableEmptyView(
-                    activity,
-                    WPWebViewUsageCategory.REMOTE_PREVIEW_NO_NETWORK,
-                    post.title
+                activity,
+                WPWebViewUsageCategory.REMOTE_PREVIEW_NO_NETWORK,
+                post.title
             )
             return PreviewLogicOperationResult.NETWORK_NOT_AVAILABLE
         }
@@ -84,9 +84,9 @@ class RemotePreviewLogicHelper @Inject constructor(
                 val status = PostStatus.fromPost(post)
                 if (!site.isUsingWpComRestApi && status != DRAFT) {
                     activityLauncherWrapper.showActionableEmptyView(
-                            activity,
-                            WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
-                            post.title
+                        activity,
+                        WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
+                        post.title
                     )
                     return PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE
                 }
@@ -102,10 +102,10 @@ class RemotePreviewLogicHelper @Inject constructor(
             else -> {
                 // If we don't need upload or auto save the post (eg. post not modified), open the preview directly.
                 activityLauncherWrapper.previewPostOrPageForResult(
-                        activity,
-                        site,
-                        post,
-                        RemotePreviewType.REMOTE_PREVIEW
+                    activity,
+                    site,
+                    post,
+                    RemotePreviewType.REMOTE_PREVIEW
                 )
                 PreviewLogicOperationResult.OPENING_PREVIEW
             }

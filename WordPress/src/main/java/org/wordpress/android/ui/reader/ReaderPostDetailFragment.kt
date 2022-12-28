@@ -150,13 +150,13 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ReaderPostDetailFragment : ViewPagerFragment(),
-        WPMainActivity.OnActivityBackPressedListener,
-        ScrollDirectionListener,
-        ReaderCustomViewListener,
-        ReaderWebViewPageFinishedListener,
-        ReaderWebViewUrlClickListener,
-        PrivateAtCookieProgressDialogOnDismissListener,
-        ReaderInterfaces.AutoHideToolbarListener {
+    WPMainActivity.OnActivityBackPressedListener,
+    ScrollDirectionListener,
+    ReaderCustomViewListener,
+    ReaderWebViewPageFinishedListener,
+    ReaderWebViewUrlClickListener,
+    PrivateAtCookieProgressDialogOnDismissListener,
+    ReaderInterfaces.AutoHideToolbarListener {
     private var postId: Long = 0
     private var blogId: Long = 0
     private var directOperation: DirectOperation? = null
@@ -211,65 +211,81 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private val viewModel: ReaderPostDetailViewModel by viewModels()
     private lateinit var conversationViewModel: ConversationNotificationsViewModel
 
-    @Inject internal lateinit var accountStore: AccountStore
-    @Inject internal lateinit var siteStore: SiteStore
-    @Inject internal lateinit var dispatcher: Dispatcher
-    @Inject internal lateinit var readerFileDownloadManager: ReaderFileDownloadManager
-    @Inject internal lateinit var privateAtomicCookie: PrivateAtomicCookie
-    @Inject internal lateinit var readerCssProvider: ReaderCssProvider
-    @Inject internal lateinit var imageManager: ImageManager
-    @Inject lateinit var postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
-    @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
-    @Inject lateinit var viewModelFactory: Factory
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var readerTracker: ReaderTracker
-    @Inject lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
-    @Inject lateinit var contextProvider: ContextProvider
-    @Inject lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
-    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Inject
+    internal lateinit var accountStore: AccountStore
+    @Inject
+    internal lateinit var siteStore: SiteStore
+    @Inject
+    internal lateinit var dispatcher: Dispatcher
+    @Inject
+    internal lateinit var readerFileDownloadManager: ReaderFileDownloadManager
+    @Inject
+    internal lateinit var privateAtomicCookie: PrivateAtomicCookie
+    @Inject
+    internal lateinit var readerCssProvider: ReaderCssProvider
+    @Inject
+    internal lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
+    @Inject
+    lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+    @Inject
+    lateinit var viewModelFactory: Factory
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var readerTracker: ReaderTracker
+    @Inject
+    lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
+    @Inject
+    lateinit var contextProvider: ContextProvider
+    @Inject
+    lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
+    @Inject
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
-                .post(ReaderEvents.DoSignIn())
+            .post(ReaderEvents.DoSignIn())
     }
 
     val isCustomViewShowing: Boolean
         get() = view != null && readerWebView.isCustomViewShowing
 
     private val appBarLayoutOffsetChangedListener =
-            AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-                val collapsingToolbarLayout = appBarLayout
-                        .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
-                val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
+        AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            val collapsingToolbarLayout = appBarLayout
+                .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
+            val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
 
-                context?.let { context ->
-                    val menu: Menu = toolbar.menu
-                    val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
-                    val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
-                    val menuMore: MenuItem? = menu.findItem(R.id.menu_more)
+            context?.let { context ->
+                val menu: Menu = toolbar.menu
+                val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
+                val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
+                val menuMore: MenuItem? = menu.findItem(R.id.menu_more)
 
-                    val collapsingToolbarHeight = collapsingToolbarLayout.height
-                    val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
-                            collapsingToolbarLayout.scrimVisibleHeightTrigger
-                    val isDarkTheme = context.resources.configuration.isDarkTheme()
+                val collapsingToolbarHeight = collapsingToolbarLayout.height
+                val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
+                        collapsingToolbarLayout.scrimVisibleHeightTrigger
+                val isDarkTheme = context.resources.configuration.isDarkTheme()
 
-                    val colorAttr = if (isCollapsed || isDarkTheme) {
-                        R.attr.colorOnSurface
-                    } else {
-                        R.attr.colorSurface
-                    }
-                    val color = context.getColorFromAttribute(colorAttr)
-                    val colorFilter = BlendModeColorFilterCompat
-                            .createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
-
-                    toolbar.setTitleTextColor(color)
-                    toolbar.navigationIcon?.colorFilter = colorFilter
-
-                    menuBrowse?.icon?.colorFilter = colorFilter
-                    menuShare?.icon?.colorFilter = colorFilter
-                    menuMore?.icon?.colorFilter = colorFilter
+                val colorAttr = if (isCollapsed || isDarkTheme) {
+                    R.attr.colorOnSurface
+                } else {
+                    R.attr.colorSurface
                 }
+                val color = context.getColorFromAttribute(colorAttr)
+                val colorFilter = BlendModeColorFilterCompat
+                    .createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
+
+                toolbar.setTitleTextColor(color)
+                toolbar.navigationIcon?.colorFilter = colorFilter
+
+                menuBrowse?.icon?.colorFilter = colorFilter
+                menuShare?.icon?.colorFilter = colorFilter
+                menuMore?.icon?.colorFilter = colorFilter
             }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -414,7 +430,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val elevationOverlayProvider = ElevationOverlayProvider(layoutFooter.context)
         val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
         val elevatedSurfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
-                appbarElevation
+            appbarElevation
         )
         layoutFooter.setBackgroundColor(elevatedSurfaceColor)
         layoutFooter.visibility = View.INVISIBLE
@@ -470,10 +486,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         likeFacesRecycler.addItemDecoration(
-                AvatarItemDecorator(
+            AvatarItemDecorator(
                 RtlUtils.isRtl(activity),
                 contextProvider.getContext(),
-                AVATAR_LEFT_OFFSET_DIMEN)
+                AVATAR_LEFT_OFFSET_DIMEN
+            )
         )
 
         likeFacesRecycler.layoutManager = layoutManager
@@ -492,7 +509,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun initViewModel(binding: ReaderFragmentPostDetailBinding, savedInstanceState: Bundle?) {
         conversationViewModel = ViewModelProvider(this, viewModelFactory).get(
-                ConversationNotificationsViewModel::class.java
+            ConversationNotificationsViewModel::class.java
         )
 
         initObservers(binding)
@@ -541,7 +558,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
                 val fm: FragmentManager = childFragmentManager
                 val bottomSheet =
-                        fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
+                    fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
                 if (bottomSheet != null) return@observe
                 event.applyIfNotHandled {
                     this.showSnackbar(binding)
@@ -553,11 +570,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
                 val fm: FragmentManager = childFragmentManager
                 var bottomSheet =
-                        fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
+                    fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
                 if (showBottomSheetData.show && bottomSheet == null) {
                     bottomSheet = CommentNotificationsBottomSheetFragment.newInstance(
-                            showBottomSheetData.isReceivingNotifications,
-                            true
+                        showBottomSheetData.isReceivingNotifications,
+                        true
                     )
                     bottomSheet.show(fm, NOTIFICATIONS_BOTTOM_SHEET_TAG)
                 } else if (!showBottomSheetData.show && bottomSheet != null) {
@@ -576,8 +593,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
             JetpackPoweredBottomSheetFragment
-                    .newInstance()
-                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                .newInstance()
+                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
     }
 
@@ -594,11 +611,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             val shimmerView: ShimmerFrameLayout = commentsSnippet.shimmerViewContainer
             val followText = commentsSnippet.followConversation
             followText.setOnClickListener(
-                    if (uiState.onFollowTapped != null) {
-                        View.OnClickListener { uiState.onFollowTapped.invoke() }
-                    } else {
-                        null
-                    }
+                if (uiState.onFollowTapped != null) {
+                    View.OnClickListener { uiState.onFollowTapped.invoke() }
+                } else {
+                    null
+                }
             )
             bellItem.setOnClickListener {
                 uiState.onManageNotificationsTapped.invoke()
@@ -629,9 +646,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             val shouldSkipAnimation = likeFacesTrain.visibility == View.GONE && state.goingToShowFaces
 
             setupLikeFacesTrain(
-                    state.engageItemsList,
-                    state.showLoading,
-                    shouldSkipAnimation
+                state.engageItemsList,
+                state.showLoading,
+                shouldSkipAnimation
             )
 
             likeProgressBar.visibility = if (state.showLoading) View.VISIBLE else View.GONE
@@ -647,8 +664,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
 
             likeFacesTrain.contentDescription = uiHelpers.getTextOfUiString(
-                    contextProvider.getContext(),
-                    state.contentDescription
+                contextProvider.getContext(),
+                state.contentDescription
             )
 
             likeFacesTrain.setOnClickListener {
@@ -675,8 +692,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun setupCommentSnippetAdapter(context: Context, items: List<CommentSnippetItemState>) {
         val adapter = commentSnippetRecycler.adapter as? CommentSnippetAdapter ?: CommentSnippetAdapter(
-                context,
-                viewModel.post
+            context,
+            viewModel.post
         ).also {
             commentSnippetRecycler.adapter = it
         }
@@ -699,8 +716,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         if (adapter == null) {
             adapter = TrainOfAvatarsAdapter(
-                    imageManager,
-                    uiHelpers
+                imageManager,
+                uiHelpers
             )
 
             likeFacesRecycler.adapter = adapter
@@ -759,22 +776,22 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun ReaderNavigationEvents.handleNavigationEvent() {
         when (this) {
             is ReaderNavigationEvents.ShowMediaPreview -> MediaPreviewActivity
-                    .showPreview(requireContext(), site, featuredImage)
+                .showPreview(requireContext(), site, featuredImage)
 
             is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
-                    context,
-                    this.tag,
-                    ReaderTracker.SOURCE_POST_DETAIL,
-                    readerTracker
+                context,
+                this.tag,
+                ReaderTracker.SOURCE_POST_DETAIL,
+                readerTracker
             )
 
             is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
-                    context,
-                    this.siteId,
-                    this.feedId,
-                    this.isFollowed,
-                    ReaderTracker.SOURCE_POST_DETAIL,
-                    readerTracker
+                context,
+                this.siteId,
+                this.feedId,
+                this.isFollowed,
+                ReaderTracker.SOURCE_POST_DETAIL,
+                readerTracker
             )
 
             is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
@@ -785,23 +802,23 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 ReaderActivityLauncher.openUrl(context, readerUtilsWrapper.getReportPostUrl(url), OpenUrlType.INTERNAL)
 
             is ReaderNavigationEvents.ShowReportUser -> ReaderActivityLauncher.openUrl(
-                    context,
-                    readerUtilsWrapper.getReportUserUrl(url, authorId),
-                    OpenUrlType.INTERNAL
+                context,
+                readerUtilsWrapper.getReportUserUrl(url, authorId),
+                OpenUrlType.INTERNAL
             )
 
             is ReaderNavigationEvents.ShowReaderComments -> ReaderActivityLauncher.showReaderCommentsForResult(
-                    this@ReaderPostDetailFragment,
-                    blogId,
-                    postId,
-                    this.source.sourceDescription
+                this@ReaderPostDetailFragment,
+                blogId,
+                postId,
+                this.source.sourceDescription
             )
 
             is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
 
             is ReaderNavigationEvents.ShowSitePickerForResult ->
                 ActivityLauncher
-                        .showSitePickerForResult(this@ReaderPostDetailFragment, this.preselectedSite, this.mode)
+                    .showSitePickerForResult(this@ReaderPostDetailFragment, this.preselectedSite, this.mode)
 
             is ReaderNavigationEvents.OpenEditorForReblog ->
                 ActivityLauncher.openEditorForReblog(activity, this.site, this.post, this.source)
@@ -821,11 +838,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post)
             is ReaderNavigationEvents.ShowEngagedPeopleList -> {
                 ActivityLauncher.viewPostLikesListActivity(
-                        activity,
-                        this.siteId,
-                        this.postId,
-                        this.headerData,
-                        EngagementNavigationSource.LIKE_READER_LIST
+                    activity,
+                    this.siteId,
+                    this.postId,
+                    this.headerData,
+                    EngagementNavigationSource.LIKE_READER_LIST
                 )
             }
             is ReaderNavigationEvents.ShowPostDetail,
@@ -877,20 +894,20 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     ) {
         if (bookmarksSavedLocallyDialog == null) {
             MaterialAlertDialogBuilder(requireActivity())
-                    .setTitle(getString(bookmarkDialog.title))
-                    .setMessage(getString(bookmarkDialog.message))
-                    .setPositiveButton(getString(bookmarkDialog.buttonLabel)) { _, _ ->
-                        bookmarkDialog.okButtonAction.invoke()
-                    }
-                    .setOnDismissListener {
-                        bookmarksSavedLocallyDialog = null
-                    }
-                    .setCancelable(false)
-                    .create()
-                    .let {
-                        bookmarksSavedLocallyDialog = it
-                        it.show()
-                    }
+                .setTitle(getString(bookmarkDialog.title))
+                .setMessage(getString(bookmarkDialog.message))
+                .setPositiveButton(getString(bookmarkDialog.buttonLabel)) { _, _ ->
+                    bookmarkDialog.okButtonAction.invoke()
+                }
+                .setOnDismissListener {
+                    bookmarksSavedLocallyDialog = null
+                }
+                .setCancelable(false)
+                .create()
+                .let {
+                    bookmarksSavedLocallyDialog = it
+                    it.show()
+                }
         }
     }
 
@@ -929,9 +946,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun SnackbarMessageHolder.showSnackbar(binding: ReaderFragmentPostDetailBinding) {
         val snackbar = WPSnackbar.make(
-                binding.layoutPostDetailContainer,
-                uiHelpers.getTextOfUiString(requireContext(), this.message),
-                Snackbar.LENGTH_LONG
+            binding.layoutPostDetailContainer,
+            uiHelpers.getTextOfUiString(requireContext(), this.message),
+            Snackbar.LENGTH_LONG
         )
         if (this.buttonTitle != null) {
             snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), this.buttonTitle)) {
@@ -1007,23 +1024,23 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost)
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, viewModel.interceptedUri)
         outState.putBoolean(
-                ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY,
-                postSlugsResolutionUnderway
+            ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY,
+            postSlugsResolutionUnderway
         )
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, hasAlreadyUpdatedPost)
 
         outState.putBoolean(
-                ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS,
-                hasTrackedGlobalRelatedPosts
+            ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS,
+            hasTrackedGlobalRelatedPosts
         )
         outState.putBoolean(
-                ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS,
-                hasTrackedLocalRelatedPosts
+            ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS,
+            hasTrackedLocalRelatedPosts
         )
 
         outState.putSerializable(
-                ReaderConstants.ARG_POST_LIST_TYPE,
-                this.postListType
+            ReaderConstants.ARG_POST_LIST_TYPE,
+            this.postListType
         )
 
         postHistory.saveInstance(outState)
@@ -1046,7 +1063,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             blogId = it.getLong(ReaderConstants.ARG_BLOG_ID)
             postId = it.getLong(ReaderConstants.ARG_POST_ID)
             directOperation = it
-                    .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION) as? DirectOperation
+                .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION) as? DirectOperation
             commentId = it.getInt(ReaderConstants.ARG_COMMENT_ID)
             isRelatedPost = it.getBoolean(ReaderConstants.ARG_IS_RELATED_POST)
             interceptedUri = it.getString(ReaderConstants.ARG_INTERCEPTED_URI)
@@ -1068,8 +1085,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         dispatcher.register(this)
         EventBus.getDefault().register(this)
         activity?.registerReceiver(
-                readerFileDownloadManager,
-                IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+            readerFileDownloadManager,
+            IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
         )
     }
 
@@ -1173,12 +1190,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun showRelatedPostDetail(postId: Long, blogId: Long) {
         ReaderActivityLauncher.showReaderPostDetail(
-                activity,
-                false,
-                blogId,
-                postId, null,
-                0,
-                true, null
+            activity,
+            false,
+            blogId,
+            postId, null,
+            0,
+            true, null
         )
     }
 
@@ -1247,8 +1264,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         if (!accountStore.hasAccessToken()) {
             WPSnackbar.make(
-                    requireView(), R.string.reader_snackbar_err_cannot_like_post_logged_out,
-                    Snackbar.LENGTH_INDEFINITE
+                requireView(), R.string.reader_snackbar_err_cannot_like_post_logged_out,
+                Snackbar.LENGTH_INDEFINITE
             ).setAction(R.string.sign_in, mSignInClickListener).show()
             return
         }
@@ -1272,8 +1289,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             RequestCodes.SITE_PICKER -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val siteLocalId = data?.getIntExtra(
-                            SitePickerActivity.KEY_SITE_LOCAL_ID,
-                            SelectedSiteRepository.UNAVAILABLE
+                        SitePickerActivity.KEY_SITE_LOCAL_ID,
+                        SelectedSiteRepository.UNAVAILABLE
                     ) ?: SelectedSiteRepository.UNAVAILABLE
                     viewModel.onReblogSiteSelected(siteLocalId)
                 }
@@ -1281,7 +1298,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             RequestCodes.READER_FOLLOW_CONVERSATION -> {
                 if (resultCode == Activity.RESULT_OK && commentsSnippetFeatureConfig.isEnabled() && data != null) {
                     val flags = data.getParcelableExtra<FollowConversationStatusFlags>(
-                            FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY
+                        FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY
                     )
                     flags?.let {
                         conversationViewModel.onUserNavigateFromComments(it)
@@ -1315,13 +1332,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         ReaderActivityLauncher.showReaderPhotoViewer(
-                activity,
-                imageUrl,
-                postContent,
-                sourceView,
-                options,
-                startX,
-                startY
+            activity,
+            imageUrl,
+            postContent,
+            sourceView,
+            options,
+            startX,
+            startY
         )
 
         return true
@@ -1416,13 +1433,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (event.isError) {
             AppLog.e(T.READER, "Failed to load private AT cookie. $event.error.type - $event.error.message")
             WPSnackbar.make(
-                    requireView(),
-                    R.string.media_accessing_failed,
-                    Snackbar.LENGTH_LONG
+                requireView(),
+                R.string.media_accessing_failed,
+                Snackbar.LENGTH_LONG
             ).show()
         } else {
             CookieManager.getInstance().setCookie(
-                    privateAtomicCookie.getDomain(), privateAtomicCookie.getCookieContent()
+                privateAtomicCookie.getDomain(), privateAtomicCookie.getCookieContent()
             )
         }
 
@@ -1436,9 +1453,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         WPSnackbar.make(
-                requireView(),
-                R.string.media_accessing_failed,
-                Snackbar.LENGTH_LONG
+            requireView(),
+            R.string.media_accessing_failed,
+            Snackbar.LENGTH_LONG
         ).show()
         renderer?.beginRender()
     }
@@ -1447,9 +1464,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         DirectOperation.COMMENT_JUMP, DirectOperation.COMMENT_REPLY, DirectOperation.COMMENT_LIKE -> {
             viewModel.post?.let {
                 ReaderActivityLauncher.showReaderComments(
-                        activity, it.blogId, it.postId,
-                        directOperation, commentId.toLong(), viewModel.interceptedUri,
-                        DIRECT_OPERATION.sourceDescription
+                    activity, it.blogId, it.postId,
+                    directOperation, commentId.toLong(), viewModel.interceptedUri,
+                    DIRECT_OPERATION.sourceDescription
                 )
             }
 
@@ -1475,7 +1492,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         } else if (post.isPrivateAtomic && privateAtomicCookie.exists()) {
             // make sure we add cookie to the cookie manager if it exists before starting render
             CookieManager.getInstance().setCookie(
-                    privateAtomicCookie.getDomain(), privateAtomicCookie.getCookieContent()
+                privateAtomicCookie.getDomain(), privateAtomicCookie.getCookieContent()
             )
             renderer?.beginRender()
         } else {
@@ -1485,9 +1502,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun requestPrivateAtomicCookie() {
         dispatcher.dispatch(
-                viewModel.post?.let {
-                    SiteActionBuilder.newFetchPrivateAtomicCookieAction(FetchPrivateAtomicCookiePayload(it.blogId))
-                }
+            viewModel.post?.let {
+                SiteActionBuilder.newFetchPrivateAtomicCookieAction(FetchPrivateAtomicCookiePayload(it.blogId))
+            }
         )
     }
 
@@ -1573,11 +1590,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             val siteId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url)
             if (siteId != 0L) {
                 ReaderActivityLauncher.showReaderBlogPreview(
-                        activity,
-                        siteId,
-                        viewModel.post?.isFollowedByCurrentUser,
-                        ReaderTracker.SOURCE_POST_DETAIL,
-                        readerTracker
+                    activity,
+                    siteId,
+                    viewModel.post?.isFollowedByCurrentUser,
+                    ReaderTracker.SOURCE_POST_DETAIL,
+                    readerTracker
                 )
             }
             return true
@@ -1649,11 +1666,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     override fun onFileDownloadClick(fileUrl: String?): Boolean {
         readerTracker.track(Stat.READER_ARTICLE_FILE_DOWNLOAD_TAPPED)
         return if (activity != null &&
-                fileUrl != null &&
-                PermissionUtils.checkAndRequestStoragePermission(
-                        this,
-                        READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
-                )) {
+            fileUrl != null &&
+            PermissionUtils.checkAndRequestStoragePermission(
+                this,
+                READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
+            )
+        ) {
             readerFileDownloadManager.downloadFile(fileUrl)
             true
         } else {
@@ -1670,9 +1688,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     ) {
         val activity = activity
         if (activity != null &&
-                requestCode == READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE &&
-                grantResults.isNotEmpty() &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            requestCode == READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE &&
+            grantResults.isNotEmpty() &&
+            grantResults[0] == PackageManager.PERMISSION_GRANTED
+        ) {
             fileForDownload?.let { readerFileDownloadManager.downloadFile(it) }
         }
         fileForDownload = null
@@ -1754,8 +1773,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType)
             }
             args.putBoolean(
-                    ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY,
-                    postSlugsResolutionUnderway
+                ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY,
+                postSlugsResolutionUnderway
             )
 
             val fragment = ReaderPostDetailFragment()

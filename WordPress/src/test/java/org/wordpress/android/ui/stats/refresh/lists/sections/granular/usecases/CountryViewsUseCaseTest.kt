@@ -51,49 +51,58 @@ private val limitMode = Top(ITEMS_TO_LOAD)
 
 @ExperimentalCoroutinesApi
 class CountryViewsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var store: CountryViewsStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
-    @Mock lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var store: CountryViewsStore
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock
+    lateinit var statsUtils: StatsUtils
     private lateinit var useCase: CountryViewsUseCase
     private val country = Country("CZ", "Czech Republic", 500, "flag.jpg", "flatFlag.jpg")
 
     @Before
     fun setUp() {
         useCase = CountryViewsUseCase(
-                statsGranularity,
-                testDispatcher(),
-                testDispatcher(),
-                store,
-                statsSiteProvider,
-                selectedDateProvider,
-                tracker,
-                contentDescriptionHelper,
-                statsUtils,
-                BLOCK
+            statsGranularity,
+            testDispatcher(),
+            testDispatcher(),
+            store,
+            statsSiteProvider,
+            selectedDateProvider,
+            tracker,
+            contentDescriptionHelper,
+            statsUtils,
+            BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
-                SelectedDate(
-                        selectedDate,
-                        listOf(selectedDate)
-                )
+            SelectedDate(
+                selectedDate,
+                listOf(selectedDate)
+            )
         )
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<String>(),
                 any()
-        )).thenReturn("title, views")
+            )
+        ).thenReturn("title, views")
         whenever(
-                statsUtils.toFormattedString(
-                        anyNullable<Int>(),
-                        any(),
-                        eq("0")
-                )
+            statsUtils.toFormattedString(
+                anyNullable<Int>(),
+                any(),
+                eq("0")
+            )
         ).then { (it.arguments[0] as? Int)?.toString() }
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as? Int)?.toString() }
     }
@@ -103,18 +112,22 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
         val forced = false
         val model = CountryViewsModel(10, 15, listOf(country), false)
         whenever(
-                store.getCountryViews(
-                        site,
-                        statsGranularity,
-                        limitMode,
-                        selectedDate
-                )
+            store.getCountryViews(
+                site,
+                statsGranularity,
+                limitMode,
+                selectedDate
+            )
         ).thenReturn(model)
-        whenever(store.fetchCountryViews(site, statsGranularity,
-                limitMode, selectedDate, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+        whenever(
+            store.fetchCountryViews(
+                site, statsGranularity,
+                limitMode, selectedDate, forced
+            )
+        ).thenReturn(
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadData(true, forced)
@@ -139,19 +152,19 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
         val forced = false
         val model = CountryViewsModel(10, 15, listOf(country), true)
         whenever(
-                store.getCountryViews(
-                        site,
-                        statsGranularity,
-                        limitMode,
-                        selectedDate
-                )
+            store.getCountryViews(
+                site,
+                statsGranularity,
+                limitMode,
+                selectedDate
+            )
         ).thenReturn(model)
         whenever(
-                store.fetchCountryViews(site, statsGranularity, limitMode, selectedDate, forced)
+            store.fetchCountryViews(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         val result = loadData(true, forced)
 
@@ -166,9 +179,9 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
     fun `maps empty country views to UI model`() = test {
         val forced = false
         whenever(
-                store.fetchCountryViews(site, statsGranularity, limitMode, selectedDate, forced)
+            store.fetchCountryViews(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
-                OnStatsFetched(CountryViewsModel(0, 0, listOf(), false))
+            OnStatsFetched(CountryViewsModel(0, 0, listOf(), false))
         )
 
         val result = loadData(true, forced)
@@ -186,11 +199,11 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(
-                store.fetchCountryViews(site, statsGranularity, limitMode, selectedDate, forced)
+            store.fetchCountryViews(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadData(true, forced)

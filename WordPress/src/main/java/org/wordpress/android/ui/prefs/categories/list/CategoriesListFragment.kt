@@ -22,7 +22,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_fragment) {
     private val viewModel: CategoriesListViewModel by viewModels()
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var uiHelpers: UiHelpers
     private lateinit var adapter: SiteSettingsCategoriesAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,10 +48,10 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
         categoriesRecyclerView.adapter = adapter
 
         categoriesRecyclerView.addItemDecoration(
-                DividerItemDecoration(
-                        categoriesRecyclerView.context,
-                        DividerItemDecoration.VERTICAL
-                )
+            DividerItemDecoration(
+                categoriesRecyclerView.context,
+                DividerItemDecoration.VERTICAL
+            )
         )
     }
 

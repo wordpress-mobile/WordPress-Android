@@ -33,11 +33,16 @@ import org.wordpress.android.ui.JetpackRemoteInstallViewState.Start
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class JetpackRemoteInstallViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var dispatcher: Dispatcher
-    @Mock private lateinit var jetpackStore: JetpackStore
-    @Mock private lateinit var accountStore: AccountStore
-    @Mock private lateinit var siteStore: SiteStore
-    @Mock private lateinit var site: SiteModel
+    @Mock
+    private lateinit var dispatcher: Dispatcher
+    @Mock
+    private lateinit var jetpackStore: JetpackStore
+    @Mock
+    private lateinit var accountStore: AccountStore
+    @Mock
+    private lateinit var siteStore: SiteStore
+    @Mock
+    private lateinit var site: SiteModel
     private lateinit var actionCaptor: KArgumentCaptor<Action<Any>>
     private val siteId = 1
 
@@ -120,9 +125,9 @@ class JetpackRemoteInstallViewModelTest : BaseUnitTest() {
     @Test
     fun `on invalid credentials triggers manual install`() = test {
         val installError = JetpackInstallError(
-                JetpackInstallErrorType.GENERIC_ERROR,
-                "INVALID_CREDENTIALS",
-                message = "msg"
+            JetpackInstallErrorType.GENERIC_ERROR,
+            "INVALID_CREDENTIALS",
+            message = "msg"
         )
         viewModel.start(site, null)
 

@@ -32,7 +32,7 @@ class WordPressPublicData @Inject constructor(private val packageManagerWrapper:
         val wordPressVersion = majorMinorRegex.find(rawVersion)?.value
 
         // Verify that the resulting version is supported by org.wordpress.android.util.helpers.Version.Version
-        val versionIsSupportedForComparison = wordPressVersion !=null
+        val versionIsSupportedForComparison = wordPressVersion != null
                 && Regex("[0-9]+(\\.[0-9]+)*").matchEntire(wordPressVersion) != null
 
         return if (versionIsSupportedForComparison) wordPressVersion else null

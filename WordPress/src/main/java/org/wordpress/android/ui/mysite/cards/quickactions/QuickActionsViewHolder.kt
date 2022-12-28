@@ -14,7 +14,7 @@ class QuickActionsViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
 ) : MySiteCardAndItemViewHolder<MySiteQuickActionsCardBinding>(
-        parent.viewBinding(MySiteQuickActionsCardBinding::inflate)
+    parent.viewBinding(MySiteQuickActionsCardBinding::inflate)
 ) {
     fun bind(card: QuickActionsCard) = with(binding) {
         quickActionsToolbar.update(card)

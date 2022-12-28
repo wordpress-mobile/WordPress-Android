@@ -82,8 +82,8 @@ data class MediaItem(
                     return when (type) {
                         LOCAL_URI -> {
                             LocalUri(
-                                    UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))),
-                                    parcel.readInt() != 0
+                                UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))),
+                                parcel.readInt() != 0
                             )
                         }
                         REMOTE_ID -> {
@@ -97,8 +97,8 @@ data class MediaItem(
                         }
                         GIF_MEDIA_IDENTIFIER -> {
                             GifMediaIdentifier(
-                                    UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))),
-                                    parcel.readString()
+                                UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))),
+                                parcel.readString()
                             )
                         }
                     }

@@ -13,8 +13,10 @@ sealed class ScanNavigationEvents {
         val message: UiString,
         val okButtonAction: () -> Unit
     ) : ScanNavigationEvents() {
-        @StringRes val positiveButtonLabel: Int = R.string.dialog_button_ok
-        @StringRes val negativeButtonLabel: Int = R.string.dialog_button_cancel
+        @StringRes
+        val positiveButtonLabel: Int = R.string.dialog_button_ok
+        @StringRes
+        val negativeButtonLabel: Int = R.string.dialog_button_cancel
     }
 
     data class ShowContactSupport(val site: SiteModel) : ScanNavigationEvents()

@@ -83,31 +83,31 @@ class AztecImageLoaderTest {
 
     private fun wheneverLoadAsBitmapInvokeOnLoadFailed() {
         whenever(imageManager.loadAsBitmapIntoCustomTarget(any(), any(), any(), any()))
-                .thenAnswer { invocation ->
-                    run {
-                        @Suppress("DEPRECATION", "UNCHECKED_CAST")
-                        (invocation.arguments[1] as BaseTarget<Bitmap>).onLoadFailed(mock(Drawable::class.java))
-                    }
+            .thenAnswer { invocation ->
+                run {
+                    @Suppress("DEPRECATION", "UNCHECKED_CAST")
+                    (invocation.arguments[1] as BaseTarget<Bitmap>).onLoadFailed(mock(Drawable::class.java))
                 }
+            }
     }
 
     private fun wheneverLoadAsBitmapInvokeOnResourceReady() {
         whenever(imageManager.loadAsBitmapIntoCustomTarget(any(), any(), any(), any()))
-                .thenAnswer { invocation ->
-                    run {
-                        @Suppress("DEPRECATION", "UNCHECKED_CAST")
-                        (invocation.arguments[1] as BaseTarget<Bitmap>).onResourceReady(bitmap, null)
-                    }
+            .thenAnswer { invocation ->
+                run {
+                    @Suppress("DEPRECATION", "UNCHECKED_CAST")
+                    (invocation.arguments[1] as BaseTarget<Bitmap>).onResourceReady(bitmap, null)
                 }
+            }
     }
 
     private fun wheneverLoadAsBitmapInvokeOnLoadStarted() {
         whenever(imageManager.loadAsBitmapIntoCustomTarget(any(), any(), any(), any()))
-                .thenAnswer { invocation ->
-                    run {
-                        @Suppress("DEPRECATION", "UNCHECKED_CAST")
-                        (invocation.arguments[1] as BaseTarget<Bitmap>).onLoadStarted(mock(Drawable::class.java))
-                    }
+            .thenAnswer { invocation ->
+                run {
+                    @Suppress("DEPRECATION", "UNCHECKED_CAST")
+                    (invocation.arguments[1] as BaseTarget<Bitmap>).onLoadStarted(mock(Drawable::class.java))
                 }
+            }
     }
 }

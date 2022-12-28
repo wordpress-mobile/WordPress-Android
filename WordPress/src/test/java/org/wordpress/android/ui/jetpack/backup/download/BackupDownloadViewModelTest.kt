@@ -50,15 +50,24 @@ import java.util.Date
 
 @ExperimentalCoroutinesApi
 class BackupDownloadViewModelTest : BaseUnitTest() {
-    @Mock lateinit var wizardManager: WizardManager<BackupDownloadStep>
-    @Mock lateinit var backupDownloadStep: BackupDownloadStep
-    @Mock lateinit var savedInstanceState: Bundle
-    @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var getActivityLogItemUseCase: GetActivityLogItemUseCase
-    @Mock private lateinit var backupDownloadStatusUseCase: GetBackupDownloadStatusUseCase
-    @Mock private lateinit var postBackupDownloadUseCase: PostBackupDownloadUseCase
-    @Mock private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
-    @Mock private lateinit var percentFormatter: PercentFormatter
+    @Mock
+    lateinit var wizardManager: WizardManager<BackupDownloadStep>
+    @Mock
+    lateinit var backupDownloadStep: BackupDownloadStep
+    @Mock
+    lateinit var savedInstanceState: Bundle
+    @Mock
+    private lateinit var site: SiteModel
+    @Mock
+    private lateinit var getActivityLogItemUseCase: GetActivityLogItemUseCase
+    @Mock
+    private lateinit var backupDownloadStatusUseCase: GetBackupDownloadStatusUseCase
+    @Mock
+    private lateinit var postBackupDownloadUseCase: PostBackupDownloadUseCase
+    @Mock
+    private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
+    @Mock
+    private lateinit var percentFormatter: PercentFormatter
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider
     private lateinit var stateListItemBuilder: BackupDownloadStateListItemBuilder
 
@@ -69,12 +78,12 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     private val activityId = "1"
 
     private val backupDownloadState = BackupDownloadState(
-            activityId = "activityId",
-            rewindId = "rewindId",
-            downloadId = 100L,
-            siteId = 200L,
-            url = null,
-            published = Date(1609690147756)
+        activityId = "activityId",
+        rewindId = "rewindId",
+        downloadId = 100L,
+        siteId = 200L,
+        url = null,
+        published = Date(1609690147756)
     )
 
     @Before
@@ -87,42 +96,42 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         availableItemsProvider = JetpackAvailableItemsProvider()
         stateListItemBuilder = BackupDownloadStateListItemBuilder(checkboxSpannableLabel, percentFormatter)
         viewModel = BackupDownloadViewModel(
-                wizardManager,
-                availableItemsProvider,
-                getActivityLogItemUseCase,
-                stateListItemBuilder,
-                postBackupDownloadUseCase,
-                backupDownloadStatusUseCase,
-                testDispatcher(),
-                percentFormatter
+            wizardManager,
+            availableItemsProvider,
+            getActivityLogItemUseCase,
+            stateListItemBuilder,
+            postBackupDownloadUseCase,
+            backupDownloadStatusUseCase,
+            testDispatcher(),
+            percentFormatter
         )
         whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(fakeActivityLogModel)
         whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(postBackupDownloadSuccess)
+            .thenReturn(postBackupDownloadSuccess)
         whenever(backupDownloadStatusUseCase.getBackupDownloadStatus(anyOrNull(), anyOrNull()))
-                .thenReturn(flow { emit(getStatusProgress) })
+            .thenReturn(flow { emit(getStatusProgress) })
         whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_themes, null))
-                .thenReturn("themes")
+            .thenReturn("themes")
         whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_plugins, null))
-                .thenReturn("plugins")
+            .thenReturn("plugins")
         whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_media_uploads, null))
-                .thenReturn("uploads")
+            .thenReturn("uploads")
         whenever(
-                checkboxSpannableLabel.buildSpannableLabel(
-                        R.string.backup_item_roots,
-                        R.string.backup_item_roots_hint
-                )
+            checkboxSpannableLabel.buildSpannableLabel(
+                R.string.backup_item_roots,
+                R.string.backup_item_roots_hint
+            )
         )
-                .thenReturn("roots")
+            .thenReturn("roots")
         whenever(
-                checkboxSpannableLabel.buildSpannableLabel(
-                        R.string.backup_item_contents,
-                        R.string.backup_item_content_hint
-                )
+            checkboxSpannableLabel.buildSpannableLabel(
+                R.string.backup_item_contents,
+                R.string.backup_item_content_hint
+            )
         )
-                .thenReturn("contents")
+            .thenReturn("contents")
         whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_sqls, R.string.backup_item_sqls_hint))
-                .thenReturn("sqls")
+            .thenReturn("sqls")
     }
 
     @Test
@@ -153,7 +162,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         ((uiStates.last().items).first { it is CheckboxState } as CheckboxState).onClick.invoke()
 
         assertThat((((uiStates.last()).items)
-                .first { it is CheckboxState } as CheckboxState).checked).isFalse
+            .first { it is CheckboxState } as CheckboxState).checked).isFalse
     }
 
     @Test
@@ -174,7 +183,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     fun `given details step, when request create download success, then state reflects progress`() = test {
         whenever(percentFormatter.format(0)).thenReturn("30%")
         whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(postBackupDownloadSuccess)
+            .thenReturn(postBackupDownloadSuccess)
 
         val uiStates = initObservers().uiStates
 
@@ -194,7 +203,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     @Test
     fun `given details step, when no network connection, then a snackbar message is shown`() = test {
         whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(postBackupDownloadNetworkError)
+            .thenReturn(postBackupDownloadNetworkError)
 
         val uiStates = initObservers().uiStates
         val msgs = initObservers().snackbarMessages
@@ -209,7 +218,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     @Test
     fun `given details step, when request in error, then a snackbar message is shown`() = test {
         whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(postBackupDownloadRemoteRequestError)
+            .thenReturn(postBackupDownloadRemoteRequestError)
 
         val uiStates = initObservers().uiStates
         val msgs = initObservers().snackbarMessages
@@ -224,7 +233,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     @Test
     fun `given details step, when another request is running, then a snackbar message is shown`() = test {
         whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(otherRequestRunningError)
+            .thenReturn(otherRequestRunningError)
 
         val uiStates = initObservers().uiStates
         val msgs = initObservers().snackbarMessages
@@ -280,7 +289,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         viewModel.writeToBundle(savedInstanceState)
 
         verify(savedInstanceState)
-                .putParcelable(any(), argThat { this is BackupDownloadState })
+            .putParcelable(any(), argThat { this is BackupDownloadState })
     }
 
     @Test
@@ -296,7 +305,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     fun `given progress step, when started, then the progress is set to zero`() = test {
         whenever(percentFormatter.format(0)).thenReturn("30%")
         whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(postBackupDownloadSuccess)
+            .thenReturn(postBackupDownloadSuccess)
 
         val uiStates = initObservers().uiStates
 
@@ -310,8 +319,8 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
         assertThat(((uiStates.last().items)
-                .first { it is JetpackListItemState.ProgressState } as JetpackListItemState.ProgressState).progress)
-                .isEqualTo(0)
+            .first { it is JetpackListItemState.ProgressState } as JetpackListItemState.ProgressState).progress)
+            .isEqualTo(0)
     }
 
     @Test
@@ -378,9 +387,9 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         viewModel.showStep(WizardNavigationTarget(BackupDownloadStep.COMPLETE, backupDownloadState))
 
         (uiStates.last().items)
-                .filterIsInstance<ActionButtonState>()
-                .first()
-                .onClick.invoke()
+            .filterIsInstance<ActionButtonState>()
+            .first()
+            .onClick.invoke()
 
         assertThat(navigationEvents.last()).isInstanceOf(DownloadFile::class.java)
     }
@@ -395,9 +404,9 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         viewModel.showStep(WizardNavigationTarget(BackupDownloadStep.COMPLETE, backupDownloadState))
 
         (uiStates.last().items)
-                .filterIsInstance<ActionButtonState>()
-                .last()
-                .onClick.invoke()
+            .filterIsInstance<ActionButtonState>()
+            .last()
+            .onClick.invoke()
 
         assertThat(navigationEvents.last()).isInstanceOf(ShareLink::class.java)
     }
@@ -408,30 +417,30 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
 
     private fun startViewModelForProgress() {
         whenever(savedInstanceState.getInt(KEY_BACKUP_DOWNLOAD_CURRENT_STEP))
-                .thenReturn(BackupDownloadStep.PROGRESS.id)
+            .thenReturn(BackupDownloadStep.PROGRESS.id)
         whenever(savedInstanceState.getParcelable<BackupDownloadState>(KEY_BACKUP_DOWNLOAD_STATE))
-                .thenReturn(backupDownloadState)
+            .thenReturn(backupDownloadState)
         whenever(percentFormatter.format(30))
-                .thenReturn("30%")
+            .thenReturn("30%")
         // Necessary to mock the call to BackupDownloadStateListItemBuilder
         whenever(percentFormatter.format(0))
-                .thenReturn("0%")
+            .thenReturn("0%")
         startViewModel(savedInstanceState)
     }
 
     private fun startViewModelForComplete(backupDownloadState: BackupDownloadState? = null) {
         whenever(savedInstanceState.getInt(KEY_BACKUP_DOWNLOAD_CURRENT_STEP))
-                .thenReturn(BackupDownloadStep.COMPLETE.id)
+            .thenReturn(BackupDownloadStep.COMPLETE.id)
         whenever(savedInstanceState.getParcelable<BackupDownloadState>(KEY_BACKUP_DOWNLOAD_STATE))
-                .thenReturn(backupDownloadState)
+            .thenReturn(backupDownloadState)
         startViewModel(savedInstanceState)
     }
 
     private fun startViewModelForError() {
         whenever(savedInstanceState.getInt(KEY_BACKUP_DOWNLOAD_CURRENT_STEP))
-                .thenReturn(BackupDownloadStep.ERROR.id)
+            .thenReturn(BackupDownloadStep.ERROR.id)
         whenever(savedInstanceState.getParcelable<BackupDownloadState>(KEY_BACKUP_DOWNLOAD_STATE))
-                .thenReturn(backupDownloadState)
+            .thenReturn(backupDownloadState)
         startViewModel(savedInstanceState)
     }
 
@@ -449,10 +458,10 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         viewModel.uiState.observeForever { uiStates.add(it) }
 
         return Observers(
-                wizardFinishedObserver,
-                snackbarMsgs,
-                navigationEvents,
-                uiStates
+            wizardFinishedObserver,
+            snackbarMsgs,
+            navigationEvents,
+            uiStates
         )
     }
 
@@ -464,27 +473,27 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     )
 
     private val fakeActivityLogModel: ActivityLogModel = ActivityLogModel(
-            activityID = "1",
-            summary = "summary",
-            content = null,
-            name = null,
-            type = null,
-            gridicon = null,
-            status = null,
-            rewindable = null,
-            rewindID = "rewindId",
-            published = Date()
+        activityID = "1",
+        summary = "summary",
+        content = null,
+        name = null,
+        type = null,
+        gridicon = null,
+        status = null,
+        rewindable = null,
+        rewindID = "rewindId",
+        published = Date()
     )
 
     private val postBackupDownloadSuccess = BackupDownloadRequestState.Success(
-            requestRewindId = "rewindId",
-            rewindId = "rewindId",
-            downloadId = 100L
+        requestRewindId = "rewindId",
+        rewindId = "rewindId",
+        downloadId = 100L
     )
 
     private val getStatusProgress = BackupDownloadRequestState.Progress(
-            rewindId = "rewindId",
-            progress = 30
+        rewindId = "rewindId",
+        progress = 30
     )
 
     private val postBackupDownloadNetworkError = BackupDownloadRequestState.Failure.NetworkUnavailable

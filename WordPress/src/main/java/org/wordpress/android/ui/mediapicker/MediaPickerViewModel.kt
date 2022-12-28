@@ -7,7 +7,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -105,21 +104,21 @@ class MediaPickerViewModel @Inject constructor(
     val onPermissionsRequested: LiveData<Event<PermissionsRequested>> = _onPermissionsRequested
 
     val uiState: LiveData<MediaPickerUiState> = merge(
-            _domainModel.distinct(),
-            _selectedIds.distinct(),
-            _softAskRequest,
-            _searchExpanded,
-            _showProgressDialog.distinct()
+        _domainModel.distinct(),
+        _selectedIds.distinct(),
+        _softAskRequest,
+        _searchExpanded,
+        _showProgressDialog.distinct()
     ) { domainModel, selectedIds, softAskRequest, searchExpanded, progressDialogUiModel ->
         MediaPickerUiState(
-                buildUiModel(domainModel, selectedIds, softAskRequest, searchExpanded),
-                buildSoftAskView(softAskRequest),
-                FabUiModel(mediaPickerSetup.cameraSetup != HIDDEN && selectedIds.isNullOrEmpty(), this::clickOnCamera),
-                buildActionModeUiModel(selectedIds, domainModel?.domainItems),
-                buildSearchUiModel(softAskRequest?.let { !it.show } ?: true, domainModel?.filter, searchExpanded),
-                !domainModel?.domainItems.isNullOrEmpty() && domainModel?.isLoading == true,
-                buildBrowseMenuUiModel(softAskRequest, searchExpanded),
-                progressDialogUiModel ?: Hidden
+            buildUiModel(domainModel, selectedIds, softAskRequest, searchExpanded),
+            buildSoftAskView(softAskRequest),
+            FabUiModel(mediaPickerSetup.cameraSetup != HIDDEN && selectedIds.isNullOrEmpty(), this::clickOnCamera),
+            buildActionModeUiModel(selectedIds, domainModel?.domainItems),
+            buildSearchUiModel(softAskRequest?.let { !it.show } ?: true, domainModel?.filter, searchExpanded),
+            !domainModel?.domainItems.isNullOrEmpty() && domainModel?.isLoading == true,
+            buildBrowseMenuUiModel(softAskRequest, searchExpanded),
+            progressDialogUiModel ?: Hidden
         )
     }
 
@@ -173,17 +172,17 @@ class MediaPickerViewModel @Inject constructor(
             populateDomainItems(data, selectedIds, domainModel)
         } else if (domainModel?.emptyState != null) {
             PhotoListUiModel.Empty(
-                    domainModel.emptyState.title,
-                    domainModel.emptyState.htmlSubtitle,
-                    domainModel.emptyState.image,
-                    domainModel.emptyState.bottomImage,
-                    domainModel.emptyState.bottomImageDescription,
-                    isSearching == true,
-                    retryAction = if (domainModel.emptyState.isError) {
-                        this::retry
-                    } else {
-                        null
-                    }
+                domainModel.emptyState.title,
+                domainModel.emptyState.htmlSubtitle,
+                domainModel.emptyState.image,
+                domainModel.emptyState.bottomImage,
+                domainModel.emptyState.bottomImageDescription,
+                isSearching == true,
+                retryAction = if (domainModel.emptyState.isError) {
+                    this::retry
+                } else {
+                    null
+                }
             )
         } else if (domainModel?.isLoading == true) {
             PhotoListUiModel.Loading
@@ -197,9 +196,9 @@ class MediaPickerViewModel @Inject constructor(
                 else -> R.string.media_empty_list
             }
             PhotoListUiModel.Empty(
-                    UiStringRes(stringId),
-                    image = R.drawable.img_illustration_media_105dp,
-                    isSearching = isSearching == true
+                UiStringRes(stringId),
+                image = R.drawable.img_illustration_media_105dp,
+                isSearching = isSearching == true
             )
         }
     }
@@ -226,32 +225,32 @@ class MediaPickerViewModel @Inject constructor(
             }
             when (it.type) {
                 IMAGE -> MediaPickerUiItem.PhotoItem(
-                        url = it.url,
-                        identifier = it.identifier,
-                        isSelected = isSelected,
-                        selectedOrder = selectedOrder,
-                        showOrderCounter = showOrderCounter,
-                        toggleAction = toggleAction,
-                        clickAction = clickAction
+                    url = it.url,
+                    identifier = it.identifier,
+                    isSelected = isSelected,
+                    selectedOrder = selectedOrder,
+                    showOrderCounter = showOrderCounter,
+                    toggleAction = toggleAction,
+                    clickAction = clickAction
                 )
                 VIDEO -> MediaPickerUiItem.VideoItem(
-                        url = it.url,
-                        identifier = it.identifier,
-                        isSelected = isSelected,
-                        selectedOrder = selectedOrder,
-                        showOrderCounter = showOrderCounter,
-                        toggleAction = toggleAction,
-                        clickAction = clickAction
+                    url = it.url,
+                    identifier = it.identifier,
+                    isSelected = isSelected,
+                    selectedOrder = selectedOrder,
+                    showOrderCounter = showOrderCounter,
+                    toggleAction = toggleAction,
+                    clickAction = clickAction
                 )
                 AUDIO, DOCUMENT -> MediaPickerUiItem.FileItem(
-                        fileName = it.name ?: "",
-                        fileExtension = fileExtension,
-                        identifier = it.identifier,
-                        isSelected = isSelected,
-                        selectedOrder = selectedOrder,
-                        showOrderCounter = showOrderCounter,
-                        toggleAction = toggleAction,
-                        clickAction = clickAction
+                    fileName = it.name ?: "",
+                    fileExtension = fileExtension,
+                    identifier = it.identifier,
+                    isSelected = isSelected,
+                    selectedOrder = selectedOrder,
+                    showOrderCounter = showOrderCounter,
+                    toggleAction = toggleAction,
+                    clickAction = clickAction
                 )
             }
         }
@@ -316,16 +315,16 @@ class MediaPickerViewModel @Inject constructor(
         val onlyImagesSelected = items?.none { it.type != IMAGE && selectedIds.contains(it.identifier) } ?: true
         val showEditActionButton = mediaPickerSetup.editingEnabled && onlyImagesSelected
         return ActionModeUiModel.Visible(
-                title,
-                EditActionUiModel(
-                        isVisible = showEditActionButton,
-                        isCounterBadgeVisible = if (!showEditActionButton) {
-                            false
-                        } else {
-                            mediaPickerSetup.canMultiselect
-                        },
-                        counterBadgeValue = numSelected
-                )
+            title,
+            EditActionUiModel(
+                isVisible = showEditActionButton,
+                isCounterBadgeVisible = if (!showEditActionButton) {
+                    false
+                } else {
+                    mediaPickerSetup.canMultiselect
+                },
+                counterBadgeValue = numSelected
+            )
         )
     }
 
@@ -457,16 +456,16 @@ class MediaPickerViewModel @Inject constructor(
                     is InsertModel.Error -> {
                         val message = if (it.error.isNotEmpty()) {
                             UiStringResWithParams(
-                                    R.string.media_insert_failed_with_reason,
-                                    listOf(UiStringText(it.error))
+                                R.string.media_insert_failed_with_reason,
+                                listOf(UiStringText(it.error))
                             )
                         } else {
                             UiStringRes(R.string.media_insert_failed)
                         }
                         _onSnackbarMessage.value = Event(
-                                SnackbarMessageHolder(
-                                        message
-                                )
+                            SnackbarMessageHolder(
+                                message
+                            )
                         )
                         progressDialogJob?.cancel()
                         job = null
@@ -536,14 +535,14 @@ class MediaPickerViewModel @Inject constructor(
                     }
                     listOf(AUDIO).containsAll(allowedTypes) -> {
                         Pair(
-                                ChooserContext.AUDIO,
-                                MimeTypes().getAudioTypesOnly(mediaUtilsWrapper.getSitePlanForMimeTypes(site))
+                            ChooserContext.AUDIO,
+                            MimeTypes().getAudioTypesOnly(mediaUtilsWrapper.getSitePlanForMimeTypes(site))
                         )
                     }
                     else -> {
                         Pair(
-                                ChooserContext.MEDIA_FILE,
-                                MimeTypes().getAllTypes(mediaUtilsWrapper.getSitePlanForMimeTypes(site))
+                            ChooserContext.MEDIA_FILE,
+                            MimeTypes().getAllTypes(mediaUtilsWrapper.getSitePlanForMimeTypes(site))
                         )
                     }
                 }
@@ -553,13 +552,13 @@ class MediaPickerViewModel @Inject constructor(
             is CapturePhoto -> OpenCameraForPhotos
             is SwitchSource -> {
                 SwitchMediaPicker(
-                        mediaPickerSetup.copy(
-                                primaryDataSource = icon.dataSource,
-                                availableDataSources = setOf(),
-                                systemPickerEnabled = icon.dataSource == DEVICE,
-                                defaultSearchView = icon.dataSource == STOCK_LIBRARY || icon.dataSource == GIF_LIBRARY,
-                                cameraSetup = HIDDEN
-                        )
+                    mediaPickerSetup.copy(
+                        primaryDataSource = icon.dataSource,
+                        availableDataSources = setOf(),
+                        systemPickerEnabled = icon.dataSource == DEVICE,
+                        defaultSearchView = icon.dataSource == STOCK_LIBRARY || icon.dataSource == GIF_LIBRARY,
+                        cameraSetup = HIDDEN
+                    )
                 )
             }
         }
@@ -599,26 +598,26 @@ class MediaPickerViewModel @Inject constructor(
             val label = if (softAskRequest.isAlwaysDenied) {
                 val writePermission = ("<strong>${
                     WPPermissionUtils.getPermissionName(
-                            resourceProvider,
-                            permission.WRITE_EXTERNAL_STORAGE
+                        resourceProvider,
+                        permission.WRITE_EXTERNAL_STORAGE
                     )
                 }</strong>")
                 val readPermission = ("<strong>${
                     WPPermissionUtils.getPermissionName(
-                            resourceProvider,
-                            permission.READ_EXTERNAL_STORAGE
+                        resourceProvider,
+                        permission.READ_EXTERNAL_STORAGE
                     )
                 }</strong>")
                 String.format(
-                        resourceProvider.getString(R.string.media_picker_soft_ask_permissions_denied),
-                        appName,
-                        writePermission,
-                        readPermission
+                    resourceProvider.getString(R.string.media_picker_soft_ask_permissions_denied),
+                    appName,
+                    writePermission,
+                    readPermission
                 )
             } else {
                 String.format(
-                        resourceProvider.getString(R.string.photo_picker_soft_ask_label),
-                        appName
+                    resourceProvider.getString(R.string.photo_picker_soft_ask_label),
+                    appName
                 )
             }
             val allowId = if (softAskRequest.isAlwaysDenied) {
@@ -688,7 +687,7 @@ class MediaPickerViewModel @Inject constructor(
 
     sealed class PhotoListUiModel {
         data class Data(val items: List<MediaPickerUiItem>) :
-                PhotoListUiModel()
+            PhotoListUiModel()
 
         data class Empty(
             val title: UiString,
@@ -706,7 +705,7 @@ class MediaPickerViewModel @Inject constructor(
 
     sealed class SoftAskViewUiModel {
         data class Visible(val label: String, val allowId: UiStringRes, val isAlwaysDenied: Boolean) :
-                SoftAskViewUiModel()
+            SoftAskViewUiModel()
 
         object Hidden : SoftAskViewUiModel()
     }

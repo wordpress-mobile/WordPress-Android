@@ -12,34 +12,34 @@ object SiteCreationServiceNotification {
 
     fun createCreatingSiteNotification(context: Context): Notification {
         return AutoForegroundNotification.progressIndeterminate(
-                context,
-                context.getString(channelResId),
-                R.string.notification_new_site_creation_title,
-                R.string.notification_new_site_creation_creating_site_subtitle,
-                drawableResId,
-                colorResId
+            context,
+            context.getString(channelResId),
+            R.string.notification_new_site_creation_title,
+            R.string.notification_new_site_creation_creating_site_subtitle,
+            drawableResId,
+            colorResId
         )
     }
 
     fun createSuccessNotification(context: Context): Notification {
         return AutoForegroundNotification.success(
-                context,
-                context.getString(channelResId),
-                R.string.notification_site_creation_title_success,
-                R.string.notification_site_creation_created,
-                drawableResId,
-                colorResId
+            context,
+            context.getString(channelResId),
+            R.string.notification_site_creation_title_success,
+            R.string.notification_site_creation_created,
+            drawableResId,
+            colorResId
         )
     }
 
     fun createFailureNotification(context: Context): Notification {
         return AutoForegroundNotification.failure(
-                context,
-                context.getString(channelResId),
-                R.string.notification_new_site_creation_title,
-                R.string.notification_new_site_creation_failed,
-                drawableResId,
-                colorResId
+            context,
+            context.getString(channelResId),
+            R.string.notification_new_site_creation_title,
+            R.string.notification_new_site_creation_failed,
+            drawableResId,
+            colorResId
         )
     }
 }

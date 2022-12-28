@@ -16,8 +16,10 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class LoginViewModelTest : BaseUnitTest() {
-    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
-    @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
     private lateinit var viewModel: LoginViewModel
 
     @Before
@@ -64,7 +66,7 @@ class LoginViewModelTest : BaseUnitTest() {
     }
 
     private fun getConnectSiteInfoPayload(url: String): ConnectSiteInfoPayload =
-            ConnectSiteInfoPayload(url, null)
+        ConnectSiteInfoPayload(url, null)
 
     private data class Observers(
         val navigationEvents: List<LoginNavigationEvents>

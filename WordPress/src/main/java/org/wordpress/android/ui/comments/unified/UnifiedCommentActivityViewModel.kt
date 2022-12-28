@@ -12,18 +12,18 @@ class UnifiedCommentActivityViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState: MutableStateFlow<CommentListActivityUiModel> = MutableStateFlow(
-            CommentListActivityUiModel(
-                    true
-            )
+        CommentListActivityUiModel(
+            true
+        )
     )
     val uiState: StateFlow<CommentListActivityUiModel> = _uiState
 
     fun onActionModeToggled(isEnabled: Boolean) {
         launch {
             _uiState.emit(
-                    CommentListActivityUiModel(
-                            !isEnabled
-                    )
+                CommentListActivityUiModel(
+                    !isEnabled
+                )
             )
         }
     }

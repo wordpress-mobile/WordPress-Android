@@ -10,8 +10,8 @@ class JetpackCheckboxViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : JetpackViewHolder<JetpackListCheckboxItemBinding>(
-        parent,
-        JetpackListCheckboxItemBinding::inflate
+    parent,
+    JetpackListCheckboxItemBinding::inflate
 ) {
     override fun onBind(itemUiState: JetpackListItemState) = with(binding) {
         val checkboxState = itemUiState as CheckboxState

@@ -17,8 +17,10 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class StatsWidgetSiteSelectionDialogFragment : AppCompatDialogFragment() {
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsSiteSelectionViewModel
     private fun buildView(): View {
         val rootView = requireActivity().layoutInflater.inflate(R.layout.stats_widget_site_selector, null)
@@ -37,7 +39,7 @@ class StatsWidgetSiteSelectionDialogFragment : AppCompatDialogFragment() {
         alertDialogBuilder.setCancelable(true)
 
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(StatsSiteSelectionViewModel::class.java)
+            .get(StatsSiteSelectionViewModel::class.java)
         viewModel.sites.observe(this, {
             with(StatsWidgetSiteSelectorBinding.bind(view)) {
                 (recyclerView.adapter as? StatsWidgetSiteAdapter)?.update(it ?: listOf())

@@ -52,13 +52,13 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                     when (status) {
                         is Success -> {
                             emit(
-                                    FollowCommentsState.FollowStateChanged(
-                                            blogId = blogId,
-                                            postId = postId,
-                                            isFollowing = status.isFollowing,
-                                            isReceivingNotifications = status.isReceivingNotifications,
-                                            isInit = isInit
-                                    )
+                                FollowCommentsState.FollowStateChanged(
+                                    blogId = blogId,
+                                    postId = postId,
+                                    isFollowing = status.isFollowing,
+                                    isReceivingNotifications = status.isReceivingNotifications,
+                                    isInit = isInit
+                                )
                             )
                         }
                         is Failure -> {
@@ -96,20 +96,20 @@ class ReaderCommentsFollowUseCase @Inject constructor(
             when (status) {
                 is Success -> {
                     emit(
-                            FollowCommentsState.FollowStateChanged(
-                                    blogId = blogId,
-                                    postId = postId,
-                                    isFollowing = status.isFollowing,
-                                    isReceivingNotifications = status.isReceivingNotifications,
-                                    false,
-                                    userMessage = UiStringRes(
-                                            if (status.isFollowing) {
-                                                R.string.reader_follow_comments_subscribe_success_enable_push
-                                            } else {
-                                                R.string.reader_follow_comments_unsubscribe_from_all_success
-                                            }
-                                    )
+                        FollowCommentsState.FollowStateChanged(
+                            blogId = blogId,
+                            postId = postId,
+                            isFollowing = status.isFollowing,
+                            isReceivingNotifications = status.isReceivingNotifications,
+                            false,
+                            userMessage = UiStringRes(
+                                if (status.isFollowing) {
+                                    R.string.reader_follow_comments_subscribe_success_enable_push
+                                } else {
+                                    R.string.reader_follow_comments_unsubscribe_from_all_success
+                                }
                             )
+                        )
                     )
                     properties.addFollowActionResult(SUCCEEDED)
                 }
@@ -123,14 +123,15 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
 
         readerTracker.trackPostComments(
-                Stat.COMMENT_FOLLOW_CONVERSATION,
-                blogId,
-                postId,
-                post,
-                properties
+            Stat.COMMENT_FOLLOW_CONVERSATION,
+            blogId,
+            postId,
+            post,
+            properties
         )
     }
 
+    @Suppress("LongMethod")
     suspend fun setEnableByPushNotifications(
         blogId: Long,
         postId: Long,
@@ -142,58 +143,67 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         properties.addFollowActionSource(source)
 
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            emit(FollowCommentsState.FollowStateChanged(
-                    blogId = blogId,
-                    postId = postId,
+            emit(
+                FollowCommentsState.FollowStateChanged(
+                    blogId = blogId, postId = postId,
                     isFollowing = true,
                     isReceivingNotifications = !enable,
                     false,
                     userMessage = UiStringRes(R.string.error_network_connection),
                     true
-            ))
+                )
+            )
             properties.addFollowActionResult(ERROR, NO_NETWORK.errorMessage)
         } else {
             when (val status = postSubscribersApiCallsProvider.managePushNotificationsForPost(blogId, postId, enable)) {
                 is Success -> {
-                    emit(FollowCommentsState.FollowStateChanged(
-                                    blogId = blogId,
-                                    postId = postId,
-                                    isFollowing = status.isFollowing,
-                                    isReceivingNotifications = status.isReceivingNotifications,
-                                    false,
-                                    userMessage = UiStringRes(if (enable) {
-                                                R.string.reader_follow_comments_subscribe_to_push_success
-                                            } else {
-                                                R.string.reader_follow_comments_unsubscribe_from_push_success
-                                            }),
-                                    false
-                    ))
+                    emit(
+                        FollowCommentsState.FollowStateChanged(
+                            blogId = blogId,
+                            postId = postId,
+                            isFollowing = status.isFollowing,
+                            isReceivingNotifications = status.isReceivingNotifications,
+                            false,
+                            userMessage = UiStringRes(
+                                if (enable) {
+                                    R.string.reader_follow_comments_subscribe_to_push_success
+                                } else {
+                                    R.string.reader_follow_comments_unsubscribe_from_push_success
+                                }
+                            ),
+                            false
+                        )
+                    )
                     properties.addFollowActionResult(SUCCEEDED)
                 }
                 is Failure -> {
-                    emit(FollowCommentsState.FollowStateChanged(
+                    emit(
+                        FollowCommentsState.FollowStateChanged(
                             blogId = blogId,
                             postId = postId,
                             isFollowing = true,
                             isReceivingNotifications = !enable,
                             false,
-                            userMessage = UiStringRes(if (enable) {
-                                        R.string.reader_follow_comments_could_not_subscribe_to_push_error
-                                    } else {
-                                        R.string.reader_follow_comments_could_not_unsubscribe_from_push_error
-                                    }),
+                            userMessage = UiStringRes(
+                                if (enable) {
+                                    R.string.reader_follow_comments_could_not_subscribe_to_push_error
+                                } else {
+                                    R.string.reader_follow_comments_could_not_unsubscribe_from_push_error
+                                }
+                            ),
                             true
-                    ))
+                        )
+                    )
                     properties.addFollowActionResult(ERROR, status.error)
                 }
             }
         }
         readerTracker.trackPostComments(
-                Stat.COMMENT_FOLLOW_CONVERSATION,
-                blogId,
-                postId,
-                readerPostTableWrapper.getBlogPost(blogId, postId, true),
-                properties
+            Stat.COMMENT_FOLLOW_CONVERSATION,
+            blogId,
+            postId,
+            readerPostTableWrapper.getBlogPost(blogId, postId, true),
+            properties
         )
     }
 

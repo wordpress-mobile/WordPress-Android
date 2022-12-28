@@ -27,29 +27,32 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
 class StockMediaDataSourceTest : BaseUnitTest() {
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var stockMediaStore: StockMediaStore
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var stockMediaStore: StockMediaStore
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     private lateinit var stockMediaDataSource: StockMediaDataSource
     private val url = "wordpress://url"
     private val title = "title"
     private val name = "name"
     private val thumbnail = "image.jpg"
     private val stockMediaItem = StockMediaItem(
-            "id",
-            name,
-            title,
-            url,
-            "123",
-            thumbnail
+        "id",
+        name,
+        title,
+        url,
+        "123",
+        thumbnail
     )
 
     @Before
     fun setUp() {
         stockMediaDataSource = StockMediaDataSource(
-                stockMediaStore,
-                testDispatcher(),
-                networkUtilsWrapper
+            stockMediaStore,
+            testDispatcher(),
+            networkUtilsWrapper
         )
     }
 
@@ -63,8 +66,8 @@ class StockMediaDataSourceTest : BaseUnitTest() {
         (result as MediaLoadingResult.Empty).apply {
             assertThat((this.title as UiStringRes).stringRes).isEqualTo(R.string.stock_media_picker_initial_empty_text)
             val subtitle = UiStringResWithParams(
-                    R.string.stock_media_picker_initial_empty_subtext,
-                    listOf(UiStringText("<a href='https://pexels.com/'>Pexels</a>"))
+                R.string.stock_media_picker_initial_empty_subtext,
+                listOf(UiStringText("<a href='https://pexels.com/'>Pexels</a>"))
             )
             assertThat(this.htmlSubtitle).isEqualTo(subtitle)
             assertThat(this.image).isNull()
@@ -79,7 +82,7 @@ class StockMediaDataSourceTest : BaseUnitTest() {
         val loadMore = false
         val hasMore = true
         whenever(stockMediaStore.fetchStockMedia(filter, loadMore)).thenReturn(
-                OnStockMediaListFetched(listOf(StockMediaModel()), filter, 1, hasMore)
+            OnStockMediaListFetched(listOf(StockMediaModel()), filter, 1, hasMore)
         )
         whenever(stockMediaStore.getStockMedia()).thenReturn(listOf(stockMediaItem))
 
@@ -88,14 +91,14 @@ class StockMediaDataSourceTest : BaseUnitTest() {
         (result as MediaLoadingResult.Success).apply {
             assertThat(this.data).hasSize(1)
             assertThat(this.data).containsExactly(
-                    MediaItem(
-                            StockMediaIdentifier(url, name, title),
-                            url,
-                            name,
-                            IMAGE,
-                            null,
-                            123
-                    )
+                MediaItem(
+                    StockMediaIdentifier(url, name, title),
+                    url,
+                    name,
+                    IMAGE,
+                    null,
+                    123
+                )
             )
             assertThat(this.hasMore).isTrue()
         }
@@ -110,7 +113,7 @@ class StockMediaDataSourceTest : BaseUnitTest() {
         val loadMore = false
         val hasMore = false
         whenever(stockMediaStore.fetchStockMedia(filter, loadMore)).thenReturn(
-                OnStockMediaListFetched(listOf(), filter, 0, hasMore)
+            OnStockMediaListFetched(listOf(), filter, 0, hasMore)
         )
         whenever(stockMediaStore.getStockMedia()).thenReturn(listOf())
 

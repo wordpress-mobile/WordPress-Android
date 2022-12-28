@@ -31,11 +31,16 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class WPWebViewViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var connectionStatus: LiveData<ConnectionStatus>
-    @Mock private lateinit var networkUtils: NetworkUtilsWrapper
-    @Mock private lateinit var uiStateObserver: Observer<WebPreviewUiState>
-    @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock
+    private lateinit var connectionStatus: LiveData<ConnectionStatus>
+    @Mock
+    private lateinit var networkUtils: NetworkUtilsWrapper
+    @Mock
+    private lateinit var uiStateObserver: Observer<WebPreviewUiState>
+    @Mock
+    lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private lateinit var viewModel: WPWebViewViewModel
 

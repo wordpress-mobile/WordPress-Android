@@ -79,8 +79,8 @@ class ReaderTracker @Inject constructor(
                 ReaderTab.DISCOVER -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_DISCOVER_SHOWN)
                 ReaderTab.LIKED -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_LIKED_SHOWN)
                 ReaderTab.SAVED -> analyticsTrackerWrapper.track(
-                        AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN,
-                        mapOf("source" to "reader_filter")
+                    AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN,
+                    mapOf("source" to "reader_filter")
                 )
                 ReaderTab.A8C -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_A8C_SHOWN)
                 ReaderTab.P2 -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_P2_SHOWN)
@@ -111,7 +111,7 @@ class ReaderTracker @Inject constructor(
         source: String
     ) {
         val properties = mutableMapOf<String, Any>(
-                SOURCE_KEY to source
+            SOURCE_KEY to source
         )
         track(stat, properties)
     }
@@ -131,8 +131,8 @@ class ReaderTracker @Inject constructor(
         feedId: Long
     ) {
         val properties = mutableMapOf<String, Any>(
-                BLOG_ID_KEY to blogId(blogId, feedId),
-                FEED_ID_KEY to feedId
+            BLOG_ID_KEY to blogId(blogId, feedId),
+            FEED_ID_KEY to feedId
         )
         track(stat, properties)
     }
@@ -144,9 +144,9 @@ class ReaderTracker @Inject constructor(
         isFollowed: Boolean?
     ) {
         val properties = mutableMapOf<String, Any>(
-                BLOG_ID_KEY to blogId(blogId, feedId),
-                FEED_ID_KEY to feedId,
-                FOLLOW_KEY to (isFollowed ?: UNKNOWN_VALUE)
+            BLOG_ID_KEY to blogId(blogId, feedId),
+            FEED_ID_KEY to feedId,
+            FOLLOW_KEY to (isFollowed ?: UNKNOWN_VALUE)
         )
         track(stat, properties)
     }
@@ -158,9 +158,9 @@ class ReaderTracker @Inject constructor(
         source: String
     ) {
         val properties = mutableMapOf<String, Any>(
-                BLOG_ID_KEY to blogId(blogId, feedId),
-                FEED_ID_KEY to feedId,
-                SOURCE_KEY to source
+            BLOG_ID_KEY to blogId(blogId, feedId),
+            FEED_ID_KEY to feedId,
+            SOURCE_KEY to source
         )
         track(stat, properties)
     }
@@ -173,10 +173,10 @@ class ReaderTracker @Inject constructor(
         source: String
     ) {
         val properties = mutableMapOf<String, Any>(
-                BLOG_ID_KEY to blogId(blogId, feedId),
-                FEED_ID_KEY to feedId,
-                FOLLOW_KEY to (isFollowed ?: UNKNOWN_VALUE),
-                SOURCE_KEY to source
+            BLOG_ID_KEY to blogId(blogId, feedId),
+            FEED_ID_KEY to feedId,
+            FOLLOW_KEY to (isFollowed ?: UNKNOWN_VALUE),
+            SOURCE_KEY to source
         )
         track(stat, properties)
     }
@@ -201,8 +201,8 @@ class ReaderTracker @Inject constructor(
         source: String
     ) {
         val properties = mutableMapOf<String, Any>(
-                TAG_KEY to tag,
-                SOURCE_KEY to source
+            TAG_KEY to tag,
+            SOURCE_KEY to source
         )
         track(stat, properties)
     }
@@ -212,7 +212,7 @@ class ReaderTracker @Inject constructor(
         quantity: Int
     ) {
         val properties = mutableMapOf<String, Any>(
-                QUANTITY_KEY to quantity
+            QUANTITY_KEY to quantity
         )
         track(stat, properties)
     }
@@ -225,8 +225,8 @@ class ReaderTracker @Inject constructor(
         postId: Long
     ) {
         val properties = mutableMapOf<String, Any>(
-                BLOG_ID_KEY to blogId,
-                POST_ID_KEY to postId
+            BLOG_ID_KEY to blogId,
+            POST_ID_KEY to postId
         )
         track(stat, properties)
     }
@@ -238,9 +238,9 @@ class ReaderTracker @Inject constructor(
         isJetpack: Boolean
     ) {
         val properties = mutableMapOf<String, Any>(
-                BLOG_ID_KEY to blogId,
-                POST_ID_KEY to postId,
-                IS_JETPACK_KEY to isJetpack
+            BLOG_ID_KEY to blogId,
+            POST_ID_KEY to postId,
+            IS_JETPACK_KEY to isJetpack
         )
         track(stat, properties)
     }
@@ -253,10 +253,10 @@ class ReaderTracker @Inject constructor(
         userId: Long
     ) {
         val properties = mutableMapOf<String, Any>(
-                BLOG_ID_KEY to blogId,
-                POST_ID_KEY to postId,
-                IS_JETPACK_KEY to isJetpack,
-                USER_ID_KEY to userId
+            BLOG_ID_KEY to blogId,
+            POST_ID_KEY to postId,
+            IS_JETPACK_KEY to isJetpack,
+            USER_ID_KEY to userId
         )
         track(stat, properties)
     }
@@ -268,9 +268,9 @@ class ReaderTracker @Inject constructor(
         commentId: Int
     ) {
         val properties = mutableMapOf<String, Any>(
-                BLOG_ID_KEY to blogId,
-                POST_ID_KEY to postId,
-                COMMENT_ID_KEY to commentId
+            BLOG_ID_KEY to blogId,
+            POST_ID_KEY to postId,
+            COMMENT_ID_KEY to commentId
         )
         track(stat, properties)
     }
@@ -281,8 +281,8 @@ class ReaderTracker @Inject constructor(
         feedItemId: Long
     ) {
         val properties = mutableMapOf<String, Any>(
-                FEED_ID_KEY to feedId,
-                FEED_ITEM_ID_KEY to feedItemId
+            FEED_ID_KEY to feedId,
+            FEED_ITEM_ID_KEY to feedItemId
         )
         track(stat, properties)
     }
@@ -300,7 +300,7 @@ class ReaderTracker @Inject constructor(
         source: String
     ) {
         val properties = mutableMapOf<String, Any>(
-                SOURCE_KEY to source
+            SOURCE_KEY to source
         )
         trackPost(stat, post, properties)
     }
@@ -311,9 +311,9 @@ class ReaderTracker @Inject constructor(
         properties: MutableMap<String, *>
     ) {
         analyticsUtilsWrapper.trackWithReaderPostDetails(
-                stat,
-                post,
-                properties
+            stat,
+            post,
+            properties
         )
     }
 
@@ -325,11 +325,11 @@ class ReaderTracker @Inject constructor(
         properties: MutableMap<String, *>
     ) {
         analyticsUtilsWrapper.trackFollowCommentsWithReaderPostDetails(
-                stat,
-                blogId,
-                postId,
-                post,
-                properties
+            stat,
+            blogId,
+            postId,
+            post,
+            properties
         )
     }
 
@@ -346,7 +346,7 @@ class ReaderTracker @Inject constructor(
         interceptedUri: String
     ) {
         val properties = mutableMapOf<String, Any>(
-                INTERCEPTED_URI_KEY to interceptedUri
+            INTERCEPTED_URI_KEY to interceptedUri
         )
         track(stat, properties)
     }
@@ -356,7 +356,7 @@ class ReaderTracker @Inject constructor(
         query: String
     ) {
         val properties = mutableMapOf<String, Any>(
-                QUERY_KEY to query
+            QUERY_KEY to query
         )
         track(stat, properties)
     }
@@ -436,7 +436,7 @@ class ReaderTracker @Inject constructor(
             tag: String
         ) {
             val properties = mutableMapOf<String, Any>(
-                    TAG_KEY to tag
+                TAG_KEY to tag
             )
             AnalyticsTracker.track(stat, properties)
         }

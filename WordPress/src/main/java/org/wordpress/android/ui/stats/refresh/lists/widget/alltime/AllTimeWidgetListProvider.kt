@@ -17,8 +17,10 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
 import javax.inject.Inject
 
 class AllTimeWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
-    @Inject lateinit var viewModel: AllTimeWidgetListViewModel
-    @Inject lateinit var widgetUpdated: AllTimeWidgetUpdater
+    @Inject
+    lateinit var viewModel: AllTimeWidgetListViewModel
+    @Inject
+    lateinit var widgetUpdated: AllTimeWidgetUpdater
     private val colorMode: Color = intent.getColorMode()
     private val siteId: Int = intent.getIntExtra(SITE_ID_KEY, -1)
     private val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
@@ -36,8 +38,8 @@ class AllTimeWidgetListProvider(val context: Context, intent: Intent) : RemoteVi
     override fun onDataSetChanged() {
         viewModel.onDataSetChanged { appWidgetId ->
             widgetUpdated.updateAppWidget(
-                    context,
-                    appWidgetId = appWidgetId
+                context,
+                appWidgetId = appWidgetId
             )
         }
     }

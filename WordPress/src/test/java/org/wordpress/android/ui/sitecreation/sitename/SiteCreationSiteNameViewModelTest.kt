@@ -16,8 +16,10 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SiteCreationSiteNameViewModelTest : BaseUnitTest() {
-    @Mock lateinit var analyticsTracker: SiteCreationTracker
-    @Mock lateinit var dispatcher: CoroutineDispatcher
+    @Mock
+    lateinit var analyticsTracker: SiteCreationTracker
+    @Mock
+    lateinit var dispatcher: CoroutineDispatcher
 
     private lateinit var viewModel: SiteCreationSiteNameViewModel
 

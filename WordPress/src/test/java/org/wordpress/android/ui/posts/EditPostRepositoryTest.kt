@@ -28,19 +28,22 @@ import java.util.TimeZone
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class EditPostRepositoryTest : BaseUnitTest() {
-    @Mock lateinit var localeManager: LocaleManagerWrapper
-    @Mock lateinit var postStore: PostStore
-    @Mock lateinit var postUtils: PostUtilsWrapper
+    @Mock
+    lateinit var localeManager: LocaleManagerWrapper
+    @Mock
+    lateinit var postStore: PostStore
+    @Mock
+    lateinit var postUtils: PostUtilsWrapper
     private lateinit var editPostRepository: EditPostRepository
 
     @Before
     fun setUp() {
         editPostRepository = EditPostRepository(
-                localeManager,
-                postStore,
-                postUtils,
-                testDispatcher(),
-                testDispatcher()
+            localeManager,
+            postStore,
+            postUtils,
+            testDispatcher(),
+            testDispatcher()
         )
     }
 
@@ -276,10 +279,10 @@ class EditPostRepositoryTest : BaseUnitTest() {
         editPostRepository.set { post }
 
         assertThat(editPostRepository.getPost()!!.changesConfirmedContentHashcode).isEqualTo(
-                changesConfirmedContentHashcode
+            changesConfirmedContentHashcode
         )
         assertThat(editPostRepository.changesConfirmedContentHashcode).isEqualTo(
-                changesConfirmedContentHashcode
+            changesConfirmedContentHashcode
         )
     }
 

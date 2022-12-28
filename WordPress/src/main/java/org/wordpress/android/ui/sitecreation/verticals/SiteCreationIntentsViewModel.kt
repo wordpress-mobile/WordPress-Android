@@ -89,7 +89,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         fullItemsList = FullItemsList(newItems)
         defaultItems = DefaultItems(newItems.filter { it.verticalSlug in defaultsArray })
         _uiState.value = IntentsUiState(
-                content = defaultItems
+            content = defaultItems
         )
         isInitialized = true
     }
@@ -110,7 +110,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         uiState.value?.let { state ->
             if (state.isAppBarTitleVisible == shouldAppBarTitleBeVisible || !state.isHeaderVisible) return
             updateUiState(
-                    state.copy(isAppBarTitleVisible = shouldAppBarTitleBeVisible)
+                state.copy(isAppBarTitleVisible = shouldAppBarTitleBeVisible)
             )
         }
     }
@@ -120,11 +120,11 @@ class SiteCreationIntentsViewModel @Inject constructor(
             if (!state.isHeaderVisible) return
             analyticsTracker.trackSiteIntentQuestionSearchFocused()
             updateUiState(
-                    state.copy(
-                            isAppBarTitleVisible = true,
-                            isHeaderVisible = false,
-                            content = fullItemsList
-                    )
+                state.copy(
+                    isAppBarTitleVisible = true,
+                    isHeaderVisible = false,
+                    content = fullItemsList
+                )
             )
         }
     }
@@ -139,10 +139,10 @@ class SiteCreationIntentsViewModel @Inject constructor(
         }
         uiState.value?.let { state ->
             updateUiState(
-                    state.copy(
-                            searchQuery = query,
-                            content = IntentsUiState.Content.SearchResults(searchResults)
-                    )
+                state.copy(
+                    searchQuery = query,
+                    content = IntentsUiState.Content.SearchResults(searchResults)
+                )
             )
         }
     }
@@ -183,7 +183,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
             private const val customVerticalEmoji = "+"
 
             fun getCustomVertical(query: String, onCustomVerticalSelected: (() -> Unit)) =
-                    IntentListItemUiState(customVerticalSlug, query, customVerticalEmoji, onCustomVerticalSelected)
+                IntentListItemUiState(customVerticalSlug, query, customVerticalEmoji, onCustomVerticalSelected)
         }
     }
 }

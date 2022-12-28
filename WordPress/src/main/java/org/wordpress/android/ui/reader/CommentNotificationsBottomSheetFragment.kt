@@ -23,9 +23,12 @@ import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class CommentNotificationsBottomSheetFragment : BottomSheetDialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var contextProvider: ContextProvider
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var contextProvider: ContextProvider
+    @Inject
+    lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: ConversationNotificationsViewModel
 
     // this avoids a weird animation when opening this dialog from activity that is using
@@ -70,12 +73,12 @@ class CommentNotificationsBottomSheetFragment : BottomSheetDialogFragment() {
 
     private fun initViewModel(isAttachedToFragment: Boolean) {
         viewModel = ViewModelProvider(
-                if (isAttachedToFragment) {
-                    parentFragment as ViewModelStoreOwner
-                } else {
-                    requireActivity()
-                },
-                viewModelFactory
+            if (isAttachedToFragment) {
+                parentFragment as ViewModelStoreOwner
+            } else {
+                requireActivity()
+            },
+            viewModelFactory
         ).get(ConversationNotificationsViewModel::class.java)
     }
 
@@ -84,9 +87,9 @@ class CommentNotificationsBottomSheetFragment : BottomSheetDialogFragment() {
             if (!isAdded) return@observeEvent
 
             WPSnackbar.make(
-                    coordinator,
-                    uiHelpers.getTextOfUiString(contextProvider.getContext(), messageHolder.message),
-                    Snackbar.LENGTH_LONG
+                coordinator,
+                uiHelpers.getTextOfUiString(contextProvider.getContext(), messageHolder.message),
+                Snackbar.LENGTH_LONG
             ).show()
         })
 

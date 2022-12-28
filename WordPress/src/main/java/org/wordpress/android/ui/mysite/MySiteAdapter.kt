@@ -50,21 +50,21 @@ class MySiteAdapter(
             MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD.ordinal -> DomainRegistrationViewHolder(parent)
             MySiteCardAndItem.Type.QUICK_START_CARD.ordinal -> QuickStartCardViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD.ordinal -> QuickStartDynamicCardViewHolder(
-                    parent,
-                    quickStartViewPool,
-                    nestedScrollStates,
-                    uiHelpers
+                parent,
+                quickStartViewPool,
+                nestedScrollStates,
+                uiHelpers
             )
             MySiteCardAndItem.Type.INFO_ITEM.ordinal -> MySiteInfoItemViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM.ordinal -> MySiteCategoryItemViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.DASHBOARD_CARDS.ordinal -> CardsViewHolder(
-                    parent,
-                    imageManager,
-                    uiHelpers,
-                    bloggingPromptsCardAnalyticsTracker,
-                    htmlCompatWrapper,
-                    learnMoreClicked
+                parent,
+                imageManager,
+                uiHelpers,
+                bloggingPromptsCardAnalyticsTracker,
+                htmlCompatWrapper,
+                learnMoreClicked
             )
             MySiteCardAndItem.Type.JETPACK_BADGE.ordinal -> MySiteJetpackBadgeViewHolder(parent)
             MySiteCardAndItem.Type.SINGLE_ACTION_CARD.ordinal -> SingleActionCardViewHolder(parent)

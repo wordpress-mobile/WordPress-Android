@@ -43,20 +43,20 @@ class GifMediaInsertUseCase(
     override suspend fun insert(identifiers: List<Identifier>) = flow {
         emit(InsertModel.Progress(actionTitle))
         emit(coroutineScope {
-                return@coroutineScope try {
-                    val mediaIdentifiers = identifiers.mapNotNull { identifier ->
-                        (identifier as? GifMediaIdentifier)?.let {
-                            fetchAndSaveAsync(this, it, site)
-                        }
+            return@coroutineScope try {
+                val mediaIdentifiers = identifiers.mapNotNull { identifier ->
+                    (identifier as? GifMediaIdentifier)?.let {
+                        fetchAndSaveAsync(this, it, site)
                     }
-
-                    InsertModel.Success(mediaIdentifiers.awaitAll().filterNotNull())
-                } catch (e: CancellationException) {
-                    InsertModel.Success(listOf<GifMediaIdentifier>())
-                } catch (e: Exception) {
-                    InsertModel.Error(context.getString(R.string.error_downloading_image))
                 }
+
+                InsertModel.Success(mediaIdentifiers.awaitAll().filterNotNull())
+            } catch (e: CancellationException) {
+                InsertModel.Success(listOf<GifMediaIdentifier>())
+            } catch (e: Exception) {
+                InsertModel.Error(context.getString(R.string.error_downloading_image))
             }
+        }
         )
     }
 
@@ -69,7 +69,7 @@ class GifMediaInsertUseCase(
             // No need to log the Exception here. The underlying method that is used, [MediaUtils.downloadExternalMedia]
             // already logs any errors.
             val downloadedUri = wpMediaUtilsWrapper.fetchMediaToUriWrapper(mediaUri)
-                    ?: throw Exception("Failed to download the image.")
+                ?: throw Exception("Failed to download the image.")
 
             // Exit if the parent coroutine has already been cancelled
             yield()
@@ -96,13 +96,13 @@ class GifMediaInsertUseCase(
     ) {
         fun build(site: SiteModel): GifMediaInsertUseCase {
             return GifMediaInsertUseCase(
-                    context,
-                    site,
-                    dispatcher,
-                    ioDispatcher,
-                    wpMediaUtilsWrapper,
-                    fluxCUtilsWrapper,
-                    mimeTypeMapUtilsWrapper
+                context,
+                site,
+                dispatcher,
+                ioDispatcher,
+                wpMediaUtilsWrapper,
+                fluxCUtilsWrapper,
+                mimeTypeMapUtilsWrapper
             )
         }
     }

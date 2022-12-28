@@ -17,34 +17,34 @@ private val darkGray = Color(0xff121212)
 
 @SuppressLint("ConflictingOnColor")
 val JpLightColorPalette = lightColors(
-        primary = green50,
-        primaryVariant = green40,
-        secondary = green50,
-        secondaryVariant = green40,
-        background = white,
-        surface = white,
-        error = red50,
-        onPrimary = white,
-        onSecondary = white,
-        onBackground = black,
-        onSurface = black,
-        onError = white
+    primary = green50,
+    primaryVariant = green40,
+    secondary = green50,
+    secondaryVariant = green40,
+    background = white,
+    surface = white,
+    error = red50,
+    onPrimary = white,
+    onSecondary = white,
+    onBackground = black,
+    onSurface = black,
+    onError = white
 )
 
 @SuppressLint("ConflictingOnColor")
 val JpDarkColorPalette = darkColors(
-        primary = green40,
-        primaryVariant = green50,
-        secondary = green40,
-        secondaryVariant = green50,
-        background = darkGray,
-        surface = darkGray,
-        error = red30,
-        onPrimary = black,
-        onSecondary = white,
-        onBackground = white,
-        onSurface = white,
-        onError = black
+    primary = green40,
+    primaryVariant = green50,
+    secondary = green40,
+    secondaryVariant = green50,
+    background = darkGray,
+    surface = darkGray,
+    error = red30,
+    onPrimary = black,
+    onSecondary = white,
+    onBackground = white,
+    onSurface = white,
+    onError = black
 )
 
 @Composable

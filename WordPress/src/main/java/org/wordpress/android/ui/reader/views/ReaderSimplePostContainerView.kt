@@ -26,9 +26,12 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
     private val binding = ReaderSimplePostsContainerViewBinding.inflate(LayoutInflater.from(context), this, true)
     private val railcarJsonStrings = mutableListOf<String?>()
 
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var readerTracker: ReaderTracker
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var readerTracker: ReaderTracker
 
     init {
         (context.applicationContext as WordPress).component().inject(this)

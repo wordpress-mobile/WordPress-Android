@@ -19,12 +19,12 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
-import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -46,23 +46,23 @@ class PublicizeUseCase
 
     override suspend fun loadCachedData(): PublicizeModel? {
         return publicizeStore.getPublicizeData(
-                statsSiteProvider.siteModel,
-                LimitMode.Top(itemsToLoad)
+            statsSiteProvider.siteModel,
+            LimitMode.Top(itemsToLoad)
         )
     }
 
     override suspend fun fetchRemoteData(forced: Boolean): State<PublicizeModel> {
         val response = publicizeStore.fetchPublicizeData(
-                statsSiteProvider.siteModel,
-                LimitMode.Top(itemsToLoad),
-                forced
+            statsSiteProvider.siteModel,
+            LimitMode.Top(itemsToLoad),
+            forced
         )
         val model = response.model
         val error = response.error
 
         return when {
             error != null -> State.Error(
-                    error.message ?: error.type.name
+                error.message ?: error.type.name
             )
             model != null && model.services.isNotEmpty() -> State.Data(model)
             else -> State.Empty()
@@ -92,10 +92,10 @@ class PublicizeUseCase
             })
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
-                        Link(
-                                text = R.string.stats_insights_view_more,
-                                navigateAction = ListItemInteraction.create(this::onLinkClick)
-                        )
+                    Link(
+                        text = R.string.stats_insights_view_more,
+                        navigateAction = ListItemInteraction.create(this::onLinkClick)
+                    )
                 )
             }
         }
@@ -124,15 +124,15 @@ class PublicizeUseCase
         private val popupMenuHandler: ItemPopupMenuHandler
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
-                PublicizeUseCase(
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        publicizeStore,
-                        statsSiteProvider,
-                        mapper,
-                        analyticsTracker,
-                        popupMenuHandler,
-                        useCaseMode
-                )
+            PublicizeUseCase(
+                mainDispatcher,
+                backgroundDispatcher,
+                publicizeStore,
+                statsSiteProvider,
+                mapper,
+                analyticsTracker,
+                popupMenuHandler,
+                useCaseMode
+            )
     }
 }

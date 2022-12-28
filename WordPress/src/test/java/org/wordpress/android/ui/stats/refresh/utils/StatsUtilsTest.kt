@@ -20,9 +20,12 @@ import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
 class StatsUtilsTest {
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock private lateinit var percentFormatter: PercentFormatter
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    private lateinit var percentFormatter: PercentFormatter
     private lateinit var statsUtils: StatsUtils
     private val suffixThousand = "k"
     private val suffixMillion = "M"
@@ -50,30 +53,30 @@ class StatsUtilsTest {
     @Test
     fun `test stats int formatter`() {
         val numbers: List<Int> = listOf(
-                0,
-                5,
-                999,
-                1000,
-                -5821,
-                10500,
-                -101800,
-                2000000,
-                -7800000,
-                92150000,
-                1232000000
+            0,
+            5,
+            999,
+            1000,
+            -5821,
+            10500,
+            -101800,
+            2000000,
+            -7800000,
+            92150000,
+            1232000000
         )
         val expected = listOf(
-                "0",
-                "5",
-                "999",
-                "1,000",
-                "-5,821",
-                "10k",
-                "-101k",
-                "2M",
-                "-7.8M",
-                "92M",
-                "1.2B"
+            "0",
+            "5",
+            "999",
+            "1,000",
+            "-5,821",
+            "10k",
+            "-101k",
+            "2M",
+            "-7.8M",
+            "92M",
+            "1.2B"
         )
         for (i in numbers.indices) {
             val number = numbers[i]
@@ -85,32 +88,32 @@ class StatsUtilsTest {
     @Test
     fun `test stats long formatter`() {
         val numbers: List<Long> = listOf(
-                0,
-                5,
-                999,
-                1000,
-                -5821,
-                10500,
-                -101800,
-                2000000,
-                -7800000,
-                92150000,
-                1232000000,
-                -2120000000000
+            0,
+            5,
+            999,
+            1000,
+            -5821,
+            10500,
+            -101800,
+            2000000,
+            -7800000,
+            92150000,
+            1232000000,
+            -2120000000000
         )
         val expected = listOf(
-                "0",
-                "5",
-                "999",
-                "1,000",
-                "-5,821",
-                "10k",
-                "-101k",
-                "2M",
-                "-7.8M",
-                "92M",
-                "1.2B",
-                "-2.1T"
+            "0",
+            "5",
+            "999",
+            "1,000",
+            "-5,821",
+            "10k",
+            "-101k",
+            "2M",
+            "-7.8M",
+            "92M",
+            "1.2B",
+            "-2.1T"
         )
         for (i in numbers.indices) {
             val number = numbers[i]
@@ -122,32 +125,32 @@ class StatsUtilsTest {
     @Test
     fun `test stats double formatter`() {
         val numbers: List<Double> = listOf(
-                0.5,
-                5.1,
-                999.753,
-                1000.21312,
-                -5821.43,
-                10500.07,
-                -101800.123,
-                2000000.432,
-                -7800000.87,
-                92150000.33,
-                1232000000.3456,
-                -2120000000000.765
+            0.5,
+            5.1,
+            999.753,
+            1000.21312,
+            -5821.43,
+            10500.07,
+            -101800.123,
+            2000000.432,
+            -7800000.87,
+            92150000.33,
+            1232000000.3456,
+            -2120000000000.765
         )
         val expected = listOf(
-                "0.5",
-                "5.1",
-                "999.8",
-                "1,000.2",
-                "-5,821.4",
-                "10k",
-                "-101k",
-                "2M",
-                "-7.8M",
-                "92M",
-                "1.2B",
-                "-2.1T"
+            "0.5",
+            "5.1",
+            "999.8",
+            "1,000.2",
+            "-5,821.4",
+            "10k",
+            "-101k",
+            "2M",
+            "-7.8M",
+            "92M",
+            "1.2B",
+            "-2.1T"
         )
         for (i in numbers.indices) {
             val number = numbers[i]
@@ -213,12 +216,12 @@ class StatsUtilsTest {
     @Test
     fun `test stats int formatter with start value`() {
         val numbers = listOf(
-                999999,
-                1000000
+            999999,
+            1000000
         )
         val expected = listOf(
-                "999,999",
-                "1M"
+            "999,999",
+            "1M"
         )
         for (i in numbers.indices) {
             val number = numbers[i]
@@ -265,7 +268,7 @@ class StatsUtilsTest {
         val positive = true
         val expectedChange = "+15 (300%)"
         whenever(resourceProvider.getString(eq(string.stats_traffic_increase), eq("15"), eq("300")))
-                .thenReturn(expectedChange)
+            .thenReturn(expectedChange)
 
         val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
 
@@ -280,7 +283,7 @@ class StatsUtilsTest {
         val positive = true
         val expectedChange = "+20 (∞%)"
         whenever(resourceProvider.getString(eq(string.stats_traffic_increase), eq("20"), eq("∞")))
-                .thenReturn(expectedChange)
+            .thenReturn(expectedChange)
 
         val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
 
@@ -295,7 +298,7 @@ class StatsUtilsTest {
         val positive = false
         val expectedChange = "-10 (-33%)"
         whenever(resourceProvider.getString(eq(string.stats_traffic_change), eq("-10"), eq("-33")))
-                .thenReturn(expectedChange)
+            .thenReturn(expectedChange)
 
         val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
 
@@ -310,7 +313,7 @@ class StatsUtilsTest {
         val positive = false
         val expectedChange = "-20 (-100%)"
         whenever(resourceProvider.getString(eq(string.stats_traffic_change), eq("-20"), eq("-100")))
-                .thenReturn(expectedChange)
+            .thenReturn(expectedChange)
 
         val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
 
@@ -324,7 +327,7 @@ class StatsUtilsTest {
         val positive = true
         val expectedChange = "+0 (0%)"
         whenever(resourceProvider.getString(eq(string.stats_traffic_increase), eq("0"), eq("0")))
-                .thenReturn(expectedChange)
+            .thenReturn(expectedChange)
 
         val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
 

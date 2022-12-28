@@ -54,9 +54,9 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPSwipeToRefreshHelper
-import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.viewmodel.observeEvent
@@ -73,7 +73,8 @@ import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializedListener {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PagesViewModel
     private lateinit var mlpViewModel: ModalLayoutPickerViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
@@ -84,16 +85,25 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
      * PostStore needs to be injected here as otherwise FluxC doesn't accept emitted events.
      */
     @Suppress("unused")
-    @Inject lateinit var postStore: PostStore
-    @Inject lateinit var dispatcher: Dispatcher
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
-    @Inject lateinit var previewStateHelper: PreviewStateHelper
-    @Inject lateinit var progressDialogHelper: ProgressDialogHelper
-    @Inject lateinit var uploadActionUseCase: UploadActionUseCase
-    @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+    @Inject
+    lateinit var postStore: PostStore
+    @Inject
+    lateinit var dispatcher: Dispatcher
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
+    @Inject
+    lateinit var previewStateHelper: PreviewStateHelper
+    @Inject
+    lateinit var progressDialogHelper: ProgressDialogHelper
+    @Inject
+    lateinit var uploadActionUseCase: UploadActionUseCase
+    @Inject
+    lateinit var uploadUtilsWrapper: UploadUtilsWrapper
 
-    @Suppress("DEPRECATION") private var progressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION")
+    private var progressDialog: ProgressDialog? = null
 
     private var restorePreviousSearch = false
 
@@ -144,11 +154,11 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
             if (EditPostActivity.checkToRestart(data)) {
                 ActivityLauncher.editPageForResult(
-                        data,
-                        this@PagesFragment,
-                        viewModel.site,
-                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0),
-                        false
+                    data,
+                    this@PagesFragment,
+                    viewModel.site,
+                    data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0),
+                    false
                 )
 
                 // a restart will happen so, no need to continue here
@@ -218,9 +228,9 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
         val searchFragment = SearchListFragment.newInstance()
         activity.supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.searchFrame, searchFragment)
-                .commit()
+            .beginTransaction()
+            .replace(R.id.searchFrame, searchFragment)
+            .commit()
 
         pagesPager.setOnTouchListener { _, event ->
             swipeToRefreshHelper.setEnabled(false)
@@ -275,7 +285,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         // fix the search view margins to match the action bar
         val searchEditFrame = actionMenuItem.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
         (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
-                .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
+            .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
 
         viewModel.isSearchExpanded.observe(this@PagesFragment, Observer {
             if (it == true) {
@@ -308,9 +318,9 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                 uiHelpers.updateVisibility(pagesTabLayoutFadingEdge, state.isAuthorFilterVisible)
 
                 val tabLayoutPaddingStart =
-                        if (state.isAuthorFilterVisible) {
-                            resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
-                        } else 0
+                    if (state.isAuthorFilterVisible) {
+                        resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
+                    } else 0
                 tabLayout.setPaddingRelative(tabLayoutPaddingStart, 0, 0, 0)
 
                 authorSelectionAdapter.updateItems(state.authorFilterItems)
@@ -332,19 +342,19 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
     private fun previewPage(activity: FragmentActivity, post: PostModel) {
         val action = PreviewPost(
-                site = viewModel.site,
-                post = post,
-                triggerPreviewStateUpdate = viewModel::updatePreviewAndDialogState,
-                showToast = this::showToast,
-                messageMediaUploading = ToastMessageHolder(R.string.editor_toast_uploading_please_wait, Duration.SHORT)
+            site = viewModel.site,
+            post = post,
+            triggerPreviewStateUpdate = viewModel::updatePreviewAndDialogState,
+            showToast = this::showToast,
+            messageMediaUploading = ToastMessageHolder(R.string.editor_toast_uploading_please_wait, Duration.SHORT)
         )
 
         val helperFunctions = previewStateHelper.getUploadStrategyFunctions(activity, action)
         remotePreviewLogicHelper.runPostPreviewLogic(
-                activity = activity,
-                site = viewModel.site,
-                post = post,
-                helperFunctions = helperFunctions
+            activity = activity,
+            site = viewModel.site,
+            post = post,
+            helperFunctions = helperFunctions
         )
     }
 
@@ -385,10 +395,10 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
         viewModel.previewState.observe(viewLifecycleOwner, {
             progressDialog = progressDialogHelper.updateProgressDialogState(
-                    activity,
-                    progressDialog,
-                    it.progressDialogUiState,
-                    uiHelpers
+                activity,
+                progressDialog,
+                it.progressDialogUiState,
+                uiHelpers
             )
         })
 
@@ -423,21 +433,21 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         if (holder != null && parent != null) {
             if (holder.buttonTitle == null) {
                 WPSnackbar.make(
-                        parent,
-                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                        Snackbar.LENGTH_LONG
+                    parent,
+                    uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                    Snackbar.LENGTH_LONG
                 ).show()
             } else {
                 val snackbar = WPSnackbar.make(
-                        parent,
-                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                        Snackbar.LENGTH_LONG
+                    parent,
+                    uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                    Snackbar.LENGTH_LONG
                 )
                 snackbar.setAction(
-                        uiHelpers.getTextOfUiString(
-                                requireContext(),
-                                holder.buttonTitle
-                        )
+                    uiHelpers.getTextOfUiString(
+                        requireContext(),
+                        holder.buttonTitle
+                    )
                 ) {
                     holder.buttonAction()
                 }
@@ -454,19 +464,19 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         viewModel.postUploadAction.observe(viewLifecycleOwner, {
             it?.let { (post, site, data) ->
                 uploadUtilsWrapper.handleEditPostResultSnackbars(
-                        activity,
-                        activity.findViewById(R.id.coordinator),
-                        data,
-                        post,
-                        site,
-                        uploadActionUseCase.getUploadAction(post),
-                        {
-                            uploadUtilsWrapper.publishPost(
-                                    activity,
-                                    post,
-                                    site
-                            )
-                        }
+                    activity,
+                    activity.findViewById(R.id.coordinator),
+                    data,
+                    post,
+                    site,
+                    uploadActionUseCase.getUploadAction(post),
+                    {
+                        uploadUtilsWrapper.publishPost(
+                            activity,
+                            post,
+                            site
+                        )
+                    }
                 )
             }
         })
@@ -480,13 +490,13 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         viewModel.uploadFinishedAction.observe(viewLifecycleOwner, {
             it?.let { (page, isError, isFirstTimePublish) ->
                 uploadUtilsWrapper.onPostUploadedSnackbarHandler(
-                        activity,
-                        activity.findViewById(R.id.coordinator),
-                        isError,
-                        isFirstTimePublish,
-                        page.post,
-                        null,
-                        page.site
+                    activity,
+                    activity.findViewById(R.id.coordinator),
+                    isError,
+                    isFirstTimePublish,
+                    page.post,
+                    null,
+                    page.site
                 )
             }
         })
@@ -516,8 +526,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
      */
     private fun createNewPage(title: String = "", content: String = "", template: String? = null) {
         ActivityLauncher.addNewPageForResult(
-                this, viewModel.site, title, content, template,
-                PAGE_FROM_PAGES_LIST
+            this, viewModel.site, title, content, template,
+            PAGE_FROM_PAGES_LIST
         )
     }
 
@@ -581,8 +591,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
 @Suppress("DEPRECATION")
 class PagesPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(
-        fm,
-        BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+    fm,
+    BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 ) {
     companion object {
         val pageTypes = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)

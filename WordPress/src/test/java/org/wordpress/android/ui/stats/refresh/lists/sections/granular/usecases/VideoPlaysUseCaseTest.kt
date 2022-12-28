@@ -46,13 +46,20 @@ private val limitMode = Top(ITEMS_TO_LOAD)
 
 @ExperimentalCoroutinesApi
 class VideoPlaysUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var store: VideoPlaysStore
-    @Mock lateinit var siteModelProvider: StatsSiteProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
-    @Mock lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var store: VideoPlaysStore
+    @Mock
+    lateinit var siteModelProvider: StatsSiteProvider
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock
+    lateinit var statsUtils: StatsUtils
     private lateinit var useCase: VideoPlaysUseCase
     private val videoPlay = VideoPlays("post1", "Video 1", "group2.jpg", 100)
     private val contentDescription = "title, views"
@@ -60,30 +67,32 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = VideoPlaysUseCase(
-                statsGranularity,
-                testDispatcher(),
-                testDispatcher(),
-                store,
-                siteModelProvider,
-                selectedDateProvider,
-                tracker,
-                contentDescriptionHelper,
-                statsUtils,
-                BLOCK
+            statsGranularity,
+            testDispatcher(),
+            testDispatcher(),
+            store,
+            siteModelProvider,
+            selectedDateProvider,
+            tracker,
+            contentDescriptionHelper,
+            statsUtils,
+            BLOCK
         )
         whenever(siteModelProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
-                SelectedDate(
-                        selectedDate,
-                        listOf(selectedDate)
-                )
+            SelectedDate(
+                selectedDate,
+                listOf(selectedDate)
+            )
         )
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<String>(),
                 any()
-        )).thenReturn(contentDescription)
+            )
+        ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
@@ -92,18 +101,22 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         val forced = false
         val model = VideoPlaysModel(10, 15, listOf(videoPlay), false)
         whenever(
-                store.getVideoPlays(
-                        site,
-                        statsGranularity,
-                        limitMode,
-                        selectedDate
-                )
+            store.getVideoPlays(
+                site,
+                statsGranularity,
+                limitMode,
+                selectedDate
+            )
         ).thenReturn(model)
-        whenever(store.fetchVideoPlays(site, statsGranularity, limitMode, selectedDate,
-                forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+        whenever(
+            store.fetchVideoPlays(
+                site, statsGranularity, limitMode, selectedDate,
+                forced
+            )
+        ).thenReturn(
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadData(true, forced)
@@ -122,19 +135,19 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         val forced = false
         val model = VideoPlaysModel(10, 15, listOf(videoPlay), true)
         whenever(
-                store.getVideoPlays(
-                        site,
-                        statsGranularity,
-                        limitMode,
-                        selectedDate
-                )
+            store.getVideoPlays(
+                site,
+                statsGranularity,
+                limitMode,
+                selectedDate
+            )
         ).thenReturn(model)
         whenever(
-                store.fetchVideoPlays(site, statsGranularity, limitMode, selectedDate, forced)
+            store.fetchVideoPlays(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         val result = loadData(true, forced)
 
@@ -153,9 +166,9 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
     fun `maps empty video plays to UI model`() = test {
         val forced = false
         whenever(
-                store.fetchVideoPlays(site, statsGranularity, limitMode, selectedDate, forced)
+            store.fetchVideoPlays(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
-                OnStatsFetched(VideoPlaysModel(0, 0, listOf(), false))
+            OnStatsFetched(VideoPlaysModel(0, 0, listOf(), false))
         )
 
         val result = loadData(true, forced)
@@ -174,11 +187,11 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(
-                store.fetchVideoPlays(site, statsGranularity, limitMode, selectedDate, forced)
+            store.fetchVideoPlays(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadData(true, forced)

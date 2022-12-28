@@ -18,8 +18,8 @@ class ScanFootnoteViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : JetpackViewHolder<ScanListFootnoteItemBinding>(
-        parent,
-        ScanListFootnoteItemBinding::inflate
+    parent,
+    ScanListFootnoteItemBinding::inflate
 ) {
     init {
         with(binding.footnote) {
@@ -43,9 +43,9 @@ class ScanFootnoteViewHolder(
                     imageManager.load(icon, it)
                 } else {
                     ColorUtils.setImageResourceWithTint(
-                            icon,
-                            it,
-                            state.iconColorResId
+                        icon,
+                        it,
+                        state.iconColorResId
                     )
                 }
 

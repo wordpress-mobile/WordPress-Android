@@ -10,7 +10,7 @@ open class FlowFSMUseCase<RESOURCE_PROVIDER, ACTION_TYPE, DATA, USE_CASE_TYPE, E
 ) {
     private val _flowChannel = MutableSharedFlow<UseCaseResult<USE_CASE_TYPE, ERROR, DATA>>()
     private var _internalState: StateInterface<RESOURCE_PROVIDER, ACTION_TYPE, DATA, USE_CASE_TYPE, ERROR> =
-            initialState
+        initialState
 
     fun subscribe(): SharedFlow<UseCaseResult<USE_CASE_TYPE, ERROR, DATA>> {
         return _flowChannel.asSharedFlow()

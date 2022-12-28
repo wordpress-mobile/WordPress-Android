@@ -28,12 +28,18 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class StatsMinifiedWidgetConfigureFragment : DaggerFragment(R.layout.stats_widget_configure_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var minifiedWidgetUpdater: MinifiedWidgetUpdater
-    @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Inject lateinit var siteStore: SiteStore
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var minifiedWidgetUpdater: MinifiedWidgetUpdater
+    @Inject
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Inject
+    lateinit var siteStore: SiteStore
+    @Inject
+    lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var viewModel: StatsMinifiedWidgetConfigureViewModel
     private lateinit var siteSelectionViewModel: StatsSiteSelectionViewModel
     private lateinit var colorSelectionViewModel: StatsColorSelectionViewModel
@@ -44,18 +50,18 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment(R.layout.stats_widge
         super.onViewCreated(view, savedInstanceState)
         val nonNullActivity = requireActivity()
         viewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
-                .get(StatsMinifiedWidgetConfigureViewModel::class.java)
+            .get(StatsMinifiedWidgetConfigureViewModel::class.java)
         siteSelectionViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
-                .get(StatsSiteSelectionViewModel::class.java)
+            .get(StatsSiteSelectionViewModel::class.java)
         colorSelectionViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
-                .get(StatsColorSelectionViewModel::class.java)
+            .get(StatsColorSelectionViewModel::class.java)
         dataTypeSelectionViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
-                .get(StatsDataTypeSelectionViewModel::class.java)
+            .get(StatsDataTypeSelectionViewModel::class.java)
         nonNullActivity.setResult(AppCompatActivity.RESULT_CANCELED)
 
         val appWidgetId = nonNullActivity.intent?.extras?.getInt(
-                AppWidgetManager.EXTRA_APPWIDGET_ID,
-                AppWidgetManager.INVALID_APPWIDGET_ID
+            AppWidgetManager.EXTRA_APPWIDGET_ID,
+            AppWidgetManager.INVALID_APPWIDGET_ID
         ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
 
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
@@ -86,27 +92,27 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment(R.layout.stats_widge
 
             colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
                 StatsWidgetColorSelectionDialogFragment().show(
-                        requireFragmentManager(),
-                        "stats_view_mode_selection_fragment"
+                    requireFragmentManager(),
+                    "stats_view_mode_selection_fragment"
                 )
             })
 
             dataTypeSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
                 StatsWidgetDataTypeSelectionDialogFragment().show(
-                        requireFragmentManager(),
-                        "stats_data_type_selection_fragment"
+                    requireFragmentManager(),
+                    "stats_data_type_selection_fragment"
                 )
             })
 
             mergeNotNull(
-                    siteSelectionViewModel.notification,
-                    colorSelectionViewModel.notification,
-                    dataTypeSelectionViewModel.notification
+                siteSelectionViewModel.notification,
+                colorSelectionViewModel.notification,
+                dataTypeSelectionViewModel.notification
             ).observeEvent(
-                    viewLifecycleOwner,
-                    {
-                        ToastUtils.showToast(activity, it)
-                    })
+                viewLifecycleOwner,
+                {
+                    ToastUtils.showToast(activity, it)
+                })
 
             viewModel.settingsModel.observe(viewLifecycleOwner, { uiModel ->
                 uiModel?.let {

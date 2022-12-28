@@ -101,9 +101,9 @@ class UploadActionUseCaseTest : BaseUnitTest() {
         }
 
         val posts = listOf(
-                createPostModel(dateLocallyChanged = twoDaysAgoTimestamp),
-                createPostModel(dateLocallyChanged = twoDaysAgoTimestamp, isLocalDraft = true, changesConfirmed = true),
-                createPostModel(dateLocallyChanged = twoDaysAgoTimestamp, isLocalDraft = false, changesConfirmed = true)
+            createPostModel(dateLocallyChanged = twoDaysAgoTimestamp),
+            createPostModel(dateLocallyChanged = twoDaysAgoTimestamp, isLocalDraft = true, changesConfirmed = true),
+            createPostModel(dateLocallyChanged = twoDaysAgoTimestamp, isLocalDraft = false, changesConfirmed = true)
         )
 
         val siteModel: SiteModel = createSiteModel()
@@ -125,8 +125,8 @@ class UploadActionUseCaseTest : BaseUnitTest() {
         val twoDaysAgo = (Date().time / 1000) - twoDaysInSeconds
 
         val post = createPostModel(
-                dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(twoDaysAgo + 99),
-                changesConfirmed = false
+            dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(twoDaysAgo + 99),
+            changesConfirmed = false
         )
         val siteModel: SiteModel = createSiteModel()
         // Act
@@ -145,8 +145,8 @@ class UploadActionUseCaseTest : BaseUnitTest() {
         val twoDaysAgo = (Date().time / 1000) - twoDaysInSeconds
 
         val post = createPostModel(
-                dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(twoDaysAgo + 99),
-                changesConfirmed = true
+            dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(twoDaysAgo + 99),
+            changesConfirmed = true
         )
         val siteModel: SiteModel = createSiteModel()
         // Act
@@ -160,9 +160,9 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is DO NOTHING when the post is NOT publishable`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                postUtilsWrapper = createdMockedPostUtilsWrapper(
-                        isPublishable = false
-                )
+            postUtilsWrapper = createdMockedPostUtilsWrapper(
+                isPublishable = false
+            )
         )
 
         val post = createPostModel()
@@ -178,9 +178,9 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is REMOTE AUTO SAVE when the post is publishable and the changes are NOT confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                postUtilsWrapper = createdMockedPostUtilsWrapper(
-                        isPublishable = true
-                )
+            postUtilsWrapper = createdMockedPostUtilsWrapper(
+                isPublishable = true
+            )
         )
 
         val post = createPostModel(changesConfirmed = false)
@@ -196,9 +196,9 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is UPLOAD when the post is publishable and the changes are confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                postUtilsWrapper = createdMockedPostUtilsWrapper(
-                        isPublishable = true
-                )
+            postUtilsWrapper = createdMockedPostUtilsWrapper(
+                isPublishable = true
+            )
         )
 
         val post = createPostModel(changesConfirmed = true)
@@ -214,9 +214,9 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is DO NOTHING when the post is in conflict`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                postUtilsWrapper = createdMockedPostUtilsWrapper(
-                        isInConflict = true
-                )
+            postUtilsWrapper = createdMockedPostUtilsWrapper(
+                isInConflict = true
+            )
         )
 
         val post = createPostModel()
@@ -232,9 +232,9 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is REMOTE AUTO SAVE when the post is not in conflict and the changes are NOT confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                postUtilsWrapper = createdMockedPostUtilsWrapper(
-                        isInConflict = false
-                )
+            postUtilsWrapper = createdMockedPostUtilsWrapper(
+                isInConflict = false
+            )
         )
 
         val post = createPostModel(changesConfirmed = false)
@@ -250,9 +250,9 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is UPLOAD when the post is not in conflict and the changes are confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                postUtilsWrapper = createdMockedPostUtilsWrapper(
-                        isInConflict = false
-                )
+            postUtilsWrapper = createdMockedPostUtilsWrapper(
+                isInConflict = false
+            )
         )
 
         val post = createPostModel(changesConfirmed = true)
@@ -268,7 +268,7 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is DO NOTHING when upload failed MAXIMUM_AUTO_UPLOAD_RETRIES and NOT confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                uploadStore = createdMockedUploadStore(MAXIMUM_AUTO_UPLOAD_RETRIES)
+            uploadStore = createdMockedUploadStore(MAXIMUM_AUTO_UPLOAD_RETRIES)
         )
 
         val post = createPostModel(changesConfirmed = false)
@@ -284,7 +284,7 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is DO_NOTHING when upload failed MAXIMUM_AUTO_UPLOAD_RETRIES+1 and changes confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                uploadStore = createdMockedUploadStore(MAXIMUM_AUTO_UPLOAD_RETRIES)
+            uploadStore = createdMockedUploadStore(MAXIMUM_AUTO_UPLOAD_RETRIES)
         )
 
         val post = createPostModel(changesConfirmed = true)
@@ -300,7 +300,7 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is REMOTE AUTO SAVE when failed MAXIMUM_AUTO_UPLOAD_RETRIES - 1 and changes NOT confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                uploadStore = createdMockedUploadStore(MAXIMUM_AUTO_UPLOAD_RETRIES - 1)
+            uploadStore = createdMockedUploadStore(MAXIMUM_AUTO_UPLOAD_RETRIES - 1)
         )
 
         val post = createPostModel(changesConfirmed = false)
@@ -316,7 +316,7 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is REMOTE AUTO SAVE when upload hasn't failed and the changes are NOT confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                uploadStore = createdMockedUploadStore(0)
+            uploadStore = createdMockedUploadStore(0)
         )
 
         val post = createPostModel(changesConfirmed = false)
@@ -332,7 +332,7 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is UPLOAD when upload hasn't failed and the changes are confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                uploadStore = createdMockedUploadStore(0)
+            uploadStore = createdMockedUploadStore(0)
         )
 
         val post = createPostModel(changesConfirmed = true)
@@ -348,7 +348,7 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is UPLOAD when upload failed MAXIMUM_AUTO_UPLOAD_RETRIES - 1 and changes are confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                uploadStore = createdMockedUploadStore(MAXIMUM_AUTO_UPLOAD_RETRIES - 1)
+            uploadStore = createdMockedUploadStore(MAXIMUM_AUTO_UPLOAD_RETRIES - 1)
         )
 
         val post = createPostModel(changesConfirmed = true)
@@ -364,7 +364,7 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is DO NOTHING when the post is uploading or queued`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                uploadServiceFacade = createdMockedUploadServiceFacade(isPostUploadingOrQueued = true)
+            uploadServiceFacade = createdMockedUploadServiceFacade(isPostUploadingOrQueued = true)
         )
 
         val post = createPostModel()
@@ -380,7 +380,7 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is REMOTE AUTO SAVE when not uploading or queued and the changes are NOT confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                uploadServiceFacade = createdMockedUploadServiceFacade(isPostUploadingOrQueued = false)
+            uploadServiceFacade = createdMockedUploadServiceFacade(isPostUploadingOrQueued = false)
         )
 
         val post = createPostModel(changesConfirmed = false)
@@ -396,7 +396,7 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is UPLOAD when the post is not uploading or queued and the changes are confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                uploadServiceFacade = createdMockedUploadServiceFacade(isPostUploadingOrQueued = false)
+            uploadServiceFacade = createdMockedUploadServiceFacade(isPostUploadingOrQueued = false)
         )
 
         val post = createPostModel(changesConfirmed = true)
@@ -497,9 +497,9 @@ class UploadActionUseCaseTest : BaseUnitTest() {
     fun `autoUploadAction is DO_NOTHING when the post is currently being edited`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
-                postUtilsWrapper = createdMockedPostUtilsWrapper(
-                        isPostBeingEdited = true
-                )
+            postUtilsWrapper = createdMockedPostUtilsWrapper(
+                isPostBeingEdited = true
+            )
         )
 
         val post = createPostModel()

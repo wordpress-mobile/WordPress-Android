@@ -73,8 +73,8 @@ class WPMainActivityViewModel @Inject constructor(
 
     private val _fabUiState = MutableLiveData<MainFabUiState>()
     val fabUiState: LiveData<MainFabUiState> = merge(
-            _fabUiState,
-            quickStartRepository.activeTask
+        _fabUiState,
+        quickStartRepository.activeTask
     ) { fabUiState, activeTask ->
         val isFocusPointVisible = activeTask == PUBLISH_POST && fabUiState?.isFabVisible == true
         if (isFocusPointVisible != fabUiState?.isFocusPointVisible) {
@@ -88,13 +88,13 @@ class WPMainActivityViewModel @Inject constructor(
 
     private val _mainActions = MutableLiveData<List<MainActionListItem>>()
     val mainActions: LiveData<List<MainActionListItem>> = merge(
-            _mainActions,
-            _showQuickStarInBottomSheet
+        _mainActions,
+        _showQuickStarInBottomSheet
     ) { mainActions, showQuickStart ->
         if (showQuickStart != null && mainActions != null) {
             mainActions.map {
                 if (it is CreateAction && it.actionType == CREATE_NEW_POST) it.copy(
-                        showQuickStartFocusPoint = showQuickStart
+                    showQuickStartFocusPoint = showQuickStart
                 ) else it
             }
         } else {
@@ -123,9 +123,9 @@ class WPMainActivityViewModel @Inject constructor(
     val openBloggingPromptsOnboarding: LiveData<Unit> = _openBloggingPromptsOnboarding
 
     val onFocusPointVisibilityChange = quickStartRepository.activeTask
-            .mapNullable { getExternalFocusPointInfo(it) }
-            .distinctUntilChanged()
-            .map { Event(it) } as LiveData<Event<List<FocusPointInfo>>>
+        .mapNullable { getExternalFocusPointInfo(it) }
+        .distinctUntilChanged()
+        .map { Event(it) } as LiveData<Event<List<FocusPointInfo>>>
 
     val hasMultipleSites: Boolean
         get() = siteStore.sitesCount > ONE_SITE
@@ -163,53 +163,53 @@ class WPMainActivityViewModel @Inject constructor(
 
             prompt?.let {
                 actionsList.add(
-                        AnswerBloggingPromptAction(
-                                actionType = ANSWER_BLOGGING_PROMPT,
-                                promptTitle = UiStringText(it.text),
-                                isAnswered = prompt.isAnswered,
-                                promptId = prompt.id,
-                                attribution = BloggingPromptAttribution.fromString(prompt.attribution),
-                                onClickAction = ::onAnswerPromptActionClicked,
-                                onHelpAction = ::onHelpPrompActionClicked
-                        )
+                    AnswerBloggingPromptAction(
+                        actionType = ANSWER_BLOGGING_PROMPT,
+                        promptTitle = UiStringText(it.text),
+                        isAnswered = prompt.isAnswered,
+                        promptId = prompt.id,
+                        attribution = BloggingPromptAttribution.fromString(prompt.attribution),
+                        onClickAction = ::onAnswerPromptActionClicked,
+                        onHelpAction = ::onHelpPrompActionClicked
+                    )
                 )
             }
         }
 
         actionsList.add(
-                CreateAction(
-                        actionType = NO_ACTION,
-                        iconRes = 0,
-                        labelRes = R.string.my_site_bottom_sheet_title,
-                        onClickAction = null
-                )
+            CreateAction(
+                actionType = NO_ACTION,
+                iconRes = 0,
+                labelRes = R.string.my_site_bottom_sheet_title,
+                onClickAction = null
+            )
         )
         if (SiteUtils.supportsStoriesFeature(site)) {
             actionsList.add(
-                    CreateAction(
-                            actionType = CREATE_NEW_STORY,
-                            iconRes = R.drawable.ic_story_icon_24dp,
-                            labelRes = R.string.my_site_bottom_sheet_add_story,
-                            onClickAction = ::onCreateActionClicked
-                    )
+                CreateAction(
+                    actionType = CREATE_NEW_STORY,
+                    iconRes = R.drawable.ic_story_icon_24dp,
+                    labelRes = R.string.my_site_bottom_sheet_add_story,
+                    onClickAction = ::onCreateActionClicked
+                )
             )
         }
         actionsList.add(
-                CreateAction(
-                        actionType = CREATE_NEW_POST,
-                        iconRes = R.drawable.ic_posts_white_24dp,
-                        labelRes = R.string.my_site_bottom_sheet_add_post,
-                        onClickAction = ::onCreateActionClicked
-                )
+            CreateAction(
+                actionType = CREATE_NEW_POST,
+                iconRes = R.drawable.ic_posts_white_24dp,
+                labelRes = R.string.my_site_bottom_sheet_add_post,
+                onClickAction = ::onCreateActionClicked
+            )
         )
         if (hasFullAccessToContent(site)) {
             actionsList.add(
-                    CreateAction(
-                            actionType = CREATE_NEW_PAGE,
-                            iconRes = R.drawable.ic_pages_white_24dp,
-                            labelRes = R.string.my_site_bottom_sheet_add_page,
-                            onClickAction = ::onCreateActionClicked
-                    )
+                CreateAction(
+                    actionType = CREATE_NEW_PAGE,
+                    iconRes = R.drawable.ic_pages_white_24dp,
+                    labelRes = R.string.my_site_bottom_sheet_add_page,
+                    onClickAction = ::onCreateActionClicked
+                )
             )
         }
 
@@ -247,9 +247,9 @@ class WPMainActivityViewModel @Inject constructor(
         val oldState = _fabUiState.value
         oldState?.let {
             _fabUiState.value = MainFabUiState(
-                    isFabVisible = it.isFabVisible,
-                    isFabTooltipVisible = false,
-                    CreateContentMessageId = getCreateContentMessageId(site)
+                isFabVisible = it.isFabVisible,
+                isFabTooltipVisible = false,
+                CreateContentMessageId = getCreateContentMessageId(site)
             )
         }
     }
@@ -325,9 +325,9 @@ class WPMainActivityViewModel @Inject constructor(
 
     private fun setMainFabUiState(isFabVisible: Boolean, site: SiteModel?) {
         val newState = MainFabUiState(
-                isFabVisible = isFabVisible,
-                isFabTooltipVisible = if (appPrefsWrapper.isMainFabTooltipDisabled()) false else isFabVisible,
-                CreateContentMessageId = getCreateContentMessageId(site)
+            isFabVisible = isFabVisible,
+            isFabTooltipVisible = if (appPrefsWrapper.isMainFabTooltipDisabled()) false else isFabVisible,
+            CreateContentMessageId = getCreateContentMessageId(site)
         )
 
         _fabUiState.value = newState
@@ -374,11 +374,11 @@ class WPMainActivityViewModel @Inject constructor(
 
     private fun getExternalFocusPointInfo(task: QuickStartTask?): List<FocusPointInfo> {
         val followSiteTask = quickStartRepository.quickStartType
-                .getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL)
+            .getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL)
         val followSitesTaskFocusPointInfo = FocusPointInfo(followSiteTask, task == followSiteTask)
         val checkNotifsTaskFocusPointInfo = FocusPointInfo(
-                QuickStartExistingSiteTask.CHECK_NOTIFICATIONS,
-                task == QuickStartExistingSiteTask.CHECK_NOTIFICATIONS
+            QuickStartExistingSiteTask.CHECK_NOTIFICATIONS,
+            task == QuickStartExistingSiteTask.CHECK_NOTIFICATIONS
         )
         return listOf(followSitesTaskFocusPointInfo, checkNotifsTaskFocusPointInfo)
     }

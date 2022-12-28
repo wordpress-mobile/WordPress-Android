@@ -19,9 +19,12 @@ import javax.inject.Inject
 class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     private var closeListener: PrepublishingScreenClosedListener? = null
 
-    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private lateinit var viewModel: PrepublishingTagsViewModel
 
@@ -48,7 +51,8 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     companion object {
         const val TAG = "prepublishing_tags_fragment_tag"
         const val NEEDS_REQUEST_LAYOUT = "prepublishing_tags_fragment_needs_request_layout"
-        @JvmStatic fun newInstance(site: SiteModel, needsRequestLayout: Boolean): PrepublishingTagsFragment {
+        @JvmStatic
+        fun newInstance(site: SiteModel, needsRequestLayout: Boolean): PrepublishingTagsFragment {
             val bundle = Bundle().apply {
                 putSerializable(WordPress.SITE, site)
                 putBoolean(NEEDS_REQUEST_LAYOUT, needsRequestLayout)
@@ -84,7 +88,7 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
 
     private fun PrepublishingTagsFragmentBinding.initViewModel() {
         viewModel = ViewModelProvider(this@PrepublishingTagsFragment, viewModelFactory)
-                .get(PrepublishingTagsViewModel::class.java)
+            .get(PrepublishingTagsViewModel::class.java)
 
         viewModel.dismissKeyboard.observeEvent(viewLifecycleOwner, {
             ActivityUtils.hideKeyboardForced(fragmentPostSettingsTags.tagsEditText)

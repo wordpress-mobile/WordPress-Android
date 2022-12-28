@@ -13,8 +13,10 @@ import org.wordpress.android.util.UriUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class DeepLinkUriUtilsTest {
-    @Mock lateinit var siteStore: SiteStore
-    @Mock lateinit var uriUtilsWrapper: UriUtilsWrapper
+    @Mock
+    lateinit var siteStore: SiteStore
+    @Mock
+    lateinit var uriUtilsWrapper: UriUtilsWrapper
     private lateinit var deepLinkUriUtils: DeepLinkUriUtils
     private val host = "example.com"
     lateinit var site: SiteModel

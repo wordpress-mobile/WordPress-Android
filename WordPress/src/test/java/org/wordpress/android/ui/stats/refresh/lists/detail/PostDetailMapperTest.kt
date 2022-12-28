@@ -29,27 +29,32 @@ import java.util.Locale
 
 @ExperimentalCoroutinesApi
 class PostDetailMapperTest : BaseUnitTest() {
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
-    @Mock lateinit var statsUtils: StatsUtils
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock
+    lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var postDetailMapper: PostDetailMapper
     private val contentDescription = "period, views"
+
     @Before
     fun setUp() {
         postDetailMapper = PostDetailMapper(
-                localeManagerWrapper,
-                statsDateFormatter,
-                statsUtils,
-                contentDescriptionHelper
+            localeManagerWrapper,
+            statsDateFormatter,
+            statsUtils,
+            contentDescriptionHelper
         )
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
         whenever(
-                contentDescriptionHelper.buildContentDescription(
-                        any(),
-                        any<String>(),
-                        any()
-                )
+            contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any()
+            )
         ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
@@ -61,12 +66,12 @@ class PostDetailMapperTest : BaseUnitTest() {
         val years = listOf(year2018, year2019)
         var expandedYear: Int? = null
         val result = postDetailMapper.mapYears(
-                years,
-                ExpandedYearUiState(),
-                Header(
-                        R.string.stats_months_and_years_period_label,
-                        R.string.stats_months_and_years_views_label
-                )
+            years,
+            ExpandedYearUiState(),
+            Header(
+                R.string.stats_months_and_years_period_label,
+                R.string.stats_months_and_years_views_label
+            )
         ) {
             expandedYear = it.expandedYear
         }
@@ -97,12 +102,12 @@ class PostDetailMapperTest : BaseUnitTest() {
         val february = Month(2, 40)
         val years = listOf(PostDetailStatsModel.Year(2019, listOf(january, february), 100))
         val result = postDetailMapper.mapYears(
-                years,
-                ExpandedYearUiState(expandedYear = 2019),
-                Header(
-                        R.string.stats_months_and_years_period_label,
-                        R.string.stats_months_and_years_views_label
-                )
+            years,
+            ExpandedYearUiState(expandedYear = 2019),
+            Header(
+                R.string.stats_months_and_years_period_label,
+                R.string.stats_months_and_years_views_label
+            )
         ) { }
         assertThat(result).hasSize(5)
         assertThat(result[0] is Divider).isTrue()
@@ -150,17 +155,17 @@ class PostDetailMapperTest : BaseUnitTest() {
         val weeks = listOf(firstWeek, secondWeek)
         val secondWeekLabel = "Jan 9 - Jan 16, 2019"
         whenever(statsDateFormatter.printWeek(secondWeekFirstDay, secondWeekLastDay)).thenReturn(
-                secondWeekLabel
+            secondWeekLabel
         )
 
         val result = postDetailMapper.mapWeeks(
-                weeks,
-                1,
-                ExpandedWeekUiState(),
-                Header(
-                        R.string.stats_months_and_years_period_label,
-                        R.string.stats_months_and_years_views_label
-                )
+            weeks,
+            1,
+            ExpandedWeekUiState(),
+            Header(
+                R.string.stats_months_and_years_period_label,
+                R.string.stats_months_and_years_views_label
+            )
         ) {}
 
         assertThat(result).hasSize(1)
@@ -192,13 +197,13 @@ class PostDetailMapperTest : BaseUnitTest() {
         whenever(statsDateFormatter.printWeek(firstDay, lastDay)).thenReturn(weekLabel)
 
         val result = postDetailMapper.mapWeeks(
-                weeks,
-                1,
-                ExpandedWeekUiState(firstDay),
-                Header(
-                        R.string.stats_months_and_years_period_label,
-                        R.string.stats_months_and_years_views_label
-                )
+            weeks,
+            1,
+            ExpandedWeekUiState(firstDay),
+            Header(
+                R.string.stats_months_and_years_period_label,
+                R.string.stats_months_and_years_views_label
+            )
         ) {}
 
         assertThat(result).hasSize(5)

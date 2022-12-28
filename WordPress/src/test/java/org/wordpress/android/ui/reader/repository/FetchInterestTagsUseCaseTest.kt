@@ -27,20 +27,24 @@ import java.util.EnumSet
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class FetchInterestTagsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var contextProvider: ContextProvider
-    @Mock lateinit var eventBusWrapper: EventBusWrapper
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var readerUpdateServiceStarterWrapper: ReaderUpdateServiceStarterWrapper
+    @Mock
+    lateinit var contextProvider: ContextProvider
+    @Mock
+    lateinit var eventBusWrapper: EventBusWrapper
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    lateinit var readerUpdateServiceStarterWrapper: ReaderUpdateServiceStarterWrapper
 
     private lateinit var useCase: FetchInterestTagsUseCase
 
     @Before
     fun setUp() {
         useCase = FetchInterestTagsUseCase(
-                contextProvider,
-                eventBusWrapper,
-                networkUtilsWrapper,
-                readerUpdateServiceStarterWrapper
+            contextProvider,
+            eventBusWrapper,
+            networkUtilsWrapper,
+            readerUpdateServiceStarterWrapper
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
@@ -63,10 +67,10 @@ class FetchInterestTagsUseCaseTest : BaseUnitTest() {
         val readerTag = mock<ReaderTag>()
         val event = InterestTagsFetchEnded(ReaderTagList().apply { add(readerTag) }, true)
         whenever(
-                readerUpdateServiceStarterWrapper.startService(
-                        contextProvider.getContext(),
-                        EnumSet.of(INTEREST_TAGS)
-                )
+            readerUpdateServiceStarterWrapper.startService(
+                contextProvider.getContext(),
+                EnumSet.of(INTEREST_TAGS)
+            )
         ).then { useCase.onInterestTagsFetchEnded(event) }
 
         // When
@@ -81,10 +85,10 @@ class FetchInterestTagsUseCaseTest : BaseUnitTest() {
         // Given
         val event = InterestTagsFetchEnded(ReaderTagList(), false)
         whenever(
-                readerUpdateServiceStarterWrapper.startService(
-                        contextProvider.getContext(),
-                        EnumSet.of(INTEREST_TAGS)
-                )
+            readerUpdateServiceStarterWrapper.startService(
+                contextProvider.getContext(),
+                EnumSet.of(INTEREST_TAGS)
+            )
         ).then { useCase.onInterestTagsFetchEnded(event) }
 
         // When

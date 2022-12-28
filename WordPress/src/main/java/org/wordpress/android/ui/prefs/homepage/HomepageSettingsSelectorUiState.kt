@@ -17,10 +17,10 @@ data class HomepageSettingsSelectorUiState(
         val selectedItem = data.find { it.id == updatedItemId }
         val (title, id, isHighlighted) = Builder.buildUiProperties(selectedItem)
         return this.copy(
-                selectedItem = title,
-                selectedItemId = id,
-                isHighlighted = isHighlighted,
-                isExpanded = false
+            selectedItem = title,
+            selectedItemId = id,
+            isHighlighted = isHighlighted,
+            isExpanded = false
         )
     }
 
@@ -37,20 +37,20 @@ data class HomepageSettingsSelectorUiState(
         ): HomepageSettingsSelectorUiState {
             val data = pages.map {
                 PageUiModel(
-                        it.pageId,
-                        it.remoteId,
-                        it.title
+                    it.pageId,
+                    it.remoteId,
+                    it.title
                 )
             }
             val selectedItem = data
-                    .find { it.remoteId == remoteId }
+                .find { it.remoteId == remoteId }
             val (title, id, isHighlighted) = buildUiProperties(selectedItem)
             return HomepageSettingsSelectorUiState(
-                    data,
-                    title,
-                    id,
-                    isHighlighted,
-                    isExpanded = false
+                data,
+                title,
+                id,
+                isHighlighted,
+                isExpanded = false
             )
         }
 

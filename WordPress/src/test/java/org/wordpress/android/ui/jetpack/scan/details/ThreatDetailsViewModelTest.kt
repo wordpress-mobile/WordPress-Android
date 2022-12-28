@@ -51,36 +51,46 @@ private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_S
 
 @ExperimentalCoroutinesApi
 class ThreatDetailsViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var getThreatModelUseCase: GetThreatModelUseCase
-    @Mock private lateinit var ignoreThreatUseCase: IgnoreThreatUseCase
-    @Mock private lateinit var fixThreatsUseCase: FixThreatsUseCase
-    @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock private lateinit var builder: ThreatDetailsListItemsBuilder
-    @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
-    @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var scanTracker: ScanTracker
-    @Mock private lateinit var scanStore: ScanStore
+    @Mock
+    private lateinit var site: SiteModel
+    @Mock
+    private lateinit var getThreatModelUseCase: GetThreatModelUseCase
+    @Mock
+    private lateinit var ignoreThreatUseCase: IgnoreThreatUseCase
+    @Mock
+    private lateinit var fixThreatsUseCase: FixThreatsUseCase
+    @Mock
+    private lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock
+    private lateinit var builder: ThreatDetailsListItemsBuilder
+    @Mock
+    private lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+    @Mock
+    private lateinit var scanTracker: ScanTracker
+    @Mock
+    private lateinit var scanStore: ScanStore
 
     private lateinit var viewModel: ThreatDetailsViewModel
     private val threatId = 1L
     private val fakeUiStringText = UiStringText("")
     private val fakeThreatModel = ThreatTestData.fixableThreatInCurrentStatus.copy(
-            baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.copy(id = threatId)
+        baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.copy(id = threatId)
     )
 
     @Before
     fun setUp() = test {
         viewModel = ThreatDetailsViewModel(
-                getThreatModelUseCase,
-                ignoreThreatUseCase,
-                fixThreatsUseCase,
-                selectedSiteRepository,
-                scanStore,
-                builder,
-                htmlMessageUtils,
-                resourceProvider,
-                scanTracker
+            getThreatModelUseCase,
+            ignoreThreatUseCase,
+            fixThreatsUseCase,
+            selectedSiteRepository,
+            scanStore,
+            builder,
+            htmlMessageUtils,
+            resourceProvider,
+            scanTracker
         )
         whenever(site.name).thenReturn(TEST_SITE_NAME)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
@@ -88,9 +98,9 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
         whenever(getThreatModelUseCase.get(anyLong())).thenReturn(fakeThreatModel)
         whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any(), any(), any(), any())).thenAnswer {
             createDummyThreatDetailsListItems(
-                    it.getArgument(ON_FIX_THREAT_BUTTON_CLICKED_PARAM_POSITION),
-                    it.getArgument(ON_IGNORE_THREAT_BUTTON_CLICKED_PARAM_POSITION),
-                    it.getArgument(ON_ENTER_SERVER_CREDS_ICON_CLICKED_PARAM_POSITION)
+                it.getArgument(ON_FIX_THREAT_BUTTON_CLICKED_PARAM_POSITION),
+                it.getArgument(ON_IGNORE_THREAT_BUTTON_CLICKED_PARAM_POSITION),
+                it.getArgument(ON_ENTER_SERVER_CREDS_ICON_CLICKED_PARAM_POSITION)
             )
         }
         whenever(builder.buildFixableThreatDescription(any())).thenAnswer {
@@ -116,83 +126,83 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when fix threat button is clicked, then open threat action dialog action is triggered for fix threat`() =
-            test {
-                val observers = init()
+        test {
+            val observers = init()
 
-                (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
-                        .first().onClick.invoke()
+            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
+                .first().onClick.invoke()
 
-                assertThat(observers.navigation.last().peekContent()).isInstanceOf(OpenThreatActionDialog::class.java)
-            }
+            assertThat(observers.navigation.last().peekContent()).isInstanceOf(OpenThreatActionDialog::class.java)
+        }
 
     @Test
     fun `when open threat action dialog is triggered for fix threat, then fix threat confirmation dialog is shown`() =
-            test {
-                val observers = init()
+        test {
+            val observers = init()
 
-                (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
-                        .first().onClick.invoke()
+            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
+                .first().onClick.invoke()
 
-                val confirmationDialog = observers.navigation.last().peekContent() as OpenThreatActionDialog
-                with(confirmationDialog) {
-                    assertThat(title).isEqualTo(UiStringRes(R.string.threat_fix))
-                    val fixable = requireNotNull(fakeThreatModel.baseThreatModel.fixable)
-                    assertThat(message).isEqualTo(builder.buildFixableThreatDescription(fixable).text)
-                    assertThat(positiveButtonLabel).isEqualTo(R.string.dialog_button_ok)
-                    assertThat(negativeButtonLabel).isEqualTo(R.string.dialog_button_cancel)
-                }
+            val confirmationDialog = observers.navigation.last().peekContent() as OpenThreatActionDialog
+            with(confirmationDialog) {
+                assertThat(title).isEqualTo(UiStringRes(R.string.threat_fix))
+                val fixable = requireNotNull(fakeThreatModel.baseThreatModel.fixable)
+                assertThat(message).isEqualTo(builder.buildFixableThreatDescription(fixable).text)
+                assertThat(positiveButtonLabel).isEqualTo(R.string.dialog_button_ok)
+                assertThat(negativeButtonLabel).isEqualTo(R.string.dialog_button_cancel)
             }
+        }
 
     @Test
     fun `when get free estimate button is clicked, then ShowGetFreeEstimate event is triggered`() = test {
         whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any(), any(), any(), any())).thenAnswer {
             createDummyThreatDetailsListItems(
-                    it.getArgument(ON_GET_FREE_ESTIMATE_BUTTON_CLICKED_PARAM_POSITION)
+                it.getArgument(ON_GET_FREE_ESTIMATE_BUTTON_CLICKED_PARAM_POSITION)
             )
         }
         val observers = init()
 
         (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
-                .first().onClick.invoke()
+            .first().onClick.invoke()
 
         assertThat(observers.navigation.last().peekContent())
-                .isInstanceOf(ThreatDetailsNavigationEvents.ShowGetFreeEstimate::class.java)
+            .isInstanceOf(ThreatDetailsNavigationEvents.ShowGetFreeEstimate::class.java)
     }
 
     @Test
     fun `when enter server creds icon is clicked, then app opens site's jetpack settings external url`() = test {
         whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any(), any(), any(), any())).thenAnswer {
             createDummyThreatDetailsListItems(
-                    onEnterServerCredsIconClicked = it
-                            .getArgument(ON_ENTER_SERVER_CREDS_ICON_CLICKED_PARAM_POSITION)
+                onEnterServerCredsIconClicked = it
+                    .getArgument(ON_ENTER_SERVER_CREDS_ICON_CLICKED_PARAM_POSITION)
             )
         }
         val observers = init()
 
         (observers.uiStates.last() as Content)
-                .items
-                .filterIsInstance(FootnoteState::class.java)
-                .firstOrNull { it.text == UiStringText(SERVER_CREDS_LINK) }
-                ?.onIconClick
-                ?.invoke()
+            .items
+            .filterIsInstance(FootnoteState::class.java)
+            .firstOrNull { it.text == UiStringText(SERVER_CREDS_LINK) }
+            ?.onIconClick
+            ?.invoke()
 
         assertThat(observers.navigation.last().peekContent()).isEqualTo(
-                ShowJetpackSettings("${Constants.URL_JETPACK_SETTINGS}/${site.siteId}")
+            ShowJetpackSettings("${Constants.URL_JETPACK_SETTINGS}/${site.siteId}")
         )
     }
 
     @Test
     fun `given server unavailable, when fix threat action is triggered, then fix threat error msg is shown`() =
-            test {
-                whenever(fixThreatsUseCase.fixThreats(any(), any()))
-                        .thenReturn(FixThreatsState.Failure.RemoteRequestFailure)
-                val observers = init()
+        test {
+            whenever(fixThreatsUseCase.fixThreats(any(), any()))
+                .thenReturn(FixThreatsState.Failure.RemoteRequestFailure)
+            val observers = init()
 
-                triggerFixThreatAction(observers)
+            triggerFixThreatAction(observers)
 
-                val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-                assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_fix_error_message)))
-            }
+            val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+            assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_fix_error_message)))
+        }
 
     @Test
     fun `given no network, when fix threat action is triggered, then network error msg is shown`() = test {
@@ -230,64 +240,64 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given success response, when fix threat action is triggered, then update fix state action is triggered`() =
-            test {
-                whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
-                val observers = init()
+        test {
+            whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
+            val observers = init()
 
-                triggerFixThreatAction(observers)
+            triggerFixThreatAction(observers)
 
-                assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowUpdatedFixState(threatId))
-            }
+            assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowUpdatedFixState(threatId))
+        }
 
     @Test
     fun `when ignore threat button is clicked, then open threat action dialog action is triggered for ignore threat`() =
-            test {
-                val observers = init()
+        test {
+            val observers = init()
 
-                (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
-                        .last().onClick.invoke()
+            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
+                .last().onClick.invoke()
 
-                assertThat(observers.navigation.last().peekContent()).isInstanceOf(OpenThreatActionDialog::class.java)
-            }
+            assertThat(observers.navigation.last().peekContent()).isInstanceOf(OpenThreatActionDialog::class.java)
+        }
 
     @Test
     fun `when open threat action dialog triggered for ignore threat, then ignore threat confirmation dialog shown`() =
-            test {
-                val observers = init()
+        test {
+            val observers = init()
 
-                (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
-                        .last().onClick.invoke()
+            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
+                .last().onClick.invoke()
 
-                val siteName = site.name ?: resourceProvider.getString(R.string.scan_this_site)
-                val confirmationDialog = observers.navigation.last().peekContent() as OpenThreatActionDialog
-                with(confirmationDialog) {
-                    assertThat(title).isEqualTo(UiStringRes(R.string.threat_ignore))
-                    assertThat(message).isEqualTo(
-                            UiStringText(
-                                    htmlMessageUtils
-                                            .getHtmlMessageFromStringFormatResId(
-                                                    R.string.threat_ignore_warning,
-                                                    "<b>$siteName</b>"
-                                            )
+            val siteName = site.name ?: resourceProvider.getString(R.string.scan_this_site)
+            val confirmationDialog = observers.navigation.last().peekContent() as OpenThreatActionDialog
+            with(confirmationDialog) {
+                assertThat(title).isEqualTo(UiStringRes(R.string.threat_ignore))
+                assertThat(message).isEqualTo(
+                    UiStringText(
+                        htmlMessageUtils
+                            .getHtmlMessageFromStringFormatResId(
+                                R.string.threat_ignore_warning,
+                                "<b>$siteName</b>"
                             )
                     )
-                    assertThat(positiveButtonLabel).isEqualTo(R.string.dialog_button_ok)
-                    assertThat(negativeButtonLabel).isEqualTo(R.string.dialog_button_cancel)
-                }
+                )
+                assertThat(positiveButtonLabel).isEqualTo(R.string.dialog_button_ok)
+                assertThat(negativeButtonLabel).isEqualTo(R.string.dialog_button_cancel)
             }
+        }
 
     @Test
     fun `given server unavailable, when ignore threat action is triggered, then ignore threat error msg is shown`() =
-            test {
-                whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Failure.RemoteRequestFailure)
-                val observers = init()
+        test {
+            whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Failure.RemoteRequestFailure)
+            val observers = init()
 
-                triggerIgnoreThreatAction(observers)
+            triggerIgnoreThreatAction(observers)
 
-                val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-                assertThat(snackBarMsg)
-                        .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_error_message)))
-            }
+            val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+            assertThat(snackBarMsg)
+                .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_error_message)))
+        }
 
     @Test
     fun `given no network, when ignore threat action is triggered, then network error msg is shown`() = test {
@@ -325,15 +335,15 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given success response, when ignore threat action is triggered, then update scan state action is triggered`() =
-            test {
-                whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Success)
-                val observers = init()
+        test {
+            whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Success)
+            val observers = init()
 
-                triggerIgnoreThreatAction(observers)
+            triggerIgnoreThreatAction(observers)
 
-                assertThat(observers.navigation.last().peekContent())
-                        .isEqualTo(ShowUpdatedScanStateWithMessage(R.string.threat_ignore_success_message))
-            }
+            assertThat(observers.navigation.last().peekContent())
+                .isEqualTo(ShowUpdatedScanStateWithMessage(R.string.threat_ignore_success_message))
+        }
 
     private fun triggerIgnoreThreatAction(observers: Observers) {
         (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
@@ -353,32 +363,32 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
         val items = ArrayList<JetpackListItemState>()
         primaryAction?.let {
             items.add(
-                    ActionButtonState(
-                            text = fakeUiStringText,
-                            contentDescription = fakeUiStringText,
-                            isSecondary = false,
-                            onClick = primaryAction
-                    )
+                ActionButtonState(
+                    text = fakeUiStringText,
+                    contentDescription = fakeUiStringText,
+                    isSecondary = false,
+                    onClick = primaryAction
+                )
             )
         }
         secondaryAction?.let {
             items.add(
-                    ActionButtonState(
-                            text = fakeUiStringText,
-                            contentDescription = fakeUiStringText,
-                            isSecondary = true,
-                            onClick = secondaryAction
-                    )
+                ActionButtonState(
+                    text = fakeUiStringText,
+                    contentDescription = fakeUiStringText,
+                    isSecondary = true,
+                    onClick = secondaryAction
+                )
             )
         }
         onEnterServerCredsIconClicked?.let {
             items.add(
-                    FootnoteState(
-                            iconResId = R.drawable.ic_plus_white_24dp,
-                            iconColorResId = R.color.primary,
-                            text = UiStringText(SERVER_CREDS_LINK),
-                            onIconClick = onEnterServerCredsIconClicked
-                    )
+                FootnoteState(
+                    iconResId = R.drawable.ic_plus_white_24dp,
+                    iconColorResId = R.color.primary,
+                    text = UiStringText(SERVER_CREDS_LINK),
+                    onIconClick = onEnterServerCredsIconClicked
+                )
             )
         }
         return items

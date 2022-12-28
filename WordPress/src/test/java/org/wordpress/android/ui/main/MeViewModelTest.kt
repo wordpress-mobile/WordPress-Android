@@ -26,10 +26,14 @@ import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
 class MeViewModelTest : BaseUnitTest() {
-    @Mock lateinit var wordPress: WordPress
-    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock lateinit var recommendApiCallsProvider: RecommendApiCallsProvider
-    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock
+    lateinit var wordPress: WordPress
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock
+    lateinit var recommendApiCallsProvider: RecommendApiCallsProvider
+    @Mock
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     private lateinit var viewModel: MeViewModel
 
@@ -38,11 +42,11 @@ class MeViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = MeViewModel(
-                testDispatcher(),
-                testDispatcher(),
-                selectedSiteRepository,
-                recommendApiCallsProvider,
-                analyticsUtilsWrapper
+            testDispatcher(),
+            testDispatcher(),
+            selectedSiteRepository,
+            recommendApiCallsProvider,
+            analyticsUtilsWrapper
         )
 
         setupObservers()
@@ -72,64 +76,78 @@ class MeViewModelTest : BaseUnitTest() {
 
     @Test
     fun `recommend template is recovered on first call`() = test {
-        whenever(recommendApiCallsProvider.getRecommendTemplate(
+        whenever(
+            recommendApiCallsProvider.getRecommendTemplate(
                 anyString(),
                 eq(RecommendAppSource.ME)
-        )).thenReturn(DEFAULT_SUCCESS_API_RESPONSE)
+            )
+        ).thenReturn(DEFAULT_SUCCESS_API_RESPONSE)
 
         viewModel.onRecommendTheApp()
         advanceUntilIdle()
 
         verify(recommendApiCallsProvider, times(1)).getRecommendTemplate(anyString(), eq(RecommendAppSource.ME))
 
-        assertThat(recommendUiState).isEqualTo(listOf(
+        assertThat(recommendUiState).isEqualTo(
+            listOf(
                 RecommendAppUiState(showLoading = true),
                 RecommendAppUiState(
                     message = DEFAULT_SUCCESS_API_RESPONSE.templateData.message,
-                    link = DEFAULT_SUCCESS_API_RESPONSE.templateData.link)
+                    link = DEFAULT_SUCCESS_API_RESPONSE.templateData.link
                 )
+            )
         )
     }
 
     @Test
     fun `recommend triggers an error when no network`() = test {
         val noNetError = "No Network Error"
-        whenever(recommendApiCallsProvider.getRecommendTemplate(
+        whenever(
+            recommendApiCallsProvider.getRecommendTemplate(
                 anyString(),
                 eq(RecommendAppSource.ME)
-        )).thenReturn(Failure(noNetError))
+            )
+        ).thenReturn(Failure(noNetError))
 
         viewModel.onRecommendTheApp()
         advanceUntilIdle()
 
-        assertThat(recommendUiState).isEqualTo(listOf(
+        assertThat(recommendUiState).isEqualTo(
+            listOf(
                 RecommendAppUiState(showLoading = true),
                 RecommendAppUiState(noNetError)
-        ))
+            )
+        )
     }
 
     @Test
     fun `recommend triggers an error on api call error`() = test {
-        whenever(recommendApiCallsProvider.getRecommendTemplate(
+        whenever(
+            recommendApiCallsProvider.getRecommendTemplate(
                 anyString(),
                 eq(RecommendAppSource.ME)
-        )).thenReturn(DEFAULT_FAILURE_API_RESPONSE)
+            )
+        ).thenReturn(DEFAULT_FAILURE_API_RESPONSE)
 
         viewModel.onRecommendTheApp()
         advanceUntilIdle()
 
-        assertThat(recommendUiState).isEqualTo(listOf(
+        assertThat(recommendUiState).isEqualTo(
+            listOf(
                 RecommendAppUiState(showLoading = true),
                 RecommendAppUiState(DEFAULT_FAILURE_API_RESPONSE.error)
-        ))
+            )
+        )
     }
 
     @Test
     fun `recommend use already fetched template when available`() = test {
-        whenever(recommendApiCallsProvider.getRecommendTemplate(
+        whenever(
+            recommendApiCallsProvider.getRecommendTemplate(
                 anyString(),
                 eq(RecommendAppSource.ME)
-        )).thenReturn(DEFAULT_SUCCESS_API_RESPONSE)
+            )
+        ).thenReturn(DEFAULT_SUCCESS_API_RESPONSE)
 
         // first call successfully gets the template
         viewModel.onRecommendTheApp()
@@ -137,23 +155,27 @@ class MeViewModelTest : BaseUnitTest() {
         viewModel.onRecommendTheApp()
         advanceUntilIdle()
 
-        assertThat(recommendUiState).isEqualTo(listOf(
+        assertThat(recommendUiState).isEqualTo(
+            listOf(
                 RecommendAppUiState(showLoading = true),
                 RecommendAppUiState(
-                        message = DEFAULT_SUCCESS_API_RESPONSE.templateData.message,
-                        link = DEFAULT_SUCCESS_API_RESPONSE.templateData.link
+                    message = DEFAULT_SUCCESS_API_RESPONSE.templateData.message,
+                    link = DEFAULT_SUCCESS_API_RESPONSE.templateData.link
                 )
-        ))
+            )
+        )
 
         verify(recommendApiCallsProvider, times(1)).getRecommendTemplate(anyString(), eq(RecommendAppSource.ME))
     }
 
     @Test
     fun `recommend the app tracking is triggered when no error`() = test {
-        whenever(recommendApiCallsProvider.getRecommendTemplate(
+        whenever(
+            recommendApiCallsProvider.getRecommendTemplate(
                 anyString(),
                 eq(RecommendAppSource.ME)
-        )).thenReturn(DEFAULT_SUCCESS_API_RESPONSE)
+            )
+        ).thenReturn(DEFAULT_SUCCESS_API_RESPONSE)
 
         viewModel.onRecommendTheApp()
         advanceUntilIdle()
@@ -163,10 +185,12 @@ class MeViewModelTest : BaseUnitTest() {
 
     @Test
     fun `recommend the app tracking is not triggered on error`() = test {
-        whenever(recommendApiCallsProvider.getRecommendTemplate(
+        whenever(
+            recommendApiCallsProvider.getRecommendTemplate(
                 anyString(),
                 eq(RecommendAppSource.ME)
-        )).thenReturn(DEFAULT_FAILURE_API_RESPONSE)
+            )
+        ).thenReturn(DEFAULT_FAILURE_API_RESPONSE)
 
         viewModel.onRecommendTheApp()
 
@@ -185,11 +209,11 @@ class MeViewModelTest : BaseUnitTest() {
 
     companion object {
         private val DEFAULT_SUCCESS_API_RESPONSE = Success(
-                templateData = RecommendTemplateData(
-                        name = RecommendAppName.WordPress.appName,
-                        message = "sharing message",
-                        link = "https://sharinglink.org"
-                )
+            templateData = RecommendTemplateData(
+                name = RecommendAppName.WordPress.appName,
+                message = "sharing message",
+                link = "https://sharinglink.org"
+            )
         )
         private val DEFAULT_FAILURE_API_RESPONSE = Failure("API call Error")
     }

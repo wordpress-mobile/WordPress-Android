@@ -76,11 +76,11 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
                 val bloggingPrompt = bloggingPromptsStore.getPromptForDate(site!!, Date()).firstOrNull()?.model
                 if (bloggingPrompt == null) {
                     _snackBarMessage.postValue(
-                            Event(
-                                    SnackbarMessageHolder(
-                                            UiStringRes(R.string.blogging_prompts_onboarding_prompts_loading)
-                                    )
+                        Event(
+                            SnackbarMessageHolder(
+                                UiStringRes(R.string.blogging_prompts_onboarding_prompts_loading)
                             )
+                        )
                     )
                     DoNothing
                 } else {

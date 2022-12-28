@@ -22,24 +22,31 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class AllTimeWidgetListViewModelTest {
-    @Mock private lateinit var siteStore: SiteStore
-    @Mock private lateinit var allTimeStore: AllTimeInsightsStore
-    @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock private lateinit var statsUtils: StatsUtils
-    @Mock private lateinit var site: SiteModel
+    @Mock
+    private lateinit var siteStore: SiteStore
+    @Mock
+    private lateinit var allTimeStore: AllTimeInsightsStore
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    private lateinit var statsUtils: StatsUtils
+    @Mock
+    private lateinit var site: SiteModel
     private lateinit var viewModel: AllTimeWidgetListViewModel
     private val siteId: Int = 15
     private val appWidgetId: Int = 1
     private val color = Color.LIGHT
+
     @Before
     fun setUp() {
         viewModel = AllTimeWidgetListViewModel(
-                siteStore,
-                allTimeStore,
-                resourceProvider,
-                appPrefsWrapper,
-                statsUtils
+            siteStore,
+            allTimeStore,
+            resourceProvider,
+            appPrefsWrapper,
+            statsUtils
         )
         viewModel.start(siteId, color, appWidgetId)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
@@ -61,15 +68,15 @@ class AllTimeWidgetListViewModelTest {
         whenever(resourceProvider.getString(R.string.posts)).thenReturn(postsKey)
         whenever(resourceProvider.getString(R.string.stats_insights_best_ever)).thenReturn(bestKey)
         whenever(allTimeStore.getAllTimeInsights(site)).thenReturn(
-                InsightsAllTimeModel(
-                        150L,
-                        null,
-                        visitors,
-                        views,
-                        posts,
-                        "Monday",
-                        viewsBestDayTotal
-                )
+            InsightsAllTimeModel(
+                150L,
+                null,
+                visitors,
+                views,
+                posts,
+                "Monday",
+                viewsBestDayTotal
+            )
         )
 
         viewModel.onDataSetChanged { }

@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mediapicker.loader
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -24,9 +23,12 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @ExperimentalCoroutinesApi
 class MediaLoaderTest : BaseUnitTest() {
-    @Mock lateinit var mediaSource: MediaSource
-    @Mock lateinit var identifier1: Identifier
-    @Mock lateinit var identifier2: Identifier
+    @Mock
+    lateinit var mediaSource: MediaSource
+    @Mock
+    lateinit var identifier1: Identifier
+    @Mock
+    lateinit var identifier2: Identifier
     private lateinit var mediaLoader: MediaLoader
     private lateinit var firstMediaItem: MediaItem
     private lateinit var secondMediaItem: MediaItem
@@ -42,10 +44,10 @@ class MediaLoaderTest : BaseUnitTest() {
     fun `loads media items on start`() = withMediaLoader { resultModel, performAction ->
         val mediaItems = listOf(firstMediaItem)
         whenever(
-                mediaSource.load(
-                        forced = false,
-                        loadMore = false
-                )
+            mediaSource.load(
+                forced = false,
+                loadMore = false
+            )
         ).thenReturn(MediaLoadingResult.Success(mediaItems, hasMore = false))
 
         performAction(LoadAction.Start(), true)
@@ -57,9 +59,9 @@ class MediaLoaderTest : BaseUnitTest() {
     fun `shows an error when loading fails`() = withMediaLoader { resultModel, performAction ->
         val errorMessage = "error"
         whenever(mediaSource.load(forced = false, loadMore = false)).thenReturn(
-                MediaLoadingResult.Failure(
-                        UiStringText(errorMessage)
-                )
+            MediaLoadingResult.Failure(
+                UiStringText(errorMessage)
+            )
         )
 
         performAction(LoadAction.Start(), true)
@@ -121,11 +123,11 @@ class MediaLoaderTest : BaseUnitTest() {
         val filter = "second"
         whenever(mediaSource.load(forced = false, loadMore = false)).thenReturn(MediaLoadingResult.Success(mediaItems))
         whenever(
-                mediaSource.load(
-                        forced = false,
-                        loadMore = false,
-                        filter = filter
-                )
+            mediaSource.load(
+                forced = false,
+                loadMore = false,
+                filter = filter
+            )
         ).thenReturn(MediaLoadingResult.Success(listOf(secondMediaItem)))
 
         performAction(LoadAction.Start(), true)
@@ -144,17 +146,17 @@ class MediaLoaderTest : BaseUnitTest() {
         val mediaItems = listOf(firstMediaItem, secondMediaItem)
         val filter = "second"
         whenever(
-                mediaSource.load(
-                        forced = false,
-                        loadMore = false,
-                        filter = filter
-                )
+            mediaSource.load(
+                forced = false,
+                loadMore = false,
+                filter = filter
+            )
         ).thenReturn(MediaLoadingResult.Success(listOf(secondMediaItem)))
         whenever(
-                mediaSource.load(
-                        forced = false,
-                        loadMore = false
-                )
+            mediaSource.load(
+                forced = false,
+                loadMore = false
+            )
         ).thenReturn(MediaLoadingResult.Success(mediaItems))
 
         performAction(LoadAction.Start(), true)
@@ -191,23 +193,23 @@ class MediaLoaderTest : BaseUnitTest() {
             ) -> Unit
         ) -> Unit
     ) =
-            test {
-                val loadActions: Channel<LoadAction> = Channel()
-                val domainModels: MutableList<DomainModel> = mutableListOf()
-                val job = launch {
-                    mediaLoader.loadMedia(loadActions).collect {
-                        domainModels.add(it)
-                    }
+        test {
+            val loadActions: Channel<LoadAction> = Channel()
+            val domainModels: MutableList<DomainModel> = mutableListOf()
+            val job = launch {
+                mediaLoader.loadMedia(loadActions).collect {
+                    domainModels.add(it)
                 }
-                assertFunction(domainModels) { action, awaitResult ->
-                    val currentCount = domainModels.size
-                    loadActions.send(action)
-                    if (awaitResult) {
-                        domainModels.awaitResult(currentCount + 1)
-                    }
-                }
-                job.cancel()
             }
+            assertFunction(domainModels) { action, awaitResult ->
+                val currentCount = domainModels.size
+                loadActions.send(action)
+                if (awaitResult) {
+                    domainModels.awaitResult(currentCount + 1)
+                }
+            }
+            job.cancel()
+        }
 
     private suspend fun List<DomainModel>.awaitResult(count: Int) {
         val limit = 10

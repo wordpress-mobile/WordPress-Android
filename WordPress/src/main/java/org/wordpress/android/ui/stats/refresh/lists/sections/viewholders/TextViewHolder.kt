@@ -20,15 +20,15 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.V
 import org.wordpress.android.util.extensions.getColorFromAttribute
 
 class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_text_item
+    parent,
+    R.layout.stats_block_text_item
 ) {
     private val text = itemView.findViewById<TextView>(R.id.text)
 
     fun bind(textItem: Text) {
         val loadedText = textItem.text
-                ?: textItem.textResource?.let { text.resources.getString(textItem.textResource) }
-                ?: ""
+            ?: textItem.textResource?.let { text.resources.getString(textItem.textResource) }
+            ?: ""
         val spannableString = SpannableString(loadedText)
         textItem.links?.forEach { link ->
             link.link?.let {
@@ -38,8 +38,8 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             }
             link.icon?.let {
                 spannableString.withClickableSpan(
-                        text.context,
-                        loadedText.takeLast(EXTERNAL_LINK_ICON_TOKEN.length)
+                    text.context,
+                    loadedText.takeLast(EXTERNAL_LINK_ICON_TOKEN.length)
                 ) {
                     link.navigationAction.click()
                 }
@@ -50,10 +50,10 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
                 drawable?.let { icon ->
                     spannableString.setSpan(
-                            ImageSpan(icon),
-                            loadedText.indexOf(EXTERNAL_LINK_ICON_TOKEN),
-                            loadedText.length,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                        ImageSpan(icon),
+                        loadedText.indexOf(EXTERNAL_LINK_ICON_TOKEN),
+                        loadedText.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
                 }
             }
@@ -63,12 +63,12 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
         textItem.color?.forEach { (color, string) ->
             spannableString.setSpan(
-                    ForegroundColorSpan(
-                            ContextCompat.getColor(text.context, color)
-                    ),
-                    loadedText.indexOf(string),
-                    loadedText.indexOf(string) + string.length,
-                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                ForegroundColorSpan(
+                    ContextCompat.getColor(text.context, color)
+                ),
+                loadedText.indexOf(string),
+                loadedText.indexOf(string) + string.length,
+                Spannable.SPAN_EXCLUSIVE_INCLUSIVE
             )
         }
         text.text = spannableString
@@ -89,18 +89,18 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             override fun updateDrawState(ds: TextPaint) {
                 ds.color = context.getColorFromAttribute(R.attr.colorPrimary)
                 ds.typeface = Typeface.create(
-                        Typeface.DEFAULT_BOLD,
-                        Typeface.NORMAL
+                    Typeface.DEFAULT_BOLD,
+                    Typeface.NORMAL
                 )
                 ds.isUnderlineText = false
             }
         }
         val clickablePartStart = indexOf(clickablePart)
         setSpan(
-                clickableSpan,
-                clickablePartStart,
-                clickablePartStart + clickablePart.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            clickableSpan,
+            clickablePartStart,
+            clickablePartStart + clickablePart.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         return this
     }
@@ -108,10 +108,10 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     private fun SpannableString.withBoldSpan(boldPart: String): SpannableString {
         val boldPartIndex = indexOf(boldPart)
         setSpan(
-                StyleSpan(Typeface.BOLD),
-                boldPartIndex,
-                boldPartIndex + boldPart.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            StyleSpan(Typeface.BOLD),
+            boldPartIndex,
+            boldPartIndex + boldPart.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         return this
     }

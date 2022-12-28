@@ -26,8 +26,10 @@ import javax.inject.Inject
  */
 
 class PeopleInviteDialogFragment : DialogFragment() {
-    @Inject lateinit var contextProvider: ContextProvider
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var contextProvider: ContextProvider
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: PeopleInviteViewModel
 
@@ -39,7 +41,7 @@ class PeopleInviteDialogFragment : DialogFragment() {
     @Suppress("DEPRECATION")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewModel = ViewModelProvider(
-                targetFragment as ViewModelStoreOwner, viewModelFactory
+            targetFragment as ViewModelStoreOwner, viewModelFactory
         ).get(PeopleInviteViewModel::class.java)
 
         val dialogMode = arguments?.getSerializable(ARG_DIALOG_MODE) as? DialogMode
@@ -102,13 +104,13 @@ class PeopleInviteDialogFragment : DialogFragment() {
         val positiveButtonText: Int = 0
     ) {
         INVITE_LINKS_ROLE_SELECTION(
-                R.string.role
+            R.string.role
         ),
         DISABLE_INVITE_LINKS_CONFIRMATION(
-                R.string.invite_links_disable_dialog_title,
-                R.string.invite_links_disable_dialog_message,
-                R.string.cancel,
-                R.string.disable
+            R.string.invite_links_disable_dialog_title,
+            R.string.invite_links_disable_dialog_message,
+            R.string.cancel,
+            R.string.disable
         )
     }
 }

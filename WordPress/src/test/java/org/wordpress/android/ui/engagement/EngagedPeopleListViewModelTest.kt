@@ -47,11 +47,16 @@ import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
 class EngagedPeopleListViewModelTest : BaseUnitTest() {
-    @Mock lateinit var getLikesHandler: GetLikesHandler
-    @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
-    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
-    @Mock lateinit var listScenario: ListScenario
-    @Mock lateinit var headerData: HeaderData
+    @Mock
+    lateinit var getLikesHandler: GetLikesHandler
+    @Mock
+    lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+    @Mock
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock
+    lateinit var listScenario: ListScenario
+    @Mock
+    lateinit var headerData: HeaderData
 
     private lateinit var viewModel: EngagedPeopleListViewModel
 
@@ -78,12 +83,12 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         whenever(getLikesHandler.likesStatusUpdate).thenReturn(getLikesState)
 
         viewModel = EngagedPeopleListViewModel(
-                testDispatcher(),
-                testDispatcher(),
-                getLikesHandler,
-                readerUtilsWrapper,
-                engagementUtils,
-                analyticsUtilsWrapper
+            testDispatcher(),
+            testDispatcher(),
+            getLikesHandler,
+            readerUtilsWrapper,
+            engagementUtils,
+            analyticsUtilsWrapper
         )
 
         setupObservers()
@@ -101,12 +106,12 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         viewModel.start(listScenario)
 
         verify(getLikesHandler, times(1)).handleGetLikesForPost(
-                LikeGroupFingerPrint(
-                        siteId,
-                        postId,
-                        expectedNumLikes
-                ),
-                false
+            LikeGroupFingerPrint(
+                siteId,
+                postId,
+                expectedNumLikes
+            ),
+            false
         )
     }
 
@@ -144,10 +149,10 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
 
         assertThat(serviceRequestEvent).isNotEmpty
         assertThat(serviceRequestEvent).isEqualTo(
-                listOf(
-                        RequestBlogPost(siteId, postId),
-                        RequestComment(siteId, postId, commentId)
-                )
+            listOf(
+                RequestBlogPost(siteId, postId),
+                RequestComment(siteId, postId, commentId)
+            )
         )
     }
 
@@ -156,12 +161,12 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         viewModel.start(listScenario)
 
         verify(getLikesHandler, times(1)).handleGetLikesForPost(
-                LikeGroupFingerPrint(
-                        siteId,
-                        postId,
-                        expectedNumLikes
-                ),
-                false
+            LikeGroupFingerPrint(
+                siteId,
+                postId,
+                expectedNumLikes
+            ),
+            false
         )
     }
 
@@ -172,12 +177,12 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         viewModel.start(listScenario)
 
         verify(getLikesHandler, times(1)).handleGetLikesForComment(
-                LikeGroupFingerPrint(
-                        siteId,
-                        commentId,
-                        expectedNumLikes
-                ),
-                false
+            LikeGroupFingerPrint(
+                siteId,
+                commentId,
+                expectedNumLikes
+            ),
+            false
         )
     }
 
@@ -329,9 +334,9 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         requireNotNull(uiState).let {
             val likedItem = it.engageItemsList[0] as LikedItem
             likedItem.onGravatarClick.invoke(
-                    likedItem.authorPreferredSiteId,
-                    likedItem.authorPreferredSiteUrl,
-                    likedItem.blogPreviewSource
+                likedItem.authorPreferredSiteId,
+                likedItem.authorPreferredSiteUrl,
+                likedItem.blogPreviewSource
             )
 
             requireNotNull(navigationEvent).let {
@@ -351,9 +356,9 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         requireNotNull(uiState).let {
             val likedItem = it.engageItemsList[0] as LikedItem
             likedItem.onGravatarClick.invoke(
-                    0,
-                    likedItem.authorPreferredSiteUrl,
-                    likedItem.blogPreviewSource
+                0,
+                likedItem.authorPreferredSiteUrl,
+                likedItem.blogPreviewSource
             )
 
             requireNotNull(navigationEvent).let {
@@ -377,10 +382,10 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         requireNotNull(uiState).let {
             val likedItem = it.engageItemsList[0] as LikedItem
             likedItem.onHeaderClicked.invoke(
-                    likedItem.likedItemSiteId,
-                    likedItem.likedItemSiteUrl,
-                    likedItem.likedItemId,
-                    likedItem.likedItemPostId
+                likedItem.likedItemSiteId,
+                likedItem.likedItemSiteUrl,
+                likedItem.likedItemId,
+                likedItem.likedItemPostId
             )
 
             requireNotNull(navigationEvent).let {
@@ -404,10 +409,10 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         requireNotNull(uiState).let {
             val likedItem = it.engageItemsList[0] as LikedItem
             likedItem.onHeaderClicked.invoke(
-                    likedItem.likedItemSiteId,
-                    likedItem.likedItemSiteUrl,
-                    likedItem.likedItemId,
-                    likedItem.likedItemPostId
+                likedItem.likedItemSiteId,
+                likedItem.likedItemSiteUrl,
+                likedItem.likedItemId,
+                likedItem.likedItemPostId
             )
 
             requireNotNull(navigationEvent).let {
@@ -427,10 +432,10 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         requireNotNull(uiState).let {
             val likedItem = it.engageItemsList[0] as LikedItem
             likedItem.onHeaderClicked.invoke(
-                    likedItem.likedItemSiteId,
-                    likedItem.likedItemSiteUrl,
-                    likedItem.likedItemId,
-                    likedItem.likedItemPostId
+                likedItem.likedItemSiteId,
+                likedItem.likedItemSiteUrl,
+                likedItem.likedItemId,
+                likedItem.likedItemPostId
             )
 
             requireNotNull(navigationEvent).let {

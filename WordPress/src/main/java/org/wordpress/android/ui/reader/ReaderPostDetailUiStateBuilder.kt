@@ -65,7 +65,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
     resourceProvider: ResourceProvider
 ) {
     private val relatedPostFeaturedImageWidth: Int = resourceProvider
-            .getDimensionPixelSize(R.dimen.reader_related_post_image_width)
+        .getDimensionPixelSize(R.dimen.reader_related_post_image_width)
     private val relatedPostFeaturedImageHeight: Int = (relatedPostFeaturedImageWidth
             * RELATED_POST_IMAGE_HEIGHT_WIDTH_RATION).toInt()
 
@@ -77,18 +77,18 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         onFollowClicked: () -> Unit,
         onTagItemClicked: (String) -> Unit
     ) = ReaderPostDetailsUiState(
-            postId = post.postId,
-            blogId = post.blogId,
-            featuredImageUiState = buildReaderPostFeaturedImageUiState(post),
-            headerUiState = buildPostDetailsHeaderUiState(
-                    post,
-                    onBlogSectionClicked,
-                    onFollowClicked,
-                    onTagItemClicked
-            ),
-            excerptFooterUiState = buildExcerptFooterUiState(post),
-            moreMenuItems = moreMenuItems,
-            actions = buildPostActions(post, onButtonClicked)
+        postId = post.postId,
+        blogId = post.blogId,
+        featuredImageUiState = buildReaderPostFeaturedImageUiState(post),
+        headerUiState = buildPostDetailsHeaderUiState(
+            post,
+            onBlogSectionClicked,
+            onFollowClicked,
+            onTagItemClicked
+        ),
+        excerptFooterUiState = buildExcerptFooterUiState(post),
+        moreMenuItems = moreMenuItems,
+        actions = buildPostActions(post, onButtonClicked)
     )
 
     fun mapRelatedPostsToUiState(
@@ -97,16 +97,16 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         isGlobal: Boolean,
         onItemClicked: (Long, Long, Boolean) -> Unit
     ) = RelatedPostsUiState(
-            cards = relatedPosts.map {
-                mapRelatedPostToUiState(
-                        post = it,
-                        isGlobal = isGlobal,
-                        onItemClicked = onItemClicked
-                )
-            },
-            isGlobal = isGlobal,
-            headerLabel = buildRelatedPostsHeaderLabel(blogName = sourcePost.blogName, isGlobal = isGlobal),
-            railcarJsonStrings = relatedPosts.map { it.railcarJson }
+        cards = relatedPosts.map {
+            mapRelatedPostToUiState(
+                post = it,
+                isGlobal = isGlobal,
+                onItemClicked = onItemClicked
+            )
+        },
+        isGlobal = isGlobal,
+        headerLabel = buildRelatedPostsHeaderLabel(blogName = sourcePost.blogName, isGlobal = isGlobal),
+        railcarJsonStrings = relatedPosts.map { it.railcarJson }
     )
 
     fun buildCommentSnippetUiState(
@@ -118,16 +118,16 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             AppLog.d(T.READER, "buildCommentSnippetUiState -> post was not null")
 
             CommentSnippetUiState(
-                    commentsNumber = readerPost.numReplies,
-                    showFollowConversation = readerPost.isWP && readerPost.isCommentsOpen,
-                    snippetItems = getSnippetItems(commentSnippetState, post, onCommentSnippetClicked)
+                commentsNumber = readerPost.numReplies,
+                showFollowConversation = readerPost.isWP && readerPost.isCommentsOpen,
+                snippetItems = getSnippetItems(commentSnippetState, post, onCommentSnippetClicked)
             )
         } ?: run {
             AppLog.d(T.READER, "buildCommentSnippetUiState -> post was null")
             CommentSnippetUiState(
-                    snippetItems = listOf(LoadingState),
-                    showFollowConversation = false,
-                    commentsNumber = 0
+                snippetItems = listOf(LoadingState),
+                showFollowConversation = false,
+                commentsNumber = 0
             )
         }
     }
@@ -140,52 +140,55 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         return when (commentSnippetState) {
             is CommentSnippetData -> commentSnippetState.comments.map { readerComment ->
                 CommentState(
-                        authorName = readerComment.authorName,
-                        datePublished = dateTimeUtilsWrapper.javaDateToTimeSpan(
-                                dateTimeUtilsWrapper.dateFromIso8601(
-                                        readerComment.published
-                                )
-                        ),
-                        avatarUrl = gravatarUtilsWrapper.fixGravatarUrl(
-                                readerComment.authorAvatar,
-                                contextProvider.getContext().resources.getDimensionPixelSize(
-                                        dimen.avatar_sz_extra_small
-                                )
-                        ),
-                        showAuthorBadge = readerComment.authorId == readerPost.authorId,
-                        commentText = readerComment.text,
-                        isPrivatePost = threadedCommentsUtils.isPrivatePost(readerPost),
-                        blogId = readerComment.blogId,
-                        postId = readerComment.postId,
-                        commentId = readerComment.commentId
+                    authorName = readerComment.authorName,
+                    datePublished = dateTimeUtilsWrapper.javaDateToTimeSpan(
+                        dateTimeUtilsWrapper.dateFromIso8601(
+                            readerComment.published
+                        )
+                    ),
+                    avatarUrl = gravatarUtilsWrapper.fixGravatarUrl(
+                        readerComment.authorAvatar,
+                        contextProvider.getContext().resources.getDimensionPixelSize(
+                            dimen.avatar_sz_extra_small
+                        )
+                    ),
+                    showAuthorBadge = readerComment.authorId == readerPost.authorId,
+                    commentText = readerComment.text,
+                    isPrivatePost = threadedCommentsUtils.isPrivatePost(readerPost),
+                    blogId = readerComment.blogId,
+                    postId = readerComment.postId,
+                    commentId = readerComment.commentId
                 )
             } + ButtonState(
-                    buttonText = UiStringRes(string.reader_comments_view_all),
-                    postId = readerPost.postId,
-                    blogId = readerPost.blogId,
-                    onCommentSnippetClicked = onCommentSnippetClicked
+                buttonText = UiStringRes(string.reader_comments_view_all),
+                postId = readerPost.postId,
+                blogId = readerPost.blogId,
+                onCommentSnippetClicked = onCommentSnippetClicked
             )
             is Empty -> {
                 listOf<CommentSnippetItemState>(
-                        TextMessage(commentSnippetState.message)
+                    TextMessage(commentSnippetState.message)
                 ) + if (readerPost.isCommentsOpen) {
-                    listOf<CommentSnippetItemState>(ButtonState(
+                    listOf<CommentSnippetItemState>(
+                        ButtonState(
                             buttonText = UiStringRes(string.reader_comments_be_first_to_comment),
                             postId = readerPost.postId,
                             blogId = readerPost.blogId,
-                            onCommentSnippetClicked = onCommentSnippetClicked))
+                            onCommentSnippetClicked = onCommentSnippetClicked
+                        )
+                    )
                 } else {
                     listOf<CommentSnippetItemState>()
                 }
             }
             is Failure -> listOf(
-                    TextMessage(commentSnippetState.message),
-                    ButtonState(
-                            buttonText = UiStringRes(string.reader_comments_view_all),
-                            postId = readerPost.postId,
-                            blogId = readerPost.blogId,
-                            onCommentSnippetClicked = onCommentSnippetClicked
-                    )
+                TextMessage(commentSnippetState.message),
+                ButtonState(
+                    buttonText = UiStringRes(string.reader_comments_view_all),
+                    postId = readerPost.postId,
+                    blogId = readerPost.blogId,
+                    onCommentSnippetClicked = onCommentSnippetClicked
+                )
             )
             Loading -> listOf(LoadingState)
         }
@@ -196,37 +199,37 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         isGlobal: Boolean,
         onItemClicked: (Long, Long, Boolean) -> Unit
     ) = ReaderRelatedPostUiState(
-            postId = post.postId,
-            blogId = post.siteId,
-            isGlobal = isGlobal,
-            title = post.takeIf { it.hasTitle() }?.let { UiStringText(it.title) },
-            excerpt = post.takeIf { it.hasExcerpt() }?.let { UiStringText(it.excerpt) },
-            featuredImageUrl = buildFeaturedImageUrl(
-                    post,
-                    relatedPostFeaturedImageWidth,
-                    relatedPostFeaturedImageHeight
-            ),
-            featuredImageVisibility = post.featuredImageUrl?.isNotEmpty() == true,
-            featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
-            onItemClicked = onItemClicked
+        postId = post.postId,
+        blogId = post.siteId,
+        isGlobal = isGlobal,
+        title = post.takeIf { it.hasTitle() }?.let { UiStringText(it.title) },
+        excerpt = post.takeIf { it.hasExcerpt() }?.let { UiStringText(it.excerpt) },
+        featuredImageUrl = buildFeaturedImageUrl(
+            post,
+            relatedPostFeaturedImageWidth,
+            relatedPostFeaturedImageHeight
+        ),
+        featuredImageVisibility = post.featuredImageUrl?.isNotEmpty() == true,
+        featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
+        onItemClicked = onItemClicked
     )
 
     private fun buildReaderPostFeaturedImageUiState(post: ReaderPost) =
-            post.takeIf { featuredImageUtils.shouldAddFeaturedImage(post) }?.let {
-                ReaderPostFeaturedImageUiState(
-                        blogId = post.blogId,
-                        url = buildReaderPostFeaturedImageUrl(post),
-                        height = (displayUtilsWrapper.getWindowPixelHeight() *
-                                READER_POST_FEATURED_IMAGE_HEIGHT_PERCENT).toInt()
-                )
-            }
+        post.takeIf { featuredImageUtils.shouldAddFeaturedImage(post) }?.let {
+            ReaderPostFeaturedImageUiState(
+                blogId = post.blogId,
+                url = buildReaderPostFeaturedImageUrl(post),
+                height = (displayUtilsWrapper.getWindowPixelHeight() *
+                        READER_POST_FEATURED_IMAGE_HEIGHT_PERCENT).toInt()
+            )
+        }
 
     private fun buildReaderPostFeaturedImageUrl(post: ReaderPost) = readerUtilsWrapper.getResizedImageUrl(
-            post.featuredImage,
-            displayUtilsWrapper.getDisplayPixelWidth(),
-            0,
-            post.isPrivate,
-            post.isPrivateAtomic
+        post.featuredImage,
+        displayUtilsWrapper.getDisplayPixelWidth(),
+        0,
+        post.isPrivate,
+        post.isPrivateAtomic
     )
 
     private fun buildPostDetailsHeaderUiState(
@@ -235,28 +238,28 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         onFollowClicked: () -> Unit,
         onTagItemClicked: (String) -> Unit
     ) = postDetailsHeaderViewUiStateBuilder.mapPostToUiState(
-            post,
-            onBlogSectionClicked,
-            onFollowClicked,
-            onTagItemClicked
+        post,
+        onBlogSectionClicked,
+        onFollowClicked,
+        onTagItemClicked
     )
 
     private fun buildExcerptFooterUiState(post: ReaderPost): ExcerptFooterUiState? =
-            post.takeIf { post.shouldShowExcerpt() }?.let {
-                ExcerptFooterUiState(
-                        visitPostExcerptFooterLinkText = buildPostExcerptFooterLinkText(post),
-                        postLink = post.url
-                )
-            }
+        post.takeIf { post.shouldShowExcerpt() }?.let {
+            ExcerptFooterUiState(
+                visitPostExcerptFooterLinkText = buildPostExcerptFooterLinkText(post),
+                postLink = post.url
+            )
+        }
 
     private fun buildPostExcerptFooterLinkText(post: ReaderPost) = UiStringText(
-            htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                    R.string.reader_excerpt_link,
-                    "<font color='" +
-                            htmlUtilsWrapper
-                                    .colorResToHtmlColor(contextProvider.getContext(), R.color.link_reader) + "'>" +
-                            post.blogName + "</font>"
-            )
+        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+            R.string.reader_excerpt_link,
+            "<font color='" +
+                    htmlUtilsWrapper
+                        .colorResToHtmlColor(contextProvider.getContext(), R.color.link_reader) + "'>" +
+                    post.blogName + "</font>"
+        )
     )
 
     fun buildPostActions(
@@ -273,5 +276,5 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
     }
 
     private fun buildFeaturedImageUrl(post: ReaderSimplePost, imageWidth: Int, imageHeight: Int) =
-            post.getFeaturedImageForDisplay(imageWidth, imageHeight)
+        post.getFeaturedImageForDisplay(imageWidth, imageHeight)
 }

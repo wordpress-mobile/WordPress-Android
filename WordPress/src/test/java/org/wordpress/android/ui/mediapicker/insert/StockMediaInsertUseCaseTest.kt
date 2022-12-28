@@ -21,8 +21,10 @@ import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertMode
 
 @ExperimentalCoroutinesApi
 class StockMediaInsertUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var stockMediaStore: StockMediaStore
+    @Mock
+    lateinit var site: SiteModel
+    @Mock
+    lateinit var stockMediaStore: StockMediaStore
     private lateinit var stockMediaInsertUseCase: StockMediaInsertUseCase
     private val url = "wordpress://url"
     private val title = "title"
@@ -39,9 +41,13 @@ class StockMediaInsertUseCaseTest : BaseUnitTest() {
         val insertedMediaModel = MediaModel()
         val mediaId: Long = 10
         insertedMediaModel.mediaId = mediaId
-        whenever(stockMediaStore.performUploadStockMedia(any(), any())).thenReturn(OnStockMediaUploaded(site, listOf(
-                insertedMediaModel
-        )))
+        whenever(stockMediaStore.performUploadStockMedia(any(), any())).thenReturn(
+            OnStockMediaUploaded(
+                site, listOf(
+                    insertedMediaModel
+                )
+            )
+        )
 
         val result = stockMediaInsertUseCase.insert(listOf(itemToInsert)).toList()
 

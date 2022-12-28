@@ -29,20 +29,23 @@ import java.util.Date
 @ExperimentalCoroutinesApi
 class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: GetBackupDownloadStatusUseCase
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var activityLogStore: ActivityLogStore
-    @Mock private lateinit var site: SiteModel
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    lateinit var activityLogStore: ActivityLogStore
+    @Mock
+    private lateinit var site: SiteModel
 
     @Before
     fun setup() = test {
         useCase = GetBackupDownloadStatusUseCase(
-                networkUtilsWrapper,
-                activityLogStore,
-                testDispatcher()
+            networkUtilsWrapper,
+            activityLogStore,
+            testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(activityLogStore.fetchBackupDownloadState(any()))
-                .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
+            .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
         whenever(activityLogStore.getActivityLogItemByRewindId(rewindId)).thenReturn(activityLogModel)
     }
 
@@ -66,34 +69,34 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `given failure without download id, when backup status triggers, then return remote request failure`() =
-            test {
-                whenever(activityLogStore.fetchBackupDownloadState(any()))
-                        .thenReturn(
-                                OnBackupDownloadStatusFetched(
-                                        BackupDownloadStatusError(GENERIC_ERROR),
-                                        FETCH_BACKUP_DOWNLOAD_STATE
-                                )
-                        )
+        test {
+            whenever(activityLogStore.fetchBackupDownloadState(any()))
+                .thenReturn(
+                    OnBackupDownloadStatusFetched(
+                        BackupDownloadStatusError(GENERIC_ERROR),
+                        FETCH_BACKUP_DOWNLOAD_STATE
+                    )
+                )
 
-                val result = useCase.getBackupDownloadStatus(site, null).toList()
+            val result = useCase.getBackupDownloadStatus(site, null).toList()
 
-                assertThat(result).contains(RemoteRequestFailure)
-            }
+            assertThat(result).contains(RemoteRequestFailure)
+        }
 
     @Test
     fun `given failure with download id, when backup status triggers, then return remote request failure`() =
-            test {
-                whenever(activityLogStore.fetchBackupDownloadState(any())).thenReturn(
-                        OnBackupDownloadStatusFetched(
-                                BackupDownloadStatusError(GENERIC_ERROR),
-                                FETCH_BACKUP_DOWNLOAD_STATE
-                        )
+        test {
+            whenever(activityLogStore.fetchBackupDownloadState(any())).thenReturn(
+                OnBackupDownloadStatusFetched(
+                    BackupDownloadStatusError(GENERIC_ERROR),
+                    FETCH_BACKUP_DOWNLOAD_STATE
                 )
+            )
 
-                val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
+            val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
 
-                assertThat(result).contains(RemoteRequestFailure)
-            }
+            assertThat(result).contains(RemoteRequestFailure)
+        }
 
     @Test
     fun `given success without download id, when backup status triggers, then return complete`() = test {
@@ -169,98 +172,98 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `given download in process without download id, when backup status triggers, then return progress`() =
-            test {
-                whenever(activityLogStore.getBackupDownloadStatusForSite(site))
-                        .thenReturn(inProgressModel)
-                        .thenReturn(statusModel)
-                whenever(activityLogStore.fetchBackupDownloadState(any()))
-                        .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
+        test {
+            whenever(activityLogStore.getBackupDownloadStatusForSite(site))
+                .thenReturn(inProgressModel)
+                .thenReturn(statusModel)
+            whenever(activityLogStore.fetchBackupDownloadState(any()))
+                .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
 
-                val result = useCase.getBackupDownloadStatus(site, null).toList()
+            val result = useCase.getBackupDownloadStatus(site, null).toList()
 
-                assertThat(result).contains(progressStatus, completeStatus)
-            }
+            assertThat(result).contains(progressStatus, completeStatus)
+        }
 
     @Test
     fun `given download in process with download id, when backup status triggers, then return progress`() =
-            test {
-                whenever(activityLogStore.getBackupDownloadStatusForSite(site))
-                        .thenReturn(inProgressModel)
-                        .thenReturn(statusModel)
-                whenever(activityLogStore.fetchBackupDownloadState(any()))
-                        .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
+        test {
+            whenever(activityLogStore.getBackupDownloadStatusForSite(site))
+                .thenReturn(inProgressModel)
+                .thenReturn(statusModel)
+            whenever(activityLogStore.fetchBackupDownloadState(any()))
+                .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
 
-                val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
+            val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
 
-                assertThat(result).contains(progressStatus, completeStatus)
-            }
+            assertThat(result).contains(progressStatus, completeStatus)
+        }
 
     @Test
     fun `given max fetch retries exceeded, when backup status triggers, then return remote request failure`() =
-            test {
-                whenever(activityLogStore.fetchBackupDownloadState(any()))
-                        .thenReturn(
-                                OnBackupDownloadStatusFetched(
-                                        BackupDownloadStatusError(GENERIC_ERROR),
-                                        FETCH_BACKUP_DOWNLOAD_STATE
-                                )
-                        )
-                        .thenReturn(
-                                OnBackupDownloadStatusFetched(
-                                        BackupDownloadStatusError(GENERIC_ERROR),
-                                        FETCH_BACKUP_DOWNLOAD_STATE
-                                )
-                        )
-                        .thenReturn(
-                                OnBackupDownloadStatusFetched(
-                                        BackupDownloadStatusError(GENERIC_ERROR),
-                                        FETCH_BACKUP_DOWNLOAD_STATE
-                                )
-                        )
+        test {
+            whenever(activityLogStore.fetchBackupDownloadState(any()))
+                .thenReturn(
+                    OnBackupDownloadStatusFetched(
+                        BackupDownloadStatusError(GENERIC_ERROR),
+                        FETCH_BACKUP_DOWNLOAD_STATE
+                    )
+                )
+                .thenReturn(
+                    OnBackupDownloadStatusFetched(
+                        BackupDownloadStatusError(GENERIC_ERROR),
+                        FETCH_BACKUP_DOWNLOAD_STATE
+                    )
+                )
+                .thenReturn(
+                    OnBackupDownloadStatusFetched(
+                        BackupDownloadStatusError(GENERIC_ERROR),
+                        FETCH_BACKUP_DOWNLOAD_STATE
+                    )
+                )
 
-                val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
+            val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
 
-                assertThat(result).size().isEqualTo(1)
-                assertThat(result).isEqualTo(listOf(RemoteRequestFailure))
-            }
+            assertThat(result).size().isEqualTo(1)
+            assertThat(result).isEqualTo(listOf(RemoteRequestFailure))
+        }
 
     @Test
     fun `given fetch error under retry count, when backup status triggers, then return progress`() =
-            test {
-                whenever(activityLogStore.getBackupDownloadStatusForSite(site))
-                        .thenReturn(inProgressModel)
-                        .thenReturn(statusModel)
-                whenever(activityLogStore.fetchBackupDownloadState(any()))
-                        .thenReturn(
-                                OnBackupDownloadStatusFetched(
-                                        BackupDownloadStatusError(GENERIC_ERROR),
-                                        FETCH_BACKUP_DOWNLOAD_STATE
-                                )
-                        )
-                        .thenReturn(
-                                OnBackupDownloadStatusFetched(
-                                        BackupDownloadStatusError(GENERIC_ERROR),
-                                        FETCH_BACKUP_DOWNLOAD_STATE
-                                )
-                        )
-                        .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
+        test {
+            whenever(activityLogStore.getBackupDownloadStatusForSite(site))
+                .thenReturn(inProgressModel)
+                .thenReturn(statusModel)
+            whenever(activityLogStore.fetchBackupDownloadState(any()))
+                .thenReturn(
+                    OnBackupDownloadStatusFetched(
+                        BackupDownloadStatusError(GENERIC_ERROR),
+                        FETCH_BACKUP_DOWNLOAD_STATE
+                    )
+                )
+                .thenReturn(
+                    OnBackupDownloadStatusFetched(
+                        BackupDownloadStatusError(GENERIC_ERROR),
+                        FETCH_BACKUP_DOWNLOAD_STATE
+                    )
+                )
+                .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
 
-                val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
+            val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
 
-                assertThat(result).isEqualTo(listOf(progressStatus, completeStatus))
-            }
+            assertThat(result).isEqualTo(listOf(progressStatus, completeStatus))
+        }
 
     @Test
     fun `given network not available under retry count, when backup status triggers, then return progress`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable())
-                .thenReturn(false)
-                .thenReturn(false)
-                .thenReturn(true)
+            .thenReturn(false)
+            .thenReturn(false)
+            .thenReturn(true)
         whenever(activityLogStore.getBackupDownloadStatusForSite(site))
-                .thenReturn(inProgressModel)
-                .thenReturn(statusModel)
+            .thenReturn(inProgressModel)
+            .thenReturn(statusModel)
         whenever(activityLogStore.fetchBackupDownloadState(any()))
-                .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
+            .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
 
         val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
 
@@ -276,72 +279,72 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     private val invalidDate = Calendar.getInstance().apply { time = Date() }.time
 
     private val statusModel = BackupDownloadStatusModel(
-            downloadId = downloadId,
-            rewindId = rewindId,
-            backupPoint = Date(1609690147756),
-            startedAt = Date(1609690147756),
-            progress = null,
-            downloadCount = 0,
-            validUntil = validDate,
-            url = url
+        downloadId = downloadId,
+        rewindId = rewindId,
+        backupPoint = Date(1609690147756),
+        startedAt = Date(1609690147756),
+        progress = null,
+        downloadCount = 0,
+        validUntil = validDate,
+        url = url
     )
 
     private val inProgressModel = BackupDownloadStatusModel(
-            downloadId = downloadId,
-            rewindId = rewindId,
-            backupPoint = Date(1609690147756),
-            startedAt = Date(1609690147756),
-            progress = progress,
-            downloadCount = 0,
-            url = null,
-            validUntil = null
+        downloadId = downloadId,
+        rewindId = rewindId,
+        backupPoint = Date(1609690147756),
+        startedAt = Date(1609690147756),
+        progress = progress,
+        downloadCount = 0,
+        url = null,
+        validUntil = null
     )
 
     private val activityLogModel = ActivityLogModel(
-            activityID = "activityID",
-            summary = "summary",
-            content = null,
-            name = null,
-            type = null,
-            gridicon = null,
-            status = null,
-            rewindable = null,
-            rewindID = null,
-            published = published,
-            actor = null
+        activityID = "activityID",
+        summary = "summary",
+        content = null,
+        name = null,
+        type = null,
+        gridicon = null,
+        status = null,
+        rewindable = null,
+        rewindID = null,
+        published = published,
+        actor = null
     )
 
     private val noUrlStatusModel = BackupDownloadStatusModel(
-            downloadId = downloadId,
-            rewindId = rewindId,
-            backupPoint = Date(1609690147756),
-            startedAt = Date(1609690147756),
-            progress = null,
-            downloadCount = 0,
-            validUntil = validDate,
-            url = null
+        downloadId = downloadId,
+        rewindId = rewindId,
+        backupPoint = Date(1609690147756),
+        startedAt = Date(1609690147756),
+        progress = null,
+        downloadCount = 0,
+        validUntil = validDate,
+        url = null
     )
 
     private val noValidUntilDateStatusModel = BackupDownloadStatusModel(
-            downloadId = downloadId,
-            rewindId = rewindId,
-            backupPoint = Date(1609690147756),
-            startedAt = Date(1609690147756),
-            progress = null,
-            downloadCount = 0,
-            validUntil = null,
-            url = url
+        downloadId = downloadId,
+        rewindId = rewindId,
+        backupPoint = Date(1609690147756),
+        startedAt = Date(1609690147756),
+        progress = null,
+        downloadCount = 0,
+        validUntil = null,
+        url = url
     )
 
     private val oldValidUntilDateStatusModel = BackupDownloadStatusModel(
-            downloadId = downloadId,
-            rewindId = rewindId,
-            backupPoint = Date(1609690147756),
-            startedAt = Date(1609690147756),
-            progress = null,
-            downloadCount = 0,
-            validUntil = invalidDate,
-            url = url
+        downloadId = downloadId,
+        rewindId = rewindId,
+        backupPoint = Date(1609690147756),
+        startedAt = Date(1609690147756),
+        progress = null,
+        downloadCount = 0,
+        validUntil = invalidDate,
+        url = url
     )
 
     private val completeStatus = Complete(rewindId, downloadId, url, published, validDate, true)

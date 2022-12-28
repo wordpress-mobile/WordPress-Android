@@ -22,8 +22,10 @@ private const val REQUEST_BLOG_LISTENER_PARAM_POSITION = 2
 
 @ExperimentalCoroutinesApi
 class ReaderFetchPostUseCaseTest : BaseUnitTest() {
-    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
     private lateinit var useCase: ReaderFetchPostUseCase
 
     private val postId = 1L
@@ -48,33 +50,33 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     fun `given feed, when reader post is fetched, then feed post is requested`() = test {
         whenever(readerPostActionsWrapper.requestFeedPost(anyLong(), anyLong(), any())).then {
             (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                    .onSuccess(null)
+                .onSuccess(null)
         }
 
         useCase.fetchPost(postId = postId, blogId = blogId, isFeed = true)
 
         verify(readerPostActionsWrapper)
-                .requestFeedPost(feedId = eq(blogId), postId = eq(postId), requestListener = any())
+            .requestFeedPost(feedId = eq(blogId), postId = eq(postId), requestListener = any())
     }
 
     @Test
     fun `given blog, when reader post is fetched, then blog post is requested`() = test {
         whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
             (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                    .onSuccess(null)
+                .onSuccess(null)
         }
 
         useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
 
         verify(readerPostActionsWrapper)
-                .requestBlogPost(blogId = eq(blogId), postId = eq(postId), requestListener = any())
+            .requestBlogPost(blogId = eq(blogId), postId = eq(postId), requestListener = any())
     }
 
     @Test
     fun `given success response, when reader post is fetched, then success is returned`() = test {
         whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
             (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                    .onSuccess(null)
+                .onSuccess(null)
         }
 
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
@@ -86,7 +88,7 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     fun `given http not found status code, when reader post is fetched, then post not found is returned`() = test {
         whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
             (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                    .onFailure(HttpURLConnection.HTTP_NOT_FOUND)
+                .onFailure(HttpURLConnection.HTTP_NOT_FOUND)
         }
 
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
@@ -98,7 +100,7 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     fun `given http unauthorised status code, when reader post is fetched, then not authorised is returned`() = test {
         whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
             (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                    .onFailure(HttpURLConnection.HTTP_UNAUTHORIZED)
+                .onFailure(HttpURLConnection.HTTP_UNAUTHORIZED)
         }
 
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
@@ -110,7 +112,7 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     fun `given http forbidden status code, when reader post is fetched, then not authorised is returned`() = test {
         whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
             (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                    .onFailure(HttpURLConnection.HTTP_FORBIDDEN)
+                .onFailure(HttpURLConnection.HTTP_FORBIDDEN)
         }
 
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
@@ -122,7 +124,7 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     fun `given unknown status code, when reader post is fetched, then request failed is returned`() = test {
         whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
             (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                    .onFailure(500)
+                .onFailure(500)
         }
 
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)

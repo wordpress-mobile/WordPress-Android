@@ -22,9 +22,12 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 @ExperimentalCoroutinesApi
 class PostListCreateMenuViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PostListCreateMenuViewModel
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var site: SiteModel
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var site: SiteModel
 
     @Before
     fun setUp() {
@@ -121,7 +124,7 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, false)
         Assertions.assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
-                .isEqualTo(R.string.create_post_story_fab_tooltip)
+            .isEqualTo(R.string.create_post_story_fab_tooltip)
     }
 
     @Test
@@ -129,14 +132,14 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
         viewModel.start(site, false)
 
         val expectedOrder = listOf(
-                NO_ACTION,
-                CREATE_NEW_STORY,
-                CREATE_NEW_POST
+            NO_ACTION,
+            CREATE_NEW_STORY,
+            CREATE_NEW_POST
         )
 
         Assertions.assertThat(viewModel.mainActions.value!!.map { it.actionType }).isEqualTo(expectedOrder)
     }
 
     private fun getCreateAction(actionType: ActionType) =
-            viewModel.mainActions.value?.first { it.actionType == actionType } as CreateAction
+        viewModel.mainActions.value?.first { it.actionType == actionType } as CreateAction
 }

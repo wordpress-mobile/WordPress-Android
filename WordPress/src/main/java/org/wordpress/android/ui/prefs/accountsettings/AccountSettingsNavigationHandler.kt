@@ -17,18 +17,18 @@ class AccountSettingsNavigationHandler @Inject constructor() {
         with(request) {
             val bundle: Bundle = BaseUsernameChangerFullScreenDialogFragment.newBundle(displayName, userName)
             FullScreenDialogFragment.Builder(activity)
-                    .setTitle(R.string.username_changer_title)
-                    .setAction(R.string.username_changer_action)
-                    .setOnConfirmListener { result -> onConfirm.invoke(result) }
-                    .setIsLifOnScroll(false)
-                    .setOnDismissListener { onDismiss.invoke() }
-                    .setOnShownListener { onShown.invoke() }
-                    .setContent(SettingsUsernameChangerFragment::class.java, bundle)
-                    .build()
-                    .show(
-                            (activity as AppCompatActivity).supportFragmentManager,
-                            FullScreenDialogFragment.TAG
-                    )
+                .setTitle(R.string.username_changer_title)
+                .setAction(R.string.username_changer_action)
+                .setOnConfirmListener { result -> onConfirm.invoke(result) }
+                .setIsLifOnScroll(false)
+                .setOnDismissListener { onDismiss.invoke() }
+                .setOnShownListener { onShown.invoke() }
+                .setContent(SettingsUsernameChangerFragment::class.java, bundle)
+                .build()
+                .show(
+                    (activity as AppCompatActivity).supportFragmentManager,
+                    FullScreenDialogFragment.TAG
+                )
         }
     }
 }

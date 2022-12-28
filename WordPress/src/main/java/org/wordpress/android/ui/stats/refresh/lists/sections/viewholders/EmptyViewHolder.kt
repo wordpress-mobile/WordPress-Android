@@ -6,8 +6,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 
 class EmptyViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_empty_item
+    parent,
+    R.layout.stats_block_empty_item
 ) {
     private val text = itemView.findViewById<TextView>(R.id.text)
     fun bind(message: Empty) {

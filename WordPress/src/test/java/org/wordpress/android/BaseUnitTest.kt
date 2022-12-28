@@ -15,8 +15,12 @@ import org.mockito.junit.MockitoJUnitRunner
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 abstract class BaseUnitTest(testDispatcher: TestDispatcher = UnconfinedTestDispatcher()) {
-    @Rule @JvmField val rule = InstantTaskExecutorRule()
-    @Rule @JvmField val coroutinesTestRule = CoroutineTestRule(testDispatcher)
+    @Rule
+    @JvmField
+    val rule = InstantTaskExecutorRule()
+    @Rule
+    @JvmField
+    val coroutinesTestRule = CoroutineTestRule(testDispatcher)
 
     protected fun testDispatcher() = coroutinesTestRule.testDispatcher
 

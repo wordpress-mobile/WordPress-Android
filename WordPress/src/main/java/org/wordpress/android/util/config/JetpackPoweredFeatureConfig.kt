@@ -11,9 +11,9 @@ import javax.inject.Inject
 class JetpackPoweredFeatureConfig @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.JETPACK_POWERED,
-        JETPACK_POWERED_REMOTE_FIELD
+    appConfig,
+    BuildConfig.JETPACK_POWERED,
+    JETPACK_POWERED_REMOTE_FIELD
 ) {
     companion object {
         const val JETPACK_POWERED_REMOTE_FIELD = "jetpack_powered_remote_field"

@@ -20,12 +20,12 @@ class DeepLinkTrackingUtils
     fun track(action: String, navigateAction: NavigateAction, uriWrapper: UriWrapper) {
         val trackingData = buildTrackingDataFromNavigateAction(navigateAction, uriWrapper)
         analyticsUtilsWrapper.trackWithDeepLinkData(
-                DEEP_LINKED,
-                action,
-                uriWrapper.host ?: "",
-                trackingData.source.value,
-                trackingData.url,
-                trackingData.sourceInfo
+            DEEP_LINKED,
+            action,
+            uriWrapper.host ?: "",
+            trackingData.source.value,
+            trackingData.url,
+            trackingData.sourceInfo
         )
     }
 

@@ -25,8 +25,10 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     private var searchInputWithHeader: SearchInputWithHeader? = null
     private val viewModel: SiteCreationDomainsViewModel by activityViewModels()
 
-    @Inject internal lateinit var uiHelpers: UiHelpers
-    @Inject internal lateinit var displayUtils: DisplayUtilsWrapper
+    @Inject
+    internal lateinit var uiHelpers: UiHelpers
+    @Inject
+    internal lateinit var displayUtils: DisplayUtilsWrapper
 
     private var binding: SiteCreationDomainsScreenBinding? = null
 
@@ -45,9 +47,10 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         return R.layout.site_creation_domains_screen
     }
 
-    @Suppress("UseCheckOrError") override val screenTitle: String
+    @Suppress("UseCheckOrError")
+    override val screenTitle: String
         get() = arguments?.getString(EXTRA_SCREEN_TITLE)
-                ?: throw IllegalStateException("Required argument screen title is missing.")
+            ?: throw IllegalStateException("Required argument screen title is missing.")
 
     override fun setBindingViewStubListener(parentBinding: SiteCreationFormScreenBinding) {
         parentBinding.siteCreationFormContentStub.setOnInflateListener { _, inflated ->
@@ -58,9 +61,9 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     override fun setupContent() {
         binding?.let {
             searchInputWithHeader = SearchInputWithHeader(
-                    uiHelpers = uiHelpers,
-                    rootView = it.root as ViewGroup,
-                    onClear = { viewModel.onClearTextBtnClicked() }
+                uiHelpers = uiHelpers,
+                rootView = it.root as ViewGroup,
+                onClear = { viewModel.onClearTextBtnClicked() }
             )
             it.createSiteButton.setOnClickListener { viewModel.createSiteBtnClicked() }
             it.initRecyclerView()

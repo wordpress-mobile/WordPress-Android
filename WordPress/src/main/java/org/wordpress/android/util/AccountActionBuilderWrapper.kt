@@ -7,5 +7,5 @@ import javax.inject.Inject
 
 class AccountActionBuilderWrapper @Inject constructor() {
     fun newUpdateAccessTokenAction(accessToken: String): Action<UpdateTokenPayload> =
-            AccountActionBuilder.newUpdateAccessTokenAction(UpdateTokenPayload(accessToken))
+        AccountActionBuilder.newUpdateAccessTokenAction(UpdateTokenPayload(accessToken))
 }

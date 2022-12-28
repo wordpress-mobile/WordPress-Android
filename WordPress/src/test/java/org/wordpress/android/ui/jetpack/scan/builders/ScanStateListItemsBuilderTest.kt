@@ -48,30 +48,40 @@ private const val ONE_HOUR = 60 * ONE_MINUTE
 private const val DUMMY_TEXT = "dummy text"
 private const val TEST_SITE_ID = 1L
 private const val SERVER_CREDS_MSG_WITH_CLICKABLE_LINK =
-        "<a href=\"${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID}\">Enter your server credentials&lt</a> " +
-                "to fix threat."
+    "<a href=\"${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID}\">Enter your server credentials&lt</a> " +
+            "to fix threat."
 
 @ExperimentalCoroutinesApi
 class ScanStateListItemsBuilderTest : BaseUnitTest() {
     private lateinit var builder: ScanStateListItemsBuilder
 
-    @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var dateProvider: DateProvider
-    @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
-    @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var threatItemBuilder: ThreatItemBuilder
-    @Mock private lateinit var threatDetailsListItemsBuilder: ThreatDetailsListItemsBuilder
-    @Mock private lateinit var scanStore: ScanStore
-    @Mock private lateinit var onHelpClickedMock: () -> Unit
-    @Mock private lateinit var onEnterServerCredsIconClicked: () -> Unit
-    @Mock private lateinit var percentFormatter: PercentFormatter
+    @Mock
+    private lateinit var site: SiteModel
+    @Mock
+    private lateinit var dateProvider: DateProvider
+    @Mock
+    private lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+    @Mock
+    private lateinit var threatItemBuilder: ThreatItemBuilder
+    @Mock
+    private lateinit var threatDetailsListItemsBuilder: ThreatDetailsListItemsBuilder
+    @Mock
+    private lateinit var scanStore: ScanStore
+    @Mock
+    private lateinit var onHelpClickedMock: () -> Unit
+    @Mock
+    private lateinit var onEnterServerCredsIconClicked: () -> Unit
+    @Mock
+    private lateinit var percentFormatter: PercentFormatter
 
     private val baseThreatModel = BaseThreatModel(
-            id = 1L,
-            signature = "",
-            description = "",
-            status = ThreatStatus.CURRENT,
-            firstDetected = Date(0)
+        id = 1L,
+        signature = "",
+        description = "",
+        status = ThreatStatus.CURRENT,
+        firstDetected = Date(0)
     )
     private val threat = ThreatModel.GenericThreatModel(baseThreatModel)
     private val threats = listOf(threat)
@@ -81,13 +91,13 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Before
     fun setUp() {
         builder = ScanStateListItemsBuilder(
-                dateProvider,
-                htmlMessageUtils,
-                resourceProvider,
-                threatItemBuilder,
-                threatDetailsListItemsBuilder,
-                scanStore,
-                percentFormatter
+            dateProvider,
+            htmlMessageUtils,
+            resourceProvider,
+            threatItemBuilder,
+            threatDetailsListItemsBuilder,
+            scanStore,
+            percentFormatter
         )
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn("")
         whenever(resourceProvider.getString(anyInt())).thenReturn(DUMMY_TEXT)
@@ -100,56 +110,56 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given fixing threats state, when items are built, then shield warning icon with error color exists`() =
-            test {
-                val scanStateItems = buildScanStateItems(
-                        model = scanStateModelWithThreats,
-                        fixingThreatIds = listOf(threat.baseThreatModel.id)
-                )
+        test {
+            val scanStateItems = buildScanStateItems(
+                model = scanStateModelWithThreats,
+                fixingThreatIds = listOf(threat.baseThreatModel.id)
+            )
 
-                assertThat(scanStateItems.filterIsInstance(IconState::class.java).first()).isEqualTo(
-                        IconState(
-                                icon = R.drawable.ic_shield_warning_white,
-                                colorResId = R.color.error,
-                                sizeResId = R.dimen.scan_icon_size,
-                                marginResId = R.dimen.scan_icon_margin,
-                                contentDescription = UiStringRes(R.string.scan_state_icon)
-                        )
+            assertThat(scanStateItems.filterIsInstance(IconState::class.java).first()).isEqualTo(
+                IconState(
+                    icon = R.drawable.ic_shield_warning_white,
+                    colorResId = R.color.error,
+                    sizeResId = R.dimen.scan_icon_size,
+                    marginResId = R.dimen.scan_icon_margin,
+                    contentDescription = UiStringRes(R.string.scan_state_icon)
                 )
-            }
+            )
+        }
 
     @Test
     fun `given fixing threats state, when items are built, then fixing threats header exists`() = test {
         val scanStateItems = buildScanStateItems(
-                model = scanStateModelWithThreats,
-                fixingThreatIds = listOf(threat.baseThreatModel.id)
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threat.baseThreatModel.id)
         )
 
         assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
-                HeaderState(UiStringRes(R.string.scan_fixing_threats_title_singular))
+            HeaderState(UiStringRes(R.string.scan_fixing_threats_title_singular))
         )
     }
 
     @Test
     fun `given fixing threats state, when items are built, then fixing threats description exists`() = test {
         val scanStateItems = buildScanStateItems(
-                model = scanStateModelWithThreats,
-                fixingThreatIds = listOf(threat.baseThreatModel.id)
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threat.baseThreatModel.id)
         )
 
         assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
-                DescriptionState(UiStringRes(R.string.scan_fixing_threats_description_singular))
+            DescriptionState(UiStringRes(R.string.scan_fixing_threats_description_singular))
         )
     }
 
     @Test
     fun `given fixing threats state, when items are built, then indeterminate progress bar exists`() = test {
         val scanStateItems = buildScanStateItems(
-                model = scanStateModelWithThreats,
-                fixingThreatIds = listOf(threat.baseThreatModel.id)
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threat.baseThreatModel.id)
         )
 
         assertThat(scanStateItems.filterIsInstance(ProgressState::class.java).first()).isEqualTo(
-                ProgressState(isIndeterminate = true, isVisible = true)
+            ProgressState(isIndeterminate = true, isVisible = true)
         )
     }
 
@@ -162,8 +172,8 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         whenever(scanStore.getThreatModelByThreatId(any())).thenReturn(threatModel)
 
         val scanStateItems = buildScanStateItems(
-                model = scanStateModelWithThreats,
-                fixingThreatIds = listOf(threat.baseThreatModel.id)
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threat.baseThreatModel.id)
         )
 
         assertThat(scanStateItems.filterIsInstance(ThreatItemState::class.java)).isNotEmpty
@@ -171,65 +181,65 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given fixing threats state, when items are built, then threats with fixable description subheader exist`() =
-            test {
-                val threatModel = ThreatTestData.fixableThreatInCurrentStatus
-                val threatItemState = createDummyThreatItemState(threatModel)
-                val subHeader = DescriptionState(UiStringText("sub header"))
-                whenever(threatItemBuilder.buildThreatItem(threatModel)).thenReturn(threatItemState)
-                whenever(threatDetailsListItemsBuilder.buildFixableThreatDescription(any())).thenReturn(subHeader)
-                whenever(scanStore.getThreatModelByThreatId(any())).thenReturn(threatModel)
+        test {
+            val threatModel = ThreatTestData.fixableThreatInCurrentStatus
+            val threatItemState = createDummyThreatItemState(threatModel)
+            val subHeader = DescriptionState(UiStringText("sub header"))
+            whenever(threatItemBuilder.buildThreatItem(threatModel)).thenReturn(threatItemState)
+            whenever(threatDetailsListItemsBuilder.buildFixableThreatDescription(any())).thenReturn(subHeader)
+            whenever(scanStore.getThreatModelByThreatId(any())).thenReturn(threatModel)
 
-                val scanStateItems = buildScanStateItems(
-                        model = scanStateModelWithThreats,
-                        fixingThreatIds = listOf(threatModel.baseThreatModel.id)
-                )
+            val scanStateItems = buildScanStateItems(
+                model = scanStateModelWithThreats,
+                fixingThreatIds = listOf(threatModel.baseThreatModel.id)
+            )
 
-                assertThat(scanStateItems.filterIsInstance(ThreatItemState::class.java).first().subHeader)
-                        .isEqualTo(subHeader.text)
-            }
+            assertThat(scanStateItems.filterIsInstance(ThreatItemState::class.java).first().subHeader)
+                .isEqualTo(subHeader.text)
+        }
 
     @Test
     fun `given fixing state fixable threats without server creds, when items are built, then creds msg not exists`() =
-            test {
-                val scanStateItems = buildScanStateItems(
-                        model = scanStateModelWithThreats,
-                        fixingThreatIds = listOf(threat.baseThreatModel.id),
-                        fixableThreatsPresent = true,
-                        serverCredsPresent = false
-                )
+        test {
+            val scanStateItems = buildScanStateItems(
+                model = scanStateModelWithThreats,
+                fixingThreatIds = listOf(threat.baseThreatModel.id),
+                fixableThreatsPresent = true,
+                serverCredsPresent = false
+            )
 
-                assertThat(
-                        scanStateItems.filterIsInstance(DescriptionState::class.java)
-                                .firstOrNull {
-                                    it.text == UiStringRes(R.string.threat_fix_enter_server_creds_msg_singular)
-                                }
-                ).isNull()
-            }
+            assertThat(
+                scanStateItems.filterIsInstance(DescriptionState::class.java)
+                    .firstOrNull {
+                        it.text == UiStringRes(R.string.threat_fix_enter_server_creds_msg_singular)
+                    }
+            ).isNull()
+        }
 
     /* IDLE - THREATS FOUND STATE */
 
     @Test
     fun `given idle state with threats, when items are built, then shield warning icon with error color exists`() =
-            test {
-                val scanStateItems = buildScanStateItems(scanStateModelWithThreats)
+        test {
+            val scanStateItems = buildScanStateItems(scanStateModelWithThreats)
 
-                assertThat(scanStateItems.filterIsInstance(IconState::class.java).first()).isEqualTo(
-                        IconState(
-                                icon = R.drawable.ic_shield_warning_white,
-                                colorResId = R.color.error,
-                                sizeResId = R.dimen.scan_icon_size,
-                                marginResId = R.dimen.scan_icon_margin,
-                                contentDescription = UiStringRes(R.string.scan_state_icon)
-                        )
+            assertThat(scanStateItems.filterIsInstance(IconState::class.java).first()).isEqualTo(
+                IconState(
+                    icon = R.drawable.ic_shield_warning_white,
+                    colorResId = R.color.error,
+                    sizeResId = R.dimen.scan_icon_size,
+                    marginResId = R.dimen.scan_icon_margin,
+                    contentDescription = UiStringRes(R.string.scan_state_icon)
                 )
-            }
+            )
+        }
 
     @Test
     fun `given idle state with threats, when items are built, then header for threats found exists`() = test {
         val scanStateItems = buildScanStateItems(model = scanStateModelWithThreats)
 
         assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
-                HeaderState(UiStringRes(R.string.scan_idle_threats_found_title))
+            HeaderState(UiStringRes(R.string.scan_idle_threats_found_title))
         )
     }
 
@@ -238,9 +248,9 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         buildScanStateItems(scanStateModelWithThreats)
 
         verify(htmlMessageUtils).getHtmlMessageFromStringFormatResId(
-                R.string.scan_idle_threats_description_singular,
-                "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
-                resourceProvider.getString(R.string.scan_here_to_help)
+            R.string.scan_idle_threats_description_singular,
+            "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
+            resourceProvider.getString(R.string.scan_here_to_help)
         )
     }
 
@@ -249,7 +259,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         val scanStateItems = buildScanStateItems(scanStateModelWithThreats)
 
         assertThat(scanStateItems.filterIsInstance(ActionButtonState::class.java).map { it.text }).contains(
-                UiStringRes(R.string.scan_again)
+            UiStringRes(R.string.scan_again)
         )
     }
 
@@ -261,129 +271,129 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         val scanStateItems = buildScanStateItems(scanStateModelWithFixableThreats)
 
         assertThat(scanStateItems.filterIsInstance(ActionButtonState::class.java).map { it.text }).contains(
-                UiStringRes(R.string.threats_fix_all)
+            UiStringRes(R.string.threats_fix_all)
         )
     }
 
     @Test
     fun `given idle state with no fixable threats, when items are built, then fix all threats btn does not exists`() =
-            test {
-                val threats = listOf(threat.copy(baseThreatModel = baseThreatModel.copy(fixable = null)))
-                val scanStateModelWithNoFixableThreats = scanStateModelWithThreats.copy(threats = threats)
+        test {
+            val threats = listOf(threat.copy(baseThreatModel = baseThreatModel.copy(fixable = null)))
+            val scanStateModelWithNoFixableThreats = scanStateModelWithThreats.copy(threats = threats)
 
-                val scanStateItems = buildScanStateItems(scanStateModelWithNoFixableThreats)
+            val scanStateItems = buildScanStateItems(scanStateModelWithNoFixableThreats)
 
-                assertThat(scanStateItems.filterIsInstance(ActionButtonState::class.java).map { it.text })
-                        .doesNotContain(UiStringRes(R.string.threats_fix_all))
-            }
+            assertThat(scanStateItems.filterIsInstance(ActionButtonState::class.java).map { it.text })
+                .doesNotContain(UiStringRes(R.string.threats_fix_all))
+        }
 
     @Test
     fun `given idle state fixable threats without server creds, when items are built, then fix all btn is disabled`() =
-            test {
-                val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = false)
+        test {
+            val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = false)
 
-                val fixAllButton = scanStateItems.filterIsInstance(ActionButtonState::class.java)
-                        .firstOrNull { it.text == UiStringRes(R.string.threats_fix_all) }
-                assertThat(fixAllButton?.isEnabled).isFalse
-            }
+            val fixAllButton = scanStateItems.filterIsInstance(ActionButtonState::class.java)
+                .firstOrNull { it.text == UiStringRes(R.string.threats_fix_all) }
+            assertThat(fixAllButton?.isEnabled).isFalse
+        }
 
     @Test
     fun `given idle state fixable threats with server creds, when items are built, then fix all btn is enabled`() =
-            test {
-                val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = true)
+        test {
+            val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = true)
 
-                val fixAllButton = scanStateItems.filterIsInstance(ActionButtonState::class.java)
-                        .firstOrNull { it.text == UiStringRes(R.string.threats_fix_all) }
-                assertThat(fixAllButton?.isEnabled).isTrue
-            }
+            val fixAllButton = scanStateItems.filterIsInstance(ActionButtonState::class.java)
+                .firstOrNull { it.text == UiStringRes(R.string.threats_fix_all) }
+            assertThat(fixAllButton?.isEnabled).isTrue
+        }
 
     @Test
     fun `given idle state fixable threats without server creds, when items are built, then server creds msg exists`() =
-            test {
-                val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = false)
+        test {
+            val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = false)
 
-                assertThat(scanStateItems.filterIsInstance(FootnoteState::class.java).first().text)
-                        .isEqualTo(UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK))
-            }
+            assertThat(scanStateItems.filterIsInstance(FootnoteState::class.java).first().text)
+                .isEqualTo(UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK))
+        }
 
     @Test
     fun `given server creds msg exists, when items are built, then primary colored plus button exists`() =
-            test {
-                val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = false)
+        test {
+            val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = false)
 
-                val serverCredsMsg = scanStateItems.filterIsInstance(FootnoteState::class.java)
-                        .first { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) }
-                with(serverCredsMsg) {
-                    assertThat(iconResId).isEqualTo(R.drawable.ic_plus_white_24dp)
-                    assertThat(iconColorResId).isEqualTo(R.color.colorPrimary)
-                }
+            val serverCredsMsg = scanStateItems.filterIsInstance(FootnoteState::class.java)
+                .first { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) }
+            with(serverCredsMsg) {
+                assertThat(iconResId).isEqualTo(R.drawable.ic_plus_white_24dp)
+                assertThat(iconColorResId).isEqualTo(R.color.colorPrimary)
             }
+        }
 
     @Test
     fun `given idle state fixable threats with server creds, when items are built, then server creds msg not exists`() =
-            test {
-                val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = true)
+        test {
+            val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = true)
 
-                assertThat(scanStateItems.filterIsInstance(FootnoteState::class.java)
-                        .firstOrNull { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) })
-                        .isNull()
-            }
+            assertThat(scanStateItems.filterIsInstance(FootnoteState::class.java)
+                .firstOrNull { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) })
+                .isNull()
+        }
 
     @Test
     fun `given idle state with no fixable threats, when items are built, then server creds msg does not exists`() =
-            test {
-                val scanStateItems = buildScanStateItems(fixableThreatsPresent = false)
+        test {
+            val scanStateItems = buildScanStateItems(fixableThreatsPresent = false)
 
-                assertThat(scanStateItems.filterIsInstance(FootnoteState::class.java)
-                        .firstOrNull { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) })
-                        .isNull()
-            }
+            assertThat(scanStateItems.filterIsInstance(FootnoteState::class.java)
+                .firstOrNull { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) })
+                .isNull()
+        }
 
     @Test
     fun `given idle state with threats, when items are built, then description with clickable help info exists`() =
-            test {
-                val clickableText = "clickable help text"
-                val descriptionWithClickableText = "description with $clickableText"
-                whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any()))
-                        .thenReturn(descriptionWithClickableText)
-                whenever(resourceProvider.getString(R.string.scan_here_to_help)).thenReturn(clickableText)
+        test {
+            val clickableText = "clickable help text"
+            val descriptionWithClickableText = "description with $clickableText"
+            whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any()))
+                .thenReturn(descriptionWithClickableText)
+            whenever(resourceProvider.getString(R.string.scan_here_to_help)).thenReturn(clickableText)
 
-                val scanStateItems = buildScanStateItems(scanStateModelWithThreats)
+            val scanStateItems = buildScanStateItems(scanStateModelWithThreats)
 
-                val descriptionState = scanStateItems.filterIsInstance(DescriptionState::class.java).first()
-                assertThat(descriptionState.clickableTextsInfo?.first()).isEqualTo(
-                        ClickableTextInfo(
-                                17,
-                                36,
-                                onHelpClickedMock
-                        )
+            val descriptionState = scanStateItems.filterIsInstance(DescriptionState::class.java).first()
+            assertThat(descriptionState.clickableTextsInfo?.first()).isEqualTo(
+                ClickableTextInfo(
+                    17,
+                    36,
+                    onHelpClickedMock
                 )
-            }
+            )
+        }
 
     /* IDLE - THREATS NOT FOUND STATE */
 
     @Test
     fun `given idle no threats state, when items are built, then shield tick icon with green color exists`() =
-            test {
-                val scanStateItems = buildScanStateItems(scanStateModelWithNoThreats)
+        test {
+            val scanStateItems = buildScanStateItems(scanStateModelWithNoThreats)
 
-                assertThat(scanStateItems.filterIsInstance(IconState::class.java).first()).isEqualTo(
-                        IconState(
-                                icon = R.drawable.ic_shield_tick_white,
-                                colorResId = R.color.jetpack_green_40,
-                                sizeResId = R.dimen.scan_icon_size,
-                                marginResId = R.dimen.scan_icon_margin,
-                                contentDescription = UiStringRes(R.string.scan_state_icon)
-                        )
+            assertThat(scanStateItems.filterIsInstance(IconState::class.java).first()).isEqualTo(
+                IconState(
+                    icon = R.drawable.ic_shield_tick_white,
+                    colorResId = R.color.jetpack_green_40,
+                    sizeResId = R.dimen.scan_icon_size,
+                    marginResId = R.dimen.scan_icon_margin,
+                    contentDescription = UiStringRes(R.string.scan_state_icon)
                 )
-            }
+            )
+        }
 
     @Test
     fun `given idle no threats state, when items are built, then header for no threats found exists`() = test {
         val scanStateItems = buildScanStateItems(model = scanStateModelWithNoThreats)
 
         assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
-                HeaderState(UiStringRes(R.string.scan_idle_no_threats_found_title))
+            HeaderState(UiStringRes(R.string.scan_idle_no_threats_found_title))
         )
     }
 
@@ -392,155 +402,155 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         val scanStateItems = buildScanStateItems(scanStateModelWithNoThreats)
 
         assertThat(scanStateItems.filterIsInstance(ActionButtonState::class.java).map { it.text }).contains(
-                UiStringRes(R.string.scan_now)
+            UiStringRes(R.string.scan_now)
         )
     }
 
     @Test
     fun `given idle no threats state with last scan secs ago, when items are built, then few secs exists in desc`() =
-            test {
-                whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
-                val scanStateModelWithMostRecentStartDate = scanStateModelWithNoThreats.copy(
-                        mostRecentStatus = ScanProgressStatus(startDate = Date(DUMMY_CURRENT_TIME - 10))
-                )
-                val scanStateItems = buildScanStateItems(scanStateModelWithMostRecentStartDate)
+        test {
+            whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
+            val scanStateModelWithMostRecentStartDate = scanStateModelWithNoThreats.copy(
+                mostRecentStatus = ScanProgressStatus(startDate = Date(DUMMY_CURRENT_TIME - 10))
+            )
+            val scanStateItems = buildScanStateItems(scanStateModelWithMostRecentStartDate)
 
-                assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).map { it.text }).contains(
-                        UiStringResWithParams(
-                                R.string.scan_idle_last_scan_description,
-                                listOf(
-                                        UiStringRes(R.string.scan_in_few_seconds),
-                                        UiStringRes(R.string.scan_idle_manual_scan_description)
-                                )
-                        )
+            assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).map { it.text }).contains(
+                UiStringResWithParams(
+                    R.string.scan_idle_last_scan_description,
+                    listOf(
+                        UiStringRes(R.string.scan_in_few_seconds),
+                        UiStringRes(R.string.scan_idle_manual_scan_description)
+                    )
                 )
-            }
+            )
+        }
 
     @Test
     fun `given idle no threats state with last scan hrs ago, when items are built, then hrs ago exists in descr`() =
-            test {
-                val scanStateModelWithMostRecentStartDate = scanStateModelWithNoThreats.copy(
-                        mostRecentStatus = ScanProgressStatus(startDate = Date(DUMMY_CURRENT_TIME - ONE_HOUR))
-                )
+        test {
+            val scanStateModelWithMostRecentStartDate = scanStateModelWithNoThreats.copy(
+                mostRecentStatus = ScanProgressStatus(startDate = Date(DUMMY_CURRENT_TIME - ONE_HOUR))
+            )
 
-                val scanStateItems = buildScanStateItems(scanStateModelWithMostRecentStartDate)
+            val scanStateItems = buildScanStateItems(scanStateModelWithMostRecentStartDate)
 
-                assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).map { it.text }).contains(
-                        UiStringResWithParams(
-                                R.string.scan_idle_last_scan_description,
-                                listOf(
-                                        UiStringResWithParams(R.string.scan_in_hours_ago, listOf(UiStringText("1"))),
-                                        UiStringRes(R.string.scan_idle_manual_scan_description)
-                                )
-                        )
+            assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).map { it.text }).contains(
+                UiStringResWithParams(
+                    R.string.scan_idle_last_scan_description,
+                    listOf(
+                        UiStringResWithParams(R.string.scan_in_hours_ago, listOf(UiStringText("1"))),
+                        UiStringRes(R.string.scan_idle_manual_scan_description)
+                    )
                 )
-            }
+            )
+        }
 
     @Test
     fun `given idle no threats state with last scan mins ago, when items are built, then mins ago exists in descr`() =
-            test {
-                val scanStateModelWithMostRecentStartDate = scanStateModelWithNoThreats.copy(
-                        mostRecentStatus = ScanProgressStatus(startDate = Date(DUMMY_CURRENT_TIME - ONE_MINUTE))
-                )
+        test {
+            val scanStateModelWithMostRecentStartDate = scanStateModelWithNoThreats.copy(
+                mostRecentStatus = ScanProgressStatus(startDate = Date(DUMMY_CURRENT_TIME - ONE_MINUTE))
+            )
 
-                val scanStateItems = buildScanStateItems(scanStateModelWithMostRecentStartDate)
+            val scanStateItems = buildScanStateItems(scanStateModelWithMostRecentStartDate)
 
-                assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).map { it.text }).contains(
+            assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).map { it.text }).contains(
+                UiStringResWithParams(
+                    R.string.scan_idle_last_scan_description,
+                    listOf(
                         UiStringResWithParams(
-                                R.string.scan_idle_last_scan_description,
-                                listOf(
-                                        UiStringResWithParams(
-                                                R.string.scan_in_minutes_ago,
-                                                listOf(UiStringText("1"))
-                                        ),
-                                        UiStringRes(R.string.scan_idle_manual_scan_description)
-                                )
-                        )
+                            R.string.scan_in_minutes_ago,
+                            listOf(UiStringText("1"))
+                        ),
+                        UiStringRes(R.string.scan_idle_manual_scan_description)
+                    )
                 )
-            }
+            )
+        }
 
     /* SCANNING STATE */
 
     @Test
     fun `given scanning state, when items are built, then shield icon with light green color exists`() =
-            test {
-                whenever(percentFormatter.format(0)).thenReturn("10")
-                val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(state = State.SCANNING)
+        test {
+            whenever(percentFormatter.format(0)).thenReturn("10")
+            val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(state = State.SCANNING)
 
-                val scanStateItems = buildScanStateItems(scanStateModelInScanningState)
+            val scanStateItems = buildScanStateItems(scanStateModelInScanningState)
 
-                assertThat(scanStateItems.filterIsInstance(IconState::class.java).first()).isEqualTo(
-                        IconState(
-                                icon = R.drawable.ic_shield_white,
-                                colorResId = R.color.jetpack_green_5,
-                                sizeResId = R.dimen.scan_icon_size,
-                                marginResId = R.dimen.scan_icon_margin,
-                                contentDescription = UiStringRes(R.string.scan_state_icon)
-                        )
+            assertThat(scanStateItems.filterIsInstance(IconState::class.java).first()).isEqualTo(
+                IconState(
+                    icon = R.drawable.ic_shield_white,
+                    colorResId = R.color.jetpack_green_5,
+                    sizeResId = R.dimen.scan_icon_size,
+                    marginResId = R.dimen.scan_icon_margin,
+                    contentDescription = UiStringRes(R.string.scan_state_icon)
                 )
-            }
+            )
+        }
 
     @Test
     fun `given scanning state with zero progress, when items are built, then preparing for scan header exists`() =
-            test {
-                whenever(percentFormatter.format(0)).thenReturn("10")
-                val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(
-                        state = State.SCANNING,
-                        currentStatus = ScanProgressStatus(progress = 0, startDate = Date(0))
-                )
+        test {
+            whenever(percentFormatter.format(0)).thenReturn("10")
+            val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(
+                state = State.SCANNING,
+                currentStatus = ScanProgressStatus(progress = 0, startDate = Date(0))
+            )
 
-                val scanStateItems = buildScanStateItems(scanStateModelInScanningState)
+            val scanStateItems = buildScanStateItems(scanStateModelInScanningState)
 
-                assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
-                        HeaderState(UiStringRes(R.string.scan_preparing_to_scan_title))
-                )
-            }
+            assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
+                HeaderState(UiStringRes(R.string.scan_preparing_to_scan_title))
+            )
+        }
 
     @Test
     fun `given scanning state with non zero progress, when items are built, then scanning files header exists`() =
-            test {
-                val progress = 10
-                whenever(percentFormatter.format(progress)).thenReturn("10")
-                val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(
-                        state = State.SCANNING,
-                        currentStatus = ScanProgressStatus(progress = progress, startDate = Date(0))
-                )
+        test {
+            val progress = 10
+            whenever(percentFormatter.format(progress)).thenReturn("10")
+            val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(
+                state = State.SCANNING,
+                currentStatus = ScanProgressStatus(progress = progress, startDate = Date(0))
+            )
 
-                val scanStateItems = buildScanStateItems(scanStateModelInScanningState)
+            val scanStateItems = buildScanStateItems(scanStateModelInScanningState)
 
-                assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
-                        HeaderState(UiStringRes(R.string.scan_scanning_title))
-                )
-            }
+            assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
+                HeaderState(UiStringRes(R.string.scan_scanning_title))
+            )
+        }
 
     @Test
     fun `given initial scanning state, when items are built, then initial scanning description exists`() =
-            test {
-                whenever(percentFormatter.format(0)).thenReturn("10")
-                val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
-                        state = State.SCANNING,
-                        mostRecentStatus = ScanProgressStatus(isInitial = true, startDate = Date(0))
-                )
+        test {
+            whenever(percentFormatter.format(0)).thenReturn("10")
+            val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
+                state = State.SCANNING,
+                mostRecentStatus = ScanProgressStatus(isInitial = true, startDate = Date(0))
+            )
 
-                val scanStateItems = buildScanStateItems(scanStateModelInScanningInitialState)
+            val scanStateItems = buildScanStateItems(scanStateModelInScanningInitialState)
 
-                assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
-                        DescriptionState(UiStringRes(R.string.scan_scanning_is_initial_description))
-                )
-            }
+            assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
+                DescriptionState(UiStringRes(R.string.scan_scanning_is_initial_description))
+            )
+        }
 
     @Test
     fun `given non initial scanning state, when items are built, then scanning description exists`() = test {
         whenever(percentFormatter.format(0)).thenReturn("10")
         val scanStateModelInScanningNonInitialState = scanStateModelWithNoThreats.copy(
-                state = State.SCANNING,
-                mostRecentStatus = ScanProgressStatus(isInitial = false, startDate = Date(0))
+            state = State.SCANNING,
+            mostRecentStatus = ScanProgressStatus(isInitial = false, startDate = Date(0))
         )
 
         val scanStateItems = buildScanStateItems(scanStateModelInScanningNonInitialState)
 
         assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
-                DescriptionState(UiStringRes(R.string.scan_scanning_description))
+            DescriptionState(UiStringRes(R.string.scan_scanning_description))
         )
     }
 
@@ -549,32 +559,32 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         val progress = 10
         whenever(percentFormatter.format(progress)).thenReturn("10")
         val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(
-                state = State.SCANNING,
-                currentStatus = ScanProgressStatus(progress = progress, startDate = Date(0))
+            state = State.SCANNING,
+            currentStatus = ScanProgressStatus(progress = progress, startDate = Date(0))
         )
 
         val scanStateItems = buildScanStateItems(scanStateModelInScanningState)
 
         assertThat(scanStateItems.filterIsInstance(ProgressState::class.java).first()).isEqualTo(
-                ProgressState(
-                        progress = progress,
-                        progressLabel = UiStringText(progress.toString())
-                )
+            ProgressState(
+                progress = progress,
+                progressLabel = UiStringText(progress.toString())
+            )
         )
     }
 
     @Test
     fun `given initial scanning state, should call PercentFormatter`() =
-            test {
-                val progress = 10
-                whenever(percentFormatter.format(progress)).thenReturn("10")
-                val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
-                        state = State.SCANNING,
-                        currentStatus = ScanProgressStatus(progress = progress, startDate = Date(0))
-                )
-                buildScanStateItems(scanStateModelInScanningInitialState)
-                verify(percentFormatter).format(progress)
-            }
+        test {
+            val progress = 10
+            whenever(percentFormatter.format(progress)).thenReturn("10")
+            val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
+                state = State.SCANNING,
+                currentStatus = ScanProgressStatus(progress = progress, startDate = Date(0))
+            )
+            buildScanStateItems(scanStateModelInScanningInitialState)
+            verify(percentFormatter).format(progress)
+        }
 
     /* PROVISIONING STATE */
 
@@ -585,13 +595,13 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         val scanStateItems = buildScanStateItems(scanStateModelInProvisioningState)
 
         assertThat(scanStateItems.filterIsInstance(IconState::class.java).first()).isEqualTo(
-                IconState(
-                        icon = R.drawable.ic_shield_white,
-                        colorResId = R.color.jetpack_green_5,
-                        sizeResId = R.dimen.scan_icon_size,
-                        marginResId = R.dimen.scan_icon_margin,
-                        contentDescription = UiStringRes(R.string.scan_state_icon)
-                )
+            IconState(
+                icon = R.drawable.ic_shield_white,
+                colorResId = R.color.jetpack_green_5,
+                sizeResId = R.dimen.scan_icon_size,
+                marginResId = R.dimen.scan_icon_margin,
+                contentDescription = UiStringRes(R.string.scan_state_icon)
+            )
         )
     }
 
@@ -602,7 +612,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         val scanStateItems = buildScanStateItems(scanStateModelInProvisioningState)
 
         assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
-                HeaderState(UiStringRes(R.string.scan_preparing_to_scan_title))
+            HeaderState(UiStringRes(R.string.scan_preparing_to_scan_title))
         )
     }
 
@@ -613,7 +623,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         val scanStateItems = buildScanStateItems(scanStateModelInProvisioningState)
 
         assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
-                DescriptionState(UiStringRes(R.string.scan_provisioning_description))
+            DescriptionState(UiStringRes(R.string.scan_provisioning_description))
         )
     }
 
@@ -656,34 +666,34 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
 
         if (fixableThreatsPresent && !serverCredsPresent) {
             whenever(
-                    htmlMessageUtils
-                            .getHtmlMessageFromStringFormatResId(
-                                    R.string.threat_fix_enter_server_creds_msg_singular,
-                                    "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID"
-                            )
+                htmlMessageUtils
+                    .getHtmlMessageFromStringFormatResId(
+                        R.string.threat_fix_enter_server_creds_msg_singular,
+                        "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID"
+                    )
             ).thenReturn(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK)
         }
 
         return builder.buildScanStateListItems(
-                model = scanStateModel,
-                site = site,
-                fixingThreatIds = fixingThreatIds,
-                onScanButtonClicked = mock(),
-                onFixAllButtonClicked = mock(),
-                onThreatItemClicked = mock(),
-                onHelpClicked = onHelpClickedMock,
-                onEnterServerCredsIconClicked = onEnterServerCredsIconClicked
+            model = scanStateModel,
+            site = site,
+            fixingThreatIds = fixingThreatIds,
+            onScanButtonClicked = mock(),
+            onFixAllButtonClicked = mock(),
+            onThreatItemClicked = mock(),
+            onHelpClicked = onHelpClickedMock,
+            onEnterServerCredsIconClicked = onEnterServerCredsIconClicked
         )
     }
 
     private fun createDummyThreatItemState(threatModel: ThreatModel) = ThreatItemState(
-            threatId = threatModel.baseThreatModel.id,
-            header = UiStringText(""),
-            firstDetectedDate = UiStringText(""),
-            subHeader = UiStringText(""),
-            subHeaderColor = 0,
-            icon = 0,
-            iconBackground = 0,
-            onClick = {}
+        threatId = threatModel.baseThreatModel.id,
+        header = UiStringText(""),
+        firstDetectedDate = UiStringText(""),
+        subHeader = UiStringText(""),
+        subHeaderColor = 0,
+        icon = 0,
+        iconBackground = 0,
+        onClick = {}
     )
 }

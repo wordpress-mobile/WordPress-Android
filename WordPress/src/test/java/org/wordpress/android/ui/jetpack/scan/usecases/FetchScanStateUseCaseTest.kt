@@ -28,17 +28,21 @@ import java.util.function.Consumer
 @ExperimentalCoroutinesApi
 class FetchScanStateUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: FetchScanStateUseCase
-    @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var scanStateModel: ScanStateModel
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var scanStore: ScanStore
+    @Mock
+    private lateinit var site: SiteModel
+    @Mock
+    private lateinit var scanStateModel: ScanStateModel
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    lateinit var scanStore: ScanStore
 
     @Before
     fun setup() = test {
         useCase = FetchScanStateUseCase(
-                networkUtilsWrapper,
-                scanStore,
-                testDispatcher()
+            networkUtilsWrapper,
+            scanStore,
+            testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModel)
@@ -65,7 +69,7 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
     @Test
     fun `given site, when scan state is fetched, then RemoteRequestFailure is returned on failure`() = test {
         whenever(scanStore.fetchScanState(any())).thenReturn(
-                OnScanStateFetched(ScanStateError(ScanStateErrorType.GENERIC_ERROR), FETCH_SCAN_STATE)
+            OnScanStateFetched(ScanStateError(ScanStateErrorType.GENERIC_ERROR), FETCH_SCAN_STATE)
         )
         val result = useCase.fetchScanState(site).toList(mutableListOf())
 
@@ -75,8 +79,8 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
     @Test
     fun `given multisite, when scan state is fetched, then MultisiteNotSupported is returned`() = test {
         val scanStateModel = ScanStateModel(
-                state = ScanStateModel.State.UNAVAILABLE,
-                reason = Reason.MULTISITE_NOT_SUPPORTED
+            state = ScanStateModel.State.UNAVAILABLE,
+            reason = Reason.MULTISITE_NOT_SUPPORTED
         )
         whenever(scanStore.getScanStateForSite(any())).thenReturn(scanStateModel)
         whenever(scanStore.fetchScanState(any())).thenReturn(OnScanStateFetched(FETCH_SCAN_STATE))
@@ -91,14 +95,14 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
         whenever(scanStore.fetchScanState(any())).thenReturn(OnScanStateFetched(FETCH_SCAN_STATE))
         val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING, reason = Reason.NO_REASON)
         val scanStateModels = listOf(
-                scanStateScanningModel,
-                scanStateScanningModel,
-                ScanStateModel(state = ScanStateModel.State.IDLE, reason = Reason.NO_REASON)
+            scanStateScanningModel,
+            scanStateScanningModel,
+            ScanStateModel(state = ScanStateModel.State.IDLE, reason = Reason.NO_REASON)
         )
         whenever(scanStore.getScanStateForSite(any()))
-                .thenReturn(scanStateModels[0])
-                .thenReturn(scanStateModels[1])
-                .thenReturn(scanStateModels[2])
+            .thenReturn(scanStateModels[0])
+            .thenReturn(scanStateModels[1])
+            .thenReturn(scanStateModels[2])
 
         val result = useCase.fetchScanState(site = site).toList(mutableListOf())
 
@@ -112,8 +116,8 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
         val scanStateError = ScanStateError(ScanStateErrorType.GENERIC_ERROR)
         whenever(scanStore.getScanStateForSite(any())).thenReturn(scanStateScanningModel)
         whenever(scanStore.fetchScanState(any())).thenReturn(
-                OnScanStateFetched(FETCH_SCAN_STATE),
-                OnScanStateFetched(scanStateError, FETCH_SCAN_STATE)
+            OnScanStateFetched(FETCH_SCAN_STATE),
+            OnScanStateFetched(scanStateError, FETCH_SCAN_STATE)
         )
 
         val result = useCase.fetchScanState(site = site).toList(mutableListOf())
@@ -141,13 +145,13 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
         val scanStateFinished = ScanStateModel(state = ScanStateModel.State.IDLE, reason = Reason.NO_REASON)
         val scanStateError = ScanStateError(ScanStateErrorType.GENERIC_ERROR)
         whenever(scanStore.fetchScanState(any()))
-                .thenReturn(OnScanStateFetched(scanStateError, FETCH_SCAN_STATE))
-                .thenReturn(OnScanStateFetched(scanStateError, FETCH_SCAN_STATE))
-                .thenReturn(OnScanStateFetched(FETCH_SCAN_STATE))
+            .thenReturn(OnScanStateFetched(scanStateError, FETCH_SCAN_STATE))
+            .thenReturn(OnScanStateFetched(scanStateError, FETCH_SCAN_STATE))
+            .thenReturn(OnScanStateFetched(FETCH_SCAN_STATE))
 
         whenever(scanStore.getScanStateForSite(site))
-                .thenReturn(scanStateScanningModel)
-                .thenReturn(scanStateFinished)
+            .thenReturn(scanStateScanningModel)
+            .thenReturn(scanStateFinished)
 
         val result = useCase.fetchScanState(site = site).toList(mutableListOf())
 

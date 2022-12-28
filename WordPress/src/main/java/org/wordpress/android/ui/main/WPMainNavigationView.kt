@@ -44,14 +44,14 @@ class WPMainNavigationView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : BottomNavigationView(context, attrs, defStyleAttr),
-        OnItemSelectedListener, OnItemReselectedListener {
+    OnItemSelectedListener, OnItemReselectedListener {
     private lateinit var navAdapter: NavAdapter
     private lateinit var fragmentManager: FragmentManager
     private lateinit var pageListener: OnPageListener
     private var prevPosition = -1
     private val unselectedButtonAlpha = ResourcesCompat.getFloat(
-            resources,
-            R.dimen.material_emphasis_disabled
+        resources,
+        R.dimen.material_emphasis_disabled
     )
 
     private var currentPosition: Int
@@ -195,9 +195,9 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     private fun setTitleViewSelected(position: Int, isSelected: Boolean) {
         getTitleViewForPosition(position)?.setTextColor(
-                context.getColorStateListFromAttribute(
-                        if (isSelected) R.attr.wpColorNavBar else R.attr.wpColorOnSurfaceMedium
-                )
+            context.getColorStateListFromAttribute(
+                if (isSelected) R.attr.wpColorNavBar else R.attr.wpColorOnSurfaceMedium
+            )
         )
     }
 
@@ -298,8 +298,8 @@ class WPMainNavigationView @JvmOverloads constructor(
                 NOTIFS -> NotificationsListFragment.newInstance()
             }
             fragmentManager.beginTransaction()
-                    .add(R.id.fragment_container, fragment, getTagForPageType(pageType))
-                    .commitNow()
+                .add(R.id.fragment_container, fragment, getTagForPageType(pageType))
+                .commitNow()
             return fragment
         }
 

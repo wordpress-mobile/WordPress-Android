@@ -30,10 +30,14 @@ private const val TEST_MESSAGE = "This is a test message"
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SnackbarSequencerTest : BaseUnitTest() {
-    @Mock lateinit var wpSnackbarWrapper: WPSnackbarWrapper
-    @Mock lateinit var wpSnackbar: Snackbar
-    @Mock lateinit var view: View
-    @Mock lateinit var activity: Activity
+    @Mock
+    lateinit var wpSnackbarWrapper: WPSnackbarWrapper
+    @Mock
+    lateinit var wpSnackbar: Snackbar
+    @Mock
+    lateinit var view: View
+    @Mock
+    lateinit var activity: Activity
 
     private val uiHelper: UiHelpers = UiHelpers()
     private lateinit var sequencer: SnackbarSequencer
@@ -47,17 +51,17 @@ class SnackbarSequencerTest : BaseUnitTest() {
         whenever(wpSnackbarWrapper.make(any(), any(), any())).thenReturn(wpSnackbar)
 
         sequencer = SnackbarSequencer(
-                uiHelper,
-                wpSnackbarWrapper,
-                testDispatcher()
+            uiHelper,
+            wpSnackbarWrapper,
+            testDispatcher()
         )
 
         item = SnackbarItem(
-                Info(
-                        view = view,
-                        textRes = UiStringText(TEST_MESSAGE),
-                        duration = Snackbar.LENGTH_LONG
-                )
+            Info(
+                view = view,
+                textRes = UiStringText(TEST_MESSAGE),
+                duration = Snackbar.LENGTH_LONG
+            )
         )
     }
 

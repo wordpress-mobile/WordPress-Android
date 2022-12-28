@@ -29,27 +29,36 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class WeekWidgetBlockListViewModelTest {
-    @Mock private lateinit var siteStore: SiteStore
-    @Mock private lateinit var store: VisitsAndViewsStore
-    @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var statsUtils: StatsUtils
-    @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var context: Context
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock private lateinit var todayWidgetUpdater: WeekViewsWidgetUpdater
+    @Mock
+    private lateinit var siteStore: SiteStore
+    @Mock
+    private lateinit var store: VisitsAndViewsStore
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+    @Mock
+    private lateinit var statsUtils: StatsUtils
+    @Mock
+    private lateinit var site: SiteModel
+    @Mock
+    private lateinit var context: Context
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    private lateinit var todayWidgetUpdater: WeekViewsWidgetUpdater
     private lateinit var viewModel: WeekWidgetBlockListViewModel
     private val siteId: Int = 15
     private val appWidgetId: Int = 1
     private val color = Color.LIGHT
+
     @Before
     fun setUp() {
         viewModel = WeekWidgetBlockListViewModel(
-                siteStore,
-                store,
-                resourceProvider,
-                todayWidgetUpdater,
-                appPrefsWrapper,
-                statsUtils
+            siteStore,
+            store,
+            resourceProvider,
+            todayWidgetUpdater,
+            appPrefsWrapper,
+            statsUtils
         )
         viewModel.start(siteId, color, appWidgetId)
         whenever(statsUtils.toFormattedString(any<Long>(), any())).then { (it.arguments[0] as Long).toString() }
@@ -72,7 +81,7 @@ class WeekWidgetBlockListViewModelTest {
         whenever(resourceProvider.getString(string.likes)).thenReturn(likesKey)
         whenever(resourceProvider.getString(string.stats_comments)).thenReturn(commentsKey)
         whenever(store.getVisits(site, WEEKS, LimitMode.All)).thenReturn(
-                VisitsAndViewsModel("2019-10-10", listOf(periodData))
+            VisitsAndViewsModel("2019-10-10", listOf(periodData))
         )
 
         viewModel.onDataSetChanged(context)

@@ -22,18 +22,23 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 @ExperimentalCoroutinesApi
 class StoriesIntroViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: StoriesIntroViewModel
-    @Mock lateinit var onDialogClosedObserver: Observer<Unit>
-    @Mock lateinit var onCreateButtonClickedObserver: Observer<Unit>
-    @Mock lateinit var onStoryOpenRequestedObserver: Observer<String>
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    lateinit var onDialogClosedObserver: Observer<Unit>
+    @Mock
+    lateinit var onCreateButtonClickedObserver: Observer<Unit>
+    @Mock
+    lateinit var onStoryOpenRequestedObserver: Observer<String>
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Before
     fun setUp() = test {
         viewModel = StoriesIntroViewModel(
-                analyticsTrackerWrapper,
-                appPrefsWrapper,
-                NoDelayCoroutineDispatcher()
+            analyticsTrackerWrapper,
+            appPrefsWrapper,
+            NoDelayCoroutineDispatcher()
         )
         viewModel.onDialogClosed.observeForever(onDialogClosedObserver)
         viewModel.onCreateButtonClicked.observeForever(onCreateButtonClickedObserver)

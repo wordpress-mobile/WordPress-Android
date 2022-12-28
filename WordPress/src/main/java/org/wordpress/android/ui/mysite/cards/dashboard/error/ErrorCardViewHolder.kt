@@ -9,7 +9,7 @@ import org.wordpress.android.util.extensions.viewBinding
 class ErrorCardViewHolder(
     parent: ViewGroup
 ) : CardViewHolder<MySiteErrorCardBinding>(
-        parent.viewBinding(MySiteErrorCardBinding::inflate)
+    parent.viewBinding(MySiteErrorCardBinding::inflate)
 ) {
     fun bind(card: ErrorCard) = with(binding) {
         retry.setOnClickListener { card.onRetryClick.click() }

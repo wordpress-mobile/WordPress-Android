@@ -33,12 +33,18 @@ import org.wordpress.android.util.helpers.Debouncer
 
 @ExperimentalCoroutinesApi
 class DomainSuggestionsViewModelTest : BaseUnitTest() {
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var debouncer: Debouncer
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
-    @Mock lateinit var createCartUseCase: CreateCartUseCase
-    @Mock lateinit var productsStore: ProductsStore
+    @Mock
+    lateinit var dispatcher: Dispatcher
+    @Mock
+    lateinit var debouncer: Debouncer
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
+    @Mock
+    lateinit var createCartUseCase: CreateCartUseCase
+    @Mock
+    lateinit var productsStore: ProductsStore
 
     private lateinit var site: SiteModel
     private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
@@ -50,13 +56,13 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         site = SiteModel().also { it.name = "Test Site" }
         domainRegistrationPurpose = CTA_DOMAIN_CREDIT_REDEMPTION
         viewModel = DomainSuggestionsViewModel(
-                productsStore,
-                tracker,
-                dispatcher,
-                debouncer,
-                siteDomainsFeatureConfig,
-                createCartUseCase,
-                testDispatcher()
+            productsStore,
+            tracker,
+            dispatcher,
+            debouncer,
+            siteDomainsFeatureConfig,
+            createCartUseCase,
+            testDispatcher()
         )
 
         whenever(debouncer.debounce(any(), any(), any(), any())).thenAnswer { invocation ->
@@ -172,7 +178,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Test
     fun `clicking select domain button for purchase calls cart creation use case and emits selected domain`() = test {
         whenever(createCartUseCase.execute(site, DUMMY_PRODUCT_ID, DUMMY_DOMAIN_NAME, true, false))
-                .thenReturn(dummySuccessfulOnShoppingCartCreated)
+            .thenReturn(dummySuccessfulOnShoppingCartCreated)
 
         viewModel.start(site, DOMAIN_PURCHASE)
         viewModel.onDomainSuggestionSelected(dummySelectedDomainSuggestionItem)
@@ -186,28 +192,28 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         const val DUMMY_DOMAIN_NAME = "domainname.com"
 
         val dummySuccessfulOnShoppingCartCreated = OnShoppingCartCreated(
-                CreateShoppingCartResponse(
-                        1,
-                        "dummy_cart_key",
-                        emptyList()
-                )
+            CreateShoppingCartResponse(
+                1,
+                "dummy_cart_key",
+                emptyList()
+            )
         )
 
         val dummySelectedDomainSuggestionItem = DomainSuggestionItem(
-                domainName = DUMMY_DOMAIN_NAME,
-                cost = "$20.00",
-                isOnSale = false,
-                saleCost = "0.0",
-                isFree = false,
-                supportsPrivacy = true,
-                productId = DUMMY_PRODUCT_ID,
-                productSlug = null,
-                vendor = null,
-                relevance = 1.0f,
-                isSelected = true,
-                isCostVisible = true,
-                isFreeWithCredits = false,
-                isEnabled = true
+            domainName = DUMMY_DOMAIN_NAME,
+            cost = "$20.00",
+            isOnSale = false,
+            saleCost = "0.0",
+            isFree = false,
+            supportsPrivacy = true,
+            productId = DUMMY_PRODUCT_ID,
+            productSlug = null,
+            vendor = null,
+            relevance = 1.0f,
+            isSelected = true,
+            isCostVisible = true,
+            isFreeWithCredits = false,
+            isEnabled = true
         )
     }
 }

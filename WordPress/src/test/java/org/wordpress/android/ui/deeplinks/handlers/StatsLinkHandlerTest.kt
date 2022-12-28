@@ -19,8 +19,10 @@ import org.wordpress.android.ui.stats.StatsTimeframe.YEAR
 
 @RunWith(MockitoJUnitRunner::class)
 class StatsLinkHandlerTest {
-    @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
-    @Mock lateinit var site: SiteModel
+    @Mock
+    lateinit var deepLinkUriUtils: DeepLinkUriUtils
+    @Mock
+    lateinit var site: SiteModel
     private lateinit var statsLinkHandler: StatsLinkHandler
 
     @Before
@@ -97,11 +99,11 @@ class StatsLinkHandlerTest {
     fun `opens stats screen for a stats timeframe and a site when both present in URL`() {
         val siteUrl = "example.com"
         val timeframes = mapOf(
-                "day" to DAY,
-                "week" to WEEK,
-                "month" to MONTH,
-                "year" to YEAR,
-                "insights" to INSIGHTS
+            "day" to DAY,
+            "week" to WEEK,
+            "month" to MONTH,
+            "year" to YEAR,
+            "insights" to INSIGHTS
         )
         timeframes.forEach { (key, timeframe) ->
             val uri = buildUri(host = null, "stats", key, siteUrl)
@@ -110,10 +112,10 @@ class StatsLinkHandlerTest {
             val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
 
             assertThat(buildNavigateAction).isEqualTo(
-                    NavigateAction.OpenStatsForSiteAndTimeframe(
-                            site,
-                            timeframe
-                    )
+                NavigateAction.OpenStatsForSiteAndTimeframe(
+                    site,
+                    timeframe
+                )
             )
         }
     }

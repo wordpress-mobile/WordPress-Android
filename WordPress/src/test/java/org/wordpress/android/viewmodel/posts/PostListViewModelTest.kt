@@ -27,8 +27,10 @@ private val DEFAULT_AUTHOR_FILTER = AuthorFilterSelection.EVERYONE
 
 @ExperimentalCoroutinesApi
 class PostListViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var uploadStarter: UploadStarter
+    @Mock
+    private lateinit var site: SiteModel
+    @Mock
+    private lateinit var uploadStarter: UploadStarter
 
     private lateinit var viewModel: PostListViewModel
 
@@ -42,35 +44,37 @@ class PostListViewModelTest : BaseUnitTest() {
         whenever(postList.isEmpty).thenReturn(mock())
         whenever(postList.data).thenReturn(mock())
         whenever(postList.isLoadingMore).thenReturn(mock())
-        whenever(listStore.getList<PostListDescriptorForXmlRpcSite, PostListItemIdentifier, PostListItemType>(
-                        any(),
-                        any(),
-                        any()
-                )).thenReturn(postList)
+        whenever(
+            listStore.getList<PostListDescriptorForXmlRpcSite, PostListItemIdentifier, PostListItemType>(
+                any(),
+                any(),
+                any()
+            )
+        ).thenReturn(postList)
 
         viewModel = PostListViewModel(
-                dispatcher = mock(),
-                listStore = listStore,
-                postStore = mock(),
-                accountStore = mock(),
-                listItemUiStateHelper = mock(),
-                networkUtilsWrapper = mock(),
-                uploadStarter = uploadStarter,
-                readerUtilsWrapper = mock(),
-                connectionStatus = mock(),
-                uploadUtilsWrapper = mock(),
-                uiDispatcher = testDispatcher(),
-                bgDispatcher = testDispatcher()
+            dispatcher = mock(),
+            listStore = listStore,
+            postStore = mock(),
+            accountStore = mock(),
+            listItemUiStateHelper = mock(),
+            networkUtilsWrapper = mock(),
+            uploadStarter = uploadStarter,
+            readerUtilsWrapper = mock(),
+            connectionStatus = mock(),
+            uploadUtilsWrapper = mock(),
+            uiDispatcher = testDispatcher(),
+            bgDispatcher = testDispatcher()
         )
     }
 
     @Test
     fun `when swiping to refresh, it uploads all local drafts`() {
         viewModel.start(
-                createPostListViewModelConnector(site = site, postListType = DRAFTS),
-                DEFAULT_AUTHOR_FILTER,
-                DEFAULT_PHOTON_DIMENSIONS,
-                DEFAULT_PHOTON_DIMENSIONS
+            createPostListViewModelConnector(site = site, postListType = DRAFTS),
+            DEFAULT_AUTHOR_FILTER,
+            DEFAULT_PHOTON_DIMENSIONS,
+            DEFAULT_PHOTON_DIMENSIONS
         )
 
         // When
@@ -83,10 +87,10 @@ class PostListViewModelTest : BaseUnitTest() {
     @Test
     fun `empty search query should show search prompt`() {
         viewModel.start(
-                createPostListViewModelConnector(site = site, postListType = SEARCH),
-                DEFAULT_AUTHOR_FILTER,
-                DEFAULT_PHOTON_DIMENSIONS,
-                DEFAULT_PHOTON_DIMENSIONS
+            createPostListViewModelConnector(site = site, postListType = SEARCH),
+            DEFAULT_AUTHOR_FILTER,
+            DEFAULT_PHOTON_DIMENSIONS,
+            DEFAULT_PHOTON_DIMENSIONS
         )
 
         val emptyViewStateResults = mutableListOf<PostListEmptyUiState>()
@@ -103,14 +107,14 @@ class PostListViewModelTest : BaseUnitTest() {
 
     private companion object {
         fun createPostListViewModelConnector(site: SiteModel, postListType: PostListType) = PostListViewModelConnector(
-                site = site,
-                postListType = postListType,
-                postActionHandler = mock(),
-                uploadStatusTracker = mock(),
-                doesPostHaveUnhandledConflict = mock(),
-                hasAutoSave = mock(),
-                getFeaturedImageUrl = mock(),
-                postFetcher = mock()
+            site = site,
+            postListType = postListType,
+            postActionHandler = mock(),
+            uploadStatusTracker = mock(),
+            doesPostHaveUnhandledConflict = mock(),
+            hasAutoSave = mock(),
+            getFeaturedImageUrl = mock(),
+            postFetcher = mock()
         )
     }
 }

@@ -20,23 +20,30 @@ import java.util.Locale
 
 @ExperimentalCoroutinesApi
 class PostingActivityMapperTest : BaseUnitTest() {
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
     private lateinit var mapper: PostingActivityMapper
+
     @Before
     fun setUp() {
         mapper = PostingActivityMapper(localeManagerWrapper, resourceProvider)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
-        whenever(resourceProvider.getString(eq(R.string.stats_posting_activity_label_content_description),
-                anyString())).then {
+        whenever(
+            resourceProvider.getString(
+                eq(R.string.stats_posting_activity_label_content_description),
+                anyString()
+            )
+        ).then {
             val month = it.getArgument<String>(1)
             "Posting Activity for $month"
         }
         whenever(
-                resourceProvider.getString(
-                        eq(R.string.stats_posting_activity_content_description),
-                        anyString(), anyString(), anyString()
-                )
+            resourceProvider.getString(
+                eq(R.string.stats_posting_activity_content_description),
+                anyString(), anyString(), anyString()
+            )
         ).then {
             val readableBoxType = it.getArgument<String>(1)
             val month = it.getArgument<String>(2)
@@ -57,31 +64,31 @@ class PostingActivityMapperTest : BaseUnitTest() {
     @Test
     fun `ensure content descriptions are accurate`() {
         val result = mapper.buildActivityItem(
-                listOf(
-                        Month(
-                                2019,
-                                Calendar.DECEMBER,
-                                mapOf(Pair(3, 60), Pair(4, 70), Pair(5, 10), Pair(6, 10))
-                        ),
-                        Month(
-                                2019,
-                                Calendar.JANUARY,
-                                mapOf(Pair(1, 60), Pair(2, 10))
-                        )
-                ), 100
+            listOf(
+                Month(
+                    2019,
+                    Calendar.DECEMBER,
+                    mapOf(Pair(3, 60), Pair(4, 70), Pair(5, 10), Pair(6, 10))
+                ),
+                Month(
+                    2019,
+                    Calendar.JANUARY,
+                    mapOf(Pair(1, 60), Pair(2, 10))
+                )
+            ), 100
         )
 
         assertThat(result.blocks[0].contentDescription).isEqualTo("Posting Activity for December")
         assertThat(result.blocks[0].activityContentDescriptions[0])
-                .isEqualTo("The days with high views for December are : December 3. 4.Tap for more.")
+            .isEqualTo("The days with high views for December are : December 3. 4.Tap for more.")
         assertThat(result.blocks[0].activityContentDescriptions[1])
-                .isEqualTo("The days with low views for December are : December 5. 6.Tap for more.")
+            .isEqualTo("The days with low views for December are : December 5. 6.Tap for more.")
 
         assertThat(result.blocks[1].contentDescription).isEqualTo("Posting Activity for January")
         assertThat(result.blocks[1].activityContentDescriptions[0])
-                .isEqualTo("The days with high views for January are : January 1.Tap for more.")
+            .isEqualTo("The days with high views for January are : January 1.Tap for more.")
         assertThat(result.blocks[1].activityContentDescriptions[1])
-                .isEqualTo("The days with low views for January are : January 2.Tap for more.")
+            .isEqualTo("The days with low views for January are : January 2.Tap for more.")
     }
 
     @Test

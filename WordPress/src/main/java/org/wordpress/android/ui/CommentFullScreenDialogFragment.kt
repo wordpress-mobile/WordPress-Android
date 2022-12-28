@@ -30,8 +30,10 @@ import org.wordpress.android.widgets.SuggestionAutoCompleteText
 import javax.inject.Inject
 
 class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogContent {
-    @Inject lateinit var viewModel: CommentFullScreenDialogViewModel
-    @Inject lateinit var siteStore: SiteStore
+    @Inject
+    lateinit var viewModel: CommentFullScreenDialogViewModel
+    @Inject
+    lateinit var siteStore: SiteStore
     private lateinit var dialogController: CollapseFullScreenDialogController
     private lateinit var reply: SuggestionAutoCompleteText
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
@@ -91,12 +93,12 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
             return
         }
         val suggestionServiceConnectionManager = SuggestionServiceConnectionManager(
-                activity,
-                site.siteId
+            activity,
+            site.siteId
         )
         val suggestionAdapter = SuggestionUtils.setupUserSuggestions(
-                site, requireActivity(),
-                suggestionServiceConnectionManager
+            site, requireActivity(),
+            suggestionServiceConnectionManager
         )
         this.reply.setAdapter(suggestionAdapter)
     }

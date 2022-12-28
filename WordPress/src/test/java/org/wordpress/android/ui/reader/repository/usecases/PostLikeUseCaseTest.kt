@@ -33,10 +33,14 @@ private const val SOURCE = "source"
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class PostLikeUseCaseTest : BaseUnitTest() {
-    @Mock private lateinit var accountStore: AccountStore
-    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
-    @Mock private lateinit var readerTracker: ReaderTracker
+    @Mock
+    private lateinit var accountStore: AccountStore
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
+    @Mock
+    private lateinit var readerTracker: ReaderTracker
 
     private lateinit var useCase: PostLikeUseCase
 
@@ -48,10 +52,10 @@ class PostLikeUseCaseTest : BaseUnitTest() {
         whenever(accountStore.account).thenReturn(account)
 
         useCase = PostLikeUseCase(
-                readerPostActionsWrapper,
-                readerTracker,
-                accountStore,
-                networkUtilsWrapper
+            readerPostActionsWrapper,
+            readerTracker,
+            accountStore,
+            networkUtilsWrapper
         )
     }
 
@@ -62,9 +66,9 @@ class PostLikeUseCaseTest : BaseUnitTest() {
 
         // When
         val result = useCase.perform(
-                readerPost,
-                true,
-                SOURCE
+            readerPost,
+            true,
+            SOURCE
         ).toList(mutableListOf())
 
         // Then
@@ -78,9 +82,9 @@ class PostLikeUseCaseTest : BaseUnitTest() {
 
         // When
         val result = useCase.perform(
-                readerPost,
-                true,
-                SOURCE
+            readerPost,
+            true,
+            SOURCE
         ).toList(mutableListOf())
 
         // Then
@@ -94,9 +98,9 @@ class PostLikeUseCaseTest : BaseUnitTest() {
 
         // When
         val result = useCase.perform(
-                readerPost,
-                false,
-                SOURCE
+            readerPost,
+            false,
+            SOURCE
         ).toList(mutableListOf())
 
         // Then
@@ -105,138 +109,138 @@ class PostLikeUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `success is returned when liking an unliked post`() =
-            test {
-                val readerPost = init(isLikedByCurrentUser = false)
-                // Act
-                val result = useCase.perform(
-                        readerPost,
-                        true,
-                        SOURCE
-                ).toList(mutableListOf())
+        test {
+            val readerPost = init(isLikedByCurrentUser = false)
+            // Act
+            val result = useCase.perform(
+                readerPost,
+                true,
+                SOURCE
+            ).toList(mutableListOf())
 
-                // Assert
-                assertThat((result)).contains(Success)
-            }
+            // Assert
+            assertThat((result)).contains(Success)
+        }
 
     @Test
     fun `success is returned when unliking a like post`() =
-            test {
-                val readerPost = init(isLikedByCurrentUser = true)
+        test {
+            val readerPost = init(isLikedByCurrentUser = true)
 
-                // Act
-                val result = useCase.perform(
-                        readerPost,
-                        false,
-                        SOURCE
-                ).toList(mutableListOf())
+            // Act
+            val result = useCase.perform(
+                readerPost,
+                false,
+                SOURCE
+            ).toList(mutableListOf())
 
-                // Assert
-                assertThat((result)).contains(Success)
-            }
+            // Assert
+            assertThat((result)).contains(Success)
+        }
 
     @Test
     fun `failure is returned when liking an unliked post`() =
-            test {
-                val readerPost = init(isLikedByCurrentUser = false, remoteSucceeds = false)
+        test {
+            val readerPost = init(isLikedByCurrentUser = false, remoteSucceeds = false)
 
-                // Act
-                val result = useCase.perform(
-                        readerPost,
-                        true,
-                        SOURCE
-                ).toList(mutableListOf())
+            // Act
+            val result = useCase.perform(
+                readerPost,
+                true,
+                SOURCE
+            ).toList(mutableListOf())
 
-                // Assert
-                assertThat((result)).contains(Failed.RequestFailed)
-            }
+            // Assert
+            assertThat((result)).contains(Failed.RequestFailed)
+        }
 
     @Test
     fun `failure is returned when unliking a like post`() =
-            test {
-                val readerPost = init(isLikedByCurrentUser = true, remoteSucceeds = false)
+        test {
+            val readerPost = init(isLikedByCurrentUser = true, remoteSucceeds = false)
 
-                // Act
-                val result = useCase.perform(
-                        readerPost,
-                        false,
-                        SOURCE
-                ).toList(mutableListOf())
+            // Act
+            val result = useCase.perform(
+                readerPost,
+                false,
+                SOURCE
+            ).toList(mutableListOf())
 
-                // Assert
-                assertThat((result)).contains(Failed.RequestFailed)
-            }
+            // Assert
+            assertThat((result)).contains(Failed.RequestFailed)
+        }
 
     @Test
     fun `like local action is triggered for selected reader post`() =
-            test {
-                val readerPost = init(isLikedByCurrentUser = false)
+        test {
+            val readerPost = init(isLikedByCurrentUser = false)
 
-                // Act
-                useCase.perform(
-                        readerPost,
-                        true,
-                        SOURCE
-                ).toList(mutableListOf())
+            // Act
+            useCase.perform(
+                readerPost,
+                true,
+                SOURCE
+            ).toList(mutableListOf())
 
-                // Assert
-                verify(readerPostActionsWrapper).performLikeActionLocal(
-                        anyOrNull(),
-                        anyBoolean(),
-                        anyLong()
-                )
-            }
+            // Assert
+            verify(readerPostActionsWrapper).performLikeActionLocal(
+                anyOrNull(),
+                anyBoolean(),
+                anyLong()
+            )
+        }
 
     @Test
     fun `like remote action is triggered for selected reader post`() =
-            test {
-                val readerPost = init(isLikedByCurrentUser = false)
+        test {
+            val readerPost = init(isLikedByCurrentUser = false)
 
-                // Act
-                useCase.perform(
-                        readerPost,
-                        true,
-                        SOURCE
-                ).toList(mutableListOf())
+            // Act
+            useCase.perform(
+                readerPost,
+                true,
+                SOURCE
+            ).toList(mutableListOf())
 
-                // Assert
-                verify(readerPostActionsWrapper).performLikeActionRemote(
-                        anyOrNull(),
-                        anyBoolean(),
-                        anyLong(),
-                        anyOrNull()
-                )
-            }
+            // Assert
+            verify(readerPostActionsWrapper).performLikeActionRemote(
+                anyOrNull(),
+                anyBoolean(),
+                anyLong(),
+                anyOrNull()
+            )
+        }
 
     @Test
     fun `Post views bumped when asking to like`() =
-            test {
-                val readerPost = init(isLikedByCurrentUser = false)
-                // Act
-                useCase.perform(
-                        readerPost,
-                        true,
-                        SOURCE
-                ).toList(mutableListOf())
+        test {
+            val readerPost = init(isLikedByCurrentUser = false)
+            // Act
+            useCase.perform(
+                readerPost,
+                true,
+                SOURCE
+            ).toList(mutableListOf())
 
-                // Assert
-                verify(readerPostActionsWrapper).bumpPageViewForPost(anyOrNull())
-            }
+            // Assert
+            verify(readerPostActionsWrapper).bumpPageViewForPost(anyOrNull())
+        }
 
     @Test
     fun `Post views NOT bumped when asking to unlike`() =
-            test {
-                val readerPost = init(isLikedByCurrentUser = true)
+        test {
+            val readerPost = init(isLikedByCurrentUser = true)
 
-                // Act
-                useCase.perform(
-                        readerPost,
-                        false,
-                        SOURCE
-                ).toList(mutableListOf())
+            // Act
+            useCase.perform(
+                readerPost,
+                false,
+                SOURCE
+            ).toList(mutableListOf())
 
-                // Assert
-                verify(readerPostActionsWrapper, never()).bumpPageViewForPost(anyOrNull())
-            }
+            // Assert
+            verify(readerPostActionsWrapper, never()).bumpPageViewForPost(anyOrNull())
+        }
 
     private fun init(
         isLikedByCurrentUser: Boolean = false,
@@ -246,11 +250,11 @@ class PostLikeUseCaseTest : BaseUnitTest() {
     ): ReaderPost {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(isNetworkAvailable)
         whenever(readerPostActionsWrapper.performLikeActionLocal(anyOrNull(), anyBoolean(), anyLong()))
-                .thenReturn(localSucceeds)
+            .thenReturn(localSucceeds)
         whenever(readerPostActionsWrapper.performLikeActionRemote(anyOrNull(), anyBoolean(), anyLong(), anyOrNull()))
-                .then {
-                    (it.arguments[3] as ActionListener).onActionResult(remoteSucceeds)
-                }
+            .then {
+                (it.arguments[3] as ActionListener).onActionResult(remoteSucceeds)
+            }
         return createDummyReaderPost(isLikedByCurrentUser = isLikedByCurrentUser)
     }
 
@@ -258,9 +262,9 @@ class PostLikeUseCaseTest : BaseUnitTest() {
         id: Long = POST_AND_BLOG_ID,
         isLikedByCurrentUser: Boolean = false
     ): ReaderPost =
-            ReaderPost().apply {
-                this.postId = id
-                this.blogId = id
-                this.isLikedByCurrentUser = isLikedByCurrentUser
-            }
+        ReaderPost().apply {
+            this.postId = id
+            this.blogId = id
+            this.isLikedByCurrentUser = isLikedByCurrentUser
+        }
 }

@@ -25,8 +25,10 @@ private const val SEGMENT_ID = 123L
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class FetchDomainsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var store: SiteStore
+    @Mock
+    lateinit var dispatcher: Dispatcher
+    @Mock
+    lateinit var store: SiteStore
     private lateinit var useCase: FetchDomainsUseCase
     private lateinit var dispatchCaptor: KArgumentCaptor<Action<SuggestDomainsPayload>>
     private val event = OnSuggestedDomains(SEARCH_QUERY, emptyList())

@@ -16,12 +16,18 @@ import org.wordpress.android.util.config.ExperimentConfig.Variant
 
 @RunWith(MockitoJUnitRunner::class)
 class AppConfigTest {
-    @Mock lateinit var featureFlagConfig: FeatureFlagConfig
-    @Mock lateinit var remoteFieldConfigRepository: RemoteFieldConfigRepository
-    @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
-    @Mock lateinit var experimentConfig: ExperimentConfig
-    @Mock lateinit var manualFeatureConfig: ManualFeatureConfig
-    @Mock lateinit var appScope: CoroutineScope
+    @Mock
+    lateinit var featureFlagConfig: FeatureFlagConfig
+    @Mock
+    lateinit var remoteFieldConfigRepository: RemoteFieldConfigRepository
+    @Mock
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var experimentConfig: ExperimentConfig
+    @Mock
+    lateinit var manualFeatureConfig: ManualFeatureConfig
+    @Mock
+    lateinit var appScope: CoroutineScope
     private lateinit var appConfig: AppConfig
     private val remoteField = "remote_field"
     private val experimentVariantA = "variantA"
@@ -46,8 +52,8 @@ class AppConfigTest {
 
         assertThat(appConfig.getCurrentVariant(experimentConfig)).isEqualTo(variant)
         verify(analyticsTracker).track(
-                Stat.EXPERIMENT_VARIANT_SET,
-                mapOf(experimentConfig.remoteField to experimentVariantA)
+            Stat.EXPERIMENT_VARIANT_SET,
+            mapOf(experimentConfig.remoteField to experimentVariantA)
         )
     }
 
@@ -58,8 +64,8 @@ class AppConfigTest {
 
         assertThatIllegalArgumentException().isThrownBy { appConfig.getCurrentVariant(experimentConfig) }
         verify(analyticsTracker).track(
-                Stat.EXPERIMENT_VARIANT_SET,
-                mapOf(remoteField to experimentVariantA)
+            Stat.EXPERIMENT_VARIANT_SET,
+            mapOf(remoteField to experimentVariantA)
         )
     }
 
@@ -76,8 +82,8 @@ class AppConfigTest {
         assertThat(appConfig.getCurrentVariant(experimentConfig)).isEqualTo(variantA)
 
         verify(analyticsTracker).track(
-                Stat.EXPERIMENT_VARIANT_SET,
-                mapOf(remoteField to experimentVariantA)
+            Stat.EXPERIMENT_VARIANT_SET,
+            mapOf(remoteField to experimentVariantA)
         )
     }
 

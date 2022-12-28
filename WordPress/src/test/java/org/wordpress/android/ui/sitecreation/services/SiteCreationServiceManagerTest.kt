@@ -31,10 +31,10 @@ private const val NEW_SITE_REMOTE_ID = 1234L
 private const val NEW_SITE_REMOTE_URL = "new.site.url"
 
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
-        123,
-        "slug",
-        "domain",
-        null
+    123,
+    "slug",
+    "domain",
+    null
 )
 
 private val IDLE_STATE = SiteCreationServiceState(IDLE)
@@ -45,10 +45,14 @@ private val FAILURE_STATE = SiteCreationServiceState(FAILURE)
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SiteCreationServiceManagerTest : BaseUnitTest() {
-    @Mock lateinit var useCase: CreateSiteUseCase
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var serviceListener: SiteCreationServiceManagerListener
-    @Mock lateinit var tracker: SiteCreationTracker
+    @Mock
+    lateinit var useCase: CreateSiteUseCase
+    @Mock
+    lateinit var dispatcher: Dispatcher
+    @Mock
+    lateinit var serviceListener: SiteCreationServiceManagerListener
+    @Mock
+    lateinit var tracker: SiteCreationTracker
 
     private lateinit var manager: SiteCreationServiceManager
 
@@ -59,10 +63,10 @@ class SiteCreationServiceManagerTest : BaseUnitTest() {
     @Before
     fun setUp() {
         manager = SiteCreationServiceManager(
-                useCase,
-                dispatcher,
-                tracker,
-                testDispatcher()
+            useCase,
+            dispatcher,
+            tracker,
+            testDispatcher()
         )
         successEvent = OnNewSiteCreated(newSiteRemoteId = NEW_SITE_REMOTE_ID, url = NEW_SITE_REMOTE_URL)
         siteExistsErrorEvent = OnNewSiteCreated(newSiteRemoteId = NEW_SITE_REMOTE_ID, url = NEW_SITE_REMOTE_URL)
@@ -186,7 +190,7 @@ class SiteCreationServiceManagerTest : BaseUnitTest() {
     @Test
     fun verifyIllegalStateExceptionInUseCaseResultsInServiceErrorState() = test {
         whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID))
-                .thenThrow(IllegalStateException("Error"))
+            .thenThrow(IllegalStateException("Error"))
         startFlow()
         argumentCaptor<SiteCreationServiceState>().apply {
             verify(serviceListener, times(3)).updateState(capture())
@@ -206,16 +210,16 @@ class SiteCreationServiceManagerTest : BaseUnitTest() {
 
     private suspend fun setSuccessfulResponses() = test {
         whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID))
-                .thenReturn(successEvent)
+            .thenReturn(successEvent)
     }
 
     private suspend fun setGenericErrorResponses() = test {
         whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID))
-                .thenReturn(genericErrorEvent)
+            .thenReturn(genericErrorEvent)
     }
 
     private suspend fun setSiteExistsErrorResponses() = test {
         whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID))
-                .thenReturn(siteExistsErrorEvent)
+            .thenReturn(siteExistsErrorEvent)
     }
 }

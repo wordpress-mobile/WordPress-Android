@@ -49,49 +49,52 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class SystemNotificationsTrackerTest {
-    @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
-    @Mock lateinit var appPrefs: AppPrefsWrapper
-    @Mock lateinit var notificationManager: NotificationManagerWrapper
+    @Mock
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var appPrefs: AppPrefsWrapper
+    @Mock
+    lateinit var notificationManager: NotificationManagerWrapper
     private lateinit var systemNotificationsTracker: SystemNotificationsTracker
     private val typeToValue = mapOf(
-            COMMENT to "comment",
-            LIKE to "like",
-            COMMENT_LIKE to "comment_like",
-            AUTOMATTCHER to "automattcher",
-            FOLLOW to "follow",
-            REBLOG to "reblog",
-            BADGE_RESET to "badge_reset",
-            NOTE_DELETE to "note_delete",
-            TEST_NOTE to "test_note",
-            UNKNOWN_NOTE to "unknown_note",
-            AUTHENTICATION to "authentication",
-            GROUP_NOTIFICATION to "group_notes",
-            ACTIONS_RESULT to "actions_result",
-            ACTIONS_PROGRESS to "actions_progress",
-            QUICK_START_REMINDER to "quick_start_reminder",
-            POST_UPLOAD_SUCCESS to "post_upload_success",
-            POST_UPLOAD_ERROR to "post_upload_error",
-            MEDIA_UPLOAD_SUCCESS to "media_upload_success",
-            MEDIA_UPLOAD_ERROR to "media_upload_error",
-            POST_PUBLISHED to "post_published",
-            STORY_SAVE_SUCCESS to "story_save_success",
-            STORY_SAVE_ERROR to "story_save_error",
-            STORY_FRAME_SAVE_SUCCESS to "story_frame_save_success",
-            STORY_FRAME_SAVE_ERROR to "story_frame_save_error",
-            PENDING_DRAFTS to "pending_draft",
-            ZENDESK to "zendesk_message",
-            BLOGGING_REMINDERS to "blogging_reminders",
-            CREATE_SITE to "create_site",
-            WEEKLY_ROUNDUP to "weekly_roundup",
-            BLOGGING_PROMPTS_ONBOARDING to "blogging_prompts_onboarding"
+        COMMENT to "comment",
+        LIKE to "like",
+        COMMENT_LIKE to "comment_like",
+        AUTOMATTCHER to "automattcher",
+        FOLLOW to "follow",
+        REBLOG to "reblog",
+        BADGE_RESET to "badge_reset",
+        NOTE_DELETE to "note_delete",
+        TEST_NOTE to "test_note",
+        UNKNOWN_NOTE to "unknown_note",
+        AUTHENTICATION to "authentication",
+        GROUP_NOTIFICATION to "group_notes",
+        ACTIONS_RESULT to "actions_result",
+        ACTIONS_PROGRESS to "actions_progress",
+        QUICK_START_REMINDER to "quick_start_reminder",
+        POST_UPLOAD_SUCCESS to "post_upload_success",
+        POST_UPLOAD_ERROR to "post_upload_error",
+        MEDIA_UPLOAD_SUCCESS to "media_upload_success",
+        MEDIA_UPLOAD_ERROR to "media_upload_error",
+        POST_PUBLISHED to "post_published",
+        STORY_SAVE_SUCCESS to "story_save_success",
+        STORY_SAVE_ERROR to "story_save_error",
+        STORY_FRAME_SAVE_SUCCESS to "story_frame_save_success",
+        STORY_FRAME_SAVE_ERROR to "story_frame_save_error",
+        PENDING_DRAFTS to "pending_draft",
+        ZENDESK to "zendesk_message",
+        BLOGGING_REMINDERS to "blogging_reminders",
+        CREATE_SITE to "create_site",
+        WEEKLY_ROUNDUP to "weekly_roundup",
+        BLOGGING_PROMPTS_ONBOARDING to "blogging_prompts_onboarding"
     )
 
     @Before
     fun setUp() {
         systemNotificationsTracker = SystemNotificationsTracker(
-                analyticsTracker,
-                appPrefs,
-                notificationManager
+            analyticsTracker,
+            appPrefs,
+            notificationManager
         )
     }
 
@@ -170,8 +173,8 @@ class SystemNotificationsTrackerTest {
         systemNotificationsTracker.trackDismissedNotification(notificationType)
 
         verify(analyticsTracker).track(
-                NOTIFICATION_DISMISSED,
-                mapOf("notification_type" to typeValue)
+            NOTIFICATION_DISMISSED,
+            mapOf("notification_type" to typeValue)
         )
     }
 
@@ -182,8 +185,8 @@ class SystemNotificationsTrackerTest {
         systemNotificationsTracker.trackTappedNotification(notificationType)
 
         verify(analyticsTracker).track(
-                NOTIFICATION_TAPPED,
-                mapOf("notification_type" to typeValue)
+            NOTIFICATION_TAPPED,
+            mapOf("notification_type" to typeValue)
         )
     }
 
@@ -194,8 +197,8 @@ class SystemNotificationsTrackerTest {
         systemNotificationsTracker.trackShownNotification(notificationType)
 
         verify(analyticsTracker).track(
-                NOTIFICATION_SHOWN,
-                mapOf("notification_type" to typeValue)
+            NOTIFICATION_SHOWN,
+            mapOf("notification_type" to typeValue)
         )
     }
 }

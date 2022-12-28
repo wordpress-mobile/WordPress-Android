@@ -16,7 +16,7 @@ class ListItemWithImageViewHolder(
     val binding: StatsBlockListItemWithImageBinding = parent.viewBinding(StatsBlockListItemWithImageBinding::inflate),
     val imageManager: ImageManager
 ) : BlockListItemViewHolder(
-        binding.root
+    binding.root
 ) {
     fun bind(
         item: ListItemWithImage
@@ -26,10 +26,10 @@ class ListItemWithImageViewHolder(
         item.imageUrl?.let {
             statsImage.visibility = View.VISIBLE
             imageManager.loadImageWithCorners(
-                    statsImage,
-                    IMAGE,
-                    it,
-                    DisplayUtils.dpToPx(statsImage.context, SITE_IMAGE_CORNER_RADIUS_IN_DP)
+                statsImage,
+                IMAGE,
+                it,
+                DisplayUtils.dpToPx(statsImage.context, SITE_IMAGE_CORNER_RADIUS_IN_DP)
             )
         }
     }

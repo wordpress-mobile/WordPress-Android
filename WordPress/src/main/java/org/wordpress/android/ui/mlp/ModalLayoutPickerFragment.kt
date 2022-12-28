@@ -36,9 +36,12 @@ import javax.inject.Inject
  * Implements the Modal Layout Picker UI
  */
 class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
-    @Inject internal lateinit var uiHelper: UiHelpers
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var thumbDimensionProvider: ModalLayoutPickerDimensionProvider
+    @Inject
+    internal lateinit var uiHelper: UiHelpers
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var thumbDimensionProvider: ModalLayoutPickerDimensionProvider
     private lateinit var viewModel: ModalLayoutPickerViewModel
     private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
@@ -63,9 +66,9 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
         with(ModalLayoutPickerFragmentBinding.bind(view)) {
             categoriesRecyclerView.apply {
                 layoutManager = LinearLayoutManager(
-                        context,
-                        RecyclerView.HORIZONTAL,
-                        false
+                    context,
+                    RecyclerView.HORIZONTAL,
+                    false
                 )
                 setRecycledViewPool(RecyclerView.RecycledViewPool())
                 adapter = CategoriesAdapter()
@@ -110,8 +113,8 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
             setupViewModel(savedInstanceState)
 
             previewModeSelectorPopup = PreviewModeSelectorPopup(
-                    requireActivity(),
-                    modalLayoutPickerTitlebar.previewTypeSelectorButton
+                requireActivity(),
+                modalLayoutPickerTitlebar.previewTypeSelectorButton
             )
         }
     }
@@ -171,9 +174,9 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
 
     private fun ModalLayoutPickerFragmentBinding.setHeaderVisibility(visible: Boolean) {
         uiHelper.fadeInfadeOutViews(
-                modalLayoutPickerTitlebar.title,
-                modalLayoutPickerHeaderSection.modalLayoutPickerTitleRow?.header,
-                visible
+            modalLayoutPickerTitlebar.title,
+            modalLayoutPickerHeaderSection.modalLayoutPickerTitleRow?.header,
+            visible
         )
     }
 
@@ -183,7 +186,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
      */
     private fun ModalLayoutPickerFragmentBinding.setDescriptionVisibility(visible: Boolean) {
         modalLayoutPickerHeaderSection.modalLayoutPickerSubtitleRow?.description?.visibility =
-                if (visible) View.VISIBLE else View.INVISIBLE
+            if (visible) View.VISIBLE else View.INVISIBLE
     }
 
     private fun ModalLayoutPickerFragmentBinding.setButtonsVisibility(uiState: ButtonsUiState) {
@@ -192,7 +195,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
         modalLayoutPickerBottomToolbar.previewButton.setVisible(uiState.previewVisible)
         modalLayoutPickerBottomToolbar.retryButton.setVisible(uiState.retryVisible)
         modalLayoutPickerBottomToolbar.createOrRetryContainer.setVisible(
-                uiState.createBlankPageVisible || uiState.retryVisible
+            uiState.createBlankPageVisible || uiState.retryVisible
         )
     }
 

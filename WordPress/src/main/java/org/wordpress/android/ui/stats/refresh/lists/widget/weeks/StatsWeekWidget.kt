@@ -6,7 +6,8 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater
 import javax.inject.Inject
 
 class StatsWeekWidget : StatsWidget() {
-    @Inject lateinit var weekViewsWidgetUpdater: WeekViewsWidgetUpdater
+    @Inject
+    lateinit var weekViewsWidgetUpdater: WeekViewsWidgetUpdater
     override val widgetUpdater: WidgetUpdater
         get() = weekViewsWidgetUpdater
 

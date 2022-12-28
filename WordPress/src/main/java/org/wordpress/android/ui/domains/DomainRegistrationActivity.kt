@@ -32,7 +32,8 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         const val DOMAIN_REGISTRATION_PURPOSE_KEY = "DOMAIN_REGISTRATION_PURPOSE_KEY"
     }
 
-    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainRegistrationMainViewModel
     private lateinit var binding: DomainRegistrationActivityBinding
 
@@ -119,10 +120,10 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         beginTransaction().apply {
             if (!isRootFragment) {
                 setCustomAnimations(
-                        R.anim.activity_slide_in_from_right,
-                        R.anim.activity_slide_out_to_left,
-                        R.anim.activity_slide_in_from_left,
-                        R.anim.activity_slide_out_to_right
+                    R.anim.activity_slide_in_from_right,
+                    R.anim.activity_slide_out_to_left,
+                    R.anim.activity_slide_in_from_left,
+                    R.anim.activity_slide_out_to_right
                 )
                 addToBackStack(null)
             }

@@ -20,8 +20,10 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @ExperimentalCoroutinesApi
 class IgnoreThreatUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: IgnoreThreatUseCase
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var scanStore: ScanStore
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    lateinit var scanStore: ScanStore
 
     private val fakeSiteId = 1L
     private val fakeThreatId = 11L
@@ -29,27 +31,27 @@ class IgnoreThreatUseCaseTest : BaseUnitTest() {
     @Before
     fun setup() = test {
         useCase = IgnoreThreatUseCase(
-                networkUtilsWrapper,
-                scanStore,
-                testDispatcher()
+            networkUtilsWrapper,
+            scanStore,
+            testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
 
     @Test
     fun `given no network, when ignore threat is triggered, then the call fails due to network unavailability`() =
-            test {
-                whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        test {
+            whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
-                val result = useCase.ignoreThreat(fakeSiteId, fakeThreatId)
+            val result = useCase.ignoreThreat(fakeSiteId, fakeThreatId)
 
-                assertThat(result).isEqualTo(Failure.NetworkUnavailable)
-            }
+            assertThat(result).isEqualTo(Failure.NetworkUnavailable)
+        }
 
     @Test
     fun `given invalid response, when ignore threat is triggered, then the call fails`() = test {
         whenever(scanStore.ignoreThreat(any())).thenReturn(
-                OnIgnoreThreatStarted(IgnoreThreatError(INVALID_RESPONSE), IGNORE_THREAT)
+            OnIgnoreThreatStarted(IgnoreThreatError(INVALID_RESPONSE), IGNORE_THREAT)
         )
 
         val result = useCase.ignoreThreat(fakeSiteId, fakeThreatId)

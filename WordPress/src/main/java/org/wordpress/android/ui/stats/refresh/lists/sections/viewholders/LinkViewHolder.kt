@@ -9,8 +9,8 @@ import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 
 class LinkViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_link_item
+    parent,
+    R.layout.stats_block_link_item
 ) {
     private val text = itemView.findViewById<TextView>(R.id.text)
     private val link = itemView.findViewById<View>(R.id.link_wrapper)
@@ -18,9 +18,9 @@ class LinkViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     fun bind(item: Link) {
         if (item.icon != null) {
             val drawable = ColorUtils.applyTintToDrawable(
-                    text.context,
-                    item.icon,
-                    text.context.getColorResIdFromAttribute(R.attr.colorPrimary)
+                text.context,
+                item.icon,
+                text.context.getColorResIdFromAttribute(R.attr.colorPrimary)
             )
             text.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         } else {

@@ -34,13 +34,20 @@ import java.util.TimeZone
 
 @ExperimentalCoroutinesApi
 class PublishSettingsViewModelTest : BaseUnitTest() {
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var postSettingsUtils: PostSettingsUtils
-    @Mock lateinit var peopleUtilsWrapper: PeopleUtilsWrapper
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var postSchedulingNotificationStore: PostSchedulingNotificationStore
-    @Mock lateinit var siteStore: SiteStore
-    @Mock lateinit var editPostRepository: EditPostRepository
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var postSettingsUtils: PostSettingsUtils
+    @Mock
+    lateinit var peopleUtilsWrapper: PeopleUtilsWrapper
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    lateinit var postSchedulingNotificationStore: PostSchedulingNotificationStore
+    @Mock
+    lateinit var siteStore: SiteStore
+    @Mock
+    lateinit var editPostRepository: EditPostRepository
     private lateinit var viewModel: EditPostPublishSettingsViewModel
     private lateinit var post: PostModel
 
@@ -51,12 +58,12 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = EditPostPublishSettingsViewModel(
-                resourceProvider,
-                postSettingsUtils,
-                peopleUtilsWrapper,
-                localeManagerWrapper,
-                postSchedulingNotificationStore,
-                siteStore
+            resourceProvider,
+            postSettingsUtils,
+            peopleUtilsWrapper,
+            localeManagerWrapper,
+            postSchedulingNotificationStore,
+            siteStore
         )
         currentCalendar.set(2019, 6, 6, 10, 20)
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(currentCalendar)
@@ -129,7 +136,7 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
 
         val peopleList = listOf(Person(1, 1), Person(2, 1))
         whenever(peopleUtilsWrapper.fetchAuthors(any(), any(), any()))
-                .then { it.getArgument<FetchUsersCallback>(2).onSuccess(peopleList, true) }
+            .then { it.getArgument<FetchUsersCallback>(2).onSuccess(peopleList, true) }
 
         var authors = listOf<Person>()
         viewModel.authors.observeForever { authors = it }
@@ -253,7 +260,7 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
     fun `updatePost updates post status from SCHEDULED to DRAFT when published date in past`() {
         val expectedToastMessage = "Message"
         whenever(resourceProvider.getString(R.string.editor_post_converted_back_to_draft)).thenReturn(
-                expectedToastMessage
+            expectedToastMessage
         )
         whenever(editPostRepository.status).thenReturn(PostStatus.SCHEDULED)
         val pastDate = Calendar.getInstance()
@@ -395,17 +402,21 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
 
         val eventTitle = "Event title"
         val eventDescription = "Event description"
-        whenever(resourceProvider.getString(
+        whenever(
+            resourceProvider.getString(
                 R.string.calendar_scheduled_post_title,
                 postTitle
-        )).thenReturn(eventTitle)
-        whenever(resourceProvider.getString(
+            )
+        ).thenReturn(eventTitle)
+        whenever(
+            resourceProvider.getString(
                 R.string.calendar_scheduled_post_description,
                 postTitle,
                 siteTitle,
                 appName,
                 postLink
-        )).thenReturn(eventDescription)
+            )
+        ).thenReturn(eventDescription)
 
         viewModel.onAddToCalendar(editPostRepository)
 

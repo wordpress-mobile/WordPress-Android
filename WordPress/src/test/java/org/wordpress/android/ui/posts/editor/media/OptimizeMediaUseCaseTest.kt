@@ -24,7 +24,7 @@ class OptimizeMediaUseCaseTest : BaseUnitTest() {
         val mediaUtilsWrapper = createMediaUtilsWrapper(resultForGetRealPath = uris[1] to null)
         // Act
         val optimizeMediaResult = createOptimizeMediaUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .optimizeMediaIfSupportedAsync(SiteModel(), FRESHLY_TAKEN, uris)
+            .optimizeMediaIfSupportedAsync(SiteModel(), FRESHLY_TAKEN, uris)
         // Assert
         assertThat(optimizeMediaResult.optimizedMediaUris.size).isEqualTo(uris.size - 1)
     }
@@ -36,7 +36,7 @@ class OptimizeMediaUseCaseTest : BaseUnitTest() {
         val mediaUtilsWrapper = createMediaUtilsWrapper(resultForGetRealPath = uris[1] to null)
         // Act
         val optimizeMediaResult = createOptimizeMediaUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .optimizeMediaIfSupportedAsync(SiteModel(), FRESHLY_TAKEN, uris)
+            .optimizeMediaIfSupportedAsync(SiteModel(), FRESHLY_TAKEN, uris)
         // Assert
         assertThat(optimizeMediaResult.loadingSomeMediaFailed).isTrue()
     }
@@ -47,7 +47,7 @@ class OptimizeMediaUseCaseTest : BaseUnitTest() {
         val uris = listOf<Uri>(mock(), mock(), mock())
         // Act
         val optimizeMediaResult = createOptimizeMediaUseCase()
-                .optimizeMediaIfSupportedAsync(SiteModel(), FRESHLY_TAKEN, uris)
+            .optimizeMediaIfSupportedAsync(SiteModel(), FRESHLY_TAKEN, uris)
         // Assert
         assertThat(optimizeMediaResult.loadingSomeMediaFailed).isFalse()
     }
@@ -62,7 +62,7 @@ class OptimizeMediaUseCaseTest : BaseUnitTest() {
 
         // Act
         val optimizeMediaResult = createOptimizeMediaUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .optimizeMediaIfSupportedAsync(SiteModel(), FRESHLY_TAKEN, uris)
+            .optimizeMediaIfSupportedAsync(SiteModel(), FRESHLY_TAKEN, uris)
 
         // Assert
         assertThat(optimizeMediaResult.optimizedMediaUris).isEqualTo(listOf(optimizedUri))
@@ -79,7 +79,7 @@ class OptimizeMediaUseCaseTest : BaseUnitTest() {
 
         // Act
         val optimizeMediaResult = createOptimizeMediaUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .optimizeMediaIfSupportedAsync(siteModel, FRESHLY_TAKEN, uris)
+            .optimizeMediaIfSupportedAsync(siteModel, FRESHLY_TAKEN, uris)
 
         // Assert
         assertThat(optimizeMediaResult.optimizedMediaUris).isEqualTo(uris)
@@ -87,52 +87,52 @@ class OptimizeMediaUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `Optimization disabled, self-hosted, result contains uris with fixed orientation`() =
-            test {
-                // Arrange
-                val uris = listOf<Uri>(mock())
-                val fixedOrientationUri = mock<Uri>()
-                // Is self-hosted
-                val siteModel = SiteModel().apply { setIsWPCom(false) }
-                // OptimizeMediaResult is null => optimization disabled
-                val mediaUtilsWrapper = createMediaUtilsWrapper(
-                        resultForGetOptimizeMedia = null,
-                        resultForFixOrientation = fixedOrientationUri
-                )
+        test {
+            // Arrange
+            val uris = listOf<Uri>(mock())
+            val fixedOrientationUri = mock<Uri>()
+            // Is self-hosted
+            val siteModel = SiteModel().apply { setIsWPCom(false) }
+            // OptimizeMediaResult is null => optimization disabled
+            val mediaUtilsWrapper = createMediaUtilsWrapper(
+                resultForGetOptimizeMedia = null,
+                resultForFixOrientation = fixedOrientationUri
+            )
 
-                // Act
-                val optimizeMediaResult = createOptimizeMediaUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                        .optimizeMediaIfSupportedAsync(siteModel, FRESHLY_TAKEN, uris)
+            // Act
+            val optimizeMediaResult = createOptimizeMediaUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
+                .optimizeMediaIfSupportedAsync(siteModel, FRESHLY_TAKEN, uris)
 
-                // Assert
-                assertThat(optimizeMediaResult.optimizedMediaUris).isEqualTo(
-                        listOf(
-                                fixedOrientationUri
-                        )
+            // Assert
+            assertThat(optimizeMediaResult.optimizedMediaUris).isEqualTo(
+                listOf(
+                    fixedOrientationUri
                 )
-                assertThat(optimizeMediaResult.optimizedMediaUris).isNotEqualTo(uris)
-            }
+            )
+            assertThat(optimizeMediaResult.optimizedMediaUris).isNotEqualTo(uris)
+        }
 
     @Test
     fun `Optimization disabled, self-hosted, fixOrientationIssue returns null, result contains original uris`() =
-            test {
-                // Arrange
-                val uris = listOf<Uri>(mock())
-                val fixedOrientationUri = null
-                // Is self-hosted
-                val siteModel = SiteModel().apply { setIsWPCom(false) }
-                // OptimizeMediaResult is null => optimization disabled
-                val mediaUtilsWrapper = createMediaUtilsWrapper(
-                        resultForGetOptimizeMedia = null,
-                        resultForFixOrientation = fixedOrientationUri
-                )
+        test {
+            // Arrange
+            val uris = listOf<Uri>(mock())
+            val fixedOrientationUri = null
+            // Is self-hosted
+            val siteModel = SiteModel().apply { setIsWPCom(false) }
+            // OptimizeMediaResult is null => optimization disabled
+            val mediaUtilsWrapper = createMediaUtilsWrapper(
+                resultForGetOptimizeMedia = null,
+                resultForFixOrientation = fixedOrientationUri
+            )
 
-                // Act
-                val optimizeMediaResult = createOptimizeMediaUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                        .optimizeMediaIfSupportedAsync(siteModel, FRESHLY_TAKEN, uris)
+            // Act
+            val optimizeMediaResult = createOptimizeMediaUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
+                .optimizeMediaIfSupportedAsync(siteModel, FRESHLY_TAKEN, uris)
 
-                // Assert
-                assertThat(optimizeMediaResult.optimizedMediaUris).isEqualTo(uris)
-            }
+            // Assert
+            assertThat(optimizeMediaResult.optimizedMediaUris).isEqualTo(uris)
+        }
 
     private companion object Fixtures {
         private const val FRESHLY_TAKEN = false
@@ -141,9 +141,9 @@ class OptimizeMediaUseCaseTest : BaseUnitTest() {
             editorTracker: EditorTracker = mock(),
             mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper()
         ) = OptimizeMediaUseCase(
-                editorTracker,
-                mediaUtilsWrapper,
-                UnconfinedTestDispatcher()
+            editorTracker,
+            mediaUtilsWrapper,
+            UnconfinedTestDispatcher()
         )
 
         private fun createMediaUtilsWrapper(
@@ -151,15 +151,15 @@ class OptimizeMediaUseCaseTest : BaseUnitTest() {
             resultForGetOptimizeMedia: Uri? = mock(),
             resultForFixOrientation: Uri? = mock()
         ) =
-                mock<MediaUtilsWrapper> {
-                    on { getOptimizedMedia(any(), any()) }.thenReturn(resultForGetOptimizeMedia)
-                    on { fixOrientationIssue(any(), any()) }.thenReturn(resultForFixOrientation)
-                    on { getRealPathFromURI(any()) }.thenReturn("")
-                    resultForGetRealPath?.let {
-                        on { getRealPathFromURI(resultForGetRealPath.first) }.thenReturn(
-                                resultForGetRealPath.second
-                        )
-                    }
+            mock<MediaUtilsWrapper> {
+                on { getOptimizedMedia(any(), any()) }.thenReturn(resultForGetOptimizeMedia)
+                on { fixOrientationIssue(any(), any()) }.thenReturn(resultForFixOrientation)
+                on { getRealPathFromURI(any()) }.thenReturn("")
+                resultForGetRealPath?.let {
+                    on { getRealPathFromURI(resultForGetRealPath.first) }.thenReturn(
+                        resultForGetRealPath.second
+                    )
                 }
+            }
     }
 }

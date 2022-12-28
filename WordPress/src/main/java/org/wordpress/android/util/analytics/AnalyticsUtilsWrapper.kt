@@ -89,12 +89,12 @@ class AnalyticsUtilsWrapper @Inject constructor(
         url: String,
         sourceInfo: String?
     ) = AnalyticsUtils.trackWithDeepLinkData(
-            stat,
-            action,
-            host,
-            source,
-            url,
-            sourceInfo
+        stat,
+        action,
+        host,
+        source,
+        url,
+        sourceInfo
     )
 
     fun trackRailcarRender(
@@ -102,12 +102,12 @@ class AnalyticsUtilsWrapper @Inject constructor(
     ) = AnalyticsUtils.trackRailcarRender(railcarJson)
 
     fun trackWithBlogPostDetails(stat: Stat, blogId: Long, postId: Long) =
-            AnalyticsUtils.trackWithBlogPostDetails(stat, blogId, postId)
+        AnalyticsUtils.trackWithBlogPostDetails(stat, blogId, postId)
 
     fun trackRecommendAppEngaged(source: RecommendAppSource) = AnalyticsUtils.trackRecommendAppEngaged(source)
 
     fun trackRecommendAppFetchFailed(source: RecommendAppSource, error: String) =
-            AnalyticsUtils.trackRecommendAppFetchFailed(source, error)
+        AnalyticsUtils.trackRecommendAppFetchFailed(source, error)
 
     fun trackCommentActionWithSiteDetails(
         stat: Stat,

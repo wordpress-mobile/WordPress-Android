@@ -92,26 +92,26 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     val uiState: StateFlow<CommentsUiModel> by lazy {
         combine(
-                _commentsProvider.filter { it.type == PAGINATE_USE_CASE }.filterIsInstance<CommentsPagingResult>(),
-                _selectedComments,
-                _batchModerationStatus
+            _commentsProvider.filter { it.type == PAGINATE_USE_CASE }.filterIsInstance<CommentsPagingResult>(),
+            _selectedComments,
+            _batchModerationStatus
         ) { commentData, selectedCommentIds, batchModerationStatus ->
             commentListUiModelHelper.buildUiModel(
-                    commentFilter,
-                    commentData,
-                    selectedCommentIds,
-                    batchModerationStatus,
-                    uiState.replayCache.firstOrNull(),
-                    this::toggleItem,
-                    this::clickItem,
-                    this::requestNextPage,
-                    this::moderateSelectedComments,
-                    this::onBatchModerationConfirmationCanceled
+                commentFilter,
+                commentData,
+                selectedCommentIds,
+                batchModerationStatus,
+                uiState.replayCache.firstOrNull(),
+                this::toggleItem,
+                this::clickItem,
+                this::requestNextPage,
+                this::moderateSelectedComments,
+                this::onBatchModerationConfirmationCanceled
             )
         }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Companion.WhileSubscribed(UI_STATE_FLOW_TIMEOUT_MS),
-                initialValue = CommentsUiModel.buildInitialState()
+            scope = viewModelScope,
+            started = SharingStarted.Companion.WhileSubscribed(UI_STATE_FLOW_TIMEOUT_MS),
+            initialValue = CommentsUiModel.buildInitialState()
         )
     }
 
@@ -129,12 +129,12 @@ class UnifiedCommentListViewModel @Inject constructor(
     private fun requestsFirstPage() {
         launch(bgDispatcher) {
             unifiedCommentsListHandler.requestPage(
-                    GetPageParameters(
-                            site = selectedSiteRepository.getSelectedSite()!!,
-                            number = if (commentFilter == UNREPLIED) UNREPLIED_COMMENT_PAGE_SIZE else COMMENT_PAGE_SIZE,
-                            offset = 0,
-                            commentFilter = commentFilter
-                    )
+                GetPageParameters(
+                    site = selectedSiteRepository.getSelectedSite()!!,
+                    number = if (commentFilter == UNREPLIED) UNREPLIED_COMMENT_PAGE_SIZE else COMMENT_PAGE_SIZE,
+                    offset = 0,
+                    commentFilter = commentFilter
+                )
             )
         }
     }
@@ -142,16 +142,16 @@ class UnifiedCommentListViewModel @Inject constructor(
     private fun requestNextPage(offset: Int) {
         launch(bgDispatcher) {
             unifiedCommentsListHandler.requestPage(
-                    GetPageParameters(
-                            site = selectedSiteRepository.getSelectedSite()!!,
-                            number = if (commentFilter == UNREPLIED) {
-                                UNREPLIED_COMMENT_PAGE_SIZE
-                            } else {
-                                COMMENT_PAGE_SIZE
-                            },
-                            offset = offset,
-                            commentFilter = commentFilter
-                    )
+                GetPageParameters(
+                    site = selectedSiteRepository.getSelectedSite()!!,
+                    number = if (commentFilter == UNREPLIED) {
+                        UNREPLIED_COMMENT_PAGE_SIZE
+                    } else {
+                        COMMENT_PAGE_SIZE
+                    },
+                    offset = offset,
+                    commentFilter = commentFilter
+                )
             )
         }
     }
@@ -161,19 +161,19 @@ class UnifiedCommentListViewModel @Inject constructor(
             _commentsUpdateListener.collectLatest {
                 launch(bgDispatcher) {
                     unifiedCommentsListHandler.refreshFromCache(
-                            ReloadFromCacheParameters(
-                                    pagingParameters = GetPageParameters(
-                                            site = selectedSiteRepository.getSelectedSite()!!,
-                                            number = if (commentFilter == UNREPLIED) {
-                                                UNREPLIED_COMMENT_PAGE_SIZE
-                                            } else {
-                                                COMMENT_PAGE_SIZE
-                                            },
-                                            offset = 0,
-                                            commentFilter = commentFilter
-                                    ),
-                                    hasMore = uiState.value.commentData.hasMore
-                            )
+                        ReloadFromCacheParameters(
+                            pagingParameters = GetPageParameters(
+                                site = selectedSiteRepository.getSelectedSite()!!,
+                                number = if (commentFilter == UNREPLIED) {
+                                    UNREPLIED_COMMENT_PAGE_SIZE
+                                } else {
+                                    COMMENT_PAGE_SIZE
+                                },
+                                offset = 0,
+                                commentFilter = commentFilter
+                            ),
+                            hasMore = uiState.value.commentData.hasMore
+                        )
                     )
                 }
             }
@@ -212,38 +212,38 @@ class UnifiedCommentListViewModel @Inject constructor(
                     }
                     commentInModeration.add(it.data.remoteCommentId)
                     _onSnackbarMessage.emit(
-                            SnackbarMessageHolder(
-                                    message = message,
-                                    buttonTitle = UiStringRes(string.undo),
-                                    buttonAction = {
-                                        launch(bgDispatcher) {
-                                            commentInModeration.remove(it.data.remoteCommentId)
-                                            unifiedCommentsListHandler.undoCommentModeration(
-                                                    ModerateWithFallbackParameters(
-                                                            selectedSiteRepository.getSelectedSite()!!,
-                                                            it.data.remoteCommentId,
-                                                            it.data.newStatus,
-                                                            it.data.oldStatus
-                                                    )
+                        SnackbarMessageHolder(
+                            message = message,
+                            buttonTitle = UiStringRes(string.undo),
+                            buttonAction = {
+                                launch(bgDispatcher) {
+                                    commentInModeration.remove(it.data.remoteCommentId)
+                                    unifiedCommentsListHandler.undoCommentModeration(
+                                        ModerateWithFallbackParameters(
+                                            selectedSiteRepository.getSelectedSite()!!,
+                                            it.data.remoteCommentId,
+                                            it.data.newStatus,
+                                            it.data.oldStatus
+                                        )
+                                    )
+                                }
+                            },
+                            onDismissAction = { _ ->
+                                launch(bgDispatcher) {
+                                    if (commentInModeration.contains(it.data.remoteCommentId)) {
+                                        commentInModeration.remove(it.data.remoteCommentId)
+                                        unifiedCommentsListHandler.moderateAfterUndo(
+                                            ModerateWithFallbackParameters(
+                                                selectedSiteRepository.getSelectedSite()!!,
+                                                it.data.remoteCommentId,
+                                                it.data.newStatus,
+                                                it.data.oldStatus
                                             )
-                                        }
-                                    },
-                                    onDismissAction = { _ ->
-                                        launch(bgDispatcher) {
-                                            if (commentInModeration.contains(it.data.remoteCommentId)) {
-                                                commentInModeration.remove(it.data.remoteCommentId)
-                                                unifiedCommentsListHandler.moderateAfterUndo(
-                                                        ModerateWithFallbackParameters(
-                                                                selectedSiteRepository.getSelectedSite()!!,
-                                                                it.data.remoteCommentId,
-                                                                it.data.newStatus,
-                                                                it.data.oldStatus
-                                                        )
-                                                )
-                                            }
-                                        }
+                                        )
                                     }
-                            )
+                                }
+                            }
+                        )
                     )
                 }
             }
@@ -279,10 +279,10 @@ class UnifiedCommentListViewModel @Inject constructor(
         } else {
             launch {
                 _onCommentDetailsRequested.emit(
-                        SelectedComment(
-                                comment.remoteCommentId,
-                                CommentStatus.fromString(comment.status)
-                        )
+                    SelectedComment(
+                        comment.remoteCommentId,
+                        CommentStatus.fromString(comment.status)
+                    )
                 )
             }
         }
@@ -300,20 +300,20 @@ class UnifiedCommentListViewModel @Inject constructor(
         launch(bgDispatcher) {
             if (newStatus == SPAM || newStatus == TRASH || newStatus == DELETED) {
                 unifiedCommentsListHandler.preModerateWithUndo(
-                        ModerateCommentParameters(
-                                selectedSiteRepository.getSelectedSite()!!,
-                                commentId,
-                                newStatus
-                        )
+                    ModerateCommentParameters(
+                        selectedSiteRepository.getSelectedSite()!!,
+                        commentId,
+                        newStatus
+                    )
                 )
             } else {
                 launch(bgDispatcher) {
                     unifiedCommentsListHandler.moderateComments(
-                            ModerateCommentsParameters(
-                                    selectedSiteRepository.getSelectedSite()!!,
-                                    listOf(commentId),
-                                    newStatus
-                            )
+                        ModerateCommentsParameters(
+                            selectedSiteRepository.getSelectedSite()!!,
+                            listOf(commentId),
+                            newStatus
+                        )
                     )
                 }
             }
@@ -348,11 +348,11 @@ class UnifiedCommentListViewModel @Inject constructor(
             val commentsToModerate = _selectedComments.value.map { it.remoteCommentId }
             _selectedComments.emit(emptyList())
             unifiedCommentsListHandler.moderateComments(
-                    ModerateCommentsParameters(
-                            selectedSiteRepository.getSelectedSite()!!,
-                            commentsToModerate,
-                            newStatus
-                    )
+                ModerateCommentsParameters(
+                    selectedSiteRepository.getSelectedSite()!!,
+                    commentsToModerate,
+                    newStatus
+                )
             )
             when (newStatus) {
                 APPROVED -> analyticsTrackerWrapper.track(COMMENT_BATCH_APPROVED)

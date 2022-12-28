@@ -45,7 +45,7 @@ class BaseListUseCase(
         get() = bgDispatcher
 
     private val blockListData = combineMap(
-            useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
+        useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
     )
     private val statsTypes = MutableLiveData<List<StatsType>>()
     val data: MediatorLiveData<UiModel?> = mergeAsyncNotNull(this, statsTypes, blockListData) { types, map ->
@@ -65,8 +65,8 @@ class BaseListUseCase(
 
     private val mutableNavigationTarget = MutableLiveData<Event<NavigationTarget>>()
     val navigationTarget: LiveData<Event<NavigationTarget>> = mergeNotNull(
-            useCases.map { it.navigationTarget } + mutableNavigationTarget,
-            distinct = false
+        useCases.map { it.navigationTarget } + mutableNavigationTarget,
+        distinct = false
     )
 
     private val mutableSnackbarMessage = MutableLiveData<Int?>()
@@ -91,11 +91,11 @@ class BaseListUseCase(
     private suspend fun onParamChanged(param: UseCaseParam) {
         statsTypes.value?.forEach { type ->
             useCases.find { it.type == type }
-                    ?.let { block ->
-                        withContext(bgDispatcher) {
-                            block.onParamsChange(param)
-                        }
+                ?.let { block ->
+                    withContext(bgDispatcher) {
+                        block.onParamsChange(param)
                     }
+                }
         }
     }
 
@@ -118,11 +118,11 @@ class BaseListUseCase(
                 val visibleTypes = refreshTypes()
                 visibleTypes.forEach { type ->
                     useCases.find { it.type == type }
-                            ?.let { block ->
-                                launch(bgDispatcher) {
-                                    block.fetch(refresh, forced)
-                                }
+                        ?.let { block ->
+                            launch(bgDispatcher) {
+                                block.fetch(refresh, forced)
                             }
+                        }
                 }
                 if (!refresh) {
                     mutableScrollTo.postValue(Event(visibleTypes.last()))
