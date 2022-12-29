@@ -4114,10 +4114,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_answer_prompt_notification_title">Daily Prompt</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Answer</string>
     <string name="blogging_prompts_notification_dismiss">Dismiss</string>
-    <string name="blogging_prompts_answered_prompt">✓ Answered</string>
-    <string name="blogging_prompts_number_of_answers_zero">0 answers</string>
-    <string name="blogging_prompts_number_of_answers_one">1 answer</string>
-    <string name="blogging_prompts_number_of_answers_other">%d answers</string>
 
     <!-- Blogging Prompts Onboarding -->
     <string name="blogging_prompts_onboarding_header_title">Introducing Prompts</string>
@@ -4136,6 +4132,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Blogging Prompts List -->
     <string name="blogging_prompts_list_title">Prompts</string>
+    <string name="blogging_prompts_list_answered_prompt">✓ Answered</string>
+    <string name="blogging_prompts_list_number_of_answers_zero">0 answers</string>
+    <string name="blogging_prompts_list_number_of_answers_one">1 answer</string>
+    <string name="blogging_prompts_list_number_of_answers_other">%d answers</string>
+    <string name="blogging_prompts_list_subtitle_divider" translatable="false">•</string>
 
     <!-- Editor module -->
     <string name="post_content" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Content</string>

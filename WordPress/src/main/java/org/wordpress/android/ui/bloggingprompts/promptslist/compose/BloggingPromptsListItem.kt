@@ -77,9 +77,9 @@ fun BloggingPromptsListItem(
             ItemSubtitleDivider()
             Text(
                     text = UiStringPluralRes(
-                            zeroRes = R.string.blogging_prompts_number_of_answers_zero,
-                            oneRes = R.string.blogging_prompts_number_of_answers_one,
-                            otherRes = R.string.blogging_prompts_number_of_answers_other,
+                            zeroRes = R.string.blogging_prompts_list_number_of_answers_zero,
+                            oneRes = R.string.blogging_prompts_list_number_of_answers_one,
+                            otherRes = R.string.blogging_prompts_list_number_of_answers_other,
                             count = model.answersCount,
                     ).asString(),
                     style = ItemSubtitleTextStyle,
@@ -88,7 +88,7 @@ fun BloggingPromptsListItem(
             if (model.isAnswered) {
                 ItemSubtitleDivider()
                 Text(
-                        text = stringResource(R.string.blogging_prompts_answered_prompt),
+                        text = stringResource(R.string.blogging_prompts_list_answered_prompt),
                         color = answeredColor,
                         style = ItemSubtitleTextStyle,
                 )
@@ -100,7 +100,7 @@ fun BloggingPromptsListItem(
 @Composable
 private fun ItemSubtitleDivider() {
     Text(
-            text = "•",
+            text = stringResource(R.string.blogging_prompts_list_subtitle_divider),
             modifier = Modifier.padding(horizontal = Margin.Medium.value),
             style = ItemSubtitleTextStyle,
     )
