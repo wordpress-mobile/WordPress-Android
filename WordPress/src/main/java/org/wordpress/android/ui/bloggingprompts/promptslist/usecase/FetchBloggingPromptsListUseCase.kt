@@ -6,7 +6,6 @@ import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggin
 import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
-import kotlin.random.Random
 
 // TODO thomashorta remove this suppress annotation when this has a real implementation
 @Suppress("MagicNumber")
@@ -39,12 +38,12 @@ class FetchBloggingPromptsListUseCase @Inject constructor() {
         return List(11) { generateFakePrompt(it, calendar.getDateAndSubtractADay()) }
     }
 
-    private fun generateFakePrompt(id: Int, date: Date) = BloggingPromptsListItemModel(
-            id = id,
+    private fun generateFakePrompt(index: Int, date: Date) = BloggingPromptsListItemModel(
+            id = index,
             text = fakePrompts.random(),
             date = date,
             isAnswered = listOf(true, false).random(),
-            answersCount = Random.nextInt(5000),
+            answersCount = index,
     )
 
     private fun Calendar.getDateAndSubtractADay(): Date {

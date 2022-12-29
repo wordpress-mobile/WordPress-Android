@@ -12,7 +12,7 @@ class BloggingPromptsListScreenPreviewProvider : PreviewParameterProvider<UiStat
                 text = "Prompt text",
                 date = Date(if (it == 0) 1671678000000 else 1671591600000),
                 isAnswered = it % 2 == 0,
-                answersCount = 10 * it,
+                answersCount = it,
         )
     }
 

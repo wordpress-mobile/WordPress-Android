@@ -15,16 +15,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.sp
+import org.wordpress.android.R
 import org.wordpress.android.ui.bloggingprompts.promptslist.model.BloggingPromptsListItemModel
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.compose.utils.asString
+import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.util.LocaleManager
 import java.text.SimpleDateFormat
 
@@ -72,14 +76,19 @@ fun BloggingPromptsListItem(
             )
             ItemSubtitleDivider()
             Text(
-                    text = "${model.answersCount} answers",
+                    text = UiStringPluralRes(
+                            zeroRes = R.string.blogging_prompts_number_of_answers_zero,
+                            oneRes = R.string.blogging_prompts_number_of_answers_one,
+                            otherRes = R.string.blogging_prompts_number_of_answers_other,
+                            count = model.answersCount,
+                    ).asString(),
                     style = ItemSubtitleTextStyle,
             )
 
             if (model.isAnswered) {
                 ItemSubtitleDivider()
                 Text(
-                        text = "✓ Answered",
+                        text = stringResource(R.string.blogging_prompts_answered_prompt),
                         color = answeredColor,
                         style = ItemSubtitleTextStyle,
                 )
