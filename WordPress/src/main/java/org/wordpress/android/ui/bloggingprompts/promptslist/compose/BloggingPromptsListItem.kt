@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.bloggingprompts.promptslist.compose
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
@@ -26,7 +28,7 @@ import org.wordpress.android.util.LocaleManager
 import java.text.SimpleDateFormat
 
 private const val MONTH_DAY_FORMAT = "MMM d"
-private val answerGreen = Color(0xFF008A20)
+private val answeredColor = Color(0xFF008A20)
 
 private val ItemSubtitleTextStyle
     @ReadOnlyComposable
@@ -49,7 +51,9 @@ fun BloggingPromptsListItem(
     }
 
     Column(
-            modifier = modifier.padding(Margin.ExtraLarge.value),
+            modifier = modifier
+                    .background(MaterialTheme.colors.surface)
+                    .padding(Margin.ExtraLarge.value),
             verticalArrangement = Arrangement.spacedBy(Margin.Small.value),
     ) {
         Text(
@@ -74,7 +78,7 @@ fun BloggingPromptsListItem(
                 ItemSubtitleDivider()
                 Text(
                         text = "✓ Answered",
-                        color = answerGreen,
+                        color = answeredColor,
                         style = ItemSubtitleTextStyle,
                 )
             }
