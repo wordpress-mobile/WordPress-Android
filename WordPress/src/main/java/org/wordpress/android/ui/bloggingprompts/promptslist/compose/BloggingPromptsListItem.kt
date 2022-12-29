@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.ui.bloggingprompts.promptslist.model.BloggingPromptsListItemModel
 import org.wordpress.android.ui.compose.theme.AppTheme
@@ -23,7 +24,6 @@ import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.util.LocaleManager
 import java.text.SimpleDateFormat
-import java.util.Date
 
 private const val MONTH_DAY_FORMAT = "MMM d"
 private val answerGreen = Color(0xFF008A20)
@@ -91,18 +91,12 @@ private fun ItemSubtitleDivider() {
     )
 }
 
-@Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(widthDp = 360)
+@Preview(widthDp = 360, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun BloggingPromptsListItemPreview() {
-    val model = BloggingPromptsListItemModel(
-            id = 0,
-            text = "Cast the movie of your life.",
-            date = Date(),
-            isAnswered = true,
-            answersCount = 100,
-    )
-
+fun BloggingPromptsListItemPreview(
+    @PreviewParameter(BloggingPromptsListItemPreviewProvider::class) model: BloggingPromptsListItemModel
+) {
     AppTheme {
         BloggingPromptsListItem(model)
     }
