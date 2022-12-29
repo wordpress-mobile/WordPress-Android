@@ -212,12 +212,14 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             startActivity(Intent(activity, UnifiedAboutActivity::class.java))
         })
 
-        viewModel.showDisconnectDialog.observeEvent(viewLifecycleOwner, {
-            when (it) {
-                true -> showDisconnectDialog()
-                false -> hideDisconnectDialog()
+        viewModel.showDisconnectDialog.observeEvent(viewLifecycleOwner) {
+            if(it) {
+                showDisconnectDialog()
+            } else {
+                hideDisconnectDialog()
+                activity?.finish()
             }
-        })
+        }
 
         viewModel.recommendUiState.observeEvent(viewLifecycleOwner, {
             if (!isAdded) return@observeEvent
