@@ -11,62 +11,50 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.config.JPDeadlineConfig
-import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
-import org.wordpress.android.util.config.PhaseTwoBlogPostLinkConfig
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
 
+// Format 2020-12-22
+const val JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT = "yyyy-MM-dd"
+
+// Format Decemeber 22, 2020
+const val JETPACK_OVERLAY_TARGET_DATE_FORMAT = "MMMM dd, yyyy"
+
 @Singleton
 class JetpackFeatureOverlayContentBuilder @Inject constructor(
-    private val jpDeadlineConfig: JPDeadlineConfig,
-    private val phaseTwoBlogPostLinkConfig: PhaseTwoBlogPostLinkConfig,
-    private val phaseThreeBlogPostLinkConfig: PhaseThreeBlogPostLinkConfig,
-    private val htmlMessageUtils: HtmlMessageUtils
+    private val htmlMessageUtils: HtmlMessageUtils,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
     fun build(params: JetpackFeatureOverlayContentBuilderParams): JetpackFeatureOverlayUIState {
         return when (params.currentPhase) {
             is PhaseOne -> getStateForPhaseOne(params, params.feature!!)
-            PhaseTwo -> getStateForPhaseTwo(
-                    params,
-                    phaseTwoBlogPostLinkConfig.getValue(),
-                    jpDeadlineConfig.getValue()
-            )
-            PhaseThree -> getStateForPhaseThree(
-                    params,
-                    phaseThreeBlogPostLinkConfig.getValue(),
-                    jpDeadlineConfig.getValue()
-            )
-            PhaseFour -> TODO()
-            PhaseNewUsers -> TODO()
+            is PhaseTwo -> getStateForPhaseTwo(params)
+            is PhaseThree -> getStateForPhaseThree(params)
+            is PhaseFour -> TODO()
+            is PhaseNewUsers -> TODO()
         }
     }
 
     private fun getStateForPhaseThree(
-        params: JetpackFeatureOverlayContentBuilderParams,
-        phaseThreeBlogPostLink: String,
-        jpDeadlineDate: String,
+        params: JetpackFeatureOverlayContentBuilderParams
     ): JetpackFeatureOverlayUIState {
         val componentVisibility = JetpackFeatureOverlayComponentVisibility.PhaseThree()
         val content = when (params.feature!!) {
             JetpackFeatureOverlayScreenType.STATS -> getStateForPhaseTwoStats(
                     params,
-                    jpDeadlineDate,
-                    phaseThreeBlogPostLink
+                    params.jpDeadlineDate,
+                    params.phaseThreeBlogPostLink
             )
             JetpackFeatureOverlayScreenType.NOTIFICATIONS -> getStateForPhaseTwoNotifications(
                     params,
-                    jpDeadlineDate,
-                    phaseThreeBlogPostLink
+                    params.jpDeadlineDate,
+                    params.phaseThreeBlogPostLink
             )
             JetpackFeatureOverlayScreenType.READER -> getStateForPhaseTwoReader(
                     params,
-                    jpDeadlineDate,
-                    phaseThreeBlogPostLink
+                    params.jpDeadlineDate,
+                    params.phaseThreeBlogPostLink
             )
         }.copy(
                 migrationText = R.string.wp_jetpack_feature_removal_overlay_migration_helper_text
@@ -75,26 +63,24 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
     }
 
     private fun getStateForPhaseTwo(
-        params: JetpackFeatureOverlayContentBuilderParams,
-        phaseTwoBlogPostLinkConfig: String,
-        jpDeadlineDate: String,
+        params: JetpackFeatureOverlayContentBuilderParams
     ): JetpackFeatureOverlayUIState {
         val componentVisibility = JetpackFeatureOverlayComponentVisibility.PhaseTwo()
         val content = when (params.feature!!) {
             JetpackFeatureOverlayScreenType.STATS -> getStateForPhaseTwoStats(
                     params,
-                    jpDeadlineDate,
-                    phaseTwoBlogPostLinkConfig
+                    params.jpDeadlineDate,
+                    params.phaseTwoBlogPostLink
             )
             JetpackFeatureOverlayScreenType.NOTIFICATIONS -> getStateForPhaseTwoNotifications(
                     params,
-                    jpDeadlineDate,
-                    phaseTwoBlogPostLinkConfig
+                    params.jpDeadlineDate,
+                    params.phaseTwoBlogPostLink
             )
             JetpackFeatureOverlayScreenType.READER -> getStateForPhaseTwoReader(
                     params,
-                    jpDeadlineDate,
-                    phaseTwoBlogPostLinkConfig
+                    params.jpDeadlineDate,
+                    params.phaseTwoBlogPostLink
             )
         }
         return JetpackFeatureOverlayUIState(componentVisibility, content)
@@ -102,16 +88,16 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
 
     private fun getStateForPhaseTwoStats(
         params: JetpackFeatureOverlayContentBuilderParams,
-        jpDeadlineDate: String,
-        blogPostLink: String
+        jpDeadlineDate: String?,
+        blogPostLink: String?
     ): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
                 illustration = if (params.isRtl) R.raw.jp_stats_rtl else R.raw.jp_stats_left,
                 title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats,
                 caption = getCaptionForPhaseTwoAndThree(jpDeadlineDate),
-                migrationInfoText = if (blogPostLink.isNotEmpty())
+                migrationInfoText = if (!blogPostLink.isNullOrEmpty())
                     R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
-                migrationInfoUrl = blogPostLink.ifEmpty { null },
+                migrationInfoUrl = blogPostLink,
                 primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_to_stats
         )
@@ -119,16 +105,16 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
 
     private fun getStateForPhaseTwoReader(
         params: JetpackFeatureOverlayContentBuilderParams,
-        jpDeadlineDate: String,
-        blogPostLink: String
+        jpDeadlineDate: String?,
+        blogPostLink: String?
     ): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
                 illustration = if (params.isRtl) R.raw.jp_reader_rtl else R.raw.jp_reader_left,
                 title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader,
                 caption = getCaptionForPhaseTwoAndThree(jpDeadlineDate),
-                migrationInfoText = if (blogPostLink.isNotEmpty())
+                migrationInfoText = if (!blogPostLink.isNullOrEmpty())
                     R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
-                migrationInfoUrl = blogPostLink.ifEmpty { null },
+                migrationInfoUrl = blogPostLink,
                 primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_to_reader
         )
@@ -136,28 +122,32 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
 
     private fun getStateForPhaseTwoNotifications(
         params: JetpackFeatureOverlayContentBuilderParams,
-        jpDeadlineDate: String,
-        blogPostLink: String
+        jpDeadlineDate: String?,
+        blogPostLink: String?
     ): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
                 illustration = if (params.isRtl) R.raw.jp_notifications_rtl else R.raw.jp_notifications_left,
                 title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications,
                 caption = getCaptionForPhaseTwoAndThree(jpDeadlineDate),
-                migrationInfoText = if (blogPostLink.isNotEmpty())
+                migrationInfoText = if (!blogPostLink.isNullOrEmpty())
                     R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
-                migrationInfoUrl = blogPostLink.ifEmpty { null },
+                migrationInfoUrl = blogPostLink,
                 primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_to_notifications
         )
     }
 
-    private fun getCaptionForPhaseTwoAndThree(jpDeadlineDate: String): UiString {
-        return if (jpDeadlineDate.isEmpty()) getPhaseTwoAndThreeCaptionWithoutDeadline()
+    private fun getCaptionForPhaseTwoAndThree(jpDeadlineDate: String?): UiString {
+        return if (jpDeadlineDate.isNullOrEmpty()) getPhaseTwoAndThreeCaptionWithoutDeadline()
         else {
-            val deadlineDate = convertDateFormat(jpDeadlineDate)
+            val deadlineDate = dateTimeUtilsWrapper.convertDateFormat(
+                    jpDeadlineDate,
+                    JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT,
+                    JETPACK_OVERLAY_TARGET_DATE_FORMAT
+            )
             if (deadlineDate.isNullOrEmpty())
                 return getPhaseTwoAndThreeCaptionWithoutDeadline()
-            getPhaseTwoAndThreeCaptionWithDeadline(jpDeadlineDate)
+            getPhaseTwoAndThreeCaptionWithDeadline(deadlineDate)
         }
     }
 
@@ -280,20 +270,13 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
                 secondaryButtonText = R.string.wp_jetpack_deep_link_open_in_wordpress
         )
     }
-
-    private fun convertDateFormat(date: String): String? {
-        // Format 2020-12-22
-        val originalFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        // Format Decemeber 22, 2020
-        val targetFormat = DateTimeFormatter.ofPattern("MMMM dd, yyyy")
-        return runCatching { LocalDate.parse(date, originalFormat).format(targetFormat) }
-                .onFailure { AppLog.e(T.UTILS, "Jetpack focus overlay – Couldn't parse date: $date", it) }
-                .getOrNull()
-    }
 }
 
 data class JetpackFeatureOverlayContentBuilderParams(
     val currentPhase: JetpackFeatureRemovalPhase,
     val isRtl: Boolean = true,
-    val feature: JetpackFeatureOverlayScreenType?
+    val feature: JetpackFeatureOverlayScreenType?,
+    val jpDeadlineDate: String? = null,
+    val phaseTwoBlogPostLink: String? = null,
+    val phaseThreeBlogPostLink: String? = null
 )
