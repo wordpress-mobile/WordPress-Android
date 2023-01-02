@@ -36,7 +36,7 @@
                 app:theme="@style/WordPress.ActionBar">
 
                 <TextView
-                    android:id="@+id/tv_Text"
+                    android:id="@+id/tv_toolbar_text"
                     style="@style/TextAppearance.App.Toolbar.Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
