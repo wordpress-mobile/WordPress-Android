@@ -666,6 +666,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 arguments.getParcelable(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA);
         boolean supportStockPhotos = gutenbergWebViewAuthorizationData.isSiteUsingWPComRestAPI()
                                      && jetpackFeaturesEnabled;
+        boolean supportsTenor = jetpackFeaturesEnabled;
 
         String packageName = activity.getApplication().getPackageName();
         if (supportStockPhotos) {
@@ -674,9 +675,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
             otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
         }
-        int gifMediaResourceId =
-                getResources().getIdentifier("photo_picker_gif", "string", packageName);
-        otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
+        if (supportsTenor) {
+            int gifMediaResourceId =
+                    getResources().getIdentifier("photo_picker_gif", "string", packageName);
+            otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
+        }
 
         return otherMediaOptions;
     }

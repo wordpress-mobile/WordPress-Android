@@ -979,7 +979,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                     });
         }
 
-        if (mBrowserType.isBrowser()) {
+        if (mBrowserType.isBrowser() && !mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
             popup.getMenu().add(R.string.photo_picker_gif).setOnMenuItemClickListener(
                     item -> {
                         doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_GIF);
