@@ -14,7 +14,17 @@
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:theme="@style/WordPress.ActionBar" />
+            app:theme="@style/WordPress.ActionBar">
+
+            <TextView
+                android:id="@+id/tv_Text"
+                style="@style/TextAppearance.App.Toolbar.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reader_title_subs"
+                android:textColor="?attr/colorOnSurface"
+                android:textStyle="bold" />
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
