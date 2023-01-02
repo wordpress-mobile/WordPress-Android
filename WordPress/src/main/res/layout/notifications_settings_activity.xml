@@ -25,7 +25,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusableInTouchMode="true"
-                app:theme="@style/WordPress.ActionBar" />
+                app:theme="@style/WordPress.ActionBar">
+
+                <TextView
+                    android:id="@+id/tv_toolbar_text"
+                    style="@style/TextAppearance.App.Toolbar.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/notification_settings"
+                    android:textColor="?attr/colorOnSurface"/>
+            </com.google.android.material.appbar.MaterialToolbar>
 
             <org.wordpress.android.ui.prefs.notifications.PrefMainSwitchToolbarView
                 android:id="@+id/main_switch"

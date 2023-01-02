@@ -98,7 +98,7 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
         toolbar?.let { setSupportActionBar(it) }
 
         supportActionBar?.apply {
-            setTitle(string.notification_settings)
+            setTitle("")
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowTitleEnabled(true)
         }

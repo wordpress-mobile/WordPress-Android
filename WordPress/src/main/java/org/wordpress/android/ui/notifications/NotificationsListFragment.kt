@@ -88,7 +88,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         binding = NotificationsListFragmentBinding.bind(view).apply {
-            toolbarMain.setTitle("")
+            toolbarMain.setTitle(R.string.notifications_screen_title)
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbarMain)
 
             tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
