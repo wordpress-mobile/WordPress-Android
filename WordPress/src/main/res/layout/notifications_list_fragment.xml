@@ -33,7 +33,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_height"
                 app:layout_collapseMode="pin"
-                app:theme="@style/WordPress.ActionBar" />
+                app:theme="@style/WordPress.ActionBar">
+
+                <TextView
+                    android:id="@+id/tv_Text"
+                    style="@style/TextAppearance.App.Toolbar.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/notifications_screen_title"
+                    android:textColor="?attr/colorOnSurface" />
+            </com.google.android.material.appbar.MaterialToolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
