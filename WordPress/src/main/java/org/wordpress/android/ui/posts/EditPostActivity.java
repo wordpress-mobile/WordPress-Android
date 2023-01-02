@@ -2271,7 +2271,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 mIsNewPost,
                                 gutenbergWebViewAuthorizationData,
                                 gutenbergPropsBuilder,
-                                RequestCodes.EDIT_STORY
+                                RequestCodes.EDIT_STORY,
+                                !mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
                         );
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
