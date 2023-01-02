@@ -24,7 +24,6 @@ private const val JP_DEADLINE_MESSAGE = "Stats, Reader, Notifications and other 
 
 @RunWith(MockitoJUnitRunner::class)
 class JetpackFeatureOverlayContentBuilderTest {
-
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
 
@@ -54,7 +53,7 @@ class JetpackFeatureOverlayContentBuilderTest {
         assertEquals(phaseOneStats.overlayContent, getPhaseOneStats())
     }
 
-    @Suppress("MaximumLineLength")
+    @Suppress("MaxLineLength")
     @Test
     fun `given phase two without remote field post link, when content is built, should return phase two overlay content`() {
         val phaseTwoStats = jetpackFeatureOverlayContentBuilder.build(
@@ -68,7 +67,7 @@ class JetpackFeatureOverlayContentBuilderTest {
         assertEquals(phaseTwoStats.overlayContent, getPhaseTwoStatsWithoutMigrationInfo())
     }
 
-    @Suppress("MaximumLineLength")
+    @Suppress("MaxLineLength")
     @Test
     fun `given phase two with remote field post link, when content is built, should return phase two overlay content`() {
         val phaseTwoStats = jetpackFeatureOverlayContentBuilder.build(
@@ -87,12 +86,12 @@ class JetpackFeatureOverlayContentBuilderTest {
         assertEquals(phaseTwoStats.overlayContent, actual)
     }
 
-    @Suppress("MaximumLineLength")
+    @Suppress("MaxLineLength")
     @Test
     fun `given phase two with deadline, when content is built, should return phase two overlay content`() {
         val jpDeadlineDateFromRemoteConfig = "2020-01-01"
-        val jpDeadlineDateToBeShownOnOverlay  = "January 1, 2020"
-        val jpDeadlineDateToBeShownOnOverlayWithFormat  = "<b>January 1, 2020</b>"
+        val jpDeadlineDateToBeShownOnOverlay = "January 1, 2020"
+        val jpDeadlineDateToBeShownOnOverlayWithFormat = "<b>January 1, 2020</b>"
         whenever(
                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                         R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline,
