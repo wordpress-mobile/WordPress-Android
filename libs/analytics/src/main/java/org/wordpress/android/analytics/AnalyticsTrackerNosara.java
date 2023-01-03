@@ -2481,6 +2481,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_deep_link_overlay_button_open_in_jetpack_app_tapped";
             case JETPACK_DEEP_LINK_OVERLAY_DISMISSED:
                 return "jetpack_deep_link_overlay_dismissed";
+            case REMOVE_FEATURE_CARD_DISPLAYED:
+                return "remove_feature_card_displayed";
+            case REMOVE_FEATURE_CARD_TAPPED:
+                return "remove_feature_card_tapped";
+            case REMOVE_FEATURE_CARD_LINK_TAPPED:
+                return "remove_feature_card_link_tapped";
+            case REMOVE_FEATURE_CARD_MENU_ACCESSED:
+                return "remove_feature_card_menu_accessed";
+            case REMOVE_FEATURE_CARD_HIDE_TAPPED:
+                return "remove_feature_card_hide_tapped";
+            case REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED:
+                return "remove_feature_card_remind_later_tapped";
         }
         return null;
     }
