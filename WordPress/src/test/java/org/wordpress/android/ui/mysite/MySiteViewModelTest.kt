@@ -2859,6 +2859,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `when Jetpack feature card learn more is clicked, then learn more is tracked`() {
         whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+        whenever(jetpackFeatureCardHelper.getLearnMoreUrl()).thenReturn("https://jetpack.com")
         initSelectedSite()
 
         findJetpackFeatureCard()?.onLearnMoreClick?.click()

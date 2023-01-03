@@ -379,6 +379,9 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
         is SiteNavigationAction.OpenJetpackPoweredBottomSheet -> showJetpackPoweredBottomSheet()
         is SiteNavigationAction.OpenJetpackMigrationDeleteWP -> showJetpackMigrationDeleteWP()
+        is SiteNavigationAction.OpenJetpackFeatureOverlay -> showJetpackFeatureOverlay()
+        is SiteNavigationAction.OpenJetpackFeatureCardLearnMoreLink ->
+            ActivityLauncher.openUrlExternal(requireActivity(), action.url)
     }
 
     private fun showJetpackPoweredBottomSheet() {
@@ -393,6 +396,10 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             showDeleteWpState = true
         )
         startActivity(intent)
+    }
+
+    private fun showJetpackFeatureOverlay() {
+        // Show the jetpack feature overlay once the view has been implemented
     }
 
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {

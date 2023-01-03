@@ -8,10 +8,12 @@ import org.wordpress.android.databinding.JetpackFeatureCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
 
 class JetpackFeatureCardViewHolder(
-    parent: ViewGroup
+    parent: ViewGroup,
+    private val uiHelpers: UiHelpers
 ) : MySiteCardAndItemViewHolder<JetpackFeatureCardBinding>(
     parent.viewBinding(JetpackFeatureCardBinding::inflate)
 ) {
@@ -26,6 +28,7 @@ class JetpackFeatureCardViewHolder(
                 mySiteJetpackFeatureCardMore,
             )
         }
+        uiHelpers.updateVisibility(mySiteJetpackFeatureCardLearnMore, !card.learnMoreUrl.isNullOrEmpty())
     }
 
     private fun showMoreMenu(

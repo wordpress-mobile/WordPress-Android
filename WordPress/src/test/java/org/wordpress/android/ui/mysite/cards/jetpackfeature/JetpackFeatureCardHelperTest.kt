@@ -15,31 +15,29 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class JetpackFeatureCardHelperTest {
-    @Mock
-    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock
-    lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock
-    lateinit var buildConfigWrapper: BuildConfigWrapper
-    @Mock
-    lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
-    @Mock
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    @Mock lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    @Mock lateinit var phaseThreeBlogPostLinkConfig: PhaseThreeBlogPostLinkConfig
 
     private lateinit var helper: JetpackFeatureCardHelper
 
     @Before
     fun setUp() {
         helper = JetpackFeatureCardHelper(
-            analyticsTrackerWrapper,
-            appPrefsWrapper,
-            buildConfigWrapper,
-            dateTimeUtilsWrapper,
-            jetpackFeatureRemovalPhaseHelper
+                analyticsTrackerWrapper,
+                appPrefsWrapper,
+                buildConfigWrapper,
+                dateTimeUtilsWrapper,
+                jetpackFeatureRemovalPhaseHelper,
+                phaseThreeBlogPostLinkConfig
         )
     }
 

@@ -59,6 +59,14 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
             is PhaseFour, PhaseNewUsers -> PHASE_TWO
         }
     }
+
+    fun shouldRemoveJetpackFeatures(): Boolean {
+        val currentPhase = getCurrentPhase() ?: return false
+        return when (currentPhase) {
+            is PhaseFour, PhaseNewUsers -> true
+            is PhaseOne, PhaseTwo, PhaseThree -> false
+        }
+    }
 }
 // Global overlay frequency is the frequency at which the overlay is shown across the features
 // no matter which feature was accessed last time
