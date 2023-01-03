@@ -36,20 +36,28 @@ import javax.inject.Inject
 class StatsWidgetConfigureFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
+
     @Inject
     lateinit var allTimeWidgetUpdater: AllTimeWidgetUpdater
+
     @Inject
     lateinit var todayWidgetUpdater: TodayWidgetUpdater
+
     @Inject
     lateinit var weekViewsWidgetUpdater: WeekViewsWidgetUpdater
+
     @Inject
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Inject
     lateinit var siteStore: SiteStore
+
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var viewModel: StatsWidgetConfigureViewModel

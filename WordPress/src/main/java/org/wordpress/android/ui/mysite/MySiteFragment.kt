@@ -46,10 +46,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     QuickStartPromptClickInterface {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var meGravatarLoader: MeGravatarLoader
+
     @Inject
     lateinit var imageManager: ImageManager
     private lateinit var viewModel: MySiteViewModel

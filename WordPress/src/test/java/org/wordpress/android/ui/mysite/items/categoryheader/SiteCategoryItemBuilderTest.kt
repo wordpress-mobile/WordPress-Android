@@ -18,8 +18,10 @@ import org.wordpress.android.util.SiteUtilsWrapper
 class SiteCategoryItemBuilderTest {
     @Mock
     lateinit var themeBrowserUtils: ThemeBrowserUtils
+
     @Mock
     lateinit var siteUtilsWrapper: SiteUtilsWrapper
+
     @Mock
     lateinit var siteModel: SiteModel
     private lateinit var siteCategoryItemBuilder: SiteCategoryItemBuilder

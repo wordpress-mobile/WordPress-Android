@@ -82,8 +82,10 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
+
     @Inject
     lateinit var listScenarioUtils: ListScenarioUtils
 

@@ -34,16 +34,22 @@ import javax.inject.Inject
 class HomePagePickerFragment : Fragment() {
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var displayUtils: DisplayUtilsWrapper
+
     @Inject
     internal lateinit var uiHelper: UiHelpers
+
     @Inject
     lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var thumbDimensionProvider: SiteDesignPickerDimensionProvider
+
     @Inject
     lateinit var recommendedDimensionProvider: SiteDesignRecommendedDimensionProvider
     private val viewModel: HomePagePickerViewModel by activityViewModels()

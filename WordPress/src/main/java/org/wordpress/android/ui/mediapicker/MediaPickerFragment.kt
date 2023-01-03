@@ -188,10 +188,13 @@ class MediaPickerFragment : Fragment() {
 
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
+
     @Inject
     lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: MediaPickerViewModel
@@ -678,6 +681,7 @@ class MediaPickerFragment : Fragment() {
         private const val KEY_SELECTED_IDS = "selected_ids"
         private const val KEY_LIST_STATE = "list_state"
         const val NUM_COLUMNS = 3
+
         @JvmStatic
         fun newInstance(
             listener: MediaPickerListener,

@@ -18,6 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 class SelectedSectionManagerTest : BaseUnitTest() {
     @Mock
     lateinit var sharedPreferences: SharedPreferences
+
     @Mock
     lateinit var sharedPreferencesEditor: SharedPreferences.Editor
     private lateinit var selectedSectionManager: SelectedSectionManager

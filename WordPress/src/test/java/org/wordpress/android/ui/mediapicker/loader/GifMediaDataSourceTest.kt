@@ -31,12 +31,16 @@ import org.wordpress.android.util.UriWrapper
 class GifMediaDataSourceTest : BaseUnitTest() {
     @Mock
     lateinit var context: Context
+
     @Mock
     internal lateinit var tenorClient: TenorGifClient
+
     @Mock
     lateinit var gifsResponse: GifsResponse
+
     @Mock
     lateinit var uriUtilsWrapper: UriUtilsWrapper
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 

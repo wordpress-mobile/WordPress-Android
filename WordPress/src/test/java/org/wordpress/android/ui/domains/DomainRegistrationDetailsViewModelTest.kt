@@ -65,24 +65,32 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var transactionsStore: TransactionsStore
+
     @Mock
     private lateinit var siteStore: SiteStore
+
     @Mock
     private lateinit var dispatcher: Dispatcher
+
     @Mock
     private lateinit var analyticsTracker: AnalyticsTrackerWrapper
     private var site: SiteModel = SiteModel()
 
     @Mock
     private lateinit var domainContactDetailsObserver: Observer<DomainContactFormModel>
+
     @Mock
     private lateinit var countryPickerDialogObserver: Observer<List<SupportedDomainCountry>>
+
     @Mock
     private lateinit var statePickerDialogObserver: Observer<List<SupportedStateResponse>>
+
     @Mock
     private lateinit var tosLinkObserver: Observer<Unit>
+
     @Mock
     private lateinit var completedDomainRegistrationObserver: Observer<DomainRegistrationCompletedEvent>
+
     @Mock
     private lateinit var errorMessageObserver: Observer<String>
 

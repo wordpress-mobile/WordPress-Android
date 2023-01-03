@@ -50,16 +50,22 @@ private val selectedDate = Date(0)
 class PostsAndPagesUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var store: PostAndPageViewsStore
+
     @Mock
     lateinit var siteModelProvider: StatsSiteProvider
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var selectedDateProvider: SelectedDateProvider
+
     @Mock
     lateinit var tracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
     @Mock
     lateinit var statsUtils: StatsUtils
     private lateinit var useCase: PostsAndPagesUseCase

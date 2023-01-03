@@ -22,8 +22,10 @@ import org.wordpress.android.viewmodel.ContextProvider
 class FetchPostsForTagUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var contextProvider: ContextProvider
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var readerPostServiceStarterWrapper: ReaderPostServiceStarterWrapper
 

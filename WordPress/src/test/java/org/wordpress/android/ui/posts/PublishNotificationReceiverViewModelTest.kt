@@ -23,8 +23,10 @@ import java.util.Calendar
 class PublishNotificationReceiverViewModelTest {
     @Mock
     lateinit var postSchedulingNotificationStore: PostSchedulingNotificationStore
+
     @Mock
     lateinit var postStore: PostStore
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
     private lateinit var viewModel: PublishNotificationReceiverViewModel

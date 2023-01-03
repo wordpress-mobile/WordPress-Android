@@ -28,12 +28,16 @@ import java.util.function.Consumer
 @ExperimentalCoroutinesApi
 class FetchScanStateUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: FetchScanStateUseCase
+
     @Mock
     private lateinit var site: SiteModel
+
     @Mock
     private lateinit var scanStateModel: ScanStateModel
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var scanStore: ScanStore
 

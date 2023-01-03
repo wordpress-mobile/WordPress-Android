@@ -23,6 +23,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class UserProfileViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 

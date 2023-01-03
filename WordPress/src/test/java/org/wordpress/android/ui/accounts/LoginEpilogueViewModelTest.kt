@@ -17,8 +17,10 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
+
     @Mock
     lateinit var siteStore: SiteStore
 

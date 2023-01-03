@@ -19,6 +19,7 @@ import javax.inject.Inject
 class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_fragment) {
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var imageManager: ImageManager
 

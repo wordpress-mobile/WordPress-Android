@@ -52,32 +52,46 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class StatsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var baseListUseCase: BaseListUseCase
+
     @Mock
     lateinit var selectedDateProvider: SelectedDateProvider
+
     @Mock
     lateinit var statsSectionManager: SelectedSectionManager
+
     @Mock
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var statsStore: StatsStore
+
     @Mock
     lateinit var newsCardHandler: NewsCardHandler
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var statsModuleActivateUseCase: StatsModuleActivateUseCase
+
     @Mock
     lateinit var notificationsTracker: SystemNotificationsTracker
+
     @Mock
     lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
+
     @Mock
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
     @Mock
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
     private lateinit var viewModel: StatsViewModel

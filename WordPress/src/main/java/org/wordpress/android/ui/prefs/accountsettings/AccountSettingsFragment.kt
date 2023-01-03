@@ -60,12 +60,16 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     OnPreferenceChangeListener, OnPreferenceClickListener {
     @set:Inject
     lateinit var uiHelpers: UiHelpers
+
     @set:Inject
     lateinit var viewModel: AccountSettingsViewModel
+
     @set:Inject
     lateinit var snackbarSequencer: SnackbarSequencer
+
     @set:Inject
     lateinit var analyticsTracker: AccountSettingsAnalyticsTracker
+
     @set:Inject
     lateinit var navigationHandler: AccountSettingsNavigationHandler
     private lateinit var usernamePreference: Preference
@@ -73,6 +77,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     private lateinit var primarySitePreference: DetailListPreference
     private lateinit var webAddressPreference: EditTextPreferenceWithValidation
     private lateinit var changePasswordPreference: EditTextPreferenceWithValidation
+
     @Suppress("DEPRECATION")
     private var changePasswordProgressDialog: ProgressDialog? = null
     private var emailSnackbar: Snackbar? = null

@@ -21,8 +21,10 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class PostSettingsUtilsTest : BaseUnitTest() {
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var mStatsDateUtils: StatsDateUtils
+
     @Mock
     lateinit var dateProvider: DateProvider
     private lateinit var postSettingsUtils: PostSettingsUtils

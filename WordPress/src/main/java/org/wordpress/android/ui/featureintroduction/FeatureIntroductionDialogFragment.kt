@@ -19,6 +19,7 @@ import javax.inject.Inject
 abstract class FeatureIntroductionDialogFragment : DialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: FeatureIntroductionViewModel

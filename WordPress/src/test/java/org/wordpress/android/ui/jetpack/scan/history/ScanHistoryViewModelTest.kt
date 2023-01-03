@@ -27,6 +27,7 @@ import org.wordpress.android.util.analytics.ScanTracker
 class ScanHistoryViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var scanTracker: ScanTracker
+
     @Mock
     private lateinit var fetchScanHistoryUseCase: FetchScanHistoryUseCase
 

@@ -33,16 +33,22 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class FollowerTypesUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var followersStore: FollowersStore
+
     @Mock
     lateinit var publicizeStore: PublicizeStore
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
     @Mock
     lateinit var statsUtils: StatsUtils
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var site: SiteModel
     private lateinit var useCase: FollowerTypesUseCase

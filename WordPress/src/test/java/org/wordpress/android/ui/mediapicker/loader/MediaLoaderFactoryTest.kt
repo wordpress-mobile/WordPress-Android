@@ -22,16 +22,22 @@ import org.wordpress.android.ui.mediapicker.loader.MediaLibraryDataSource.MediaL
 class MediaLoaderFactoryTest {
     @Mock
     lateinit var deviceListBuilderFactory: DeviceListBuilderFactory
+
     @Mock
     lateinit var deviceListBuilder: DeviceListBuilder
+
     @Mock
     lateinit var mediaLibraryDataSourceFactory: MediaLibraryDataSourceFactory
+
     @Mock
     lateinit var mediaLibraryDataSource: MediaLibraryDataSource
+
     @Mock
     lateinit var stockMediaDataSource: StockMediaDataSource
+
     @Mock
     lateinit var gifMediaDataSource: GifMediaDataSource
+
     @Mock
     lateinit var site: SiteModel
     private lateinit var mediaLoaderFactory: MediaLoaderFactory

@@ -20,8 +20,10 @@ import org.wordpress.android.util.DateTimeUtilsWrapper
 class UpdatePostStatusUseCaseTest : BaseUnitTest() {
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var updatePostStatusUseCase: UpdatePostStatusUseCase
+
     @Mock
     lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
     @Mock
     lateinit var postUtilsWrapper: PostUtilsWrapper
 

@@ -21,6 +21,7 @@ import javax.inject.Inject
 class StoriesIntroDialogFragment : DialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     internal lateinit var mediaPickerLauncher: MediaPickerLauncher
 

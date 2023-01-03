@@ -30,8 +30,10 @@ import javax.inject.Inject
 class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ThreatDetailsViewModel

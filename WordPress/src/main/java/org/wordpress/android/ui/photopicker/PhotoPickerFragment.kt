@@ -72,6 +72,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 

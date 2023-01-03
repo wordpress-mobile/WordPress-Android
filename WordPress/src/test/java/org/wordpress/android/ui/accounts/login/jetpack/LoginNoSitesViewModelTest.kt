@@ -30,10 +30,13 @@ private const val AVATAR_URL = "avatar_url"
 class LoginNoSitesViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var unifiedLoginTracker: UnifiedLoginTracker
+
     @Mock
     lateinit var wordPress: WordPress
+
     @Mock
     lateinit var accountStore: AccountStore
+
     @Mock
     lateinit var savedInstanceState: Bundle
     private lateinit var viewModel: LoginNoSitesViewModel

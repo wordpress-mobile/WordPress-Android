@@ -49,12 +49,16 @@ import org.wordpress.android.viewmodel.Event
 class EngagedPeopleListViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var getLikesHandler: GetLikesHandler
+
     @Mock
     lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+
     @Mock
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+
     @Mock
     lateinit var listScenario: ListScenario
+
     @Mock
     lateinit var headerData: HeaderData
 

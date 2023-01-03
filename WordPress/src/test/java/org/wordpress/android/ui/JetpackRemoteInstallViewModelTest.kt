@@ -35,12 +35,16 @@ import org.wordpress.android.ui.JetpackRemoteInstallViewState.Start
 class JetpackRemoteInstallViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var dispatcher: Dispatcher
+
     @Mock
     private lateinit var jetpackStore: JetpackStore
+
     @Mock
     private lateinit var accountStore: AccountStore
+
     @Mock
     private lateinit var siteStore: SiteStore
+
     @Mock
     private lateinit var site: SiteModel
     private lateinit var actionCaptor: KArgumentCaptor<Action<Any>>

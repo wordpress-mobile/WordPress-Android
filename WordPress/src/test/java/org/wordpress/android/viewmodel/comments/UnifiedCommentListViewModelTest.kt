@@ -58,16 +58,22 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
     @Mock
     private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
     @Mock
     private lateinit var paginateCommentsResourceProvider: PaginateCommentsResourceProvider
+
     @Mock
     private lateinit var moderateCommentsResourceProvider: ModerateCommentsResourceProvider
 

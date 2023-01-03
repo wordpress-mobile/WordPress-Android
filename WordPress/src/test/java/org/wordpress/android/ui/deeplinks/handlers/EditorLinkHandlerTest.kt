@@ -19,6 +19,7 @@ import org.wordpress.android.ui.deeplinks.buildUri
 class EditorLinkHandlerTest : BaseUnitTest() {
     @Mock
     lateinit var deepLinkUriUtils: DeepLinkUriUtils
+
     @Mock
     lateinit var postStore: PostStore
     private lateinit var editorLinkHandler: EditorLinkHandler

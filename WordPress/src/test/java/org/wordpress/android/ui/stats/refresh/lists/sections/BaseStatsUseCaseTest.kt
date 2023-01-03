@@ -23,10 +23,12 @@ import javax.inject.Provider
 class BaseStatsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var localDataProvider: Provider<String?>
+
     @Mock
     lateinit var remoteDataProvider: Provider<String?>
     private val localData = "local data"
     private val remoteData = "remote data"
+
     @Mock
     lateinit var site: SiteModel
     private lateinit var block: TestUseCase

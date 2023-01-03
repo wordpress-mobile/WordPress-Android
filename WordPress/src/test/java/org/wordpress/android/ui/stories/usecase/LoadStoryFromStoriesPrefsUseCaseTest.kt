@@ -20,14 +20,19 @@ import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
 @RunWith(MockitoJUnitRunner::class)
 class LoadStoryFromStoriesPrefsUseCaseTest {
     private lateinit var loadStoryFromStoriesPrefsUseCase: LoadStoryFromStoriesPrefsUseCase
+
     @Mock
     lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
+
     @Mock
     lateinit var mediaStore: MediaStore
+
     @Mock
     lateinit var storiesPrefs: StoriesPrefs
+
     @Mock
     lateinit var context: Context
+
     @Mock
     lateinit var siteModel: SiteModel
 

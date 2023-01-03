@@ -19,6 +19,7 @@ import javax.inject.Inject
 class ReaderSearchActivity : LocaleAwareActivity() {
     @Inject
     lateinit var readerTracker: ReaderTracker
+
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 

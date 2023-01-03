@@ -20,8 +20,10 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabil
 class ScanAndBackupSourceTest : BaseUnitTest() {
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+
     @Mock
     lateinit var site: SiteModel
     private lateinit var scanAndBackupSource: ScanAndBackupSource

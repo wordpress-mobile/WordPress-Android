@@ -36,16 +36,22 @@ import java.util.TimeZone
 class PublishSettingsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var postSettingsUtils: PostSettingsUtils
+
     @Mock
     lateinit var peopleUtilsWrapper: PeopleUtilsWrapper
+
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var postSchedulingNotificationStore: PostSchedulingNotificationStore
+
     @Mock
     lateinit var siteStore: SiteStore
+
     @Mock
     lateinit var editPostRepository: EditPostRepository
     private lateinit var viewModel: EditPostPublishSettingsViewModel

@@ -34,16 +34,22 @@ import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 class SiteListItemBuilderTest {
     @Mock
     lateinit var accountStore: AccountStore
+
     @Mock
     lateinit var pluginUtilsWrapper: PluginUtilsWrapper
+
     @Mock
     lateinit var siteUtilsWrapper: SiteUtilsWrapper
+
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
+
     @Mock
     lateinit var themeBrowserUtils: ThemeBrowserUtils
+
     @Mock
     lateinit var siteModel: SiteModel
+
     @Mock
     lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
     private lateinit var siteListItemBuilder: SiteListItemBuilder

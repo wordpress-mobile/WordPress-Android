@@ -95,12 +95,14 @@ class ScanHistoryViewModel @Inject constructor(
 
             data class NoConnection(override val retry: () -> Unit) : ErrorUiState() {
                 override val title: UiString = UiStringRes(R.string.scan_history_no_connection)
+
                 @DrawableRes
                 override val img: Int = R.drawable.img_illustration_cloud_off_152dp
             }
 
             data class RequestFailed(override val retry: () -> Unit) : ErrorUiState() {
                 override val title: UiString = UiStringRes(R.string.scan_history_request_failed)
+
                 @DrawableRes
                 override val img: Int = R.drawable.img_illustration_cloud_off_152dp
             }

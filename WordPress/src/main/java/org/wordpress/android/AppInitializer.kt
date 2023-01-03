@@ -133,49 +133,71 @@ class AppInitializer @Inject constructor(
 ) : DefaultLifecycleObserver {
     @Inject
     lateinit var dispatcher: Dispatcher
+
     @Inject
     lateinit var accountStore: AccountStore
+
     @Inject
     lateinit var siteStore: SiteStore
+
     @Inject
     lateinit var mediaStore: MediaStore
+
     @Inject
     lateinit var zendeskHelper: ZendeskHelper
+
     @Inject
     lateinit var uploadStarter: UploadStarter
+
     @Inject
     lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+
     @Inject
     lateinit var statsStore: StatsStore
+
     @Inject
     lateinit var systemNotificationsTracker: SystemNotificationsTracker
+
     @Inject
     lateinit var readerTracker: ReaderTracker
+
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var privateAtomicCookie: PrivateAtomicCookie
+
     @Inject
     lateinit var imageEditorTracker: ImageEditorTracker
+
     @Inject
     lateinit var storyMediaSaveUploadBridge: StoryMediaSaveUploadBridge
+
     @Inject
     lateinit var crashLogging: CrashLogging
+
     @Inject
     lateinit var encryptedLogging: EncryptedLogging
+
     @Inject
     lateinit var appConfig: AppConfig
+
     @Inject
     lateinit var imageEditorFileUtils: ImageEditorFileUtils
+
     @Inject
     lateinit var exPlat: ExPlat
+
     @Inject
     lateinit var wordPressWorkerFactory: WordPressWorkersFactory
+
     @Inject
     lateinit var debugCookieManager: DebugCookieManager
+
     @Inject
     @Named(APPLICATION_SCOPE)
     lateinit var appScope: CoroutineScope
+
     @Inject
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
@@ -186,14 +208,17 @@ class AppInitializer @Inject constructor(
     @Inject
     @Named("custom-ssl")
     lateinit var requestQueue: RequestQueue
+
     @Inject
     lateinit var imageLoader: FluxCImageLoader
+
     @Inject
     lateinit var oAuthAuthenticator: OAuthAuthenticator
 
     // For jetpack focus
     @Inject
     lateinit var openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig
+
     @Inject
     lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
 

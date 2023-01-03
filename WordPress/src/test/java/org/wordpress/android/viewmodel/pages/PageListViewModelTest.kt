@@ -42,20 +42,28 @@ private const val HOUR_IN_MILLISECONDS = 3600000L
 class PageListViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var mediaStore: MediaStore
+
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var pagesViewModel: PagesViewModel
+
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
+
     @Mock
     lateinit var pageListItemActionsUseCase: CreatePageListItemActionsUseCase
+
     @Mock
     lateinit var createUploadStateUseCase: PostModelUploadUiStateUseCase
+
     @Mock
     lateinit var createLabelsUseCase: CreatePageListItemLabelsUseCase
+
     @Mock
     lateinit var accountStore: AccountStore
 

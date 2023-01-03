@@ -20,8 +20,10 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 class DeepLinkTrackingUtilsTest {
     @Mock
     lateinit var deepLinkUriUtils: DeepLinkUriUtils
+
     @Mock
     lateinit var deepLinkHandlers: DeepLinkHandlers
+
     @Mock
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     private lateinit var deepLinkTrackingUtils: DeepLinkTrackingUtils

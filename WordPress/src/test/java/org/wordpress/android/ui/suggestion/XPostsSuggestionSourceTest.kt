@@ -27,6 +27,7 @@ import org.wordpress.android.util.NoDelayCoroutineDispatcher
 class XPostsSuggestionSourceTest : BaseUnitTest() {
     @Mock
     lateinit var mockXPostsStore: XPostsStore
+
     @Mock
     lateinit var mockSite: SiteModel
     private lateinit var xPostsSource: XPostsSuggestionSource

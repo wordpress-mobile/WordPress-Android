@@ -57,6 +57,7 @@ private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     private val viewModel: StatsViewModel by activityViewModels()

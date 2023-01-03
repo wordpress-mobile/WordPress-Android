@@ -42,8 +42,10 @@ private const val ON_ITEM_CLICKED_PARAM_POSITION = 1
 class ScanHistoryListViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var scanThreatItemBuilder: ThreatItemBuilder
+
     @Mock
     private lateinit var scanHistoryViewModel: ScanHistoryViewModel
+
     @Mock
     private lateinit var scanTracker: ScanTracker
     private val captor = argumentCaptor<ThreatModel>()

@@ -36,18 +36,25 @@ import org.wordpress.android.viewmodel.Event
 class StorePostViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var siteStore: SiteStore
+
     @Mock
     lateinit var postUtils: PostUtilsWrapper
+
     @Mock
     lateinit var uploadService: UploadServiceFacade
+
     @Mock
     lateinit var postRepository: EditPostRepository
+
     @Mock
     lateinit var savePostToDbUseCase: SavePostToDbUseCase
+
     @Mock
     lateinit var networkUtils: NetworkUtilsWrapper
+
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var context: Context
 

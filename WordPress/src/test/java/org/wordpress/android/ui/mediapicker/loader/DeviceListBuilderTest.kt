@@ -24,16 +24,22 @@ import org.wordpress.android.util.UriWrapper
 class DeviceListBuilderTest : BaseUnitTest() {
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var deviceMediaLoader: DeviceMediaLoader
+
     @Mock
     lateinit var mediaUtilsWrapper: MediaUtilsWrapper
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var uri1: UriWrapper
+
     @Mock
     lateinit var uri2: UriWrapper
+
     @Mock
     lateinit var uri3: UriWrapper
     private lateinit var deviceListBuilder: DeviceListBuilder

@@ -24,6 +24,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 class SubfilterListItemMapperTest {
     @Mock
     lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+
     @Mock
     lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
 

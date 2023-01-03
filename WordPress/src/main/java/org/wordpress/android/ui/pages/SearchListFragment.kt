@@ -24,6 +24,7 @@ class SearchListFragment : Fragment(R.layout.pages_list_fragment) {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: SearchListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
+
     @Inject
     lateinit var uiHelper: UiHelpers
 

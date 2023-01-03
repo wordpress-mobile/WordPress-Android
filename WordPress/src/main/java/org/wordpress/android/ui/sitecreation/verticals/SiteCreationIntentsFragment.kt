@@ -24,6 +24,7 @@ import javax.inject.Inject
 class SiteCreationIntentsFragment : Fragment() {
     @Inject
     internal lateinit var uiHelper: UiHelpers
+
     @Inject
     internal lateinit var displayUtils: DisplayUtilsWrapper
 

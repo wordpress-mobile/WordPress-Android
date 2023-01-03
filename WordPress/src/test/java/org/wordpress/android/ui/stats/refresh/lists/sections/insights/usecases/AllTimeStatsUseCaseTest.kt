@@ -35,14 +35,19 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 class AllTimeStatsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var insightsStore: AllTimeInsightsStore
+
     @Mock
     lateinit var statsDateFormatter: StatsDateFormatter
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var popupMenuHandler: ItemPopupMenuHandler
+
     @Mock
     lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+
     @Mock
     lateinit var statsUtils: StatsUtils
     private val site = SiteModel()

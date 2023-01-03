@@ -51,18 +51,25 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var commentsStore: CommentsStore
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     private lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
+
     @Mock
     lateinit var getCommentUseCase: GetCommentUseCase
+
     @Mock
     lateinit var notificationActionsWrapper: NotificationsActionsWrapper
+
     @Mock
     lateinit var readerCommentTableWrapper: ReaderCommentTableWrapper
+
     @Mock
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 

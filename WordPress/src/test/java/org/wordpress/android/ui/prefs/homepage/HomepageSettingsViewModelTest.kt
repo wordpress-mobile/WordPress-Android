@@ -37,10 +37,13 @@ import java.util.Date
 class HomepageSettingsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var homepageSettingsDataLoader: HomepageSettingsDataLoader
+
     @Mock
     lateinit var siteStore: SiteStore
+
     @Mock
     lateinit var siteOptionsStore: SiteOptionsStore
+
     @Mock
     lateinit var dispatcher: Dispatcher
     private val siteModel = SiteModel()

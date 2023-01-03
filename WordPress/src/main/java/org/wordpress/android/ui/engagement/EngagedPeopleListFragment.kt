@@ -47,16 +47,22 @@ import javax.inject.Inject
 class EngagedPeopleListFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var resourceProvider: ResourceProvider
+
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var readerTracker: ReaderTracker
+
     @Inject
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 

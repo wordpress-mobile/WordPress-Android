@@ -161,84 +161,124 @@ private const val DYNAMIC_CARDS_BUILDER_MORE_CLICK_PARAM_POSITION = 3
 class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var siteItemsBuilder: SiteItemsBuilder
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var accountStore: AccountStore
+
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     lateinit var wpMediaUtilsWrapper: WPMediaUtilsWrapper
+
     @Mock
     lateinit var mediaUtilsWrapper: MediaUtilsWrapper
+
     @Mock
     lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
+
     @Mock
     lateinit var contextProvider: ContextProvider
+
     @Mock
     lateinit var siteIconUploadHandler: SiteIconUploadHandler
+
     @Mock
     lateinit var siteStoriesHandler: SiteStoriesHandler
+
     @Mock
     lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+
     @Mock
     lateinit var quickStartRepository: QuickStartRepository
+
     @Mock
     lateinit var quickStartCardBuilder: QuickStartCardBuilder
+
     @Mock
     lateinit var siteInfoHeaderCardBuilder: SiteInfoHeaderCardBuilder
+
     @Mock
     lateinit var homePageDataLoader: HomePageDataLoader
+
     @Mock
     lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
+
     @Mock
     lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+
     @Mock
     lateinit var snackbarSequencer: SnackbarSequencer
+
     @Mock
     lateinit var cardsBuilder: CardsBuilder
+
     @Mock
     lateinit var dynamicCardsBuilder: DynamicCardsBuilder
+
     @Mock
     lateinit var landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig
+
     @Mock
     lateinit var mySiteSourceManager: MySiteSourceManager
+
     @Mock
     lateinit var cardsTracker: CardsTracker
+
     @Mock
     lateinit var siteItemsTracker: SiteItemsTracker
+
     @Mock
     lateinit var domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
+
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
+
     @Mock
     lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+
     @Mock
     lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+
     @Mock
     lateinit var bloggingPromptsListFeatureConfig: BloggingPromptsListFeatureConfig
+
     @Mock
     lateinit var contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker
+
     @Mock
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     lateinit var bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
+
     @Mock
     lateinit var quickStartType: QuickStartType
+
     @Mock
     lateinit var quickStartTracker: QuickStartTracker
+
     @Mock
     private lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var appStatus: AppStatus
+
     @Mock
     lateinit var wordPressPublicData: WordPressPublicData
+
     @Mock
     lateinit var jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker
+
     @Mock
     lateinit var jetpackFeatureCardHelper: JetpackFeatureCardHelper
     private lateinit var viewModel: MySiteViewModel

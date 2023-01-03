@@ -64,20 +64,28 @@ private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_S
 class ScanViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var site: SiteModel
+
     @Mock
     private lateinit var scanStateItemsBuilder: ScanStateListItemsBuilder
+
     @Mock
     private lateinit var fetchScanStateUseCase: FetchScanStateUseCase
+
     @Mock
     private lateinit var startScanUseCase: StartScanUseCase
+
     @Mock
     private lateinit var fixThreatsUseCase: FixThreatsUseCase
+
     @Mock
     private lateinit var fetchFixThreatsStatusUseCase: FetchFixThreatsStatusUseCase
+
     @Mock
     private lateinit var scanStore: ScanStore
+
     @Mock
     private lateinit var scanTracker: ScanTracker
+
     @Mock
     private lateinit var htmlMessageUtils: HtmlMessageUtils
 

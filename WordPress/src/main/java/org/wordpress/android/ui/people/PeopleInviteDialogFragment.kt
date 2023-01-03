@@ -28,6 +28,7 @@ import javax.inject.Inject
 class PeopleInviteDialogFragment : DialogFragment() {
     @Inject
     lateinit var contextProvider: ContextProvider
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 

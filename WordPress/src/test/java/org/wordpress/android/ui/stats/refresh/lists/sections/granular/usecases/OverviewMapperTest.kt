@@ -25,10 +25,13 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class OverviewMapperTest : BaseUnitTest() {
     @Mock
     lateinit var statsDateFormatter: StatsDateFormatter
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var statsUtils: StatsUtils
+
     @Mock
     lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var mapper: OverviewMapper

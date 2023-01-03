@@ -38,12 +38,12 @@ class BloggingPromptsListViewModel @Inject constructor(
             _uiStateFlow.update { UiState.Loading }
 
             fetchBloggingPromptsList.execute()
-                    .onSuccess { prompts ->
-                        _uiStateFlow.update { UiState.Content(prompts) }
-                    }
-                    .onFailure {
-                        _uiStateFlow.update { UiState.FetchError }
-                    }
+                .onSuccess { prompts ->
+                    _uiStateFlow.update { UiState.Content(prompts) }
+                }
+                .onFailure {
+                    _uiStateFlow.update { UiState.FetchError }
+                }
         }
     }
 

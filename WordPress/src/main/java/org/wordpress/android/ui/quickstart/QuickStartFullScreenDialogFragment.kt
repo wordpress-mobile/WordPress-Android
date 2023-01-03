@@ -40,14 +40,19 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
 
     @Inject
     lateinit var quickStartTracker: QuickStartTracker
+
     @Inject
     lateinit var quickStartStore: QuickStartStore
+
     @Inject
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var quickStartCardBuilder: QuickStartCardBuilder
+
     @Inject
     lateinit var displayUtilsWrapper: DisplayUtilsWrapper
 

@@ -15,6 +15,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class ContentDescriptionHelperTest {
     @Mock
     lateinit var rtlUtils: RtlUtils
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
     private lateinit var contentDescriptionHelper: ContentDescriptionHelper

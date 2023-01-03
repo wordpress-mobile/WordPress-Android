@@ -23,8 +23,10 @@ private const val SUBTYPE = "subtype"
 class CardsTrackerTest {
     @Mock
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var cardsShownTracker: CardsShownTracker
+
     @Mock
     lateinit var quickStartTracker: QuickStartTracker
     private lateinit var cardsTracker: CardsTracker

@@ -44,12 +44,16 @@ private const val FORWARD_SLASH = "/"
 class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
+
     @Inject
     lateinit var formattableContentClickHandler: FormattableContentClickHandler
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 

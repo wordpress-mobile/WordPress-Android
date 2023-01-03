@@ -31,19 +31,26 @@ import org.wordpress.android.viewmodel.ResourceProvider
 @ExperimentalCoroutinesApi
 class AccountSettingsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: AccountSettingsViewModel
+
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     private lateinit var fetchAccountSettingsUseCase: FetchAccountSettingsUseCase
+
     @Mock
     private lateinit var pushAccountSettingsUseCase: PushAccountSettingsUseCase
+
     @Mock
     private lateinit var getSitesUseCase: GetSitesUseCase
+
     @Mock
     private lateinit var getAccountUseCase: GetAccountUseCase
     private val optimisticUpdateHandler = AccountSettingsOptimisticUpdateHandler()
+
     @Mock
     private lateinit var account: AccountModel
 

@@ -42,8 +42,10 @@ private const val GET_MORE_VIEWS_MSG_WITH_CLICKABLE_LINK =
 class TodaysStatsCardBuilderTest : BaseUnitTest() {
     @Mock
     private lateinit var statsUtils: StatsUtils
+
     @Mock
     private lateinit var appLogWrapper: AppLogWrapper
+
     @Mock
     private lateinit var htmlMessageUtils: HtmlMessageUtils
 

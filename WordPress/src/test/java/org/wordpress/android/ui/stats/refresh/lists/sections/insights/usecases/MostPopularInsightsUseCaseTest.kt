@@ -37,20 +37,28 @@ import kotlin.math.roundToInt
 class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var insightsStore: MostPopularInsightsStore
+
     @Mock
     lateinit var postStore: PostStore
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var mStatsDateUtils: StatsDateUtils
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var popupMenuHandler: ItemPopupMenuHandler
+
     @Mock
     lateinit var actionCardHandler: ActionCardHandler
+
     @Mock
     private lateinit var percentFormatter: PercentFormatter
     private lateinit var useCase: MostPopularInsightsUseCase

@@ -35,6 +35,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     internal lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var viewModel: PrepublishingViewModel

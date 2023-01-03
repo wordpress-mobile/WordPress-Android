@@ -18,6 +18,7 @@ abstract class BaseUnitTest(testDispatcher: TestDispatcher = UnconfinedTestDispa
     @Rule
     @JvmField
     val rule = InstantTaskExecutorRule()
+
     @Rule
     @JvmField
     val coroutinesTestRule = CoroutineTestRule(testDispatcher)

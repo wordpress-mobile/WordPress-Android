@@ -34,18 +34,25 @@ import org.wordpress.android.viewmodel.Event
 class PeopleInviteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var inviteLinksHandler: InviteLinksHandler
+
     @Mock
     lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
     @Mock
     lateinit var contextProvider: ContextProvider
+
     @Mock
     lateinit var invitePeopleUtils: InvitePeopleUtils
+
     @Mock
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+
     @Mock
     lateinit var siteModel: SiteModel
+
     @Mock
     lateinit var context: Context
+
     @Mock
     lateinit var inviteLinksItem: InviteLinksItem
 

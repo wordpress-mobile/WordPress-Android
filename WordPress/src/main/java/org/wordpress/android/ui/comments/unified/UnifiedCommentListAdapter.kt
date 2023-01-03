@@ -24,14 +24,19 @@ class UnifiedCommentListAdapter(context: Context) : ListAdapter<UnifiedCommentLi
 ) {
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var commentListUiUtils: CommentListUiUtils
+
     @Inject
     lateinit var resourceProvider: ResourceProvider
+
     @Inject
     lateinit var gravatarUtilsWrapper: GravatarUtilsWrapper
+
     @Inject
     lateinit var animationUtilsWrapper: AnimationUtilsWrapper
 

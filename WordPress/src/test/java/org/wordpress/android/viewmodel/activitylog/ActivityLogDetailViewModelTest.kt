@@ -36,12 +36,16 @@ import java.util.Date
 class ActivityLogDetailViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var dispatcher: Dispatcher
+
     @Mock
     private lateinit var activityLogStore: ActivityLogStore
+
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
     @Mock
     private lateinit var htmlMessageUtils: HtmlMessageUtils
+
     @Mock
     private lateinit var site: SiteModel
     private lateinit var viewModel: ActivityLogDetailViewModel

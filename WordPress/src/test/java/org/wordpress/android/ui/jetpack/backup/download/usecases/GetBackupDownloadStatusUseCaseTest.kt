@@ -29,10 +29,13 @@ import java.util.Date
 @ExperimentalCoroutinesApi
 class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: GetBackupDownloadStatusUseCase
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var activityLogStore: ActivityLogStore
+
     @Mock
     private lateinit var site: SiteModel
 

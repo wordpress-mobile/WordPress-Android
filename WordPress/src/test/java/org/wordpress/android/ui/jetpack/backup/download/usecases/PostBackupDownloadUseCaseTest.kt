@@ -26,10 +26,13 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @ExperimentalCoroutinesApi
 class PostBackupDownloadUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: PostBackupDownloadUseCase
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var activityLogStore: ActivityLogStore
+
     @Mock
     lateinit var siteModel: SiteModel
 

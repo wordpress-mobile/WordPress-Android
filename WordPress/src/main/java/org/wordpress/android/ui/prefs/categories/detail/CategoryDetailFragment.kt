@@ -37,11 +37,13 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     private val viewModel: CategoryDetailViewModel by viewModels()
+
     @Inject
     lateinit var uiHelpers: UiHelpers
     private lateinit var categoryAdapter: ParentCategorySpinnerAdapter
 
     private var spinnerTouched: Boolean = false
+
     @Suppress("DEPRECATION")
     private var progressDialog: ProgressDialog? = null
 

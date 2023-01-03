@@ -126,50 +126,73 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
+
     @Mock
     private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+
     @Mock
     private lateinit var postDetailsUiStateBuilder: ReaderPostDetailUiStateBuilder
+
     @Mock
     private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
+
     @Mock
     private lateinit var menuUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
+
     @Mock
     private lateinit var reblogUseCase: ReblogUseCase
+
     @Mock
     private lateinit var readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase
+
     @Mock
     private lateinit var readerGetPostUseCase: ReaderGetPostUseCase
+
     @Mock
     private lateinit var readerFetchPostUseCase: ReaderFetchPostUseCase
+
     @Mock
     private lateinit var eventBusWrapper: EventBusWrapper
+
     @Mock
     private lateinit var readerSimplePost: ReaderSimplePost
+
     @Mock
     private lateinit var readerTracker: ReaderTracker
+
     @Mock
     private lateinit var siteStore: SiteStore
+
     @Mock
     private lateinit var accountStore: AccountStore
+
     @Mock
     private lateinit var wpUrlUtilsWrapper: WpUrlUtilsWrapper
+
     @Mock
     private lateinit var getLikesHandler: GetLikesHandler
+
     @Mock
     private lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
+
     @Mock
     private lateinit var contextProvider: ContextProvider
+
     @Mock
     private lateinit var engagementUtils: EngagementUtils
+
     @Mock
     private lateinit var htmlMessageUtils: HtmlMessageUtils
+
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     private lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
+
     @Mock
     private lateinit var readerCommentTableWrapper: ReaderCommentTableWrapper
+
     @Mock
     private lateinit var readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
 

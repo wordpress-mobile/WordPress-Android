@@ -17,8 +17,10 @@ import org.wordpress.android.ui.suggestion.SuggestionType.XPosts
 class SuggestionSourceProviderTest {
     @Mock
     lateinit var mockSuggestionSourceSubcomponentFactory: SuggestionSourceSubcomponent.Factory
+
     @Mock
     lateinit var mockSuggestionSourceSubcomponent: SuggestionSourceSubcomponent
+
     @Mock
     lateinit var mockSite: SiteModel
 

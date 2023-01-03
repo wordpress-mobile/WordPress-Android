@@ -28,8 +28,10 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
 
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var readerTracker: ReaderTracker
 

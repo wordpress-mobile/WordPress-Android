@@ -24,8 +24,10 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdate
 class StatsSiteProviderTest : BaseUnitTest() {
     @Mock
     lateinit var siteStore: SiteStore
+
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
     private lateinit var statsSiteProvider: StatsSiteProvider

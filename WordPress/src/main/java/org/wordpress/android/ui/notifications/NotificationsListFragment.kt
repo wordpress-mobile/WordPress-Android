@@ -64,6 +64,7 @@ import javax.inject.Inject
 class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment), ScrollableViewInitializedListener {
     @Inject
     lateinit var accountStore: AccountStore
+
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 

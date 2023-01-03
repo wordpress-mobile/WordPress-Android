@@ -31,16 +31,22 @@ import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupNotifier
 class DebugSettingsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var manualFeatureConfig: ManualFeatureConfig
+
     @Mock
     lateinit var featureFlagConfig: FeatureFlagConfig
+
     @Mock
     lateinit var debugUtils: DebugUtils
+
     @Mock
     lateinit var weeklyRoundupNotifier: WeeklyRoundupNotifier
+
     @Mock
     lateinit var notificationManager: NotificationManagerWrapper
+
     @Mock
     lateinit var contextProvider: ContextProvider
+
     @Mock
     lateinit var remoteFieldConfigRepository: RemoteFieldConfigRepository
     private lateinit var viewModel: DebugSettingsViewModel

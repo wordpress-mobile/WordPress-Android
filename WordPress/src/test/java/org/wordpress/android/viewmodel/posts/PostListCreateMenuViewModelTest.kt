@@ -22,10 +22,13 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 @ExperimentalCoroutinesApi
 class PostListCreateMenuViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PostListCreateMenuViewModel
+
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var site: SiteModel
 

@@ -25,6 +25,7 @@ import javax.inject.Inject
 class HistoryListFragment : Fragment(R.layout.history_list_fragment) {
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var viewModel: HistoryViewModel
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 

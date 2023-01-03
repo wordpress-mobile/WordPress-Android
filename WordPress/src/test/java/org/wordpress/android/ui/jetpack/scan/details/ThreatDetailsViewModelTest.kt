@@ -53,22 +53,31 @@ private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_S
 class ThreatDetailsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var site: SiteModel
+
     @Mock
     private lateinit var getThreatModelUseCase: GetThreatModelUseCase
+
     @Mock
     private lateinit var ignoreThreatUseCase: IgnoreThreatUseCase
+
     @Mock
     private lateinit var fixThreatsUseCase: FixThreatsUseCase
+
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     private lateinit var builder: ThreatDetailsListItemsBuilder
+
     @Mock
     private lateinit var htmlMessageUtils: HtmlMessageUtils
+
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
     @Mock
     private lateinit var scanTracker: ScanTracker
+
     @Mock
     private lateinit var scanStore: ScanStore
 

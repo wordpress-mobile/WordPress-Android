@@ -47,18 +47,24 @@ import javax.inject.Inject
 class HelpActivity : LocaleAwareActivity() {
     @Inject
     lateinit var accountStore: AccountStore
+
     @Inject
     lateinit var siteStore: SiteStore
+
     @Inject
     lateinit var supportHelper: SupportHelper
+
     @Inject
     lateinit var zendeskHelper: ZendeskHelper
+
     @Inject
     lateinit var meGravatarLoader: MeGravatarLoader
+
     @Inject
     lateinit var mDispatcher: Dispatcher
 
     private lateinit var binding: HelpActivityBinding
+
     @Suppress("DEPRECATION")
     private var signingOutProgressDialog: ProgressDialog? = null
 

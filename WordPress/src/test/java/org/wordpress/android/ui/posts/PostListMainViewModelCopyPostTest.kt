@@ -27,10 +27,13 @@ import org.wordpress.android.ui.posts.PostListAction.EditPost
 class PostListMainViewModelCopyPostTest : BaseUnitTest() {
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var postSqlUtils: PostSqlUtils
+
     @Mock
     lateinit var onPostListActionObserver: Observer<PostListAction>
 

@@ -18,6 +18,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class LoginViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
     private lateinit var viewModel: LoginViewModel

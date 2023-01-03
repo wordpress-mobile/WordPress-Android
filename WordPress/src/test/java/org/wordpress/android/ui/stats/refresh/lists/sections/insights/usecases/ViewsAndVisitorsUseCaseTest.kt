@@ -46,30 +46,43 @@ import java.util.Calendar
 class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var store: VisitsAndViewsStore
+
     @Mock
     lateinit var selectedDateProvider: SelectedDateProvider
+
     @Mock
     lateinit var statsDateFormatter: StatsDateFormatter
+
     @Mock
     lateinit var viewsAndVisitorsMapper: ViewsAndVisitorsMapper
+
     @Mock
     lateinit var popupMenuHandler: ItemPopupMenuHandler
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var title: ValuesItem
+
     @Mock
     lateinit var chips: Chips
+
     @Mock
     lateinit var lineChartItem: LineChartItem
+
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var useCaseMode: UseCaseMode
     private lateinit var useCase: ViewsAndVisitorsUseCase

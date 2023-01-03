@@ -53,12 +53,16 @@ private val PROMPT = BloggingPromptModel(
 class BloggingPromptCardSourceTest : BaseUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     private lateinit var bloggingPromptsStore: BloggingPromptsStore
+
     @Mock
     private lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     private lateinit var bloggingRemindersStore: BloggingRemindersStore
     private lateinit var bloggingPromptCardSource: BloggingPromptCardSource

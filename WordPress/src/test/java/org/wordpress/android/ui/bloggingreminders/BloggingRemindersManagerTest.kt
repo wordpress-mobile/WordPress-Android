@@ -14,6 +14,7 @@ import org.wordpress.android.util.config.BloggingRemindersFeatureConfig
 class BloggingRemindersManagerTest {
     @Mock
     lateinit var bloggingRemindersFeatureConfig: BloggingRemindersFeatureConfig
+
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var bloggingRemindersManager: BloggingRemindersManager

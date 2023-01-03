@@ -38,8 +38,10 @@ import javax.inject.Inject
 class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     @Inject
     internal lateinit var uiHelper: UiHelpers
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var thumbDimensionProvider: ModalLayoutPickerDimensionProvider
     private lateinit var viewModel: ModalLayoutPickerViewModel

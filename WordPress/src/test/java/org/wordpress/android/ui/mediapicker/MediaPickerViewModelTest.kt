@@ -76,28 +76,40 @@ import java.util.Locale
 class MediaPickerViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var mediaLoaderFactory: MediaLoaderFactory
+
     @Mock
     lateinit var mediaLoader: MediaLoader
+
     @Mock
     lateinit var mediaInsertHandlerFactory: MediaInsertHandlerFactory
+
     @Mock
     lateinit var mediaInsertHandler: MediaInsertHandler
+
     @Mock
     lateinit var mediaPickerTracker: MediaPickerTracker
+
     @Mock
     lateinit var uriWrapper1: UriWrapper
+
     @Mock
     lateinit var uriWrapper2: UriWrapper
+
     @Mock
     lateinit var permissionsHandler: PermissionsHandler
+
     @Mock
     lateinit var context: Context
+
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var mediaUtilsWrapper: MediaUtilsWrapper
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var mediaStore: MediaStore
     private lateinit var viewModel: MediaPickerViewModel

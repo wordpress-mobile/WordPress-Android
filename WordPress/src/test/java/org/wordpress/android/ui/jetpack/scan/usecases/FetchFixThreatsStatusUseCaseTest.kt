@@ -28,8 +28,10 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @ExperimentalCoroutinesApi
 class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: FetchFixThreatsStatusUseCase
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var scanStore: ScanStore
 

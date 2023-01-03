@@ -109,32 +109,46 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     @Inject
     lateinit var storyEditorMedia: StoryEditorMedia
+
     @Inject
     lateinit var progressDialogHelper: ProgressDialogHelper
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var postStore: PostStore
+
     @Inject
     lateinit var authenticationUtils: AuthenticationUtils
+
     @Inject
     internal lateinit var editPostRepository: EditPostRepository
+
     @Inject
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     @Inject
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     internal lateinit var mediaPickerLauncher: MediaPickerLauncher
+
     @Inject
     lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
+
     @Inject
     lateinit var mediaStore: MediaStore
+
     @Inject
     lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
+
     @Inject
     lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
+
     @Inject
     lateinit var storiesPrefs: StoriesPrefs
 

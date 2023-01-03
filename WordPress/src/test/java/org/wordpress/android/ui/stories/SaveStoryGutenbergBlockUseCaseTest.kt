@@ -32,16 +32,22 @@ import org.wordpress.android.util.helpers.MediaFile
 class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     private lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
     private lateinit var editPostRepository: EditPostRepository
+
     @Mock
     lateinit var storiesPrefs: StoriesPrefs
+
     @Mock
     lateinit var crashLogging: CrashLogging
+
     @Mock
     lateinit var context: Context
+
     @Mock
     lateinit var postStore: PostStore
+
     @Mock
     lateinit var mediaFile: MediaFile
+
     @Mock
     lateinit var mediaFile2: MediaFile
 

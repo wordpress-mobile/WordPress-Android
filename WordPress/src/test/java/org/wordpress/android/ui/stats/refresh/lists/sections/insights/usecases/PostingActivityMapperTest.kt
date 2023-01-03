@@ -22,6 +22,7 @@ import java.util.Locale
 class PostingActivityMapperTest : BaseUnitTest() {
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
     private lateinit var mapper: PostingActivityMapper

@@ -26,10 +26,13 @@ import java.util.EnumSet
 class FetchFollowedTagsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var contextProvider: ContextProvider
+
     @Mock
     lateinit var eventBusWrapper: EventBusWrapper
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var readerUpdateServiceStarterWrapper: ReaderUpdateServiceStarterWrapper
 

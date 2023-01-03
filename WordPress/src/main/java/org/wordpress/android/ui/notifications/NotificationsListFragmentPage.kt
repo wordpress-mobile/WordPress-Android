@@ -68,6 +68,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
 
     @Inject
     lateinit var accountStore: AccountStore
+
     @Inject
     lateinit var gcmMessageHandler: GCMMessageHandler
 

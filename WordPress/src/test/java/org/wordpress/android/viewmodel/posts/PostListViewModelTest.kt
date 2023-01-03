@@ -29,6 +29,7 @@ private val DEFAULT_AUTHOR_FILTER = AuthorFilterSelection.EVERYONE
 class PostListViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var site: SiteModel
+
     @Mock
     private lateinit var uploadStarter: UploadStarter
 

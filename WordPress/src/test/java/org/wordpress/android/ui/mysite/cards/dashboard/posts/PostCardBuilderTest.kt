@@ -41,6 +41,7 @@ private val POST_DATE = SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2021-12-0
 class PostCardBuilderTest : BaseUnitTest() {
     @Mock
     private lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     private lateinit var appLogWrapper: AppLogWrapper
 

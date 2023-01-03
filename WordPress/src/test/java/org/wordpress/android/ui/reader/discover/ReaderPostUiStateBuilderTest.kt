@@ -67,16 +67,22 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
 
     @Mock
     lateinit var accountStore: AccountStore
+
     @Mock
     lateinit var urlUtilsWrapper: UrlUtilsWrapper
+
     @Mock
     lateinit var gravatarUtilsWrapper: GravatarUtilsWrapper
+
     @Mock
     lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
     @Mock
     lateinit var readerImageScannerProvider: ReaderImageScannerProvider
+
     @Mock
     lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+
     @Mock
     lateinit var readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder
 

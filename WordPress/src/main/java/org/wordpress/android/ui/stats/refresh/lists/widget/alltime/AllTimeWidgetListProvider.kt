@@ -19,6 +19,7 @@ import javax.inject.Inject
 class AllTimeWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
     @Inject
     lateinit var viewModel: AllTimeWidgetListViewModel
+
     @Inject
     lateinit var widgetUpdated: AllTimeWidgetUpdater
     private val colorMode: Color = intent.getColorMode()

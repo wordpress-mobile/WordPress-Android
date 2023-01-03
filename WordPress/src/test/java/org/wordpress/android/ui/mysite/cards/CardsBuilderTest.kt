@@ -42,16 +42,22 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder as Dashboard
 class CardsBuilderTest {
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
+
     @Mock
     lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
+
     @Mock
     lateinit var quickActionsCardBuilder: QuickActionsCardBuilder
+
     @Mock
     lateinit var quickStartCardBuilder: QuickStartCardBuilder
+
     @Mock
     lateinit var dashboardCardsBuilder: DashboardCardsBuilder
+
     @Mock
     lateinit var quickLinkRibbonBuilder: QuickLinkRibbonBuilder
+
     @Mock
     lateinit var site: SiteModel
 

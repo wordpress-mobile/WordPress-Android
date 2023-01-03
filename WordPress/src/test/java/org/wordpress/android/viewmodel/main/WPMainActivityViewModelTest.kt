@@ -70,28 +70,40 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
+
     @Mock
     lateinit var onFeatureAnnouncementRequestedObserver: Observer<Unit>
+
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
+
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var quickStartRepository: QuickStartRepository
+
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     lateinit var accountStore: AccountStore
+
     @Mock
     lateinit var siteStore: SiteStore
+
     @Mock
     lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+
     @Mock
     lateinit var bloggingPromptsStore: BloggingPromptsStore
+
     @Mock
     lateinit var quickStartType: QuickStartType
+
     @Mock
     private lateinit var openBloggingPromptsOnboardingObserver: Observer<Unit>
 

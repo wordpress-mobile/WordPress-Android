@@ -446,6 +446,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     class StatePickerDialogFragment : DialogFragment() {
         private lateinit var states: ArrayList<SupportedStateResponse>
+
         @Inject
         lateinit var viewModelFactory: ViewModelProvider.Factory
         private lateinit var viewModel: DomainRegistrationDetailsViewModel
@@ -498,6 +499,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     class CountryPickerDialogFragment : DialogFragment() {
         private lateinit var countries: ArrayList<SupportedDomainCountry>
+
         @Inject
         lateinit var viewModelFactory: ViewModelProvider.Factory
         private lateinit var viewModel: DomainRegistrationDetailsViewModel

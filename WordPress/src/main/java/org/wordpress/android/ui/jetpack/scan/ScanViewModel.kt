@@ -400,6 +400,7 @@ class ScanViewModel @Inject constructor(
             object MultisiteNotSupported : ErrorUiState() {
                 @DrawableRes
                 override val image = R.drawable.ic_baseline_security_white_24dp
+
                 @ColorRes
                 override val imageColorResId = R.color.gray
                 override val title = UiStringRes(R.string.scan_multisite_not_supported_title)
@@ -409,6 +410,7 @@ class ScanViewModel @Inject constructor(
             data class VaultPressActiveOnSite(override val action: () -> Unit) : ErrorUiState() {
                 @DrawableRes
                 override val image = R.drawable.ic_shield_warning_white
+
                 @ColorRes
                 override val imageColorResId = R.color.error_60
                 override val title = UiStringRes(R.string.scan_vault_press_active_on_site_title)

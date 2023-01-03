@@ -41,12 +41,16 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
 
     @Mock
     private lateinit var eventBusWrapper: EventBusWrapper
+
     @Mock
     private lateinit var getDiscoverCardsUseCase: GetDiscoverCardsUseCase
+
     @Mock
     private lateinit var shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase
+
     @Mock
     private lateinit var fetchDiscoverCardsUseCase: FetchDiscoverCardsUseCase
+
     @Mock
     private lateinit var readerTagWrapper: ReaderTagWrapper
 

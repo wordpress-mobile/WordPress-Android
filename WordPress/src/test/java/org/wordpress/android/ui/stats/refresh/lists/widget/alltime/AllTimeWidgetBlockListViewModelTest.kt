@@ -28,18 +28,25 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class AllTimeWidgetBlockListViewModelTest {
     @Mock
     private lateinit var siteStore: SiteStore
+
     @Mock
     private lateinit var allTimeStore: AllTimeInsightsStore
+
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
     @Mock
     private lateinit var statsUtils: StatsUtils
+
     @Mock
     private lateinit var site: SiteModel
+
     @Mock
     private lateinit var context: Context
+
     @Mock
     private lateinit var allTimeWidgetUpdater: AllTimeWidgetUpdater
+
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var viewModel: AllTimeWidgetBlockListViewModel

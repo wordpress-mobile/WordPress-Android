@@ -43,12 +43,16 @@ import javax.inject.Inject
 class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
     @Inject
     lateinit var viewModelFactoryBuilder: StatsViewAllViewModelFactory.Builder
+
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var navigator: StatsNavigator
+
     @Inject
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Inject
     lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: StatsViewAllViewModel

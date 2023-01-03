@@ -9,6 +9,7 @@ import org.wordpress.android.ui.utils.UiString
 
 @DimenRes
 const val AVATAR_LEFT_OFFSET_DIMEN = R.dimen.margin_small_medium
+
 @DimenRes
 const val AVATAR_SIZE_DIMEN = R.dimen.avatar_sz_small
 

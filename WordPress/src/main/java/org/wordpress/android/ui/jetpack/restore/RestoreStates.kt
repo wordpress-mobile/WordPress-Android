@@ -70,6 +70,7 @@ enum class StateType(val id: Int) {
 
 sealed class ToolbarState {
     abstract val title: Int
+
     @DrawableRes
     val icon: Int = R.drawable.ic_close_24px
 

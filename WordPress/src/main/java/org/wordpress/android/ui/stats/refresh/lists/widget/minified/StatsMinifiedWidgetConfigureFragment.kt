@@ -30,14 +30,19 @@ import javax.inject.Inject
 class StatsMinifiedWidgetConfigureFragment : DaggerFragment(R.layout.stats_widget_configure_fragment) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var minifiedWidgetUpdater: MinifiedWidgetUpdater
+
     @Inject
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Inject
     lateinit var siteStore: SiteStore
+
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var viewModel: StatsMinifiedWidgetConfigureViewModel

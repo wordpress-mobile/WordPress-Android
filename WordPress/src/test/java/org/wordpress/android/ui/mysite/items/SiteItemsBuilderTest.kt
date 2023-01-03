@@ -22,12 +22,16 @@ import org.wordpress.android.ui.quickstart.QuickStartType
 class SiteItemsBuilderTest {
     @Mock
     lateinit var siteCategoryItemBuilder: SiteCategoryItemBuilder
+
     @Mock
     lateinit var siteListItemBuilder: SiteListItemBuilder
+
     @Mock
     lateinit var siteModel: SiteModel
+
     @Mock
     lateinit var quickStartRepository: QuickStartRepository
+
     @Mock
     lateinit var quickStartType: QuickStartType
     private lateinit var siteItemsBuilder: SiteItemsBuilder

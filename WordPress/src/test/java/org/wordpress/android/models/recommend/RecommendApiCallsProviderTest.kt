@@ -34,18 +34,25 @@ import org.wordpress.android.viewmodel.ContextProvider
 class RecommendApiCallsProviderTest : BaseUnitTest() {
     @Mock
     lateinit var contextProvider: ContextProvider
+
     @Mock
     lateinit var context: Context
+
     @Mock
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var restClientProvider: RestClientProvider
+
     @Mock
     lateinit var restClientUtils: RestClientUtils
+
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var jsonObject: JSONObject
 

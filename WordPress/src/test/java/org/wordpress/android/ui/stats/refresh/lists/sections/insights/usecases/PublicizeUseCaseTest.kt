@@ -39,14 +39,19 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 class PublicizeUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var insightsStore: PublicizeStore
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var serviceMapper: ServiceMapper
+
     @Mock
     lateinit var tracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var popupMenuHandler: ItemPopupMenuHandler
     private lateinit var useCase: PublicizeUseCase

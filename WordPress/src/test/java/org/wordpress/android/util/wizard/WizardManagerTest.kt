@@ -23,6 +23,7 @@ private val LAST_STEP_INDEX = STEPS.size - 1
 @RunWith(MockitoJUnitRunner::class)
 class WizardManagerTest : BaseUnitTest() {
     private lateinit var manager: WizardManager<SiteCreationStep>
+
     @Mock
     private lateinit var navigatorLiveDataObserver: Observer<SiteCreationStep>
 

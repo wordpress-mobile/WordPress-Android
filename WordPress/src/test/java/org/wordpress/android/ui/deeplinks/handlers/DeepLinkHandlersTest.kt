@@ -17,20 +17,28 @@ import org.wordpress.android.viewmodel.Event
 class DeepLinkHandlersTest : BaseUnitTest() {
     @Mock
     lateinit var editorLinkHandler: EditorLinkHandler
+
     @Mock
     lateinit var statsLinkHandler: StatsLinkHandler
+
     @Mock
     lateinit var startLinkHandler: StartLinkHandler
+
     @Mock
     lateinit var readerLinkHandler: ReaderLinkHandler
+
     @Mock
     lateinit var pagesLinkHandler: PagesLinkHandler
+
     @Mock
     lateinit var notificationsLinkHandler: NotificationsLinkHandler
+
     @Mock
     lateinit var qrCodeAuthLinkHandler: QRCodeAuthLinkHandler
+
     @Mock
     lateinit var homeLinkHandler: HomeLinkHandler
+
     @Mock
     lateinit var uri: UriWrapper
     private lateinit var deepLinkHandlers: DeepLinkHandlers

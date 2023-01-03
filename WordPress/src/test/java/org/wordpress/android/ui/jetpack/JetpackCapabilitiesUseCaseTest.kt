@@ -29,8 +29,10 @@ private const val SITE_ID = 1L
 class JetpackCapabilitiesUseCaseTest : BaseUnitTest() {
     @Mock
     private lateinit var dispatcher: Dispatcher
+
     @Mock
     private lateinit var store: SiteStore
+
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var useCase: JetpackCapabilitiesUseCase

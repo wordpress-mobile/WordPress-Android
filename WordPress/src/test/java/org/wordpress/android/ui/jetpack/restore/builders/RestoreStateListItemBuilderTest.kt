@@ -35,8 +35,10 @@ class RestoreStateListItemBuilderTest : BaseUnitTest() {
 
     @Mock
     private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
+
     @Mock
     private lateinit var htmlMessageUtils: HtmlMessageUtils
+
     @Mock
     private lateinit var percentFormatter: PercentFormatter
 

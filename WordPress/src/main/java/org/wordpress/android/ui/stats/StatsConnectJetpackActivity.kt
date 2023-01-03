@@ -30,8 +30,10 @@ import javax.inject.Inject
  */
 class StatsConnectJetpackActivity : LocaleAwareActivity() {
     private var mIsJetpackConnectStarted = false
+
     @Inject
     lateinit var mAccountStore: AccountStore
+
     @Inject
     lateinit var mDispatcher: Dispatcher
 

@@ -50,34 +50,49 @@ import java.util.Date
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
     private lateinit var builder: ReaderPostDetailUiStateBuilder
+
     @Mock
     lateinit var postUiStateBuilder: ReaderPostUiStateBuilder
+
     @Mock
     lateinit var headerViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
+
     @Mock
     lateinit var featuredImageUtils: FeaturedImageUtils
+
     @Mock
     lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+
     @Mock
     lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var contextProvider: ContextProvider
+
     @Mock
     lateinit var context: Context
+
     @Mock
     lateinit var resources: Resources
+
     @Mock
     lateinit var htmlUtilsWrapper: HtmlUtilsWrapper
+
     @Mock
     lateinit var htmlMessageUtils: HtmlMessageUtils
+
     @Mock
     lateinit var readerSimplePost: ReaderSimplePost
+
     @Mock
     lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
     @Mock
     lateinit var gravatarUtilsWrapper: GravatarUtilsWrapper
+
     @Mock
     lateinit var threadedCommentsUtils: ThreadedCommentsUtils
     private lateinit var dummyRelatedPosts: ReaderSimplePostList

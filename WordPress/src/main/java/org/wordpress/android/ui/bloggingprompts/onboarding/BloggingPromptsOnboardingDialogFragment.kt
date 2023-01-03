@@ -48,6 +48,7 @@ import javax.inject.Inject
 class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragment() {
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: BloggingPromptsOnboardingViewModel

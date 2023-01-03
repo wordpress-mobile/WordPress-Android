@@ -25,10 +25,13 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 class SelectedSiteRepositoryTest : BaseUnitTest() {
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory
+
     @Mock
     lateinit var siteSettingsInterfaceWrapper: SiteSettingsInterfaceWrapper
+
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var siteModel: SiteModel

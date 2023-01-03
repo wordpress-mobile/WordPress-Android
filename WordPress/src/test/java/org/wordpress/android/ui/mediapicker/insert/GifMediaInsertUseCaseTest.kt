@@ -30,16 +30,22 @@ import org.wordpress.android.util.WPMediaUtilsWrapper
 class GifMediaInsertUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var context: Context
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var uriWrapper: UriWrapper
+
     @Mock
     lateinit var wpMediaUtilsWrapper: WPMediaUtilsWrapper
+
     @Mock
     lateinit var mimeTypeMapUtilsWrapper: MimeTypeMapUtilsWrapper
+
     @Mock
     lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
 

@@ -33,14 +33,19 @@ import org.wordpress.android.util.DateTimeUtilsWrapper
 class SavePostToDbUseCaseTest {
     @Mock
     lateinit var uploadUtils: UploadUtilsWrapper
+
     @Mock
     lateinit var dateTimeUtils: DateTimeUtilsWrapper
+
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var pendingDraftsNotificationsUtils: PendingDraftsNotificationsUtilsWrapper
+
     @Mock
     lateinit var postRepository: EditPostRepository
+
     @Mock
     lateinit var context: Context
     private lateinit var siteModel: SiteModel

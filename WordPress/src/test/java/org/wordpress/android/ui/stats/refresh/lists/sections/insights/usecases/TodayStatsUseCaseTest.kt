@@ -34,12 +34,16 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 class TodayStatsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var insightsStore: TodayInsightsStore
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var popupMenuHandler: ItemPopupMenuHandler
+
     @Mock
     lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+
     @Mock
     lateinit var statsUtils: StatsUtils
     private lateinit var useCase: TodayStatsUseCase

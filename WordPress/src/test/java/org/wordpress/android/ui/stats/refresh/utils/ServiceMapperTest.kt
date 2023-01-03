@@ -17,8 +17,10 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class ServiceMapperTest : BaseUnitTest() {
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var statsUtils: StatsUtils
+
     @Mock
     lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var serviceMapper: ServiceMapper

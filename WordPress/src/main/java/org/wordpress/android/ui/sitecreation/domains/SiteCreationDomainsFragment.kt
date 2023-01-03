@@ -27,6 +27,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
     @Inject
     internal lateinit var uiHelpers: UiHelpers
+
     @Inject
     internal lateinit var displayUtils: DisplayUtilsWrapper
 

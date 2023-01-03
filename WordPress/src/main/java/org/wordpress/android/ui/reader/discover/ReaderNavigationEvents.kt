@@ -35,8 +35,10 @@ sealed class ReaderNavigationEvents {
     class ShowBookmarkedSavedOnlyLocallyDialog(val okButtonAction: () -> Unit) : ReaderNavigationEvents() {
         @StringRes
         val title: Int = R.string.reader_save_posts_locally_dialog_title
+
         @StringRes
         val message: Int = R.string.reader_save_posts_locally_dialog_message
+
         @StringRes
         val buttonLabel: Int = R.string.dialog_button_ok
     }

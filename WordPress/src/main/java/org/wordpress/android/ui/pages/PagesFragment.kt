@@ -87,18 +87,25 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     @Suppress("unused")
     @Inject
     lateinit var postStore: PostStore
+
     @Inject
     lateinit var dispatcher: Dispatcher
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
+
     @Inject
     lateinit var previewStateHelper: PreviewStateHelper
+
     @Inject
     lateinit var progressDialogHelper: ProgressDialogHelper
+
     @Inject
     lateinit var uploadActionUseCase: UploadActionUseCase
+
     @Inject
     lateinit var uploadUtilsWrapper: UploadUtilsWrapper
 

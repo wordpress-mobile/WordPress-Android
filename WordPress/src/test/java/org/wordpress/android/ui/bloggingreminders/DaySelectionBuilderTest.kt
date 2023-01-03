@@ -33,10 +33,13 @@ import java.util.Locale
 class DaySelectionBuilderTest {
     @Mock
     lateinit var daysProvider: DaysProvider
+
     @Mock
     lateinit var dayLabelUtils: DayLabelUtils
+
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     private lateinit var daySelectionBuilder: DaySelectionBuilder

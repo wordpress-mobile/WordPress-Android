@@ -33,12 +33,16 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 class ReaderCommentsFollowUseCaseTest : BaseUnitTest() {
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     private lateinit var postSubscribersApiCallsProvider: PostSubscribersApiCallsProvider
+
     @Mock
     private lateinit var accountStore: AccountStore
+
     @Mock
     private lateinit var readerTracker: ReaderTracker
+
     @Mock
     private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
 

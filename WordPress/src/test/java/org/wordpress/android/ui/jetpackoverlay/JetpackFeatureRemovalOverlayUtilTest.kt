@@ -29,16 +29,22 @@ private const val ONE_DAY_TIME_IN_MILLIS = 1000L * 60L * 60L * 24L
 class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     @Mock
     private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
     @Mock
     private lateinit var jetpackFeatureOverlayShownTracker: JetpackFeatureOverlayShownTracker
+
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     private lateinit var siteUtilsWrapper: SiteUtilsWrapper
+
     @Mock
     private lateinit var buildConfigWrapper: BuildConfigWrapper
+
     @Mock
     private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
     @Mock
     private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 

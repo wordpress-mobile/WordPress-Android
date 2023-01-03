@@ -35,6 +35,7 @@ import javax.inject.Inject
 abstract class PublishSettingsFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     lateinit var viewModel: PublishSettingsViewModel

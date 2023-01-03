@@ -94,30 +94,43 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     @Inject
     lateinit var dispatcher: Dispatcher
+
     @Inject
     lateinit var accountStore: AccountStore
+
     @Inject
     lateinit var siteStore: SiteStore
+
     @Inject
     lateinit var postStore: PostStore
+
     @Inject
     lateinit var meGravatarLoader: MeGravatarLoader
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var mediaPickerLauncher: MediaPickerLauncher
+
     @Inject
     lateinit var recommendTheAppFeatureConfig: RecommendTheAppFeatureConfig
+
     @Inject
     lateinit var sequencer: SnackbarSequencer
+
     @Inject
     lateinit var unifiedAboutFeatureConfig: UnifiedAboutFeatureConfig
+
     @Inject
     lateinit var qrCodeAuthFlowFeatureConfig: QRCodeAuthFlowFeatureConfig
+
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
     @Inject
     lateinit var packageManagerWrapper: PackageManagerWrapper
+
     @Inject
     lateinit var appPrefsWrapper: AppPrefsWrapper
     private val viewModel: MeViewModel by viewModels()

@@ -36,6 +36,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
 
     @Mock
     private lateinit var dateFormatWrapper: DateFormatWrapper
+
     @Mock
     private lateinit var dateFormat: DateFormat
 

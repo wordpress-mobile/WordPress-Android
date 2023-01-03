@@ -21,6 +21,7 @@ class ReaderDiscoverJobService : JobService(), ServiceCompletionListener, Corout
     @Inject
     @field:Named("IO_THREAD")
     lateinit var ioDispatcher: CoroutineDispatcher
+
     @Inject
     lateinit var readerDiscoverLogic: ReaderDiscoverLogic
 

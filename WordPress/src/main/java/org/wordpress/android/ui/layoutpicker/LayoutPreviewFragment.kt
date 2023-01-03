@@ -40,6 +40,7 @@ private const val JS_READY_CALLBACK_ID = 926L
 abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
     @Inject
     lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: LayoutPickerViewModel

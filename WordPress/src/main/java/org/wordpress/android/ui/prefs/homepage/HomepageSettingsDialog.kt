@@ -27,6 +27,7 @@ import javax.inject.Inject
 class HomepageSettingsDialog : DialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: HomepageSettingsViewModel

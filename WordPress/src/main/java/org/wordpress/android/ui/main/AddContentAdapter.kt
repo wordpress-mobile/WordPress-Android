@@ -15,10 +15,13 @@ import javax.inject.Inject
 
 class AddContentAdapter(context: Context) : Adapter<AddContentViewHolder<*>>() {
     private var items: List<MainActionListItem> = listOf()
+
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var htmlCompatWrapper: HtmlCompatWrapper
 

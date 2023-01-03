@@ -24,6 +24,7 @@ private const val REQUEST_BLOG_LISTENER_PARAM_POSITION = 2
 class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
     private lateinit var useCase: ReaderFetchPostUseCase

@@ -27,6 +27,7 @@ private const val SEGMENT_ID = 123L
 class FetchDomainsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var store: SiteStore
     private lateinit var useCase: FetchDomainsUseCase

@@ -29,10 +29,13 @@ import org.wordpress.android.util.config.BetaSiteDesignsFeatureConfig
 class FetchHomePageLayoutsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var store: ThemeStore
+
     @Mock
     lateinit var thumbDimensionProvider: SiteDesignRecommendedDimensionProvider
+
     @Mock
     lateinit var betaSiteDesigns: BetaSiteDesignsFeatureConfig
 

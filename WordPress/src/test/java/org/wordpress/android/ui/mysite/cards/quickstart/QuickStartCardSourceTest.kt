@@ -54,34 +54,49 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class QuickStartCardSourceTest : BaseUnitTest() {
     @Mock
     lateinit var quickStartStore: QuickStartStore
+
     @Mock
     lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var eventBus: EventBusWrapper
+
     @Mock
     lateinit var dynamicCardStore: DynamicCardStore
+
     @Mock
     lateinit var htmlCompat: HtmlCompatWrapper
+
     @Mock
     lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
+
     @Mock
     lateinit var contextProvider: ContextProvider
+
     @Mock
     lateinit var htmlMessageUtils: HtmlMessageUtils
+
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
+
     @Mock
     lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+
     @Mock
     lateinit var quickStartExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
+
     @Mock
     lateinit var quickStartTracker: QuickStartTracker
     private lateinit var site: SiteModel

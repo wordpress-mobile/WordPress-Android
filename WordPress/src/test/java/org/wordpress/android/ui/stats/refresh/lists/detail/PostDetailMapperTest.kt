@@ -31,10 +31,13 @@ import java.util.Locale
 class PostDetailMapperTest : BaseUnitTest() {
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var statsDateFormatter: StatsDateFormatter
+
     @Mock
     lateinit var statsUtils: StatsUtils
+
     @Mock
     lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var postDetailMapper: PostDetailMapper

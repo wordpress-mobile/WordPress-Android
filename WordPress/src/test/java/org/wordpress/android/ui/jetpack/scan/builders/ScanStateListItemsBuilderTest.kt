@@ -57,22 +57,31 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
 
     @Mock
     private lateinit var site: SiteModel
+
     @Mock
     private lateinit var dateProvider: DateProvider
+
     @Mock
     private lateinit var htmlMessageUtils: HtmlMessageUtils
+
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
     @Mock
     private lateinit var threatItemBuilder: ThreatItemBuilder
+
     @Mock
     private lateinit var threatDetailsListItemsBuilder: ThreatDetailsListItemsBuilder
+
     @Mock
     private lateinit var scanStore: ScanStore
+
     @Mock
     private lateinit var onHelpClickedMock: () -> Unit
+
     @Mock
     private lateinit var onEnterServerCredsIconClicked: () -> Unit
+
     @Mock
     private lateinit var percentFormatter: PercentFormatter
 

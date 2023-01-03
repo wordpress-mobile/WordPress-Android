@@ -20,10 +20,13 @@ import java.util.Date
 class ReaderTrackerTest {
     @Mock
     lateinit var dateProvider: DateProvider
+
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 

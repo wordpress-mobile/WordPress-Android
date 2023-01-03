@@ -99,6 +99,7 @@ enum class QuickStartTaskDetails(
 
     companion object {
         const val KEY = "quick_start_task_details"
+
         @JvmStatic
         fun getDetailsForTask(task: QuickStartTask): QuickStartTaskDetails? {
             for (quickStartTaskDetails in values()) {

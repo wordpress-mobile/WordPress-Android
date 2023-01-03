@@ -29,8 +29,10 @@ class SiteCreationService : AutoForeground<SiteCreationServiceState>(SiteCreatio
 
     @Inject
     lateinit var dispatcher: Dispatcher
+
     @Inject
     lateinit var tracker: SiteCreationTracker
+
     @Inject
     lateinit var localeManagerWrapper: LocaleManagerWrapper
 

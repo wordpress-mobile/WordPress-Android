@@ -21,8 +21,10 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
@@ -51,6 +53,7 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     companion object {
         const val TAG = "prepublishing_tags_fragment_tag"
         const val NEEDS_REQUEST_LAYOUT = "prepublishing_tags_fragment_needs_request_layout"
+
         @JvmStatic
         fun newInstance(site: SiteModel, needsRequestLayout: Boolean): PrepublishingTagsFragment {
             val bundle = Bundle().apply {

@@ -23,6 +23,7 @@ import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertMode
 class StockMediaInsertUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var stockMediaStore: StockMediaStore
     private lateinit var stockMediaInsertUseCase: StockMediaInsertUseCase

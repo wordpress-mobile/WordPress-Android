@@ -19,10 +19,13 @@ import org.wordpress.android.viewmodel.Event
 class StorageUtilsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var storageUtilsProvider: StorageUtilsProvider
+
     @Mock
     lateinit var checkStorageWarningObserver: Observer<Event<Unit>>
+
     @Mock
     lateinit var fm: FragmentManager
+
     @Mock
     lateinit var source: Source
 

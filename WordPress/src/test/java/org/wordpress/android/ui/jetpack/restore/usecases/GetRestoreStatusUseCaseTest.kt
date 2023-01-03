@@ -45,8 +45,10 @@ class GetRestoreStatusUseCaseTest : BaseUnitTest() {
 
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var activityLogStore: ActivityLogStore
+
     @Mock
     private lateinit var site: SiteModel
 

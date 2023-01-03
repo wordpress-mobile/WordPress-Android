@@ -19,8 +19,10 @@ import org.wordpress.android.viewmodel.Event
 class StatsSiteSelectionViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var siteStore: SiteStore
+
     @Mock
     private lateinit var accountStore: AccountStore
+
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var wpComSite: SiteModel

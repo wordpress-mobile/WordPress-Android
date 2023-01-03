@@ -22,10 +22,13 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class SiteInfoHeaderCardBuilderTest {
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var quickStartRepository: QuickStartRepository
+
     @Mock
     lateinit var quickStartType: QuickStartType
     private lateinit var siteInfoHeaderCardBuilder: SiteInfoHeaderCardBuilder

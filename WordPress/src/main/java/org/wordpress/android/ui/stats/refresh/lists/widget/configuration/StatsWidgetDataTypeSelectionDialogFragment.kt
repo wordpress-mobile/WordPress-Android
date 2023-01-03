@@ -21,6 +21,7 @@ import javax.inject.Inject
 class StatsWidgetDataTypeSelectionDialogFragment : AppCompatDialogFragment() {
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsDataTypeSelectionViewModel

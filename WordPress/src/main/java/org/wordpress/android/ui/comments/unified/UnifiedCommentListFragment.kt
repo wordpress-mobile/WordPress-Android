@@ -39,14 +39,19 @@ import javax.inject.Inject
 class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragment) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
+
     @Inject
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Inject
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Inject
     lateinit var unifiedCommentsDetailFeatureConfig: UnifiedCommentsDetailFeatureConfig
 

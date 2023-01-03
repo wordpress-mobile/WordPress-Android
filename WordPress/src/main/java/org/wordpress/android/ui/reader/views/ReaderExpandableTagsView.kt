@@ -22,6 +22,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
 ) : ChipGroup(context, attrs, defStyleAttr) {
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var readerTracker: ReaderTracker
 

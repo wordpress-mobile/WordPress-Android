@@ -15,6 +15,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarU
 class CurrentAvatarSourceTest : BaseUnitTest() {
     @Mock
     lateinit var accountStore: AccountStore
+
     @Mock
     lateinit var accountModel: AccountModel
     private lateinit var currentAvatarSource: CurrentAvatarSource

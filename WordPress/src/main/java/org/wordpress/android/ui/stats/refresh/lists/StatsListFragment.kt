@@ -35,10 +35,13 @@ import javax.inject.Inject
 class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var statsDateFormatter: StatsDateFormatter
+
     @Inject
     lateinit var navigator: StatsNavigator
     private lateinit var viewModel: StatsListViewModel

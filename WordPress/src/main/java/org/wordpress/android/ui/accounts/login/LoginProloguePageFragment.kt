@@ -17,8 +17,10 @@ import kotlin.math.min
 class LoginProloguePageFragment : Fragment(R.layout.login_intro_template_view) {
     @StringRes
     private var promoTitle: Int? = null
+
     @LayoutRes
     private var promoLayoutId: Int? = null
+
     @LayoutRes
     private var promoBackgroundId: Int? = null
 

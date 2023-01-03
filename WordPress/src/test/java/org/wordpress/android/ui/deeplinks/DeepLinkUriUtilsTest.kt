@@ -15,6 +15,7 @@ import org.wordpress.android.util.UriUtilsWrapper
 class DeepLinkUriUtilsTest {
     @Mock
     lateinit var siteStore: SiteStore
+
     @Mock
     lateinit var uriUtilsWrapper: UriUtilsWrapper
     private lateinit var deepLinkUriUtils: DeepLinkUriUtils

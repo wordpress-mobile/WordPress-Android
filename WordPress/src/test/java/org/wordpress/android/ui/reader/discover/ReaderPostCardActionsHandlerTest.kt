@@ -87,36 +87,52 @@ private const val SOURCE = "source"
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     private lateinit var actionHandler: ReaderPostCardActionsHandler
+
     @Mock
     private lateinit var readerTracker: ReaderTracker
+
     @Mock
     private lateinit var reblogUseCase: ReblogUseCase
+
     @Mock
     private lateinit var bookmarkUseCase: ReaderPostBookmarkUseCase
+
     @Mock
     private lateinit var followUseCase: ReaderSiteFollowUseCase
+
     @Mock
     private lateinit var blockBlogUseCase: BlockBlogUseCase
+
     @Mock
     private lateinit var blockUserUseCase: BlockUserUseCase
+
     @Mock
     private lateinit var likeUseCase: PostLikeUseCase
+
     @Mock
     private lateinit var siteNotificationsUseCase: ReaderSiteNotificationsUseCase
+
     @Mock
     private lateinit var seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase
+
     @Mock
     private lateinit var undoBlockBlogUseCase: UndoBlockBlogUseCase
+
     @Mock
     private lateinit var fetchSiteUseCase: ReaderFetchSiteUseCase
+
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     private lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
+
     @Mock
     private lateinit var dispatcher: Dispatcher
+
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
     @Mock
     private lateinit var htmlMessageUtils: HtmlMessageUtils
 

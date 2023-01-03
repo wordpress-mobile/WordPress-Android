@@ -36,14 +36,19 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 class ReaderPostSeenStatusToggleUseCaseTest : BaseUnitTest() {
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     private lateinit var postSeenStatusApiCallsProvider: PostSeenStatusApiCallsProvider
+
     @Mock
     private lateinit var accountStore: AccountStore
+
     @Mock
     private lateinit var readerTracker: ReaderTracker
+
     @Mock
     private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
+
     @Mock
     private lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
 

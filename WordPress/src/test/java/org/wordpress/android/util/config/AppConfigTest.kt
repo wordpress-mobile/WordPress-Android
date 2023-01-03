@@ -18,14 +18,19 @@ import org.wordpress.android.util.config.ExperimentConfig.Variant
 class AppConfigTest {
     @Mock
     lateinit var featureFlagConfig: FeatureFlagConfig
+
     @Mock
     lateinit var remoteFieldConfigRepository: RemoteFieldConfigRepository
+
     @Mock
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var experimentConfig: ExperimentConfig
+
     @Mock
     lateinit var manualFeatureConfig: ManualFeatureConfig
+
     @Mock
     lateinit var appScope: CoroutineScope
     private lateinit var appConfig: AppConfig

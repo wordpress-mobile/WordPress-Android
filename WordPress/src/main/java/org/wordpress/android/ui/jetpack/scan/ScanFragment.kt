@@ -39,6 +39,7 @@ import javax.inject.Inject
 class ScanFragment : Fragment(R.layout.scan_fragment) {
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var uiHelpers: UiHelpers
     private lateinit var listView: EmptyViewRecyclerView

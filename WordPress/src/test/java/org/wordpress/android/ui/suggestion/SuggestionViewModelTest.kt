@@ -31,16 +31,22 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class SuggestionViewModelTest {
     @Mock
     lateinit var mockSuggestionSourceProvider: SuggestionSourceProvider
+
     @Mock
     lateinit var mockResourceProvider: ResourceProvider
+
     @Mock
     lateinit var mockNetworkUtils: NetworkUtilsWrapper
+
     @Mock
     lateinit var mockAnalyticsTracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var mockSite: SiteModel
+
     @Mock
     lateinit var mockLiveData: LiveData<SuggestionResult>
+
     @Mock
     lateinit var mockSuggestionSource: SuggestionSource
 

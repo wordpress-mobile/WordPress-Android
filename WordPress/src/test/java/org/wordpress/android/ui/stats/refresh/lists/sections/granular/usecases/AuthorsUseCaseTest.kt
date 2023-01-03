@@ -51,16 +51,22 @@ private val selectedDate = Date(0)
 class AuthorsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var store: AuthorsStore
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var selectedDateProvider: SelectedDateProvider
+
     @Mock
     lateinit var tracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
     @Mock
     lateinit var statsUtils: StatsUtils
     private lateinit var useCase: AuthorsUseCase

@@ -23,10 +23,13 @@ import org.wordpress.android.ui.posts.SavePostToDbUseCase
 class SaveInitialPostUseCaseTest : BaseUnitTest() {
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var saveInitialPostUseCase: SaveInitialPostUseCase
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var savePostToDbUseCase: SavePostToDbUseCase
+
     @Mock
     lateinit var postStore: PostStore
 

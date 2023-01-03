@@ -44,26 +44,37 @@ import java.util.Calendar
 class OverviewUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var store: VisitsAndViewsStore
+
     @Mock
     lateinit var selectedDateProvider: SelectedDateProvider
+
     @Mock
     lateinit var statsDateFormatter: StatsDateFormatter
+
     @Mock
     lateinit var overviewMapper: OverviewMapper
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var columns: Columns
+
     @Mock
     lateinit var title: ValueItem
+
     @Mock
     lateinit var barChartItem: BarChartItem
+
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
     private lateinit var useCase: OverviewUseCase

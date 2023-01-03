@@ -25,12 +25,16 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @ExperimentalCoroutinesApi
 class StartScanUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: StartScanUseCase
+
     @Mock
     private lateinit var site: SiteModel
+
     @Mock
     private lateinit var scanStateModel: ScanStateModel
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var scanStore: ScanStore
 

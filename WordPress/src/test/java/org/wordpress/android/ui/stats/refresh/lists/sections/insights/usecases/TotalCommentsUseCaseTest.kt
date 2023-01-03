@@ -45,28 +45,40 @@ import java.util.Calendar
 class TotalCommentsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var store: VisitsAndViewsStore
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var statsDateFormatter: StatsDateFormatter
+
     @Mock
     lateinit var totalStatsMapper: TotalStatsMapper
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var valueWithChart: ValueWithChartItem
+
     @Mock
     lateinit var information: Text
+
     @Mock
     lateinit var useCaseMode: UseCaseMode
+
     @Mock
     lateinit var selectedDateProvider: SelectedDateProvider
     private lateinit var useCase: TotalCommentsUseCase

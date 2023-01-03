@@ -38,10 +38,13 @@ import java.util.Date
 @ExperimentalCoroutinesApi
 class PostRestoreUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: PostRestoreUseCase
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var activityLogStore: ActivityLogStore
+
     @Mock
     lateinit var siteModel: SiteModel
 

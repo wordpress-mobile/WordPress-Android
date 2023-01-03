@@ -23,10 +23,13 @@ import java.util.Locale
 class SiteCreationIntentsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var analyticsTracker: SiteCreationTracker
+
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var dispatcher: CoroutineDispatcher
+
     @Mock
     private lateinit var resources: Resources
 

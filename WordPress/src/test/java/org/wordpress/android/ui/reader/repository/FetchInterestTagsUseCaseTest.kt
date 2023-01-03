@@ -29,10 +29,13 @@ import java.util.EnumSet
 class FetchInterestTagsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var contextProvider: ContextProvider
+
     @Mock
     lateinit var eventBusWrapper: EventBusWrapper
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var readerUpdateServiceStarterWrapper: ReaderUpdateServiceStarterWrapper
 

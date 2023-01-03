@@ -37,12 +37,16 @@ private const val ERROR = "Error"
 @RunWith(MockitoJUnitRunner::class)
 class ReaderSiteNotificationsUseCaseTest : BaseUnitTest() {
     lateinit var useCase: ReaderSiteNotificationsUseCase
+
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var readerTracker: ReaderTracker
+
     @Mock
     lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     private val event = OnSubscriptionUpdated()

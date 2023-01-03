@@ -32,20 +32,28 @@ import org.wordpress.android.ui.stories.usecase.SetUntitledStoryTitleIfTitleEmpt
 class StoryComposerViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: StoryComposerViewModel
     private lateinit var editPostRepository: EditPostRepository
+
     @Mock
     lateinit var systemNotificationsTracker: SystemNotificationsTracker
+
     @Mock
     lateinit var saveInitialPostUseCase: SaveInitialPostUseCase
+
     @Mock
     lateinit var savePostToDbUseCase: SavePostToDbUseCase
+
     @Mock
     lateinit var setUntitledStoryTitleIfTitleEmptyUseCase: SetUntitledStoryTitleIfTitleEmptyUseCase
+
     @Mock
     lateinit var postEditorAnalyticsSessionWrapper: PostEditorAnalyticsSessionWrapper
+
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var postStore: PostStore
+
     @Mock
     lateinit var site: SiteModel
 

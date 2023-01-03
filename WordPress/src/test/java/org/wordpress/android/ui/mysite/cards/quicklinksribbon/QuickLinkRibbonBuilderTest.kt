@@ -23,8 +23,10 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 class QuickLinkRibbonBuilderTest : BaseUnitTest() {
     @Mock
     lateinit var siteModel: SiteModel
+
     @Mock
     lateinit var quickStartRepository: QuickStartRepository
+
     @Mock
     lateinit var quickStartType: QuickStartType
     private lateinit var builder: QuickLinkRibbonBuilder

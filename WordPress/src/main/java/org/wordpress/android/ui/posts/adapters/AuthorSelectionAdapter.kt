@@ -24,6 +24,7 @@ import javax.inject.Inject
 class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var uiHelpers: UiHelpers
 

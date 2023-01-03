@@ -25,14 +25,19 @@ import java.util.Date
 class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     @Mock
     lateinit var openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig
+
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     lateinit var firebaseRemoteConfigWrapper: FirebaseRemoteConfigWrapper
+
     @Mock
     lateinit var packageManagerWrapper: PackageManagerWrapper
+
     @Mock
     lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
 

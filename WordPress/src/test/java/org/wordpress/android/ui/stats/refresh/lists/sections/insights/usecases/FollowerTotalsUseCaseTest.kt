@@ -34,16 +34,22 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 class FollowerTotalsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var followersStore: FollowersStore
+
     @Mock
     lateinit var publicizeStore: PublicizeStore
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
     @Mock
     lateinit var popupMenuHandler: ItemPopupMenuHandler
+
     @Mock
     lateinit var statsUtils: StatsUtils
+
     @Mock
     lateinit var site: SiteModel
     private lateinit var useCase: FollowerTotalsUseCase

@@ -76,20 +76,28 @@ private const val SERVER_CREDS_MSG_WITH_CLICKABLE_LINK =
 class RestoreViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var wizardManager: WizardManager<RestoreStep>
+
     @Mock
     lateinit var savedInstanceState: Bundle
+
     @Mock
     private lateinit var site: SiteModel
+
     @Mock
     private lateinit var getActivityLogItemUseCase: GetActivityLogItemUseCase
+
     @Mock
     private lateinit var restoreStatusUseCase: GetRestoreStatusUseCase
+
     @Mock
     private lateinit var postRestoreUseCase: PostRestoreUseCase
+
     @Mock
     private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
+
     @Mock
     private lateinit var htmlMessageUtils: HtmlMessageUtils
+
     @Mock
     private lateinit var percentFormatter: PercentFormatter
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider

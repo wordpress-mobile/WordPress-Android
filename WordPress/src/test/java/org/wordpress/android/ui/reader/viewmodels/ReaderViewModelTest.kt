@@ -52,26 +52,37 @@ class ReaderViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     lateinit var dateProvider: DateProvider
+
     @Mock
     lateinit var loadReaderTabsUseCase: LoadReaderTabsUseCase
+
     @Mock
     lateinit var readerTracker: ReaderTracker
+
     @Mock
     lateinit var accountStore: AccountStore
+
     @Mock
     lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
+
     @Mock
     lateinit var quickStartRepository: QuickStartRepository
+
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     lateinit var quickStartType: QuickStartType
+
     @Mock
     lateinit var snackbarSequencer: SnackbarSequencer
+
     @Mock
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
     @Mock
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 

@@ -43,10 +43,13 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 class PaginateCommentsUseCaseTest : BaseUnitTest() {
     @Mock
     private lateinit var commentStore: CommentsStore
+
     @Mock
     private lateinit var paginateCommentsResourceProvider: PaginateCommentsResourceProvider
+
     @Mock
     private lateinit var unrepliedCommentsUtils: UnrepliedCommentsUtils
+
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 

@@ -24,14 +24,19 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class TodayWidgetListViewModelTest {
     @Mock
     private lateinit var siteStore: SiteStore
+
     @Mock
     private lateinit var store: TodayInsightsStore
+
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     private lateinit var statsUtils: StatsUtils
+
     @Mock
     private lateinit var site: SiteModel
     private lateinit var viewModel: TodayWidgetListViewModel

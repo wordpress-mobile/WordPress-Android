@@ -22,10 +22,13 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @ExperimentalCoroutinesApi
 class StatsModuleActivateUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: StatsModuleActivateUseCase
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var siteModel: SiteModel
+
     @Mock
     lateinit var jetpackStore: JetpackStore
 

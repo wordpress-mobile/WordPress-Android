@@ -33,6 +33,7 @@ import javax.inject.Named
 class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarListener {
     @Inject
     lateinit var updateNotificationSettingsUseCase: UpdateNotificationSettingsUseCase
+
     @Inject
     @Named(APPLICATION_SCOPE)
     lateinit var applicationScope: CoroutineScope

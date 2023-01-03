@@ -39,8 +39,10 @@ const val KEY_BACKUP_DOWNLOAD_ACTION_STATE_ID = "key_backup_download_action_stat
 class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var imageManager: ImageManager
     private lateinit var viewModel: BackupDownloadViewModel

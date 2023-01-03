@@ -213,34 +213,49 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     @Inject
     internal lateinit var accountStore: AccountStore
+
     @Inject
     internal lateinit var siteStore: SiteStore
+
     @Inject
     internal lateinit var dispatcher: Dispatcher
+
     @Inject
     internal lateinit var readerFileDownloadManager: ReaderFileDownloadManager
+
     @Inject
     internal lateinit var privateAtomicCookie: PrivateAtomicCookie
+
     @Inject
     internal lateinit var readerCssProvider: ReaderCssProvider
+
     @Inject
     internal lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
+
     @Inject
     lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+
     @Inject
     lateinit var viewModelFactory: Factory
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var readerTracker: ReaderTracker
+
     @Inject
     lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
+
     @Inject
     lateinit var contextProvider: ContextProvider
+
     @Inject
     lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
+
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 

@@ -54,15 +54,20 @@ import javax.inject.Inject
 
 class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragment_layout) {
     private var bookmarksSavedLocallyDialog: AlertDialog? = null
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var imageManager: ImageManager
     private lateinit var viewModel: ReaderDiscoverViewModel
+
     @Inject
     lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+
     @Inject
     lateinit var readerTracker: ReaderTracker
     private lateinit var parentViewModel: ReaderViewModel

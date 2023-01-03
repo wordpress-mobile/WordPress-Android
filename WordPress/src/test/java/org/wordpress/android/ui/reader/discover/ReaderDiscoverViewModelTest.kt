@@ -94,24 +94,34 @@ private const val ON_RECOMMENDED_BLOG_FOLLOW_CLICKED_PARAM_POSITION = 2
 class ReaderDiscoverViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var readerDiscoverDataProvider: ReaderDiscoverDataProvider
+
     @Mock
     private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
+
     @Mock
     private lateinit var menuUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
+
     @Mock
     private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
+
     @Mock
     private lateinit var reblogUseCase: ReblogUseCase
+
     @Mock
     private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+
     @Mock
     private lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
+
     @Mock
     private lateinit var readerTracker: ReaderTracker
+
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     private lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+
     @Mock
     private lateinit var parentViewModel: ReaderViewModel
 

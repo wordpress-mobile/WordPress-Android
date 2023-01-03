@@ -32,12 +32,16 @@ import java.util.Date
 class ExPlatTest : BaseUnitTest() {
     @Mock
     lateinit var experiments: Lazy<Set<Experiment>>
+
     @Mock
     lateinit var experimentStore: ExperimentStore
+
     @Mock
     lateinit var appLog: AppLogWrapper
+
     @Mock
     lateinit var accountStore: AccountStore
+
     @Mock
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
     private lateinit var exPlat: ExPlat

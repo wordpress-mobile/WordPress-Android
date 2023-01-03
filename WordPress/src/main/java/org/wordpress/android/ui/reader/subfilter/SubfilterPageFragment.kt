@@ -42,10 +42,13 @@ import javax.inject.Inject
 class SubfilterPageFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
+
     @Inject
     lateinit var statsUtils: StatsUtils
 

@@ -23,6 +23,7 @@ class PlansListAdapter(
     private val itemClickListener: (PlanOffersModel) -> Unit
 ) : Adapter<PlansItemViewHolder>() {
     private val list = mutableListOf<PlanOffersModel>()
+
     @Inject
     lateinit var imageManager: ImageManager
 

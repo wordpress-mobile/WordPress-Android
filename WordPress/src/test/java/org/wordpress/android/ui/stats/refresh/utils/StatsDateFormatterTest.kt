@@ -26,6 +26,7 @@ import java.util.TimeZone
 class StatsDateFormatterTest : BaseUnitTest() {
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
     private lateinit var statsDateFormatter: StatsDateFormatter

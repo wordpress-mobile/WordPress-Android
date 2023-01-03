@@ -19,6 +19,7 @@ import javax.inject.Inject
 class DynamicCardMenuFragment : BottomSheetDialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var imageManager: ImageManager
     private lateinit var viewModel: DynamicCardMenuViewModel

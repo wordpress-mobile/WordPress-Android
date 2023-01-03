@@ -28,18 +28,25 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 @ExperimentalCoroutinesApi
 class FeatureAnnouncementViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: FeatureAnnouncementViewModel
+
     @Mock
     lateinit var onDialogClosedObserver: Observer<Unit>
+
     @Mock
     lateinit var onAnnouncementDetailsRequestedObserver: Observer<String>
+
     @Mock
     lateinit var featuresObserver: Observer<List<FeatureAnnouncementItem>>
+
     @Mock
     lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
+
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
+
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
 

@@ -24,6 +24,7 @@ import javax.inject.Inject
 class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: DomainsDashboardViewModel
@@ -83,6 +84,7 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
 
     companion object {
         const val TAG = "DOMAINS_DASHBOARD_FRAGMENT"
+
         @JvmStatic
         fun newInstance() = DomainsDashboardFragment()
     }

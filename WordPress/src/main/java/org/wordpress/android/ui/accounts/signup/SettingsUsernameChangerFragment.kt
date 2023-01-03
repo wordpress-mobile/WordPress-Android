@@ -35,6 +35,7 @@ import org.wordpress.android.widgets.WPDialogSnackbar
  */
 class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragment() {
     private lateinit var dialogController: FullScreenDialogController
+
     @Suppress("DEPRECATION")
     private var progressDialog: ProgressDialog? = null
 

@@ -17,6 +17,7 @@ class PhotoPickerAdapter internal constructor(
 ) : Adapter<ThumbnailViewHolder>() {
     @Suppress("DEPRECATION")
     private val thumbnailViewUtils = ThumbnailViewUtils(imageManager)
+
     @Suppress("DEPRECATION")
     private var mediaList = listOf<PhotoPickerUiItem>()
 

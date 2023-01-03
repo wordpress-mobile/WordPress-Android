@@ -44,11 +44,13 @@ private const val CURRENT_LANGUAGE = "en"
 @RunWith(MockitoJUnitRunner::class)
 class ReaderInterestsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ReaderInterestsViewModel
+
     @Mock
     lateinit var parentViewModel: ReaderViewModel
 
     @Mock
     lateinit var readerTagRepository: ReaderTagRepository
+
     @Mock
     lateinit var readerTracker: ReaderTracker
 

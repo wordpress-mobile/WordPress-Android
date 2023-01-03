@@ -21,10 +21,13 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @RunWith(MockitoJUnitRunner::class)
 class ReaderFetchRelatedPostsUseCaseTest : BaseUnitTest() {
     lateinit var useCase: ReaderFetchRelatedPostsUseCase
+
     @Mock
     lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var readerPost: ReaderPost
 

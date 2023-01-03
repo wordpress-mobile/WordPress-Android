@@ -37,16 +37,22 @@ import java.util.SortedMap
 class SearchListViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var pagesViewModel: PagesViewModel
+
     @Mock
     lateinit var createPageListItemLabelsUseCase: CreatePageListItemLabelsUseCase
+
     @Mock
     lateinit var pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
+
     @Mock
     lateinit var pageListItemActionsUseCase: CreatePageListItemActionsUseCase
+
     @Mock
     lateinit var createUploadStateUseCase: PostModelUploadUiStateUseCase
 

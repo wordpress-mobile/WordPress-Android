@@ -29,8 +29,10 @@ import javax.inject.Inject
 class UnifiedCommentsActivity : LocaleAwareActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     @Inject
     lateinit var selectedSiteRepository: SelectedSiteRepository
     private lateinit var viewModel: UnifiedCommentActivityViewModel

@@ -78,32 +78,46 @@ class PostsListActivity : LocaleAwareActivity(),
     ScrollableViewInitializedListener {
     @Inject
     internal lateinit var siteStore: SiteStore
+
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     internal lateinit var uiHelpers: UiHelpers
+
     @Inject
     internal lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
+
     @Inject
     internal lateinit var previewStateHelper: PreviewStateHelper
+
     @Inject
     internal lateinit var progressDialogHelper: ProgressDialogHelper
+
     @Inject
     internal lateinit var dispatcher: Dispatcher
+
     @Inject
     internal lateinit var uploadActionUseCase: UploadActionUseCase
+
     @Inject
     internal lateinit var snackbarSequencer: SnackbarSequencer
+
     @Inject
     internal lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+
     @Inject
     internal lateinit var systemNotificationTracker: SystemNotificationsTracker
+
     @Inject
     internal lateinit var editPostRepository: EditPostRepository
+
     @Inject
     internal lateinit var mediaPickerLauncher: MediaPickerLauncher
+
     @Inject
     internal lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
+
     @Inject
     internal lateinit var bloggingRemindersViewModel: BloggingRemindersViewModel
 

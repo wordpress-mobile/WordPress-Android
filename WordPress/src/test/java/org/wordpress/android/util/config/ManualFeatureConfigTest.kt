@@ -16,8 +16,10 @@ import org.wordpress.android.util.BuildConfigWrapper
 class ManualFeatureConfigTest {
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     lateinit var appConfig: AppConfig
+
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
     private lateinit var manualFeatureConfig: ManualFeatureConfig

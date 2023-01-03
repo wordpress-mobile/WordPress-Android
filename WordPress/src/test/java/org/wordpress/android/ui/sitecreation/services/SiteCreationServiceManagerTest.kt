@@ -47,10 +47,13 @@ private val FAILURE_STATE = SiteCreationServiceState(FAILURE)
 class SiteCreationServiceManagerTest : BaseUnitTest() {
     @Mock
     lateinit var useCase: CreateSiteUseCase
+
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var serviceListener: SiteCreationServiceManagerListener
+
     @Mock
     lateinit var tracker: SiteCreationTracker
 

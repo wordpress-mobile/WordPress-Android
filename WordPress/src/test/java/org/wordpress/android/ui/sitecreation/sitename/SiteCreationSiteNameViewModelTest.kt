@@ -18,6 +18,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 class SiteCreationSiteNameViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var analyticsTracker: SiteCreationTracker
+
     @Mock
     lateinit var dispatcher: CoroutineDispatcher
 

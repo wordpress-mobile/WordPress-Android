@@ -29,6 +29,7 @@ import javax.inject.Inject
 class SuggestionActivity : LocaleAwareActivity() {
     private var suggestionAdapter: SuggestionAdapter? = null
     private var siteId: Long? = null
+
     @Inject
     lateinit var viewModel: SuggestionViewModel
     private lateinit var binding: SuggestUsersActivityBinding

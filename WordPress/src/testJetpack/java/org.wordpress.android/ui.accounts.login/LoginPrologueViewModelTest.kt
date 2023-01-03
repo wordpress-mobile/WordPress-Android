@@ -21,8 +21,10 @@ import org.wordpress.android.viewmodel.Event
 class LoginPrologueViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var unifiedLoginTracker: UnifiedLoginTracker
+
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
     private lateinit var viewModel: LoginPrologueViewModel

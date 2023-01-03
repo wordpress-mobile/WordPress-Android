@@ -102,20 +102,28 @@ private val DOWNLOAD_VALID_UNTIL = Date()
 class ActivityLogViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var store: ActivityLogStore
+
     @Mock
     private lateinit var site: SiteModel
+
     @Mock
     private lateinit var getRestoreStatusUseCase: GetRestoreStatusUseCase
+
     @Mock
     private lateinit var getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase
+
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
     @Mock
     private lateinit var mStatsDateUtils: StatsDateUtils
+
     @Mock
     private lateinit var activityLogTracker: ActivityLogTracker
+
     @Mock
     private lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+
     @Mock
     private lateinit var postDismissBackupDownloadUseCase: PostDismissBackupDownloadUseCase
 

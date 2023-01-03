@@ -30,12 +30,16 @@ import org.wordpress.android.viewmodel.ResourceProvider
 @RunWith(MockitoJUnitRunner::class)
 class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingAddCategoryViewModel
+
     @Mock
     lateinit var getCategoriesUseCase: GetCategoriesUseCase
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var siteModel: SiteModel
 

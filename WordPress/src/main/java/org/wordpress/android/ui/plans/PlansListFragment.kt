@@ -24,6 +24,7 @@ import javax.inject.Inject
 class PlansListFragment : Fragment() {
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var viewModel: PlansViewModel
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 

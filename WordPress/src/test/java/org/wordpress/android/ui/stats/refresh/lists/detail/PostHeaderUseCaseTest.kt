@@ -22,6 +22,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 class PostHeaderUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var statsPostProvider: StatsPostProvider
+
     @Mock
     lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: PostHeaderUseCase

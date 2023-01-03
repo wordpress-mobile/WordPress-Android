@@ -38,8 +38,10 @@ const val KEY_RESTORE_RESTORE_ID = "key_restore_restore_id"
 class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var imageManager: ImageManager
     private lateinit var viewModel: RestoreViewModel

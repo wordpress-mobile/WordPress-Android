@@ -29,12 +29,16 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var site: SiteModel
     private val currentBottomSheetPostId = LocalId(0)
+
     @Mock
     lateinit var uploadStarter: UploadStarter
+
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var editPostRepository: EditPostRepository
+
     @Mock
     lateinit var savePostToDbUseCase: SavePostToDbUseCase
     private lateinit var viewModel: PostListMainViewModel

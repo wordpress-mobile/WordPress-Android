@@ -19,6 +19,7 @@ import javax.inject.Inject
 class StatsWidgetColorSelectionDialogFragment : AppCompatDialogFragment() {
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsColorSelectionViewModel

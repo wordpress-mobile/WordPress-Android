@@ -33,8 +33,10 @@ import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostU
 class CreatePageListItemLabelsUseCaseTest {
     @Mock
     private lateinit var autoSaveConflictResolver: AutoSaveConflictResolver
+
     @Mock
     private lateinit var labelColorUseCase: PostPageListLabelColorUseCase
+
     @Mock
     private lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private lateinit var useCase: CreatePageListItemLabelsUseCase

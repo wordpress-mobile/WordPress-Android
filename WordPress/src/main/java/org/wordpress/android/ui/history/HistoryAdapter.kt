@@ -18,6 +18,7 @@ class HistoryAdapter(
     private val itemClickListener: (HistoryListItem) -> Unit
 ) : Adapter<HistoryViewHolder>() {
     private val list = mutableListOf<HistoryListItem>()
+
     @Inject
     lateinit var imageManager: ImageManager
 

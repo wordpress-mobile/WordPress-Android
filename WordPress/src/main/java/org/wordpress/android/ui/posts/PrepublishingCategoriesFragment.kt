@@ -35,8 +35,10 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingCategoriesViewModel
     private lateinit var parentViewModel: PrepublishingViewModel
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var dispatcher: Dispatcher
 
@@ -192,6 +194,7 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         const val NEEDS_REQUEST_LAYOUT = "prepublishing_categories_fragment_needs_request_layout"
         const val ADD_CATEGORY_REQUEST = "prepublishing_add_category_request"
         const val SELECTED_CATEGORY_IDS = "prepublishing_selected_category_ids"
+
         @JvmStatic
         fun newInstance(
             site: SiteModel,

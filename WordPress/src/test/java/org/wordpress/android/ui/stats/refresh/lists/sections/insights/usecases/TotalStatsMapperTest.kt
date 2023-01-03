@@ -16,6 +16,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class TotalStatsMapperTest : BaseUnitTest() {
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var statsUtils: StatsUtils
     private lateinit var mapper: TotalStatsMapper

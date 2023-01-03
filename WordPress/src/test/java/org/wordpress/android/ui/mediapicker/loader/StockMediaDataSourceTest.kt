@@ -29,8 +29,10 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 class StockMediaDataSourceTest : BaseUnitTest() {
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var stockMediaStore: StockMediaStore
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     private lateinit var stockMediaDataSource: StockMediaDataSource

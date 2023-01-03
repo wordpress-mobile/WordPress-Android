@@ -25,12 +25,16 @@ import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
     private val dummyOnClick: (Long, Long, ReaderPostCardActionType) -> Unit = { _, _, _ -> }
     private lateinit var builder: ReaderPostMoreButtonUiStateBuilder
+
     @Mock
     lateinit var readerPostTableWrapper: ReaderPostTableWrapper
+
     @Mock
     lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
+
     @Mock
     lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+
     @Mock
     lateinit var mSeenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
 

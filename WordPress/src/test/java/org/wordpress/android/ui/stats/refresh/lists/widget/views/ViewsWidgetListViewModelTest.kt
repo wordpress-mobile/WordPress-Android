@@ -33,16 +33,22 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class ViewsWidgetListViewModelTest {
     @Mock
     private lateinit var siteStore: SiteStore
+
     @Mock
     private lateinit var visitsAndViewsStore: VisitsAndViewsStore
+
     @Mock
     private lateinit var overviewMapper: OverviewMapper
+
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
     @Mock
     private lateinit var statsDateFormatter: StatsDateFormatter
+
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     private lateinit var site: SiteModel
     private lateinit var viewModel: ViewsWidgetListViewModel

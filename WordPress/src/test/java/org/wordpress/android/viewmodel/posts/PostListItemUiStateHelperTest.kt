@@ -49,10 +49,13 @@ private val POST_STATE_TRASHED = PostStatus.TRASHED.toString()
 class PostListItemUiStateHelperTest {
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     private lateinit var uploadUiStateUseCase: PostModelUploadUiStateUseCase
+
     @Mock
     private lateinit var uploadStatusTracker: PostModelUploadStatusTracker
+
     @Mock
     private lateinit var labelColorUseCase: PostPageListLabelColorUseCase
     private lateinit var helper: PostListItemUiStateHelper

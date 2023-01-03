@@ -29,12 +29,16 @@ class CommentSnippetAdapter constructor(
 ) : Adapter<CommentsSnippetViewHolder<*>>() {
     @Inject
     lateinit var threadedCommentsUtils: ThreadedCommentsUtils
+
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var accountStore: AccountStore
+
     @Inject
     lateinit var readerTracker: ReaderTracker
+
     @Inject
     lateinit var uiHelpers: UiHelpers
 

@@ -35,10 +35,13 @@ private const val SOURCE = "source"
 class PostLikeUseCaseTest : BaseUnitTest() {
     @Mock
     private lateinit var accountStore: AccountStore
+
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
+
     @Mock
     private lateinit var readerTracker: ReaderTracker
 

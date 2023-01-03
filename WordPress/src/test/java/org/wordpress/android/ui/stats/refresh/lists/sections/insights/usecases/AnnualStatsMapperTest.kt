@@ -24,6 +24,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 class AnnualStatsMapperTest {
     @Mock
     lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
     @Mock
     lateinit var statsUtils: StatsUtils
     private lateinit var annualStatsMapper: AnnualStatsMapper

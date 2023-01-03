@@ -44,18 +44,25 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var insightsStore: TagsStore
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var statsUtils: StatsUtils
+
     @Mock
     lateinit var tracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var popupMenuHandler: ItemPopupMenuHandler
+
     @Mock
     lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCase: TagsAndCategoriesUseCase

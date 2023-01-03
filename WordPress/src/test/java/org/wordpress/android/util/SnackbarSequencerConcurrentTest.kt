@@ -29,10 +29,13 @@ private const val SNACKBAR_DURATION_MS = 500L
 class SnackbarSequencerConcurrentTest : BaseUnitTest() {
     @Mock
     lateinit var wpSnackbarWrapper: WPSnackbarWrapper
+
     @Mock
     lateinit var wpSnackbar: Snackbar
+
     @Mock
     lateinit var view: View
+
     @Mock
     lateinit var activity: Activity
 

@@ -22,8 +22,10 @@ import org.wordpress.android.viewmodel.Event
 class StatsWidgetConfigureViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     private lateinit var siteSelectionViewModel: StatsSiteSelectionViewModel
+
     @Mock
     private lateinit var colorSelectionViewModel: StatsColorSelectionViewModel
     private lateinit var viewModel: StatsWidgetConfigureViewModel

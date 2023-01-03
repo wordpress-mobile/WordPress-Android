@@ -46,6 +46,7 @@ import org.wordpress.android.util.NoDelayCoroutineDispatcher
 class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
     @Mock
     private lateinit var commentStore: CommentsStore
+
     @Mock
     private lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
 

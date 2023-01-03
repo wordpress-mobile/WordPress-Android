@@ -26,9 +26,11 @@ class WordPressGlideModule : AppGlideModule() {
     @Inject
     @Named("custom-ssl")
     lateinit var requestQueue: RequestQueue
+
     @Inject
     @Named("no-redirects")
     lateinit var noRedirectsRequestQueue: RequestQueue
+
     @Inject
     lateinit var glideRequestFactory: GlideRequestFactory
 

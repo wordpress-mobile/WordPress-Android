@@ -33,8 +33,10 @@ private const val REMOTE_SITE_ID = 0L
 @ExperimentalCoroutinesApi
 class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ActivityLogTypeFilterViewModel
+
     @Mock
     private lateinit var parentViewModel: ActivityLogViewModel
+
     @Mock
     private lateinit var activityLogStore: ActivityLogStore
 

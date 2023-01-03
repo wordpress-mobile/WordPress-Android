@@ -53,20 +53,28 @@ class SubFilterViewModelTest : BaseUnitTest() {
      */
     @Mock
     private lateinit var initialTag: ReaderTag
+
     @Mock
     private lateinit var savedTag: ReaderTag
+
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     private lateinit var subfilterListItemMapper: SubfilterListItemMapper
+
     @Mock
     private lateinit var eventBusWrapper: EventBusWrapper
+
     @Mock
     private lateinit var accountStore: AccountStore
+
     @Mock
     private lateinit var readerTracker: ReaderTracker
+
     @Mock
     private lateinit var savedState: Bundle
+
     @Mock
     private lateinit var filter: SubfilterListItem
 

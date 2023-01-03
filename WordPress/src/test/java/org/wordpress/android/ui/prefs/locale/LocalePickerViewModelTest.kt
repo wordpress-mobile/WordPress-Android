@@ -22,8 +22,10 @@ import java.util.Locale
 class LocalePickerViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var localeProvider: LocaleProvider
+
     @Mock
     lateinit var context: Context
 
@@ -35,10 +37,13 @@ class LocalePickerViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var dismissBottomSheetObserver: Observer<Unit>
+
     @Mock
     lateinit var expandBottomSheetObserver: Observer<Unit>
+
     @Mock
     lateinit var hideKeyboardObserver: Observer<Unit>
+
     @Mock
     lateinit var clearSearchFieldObserver: Observer<Unit>
 

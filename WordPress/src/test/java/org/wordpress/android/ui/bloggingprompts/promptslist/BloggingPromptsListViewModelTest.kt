@@ -19,18 +19,23 @@ import java.util.Date
 
 @ExperimentalCoroutinesApi
 class BloggingPromptsListViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var fetchBloggingPromptsListUseCase: FetchBloggingPromptsListUseCase
-    @Mock private lateinit var tracker: BloggingPromptsListAnalyticsTracker
-    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    private lateinit var fetchBloggingPromptsListUseCase: FetchBloggingPromptsListUseCase
+
+    @Mock
+    private lateinit var tracker: BloggingPromptsListAnalyticsTracker
+
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     lateinit var viewModel: BloggingPromptsListViewModel
 
     @Before
     fun setUp() {
         viewModel = BloggingPromptsListViewModel(
-                fetchBloggingPromptsListUseCase,
-                tracker,
-                networkUtilsWrapper,
-                testDispatcher()
+            fetchBloggingPromptsListUseCase,
+            tracker,
+            networkUtilsWrapper,
+            testDispatcher()
         )
     }
 

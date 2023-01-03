@@ -34,6 +34,7 @@ class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
 
     @Inject
     lateinit var meGravatarLoader: MeGravatarLoader
+
     @Inject
     lateinit var uiHelpers: UiHelpers
     private var loginListener: LoginListener? = null

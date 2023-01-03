@@ -115,6 +115,7 @@ class ScanHistoryListViewModel @Inject constructor(
         sealed class EmptyUiState : ScanHistoryUiState(emptyVisibility = true) {
             object EmptyHistory : EmptyUiState() {
                 val label: UiString = UiStringRes(R.string.scan_history_no_threats_found)
+
                 @DrawableRes
                 val img: Int = R.drawable.img_illustration_empty_results_216dp
             }

@@ -45,20 +45,28 @@ private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = "empty_result_query" to 0
 class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var fetchDomainsUseCase: FetchDomainsUseCase
+
     @Mock
     private lateinit var tracker: SiteCreationTracker
+
     @Mock
     private lateinit var uiStateObserver: Observer<DomainsUiState>
+
     @Mock
     private lateinit var createSiteBtnObserver: Observer<String>
+
     @Mock
     private lateinit var clearBtnObserver: Observer<Unit>
+
     @Mock
     private lateinit var onHelpClickedObserver: Observer<Unit>
+
     @Mock
     private lateinit var networkUtils: NetworkUtilsWrapper
+
     @Mock
     private lateinit var mSiteCreationDomainSanitizer: SiteCreationDomainSanitizer
 

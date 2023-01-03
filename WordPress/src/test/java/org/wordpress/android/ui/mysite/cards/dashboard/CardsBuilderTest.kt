@@ -36,8 +36,10 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 class CardsBuilderTest : BaseUnitTest() {
     @Mock
     lateinit var todaysStatsCardBuilder: TodaysStatsCardBuilder
+
     @Mock
     lateinit var postCardBuilder: PostCardBuilder
+
     @Mock
     lateinit var bloggingPromptCardsBuilder: BloggingPromptCardBuilder
     private lateinit var cardsBuilder: CardsBuilder

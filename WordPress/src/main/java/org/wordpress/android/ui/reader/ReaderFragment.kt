@@ -59,12 +59,16 @@ import javax.inject.Inject
 class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableViewInitializedListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: ReaderViewModel

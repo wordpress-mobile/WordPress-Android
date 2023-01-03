@@ -55,6 +55,7 @@ sealed class QRCodeAuthUiState {
             override val type = AUTHENTICATION_FAILED
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_auth_failed_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_error_auth_failed_subtitle)
+
             @DrawableRes
             override val image = R.drawable.img_illustration_empty_results_216dp
         }
@@ -66,6 +67,7 @@ sealed class QRCodeAuthUiState {
             override val type = EXPIRED_TOKEN
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_expired_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_error_expired_subtitle)
+
             @DrawableRes
             override val image = R.drawable.img_illustration_empty_results_216dp
         }
@@ -77,6 +79,7 @@ sealed class QRCodeAuthUiState {
             override val type = INVALID_DATA
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_invalid_data_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_error_invalid_data_subtitle)
+
             @DrawableRes
             override val image = R.drawable.img_illustration_empty_results_216dp
         }
@@ -88,6 +91,7 @@ sealed class QRCodeAuthUiState {
             override val type = NO_INTERNET
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_no_connection_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_error_no_connection_subtitle)
+
             @DrawableRes
             override val image = R.drawable.img_illustration_cloud_off_152dp
         }
@@ -97,6 +101,7 @@ sealed class QRCodeAuthUiState {
         override val type = CONTENT
         open val title: UiString? = null
         open val subtitle: UiString? = null
+
         @DrawableRes
         open val image: Int? = null
         open val isProgressShowing: Boolean = false
@@ -125,6 +130,7 @@ sealed class QRCodeAuthUiState {
                 )
             }
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_validated_subtitle)
+
             @DrawableRes
             override val image = R.drawable.img_illustration_qrcode_auth_validated_152dp
         }
@@ -148,6 +154,7 @@ sealed class QRCodeAuthUiState {
                 )
             }
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_validated_subtitle)
+
             @DrawableRes
             override val image = R.drawable.img_illustration_qrcode_auth_validated_152dp
             override val alpha: Float = BLURRED_ALPHA
@@ -161,6 +168,7 @@ sealed class QRCodeAuthUiState {
             override val type = DONE
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_done_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_done_subtitle)
+
             @DrawableRes
             override val image = R.drawable.img_illustration_qrcode_auth_login_success_218dp
         }

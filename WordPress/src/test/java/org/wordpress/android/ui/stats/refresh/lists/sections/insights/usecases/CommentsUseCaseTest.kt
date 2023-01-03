@@ -43,16 +43,22 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 class CommentsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var insightsStore: CommentsStore
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var tracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var popupMenuHandler: ItemPopupMenuHandler
+
     @Mock
     lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
     @Mock
     lateinit var statsUtils: StatsUtils
     private lateinit var useCase: CommentsUseCase

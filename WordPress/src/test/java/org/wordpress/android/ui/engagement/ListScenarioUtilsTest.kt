@@ -27,12 +27,16 @@ import org.wordpress.android.util.image.ImageManager
 class ListScenarioUtilsTest {
     @Mock
     lateinit var imageManager: ImageManager
+
     @Mock
     lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
+
     @Mock
     lateinit var note: Note
+
     @Mock
     lateinit var context: Context
+
     @Mock
     lateinit var spannableBuilder: SpannableStringBuilder
 

@@ -46,20 +46,28 @@ private const val MOCKED_DESIGN_DEMO_URL = "mockedDemoUrl"
 class HomePagePickerViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var networkUtils: NetworkUtilsWrapper
+
     @Mock
     lateinit var fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
+
     @Mock
     lateinit var uiStateObserver: Observer<LayoutPickerUiState>
+
     @Mock
     lateinit var onDesignActionObserver: Observer<DesignSelectionAction>
+
     @Mock
     lateinit var onPreviewActionObserver: Observer<DesignPreviewAction>
+
     @Mock
     lateinit var previewModeObserver: Observer<PreviewMode>
+
     @Mock
     lateinit var analyticsTracker: SiteCreationTracker
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
 

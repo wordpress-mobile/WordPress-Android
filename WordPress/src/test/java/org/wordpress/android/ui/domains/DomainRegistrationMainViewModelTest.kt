@@ -20,6 +20,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 class DomainRegistrationMainViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var tracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var site: SiteModel
 

@@ -39,8 +39,10 @@ import javax.inject.Inject
 class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_fragment) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
 

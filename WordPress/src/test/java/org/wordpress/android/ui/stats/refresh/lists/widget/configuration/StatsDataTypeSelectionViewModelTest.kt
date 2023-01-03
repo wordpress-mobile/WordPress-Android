@@ -17,6 +17,7 @@ import org.wordpress.android.viewmodel.Event
 class StatsDataTypeSelectionViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     private lateinit var accountStore: AccountStore
     private lateinit var viewModel: StatsDataTypeSelectionViewModel

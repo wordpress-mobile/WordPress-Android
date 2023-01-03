@@ -15,6 +15,7 @@ sealed class ThreatDetailsNavigationEvents {
     ) : ThreatDetailsNavigationEvents() {
         @StringRes
         val positiveButtonLabel: Int = R.string.dialog_button_ok
+
         @StringRes
         val negativeButtonLabel: Int = R.string.dialog_button_cancel
     }

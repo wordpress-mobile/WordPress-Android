@@ -30,8 +30,10 @@ import java.util.TimeZone
 class EditPostRepositoryTest : BaseUnitTest() {
     @Mock
     lateinit var localeManager: LocaleManagerWrapper
+
     @Mock
     lateinit var postStore: PostStore
+
     @Mock
     lateinit var postUtils: PostUtilsWrapper
     private lateinit var editPostRepository: EditPostRepository

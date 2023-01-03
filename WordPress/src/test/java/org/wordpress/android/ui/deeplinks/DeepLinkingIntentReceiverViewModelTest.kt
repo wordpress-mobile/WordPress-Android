@@ -29,20 +29,28 @@ import org.wordpress.android.viewmodel.ContextProvider
 class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var deepLinkHandlers: DeepLinkHandlers
+
     @Mock
     lateinit var accountStore: AccountStore
+
     @Mock
     lateinit var deepLinkUriUtils: DeepLinkUriUtils
+
     @Mock
     lateinit var serverTrackingHandler: ServerTrackingHandler
+
     @Mock
     lateinit var deepLinkTrackingUtils: DeepLinkTrackingUtils
+
     @Mock
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+
     @Mock
     lateinit var contextProvider: ContextProvider
+
     @Mock
     lateinit var context: Context
+
     @Mock
     lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
     private lateinit var viewModel: DeepLinkingIntentReceiverViewModel

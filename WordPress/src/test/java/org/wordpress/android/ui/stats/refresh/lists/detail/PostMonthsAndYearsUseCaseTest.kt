@@ -48,16 +48,22 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var store: PostDetailStore
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var statsPostProvider: StatsPostProvider
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var tracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var postDetailMapper: PostDetailMapper
     private lateinit var useCase: PostMonthsAndYearsUseCase

@@ -50,30 +50,43 @@ private const val LAST_STEP_INDEX = STEP_COUNT
 class SiteCreationMainVMTest : BaseUnitTest() {
     @Mock
     lateinit var tracker: SiteCreationTracker
+
     @Mock
     lateinit var navigationTargetObserver: Observer<NavigationTarget>
+
     @Mock
     lateinit var wizardFinishedObserver: Observer<CreateSiteState>
+
     @Mock
     lateinit var wizardExitedObserver: Observer<Unit>
+
     @Mock
     lateinit var dialogActionsObserver: Observer<DialogHolder>
+
     @Mock
     lateinit var onBackPressedObserver: Observer<Unit>
+
     @Mock
     lateinit var savedInstanceState: Bundle
+
     @Mock
     lateinit var wizardManager: WizardManager<SiteCreationStep>
+
     @Mock
     lateinit var siteCreationStep: SiteCreationStep
+
     @Mock
     lateinit var networkUtils: NetworkUtilsWrapper
+
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
+
     @Mock
     lateinit var imageManager: ImageManager
+
     @Mock
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
     private val wizardManagerNavigatorLiveData = SingleLiveEvent<SiteCreationStep>()

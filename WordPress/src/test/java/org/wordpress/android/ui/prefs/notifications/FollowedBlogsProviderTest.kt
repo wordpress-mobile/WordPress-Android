@@ -18,8 +18,10 @@ import org.wordpress.android.ui.utils.UrlUtilsWrapper
 class FollowedBlogsProviderTest {
     @Mock
     lateinit var accountStore: AccountStore
+
     @Mock
     lateinit var readerBlogTable: ReaderBlogTableWrapper
+
     @Mock
     lateinit var urlUtils: UrlUtilsWrapper
     private lateinit var followedBlogsProvider: FollowedBlogsProvider

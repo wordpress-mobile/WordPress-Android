@@ -24,6 +24,7 @@ import javax.inject.Inject
 class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layout) {
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ReaderInterestsViewModel

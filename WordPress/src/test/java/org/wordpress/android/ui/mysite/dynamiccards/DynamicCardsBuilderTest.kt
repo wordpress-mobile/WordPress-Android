@@ -25,6 +25,7 @@ import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 class DynamicCardsBuilderTest : BaseUnitTest() {
     @Mock
     lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
+
     @Mock
     lateinit var quickStartItemBuilder: QuickStartItemBuilder
 

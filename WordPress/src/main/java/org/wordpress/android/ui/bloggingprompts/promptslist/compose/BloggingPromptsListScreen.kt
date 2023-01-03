@@ -39,13 +39,13 @@ fun BloggingPromptsListScreen(
     onNavigateUp: () -> Unit,
 ) {
     Scaffold(
-            topBar = {
-                MainTopAppBar(
-                        title = stringResource(R.string.blogging_prompts_list_title),
-                        navigationIcon = NavigationIcons.BackIcon,
-                        onNavigationIconClick = onNavigateUp
-                )
-            },
+        topBar = {
+            MainTopAppBar(
+                title = stringResource(R.string.blogging_prompts_list_title),
+                navigationIcon = NavigationIcons.BackIcon,
+                onNavigationIconClick = onNavigateUp
+            )
+        },
     ) {
         Surface(modifier = Modifier.fillMaxSize()) {
             when (uiState) {
@@ -65,22 +65,22 @@ private fun ListContent(
 ) {
     // TODO thomashorta this is all just temporary for now, the actual list item will be created in the next task
     val dateFormat = DateFormat.getDateInstance(
-            DateFormat.MEDIUM,
-            LocaleManager.getSafeLocale(LocalContext.current)
+        DateFormat.MEDIUM,
+        LocaleManager.getSafeLocale(LocalContext.current)
     )
     LazyColumn(
-            Modifier.fillMaxWidth(),
+        Modifier.fillMaxWidth(),
     ) {
         items(promptsList) {
             val answeredText = if (it.isAnswered) "- Answered" else ""
             Column(Modifier.padding(16.dp)) {
                 Text(
-                        it.text,
-                        style = MaterialTheme.typography.subtitle1
+                    it.text,
+                    style = MaterialTheme.typography.subtitle1
                 )
                 Text(
-                        "${dateFormat.format(it.date)} - ${it.answersCount} answers $answeredText",
-                        style = MaterialTheme.typography.body2
+                    "${dateFormat.format(it.date)} - ${it.answersCount} answers $answeredText",
+                    style = MaterialTheme.typography.body2
                 )
             }
         }
@@ -91,8 +91,8 @@ private fun ListContent(
 private fun LoadingContent() {
     Box(Modifier.fillMaxSize()) {
         Text(
-                "Loading...",
-                modifier = Modifier.align(Alignment.Center),
+            "Loading...",
+            modifier = Modifier.align(Alignment.Center),
         )
     }
 }

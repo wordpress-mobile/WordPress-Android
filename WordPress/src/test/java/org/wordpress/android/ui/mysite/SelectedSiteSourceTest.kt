@@ -21,6 +21,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 class SelectedSiteSourceTest : BaseUnitTest() {
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     lateinit var dispatcher: Dispatcher
     private lateinit var source: SelectedSiteSource

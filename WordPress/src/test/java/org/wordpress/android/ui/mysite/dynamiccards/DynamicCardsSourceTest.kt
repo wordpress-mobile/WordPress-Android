@@ -21,8 +21,10 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 class DynamicCardsSourceTest : BaseUnitTest() {
     @Mock
     lateinit var dynamicCardStore: DynamicCardStore
+
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     lateinit var siteModel: SiteModel
     private lateinit var dynamicCardsSource: DynamicCardsSource

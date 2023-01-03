@@ -21,6 +21,7 @@ import javax.inject.Inject
 class StatsActivity : LocaleAwareActivity() {
     @Inject
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     private val viewModel: StatsViewModel by viewModels()

@@ -27,18 +27,25 @@ import java.util.Date
 class InvitePeopleUtilsTest : BaseUnitTest() {
     @Mock
     lateinit var siteStore: SiteStore
+
     @Mock
     lateinit var siteModel: SiteModel
+
     @Mock
     lateinit var contextProvider: ContextProvider
+
     @Mock
     lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
     @Mock
     lateinit var roleUtilsWrapper: RoleUtilsWrapper
+
     @Mock
     lateinit var context: Context
+
     @Mock
     lateinit var simpleDateFormatWrapper: SimpleDateFormatWrapper
+
     @Mock
     lateinit var dateFormat: DateFormat
 

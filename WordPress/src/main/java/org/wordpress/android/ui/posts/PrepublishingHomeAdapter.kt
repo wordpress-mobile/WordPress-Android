@@ -22,8 +22,10 @@ private const val submitButtonViewType: Int = 3
 
 class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<PrepublishingHomeViewHolder>() {
     private var items: List<PrepublishingHomeItemUiState> = listOf()
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var imageManager: ImageManager
 

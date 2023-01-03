@@ -28,10 +28,13 @@ import org.wordpress.android.viewmodel.Event
 class MeViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var wordPress: WordPress
+
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     lateinit var recommendApiCallsProvider: RecommendApiCallsProvider
+
     @Mock
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 

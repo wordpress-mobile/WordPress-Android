@@ -22,8 +22,10 @@ import java.util.Locale
 class StatsUtilsTest {
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     private lateinit var percentFormatter: PercentFormatter
     private lateinit var statsUtils: StatsUtils

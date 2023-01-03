@@ -53,16 +53,22 @@ private val selectedDate = Date(0)
 class ClicksUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var store: ClicksStore
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var selectedDateProvider: SelectedDateProvider
+
     @Mock
     lateinit var tracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
     @Mock
     lateinit var statsUtils: StatsUtils
     private lateinit var useCase: ClicksUseCase

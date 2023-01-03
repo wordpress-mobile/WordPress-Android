@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 class PostMediaHandlerTest {
     @Mock
     lateinit var mediaStore: MediaStore
+
     @Mock
     lateinit var dispatcher: Dispatcher
     private lateinit var postMediaHandler: PostMediaHandler

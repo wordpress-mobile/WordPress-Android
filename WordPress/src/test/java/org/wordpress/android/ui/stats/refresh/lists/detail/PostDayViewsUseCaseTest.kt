@@ -36,26 +36,37 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class PostDayViewsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var store: PostDetailStore
+
     @Mock
     lateinit var selectedDateProvider: SelectedDateProvider
+
     @Mock
     lateinit var statsDateFormatter: StatsDateFormatter
+
     @Mock
     lateinit var mapper: PostDayViewsMapper
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var statsPostProvider: StatsPostProvider
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var title: ValueItem
+
     @Mock
     lateinit var barChartItem: BarChartItem
+
     @Mock
     lateinit var emptyModel: PostDetailStatsModel
+
     @Mock
     lateinit var model: PostDetailStatsModel
     private lateinit var useCase: PostDayViewsUseCase

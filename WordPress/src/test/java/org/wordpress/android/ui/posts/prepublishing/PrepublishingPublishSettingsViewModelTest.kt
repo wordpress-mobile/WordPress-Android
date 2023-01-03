@@ -19,8 +19,10 @@ import java.util.Locale
 @ExperimentalCoroutinesApi
 class PrepublishingPublishSettingsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingPublishSettingsViewModel
+
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
 

@@ -23,8 +23,10 @@ import java.util.Date
 class StatsDateSelectorTest : BaseUnitTest() {
     @Mock
     lateinit var selectedDateProvider: SelectedDateProvider
+
     @Mock
     lateinit var statsDateFormatter: StatsDateFormatter
+
     @Mock
     lateinit var siteProvider: StatsSiteProvider
     private val selectedDate = Date(0)

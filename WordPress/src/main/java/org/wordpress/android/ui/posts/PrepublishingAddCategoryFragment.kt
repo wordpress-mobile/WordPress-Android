@@ -31,6 +31,7 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingAddCategoryViewModel
     private lateinit var parentViewModel: PrepublishingViewModel
+
     @Inject
     lateinit var uiHelpers: UiHelpers
 
@@ -207,6 +208,7 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
     companion object {
         const val TAG = "prepublishing_add_category_fragment_tag"
         const val NEEDS_REQUEST_LAYOUT = "prepublishing_add_category_fragment_needs_request_layout"
+
         @JvmStatic
         fun newInstance(
             site: SiteModel,

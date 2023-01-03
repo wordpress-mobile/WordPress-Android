@@ -22,10 +22,13 @@ import java.util.Date
 class LatestPostSummaryMapperTest {
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var statsSinceLabelFormatter: StatsSinceLabelFormatter
+
     @Mock
     lateinit var statsUtils: StatsUtils
+
     @Mock
     lateinit var statsDateFormatter: StatsDateFormatter
     private lateinit var mapper: LatestPostSummaryMapper

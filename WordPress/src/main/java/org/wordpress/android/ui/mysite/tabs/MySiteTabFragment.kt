@@ -93,22 +93,31 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     OnDismissListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
+
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
+
     @Inject
     lateinit var mediaPickerLauncher: MediaPickerLauncher
+
     @Inject
     lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+
     @Inject
     lateinit var quickStartUtils: QuickStartUtilsWrapper
+
     @Inject
     lateinit var quickStartTracker: QuickStartTracker
+
     @Inject
     lateinit var htmlCompatWrapper: HtmlCompatWrapper
     private lateinit var viewModel: MySiteViewModel

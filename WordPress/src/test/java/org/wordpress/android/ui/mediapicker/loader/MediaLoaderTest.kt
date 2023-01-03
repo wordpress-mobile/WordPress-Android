@@ -25,8 +25,10 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 class MediaLoaderTest : BaseUnitTest() {
     @Mock
     lateinit var mediaSource: MediaSource
+
     @Mock
     lateinit var identifier1: Identifier
+
     @Mock
     lateinit var identifier2: Identifier
     private lateinit var mediaLoader: MediaLoader

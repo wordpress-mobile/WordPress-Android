@@ -16,8 +16,10 @@ import javax.inject.Named
 class JetpackAppInstallReceiver : BroadcastReceiver() {
     @Inject
     lateinit var updateNotificationSettingsUseCase: UpdateNotificationSettingsUseCase
+
     @Inject
     lateinit var gcmMessageHandler: GCMMessageHandler
+
     @Inject
     @Named(APPLICATION_SCOPE)
     lateinit var applicationScope: CoroutineScope

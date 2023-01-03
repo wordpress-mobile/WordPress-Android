@@ -63,6 +63,7 @@ class PhotoPickerViewModel @Inject constructor(
     private val _navigateToPreview = MutableLiveData<Event<UriWrapper>>()
     private val _onInsert = MutableLiveData<Event<List<UriWrapper>>>()
     private val _showPopupMenu = MutableLiveData<Event<PopupMenuUiModel>>()
+
     @Suppress("DEPRECATION")
     private val _photoPickerItems = MutableLiveData<List<PhotoPickerItem>>()
     private val _selectedIds = MutableLiveData<List<Long>?>()

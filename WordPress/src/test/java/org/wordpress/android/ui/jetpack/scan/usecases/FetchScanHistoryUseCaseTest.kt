@@ -28,8 +28,10 @@ class FetchScanHistoryUseCaseTest : BaseUnitTest() {
 
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     private lateinit var scanStore: ScanStore
+
     @Mock
     private lateinit var scanTracker: ScanTracker
     private val site: SiteModel = SiteModel()

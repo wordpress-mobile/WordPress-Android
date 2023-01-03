@@ -47,20 +47,28 @@ class ModalLayoutPickerViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var siteStore: SiteStore
+
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     lateinit var supportedBlocksProvider: SupportedBlocksProvider
+
     @Mock
     lateinit var thumbDimensionProvider: ModalLayoutPickerDimensionProvider
+
     @Mock
     lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+
     @Mock
     lateinit var networkUtils: NetworkUtilsWrapper
+
     @Mock
     lateinit var analyticsTracker: ModalLayoutPickerTracker
+
     @Mock
     lateinit var onCreateNewPageRequestedObserver: Observer<Create>
 

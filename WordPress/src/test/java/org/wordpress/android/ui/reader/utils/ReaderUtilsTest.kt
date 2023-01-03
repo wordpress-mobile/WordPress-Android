@@ -17,6 +17,7 @@ import org.wordpress.android.ui.FilteredRecyclerView
 class ReaderUtilsTest {
     @Mock
     lateinit var currentTag: ReaderTag
+
     @Mock
     lateinit var filteredRecyclerView: FilteredRecyclerView
 

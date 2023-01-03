@@ -47,18 +47,25 @@ import java.util.Date
 class FollowersUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var insightsStore: FollowersStore
+
     @Mock
     lateinit var statsSinceLabelFormatter: StatsSinceLabelFormatter
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var tracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var popupMenuHandler: ItemPopupMenuHandler
+
     @Mock
     lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCaseFactory: FollowersUseCaseFactory

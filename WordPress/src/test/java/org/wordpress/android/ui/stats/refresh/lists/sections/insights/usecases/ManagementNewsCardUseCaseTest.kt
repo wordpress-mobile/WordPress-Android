@@ -24,8 +24,10 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class ManagementNewsCardUseCaseTest : BaseUnitTest() {
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
     @Mock
     private lateinit var newsCardHandler: NewsCardHandler
+
     @Mock
     private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var useCase: ManagementNewsCardUseCase

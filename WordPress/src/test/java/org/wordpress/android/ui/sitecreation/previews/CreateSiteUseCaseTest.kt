@@ -38,8 +38,10 @@ private const val TIMEZONE_ID = "timezone_id"
 class CreateSiteUseCaseTest : BaseUnitTest() {
     @Mock
     private lateinit var dispatcher: Dispatcher
+
     @Mock
     private lateinit var store: SiteStore
+
     @Mock
     private lateinit var urlUtilsWrapper: UrlUtilsWrapper
     private lateinit var useCase: CreateSiteUseCase

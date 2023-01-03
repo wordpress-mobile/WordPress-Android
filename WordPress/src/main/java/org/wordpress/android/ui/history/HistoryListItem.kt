@@ -45,10 +45,13 @@ sealed class HistoryListItem(val type: ViewType) {
         // Replace space with T since API returns yyyy-MM-dd hh:mm:ssZ and ISO 8601 format is yyyy-MM-ddThh:mm:ssZ.
         @IgnoredOnParcel
         private val postDate: Date = DateTimeUtils.dateUTCFromIso8601(postDateGmt?.replace(" ", "T"))
+
         @IgnoredOnParcel
         val timeSpan: String = DateTimeUtils.javaDateToTimeSpan(postDate, WordPress.getContext())
+
         @IgnoredOnParcel
         val formattedDate: String = postDate.toFormattedDateString()
+
         @IgnoredOnParcel
         val formattedTime: String = postDate.toFormattedTimeString()
 

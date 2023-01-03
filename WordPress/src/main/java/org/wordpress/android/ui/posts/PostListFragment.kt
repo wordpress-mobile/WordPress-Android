@@ -43,8 +43,10 @@ private const val MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION = 2
 class PostListFragment : ViewPagerFragment() {
     @Inject
     internal lateinit var imageManager: ImageManager
+
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     internal lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: PostListViewModel

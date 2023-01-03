@@ -70,26 +70,37 @@ import java.util.SortedMap
 class PagesViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var pageStore: PageStore
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var actionPerformer: ActionPerformer
+
     @Mock
     lateinit var networkUtils: NetworkUtilsWrapper
+
     @Mock
     lateinit var uploadStarter: UploadStarter
+
     @Mock
     lateinit var siteOptionsStore: SiteOptionsStore
+
     @Mock
     lateinit var appLogWrapper: AppLogWrapper
+
     @Mock
     lateinit var siteStore: SiteStore
+
     @Mock
     lateinit var accountStore: AccountStore
+
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
     @Mock
     lateinit var postSqlUtils: PostSqlUtils
     private lateinit var viewModel: PagesViewModel

@@ -32,10 +32,13 @@ private const val TEST_MESSAGE = "This is a test message"
 class SnackbarSequencerTest : BaseUnitTest() {
     @Mock
     lateinit var wpSnackbarWrapper: WPSnackbarWrapper
+
     @Mock
     lateinit var wpSnackbar: Snackbar
+
     @Mock
     lateinit var view: View
+
     @Mock
     lateinit var activity: Activity
 

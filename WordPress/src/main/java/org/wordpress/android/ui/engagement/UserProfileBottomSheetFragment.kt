@@ -32,10 +32,13 @@ import javax.inject.Inject
 class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var resourceProvider: ResourceProvider
 

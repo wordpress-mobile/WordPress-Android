@@ -78,10 +78,13 @@ private val STATS_FEATURED_ENABLED_CARD_TYPES = listOf(CardModel.Type.TODAYS_STA
 class CardsSourceTest : BaseUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     private lateinit var cardsStore: CardsStore
+
     @Mock
     private lateinit var siteModel: SiteModel
+
     @Mock
     private lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
     private lateinit var cardSource: CardsSource

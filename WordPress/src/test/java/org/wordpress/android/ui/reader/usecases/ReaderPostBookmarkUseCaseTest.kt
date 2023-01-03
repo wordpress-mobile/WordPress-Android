@@ -26,12 +26,16 @@ private const val SOURCE = "source"
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
     lateinit var useCase: ReaderPostBookmarkUseCase
+
     @Mock
     lateinit var readerTracker: ReaderTracker
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
+
     @Mock
     lateinit var readerPostTableWrapper: ReaderPostTableWrapper
 

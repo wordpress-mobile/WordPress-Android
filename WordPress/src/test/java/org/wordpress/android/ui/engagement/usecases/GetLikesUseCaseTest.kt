@@ -47,12 +47,16 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 class GetLikesUseCaseTest : BaseUnitTest() {
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     private lateinit var dispatcher: Dispatcher
+
     @Mock
     private lateinit var commentStore: CommentStore
+
     @Mock
     private lateinit var postStore: PostStore
+
     @Mock
     private lateinit var accountStore: AccountStore
 

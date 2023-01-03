@@ -21,6 +21,7 @@ class FeatureAnnouncementListAdapter(
 ) : Adapter<RecyclerView.ViewHolder>() {
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private var viewModel: FeatureAnnouncementViewModel

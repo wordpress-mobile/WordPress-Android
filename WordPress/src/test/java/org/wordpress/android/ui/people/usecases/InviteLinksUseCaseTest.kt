@@ -34,12 +34,16 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 class InviteLinksUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var inviteLinksApiCallsProvider: InviteLinksApiCallsProvider
+
     @Mock
     lateinit var accountStore: AccountStore
+
     @Mock
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+
     @Mock
     lateinit var siteStore: SiteStore
 

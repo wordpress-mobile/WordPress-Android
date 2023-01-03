@@ -69,8 +69,10 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
     @Inject
     lateinit var editPostRepository: EditPostRepository
+
     @Inject
     lateinit var storiesTrackerHelper: StoriesTrackerHelper
+
     @Inject
     lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
 

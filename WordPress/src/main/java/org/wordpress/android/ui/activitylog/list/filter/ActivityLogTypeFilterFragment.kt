@@ -48,6 +48,7 @@ private const val SECONDARY_ACTION_SHOW_ALWAYS = false
 class ActivityLogTypeFilterFragment : DialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var uiHelpers: UiHelpers
 

@@ -17,6 +17,7 @@ import org.wordpress.android.viewmodel.Event
 class HelpViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var wordPress: WordPress
+
     @Mock
     private lateinit var onSignoutCompletedObserver: Observer<Unit>
 

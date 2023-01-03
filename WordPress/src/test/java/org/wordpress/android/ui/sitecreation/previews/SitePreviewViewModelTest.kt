@@ -58,28 +58,40 @@ private val SITE_CREATION_STATE = SiteCreationState(segmentId = 1, siteDesign = 
 class SitePreviewViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var dispatcher: Dispatcher
+
     @Mock
     private lateinit var siteStore: SiteStore
+
     @Mock
     private lateinit var bundle: Bundle
+
     @Mock
     private lateinit var fetchWpComUseCase: FetchWpComSiteUseCase
+
     @Mock
     private lateinit var networkUtils: NetworkUtilsWrapper
+
     @Mock
     private lateinit var urlUtils: UrlUtilsWrapper
+
     @Mock
     private lateinit var tracker: SiteCreationTracker
+
     @Mock
     private lateinit var uiStateObserver: Observer<SitePreviewUiState>
+
     @Mock
     private lateinit var startServiceObserver: Observer<SitePreviewStartServiceData>
+
     @Mock
     private lateinit var onHelpedClickedObserver: Observer<Unit>
+
     @Mock
     private lateinit var onCancelWizardClickedObserver: Observer<CreateSiteState>
+
     @Mock
     private lateinit var onOkClickedObserver: Observer<CreateSiteState>
+
     @Mock
     private lateinit var preloadPreviewObserver: Observer<String>
 

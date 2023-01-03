@@ -51,18 +51,25 @@ private val statsGranularity = DAYS
 class FileDownloadsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var store: FileDownloadsStore
+
     @Mock
     lateinit var siteModelProvider: StatsSiteProvider
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var selectedDateProvider: SelectedDateProvider
+
     @Mock
     lateinit var tracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var statsUtils: StatsUtils
     private lateinit var useCase: FileDownloadsUseCase

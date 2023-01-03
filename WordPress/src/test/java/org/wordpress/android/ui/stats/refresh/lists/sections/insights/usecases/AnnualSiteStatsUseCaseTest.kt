@@ -42,16 +42,22 @@ import java.util.Locale
 class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var insightsStore: MostPopularInsightsStore
+
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
+
     @Mock
     lateinit var selectedDateProvider: SelectedDateProvider
+
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var annualStatsMapper: AnnualStatsMapper
+
     @Mock
     lateinit var site: SiteModel
+
     @Mock
     lateinit var popupMenuHandler: ItemPopupMenuHandler
     private val year2019 = YearInsights(null, null, null, null, 0, 0, 0, 0, 0, "2019")

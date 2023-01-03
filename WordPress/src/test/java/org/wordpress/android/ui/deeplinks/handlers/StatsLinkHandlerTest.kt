@@ -21,6 +21,7 @@ import org.wordpress.android.ui.stats.StatsTimeframe.YEAR
 class StatsLinkHandlerTest {
     @Mock
     lateinit var deepLinkUriUtils: DeepLinkUriUtils
+
     @Mock
     lateinit var site: SiteModel
     private lateinit var statsLinkHandler: StatsLinkHandler

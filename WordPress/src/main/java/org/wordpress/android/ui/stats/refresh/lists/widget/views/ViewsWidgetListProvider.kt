@@ -20,6 +20,7 @@ import javax.inject.Inject
 class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
     @Inject
     lateinit var viewModel: ViewsWidgetListViewModel
+
     @Inject
     lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
     private val isWideView: Boolean = intent.getBooleanExtra(IS_WIDE_VIEW_KEY, true)

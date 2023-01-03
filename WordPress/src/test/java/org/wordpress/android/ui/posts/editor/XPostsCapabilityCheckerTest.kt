@@ -20,8 +20,10 @@ import org.wordpress.android.fluxc.store.XPostsStore
 class XPostsCapabilityCheckerTest : BaseUnitTest() {
     @Mock
     lateinit var mockXPostsStore: XPostsStore
+
     @Mock
     lateinit var mockSite: SiteModel
+
     @InjectMocks
     lateinit var xPostsCapabilityChecker: XPostsCapabilityChecker
 

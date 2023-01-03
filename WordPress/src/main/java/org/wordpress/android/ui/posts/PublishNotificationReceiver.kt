@@ -15,6 +15,7 @@ import javax.inject.Inject
 class PublishNotificationReceiver : BroadcastReceiver() {
     @Inject
     lateinit var publishNotificationReceiverViewModel: PublishNotificationReceiverViewModel
+
     @Inject
     lateinit var systemNotificationsTracker: SystemNotificationsTracker
     override fun onReceive(context: Context, intent: Intent) {

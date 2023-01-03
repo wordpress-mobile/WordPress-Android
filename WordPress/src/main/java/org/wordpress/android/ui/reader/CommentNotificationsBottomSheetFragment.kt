@@ -25,8 +25,10 @@ import javax.inject.Inject
 class CommentNotificationsBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var contextProvider: ContextProvider
+
     @Inject
     lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: ConversationNotificationsViewModel

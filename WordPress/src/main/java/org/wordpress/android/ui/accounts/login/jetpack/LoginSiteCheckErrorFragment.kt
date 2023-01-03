@@ -36,6 +36,7 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.jetpack_login_empty_view) 
 
     @Inject
     lateinit var unifiedLoginTracker: UnifiedLoginTracker
+
     @Inject
     lateinit var htmlMessageUtils: HtmlMessageUtils
     private var loginListener: LoginListener? = null

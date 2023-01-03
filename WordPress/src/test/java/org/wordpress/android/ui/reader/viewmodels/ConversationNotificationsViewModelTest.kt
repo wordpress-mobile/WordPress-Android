@@ -31,6 +31,7 @@ import org.wordpress.android.viewmodel.Event
 class ConversationNotificationsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var followCommentsHandler: ReaderFollowCommentsHandler
+
     @Mock
     lateinit var readerPostTableWrapper: ReaderPostTableWrapper
 

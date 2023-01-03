@@ -27,14 +27,19 @@ import javax.inject.Inject
 class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     internal lateinit var imageManager: ImageManager
+
     @Inject
     internal lateinit var uiHelper: UiHelpers
+
     @Inject
     lateinit var dispatcher: Dispatcher
+
     @Inject
     lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: PageListViewModel

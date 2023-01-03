@@ -64,14 +64,19 @@ const val INVALID_EXPIRED_MESSAGE = "invalid qr code data expired"
 @ExperimentalCoroutinesApi
 class QRCodeAuthViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: QRCodeAuthViewModel
+
     @Mock
     lateinit var store: QRCodeAuthStore
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var savedInstanceState: Bundle
+
     @Mock
     lateinit var validator: QRCodeAuthValidator
+
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private val uiStateMapper = QRCodeAuthUiStateMapper()

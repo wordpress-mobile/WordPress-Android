@@ -34,20 +34,28 @@ import org.wordpress.android.viewmodel.Event
 @ExperimentalCoroutinesApi
 class PrepublishingHomeViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingHomeViewModel
+
     @Mock
     lateinit var postSettingsUtils: PostSettingsUtils
+
     @Mock
     lateinit var editPostRepository: EditPostRepository
+
     @Mock
     lateinit var getPostTagsUseCase: GetPostTagsUseCase
+
     @Mock
     lateinit var getButtonUiStateUseCase: GetButtonUiStateUseCase
+
     @Mock
     lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
+
     @Mock
     lateinit var updateStoryTitleUseCase: UpdateStoryPostTitleUseCase
+
     @Mock
     lateinit var getCategoriesUseCase: GetCategoriesUseCase
+
     @Mock
     lateinit var site: SiteModel
 

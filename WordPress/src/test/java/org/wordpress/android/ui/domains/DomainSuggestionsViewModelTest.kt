@@ -35,14 +35,19 @@ import org.wordpress.android.util.helpers.Debouncer
 class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var debouncer: Debouncer
+
     @Mock
     lateinit var tracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
+
     @Mock
     lateinit var createCartUseCase: CreateCartUseCase
+
     @Mock
     lateinit var productsStore: ProductsStore
 

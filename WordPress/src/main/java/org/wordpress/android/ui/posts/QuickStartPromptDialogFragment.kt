@@ -44,6 +44,7 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
 
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var selectedSiteRepository: SelectedSiteRepository
 

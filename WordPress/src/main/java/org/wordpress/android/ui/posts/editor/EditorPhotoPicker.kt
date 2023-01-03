@@ -37,6 +37,7 @@ class EditorPhotoPicker(
     private val showAztecEditor: Boolean
 ) : MediaToolbarAction.MediaToolbarButtonClickListener {
     private var photoPickerContainer: View? = null
+
     @Suppress("DEPRECATION")
     private var photoPickerFragment: PhotoPickerFragment? = null
     private var photoPickerOrientation = Configuration.ORIENTATION_UNDEFINED

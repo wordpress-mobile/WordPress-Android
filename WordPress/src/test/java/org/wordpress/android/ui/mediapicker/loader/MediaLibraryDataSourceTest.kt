@@ -44,10 +44,13 @@ import java.util.Date
 class MediaLibraryDataSourceTest : BaseUnitTest() {
     @Mock
     lateinit var mediaStore: MediaStore
+
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
     private lateinit var mediaLibraryDataSourceFactory: MediaLibraryDataSourceFactory

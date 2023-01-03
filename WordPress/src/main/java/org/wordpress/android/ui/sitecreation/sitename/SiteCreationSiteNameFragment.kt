@@ -29,8 +29,10 @@ import javax.inject.Inject
 class SiteCreationSiteNameFragment : Fragment() {
     @Inject
     internal lateinit var uiHelper: UiHelpers
+
     @Inject
     internal lateinit var displayUtils: DisplayUtilsWrapper
+
     @Inject
     internal lateinit var htmlMessageUtils: HtmlMessageUtils
 

@@ -27,10 +27,13 @@ import java.util.Locale
 class EpilogueBuilderTest {
     @Mock
     lateinit var dayLabelUtils: DayLabelUtils
+
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Mock
     lateinit var listFormatterUtils: ListFormatterUtils
+
     @Mock
     lateinit var htmlMessageUtils: HtmlMessageUtils
     private lateinit var epilogueBuilder: EpilogueBuilder

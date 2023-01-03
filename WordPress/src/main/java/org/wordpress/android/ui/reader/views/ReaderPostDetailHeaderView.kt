@@ -28,6 +28,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
     @Inject
     lateinit var imageManager: ImageManager
+
     @Inject
     lateinit var uiHelpers: UiHelpers
 

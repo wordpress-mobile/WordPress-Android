@@ -58,6 +58,7 @@ private const val BACKUP_TRACKING_SOURCE = "backup"
 class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: ActivityLogViewModel

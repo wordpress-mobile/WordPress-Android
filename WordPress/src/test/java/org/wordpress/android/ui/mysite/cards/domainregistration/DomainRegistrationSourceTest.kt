@@ -28,10 +28,13 @@ import org.wordpress.android.util.SiteUtilsWrapper
 class DomainRegistrationSourceTest : BaseUnitTest() {
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
     @Mock
     lateinit var appLogWrapper: AppLogWrapper
+
     @Mock
     lateinit var siteUtils: SiteUtilsWrapper
     private val siteLocalId = 1

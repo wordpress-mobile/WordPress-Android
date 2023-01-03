@@ -32,6 +32,7 @@ import javax.inject.Inject
 class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogContent {
     @Inject
     lateinit var viewModel: CommentFullScreenDialogViewModel
+
     @Inject
     lateinit var siteStore: SiteStore
     private lateinit var dialogController: CollapseFullScreenDialogController

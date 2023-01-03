@@ -25,8 +25,10 @@ import java.util.Calendar
 class PageParentViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var pageStore: PageStore
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var site: SiteModel
     private lateinit var viewModel: PageParentViewModel

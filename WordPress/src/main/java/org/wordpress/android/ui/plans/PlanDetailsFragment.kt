@@ -20,6 +20,7 @@ import javax.inject.Inject
 
 class PlanDetailsFragment : Fragment(), FullScreenDialogContent {
     private var plan: PlanOffersModel? = null
+
     @Inject
     lateinit var imageManager: ImageManager
     private lateinit var dialogController: FullScreenDialogController

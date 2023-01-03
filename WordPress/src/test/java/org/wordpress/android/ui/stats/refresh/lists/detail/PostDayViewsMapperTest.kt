@@ -25,10 +25,13 @@ import java.math.RoundingMode.HALF_UP
 class PostDayViewsMapperTest : BaseUnitTest() {
     @Mock
     lateinit var statsDateFormatter: StatsDateFormatter
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var statsUtils: StatsUtils
+
     @Mock
     private lateinit var percentFormatter: PercentFormatter
     private lateinit var mapper: PostDayViewsMapper

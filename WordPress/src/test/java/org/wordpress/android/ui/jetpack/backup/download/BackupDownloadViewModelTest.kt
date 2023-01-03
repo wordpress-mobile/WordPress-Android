@@ -52,20 +52,28 @@ import java.util.Date
 class BackupDownloadViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var wizardManager: WizardManager<BackupDownloadStep>
+
     @Mock
     lateinit var backupDownloadStep: BackupDownloadStep
+
     @Mock
     lateinit var savedInstanceState: Bundle
+
     @Mock
     private lateinit var site: SiteModel
+
     @Mock
     private lateinit var getActivityLogItemUseCase: GetActivityLogItemUseCase
+
     @Mock
     private lateinit var backupDownloadStatusUseCase: GetBackupDownloadStatusUseCase
+
     @Mock
     private lateinit var postBackupDownloadUseCase: PostBackupDownloadUseCase
+
     @Mock
     private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
+
     @Mock
     private lateinit var percentFormatter: PercentFormatter
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider

@@ -51,8 +51,10 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 class SystemNotificationsTrackerTest {
     @Mock
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var appPrefs: AppPrefsWrapper
+
     @Mock
     lateinit var notificationManager: NotificationManagerWrapper
     private lateinit var systemNotificationsTracker: SystemNotificationsTracker

@@ -32,34 +32,47 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     @Suppress("DEPRECATION")
     @Mock
     lateinit var deviceMediaListBuilder: DeviceMediaListBuilder
+
     @Mock
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     @Mock
     lateinit var uriWrapper1: UriWrapper
+
     @Mock
     lateinit var uriWrapper2: UriWrapper
+
     @Mock
     lateinit var permissionsHandler: PermissionsHandler
+
     @Mock
     lateinit var context: Context
+
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
     @Mock
     lateinit var copyMediaToAppStorageUseCase: CopyMediaToAppStorageUseCase
+
     @Mock
     lateinit var getMediaModelUseCase: GetMediaModelUseCase
+
     @Suppress("DEPRECATION")
     private lateinit var viewModel: PhotoPickerViewModel
+
     @Suppress("DEPRECATION")
     private var uiStates = mutableListOf<PhotoPickerViewModel.PhotoPickerUiState>()
     private var navigateEvents = mutableListOf<Event<UriWrapper>>()
     private val singleSelectBrowserType = MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER
     private val multiSelectBrowserType = MediaBrowserType.GUTENBERG_IMAGE_PICKER
     private val site = SiteModel()
+
     @Suppress("DEPRECATION")
     private lateinit var firstItem: PhotoPickerItem
+
     @Suppress("DEPRECATION")
     private lateinit var secondItem: PhotoPickerItem
 

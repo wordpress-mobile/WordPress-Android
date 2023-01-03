@@ -32,8 +32,10 @@ import javax.inject.Inject
 class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), ScrollableViewInitializedListener {
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     @Inject
     lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     private val viewModel: ScanHistoryViewModel by activityViewModels()

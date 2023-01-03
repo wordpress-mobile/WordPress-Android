@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 class FetchSegmentsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var dispatcher: Dispatcher
+
     @Mock
     lateinit var store: VerticalStore
     private lateinit var useCase: FetchSegmentsUseCase
