@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.mysite
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -11,15 +11,12 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.test
-import org.wordpress.android.testScope
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ScanAndBackupSourceTest : BaseUnitTest() {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
@@ -42,7 +39,9 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         initScanAndBackupSource(hasSelectedSite = false)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever {
+            result = it
+        }
 
         assertThat(result!!.backupAvailable).isFalse
         assertThat(result!!.scanAvailable).isFalse
@@ -53,7 +52,9 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         initScanAndBackupSource(hasSelectedSite = true, scanPurchased = true, backupPurchased = true)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever {
+            result = it
+        }
 
         assertThat(result!!.backupAvailable).isTrue
         assertThat(result!!.scanAvailable).isTrue
@@ -64,7 +65,9 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         initScanAndBackupSource(hasSelectedSite = true, scanPurchased = false, backupPurchased = false)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever {
+            result = it
+        }
 
         assertThat(result!!.backupAvailable).isFalse
         assertThat(result!!.scanAvailable).isFalse
@@ -76,7 +79,9 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(site.isWPCom).thenReturn(true)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever {
+            result = it
+        }
 
         assertThat(result!!.scanAvailable).isFalse
     }
@@ -87,7 +92,9 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(site.isWPComAtomic).thenReturn(true)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever {
+            result = it
+        }
 
         assertThat(result!!.scanAvailable).isFalse
     }
@@ -99,7 +106,9 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(site.isWPComAtomic).thenReturn(false)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever {
+            result = it
+        }
 
         assertThat(result!!.scanAvailable).isTrue
     }
@@ -161,7 +170,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
             )
         }
         scanAndBackupSource = ScanAndBackupSource(
-                TEST_DISPATCHER,
+                testDispatcher(),
                 selectedSiteRepository,
                 jetpackCapabilitiesUseCase
         )

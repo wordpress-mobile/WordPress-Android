@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +10,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.YearsInsightsModel
 import org.wordpress.android.fluxc.model.stats.YearsInsightsModel.YearInsights
@@ -19,7 +17,6 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -41,7 +38,7 @@ import org.wordpress.android.viewmodel.Event
 import java.util.Calendar
 import java.util.Locale
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: MostPopularInsightsStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
@@ -56,8 +53,8 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = AnnualSiteStatsUseCase(
-                Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 insightsStore,
                 statsSiteProvider,
                 selectedDateProvider,
@@ -96,7 +93,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
         selectedDate.set(Calendar.YEAR, 2019)
         selectedDate.set(Calendar.MONTH, Calendar.DECEMBER)
         selectedDate.set(Calendar.DAY_OF_MONTH, 31)
-        verify(selectedDateProvider, times(2)).selectDate(selectedDate.time, listOf(selectedDate.time), ANNUAL_STATS)
+        verify(selectedDateProvider, times(1)).selectDate(selectedDate.time, listOf(selectedDate.time), ANNUAL_STATS)
     }
 
     @Test
@@ -132,8 +129,8 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     @Test
     fun `hide title and view more block in view all mode`() = test {
         useCase = AnnualSiteStatsUseCase(
-                Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 insightsStore,
                 statsSiteProvider,
                 selectedDateProvider,
@@ -206,6 +203,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(refresh, forced)
+        advanceUntilIdle()
         return checkNotNull(result)
     }
 }

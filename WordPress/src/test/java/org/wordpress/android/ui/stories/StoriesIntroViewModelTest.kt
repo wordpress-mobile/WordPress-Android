@@ -13,7 +13,6 @@ import org.mockito.kotlin.reset
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stories.intro.StoriesIntroViewModel
 import org.wordpress.android.util.NoDelayCoroutineDispatcher

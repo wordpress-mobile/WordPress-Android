@@ -4109,7 +4109,12 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Back icon</string>
     <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">App icon</string>
 
-    <!-- Blogging prompts -->
+    <!-- Blogging Prompts -->
+    <string name="blogging_prompts_answer_prompt_notification_title">Daily Prompt</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Answer</string>
+    <string name="blogging_prompts_notification_dismiss">Dismiss</string>
+
+    <!-- Blogging Prompts Onboarding -->
     <string name="blogging_prompts_onboarding_header_title">Introducing Prompts</string>
     <string name="blogging_prompts_onboarding_content_top">The best way to become a better writer is to build a writing habit and share with others — that’s where Prompts come in!</string>
     <string name="blogging_prompts_onboarding_content_bottom">We’ll show you a new prompt each day on your dashboard to help get those creative juices flowing!</string>
@@ -4123,9 +4128,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_notification_title">New in the WordPress mobile app: Prompts</string>
     <string name="blogging_prompts_onboarding_notification_text">Become a better writer by building a writing habit. Tap to learn more.</string>
     <string name="blogging_prompts_onboarding_notification_action">Learn more</string>
-    <string name="blogging_prompts_answer_prompt_notification_title">Daily Prompt</string>
-    <string name="blogging_prompts_answer_prompt_notification_answer_action">Answer</string>
-    <string name="blogging_prompts_notification_dismiss">Dismiss</string>
+
+    <!-- Blogging Prompts List -->
+    <string name="blogging_prompts_list_title">Prompts</string>
 
     <!-- Editor module -->
     <string name="post_content" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Content</string>
@@ -4319,4 +4324,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_deep_link_overlay_description">It looks like you have the Jetpack app installed.\n\nWould you like to open links in the Jetpack app in the future?\n\nYou can always change this in App Settings &gt; Open links in Jetpack</string>
     <string name="wp_jetpack_deep_link_open_in_jetpack" translatable="false">@string/preference_open_links_in_jetpack</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">Open links in WordPress</string>
+
+    <!-- Jetpack Feature Card -->
+    <string name="jetpack_feature_card_content">Stats, Reader, Notifications and other features will soon move to the Jetpack mobile app.</string>
+    <string name="jetpack_feature_card_learn_more" translatable="false">@string/learn_more</string>
+    <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
 </resources>

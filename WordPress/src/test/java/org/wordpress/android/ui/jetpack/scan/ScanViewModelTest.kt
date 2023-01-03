@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.jetpack.scan
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
@@ -16,14 +15,11 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.Constants
-import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.Reason
 import org.wordpress.android.fluxc.store.ScanStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.FootnoteState
@@ -64,12 +60,8 @@ private const val TEST_SITE_ID = 1L
 private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID}"
 
 @Suppress("LargeClass")
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class ScanViewModelTest : BaseUnitTest() {
-    @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
-
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var scanStateItemsBuilder: ScanStateListItemsBuilder
     @Mock private lateinit var fetchScanStateUseCase: FetchScanStateUseCase
@@ -105,7 +97,7 @@ class ScanViewModelTest : BaseUnitTest() {
                 scanStore,
                 scanTracker,
                 htmlMessageUtils,
-                TEST_DISPATCHER
+                testDispatcher()
         )
         whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(fakeScanStateModel)))
         whenever(scanStateItemsBuilder.buildScanStateListItems(any(), any(), any(), any(), any(), any(), any(), any()))
@@ -266,7 +258,7 @@ class ScanViewModelTest : BaseUnitTest() {
         val uiStates = init().uiStates
 
         (uiStates.last() as ErrorUiState).action?.invoke()
-        coroutineScope.advanceTimeBy(RETRY_DELAY)
+        advanceUntilIdle()
 
         verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
     }

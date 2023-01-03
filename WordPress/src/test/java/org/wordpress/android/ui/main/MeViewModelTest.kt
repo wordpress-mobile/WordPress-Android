@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -11,21 +12,19 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendAppName
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult.Failure
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult.Success
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendTemplateData
-import org.wordpress.android.test
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class MeViewModelTest : BaseUnitTest() {
     @Mock lateinit var wordPress: WordPress
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -39,8 +38,8 @@ class MeViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = MeViewModel(
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 selectedSiteRepository,
                 recommendApiCallsProvider,
                 analyticsUtilsWrapper
@@ -79,6 +78,7 @@ class MeViewModelTest : BaseUnitTest() {
         )).thenReturn(DEFAULT_SUCCESS_API_RESPONSE)
 
         viewModel.onRecommendTheApp()
+        advanceUntilIdle()
 
         verify(recommendApiCallsProvider, times(1)).getRecommendTemplate(anyString(), eq(RecommendAppSource.ME))
 
@@ -100,6 +100,7 @@ class MeViewModelTest : BaseUnitTest() {
         )).thenReturn(Failure(noNetError))
 
         viewModel.onRecommendTheApp()
+        advanceUntilIdle()
 
         assertThat(recommendUiState).isEqualTo(listOf(
                 RecommendAppUiState(showLoading = true),
@@ -115,6 +116,7 @@ class MeViewModelTest : BaseUnitTest() {
         )).thenReturn(DEFAULT_FAILURE_API_RESPONSE)
 
         viewModel.onRecommendTheApp()
+        advanceUntilIdle()
 
         assertThat(recommendUiState).isEqualTo(listOf(
                 RecommendAppUiState(showLoading = true),
@@ -133,13 +135,10 @@ class MeViewModelTest : BaseUnitTest() {
         viewModel.onRecommendTheApp()
         // second call should use the already available template
         viewModel.onRecommendTheApp()
+        advanceUntilIdle()
 
         assertThat(recommendUiState).isEqualTo(listOf(
                 RecommendAppUiState(showLoading = true),
-                RecommendAppUiState(
-                        message = DEFAULT_SUCCESS_API_RESPONSE.templateData.message,
-                        link = DEFAULT_SUCCESS_API_RESPONSE.templateData.link
-                ),
                 RecommendAppUiState(
                         message = DEFAULT_SUCCESS_API_RESPONSE.templateData.message,
                         link = DEFAULT_SUCCESS_API_RESPONSE.templateData.link
@@ -157,6 +156,7 @@ class MeViewModelTest : BaseUnitTest() {
         )).thenReturn(DEFAULT_SUCCESS_API_RESPONSE)
 
         viewModel.onRecommendTheApp()
+        advanceUntilIdle()
 
         verify(analyticsUtilsWrapper, times(1)).trackRecommendAppEngaged(eq(RecommendAppSource.ME))
     }

@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.posts.prepublishing
 
 import android.os.Bundle
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -14,10 +14,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.CategoryNode
-import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel
@@ -28,7 +26,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingAddCategoryViewModel
@@ -43,7 +41,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
                 getCategoriesUseCase,
                 networkUtilsWrapper,
                 resourceProvider,
-                TEST_DISPATCHER
+                testDispatcher()
         )
 
         whenever(getCategoriesUseCase.getSiteCategories(any()))

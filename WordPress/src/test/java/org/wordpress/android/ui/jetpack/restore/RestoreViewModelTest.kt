@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.jetpack.restore
 
 import android.os.Bundle
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -17,10 +17,8 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.Constants
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.CheckboxSpannableLabel
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
@@ -74,7 +72,7 @@ private const val SERVER_CREDS_MSG_WITH_CLICKABLE_LINK =
         "<a href=\"$SERVER_CREDS_LINK\">Enter your server credentials&lt</a> " +
                 "to enable one click site restores from backups."
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class RestoreViewModelTest : BaseUnitTest() {
     @Mock lateinit var wizardManager: WizardManager<RestoreStep>
     @Mock lateinit var savedInstanceState: Bundle
@@ -121,7 +119,7 @@ class RestoreViewModelTest : BaseUnitTest() {
                 stateListItemBuilder,
                 postRestoreUseCase,
                 restoreStatusUseCase,
-                TEST_DISPATCHER,
+                testDispatcher(),
                 percentFormatter
         )
         whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(fakeActivityLogModel)

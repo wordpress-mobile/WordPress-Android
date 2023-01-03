@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.prepublishing.home.usecases
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.posts.editor.PrimaryEditorAction.SUBMIT_FOR_REVI
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction.UPDATE
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 
+@ExperimentalCoroutinesApi
 class GetButtonUiStateUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: GetButtonUiStateUseCase
     @Mock lateinit var editorActionsProvider: EditorActionsProvider

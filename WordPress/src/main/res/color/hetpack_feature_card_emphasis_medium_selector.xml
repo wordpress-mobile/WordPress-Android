@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:alpha="@dimen/material_emphasis_disabled" android:color="@color/jetpack_green_50" android:state_pressed="true" />
+    <item android:color="@color/jetpack_green_50" />
+</selector>

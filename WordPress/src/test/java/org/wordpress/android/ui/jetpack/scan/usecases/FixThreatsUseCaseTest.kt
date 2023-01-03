@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.usecases
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -8,18 +8,16 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ScanAction.FIX_THREATS
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsError
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.store.ScanStore.OnFixThreatsStarted
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase.FixThreatsState.Failure
 import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase.FixThreatsState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class FixThreatsUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: FixThreatsUseCase
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
@@ -30,7 +28,11 @@ class FixThreatsUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setup() = test {
-        useCase = FixThreatsUseCase(networkUtilsWrapper, scanStore, TEST_DISPATCHER)
+        useCase = FixThreatsUseCase(
+                networkUtilsWrapper,
+                scanStore,
+                testDispatcher()
+        )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
 

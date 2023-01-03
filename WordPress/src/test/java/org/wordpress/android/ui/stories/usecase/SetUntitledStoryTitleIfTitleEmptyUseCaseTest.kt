@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stories.usecase
 
 import android.content.Context
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -15,6 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 
+@ExperimentalCoroutinesApi
 class SetUntitledStoryTitleIfTitleEmptyUseCaseTest : BaseUnitTest() {
     private lateinit var setUntitledStoryTitleIfTitleEmptyUseCase: SetUntitledStoryTitleIfTitleEmptyUseCase
     @Mock lateinit var storyRepositoryWrapper: StoryRepositoryWrapper

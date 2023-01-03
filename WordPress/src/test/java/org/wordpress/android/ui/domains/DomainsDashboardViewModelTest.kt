@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.domains
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -10,14 +10,12 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
-import org.wordpress.android.test
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
 import org.wordpress.android.ui.domains.DomainsDashboardItem.FreeDomain
@@ -31,6 +29,7 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
+@ExperimentalCoroutinesApi
 class DomainsDashboardViewModelTest : BaseUnitTest() {
     private val siteStore: SiteStore = mock()
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()
@@ -43,7 +42,6 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
 
     private val uiModel = mutableListOf<DomainsDashboardItem>()
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         viewModel = DomainsDashboardViewModel(
@@ -51,7 +49,7 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
                 analyticsTracker,
                 htmlMessageUtils,
                 fetchPlansUseCase,
-                TEST_DISPATCHER
+                testDispatcher()
         )
 
         viewModel.uiModel.observeForever { if (it != null) uiModel += it }

@@ -1,15 +1,15 @@
 package org.wordpress.android.ui.jetpackoverlay
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_THREE
@@ -26,8 +26,9 @@ import java.util.Date
 
 private const val ONE_DAY_TIME_IN_MILLIS = 1000L * 60L * 60L * 24L
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class JetpackFeatureRemovalOverlayUtilTest {
+class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     @Mock private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
     @Mock private lateinit var jetpackFeatureOverlayShownTracker: JetpackFeatureOverlayShownTracker
     @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -35,9 +36,6 @@ class JetpackFeatureRemovalOverlayUtilTest {
     @Mock private lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
     @Mock private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
 
     private lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 

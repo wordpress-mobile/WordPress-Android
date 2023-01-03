@@ -1,9 +1,11 @@
 package org.wordpress.android.ui
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 
+@ExperimentalCoroutinesApi
 class JetpackConnectionSourceTest : BaseUnitTest() {
     @Test
     fun `given valid notifications source, when fromString requested, then results match enum`() {

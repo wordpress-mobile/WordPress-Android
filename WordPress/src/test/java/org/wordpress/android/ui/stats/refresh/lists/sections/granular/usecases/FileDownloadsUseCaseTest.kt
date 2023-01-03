@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -10,7 +9,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.FileDownloadsModel
@@ -21,7 +19,6 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.FILE_DOWNLOADS
 import org.wordpress.android.fluxc.store.stats.time.FileDownloadsStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFileDownloads
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -50,6 +47,7 @@ import java.util.Locale
 private const val ITEMS_TO_LOAD = 6
 private val statsGranularity = DAYS
 
+@ExperimentalCoroutinesApi
 class FileDownloadsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: FileDownloadsStore
     @Mock lateinit var siteModelProvider: StatsSiteProvider
@@ -62,13 +60,13 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: FileDownloadsUseCase
     private lateinit var selectedDate: Date
     private val contentDescription = "file, downloads"
-    @InternalCoroutinesApi
+
     @Before
     fun setUp() {
         useCase = FileDownloadsUseCase(
                 statsGranularity,
-                Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 store,
                 siteModelProvider,
                 selectedDateProvider,
@@ -318,6 +316,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(refresh, forced)
+        advanceUntilIdle()
         return checkNotNull(result)
     }
 }

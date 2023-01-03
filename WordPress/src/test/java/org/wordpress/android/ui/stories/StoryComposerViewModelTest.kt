@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stories
 
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -14,7 +14,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
@@ -29,6 +28,7 @@ import org.wordpress.android.ui.posts.PostEditorAnalyticsSessionWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.stories.usecase.SetUntitledStoryTitleIfTitleEmptyUseCase
 
+@ExperimentalCoroutinesApi
 class StoryComposerViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: StoryComposerViewModel
     private lateinit var editPostRepository: EditPostRepository
@@ -41,7 +41,6 @@ class StoryComposerViewModelTest : BaseUnitTest() {
     @Mock lateinit var postStore: PostStore
     @Mock lateinit var site: SiteModel
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         viewModel = StoryComposerViewModel(
@@ -56,8 +55,8 @@ class StoryComposerViewModelTest : BaseUnitTest() {
                 mock(),
                 postStore,
                 mock(),
-                TEST_DISPATCHER,
-                TEST_DISPATCHER
+                testDispatcher(),
+                testDispatcher()
         )
     }
 
