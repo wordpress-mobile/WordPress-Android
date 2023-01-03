@@ -43,6 +43,11 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         )
     }
 
+    fun shouldHideJetpackFeatures(): Boolean {
+        return !buildConfigWrapper.isJetpackApp && isWpComSite() &&
+                jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == JetpackFeatureRemovalPhase.PhaseFour
+    }
+
     fun shouldShowSiteCreationOverlay(): Boolean {
         return !buildConfigWrapper.isJetpackApp && isInSiteCreationPhase()
     }

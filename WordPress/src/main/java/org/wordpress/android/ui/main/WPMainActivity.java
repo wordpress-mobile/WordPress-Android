@@ -267,6 +267,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
+    private Boolean showJetpackFeatures = false;
+
     /*
      * fragments implement this if their contents can be scrolled, called when user
      * requests to scroll to the top
@@ -302,9 +304,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        mBottomNav = findViewById(R.id.bottom_navigation);
 
-        mBottomNav.init(getSupportFragmentManager(), this);
+        if (showJetpackFeatures) {
+            mBottomNav = findViewById(R.id.bottom_navigation);
+            mBottomNav.init(getSupportFragmentManager(), this);
+        } else {
+            showMySiteFragment();
+        }
 
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(v -> {
@@ -364,7 +370,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     handleOpenPageIntent(getIntent());
                 } else if (isQuickStartRequestedFromPush) {
                     // when app is opened from Quick Start reminder switch to MySite fragment
-                    mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+                    if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
                     mQuickStartTracker.track(Stat.QUICK_START_NOTIFICATION_TAPPED);
                 } else {
                     if (mIsMagicLinkLogin) {
@@ -467,6 +473,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
             mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
         }
+    }
+
+    private void showMySiteFragment() {
+        MySiteFragment fragment = MySiteFragment.Companion.newInstance();
+        getSupportFragmentManager().beginTransaction()
+                                   .add(R.id.fragment_container, fragment, MySiteFragment.TAG)
+                                   .commitNow();
     }
 
     private void showBloggingPromptsOnboarding() {
@@ -733,17 +746,17 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (!TextUtils.isEmpty(pagePosition)) {
             switch (pagePosition) {
                 case ARG_MY_SITE:
-                    mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+                    if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
                     break;
                 case ARG_NOTIFICATIONS:
-                    mBottomNav.setCurrentSelectedPage(PageType.NOTIFS);
+                    if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.NOTIFS);
                     break;
                 case ARG_READER:
-                    if (intent.getBooleanExtra(ARG_READER_BOOKMARK_TAB, false) && mBottomNav
+                    if (intent.getBooleanExtra(ARG_READER_BOOKMARK_TAB, false) && mBottomNav != null && mBottomNav
                             .getActiveFragment() instanceof ReaderFragment) {
                         ((ReaderFragment) mBottomNav.getActiveFragment()).requestBookmarkTab();
                     } else {
-                        mBottomNav.setCurrentSelectedPage(PageType.READER);
+                        if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.READER);
                     }
                     break;
                 case ARG_EDITOR:
@@ -790,7 +803,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         // leave the Main activity showing the MY_SITE page, so when the user comes back from
         // Help&Support > HelpActivity the app is in the right section.
-        mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+        if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
 
         // init selected site, this is the same as in onResume
         initSelectedSite();
@@ -841,7 +854,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // Then hit the server
         NotificationsActions.updateNotesSeenTimestamp();
 
-        mBottomNav.setCurrentSelectedPage(PageType.NOTIFS);
+        if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.NOTIFS);
 
         // it could be that a notification has been tapped but has been removed by the time we reach
         // here. It's ok to compare to <=1 as it could be zero then.
@@ -938,16 +951,18 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
-        PageType currentPageType = mBottomNav.getCurrentSelectedPage();
-        trackLastVisiblePage(currentPageType, mFirstResume);
 
-        if (currentPageType == PageType.NOTIFS) {
-            // if we are presenting the notifications list, it's safe to clear any outstanding
-            // notifications
-            mGCMMessageHandler.removeAllNotifications(this);
+        if (mBottomNav != null) {
+            PageType currentPageType = mBottomNav.getCurrentSelectedPage();
+            trackLastVisiblePage(currentPageType, mFirstResume);
+
+            if (currentPageType == PageType.NOTIFS) {
+                // if we are presenting the notifications list, it's safe to clear any outstanding
+                // notifications
+                mGCMMessageHandler.removeAllNotifications(this);
+            }
+            announceTitleForAccessibility(currentPageType);
         }
-
-        announceTitleForAccessibility(currentPageType);
 
         checkConnection();
 
@@ -968,7 +983,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel.onResume(
                 getSelectedSite(),
-                mSelectedSiteRepository.hasSelectedSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
+                mSelectedSiteRepository.hasSelectedSite() && mBottomNav != null &&
+                mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
         );
 
         mFirstResume = false;
@@ -1000,11 +1016,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override
     public void onBackPressed() {
         // let the fragment handle the back button if it implements our OnParentBackPressedListener
-        Fragment fragment = mBottomNav.getActiveFragment();
-        if (fragment instanceof OnActivityBackPressedListener) {
-            boolean handled = ((OnActivityBackPressedListener) fragment).onActivityBackPressed();
-            if (handled) {
-                return;
+        if (mBottomNav != null) {
+            Fragment fragment = mBottomNav.getActiveFragment();
+            if (fragment instanceof OnActivityBackPressedListener) {
+                boolean handled = ((OnActivityBackPressedListener) fragment).onActivityBackPressed();
+                if (handled) {
+                    return;
+                }
             }
         }
 
@@ -1326,9 +1344,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void passOnActivityResultToMySiteFragment(int requestCode, int resultCode, Intent data) {
-        Fragment fragment = mBottomNav.getFragment(PageType.MY_SITE);
-        if (fragment != null) {
-            fragment.onActivityResult(requestCode, resultCode, data);
+        if (mBottomNav != null) {
+            Fragment fragment = mBottomNav.getFragment(PageType.MY_SITE);
+            if (fragment != null) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 
@@ -1438,7 +1458,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public void onAccountChanged(OnAccountChanged event) {
         // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
-            mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+            if (mBottomNav != null) mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
             if (AppPrefs.getShouldTrackMagicLinkSignup()) {
                 trackMagicLinkSignupIfNeeded();
             }
@@ -1463,13 +1483,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
-        mBottomNav.showNoteBadge(event.hasUnseenNotes);
+        if (mBottomNav != null) mBottomNav.showNoteBadge(event.hasUnseenNotes);
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
-        mBottomNav.showNoteBadge(event.hasUnseenNotes);
+        if (mBottomNav != null) mBottomNav.showNoteBadge(event.hasUnseenNotes);
     }
 
     @SuppressWarnings("unused")
