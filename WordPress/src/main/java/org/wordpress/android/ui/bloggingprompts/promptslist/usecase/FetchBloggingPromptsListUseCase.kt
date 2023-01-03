@@ -14,6 +14,19 @@ class FetchBloggingPromptsListUseCase @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
 ) {
     suspend fun execute(): Result {
+        return fetchBloggingPrompts()
+                ?.sortedByDescending { it.date }
+                ?.dropWhile { it.date > Date() } // don't display future prompts
+                ?.take(NUMBER_OF_PROMPTS)
+                ?.let { Result.Success(it) } // success if fetchBloggingPrompts was not null
+                ?: Result.Failure // failure otherwise
+    }
+
+    /**
+     * Returns the List of Blogging Prompts for the current site, with a size of [NUMBER_OF_PROMPTS] if the fetch was
+     * successful, otherwise returns null, indicating a failure.
+     */
+    private suspend fun fetchBloggingPrompts(): List<BloggingPromptModel>? {
         // get the starting date to fetch the prompts from
         // it is today's date minus (number of prompts - 1) because it needs to fetch today's prompt as well
         val fromDate = LocalDate.now()
@@ -22,25 +35,17 @@ class FetchBloggingPromptsListUseCase @Inject constructor(
                 .toInstant()
                 .let { Date.from(it) }
 
-        val site = selectedSiteRepository.getSelectedSite() ?: return Result.Failure
-
-        // fetchPrompts do not return the actual fetched prompts, it only stores them in the local FluxC database so
-        // if the fetch is successful we still need to cal getPrompts to get the actual prompts list result
-        // if the get is also successful then we can proceed to mapping the prompt model to list item models
-        val result = bloggingPromptsStore.fetchPrompts(site, NUMBER_OF_PROMPTS, fromDate)
-                .takeUnless { it.isError }
-                ?.let { bloggingPromptsStore.getPrompts(site) }
-                ?.first()
-                ?.takeUnless { it.isError }
-
-        return result?.run {
-            val prompts = model
-                    ?.sortedByDescending { it.date }
-                    ?.dropWhile { it.date > Date() } // don't display future prompts
-                    ?.take(NUMBER_OF_PROMPTS)
-                    ?: emptyList()
-            Result.Success(prompts)
-        } ?: Result.Failure
+        return selectedSiteRepository.getSelectedSite()?.let { site ->
+            // fetchPrompts do not return the actual fetched prompts, it only stores them in the local FluxC database so
+            // if the fetch is successful we still need to cal getPrompts to get the actual prompts list result
+            // if the get is also successful then we can proceed to mapping the prompt model to list item models
+            bloggingPromptsStore.fetchPrompts(site, NUMBER_OF_PROMPTS, fromDate)
+                    .takeUnless { it.isError }
+                    ?.let { bloggingPromptsStore.getPrompts(site) }
+                    ?.first()
+                    ?.takeUnless { it.isError }
+                    ?.model
+        }
     }
 
     sealed class Result {
