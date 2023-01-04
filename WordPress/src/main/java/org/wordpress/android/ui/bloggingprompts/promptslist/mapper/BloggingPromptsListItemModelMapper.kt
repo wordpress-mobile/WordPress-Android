@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 class BloggingPromptsListItemModelMapper @Inject constructor(
-    private val localeManagerWrapper: LocaleManagerWrapper
+    localeManagerWrapper: LocaleManagerWrapper
 ) {
     private val dateFormat = SimpleDateFormat("MMM d", localeManagerWrapper.getLocale())
 
