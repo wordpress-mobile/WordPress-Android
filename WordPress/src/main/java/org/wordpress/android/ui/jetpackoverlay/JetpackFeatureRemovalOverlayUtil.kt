@@ -119,14 +119,13 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun onFeatureSpecificOverlayShown(feature: JetpackOverlayConnectedFeature) {
-//        if (isInFeatureSpecificRemovalPhase())
-//            jetpackFeatureOverlayShownTracker.setFeatureOverlayShownTimeStamp(
-//                    feature,
-//                    getCurrentPhasePreference()!!,
-//                    System.currentTimeMillis()
-//            )
+        if (isInFeatureSpecificRemovalPhase())
+            jetpackFeatureOverlayShownTracker.setFeatureOverlayShownTimeStamp(
+                    feature,
+                    getCurrentPhasePreference()!!,
+                    System.currentTimeMillis()
+            )
     }
 
     fun onOverlayShown(overlayScreenType: JetpackFeatureOverlayScreenType?) {
