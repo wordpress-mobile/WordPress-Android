@@ -1,12 +1,11 @@
 package org.wordpress.android.ui.bloggingprompts.promptslist.usecase
 
 import kotlinx.coroutines.delay
-import org.wordpress.android.ui.bloggingprompts.promptslist.model.BloggingPromptsListItemModel
+import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Success
 import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
-import kotlin.random.Random
 
 // TODO thomashorta remove this suppress annotation when this has a real implementation
 @Suppress("MagicNumber")
@@ -18,10 +17,10 @@ class FetchBloggingPromptsListUseCase @Inject constructor() {
     }
 
     sealed class Result {
-        class Success(val content: List<BloggingPromptsListItemModel>) : Result()
+        class Success(val content: List<BloggingPromptModel>) : Result()
         object Failure : Result()
 
-        inline fun onSuccess(block: (List<BloggingPromptsListItemModel>) -> Unit): Result {
+        inline fun onSuccess(block: (List<BloggingPromptModel>) -> Unit): Result {
             if (this is Success) block(this.content)
             return this
         }
@@ -34,17 +33,21 @@ class FetchBloggingPromptsListUseCase @Inject constructor() {
 
     // FAKE DATA GENERATION BELOW
 
-    private fun generateFakePrompts(): List<BloggingPromptsListItemModel> {
+    private fun generateFakePrompts(): List<BloggingPromptModel> {
         val calendar = Calendar.getInstance()
         return List(11) { generateFakePrompt(it, calendar.getDateAndSubtractADay()) }
     }
 
-    private fun generateFakePrompt(id: Int, date: Date) = BloggingPromptsListItemModel(
-            id = id,
+    private fun generateFakePrompt(index: Int, date: Date) = BloggingPromptModel(
+            id = index,
             text = fakePrompts.random(),
             date = date,
             isAnswered = listOf(true, false).random(),
-            answersCount = Random.nextInt(5000),
+            respondentsCount = index,
+            title = "Prompt Title $index",
+            content = "Prompt Content $index",
+            attribution = "Prompt Attribution $index",
+            respondentsAvatarUrls = emptyList(),
     )
 
     private fun Calendar.getDateAndSubtractADay(): Date {

@@ -4,17 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import dagger.hilt.android.AndroidEntryPoint
+import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.bloggingprompts.promptslist.compose.BloggingPromptsListScreen
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @AndroidEntryPoint
-class BloggingPromptsListActivity : AppCompatActivity() {
+class BloggingPromptsListActivity : LocaleAwareActivity() {
     private val viewModel: BloggingPromptsListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
