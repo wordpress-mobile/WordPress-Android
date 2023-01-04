@@ -10,11 +10,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import dagger.hilt.android.AndroidEntryPoint
+import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.bloggingprompts.promptslist.compose.BloggingPromptsListScreen
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @AndroidEntryPoint
-class BloggingPromptsListActivity : AppCompatActivity() {
+class BloggingPromptsListActivity : LocaleAwareActivity() {
     private val viewModel: BloggingPromptsListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
