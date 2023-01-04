@@ -82,6 +82,7 @@ import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalWidgetHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
@@ -165,6 +166,7 @@ class AppInitializer @Inject constructor(
     // For jetpack focus
     @Inject lateinit var openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig
     @Inject lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
+    @Inject lateinit var jetpackFeatureRemovalWidgetHelper: JetpackFeatureRemovalWidgetHelper
 
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
     lateinit var storyNotificationTrackerProvider: StoryNotificationTrackerProvider
@@ -670,6 +672,10 @@ class AppInitializer @Inject constructor(
         }
     }
 
+    private fun disableWidgetReceiversIfNeeded() {
+        jetpackFeatureRemovalWidgetHelper.disableWidgetReceiversIfNeeded()
+    }
+
     private fun flushHttpCache() {
         val cache = HttpResponseCache.getInstalled()
         cache?.flush()
@@ -780,6 +786,9 @@ class AppInitializer @Inject constructor(
                     AppLog.e(MAIN, "ConnectionChangeReceiver was already unregistered")
                 }
             }
+
+            // Disable the widgets if needed
+            disableWidgetReceiversIfNeeded()
         }
 
         /**
@@ -842,6 +851,9 @@ class AppInitializer @Inject constructor(
                 deferredInit()
             }
             firstActivityResumed = false
+
+            // Disable the widgets if needed
+            disableWidgetReceiversIfNeeded()
         }
     }
 
