@@ -207,6 +207,11 @@ public class HeaderGridView extends GridView {
         }
     }
 
+    @Override
+    public int computeVerticalScrollOffset() {
+        return super.computeVerticalScrollOffset();
+    }
+
     /**
      * ListAdapter used when a HeaderGridView has header views. This ListAdapter
      * wraps another one and also keeps track of the header views and their
