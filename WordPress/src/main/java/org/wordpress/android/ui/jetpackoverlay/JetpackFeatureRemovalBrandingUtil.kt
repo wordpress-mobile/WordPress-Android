@@ -18,4 +18,13 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
             else -> false
         }
     }
+
+    fun shouldShowPhaseTwoBranding(): Boolean {
+        return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
+            PhaseTwo,
+            PhaseThree,
+            PhaseFour -> true
+            else -> false
+        }
+    }
 }

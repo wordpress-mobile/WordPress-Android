@@ -193,7 +193,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
 
     @Override
     public void onScrollableViewInitialized(int containerId) {
-        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+        if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
             findViewById(R.id.root_view).post(() -> {
                 View jetpackBannerView = findViewById(R.id.jetpack_banner);
                 HeaderGridView scrollableView = findViewById(containerId);
