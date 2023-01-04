@@ -908,7 +908,6 @@
         <receiver
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidget"
             android:label="@string/stats_widget_weekly_views_name"
-            android:enabled="@string/widgets_enabled"
             android:exported="false"
             tools:ignore="ManifestResource">
             <intent-filter>
