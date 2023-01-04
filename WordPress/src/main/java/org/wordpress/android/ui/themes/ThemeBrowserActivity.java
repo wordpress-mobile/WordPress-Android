@@ -36,11 +36,13 @@ import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JetpackBrandingUtils;
+import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.widgets.HeaderGridView;
@@ -198,6 +200,14 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
 
                 showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView);
                 initJetpackBannerAnimation(jetpackBannerView, scrollableView);
+
+                if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                    jetpackBannerView.setOnClickListener(v -> {
+                        mJetpackBrandingUtils.trackBannerTapped(Screen.THEMES);
+                        new JetpackPoweredBottomSheetFragment()
+                                .show(getSupportFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
+                    });
+                }
             });
         }
     }

@@ -109,7 +109,8 @@ class JetpackBrandingUtils @Inject constructor(
         READER_SEARCH("reader_search"),
         SHARE("share"),
         STATS("stats"),
-        SCAN("scan")
+        SCAN("scan"),
+        THEMES("themes")
     }
 
     companion object {
