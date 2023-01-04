@@ -1842,4 +1842,18 @@
         <item name="android:textStyle">bold</item>
         <item name="rippleColor">@color/on_surface_disabled_transparent_selector</item>
     </style>
+
+    <style name="OverlayMigrationHelperText" parent="@style/Widget.MaterialComponents.Button.TextButton.Icon">
+        <item name="android:ellipsize">end</item>
+        <item name="android:insetTop">2dp</item>
+        <item name="android:insetBottom">2dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="iconGravity">textEnd</item>
+        <item name="iconSize">@dimen/text_sz_medium</item>
+        <item name="iconTint">@color/jetpack_green_50</item>
+    </style>
 </resources>

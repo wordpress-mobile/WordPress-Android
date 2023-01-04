@@ -12,8 +12,10 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_ONE
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_THREE
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.BuildConfigWrapper
@@ -87,14 +89,11 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         assertFalse(shouldShowOverlay)
     }
 
-    // This test is for phase 2 and above right now, when the changes for phase 2 is implemented,
-    // the jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(STATS)
-    // would return true for phase 2 and 3
     @Test
     @Suppress("MaxLineLength")
-    fun `given feature removal in phase two, when shouldShowFeatureSpecificJetpackOverlay invoked, then return false`() {
+    fun `given feature removal in phase four, when shouldShowFeatureSpecificJetpackOverlay invoked, then return false`() {
         setupMockForWpComSite()
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseTwo)
+        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseFour)
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
                 .shouldShowFeatureSpecificJetpackOverlay(STATS)
@@ -106,11 +105,11 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     @Suppress("MaxLineLength")
     fun `given feature is never accessed, when shouldShowFeatureSpecificJetpackOverlay invoked, then return true`() {
         setupMockForWpComSite()
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseOne)
+        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseThree)
         whenever(
                 jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(
                         STATS,
-                        PHASE_ONE
+                        PHASE_THREE
                 )
         ).thenReturn(null)
 

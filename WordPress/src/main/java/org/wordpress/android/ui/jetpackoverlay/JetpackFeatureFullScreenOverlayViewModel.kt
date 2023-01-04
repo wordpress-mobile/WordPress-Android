@@ -5,11 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenMigrationInfoLink
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackOverlayDismissalType.CLOSE_BUTTON
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackOverlayDismissalType.CONTINUE_BUTTON
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource.UNSPECIFIED
+import org.wordpress.android.util.config.JPDeadlineConfig
+import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
+import org.wordpress.android.util.config.PhaseTwoBlogPostLinkConfig
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -19,7 +23,10 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val jetpackFeatureOverlayContentBuilder: JetpackFeatureOverlayContentBuilder,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
+    private val jpDeadlineConfig: JPDeadlineConfig,
+    private val phaseTwoBlogPostLinkConfig: PhaseTwoBlogPostLinkConfig,
+    private val phaseThreeBlogPostLinkConfig: PhaseThreeBlogPostLinkConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<JetpackFeatureOverlayUIState>()
     val uiState: LiveData<JetpackFeatureOverlayUIState> = _uiState
@@ -101,7 +108,10 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         val params = JetpackFeatureOverlayContentBuilderParams(
                 currentPhase = getCurrentPhase()!!,
                 isRtl = rtlLayout,
-                feature = overlayScreenType
+                feature = overlayScreenType,
+                jpDeadlineDate = jpDeadlineConfig.getValue(),
+                phaseTwoBlogPostLink = phaseTwoBlogPostLinkConfig.getValue(),
+                phaseThreeBlogPostLink = phaseThreeBlogPostLinkConfig.getValue()
         )
         _uiState.postValue(jetpackFeatureOverlayContentBuilder.build(params = params))
         jetpackFeatureRemovalOverlayUtil.onOverlayShown(overlayScreenType)
@@ -110,5 +120,10 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     private fun getCurrentPhase() = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
     private fun getSiteCreationPhase() = jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()
+
+    fun openJetpackMigrationInfoLink(migrationInfoRedirectUrl: String) {
+        jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClicked(screenType)
+        _action.value = OpenMigrationInfoLink(migrationInfoRedirectUrl)
+    }
 }
 
