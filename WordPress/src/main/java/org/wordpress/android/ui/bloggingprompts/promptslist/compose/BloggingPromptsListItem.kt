@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -25,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.bloggingprompts.promptslist.model.BloggingPromptsListItemModel
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.asString
@@ -33,7 +33,6 @@ import org.wordpress.android.util.LocaleManager
 import java.text.SimpleDateFormat
 
 private const val MONTH_DAY_FORMAT = "MMM d"
-private val answeredColor = Color(0xFF008A20)
 
 private val ItemSubtitleTextStyle
     @ReadOnlyComposable
@@ -89,7 +88,7 @@ fun BloggingPromptsListItem(
                 ItemSubtitleDivider()
                 Text(
                         text = stringResource(R.string.blogging_prompts_list_answered_prompt),
-                        color = answeredColor,
+                        color = AppColor.Green50,
                         style = ItemSubtitleTextStyle,
                 )
             }

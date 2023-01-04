@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -29,8 +30,6 @@ import org.wordpress.android.ui.bloggingprompts.promptslist.model.BloggingPrompt
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
-
-private val listBackgroundColor = Color(0xFFE5E5E5)
 
 @Composable
 fun BloggingPromptsListScreen(
@@ -65,7 +64,7 @@ private fun ListContent(
     LazyColumn(
             Modifier
                     .fillMaxSize()
-                    .background(listBackgroundColor),
+                    .background(MaterialTheme.colors.onSurface.copy(alpha = 0.1f)), // todo create extension colors.divider
             verticalArrangement = Arrangement.spacedBy(1.dp),
     ) {
         items(promptsList) {
