@@ -1,24 +1,21 @@
 package org.wordpress.android.ui.bloggingprompts.promptslist.compose
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListViewModel.UiState
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListViewModel.UiState.Content
@@ -61,15 +58,12 @@ fun BloggingPromptsListScreen(
 private fun ListContent(
     promptsList: List<BloggingPromptsListItemModel>
 ) {
-    LazyColumn(
-            Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.onSurface.copy(alpha = 0.1f)), // todo create extension colors.divider
-            verticalArrangement = Arrangement.spacedBy(1.dp),
-    ) {
-        items(promptsList) {
+    LazyColumn(Modifier.fillMaxSize()) {
+        itemsIndexed(promptsList) { index, item ->
+            if (index != 0) Divider()
+
             BloggingPromptsListItem(
-                    model = it,
+                    model = item,
                     modifier = Modifier.fillMaxWidth()
             )
         }
@@ -87,6 +81,7 @@ private fun LoadingContent() {
 }
 
 @Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun BloggingPromptsListScreenPreview(
     @PreviewParameter(provider = BloggingPromptsListScreenPreviewProvider::class) uiState: UiState
