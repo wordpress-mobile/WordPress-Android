@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.bloggingprompts.promptslist.usecase
 
-import kotlinx.coroutines.flow.first
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -36,14 +35,8 @@ class FetchBloggingPromptsListUseCase @Inject constructor(
                 .let { Date.from(it) }
 
         return selectedSiteRepository.getSelectedSite()?.let { site ->
-            // fetchPrompts do not return the actual fetched prompts, it only stores them in the local FluxC database so
-            // if the fetch is successful we still need to cal getPrompts to get the actual prompts list result
-            // if the get is also successful then we can proceed to mapping the prompt model to list item models
             bloggingPromptsStore.fetchPrompts(site, NUMBER_OF_PROMPTS, fromDate)
                     .takeUnless { it.isError }
-                    ?.let { bloggingPromptsStore.getPrompts(site) }
-                    ?.first()
-                    ?.takeUnless { it.isError }
                     ?.model
         }
     }
