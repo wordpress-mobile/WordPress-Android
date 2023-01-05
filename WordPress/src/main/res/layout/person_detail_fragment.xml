@@ -124,4 +124,14 @@
         android:layout_below="@id/person_role_container"
         android:background="?android:attr/listDivider" />
 
+    <include
+        android:id="@+id/jetpack_badge"
+        layout="@layout/jetpack_badge"
+        android:layout_below="@id/subscribed_date_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
 </RelativeLayout>

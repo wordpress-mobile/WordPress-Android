@@ -109,6 +109,7 @@ class JetpackBrandingUtils @Inject constructor(
         NOTIFICATIONS("notifications"),
         NOTIFICATIONS_SETTINGS("notifications_settings"),
         PEOPLE("people"),
+        PERSON("person"),
         READER("reader"),
         READER_POST_DETAIL("reader_post_detail"),
         READER_SEARCH("reader_search"),
