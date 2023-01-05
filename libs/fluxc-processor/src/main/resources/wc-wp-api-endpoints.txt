@@ -54,6 +54,8 @@
 
 /payments/terminal/locations/store
 
+/payments/transactions/summary
+
 /wc_stripe/account/summary
 /wc_stripe/terminal/locations/store
 /wc_stripe/orders/<order_id>/create_customer
