@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpackoverlay
 
+import android.util.Log
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_THREE
@@ -253,8 +254,40 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         )
     }
 
+
+    fun trackAllFeatureOverlayShown(source: JetpackAllFeaturesOverlaySource) {
+        // todo: annmarie - to be implemented
+        Log.i(javaClass.simpleName, "***=> trackAllFeatureOverlayShown $source")
+    }
+
+    fun trackBottomSheetDismissedInAllFeaturesOverlay(
+        source: JetpackAllFeaturesOverlaySource,
+        dismissalType: JetpackOverlayDismissalType
+    ) {
+        // todo: annmarie - to be implemented
+        Log.i(javaClass.simpleName, "***=> trackBottomSheetDismissedInAllFeaturesOverlay $source $dismissalType")
+    }
+
+    fun trackInstallJetpackTappedInAllFeaturesOverlay(source: JetpackAllFeaturesOverlaySource) {
+        // todo: annmarie - to be implemented
+        Log.i(javaClass.simpleName, "***=> trackInstallJetpackTappedInAllFeaturesOverlay $source")
+    }
+
     enum class JetpackOverlayDismissalType(val trackingName: String) {
         CLOSE_BUTTON("close"),
         CONTINUE_BUTTON("continue")
+    }
+
+    enum class JetpackAllFeaturesOverlaySource(val label: String) {
+        FEATURE_CARD("feature_card"),
+        UNSPECIFIED("unspecified");
+
+        companion object {
+            @JvmStatic
+            fun fromString(label: String?) = when (FEATURE_CARD.label) {
+                label -> FEATURE_CARD
+                else -> UNSPECIFIED
+            }
+        }
     }
 }
