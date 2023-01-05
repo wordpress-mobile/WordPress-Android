@@ -153,7 +153,9 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
 
     fun openJetpackMigrationInfoLink(migrationInfoRedirectUrl: String) {
         if (isAllFeaturesOverlayScreen) {
-            jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClickedInAllFeaturesOverlay(allFeaturesOverlayOrigin)
+            jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClickedInAllFeaturesOverlay(
+                    allFeaturesOverlayOrigin
+            )
         } else {
             jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClicked(screenType)
         }
