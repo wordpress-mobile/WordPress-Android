@@ -4291,15 +4291,18 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Switch to the Jetpack app to watch your site’s traffic grow with stats and insights.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Switch to the Jetpack app to find, follow, and like all your favorite sites and posts with Reader.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Switch to the Jetpack app to keep receiving  realtime notifications on your device.</string>
-    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app"> Switch to the new Jetpack app</string>
-
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Switch to the new Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Your stats are moving to the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader is moving to the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Notifications are moving to Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Jetpack features are moving soon.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app on %s.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app soon.</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Switch to the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_continue_without_jetpack" translatable="false">@string/wp_jetpack_continue_without_jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_three_all_features_description" translatable="false">@string/wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline</string>
 
     <!-- Deep Linking Activity Aliases -->
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
