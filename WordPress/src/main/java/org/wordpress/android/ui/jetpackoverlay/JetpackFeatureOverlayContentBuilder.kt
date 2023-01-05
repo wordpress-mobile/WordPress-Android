@@ -270,6 +270,37 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
                 secondaryButtonText = R.string.wp_jetpack_deep_link_open_in_wordpress
         )
     }
+
+    // All Feature Overlay
+    fun buildAllFeaturesOverlayState(
+        isRtl: Boolean, currentPhase: JetpackFeatureRemovalPhase, blogPostLink: String?
+    ): JetpackFeatureOverlayUIState {
+        return getStateForAllFeatures(isRtl, currentPhase, blogPostLink)
+    }
+
+    private fun getStateForAllFeatures(
+        isRtl: Boolean,
+        currentPhase: JetpackFeatureRemovalPhase,
+        blogPostLink: String?
+    ): JetpackFeatureOverlayUIState {
+        val componentVisibility = if (currentPhase == PhaseThree)
+                JetpackFeatureOverlayComponentVisibility.AllFeaturesPhase.PhaseThree()
+            else
+                JetpackFeatureOverlayComponentVisibility.AllFeaturesPhase.Final()
+        val content = getContentForAllFeatures(isRtl, blogPostLink)
+        return JetpackFeatureOverlayUIState(componentVisibility, content)
+    }
+
+    private fun getContentForAllFeatures(isRtl: Boolean, blogPostLink: String?): JetpackFeatureOverlayContent {
+        return JetpackFeatureOverlayContent(
+                illustration = if (isRtl) R.raw.jp_all_features_rtl else R.raw.jp_all_features_left,
+                title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features,
+                caption = UiStringRes(R.string.wp_jetpack_feature_removal_overlay_phase_three_all_features_description),
+                migrationInfoUrl = blogPostLink,
+                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app,
+                secondaryButtonText = R.string.wp_jetpack_feature_removal_overlay_continue_without_jetpack
+        )
+    }
 }
 
 data class JetpackFeatureOverlayContentBuilderParams(
