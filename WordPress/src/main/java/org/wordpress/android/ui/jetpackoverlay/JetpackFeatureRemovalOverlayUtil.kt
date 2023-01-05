@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.jetpackoverlay
 
-import android.util.Log
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_THREE
@@ -254,23 +253,48 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         )
     }
 
-
     fun trackAllFeatureOverlayShown(source: JetpackAllFeaturesOverlaySource) {
-        // todo: annmarie - to be implemented
-        Log.i(javaClass.simpleName, "***=> trackAllFeatureOverlayShown $source")
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                        SCREEN_TYPE_KEY to source.label
+                )
+        )
     }
 
     fun trackBottomSheetDismissedInAllFeaturesOverlay(
         source: JetpackAllFeaturesOverlaySource,
         dismissalType: JetpackOverlayDismissalType
     ) {
-        // todo: annmarie - to be implemented
-        Log.i(javaClass.simpleName, "***=> trackBottomSheetDismissedInAllFeaturesOverlay $source $dismissalType")
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISMISSED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                        SCREEN_TYPE_KEY to source.label,
+                        DISMISSAL_TYPE_KEY to dismissalType.trackingName
+                )
+        )
     }
 
     fun trackInstallJetpackTappedInAllFeaturesOverlay(source: JetpackAllFeaturesOverlaySource) {
-        // todo: annmarie - to be implemented
-        Log.i(javaClass.simpleName, "***=> trackInstallJetpackTappedInAllFeaturesOverlay $source")
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                        SCREEN_TYPE_KEY to source.label
+                )
+        )
+    }
+
+    fun trackLearnMoreAboutMigrationClickedInAllFeaturesOverlay(source: JetpackAllFeaturesOverlaySource) {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                        SCREEN_TYPE_KEY to source.label
+                )
+        )
     }
 
     enum class JetpackOverlayDismissalType(val trackingName: String) {

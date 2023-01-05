@@ -152,7 +152,11 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     private fun getSiteCreationPhase() = jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()
 
     fun openJetpackMigrationInfoLink(migrationInfoRedirectUrl: String) {
-        jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClicked(screenType)
+        if (isAllFeaturesOverlayScreen) {
+            jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClickedInAllFeaturesOverlay(allFeaturesOverlayOrigin)
+        } else {
+            jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClicked(screenType)
+        }
         _action.value = OpenMigrationInfoLink(migrationInfoRedirectUrl)
     }
 }
