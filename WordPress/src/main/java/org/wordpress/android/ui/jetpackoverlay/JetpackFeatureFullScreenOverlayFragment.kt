@@ -31,6 +31,7 @@ import org.wordpress.android.util.extensions.setVisible
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@Suppress("TooManyFunctions")
 class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     @Inject lateinit var activityLauncherWrapper: ActivityLauncherWrapper
     @Inject lateinit var uiHelpers: UiHelpers
@@ -207,6 +208,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         private const val IS_ALL_FEATURES_OVERLAY = "KEY_IS_ALL_FEATURES_OVERLAY"
         private const val ALL_FEATURES_OVERLAY_SOURCE = "KEY_ALL_FEATURES_OVERLAY_SOURCE"
 
+        @Suppress("LongParameterList")
         @JvmStatic fun newInstance(
             jetpackFeatureOverlayScreenType: JetpackFeatureOverlayScreenType? = null,
             isSiteCreationOverlay: Boolean = false,
