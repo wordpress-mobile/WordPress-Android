@@ -41,7 +41,7 @@
                     android:id="@+id/person_display_name"
                     style="@style/PersonTextView"
                     android:fontFamily="sans-serif-light"
-                    android:textColor="?attr/colorOnPrimarySurface"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textSize="@dimen/text_sz_extra_large"
                     android:textStyle="bold"
                     tools:text="display_name" />
@@ -49,7 +49,6 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/person_username"
                     style="@style/PersonTextView"
-                    android:textColor="?attr/colorOnPrimarySurface"
                     android:textSize="@dimen/text_sz_large"
                     tools:text="username" />
 
