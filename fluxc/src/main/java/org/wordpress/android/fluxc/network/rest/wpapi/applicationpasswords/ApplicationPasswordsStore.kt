@@ -20,7 +20,7 @@ internal class ApplicationPasswordsStore @Inject constructor(
         private const val PASSWORD_PREFERENCE_KEY_PREFIX = "app_password_"
     }
 
-    private val applicationName
+    val applicationName: String
         get() = applicationNameOptional.orElseThrow {
             NoSuchElementException(
                 "Please make sure to inject a String instance with " +
