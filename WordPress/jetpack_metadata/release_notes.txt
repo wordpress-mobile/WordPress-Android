@@ -1,3 +1,5 @@
-- Text in the QR code scanning process is translated into your app’s language.
-- The Notification Settings switch disables weekly roundup, blogging reminder, and site notifications.
-- We fixed a bug in My Site > Comments that crashed the app for self-hosted sites with certain plugins.
+* [**] Adds the functionality to Add, Edit and Delete categories from site settings. [https://github.com/wordpress-mobile/WordPress-Android/pull/17652]
+* [**] [internal] Upgrade React Native from 0.66.2 to 0.69.4 [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5193]
+* [*] Reader: Fix translations not applying on some texts when the language is changed via App Settings. [https://github.com/wordpress-mobile/WordPress-Android/pull/17524]
+* [*] [Jetpack-only] Hiding Scan Login QR Code when logged into an account with 2FA. [https://github.com/wordpress-mobile/WordPress-Android/pull/17662]
+
