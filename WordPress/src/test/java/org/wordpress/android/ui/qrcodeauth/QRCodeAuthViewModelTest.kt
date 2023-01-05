@@ -2,11 +2,9 @@ package org.wordpress.android.ui.qrcodeauth
 
 import android.os.Bundle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestCoroutineScope
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -63,7 +61,6 @@ const val VALID_EXPIRED_MESSAGE = "qr code data expired"
 const val INVALID_EXPIRED_MESSAGE = "invalid qr code data expired"
 
 @Suppress("LargeClass")
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class QRCodeAuthViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: QRCodeAuthViewModel
@@ -612,12 +609,12 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     private fun testWithData(
         uiStates: MutableList<QRCodeAuthUiState> = mutableListOf(),
         actionEvents: MutableList<QRCodeAuthActionEvent> = mutableListOf(),
-        testBody: suspend TestCoroutineScope.() -> Unit
-    ) = runBlockingTest {
-            val uiStatesJob = launch { viewModel.uiState.toList(uiStates) }
-            val actionEventsJob = launch { viewModel.actionEvents.toList(actionEvents) }
-            testBody()
-            uiStatesJob.cancel()
-            actionEventsJob.cancel()
+        testBody: suspend TestScope.() -> Unit
+    ) = test {
+        val uiStatesJob = launch { viewModel.uiState.toList(uiStates) }
+        val actionEventsJob = launch { viewModel.actionEvents.toList(actionEvents) }
+        testBody(testScope())
+        uiStatesJob.cancel()
+        actionEventsJob.cancel()
     }
 }

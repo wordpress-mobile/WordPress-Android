@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.debug
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -10,12 +10,12 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Button
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Field
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiState
@@ -23,9 +23,11 @@ import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.FeatureFlagConfig
+import org.wordpress.android.util.config.RemoteFieldConfigRepository
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupNotifier
 
+@ExperimentalCoroutinesApi
 class DebugSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var manualFeatureConfig: ManualFeatureConfig
     @Mock lateinit var featureFlagConfig: FeatureFlagConfig
@@ -33,17 +35,18 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var weeklyRoundupNotifier: WeeklyRoundupNotifier
     @Mock lateinit var notificationManager: NotificationManagerWrapper
     @Mock lateinit var contextProvider: ContextProvider
+    @Mock lateinit var remoteFieldConfigRepository: RemoteFieldConfigRepository
     private lateinit var viewModel: DebugSettingsViewModel
     private val uiStates = mutableListOf<UiState>()
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         viewModel = DebugSettingsViewModel(
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 manualFeatureConfig,
                 featureFlagConfig,
+                remoteFieldConfigRepository,
                 debugUtils,
                 weeklyRoundupNotifier,
                 notificationManager,
@@ -125,7 +128,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
         }
     }
 
-    @Suppress("NestedBlockDepth")
+    @Suppress("NestedBlockDepth", "ComplexMethod", "NestedBlockDepth")
     private fun assertUiState(
         expectedState: Feature.State? = null,
         enabledFeature: String? = null,
@@ -137,6 +140,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
             val developedItems = mutableListOf<Feature>()
             val buttons = mutableListOf<Button>()
             val rows = mutableListOf<Row>()
+            val remoteFields = mutableListOf<Field>()
             for (uiItem in this.uiItems) {
                 when (uiItem) {
                     is Header -> headers.add(uiItem)
@@ -153,6 +157,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
                     is Row -> {
                         rows.add(uiItem)
                     }
+                    is Field -> remoteFields.add(uiItem)
                 }
             }
             assertThat(headers).hasSize(4)

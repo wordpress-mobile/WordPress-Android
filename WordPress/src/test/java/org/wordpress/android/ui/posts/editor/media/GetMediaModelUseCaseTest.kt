@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -12,19 +13,17 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.util.FileProvider
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import java.io.File
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-@InternalCoroutinesApi
 class GetMediaModelUseCaseTest : BaseUnitTest() {
     @Test
     fun `loadMediaByLocalId loads models from db and returns them`() = test {
@@ -182,7 +181,7 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
                     mediaStore,
                     fileProvider,
                     authenticationUtils,
-                    TEST_DISPATCHER
+                    UnconfinedTestDispatcher()
             )
         }
 

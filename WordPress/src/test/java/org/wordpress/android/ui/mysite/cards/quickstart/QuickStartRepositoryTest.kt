@@ -2,7 +2,8 @@ package org.wordpress.android.ui.mysite.cards.quickstart
 
 import androidx.core.text.HtmlCompat
 import com.google.android.material.snackbar.Snackbar.Callback
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -16,7 +17,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.DynamicCardStore
@@ -24,7 +24,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
@@ -45,6 +44,7 @@ import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
+@ExperimentalCoroutinesApi
 class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var quickStartStore: QuickStartStore
     @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
@@ -81,13 +81,12 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     private val nonSiteMenuTasks = QuickStartTask.getAllTasks().subtract(siteMenuTasks)
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() = test {
         whenever(appPrefsWrapper.getLastSelectedQuickStartTypeForSite(any())).thenReturn(quickStartType)
         whenever(quickStartExistingUsersV2FeatureConfig.isEnabled()).thenReturn(false)
         quickStartRepository = QuickStartRepository(
-                TEST_DISPATCHER,
+                testDispatcher(),
                 quickStartStore,
                 quickStartUtilsWrapper,
                 appPrefsWrapper,
@@ -350,6 +349,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(quickStartType.isEveryQuickStartTaskDone(quickStartStore, site.id.toLong())).thenReturn(true)
 
         quickStartRepository.completeTask(QuickStartNewSiteTask.CHECK_STATS)
+        advanceUntilIdle()
 
         assertThat(snackbars).isNotEmpty
     }

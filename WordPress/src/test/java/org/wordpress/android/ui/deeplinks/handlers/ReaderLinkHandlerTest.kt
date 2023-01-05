@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.deeplinks.handlers
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -16,6 +17,7 @@ import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.utils.IntentUtils
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
+@ExperimentalCoroutinesApi
 class ReaderLinkHandlerTest : BaseUnitTest() {
     @Mock lateinit var intentUtils: IntentUtils
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper

@@ -2,15 +2,10 @@ package org.wordpress.android.util
 
 import android.app.Activity
 import android.view.View
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.advanceTimeBy
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -20,6 +15,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.SnackbarItem.Info
@@ -28,12 +24,9 @@ import org.wordpress.android.widgets.WPSnackbarWrapper
 private const val TEST_MESSAGE_TEMPLATE = "This is test message number "
 private const val SNACKBAR_DURATION_MS = 500L
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class SnackbarSequencerConcurrentTest {
-    @get:Rule val rule = InstantTaskExecutorRule()
-
+class SnackbarSequencerConcurrentTest : BaseUnitTest() {
     @Mock lateinit var wpSnackbarWrapper: WPSnackbarWrapper
     @Mock lateinit var wpSnackbar: Snackbar
     @Mock lateinit var view: View
@@ -42,21 +35,21 @@ class SnackbarSequencerConcurrentTest {
     private val uiHelper: UiHelpers = UiHelpers()
     private lateinit var sequencer: SnackbarSequencer
 
-    private val job = Job()
-    private val dispatcher = TestCoroutineDispatcher()
-    private val coroutineContext = job + dispatcher
-
     @Before
     fun setUp() {
         whenever(activity.isFinishing).thenReturn(false)
         whenever(view.context).thenReturn(activity)
         whenever(wpSnackbarWrapper.make(any(), any(), any())).thenReturn(wpSnackbar)
 
-        sequencer = SnackbarSequencer(uiHelper, wpSnackbarWrapper, dispatcher)
+        sequencer = SnackbarSequencer(
+                uiHelper,
+                wpSnackbarWrapper,
+                testDispatcher()
+        )
     }
 
     @Test
-    fun `snackbars are shown in sequence with the correct duration`() = runBlockingTest(coroutineContext) {
+    fun `snackbars are shown in sequence with the correct duration`() = test {
         // Given
         val items = getItems(2)
 
@@ -75,7 +68,7 @@ class SnackbarSequencerConcurrentTest {
     }
 
     @Test
-    fun `snackbars are not shown until previous duration elapsed`() = runBlockingTest(coroutineContext) {
+    fun `snackbars are not shown until previous duration elapsed`() = test {
         // Given
         val items = getItems(2)
 
@@ -98,7 +91,7 @@ class SnackbarSequencerConcurrentTest {
     }
 
     @Test
-    fun `snackbars beyond capacity are not shown`() = runBlockingTest(coroutineContext) {
+    fun `snackbars beyond capacity are not shown`() = test {
         // Given
         val items = getItems(10)
 

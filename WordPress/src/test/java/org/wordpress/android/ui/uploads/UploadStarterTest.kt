@@ -1,15 +1,13 @@
 package org.wordpress.android.ui.uploads
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ProcessLifecycleOwner
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
@@ -26,6 +24,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.UploadAction
 import org.wordpress.android.fluxc.annotations.action.Action
@@ -42,7 +41,6 @@ import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.UploadStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -53,10 +51,9 @@ import java.util.Date
 import java.util.UUID
 import kotlin.random.Random
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class UploadStarterTest {
-    @get:Rule val rule = InstantTaskExecutorRule()
-
+class UploadStarterTest : BaseUnitTest() {
     private val uploadServiceFacade = createMockedUploadServiceFacade()
 
     private val sites = listOf(createSiteModel(), createSiteModel())
@@ -505,8 +502,8 @@ class UploadStarterTest {
             postStore = postStore,
             pageStore = pageStore,
             siteStore = siteStore,
-            bgDispatcher = Dispatchers.Unconfined,
-            ioDispatcher = Dispatchers.Unconfined,
+            bgDispatcher = testDispatcher(),
+            ioDispatcher = testDispatcher(),
             networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
             connectionStatus = connectionStatus,
             uploadServiceFacade = uploadServiceFacade,

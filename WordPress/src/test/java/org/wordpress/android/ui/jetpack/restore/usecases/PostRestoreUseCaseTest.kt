@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.jetpack.restore.usecases
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -8,7 +8,6 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ActivityLogAction
 import org.wordpress.android.fluxc.action.ActivityLogAction.REWIND
 import org.wordpress.android.fluxc.model.SiteModel
@@ -29,7 +28,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType.INVALI
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.OtherRequestRunning
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.RemoteRequestFailure
@@ -37,7 +35,7 @@ import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class PostRestoreUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: PostRestoreUseCase
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
@@ -57,7 +55,11 @@ class PostRestoreUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setup() = test {
-        useCase = PostRestoreUseCase(networkUtilsWrapper, activityLogStore, TEST_DISPATCHER)
+        useCase = PostRestoreUseCase(
+                networkUtilsWrapper,
+                activityLogStore,
+                testDispatcher()
+        )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(activityLogStore.fetchActivitiesRewind(any())).thenReturn(
                 OnRewindStatusFetched(ActivityLogAction.FETCH_REWIND_STATE)

@@ -1,19 +1,21 @@
 package org.wordpress.android.ui.comments.unified.usecase
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsActionPayload
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.CommentsActionData
-import org.wordpress.android.test
 import org.wordpress.android.ui.comments.utils.generateMockComments
 
-class GetCommentUseCaseTest {
+@ExperimentalCoroutinesApi
+class GetCommentUseCaseTest : BaseUnitTest() {
     private val commentsStore: CommentsStore = mock()
 
     private val classToTest = GetCommentUseCase(commentsStore)

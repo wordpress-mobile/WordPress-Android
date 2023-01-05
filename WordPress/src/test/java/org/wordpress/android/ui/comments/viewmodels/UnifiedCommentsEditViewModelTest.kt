@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.comments.viewmodels
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -14,7 +15,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
@@ -26,7 +26,6 @@ import org.wordpress.android.fluxc.store.CommentsStore.CommentsActionPayload
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.CommentsActionData
 import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
-import org.wordpress.android.test
 import org.wordpress.android.ui.comments.unified.CommentEssentials
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
@@ -48,7 +47,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActio
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Mock lateinit var commentsStore: CommentsStore
     @Mock lateinit var resourceProvider: ResourceProvider
@@ -89,8 +88,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 .thenReturn(READER_COMMENT_ENTITY)
 
         viewModel = UnifiedCommentsEditViewModel(
-                mainDispatcher = TEST_DISPATCHER,
-                bgDispatcher = TEST_DISPATCHER,
+                mainDispatcher = testDispatcher(),
+                bgDispatcher = testDispatcher(),
                 commentsStore = commentsStore,
                 resourceProvider = resourceProvider,
                 networkUtilsWrapper = networkUtilsWrapper,
@@ -135,6 +134,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Test
     fun `Should show and hide progress after start`() = test {
         viewModel.start(site, siteCommentIdentifier)
+        advanceUntilIdle()
 
         assertThat(uiState[0].showProgress).isTrue
         assertThat(uiState[2].showProgress).isFalse
@@ -157,6 +157,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         whenever(getCommentUseCase.execute(site, remoteCommentId))
                 .thenReturn(null)
         viewModel.start(site, siteCommentIdentifier)
+        advanceUntilIdle()
+
         assertThat(uiState[1].editedComment).isEqualTo(CommentEssentials())
     }
 
@@ -164,6 +166,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     fun `Should map CommentIdentifier to default CommentEssentials if CommentIdentifier not handled`() = test {
         // ReaderCommentIdentifier is not supported by this class yet
         viewModel.start(site, ReaderCommentIdentifier(0L, 0L, 0L))
+        advanceUntilIdle()
+
         assertThat(uiState[1].editedComment).isEqualTo(CommentEssentials())
     }
 

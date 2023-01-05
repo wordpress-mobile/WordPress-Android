@@ -65,8 +65,8 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         return jetpackFeatureRemovalPhaseHelper.getCurrentPhase() != null &&
                 when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
                     null -> false
-                    PhaseOne -> true
-                    PhaseTwo, PhaseThree, PhaseFour, PhaseNewUsers -> false
+                    PhaseOne, PhaseTwo, PhaseThree -> true
+                    PhaseFour, PhaseNewUsers -> false
                 }
     }
 
@@ -239,6 +239,16 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
                 mapOf(
                         CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getDeepLinkPhase()?.trackingName,
                         DISMISSAL_TYPE_KEY to dismissalType.trackingName
+                )
+        )
+    }
+
+    fun trackLearnMoreAboutMigrationClicked(screenType: JetpackFeatureOverlayScreenType) {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                        SCREEN_TYPE_KEY to screenType.trackingName
                 )
         )
     }

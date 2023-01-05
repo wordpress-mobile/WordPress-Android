@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import androidx.lifecycle.Observer
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -24,6 +23,7 @@ import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.PostListAction.EditPost
 
+@ExperimentalCoroutinesApi
 class PostListMainViewModelCopyPostTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var dispatcher: Dispatcher
@@ -42,7 +42,6 @@ class PostListMainViewModelCopyPostTest : BaseUnitTest() {
         setPostFormat("mockedPostFormat")
     }
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         postStore = PostStore(
@@ -61,12 +60,13 @@ class PostListMainViewModelCopyPostTest : BaseUnitTest() {
                 prefs = mock(),
                 previewStateHelper = mock(),
                 analyticsTracker = mock(),
-                mainDispatcher = Dispatchers.Unconfined,
-                bgDispatcher = Dispatchers.Unconfined,
+                mainDispatcher = testDispatcher(),
+                bgDispatcher = testDispatcher(),
                 postListEventListenerFactory = mock(),
                 uploadStarter = mock(),
                 uploadActionUseCase = mock(),
-                savePostToDbUseCase = mock()
+                savePostToDbUseCase = mock(),
+                jetpackFeatureRemovalPhaseHelper = mock()
         )
         viewModel.postListAction.observeForever(onPostListActionObserver)
 

@@ -164,10 +164,6 @@
 
         <!-- Preferences activities -->
         <activity
-            android:name=".ui.prefs.AboutActivity"
-            android:label="@string/about_the_app"
-            android:theme="@style/WordPress.NoActionBar.DarkNavbar" />
-        <activity
             android:name=".ui.about.UnifiedAboutActivity"
             android:label="@string/about_the_app"
             android:theme="@style/WordPress.UnifiedAbout" />
@@ -181,10 +177,6 @@
             android:name=".ui.prefs.ReleaseNotesActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/release_notes_screen_title"/>
-        <activity
-            android:name=".ui.prefs.LicensesActivity"
-            android:label="@string/license_screen_title"
-            android:theme="@style/WordPress.NoActionBar" />
         <activity android:name=".ui.prefs.SiteSettingsTagListActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/site_settings_tags_title" />
@@ -780,6 +772,12 @@
             android:name=".ui.qrcodeauth.QRCodeAuthActivity"
             android:label="@string/qrcode_auth_flow"
             android:theme="@style/WordPress.NoActionBar"/>
+
+        <!-- Blogging Prompts -->
+        <activity
+            android:name=".ui.bloggingprompts.promptslist.BloggingPromptsListActivity"
+            android:label="@string/blogging_prompts_list_title"
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Services -->
         <service

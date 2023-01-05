@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -12,7 +13,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
@@ -21,8 +21,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPr
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
-import org.wordpress.android.test
-import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -50,7 +48,8 @@ private val PROMPT = BloggingPromptModel(
         respondentsCount = 5,
         respondentsAvatarUrls = listOf()
 )
-@InternalCoroutinesApi
+
+@ExperimentalCoroutinesApi
 class BloggingPromptCardSourceTest : BaseUnitTest() {
     @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock private lateinit var bloggingPromptsStore: BloggingPromptsStore
@@ -89,7 +88,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 bloggingPromptsFeatureConfig,
                 appPrefsWrapper,
                 bloggingRemindersStore,
-                TEST_DISPATCHER
+                testDispatcher()
         )
     }
 
@@ -116,7 +115,9 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         init(isBloggingPromptFeatureEnabled = false)
         val result = mutableListOf<BloggingPromptUpdate>()
 
-        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
 
         bloggingPromptCardSource.refresh()
 
@@ -130,7 +131,9 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         bloggingPromptCardSource.refresh.observeForever { }
 
-        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
 
         assertThat(result.size).isEqualTo(1)
         assertThat(result.first()).isEqualTo(BloggingPromptUpdate(PROMPT))
@@ -144,6 +147,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.refresh.observeForever { }
 
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
+        advanceUntilIdle()
 
         verify(bloggingPromptsStore).fetchPrompts(eq(siteModel), eq(20), any())
     }
@@ -155,7 +159,9 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(BloggingPromptsResult())
         bloggingPromptCardSource.refresh.observeForever { }
 
-        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
 
         assertThat(result.size).isEqualTo(1)
         assertThat(result.first()).isEqualTo(BloggingPromptUpdate(PROMPT))
@@ -167,7 +173,9 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(success).thenReturn(success)
         bloggingPromptCardSource.refresh.observeForever { }
-        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
 
         bloggingPromptCardSource.refresh()
 
@@ -183,7 +191,9 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(Date())
         bloggingPromptCardSource.refresh.observeForever { }
 
-        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+            it?.let { result.add(it) }
+        }
 
         assertThat(result.size).isEqualTo(1)
         assertThat(result.first()).isEqualTo(BloggingPromptUpdate(null))
@@ -206,7 +216,10 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 )
                 bloggingPromptCardSource.refresh.observeForever { }
 
-                bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+                bloggingPromptCardSource.build(
+                        testScope(),
+                        SITE_LOCAL_ID
+                ).observeForever { it?.let { result.add(it) } }
 
                 assertThat(result.size).isEqualTo(1)
                 assertThat(result.first()).isEqualTo(BloggingPromptUpdate(PROMPT))
@@ -232,7 +245,10 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 )
                 bloggingPromptCardSource.refresh.observeForever { }
 
-                bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+                bloggingPromptCardSource.build(
+                        testScope(),
+                        SITE_LOCAL_ID
+                ).observeForever { it?.let { result.add(it) } }
 
                 assertThat(result.size).isEqualTo(1)
                 assertThat(result.first()).isEqualTo(BloggingPromptUpdate(PROMPT))
@@ -257,7 +273,10 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 )
                 bloggingPromptCardSource.refresh.observeForever { }
 
-                bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+                bloggingPromptCardSource.build(
+                        testScope(),
+                        SITE_LOCAL_ID
+                ).observeForever { it?.let { result.add(it) } }
 
                 assertThat(result.size).isEqualTo(1)
                 assertThat(result.first()).isEqualTo(BloggingPromptUpdate(null))
@@ -283,7 +302,10 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 )
                 bloggingPromptCardSource.refresh.observeForever { }
 
-                bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+                bloggingPromptCardSource.build(
+                        testScope(),
+                        SITE_LOCAL_ID
+                ).observeForever { it?.let { result.add(it) } }
 
                 assertThat(result.size).isEqualTo(1)
                 assertThat(result.first()).isEqualTo(BloggingPromptUpdate(PROMPT))
@@ -312,12 +334,13 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         bloggingPromptCardSource.refresh()
+        advanceUntilIdle()
 
         assertThat(result.size).isEqualTo(5)
         assertThat(result[0]).isFalse // init
         assertThat(result[1]).isTrue // build(...) -> refresh()
-        assertThat(result[2]).isFalse // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
-        assertThat(result[3]).isTrue // refresh()
+        assertThat(result[2]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
+        assertThat(result[3]).isFalse // refresh()
         assertThat(result[4]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
     }
 
@@ -332,10 +355,10 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         bloggingPromptCardSource.refreshTodayPrompt()
+        advanceUntilIdle()
 
-        assertThat(singlePromptRefreshResult.size).isEqualTo(2)
+        assertThat(singlePromptRefreshResult.size).isEqualTo(1)
         assertThat(singlePromptRefreshResult[0]).isFalse // init
-        assertThat(singlePromptRefreshResult[1]).isTrue // refreshTodayPrompt
     }
 
     @Test
@@ -363,12 +386,13 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         bloggingPromptCardSource.refresh()
+        advanceUntilIdle()
 
         assertThat(result.size).isEqualTo(5)
         assertThat(result[0]).isFalse // init
         assertThat(result[1]).isTrue // build(...) -> refresh()
-        assertThat(result[2]).isFalse // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
-        assertThat(result[3]).isTrue // refresh()
+        assertThat(result[2]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
+        assertThat(result[3]).isFalse // refresh()
         assertThat(result[4]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
     }
 
@@ -383,12 +407,13 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         bloggingPromptCardSource.refresh()
+        advanceUntilIdle()
 
         assertThat(result.size).isEqualTo(5)
         assertThat(result[0]).isFalse // init
         assertThat(result[1]).isTrue // build(...) -> refresh()
-        assertThat(result[2]).isFalse // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> error
-        assertThat(result[3]).isTrue // refresh()
+        assertThat(result[2]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> error
+        assertThat(result[3]).isFalse // refresh()
         assertThat(result[4]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> error
     }
 }

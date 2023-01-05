@@ -2,7 +2,8 @@ package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
 import androidx.lifecycle.Observer
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.ArgumentMatchers.any
@@ -17,14 +18,12 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload
-import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -35,7 +34,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class EditorMediaTest : BaseUnitTest() {
     @Test
     fun `advertiseImageOptimisationAndAddMedia shows dialog when shouldAdvertiseImageOptimization is true`() {
@@ -409,8 +408,8 @@ class EditorMediaTest : BaseUnitTest() {
                     reattachUploadingMediaUseCase,
                     analyticsUtilsWrapper,
                     analyticsTrackerWrapper,
-                    TEST_DISPATCHER,
-                    TEST_DISPATCHER
+                    UnconfinedTestDispatcher(),
+                    UnconfinedTestDispatcher()
             )
             editorMedia.start(siteModel, editorMediaListener)
             return editorMedia

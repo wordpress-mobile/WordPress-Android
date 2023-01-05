@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.quicklinksribbon
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -19,7 +19,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.utils.ListItemInteraction
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class QuickLinkRibbonBuilderTest : BaseUnitTest() {
     @Mock lateinit var siteModel: SiteModel
     @Mock lateinit var quickStartRepository: QuickStartRepository
