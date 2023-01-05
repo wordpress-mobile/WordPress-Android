@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+21.5
+-----
+* [*] [internal] Editor: Only register core blocks when `onlyCoreBlocks` capability is enabled [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5293]
+
 21.4
 -----
 * [**] Adds the functionality to Add, Edit and Delete categories from site settings. [https://github.com/wordpress-mobile/WordPress-Android/pull/17652]
