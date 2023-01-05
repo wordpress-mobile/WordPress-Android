@@ -23,19 +23,12 @@ private const val APPLICATION_PASSWORDS_DISABLED_ERROR_CODE = "application_passw
  */
 internal class ApplicationPasswordsManager @Inject constructor(
     private val applicationPasswordsStore: ApplicationPasswordsStore,
-    @ApplicationPasswordsClientId private val applicationNameOptional: Optional<String>,
     private val jetpackApplicationPasswordsRestClient: JetpackApplicationPasswordsRestClient,
     private val wpApiApplicationPasswordsRestClient: WPApiApplicationPasswordsRestClient,
     private val appLogWrapper: AppLogWrapper
 ) {
     private val applicationName
-        get() = applicationNameOptional.orElseThrow {
-            NoSuchElementException(
-                "Please make sure to inject a String instance with " +
-                    "the annotation @${ApplicationPasswordsClientId::class.simpleName} to the Dagger graph" +
-                    "to be able to use the Application Passwords feature"
-            )
-        }
+        get() = applicationPasswordsStore.applicationName
 
     @Suppress("ReturnCount")
     suspend fun getApplicationCredentials(
