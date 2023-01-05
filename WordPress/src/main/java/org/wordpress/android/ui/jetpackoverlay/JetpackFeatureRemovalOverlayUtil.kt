@@ -245,11 +245,11 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
 
     fun trackLearnMoreAboutMigrationClicked(screenType: JetpackFeatureOverlayScreenType) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED,
-                mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
-                        SCREEN_TYPE_KEY to screenType.trackingName
-                )
+            AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED,
+            mapOf(
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                SCREEN_TYPE_KEY to screenType.trackingName
+            )
         )
     }
 

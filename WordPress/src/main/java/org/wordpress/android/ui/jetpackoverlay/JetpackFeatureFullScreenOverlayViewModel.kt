@@ -56,8 +56,8 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         _action.value = JetpackFeatureOverlayActions.DismissDialog
         if (isSiteCreationOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInSiteCreationOverlay(
-                    siteCreationOrigin,
-                    CONTINUE_BUTTON
+                siteCreationOrigin,
+                CONTINUE_BUTTON
             )
         else if (isDeepLinkOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInDeepLinkOverlay(CONTINUE_BUTTON)
@@ -68,8 +68,8 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         _action.value = JetpackFeatureOverlayActions.DismissDialog
         if (isSiteCreationOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInSiteCreationOverlay(
-                    siteCreationOrigin,
-                    CLOSE_BUTTON
+                siteCreationOrigin,
+                CLOSE_BUTTON
             )
         else if (isDeepLinkOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInDeepLinkOverlay(CLOSE_BUTTON)
@@ -88,10 +88,10 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
             isSiteCreationOverlayScreen = true
             siteCreationOrigin = siteCreationSource
             _uiState.postValue(
-                    jetpackFeatureOverlayContentBuilder.buildSiteCreationOverlayState(
-                            getSiteCreationPhase()!!,
-                            rtlLayout
-                    )
+                jetpackFeatureOverlayContentBuilder.buildSiteCreationOverlayState(
+                    getSiteCreationPhase()!!,
+                    rtlLayout
+                )
             )
             jetpackFeatureRemovalOverlayUtil.trackSiteCreationOverlayShown(siteCreationOrigin)
             return
@@ -106,12 +106,12 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
 
         screenType = overlayScreenType ?: return
         val params = JetpackFeatureOverlayContentBuilderParams(
-                currentPhase = getCurrentPhase()!!,
-                isRtl = rtlLayout,
-                feature = overlayScreenType,
-                jpDeadlineDate = jpDeadlineConfig.getValue(),
-                phaseTwoBlogPostLink = phaseTwoBlogPostLinkConfig.getValue(),
-                phaseThreeBlogPostLink = phaseThreeBlogPostLinkConfig.getValue()
+            currentPhase = getCurrentPhase()!!,
+            isRtl = rtlLayout,
+            feature = overlayScreenType,
+            jpDeadlineDate = jpDeadlineConfig.getValue(),
+            phaseTwoBlogPostLink = phaseTwoBlogPostLinkConfig.getValue(),
+            phaseThreeBlogPostLink = phaseThreeBlogPostLinkConfig.getValue()
         )
         _uiState.postValue(jetpackFeatureOverlayContentBuilder.build(params = params))
         jetpackFeatureRemovalOverlayUtil.onOverlayShown(overlayScreenType)

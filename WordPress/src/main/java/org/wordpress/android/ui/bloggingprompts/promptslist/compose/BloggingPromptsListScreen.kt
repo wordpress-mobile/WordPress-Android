@@ -34,13 +34,13 @@ fun BloggingPromptsListScreen(
     onNavigateUp: () -> Unit,
 ) {
     Scaffold(
-            topBar = {
-                MainTopAppBar(
-                        title = stringResource(R.string.blogging_prompts_list_title),
-                        navigationIcon = NavigationIcons.BackIcon,
-                        onNavigationIconClick = onNavigateUp
-                )
-            },
+        topBar = {
+            MainTopAppBar(
+                title = stringResource(R.string.blogging_prompts_list_title),
+                navigationIcon = NavigationIcons.BackIcon,
+                onNavigationIconClick = onNavigateUp
+            )
+        },
     ) {
         Surface(modifier = Modifier.fillMaxSize()) {
             when (uiState) {
@@ -63,8 +63,8 @@ private fun ListContent(
             if (index != 0) Divider()
 
             BloggingPromptsListItem(
-                    model = item,
-                    modifier = Modifier.fillMaxWidth()
+                model = item,
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }
@@ -74,8 +74,8 @@ private fun ListContent(
 private fun LoadingContent() {
     Box(Modifier.fillMaxSize()) {
         Text(
-                "Loading...",
-                modifier = Modifier.align(Alignment.Center),
+            "Loading...",
+            modifier = Modifier.align(Alignment.Center),
         )
     }
 }

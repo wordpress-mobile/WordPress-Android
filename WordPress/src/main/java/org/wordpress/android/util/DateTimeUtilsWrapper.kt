@@ -30,7 +30,7 @@ class DateTimeUtilsWrapper @Inject constructor(
         // Format Decemeber 22, 2020
         val targetFormat = DateTimeFormatter.ofPattern(targetDateFormatPattern)
         return runCatching { LocalDate.parse(date, originalFormat).format(targetFormat) }
-                .onFailure { AppLog.e(T.UTILS, "Couldn't parse date: $date", it) }
-                .getOrNull()
+            .onFailure { AppLog.e(T.UTILS, "Couldn't parse date: $date", it) }
+            .getOrNull()
     }
 }

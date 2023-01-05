@@ -39,15 +39,15 @@ class FetchBloggingPromptsListUseCase @Inject constructor() {
     }
 
     private fun generateFakePrompt(index: Int, date: Date) = BloggingPromptModel(
-            id = index,
-            text = fakePrompts.random(),
-            date = date,
-            isAnswered = listOf(true, false).random(),
-            respondentsCount = index,
-            title = "Prompt Title $index",
-            content = "Prompt Content $index",
-            attribution = "Prompt Attribution $index",
-            respondentsAvatarUrls = emptyList(),
+        id = index,
+        text = fakePrompts.random(),
+        date = date,
+        isAnswered = listOf(true, false).random(),
+        respondentsCount = index,
+        title = "Prompt Title $index",
+        content = "Prompt Content $index",
+        attribution = "Prompt Attribution $index",
+        respondentsAvatarUrls = emptyList(),
     )
 
     private fun Calendar.getDateAndSubtractADay(): Date {
@@ -58,12 +58,12 @@ class FetchBloggingPromptsListUseCase @Inject constructor() {
 
     companion object {
         private val fakePrompts = listOf(
-                "What makes you feel nostalgic?",
-                "What relationships have a negative impact on you?",
-                "If you started a sports team, what would the colors and mascot be?",
-                "How have your political views changed over time?",
-                "You get to build your perfect space for reading and writing. What’s it like?",
-                "Have you ever been in an automobile accident?"
+            "What makes you feel nostalgic?",
+            "What relationships have a negative impact on you?",
+            "If you started a sports team, what would the colors and mascot be?",
+            "How have your political views changed over time?",
+            "You get to build your perfect space for reading and writing. What’s it like?",
+            "Have you ever been in an automobile accident?"
         )
     }
 }

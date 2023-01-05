@@ -15,7 +15,8 @@ import java.util.Locale
 
 @ExperimentalCoroutinesApi
 class BloggingPromptsListItemModelMapperTest : BaseUnitTest() {
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
     lateinit var mapper: BloggingPromptsListItemModelMapper
 
     @Before
@@ -33,24 +34,24 @@ class BloggingPromptsListItemModelMapperTest : BaseUnitTest() {
 
     companion object {
         private val DOMAIN_MODEL = BloggingPromptModel(
-                id = 123,
-                text = "Text",
-                title = "Title",
-                content = "Content",
-                date = Date(1671678000000), // December 22, 2022
-                isAnswered = true,
-                attribution = "Attribution",
-                respondentsCount = 321,
-                respondentsAvatarUrls = emptyList(),
+            id = 123,
+            text = "Text",
+            title = "Title",
+            content = "Content",
+            date = Date(1671678000000), // December 22, 2022
+            isAnswered = true,
+            attribution = "Attribution",
+            respondentsCount = 321,
+            respondentsAvatarUrls = emptyList(),
         )
 
         private val UI_MODEL = BloggingPromptsListItemModel(
-                id = 123,
-                text = "Text",
-                date = Date(1671678000000), // December 22, 2022
-                formattedDate = "Dec 22",
-                isAnswered = true,
-                answersCount = 321,
+            id = 123,
+            text = "Text",
+            date = Date(1671678000000), // December 22, 2022
+            formattedDate = "Dec 22",
+            isAnswered = true,
+            answersCount = 321,
         )
     }
 }

@@ -26,7 +26,8 @@ import org.wordpress.android.util.image.ImageType.P2_BLAVATAR_ROUNDED_CORNERS
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteUtilsTest {
-    @Mock private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    @Mock
+    private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Test
     fun `onFreePlan returns true when site is on free plan`() {

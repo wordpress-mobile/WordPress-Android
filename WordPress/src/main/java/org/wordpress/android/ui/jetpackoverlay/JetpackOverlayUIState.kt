@@ -21,7 +21,7 @@ sealed class JetpackFeatureOverlayComponentVisibility(
         override val closeButton: Boolean = false,
         override val migrationText: Boolean = true
     ) :
-            JetpackFeatureOverlayComponentVisibility()
+        JetpackFeatureOverlayComponentVisibility()
 
     sealed class SiteCreationPhase : JetpackFeatureOverlayComponentVisibility() {
         class PhaseOne : SiteCreationPhase()
@@ -53,6 +53,6 @@ sealed class JetpackFeatureOverlayActions {
     object OpenPlayStore : JetpackFeatureOverlayActions()
     object DismissDialog : JetpackFeatureOverlayActions()
     object ForwardToJetpack : JetpackFeatureOverlayActions()
-    data class OpenMigrationInfoLink(val url:String) : JetpackFeatureOverlayActions()
+    data class OpenMigrationInfoLink(val url: String) : JetpackFeatureOverlayActions()
 }
 

@@ -31,8 +31,11 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
-    @Inject lateinit var activityLauncherWrapper: ActivityLauncherWrapper
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var activityLauncherWrapper: ActivityLauncherWrapper
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
 
     private val viewModel: JetpackFeatureFullScreenOverlayViewModel by activityViewModels()
     private var _binding: JetpackFeatureRemovalOverlayBinding? = null
@@ -51,18 +54,18 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.init(
-                getSiteScreen(),
-                getIfSiteCreationOverlay(),
-                getIfDeepLinkOverlay(),
-                getSiteCreationSource(),
-                RtlUtils.isRtl(view.context)
+            getSiteScreen(),
+            getIfSiteCreationOverlay(),
+            getIfDeepLinkOverlay(),
+            getSiteCreationSource(),
+            RtlUtils.isRtl(view.context)
         )
         binding.setupObservers()
 
         (dialog as? BottomSheetDialog)?.apply {
             setOnShowListener {
                 val bottomSheet: FrameLayout = dialog?.findViewById(
-                        com.google.android.material.R.id.design_bottom_sheet
+                    com.google.android.material.R.id.design_bottom_sheet
                 ) ?: return@setOnShowListener
                 val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
                 bottomSheetBehavior.setMaxWidth(ViewGroup.LayoutParams.MATCH_PARENT)
@@ -87,16 +90,16 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     }
 
     private fun getSiteScreen() =
-            arguments?.getSerializable(OVERLAY_SCREEN_TYPE) as JetpackFeatureOverlayScreenType?
+        arguments?.getSerializable(OVERLAY_SCREEN_TYPE) as JetpackFeatureOverlayScreenType?
 
     private fun getIfSiteCreationOverlay() =
-            arguments?.getSerializable(IS_SITE_CREATION_OVERLAY) as Boolean
+        arguments?.getSerializable(IS_SITE_CREATION_OVERLAY) as Boolean
 
     private fun getIfDeepLinkOverlay() =
-            arguments?.getSerializable(IS_DEEP_LINK_OVERLAY) as Boolean
+        arguments?.getSerializable(IS_DEEP_LINK_OVERLAY) as Boolean
 
     private fun getSiteCreationSource() =
-            arguments?.getSerializable(SITE_CREATION_OVERLAY_SOURCE) as SiteCreationSource
+        arguments?.getSerializable(SITE_CREATION_OVERLAY_SOURCE) as SiteCreationSource
 
     private fun JetpackFeatureRemovalOverlayBinding.setupObservers() {
         viewModel.uiState.observe(viewLifecycleOwner) {
@@ -120,8 +123,8 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
                 is OpenMigrationInfoLink -> {
                     activity?.let {
                         WPWebViewActivity.openURL(
-                                requireContext(),
-                                UrlUtils.addUrlSchemeIfNeeded(action.url, true)
+                            requireContext(),
+                            UrlUtils.addUrlSchemeIfNeeded(action.url, true)
                         )
                     }
                 }
@@ -135,8 +138,8 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         updateVisibility(jetpackPoweredOverlayUIState.componentVisibility)
         updateContent(jetpackPoweredOverlayUIState.overlayContent)
         setClickListener(
-                jetpackPoweredOverlayUIState.componentVisibility,
-                jetpackPoweredOverlayUIState.overlayContent.migrationInfoUrl
+            jetpackPoweredOverlayUIState.componentVisibility,
+            jetpackPoweredOverlayUIState.overlayContent.migrationInfoUrl
         )
     }
 
@@ -196,7 +199,8 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         private const val IS_DEEP_LINK_OVERLAY = "KEY_IS_DEEP_LINK_OVERLAY"
         private const val SITE_CREATION_OVERLAY_SOURCE = "KEY_SITE_CREATION_OVERLAY_SOURCE"
 
-        @JvmStatic fun newInstance(
+        @JvmStatic
+        fun newInstance(
             jetpackFeatureOverlayScreenType: JetpackFeatureOverlayScreenType? = null,
             isSiteCreationOverlay: Boolean = false,
             isDeepLinkOverlay: Boolean = false,

@@ -12,11 +12,11 @@ class BloggingPromptsListItemModelMapper @Inject constructor(
     private val dateFormat = SimpleDateFormat("MMM d", localeManagerWrapper.getLocale())
 
     fun toUiModel(domainModel: BloggingPromptModel) = BloggingPromptsListItemModel(
-            id = domainModel.id,
-            text = domainModel.text,
-            date = domainModel.date,
-            formattedDate = dateFormat.format(domainModel.date),
-            isAnswered = domainModel.isAnswered,
-            answersCount = domainModel.respondentsCount,
+        id = domainModel.id,
+        text = domainModel.text,
+        date = domainModel.date,
+        formattedDate = dateFormat.format(domainModel.date),
+        isAnswered = domainModel.isAnswered,
+        answersCount = domainModel.respondentsCount,
     )
 }
