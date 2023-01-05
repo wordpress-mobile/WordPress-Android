@@ -7,7 +7,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.annotation.StringRes
@@ -34,6 +33,7 @@ import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackAllFeaturesOverlaySource
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
@@ -391,8 +391,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     }
 
     private fun showJetpackFeatureOverlay(source: JetpackAllFeaturesOverlaySource) {
-        // implement feature - below we be replaced in the next commit
-        Log.i(javaClass.simpleName, "showJetpackFeatureOverlay $source")
+        JetpackFeatureFullScreenOverlayFragment
+                .newInstance(
+                        isAllFeaturesOverlay = true,
+                        allFeaturesOverlaySource = source
+                )
+                .show(requireActivity().supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
     }
 
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {
