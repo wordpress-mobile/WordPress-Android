@@ -303,7 +303,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     }
 
     enum class JetpackAllFeaturesOverlaySource(val label: String) {
-        FEATURE_CARD("feature_card"),
+        FEATURE_CARD("card"),
         UNSPECIFIED("unspecified");
 
         companion object {
