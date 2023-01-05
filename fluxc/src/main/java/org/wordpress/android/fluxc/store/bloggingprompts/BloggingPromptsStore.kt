@@ -84,8 +84,9 @@ class BloggingPromptsStore @Inject constructor(
         site: SiteModel,
         response: BloggingPromptsListResponse
     ): BloggingPromptsResult<List<BloggingPromptModel>> = try {
-        promptsDao.insertForSite(site.id, response.toBloggingPrompts())
-        BloggingPromptsResult()
+        val prompts = response.toBloggingPrompts()
+        promptsDao.insertForSite(site.id, prompts)
+        BloggingPromptsResult(prompts)
     } catch (e: Exception) {
         BloggingPromptsResult(BloggingPromptsError(GENERIC_ERROR))
     }
