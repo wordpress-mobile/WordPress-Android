@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSi
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.SiteFilter;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo;
@@ -330,8 +331,9 @@ public class SiteUtils {
         return VersionUtils.checkMinimalVersion(site.getSoftwareVersion(), minVersion);
     }
 
-    public static boolean supportsStoriesFeature(SiteModel site) {
-        return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_STORIES_JETPACK_VERSION));
+    public static boolean supportsStoriesFeature(SiteModel site, JetpackFeatureRemovalPhaseHelper helper) {
+        return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_STORIES_JETPACK_VERSION))
+               && !helper.shouldRemoveJetpackFeatures();
     }
 
     public static boolean supportsContactInfoFeature(SiteModel site) {

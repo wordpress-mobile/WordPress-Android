@@ -258,9 +258,7 @@
                 android:id="@+id/about_the_app_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                tools:visibility="visible">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/row_about_the_app"

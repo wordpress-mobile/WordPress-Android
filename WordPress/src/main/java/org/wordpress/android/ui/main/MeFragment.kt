@@ -76,7 +76,6 @@ import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.config.QRCodeAuthFlowFeatureConfig
 import org.wordpress.android.util.config.RecommendTheAppFeatureConfig
-import org.wordpress.android.util.config.UnifiedAboutFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
@@ -100,7 +99,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var recommendTheAppFeatureConfig: RecommendTheAppFeatureConfig
     @Inject lateinit var sequencer: SnackbarSequencer
-    @Inject lateinit var unifiedAboutFeatureConfig: UnifiedAboutFeatureConfig
     @Inject lateinit var qrCodeAuthFlowFeatureConfig: QRCodeAuthFlowFeatureConfig
     @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     @Inject lateinit var packageManagerWrapper: PackageManagerWrapper
@@ -163,6 +161,22 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             ActivityLauncher.viewHelpAndSupport(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
         }
 
+        if (BuildConfig.IS_JETPACK_APP) meAboutIcon.setImageResource(R.drawable.ic_jetpack_logo_white_24dp)
+
+        rowAboutTheApp.setOnClickListener {
+            viewModel.showUnifiedAbout()
+        }
+
+        if (shouldShowQrCodeLogin()) {
+            rowScanLoginCode.isVisible = true
+
+            rowScanLoginCode.setOnClickListener {
+                viewModel.showScanLoginCode()
+            }
+        }
+
+        initRecommendUiState()
+
         rowLogout.setOnClickListener {
             if (accountStore.hasAccessToken()) {
                 signOutWordPressComWithConfirmation()
@@ -185,28 +199,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 showGravatarProgressBar(true)
             }
         }
-
-        if (unifiedAboutFeatureConfig.isEnabled()) {
-            aboutTheAppContainer.isVisible = true
-
-            if (BuildConfig.IS_JETPACK_APP) {
-                meAboutIcon.setImageResource(R.drawable.ic_jetpack_logo_white_24dp)
-            }
-
-            rowAboutTheApp.setOnClickListener {
-                viewModel.showUnifiedAbout()
-            }
-        }
-
-        if (shouldShowQrCodeLogin()) {
-            rowScanLoginCode.isVisible = true
-
-            rowScanLoginCode.setOnClickListener {
-                viewModel.showScanLoginCode()
-            }
-        }
-
-        initRecommendUiState()
 
         viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
             startActivity(Intent(activity, UnifiedAboutActivity::class.java))

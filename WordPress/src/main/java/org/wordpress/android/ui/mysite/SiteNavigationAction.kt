@@ -80,4 +80,6 @@ sealed class SiteNavigationAction {
     data class OpenTodaysStatsGetMoreViewsExternalUrl(val url: String) : SiteNavigationAction()
     object OpenJetpackPoweredBottomSheet : SiteNavigationAction()
     object OpenJetpackMigrationDeleteWP : SiteNavigationAction()
+    object OpenJetpackFeatureOverlay : SiteNavigationAction()
+    data class OpenJetpackFeatureCardLearnMoreLink(val url: String) : SiteNavigationAction()
 }

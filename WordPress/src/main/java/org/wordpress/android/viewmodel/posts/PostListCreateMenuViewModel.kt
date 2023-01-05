@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
@@ -23,7 +24,8 @@ import javax.inject.Inject
 
 class PostListCreateMenuViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) : ViewModel() {
     private var isStarted = false
     private lateinit var site: SiteModel
@@ -143,7 +145,7 @@ class PostListCreateMenuViewModel @Inject constructor(
     }
 
     private fun getCreateContentMessageId(): Int {
-        return if (SiteUtils.supportsStoriesFeature(site)) {
+        return if (SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
             R.string.create_post_story_fab_tooltip
         } else {
             R.string.create_post_fab_tooltip

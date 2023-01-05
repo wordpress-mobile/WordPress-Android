@@ -11,6 +11,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
@@ -25,10 +26,16 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var site: SiteModel
+    @Mock private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Before
     fun setUp() {
-        viewModel = PostListCreateMenuViewModel(appPrefsWrapper, analyticsTrackerWrapper)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
+        viewModel = PostListCreateMenuViewModel(
+            appPrefsWrapper,
+            analyticsTrackerWrapper,
+            jetpackFeatureRemovalPhaseHelper
+        )
     }
 
     @Test
