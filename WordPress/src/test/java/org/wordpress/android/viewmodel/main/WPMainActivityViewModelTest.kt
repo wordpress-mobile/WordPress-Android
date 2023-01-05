@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
@@ -68,75 +69,51 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     private var loginFlowTriggered: Boolean = false
     private var switchTabTriggered: Boolean = false
 
-    @Mock
-    private lateinit var appPrefsWrapper: AppPrefsWrapper
-
-    @Mock
-    lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
-
-    @Mock
-    lateinit var onFeatureAnnouncementRequestedObserver: Observer<Unit>
-
-    @Mock
-    lateinit var buildConfigWrapper: BuildConfigWrapper
-
-    @Mock
-    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-
-    @Mock
-    lateinit var quickStartRepository: QuickStartRepository
-
-    @Mock
-    lateinit var selectedSiteRepository: SelectedSiteRepository
-
-    @Mock
-    lateinit var accountStore: AccountStore
-
-    @Mock
-    lateinit var siteStore: SiteStore
-
-    @Mock
-    lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
-
-    @Mock
-    lateinit var bloggingPromptsStore: BloggingPromptsStore
-
-    @Mock
-    lateinit var quickStartType: QuickStartType
-
-    @Mock
-    private lateinit var openBloggingPromptsOnboardingObserver: Observer<Unit>
+    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
+    @Mock lateinit var onFeatureAnnouncementRequestedObserver: Observer<Unit>
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var quickStartRepository: QuickStartRepository
+    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock lateinit var accountStore: AccountStore
+    @Mock lateinit var siteStore: SiteStore
+    @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    @Mock lateinit var bloggingPromptsStore: BloggingPromptsStore
+    @Mock lateinit var quickStartType: QuickStartType
+    @Mock private lateinit var openBloggingPromptsOnboardingObserver: Observer<Unit>
+    @Mock private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     private val featureAnnouncement = FeatureAnnouncement(
-        "14.7",
-        2,
-        "14.5",
-        "14.7",
-        emptyList(),
-        "https://wordpress.org/",
-        true,
-        listOf(
-            FeatureAnnouncementItem(
-                "Test Feature 1",
-                "Test Description 1",
-                "",
-                "https://wordpress.org/icon1.png"
+            "14.7",
+            2,
+            "14.5",
+            "14.7",
+            emptyList(),
+            "https://wordpress.org/",
+            true,
+            listOf(
+                    FeatureAnnouncementItem(
+                            "Test Feature 1",
+                            "Test Description 1",
+                            "",
+                            "https://wordpress.org/icon1.png"
+                    )
             )
-        )
     )
 
     private val bloggingPrompt = BloggingPromptsResult(
-        model = BloggingPromptModel(
-            id = 123,
-            text = "title",
-            title = "",
-            content = "content",
-            date = Date(),
-            isAnswered = false,
-            attribution = "",
-            respondentsCount = 5,
-            respondentsAvatarUrls = listOf()
-        )
+            model = BloggingPromptModel(
+                    id = 123,
+                    text = "title",
+                    title = "",
+                    content = "content",
+                    date = Date(),
+                    isAnswered = false,
+                    attribution = "",
+                    respondentsCount = 5,
+                    respondentsAvatarUrls = listOf()
+            )
     )
     private lateinit var activeTask: MutableLiveData<QuickStartTask?>
     private lateinit var externalFocusPointEvents: MutableList<List<FocusPointInfo>>
@@ -149,27 +126,29 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(buildConfigWrapper.getAppVersionName()).thenReturn("14.7")
         whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL))
-            .thenReturn(FOLLOW_SITE)
+                .thenReturn(FOLLOW_SITE)
         activeTask = MutableLiveData()
         externalFocusPointEvents = mutableListOf()
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(bloggingPrompt))
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
         viewModel = WPMainActivityViewModel(
-            featureAnnouncementProvider,
-            buildConfigWrapper,
-            appPrefsWrapper,
-            analyticsTrackerWrapper,
-            quickStartRepository,
-            selectedSiteRepository,
-            accountStore,
-            siteStore,
-            bloggingPromptsFeatureConfig,
-            bloggingPromptsStore,
-            NoDelayCoroutineDispatcher()
+                featureAnnouncementProvider,
+                buildConfigWrapper,
+                appPrefsWrapper,
+                analyticsTrackerWrapper,
+                quickStartRepository,
+                selectedSiteRepository,
+                accountStore,
+                siteStore,
+                bloggingPromptsFeatureConfig,
+                bloggingPromptsStore,
+                NoDelayCoroutineDispatcher(),
+                jetpackFeatureRemovalPhaseHelper
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
-            onFeatureAnnouncementRequestedObserver
+                onFeatureAnnouncementRequestedObserver
         )
         viewModel.onFocusPointVisibilityChange.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
@@ -468,7 +447,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
-            false
+                false
         )
     }
 
@@ -479,7 +458,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
-            true
+                true
         )
 
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
@@ -488,7 +467,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         verify(quickStartRepository).completeTask(any())
 
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
-            false
+                false
         )
     }
 
@@ -512,7 +491,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
-            true
+                true
         )
 
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_PAGE } as CreateAction
@@ -520,7 +499,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         action.onClickAction?.invoke(CREATE_NEW_PAGE)
 
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
-            false
+                false
         )
     }
 
@@ -588,7 +567,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         resumeViewModelWithDefaultParameters()
         assertThat(fabUiState!!.CreateContentMessageId)
-            .isEqualTo(R.string.create_post_page_fab_tooltip_stories_enabled)
+                .isEqualTo(R.string.create_post_page_fab_tooltip_stories_enabled)
     }
 
     @Test
@@ -596,7 +575,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         viewModel.onResume(site = initSite(hasFullAccessToContent = false), isOnMySitePageWithValidSite = true)
         assertThat(fabUiState!!.CreateContentMessageId)
-            .isEqualTo(R.string.create_post_page_fab_tooltip_contributors_stories_enabled)
+                .isEqualTo(R.string.create_post_page_fab_tooltip_contributors_stories_enabled)
     }
 
     @Test
@@ -604,7 +583,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(-1)
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
-            featureAnnouncement
+                featureAnnouncement
         )
 
         startViewModelWithDefaultParameters()
@@ -619,7 +598,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(1)
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
-            featureAnnouncement
+                featureAnnouncement
         )
 
         startViewModelWithDefaultParameters()
@@ -633,7 +612,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `don't show feature announcement when cache is empty`() = test {
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
-            null
+                null
         )
 
         startViewModelWithDefaultParameters()
@@ -667,26 +646,26 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Test
     fun `don't show feature announcement when it's available but previous announcement is the same as current`() =
-        test {
-            whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
-            whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(2)
-            whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
-                featureAnnouncement
-            )
+            test {
+                whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
+                whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(2)
+                whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
+                        featureAnnouncement
+                )
 
-            startViewModelWithDefaultParameters()
-            resumeViewModelWithDefaultParameters()
+                startViewModelWithDefaultParameters()
+                resumeViewModelWithDefaultParameters()
 
-            verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
-            verify(featureAnnouncementProvider).getLatestFeatureAnnouncement(false)
-        }
+                verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
+                verify(featureAnnouncementProvider).getLatestFeatureAnnouncement(false)
+            }
 
     @Test
     fun `don't show feature announcement after view model starts again`() = test {
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
         whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(-1)
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
-            featureAnnouncement
+                featureAnnouncement
         )
 
         startViewModelWithDefaultParameters()
@@ -704,7 +683,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(-1)
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
-            featureAnnouncement
+                featureAnnouncement
         )
 
         startViewModelWithDefaultParameters(true)
@@ -726,7 +705,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = FOLLOW_SITE
 
         assertThat(externalFocusPointEvents).containsExactly(
-            listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
+                listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
         )
     }
 
@@ -735,7 +714,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = CHECK_NOTIFICATIONS
 
         assertThat(externalFocusPointEvents).containsExactly(
-            listOf(invisibleFollowSiteFocusPointInfo, visibleCheckNotificationsFocusPointInfo)
+                listOf(invisibleFollowSiteFocusPointInfo, visibleCheckNotificationsFocusPointInfo)
         )
     }
 
@@ -744,7 +723,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = VIEW_SITE
 
         assertThat(externalFocusPointEvents).containsExactly(
-            listOf(invisibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
+                listOf(invisibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
         )
     }
 
@@ -753,7 +732,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = null
 
         assertThat(externalFocusPointEvents).containsExactly(
-            listOf(invisibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
+                listOf(invisibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
         )
     }
 
@@ -766,9 +745,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = FOLLOW_SITE
 
         assertThat(externalFocusPointEvents).containsExactly(
-            listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo),
-            listOf(invisibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo),
-            listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
+                listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo),
+                listOf(invisibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo),
+                listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
         )
     }
 
@@ -777,10 +756,10 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
 
         val expectedOrder = listOf(
-            NO_ACTION,
-            CREATE_NEW_STORY,
-            CREATE_NEW_POST,
-            CREATE_NEW_PAGE
+                NO_ACTION,
+                CREATE_NEW_STORY,
+                CREATE_NEW_POST,
+                CREATE_NEW_PAGE
         )
 
         assertThat(viewModel.mainActions.value!!.map { it.actionType }).isEqualTo(expectedOrder)

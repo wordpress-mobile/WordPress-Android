@@ -76,7 +76,6 @@ import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.config.QRCodeAuthFlowFeatureConfig
 import org.wordpress.android.util.config.RecommendTheAppFeatureConfig
-import org.wordpress.android.util.config.UnifiedAboutFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
@@ -87,52 +86,23 @@ import javax.inject.Inject
 @AndroidEntryPoint
 @Suppress("TooManyFunctions")
 class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
-    @Suppress("DEPRECATION")
-    private var disconnectProgressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION") private var disconnectProgressDialog: ProgressDialog? = null
     private var isUpdatingGravatar = false
     private var binding: MeFragmentBinding? = null
 
-    @Inject
-    lateinit var dispatcher: Dispatcher
-
-    @Inject
-    lateinit var accountStore: AccountStore
-
-    @Inject
-    lateinit var siteStore: SiteStore
-
-    @Inject
-    lateinit var postStore: PostStore
-
-    @Inject
-    lateinit var meGravatarLoader: MeGravatarLoader
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var mediaPickerLauncher: MediaPickerLauncher
-
-    @Inject
-    lateinit var recommendTheAppFeatureConfig: RecommendTheAppFeatureConfig
-
-    @Inject
-    lateinit var sequencer: SnackbarSequencer
-
-    @Inject
-    lateinit var unifiedAboutFeatureConfig: UnifiedAboutFeatureConfig
-
-    @Inject
-    lateinit var qrCodeAuthFlowFeatureConfig: QRCodeAuthFlowFeatureConfig
-
-    @Inject
-    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-
-    @Inject
-    lateinit var packageManagerWrapper: PackageManagerWrapper
-
-    @Inject
-    lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Inject lateinit var dispatcher: Dispatcher
+    @Inject lateinit var accountStore: AccountStore
+    @Inject lateinit var siteStore: SiteStore
+    @Inject lateinit var postStore: PostStore
+    @Inject lateinit var meGravatarLoader: MeGravatarLoader
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
+    @Inject lateinit var recommendTheAppFeatureConfig: RecommendTheAppFeatureConfig
+    @Inject lateinit var sequencer: SnackbarSequencer
+    @Inject lateinit var qrCodeAuthFlowFeatureConfig: QRCodeAuthFlowFeatureConfig
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Inject lateinit var packageManagerWrapper: PackageManagerWrapper
+    @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     private val viewModel: MeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -191,6 +161,22 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             ActivityLauncher.viewHelpAndSupport(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
         }
 
+        if (BuildConfig.IS_JETPACK_APP) meAboutIcon.setImageResource(R.drawable.ic_jetpack_logo_white_24dp)
+
+        rowAboutTheApp.setOnClickListener {
+            viewModel.showUnifiedAbout()
+        }
+
+        if (shouldShowQrCodeLogin()) {
+            rowScanLoginCode.isVisible = true
+
+            rowScanLoginCode.setOnClickListener {
+                viewModel.showScanLoginCode()
+            }
+        }
+
+        initRecommendUiState()
+
         rowLogout.setOnClickListener {
             if (accountStore.hasAccessToken()) {
                 signOutWordPressComWithConfirmation()
@@ -213,28 +199,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 showGravatarProgressBar(true)
             }
         }
-
-        if (unifiedAboutFeatureConfig.isEnabled()) {
-            aboutTheAppContainer.isVisible = true
-
-            if (BuildConfig.IS_JETPACK_APP) {
-                meAboutIcon.setImageResource(R.drawable.ic_jetpack_logo_white_24dp)
-            }
-
-            rowAboutTheApp.setOnClickListener {
-                viewModel.showUnifiedAbout()
-            }
-        }
-
-        if (shouldShowQrCodeLogin()) {
-            rowScanLoginCode.isVisible = true
-
-            rowScanLoginCode.setOnClickListener {
-                viewModel.showScanLoginCode()
-            }
-        }
-
-        initRecommendUiState()
 
         viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
             startActivity(Intent(activity, UnifiedAboutActivity::class.java))
@@ -259,8 +223,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
             JetpackPoweredBottomSheetFragment
-                .newInstance()
-                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                    .newInstance()
+                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
     }
 
@@ -305,11 +269,11 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             if (state.isError()) {
                 view?.let { view ->
                     sequencer.enqueue(
-                        SnackbarItem(
-                            Info(view, UiStringText(state.error!!), Snackbar.LENGTH_LONG),
-                            null,
-                            null
-                        )
+                            SnackbarItem(
+                                    Info(view, UiStringText(state.error!!), Snackbar.LENGTH_LONG),
+                                    null,
+                                    null
+                            )
                     )
                 }
             } else {
@@ -400,51 +364,51 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         val newAvatarUploaded = injectFilePath != null && injectFilePath.isNotEmpty()
         val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl)
         meGravatarLoader.load(
-            newAvatarUploaded,
-            avatarUrl,
-            injectFilePath,
-            meAvatar,
-            AVATAR_WITHOUT_BACKGROUND,
-            object : RequestListener<Drawable> {
-                override fun onLoadFailed(e: Exception?, model: Any?) {
-                    val appLogMessage = "onLoadFailed while loading Gravatar image!"
-                    if (e == null) {
-                        AppLog.e(
-                            MAIN,
-                            "$appLogMessage e == null"
-                        )
-                    } else {
-                        AppLog.e(
-                            MAIN,
-                            appLogMessage,
-                            e
-                        )
+                newAvatarUploaded,
+                avatarUrl,
+                injectFilePath,
+                meAvatar,
+                AVATAR_WITHOUT_BACKGROUND,
+                object : RequestListener<Drawable> {
+                    override fun onLoadFailed(e: Exception?, model: Any?) {
+                        val appLogMessage = "onLoadFailed while loading Gravatar image!"
+                        if (e == null) {
+                            AppLog.e(
+                                    MAIN,
+                                    "$appLogMessage e == null"
+                            )
+                        } else {
+                            AppLog.e(
+                                    MAIN,
+                                    appLogMessage,
+                                    e
+                            )
+                        }
+
+                        // For some reason, the Activity can be null so, guard for it. See #8590.
+                        if (activity != null) {
+                            ToastUtils.showToast(
+                                    activity, R.string.error_refreshing_gravatar,
+                                    SHORT
+                            )
+                        }
                     }
 
-                    // For some reason, the Activity can be null so, guard for it. See #8590.
-                    if (activity != null) {
-                        ToastUtils.showToast(
-                            activity, R.string.error_refreshing_gravatar,
-                            SHORT
-                        )
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        model: Any?
+                    ) {
+                        if (newAvatarUploaded && resource is BitmapDrawable) {
+                            var bitmap = resource.bitmap
+                            // create a copy since the original bitmap may by automatically recycled
+                            bitmap = bitmap.copy(bitmap.config, true)
+                            WordPress.getBitmapCache().put(
+                                    avatarUrl,
+                                    bitmap
+                            )
+                        }
                     }
-                }
-
-                override fun onResourceReady(
-                    resource: Drawable,
-                    model: Any?
-                ) {
-                    if (newAvatarUploaded && resource is BitmapDrawable) {
-                        var bitmap = resource.bitmap
-                        // create a copy since the original bitmap may by automatically recycled
-                        bitmap = bitmap.copy(bitmap.config, true)
-                        WordPress.getBitmapCache().put(
-                            avatarUrl,
-                            bitmap
-                        )
-                    }
-                }
-            })
+                })
     }
 
     private fun signOutWordPressComWithConfirmation() {
@@ -456,17 +420,17 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             getString(R.string.sign_out_wpcom_confirm_with_no_changes)
         }
         MaterialAlertDialogBuilder(requireActivity())
-            .setMessage(message)
-            .setPositiveButton(
-                R.string.signout
-            ) { _, _ ->
-                clearNotifications()
-                enableDeepLinkComponents()
-                signOutWordPressCom()
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .setCancelable(true)
-            .create().show()
+                .setMessage(message)
+                .setPositiveButton(
+                        R.string.signout
+                ) { _, _ ->
+                    clearNotifications()
+                    enableDeepLinkComponents()
+                    signOutWordPressCom()
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .setCancelable(true)
+                .create().show()
     }
 
     private fun signOutWordPressCom() {
@@ -480,8 +444,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     private fun enableDeepLinkComponents() {
         packageManagerWrapper.enableReaderDeeplinks()
         packageManagerWrapper.enableComponentEnabledSetting(
-            DeepLinkOpenWebLinksWithJetpackHelper.WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS
-        )
+                DeepLinkOpenWebLinksWithJetpackHelper.WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
         appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(0L)
         appPrefsWrapper.setIsOpenWebLinksWithJetpack(false)
     }
@@ -489,10 +452,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Suppress("DEPRECATION")
     private fun showDisconnectDialog() {
         disconnectProgressDialog = ProgressDialog.show(
-            requireContext(),
-            null,
-            requireContext().getText(R.string.signing_out),
-            false
+                requireContext(),
+                null,
+                requireContext().getText(R.string.signing_out),
+                false
         )
     }
 
@@ -517,13 +480,13 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 val mediaUriStringsArray = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
                 if (mediaUriStringsArray == null || mediaUriStringsArray.size == 0) {
                     AppLog.e(
-                        UTILS,
-                        "Can't resolve picked or captured image"
+                            UTILS,
+                            "Can't resolve picked or captured image"
                     )
                     return
                 }
                 val source = PhotoPickerActivity.PhotoPickerMediaSource.fromString(
-                    data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
+                        data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
                 )
                 val stat = if (source == PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA) {
                     ME_GRAVATAR_SHOT_NEW
@@ -534,13 +497,13 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 val imageUri = Uri.parse(mediaUriStringsArray[0])
                 if (imageUri != null) {
                     val didGoWell = WPMediaUtils.fetchMediaAndDoNext(
-                        activity,
-                        imageUri
+                            activity,
+                            imageUri
                     ) { uri: Uri -> startCropActivity(uri) }
                     if (!didGoWell) {
                         AppLog.e(
-                            UTILS,
-                            "Can't download picked or captured image"
+                                UTILS,
+                                "Can't download picked or captured image"
                         )
                     }
                 }
@@ -549,22 +512,22 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 AnalyticsTracker.track(ME_GRAVATAR_CROPPED)
                 if (resultCode == Activity.RESULT_OK) {
                     WPMediaUtils.fetchMediaAndDoNext(
-                        activity, UCrop.getOutput(data!!)
+                            activity, UCrop.getOutput(data!!)
                     ) { uri: Uri? ->
                         startGravatarUpload(
-                            MediaUtils.getRealPathFromURI(activity, uri)
+                                MediaUtils.getRealPathFromURI(activity, uri)
                         )
                     }
                 } else if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(
-                        MAIN,
-                        "Image cropping failed!",
-                        UCrop.getError(data!!)
+                            MAIN,
+                            "Image cropping failed!",
+                            UCrop.getError(data!!)
                     )
                     ToastUtils.showToast(
-                        activity,
-                        R.string.error_cropping_image,
-                        SHORT
+                            activity,
+                            R.string.error_cropping_image,
+                            SHORT
                     )
                 }
             }
@@ -585,40 +548,40 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
         UCrop.of(uri, Uri.fromFile(File(context.cacheDir, "cropped_for_gravatar.jpg")))
-            .withAspectRatio(1f, 1f)
-            .withOptions(options)
-            .start(requireActivity(), this)
+                .withAspectRatio(1f, 1f)
+                .withOptions(options)
+                .start(requireActivity(), this)
     }
 
     private fun startGravatarUpload(filePath: String) {
         if (TextUtils.isEmpty(filePath)) {
             ToastUtils.showToast(
-                activity,
-                R.string.error_locating_image,
-                SHORT
+                    activity,
+                    R.string.error_locating_image,
+                    SHORT
             )
             return
         }
         val file = File(filePath)
         if (!file.exists()) {
             ToastUtils.showToast(
-                activity,
-                R.string.error_locating_image,
-                SHORT
+                    activity,
+                    R.string.error_locating_image,
+                    SHORT
             )
             return
         }
         binding?.showGravatarProgressBar(true)
         GravatarApi.uploadGravatar(file, accountStore.account.email, accountStore.accessToken,
-            object : GravatarUploadListener {
-                override fun onSuccess() {
-                    EventBus.getDefault().post(GravatarUploadFinished(filePath, true))
-                }
+                object : GravatarUploadListener {
+                    override fun onSuccess() {
+                        EventBus.getDefault().post(GravatarUploadFinished(filePath, true))
+                    }
 
-                override fun onError() {
-                    EventBus.getDefault().post(GravatarUploadFinished(filePath, false))
-                }
-            })
+                    override fun onError() {
+                        EventBus.getDefault().post(GravatarUploadFinished(filePath, false))
+                    }
+                })
     }
 
     class GravatarUploadFinished internal constructor(val filePath: String, val success: Boolean)
@@ -631,9 +594,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             binding?.loadAvatar(event.filePath)
         } else {
             ToastUtils.showToast(
-                activity,
-                R.string.error_updating_gravatar,
-                SHORT
+                    activity,
+                    R.string.error_updating_gravatar,
+                    SHORT
             )
         }
     }

@@ -31,7 +31,6 @@
 
     <!-- Screen titles -->
     <string name="release_notes_screen_title">Release notes</string>
-    <string name="license_screen_title">License</string>
     <string name="help_screen_title">Help and Support</string>
     <string name="notif_settings_screen_title">Notification settings</string>
     <string name="my_site_section_screen_title">My Site</string>
@@ -899,7 +898,6 @@
     <!--      End      -->
 
     <!-- preferences -->
-    <string name="open_source_licenses">Open source licenses</string>
     <string name="whats_new_in_version_title">What\'s New</string>
     <string name="preference_open_device_settings">Open device settings</string>
     <string name="preference_collect_information">Collect information</string>
@@ -1866,16 +1864,7 @@
     <string name="image_size_full_css_class" translatable="false">size-full</string>
 
     <!-- About View -->
-    <string name="app_title">WordPress for Android</string>
-    <string name="publisher">Publisher:</string>
-    <string name="publisher_with_company_param">Publisher: %s</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="automattic_inc" translatable="false">Automattic, Inc</string>
-    <string name="automattic_url" translatable="false">automattic.com</string>
-    <string name="version">Version</string>
     <string name="version_with_name_param">Version %s</string>
-    <string name="tos">Terms of Service</string>
-    <string name="privacy_policy">Privacy policy</string>
 
     <!-- Remote Post&Page has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
@@ -4132,6 +4121,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Blogging Prompts List -->
     <string name="blogging_prompts_list_title">Prompts</string>
+    <string name="blogging_prompts_list_answered_prompt">✓ Answered</string>
+    <string name="blogging_prompts_list_number_of_answers_zero">0 answers</string>
+    <string name="blogging_prompts_list_number_of_answers_one">1 answer</string>
+    <string name="blogging_prompts_list_number_of_answers_other">%d answers</string>
+    <string name="blogging_prompts_list_subtitle_divider" translatable="false">•</string>
 
     <!-- Editor module -->
     <string name="post_content" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Content</string>
@@ -4302,7 +4296,15 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Switch to the Jetpack app to watch your site’s traffic grow with stats and insights.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Switch to the Jetpack app to find, follow, and like all your favorite sites and posts with Reader.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Switch to the Jetpack app to keep receiving  realtime notifications on your device.</string>
-    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app" translatable="false"> @string/wp_jetpack_get_new_jetpack_app</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app"> Switch to the new Jetpack app</string>
+
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Your stats are moving to the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader is moving to the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Notifications are moving to Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app on %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app soon.</string>
+    <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
 
     <!-- Deep Linking Activity Aliases -->
     <string name="deep_linking_urilinks_alias_label">urilinks</string>

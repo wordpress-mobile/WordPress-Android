@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnScrollChangeListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -33,12 +35,17 @@ import org.wordpress.android.fluxc.store.ThemeStore.OnWpComThemesChanged;
 import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.ScrollableViewInitializedListener;
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.JetpackBrandingUtils;
+import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.widgets.HeaderGridView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +55,8 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBrowserFragmentCallback {
+public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBrowserFragmentCallback,
+        ScrollableViewInitializedListener {
     public static final int ACTIVATE_THEME = 1;
     public static final String THEME_ID = "theme_id";
 
@@ -62,6 +70,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
 
     @Inject ThemeStore mThemeStore;
     @Inject Dispatcher mDispatcher;
+    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -180,6 +189,61 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     public void onSwipeToRefresh() {
         fetchInstalledThemesIfJetpackSite();
         fetchWpComThemesIfSyncTimedOut(true);
+    }
+
+    @Override
+    public void onScrollableViewInitialized(int containerId) {
+        if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
+            findViewById(R.id.root_view).post(() -> {
+                View jetpackBannerView = findViewById(R.id.jetpack_banner);
+                HeaderGridView scrollableView = findViewById(containerId);
+
+                showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView);
+                initJetpackBannerAnimation(jetpackBannerView, scrollableView);
+
+                if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                    jetpackBannerView.setOnClickListener(v -> {
+                        mJetpackBrandingUtils.trackBannerTapped(Screen.THEMES);
+                        new JetpackPoweredBottomSheetFragment()
+                                .show(getSupportFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
+                    });
+                }
+            });
+        }
+    }
+
+    private void showJetpackBannerIfScrolledToTop(View banner, HeaderGridView scrollableView) {
+        banner.setVisibility(View.VISIBLE);
+
+        boolean isEmpty = scrollableView.getAdapter().isEmpty();
+        int scrollOffset = scrollableView.computeVerticalScrollOffset();
+
+        float jetpackBannerHeight = banner.getResources().getDimension(R.dimen.jetpack_banner_height);
+
+        float translationY = scrollOffset == 0 || isEmpty ? 0 : jetpackBannerHeight;
+        banner.setTranslationY(translationY);
+    }
+
+    private void initJetpackBannerAnimation(View banner, HeaderGridView scrollableView) {
+        scrollableView.setOnScrollChangeListener(new OnScrollChangeListener() {
+            private boolean mIsScrollAtTop = true;
+
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                int scrollOffset = scrollableView.computeVerticalScrollOffset();
+
+                if (scrollOffset == 0 && !mIsScrollAtTop) {
+                    // Show the banner by moving up
+                    mIsScrollAtTop = true;
+                    banner.animate().translationY(0f).start();
+                } else if (scrollOffset != 0 && mIsScrollAtTop) {
+                    // Hide the banner by moving down
+                    mIsScrollAtTop = false;
+                    float jetpackBannerHeight = banner.getResources().getDimension(R.dimen.jetpack_banner_height);
+                    banner.animate().translationY(jetpackBannerHeight).start();
+                }
+            }
+        });
     }
 
     @SuppressWarnings("unused")

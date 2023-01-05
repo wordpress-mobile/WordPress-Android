@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.ui.ActionableEmptyView;
+import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.util.NetworkUtils;
@@ -159,6 +160,14 @@ public class ThemeBrowserFragment extends Fragment
         configureSwipeToRefresh(view);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() instanceof ScrollableViewInitializedListener) {
+            ((ScrollableViewInitializedListener) getActivity()).onScrollableViewInitialized(mGridView.getId());
+        }
     }
 
     private void showQuickStartFocusPoint() {

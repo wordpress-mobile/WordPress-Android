@@ -26,21 +26,12 @@ import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
 class PostListMainViewModelTest : BaseUnitTest() {
-    @Mock
-    lateinit var site: SiteModel
+    @Mock lateinit var site: SiteModel
     private val currentBottomSheetPostId = LocalId(0)
-
-    @Mock
-    lateinit var uploadStarter: UploadStarter
-
-    @Mock
-    lateinit var dispatcher: Dispatcher
-
-    @Mock
-    lateinit var editPostRepository: EditPostRepository
-
-    @Mock
-    lateinit var savePostToDbUseCase: SavePostToDbUseCase
+    @Mock lateinit var uploadStarter: UploadStarter
+    @Mock lateinit var dispatcher: Dispatcher
+    @Mock lateinit var editPostRepository: EditPostRepository
+    @Mock lateinit var savePostToDbUseCase: SavePostToDbUseCase
     private lateinit var viewModel: PostListMainViewModel
 
     @Before
@@ -52,21 +43,22 @@ class PostListMainViewModelTest : BaseUnitTest() {
         whenever(editPostRepository.postChanged).thenReturn(MutableLiveData(Event(PostModel())))
 
         viewModel = PostListMainViewModel(
-            dispatcher = dispatcher,
-            postStore = mock(),
-            accountStore = mock(),
-            uploadStore = mock(),
-            mediaStore = mock(),
-            networkUtilsWrapper = mock(),
-            prefs = prefs,
-            previewStateHelper = mock(),
-            analyticsTracker = mock(),
-            mainDispatcher = testDispatcher(),
-            bgDispatcher = testDispatcher(),
-            postListEventListenerFactory = mock(),
-            uploadStarter = uploadStarter,
-            uploadActionUseCase = mock(),
-            savePostToDbUseCase = savePostToDbUseCase
+                dispatcher = dispatcher,
+                postStore = mock(),
+                accountStore = mock(),
+                uploadStore = mock(),
+                mediaStore = mock(),
+                networkUtilsWrapper = mock(),
+                prefs = prefs,
+                previewStateHelper = mock(),
+                analyticsTracker = mock(),
+                mainDispatcher = testDispatcher(),
+                bgDispatcher = testDispatcher(),
+                postListEventListenerFactory = mock(),
+                uploadStarter = uploadStarter,
+                uploadActionUseCase = mock(),
+                savePostToDbUseCase = savePostToDbUseCase,
+                jetpackFeatureRemovalPhaseHelper = mock()
         )
     }
 
@@ -180,11 +172,11 @@ class PostListMainViewModelTest : BaseUnitTest() {
     fun `if post in EditPostRepository is modified then the savePostToDbUseCase should update the post`() {
         // arrange
         val editPostRepository = EditPostRepository(
-            mock(),
-            mock(),
-            mock(),
-            testDispatcher(),
-            testDispatcher()
+                mock(),
+                mock(),
+                mock(),
+                testDispatcher(),
+                testDispatcher()
         )
         editPostRepository.set { mock() }
         val action = { _: PostModel -> true }

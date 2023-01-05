@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
@@ -85,7 +86,8 @@ class PostListMainViewModel @Inject constructor(
     private val savePostToDbUseCase: SavePostToDbUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val uploadStarter: UploadStarter
+    private val uploadStarter: UploadStarter,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) : ViewModel(), CoroutineScope {
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
@@ -377,7 +379,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun fabClicked() {
-        if (SiteUtils.supportsStoriesFeature(site)) {
+        if (SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
             _onFabClicked.postValue(Event(Unit))
         } else {
             newPost()
@@ -619,7 +621,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun onFabLongPressed() {
-        if (SiteUtils.supportsStoriesFeature(site)) {
+        if (SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
             _onFabLongPressedForCreateMenu.postValue(Event(Unit))
         } else {
             _onFabLongPressedForPostList.postValue(Event(Unit))

@@ -6,6 +6,7 @@ data class BloggingPromptsListItemModel(
     val id: Int,
     val text: String,
     val date: Date,
+    val formattedDate: String,
     val isAnswered: Boolean,
     val answersCount: Int,
 )

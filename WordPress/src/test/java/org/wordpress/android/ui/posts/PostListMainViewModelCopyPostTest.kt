@@ -25,17 +25,10 @@ import org.wordpress.android.ui.posts.PostListAction.EditPost
 
 @ExperimentalCoroutinesApi
 class PostListMainViewModelCopyPostTest : BaseUnitTest() {
-    @Mock
-    lateinit var site: SiteModel
-
-    @Mock
-    lateinit var dispatcher: Dispatcher
-
-    @Mock
-    lateinit var postSqlUtils: PostSqlUtils
-
-    @Mock
-    lateinit var onPostListActionObserver: Observer<PostListAction>
+    @Mock lateinit var site: SiteModel
+    @Mock lateinit var dispatcher: Dispatcher
+    @Mock lateinit var postSqlUtils: PostSqlUtils
+    @Mock lateinit var onPostListActionObserver: Observer<PostListAction>
 
     private lateinit var viewModel: PostListMainViewModel
     private lateinit var postStore: PostStore
@@ -52,27 +45,28 @@ class PostListMainViewModelCopyPostTest : BaseUnitTest() {
     @Before
     fun setUp() {
         postStore = PostStore(
-            dispatcher,
-            Mockito.mock(PostRestClient::class.java),
-            Mockito.mock(PostXMLRPCClient::class.java),
-            postSqlUtils
+                dispatcher,
+                Mockito.mock(PostRestClient::class.java),
+                Mockito.mock(PostXMLRPCClient::class.java),
+                postSqlUtils
         )
         viewModel = PostListMainViewModel(
-            dispatcher = dispatcher,
-            postStore = postStore,
-            accountStore = mock(),
-            uploadStore = mock(),
-            mediaStore = mock(),
-            networkUtilsWrapper = mock(),
-            prefs = mock(),
-            previewStateHelper = mock(),
-            analyticsTracker = mock(),
-            mainDispatcher = testDispatcher(),
-            bgDispatcher = testDispatcher(),
-            postListEventListenerFactory = mock(),
-            uploadStarter = mock(),
-            uploadActionUseCase = mock(),
-            savePostToDbUseCase = mock()
+                dispatcher = dispatcher,
+                postStore = postStore,
+                accountStore = mock(),
+                uploadStore = mock(),
+                mediaStore = mock(),
+                networkUtilsWrapper = mock(),
+                prefs = mock(),
+                previewStateHelper = mock(),
+                analyticsTracker = mock(),
+                mainDispatcher = testDispatcher(),
+                bgDispatcher = testDispatcher(),
+                postListEventListenerFactory = mock(),
+                uploadStarter = mock(),
+                uploadActionUseCase = mock(),
+                savePostToDbUseCase = mock(),
+                jetpackFeatureRemovalPhaseHelper = mock()
         )
         viewModel.postListAction.observeForever(onPostListActionObserver)
 
