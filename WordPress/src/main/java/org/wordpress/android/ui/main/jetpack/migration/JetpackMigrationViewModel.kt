@@ -243,6 +243,7 @@ class JetpackMigrationViewModel @Inject constructor(
         migrationAnalyticsTracker.trackThanksScreenFinishButtonTapped()
         migrationEmailHelper.notifyMigrationComplete()
         appPrefsWrapper.setJetpackMigrationCompleted(true)
+        appPrefsWrapper.setJetpackMigrationInProgress(false)
         postActionEvent(CompleteFlow)
     }
 
@@ -259,17 +260,6 @@ class JetpackMigrationViewModel @Inject constructor(
     private fun onGotItClicked() {
         migrationAnalyticsTracker.trackPleaseDeleteWordPressGotItTapped()
         postActionEvent(CompleteFlow)
-    }
-
-    fun cleanUpIfNeeded(application: WordPress) {
-        if (!appPrefsWrapper.isJetpackMigrationCompleted()) {
-            WordPress.applicationScope.launch(Dispatchers.IO) {
-                application.wordPressComSignOut()
-                appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(true)
-                appPrefsWrapper.saveIsFirstTryUserFlagsJetpack(true)
-                appPrefsWrapper.saveIsFirstTryReaderSavedPostsJetpack(true)
-            }
-        }
     }
 
     private fun resizeAvatarUrl(avatarUrl: String) = gravatarUtilsWrapper.fixGravatarUrlWithResource(
