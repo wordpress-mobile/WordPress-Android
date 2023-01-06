@@ -5,7 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenMigrationInfoLink
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackAllFeaturesOverlaySource
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackOverlayDismissalType.CLOSE_BUTTON
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackOverlayDismissalType.CONTINUE_BUTTON
@@ -40,8 +40,8 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     private var isSiteCreationOverlayScreen: Boolean = false
     private var siteCreationOrigin: SiteCreationSource = UNSPECIFIED
     private var isDeepLinkOverlayScreen: Boolean = false
-    private var isAllFeaturesOverlayScreen: Boolean = false
-    private var allFeaturesOverlayOrigin: JetpackAllFeaturesOverlaySource = JetpackAllFeaturesOverlaySource.UNSPECIFIED
+    private var isFeatureCollectionOverlayScreen: Boolean = false
+    private var featureCollectionOverlayOrigin: JetpackFeatureCollectionOverlaySource = JetpackFeatureCollectionOverlaySource.UNSPECIFIED
 
     fun openJetpackAppDownloadLink() {
         if (isSiteCreationOverlayScreen) {
@@ -50,9 +50,9 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         } else if (isDeepLinkOverlayScreen) {
             _action.value = JetpackFeatureOverlayActions.ForwardToJetpack
             jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInDeepLinkOverlay()
-        } else if (isAllFeaturesOverlayScreen) {
+        } else if (isFeatureCollectionOverlayScreen) {
             _action.value = JetpackFeatureOverlayActions.OpenPlayStore
-            jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInAllFeaturesOverlay(allFeaturesOverlayOrigin)
+            jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInFeatureCollectionOverlay(featureCollectionOverlayOrigin)
         } else {
             _action.value = JetpackFeatureOverlayActions.OpenPlayStore
             jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTapped(screenType)
@@ -68,9 +68,9 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
             )
         else if (isDeepLinkOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInDeepLinkOverlay(CONTINUE_BUTTON)
-        else if (isAllFeaturesOverlayScreen)
-            jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInAllFeaturesOverlay(
-                    allFeaturesOverlayOrigin,
+        else if (isFeatureCollectionOverlayScreen)
+            jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInFeatureCollectionOverlay(
+                    featureCollectionOverlayOrigin,
                     CONTINUE_BUTTON)
         else jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CONTINUE_BUTTON)
     }
@@ -84,9 +84,9 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
             )
         else if (isDeepLinkOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInDeepLinkOverlay(CLOSE_BUTTON)
-        else if (isAllFeaturesOverlayScreen)
-            jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInAllFeaturesOverlay(
-                    allFeaturesOverlayOrigin,
+        else if (isFeatureCollectionOverlayScreen)
+            jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInFeatureCollectionOverlay(
+                    featureCollectionOverlayOrigin,
                     CLOSE_BUTTON
             )
         else jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CLOSE_BUTTON)
@@ -98,8 +98,8 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         isSiteCreationOverlay: Boolean,
         isDeepLinkOverlay: Boolean,
         siteCreationSource: SiteCreationSource,
-        isAllFeaturesOverlay: Boolean,
-        allFeaturesOverlaySource: JetpackAllFeaturesOverlaySource,
+        isFeatureCollectionOverlay: Boolean,
+        featureCollectionOverlaySource: JetpackFeatureCollectionOverlaySource,
         rtlLayout: Boolean
     ) {
         if (isSiteCreationOverlay) {
@@ -122,15 +122,15 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
             return
         }
 
-        if (isAllFeaturesOverlay) {
-            isAllFeaturesOverlayScreen = true
-            allFeaturesOverlayOrigin = allFeaturesOverlaySource
-            _uiState.postValue(jetpackFeatureOverlayContentBuilder.buildAllFeaturesOverlayState(
+        if (isFeatureCollectionOverlay) {
+            isFeatureCollectionOverlayScreen = true
+            featureCollectionOverlayOrigin = featureCollectionOverlaySource
+            _uiState.postValue(jetpackFeatureOverlayContentBuilder.buildFeatureCollectionOverlayState(
                     rtlLayout,
                     getCurrentPhase()!!,
                     phaseThreeBlogPostLinkConfig.getValue()
             ))
-            jetpackFeatureRemovalOverlayUtil.onAllFeatureOverlayShown(allFeaturesOverlaySource)
+            jetpackFeatureRemovalOverlayUtil.onFeatureCollectionOverlayShown(featureCollectionOverlaySource)
             return
         }
 
@@ -152,9 +152,9 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     private fun getSiteCreationPhase() = jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()
 
     fun openJetpackMigrationInfoLink(migrationInfoRedirectUrl: String) {
-        if (isAllFeaturesOverlayScreen) {
-            jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClickedInAllFeaturesOverlay(
-                    allFeaturesOverlayOrigin
+        if (isFeatureCollectionOverlayScreen) {
+            jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClickedInFeatureCollectionOverlay(
+                    featureCollectionOverlayOrigin
             )
         } else {
             jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClicked(screenType)

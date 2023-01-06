@@ -89,7 +89,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackAllFeaturesOverlaySource;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
@@ -472,7 +472,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
         }
 
-        displayJetpackAllFeatureOverlayIfNeeded();
+        displayJetpackFeatureCollectionOverlayIfNeeded();
     }
 
     private void showBloggingPromptsOnboarding() {
@@ -508,7 +508,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void displayJetpackAllFeatureOverlayIfNeeded() {
+    private void displayJetpackFeatureCollectionOverlayIfNeeded() {
         if (mJetpackFeatureRemovalOverlayUtil.shouldShowFeatureCollectionJetpackOverlay()) {
             JetpackFeatureFullScreenOverlayFragment.newInstance(
                     null,
@@ -516,7 +516,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     false,
                     SiteCreationSource.UNSPECIFIED,
                     true,
-                    JetpackAllFeaturesOverlaySource.APP_OPEN
+                    JetpackFeatureCollectionOverlaySource.APP_OPEN
             ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
         }
     }

@@ -4,7 +4,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_THREE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_TWO
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackAllFeaturesOverlaySource.APP_OPEN
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.APP_OPEN
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.NOTIFICATIONS
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.READER
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.STATS
@@ -55,7 +55,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     }
 
     fun shouldShowFeatureCollectionJetpackOverlay(): Boolean {
-        return !jetpackFeatureOverlayShownTracker.getAllFeatureOverlayShown() &&
+        return !jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown() &&
                 jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == PhaseThree
     }
 
@@ -259,14 +259,14 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         )
     }
 
-    fun onAllFeatureOverlayShown(source: JetpackAllFeaturesOverlaySource) {
+    fun onFeatureCollectionOverlayShown(source: JetpackFeatureCollectionOverlaySource) {
         if (source == APP_OPEN) {
-            jetpackFeatureOverlayShownTracker.setAllFeatureOverlayShown()
+            jetpackFeatureOverlayShownTracker.setFeatureCollectionOverlayShown()
         }
-        trackAllFeatureOverlayShown(source)
+        trackFeatureCollectionOverlayShown(source)
     }
 
-    private fun trackAllFeatureOverlayShown(source: JetpackAllFeaturesOverlaySource) {
+    private fun trackFeatureCollectionOverlayShown(source: JetpackFeatureCollectionOverlaySource) {
         analyticsTrackerWrapper.track(
                 AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED,
                 mapOf(
@@ -276,8 +276,8 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         )
     }
 
-    fun trackBottomSheetDismissedInAllFeaturesOverlay(
-        source: JetpackAllFeaturesOverlaySource,
+    fun trackBottomSheetDismissedInFeatureCollectionOverlay(
+        source: JetpackFeatureCollectionOverlaySource,
         dismissalType: JetpackOverlayDismissalType
     ) {
         analyticsTrackerWrapper.track(
@@ -290,7 +290,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         )
     }
 
-    fun trackInstallJetpackTappedInAllFeaturesOverlay(source: JetpackAllFeaturesOverlaySource) {
+    fun trackInstallJetpackTappedInFeatureCollectionOverlay(source: JetpackFeatureCollectionOverlaySource) {
         analyticsTrackerWrapper.track(
                 AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
                 mapOf(
@@ -300,7 +300,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         )
     }
 
-    fun trackLearnMoreAboutMigrationClickedInAllFeaturesOverlay(source: JetpackAllFeaturesOverlaySource) {
+    fun trackLearnMoreAboutMigrationClickedInFeatureCollectionOverlay(source: JetpackFeatureCollectionOverlaySource) {
         analyticsTrackerWrapper.track(
                 AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED,
                 mapOf(
@@ -315,14 +315,14 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         CONTINUE_BUTTON("continue")
     }
 
-    enum class JetpackAllFeaturesOverlaySource(val label: String) {
+    enum class JetpackFeatureCollectionOverlaySource(val label: String) {
         FEATURE_CARD("card"),
         APP_OPEN("app_open"),
         UNSPECIFIED("unspecified");
 
         companion object {
             @JvmStatic
-            fun fromString(label: String?): JetpackAllFeaturesOverlaySource {
+            fun fromString(label: String?): JetpackFeatureCollectionOverlaySource {
                 return when (FEATURE_CARD.label) {
                     label -> FEATURE_CARD
                     label -> APP_OPEN

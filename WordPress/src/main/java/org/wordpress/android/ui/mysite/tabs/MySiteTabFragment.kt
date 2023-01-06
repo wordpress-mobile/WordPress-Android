@@ -34,7 +34,7 @@ import org.wordpress.android.ui.accounts.LoginEpilogueActivity
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackAllFeaturesOverlaySource
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
@@ -390,11 +390,11 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         startActivity(intent)
     }
 
-    private fun showJetpackFeatureOverlay(source: JetpackAllFeaturesOverlaySource) {
+    private fun showJetpackFeatureOverlay(source: JetpackFeatureCollectionOverlaySource) {
         JetpackFeatureFullScreenOverlayFragment
                 .newInstance(
-                        isAllFeaturesOverlay = true,
-                        allFeaturesOverlaySource = source
+                        isFeatureCollectionOverlay = true,
+                        featureCollectionOverlaySource = source
                 )
                 .show(requireActivity().supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
     }
