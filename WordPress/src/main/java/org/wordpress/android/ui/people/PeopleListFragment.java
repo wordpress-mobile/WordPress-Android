@@ -38,9 +38,12 @@ import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.JetpackBrandingUtils;
+import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -62,6 +65,7 @@ public class PeopleListFragment extends Fragment {
 
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
+    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
 
     public static PeopleListFragment newInstance(SiteModel site) {
         PeopleListFragment peopleListFragment = new PeopleListFragment();
@@ -224,7 +228,27 @@ public class PeopleListFragment extends Fragment {
             }
         });
 
+        showJetpackBannerIfNeeded(rootView);
+
         return rootView;
+    }
+
+    private void showJetpackBannerIfNeeded(final View rootView) {
+        if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
+            View jetpackBannerView = rootView.findViewById(R.id.jetpack_banner);
+            RecyclerView scrollableView = mFilteredRecyclerView.getInternalRecyclerView();
+
+            mJetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView);
+            mJetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView);
+
+            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                jetpackBannerView.setOnClickListener(v -> {
+                    mJetpackBrandingUtils.trackBannerTapped(Screen.PEOPLE);
+                    new JetpackPoweredBottomSheetFragment()
+                            .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
+                });
+            }
+        }
     }
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
