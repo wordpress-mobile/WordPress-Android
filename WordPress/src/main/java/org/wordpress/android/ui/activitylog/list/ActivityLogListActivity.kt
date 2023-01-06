@@ -21,7 +21,7 @@ import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_REWIND_ID
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.JetpackBrandingUtils.Screen.ACTIVITY_LOG
-import org.wordpress.android.util.JetpackBrandingUtils.Screen.BACKUPS
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.BACKUP
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
 import javax.inject.Inject
 
@@ -65,7 +65,7 @@ class ActivityLogListActivity : LocaleAwareActivity(), ScrollableViewInitialized
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                     binding?.jetpackBanner?.root?.setOnClickListener {
-                        val trackingScreenName = if (isRewindableOnlyFromExtras) BACKUPS else ACTIVITY_LOG
+                        val trackingScreenName = if (isRewindableOnlyFromExtras) BACKUP else ACTIVITY_LOG
                         jetpackBrandingUtils.trackBannerTapped(trackingScreenName)
                         JetpackPoweredBottomSheetFragment
                                 .newInstance()
