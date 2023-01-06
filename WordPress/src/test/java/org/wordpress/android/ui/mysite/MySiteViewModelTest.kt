@@ -48,6 +48,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
@@ -200,6 +201,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var wordPressPublicData: WordPressPublicData
     @Mock lateinit var jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker
     @Mock lateinit var jetpackFeatureCardHelper: JetpackFeatureCardHelper
+    @Mock lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -400,6 +402,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 appStatus,
                 wordPressPublicData,
                 jetpackFeatureCardShownTracker,
+                jetpackFeatureRemovalOverlayUtil,
                 jetpackFeatureCardHelper
         )
         uiModels = mutableListOf()
