@@ -130,7 +130,7 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
                     getCurrentPhase()!!,
                     phaseThreeBlogPostLinkConfig.getValue()
             ))
-            jetpackFeatureRemovalOverlayUtil.trackAllFeatureOverlayShown(allFeaturesOverlaySource)
+            jetpackFeatureRemovalOverlayUtil.onAllFeatureOverlayShown(allFeaturesOverlaySource)
             return
         }
 
