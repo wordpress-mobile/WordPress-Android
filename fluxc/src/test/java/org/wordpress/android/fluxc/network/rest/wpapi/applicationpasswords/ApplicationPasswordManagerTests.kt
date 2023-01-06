@@ -7,6 +7,7 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -27,7 +28,9 @@ class ApplicationPasswordManagerTests {
         userName = "username",
         password = "password"
     )
-    private val applicationPasswordsStore: ApplicationPasswordsStore = mock()
+    private val applicationPasswordsStore: ApplicationPasswordsStore = mock() {
+        on { applicationName } doReturn applicationName
+    }
     private val mJetpackApplicationPasswordsRestClient: JetpackApplicationPasswordsRestClient = mock()
     private val mWpApiApplicationPasswordsRestClient: WPApiApplicationPasswordsRestClient = mock()
 
@@ -37,7 +40,6 @@ class ApplicationPasswordManagerTests {
     fun setup() {
         mApplicationPasswordsManager = ApplicationPasswordsManager(
             applicationPasswordsStore = applicationPasswordsStore,
-            applicationName = applicationName,
             jetpackApplicationPasswordsRestClient = mJetpackApplicationPasswordsRestClient,
             wpApiApplicationPasswordsRestClient = mWpApiApplicationPasswordsRestClient,
             appLogWrapper = mock()
