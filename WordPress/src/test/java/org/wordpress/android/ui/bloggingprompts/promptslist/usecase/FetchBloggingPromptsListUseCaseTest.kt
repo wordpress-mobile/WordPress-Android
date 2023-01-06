@@ -87,4 +87,34 @@ class FetchBloggingPromptsListUseCaseTest : BaseUnitTest() {
         assertThat(content).hasSize(count)
         assertThat(content).isEqualTo(expectedItems)
     }
+
+    @Test
+    fun `when execute is called, then return success with no prompts in the future`() = test {
+        val now = Date()
+        var initialDate: Date = now
+        var count: Int = 0
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(SiteModel().apply { id = 1 })
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any()))
+            .doSuspendableAnswer {
+                count = it.getArgument(1)
+                initialDate = it.getArgument(2)
+                BloggingPromptsResult(
+                    model = BloggingPromptsListFixtures.domainModelListForNextDays(
+                        initialDate = initialDate,
+                        count = count + 10, // add items in the future as well for the test
+                    )
+                )
+            }
+
+        val result = useCase.execute()
+
+        assertThat(count).isNotEqualTo(0)
+        assertThat(initialDate).isNotEqualTo(now)
+
+        assertThat(result).isInstanceOf(Success::class.java)
+
+        val content = (result as Success).content
+        assertThat(content).hasSize(count) // filtered out future prompts
+        assertThat(content).noneMatch { it.date > now } // double check looking at each item's date
+    }
 }
