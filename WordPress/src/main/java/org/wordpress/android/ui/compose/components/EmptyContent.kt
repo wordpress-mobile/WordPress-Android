@@ -7,18 +7,26 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.LocalContentColor
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidthIn
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
+
+private fun Modifier.emptyContentTextModifier() = padding(horizontal = 30.dp).requiredWidthIn(max = 440.dp)
 
 /**
  * Reusable component for empty screen states such as: empty lists, errors, and loading states. Based on the existing
@@ -46,32 +54,45 @@ fun EmptyContent(
                 )
             }
 
-            // show spacer if something will be shown below
-            if (title != null || subtitle != null) {
+            // show spacer if something will be shown below and something was shown above
+            if (image != null && (title != null || subtitle != null)) {
                 Spacer(Modifier.height(Margin.ExtraLarge.value))
             }
 
-            title?.let {
-                Text(
-                        it,
-                        style = MaterialTheme.typography.subtitle1 // TODO thomashorta set the correct style
-                )
-            }
-            subtitle?.let {
-                // if there's a subtitle, add a spacer before it
-                Spacer(Modifier.height(Margin.Medium.value))
+            // To match text color in ActionableEmptyView we need to provide the "medium" content alpha from Material
+            CompositionLocalProvider(
+                    LocalContentAlpha provides ContentAlpha.medium,
+            ) {
+                title?.let {
+                    Text(
+                            it,
+                            modifier = Modifier.emptyContentTextModifier(),
+                            style = MaterialTheme.typography.subtitle1.copy(
+                                    fontSize = FontSize.ExtraLarge.value,
+                            )
+                    )
+                }
 
-                Text(
-                        it,
-                        color = LocalContentColor.current.copy(alpha = 0.6f),
-                        style = MaterialTheme.typography.subtitle2 // TODO thomashorta set the correct style
-                )
+                // show spacer if something will be shown below and title was shown above
+                if (subtitle != null && title != null) {
+                    Spacer(Modifier.height(Margin.Medium.value))
+                }
+
+                subtitle?.let {
+                    Text(
+                            it,
+                            modifier = Modifier.emptyContentTextModifier(),
+                            style = MaterialTheme.typography.subtitle1.copy(
+                                    fontSize = FontSize.Large.value,
+                            )
+                    )
+                }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Everything", showBackground = true)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun EmptyContentPreview() {
@@ -80,6 +101,75 @@ fun EmptyContentPreview() {
                 title = "Title",
                 subtitle = "Subtitle",
                 image = R.drawable.img_illustration_empty_results_216dp,
+        )
+    }
+}
+
+@Preview(name = "Image Only", showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun EmptyContentImagePreview() {
+    AppTheme {
+        EmptyContent(
+                image = R.drawable.img_illustration_empty_results_216dp,
+        )
+    }
+}
+
+@Preview(name = "Image and Title Only", showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun EmptyContentImageTitlePreview() {
+    AppTheme {
+        EmptyContent(
+                title = "Title",
+                image = R.drawable.img_illustration_empty_results_216dp,
+        )
+    }
+}
+
+@Preview(name = "Image and Subtitle Only", showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun EmptyContentImageSubtitlePreview() {
+    AppTheme {
+        EmptyContent(
+                subtitle = "Subtitle",
+                image = R.drawable.img_illustration_empty_results_216dp,
+        )
+    }
+}
+
+@Preview(name = "Title Only", showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun EmptyContentTitlePreview() {
+    AppTheme {
+        EmptyContent(
+                title = "Title",
+        )
+    }
+}
+
+@Preview(name = "Title and Subtitle Only", showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun EmptyContentTitleSubtitlePreview() {
+    AppTheme {
+        EmptyContent(
+                title = "Title",
+                subtitle = "Subtitle",
+        )
+    }
+}
+
+@Preview(name = "Subtitle Only", showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun EmptyContentSubtitlePreview() {
+    AppTheme {
+        EmptyContent(
+                subtitle = "Subtitle",
         )
     }
 }
