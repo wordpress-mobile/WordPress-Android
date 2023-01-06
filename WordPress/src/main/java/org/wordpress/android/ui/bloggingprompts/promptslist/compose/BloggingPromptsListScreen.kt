@@ -78,7 +78,7 @@ private fun ListContent(
 @Composable
 private fun NoContent() {
     EmptyContent(
-            title = "No prompts yet",
+            title = stringResource(R.string.blogging_prompts_list_no_prompts),
             image = R.drawable.img_illustration_empty_results_216dp,
             modifier = Modifier.fillMaxSize(),
     )
@@ -97,8 +97,8 @@ private fun LoadingContent() {
 @Composable
 private fun FetchErrorContent() {
     EmptyContent(
-            title = "Oops",
-            subtitle = "There was an error loading prompts.",
+            title = stringResource(R.string.blogging_prompts_list_error_fetch_title),
+            subtitle = stringResource(R.string.blogging_prompts_list_error_fetch_subtitle),
             image = R.drawable.img_illustration_empty_results_216dp,
             modifier = Modifier.fillMaxSize(),
     )
@@ -107,8 +107,8 @@ private fun FetchErrorContent() {
 @Composable
 private fun NetworkErrorContent() {
     EmptyContent(
-            title = "Unable to load this content right now.",
-            subtitle = "Check your network connection and try again.",
+            title = stringResource(R.string.blogging_prompts_list_error_network_title),
+            subtitle = stringResource(R.string.blogging_prompts_list_error_network_subtitle),
             image = R.drawable.img_illustration_cloud_off_152dp,
             modifier = Modifier.fillMaxSize(),
     )
