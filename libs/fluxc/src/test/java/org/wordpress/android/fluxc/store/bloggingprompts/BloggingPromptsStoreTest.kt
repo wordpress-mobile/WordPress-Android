@@ -191,7 +191,7 @@ class BloggingPromptsStoreTest {
     }
 
     @Test
-    fun `when fetch prompts triggered, then all prompt model are inserted into db`() = test {
+    fun `when fetch prompts triggered, then all prompt models are inserted into db`() = test {
         val payload = BloggingPromptsPayload(PROMPTS_RESPONSE)
         whenever(
             restClient.fetchPrompts(
@@ -207,7 +207,7 @@ class BloggingPromptsStoreTest {
     }
 
     @Test
-    fun `given cards response, when fetch cards gets triggered, then all prompt model are returned in the result`() =
+    fun `given cards response, when fetch cards gets triggered, then all prompt models are returned in the result`() =
         test {
             val payload = BloggingPromptsPayload(PROMPTS_RESPONSE)
             whenever(
