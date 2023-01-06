@@ -324,8 +324,8 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
             @JvmStatic
             fun fromString(label: String?): JetpackFeatureCollectionOverlaySource {
                 return when (FEATURE_CARD.label) {
-                    label -> FEATURE_CARD
-                    label -> APP_OPEN
+                    FEATURE_CARD.label -> FEATURE_CARD
+                    APP_OPEN.label -> APP_OPEN
                     else -> UNSPECIFIED
                 }
             }

@@ -41,7 +41,8 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     private var siteCreationOrigin: SiteCreationSource = UNSPECIFIED
     private var isDeepLinkOverlayScreen: Boolean = false
     private var isFeatureCollectionOverlayScreen: Boolean = false
-    private var featureCollectionOverlayOrigin: JetpackFeatureCollectionOverlaySource = JetpackFeatureCollectionOverlaySource.UNSPECIFIED
+    private var featureCollectionOverlayOrigin: JetpackFeatureCollectionOverlaySource =
+            JetpackFeatureCollectionOverlaySource.UNSPECIFIED
 
     fun openJetpackAppDownloadLink() {
         if (isSiteCreationOverlayScreen) {
@@ -52,7 +53,9 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
             jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInDeepLinkOverlay()
         } else if (isFeatureCollectionOverlayScreen) {
             _action.value = JetpackFeatureOverlayActions.OpenPlayStore
-            jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInFeatureCollectionOverlay(featureCollectionOverlayOrigin)
+            jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInFeatureCollectionOverlay(
+                    featureCollectionOverlayOrigin
+            )
         } else {
             _action.value = JetpackFeatureOverlayActions.OpenPlayStore
             jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTapped(screenType)
