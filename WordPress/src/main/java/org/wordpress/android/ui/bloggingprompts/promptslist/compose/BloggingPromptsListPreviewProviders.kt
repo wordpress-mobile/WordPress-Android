@@ -18,11 +18,13 @@ class BloggingPromptsListScreenPreviewProvider : PreviewParameterProvider<UiStat
     }
 
     override val values: Sequence<UiState> = sequenceOf(
-                UiState.None,
-                UiState.Loading,
-                UiState.Content(fakePromptList),
-                // TODO thomashorta add missing UiStates when their content is developed
-        )
+            UiState.None,
+            UiState.Loading,
+            UiState.Content(fakePromptList),
+            UiState.Content(emptyList()),
+            UiState.FetchError,
+            UiState.NetworkError,
+    )
 }
 
 class BloggingPromptsListItemPreviewProvider : PreviewParameterProvider<BloggingPromptsListItemModel> {

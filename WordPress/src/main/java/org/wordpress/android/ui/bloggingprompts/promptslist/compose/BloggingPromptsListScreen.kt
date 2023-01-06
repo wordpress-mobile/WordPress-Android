@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +24,7 @@ import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListV
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListViewModel.UiState.NetworkError
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListViewModel.UiState.None
 import org.wordpress.android.ui.bloggingprompts.promptslist.model.BloggingPromptsListItemModel
+import org.wordpress.android.ui.compose.components.EmptyContent
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
@@ -46,8 +47,8 @@ fun BloggingPromptsListScreen(
             when (uiState) {
                 is Content -> ListContent(uiState.content)
                 Loading -> LoadingContent()
-                FetchError -> TODO()
-                NetworkError -> TODO()
+                FetchError -> FetchErrorContent()
+                NetworkError -> NetworkErrorContent()
                 None -> {}
             }
         }
@@ -58,26 +59,59 @@ fun BloggingPromptsListScreen(
 private fun ListContent(
     promptsList: List<BloggingPromptsListItemModel>
 ) {
-    LazyColumn(Modifier.fillMaxSize()) {
-        itemsIndexed(promptsList) { index, item ->
-            if (index != 0) Divider()
+    if (promptsList.isEmpty()) {
+        NoContent()
+    } else {
+        LazyColumn(Modifier.fillMaxSize()) {
+            itemsIndexed(promptsList) { index, item ->
+                if (index != 0) Divider()
 
-            BloggingPromptsListItem(
-                    model = item,
-                    modifier = Modifier.fillMaxWidth()
-            )
+                BloggingPromptsListItem(
+                        model = item,
+                        modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }
 
 @Composable
+private fun NoContent() {
+    EmptyContent(
+            title = "No prompts yet",
+            image = R.drawable.img_illustration_empty_results_216dp,
+            modifier = Modifier.fillMaxSize(),
+    )
+}
+
+@Composable
 private fun LoadingContent() {
-    Box(Modifier.fillMaxSize()) {
-        Text(
-                "Loading...",
-                modifier = Modifier.align(Alignment.Center),
-        )
+    Box(
+            Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator()
     }
+}
+
+@Composable
+private fun FetchErrorContent() {
+    EmptyContent(
+            title = "Oops",
+            subtitle = "There was an error loading prompts.",
+            image = R.drawable.img_illustration_empty_results_216dp,
+            modifier = Modifier.fillMaxSize(),
+    )
+}
+
+@Composable
+private fun NetworkErrorContent() {
+    EmptyContent(
+            title = "Unable to load this content right now.",
+            subtitle = "Check your network connection and try again.",
+            image = R.drawable.img_illustration_cloud_off_152dp,
+            modifier = Modifier.fillMaxSize(),
+    )
 }
 
 @Preview
