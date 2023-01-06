@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -36,7 +37,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     @Inject lateinit var activityLauncherWrapper: ActivityLauncherWrapper
     @Inject lateinit var uiHelpers: UiHelpers
 
-    private val viewModel: JetpackFeatureFullScreenOverlayViewModel by viewModels()
+    private val viewModel: JetpackFeatureFullScreenOverlayViewModel by activityViewModels()
     private var _binding: JetpackFeatureRemovalOverlayBinding? = null
 
     private val binding get() = _binding ?: throw NullPointerException("_binding cannot be null")

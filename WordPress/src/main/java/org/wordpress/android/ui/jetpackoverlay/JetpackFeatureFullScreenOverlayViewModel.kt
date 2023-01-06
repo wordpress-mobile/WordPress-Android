@@ -16,6 +16,7 @@ import org.wordpress.android.util.config.JPDeadlineConfig
 import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
 import org.wordpress.android.util.config.PhaseTwoBlogPostLinkConfig
 import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -30,10 +31,10 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     private val phaseTwoBlogPostLinkConfig: PhaseTwoBlogPostLinkConfig,
     private val phaseThreeBlogPostLinkConfig: PhaseThreeBlogPostLinkConfig
 ) : ScopedViewModel(mainDispatcher) {
-    private val _uiState = MutableLiveData<JetpackFeatureOverlayUIState>()
+    private val _uiState = SingleLiveEvent<JetpackFeatureOverlayUIState>()
     val uiState: LiveData<JetpackFeatureOverlayUIState> = _uiState
 
-    private val _action = MutableLiveData<JetpackFeatureOverlayActions>()
+    private val _action = SingleLiveEvent<JetpackFeatureOverlayActions>()
     val action: LiveData<JetpackFeatureOverlayActions> = _action
 
     private lateinit var screenType: JetpackFeatureOverlayScreenType
