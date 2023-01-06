@@ -4,6 +4,7 @@ import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import org.wordpress.android.ui.utils.UiString
 
+@Suppress("LongParameterList")
 sealed class JetpackFeatureOverlayComponentVisibility(
     val illustration: Boolean = true,
     val title: Boolean = true,
@@ -30,6 +31,16 @@ sealed class JetpackFeatureOverlayComponentVisibility(
 
     sealed class DeepLinkPhase : JetpackFeatureOverlayComponentVisibility() {
         class All : DeepLinkPhase()
+    }
+
+    sealed class AllFeaturesPhase : JetpackFeatureOverlayComponentVisibility() {
+        class PhaseThree(
+            override val migrationInfoText: Boolean = true,
+            override val closeButton: Boolean = false,
+            override val migrationText: Boolean = true
+        ) : AllFeaturesPhase()
+
+        class Final(override val closeButton: Boolean = false) : AllFeaturesPhase()
     }
 }
 

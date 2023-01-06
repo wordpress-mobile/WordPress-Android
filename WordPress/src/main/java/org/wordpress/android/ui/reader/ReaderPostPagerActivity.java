@@ -47,6 +47,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackAllFeaturesOverlaySource;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -480,7 +481,13 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
 
         mDeepLinkOpenWebLinksWithJetpackHelper.onOverlayShown();
         JetpackFeatureFullScreenOverlayFragment
-                .newInstance(null, false, true, SiteCreationSource.UNSPECIFIED)
+                .newInstance(
+                        null,
+                        false,
+                        true,
+                        SiteCreationSource.UNSPECIFIED,
+                        false,
+                        JetpackAllFeaturesOverlaySource.UNSPECIFIED)
                 .show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
         return true;
     }
