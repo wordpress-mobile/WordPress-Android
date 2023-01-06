@@ -4,6 +4,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_THREE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_TWO
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackAllFeaturesOverlaySource.APP_OPEN
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.NOTIFICATIONS
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.READER
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.STATS
@@ -51,6 +52,11 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         return shouldShowSiteCreationOverlay() &&
                 jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase() ==
                 JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
+    }
+
+    fun shouldShowFeatureCollectionJetpackOverlay(): Boolean {
+        return !jetpackFeatureOverlayShownTracker.getAllFeatureOverlayShown() &&
+                jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == PhaseThree
     }
 
     private fun isInSiteCreationPhase(): Boolean {
@@ -253,7 +259,14 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         )
     }
 
-    fun trackAllFeatureOverlayShown(source: JetpackAllFeaturesOverlaySource) {
+    fun onAllFeatureOverlayShown(source: JetpackAllFeaturesOverlaySource) {
+        if (source == APP_OPEN) {
+            jetpackFeatureOverlayShownTracker.setAllFeatureOverlayShown()
+        }
+        trackAllFeatureOverlayShown(source)
+    }
+
+    private fun trackAllFeatureOverlayShown(source: JetpackAllFeaturesOverlaySource) {
         analyticsTrackerWrapper.track(
                 AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED,
                 mapOf(
@@ -304,13 +317,17 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
 
     enum class JetpackAllFeaturesOverlaySource(val label: String) {
         FEATURE_CARD("card"),
+        APP_OPEN("app_open"),
         UNSPECIFIED("unspecified");
 
         companion object {
             @JvmStatic
-            fun fromString(label: String?) = when (FEATURE_CARD.label) {
-                label -> FEATURE_CARD
-                else -> UNSPECIFIED
+            fun fromString(label: String?): JetpackAllFeaturesOverlaySource {
+                return when (FEATURE_CARD.label) {
+                    label -> FEATURE_CARD
+                    label -> APP_OPEN
+                    else -> UNSPECIFIED
+                }
             }
         }
     }
