@@ -323,7 +323,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         companion object {
             @JvmStatic
             fun fromString(label: String?): JetpackFeatureCollectionOverlaySource {
-                return when (FEATURE_CARD.label) {
+                return when (label) {
                     FEATURE_CARD.label -> FEATURE_CARD
                     APP_OPEN.label -> APP_OPEN
                     else -> UNSPECIFIED
