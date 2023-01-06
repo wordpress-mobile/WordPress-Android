@@ -1,19 +1,44 @@
 package org.wordpress.android.ui.bloggingprompts.promptslist.usecase
 
-import kotlinx.coroutines.delay
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
-import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Success
-import java.util.Calendar
+import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Date
 import javax.inject.Inject
 
-// TODO thomashorta remove this suppress annotation when this has a real implementation
-@Suppress("MagicNumber")
-class FetchBloggingPromptsListUseCase @Inject constructor() {
+class FetchBloggingPromptsListUseCase @Inject constructor(
+    private val bloggingPromptsStore: BloggingPromptsStore,
+    private val selectedSiteRepository: SelectedSiteRepository,
+) {
     suspend fun execute(): Result {
-        // delay a bit to simulate a fetch
-        delay(1500)
-        return Success(generateFakePrompts())
+        return fetchBloggingPrompts()
+                ?.sortedByDescending { it.date }
+                ?.dropWhile { it.date > Date() } // don't display future prompts
+                ?.take(NUMBER_OF_PROMPTS)
+                ?.let { Result.Success(it) } // success if fetchBloggingPrompts was not null
+                ?: Result.Failure // failure otherwise
+    }
+
+    /**
+     * Returns the List of Blogging Prompts for the current site, with a size of [NUMBER_OF_PROMPTS] if the fetch was
+     * successful, otherwise returns null, indicating a failure.
+     */
+    private suspend fun fetchBloggingPrompts(): List<BloggingPromptModel>? {
+        // get the starting date to fetch the prompts from
+        // it is today's date minus (number of prompts - 1) because it needs to fetch today's prompt as well
+        val fromDate = LocalDate.now()
+                .minusDays(NUMBER_OF_PROMPTS.toLong() - 1)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .let { Date.from(it) }
+
+        return selectedSiteRepository.getSelectedSite()?.let { site ->
+            bloggingPromptsStore.fetchPrompts(site, NUMBER_OF_PROMPTS, fromDate)
+                    .takeUnless { it.isError }
+                    ?.model
+        }
     }
 
     sealed class Result {
@@ -31,39 +56,7 @@ class FetchBloggingPromptsListUseCase @Inject constructor() {
         }
     }
 
-    // FAKE DATA GENERATION BELOW
-
-    private fun generateFakePrompts(): List<BloggingPromptModel> {
-        val calendar = Calendar.getInstance()
-        return List(11) { generateFakePrompt(it, calendar.getDateAndSubtractADay()) }
-    }
-
-    private fun generateFakePrompt(index: Int, date: Date) = BloggingPromptModel(
-            id = index,
-            text = fakePrompts.random(),
-            date = date,
-            isAnswered = listOf(true, false).random(),
-            respondentsCount = index,
-            title = "Prompt Title $index",
-            content = "Prompt Content $index",
-            attribution = "Prompt Attribution $index",
-            respondentsAvatarUrls = emptyList(),
-    )
-
-    private fun Calendar.getDateAndSubtractADay(): Date {
-        val currentDate = time
-        add(Calendar.DAY_OF_YEAR, -1)
-        return currentDate
-    }
-
     companion object {
-        private val fakePrompts = listOf(
-                "What makes you feel nostalgic?",
-                "What relationships have a negative impact on you?",
-                "If you started a sports team, what would the colors and mascot be?",
-                "How have your political views changed over time?",
-                "You get to build your perfect space for reading and writing. What’s it like?",
-                "Have you ever been in an automobile accident?"
-        )
+        private const val NUMBER_OF_PROMPTS = 11
     }
 }
