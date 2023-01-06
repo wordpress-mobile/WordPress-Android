@@ -129,10 +129,6 @@ class ApplicationPasswordsNetwork @Inject constructor(
         }
     }
 
-    suspend fun deleteApplicationPassword(site: SiteModel) {
-        mApplicationPasswordsManager.deleteApplicationCredentials(site)
-    }
-
     suspend fun <T> executeGetGsonRequest(
         site: SiteModel,
         path: String,
