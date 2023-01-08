@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-30 07:59:08+0000
+Translation-Revision-Date: 2023-01-06 11:03:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativt kan du ta bort bifogning och redigera detta block separat genom att trycka på ”Konvertera till vanligt block”.</string>
+    <string name="dlg_confirm_delete_category">Ta bort kategori \'%s\' permanent?</string>
+    <string name="deleting_cat_success">Kategori borttagen</string>
+    <string name="deleting_cat_failed">Misslyckades att ta bort kategori</string>
+    <string name="deleting_cat">Tar bort kategori</string>
+    <string name="updating_cat">Uppdaterar kategori</string>
+    <string name="update_category">Uppdatera kategori</string>
+    <string name="reader_toast_user_blocked">Inlägg från denna användare kommer inte längre att visas</string>
+    <string name="reader_menu_block_user">Blockera användare</string>
+    <string name="reader_menu_report_user">Rapportera denna användare</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">Öppna länkar i WordPress</string>
     <string name="wp_jetpack_deep_link_overlay_description">Du verkar ha Jetpack-appen installerad.\n\nVill du i fortsättningen öppna länkar i Jetpack-appen i stället?\n\nDu kan ändra denna inställning när som helst via appinställningar &gt; Öppna länkar i Jetpack</string>
     <string name="wp_jetpack_deep_link_overlay_title">Öppna länkar i Jetpack?</string>
@@ -26,7 +36,7 @@ Language: sv_SE
     <string name="preference_open_links_in_jetpack">Öppna länkar i Jetpack</string>
     <string name="jp_migration_need_help_button">Behöver du hjälp?</string>
     <string name="jp_migration_got_it_button">Jag förstår</string>
-    <string name="jp_migration_delete_message">&lt;b&gt;Ta bort WordPress-appen&lt;/b&gt; &lt;br&gt;för att undvika datakonflikter.</string>
+    <string name="jp_migration_delete_message">&lt;b&gt;Ta bort WordPress-appen&lt;/b&gt; för att undvika datakonflikter.</string>
     <string name="jp_migration_delete_subtitle">Det verkar som att du fortfarande har WordPress-appen installerad. Vi rekommenderar att du tar bort WordPress-appen för att undvika datakonflikter.</string>
     <string name="jp_migration_delete_title">Du behöver inte längre WordPress-appen</string>
     <string name="jp_migration_network_error_message">Vi kan inte överföra dina data och inställningar utan en nätverksanslutning.</string>
@@ -38,7 +48,7 @@ Language: sv_SE
     <string name="jp_migration_try_again_button">Försök igen</string>
     <string name="jp_migration_finish_button">Slutför</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Ta bort WordPress-appens ikon</string>
-    <string name="jp_migration_done_delete_wp_message">&lt;b&gt;Ta bort WordPress-appen&lt;/b&gt; &lt;br&gt;för att undvika datakonflikter.</string>
+    <string name="jp_migration_done_delete_wp_message">&lt;b&gt;Ta bort WordPress-appen&lt;/b&gt; för att undvika datakonflikter.</string>
     <string name="jp_migration_done_subtitle">Vi har flyttat över alla data och dina inställningar, så allt är precis som förut.</string>
     <string name="jp_migration_done_title">Tack för att du bytt till Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Aviseringar från WordPress-appent kommer att stängas av.</string>
@@ -601,6 +611,7 @@ Language: sv_SE
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Dubbeltryck för att öppna åtgärdsbladet och lägga till bild eller video</string>
     <string name="gutenberg_native_current_unit_is_s">Aktuell enhet är %s</string>
     <string name="gutenberg_native_crosspost">Korspublicera</string>
+    <string name="gutenberg_native_s_converted_to_regular_block">%s konverterades till vanligt block</string>
     <string name="gutenberg_native_columns_settings">Kolumninställningar</string>
     <string name="gutenberg_native_add_link_to_s">Lägg till länk till %s</string>
     <string name="gutenberg_native_add_link_text">Lägg till länktext</string>
@@ -3370,8 +3381,10 @@ Language: sv_SE
     <string name="categories">Kategorier</string>
     <string name="sdcard_title">SD-kort krävs</string>
     <string name="media">Media</string>
+    <string name="updating_cat_success">Kategori uppdaterades</string>
     <string name="approve">Godkänn</string>
     <string name="delete">Radera</string>
+    <string name="updating_cat_failed">Uppdatering av kategori misslyckades</string>
     <string name="none">Ingen</string>
     <string name="publish_now">Publicera nu</string>
     <string name="reply">Svara</string>

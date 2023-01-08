@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-30 16:54:11+0000
+Translation-Revision-Date: 2022-12-20 13:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: fr
 -->
 <resources>
+    <string name="reader_toast_user_blocked">Les articles de cet utilisateur ne seront plus affichés</string>
+    <string name="reader_menu_block_user">Bloquer l’utilisateur</string>
+    <string name="reader_menu_report_user">Signaler cet utilisateur</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">Ouvrir des liens dans WordPress</string>
     <string name="wp_jetpack_deep_link_overlay_description">Il semblerait que l’application Jetpack soit installée sur votre appareil.\n\nVoulez-vous ouvrir les liens dans l’application Jetpack à l’avenir ?\n\nVous pouvez toujours modifier cela dans les Réglages de l’application &gt; Ouvrir des liens dans Jetpack.</string>
     <string name="wp_jetpack_deep_link_overlay_title">Ouvrir des liens dans Jetpack ?</string>
@@ -26,7 +29,6 @@ Language: fr
     <string name="preference_open_links_in_jetpack">Ouvrir les liens dans Jetpack</string>
     <string name="jp_migration_need_help_button">Besoin d’aide ?</string>
     <string name="jp_migration_got_it_button">J’ai compris</string>
-    <string name="jp_migration_delete_message">Veuillez &lt;b&gt;supprimer l’application WordPress&lt;/b&gt; pour&lt;br&gt;éviter les conflits de données.</string>
     <string name="jp_migration_delete_subtitle">Il semblerait que l\'application WordPress soit toujours installée. Nous vous recommandons de supprimer l\'application WordPress pour éviter les conflits de données.</string>
     <string name="jp_migration_delete_title">Vous n\'avez plus besoin de l\'application WordPress</string>
     <string name="jp_migration_network_error_message">Nous ne pouvons pas transférer vos données et réglages sans connexion réseau.</string>
@@ -38,7 +40,6 @@ Language: fr
     <string name="jp_migration_try_again_button">Réessayer</string>
     <string name="jp_migration_finish_button">Terminer</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Supprimer l’icône de l’application WordPress</string>
-    <string name="jp_migration_done_delete_wp_message">Veuillez &lt;b&gt;supprimer l’application WordPress&lt;/b&gt; pour&lt;br&gt;éviter les conflits de données.</string>
     <string name="jp_migration_done_subtitle">Nous avons transféré tous vos réglages et données. Tout se trouve au même endroit qu’avant.</string>
     <string name="jp_migration_done_title">Merci d’être passé à Jetpack !</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Nous désactiverons les notifications de l’application WordPress.</string>

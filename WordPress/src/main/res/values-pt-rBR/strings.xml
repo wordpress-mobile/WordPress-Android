@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-12-14 21:02:17+0000
+Translation-Revision-Date: 2022-12-17 10:56:13+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: pt_BR
 -->
 <resources>
+    <string name="reader_toast_user_blocked">Os posts deste usuário não serão mais exibidos</string>
+    <string name="reader_menu_block_user">Bloquear usuário</string>
+    <string name="reader_menu_report_user">Denunciar este usuário</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">Abrir links no WordPress</string>
     <string name="wp_jetpack_deep_link_overlay_description">Você tem o aplicativo Jetpack instalado.\n\nGostaria de abrir links no aplicativo Jetpack no futuro?\n\nÉ possível alterar esta opção em Configurações do aplicativo &gt; Abrir links no Jetpack</string>
     <string name="wp_jetpack_deep_link_overlay_title">Abrir links no Jetpack?</string>
@@ -26,7 +29,6 @@ Language: pt_BR
     <string name="preference_open_links_in_jetpack">Abrir links no Jetpack</string>
     <string name="jp_migration_need_help_button">Precisa de ajuda?</string>
     <string name="jp_migration_got_it_button">Entendi</string>
-    <string name="jp_migration_delete_message">&lt;b&gt;Exclua o aplicativo WordPress&lt;/b&gt; para&lt;br&gt;evitar conflitos de dados.</string>
     <string name="jp_migration_delete_subtitle">Você ainda tem o aplicativo WordPress instalado. Exclua o aplicativo para evitar conflitos de dados.</string>
     <string name="jp_migration_delete_title">O aplicativo WordPress não é mais necessário</string>
     <string name="jp_migration_network_error_message">Não é possível transferir seus dados e configurações sem uma conexão de rede.</string>
@@ -38,7 +40,6 @@ Language: pt_BR
     <string name="jp_migration_try_again_button">Tente novamente</string>
     <string name="jp_migration_finish_button">Concluir</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Remover ícone do aplicativo WordPress</string>
-    <string name="jp_migration_done_delete_wp_message">&lt;b&gt;Exclua o aplicativo WordPress&lt;/b&gt; para&lt;br&gt;evitar conflitos de dados.</string>
     <string name="jp_migration_done_subtitle">Transferimos todos os seus dados e configurações. Está tudo certinho.</string>
     <string name="jp_migration_done_title">Agradecemos por mudar para o Jetpack.</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Vamos desativar as notificações do aplicativo WordPress.</string>

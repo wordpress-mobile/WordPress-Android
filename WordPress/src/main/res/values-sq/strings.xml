@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-12-09 17:13:57+0000
+Translation-Revision-Date: 2022-12-20 17:54:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sq_AL
 -->
 <resources>
+    <string name="reader_toast_user_blocked">Postimet prej këtij përdoruesi s’do të shfaqen më</string>
+    <string name="reader_menu_block_user">Blloko përdoruesin</string>
+    <string name="reader_menu_report_user">Raportojeni këtë përdorues</string>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">Lidhjet hapi në WordPress</string>
+    <string name="wp_jetpack_deep_link_overlay_description">Duket se keni të instaluar aplikacionin Jetpack.\n\nDoni që në të ardhmen lidhjet të hapen te aplikacioni Jetpack?\n\nMundeni përherë ta ndryshoni këtë, te Rregullime Aplikacioni &gt; Lidhjet hapi në Jetpack</string>
+    <string name="wp_jetpack_deep_link_overlay_title">Të hapen lidhjet në Jetpack?</string>
+    <string name="wp_jetpack_continue_without_jetpack">Vazhdo pa Jetpack-un</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack-u furnizon statistika, njoftime, etj, për t’ju ndihmuar të ngrini dhe fuqizoni sajtin tuaj WordPress që keni ëndërruar.\n\nAplikacioni WordPress nuk mbulon më krijimin e një sajti të ri.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack-u furnizon statistika, njoftime, etj, për t’ju ndihmuar të ngrini dhe fuqizoni sajtin tuaj WordPress që keni ëndërruar.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Krijoni një sajt të ri WordPress me aplikacionin Jetpack</string>
+    <string name="deep_linking_weblinks_alias_label">lidhje web</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Që të vazhdoni të merrni në pajisjen tuaj njoftime të atypëratyshme, kaloni te aplikacioni Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Që të gjeni, ndiqni dhe pëlqeni krejt sajtet dhe postimet tuaj të parapëlqyer me Lexuesin, kaloni te aplikacioni Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Që të shihni shtim trafiku në sajtin tuaj, përmes statistikash dhe prirjesh, kaloni te aplikacioni Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Merrini njoftimet tuaja me aplikacionin Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Ndiqni çfarëdo sajti, me aplikacionin Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Merrni statistikat tuaja duke përdorur aplikacionin e ri Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">S’arrihet të çaktivizohet hapje lidhjesh në Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">S’arrihet të aktivizohet hapje lidhjesh në Jetpack</string>
+    <string name="preference_open_links_in_jetpack">Lidhjet hapi në Jetpack</string>
+    <string name="jp_migration_need_help_button">Ju duhet ndihmë?</string>
+    <string name="jp_migration_got_it_button">E kuptova</string>
+    <string name="jp_migration_delete_subtitle">Duket sikur keni ende të instaluar aplikacionin WordPress. Rekomandojmë ta fshini aplikacionin WordPress, për të shmangur përplasje të dhënash.</string>
+    <string name="jp_migration_delete_title">S’ju duhet më aplikacioni WordPress</string>
+    <string name="jp_migration_network_error_message">S’jeni në gjendje të shpërngulim të dhënat dhe rregullimet tuaja pa një lidhje në rrjet.</string>
+    <string name="jp_migration_network_error_subtitle">JU lutemi, kontrolloni për t’u siguruar se lidhja juaj në rrjet funksionon dhe riprovoni.</string>
+    <string name="jp_migration_network_error_title">S’arrihet të lidhet në internet.</string>
+    <string name="jp_migration_generic_error_message">Ju lutemi, lidhuni me ata të asistencës ose riprovoni më vonë.</string>
+    <string name="jp_migration_generic_error_subtitle">Na ndjeni, por diçka nuk shkoi siç qe planifikuar. Të dhënat tuaja janë të parrezik, por s’qemë në gjendje t’i shpërngulim këtë herë.</string>
+    <string name="jp_migration_generic_error_title">Mooos, diç shkoi ters.</string>
+    <string name="jp_migration_try_again_button">Riprovoni</string>
+    <string name="jp_migration_finish_button">Përfundoje</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">Hiqni ikonë aplikacioni WordPress</string>
+    <string name="jp_migration_done_subtitle">Kemi shpërngulur krejt të dhënat dhe rregullimet tuaja. Gjithçka është mu atje ku e latë.</string>
+    <string name="jp_migration_done_title">Faleminderit që kaloni në Jetpack!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">Do t’i çaktivizojmë njoftimet prej aplikacionit WordPress.</string>
+    <string name="jp_migration_notifications_subtitle">Do të merrni të njëjtat njoftime, por tani do të vijnë nga aplikacioni Jetpack.</string>
+    <string name="jp_migration_notifications_title">Njoftimet tani vijnë prej Jetpack-ut</string>
+    <string name="jp_migration_success_card_message">Ju lutemi, fshini aplikacionin WordPress</string>
+    <string name="wordpress_help_center_button">Qendër ndihme WordPress</string>
+    <string name="support_title">Asistencë</string>
+    <string name="notification_disable_broadcast_permission_desc">E lejon aplikacionin të çaktivizojë njoftimet nga WordPress-i.</string>
+    <string name="notification_disable_broadcast_permission_label">çaktivizoni njoftimet WordPress</string>
     <string name="jp_migration_help_button">Ju duhet ndihmë?</string>
     <string name="jp_migration_continue_button">Vazhdo</string>
     <string name="jp_migration_welcome_site_found_message">E gjetëm sajtin tuaj. Vazhdoni,  që të shpërngulen krejt të dhënat tuaja dhe të bëhet automatikisht hyrja në Jetpack.</string>
