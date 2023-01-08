@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.reader.discover
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
@@ -21,13 +19,11 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.test
-import org.wordpress.android.testScope
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
@@ -86,13 +82,10 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 private const val SOURCE = "source"
 
-@InternalCoroutinesApi
 @Suppress("LargeClass")
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class ReaderPostCardActionsHandlerTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     private lateinit var actionHandler: ReaderPostCardActionsHandler
     @Mock private lateinit var readerTracker: ReaderTracker
     @Mock private lateinit var reblogUseCase: ReblogUseCase
@@ -131,7 +124,7 @@ class ReaderPostCardActionsHandlerTest {
                 mock(),
                 seenStatusToggleUseCase,
                 readerBlogTableWrapper,
-                TEST_DISPATCHER
+                testDispatcher()
         )
         actionHandler.initScope(testScope())
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)

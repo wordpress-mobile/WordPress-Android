@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.sitecreation
 
 import android.os.Bundle
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
@@ -20,6 +19,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -45,11 +45,9 @@ private const val STEP_COUNT = 20
 private const val FIRST_STEP_INDEX = 1
 private const val LAST_STEP_INDEX = STEP_COUNT
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class SiteCreationMainVMTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class SiteCreationMainVMTest : BaseUnitTest() {
     @Mock lateinit var tracker: SiteCreationTracker
     @Mock lateinit var navigationTargetObserver: Observer<NavigationTarget>
     @Mock lateinit var wizardFinishedObserver: Observer<CreateSiteState>

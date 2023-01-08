@@ -1,13 +1,13 @@
 package org.wordpress.android.viewmodel.main
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action
@@ -17,11 +17,9 @@ import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.NavigateT
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.NavigateState.TO_NO_SITE_SELECTED
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.NavigateState.TO_SITE_SELECTED
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class SitePickerViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class SitePickerViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: SitePickerViewModel
 
     @Mock

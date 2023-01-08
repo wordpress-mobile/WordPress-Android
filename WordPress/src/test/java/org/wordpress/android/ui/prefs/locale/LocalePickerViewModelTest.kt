@@ -2,6 +2,7 @@ package org.wordpress.android.ui.prefs.locale
 
 import android.content.Context
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -10,7 +11,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.language.LocalePickerListItem.LocaleRow
 import org.wordpress.android.ui.prefs.language.LocalePickerViewModel
 import org.wordpress.android.ui.prefs.language.LocalePickerViewModel.LocalePickerUiState
@@ -18,6 +18,7 @@ import org.wordpress.android.util.LocaleProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Locale
 
+@ExperimentalCoroutinesApi
 class LocalePickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var localeProvider: LocaleProvider

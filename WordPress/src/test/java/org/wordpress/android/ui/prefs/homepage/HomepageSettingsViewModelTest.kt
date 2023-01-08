@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.prefs.homepage
 
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.store.SiteOptionsStore.HomepageUpdatedPayload
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsError
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDataLoader.LoadingResult
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDataLoader.LoadingResult.Data
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDataLoader.LoadingResult.Loading
@@ -34,6 +33,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import java.util.Date
 
+@ExperimentalCoroutinesApi
 class HomepageSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var homepageSettingsDataLoader: HomepageSettingsDataLoader
     @Mock lateinit var siteStore: SiteStore
@@ -54,8 +54,8 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = HomepageSettingsViewModel(
-                Dispatchers.Unconfined,
-                Dispatchers.Unconfined,
+                testDispatcher(),
+                testDispatcher(),
                 dispatcher,
                 homepageSettingsDataLoader,
                 siteStore,

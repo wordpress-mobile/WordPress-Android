@@ -65,8 +65,8 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         return jetpackFeatureRemovalPhaseHelper.getCurrentPhase() != null &&
                 when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
                     null -> false
-                    PhaseOne -> true
-                    PhaseTwo, PhaseThree, PhaseFour, PhaseNewUsers -> false
+                    PhaseOne, PhaseTwo, PhaseThree -> true
+                    PhaseFour, PhaseNewUsers -> false
                 }
     }
 
@@ -243,8 +243,75 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         )
     }
 
+    fun trackLearnMoreAboutMigrationClicked(screenType: JetpackFeatureOverlayScreenType) {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                        SCREEN_TYPE_KEY to screenType.trackingName
+                )
+        )
+    }
+
+    fun trackAllFeatureOverlayShown(source: JetpackAllFeaturesOverlaySource) {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                        SCREEN_TYPE_KEY to source.label
+                )
+        )
+    }
+
+    fun trackBottomSheetDismissedInAllFeaturesOverlay(
+        source: JetpackAllFeaturesOverlaySource,
+        dismissalType: JetpackOverlayDismissalType
+    ) {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISMISSED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                        SCREEN_TYPE_KEY to source.label,
+                        DISMISSAL_TYPE_KEY to dismissalType.trackingName
+                )
+        )
+    }
+
+    fun trackInstallJetpackTappedInAllFeaturesOverlay(source: JetpackAllFeaturesOverlaySource) {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                        SCREEN_TYPE_KEY to source.label
+                )
+        )
+    }
+
+    fun trackLearnMoreAboutMigrationClickedInAllFeaturesOverlay(source: JetpackAllFeaturesOverlaySource) {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                        SCREEN_TYPE_KEY to source.label
+                )
+        )
+    }
+
     enum class JetpackOverlayDismissalType(val trackingName: String) {
         CLOSE_BUTTON("close"),
         CONTINUE_BUTTON("continue")
+    }
+
+    enum class JetpackAllFeaturesOverlaySource(val label: String) {
+        FEATURE_CARD("card"),
+        UNSPECIFIED("unspecified");
+
+        companion object {
+            @JvmStatic
+            fun fromString(label: String?) = when (FEATURE_CARD.label) {
+                label -> FEATURE_CARD
+                else -> UNSPECIFIED
+            }
+        }
     }
 }

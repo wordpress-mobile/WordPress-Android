@@ -86,7 +86,7 @@ fun WelcomeStep(uiState: UiState.Content.Welcome) = with(uiState) {
                             onClick = secondaryActionButton.onClick,
                             enabled = !isProcessing,
                             modifier = Modifier
-                                    .padding(bottom = 50.dp)
+                                    .padding(bottom = 10.dp)
                                     .dimmed(isProcessing),
                     )
                 }

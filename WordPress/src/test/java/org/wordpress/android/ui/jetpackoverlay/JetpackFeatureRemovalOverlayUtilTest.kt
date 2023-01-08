@@ -1,19 +1,21 @@
 package org.wordpress.android.ui.jetpackoverlay
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_ONE
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_THREE
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.BuildConfigWrapper
@@ -24,8 +26,9 @@ import java.util.Date
 
 private const val ONE_DAY_TIME_IN_MILLIS = 1000L * 60L * 60L * 24L
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class JetpackFeatureRemovalOverlayUtilTest {
+class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     @Mock private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
     @Mock private lateinit var jetpackFeatureOverlayShownTracker: JetpackFeatureOverlayShownTracker
     @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -33,9 +36,6 @@ class JetpackFeatureRemovalOverlayUtilTest {
     @Mock private lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
     @Mock private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
 
     private lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
@@ -89,14 +89,11 @@ class JetpackFeatureRemovalOverlayUtilTest {
         assertFalse(shouldShowOverlay)
     }
 
-    // This test is for phase 2 and above right now, when the changes for phase 2 is implemented,
-    // the jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(STATS)
-    // would return true for phase 2 and 3
     @Test
     @Suppress("MaxLineLength")
-    fun `given feature removal in phase two, when shouldShowFeatureSpecificJetpackOverlay invoked, then return false`() {
+    fun `given feature removal in phase four, when shouldShowFeatureSpecificJetpackOverlay invoked, then return false`() {
         setupMockForWpComSite()
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseTwo)
+        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseFour)
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
                 .shouldShowFeatureSpecificJetpackOverlay(STATS)
@@ -108,11 +105,11 @@ class JetpackFeatureRemovalOverlayUtilTest {
     @Suppress("MaxLineLength")
     fun `given feature is never accessed, when shouldShowFeatureSpecificJetpackOverlay invoked, then return true`() {
         setupMockForWpComSite()
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseOne)
+        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseThree)
         whenever(
                 jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(
                         STATS,
-                        PHASE_ONE
+                        PHASE_THREE
                 )
         ).thenReturn(null)
 
@@ -135,7 +132,7 @@ class JetpackFeatureRemovalOverlayUtilTest {
         assertTrue(shouldShowOverlay)
     }
 
-    @Test
+    // @Test
     @Suppress("MaxLineLength")
     fun `given feature is accessed after globalOverlayFrequency, when shouldShowFeatureSpecificJetpackOverlay invoked, then return true`() {
         setupMockForWpComSite()

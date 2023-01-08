@@ -12,6 +12,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackAllFeaturesOverlaySource;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.util.PackageManagerWrapper;
 import org.wordpress.android.util.ToastUtils;
@@ -97,7 +98,13 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
 
     private void showOverlay() {
         JetpackFeatureFullScreenOverlayFragment
-                .newInstance(null, false, true, SiteCreationSource.UNSPECIFIED)
+                .newInstance(
+                        null,
+                        false,
+                        true,
+                        SiteCreationSource.UNSPECIFIED,
+                        false,
+                        JetpackAllFeaturesOverlaySource.UNSPECIFIED)
                 .show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
     }
 

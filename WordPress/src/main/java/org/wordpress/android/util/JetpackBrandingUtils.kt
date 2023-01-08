@@ -30,6 +30,10 @@ class JetpackBrandingUtils @Inject constructor(
         return shouldShowJetpackBranding() && jetpackFeatureRemovalBrandingUtil.shouldShowPhaseOneBranding()
     }
 
+    fun shouldShowJetpackBrandingForPhaseTwo(): Boolean {
+        return shouldShowJetpackBranding() && jetpackFeatureRemovalBrandingUtil.shouldShowPhaseTwoBranding()
+    }
+
     fun shouldShowJetpackPoweredBottomSheet(): Boolean {
         return isWpComSite() && jetpackPoweredBottomSheetFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
     }
@@ -104,12 +108,15 @@ class JetpackBrandingUtils @Inject constructor(
         ME("me"),
         NOTIFICATIONS("notifications"),
         NOTIFICATIONS_SETTINGS("notifications_settings"),
+        PEOPLE("people"),
+        PERSON("person"),
         READER("reader"),
         READER_POST_DETAIL("reader_post_detail"),
         READER_SEARCH("reader_search"),
         SHARE("share"),
         STATS("stats"),
-        SCAN("scan")
+        SCAN("scan"),
+        THEMES("themes")
     }
 
     companion object {

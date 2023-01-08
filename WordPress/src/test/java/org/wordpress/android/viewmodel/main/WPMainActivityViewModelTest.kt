@@ -36,7 +36,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
-import org.wordpress.android.test
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
@@ -82,6 +82,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingPromptsStore: BloggingPromptsStore
     @Mock lateinit var quickStartType: QuickStartType
     @Mock private lateinit var openBloggingPromptsOnboardingObserver: Observer<Unit>
+    @Mock private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
@@ -131,6 +132,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(bloggingPrompt))
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
         viewModel = WPMainActivityViewModel(
                 featureAnnouncementProvider,
                 buildConfigWrapper,
@@ -142,7 +144,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 siteStore,
                 bloggingPromptsFeatureConfig,
                 bloggingPromptsStore,
-                NoDelayCoroutineDispatcher()
+                NoDelayCoroutineDispatcher(),
+                jetpackFeatureRemovalPhaseHelper
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
                 onFeatureAnnouncementRequestedObserver

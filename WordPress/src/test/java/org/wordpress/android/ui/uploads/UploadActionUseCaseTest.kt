@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.uploads
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -21,10 +21,9 @@ import java.util.function.Consumer
 
 private val POST_STATE_DRAFT = PostStatus.DRAFT.toString()
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class UploadActionUseCaseTest {
-    @get:Rule val rule = InstantTaskExecutorRule()
-
+class UploadActionUseCaseTest : BaseUnitTest() {
     @Test
     fun `uploadAction is UPLOAD when changes confirmed`() {
         val uploadActionUseCase = createUploadActionUseCase()

@@ -1,11 +1,13 @@
 package org.wordpress.android.ui
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.viewmodel.Event
 
+@ExperimentalCoroutinesApi
 class CommentFullScreenDialogViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: CommentFullScreenDialogViewModel
     @Before

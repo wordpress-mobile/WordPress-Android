@@ -1,9 +1,10 @@
 package org.wordpress.android.ui.mediapicker
 
 import android.content.Context
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -17,11 +18,9 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.utils.MimeTypes
-import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.IconClickEvent
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
@@ -73,6 +72,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Locale
 
 @Suppress("LargeClass")
+@ExperimentalCoroutinesApi
 class MediaPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var mediaLoaderFactory: MediaLoaderFactory
     @Mock lateinit var mediaLoader: MediaLoader
@@ -103,12 +103,11 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private lateinit var audioItem: MediaItem
     private lateinit var documentItem: MediaItem
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         viewModel = MediaPickerViewModel(
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 mediaLoaderFactory,
                 mediaInsertHandlerFactory,
                 mediaPickerTracker,
@@ -441,10 +440,10 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     fun `on search searches for results`() = test {
         val query = "dog"
         setupViewModel(listOf(firstItem), singleSelectMediaPickerSetup, filter = query)
-
         assertThat(uiStates).hasSize(2)
 
         viewModel.onSearch(query)
+        advanceUntilIdle()
 
         verify(mediaPickerTracker).trackSearch(singleSelectMediaPickerSetup)
         assertThat(uiStates).hasSize(2)

@@ -2,7 +2,7 @@ package org.wordpress.android.ui.stats.refresh
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Ignore
@@ -23,7 +23,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
@@ -49,6 +48,7 @@ import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureCo
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
+@ExperimentalCoroutinesApi
 class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var baseListUseCase: BaseListUseCase
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
@@ -68,6 +68,7 @@ class StatsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: StatsViewModel
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
     private val liveSelectedSection: LiveData<StatsSection> = _liveSelectedSection
+
     @Before
     fun setUp() {
         whenever(baseListUseCase.snackbarMessage).thenReturn(MutableLiveData())
@@ -75,8 +76,8 @@ class StatsViewModelTest : BaseUnitTest() {
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         viewModel = StatsViewModel(
                 mapOf(DAYS to baseListUseCase),
-                Dispatchers.Unconfined,
-                Dispatchers.Default,
+                testDispatcher(),
+                testDispatcher(),
                 selectedDateProvider,
                 statsSectionManager,
                 analyticsTracker,

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.editor.media
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,9 +15,9 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.MediaModel
-import org.wordpress.android.test
 import org.wordpress.android.ui.posts.editor.EditorTracker
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class AddExistingMediaToPostUseCaseTest : BaseUnitTest() {
     @Test

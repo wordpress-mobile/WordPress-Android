@@ -1,16 +1,15 @@
 package org.wordpress.android.ui.sitecreation.theme
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesign
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesignCategory
@@ -18,12 +17,9 @@ import org.wordpress.android.ui.layoutpicker.LayoutCategoryModel
 import org.wordpress.android.ui.layoutpicker.LayoutModel
 import org.wordpress.android.viewmodel.ResourceProvider
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-@InternalCoroutinesApi
-class SiteDesignRecommendationProviderTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class SiteDesignRecommendationProviderTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
 
     private lateinit var recommendationProvider: SiteDesignRecommendationProvider

@@ -64,6 +64,7 @@ import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
@@ -126,6 +127,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Inject MediaUtilsWrapper mMediaUtilsWrapper;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
+    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
 
     private SiteModel mSite;
 
@@ -968,7 +970,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                     return true;
                 });
 
-        if (mBrowserType.isBrowser() && mSite.isUsingWpComRestApi()) {
+        if (mBrowserType.isBrowser() && mSite.isUsingWpComRestApi()
+            && !mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
             popup.getMenu().add(R.string.photo_picker_stock_media).setOnMenuItemClickListener(
                     item -> {
                         doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_STOCK_MEDIA);
@@ -976,7 +979,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                     });
         }
 
-        if (mBrowserType.isBrowser()) {
+        if (mBrowserType.isBrowser() && !mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
             popup.getMenu().add(R.string.photo_picker_gif).setOnMenuItemClickListener(
                     item -> {
                         doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_GIF);

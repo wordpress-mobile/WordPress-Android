@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -10,6 +11,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 
+@ExperimentalCoroutinesApi
 class LoginEpilogueViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: LoginEpilogueViewModel
 

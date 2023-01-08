@@ -1,34 +1,28 @@
 package org.wordpress.android.viewmodel.pages
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
-import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.PageStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.pages.PageItem.ParentPage
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class PageParentViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class PageParentViewModelTest : BaseUnitTest() {
     @Mock lateinit var pageStore: PageStore
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
@@ -39,8 +33,8 @@ class PageParentViewModelTest {
         viewModel = PageParentViewModel(
                 pageStore,
                 resourceProvider,
-                TEST_DISPATCHER,
-                TEST_DISPATCHER
+                testDispatcher(),
+                testDispatcher()
         )
 
         runBlocking {

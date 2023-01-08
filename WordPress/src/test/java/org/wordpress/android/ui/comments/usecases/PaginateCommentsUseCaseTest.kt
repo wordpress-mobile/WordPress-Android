@@ -3,7 +3,6 @@ package org.wordpress.android.ui.comments.usecases
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -29,7 +28,6 @@ import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCom
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction.OnReloadFromCache
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.ReloadFromCacheParameters
-import org.wordpress.android.test
 import org.wordpress.android.ui.comments.unified.CommentFilter.ALL
 import org.wordpress.android.ui.comments.unified.CommentFilter.PENDING
 import org.wordpress.android.ui.comments.unified.CommentFilter.UNREPLIED
@@ -74,7 +72,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
     // getting a page with comments
 
     @Test
-    fun `comment store is called when requesting comments`() = runBlockingTest {
+    fun `comment store is called when requesting comments`() = test {
         paginateCommentsUseCase.manageAction(OnGetPage(GetPageParameters(site, 30, 0, ALL)))
 
         verify(commentStore, times(1)).fetchCommentsPage(
@@ -97,7 +95,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `comments are filtered when they are requested with unreplied filter`() = runBlockingTest {
+    fun `comments are filtered when they are requested with unreplied filter`() = test {
         paginateCommentsUseCase.manageAction(OnGetPage(GetPageParameters(site, 30, 0, ALL)))
 
         verify(unrepliedCommentsUtils, times(0)).getUnrepliedComments(any())
@@ -108,7 +106,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `getting a page delivers result when there are no errors`() = runBlockingTest {
+    fun `getting a page delivers result when there are no errors`() = test {
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>()
 
         val job = launch {
@@ -133,7 +131,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `getting a second page delivers result when there are no errors`() = runBlockingTest {
+    fun `getting a second page delivers result when there are no errors`() = test {
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>()
 
         val job = launch {
@@ -158,7 +156,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `getting last page correctly indicates that there are no more comments`() = runBlockingTest {
+    fun `getting last page correctly indicates that there are no more comments`() = test {
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>()
 
         val job = launch {
@@ -183,7 +181,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `getting first page (offset = 0) emits loading`() = runBlockingTest {
+    fun `getting first page (offset = 0) emits loading`() = test {
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>()
 
         val job = launch {
@@ -203,7 +201,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `getting second+ page (offset is more than 0) does not emits loading`() = runBlockingTest {
+    fun `getting second+ page (offset is more than 0) does not emits loading`() = test {
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>()
 
         val job = launch {
@@ -219,7 +217,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `encountering error without any cache emits error event without cache`() = runBlockingTest {
+    fun `encountering error without any cache emits error event without cache`() = test {
         val error = CommentError(GENERIC_ERROR, "test error message")
         val cachedData = PagingData.empty()
 
@@ -252,7 +250,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `encountering error with cache emits error event with cache`() = runBlockingTest {
+    fun `encountering error with cache emits error event with cache`() = test {
         val error = CommentError(GENERIC_ERROR, "test error message")
         val cachedData = PagingData(comments = testComments.take(30), hasMore = true)
 
@@ -287,7 +285,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
     // getting a page with comments from local cache
 
     @Test
-    fun `comment store is called when requesting cached comments`() = runBlockingTest {
+    fun `comment store is called when requesting cached comments`() = test {
         paginateCommentsUseCase.manageAction(
                 OnReloadFromCache(
                         ReloadFromCacheParameters(
@@ -327,7 +325,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `getting cache does not emit loading events`() = runBlockingTest {
+    fun `getting cache does not emit loading events`() = test {
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>()
 
         val job = launch {
@@ -368,89 +366,87 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `getting cache delivers all the cache regardless of GetPageParameters, when there are no errors`() =
-            runBlockingTest {
-                val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>()
+    fun `getting cache delivers all the cache regardless of GetPageParameters, when there are no errors`() = test {
+        val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>()
 
-                val job = launch {
-                    paginateCommentsUseCase.subscribe().collectLatest {
-                        result.add(it)
-                    }
-                }
+        val job = launch {
+            paginateCommentsUseCase.subscribe().collectLatest {
+                result.add(it)
+            }
+        }
 
-                paginateCommentsUseCase.manageAction(
-                        OnReloadFromCache(
-                                ReloadFromCacheParameters(
-                                        GetPageParameters(
-                                                site,
-                                                30,
-                                                0,
-                                                ALL
-                                        ), true
-                                )
+        paginateCommentsUseCase.manageAction(
+                OnReloadFromCache(
+                        ReloadFromCacheParameters(
+                                GetPageParameters(
+                                        site,
+                                        30,
+                                        0,
+                                        ALL
+                                ), true
+                        )
+                )
+        )
+
+        val dataResult = result[0]
+
+        assertThat(dataResult).isInstanceOf(UseCaseResult.Success::class.java)
+        assertThat(dataResult.type).isEqualTo(PAGINATE_USE_CASE)
+        assertThat((dataResult as UseCaseResult.Success).data).isInstanceOf(PagingData::class.java)
+
+        val commentsPayload = dataResult.data
+
+        assertThat(commentsPayload.hasMore).isTrue
+        assertThat(commentsPayload.comments).isEqualTo(testComments.take(60))
+        job.cancel()
+    }
+
+    @Test
+    fun `encountering error when getting cache emits error event without cache when there are no cache`() = test {
+        val error = CommentError(GENERIC_ERROR, "test error message")
+        val cachedData = PagingData.empty()
+
+        whenever(commentStore.getCachedComments(any(), any(), any()))
+                .thenReturn(
+                        CommentsActionPayload(
+                                error,
+                                cachedData
                         )
                 )
 
-                val dataResult = result[0]
+        val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>()
 
-                assertThat(dataResult).isInstanceOf(UseCaseResult.Success::class.java)
-                assertThat(dataResult.type).isEqualTo(PAGINATE_USE_CASE)
-                assertThat((dataResult as UseCaseResult.Success).data).isInstanceOf(PagingData::class.java)
-
-                val commentsPayload = dataResult.data
-
-                assertThat(commentsPayload.hasMore).isTrue
-                assertThat(commentsPayload.comments).isEqualTo(testComments.take(60))
-                job.cancel()
+        val job = launch {
+            paginateCommentsUseCase.subscribe().collectLatest {
+                result.add(it)
             }
+        }
 
-    @Test
-    fun `encountering error when getting cache emits error event without cache when there are no cache`() =
-            runBlockingTest {
-                val error = CommentError(GENERIC_ERROR, "test error message")
-                val cachedData = PagingData.empty()
-
-                whenever(commentStore.getCachedComments(any(), any(), any()))
-                        .thenReturn(
-                                CommentsActionPayload(
-                                        error,
-                                        cachedData
-                                )
-                        )
-
-                val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>()
-
-                val job = launch {
-                    paginateCommentsUseCase.subscribe().collectLatest {
-                        result.add(it)
-                    }
-                }
-
-                paginateCommentsUseCase.manageAction(
-                        OnReloadFromCache(
-                                ReloadFromCacheParameters(
-                                        GetPageParameters(
-                                                site,
-                                                30,
-                                                0,
-                                                ALL
-                                        ), true
-                                )
+        paginateCommentsUseCase.manageAction(
+                OnReloadFromCache(
+                        ReloadFromCacheParameters(
+                                GetPageParameters(
+                                        site,
+                                        30,
+                                        0,
+                                        ALL
+                                ), true
                         )
                 )
+        )
 
-                val errorResult = result[0]
+        val errorResult = result[0]
 
-                assertThat(errorResult).isInstanceOf(UseCaseResult.Failure::class.java)
-                assertThat(errorResult.type).isEqualTo(PAGINATE_USE_CASE)
-                assertThat((errorResult as UseCaseResult.Failure).cachedData).isEqualTo(cachedData)
-                assertThat(errorResult.error).isEqualTo(error)
+        assertThat(errorResult).isInstanceOf(UseCaseResult.Failure::class.java)
+        assertThat(errorResult.type).isEqualTo(PAGINATE_USE_CASE)
+        assertThat((errorResult as UseCaseResult.Failure).cachedData).isEqualTo(cachedData)
+        assertThat(errorResult.error).isEqualTo(error)
 
-                job.cancel()
-            }
+        job.cancel()
+    }
 
     @Test
-    fun `encountering error when getting cache emits error event with cache when there is cache`() = runBlockingTest {
+    fun `encountering error when getting cache emits error event with cache when there is cache`() = test {
         val error = CommentError(GENERIC_ERROR, "test error message")
         val cachedData = PagingData(comments = testComments.take(60), hasMore = true)
 

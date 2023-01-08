@@ -1,28 +1,23 @@
 package org.wordpress.android.viewmodel.pages
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R.string
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Empty
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class PageParentSearchViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class PageParentSearchViewModelTest : BaseUnitTest() {
     @Mock lateinit var pageParentViewModel: PageParentViewModel
 
     private lateinit var searchPages: MutableLiveData<List<PageItem>>
@@ -30,7 +25,9 @@ class PageParentSearchViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = PageParentSearchViewModel(TEST_DISPATCHER)
+        viewModel = PageParentSearchViewModel(
+                testDispatcher()
+        )
         searchPages = MutableLiveData()
         whenever(pageParentViewModel.searchPages).thenReturn(searchPages)
         viewModel.start(pageParentViewModel)

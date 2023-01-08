@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,13 +15,11 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.test
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-@InternalCoroutinesApi
 class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
     @Test
     fun `do NOT copy files which are present in media store`() = test {
@@ -106,12 +105,14 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
     }
 
     private companion object Fixtures {
-        @InternalCoroutinesApi
         fun createCopyMediaToAppStorageUseCase(
             mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper(),
             authenticationUtils: AuthenticationUtils = createAuthenticationUtils()
-        ) =
-                CopyMediaToAppStorageUseCase(mediaUtilsWrapper, authenticationUtils, TEST_DISPATCHER)
+        ) = CopyMediaToAppStorageUseCase(
+                mediaUtilsWrapper,
+                authenticationUtils,
+                UnconfinedTestDispatcher()
+        )
 
         fun createMediaUtilsWrapper(
             resultForIsInMediaStore: Boolean = false,

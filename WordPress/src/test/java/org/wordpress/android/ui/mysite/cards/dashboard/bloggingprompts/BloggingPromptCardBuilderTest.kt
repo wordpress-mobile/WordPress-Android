@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -40,6 +41,7 @@ private val RESPONDENTS = listOf(
         "http://avatar3.url"
 )
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private lateinit var builder: BloggingPromptCardBuilder
@@ -99,13 +101,15 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
                     showViewMoreAction,
                     onShareClick,
                     onAnswerClick,
-                    onSkipClick
+                    onSkipClick,
+                    onViewMoreClick
             )
     )
 
     private val onShareClick: (message: String) -> Unit = { }
     private val onAnswerClick: (promptId: Int) -> Unit = { }
     private val onSkipClick: () -> Unit = { }
+    private val onViewMoreClick: () -> Unit = { }
 
     private fun bloggingPromptCard(showViewMoreAction: Boolean = false) = BloggingPromptCardWithData(
             prompt = UiStringText(PROMPT_TITLE),
@@ -118,5 +122,6 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
             onShareClick = onShareClick,
             onAnswerClick = onAnswerClick,
             onSkipClick = onSkipClick,
+            onViewMoreClick = onViewMoreClick,
     )
 }

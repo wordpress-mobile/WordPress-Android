@@ -6,20 +6,19 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.wordpress.android.BaseUnitTest
 
-class ConnectionStatusLiveDataTest {
-    @get:Rule val rule = InstantTaskExecutorRule()
-
+@ExperimentalCoroutinesApi
+class ConnectionStatusLiveDataTest : BaseUnitTest() {
     private lateinit var connectionStatusLiveData: LiveData<ConnectionStatus>
     private lateinit var broadcastReceiver: BroadcastReceiver
 

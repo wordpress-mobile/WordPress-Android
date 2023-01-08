@@ -1,6 +1,9 @@
 package org.wordpress.android.util
 
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.ContextProvider
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import javax.inject.Inject
 
@@ -20,4 +23,14 @@ class DateTimeUtilsWrapper @Inject constructor(
     fun dateFromTimestamp(timestamp: Long) = DateTimeUtils.dateFromTimestamp(timestamp)
 
     fun getTodaysDate() = Date(System.currentTimeMillis())
+
+    fun convertDateFormat(date: String, originalFormatPattern: String, targetDateFormatPattern: String): String? {
+        // Format 2020-12-22
+        val originalFormat = DateTimeFormatter.ofPattern(originalFormatPattern)
+        // Format Decemeber 22, 2020
+        val targetFormat = DateTimeFormatter.ofPattern(targetDateFormatPattern)
+        return runCatching { LocalDate.parse(date, originalFormat).format(targetFormat) }
+                .onFailure { AppLog.e(T.UTILS, "Couldn't parse date: $date", it) }
+                .getOrNull()
+    }
 }

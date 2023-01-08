@@ -1,17 +1,14 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
@@ -23,7 +20,6 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
 import org.wordpress.android.fluxc.store.stats.time.ReferrersStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
@@ -35,13 +31,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Heade
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.PieChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.PIE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
@@ -60,7 +54,7 @@ private val statsGranularity = DAYS
 private val selectedDate = Date(0)
 private val limitMode = Top(ITEMS_TO_LOAD)
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ReferrersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: ReferrersStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
@@ -105,19 +99,14 @@ class ReferrersUseCaseTest : BaseUnitTest() {
             listOf(referrer1, referrer2),
             true
     )
-    private val wordPressLegend = "Wordpress"
-    private val searchLegend = "Search"
-    private val othersLegend = "Others"
-    private val totalLabel = "total"
     private val contentDescription = "title, views"
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = ReferrersUseCase(
                 statsGranularity,
-                Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 store,
                 statsSiteProvider,
                 selectedDateProvider,
@@ -136,11 +125,6 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                         listOf(selectedDate)
                 )
         )
-        whenever(resourceProvider.getString(R.string.stats_referrers_pie_chart_wordpress)).thenReturn(wordPressLegend)
-        whenever(resourceProvider.getString(R.string.stats_referrers_pie_chart_search)).thenReturn(searchLegend)
-        whenever(resourceProvider.getString(R.string.stats_referrers_pie_chart_others)).thenReturn(othersLegend)
-        whenever(resourceProvider.getString(R.string.stats_referrers_pie_chart_total_label)).thenReturn(totalLabel)
-        whenever(contentDescriptionHelper.buildContentDescription(any(), any())).thenReturn(contentDescription)
         whenever(
                 contentDescriptionHelper.buildContentDescription(
                         any(),
@@ -151,7 +135,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
-    @Ignore @Test
+    @Test
     fun `maps referrers to UI model`() = test {
         val forced = false
         val model = ReferrersModel(10, totalViews, listOf(wordPressReferrer, group, searchReferrer), false)
@@ -176,45 +160,43 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     }
 
     private fun List<BlockListItem>.assertNonExpandedList(): ExpandableItem {
-        assertThat(this).hasSize(6)
+        assertThat(this).hasSize(5)
         assertTitle(this[0])
-        assertPieChartItem(this[1])
-        assertLabel(this[2])
+        assertHeader(this[1])
         assertSingleItem(
-                this[3],
+                this[2],
                 wordPressReferrer.name!!,
                 wordPressReferrer.total,
                 wordPressReferrer.icon,
                 wordPressReferrer.markedAsSpam
         )
-        return assertExpandableItem(this[4], group.name!!, group.icon, group.markedAsSpam)
+        return assertExpandableItem(this[3], group.name!!, group.icon, group.markedAsSpam)
     }
 
     private fun List<BlockListItem>.assertExpandedList(): ExpandableItem {
-        assertThat(this).hasSize(9)
+        assertThat(this).hasSize(8)
         assertTitle(this[0])
-        assertPieChartItem(this[1])
-        assertLabel(this[2])
+        assertHeader(this[1])
         assertSingleItem(
-                this[3],
+                this[2],
                 wordPressReferrer.name!!,
                 wordPressReferrer.total,
                 wordPressReferrer.icon,
                 wordPressReferrer.markedAsSpam
         )
-        val expandableItem = assertExpandableItem(this[4], group.name!!, group.icon, group.markedAsSpam)
-        assertSingleItem(this[5], referrer1.name, referrer1.views, referrer1.icon, referrer1.markedAsSpam)
-        assertSingleItem(this[6], referrer2.name, referrer2.views, referrer2.icon, referrer2.markedAsSpam)
-        assertThat(this[7]).isEqualTo(Divider)
+        val expandableItem = assertExpandableItem(this[3], group.name!!, group.icon, group.markedAsSpam)
+        assertSingleItem(this[4], referrer1.name, referrer1.views, referrer1.icon, referrer1.markedAsSpam)
+        assertSingleItem(this[5], referrer2.name, referrer2.views, referrer2.icon, referrer2.markedAsSpam)
+        assertThat(this[6]).isEqualTo(Divider)
         return expandableItem
     }
 
-    @Ignore @Test
+    @Test
     fun `adds view more button when hasMore`() = test {
         useCase = ReferrersUseCase(
                 statsGranularity,
-                Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 store,
                 statsSiteProvider,
                 selectedDateProvider,
@@ -251,7 +233,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         }
     }
 
-    @Ignore @Test
+    @Test
     fun `maps empty referrers to UI model`() = test {
         val forced = false
         whenever(store.fetchReferrers(site,
@@ -269,7 +251,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         }
     }
 
-    @Ignore @Test
+    @Test
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
@@ -294,15 +276,11 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         assertThat((item as Title).textResource).isEqualTo(R.string.stats_referrers)
     }
 
-    private fun assertPieChartItem(item: BlockListItem) {
-        assertThat(item.type).isEqualTo(PIE_CHART)
-        assertThat((item as PieChartItem).entries.first().label).isEqualTo(wordPressLegend)
-        assertThat((item).entries.first().value).isEqualTo(wordPressReferrer.total)
-        assertThat((item).entries[1].label).isEqualTo(searchLegend)
-        assertThat((item).entries[1].value).isEqualTo(group.total)
-        assertThat((item).entries[2].label).isEqualTo(othersLegend)
-        assertThat((item).entries[2].value).isEqualTo(totalViews - firstGroupViews - secondGroupViews)
-        assertThat((item).totalLabel).isEqualTo(totalLabel)
+    private fun assertHeader(item: BlockListItem) {
+        assertThat(item.type).isEqualTo(HEADER)
+        assertThat((item as Header).startLabel).isEqualTo(R.string.stats_referrer_label)
+        assertThat((item).endLabel).isEqualTo(R.string.stats_referrer_views_label)
+        assertThat((item).bolds).isNull()
     }
 
     private fun assertLabel(item: BlockListItem) {
@@ -368,6 +346,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(refresh, forced)
+        advanceUntilIdle()
         return checkNotNull(result)
     }
 }
