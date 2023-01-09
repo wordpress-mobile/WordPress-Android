@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-12-10 18:03:27+0000
+Translation-Revision-Date: 2022-12-17 13:38:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: de
 -->
 <resources>
+    <string name="reader_toast_user_blocked">Beiträge von diesem Benutzer werden nicht länger angezeigt</string>
+    <string name="reader_menu_block_user">Benutzer sperren</string>
+    <string name="reader_menu_report_user">Diesen Benutzer melden</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">Links in WordPress öffnen</string>
     <string name="wp_jetpack_deep_link_overlay_description">Offenbar hast du die Jetpack-App installiert.\n\nMöchtest du Links in Zukunft in der Jetpack-App öffnen?\n\nDu kannst dies jederzeit unter „App-Einstellungen“ &gt; „Links in Jetpack öffnen“ ändern</string>
     <string name="wp_jetpack_deep_link_overlay_title">Links in Jetpack öffnen?</string>
@@ -26,7 +29,6 @@ Language: de
     <string name="preference_open_links_in_jetpack">Links in Jetpack öffnen</string>
     <string name="jp_migration_need_help_button">Brauchst du Hilfe?</string>
     <string name="jp_migration_got_it_button">Verstanden</string>
-    <string name="jp_migration_delete_message">Bitte &lt;b&gt;lösche die WordPress-App&lt;/b&gt;, um &lt;br&gt;Datenkonflikte zu vermeiden.</string>
     <string name="jp_migration_delete_subtitle">Offenbar hast du die WordPress-App noch installiert. Wir empfehlen dir, die WordPress-App zu löschen, um Datenkonflikte zu vermeiden.</string>
     <string name="jp_migration_delete_title">Du brauchst die WordPress-App nicht mehr</string>
     <string name="jp_migration_network_error_message">Wir können deine Daten und Einstellungen ohne Netzwerkverbindung nicht übertragen.</string>
@@ -38,7 +40,6 @@ Language: de
     <string name="jp_migration_try_again_button">Erneut versuchen</string>
     <string name="jp_migration_finish_button">Beenden</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Icon „WordPress-App entfernen“</string>
-    <string name="jp_migration_done_delete_wp_message">Bitte &lt;b&gt;lösche die WordPress-App&lt;/b&gt;, um &lt;br&gt;Datenkonflikte zu vermeiden.</string>
     <string name="jp_migration_done_subtitle">Wir haben all deine Daten und Einstellungen übertragen. Alles ist genauso wie vorher.</string>
     <string name="jp_migration_done_title">Danke für deinen Wechsel zu Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Wir deaktivieren Benachrichtigungen von der WordPress App.</string>

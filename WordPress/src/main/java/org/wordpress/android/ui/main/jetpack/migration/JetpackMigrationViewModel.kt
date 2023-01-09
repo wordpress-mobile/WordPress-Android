@@ -188,7 +188,7 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun siteUiFromModel(site: SiteModel) = SiteListItemUiState(
-            id = site.siteId,
+            id = site.id,
             name = siteUtilsWrapper.getSiteNameOrHomeURL(site),
             url = siteUtilsWrapper.getHomeURLOrHostName(site),
             iconUrl = siteUtilsWrapper.getSiteIconUrlOfResourceSize(
@@ -370,7 +370,7 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     data class SiteListItemUiState(
-        val id: Long,
+        val id: Int,
         val name: String,
         val url: String,
         val iconUrl: String,
