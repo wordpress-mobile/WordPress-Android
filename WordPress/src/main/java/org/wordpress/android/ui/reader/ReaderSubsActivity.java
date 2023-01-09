@@ -106,7 +106,6 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         if (toolbar != null) {
-            toolbar.setTitle(R.string.reader_title_subs);
             setSupportActionBar(toolbar);
             toolbar.setNavigationOnClickListener(v -> onBackPressed());
         }
@@ -114,7 +113,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             // Shadow removed on Activities with a tab toolbar
-            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
