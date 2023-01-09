@@ -105,7 +105,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         tabLayout.setupWithViewPager(mViewPager);
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
-        if (toolbar != null) {;
+        if (toolbar != null) {
             setSupportActionBar(toolbar);
             toolbar.setNavigationOnClickListener(v -> onBackPressed());
         }
