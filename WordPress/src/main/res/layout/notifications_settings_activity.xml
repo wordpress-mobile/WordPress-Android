@@ -32,7 +32,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/notification_settings"
-                    android:textColor="?attr/colorOnSurface"/>
+                    android:textColor="?attr/colorOnSurface" />
             </com.google.android.material.appbar.MaterialToolbar>
 
             <org.wordpress.android.ui.prefs.notifications.PrefMainSwitchToolbarView
