@@ -32,8 +32,8 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
             && isWordPressInstalled()
             && isWordPressCompatible()
 
-    fun startJetpackMigrationFlow() {
-        ActivityLauncher.startJetpackMigrationFlow(contextProvider.getContext())
+    fun startJetpackMigrationFlow(isOpenFromDeepLink: Boolean) {
+        ActivityLauncher.startJetpackMigrationFlow(contextProvider.getContext(), isOpenFromDeepLink)
     }
 
     private fun isWordPressInstalled() = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())

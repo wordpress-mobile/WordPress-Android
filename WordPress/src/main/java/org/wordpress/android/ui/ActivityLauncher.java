@@ -48,6 +48,7 @@ import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListA
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.domains.DomainsDashboardActivity;
@@ -145,6 +146,7 @@ import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
+import static org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity.KEY_IS_OPEN_FROM_DEEP_LINK;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_ALL_UNFLATTENED_LOADED_SLIDES;
@@ -1770,8 +1772,15 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void startJetpackMigrationFlow(@NonNull Context context) {
+    public static void startJetpackMigrationFlow(@NonNull Context context, boolean isOpenFromDeepLink) {
         Intent intent = new Intent(context, JetpackMigrationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_IS_OPEN_FROM_DEEP_LINK, isOpenFromDeepLink);
+        context.startActivity(intent);
+    }
+
+    public static void handleDeepLinkAfterJPMigration(@NonNull Context context) {
+        Intent intent = new Intent(context, DeepLinkingIntentReceiverActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }

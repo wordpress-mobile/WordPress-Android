@@ -14,6 +14,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayVi
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackAllFeaturesOverlaySource;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
+import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils;
 import org.wordpress.android.util.PackageManagerWrapper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UriWrapper;
@@ -38,6 +39,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject PackageManagerWrapper mPackageManagerWrapper;
     @Inject ActivityLauncherWrapper mActivityLauncherWrapper;
+    @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
     private DeepLinkingIntentReceiverViewModel mViewModel;
     private JetpackFeatureFullScreenOverlayViewModel mJetpackFullScreenViewModel;
 
@@ -47,6 +49,13 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         mViewModel = new ViewModelProvider(this).get(DeepLinkingIntentReceiverViewModel.class);
         mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
         setupObservers();
+
+        // Start migration flow if needed
+        if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
+            mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow(true);
+            finish();
+            return;
+        }
 
         mViewModel.start(
                 getIntent().getAction(),

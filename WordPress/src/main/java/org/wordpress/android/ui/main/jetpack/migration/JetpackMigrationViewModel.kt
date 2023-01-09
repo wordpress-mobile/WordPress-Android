@@ -40,6 +40,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFromDeepLink
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.Logout
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
@@ -83,6 +84,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val continueClickedFlow = MutableStateFlow(false)
     private val notificationContinueClickedFlow = MutableStateFlow(false)
     private var showDeleteState: Boolean = false
+    private var isOpenFromDeepLink: Boolean = false
 
     val uiState = combineTransform(migrationStateFlow, continueClickedFlow, notificationContinueClickedFlow) {
         migrationState, continueClicked, notificationContinueClicked ->
@@ -107,11 +109,12 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, Loading)
 
-    fun start(showDeleteState: Boolean) {
+    fun start(showDeleteState: Boolean, isOpenFromDeepLink: Boolean) {
         if (isStarted) return
         isStarted = true
 
         this.showDeleteState = showDeleteState
+        this.isOpenFromDeepLink = isOpenFromDeepLink
         tryMigration()
     }
 
@@ -243,7 +246,9 @@ class JetpackMigrationViewModel @Inject constructor(
         migrationAnalyticsTracker.trackThanksScreenFinishButtonTapped()
         migrationEmailHelper.notifyMigrationComplete()
         appPrefsWrapper.setJetpackMigrationCompleted(true)
-        postActionEvent(CompleteFlow)
+
+        val completionEvent = if (isOpenFromDeepLink) CompleteFromDeepLink else CompleteFlow
+        postActionEvent(completionEvent)
     }
 
     private fun onHelpClicked(source: HelpButtonSource) {
@@ -447,6 +452,7 @@ class JetpackMigrationViewModel @Inject constructor(
     sealed class JetpackMigrationActionEvent {
         object ShowHelp : JetpackMigrationActionEvent()
         object CompleteFlow : JetpackMigrationActionEvent()
+        object CompleteFromDeepLink : JetpackMigrationActionEvent()
         object FallbackToLogin : JetpackMigrationActionEvent()
         object Logout : JetpackMigrationActionEvent()
     }
