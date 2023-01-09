@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +47,7 @@ fun BloggingPromptsListItem(
 ) {
     Column(
             modifier = modifier
+                    .semantics(mergeDescendants = true) { }
                     .background(MaterialTheme.colors.surface)
                     .padding(Margin.ExtraLarge.value),
             verticalArrangement = Arrangement.spacedBy(Margin.Small.value),
@@ -89,7 +92,9 @@ fun BloggingPromptsListItem(
 private fun ItemSubtitleDivider() {
     Text(
             text = stringResource(R.string.blogging_prompts_list_subtitle_divider),
-            modifier = Modifier.padding(horizontal = Margin.Medium.value),
+            modifier = Modifier
+                    .clearAndSetSemantics { }
+                    .padding(horizontal = Margin.Medium.value),
             style = ItemSubtitleTextStyle,
     )
 }
