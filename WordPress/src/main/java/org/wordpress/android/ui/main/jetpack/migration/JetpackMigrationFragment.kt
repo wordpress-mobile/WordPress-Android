@@ -38,6 +38,7 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.state.ErrorStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.NotificationsStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.WelcomeStep
+import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.util.AppThemeUtils
 import javax.inject.Inject
 
@@ -65,8 +66,9 @@ class JetpackMigrationFragment : Fragment() {
         observeRefreshAppThemeEvents()
         val showDeleteWpState = arguments?.getBoolean(KEY_SHOW_DELETE_WP_STATE, false) ?: false
         val isOpenFromDeepLink = arguments?.getBoolean(KEY_IS_OPEN_FROM_DEEP_LINK, false) ?: false
+        val deepLinkData = arguments?.getParcelable<PreMigrationDeepLinkData>(KEY_DEEP_LINK_DATA)
         initBackPressHandler(showDeleteWpState)
-        viewModel.start(showDeleteWpState, isOpenFromDeepLink)
+        viewModel.start(showDeleteWpState, isOpenFromDeepLink, deepLinkData)
     }
 
     private fun observeViewModelEvents() {
@@ -81,7 +83,10 @@ class JetpackMigrationFragment : Fragment() {
 
     private fun handleActionEvents(actionEvent: JetpackMigrationActionEvent) {
         when (actionEvent) {
-            is CompleteFlow, FallbackToLogin, CompleteFromDeepLink -> ActivityLauncher.showMainActivity(requireContext())
+            is CompleteFlow, FallbackToLogin -> ActivityLauncher.showMainActivity(requireContext())
+            is CompleteFromDeepLink -> {
+                ActivityLauncher.handleDeepLinkAfterJPMigration(requireContext(), actionEvent.action, actionEvent.uri)
+            }
             is Logout -> (requireActivity().application as? WordPress)?.let { viewModel.signOutWordPress(it) }
             is ShowHelp -> launchHelpScreen()
         }
@@ -111,12 +116,21 @@ class JetpackMigrationFragment : Fragment() {
 
     companion object {
         private const val KEY_IS_OPEN_FROM_DEEP_LINK = "KEY_IS_OPEN_FROM_DEEP_LINK"
+        private const val KEY_DEEP_LINK_DATA = "KEY_DEEP_LINK_DATA"
         private const val KEY_SHOW_DELETE_WP_STATE = "KEY_SHOW_DELETE_WP_STATE"
-        fun newInstance(showDeleteWpState: Boolean = false, isOpenFromWebLink: Boolean): JetpackMigrationFragment =
+
+        fun newInstance(
+            showDeleteWpState: Boolean = false,
+            isOpenFromWebLink: Boolean,
+            deepLinkData: PreMigrationDeepLinkData?
+        ): JetpackMigrationFragment =
                 JetpackMigrationFragment().apply {
                     arguments = Bundle().apply {
                         putBoolean(KEY_SHOW_DELETE_WP_STATE, showDeleteWpState)
                         putBoolean(KEY_IS_OPEN_FROM_DEEP_LINK, isOpenFromWebLink)
+                        if (deepLinkData != null) {
+                            putParcelable(KEY_DEEP_LINK_DATA, deepLinkData)
+                        }
                     }
                 }
     }

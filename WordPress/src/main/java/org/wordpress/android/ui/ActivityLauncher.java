@@ -116,6 +116,7 @@ import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
+import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
@@ -146,6 +147,7 @@ import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
+import static org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity.KEY_DEEP_LINK_DATA;
 import static org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity.KEY_IS_OPEN_FROM_DEEP_LINK;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
@@ -1772,15 +1774,22 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void startJetpackMigrationFlow(@NonNull Context context, boolean isOpenFromDeepLink) {
+    public static void startJetpackMigrationFlow(@NonNull Context context,
+                                                 boolean isOpenFromDeepLink,
+                                                 @Nullable PreMigrationDeepLinkData deepLinkData) {
         Intent intent = new Intent(context, JetpackMigrationActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KEY_IS_OPEN_FROM_DEEP_LINK, isOpenFromDeepLink);
+        if (deepLinkData != null) {
+            intent.putExtra(KEY_DEEP_LINK_DATA, deepLinkData);
+        }
         context.startActivity(intent);
     }
 
-    public static void handleDeepLinkAfterJPMigration(@NonNull Context context) {
+    public static void handleDeepLinkAfterJPMigration(@NonNull Context context, String action, Uri uri) {
         Intent intent = new Intent(context, DeepLinkingIntentReceiverActivity.class);
+        intent.setAction(action);
+        intent.setData(uri);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }

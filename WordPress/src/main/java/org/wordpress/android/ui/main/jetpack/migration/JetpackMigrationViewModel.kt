@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
 import android.content.Intent
+import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
@@ -51,6 +52,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Generic
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
@@ -85,6 +87,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val notificationContinueClickedFlow = MutableStateFlow(false)
     private var showDeleteState: Boolean = false
     private var isOpenFromDeepLink: Boolean = false
+    private var deepLinkData: PreMigrationDeepLinkData? = null
 
     val uiState = combineTransform(migrationStateFlow, continueClickedFlow, notificationContinueClickedFlow) {
         migrationState, continueClicked, notificationContinueClicked ->
@@ -109,12 +112,13 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, Loading)
 
-    fun start(showDeleteState: Boolean, isOpenFromDeepLink: Boolean) {
+    fun start(showDeleteState: Boolean, isOpenFromDeepLink: Boolean, deepLinkData: PreMigrationDeepLinkData?) {
         if (isStarted) return
         isStarted = true
 
         this.showDeleteState = showDeleteState
         this.isOpenFromDeepLink = isOpenFromDeepLink
+        this.deepLinkData = deepLinkData
         tryMigration()
     }
 
@@ -247,7 +251,14 @@ class JetpackMigrationViewModel @Inject constructor(
         migrationEmailHelper.notifyMigrationComplete()
         appPrefsWrapper.setJetpackMigrationCompleted(true)
 
-        val completionEvent = if (isOpenFromDeepLink) CompleteFromDeepLink else CompleteFlow
+        val completionEvent = if (isOpenFromDeepLink) {
+            CompleteFromDeepLink(
+                    action = deepLinkData?.action,
+                    uri = deepLinkData?.data,
+            )
+        } else {
+            CompleteFlow
+        }
         postActionEvent(completionEvent)
     }
 
@@ -452,7 +463,10 @@ class JetpackMigrationViewModel @Inject constructor(
     sealed class JetpackMigrationActionEvent {
         object ShowHelp : JetpackMigrationActionEvent()
         object CompleteFlow : JetpackMigrationActionEvent()
-        object CompleteFromDeepLink : JetpackMigrationActionEvent()
+        data class CompleteFromDeepLink(
+            val action: String?,
+            val uri: Uri?,
+        ) : JetpackMigrationActionEvent()
         object FallbackToLogin : JetpackMigrationActionEvent()
         object Logout : JetpackMigrationActionEvent()
     }
