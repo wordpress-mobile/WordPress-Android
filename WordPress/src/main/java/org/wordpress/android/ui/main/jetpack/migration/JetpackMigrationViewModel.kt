@@ -112,6 +112,7 @@ class JetpackMigrationViewModel @Inject constructor(
         isStarted = true
 
         this.showDeleteState = showDeleteState
+        if (showDeleteState) return
         tryMigration(application)
     }
 
