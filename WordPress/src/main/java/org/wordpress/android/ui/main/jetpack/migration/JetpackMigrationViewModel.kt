@@ -268,10 +268,14 @@ class JetpackMigrationViewModel @Inject constructor(
 
         val completionEvent = deepLinkData
                 ?.let {
-                    CompleteFlowWithDeepLink(
-                            action = it.action,
-                            uri = it.uri,
-                    )
+                    if (it.action != null && it.uri != null) {
+                        CompleteFlowWithDeepLink(
+                                action = it.action,
+                                uri = it.uri,
+                        )
+                    } else {
+                        CompleteFlow
+                    }
                 }
                 ?: CompleteFlow
 
@@ -480,8 +484,8 @@ class JetpackMigrationViewModel @Inject constructor(
         object ShowHelp : JetpackMigrationActionEvent()
         object CompleteFlow : JetpackMigrationActionEvent()
         data class CompleteFlowWithDeepLink(
-            val action: String?,
-            val uri: Uri?,
+            val action: String,
+            val uri: Uri,
         ) : JetpackMigrationActionEvent()
 
         object FallbackToLogin : JetpackMigrationActionEvent()

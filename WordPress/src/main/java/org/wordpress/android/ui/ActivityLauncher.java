@@ -1788,7 +1788,7 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void handleDeepLinkAfterJPMigration(@NonNull Context context, String action, Uri uri) {
+    public static void openDeepLinkAfterJPMigration(@NonNull Context context, String action, Uri uri) {
         Intent intent = new Intent(context, DeepLinkingIntentReceiverActivity.class);
         intent.setAction(action);
         intent.setData(uri);
