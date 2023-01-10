@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+21.6
+-----
+
+
 21.5
 -----
 * [*] [internal] Editor: Only register core blocks when `onlyCoreBlocks` capability is enabled [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5293]
