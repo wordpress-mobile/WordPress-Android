@@ -79,7 +79,8 @@ class JetpackMigrationFragment : Fragment() {
 
     private fun handleActionEvents(actionEvent: JetpackMigrationActionEvent) {
         when (actionEvent) {
-            is CompleteFlow, FallbackToLogin -> ActivityLauncher.showMainActivity(requireContext())
+            is CompleteFlow -> ActivityLauncher.showMainActivity(requireContext())
+            is FallbackToLogin -> ActivityLauncher.showMainActivity(requireContext(), true)
             is Logout -> (requireActivity().application as? WordPress)?.let { viewModel.signOutWordPress(it) }
             is ShowHelp -> launchHelpScreen()
         }

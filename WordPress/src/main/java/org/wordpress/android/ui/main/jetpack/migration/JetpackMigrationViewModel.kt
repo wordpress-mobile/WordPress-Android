@@ -179,7 +179,7 @@ class JetpackMigrationViewModel @Inject constructor(
     fun signOutWordPress(application: WordPress) {
         viewModelScope.launch(Dispatchers.IO) {
             application.wordPressComSignOut()
-            postActionEvent(CompleteFlow)
+            postActionEvent(FallbackToLogin)
         }
     }
 
