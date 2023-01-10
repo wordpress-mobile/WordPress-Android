@@ -104,6 +104,7 @@ class JetpackBrandingUtils @Inject constructor(
         APP_SETTINGS("app_settings"),
         ACTIVITY_LOG("activity_log"),
         ACTIVITY_LOG_DETAIL("activity_log_detail"),
+        BACKUP("backup"),
         HOME("home"),
         ME("me"),
         NOTIFICATIONS("notifications"),
