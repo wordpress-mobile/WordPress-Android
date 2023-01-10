@@ -5,6 +5,8 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
+import org.wordpress.android.localcontentmigration.EligibilityHelper
+import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
@@ -24,12 +26,14 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
     private val appStatus: AppStatus,
     private val wordPressPublicData: WordPressPublicData,
     private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
+    private val eligibilityHelper: EligibilityHelper,
 ) {
     private val minimumSupportedVersion = "21.3" // non semantic minimum supported version
 
     fun shouldShowMigrationFlow() = buildConfigWrapper.isJetpackApp
             && jetpackMigrationFlowFeatureConfig.isEnabled()
             && appPrefsWrapper.isJetpackMigrationEligible()
+            && isMigrationEligible()
             && !appPrefsWrapper.isJetpackMigrationCompleted()
             && isWordPressInstalled()
             && isWordPressCompatible()
@@ -38,6 +42,11 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
 
     fun startJetpackMigrationFlow(deepLinkData: PreMigrationDeepLinkData? = null) {
         ActivityLauncher.startJetpackMigrationFlow(contextProvider.getContext(), deepLinkData)
+    }
+
+    private fun isMigrationEligible() = when (eligibilityHelper.validate()) {
+        is Success -> true
+        else -> false
     }
 
     private fun isWordPressInstalled() = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
