@@ -1,4 +1,0 @@
-21.3:
-- Tekst tijdens het scannen van de QR-code wordt vertaald naar de taal van je app.
-- De schakelaar voor meldingsinstellingen schakelt wekelijks overzicht, blogherinnering en sitemeldingen uit.
-- We hebben een fout opgelost in Mijn site > Reacties waardoor de app crashte door zelf-gehoste sites met bepaalde plug-ins.

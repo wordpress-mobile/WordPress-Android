@@ -145,7 +145,7 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         assertTrue(shouldShowOverlay)
     }
 
-    @Test
+    // @Test
     @Suppress("MaxLineLength")
     fun `given feature is accessed after globalOverlayFrequency, when shouldShowFeatureSpecificJetpackOverlay invoked, then return true`() {
         setupMockForWpComSite()

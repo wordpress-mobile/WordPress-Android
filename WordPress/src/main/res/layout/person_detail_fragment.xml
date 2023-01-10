@@ -41,7 +41,7 @@
                     android:id="@+id/person_display_name"
                     style="@style/PersonTextView"
                     android:fontFamily="sans-serif-light"
-                    android:textColor="?attr/colorOnPrimarySurface"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textSize="@dimen/text_sz_extra_large"
                     android:textStyle="bold"
                     tools:text="display_name" />
@@ -49,7 +49,6 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/person_username"
                     style="@style/PersonTextView"
-                    android:textColor="?attr/colorOnPrimarySurface"
                     android:textSize="@dimen/text_sz_large"
                     tools:text="username" />
 
@@ -124,5 +123,15 @@
         android:layout_height="@dimen/divider_size"
         android:layout_below="@id/person_role_container"
         android:background="?android:attr/listDivider" />
+
+    <include
+        android:id="@+id/jetpack_badge"
+        layout="@layout/jetpack_badge"
+        android:layout_below="@id/subscribed_date_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </RelativeLayout>

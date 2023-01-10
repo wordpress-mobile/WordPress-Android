@@ -33,6 +33,8 @@ import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
@@ -388,7 +390,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
         is SiteNavigationAction.OpenJetpackPoweredBottomSheet -> showJetpackPoweredBottomSheet()
         is SiteNavigationAction.OpenJetpackMigrationDeleteWP -> showJetpackMigrationDeleteWP()
-        is SiteNavigationAction.OpenJetpackFeatureOverlay -> showJetpackFeatureOverlay()
+        is SiteNavigationAction.OpenJetpackFeatureOverlay -> showJetpackFeatureOverlay(action.source)
         is SiteNavigationAction.OpenJetpackFeatureCardLearnMoreLink ->
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
     }
@@ -407,8 +409,13 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         startActivity(intent)
     }
 
-    private fun showJetpackFeatureOverlay() {
-        // Show the jetpack feature overlay once the view has been implemented
+    private fun showJetpackFeatureOverlay(source: JetpackFeatureCollectionOverlaySource) {
+        JetpackFeatureFullScreenOverlayFragment
+                .newInstance(
+                        isFeatureCollectionOverlay = true,
+                        featureCollectionOverlaySource = source
+                )
+                .show(requireActivity().supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
     }
 
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {

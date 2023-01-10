@@ -37,6 +37,7 @@ import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTrac
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.FEATURE_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
@@ -1310,7 +1311,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onJetpackFeatureCardClick() {
         jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_TAPPED)
-        _onNavigation.value = Event(SiteNavigationAction.OpenJetpackFeatureOverlay)
+        _onNavigation.value = Event(SiteNavigationAction.OpenJetpackFeatureOverlay(source = FEATURE_CARD))
     }
 
     private fun onJetpackFeatureCardHideMenuItemClick() {

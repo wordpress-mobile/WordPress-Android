@@ -26,8 +26,11 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.RoleUtils;
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.JetpackBrandingUtils;
+import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -60,6 +63,7 @@ public class PersonDetailFragment extends Fragment {
 
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
+    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
 
     public static PersonDetailFragment newInstance(long currentUserId, long personId, int localTableBlogId,
                                                    Person.PersonType personType) {
@@ -135,6 +139,20 @@ public class PersonDetailFragment extends Fragment {
         SiteModel site = mSiteStore.getSiteByLocalId(mLocalTableBlogId);
         if (!isCurrentUser && site != null && site.getHasCapabilityRemoveUsers()) {
             setHasOptionsMenu(true);
+        }
+
+        if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
+            View jetpackBadgeContainer = rootView.findViewById(R.id.jetpack_badge);
+            jetpackBadgeContainer.setVisibility(View.VISIBLE);
+
+            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                View jetpackBadge = jetpackBadgeContainer.findViewById(R.id.jetpack_powered_badge);
+                jetpackBadge.setOnClickListener(v -> {
+                    mJetpackBrandingUtils.trackBadgeTapped(Screen.PERSON);
+                    new JetpackPoweredBottomSheetFragment()
+                            .show(requireActivity().getSupportFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
+                });
+            }
         }
 
         return rootView;
