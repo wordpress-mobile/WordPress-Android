@@ -78,7 +78,5 @@ abstract class WordPress : MultiDexApplication() {
 
         @JvmStatic
         fun getUserAgent() = AppInitializer.userAgent
-
-        val applicationScope = MainScope()
     }
 }
