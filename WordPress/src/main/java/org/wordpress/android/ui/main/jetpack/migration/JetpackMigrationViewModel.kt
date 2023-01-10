@@ -41,7 +41,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFromDeepLink
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlowWithDeepLink
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.Logout
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
@@ -86,11 +86,13 @@ class JetpackMigrationViewModel @Inject constructor(
     private val continueClickedFlow = MutableStateFlow(false)
     private val notificationContinueClickedFlow = MutableStateFlow(false)
     private var showDeleteState: Boolean = false
-    private var isOpenFromDeepLink: Boolean = false
     private var deepLinkData: PreMigrationDeepLinkData? = null
 
-    val uiState = combineTransform(migrationStateFlow, continueClickedFlow, notificationContinueClickedFlow) {
-        migrationState, continueClicked, notificationContinueClicked ->
+    val uiState = combineTransform(
+            migrationStateFlow,
+            continueClickedFlow,
+            notificationContinueClickedFlow
+    ) { migrationState, continueClicked, notificationContinueClicked ->
         when {
             showDeleteState -> emit(initPleaseDeleteWordPressAppScreenUi())
             migrationState is Ineligible -> {
@@ -115,7 +117,6 @@ class JetpackMigrationViewModel @Inject constructor(
     fun start(
         showDeleteState: Boolean,
         application: WordPress,
-        isOpenFromDeepLink: Boolean,
         deepLinkData: PreMigrationDeepLinkData?
     ) {
         if (isStarted) return
@@ -123,7 +124,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
         this.showDeleteState = showDeleteState
         if (showDeleteState) return
-        this.isOpenFromDeepLink = isOpenFromDeepLink
+
         this.deepLinkData = deepLinkData
         tryMigration(application)
     }
@@ -265,14 +266,15 @@ class JetpackMigrationViewModel @Inject constructor(
         appPrefsWrapper.setJetpackMigrationCompleted(true)
         appPrefsWrapper.setJetpackMigrationInProgress(false)
 
-        val completionEvent = if (isOpenFromDeepLink) {
-            CompleteFromDeepLink(
-                    action = deepLinkData?.action,
-                    uri = deepLinkData?.data,
-            )
-        } else {
-            CompleteFlow
-        }
+        val completionEvent = deepLinkData
+                ?.let {
+                    CompleteFlowWithDeepLink(
+                            action = it.action,
+                            uri = it.uri,
+                    )
+                }
+                ?: CompleteFlow
+
         postActionEvent(completionEvent)
     }
 
@@ -477,10 +479,11 @@ class JetpackMigrationViewModel @Inject constructor(
     sealed class JetpackMigrationActionEvent {
         object ShowHelp : JetpackMigrationActionEvent()
         object CompleteFlow : JetpackMigrationActionEvent()
-        data class CompleteFromDeepLink(
+        data class CompleteFlowWithDeepLink(
             val action: String?,
             val uri: Uri?,
         ) : JetpackMigrationActionEvent()
+
         object FallbackToLogin : JetpackMigrationActionEvent()
         object Logout : JetpackMigrationActionEvent()
     }

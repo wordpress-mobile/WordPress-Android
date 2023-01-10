@@ -53,14 +53,11 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
 
         // Start migration flow if requirements are met and passing the link info
         if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
-            PreMigrationDeepLinkData migrationDeepLinkData = new PreMigrationDeepLinkData(
+            PreMigrationDeepLinkData deepLinkData = new PreMigrationDeepLinkData(
                     getIntent().getAction(),
                     getIntent().getData()
             );
-            mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow(
-                    true,
-                    migrationDeepLinkData
-            );
+            mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow(deepLinkData);
             finish();
             return;
         }

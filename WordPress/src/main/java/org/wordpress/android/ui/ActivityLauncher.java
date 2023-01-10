@@ -148,7 +148,6 @@ import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadVie
 import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
 import static org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity.KEY_DEEP_LINK_DATA;
-import static org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity.KEY_IS_OPEN_FROM_DEEP_LINK;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_ALL_UNFLATTENED_LOADED_SLIDES;
@@ -1780,11 +1779,9 @@ public class ActivityLauncher {
     }
 
     public static void startJetpackMigrationFlow(@NonNull Context context,
-                                                 boolean isOpenFromDeepLink,
                                                  @Nullable PreMigrationDeepLinkData deepLinkData) {
         Intent intent = new Intent(context, JetpackMigrationActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(KEY_IS_OPEN_FROM_DEEP_LINK, isOpenFromDeepLink);
         if (deepLinkData != null) {
             intent.putExtra(KEY_DEEP_LINK_DATA, deepLinkData);
         }

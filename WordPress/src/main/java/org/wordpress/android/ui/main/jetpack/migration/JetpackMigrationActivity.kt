@@ -18,11 +18,9 @@ class JetpackMigrationActivity : AppCompatActivity() {
             setContentView(root)
             if (savedInstanceState == null) {
                 val showDeleteWpState = intent.getBooleanExtra(KEY_SHOW_DELETE_WP_STATE, false)
-                val isOpenFromDeepLink = intent.getBooleanExtra(KEY_IS_OPEN_FROM_DEEP_LINK, false)
                 val deepLinkData = intent.getParcelableExtra<PreMigrationDeepLinkData>(KEY_DEEP_LINK_DATA)
                 val fragment = JetpackMigrationFragment.newInstance(
                         showDeleteWpState,
-                        isOpenFromDeepLink,
                         deepLinkData
                 )
                 supportFragmentManager.beginTransaction()
@@ -33,7 +31,6 @@ class JetpackMigrationActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val KEY_IS_OPEN_FROM_DEEP_LINK = "KEY_IS_OPEN_FROM_DEEP_LINK"
         const val KEY_DEEP_LINK_DATA = "KEY_DEEP_LINK_DATA"
         private const val KEY_SHOW_DELETE_WP_STATE = "KEY_SHOW_DELETE_WP_STATE"
         fun createIntent(context: Context, showDeleteWpState: Boolean = false): Intent =

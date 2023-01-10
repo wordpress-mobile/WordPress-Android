@@ -36,8 +36,8 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
             && (!accountStore.hasAccessToken()
             || appPrefsWrapper.isJetpackMigrationInProgress())
 
-    fun startJetpackMigrationFlow(isOpenFromDeepLink: Boolean, deepLinkData: PreMigrationDeepLinkData? = null) {
-        ActivityLauncher.startJetpackMigrationFlow(contextProvider.getContext(), isOpenFromDeepLink, deepLinkData)
+    fun startJetpackMigrationFlow(deepLinkData: PreMigrationDeepLinkData? = null) {
+        ActivityLauncher.startJetpackMigrationFlow(contextProvider.getContext(), deepLinkData)
     }
 
     private fun isWordPressInstalled() = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
@@ -53,5 +53,5 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
 @Parcelize
 data class PreMigrationDeepLinkData(
     val action: String? = null,
-    val data: Uri? = null,
+    val uri: Uri? = null,
 ) : Parcelable
