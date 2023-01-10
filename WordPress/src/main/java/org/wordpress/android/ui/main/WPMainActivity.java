@@ -214,6 +214,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_STAT_TO_TRACK = "stat_to_track";
     public static final String ARG_EDITOR_ORIGIN = "editor_origin";
     public static final String ARG_CURRENT_FOCUS = "CURRENT_FOCUS";
+    public static final String ARG_BYPASS_MIGRATION = "bypass_migration";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -388,8 +389,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
-                    if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
-                        mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow(getApplication());
+                    boolean shouldBypassMigration = (getIntent() != null && getIntent()
+                            .getBooleanExtra(ARG_BYPASS_MIGRATION, false));
+                    if (!shouldBypassMigration && mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
+                        mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
                     } else {
                         showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
                     }
