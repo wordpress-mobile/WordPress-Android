@@ -236,7 +236,7 @@ class HelpActivity : LocaleAwareActivity() {
         }
         viewModel.onSignOutCompleted.observe(this@HelpActivity) {
             // Load Main Activity once signed out, which launches the login flow
-            ActivityLauncher.showMainActivity(this@HelpActivity)
+            ActivityLauncher.showMainActivity(this@HelpActivity, true)
         }
     }
 

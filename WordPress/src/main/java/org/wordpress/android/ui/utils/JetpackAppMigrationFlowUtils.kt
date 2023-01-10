@@ -30,10 +30,11 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
     fun shouldShowMigrationFlow() = buildConfigWrapper.isJetpackApp
             && jetpackMigrationFlowFeatureConfig.isEnabled()
             && appPrefsWrapper.isJetpackMigrationEligible()
-            && appPrefsWrapper.getIsFirstTrySharedLoginJetpack()
-            && !accountStore.hasAccessToken()
+            && !appPrefsWrapper.isJetpackMigrationCompleted()
             && isWordPressInstalled()
             && isWordPressCompatible()
+            && (!accountStore.hasAccessToken()
+            || appPrefsWrapper.isJetpackMigrationInProgress())
 
     fun startJetpackMigrationFlow(isOpenFromDeepLink: Boolean, deepLinkData: PreMigrationDeepLinkData? = null) {
         ActivityLauncher.startJetpackMigrationFlow(contextProvider.getContext(), isOpenFromDeepLink, deepLinkData)

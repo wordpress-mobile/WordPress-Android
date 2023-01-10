@@ -68,7 +68,7 @@ class JetpackMigrationFragment : Fragment() {
         val isOpenFromDeepLink = arguments?.getBoolean(KEY_IS_OPEN_FROM_DEEP_LINK, false) ?: false
         val deepLinkData = arguments?.getParcelable<PreMigrationDeepLinkData>(KEY_DEEP_LINK_DATA)
         initBackPressHandler(showDeleteWpState)
-        viewModel.start(showDeleteWpState, isOpenFromDeepLink, deepLinkData)
+        viewModel.start(showDeleteWpState, requireActivity().application as WordPress, isOpenFromDeepLink, deepLinkData)
     }
 
     private fun observeViewModelEvents() {
@@ -83,7 +83,8 @@ class JetpackMigrationFragment : Fragment() {
 
     private fun handleActionEvents(actionEvent: JetpackMigrationActionEvent) {
         when (actionEvent) {
-            is CompleteFlow, FallbackToLogin -> ActivityLauncher.showMainActivity(requireContext())
+            is CompleteFlow -> ActivityLauncher.showMainActivity(requireContext())
+            is FallbackToLogin -> ActivityLauncher.showMainActivity(requireContext(), true)
             is CompleteFromDeepLink -> {
                 ActivityLauncher.handleDeepLinkAfterJPMigration(requireContext(), actionEvent.action, actionEvent.uri)
             }
@@ -109,7 +110,7 @@ class JetpackMigrationFragment : Fragment() {
                         true
                 ) {
                     override fun handleOnBackPressed() {
-                        viewModel.onBackPressed()
+                        viewModel.logoutAndFallbackToLogin()
                     }
                 })
     }

@@ -112,14 +112,29 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, Loading)
 
-    fun start(showDeleteState: Boolean, isOpenFromDeepLink: Boolean, deepLinkData: PreMigrationDeepLinkData?) {
+    fun start(
+        showDeleteState: Boolean,
+        application: WordPress,
+        isOpenFromDeepLink: Boolean,
+        deepLinkData: PreMigrationDeepLinkData?
+    ) {
         if (isStarted) return
         isStarted = true
 
         this.showDeleteState = showDeleteState
+        if (showDeleteState) return
         this.isOpenFromDeepLink = isOpenFromDeepLink
         this.deepLinkData = deepLinkData
-        tryMigration()
+        tryMigration(application)
+    }
+
+    private fun resetIfNeeded(application: WordPress) {
+        if (appPrefsWrapper.isJetpackMigrationInProgress()) {
+            application.wordPressComSignOut()
+            appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(true)
+            appPrefsWrapper.saveIsFirstTryUserFlagsJetpack(true)
+            appPrefsWrapper.saveIsFirstTryReaderSavedPostsJetpack(true)
+        }
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -186,12 +201,8 @@ class JetpackMigrationViewModel @Inject constructor(
     fun signOutWordPress(application: WordPress) {
         viewModelScope.launch(Dispatchers.IO) {
             application.wordPressComSignOut()
-            postActionEvent(CompleteFlow)
+            postActionEvent(FallbackToLogin)
         }
-    }
-
-    fun onBackPressed() {
-        logoutAndFallbackToLogin()
     }
 
     private fun siteUiFromModel(site: SiteModel) = SiteListItemUiState(
@@ -214,7 +225,7 @@ class JetpackMigrationViewModel @Inject constructor(
         logoutAndFallbackToLogin()
     }
 
-    private fun logoutAndFallbackToLogin() {
+    fun logoutAndFallbackToLogin() {
         if (accountStore.hasAccessToken()) {
             postActionEvent(Logout)
         } else {
@@ -222,8 +233,10 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }
 
-    private fun tryMigration() {
+    private fun tryMigration(application: WordPress) {
         viewModelScope.launch(Dispatchers.IO) {
+            resetIfNeeded(application)
+            appPrefsWrapper.setJetpackMigrationInProgress(true)
             localMigrationOrchestrator.tryLocalMigration(migrationStateFlow)
         }
     }
@@ -250,6 +263,7 @@ class JetpackMigrationViewModel @Inject constructor(
         migrationAnalyticsTracker.trackThanksScreenFinishButtonTapped()
         migrationEmailHelper.notifyMigrationComplete()
         appPrefsWrapper.setJetpackMigrationCompleted(true)
+        appPrefsWrapper.setJetpackMigrationInProgress(false)
 
         val completionEvent = if (isOpenFromDeepLink) {
             CompleteFromDeepLink(

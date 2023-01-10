@@ -214,6 +214,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_STAT_TO_TRACK = "stat_to_track";
     public static final String ARG_EDITOR_ORIGIN = "editor_origin";
     public static final String ARG_CURRENT_FOCUS = "CURRENT_FOCUS";
+    public static final String ARG_BYPASS_MIGRATION = "bypass_migration";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -328,7 +329,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 InstallationReferrerServiceStarter.startService(this, null);
             }
 
-            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
+                && !AppPrefs.getIsJetpackMigrationInProgress()) {
                 NotificationType notificationType =
                         (NotificationType) getIntent().getSerializableExtra(ARG_NOTIFICATION_TYPE);
                 if (notificationType != null) {
@@ -387,7 +389,19 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
-                    showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
+                    boolean shouldBypassMigration = (getIntent() != null && getIntent()
+                            .getBooleanExtra(ARG_BYPASS_MIGRATION, false));
+                    if (!shouldBypassMigration && mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
+                        mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow(false, null);
+                    } else {
+                        if (shouldBypassMigration) {
+                            AppPrefs.setIsJetpackMigrationInProgress(false);
+                            AppPrefs.saveIsFirstTrySharedLoginJetpack(true);
+                            AppPrefs.saveIsFirstTryUserFlagsJetpack(true);
+                            AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(true);
+                        }
+                        showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
+                    }
                     finish();
                 }
             }
@@ -462,10 +476,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         if (!mSelectedSiteRepository.hasSelectedSite()) {
             initSelectedSite();
-        }
-
-        if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
-            mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow(false, null);
         }
     }
 

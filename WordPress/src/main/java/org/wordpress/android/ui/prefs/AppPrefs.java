@@ -295,6 +295,9 @@ public class AppPrefs {
         // Indicates if the user has completed the Jetpack migration flow
         IS_JETPACK_MIGRATION_COMPLETED,
 
+        // Indicates if the the Jetpack migration flow is in progress (useful for resetting after interruptions)
+        IS_JETPACK_MIGRATION_IS_IN_PROGRESS,
+
         // Indicates if the user is eligible for the Jetpack migration flow
         IS_JETPACK_MIGRATION_ELIGIBLE,
     }
@@ -1487,6 +1490,14 @@ public class AppPrefs {
 
     public static void setIsJetpackMigrationCompleted(final boolean isCompleted) {
         setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_COMPLETED, isCompleted);
+    }
+
+    public static boolean getIsJetpackMigrationInProgress() {
+        return getBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_IS_IN_PROGRESS, false);
+    }
+
+    public static void setIsJetpackMigrationInProgress(final boolean isInProgress) {
+        setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_IS_IN_PROGRESS, isInProgress);
     }
 
     public static boolean getIsJetpackMigrationEligible() {
