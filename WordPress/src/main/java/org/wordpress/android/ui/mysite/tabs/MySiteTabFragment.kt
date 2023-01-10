@@ -411,11 +411,11 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     private fun showJetpackFeatureOverlay(source: JetpackFeatureCollectionOverlaySource) {
         JetpackFeatureFullScreenOverlayFragment
-                .newInstance(
-                        isFeatureCollectionOverlay = true,
-                        featureCollectionOverlaySource = source
-                )
-                .show(requireActivity().supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
+            .newInstance(
+                isFeatureCollectionOverlay = true,
+                featureCollectionOverlaySource = source
+            )
+            .show(requireActivity().supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
     }
 
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {

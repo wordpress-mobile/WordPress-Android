@@ -13,7 +13,8 @@ import java.util.Locale
 
 @ExperimentalCoroutinesApi
 class BloggingPromptsListItemModelMapperTest : BaseUnitTest() {
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
     lateinit var mapper: BloggingPromptsListItemModelMapper
 
     @Before

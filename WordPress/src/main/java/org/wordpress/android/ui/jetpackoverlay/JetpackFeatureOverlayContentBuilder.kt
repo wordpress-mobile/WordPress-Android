@@ -284,24 +284,24 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         blogPostLink: String?
     ): JetpackFeatureOverlayUIState {
         val componentVisibility = if (currentPhase == PhaseThree)
-                JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseThree()
-            else
-                JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.Final()
+            JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseThree()
+        else
+            JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.Final()
         val content = getContentForFeatureCollection(isRtl, blogPostLink)
         return JetpackFeatureOverlayUIState(componentVisibility, content)
     }
 
     private fun getContentForFeatureCollection(isRtl: Boolean, blogPostLink: String?): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
-                illustration = if (isRtl) R.raw.jp_all_features_rtl else R.raw.jp_all_features_left,
-                title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features,
-                caption = UiStringRes(R.string.wp_jetpack_feature_removal_overlay_phase_three_all_features_description),
-                migrationText = R.string.wp_jetpack_feature_removal_overlay_migration_helper_text,
-                migrationInfoText = if (!blogPostLink.isNullOrEmpty())
-                    R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
-                migrationInfoUrl = blogPostLink,
-                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app,
-                secondaryButtonText = R.string.wp_jetpack_feature_removal_overlay_continue_without_jetpack
+            illustration = if (isRtl) R.raw.jp_all_features_rtl else R.raw.jp_all_features_left,
+            title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features,
+            caption = UiStringRes(R.string.wp_jetpack_feature_removal_overlay_phase_three_all_features_description),
+            migrationText = R.string.wp_jetpack_feature_removal_overlay_migration_helper_text,
+            migrationInfoText = if (!blogPostLink.isNullOrEmpty())
+                R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
+            migrationInfoUrl = blogPostLink,
+            primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app,
+            secondaryButtonText = R.string.wp_jetpack_feature_removal_overlay_continue_without_jetpack
         )
     }
 }

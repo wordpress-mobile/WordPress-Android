@@ -58,15 +58,15 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     fun setUp() {
         whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(any(), any())).thenReturn("")
         classToTest = JetpackMigrationViewModel(
-                siteUtilsWrapper = siteUtilsWrapper,
-                gravatarUtilsWrapper = gravatarUtilsWrapper,
-                contextProvider = contextProvider,
-                preventDuplicateNotifsFeatureConfig = preventDuplicateNotifsFeatureConfig,
-                appPrefsWrapper = appPrefsWrapper,
-                localMigrationOrchestrator = localMigrationOrchestrator,
-                migrationEmailHelper = migrationEmailHelper,
-                migrationAnalyticsTracker = contentMigrationAnalyticsTracker,
-                accountStore = accountStore,
+            siteUtilsWrapper = siteUtilsWrapper,
+            gravatarUtilsWrapper = gravatarUtilsWrapper,
+            contextProvider = contextProvider,
+            preventDuplicateNotifsFeatureConfig = preventDuplicateNotifsFeatureConfig,
+            appPrefsWrapper = appPrefsWrapper,
+            localMigrationOrchestrator = localMigrationOrchestrator,
+            migrationEmailHelper = migrationEmailHelper,
+            migrationAnalyticsTracker = contentMigrationAnalyticsTracker,
+            accountStore = accountStore,
         )
         classToTest.refreshAppTheme.observeForever(refreshAppThemeObserver)
     }
@@ -210,10 +210,10 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct default userAvatarUrl for Welcome Content`() {
         val welcomeContent = Content.Welcome(
-                sites = emptyList(),
-                primaryActionButton = WelcomePrimaryButton {},
-                secondaryActionButton = WelcomeSecondaryButton {},
-                onAvatarClicked = {},
+            sites = emptyList(),
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+            onAvatarClicked = {},
         )
         val actual = welcomeContent.userAvatarUrl
         val expected = ""
@@ -223,10 +223,10 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct default isProcessing for Welcome Content`() {
         val welcomeContent = Content.Welcome(
-                sites = emptyList(),
-                primaryActionButton = WelcomePrimaryButton {},
-                secondaryActionButton = WelcomeSecondaryButton {},
-                onAvatarClicked = {},
+            sites = emptyList(),
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+            onAvatarClicked = {},
         )
         val actual = welcomeContent.isProcessing
         val expected = false
@@ -236,10 +236,10 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct screenIconRes for Welcome Content`() {
         val welcomeContent = Content.Welcome(
-                sites = emptyList(),
-                primaryActionButton = WelcomePrimaryButton {},
-                secondaryActionButton = WelcomeSecondaryButton {},
-                onAvatarClicked = {},
+            sites = emptyList(),
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+            onAvatarClicked = {},
         )
         val actual = welcomeContent.screenIconRes
         val expected = R.drawable.ic_wordpress_jetpack_logo
@@ -249,10 +249,10 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct title for Welcome Content`() {
         val welcomeContent = Content.Welcome(
-                sites = emptyList(),
-                primaryActionButton = WelcomePrimaryButton {},
-                secondaryActionButton = WelcomeSecondaryButton {},
-                onAvatarClicked = {},
+            sites = emptyList(),
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+            onAvatarClicked = {},
         )
         val actual = welcomeContent.title
         val expected = UiStringRes(R.string.jp_migration_welcome_title)
@@ -262,10 +262,10 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct subtitle for Welcome Content`() {
         val welcomeContent = Content.Welcome(
-                sites = emptyList(),
-                primaryActionButton = WelcomePrimaryButton {},
-                secondaryActionButton = WelcomeSecondaryButton {},
-                onAvatarClicked = {},
+            sites = emptyList(),
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+            onAvatarClicked = {},
         )
         val actual = welcomeContent.subtitle
         val expected = UiStringRes(R.string.jp_migration_welcome_subtitle)
@@ -275,13 +275,13 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct message for Welcome Content when sites size IS GREATER than 1`() {
         val welcomeContent = Content.Welcome(
-                sites = listOf(
-                        SiteListItemUiState(123, "name", "url", "iconUrl"),
-                        SiteListItemUiState(456, "name", "url", "iconUrl")
-                ),
-                primaryActionButton = WelcomePrimaryButton {},
-                secondaryActionButton = WelcomeSecondaryButton {},
-                onAvatarClicked = {},
+            sites = listOf(
+                SiteListItemUiState(123, "name", "url", "iconUrl"),
+                SiteListItemUiState(456, "name", "url", "iconUrl")
+            ),
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+            onAvatarClicked = {},
         )
         val actual = welcomeContent.message
         val expected = UiStringRes(R.string.jp_migration_welcome_sites_found_message)
@@ -291,10 +291,10 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct message for Welcome Content when sites size IS NOT GREATER than 1`() {
         val welcomeContent = Content.Welcome(
-                sites = listOf(SiteListItemUiState(123, "name", "url", "iconUrl")),
-                primaryActionButton = WelcomePrimaryButton {},
-                secondaryActionButton = WelcomeSecondaryButton {},
-                onAvatarClicked = {},
+            sites = listOf(SiteListItemUiState(123, "name", "url", "iconUrl")),
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+            onAvatarClicked = {},
         )
         val actual = welcomeContent.message
         val expected = UiStringRes(R.string.jp_migration_welcome_site_found_message)
@@ -418,9 +418,9 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct default isProcessing for Error UiState`() {
         val uiStateError = Error(
-                primaryActionButton = ErrorPrimaryButton {},
-                secondaryActionButton = ErrorSecondaryButton {},
-                type = Error.Networking,
+            primaryActionButton = ErrorPrimaryButton {},
+            secondaryActionButton = ErrorSecondaryButton {},
+            type = Error.Networking,
         )
         val actual = uiStateError.isProcessing
         val expected = false
@@ -430,9 +430,9 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct screenIconRes for Error UiState`() {
         val uiStateError = Error(
-                primaryActionButton = ErrorPrimaryButton {},
-                secondaryActionButton = ErrorSecondaryButton {},
-                type = Error.Networking,
+            primaryActionButton = ErrorPrimaryButton {},
+            secondaryActionButton = ErrorSecondaryButton {},
+            type = Error.Networking,
         )
         val actual = uiStateError.screenIconRes
         val expected = R.drawable.ic_jetpack_migration_error

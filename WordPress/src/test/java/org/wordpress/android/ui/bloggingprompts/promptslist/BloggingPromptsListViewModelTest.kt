@@ -19,23 +19,30 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
 class BloggingPromptsListViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var fetchBloggingPromptsListUseCase: FetchBloggingPromptsListUseCase
-    @Mock private lateinit var itemMapper: BloggingPromptsListItemModelMapper
-    @Mock private lateinit var tracker: BloggingPromptsListAnalyticsTracker
-    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    private lateinit var fetchBloggingPromptsListUseCase: FetchBloggingPromptsListUseCase
+
+    @Mock
+    private lateinit var itemMapper: BloggingPromptsListItemModelMapper
+
+    @Mock
+    private lateinit var tracker: BloggingPromptsListAnalyticsTracker
+
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     lateinit var viewModel: BloggingPromptsListViewModel
 
     @Before
     fun setUp() {
         whenever(itemMapper.toUiModel(argThat { id == BloggingPromptsListFixtures.UI_MODEL.id }))
-                .thenReturn(BloggingPromptsListFixtures.UI_MODEL)
+            .thenReturn(BloggingPromptsListFixtures.UI_MODEL)
 
         viewModel = BloggingPromptsListViewModel(
-                fetchBloggingPromptsListUseCase,
-                itemMapper,
-                tracker,
-                networkUtilsWrapper,
-                testDispatcher()
+            fetchBloggingPromptsListUseCase,
+            itemMapper,
+            tracker,
+            networkUtilsWrapper,
+            testDispatcher()
         )
     }
 
@@ -64,7 +71,7 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
         val result = viewModel.uiStateFlow.value
         assertThat(result).isInstanceOf(BloggingPromptsListViewModel.UiState.Content::class.java)
         assertThat((result as BloggingPromptsListViewModel.UiState.Content).content)
-                .isEqualTo(listOf(BloggingPromptsListFixtures.UI_MODEL))
+            .isEqualTo(listOf(BloggingPromptsListFixtures.UI_MODEL))
     }
 
     @Test

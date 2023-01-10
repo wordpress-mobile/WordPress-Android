@@ -35,13 +35,13 @@ fun BloggingPromptsListScreen(
     onNavigateUp: () -> Unit,
 ) {
     Scaffold(
-            topBar = {
-                MainTopAppBar(
-                        title = stringResource(R.string.blogging_prompts_list_title),
-                        navigationIcon = NavigationIcons.BackIcon,
-                        onNavigationIconClick = onNavigateUp
-                )
-            },
+        topBar = {
+            MainTopAppBar(
+                title = stringResource(R.string.blogging_prompts_list_title),
+                navigationIcon = NavigationIcons.BackIcon,
+                onNavigationIconClick = onNavigateUp
+            )
+        },
     ) {
         Surface(modifier = Modifier.fillMaxSize()) {
             when (uiState) {
@@ -67,8 +67,8 @@ private fun ListContent(
                 if (index != 0) Divider()
 
                 BloggingPromptsListItem(
-                        model = item,
-                        modifier = Modifier.fillMaxWidth()
+                    model = item,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
@@ -78,17 +78,17 @@ private fun ListContent(
 @Composable
 private fun NoContent() {
     EmptyContent(
-            title = stringResource(R.string.blogging_prompts_list_no_prompts),
-            image = R.drawable.img_illustration_empty_results_216dp,
-            modifier = Modifier.fillMaxSize(),
+        title = stringResource(R.string.blogging_prompts_list_no_prompts),
+        image = R.drawable.img_illustration_empty_results_216dp,
+        modifier = Modifier.fillMaxSize(),
     )
 }
 
 @Composable
 private fun LoadingContent() {
     Box(
-            Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
+        Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator()
     }
@@ -97,20 +97,20 @@ private fun LoadingContent() {
 @Composable
 private fun FetchErrorContent() {
     EmptyContent(
-            title = stringResource(R.string.blogging_prompts_list_error_fetch_title),
-            subtitle = stringResource(R.string.blogging_prompts_list_error_fetch_subtitle),
-            image = R.drawable.img_illustration_empty_results_216dp,
-            modifier = Modifier.fillMaxSize(),
+        title = stringResource(R.string.blogging_prompts_list_error_fetch_title),
+        subtitle = stringResource(R.string.blogging_prompts_list_error_fetch_subtitle),
+        image = R.drawable.img_illustration_empty_results_216dp,
+        modifier = Modifier.fillMaxSize(),
     )
 }
 
 @Composable
 private fun NetworkErrorContent() {
     EmptyContent(
-            title = stringResource(R.string.blogging_prompts_list_error_network_title),
-            subtitle = stringResource(R.string.blogging_prompts_list_error_network_subtitle),
-            image = R.drawable.img_illustration_cloud_off_152dp,
-            modifier = Modifier.fillMaxSize(),
+        title = stringResource(R.string.blogging_prompts_list_error_network_title),
+        subtitle = stringResource(R.string.blogging_prompts_list_error_network_subtitle),
+        image = R.drawable.img_illustration_cloud_off_152dp,
+        modifier = Modifier.fillMaxSize(),
     )
 }
 

@@ -42,7 +42,7 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     private var isDeepLinkOverlayScreen: Boolean = false
     private var isFeatureCollectionOverlayScreen: Boolean = false
     private var featureCollectionOverlayOrigin: JetpackFeatureCollectionOverlaySource =
-            JetpackFeatureCollectionOverlaySource.UNSPECIFIED
+        JetpackFeatureCollectionOverlaySource.UNSPECIFIED
 
     fun openJetpackAppDownloadLink() {
         if (isSiteCreationOverlayScreen) {
@@ -54,7 +54,7 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         } else if (isFeatureCollectionOverlayScreen) {
             _action.value = JetpackFeatureOverlayActions.OpenPlayStore
             jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInFeatureCollectionOverlay(
-                    featureCollectionOverlayOrigin
+                featureCollectionOverlayOrigin
             )
         } else {
             _action.value = JetpackFeatureOverlayActions.OpenPlayStore
@@ -73,8 +73,9 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInDeepLinkOverlay(CONTINUE_BUTTON)
         else if (isFeatureCollectionOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInFeatureCollectionOverlay(
-                    featureCollectionOverlayOrigin,
-                    CONTINUE_BUTTON)
+                featureCollectionOverlayOrigin,
+                CONTINUE_BUTTON
+            )
         else jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CONTINUE_BUTTON)
     }
 
@@ -89,8 +90,8 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInDeepLinkOverlay(CLOSE_BUTTON)
         else if (isFeatureCollectionOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInFeatureCollectionOverlay(
-                    featureCollectionOverlayOrigin,
-                    CLOSE_BUTTON
+                featureCollectionOverlayOrigin,
+                CLOSE_BUTTON
             )
         else jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CLOSE_BUTTON)
     }
@@ -128,11 +129,13 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         if (isFeatureCollectionOverlay) {
             isFeatureCollectionOverlayScreen = true
             featureCollectionOverlayOrigin = featureCollectionOverlaySource
-            _uiState.postValue(jetpackFeatureOverlayContentBuilder.buildFeatureCollectionOverlayState(
+            _uiState.postValue(
+                jetpackFeatureOverlayContentBuilder.buildFeatureCollectionOverlayState(
                     rtlLayout,
                     getCurrentPhase()!!,
                     phaseThreeBlogPostLinkConfig.getValue()
-            ))
+                )
+            )
             jetpackFeatureRemovalOverlayUtil.onFeatureCollectionOverlayShown(featureCollectionOverlaySource)
             return
         }
@@ -157,7 +160,7 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     fun openJetpackMigrationInfoLink(migrationInfoRedirectUrl: String) {
         if (isFeatureCollectionOverlayScreen) {
             jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClickedInFeatureCollectionOverlay(
-                    featureCollectionOverlayOrigin
+                featureCollectionOverlayOrigin
             )
         } else {
             jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClicked(screenType)
