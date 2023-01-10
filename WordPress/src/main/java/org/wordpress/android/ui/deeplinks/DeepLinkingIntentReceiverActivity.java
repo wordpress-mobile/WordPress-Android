@@ -51,7 +51,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
         setupObservers();
 
-        // Start migration flow if requirements are met and passing the link info
+        // Start migration flow passing deep link data if requirements are met
         if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
             PreMigrationDeepLinkData deepLinkData = new PreMigrationDeepLinkData(
                     getIntent().getAction(),
