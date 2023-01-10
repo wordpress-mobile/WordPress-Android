@@ -328,7 +328,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 InstallationReferrerServiceStarter.startService(this, null);
             }
 
-            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
+                && !AppPrefs.getIsJetpackMigrationInProgress()) {
                 NotificationType notificationType =
                         (NotificationType) getIntent().getSerializableExtra(ARG_NOTIFICATION_TYPE);
                 if (notificationType != null) {
