@@ -183,10 +183,6 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }
 
-    fun onBackPressed() {
-        logoutAndFallbackToLogin()
-    }
-
     private fun siteUiFromModel(site: SiteModel) = SiteListItemUiState(
             id = site.siteId,
             name = siteUtilsWrapper.getSiteNameOrHomeURL(site),
@@ -207,7 +203,7 @@ class JetpackMigrationViewModel @Inject constructor(
         logoutAndFallbackToLogin()
     }
 
-    private fun logoutAndFallbackToLogin() {
+    fun logoutAndFallbackToLogin() {
         if (accountStore.hasAccessToken()) {
             postActionEvent(Logout)
         } else {

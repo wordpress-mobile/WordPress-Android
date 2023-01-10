@@ -103,7 +103,7 @@ class JetpackMigrationFragment : Fragment() {
                         true
                 ) {
                     override fun handleOnBackPressed() {
-                        viewModel.onBackPressed()
+                        viewModel.logoutAndFallbackToLogin()
                     }
                 })
     }
