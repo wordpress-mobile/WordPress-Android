@@ -20,29 +20,29 @@ import java.util.Locale
 
 @ColorRes
 fun Context.getColorResIdFromAttribute(@AttrRes attribute: Int) =
-        TypedValue().let {
-            theme.resolveAttribute(attribute, it, true)
-            it.resourceId
-        }
+    TypedValue().let {
+        theme.resolveAttribute(attribute, it, true)
+        it.resourceId
+    }
 
 @ColorInt
 fun Context.getColorFromAttribute(@AttrRes attribute: Int) =
-        TypedValue().let {
-            theme.resolveAttribute(attribute, it, true)
-            ContextCompat.getColor(this, it.resourceId)
-        }
+    TypedValue().let {
+        theme.resolveAttribute(attribute, it, true)
+        ContextCompat.getColor(this, it.resourceId)
+    }
 
 @DrawableRes
 fun Context.getDrawableResIdFromAttribute(@AttrRes attribute: Int) =
-        TypedValue().let {
-            theme.resolveAttribute(attribute, it, true)
-            it.resourceId
-        }
+    TypedValue().let {
+        theme.resolveAttribute(attribute, it, true)
+        it.resourceId
+    }
 
 fun Context.getColorStateListFromAttribute(@AttrRes attribute: Int): ColorStateList =
-        getColorResIdFromAttribute(attribute).let {
-            AppCompatResources.getColorStateList(this, it)
-        }
+    getColorResIdFromAttribute(attribute).let {
+        AppCompatResources.getColorStateList(this, it)
+    }
 
 // https://developer.android.com/reference/android/content/res/Configuration.html#locale
 val Context.currentLocale: Locale
@@ -82,11 +82,11 @@ fun Context.getStringFromAsset(assetFilename: String): String? = try {
  * @return the parsed model
  */
 inline fun <reified T : Any> Context.parseJsonFromAsset(assetFilename: String, modelClass: Class<T>): T? =
-        getStringFromAsset(assetFilename)?.let {
-            try {
-                Gson().fromJson(it, modelClass)
-            } catch (e: JsonSyntaxException) {
-                AppLog.e(AppLog.T.UTILS, "Error parsing Json from asset file: $assetFilename")
-                null
-            }
+    getStringFromAsset(assetFilename)?.let {
+        try {
+            Gson().fromJson(it, modelClass)
+        } catch (e: JsonSyntaxException) {
+            AppLog.e(AppLog.T.UTILS, "Error parsing Json from asset file: $assetFilename")
+            null
         }
+    }

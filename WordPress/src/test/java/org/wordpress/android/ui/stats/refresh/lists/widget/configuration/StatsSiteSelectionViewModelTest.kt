@@ -17,9 +17,14 @@ import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
 class StatsSiteSelectionViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var siteStore: SiteStore
-    @Mock private lateinit var accountStore: AccountStore
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    private lateinit var siteStore: SiteStore
+
+    @Mock
+    private lateinit var accountStore: AccountStore
+
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var wpComSite: SiteModel
     private lateinit var jetpackSite: SiteModel
     private lateinit var nonJetpackSite: SiteModel
@@ -34,10 +39,10 @@ class StatsSiteSelectionViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = StatsSiteSelectionViewModel(
-                testDispatcher(),
-                siteStore,
-                accountStore,
-                appPrefsWrapper
+            testDispatcher(),
+            siteStore,
+            accountStore,
+            appPrefsWrapper
         )
         wpComSite = SiteModel()
         wpComSite.siteId = siteId

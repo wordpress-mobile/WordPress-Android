@@ -21,14 +21,16 @@ import org.wordpress.android.viewmodel.Event
 @ExperimentalCoroutinesApi
 class PrepublishingTagsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingTagsViewModel
-    @Mock lateinit var updatePostTagsUseCase: UpdatePostTagsUseCase
+
+    @Mock
+    lateinit var updatePostTagsUseCase: UpdatePostTagsUseCase
 
     @Before
     fun setup() {
         viewModel = PrepublishingTagsViewModel(
-                mock(),
-                updatePostTagsUseCase,
-                testDispatcher()
+            mock(),
+            updatePostTagsUseCase,
+            testDispatcher()
         )
     }
 

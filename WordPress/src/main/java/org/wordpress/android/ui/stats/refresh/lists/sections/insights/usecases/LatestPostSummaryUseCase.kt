@@ -24,7 +24,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
-import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
@@ -33,6 +32,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -60,7 +60,7 @@ class LatestPostSummaryUseCase
 
         return when {
             error != null -> State.Error(
-                    error.message ?: error.type.name
+                error.message ?: error.type.name
             )
             model != null -> State.Data(model)
             else -> State.Empty()
@@ -89,43 +89,43 @@ class LatestPostSummaryUseCase
             items.add(latestPostSummaryMapper.buildMessageItem(domainModel, this::onLinkClicked))
             if (domainModel != null && domainModel.hasData()) {
                 items.add(
-                        ValueItem(
-                                statsUtils.toFormattedString(domainModel.postViewsCount, startValue = MILLION),
-                                R.string.stats_views,
-                                contentDescription = contentDescriptionHelper.buildContentDescription(
-                                        R.string.stats_views,
-                                        domainModel.postViewsCount
-                                )
+                    ValueItem(
+                        statsUtils.toFormattedString(domainModel.postViewsCount, startValue = MILLION),
+                        R.string.stats_views,
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                            R.string.stats_views,
+                            domainModel.postViewsCount
                         )
+                    )
                 )
                 if (domainModel.dayViews.isNotEmpty()) {
                     items.add(latestPostSummaryMapper.buildBarChartItem(domainModel.dayViews))
                 }
                 val postLikeCount = statsUtils.toFormattedString(domainModel.postLikeCount)
                 items.add(
-                        ListItemWithIcon(
-                                R.drawable.ic_star_white_24dp,
-                                textResource = R.string.stats_likes,
-                                value = postLikeCount,
-                                showDivider = true,
-                                contentDescription = contentDescriptionHelper.buildContentDescription(
-                                        R.string.stats_likes,
-                                        domainModel.postLikeCount
-                                )
+                    ListItemWithIcon(
+                        R.drawable.ic_star_white_24dp,
+                        textResource = R.string.stats_likes,
+                        value = postLikeCount,
+                        showDivider = true,
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                            R.string.stats_likes,
+                            domainModel.postLikeCount
                         )
+                    )
                 )
                 val postCommentCount = statsUtils.toFormattedString(domainModel.postCommentCount)
                 items.add(
-                        ListItemWithIcon(
-                                R.drawable.ic_comment_white_24dp,
-                                textResource = R.string.stats_comments,
-                                value = postCommentCount,
-                                showDivider = false,
-                                contentDescription = contentDescriptionHelper.buildContentDescription(
-                                        R.string.stats_comments,
-                                        domainModel.postCommentCount
-                                )
+                    ListItemWithIcon(
+                        R.drawable.ic_comment_white_24dp,
+                        textResource = R.string.stats_comments,
+                        value = postCommentCount,
+                        showDivider = false,
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                            R.string.stats_comments,
+                            domainModel.postCommentCount
                         )
+                    )
                 )
             }
         }
@@ -136,75 +136,75 @@ class LatestPostSummaryUseCase
     private fun buildTitle() = Title(R.string.stats_insights_latest_post_summary, menuAction = this::onMenuClick)
 
     private fun buildTitleViewMore(model: InsightsLatestPostModel?) = TitleWithMore(
-            textResource = R.string.stats_insights_latest_post_summary,
-            navigationAction = if (model?.hasData() == true) {
-                ListItemInteraction.create(
-                        ViewMoreParams(model.postId, model.postTitle, model.postURL),
-                        this::onViewMore
-                )
-            } else {
-                null
-            }
+        textResource = R.string.stats_insights_latest_post_summary,
+        navigationAction = if (model?.hasData() == true) {
+            ListItemInteraction.create(
+                ViewMoreParams(model.postId, model.postTitle, model.postURL),
+                this::onViewMore
+            )
+        } else {
+            null
+        }
     )
 
     private fun buildQuickScanItems(domainModel: InsightsLatestPostModel) =
         QuickScanItem(
-                Column(
-                        label = string.stats_views,
-                        value = statsUtils.toFormattedString(domainModel.postViewsCount, startValue = MILLION),
-                        tooltip = contentDescriptionHelper.buildContentDescription(
-                                R.string.stats_views,
-                                domainModel.postViewsCount
-                        )
-                ),
-                Column(
-                        label = string.stats_likes,
-                        value = statsUtils.toFormattedString(domainModel.postLikeCount),
-                        tooltip = contentDescriptionHelper.buildContentDescription(
-                                R.string.stats_likes,
-                                domainModel.postLikeCount
-                        )
-                ),
-                Column(
-                        label = string.stats_comments,
-                        value = statsUtils.toFormattedString(domainModel.postCommentCount),
-                        tooltip = contentDescriptionHelper.buildContentDescription(
-                                R.string.stats_comments,
-                                domainModel.postCommentCount
-                        )
+            Column(
+                label = string.stats_views,
+                value = statsUtils.toFormattedString(domainModel.postViewsCount, startValue = MILLION),
+                tooltip = contentDescriptionHelper.buildContentDescription(
+                    R.string.stats_views,
+                    domainModel.postViewsCount
                 )
+            ),
+            Column(
+                label = string.stats_likes,
+                value = statsUtils.toFormattedString(domainModel.postLikeCount),
+                tooltip = contentDescriptionHelper.buildContentDescription(
+                    R.string.stats_likes,
+                    domainModel.postLikeCount
+                )
+            ),
+            Column(
+                label = string.stats_comments,
+                value = statsUtils.toFormattedString(domainModel.postCommentCount),
+                tooltip = contentDescriptionHelper.buildContentDescription(
+                    R.string.stats_comments,
+                    domainModel.postCommentCount
+                )
+            )
         )
 
     private fun InsightsLatestPostModel.hasData() =
-            this.postViewsCount > 0 || this.postCommentCount > 0 || this.postLikeCount > 0
+        this.postViewsCount > 0 || this.postCommentCount > 0 || this.postLikeCount > 0
 
     private fun buildLink(model: InsightsLatestPostModel?): Link? {
         return when {
             model == null -> Link(
-                    R.drawable.ic_create_white_24dp,
-                    R.string.stats_insights_create_post,
-                    navigateAction = ListItemInteraction.create(this::onAddNewPostClick)
+                R.drawable.ic_create_white_24dp,
+                R.string.stats_insights_create_post,
+                navigateAction = ListItemInteraction.create(this::onAddNewPostClick)
             )
             model.hasData() -> {
                 if (!BuildConfig.IS_JETPACK_APP) {
                     Link(
-                            text = R.string.stats_insights_view_more,
-                            navigateAction = ListItemInteraction.create(
-                                    ViewMoreParams(model.postId, model.postTitle, model.postURL),
-                                    this::onViewMore
-                            )
+                        text = R.string.stats_insights_view_more,
+                        navigateAction = ListItemInteraction.create(
+                            ViewMoreParams(model.postId, model.postTitle, model.postURL),
+                            this::onViewMore
+                        )
                     )
                 } else {
                     null
                 }
             }
             else -> Link(
-                    R.drawable.ic_share_white_24dp,
-                    R.string.stats_insights_share_post,
-                    navigateAction = ListItemInteraction.create(
-                            SharePostParams(model.postURL, model.postTitle),
-                            this::onSharePost
-                    )
+                R.drawable.ic_share_white_24dp,
+                R.string.stats_insights_share_post,
+                navigateAction = ListItemInteraction.create(
+                    SharePostParams(model.postURL, model.postTitle),
+                    this::onSharePost
+                )
             )
         }
     }
@@ -217,11 +217,11 @@ class LatestPostSummaryUseCase
     private fun onViewMore(params: ViewMoreParams) {
         analyticsTracker.track(STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED)
         navigateTo(
-                ViewPostDetailStats(
-                        params.postId,
-                        params.postTitle,
-                        params.postUrl
-                )
+            ViewPostDetailStats(
+                params.postId,
+                params.postTitle,
+                params.postUrl
+            )
         )
     }
 

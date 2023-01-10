@@ -35,15 +35,32 @@ import kotlin.math.roundToInt
 
 @ExperimentalCoroutinesApi
 class MostPopularInsightsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: MostPopularInsightsStore
-    @Mock lateinit var postStore: PostStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var mStatsDateUtils: StatsDateUtils
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
-    @Mock lateinit var actionCardHandler: ActionCardHandler
-    @Mock private lateinit var percentFormatter: PercentFormatter
+    @Mock
+    lateinit var insightsStore: MostPopularInsightsStore
+
+    @Mock
+    lateinit var postStore: PostStore
+
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+
+    @Mock
+    lateinit var site: SiteModel
+
+    @Mock
+    lateinit var mStatsDateUtils: StatsDateUtils
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var popupMenuHandler: ItemPopupMenuHandler
+
+    @Mock
+    lateinit var actionCardHandler: ActionCardHandler
+
+    @Mock
+    private lateinit var percentFormatter: PercentFormatter
     private lateinit var useCase: MostPopularInsightsUseCase
     private val day = 2
     private val highestDayPercent = 15.0
@@ -55,28 +72,28 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = MostPopularInsightsUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                insightsStore,
-                postStore,
-                statsSiteProvider,
-                mStatsDateUtils,
-                resourceProvider,
-                popupMenuHandler,
-                actionCardHandler,
-                percentFormatter
+            testDispatcher(),
+            testDispatcher(),
+            insightsStore,
+            postStore,
+            statsSiteProvider,
+            mStatsDateUtils,
+            resourceProvider,
+            popupMenuHandler,
+            actionCardHandler,
+            percentFormatter
         )
         whenever(
-                percentFormatter.format(
-                        value = highestDayPercent.roundToInt(),
-                        rounding = RoundingMode.HALF_UP
-                )
+            percentFormatter.format(
+                value = highestDayPercent.roundToInt(),
+                rounding = RoundingMode.HALF_UP
+            )
         ).thenReturn("10%")
         whenever(
-                percentFormatter.format(
-                        value = highestHourPercent.roundToInt(),
-                        rounding = RoundingMode.HALF_UP
-                )
+            percentFormatter.format(
+                value = highestHourPercent.roundToInt(),
+                rounding = RoundingMode.HALF_UP
+            )
         ).thenReturn("20%")
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(mStatsDateUtils.getWeekDay(day)).thenReturn(dayString)
@@ -84,15 +101,15 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         whenever(mStatsDateUtils.getHour(hour)).thenReturn(hourString)
 
         whenever(
-                resourceProvider.getString(
-                        R.string.stats_most_popular_percent_views, "10%"
-                )
+            resourceProvider.getString(
+                R.string.stats_most_popular_percent_views, "10%"
+            )
         ).thenReturn("${highestDayPercent.roundToInt()}% of views")
 
         whenever(
-                resourceProvider.getString(
-                        R.string.stats_most_popular_percent_views, "20%"
-                )
+            resourceProvider.getString(
+                R.string.stats_most_popular_percent_views, "20%"
+            )
         ).thenReturn("${highestHourPercent.roundToInt()}% of views")
     }
 
@@ -103,9 +120,9 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         val model = InsightsMostPopularModel(0, day, hour, highestDayPercent, highestHourPercent)
         whenever(insightsStore.getMostPopularInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchMostPopularInsights(site, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadMostPopularInsights(refresh, forced)
@@ -124,9 +141,9 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         val refresh = true
         val message = "Generic error"
         whenever(insightsStore.fetchMostPopularInsights(site, forced)).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadMostPopularInsights(refresh, forced)
@@ -138,12 +155,12 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     fun `when buildUiModel is called, should call PercentFormatter`() = test {
         useCase.buildUiModel(InsightsMostPopularModel(0, day, hour, highestDayPercent, highestHourPercent))
         verify(percentFormatter).format(
-                value = highestDayPercent.roundToInt(),
-                rounding = HALF_UP
+            value = highestDayPercent.roundToInt(),
+            rounding = HALF_UP
         )
         verify(percentFormatter).format(
-                value = highestHourPercent.roundToInt(),
-                rounding = HALF_UP
+            value = highestHourPercent.roundToInt(),
+            rounding = HALF_UP
         )
     }
 

@@ -44,7 +44,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
-import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -101,8 +100,8 @@ class EditorMedia @Inject constructor(
         if (mediaUtilsWrapper.shouldAdvertiseImageOptimization()) {
             editorMediaListener.advertiseImageOptimization {
                 addNewMediaItemsToEditorAsync(
-                        uriList,
-                        false
+                    uriList,
+                    false
                 )
             }
         } else {
@@ -122,11 +121,11 @@ class EditorMedia @Inject constructor(
                 AddingSingleMedia
             }
             val allMediaSucceed = addLocalMediaToPostUseCase.addNewMediaToEditorAsync(
-                    uriList,
-                    site,
-                    freshlyTaken,
-                    editorMediaListener,
-                    true
+                uriList,
+                site,
+                freshlyTaken,
+                editorMediaListener,
+                true
             )
             if (!allMediaSucceed) {
                 _snackBarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.gallery_error)))
@@ -141,15 +140,15 @@ class EditorMedia @Inject constructor(
     fun addGifMediaToPostAsync(localMediaIds: IntArray) {
         launch {
             addLocalMediaToPostUseCase.addLocalMediaToEditorAsync(
-                    localMediaIds.toList(),
-                    editorMediaListener
+                localMediaIds.toList(),
+                editorMediaListener
             )
         }
     }
 
     fun addFreshlyTakenVideoToEditor() {
         addNewMediaItemsToEditorAsync(listOf(mediaUtilsWrapper.getLastRecordedVideoUri()), true)
-                .also { AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW) }
+            .also { AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW) }
     }
 
     fun onPhotoPickerMediaChosen(uriList: List<Uri>) {
@@ -177,10 +176,10 @@ class EditorMedia @Inject constructor(
     fun addExistingMediaToEditorAsync(source: AddExistingMediaSource, mediaIdList: List<Long>) {
         launch {
             addExistingMediaToPostUseCase.addMediaExistingInRemoteToEditorAsync(
-                    site,
-                    source,
-                    mediaIdList,
-                    editorMediaListener
+                site,
+                source,
+                mediaIdList,
+                editorMediaListener
             )
         }
     }
@@ -190,12 +189,12 @@ class EditorMedia @Inject constructor(
     fun cancelMediaUploadAsync(localMediaId: Int, delete: Boolean) {
         launch {
             getMediaModelUseCase
-                    .loadMediaByLocalId(listOf(localMediaId))
-                    .firstOrNull()
-                    ?.let { mediaModel ->
-                        val payload = CancelMediaPayload(site, mediaModel, delete)
-                        dispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload))
-                    }
+                .loadMediaByLocalId(listOf(localMediaId))
+                .firstOrNull()
+                ?.let { mediaModel ->
+                    val payload = CancelMediaPayload(site, mediaModel, delete)
+                    dispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload))
+                }
         }
     }
 
@@ -205,10 +204,10 @@ class EditorMedia @Inject constructor(
             dispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload))
         } else {
             _toastMessage.value = Event(
-                    ToastMessageHolder(
-                            R.string.error_media_refresh_no_connection,
-                            Duration.SHORT
-                    )
+                ToastMessageHolder(
+                    R.string.error_media_refresh_no_connection,
+                    Duration.SHORT
+                )
             )
         }
     }
@@ -217,14 +216,14 @@ class EditorMedia @Inject constructor(
     fun updateMediaUploadStateBlocking(uri: Uri, mediaUploadState: MediaUploadState): MediaModel? {
         return runBlocking {
             getMediaModelUseCase.createMediaModelFromUri(site.id, uri).mediaModels.firstOrNull()
-                    ?.let {
-                        updateMediaModelUseCase.updateMediaModel(
-                                it,
-                                editorMediaListener.getImmutablePost(),
-                                mediaUploadState
-                        )
-                        it
-                    }
+                ?.let {
+                    updateMediaModelUseCase.updateMediaModel(
+                        it,
+                        editorMediaListener.getImmutablePost(),
+                        mediaUploadState
+                    )
+                    it
+                }
         }
     }
 
@@ -237,7 +236,7 @@ class EditorMedia @Inject constructor(
     fun purgeMediaToPostAssociationsIfNotInPostAnymoreAsync() {
         launch {
             cleanUpMediaToPostAssociationUseCase
-                    .purgeMediaToPostAssociationsIfNotInPostAnymore(editorMediaListener.getImmutablePost())
+                .purgeMediaToPostAssociationsIfNotInPostAnymore(editorMediaListener.getImmutablePost())
         }
     }
 
@@ -248,8 +247,8 @@ class EditorMedia @Inject constructor(
     ) {
         if (isAztec) {
             reattachUploadingMediaUseCase.reattachUploadingMediaForAztec(
-                    editPostRepository,
-                    editorMediaUploadListener
+                editPostRepository,
+                editorMediaUploadListener
             )
         }
     }
@@ -297,10 +296,10 @@ class EditorMedia @Inject constructor(
     fun onMediaUploadError(listener: EditorMediaUploadListener, media: MediaModel, error: MediaError) = launch {
         val properties: Map<String, Any?> = withContext(bgDispatcher) {
             analyticsUtilsWrapper
-                    .getMediaProperties(media.isVideo, null, media.filePath)
-                    .also {
-                        it["error_type"] = error.type.name
-                    }
+                .getMediaProperties(media.isVideo, null, media.filePath)
+                .also {
+                    it["error_type"] = error.type.name
+                }
         }
         analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_FAILED, properties)
         listener.onMediaUploadFailed(media.id.toString())
@@ -316,12 +315,12 @@ class EditorMedia @Inject constructor(
          * before all items were added
          */
         object AddingMultipleMedia : AddMediaToPostUiState(
-                editorOverlayVisibility = true,
-                progressDialogUiState = VisibleProgressDialog(
-                        messageString = UiStringRes(R.string.add_media_progress),
-                        cancelable = false,
-                        indeterminate = true
-                )
+            editorOverlayVisibility = true,
+            progressDialogUiState = VisibleProgressDialog(
+                messageString = UiStringRes(R.string.add_media_progress),
+                cancelable = false,
+                indeterminate = true
+            )
         )
 
         object AddingSingleMedia : AddMediaToPostUiState(true, HiddenProgressDialog)

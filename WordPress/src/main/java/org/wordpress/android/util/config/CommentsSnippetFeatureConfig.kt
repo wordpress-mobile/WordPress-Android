@@ -13,9 +13,9 @@ class CommentsSnippetFeatureConfig
 @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.COMMENTS_SNIPPET,
-        COMMENTS_SNIPPET_COMMENTS_REMOTE_FIELD
+    appConfig,
+    BuildConfig.COMMENTS_SNIPPET,
+    COMMENTS_SNIPPET_COMMENTS_REMOTE_FIELD
 ) {
     companion object {
         const val COMMENTS_SNIPPET_COMMENTS_REMOTE_FIELD = "comments_snippet_remote_field"

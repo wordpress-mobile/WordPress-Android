@@ -33,11 +33,15 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 abstract class PublishSettingsFragment : Fragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     lateinit var viewModel: PublishSettingsViewModel
 
-    @LayoutRes protected abstract fun getContentLayout(): Int
+    @LayoutRes
+    protected abstract fun getContentLayout(): Int
 
     protected abstract fun getPublishSettingsFragmentType(): PublishSettingsFragmentType
 
@@ -91,17 +95,17 @@ abstract class PublishSettingsFragment : Fragment() {
                 val notificationIntent = Intent(it, PublishNotificationReceiver::class.java)
                 notificationIntent.putExtra(PublishNotificationReceiver.NOTIFICATION_ID, notification.id)
                 val pendingIntent = PendingIntent.getBroadcast(
-                        it,
-                        notification.id,
-                        notificationIntent,
-                        PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                    it,
+                    notification.id,
+                    notificationIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
 
                 val alarmManager = it.getSystemService(ALARM_SERVICE) as AlarmManager
                 alarmManager.set(
-                        AlarmManager.RTC_WAKEUP,
-                        notification.scheduledTime,
-                        pendingIntent
+                    AlarmManager.RTC_WAKEUP,
+                    notification.scheduledTime,
+                    pendingIntent
                 )
             }
         }
@@ -110,10 +114,10 @@ abstract class PublishSettingsFragment : Fragment() {
     private fun observeOnToast() {
         viewModel.onToast.observeEvent(viewLifecycleOwner) {
             ToastUtils.showToast(
-                    context,
-                    it,
-                    SHORT,
-                    Gravity.TOP
+                context,
+                it,
+                SHORT,
+                Gravity.TOP
             )
         }
     }
@@ -223,8 +227,8 @@ abstract class PublishSettingsFragment : Fragment() {
         }
 
         val fragment = PostNotificationScheduleTimeDialogFragment.newInstance(
-                schedulingReminderPeriod,
-                getPublishSettingsFragmentType()
+            schedulingReminderPeriod,
+            getPublishSettingsFragmentType()
         )
         fragment.show(requireActivity().supportFragmentManager, PostNotificationScheduleTimeDialogFragment.TAG)
     }

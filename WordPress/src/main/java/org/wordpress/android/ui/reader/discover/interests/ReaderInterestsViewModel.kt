@@ -110,16 +110,16 @@ class ReaderInterestsViewModel @Inject constructor(
                     val distinctTags = ReaderTagList().apply { addAll(tags.distinctBy { it.tagSlug }) }
                     when (entryPoint) {
                         EntryPoint.DISCOVER -> ContentUiState(
-                                interestsUiState = transformToInterestsUiState(distinctTags),
-                                interests = distinctTags,
-                                doneButtonUiState = DoneButtonDisabledUiState(),
-                                titleVisible = true
+                            interestsUiState = transformToInterestsUiState(distinctTags),
+                            interests = distinctTags,
+                            doneButtonUiState = DoneButtonDisabledUiState(),
+                            titleVisible = true
                         )
                         EntryPoint.SETTINGS -> ContentUiState(
-                                interestsUiState = transformToInterestsUiState(distinctTags),
-                                interests = distinctTags,
-                                doneButtonUiState = DoneButtonDisabledUiState(R.string.reader_btn_done),
-                                titleVisible = false
+                            interestsUiState = transformToInterestsUiState(distinctTags),
+                            interests = distinctTags,
+                            doneButtonUiState = DoneButtonDisabledUiState(R.string.reader_btn_done),
+                            titleVisible = false
                         )
                     }
                 }
@@ -157,13 +157,13 @@ class ReaderInterestsViewModel @Inject constructor(
             val updatedInterestsUiState = getUpdatedInterestsUiState(index, isChecked)
 
             updateUiState(
-                    currentUiState.copy(
-                            interestsUiState = updatedInterestsUiState,
-                            doneButtonUiState = currentUiState.getDoneButtonState(
-                                    entryPoint = entryPoint,
-                                    isInterestChecked = isChecked
-                            )
+                currentUiState.copy(
+                    interestsUiState = updatedInterestsUiState,
+                    doneButtonUiState = currentUiState.getDoneButtonState(
+                        entryPoint = entryPoint,
+                        isInterestChecked = isChecked
                     )
+                )
             )
 
             parentViewModel?.completeQuickStartFollowSiteTaskIfNeeded()
@@ -174,10 +174,10 @@ class ReaderInterestsViewModel @Inject constructor(
         val contentUiState = uiState.value as ContentUiState
 
         updateUiState(
-                contentUiState.copy(
-                        progressBarVisible = true,
-                        doneButtonUiState = DoneButtonDisabledUiState(R.string.reader_btn_done)
-                )
+            contentUiState.copy(
+                progressBarVisible = true,
+                doneButtonUiState = DoneButtonDisabledUiState(R.string.reader_btn_done)
+            )
         )
 
         trackInterests(contentUiState.getSelectedInterests())
@@ -194,18 +194,18 @@ class ReaderInterestsViewModel @Inject constructor(
                 is ReaderRepositoryCommunication.Error -> {
                     if (result is ReaderRepositoryCommunication.Error.NetworkUnavailable) {
                         _snackbarEvents.postValue(
-                                Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
                         )
                     } else if (result is ReaderRepositoryCommunication.Error.RemoteRequestFailure) {
                         _snackbarEvents.postValue(
-                                Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
                         )
                     }
                     updateUiState(
-                            contentUiState.copy(
-                                    progressBarVisible = false,
-                                    doneButtonUiState = DoneButtonEnabledUiState(R.string.reader_btn_done)
-                            )
+                        contentUiState.copy(
+                            progressBarVisible = false,
+                            doneButtonUiState = DoneButtonEnabledUiState(R.string.reader_btn_done)
+                        )
                     )
                 }
                 is ReaderRepositoryCommunication.Started -> Unit // Do nothing
@@ -223,9 +223,9 @@ class ReaderInterestsViewModel @Inject constructor(
     }
 
     private fun transformToInterestsUiState(interests: ReaderTagList) =
-            interests.map { interest ->
-                TagUiState(interest.tagTitle, interest.tagSlug)
-            }
+        interests.map { interest ->
+            TagUiState(interest.tagTitle, interest.tagSlug)
+        }
 
     private fun getUpdatedInterestsUiState(index: Int, isChecked: Boolean): List<TagUiState> {
         val currentUiState = uiState.value as ContentUiState
@@ -245,9 +245,9 @@ class ReaderInterestsViewModel @Inject constructor(
                 EntryPoint.SETTINGS -> ReaderTracker.SOURCE_SETTINGS
             }
             readerTracker.trackTag(
-                    AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
-                    it.tagSlug,
-                    source
+                AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
+                it.tagSlug,
+                source
             )
         }
         readerTracker.trackTagQuantity(AnalyticsTracker.Stat.SELECT_INTERESTS_PICKED, tags.size)
@@ -267,7 +267,7 @@ class ReaderInterestsViewModel @Inject constructor(
         val errorLayoutVisible: Boolean = false
     ) {
         object InitialLoadingUiState : UiState(
-                progressBarVisible = true
+            progressBarVisible = true
         )
 
         data class ContentUiState(
@@ -277,16 +277,16 @@ class ReaderInterestsViewModel @Inject constructor(
             override val doneButtonUiState: DoneButtonUiState,
             override val titleVisible: Boolean
         ) : UiState(
-                progressBarVisible = false,
-                titleVisible = titleVisible,
-                errorLayoutVisible = false
+            progressBarVisible = false,
+            titleVisible = titleVisible,
+            errorLayoutVisible = false
         )
 
         sealed class ErrorUiState constructor(
             val titleRes: Int
         ) : UiState(
-                progressBarVisible = false,
-                errorLayoutVisible = true
+            progressBarVisible = false,
+            errorLayoutVisible = true
         ) {
             object ConnectionErrorUiState : ErrorUiState(R.string.no_network_message)
 
@@ -342,17 +342,17 @@ class ReaderInterestsViewModel @Inject constructor(
         data class DoneButtonEnabledUiState(
             @StringRes override val titleRes: Int = R.string.reader_btn_done
         ) : DoneButtonUiState(
-                enabled = true
+            enabled = true
         )
 
         data class DoneButtonDisabledUiState(
             @StringRes override val titleRes: Int = R.string.reader_btn_select_few_interests
         ) : DoneButtonUiState(
-                enabled = false
+            enabled = false
         )
 
         object DoneButtonHiddenUiState : DoneButtonUiState(
-                visible = false
+            visible = false
         )
     }
 }

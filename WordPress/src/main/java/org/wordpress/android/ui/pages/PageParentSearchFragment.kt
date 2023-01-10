@@ -28,7 +28,8 @@ class PageParentSearchFragment : Fragment(R.layout.pages_list_fragment), Corouti
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PageParentSearchViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
 
@@ -59,10 +60,10 @@ class PageParentSearchFragment : Fragment(R.layout.pages_list_fragment), Corouti
 
     private fun PagesListFragmentBinding.initializeViewModels(activity: FragmentActivity) {
         val pageParentViewModel = ViewModelProvider(activity, viewModelFactory)
-                .get(PageParentViewModel::class.java)
+            .get(PageParentViewModel::class.java)
 
         viewModel = ViewModelProvider(this@PageParentSearchFragment, viewModelFactory)
-                .get(PageParentSearchViewModel::class.java)
+            .get(PageParentSearchViewModel::class.java)
         viewModel.start(pageParentViewModel)
 
         setupObservers()
@@ -89,7 +90,7 @@ class PageParentSearchFragment : Fragment(R.layout.pages_list_fragment), Corouti
         val adapter: PageParentSearchAdapter
         if (recyclerView.adapter == null) {
             adapter = PageParentSearchAdapter(
-                    { page -> viewModel.onParentSelected(page) }, this@PageParentSearchFragment
+                { page -> viewModel.onParentSelected(page) }, this@PageParentSearchFragment
             )
             recyclerView.adapter = adapter
         } else {

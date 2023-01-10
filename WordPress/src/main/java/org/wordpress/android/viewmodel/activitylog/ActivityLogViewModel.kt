@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -117,7 +116,7 @@ class ActivityLogViewModel @Inject constructor(
         get() = _showSnackbarMessage
 
     private val _navigationEvents =
-            MutableLiveData<Event<ActivityLogNavigationEvents>>()
+        MutableLiveData<Event<ActivityLogNavigationEvents>>()
     val navigationEvents: LiveData<Event<ActivityLogNavigationEvents>>
         get() = _navigationEvents
 
@@ -174,9 +173,9 @@ class ActivityLogViewModel @Inject constructor(
         currentRestoreEvent = restoreEvent
         currentBackupDownloadEvent = backupDownloadEvent
         val eventList = activityLogStore.getActivityLogForSite(
-                site = site,
-                ascending = false,
-                rewindableOnly = rewindableOnly
+            site = site,
+            ascending = false,
+            rewindableOnly = rewindableOnly
         )
         val items = mutableListOf<ActivityLogListItem>()
         var moveToTop = false
@@ -201,9 +200,9 @@ class ActivityLogViewModel @Inject constructor(
         }
         eventList.forEach { model ->
             val currentItem = ActivityLogListItem.Event(
-                    model = model,
-                    rewindDisabled = withRestoreProgressItem || withBackupDownloadProgressItem,
-                    isRestoreHidden = restoreEvent.isRestoreHidden
+                model = model,
+                rewindDisabled = withRestoreProgressItem || withBackupDownloadProgressItem,
+                isRestoreHidden = restoreEvent.isRestoreHidden
             )
             val lastItem = items.lastOrNull() as? ActivityLogListItem.Event
             if (lastItem == null || lastItem.formattedDate != currentItem.formattedDate) {
@@ -232,18 +231,18 @@ class ActivityLogViewModel @Inject constructor(
         val rewindDate = published ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
         return rewindDate?.let {
             ActivityLogListItem.Progress(
-                    resourceProvider.getString(R.string.activity_log_currently_restoring_title),
-                    resourceProvider.getString(
-                            R.string.activity_log_currently_restoring_message,
-                            rewindDate.toFormattedDateString(),
-                            rewindDate.toFormattedTimeString()
-                    ),
-                    ActivityLogListItem.Progress.Type.RESTORE
+                resourceProvider.getString(R.string.activity_log_currently_restoring_title),
+                resourceProvider.getString(
+                    R.string.activity_log_currently_restoring_message,
+                    rewindDate.toFormattedDateString(),
+                    rewindDate.toFormattedTimeString()
+                ),
+                ActivityLogListItem.Progress.Type.RESTORE
             )
         } ?: ActivityLogListItem.Progress(
-                resourceProvider.getString(R.string.activity_log_currently_restoring_title),
-                resourceProvider.getString(R.string.activity_log_currently_restoring_message_no_dates),
-                ActivityLogListItem.Progress.Type.RESTORE
+            resourceProvider.getString(R.string.activity_log_currently_restoring_title),
+            resourceProvider.getString(R.string.activity_log_currently_restoring_message_no_dates),
+            ActivityLogListItem.Progress.Type.RESTORE
         )
     }
 
@@ -251,31 +250,31 @@ class ActivityLogViewModel @Inject constructor(
         val rewindDate = published ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
         return rewindDate?.let {
             ActivityLogListItem.Progress(
-                    resourceProvider.getString(R.string.activity_log_currently_backing_up_title),
-                    resourceProvider.getString(
-                            R.string.activity_log_currently_backing_up_message,
-                            rewindDate.toFormattedDateString(), rewindDate.toFormattedTimeString()
-                    ),
-                    ActivityLogListItem.Progress.Type.BACKUP_DOWNLOAD
+                resourceProvider.getString(R.string.activity_log_currently_backing_up_title),
+                resourceProvider.getString(
+                    R.string.activity_log_currently_backing_up_message,
+                    rewindDate.toFormattedDateString(), rewindDate.toFormattedTimeString()
+                ),
+                ActivityLogListItem.Progress.Type.BACKUP_DOWNLOAD
             )
         } ?: ActivityLogListItem.Progress(
-                resourceProvider.getString(R.string.activity_log_currently_backing_up_title),
-                resourceProvider.getString(R.string.activity_log_currently_backing_up_message_no_dates),
-                ActivityLogListItem.Progress.Type.BACKUP_DOWNLOAD
+            resourceProvider.getString(R.string.activity_log_currently_backing_up_title),
+            resourceProvider.getString(R.string.activity_log_currently_backing_up_message_no_dates),
+            ActivityLogListItem.Progress.Type.BACKUP_DOWNLOAD
         )
     }
 
     private fun getBackupDownloadNoticeItem(backupDownloadEvent: BackupDownloadEvent): ActivityLogListItem.Notice? {
         val rewindDate = backupDownloadEvent.published
-                ?: backupDownloadEvent.rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
+            ?: backupDownloadEvent.rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
         return rewindDate?.let {
             ActivityLogListItem.Notice(
-                    label = resourceProvider.getString(
-                            R.string.activity_log_backup_download_notice_description_with_two_params,
-                            rewindDate.toFormattedDateString(), rewindDate.toFormattedTimeString()
-                    ),
-                    primaryAction = { onDownloadBackupFileClicked(backupDownloadEvent.url as String) },
-                    secondaryAction = { dismissNoticeClicked(backupDownloadEvent.downloadId as Long) }
+                label = resourceProvider.getString(
+                    R.string.activity_log_backup_download_notice_description_with_two_params,
+                    rewindDate.toFormattedDateString(), rewindDate.toFormattedTimeString()
+                ),
+                primaryAction = { onDownloadBackupFileClicked(backupDownloadEvent.url as String) },
+                secondaryAction = { dismissNoticeClicked(backupDownloadEvent.downloadId as Long) }
             )
         }
     }
@@ -284,14 +283,14 @@ class ActivityLogViewModel @Inject constructor(
         val rewindDate = published ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
         if (rewindDate != null) {
             _showSnackbarMessage.value =
-                    resourceProvider.getString(
-                            R.string.activity_log_rewind_finished_snackbar_message,
-                            rewindDate.toFormattedDateString(),
-                            rewindDate.toFormattedTimeString()
-                    )
+                resourceProvider.getString(
+                    R.string.activity_log_rewind_finished_snackbar_message,
+                    rewindDate.toFormattedDateString(),
+                    rewindDate.toFormattedTimeString()
+                )
         } else {
             _showSnackbarMessage.value =
-                    resourceProvider.getString(R.string.activity_log_rewind_finished_snackbar_message_no_dates)
+                resourceProvider.getString(R.string.activity_log_rewind_finished_snackbar_message_no_dates)
         }
     }
 
@@ -299,14 +298,14 @@ class ActivityLogViewModel @Inject constructor(
         val rewindDate = rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
         if (rewindDate != null) {
             _showSnackbarMessage.value =
-                    resourceProvider.getString(
-                            R.string.activity_log_backup_finished_snackbar_message,
-                            rewindDate.toFormattedDateString(),
-                            rewindDate.toFormattedTimeString()
-                    )
+                resourceProvider.getString(
+                    R.string.activity_log_backup_finished_snackbar_message,
+                    rewindDate.toFormattedDateString(),
+                    rewindDate.toFormattedTimeString()
+                )
         } else {
             _showSnackbarMessage.value =
-                    resourceProvider.getString(R.string.activity_log_backup_finished_snackbar_message_no_dates)
+                resourceProvider.getString(R.string.activity_log_backup_finished_snackbar_message_no_dates)
         }
     }
 
@@ -325,11 +324,11 @@ class ActivityLogViewModel @Inject constructor(
         val newStatus = if (loadMore) ActivityLogListStatus.LOADING_MORE else ActivityLogListStatus.FETCHING
         _eventListStatus.value = newStatus
         val payload = ActivityLogStore.FetchActivityLogPayload(
-                site,
-                loadMore,
-                currentDateRangeFilter?.first?.let { Date(it) },
-                currentDateRangeFilter?.second?.let { Date(it) },
-                currentActivityTypeFilter.map { it.key }
+            site,
+            loadMore,
+            currentDateRangeFilter?.first?.let { Date(it) },
+            currentDateRangeFilter?.second?.let { Date(it) },
+            currentActivityTypeFilter.map { it.key }
         )
         fetchActivitiesJob = viewModelScope.launch {
             val result = activityLogStore.fetchActivities(payload)
@@ -354,9 +353,9 @@ class ActivityLogViewModel @Inject constructor(
 
         if (event.rowsAffected > 0) {
             reloadEvents(
-                    done = !event.canLoadMore,
-                    restoreEvent = restoreEvent,
-                    backupDownloadEvent = backupDownloadEvent
+                done = !event.canLoadMore,
+                restoreEvent = restoreEvent,
+                backupDownloadEvent = backupDownloadEvent
             )
             if (!loadingMore) {
                 moveToTop.call()
@@ -403,12 +402,12 @@ class ActivityLogViewModel @Inject constructor(
         val (activityTypeLabel, activityTypeLabelContentDescription) = createActivityTypeFilterLabel()
         val (dateRangeLabel, dateRangeLabelContentDescription) = createDateRangeFilterLabel()
         _filtersUiState.value = FiltersShown(
-                dateRangeLabel,
-                dateRangeLabelContentDescription,
-                activityTypeLabel,
-                activityTypeLabelContentDescription,
-                currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
-                currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let { ::onClearActivityTypeFilterClicked }
+            dateRangeLabel,
+            dateRangeLabelContentDescription,
+            activityTypeLabel,
+            activityTypeLabelContentDescription,
+            currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
+            currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let { ::onClearActivityTypeFilterClicked }
         )
         refreshEmptyUiState()
     }
@@ -440,12 +439,12 @@ class ActivityLogViewModel @Inject constructor(
     private fun createDateRangeFilterLabel(): kotlin.Pair<UiString, UiString> {
         return currentDateRangeFilter?.let {
             val label = UiStringText(
-                    statsDateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second), TIMEZONE_GMT_0)
+                statsDateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second), TIMEZONE_GMT_0)
             )
             kotlin.Pair(label, label)
         } ?: kotlin.Pair(
-                UiStringRes(R.string.activity_log_date_range_filter_label),
-                UiStringRes(R.string.activity_log_date_range_filter_label_content_description)
+            UiStringRes(R.string.activity_log_date_range_filter_label),
+            UiStringRes(R.string.activity_log_date_range_filter_label_content_description)
         )
     }
 
@@ -453,27 +452,27 @@ class ActivityLogViewModel @Inject constructor(
         return currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let {
             if (it.size == 1) {
                 kotlin.Pair(
-                        UiStringText(it[0].name),
-                        UiStringResWithParams(
-                                R.string.activity_log_activity_type_filter_single_item_selected_content_description,
-                                listOf(UiStringText(it[0].name), UiStringText(it[0].count.toString()))
-                        )
+                    UiStringText(it[0].name),
+                    UiStringResWithParams(
+                        R.string.activity_log_activity_type_filter_single_item_selected_content_description,
+                        listOf(UiStringText(it[0].name), UiStringText(it[0].count.toString()))
+                    )
                 )
             } else {
                 kotlin.Pair(
-                        UiStringResWithParams(
-                                R.string.activity_log_activity_type_filter_active_label,
-                                listOf(UiStringText("${it.size}"))
-                        ),
-                        UiStringResWithParams(
-                                R.string.activity_log_activity_type_filter_multiple_items_selected_content_description,
-                                listOf(UiStringText("${it.size}"))
-                        )
+                    UiStringResWithParams(
+                        R.string.activity_log_activity_type_filter_active_label,
+                        listOf(UiStringText("${it.size}"))
+                    ),
+                    UiStringResWithParams(
+                        R.string.activity_log_activity_type_filter_multiple_items_selected_content_description,
+                        listOf(UiStringText("${it.size}"))
+                    )
                 )
             }
         } ?: kotlin.Pair(
-                UiStringRes(R.string.activity_log_activity_type_filter_label),
-                UiStringRes(R.string.activity_log_activity_type_filter_no_item_selected_content_description)
+            UiStringRes(R.string.activity_log_activity_type_filter_label),
+            UiStringRes(R.string.activity_log_activity_type_filter_no_item_selected_content_description)
         )
     }
 
@@ -513,11 +512,12 @@ class ActivityLogViewModel @Inject constructor(
         activityLogTracker.trackDownloadBackupDownloadButtonClicked(rewindableOnly)
         _navigationEvents.value = Event(ActivityLogNavigationEvents.DownloadBackupFile(url))
     }
+
     /**
     Reload events first to remove the notice item, as it shows progress to the user. Then
     trigger the dismiss (this is an optimistic call). If the dismiss fails it will show
     again on the next reload.
-    */
+     */
     private fun dismissNoticeClicked(downloadId: Long) {
         activityLogTracker.trackDownloadBackupDismissButtonClicked(rewindableOnly)
         reloadEvents(backupDownloadEvent = BackupDownloadEvent(displayNotice = false, displayProgress = false))
@@ -550,9 +550,9 @@ class ActivityLogViewModel @Inject constructor(
     fun onActivityTypeFilterClicked() {
         activityLogTracker.trackActivityTypeFilterButtonClicked()
         _showActivityTypeFilterDialog.value = ShowActivityTypePicker(
-                RemoteId(site.siteId),
-                currentActivityTypeFilter.map { it.key },
-                currentDateRangeFilter
+            RemoteId(site.siteId),
+            currentActivityTypeFilter.map { it.key },
+            currentDateRangeFilter
         )
     }
 
@@ -579,7 +579,7 @@ class ActivityLogViewModel @Inject constructor(
         restoreStatusJob?.cancel()
         restoreStatusJob = viewModelScope.launch {
             getRestoreStatusUseCase.getRestoreStatus(site, restoreId)
-                    .collect { handleRestoreStatus(it) }
+                .collect { handleRestoreStatus(it) }
         }
     }
 
@@ -594,22 +594,22 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun handleRestoreStatusForMultisite() {
         reloadEvents(
-                restoreEvent = RestoreEvent(
-                        displayProgress = false,
-                        isRestoreHidden = true
-                )
+            restoreEvent = RestoreEvent(
+                displayProgress = false,
+                isRestoreHidden = true
+            )
         )
     }
 
     private fun handleRestoreStatusForProgress(state: RestoreRequestState.Progress) {
         if (!isRestoreProgressItemShown) {
             reloadEvents(
-                    restoreEvent = RestoreEvent(
-                            displayProgress = true,
-                            isCompleted = false,
-                            rewindId = state.rewindId,
-                            published = state.published
-                    )
+                restoreEvent = RestoreEvent(
+                    displayProgress = true,
+                    isCompleted = false,
+                    rewindId = state.rewindId,
+                    published = state.published
+                )
             )
         }
     }
@@ -617,13 +617,13 @@ class ActivityLogViewModel @Inject constructor(
     private fun handleRestoreStatusForComplete(state: RestoreRequestState.Complete) {
         if (isRestoreProgressItemShown) {
             requestEventsUpdate(
-                    loadMore = false,
-                    restoreEvent = RestoreEvent(
-                            displayProgress = false,
-                            isCompleted = true,
-                            rewindId = state.rewindId,
-                            published = state.published
-                    )
+                loadMore = false,
+                restoreEvent = RestoreEvent(
+                    displayProgress = false,
+                    isCompleted = true,
+                    rewindId = state.rewindId,
+                    published = state.published
+                )
             )
         }
     }
@@ -631,9 +631,9 @@ class ActivityLogViewModel @Inject constructor(
     private fun showRestoreStartedMessage(rewindId: String) {
         activityLogStore.getActivityLogItemByRewindId(rewindId)?.published?.let {
             _showSnackbarMessage.value = resourceProvider.getString(
-                    R.string.activity_log_rewind_started_snackbar_message,
-                    it.toFormattedDateString(),
-                    it.toFormattedTimeString()
+                R.string.activity_log_rewind_started_snackbar_message,
+                it.toFormattedDateString(),
+                it.toFormattedTimeString()
             )
         }
     }
@@ -652,7 +652,7 @@ class ActivityLogViewModel @Inject constructor(
         backupDownloadStatusJob?.cancel()
         backupDownloadStatusJob = viewModelScope.launch {
             getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, downloadId)
-                    .collect { state -> handleBackupDownloadStatus(state) }
+                .collect { state -> handleBackupDownloadStatus(state) }
         }
     }
 
@@ -667,27 +667,27 @@ class ActivityLogViewModel @Inject constructor(
     private fun handleBackupDownloadStatusForProgress(state: BackupDownloadRequestState.Progress) {
         if (!isBackupDownloadProgressItemShown) {
             reloadEvents(
-                    backupDownloadEvent = BackupDownloadEvent(
-                            displayProgress = true,
-                            displayNotice = false,
-                            isCompleted = false,
-                            rewindId = state.rewindId,
-                            published = state.published
-                    )
+                backupDownloadEvent = BackupDownloadEvent(
+                    displayProgress = true,
+                    displayNotice = false,
+                    isCompleted = false,
+                    rewindId = state.rewindId,
+                    published = state.published
+                )
             )
         }
     }
 
     private fun handleBackupDownloadStatusForComplete(state: BackupDownloadRequestState.Complete) {
         val backupDownloadEvent = BackupDownloadEvent(
-                displayProgress = false,
-                displayNotice = state.isValid,
-                isCompleted = true,
-                rewindId = state.rewindId,
-                published = state.published,
-                url = state.url,
-                validUntil = state.validUntil,
-                downloadId = state.downloadId
+            displayProgress = false,
+            displayNotice = state.isValid,
+            isCompleted = true,
+            rewindId = state.rewindId,
+            published = state.published,
+            url = state.url,
+            validUntil = state.validUntil,
+            downloadId = state.downloadId
         )
 
         if (isBackupDownloadProgressItemShown) {
@@ -700,9 +700,9 @@ class ActivityLogViewModel @Inject constructor(
     private fun showBackupDownloadStartedMessage(rewindId: String) {
         activityLogStore.getActivityLogItemByRewindId(rewindId)?.published?.let {
             _showSnackbarMessage.value = resourceProvider.getString(
-                    R.string.activity_log_backup_started_snackbar_message,
-                    it.toFormattedDateString(),
-                    it.toFormattedTimeString()
+                R.string.activity_log_backup_started_snackbar_message,
+                it.toFormattedDateString(),
+                it.toFormattedTimeString()
             )
         }
     }

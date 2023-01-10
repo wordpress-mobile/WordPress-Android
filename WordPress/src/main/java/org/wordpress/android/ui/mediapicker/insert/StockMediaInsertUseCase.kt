@@ -13,7 +13,6 @@ import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.StockMediaIdent
 import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertModel
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
-import java.util.HashMap
 import javax.inject.Inject
 
 class StockMediaInsertUseCase(
@@ -30,13 +29,15 @@ class StockMediaInsertUseCase(
                 StockMediaUploadItem(it.name, it.title, it.url)
             }
         })
-        emit(when {
-            result.error != null -> InsertModel.Error(result.error.message)
-            else -> {
-                trackUploadedStockMediaEvent(result.mediaList)
-                InsertModel.Success(result.mediaList.mapNotNull { Identifier.RemoteId(it.mediaId) })
+        emit(
+            when {
+                result.error != null -> InsertModel.Error(result.error.message)
+                else -> {
+                    trackUploadedStockMediaEvent(result.mediaList)
+                    InsertModel.Success(result.mediaList.mapNotNull { Identifier.RemoteId(it.mediaId) })
+                }
             }
-        })
+        )
     }
 
     private fun trackUploadedStockMediaEvent(mediaList: List<MediaModel>) {

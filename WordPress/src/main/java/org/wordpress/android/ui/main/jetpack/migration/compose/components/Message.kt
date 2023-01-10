@@ -18,12 +18,12 @@ fun Message(
     modifier: Modifier = Modifier,
 ) {
     Text(
-            text = text,
-            fontSize = 17.sp,
-            style = TextStyle(letterSpacing = (-0.01).sp),
-            color = colorResource(color.gray_50),
-            modifier = modifier
-                    .padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
-                    .padding(top = 20.dp, bottom = 30.dp)
+        text = text,
+        fontSize = 17.sp,
+        style = TextStyle(letterSpacing = (-0.01).sp),
+        color = colorResource(color.gray_50),
+        modifier = modifier
+            .padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
+            .padding(top = 20.dp, bottom = 30.dp)
     )
 }

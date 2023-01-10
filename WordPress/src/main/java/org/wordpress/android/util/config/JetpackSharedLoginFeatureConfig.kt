@@ -10,9 +10,9 @@ class JetpackSharedLoginFeatureConfig
 @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.JETPACK_SHARED_LOGIN,
-        JETPACK_SHARED_LOGIN_REMOTE_FIELD
+    appConfig,
+    BuildConfig.JETPACK_SHARED_LOGIN,
+    JETPACK_SHARED_LOGIN_REMOTE_FIELD
 ) {
     companion object {
         const val JETPACK_SHARED_LOGIN_REMOTE_FIELD = "jetpack_shared_login_remote_field"

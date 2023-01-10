@@ -23,7 +23,8 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsShownTrackerTest {
-    @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
     private lateinit var cardsShownTracker: CardsShownTracker
 
     @Before
@@ -71,57 +72,57 @@ class CardsShownTrackerTest {
         cardsShownTracker.track(buildErrorCard())
 
         verify(analyticsTracker).track(
-                Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
-                mapOf(CardsTracker.TYPE to Type.ERROR.label, CardsTracker.SUBTYPE to Type.ERROR.label)
+            Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
+            mapOf(CardsTracker.TYPE to Type.ERROR.label, CardsTracker.SUBTYPE to Type.ERROR.label)
         )
     }
 
     private fun verifyCardShownTracked(type: String, subtype: String) {
         verify(analyticsTracker).track(
-                Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
-                mapOf(CardsTracker.TYPE to type, CardsTracker.SUBTYPE to subtype)
+            Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
+            mapOf(CardsTracker.TYPE to type, CardsTracker.SUBTYPE to subtype)
         )
     }
 
     private fun verifyQuickStartCardShownTracked(type: String, subtype: String) {
         verify(analyticsTracker).track(
-                Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
-                mapOf(CardsTracker.TYPE to type, CardsTracker.SUBTYPE to subtype)
+            Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
+            mapOf(CardsTracker.TYPE to type, CardsTracker.SUBTYPE to subtype)
         )
     }
 
     private fun buildDashboardCards(postCardType: PostCardType) = DashboardCards(
-            cards = mutableListOf<DashboardCard>().apply {
-                when (postCardType) {
-                    PostCardType.SCHEDULED, PostCardType.DRAFT -> addAll(buildPostCardsWithItems(postCardType))
-                    PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> addAll(
-                            buildPostCardsWithoutItems(
-                                    postCardType
-                            )
+        cards = mutableListOf<DashboardCard>().apply {
+            when (postCardType) {
+                PostCardType.SCHEDULED, PostCardType.DRAFT -> addAll(buildPostCardsWithItems(postCardType))
+                PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> addAll(
+                    buildPostCardsWithoutItems(
+                        postCardType
                     )
-                }
+                )
             }
+        }
     )
 
     private fun buildPostCardsWithoutItems(postCardType: PostCardType) =
-            listOf(
-                    PostCardWithoutPostItems(
-                    postCardType = postCardType,
-                    title = UiStringText(""),
-                    footerLink = FooterLink(UiStringText(""), onClick = mock()),
-                    excerpt = UiStringText(""),
-                    imageRes = 0,
-                    onClick = mock()
-                )
+        listOf(
+            PostCardWithoutPostItems(
+                postCardType = postCardType,
+                title = UiStringText(""),
+                footerLink = FooterLink(UiStringText(""), onClick = mock()),
+                excerpt = UiStringText(""),
+                imageRes = 0,
+                onClick = mock()
             )
+        )
 
     private fun buildPostCardsWithItems(postCardType: PostCardType) = listOf(
-            PostCardWithPostItems(
-                    postCardType = postCardType,
-                    title = UiStringText(""),
-                    postItems = emptyList(),
-                    footerLink = FooterLink(UiStringText(""), onClick = mock())
-            )
+        PostCardWithPostItems(
+            postCardType = postCardType,
+            title = UiStringText(""),
+            postItems = emptyList(),
+            footerLink = FooterLink(UiStringText(""), onClick = mock())
+        )
     )
 
     private fun buildErrorCard(): DashboardCards {

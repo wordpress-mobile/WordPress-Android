@@ -8,16 +8,12 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
 import android.widget.ImageView.ScaleType.FIT_CENTER
-
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.SizeReadyCallback
 import com.bumptech.glide.request.transition.Transition
-
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.aztec.Html
-
 import java.lang.ref.WeakReference
-import java.util.ArrayList
 
 /**
  * Class which retrieves images from both local storage and remote url and informs the client about the progress
@@ -35,7 +31,8 @@ class AztecImageLoader(
     private val imageManager: ImageManager,
     private val loadingInProgress: Drawable
 ) : Html.ImageGetter {
-    @Suppress("DEPRECATION") private val targets = ArrayList<WeakReference<BaseTarget<Bitmap>>>()
+    @Suppress("DEPRECATION")
+    private val targets = ArrayList<WeakReference<BaseTarget<Bitmap>>>()
     private val mRequestsInProgress = ArrayList<String>()
 
     override fun loadImage(url: String, callbacks: Html.ImageGetter.Callbacks, maxWidth: Int) {

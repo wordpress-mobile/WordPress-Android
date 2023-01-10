@@ -20,11 +20,11 @@ import javax.inject.Inject
 class CommentListUiUtils @Inject constructor() {
     fun displayHtmlComment(commentContent: String, textView: TextView, maxImageWidth: Int, maxEmojiWidth: Int) {
         CommentUtils.displayHtmlComment(
-                textView,
-                commentContent,
-                maxImageWidth,
-                maxEmojiWidth,
-                textView.resources.getString(R.string.comment_unable_to_show_error)
+            textView,
+            commentContent,
+            maxImageWidth,
+            maxEmojiWidth,
+            textView.resources.getString(R.string.comment_unable_to_show_error)
         )
     }
 
@@ -46,12 +46,12 @@ class CommentListUiUtils @Inject constructor() {
         val titleStartIndex = formattedTitle.indexOf(trimmedPostTitle)
         val titleEndIndex = titleStartIndex + trimmedPostTitle.length
         string.setSpan(
-                StyleSpan(Typeface.BOLD), authorStartIndex, authorEndIndex,
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            StyleSpan(Typeface.BOLD), authorStartIndex, authorEndIndex,
+            Spannable.SPAN_INCLUSIVE_INCLUSIVE
         )
         string.setSpan(
-                StyleSpan(Typeface.BOLD), titleStartIndex, titleEndIndex,
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            StyleSpan(Typeface.BOLD), titleStartIndex, titleEndIndex,
+            Spannable.SPAN_INCLUSIVE_INCLUSIVE
         )
         return string
     }
@@ -59,10 +59,10 @@ class CommentListUiUtils @Inject constructor() {
     fun toggleSelectedStateOfCommentListItem(containerView: View, isSelected: Boolean) {
         if (isSelected) {
             containerView.setBackgroundColor(
-                    ColorUtils.setAlphaComponent(
-                            containerView.context.getColorFromAttribute(attr.colorOnSurface),
-                            containerView.context.resources.getInteger(integer.selected_list_item_opacity)
-                    )
+                ColorUtils.setAlphaComponent(
+                    containerView.context.getColorFromAttribute(attr.colorOnSurface),
+                    containerView.context.resources.getInteger(integer.selected_list_item_opacity)
+                )
             )
         } else {
             containerView.background = null

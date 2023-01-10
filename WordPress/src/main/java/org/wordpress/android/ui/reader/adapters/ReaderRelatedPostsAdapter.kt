@@ -15,9 +15,9 @@ class ReaderRelatedPostsAdapter(
     private val items = mutableListOf<ReaderRelatedPostUiState>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ReaderRelatedPostViewHolder(
-            uiHelpers,
-            imageManager,
-            parent
+        uiHelpers,
+        imageManager,
+        parent
     )
 
     override fun onBindViewHolder(holder: ReaderRelatedPostViewHolder, position: Int) {

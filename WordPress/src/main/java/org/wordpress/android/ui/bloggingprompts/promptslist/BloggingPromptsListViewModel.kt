@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.bloggingprompts.promptslist.mapper.BloggingPromptsListItemModelMapper
 import org.wordpress.android.ui.bloggingprompts.promptslist.model.BloggingPromptsListItemModel
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -16,6 +17,7 @@ import javax.inject.Named
 @HiltViewModel
 class BloggingPromptsListViewModel @Inject constructor(
     private val fetchBloggingPromptsList: FetchBloggingPromptsListUseCase,
+    private val itemModelMapper: BloggingPromptsListItemModelMapper,
     private val tracker: BloggingPromptsListAnalyticsTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -38,12 +40,12 @@ class BloggingPromptsListViewModel @Inject constructor(
             _uiStateFlow.update { UiState.Loading }
 
             fetchBloggingPromptsList.execute()
-                    .onSuccess { prompts ->
-                        _uiStateFlow.update { UiState.Content(prompts) }
-                    }
-                    .onFailure {
-                        _uiStateFlow.update { UiState.FetchError }
-                    }
+                .onSuccess { prompts ->
+                    _uiStateFlow.update { UiState.Content(prompts.map(itemModelMapper::toUiModel)) }
+                }
+                .onFailure {
+                    _uiStateFlow.update { UiState.FetchError }
+                }
         }
     }
 

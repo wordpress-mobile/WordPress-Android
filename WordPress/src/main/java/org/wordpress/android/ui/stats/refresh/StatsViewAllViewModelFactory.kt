@@ -73,12 +73,12 @@ class StatsViewAllViewModelFactory(
         if (modelClass.isAssignableFrom(StatsViewAllViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return StatsViewAllViewModel(
-                    mainDispatcher,
-                    bgDispatcher,
-                    useCase,
-                    statsSiteProvider,
-                    dateSelector,
-                    titleResource
+                mainDispatcher,
+                bgDispatcher,
+                useCase,
+                statsSiteProvider,
+                dateSelector,
+                titleResource
             ) as T
         } else {
             throw IllegalArgumentException("ViewModel Not Found")
@@ -106,24 +106,24 @@ class StatsViewAllViewModelFactory(
         private fun buildFactory(type: StatsViewType, granularity: StatsGranularity): StatsViewAllViewModelFactory {
             val (useCase, title) = getGranularUseCase(type, granularity, granularFactories)
             return StatsViewAllViewModelFactory(
-                    mainDispatcher,
-                    bgDispatcher,
-                    useCase,
-                    statsSiteProvider,
-                    dateSelectorFactory.build(granularity.toStatsSection()),
-                    title
+                mainDispatcher,
+                bgDispatcher,
+                useCase,
+                statsSiteProvider,
+                dateSelectorFactory.build(granularity.toStatsSection()),
+                title
             )
         }
 
         private fun buildFactory(type: StatsViewType): StatsViewAllViewModelFactory {
             val (useCase, title) = getInsightsUseCase(type, insightsUseCases)
             return StatsViewAllViewModelFactory(
-                    mainDispatcher,
-                    bgDispatcher,
-                    useCase,
-                    statsSiteProvider,
-                    dateSelectorFactory.build(INSIGHTS),
-                    title
+                mainDispatcher,
+                bgDispatcher,
+                useCase,
+                statsSiteProvider,
+                dateSelectorFactory.build(INSIGHTS),
+                title
             )
         }
 
@@ -132,12 +132,12 @@ class StatsViewAllViewModelFactory(
                 it is AnnualSiteStatsUseCase
             } as AnnualSiteStatsUseCase
             return StatsViewAllViewModelFactory(
-                    mainDispatcher,
-                    bgDispatcher,
-                    useCase,
-                    statsSiteProvider,
-                    dateSelectorFactory.build(StatsSection.ANNUAL_STATS),
-                    R.string.stats_insights_annual_site_stats
+                mainDispatcher,
+                bgDispatcher,
+                useCase,
+                statsSiteProvider,
+                dateSelectorFactory.build(StatsSection.ANNUAL_STATS),
+                R.string.stats_insights_annual_site_stats
             )
         }
 
@@ -148,21 +148,21 @@ class StatsViewAllViewModelFactory(
         ): Pair<BaseStatsUseCase<*, *>, Int> {
             return when (type) {
                 TOP_POSTS_AND_PAGES -> Pair(granularFactories.first { it is PostsAndPagesUseCaseFactory }
-                        .build(granularity, VIEW_ALL), R.string.stats_view_top_posts_and_pages)
+                    .build(granularity, VIEW_ALL), R.string.stats_view_top_posts_and_pages)
                 REFERRERS -> Pair(granularFactories.first { it is ReferrersUseCaseFactory }
-                        .build(granularity, VIEW_ALL), R.string.stats_view_referrers)
+                    .build(granularity, VIEW_ALL), R.string.stats_view_referrers)
                 CLICKS -> Pair(granularFactories.first { it is ClicksUseCaseFactory }
-                        .build(granularity, VIEW_ALL), R.string.stats_view_clicks)
+                    .build(granularity, VIEW_ALL), R.string.stats_view_clicks)
                 AUTHORS -> Pair(granularFactories.first { it is AuthorsUseCaseFactory }
-                        .build(granularity, VIEW_ALL), R.string.stats_view_authors)
+                    .build(granularity, VIEW_ALL), R.string.stats_view_authors)
                 GEOVIEWS -> Pair(granularFactories.first { it is CountryViewsUseCaseFactory }
-                        .build(granularity, VIEW_ALL), R.string.stats_view_countries)
+                    .build(granularity, VIEW_ALL), R.string.stats_view_countries)
                 SEARCH_TERMS -> Pair(granularFactories.first { it is SearchTermsUseCaseFactory }
-                        .build(granularity, VIEW_ALL), R.string.stats_view_search_terms)
+                    .build(granularity, VIEW_ALL), R.string.stats_view_search_terms)
                 VIDEO_PLAYS -> Pair(granularFactories.first { it is VideoPlaysUseCaseFactory }
-                        .build(granularity, VIEW_ALL), R.string.stats_view_videos)
+                    .build(granularity, VIEW_ALL), R.string.stats_view_videos)
                 FILE_DOWNLOADS -> Pair(granularFactories.first { it is FileDownloadsUseCaseFactory }
-                        .build(granularity, VIEW_ALL), R.string.stats_file_downloads)
+                    .build(granularity, VIEW_ALL), R.string.stats_file_downloads)
                 else -> throw InvalidParameterException("Invalid granular stats type: ${type.name}")
             }
         }
@@ -173,36 +173,36 @@ class StatsViewAllViewModelFactory(
         ): Pair<BaseStatsUseCase<*, *>, Int> {
             return when (type) {
                 INSIGHTS_VIEWS_AND_VISITORS -> Pair(
-                        insightsUseCases.first { it is ViewsAndVisitorsUseCase },
-                        R.string.stats_insights_views_and_visitors
+                    insightsUseCases.first { it is ViewsAndVisitorsUseCase },
+                    R.string.stats_insights_views_and_visitors
                 )
                 FOLLOWERS -> Pair(
-                        insightsUseCases.first { it is FollowersUseCase },
-                        R.string.stats_view_followers
+                    insightsUseCases.first { it is FollowersUseCase },
+                    R.string.stats_view_followers
                 )
                 TAGS_AND_CATEGORIES -> Pair(
-                        insightsUseCases.first { it is TagsAndCategoriesUseCase },
-                        R.string.stats_view_tags_and_categories
+                    insightsUseCases.first { it is TagsAndCategoriesUseCase },
+                    R.string.stats_view_tags_and_categories
                 )
                 INSIGHTS_ALL_TIME -> Pair(
-                        insightsUseCases.first { it is AllTimeStatsUseCase },
-                        R.string.stats_insights_all_time_stats
+                    insightsUseCases.first { it is AllTimeStatsUseCase },
+                    R.string.stats_insights_all_time_stats
                 )
                 INSIGHTS_LATEST_POST_SUMMARY -> Pair(
-                        insightsUseCases
-                                .first { it is LatestPostSummaryUseCase }, R.string.stats_insights_latest_post_summary
+                    insightsUseCases
+                        .first { it is LatestPostSummaryUseCase }, R.string.stats_insights_latest_post_summary
                 )
                 INSIGHTS_MOST_POPULAR -> Pair(
-                        insightsUseCases.first { it is MostPopularInsightsUseCase },
-                        R.string.stats_insights_popular
+                    insightsUseCases.first { it is MostPopularInsightsUseCase },
+                    R.string.stats_insights_popular
                 )
                 INSIGHTS_TODAY -> Pair(
-                        insightsUseCases.first { it is TodayStatsUseCase },
-                        R.string.stats_insights_today
+                    insightsUseCases.first { it is TodayStatsUseCase },
+                    R.string.stats_insights_today
                 )
                 PUBLICIZE -> Pair(
-                        insightsUseCases.first { it is PublicizeUseCase },
-                        R.string.stats_view_publicize
+                    insightsUseCases.first { it is PublicizeUseCase },
+                    R.string.stats_view_publicize
                 )
                 DETAIL_MONTHS_AND_YEARS ->
                     insightsUseCases.first {

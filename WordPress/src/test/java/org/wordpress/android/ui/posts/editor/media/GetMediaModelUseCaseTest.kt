@@ -32,7 +32,7 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
         val mediaStore = createMediaStore()
         // Act
         val result = createGetMediaModelUseCase(mediaStore = mediaStore)
-                .loadMediaByLocalId(localIds)
+            .loadMediaByLocalId(localIds)
         // Assert
         verify(mediaStore).getMediaWithLocalId(localIds[0])
         verify(mediaStore).getMediaWithLocalId(localIds[1])
@@ -47,7 +47,7 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
         val mediaStore = createMediaStore(resultForGetMediaWithLocalId = (localIds[1] to null))
         // Act
         val result = createGetMediaModelUseCase(mediaStore = mediaStore)
-                .loadMediaByLocalId(localIds)
+            .loadMediaByLocalId(localIds)
         // Assert
         assertThat(result.size).isEqualTo(localIds.size - 1)
     }
@@ -60,7 +60,7 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
         val mediaStore = createMediaStore()
         // Act
         val result = createGetMediaModelUseCase(mediaStore = mediaStore)
-                .loadMediaByRemoteId(siteModel, remoteIds)
+            .loadMediaByRemoteId(siteModel, remoteIds)
         // Assert
         verify(mediaStore).getSiteMediaWithId(siteModel, remoteIds[0])
         verify(mediaStore).getSiteMediaWithId(siteModel, remoteIds[1])
@@ -76,7 +76,7 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
         val mediaStore = createMediaStore(resultForGetSiteMediaWithId = (remoteIds[1] to null))
         // Act
         val result = createGetMediaModelUseCase(mediaStore = mediaStore)
-                .loadMediaByRemoteId(siteModel, remoteIds)
+            .loadMediaByRemoteId(siteModel, remoteIds)
         // Assert
         assertThat(result.size).isEqualTo(remoteIds.size - 1)
     }
@@ -89,7 +89,7 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
 
         // Act
         val result = createGetMediaModelUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .createMediaModelFromUri(LOCAL_SITE_ID, uris)
+            .createMediaModelFromUri(LOCAL_SITE_ID, uris)
 
         // Assert
         assertThat(result.loadingSomeMediaFailed).isTrue()
@@ -103,7 +103,7 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
 
         // Act
         val result = createGetMediaModelUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .createMediaModelFromUri(LOCAL_SITE_ID, uris)
+            .createMediaModelFromUri(LOCAL_SITE_ID, uris)
 
         // Assert
         assertThat(result.loadingSomeMediaFailed).isFalse()
@@ -116,7 +116,7 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
         val fileProvider = createFileProvider(createMockedFile(false))
         // Act
         val result = createGetMediaModelUseCase(fileProvider = fileProvider)
-                .createMediaModelFromUri(LOCAL_SITE_ID, uris)
+            .createMediaModelFromUri(LOCAL_SITE_ID, uris)
 
         // Assert
         assertThat(result.loadingSomeMediaFailed).isTrue()
@@ -128,7 +128,7 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
         val uris = listOf<Uri>(mock(), mock(), mock())
         // Act
         val result = createGetMediaModelUseCase()
-                .createMediaModelFromUri(LOCAL_SITE_ID, uris)
+            .createMediaModelFromUri(LOCAL_SITE_ID, uris)
 
         // Assert
         assertThat(result.mediaModels.size).isEqualTo(uris.size)
@@ -141,7 +141,7 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
         val mediaUtilsWrapper = createMediaUtilsWrapper(resultForGetRealPath = (uris[1] to null))
         // Act
         val result = createGetMediaModelUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .createMediaModelFromUri(LOCAL_SITE_ID, uris)
+            .createMediaModelFromUri(LOCAL_SITE_ID, uris)
 
         // Assert
         assertThat(result.mediaModels.size).isEqualTo(uris.size - 1)
@@ -153,13 +153,13 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
         val expectedThumbnail = "expected_thumbnail"
         val uris = listOf<Uri>(mock())
         val mediaUtilsWrapper = createMediaUtilsWrapper(
-                resultForIsVideoMimeType = true,
-                resultForGetVideoThumbnail = expectedThumbnail
+            resultForIsVideoMimeType = true,
+            resultForGetVideoThumbnail = expectedThumbnail
         )
 
         // Act
         val result = createGetMediaModelUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .createMediaModelFromUri(LOCAL_SITE_ID, uris)
+            .createMediaModelFromUri(LOCAL_SITE_ID, uris)
 
         // Assert
         assertThat(result.mediaModels[0].thumbnailUrl).isEqualTo(expectedThumbnail)
@@ -176,12 +176,12 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
             authenticationUtils: AuthenticationUtils = createAuthenticationUtils()
         ): GetMediaModelUseCase {
             return GetMediaModelUseCase(
-                    fluxCUtilsWrapper,
-                    mediaUtilsWrapper,
-                    mediaStore,
-                    fileProvider,
-                    authenticationUtils,
-                    UnconfinedTestDispatcher()
+                fluxCUtilsWrapper,
+                mediaUtilsWrapper,
+                mediaStore,
+                fileProvider,
+                authenticationUtils,
+                UnconfinedTestDispatcher()
             )
         }
 
@@ -197,12 +197,12 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
             on { getSiteMediaWithId(any(), any()) }.thenReturn(mock())
             resultForGetMediaWithLocalId?.let {
                 on { getMediaWithLocalId(resultForGetMediaWithLocalId.first) }.thenReturn(
-                        resultForGetMediaWithLocalId.second
+                    resultForGetMediaWithLocalId.second
                 )
             }
             resultForGetSiteMediaWithId?.let {
                 on { getSiteMediaWithId(any(), eq(resultForGetSiteMediaWithId.first)) }.thenReturn(
-                        resultForGetSiteMediaWithId.second
+                    resultForGetSiteMediaWithId.second
                 )
             }
         }
@@ -212,20 +212,20 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
             resultForIsVideoMimeType: Boolean = false,
             resultForGetVideoThumbnail: String? = null
         ) =
-                mock<MediaUtilsWrapper> {
-                    on { isVideoMimeType(anyOrNull()) }.thenReturn(resultForIsVideoMimeType)
-                    on { getRealPathFromURI(any()) }.thenReturn("")
-                    on { getVideoThumbnail(any(), any()) }.thenReturn(resultForGetVideoThumbnail)
-                    resultForGetRealPath?.let {
-                        on { getRealPathFromURI(resultForGetRealPath.first) }.thenReturn(
-                                resultForGetRealPath.second
-                        )
-                    }
+            mock<MediaUtilsWrapper> {
+                on { isVideoMimeType(anyOrNull()) }.thenReturn(resultForIsVideoMimeType)
+                on { getRealPathFromURI(any()) }.thenReturn("")
+                on { getVideoThumbnail(any(), any()) }.thenReturn(resultForGetVideoThumbnail)
+                resultForGetRealPath?.let {
+                    on { getRealPathFromURI(resultForGetRealPath.first) }.thenReturn(
+                        resultForGetRealPath.second
+                    )
                 }
+            }
 
         private fun createFluxCUtilsWrapper() = mock<FluxCUtilsWrapper> {
             on { mediaModelFromLocalUri(any(), anyOrNull(), eq(LOCAL_SITE_ID)) }.thenReturn(
-                    MediaModel()
+                MediaModel()
             )
         }
 

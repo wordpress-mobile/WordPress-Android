@@ -56,81 +56,98 @@ private val limitMode = Top(ITEMS_TO_LOAD)
 
 @ExperimentalCoroutinesApi
 class ReferrersUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var store: ReferrersStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
-    @Mock lateinit var statsUtils: StatsUtils
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var popupMenuHandler: ReferrerPopupMenuHandler
+    @Mock
+    lateinit var store: ReferrersStore
+
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+
+    @Mock
+    lateinit var site: SiteModel
+
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
+
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
+    @Mock
+    lateinit var statsUtils: StatsUtils
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var popupMenuHandler: ReferrerPopupMenuHandler
     private lateinit var useCase: ReferrersUseCase
     private val firstGroupViews = 50
     private val secondGroupViews = 50
     private val thirdGroupViews = 40
     private val totalViews = firstGroupViews + secondGroupViews + thirdGroupViews
     private val wordPressReferrer = Group(
-            GROUP_ID_WORDPRESS,
-            "Group 1",
-            "group1.jpg",
-            "group1.com",
-            firstGroupViews,
-            listOf(),
-            false
+        GROUP_ID_WORDPRESS,
+        "Group 1",
+        "group1.jpg",
+        "group1.com",
+        firstGroupViews,
+        listOf(),
+        false
     )
     private val searchReferrer = Group(
-            GROUP_ID_SEARCH,
-            "Group 2",
-            "group2.jpg",
-            "group2.com",
-            secondGroupViews,
-            listOf(),
-            false
+        GROUP_ID_SEARCH,
+        "Group 2",
+        "group2.jpg",
+        "group2.com",
+        secondGroupViews,
+        listOf(),
+        false
     )
     private val referrer1 = Referrer("Referrer 1", 20, "referrer.jpg", "referrer.com", false)
     private val referrer2 = Referrer("Referrer 1", 20, "referrer.jpg", "referrer.com", true)
     private val group = Group(
-            "group3",
-            "Group 3",
-            "group3.jpg",
-            "group3.com",
-            secondGroupViews,
-            listOf(referrer1, referrer2),
-            true
+        "group3",
+        "Group 3",
+        "group3.jpg",
+        "group3.com",
+        secondGroupViews,
+        listOf(referrer1, referrer2),
+        true
     )
     private val contentDescription = "title, views"
 
     @Before
     fun setUp() {
         useCase = ReferrersUseCase(
-                statsGranularity,
-                testDispatcher(),
-                testDispatcher(),
-                store,
-                statsSiteProvider,
-                selectedDateProvider,
-                tracker,
-                contentDescriptionHelper,
-                statsUtils,
-                resourceProvider,
-                BLOCK_DETAIL,
-                popupMenuHandler
+            statsGranularity,
+            testDispatcher(),
+            testDispatcher(),
+            store,
+            statsSiteProvider,
+            selectedDateProvider,
+            tracker,
+            contentDescriptionHelper,
+            statsUtils,
+            resourceProvider,
+            BLOCK_DETAIL,
+            popupMenuHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
-                SelectedDate(
-                        selectedDate,
-                        listOf(selectedDate)
-                )
+            SelectedDate(
+                selectedDate,
+                listOf(selectedDate)
+            )
         )
         whenever(
-                contentDescriptionHelper.buildContentDescription(
-                        any(),
-                        any<String>(),
-                        any()
-                )
+            contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any()
+            )
         ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
@@ -140,11 +157,15 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         val forced = false
         val model = ReferrersModel(10, totalViews, listOf(wordPressReferrer, group, searchReferrer), false)
         whenever(store.getReferrers(site, statsGranularity, limitMode, selectedDate)).thenReturn(model)
-        whenever(store.fetchReferrers(site,
-                statsGranularity, limitMode, selectedDate, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+        whenever(
+            store.fetchReferrers(
+                site,
+                statsGranularity, limitMode, selectedDate, forced
+            )
+        ).thenReturn(
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadData(true, forced)
@@ -164,11 +185,11 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         assertTitle(this[0])
         assertHeader(this[1])
         assertSingleItem(
-                this[2],
-                wordPressReferrer.name!!,
-                wordPressReferrer.total,
-                wordPressReferrer.icon,
-                wordPressReferrer.markedAsSpam
+            this[2],
+            wordPressReferrer.name!!,
+            wordPressReferrer.total,
+            wordPressReferrer.icon,
+            wordPressReferrer.markedAsSpam
         )
         return assertExpandableItem(this[3], group.name!!, group.icon, group.markedAsSpam)
     }
@@ -178,11 +199,11 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         assertTitle(this[0])
         assertHeader(this[1])
         assertSingleItem(
-                this[2],
-                wordPressReferrer.name!!,
-                wordPressReferrer.total,
-                wordPressReferrer.icon,
-                wordPressReferrer.markedAsSpam
+            this[2],
+            wordPressReferrer.name!!,
+            wordPressReferrer.total,
+            wordPressReferrer.icon,
+            wordPressReferrer.markedAsSpam
         )
         val expandableItem = assertExpandableItem(this[3], group.name!!, group.icon, group.markedAsSpam)
         assertSingleItem(this[4], referrer1.name, referrer1.views, referrer1.icon, referrer1.markedAsSpam)
@@ -194,18 +215,18 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     @Test
     fun `adds view more button when hasMore`() = test {
         useCase = ReferrersUseCase(
-                statsGranularity,
-                testDispatcher(),
-                testDispatcher(),
-                store,
-                statsSiteProvider,
-                selectedDateProvider,
-                tracker,
-                contentDescriptionHelper,
-                statsUtils,
-                resourceProvider,
-                BLOCK,
-                popupMenuHandler
+            statsGranularity,
+            testDispatcher(),
+            testDispatcher(),
+            store,
+            statsSiteProvider,
+            selectedDateProvider,
+            tracker,
+            contentDescriptionHelper,
+            statsUtils,
+            resourceProvider,
+            BLOCK,
+            popupMenuHandler
         )
 
         val forced = false
@@ -213,7 +234,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         val model = ReferrersModel(10, totalViews, listOf(wordPressReferrer), true)
         whenever(store.getReferrers(site, statsGranularity, limit, selectedDate)).thenReturn(model)
         whenever(store.fetchReferrers(site, statsGranularity, limit, selectedDate, forced))
-                .thenReturn(OnStatsFetched(model))
+            .thenReturn(OnStatsFetched(model))
         val result = loadData(true, forced)
 
         assertThat(result.type).isEqualTo(TimeStatsType.REFERRERS)
@@ -223,11 +244,11 @@ class ReferrersUseCaseTest : BaseUnitTest() {
             assertTitle(this[0])
             assertLabel(this[1])
             assertSingleItem(
-                    this[2],
-                    wordPressReferrer.name!!,
-                    wordPressReferrer.total,
-                    wordPressReferrer.icon,
-                    wordPressReferrer.markedAsSpam
+                this[2],
+                wordPressReferrer.name!!,
+                wordPressReferrer.total,
+                wordPressReferrer.icon,
+                wordPressReferrer.markedAsSpam
             )
             assertLink(this[3])
         }
@@ -236,9 +257,13 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty referrers to UI model`() = test {
         val forced = false
-        whenever(store.fetchReferrers(site,
-                statsGranularity, limitMode, selectedDate, forced)).thenReturn(
-                OnStatsFetched(ReferrersModel(0, 0, listOf(), false))
+        whenever(
+            store.fetchReferrers(
+                site,
+                statsGranularity, limitMode, selectedDate, forced
+            )
+        ).thenReturn(
+            OnStatsFetched(ReferrersModel(0, 0, listOf(), false))
         )
 
         val result = loadData(true, forced)
@@ -256,14 +281,14 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(
-                store.fetchReferrers(
-                        site,
-                        statsGranularity, limitMode, selectedDate, forced
-                )
+            store.fetchReferrers(
+                site,
+                statsGranularity, limitMode, selectedDate, forced
+            )
         ).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadData(true, forced)

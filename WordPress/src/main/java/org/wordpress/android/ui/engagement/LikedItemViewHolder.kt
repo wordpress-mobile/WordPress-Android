@@ -7,9 +7,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.R.string
-import org.wordpress.android.ui.engagement.EngageItem.LikedItem
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameCharSequence
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameString
+import org.wordpress.android.ui.engagement.EngageItem.LikedItem
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
 import org.wordpress.android.util.image.ImageManager
@@ -34,8 +34,8 @@ class LikedItemViewHolder(
         this.snippet.text = likedItem.postOrCommentText
 
         val avatarUrl = GravatarUtils.fixGravatarUrl(
-                likedItem.authorAvatarUrl,
-                rootView.context.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
+            likedItem.authorAvatarUrl,
+            rootView.context.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
         )
 
         imageManager.loadIntoCircle(this.avatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl)
@@ -46,13 +46,13 @@ class LikedItemViewHolder(
                 contentDescription = this.context.getString(string.profile_picture, authorName)
                 setOnClickListener {
                     likedItem.onGravatarClick.invoke(
-                            likedItem.authorPreferredSiteId,
-                            likedItem.authorPreferredSiteUrl,
-                            likedItem.blogPreviewSource
+                        likedItem.authorPreferredSiteId,
+                        likedItem.authorPreferredSiteUrl,
+                        likedItem.blogPreviewSource
                     )
                 }
                 setBackgroundResource(
-                        this.context.getDrawableResIdFromAttribute(R.attr.selectableItemBackgroundBorderless)
+                    this.context.getDrawableResIdFromAttribute(R.attr.selectableItemBackgroundBorderless)
                 )
             }
         } else {
@@ -66,10 +66,10 @@ class LikedItemViewHolder(
 
         rootView.setOnClickListener {
             likedItem.onHeaderClicked.invoke(
-                    likedItem.likedItemSiteId,
-                    likedItem.likedItemSiteUrl,
-                    likedItem.likedItemId,
-                    likedItem.likedItemPostId
+                likedItem.likedItemSiteId,
+                likedItem.likedItemSiteUrl,
+                likedItem.likedItemId,
+                likedItem.likedItemPostId
             )
         }
     }

@@ -14,11 +14,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Activ
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.VERY_LOW
 
 class DayViewHolder(parent: ViewGroup) : ViewHolder(
-        LayoutInflater.from(parent.context).inflate(
-                R.layout.stats_day_activity_box,
-                parent,
-                false
-        )
+    LayoutInflater.from(parent.context).inflate(
+        R.layout.stats_day_activity_box,
+        parent,
+        false
+    )
 ) {
     fun bind(box: Box) {
         val color = when (box) {

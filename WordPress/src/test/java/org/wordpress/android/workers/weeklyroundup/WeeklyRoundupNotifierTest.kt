@@ -54,16 +54,16 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
     @Before
     fun setUp() {
         weeklyRoundupNotifier = WeeklyRoundupNotifier(
-                accountStore,
-                siteStore,
-                contextProvider,
-                resourceProvider,
-                weeklyRoundupScheduler,
-                notificationsTracker,
-                siteUtils,
-                weeklyRoundupRepository,
-                appPrefs,
-                statsUtils
+            accountStore,
+            siteStore,
+            contextProvider,
+            resourceProvider,
+            weeklyRoundupScheduler,
+            notificationsTracker,
+            siteUtils,
+            weeklyRoundupRepository,
+            appPrefs,
+            statsUtils
         )
     }
 
@@ -167,10 +167,12 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(resourceProvider.getString(
+        assertThat(list.first().contentTitle).isEqualTo(
+            resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_views_only,
                 statsUtils.toFormattedString(data!!.views)
-        ))
+            )
+        )
     }
 
     @Test
@@ -183,11 +185,13 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(resourceProvider.getString(
+        assertThat(list.first().contentTitle).isEqualTo(
+            resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_views_and_comments,
                 statsUtils.toFormattedString(data!!.views),
                 statsUtils.toFormattedString(data.comments)
-        ))
+            )
+        )
     }
 
     @Test
@@ -200,11 +204,13 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(resourceProvider.getString(
+        assertThat(list.first().contentTitle).isEqualTo(
+            resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_views_and_likes,
                 statsUtils.toFormattedString(data!!.views),
                 statsUtils.toFormattedString(data.likes)
-        ))
+            )
+        )
     }
 
     @Test
@@ -217,12 +223,14 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(resourceProvider.getString(
+        assertThat(list.first().contentTitle).isEqualTo(
+            resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_all,
                 statsUtils.toFormattedString(data!!.views),
                 statsUtils.toFormattedString(data.likes),
                 statsUtils.toFormattedString(data.comments)
-        ))
+            )
+        )
     }
 
     private companion object {

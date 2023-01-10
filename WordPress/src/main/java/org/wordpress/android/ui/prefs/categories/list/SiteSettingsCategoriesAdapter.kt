@@ -17,7 +17,7 @@ class SiteSettingsCategoriesAdapter(
         viewType: Int
     ): SiteSettingsCategoriesViewHolder {
         val binding = SiteSettingsCategoriesRowBinding
-                .inflate(LayoutInflater.from(parent.context), parent, false)
+            .inflate(LayoutInflater.from(parent.context), parent, false)
         return SiteSettingsCategoriesViewHolder(binding, uiHelpers, onClickListener)
     }
 

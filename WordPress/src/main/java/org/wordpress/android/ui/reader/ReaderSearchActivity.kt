@@ -17,8 +17,11 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 class ReaderSearchActivity : LocaleAwareActivity() {
-    @Inject lateinit var readerTracker: ReaderTracker
-    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Inject
+    lateinit var readerTracker: ReaderTracker
+
+    @Inject
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -10,6 +10,7 @@ sealed class UiString {
     data class UiStringText(val text: CharSequence) : UiString()
     data class UiStringRes(@StringRes val stringRes: Int) : UiString()
     data class UiStringResWithParams(@StringRes val stringRes: Int, val params: List<UiString>) : UiString()
+
     // Current localization process does not support <plurals> resource strings,
     // so we need to use multiple string resources. Switch to @PluralsRes when it is supported by localization process.
     data class UiStringPluralRes(

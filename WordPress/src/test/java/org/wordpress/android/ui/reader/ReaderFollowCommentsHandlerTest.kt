@@ -20,7 +20,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderFollowCommentsHandlerTest : BaseUnitTest() {
-    @Mock lateinit var readerCommentsFollowUseCase: ReaderCommentsFollowUseCase
+    @Mock
+    lateinit var readerCommentsFollowUseCase: ReaderCommentsFollowUseCase
 
     private lateinit var followCommentsHandler: ReaderFollowCommentsHandler
     private val blogId = 100L
@@ -32,8 +33,8 @@ class ReaderFollowCommentsHandlerTest : BaseUnitTest() {
     @Before
     fun setup() {
         followCommentsHandler = ReaderFollowCommentsHandler(
-                readerCommentsFollowUseCase,
-                testDispatcher()
+            readerCommentsFollowUseCase,
+            testDispatcher()
         )
     }
 
@@ -41,16 +42,16 @@ class ReaderFollowCommentsHandlerTest : BaseUnitTest() {
     fun `handleFollowCommentsStatusRequest collects expected state`() = test {
         val userMessage = UiStringText("handleFollowCommentsStatusRequest")
         val state = FollowCommentsState.FollowStateChanged(
-                blogId = blogId,
-                postId = postId,
-                isFollowing = true,
-                isReceivingNotifications = false,
-                isInit = false,
-                userMessage = userMessage
+            blogId = blogId,
+            postId = postId,
+            isFollowing = true,
+            isReceivingNotifications = false,
+            isInit = false,
+            userMessage = userMessage
         )
 
         whenever(readerCommentsFollowUseCase.getMySubscriptionToPost(blogId, postId, false)).thenReturn(
-                flow { emit(state) }
+            flow { emit(state) }
         )
 
         setupObservers()
@@ -70,21 +71,23 @@ class ReaderFollowCommentsHandlerTest : BaseUnitTest() {
     fun `handleFollowCommentsClicked collects expected state`() = test {
         val userMessage = UiStringText("handleFollowCommentsClicked")
         val state = FollowCommentsState.FollowStateChanged(
-                blogId = blogId,
-                postId = postId,
-                isFollowing = true,
-                isReceivingNotifications = false,
-                isInit = false,
-                userMessage = userMessage
+            blogId = blogId,
+            postId = postId,
+            isFollowing = true,
+            isReceivingNotifications = false,
+            isInit = false,
+            userMessage = userMessage
         )
 
-        whenever(readerCommentsFollowUseCase.setMySubscriptionToPost(
+        whenever(
+            readerCommentsFollowUseCase.setMySubscriptionToPost(
                 blogId,
                 postId,
                 true,
                 READER_THREADED_COMMENTS
-        )).thenReturn(
-                flow { emit(state) }
+            )
+        ).thenReturn(
+            flow { emit(state) }
         )
 
         setupObservers()
@@ -105,31 +108,33 @@ class ReaderFollowCommentsHandlerTest : BaseUnitTest() {
         val userMessage = UiStringText("handleFollowCommentsClicked")
         val snackbarAction = {}
         val state = FollowCommentsState.FollowStateChanged(
-                blogId = blogId,
-                postId = postId,
-                isFollowing = true,
-                isReceivingNotifications = false,
-                isInit = false,
-                userMessage = userMessage
+            blogId = blogId,
+            postId = postId,
+            isFollowing = true,
+            isReceivingNotifications = false,
+            isInit = false,
+            userMessage = userMessage
         )
 
-        whenever(readerCommentsFollowUseCase.setMySubscriptionToPost(
+        whenever(
+            readerCommentsFollowUseCase.setMySubscriptionToPost(
                 blogId,
                 postId,
                 true,
                 READER_THREADED_COMMENTS
-        )).thenReturn(
-                flow { emit(state) }
+            )
+        ).thenReturn(
+            flow { emit(state) }
         )
 
         setupObservers()
 
         followCommentsHandler.handleFollowCommentsClicked(
-                blogId,
-                postId,
-                true,
-                READER_THREADED_COMMENTS,
-                snackbarAction
+            blogId,
+            postId,
+            true,
+            READER_THREADED_COMMENTS,
+            snackbarAction
         )
 
         requireNotNull(uiState).let {
@@ -147,32 +152,34 @@ class ReaderFollowCommentsHandlerTest : BaseUnitTest() {
         val userMessage = UiStringText("handleFollowCommentsClicked")
         val snackbarAction = {}
         val state = FollowCommentsState.FollowStateChanged(
-                blogId = blogId,
-                postId = postId,
-                isFollowing = true,
-                isReceivingNotifications = true,
-                isInit = false,
-                userMessage = userMessage,
-                forcePushNotificationsUpdate = true
+            blogId = blogId,
+            postId = postId,
+            isFollowing = true,
+            isReceivingNotifications = true,
+            isInit = false,
+            userMessage = userMessage,
+            forcePushNotificationsUpdate = true
         )
 
-        whenever(readerCommentsFollowUseCase.setEnableByPushNotifications(
+        whenever(
+            readerCommentsFollowUseCase.setEnableByPushNotifications(
                 blogId,
                 postId,
                 true,
                 READER_THREADED_COMMENTS
-        )).thenReturn(
-                flow { emit(state) }
+            )
+        ).thenReturn(
+            flow { emit(state) }
         )
 
         setupObservers()
 
         followCommentsHandler.handleEnableByPushNotificationsClicked(
-                blogId,
-                postId,
-                true,
-                READER_THREADED_COMMENTS,
-                snackbarAction
+            blogId,
+            postId,
+            true,
+            READER_THREADED_COMMENTS,
+            snackbarAction
         )
 
         requireNotNull(uiState).let {

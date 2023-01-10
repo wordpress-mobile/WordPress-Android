@@ -60,60 +60,60 @@ enum class GetLikesTestConfig {
 
 fun getGetLikesState(testConfig: GetLikesTestConfig): GetLikesState {
     val pageInfo = PagingInfo(
-            20,
-            1
+        20,
+        1
     )
     return when (testConfig) {
         // Like Data available for post and fetched from API; no more data available
         TEST_CONFIG_1 -> {
             LikesData(
-                    getDefaultLikers(10, POST_LIKE, 10, 100),
-                    10,
-                    false,
-                    pageInfo
+                getDefaultLikers(10, POST_LIKE, 10, 100),
+                10,
+                false,
+                pageInfo
             )
         }
         // Like Data available for post and fetched from API, more data available
         TEST_CONFIG_2 -> {
             LikesData(
-                    getDefaultLikers(10, COMMENT_LIKE, 10, 100),
-                    10,
-                    true,
-                    pageInfo
+                getDefaultLikers(10, COMMENT_LIKE, 10, 100),
+                10,
+                true,
+                pageInfo
             )
         }
         // Like Data available for comment and fetched from API, no more data available
         TEST_CONFIG_3 -> {
             LikesData(
-                    getDefaultLikers(10, COMMENT_LIKE, 10, 100),
-                    10,
-                    false,
-                    pageInfo
+                getDefaultLikers(10, COMMENT_LIKE, 10, 100),
+                10,
+                false,
+                pageInfo
             )
         }
         // Like Data available for comment and fetched from API, more data available
         TEST_CONFIG_4 -> {
             LikesData(
-                    getDefaultLikers(10, COMMENT_LIKE, 10, 100),
-                    10,
-                    true,
-                    pageInfo
+                getDefaultLikers(10, COMMENT_LIKE, 10, 100),
+                10,
+                true,
+                pageInfo
             )
         }
         // Failure getting like data from API, and no cached data available
         TEST_CONFIG_5 -> {
             val cachedData = listOf<LikeModel>()
             Failure(
-                    GENERIC,
-                    UiStringText("There was an error"),
-                    listOf(),
-                    EmptyStateData(
-                            cachedData.isEmpty(),
-                            UiStringRes(10)
-                    ),
-                    10,
-                    false,
-                    pageInfo
+                GENERIC,
+                UiStringText("There was an error"),
+                listOf(),
+                EmptyStateData(
+                    cachedData.isEmpty(),
+                    UiStringRes(10)
+                ),
+                10,
+                false,
+                pageInfo
             )
         }
     }
@@ -162,7 +162,7 @@ fun ListScenario.generatesEquivalentLikedItem(likedItem: LikedItem): Boolean {
             likedItem.authorPreferredSiteId == headerData.authorPreferredSiteId &&
             likedItem.authorPreferredSiteUrl == headerData.authorPreferredSiteUrl &&
             likedItem.blogPreviewSource == when (this.source) {
-                LIKE_NOTIFICATION_LIST -> ReaderTracker.SOURCE_NOTIFICATION
-                LIKE_READER_LIST -> ReaderTracker.SOURCE_READER_LIKE_LIST
-            }
+        LIKE_NOTIFICATION_LIST -> ReaderTracker.SOURCE_NOTIFICATION
+        LIKE_READER_LIST -> ReaderTracker.SOURCE_READER_LIKE_LIST
+    }
 }

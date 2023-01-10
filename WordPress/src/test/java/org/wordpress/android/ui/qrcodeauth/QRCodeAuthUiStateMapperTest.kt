@@ -91,35 +91,41 @@ class QRCodeAuthUiStateMapperTest {
     private val browser = "browser"
     private val location = "location"
     private val authFailedExpected = AuthFailed(
-            primaryActionButton = ErrorPrimaryActionButton(primaryClickAction),
-            secondaryActionButton = ErrorSecondaryActionButton(secondaryClickAction))
+        primaryActionButton = ErrorPrimaryActionButton(primaryClickAction),
+        secondaryActionButton = ErrorSecondaryActionButton(secondaryClickAction)
+    )
 
     private val expiredExpected = Expired(
-            primaryActionButton = ErrorPrimaryActionButton(primaryClickAction),
-            secondaryActionButton = ErrorSecondaryActionButton(secondaryClickAction))
+        primaryActionButton = ErrorPrimaryActionButton(primaryClickAction),
+        secondaryActionButton = ErrorSecondaryActionButton(secondaryClickAction)
+    )
 
     private val invalidDataExpected = InvalidData(
-            primaryActionButton = ErrorPrimaryActionButton(primaryClickAction),
-            secondaryActionButton = ErrorSecondaryActionButton(secondaryClickAction))
+        primaryActionButton = ErrorPrimaryActionButton(primaryClickAction),
+        secondaryActionButton = ErrorSecondaryActionButton(secondaryClickAction)
+    )
 
     private val noInternetExpected = NoInternet(
-            primaryActionButton = ErrorPrimaryActionButton(primaryClickAction),
-            secondaryActionButton = ErrorSecondaryActionButton(secondaryClickAction))
+        primaryActionButton = ErrorPrimaryActionButton(primaryClickAction),
+        secondaryActionButton = ErrorSecondaryActionButton(secondaryClickAction)
+    )
 
     private val validatedExpected = Validated(
-            primaryActionButton = ValidatedPrimaryActionButton(primaryClickAction),
-            secondaryActionButton = ValidatedSecondaryActionButton(secondaryClickAction),
-            location = location,
-            browser = browser)
+        primaryActionButton = ValidatedPrimaryActionButton(primaryClickAction),
+        secondaryActionButton = ValidatedSecondaryActionButton(secondaryClickAction),
+        location = location,
+        browser = browser
+    )
 
     private val authenticatingExpected = Authenticating(
-            primaryActionButton = AuthenticatingPrimaryActionButton,
-            secondaryActionButton = AuthenticatingSecondaryActionButton,
-            location = location,
-            browser = browser)
+        primaryActionButton = AuthenticatingPrimaryActionButton,
+        secondaryActionButton = AuthenticatingSecondaryActionButton,
+        location = location,
+        browser = browser
+    )
 
     private val doneExpected = Done(
-            primaryActionButton = DonePrimaryActionButton(primaryClickAction),
-            secondaryActionButton = DoneSecondaryActionButton
+        primaryActionButton = DonePrimaryActionButton(primaryClickAction),
+        secondaryActionButton = DoneSecondaryActionButton
     )
 }

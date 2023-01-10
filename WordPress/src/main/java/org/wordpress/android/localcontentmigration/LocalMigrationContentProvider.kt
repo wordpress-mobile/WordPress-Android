@@ -16,7 +16,7 @@ import org.wordpress.android.localcontentmigration.LocalContentEntity.UserFlags
 import org.wordpress.android.provider.query.QueryResult
 import java.lang.Integer.parseInt
 
-class LocalMigrationContentProvider: TrustedQueryContentProvider() {
+class LocalMigrationContentProvider : TrustedQueryContentProvider() {
     @EntryPoint
     @InstallIn(SingletonComponent::class)
     interface LocalMigrationContentProviderEntryPoint {
@@ -49,8 +49,12 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
 
     private fun query(entity: LocalContentEntity, localEntityId: Int?): Cursor {
         val context = checkNotNull(context) { "Cannot find context from the provider." }
-        with(EntryPointAccessors.fromApplication(context.applicationContext,
-                LocalMigrationContentProviderEntryPoint::class.java)) {
+        with(
+            EntryPointAccessors.fromApplication(
+                context.applicationContext,
+                LocalMigrationContentProviderEntryPoint::class.java
+            )
+        ) {
             val response = when (entity) {
                 EligibilityStatus -> localEligibilityStatusProviderHelper().getData()
                 AccessToken -> localAccessTokenProviderHelper().getData()

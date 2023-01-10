@@ -12,7 +12,8 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.SiteCreationFormScreenBinding
 
 abstract class SiteCreationBaseFormFragment : Fragment(R.layout.site_creation_form_screen) {
-    @LayoutRes protected abstract fun getContentLayout(): Int
+    @LayoutRes
+    protected abstract fun getContentLayout(): Int
     protected abstract val screenTitle: String
     protected abstract fun setupContent()
     protected abstract fun onHelp()

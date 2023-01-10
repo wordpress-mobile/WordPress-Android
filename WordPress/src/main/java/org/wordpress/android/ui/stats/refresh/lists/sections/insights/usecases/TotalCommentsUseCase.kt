@@ -57,9 +57,9 @@ class TotalCommentsUseCase @Inject constructor(
     override suspend fun loadCachedData(): VisitsAndViewsModel? {
         statsWidgetUpdaters.updateViewsWidget(statsSiteProvider.siteModel.siteId)
         val cachedData = visitsAndViewsStore.getVisits(
-                statsSiteProvider.siteModel,
-                DAYS,
-                LimitMode.All
+            statsSiteProvider.siteModel,
+            DAYS,
+            LimitMode.All
         )
         if (cachedData != null) {
             logIfIncorrectData(cachedData, statsSiteProvider.siteModel, false)
@@ -69,10 +69,10 @@ class TotalCommentsUseCase @Inject constructor(
 
     override suspend fun fetchRemoteData(forced: Boolean): State<VisitsAndViewsModel> {
         val response = visitsAndViewsStore.fetchVisits(
-                statsSiteProvider.siteModel,
-                DAYS,
-                LimitMode.Top(TOTAL_COMMENTS_ITEMS_TO_LOAD),
-                forced
+            statsSiteProvider.siteModel,
+            DAYS,
+            LimitMode.Top(TOTAL_COMMENTS_ITEMS_TO_LOAD),
+            forced
         )
         val model = response.model
         val error = response.error
@@ -105,15 +105,15 @@ class TotalCommentsUseCase @Inject constructor(
                 val currentCalendar = localeManagerWrapper.getCurrentCalendar()
                 val lastItemAge = ceil((currentCalendar.timeInMillis - lastDayDate.time) / 86400000.0)
                 analyticsTracker.track(
-                        STATS_TOTAL_COMMENTS_ERROR,
-                        mapOf(
-                                "stats_last_date" to statsDateFormatter.printStatsDate(lastDayDate),
-                                "stats_current_date" to statsDateFormatter.printStatsDate(currentCalendar.time),
-                                "stats_age_in_days" to lastItemAge.toInt(),
-                                "is_jetpack_connected" to site.isJetpackConnected,
-                                "is_atomic" to site.isWPComAtomic,
-                                "action_source" to if (fetched) "remote" else "cached"
-                        )
+                    STATS_TOTAL_COMMENTS_ERROR,
+                    mapOf(
+                        "stats_last_date" to statsDateFormatter.printStatsDate(lastDayDate),
+                        "stats_current_date" to statsDateFormatter.printStatsDate(currentCalendar.time),
+                        "stats_age_in_days" to lastItemAge.toInt(),
+                        "is_jetpack_connected" to site.isJetpackConnected,
+                        "is_atomic" to site.isWPComAtomic,
+                        "action_source" to if (fetched) "remote" else "cached"
+                    )
                 )
             }
         }
@@ -135,19 +135,19 @@ class TotalCommentsUseCase @Inject constructor(
     }
 
     private fun buildTitle() = TitleWithMore(
-            string.stats_view_total_comments,
-            navigationAction = if (useCaseMode == BLOCK) ListItemInteraction.create(this::onViewMoreClick) else null
+        string.stats_view_total_comments,
+        navigationAction = if (useCaseMode == BLOCK) ListItemInteraction.create(this::onViewMoreClick) else null
     )
 
     private fun onViewMoreClick() {
         analyticsTracker.trackWithType(AnalyticsTracker.Stat.STATS_INSIGHTS_VIEW_MORE, TOTAL_COMMENTS)
         navigateTo(
-                ViewInsightDetails(
-                        StatsSection.TOTAL_COMMENTS_DETAIL,
-                        StatsViewType.TOTAL_COMMENTS,
-                        null,
-                        null
-                )
+            ViewInsightDetails(
+                StatsSection.TOTAL_COMMENTS_DETAIL,
+                StatsViewType.TOTAL_COMMENTS,
+                null,
+                null
+            )
         )
     }
 
@@ -169,18 +169,18 @@ class TotalCommentsUseCase @Inject constructor(
         private val localeManagerWrapper: LocaleManagerWrapper
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
-                TotalCommentsUseCase(
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        visitsAndViewsStore,
-                        statsSiteProvider,
-                        resourceProvider,
-                        statsDateFormatter,
-                        totalStatsMapper,
-                        analyticsTracker,
-                        statsWidgetUpdaters,
-                        localeManagerWrapper,
-                        useCaseMode
-                )
+            TotalCommentsUseCase(
+                mainDispatcher,
+                backgroundDispatcher,
+                visitsAndViewsStore,
+                statsSiteProvider,
+                resourceProvider,
+                statsDateFormatter,
+                totalStatsMapper,
+                analyticsTracker,
+                statsWidgetUpdaters,
+                localeManagerWrapper,
+                useCaseMode
+            )
     }
 }

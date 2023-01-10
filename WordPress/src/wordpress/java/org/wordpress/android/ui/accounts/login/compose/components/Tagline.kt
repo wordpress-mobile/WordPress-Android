@@ -37,29 +37,29 @@ private val lineHeight = fontSize * 1.3
 @Composable
 fun ColumnScope.Tagline(text: String, modifier: Modifier = Modifier) {
     Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = modifier.weight(1f),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier.weight(1f),
     ) {
         Image(
-                painter = painterResource(drawable.ic_wordpress_gridicon),
-                contentDescription = stringResource(string.login_prologue_revamped_content_description_wordpress_icon),
-                colorFilter = ColorFilter.tint(colorResource(id = color.login_prologue_revamped_icon)),
-                modifier = Modifier
-                        .size(50.dp)
-                        .clip(CircleShape)
-                        .background(color = colorResource(id = color.login_prologue_revamped_background))
+            painter = painterResource(drawable.ic_wordpress_gridicon),
+            contentDescription = stringResource(string.login_prologue_revamped_content_description_wordpress_icon),
+            colorFilter = ColorFilter.tint(colorResource(id = color.login_prologue_revamped_icon)),
+            modifier = Modifier
+                .size(50.dp)
+                .clip(CircleShape)
+                .background(color = colorResource(id = color.login_prologue_revamped_background))
         )
         Text(
-                text,
-                fontFamily = FontFamily.EBGaramond,
-                fontSize = fontSize,
-                lineHeight = lineHeight,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colors.onSurface,
-                modifier = Modifier
-                        .width(234.dp)
-                        .padding(top = 25.dp),
+            text,
+            fontFamily = FontFamily.EBGaramond,
+            fontSize = fontSize,
+            lineHeight = lineHeight,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colors.onSurface,
+            modifier = Modifier
+                .width(234.dp)
+                .padding(top = 25.dp),
         )
     }
 }
@@ -69,7 +69,8 @@ fun ColumnScope.Tagline(text: String, modifier: Modifier = Modifier) {
 @Composable
 fun PreviewLoginPrologue() {
     AppTheme {
-        Column (Modifier
+        Column(
+            Modifier
                 .background(color = colorResource(id = color.login_prologue_revamped_background))
         ) {
             Tagline(text = stringResource(string.login_prologue_revamped_tagline))

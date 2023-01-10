@@ -137,9 +137,11 @@ class BloggingRemindersAnalyticsTrackerTest {
     @Test
     fun `trackRemindersScheduled tracks correct event and properties`() {
         bloggingRemindersUiModel = BloggingRemindersUiModel(
-                1, setOf(MONDAY, THURSDAY, FRIDAY), 14, 30, true)
+            1, setOf(MONDAY, THURSDAY, FRIDAY), 14, 30, true
+        )
         bloggingRemindersAnalyticsTracker.trackRemindersScheduled(
-                bloggingRemindersUiModel.enabledDays.size, bloggingRemindersUiModel.getNotificationTime24hour())
+            bloggingRemindersUiModel.enabledDays.size, bloggingRemindersUiModel.getNotificationTime24hour()
+        )
         verify(analyticsTracker).track(eq(BLOGGING_REMINDERS_SCHEDULED), checkMap {
             assertThat(it).containsEntry("days_of_week_count", 3)
             assertThat(it).containsEntry("selected_time", "14:30")
@@ -167,8 +169,8 @@ class BloggingRemindersAnalyticsTrackerTest {
     fun `trackRemindersIncludePromptPressed tracks correct event and properties`() {
         bloggingRemindersAnalyticsTracker.trackRemindersIncludePromptPressed(true)
         verify(analyticsTracker).track(
-                BLOGGING_REMINDERS_INCLUDE_PROMPT_TAPPED,
-                mapOf("enabled" to "true", "blog_type" to null)
+            BLOGGING_REMINDERS_INCLUDE_PROMPT_TAPPED,
+            mapOf("enabled" to "true", "blog_type" to null)
         )
     }
 

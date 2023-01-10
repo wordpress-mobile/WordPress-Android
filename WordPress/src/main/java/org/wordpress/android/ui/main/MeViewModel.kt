@@ -18,10 +18,10 @@ import org.wordpress.android.models.recommend.RecommendApiCallsProvider.Recommen
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource.ME
 import org.wordpress.android.ui.recommend.RecommendAppState
 import org.wordpress.android.ui.recommend.RecommendAppState.ApiFetchedResult
 import org.wordpress.android.ui.recommend.RecommendAppState.FetchingApi
+import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource.ME
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -59,15 +59,17 @@ class MeViewModel
         val link: String
     ) {
         constructor(showLoading: Boolean) : this(
-                showLoading = showLoading,
-                message = "",
-                link = ""
+            showLoading = showLoading,
+            message = "",
+            link = ""
         )
+
         constructor(error: String) : this(
-                error = error,
-                message = "",
-                link = ""
+            error = error,
+            message = "",
+            link = ""
         )
+
         fun isError() = error != null
     }
 
@@ -125,12 +127,12 @@ class MeViewModel
                 delay(SHOW_LOADING_DELAY)
 
                 val fetchedResult = recommendApiCallsProvider.getRecommendTemplate(
-                        if (BuildConfig.IS_JETPACK_APP) {
-                            RecommendAppName.Jetpack.appName
-                        } else {
-                            RecommendAppName.WordPress.appName
-                        },
-                        ME
+                    if (BuildConfig.IS_JETPACK_APP) {
+                        RecommendAppName.Jetpack.appName
+                    } else {
+                        RecommendAppName.WordPress.appName
+                    },
+                    ME
                 ).toFetchedResult()
 
                 _recommendUiState.postValue(fetchedResult)
@@ -142,8 +144,8 @@ class MeViewModel
         return when (this) {
             is Failure -> ApiFetchedResult(error = this.error)
             is Success -> ApiFetchedResult(
-                    message = this.templateData.message,
-                    link = this.templateData.link
+                message = this.templateData.message,
+                link = this.templateData.link
             )
         }
     }
@@ -154,8 +156,8 @@ class MeViewModel
                 RecommendAppUiState(this.error!!)
             } else {
                 RecommendAppUiState(
-                        link = this.link,
-                        message = this.message
+                    link = this.link,
+                    message = this.message
                 ).also {
                     analyticsUtilsWrapper.trackRecommendAppEngaged(ME)
                 }

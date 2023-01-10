@@ -25,8 +25,11 @@ import org.wordpress.android.util.NoDelayCoroutineDispatcher
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class XPostsSuggestionSourceTest : BaseUnitTest() {
-    @Mock lateinit var mockXPostsStore: XPostsStore
-    @Mock lateinit var mockSite: SiteModel
+    @Mock
+    lateinit var mockXPostsStore: XPostsStore
+
+    @Mock
+    lateinit var mockSite: SiteModel
     private lateinit var xPostsSource: XPostsSuggestionSource
 
     @Before
@@ -37,12 +40,12 @@ class XPostsSuggestionSourceTest : BaseUnitTest() {
     @Test
     fun `initialization sends non-empty db result and refreshes suggestions`() = test {
         val expectedDbXpostSite = XPostSiteModel(
-                1,
-                2,
-                "db_xpost_site_title",
-                "db_site_url",
-                "db_xpost_subdomain",
-                "db_xpost_blavatar"
+            1,
+            2,
+            "db_xpost_site_title",
+            "db_site_url",
+            "db_xpost_subdomain",
+            "db_xpost_blavatar"
         )
         val expectedDbResult = XPostsResult.dbResult(listOf(expectedDbXpostSite))
         whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(expectedDbResult)
@@ -79,12 +82,12 @@ class XPostsSuggestionSourceTest : BaseUnitTest() {
     @Test
     fun `refreshSuggestions sends api result`() = test {
         val expectedApiXpostSite = XPostSiteModel(
-                11,
-                12,
-                "api_xpost_site_title",
-                "api_site_url",
-                "api_xpost_subdomain",
-                "api_xpost_blavatar"
+            11,
+            12,
+            "api_xpost_site_title",
+            "api_site_url",
+            "api_xpost_subdomain",
+            "api_xpost_blavatar"
         )
         val expectedApiResult = XPostsResult.apiResult(listOf(expectedApiXpostSite))
         whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(expectedApiResult)
@@ -151,7 +154,7 @@ class XPostsSuggestionSourceTest : BaseUnitTest() {
     }
 
     private fun suggestionsFromResult(result: XPostsResult.Result): List<Suggestion> =
-            result.xPosts
-                    .map { Suggestion.fromXpost(it) }
-                    .sortedBy { it.value }
+        result.xPosts
+            .map { Suggestion.fromXpost(it) }
+            .sortedBy { it.value }
 }

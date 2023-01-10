@@ -8,9 +8,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import kotlinx.parcelize.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.collect
+import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
 import org.wordpress.android.Constants
 import org.wordpress.android.R
@@ -70,7 +69,6 @@ import org.wordpress.android.util.wizard.WizardStep
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Date
-import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -162,10 +160,10 @@ class RestoreViewModel @Inject constructor(
 
     private fun constructProgressEvent() = if (restoreState.restoreId != null) {
         Event(
-                RestoreInProgress(
-                        restoreState.rewindId as String,
-                        restoreState.restoreId as Long
-                )
+            RestoreInProgress(
+                restoreState.rewindId as String,
+                restoreState.restoreId as Long
+            )
         )
     } else {
         Event(RestoreCanceled)
@@ -186,17 +184,17 @@ class RestoreViewModel @Inject constructor(
                     queryRestoreStatus(checkIfAwaitingCredentials = true)
                 } else {
                     _uiState.value = DetailsState(
-                            activityLogModel = activityLogModel,
-                            items = stateListItemBuilder.buildDetailsListStateItems(
-                                    availableItems = availableItems,
-                                    published = activityLogModel.published,
-                                    siteId = site.siteId,
-                                    isAwaitingCredentials = isAwaitingCredentials,
-                                    onCreateDownloadClick = this@RestoreViewModel::onRestoreSiteClick,
-                                    onCheckboxItemClicked = this@RestoreViewModel::onCheckboxItemClicked,
-                                    onEnterServerCredsIconClicked = this@RestoreViewModel::onEnterServerCredsIconClicked
-                            ),
-                            type = StateType.DETAILS
+                        activityLogModel = activityLogModel,
+                        items = stateListItemBuilder.buildDetailsListStateItems(
+                            availableItems = availableItems,
+                            published = activityLogModel.published,
+                            siteId = site.siteId,
+                            isAwaitingCredentials = isAwaitingCredentials,
+                            onCreateDownloadClick = this@RestoreViewModel::onRestoreSiteClick,
+                            onCheckboxItemClicked = this@RestoreViewModel::onCheckboxItemClicked,
+                            onEnterServerCredsIconClicked = this@RestoreViewModel::onEnterServerCredsIconClicked
+                        ),
+                        type = StateType.DETAILS
                     )
                 }
             } else {
@@ -208,31 +206,31 @@ class RestoreViewModel @Inject constructor(
 
     private fun buildWarning() {
         _uiState.value = WarningState(
-                items = stateListItemBuilder.buildWarningListStateItems(
-                        published = restoreState.published as Date,
-                        onConfirmRestoreClick = this@RestoreViewModel::onConfirmRestoreClick,
-                        onCancelClick = this@RestoreViewModel::onCancelClick
-                ),
-                type = StateType.WARNING
+            items = stateListItemBuilder.buildWarningListStateItems(
+                published = restoreState.published as Date,
+                onConfirmRestoreClick = this@RestoreViewModel::onConfirmRestoreClick,
+                onCancelClick = this@RestoreViewModel::onCancelClick
+            ),
+            type = StateType.WARNING
         )
     }
 
     private fun buildProgress() {
         _uiState.value = ProgressState(
-                items = stateListItemBuilder.buildProgressListStateItems(
-                        progress = progressStart,
-                        published = restoreState.published as Date,
-                        isIndeterminate = true
-                ),
-                type = StateType.PROGRESS
+            items = stateListItemBuilder.buildProgressListStateItems(
+                progress = progressStart,
+                published = restoreState.published as Date,
+                isIndeterminate = true
+            ),
+            type = StateType.PROGRESS
         )
         if (restoreState.shouldInitProgress) {
             restoreState = restoreState.copy(shouldInitProgress = false)
             launch {
                 val result = postRestoreUseCase.postRestoreRequest(
-                        restoreState.rewindId as String,
-                        site,
-                        buildRewindRequestTypes(restoreState.optionsSelected)
+                    restoreState.rewindId as String,
+                    site,
+                    buildRewindRequestTypes(restoreState.optionsSelected)
                 )
                 handleRestoreRequestResult(result)
             }
@@ -243,22 +241,22 @@ class RestoreViewModel @Inject constructor(
 
     private fun buildComplete() {
         _uiState.value = CompleteState(
-                items = stateListItemBuilder.buildCompleteListStateItems(
-                        published = restoreState.published as Date,
-                        onDoneClick = this@RestoreViewModel::onDoneClick,
-                        onVisitSiteClick = this@RestoreViewModel::onVisitSiteClick
-                ),
-                type = StateType.COMPLETE
+            items = stateListItemBuilder.buildCompleteListStateItems(
+                published = restoreState.published as Date,
+                onDoneClick = this@RestoreViewModel::onDoneClick,
+                onVisitSiteClick = this@RestoreViewModel::onVisitSiteClick
+            ),
+            type = StateType.COMPLETE
         )
     }
 
     private fun buildError(errorType: RestoreErrorTypes) {
         _uiState.value = ErrorState(
-                items = stateListItemBuilder.buildErrorListStateErrorItems(
-                        errorType = errorType,
-                        onDoneClick = this@RestoreViewModel::onDoneClick
-                ),
-                errorType = errorType
+            items = stateListItemBuilder.buildErrorListStateErrorItems(
+                errorType = errorType,
+                onDoneClick = this@RestoreViewModel::onDoneClick
+            ),
+            errorType = errorType
         )
     }
 
@@ -270,9 +268,9 @@ class RestoreViewModel @Inject constructor(
             PROGRESS -> buildProgress()
             COMPLETE -> buildComplete()
             ERROR -> buildError(
-                    RestoreErrorTypes.fromInt(
-                            target.wizardState.errorType ?: GenericFailure.id
-                    )
+                RestoreErrorTypes.fromInt(
+                    target.wizardState.errorType ?: GenericFailure.id
+                )
             )
         }
     }
@@ -293,46 +291,46 @@ class RestoreViewModel @Inject constructor(
     private fun buildOptionsSelected(items: List<JetpackListItemState>): List<Pair<Int, Boolean>> {
         val checkboxes = items.filterIsInstance(CheckboxState::class.java)
         return listOf(
-                Pair(
-                        THEMES.id,
-                        checkboxes.firstOrNull { it.availableItemType == THEMES }?.checked ?: true
-                ),
-                Pair(
-                        PLUGINS.id,
-                        checkboxes.firstOrNull { it.availableItemType == PLUGINS }?.checked ?: true
-                ),
-                Pair(
-                        MEDIA_UPLOADS.id,
-                        checkboxes.firstOrNull { it.availableItemType == MEDIA_UPLOADS }?.checked
-                                ?: true
-                ),
-                Pair(
-                        SQLS.id,
-                        checkboxes.firstOrNull { it.availableItemType == SQLS }?.checked ?: true
-                ),
-                Pair(
-                        ROOTS.id,
-                        checkboxes.firstOrNull { it.availableItemType == ROOTS }?.checked ?: true
-                ),
-                Pair(
-                        CONTENTS.id,
-                        checkboxes.firstOrNull { it.availableItemType == CONTENTS }?.checked ?: true
-                )
+            Pair(
+                THEMES.id,
+                checkboxes.firstOrNull { it.availableItemType == THEMES }?.checked ?: true
+            ),
+            Pair(
+                PLUGINS.id,
+                checkboxes.firstOrNull { it.availableItemType == PLUGINS }?.checked ?: true
+            ),
+            Pair(
+                MEDIA_UPLOADS.id,
+                checkboxes.firstOrNull { it.availableItemType == MEDIA_UPLOADS }?.checked
+                    ?: true
+            ),
+            Pair(
+                SQLS.id,
+                checkboxes.firstOrNull { it.availableItemType == SQLS }?.checked ?: true
+            ),
+            Pair(
+                ROOTS.id,
+                checkboxes.firstOrNull { it.availableItemType == ROOTS }?.checked ?: true
+            ),
+            Pair(
+                CONTENTS.id,
+                checkboxes.firstOrNull { it.availableItemType == CONTENTS }?.checked ?: true
+            )
         )
     }
 
     private fun buildRewindRequestTypes(optionsSelected: List<Pair<Int, Boolean>>?) =
-            RewindRequestTypes(
-                    themes = optionsSelected?.firstOrNull { it.first == THEMES.id }?.second ?: true,
-                    plugins = optionsSelected?.firstOrNull { it.first == PLUGINS.id }?.second
-                            ?: true,
-                    uploads = optionsSelected?.firstOrNull { it.first == MEDIA_UPLOADS.id }?.second
-                            ?: true,
-                    sqls = optionsSelected?.firstOrNull { it.first == SQLS.id }?.second ?: true,
-                    roots = optionsSelected?.firstOrNull { it.first == ROOTS.id }?.second ?: true,
-                    contents = optionsSelected?.firstOrNull { it.first == CONTENTS.id }?.second
-                            ?: true
-            )
+        RewindRequestTypes(
+            themes = optionsSelected?.firstOrNull { it.first == THEMES.id }?.second ?: true,
+            plugins = optionsSelected?.firstOrNull { it.first == PLUGINS.id }?.second
+                ?: true,
+            uploads = optionsSelected?.firstOrNull { it.first == MEDIA_UPLOADS.id }?.second
+                ?: true,
+            sqls = optionsSelected?.firstOrNull { it.first == SQLS.id }?.second ?: true,
+            roots = optionsSelected?.firstOrNull { it.first == ROOTS.id }?.second ?: true,
+            contents = optionsSelected?.firstOrNull { it.first == CONTENTS.id }?.second
+                ?: true
+        )
 
     private fun handleRestoreRequestResult(result: RestoreRequestState) {
         when (result) {
@@ -355,8 +353,8 @@ class RestoreViewModel @Inject constructor(
 
     private fun handleRestoreRequestSuccess(result: Success) {
         restoreState = restoreState.copy(
-                rewindId = result.rewindId,
-                restoreId = result.restoreId
+            rewindId = result.rewindId,
+            restoreId = result.restoreId
         )
         (_uiState.value as? ProgressState)?.let {
             val updatedItems = stateListItemBuilder.updateProgressActionButtonState(it, result.restoreId != null)
@@ -387,7 +385,7 @@ class RestoreViewModel @Inject constructor(
     private fun queryRestoreStatus(checkIfAwaitingCredentials: Boolean = false) {
         launch {
             getRestoreStatusUseCase.getRestoreStatus(site, restoreState.restoreId, checkIfAwaitingCredentials)
-                    .collect { state -> handleQueryStatus(state) }
+                .collect { state -> handleQueryStatus(state) }
         }
     }
 
@@ -415,19 +413,19 @@ class RestoreViewModel @Inject constructor(
                 if (contentState.type == ViewType.PROGRESS) {
                     contentState as JetpackListItemState.ProgressState
                     contentState.copy(
-                            progress = restoreStatus.progress ?: 0,
-                            progressLabel = UiStringText(percentFormatter.format(restoreStatus.progress ?: 0)),
-                            progressInfoLabel = if (restoreStatus.currentEntry != null) {
-                                UiStringText("${restoreStatus.currentEntry}")
-                            } else {
-                                null
-                            },
-                            progressStateLabel = if (restoreStatus.message != null) {
-                                UiStringText("${restoreStatus.message}")
-                            } else {
-                                null
-                            },
-                            isIndeterminate = (restoreStatus.progress ?: 0) <= 0
+                        progress = restoreStatus.progress ?: 0,
+                        progressLabel = UiStringText(percentFormatter.format(restoreStatus.progress ?: 0)),
+                        progressInfoLabel = if (restoreStatus.currentEntry != null) {
+                            UiStringText("${restoreStatus.currentEntry}")
+                        } else {
+                            null
+                        },
+                        progressStateLabel = if (restoreStatus.message != null) {
+                            UiStringText("${restoreStatus.message}")
+                        } else {
+                            null
+                        },
+                        isIndeterminate = (restoreStatus.progress ?: 0) <= 0
                     )
                 } else {
                     contentState
@@ -440,13 +438,13 @@ class RestoreViewModel @Inject constructor(
     private fun clearOldRestoreState(wizardStep: RestoreStep) {
         if (wizardStep == DETAILS) {
             restoreState = restoreState.copy(
-                    rewindId = null,
-                    restoreId = null,
-                    errorType = null,
-                    optionsSelected = null,
-                    published = null,
-                    shouldInitProgress = true,
-                    shouldInitDetails = true
+                rewindId = null,
+                restoreId = null,
+                errorType = null,
+                optionsSelected = null,
+                published = null,
+                shouldInitProgress = true,
+                shouldInitDetails = true
             )
         }
     }
@@ -469,10 +467,10 @@ class RestoreViewModel @Inject constructor(
             transitionToError(GenericFailure)
         } else {
             restoreState = restoreState.copy(
-                    rewindId = rewindId,
-                    optionsSelected = optionsSelected,
-                    published = extractPublishedDate(),
-                    shouldInitProgress = true
+                rewindId = rewindId,
+                optionsSelected = optionsSelected,
+                published = extractPublishedDate(),
+                shouldInitProgress = true
             )
             wizardManager.showNextStep()
         }
@@ -509,12 +507,12 @@ class RestoreViewModel @Inject constructor(
     private fun trackRestoreConfirmed() {
         val types = buildRewindRequestTypes(restoreState.optionsSelected)
         val propertiesSetup = mapOf(
-                "themes" to types.themes,
-                "plugins" to types.plugins,
-                "uploads" to types.uploads,
-                "sqls" to types.sqls,
-                "roots" to types.roots,
-                "contents" to types.contents
+            "themes" to types.themes,
+            "plugins" to types.plugins,
+            "uploads" to types.uploads,
+            "sqls" to types.sqls,
+            "roots" to types.roots,
+            "contents" to types.contents
         )
         val map = mapOf("restore_types" to JSONObject(propertiesSetup))
         AnalyticsTracker.track(JETPACK_RESTORE_CONFIRMED, map)
@@ -530,7 +528,7 @@ class RestoreViewModel @Inject constructor(
         private val NetworkUnavailableMsg = SnackbarMessageHolder(UiStringRes(R.string.error_network_connection))
         private val GenericFailureMsg = SnackbarMessageHolder(UiStringRes(R.string.restore_generic_failure))
         private val OtherRequestRunningMsg =
-                SnackbarMessageHolder(UiStringRes(R.string.restore_another_process_running))
+            SnackbarMessageHolder(UiStringRes(R.string.restore_another_process_running))
     }
 
     @SuppressLint("ParcelCreator")

@@ -17,11 +17,11 @@ sealed class InsightsManagementViewHolder(
     parent: ViewGroup,
     @LayoutRes layoutRes: Int
 ) : ViewHolder(
-        LayoutInflater.from(parent.context).inflate(
-                layoutRes,
-                parent,
-                false
-        )
+    LayoutInflater.from(parent.context).inflate(
+        layoutRes,
+        parent,
+        false
+    )
 ) {
     class HeaderViewHolder(
         val parent: ViewGroup
@@ -35,7 +35,7 @@ sealed class InsightsManagementViewHolder(
                 lp.topMargin = itemView.context.resources.getDimensionPixelOffset(R.dimen.margin_extra_large)
             } else {
                 lp.topMargin = itemView.context.resources.getDimensionPixelOffset(
-                        R.dimen.margin_extra_extra_medium_large
+                    R.dimen.margin_extra_extra_medium_large
                 )
             }
             itemView.layoutParams = lp

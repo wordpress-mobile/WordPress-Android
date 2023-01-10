@@ -19,7 +19,8 @@ import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel
 import javax.inject.Inject
 
 class PostListCreateMenuFragment : BottomSheetDialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PostListCreateMenuViewModel
 
     override fun onCreateView(
@@ -38,7 +39,7 @@ class PostListCreateMenuFragment : BottomSheetDialogFragment() {
             contentRecyclerView.adapter = AddContentAdapter(requireActivity())
 
             viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                    .get(PostListCreateMenuViewModel::class.java)
+                .get(PostListCreateMenuViewModel::class.java)
             viewModel.mainActions.observe(this@PostListCreateMenuFragment, {
                 (contentRecyclerView.adapter as? AddContentAdapter)?.update(it ?: listOf())
             })
@@ -47,7 +48,7 @@ class PostListCreateMenuFragment : BottomSheetDialogFragment() {
                 val sheetDialog = dialogInterface as? BottomSheetDialog
 
                 val bottomSheet = sheetDialog?.findViewById<View>(
-                        com.google.android.material.R.id.design_bottom_sheet
+                    com.google.android.material.R.id.design_bottom_sheet
                 ) as? FrameLayout
 
                 bottomSheet?.let {

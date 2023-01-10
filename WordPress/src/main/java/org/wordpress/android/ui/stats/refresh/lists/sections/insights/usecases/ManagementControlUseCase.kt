@@ -9,8 +9,8 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.utils.ListItemInteraction.Companion
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
+import org.wordpress.android.ui.utils.ListItemInteraction.Companion
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -24,10 +24,10 @@ class ManagementControlUseCase
     private val resourceProvider: ResourceProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : StatelessUseCase<Boolean>(
-        ManagementType.CONTROL,
-        mainDispatcher,
-        backgroundDispatcher,
-        listOf()
+    ManagementType.CONTROL,
+    mainDispatcher,
+    backgroundDispatcher,
+    listOf()
 ) {
     override suspend fun loadCachedData() = true
 
@@ -37,13 +37,13 @@ class ManagementControlUseCase
 
     override fun buildUiModel(domainModel: Boolean): List<BlockListItem> {
         return listOf(
-                BlockListItem.ListItemWithIcon(
-                        icon = R.drawable.ic_plus_white_24dp,
-                        textResource = R.string.stats_management_add_new_stats_card,
-                        navigationAction = Companion.create(this::onClick),
-                        showDivider = false,
-                        contentDescription = resourceProvider.getString(R.string.stats_management_add_new_stats_card)
-                )
+            BlockListItem.ListItemWithIcon(
+                icon = R.drawable.ic_plus_white_24dp,
+                textResource = R.string.stats_management_add_new_stats_card,
+                navigationAction = Companion.create(this::onClick),
+                showDivider = false,
+                contentDescription = resourceProvider.getString(R.string.stats_management_add_new_stats_card)
+            )
         )
     }
 

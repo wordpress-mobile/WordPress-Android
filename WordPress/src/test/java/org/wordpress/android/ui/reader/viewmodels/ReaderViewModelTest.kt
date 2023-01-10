@@ -50,18 +50,41 @@ private const val DUMMY_CURRENT_TIME: Long = 10000000000
 class ReaderViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ReaderViewModel
 
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock lateinit var dateProvider: DateProvider
-    @Mock lateinit var loadReaderTabsUseCase: LoadReaderTabsUseCase
-    @Mock lateinit var readerTracker: ReaderTracker
-    @Mock lateinit var accountStore: AccountStore
-    @Mock lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
-    @Mock lateinit var quickStartRepository: QuickStartRepository
-    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock lateinit var quickStartType: QuickStartType
-    @Mock lateinit var snackbarSequencer: SnackbarSequencer
-    @Mock lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-    @Mock lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    lateinit var dateProvider: DateProvider
+
+    @Mock
+    lateinit var loadReaderTabsUseCase: LoadReaderTabsUseCase
+
+    @Mock
+    lateinit var readerTracker: ReaderTracker
+
+    @Mock
+    lateinit var accountStore: AccountStore
+
+    @Mock
+    lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
+
+    @Mock
+    lateinit var quickStartRepository: QuickStartRepository
+
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Mock
+    lateinit var quickStartType: QuickStartType
+
+    @Mock
+    lateinit var snackbarSequencer: SnackbarSequencer
+
+    @Mock
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
+    @Mock
+    lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
 
     private val emptyReaderTagList = ReaderTagList()
@@ -70,25 +93,25 @@ class ReaderViewModelTest : BaseUnitTest() {
     @Before
     fun setup() {
         viewModel = ReaderViewModel(
-                testDispatcher(),
-                testDispatcher(),
-                appPrefsWrapper,
-                dateProvider,
-                loadReaderTabsUseCase,
-                readerTracker,
-                accountStore,
-                quickStartRepository,
-                selectedSiteRepository,
-                jetpackBrandingUtils,
-                snackbarSequencer,
-                jetpackFeatureRemovalOverlayUtil
+            testDispatcher(),
+            testDispatcher(),
+            appPrefsWrapper,
+            dateProvider,
+            loadReaderTabsUseCase,
+            readerTracker,
+            accountStore,
+            quickStartRepository,
+            selectedSiteRepository,
+            jetpackBrandingUtils,
+            snackbarSequencer,
+            jetpackFeatureRemovalOverlayUtil
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
         whenever(appPrefsWrapper.getReaderTag()).thenReturn(null)
         whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL))
-                .thenReturn(QuickStartNewSiteTask.FOLLOW_SITE)
+            .thenReturn(QuickStartNewSiteTask.FOLLOW_SITE)
     }
 
     @Test
@@ -459,7 +482,8 @@ class ReaderViewModelTest : BaseUnitTest() {
         }
     }
 
-    @Ignore("Disabled until next sprint") @Test
+    @Ignore("Disabled until next sprint")
+    @Test
     fun `given wp app, when jp powered bottom sheet feature is true, then jp powered bottom sheet is shown`() {
         val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>()
         viewModel.showJetpackPoweredBottomSheet.observeForever {
@@ -517,11 +541,11 @@ class ReaderViewModelTest : BaseUnitTest() {
     ) {
         with(observers) {
             assertThat(quickStartReaderPrompts.last().peekContent().shortMessagePrompt).isEqualTo(
-                    if (isSettingsSupported) {
-                        R.string.quick_start_dialog_follow_sites_message_short_discover_and_settings
-                    } else {
-                        R.string.quick_start_dialog_follow_sites_message_short_discover
-                    }
+                if (isSettingsSupported) {
+                    R.string.quick_start_dialog_follow_sites_message_short_discover_and_settings
+                } else {
+                    R.string.quick_start_dialog_follow_sites_message_short_discover
+                }
             )
             assertThat(uiStates.last().findSettingsMenuQsFocusPoint()).isEqualTo(isSettingsSupported)
         }
@@ -544,7 +568,7 @@ class ReaderViewModelTest : BaseUnitTest() {
     }
 
     private fun ReaderUiState.findSettingsMenuQsFocusPoint() =
-            (this as? ContentUiState)?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
+        (this as? ContentUiState)?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
 
     private fun initObservers(): Observers {
         val uiStates = mutableListOf<ReaderUiState>()

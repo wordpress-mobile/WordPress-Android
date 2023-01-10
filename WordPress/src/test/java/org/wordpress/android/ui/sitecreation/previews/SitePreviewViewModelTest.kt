@@ -56,33 +56,58 @@ private val SITE_CREATION_STATE = SiteCreationState(segmentId = 1, siteDesign = 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SitePreviewViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var dispatcher: Dispatcher
-    @Mock private lateinit var siteStore: SiteStore
-    @Mock private lateinit var bundle: Bundle
-    @Mock private lateinit var fetchWpComUseCase: FetchWpComSiteUseCase
-    @Mock private lateinit var networkUtils: NetworkUtilsWrapper
-    @Mock private lateinit var urlUtils: UrlUtilsWrapper
-    @Mock private lateinit var tracker: SiteCreationTracker
-    @Mock private lateinit var uiStateObserver: Observer<SitePreviewUiState>
-    @Mock private lateinit var startServiceObserver: Observer<SitePreviewStartServiceData>
-    @Mock private lateinit var onHelpedClickedObserver: Observer<Unit>
-    @Mock private lateinit var onCancelWizardClickedObserver: Observer<CreateSiteState>
-    @Mock private lateinit var onOkClickedObserver: Observer<CreateSiteState>
-    @Mock private lateinit var preloadPreviewObserver: Observer<String>
+    @Mock
+    private lateinit var dispatcher: Dispatcher
+
+    @Mock
+    private lateinit var siteStore: SiteStore
+
+    @Mock
+    private lateinit var bundle: Bundle
+
+    @Mock
+    private lateinit var fetchWpComUseCase: FetchWpComSiteUseCase
+
+    @Mock
+    private lateinit var networkUtils: NetworkUtilsWrapper
+
+    @Mock
+    private lateinit var urlUtils: UrlUtilsWrapper
+
+    @Mock
+    private lateinit var tracker: SiteCreationTracker
+
+    @Mock
+    private lateinit var uiStateObserver: Observer<SitePreviewUiState>
+
+    @Mock
+    private lateinit var startServiceObserver: Observer<SitePreviewStartServiceData>
+
+    @Mock
+    private lateinit var onHelpedClickedObserver: Observer<Unit>
+
+    @Mock
+    private lateinit var onCancelWizardClickedObserver: Observer<CreateSiteState>
+
+    @Mock
+    private lateinit var onOkClickedObserver: Observer<CreateSiteState>
+
+    @Mock
+    private lateinit var preloadPreviewObserver: Observer<String>
 
     private lateinit var viewModel: SitePreviewViewModel
 
     @Before
     fun setUp() {
         viewModel = SitePreviewViewModel(
-                dispatcher,
-                siteStore,
-                fetchWpComUseCase,
-                networkUtils,
-                urlUtils,
-                tracker,
-                testDispatcher(),
-                testDispatcher()
+            dispatcher,
+            siteStore,
+            fetchWpComUseCase,
+            networkUtils,
+            urlUtils,
+            tracker,
+            testDispatcher(),
+            testDispatcher()
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.startCreateSiteService.observeForever(startServiceObserver)
@@ -100,7 +125,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     private fun <T> testWithSuccessResponse(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(fetchWpComUseCase.fetchSiteWithRetry(REMOTE_SITE_ID))
-                    .thenReturn(OnSiteChanged(1))
+                .thenReturn(OnSiteChanged(1))
             block()
         }
     }
@@ -110,7 +135,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
             val onSiteChanged = OnSiteChanged(0)
             onSiteChanged.error = SiteError(GENERIC_ERROR)
             whenever(fetchWpComUseCase.fetchSiteWithRetry(REMOTE_SITE_ID))
-                    .thenReturn(onSiteChanged)
+                .thenReturn(onSiteChanged)
             block()
         }
     }
@@ -145,7 +170,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
             val lastTextId = (viewModel.uiState.value as SitePreviewFullscreenProgressUiState).loadingTextResId
             advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
             assertThat((viewModel.uiState.value as SitePreviewFullscreenProgressUiState).loadingTextResId)
-                    .isNotEqualTo(lastTextId)
+                .isNotEqualTo(lastTextId)
         }
     }
 
@@ -304,7 +329,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     @Test
     fun `start pre-loading WebView when restoring from SiteNotInLocalDb state`() = testWithSuccessResponse {
         whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE))
-                .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID, false))
+            .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID, false))
         initViewModel(bundle)
 
         assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewFullscreenProgressUiState::class.java)
@@ -313,7 +338,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     @Test
     fun `fetch newly created SiteModel when restoring from SiteNotInLocalDb state`() = testWithSuccessResponse {
         whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE))
-                .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID, false))
+            .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID, false))
         initViewModel(bundle)
 
         verify(fetchWpComUseCase).fetchSiteWithRetry(REMOTE_SITE_ID)
@@ -322,7 +347,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     @Test
     fun `start pre-loading WebView when restoring from SiteCreationCompleted state`() {
         whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE))
-                .thenReturn(SiteCreationCompleted(LOCAL_SITE_ID, false))
+            .thenReturn(SiteCreationCompleted(LOCAL_SITE_ID, false))
         initViewModel(bundle)
 
         assertThat(viewModel.preloadPreview.value).isEqualTo(URL)

@@ -30,6 +30,10 @@ class JetpackBrandingUtils @Inject constructor(
         return shouldShowJetpackBranding() && jetpackFeatureRemovalBrandingUtil.shouldShowPhaseOneBranding()
     }
 
+    fun shouldShowJetpackBrandingForPhaseTwo(): Boolean {
+        return shouldShowJetpackBranding() && jetpackFeatureRemovalBrandingUtil.shouldShowPhaseTwoBranding()
+    }
+
     fun shouldShowJetpackPoweredBottomSheet(): Boolean {
         return isWpComSite() && jetpackPoweredBottomSheetFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
     }
@@ -79,37 +83,41 @@ class JetpackBrandingUtils @Inject constructor(
      * Tracks
      */
     fun trackBadgeTapped(screen: Screen) = analyticsTrackerWrapper.track(
-            Stat.JETPACK_POWERED_BADGE_TAPPED,
-            mapOf(SCREEN_KEY to screen.trackingName)
+        Stat.JETPACK_POWERED_BADGE_TAPPED,
+        mapOf(SCREEN_KEY to screen.trackingName)
     )
 
     fun trackBannerTapped(screen: Screen) = analyticsTrackerWrapper.track(
-            Stat.JETPACK_POWERED_BANNER_TAPPED,
-            mapOf(SCREEN_KEY to screen.trackingName)
+        Stat.JETPACK_POWERED_BANNER_TAPPED,
+        mapOf(SCREEN_KEY to screen.trackingName)
     )
 
     fun trackGetJetpackAppTapped() = analyticsTrackerWrapper.track(
-            Stat.JETPACK_POWERED_BOTTOM_SHEET_GET_JETPACK_APP_TAPPED
+        Stat.JETPACK_POWERED_BOTTOM_SHEET_GET_JETPACK_APP_TAPPED
     )
 
     fun trackDismissTapped() = analyticsTrackerWrapper.track(
-            Stat.JETPACK_POWERED_BOTTOM_SHEET_CONTINUE_TAPPED
+        Stat.JETPACK_POWERED_BOTTOM_SHEET_CONTINUE_TAPPED
     )
 
     enum class Screen(val trackingName: String) {
         APP_SETTINGS("app_settings"),
         ACTIVITY_LOG("activity_log"),
         ACTIVITY_LOG_DETAIL("activity_log_detail"),
+        BACKUP("backup"),
         HOME("home"),
         ME("me"),
         NOTIFICATIONS("notifications"),
         NOTIFICATIONS_SETTINGS("notifications_settings"),
+        PEOPLE("people"),
+        PERSON("person"),
         READER("reader"),
         READER_POST_DETAIL("reader_post_detail"),
         READER_SEARCH("reader_search"),
         SHARE("share"),
         STATS("stats"),
-        SCAN("scan")
+        SCAN("scan"),
+        THEMES("themes")
     }
 
     companion object {

@@ -27,7 +27,8 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterPagerAdapter
 import javax.inject.Inject
 
 class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: SubFilterViewModel
 
     companion object {
@@ -66,20 +67,20 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         val subfilterVmKey = requireArguments().getString(SUBFILTER_VIEW_MODEL_KEY)!!
         val bottomSheetTitle = requireArguments().getCharSequence(SUBFILTER_TITLE_KEY)!!
         val categories: ArrayList<SubfilterCategory> = requireArguments()
-                .getParcelableArrayList(SUBFILTER_CATEGORIES_KEY)!!
+            .getParcelableArrayList(SUBFILTER_CATEGORIES_KEY)!!
 
         viewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory)
-                .get(subfilterVmKey, SubFilterViewModel::class.java)
+            .get(subfilterVmKey, SubFilterViewModel::class.java)
 
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
         val title = view.findViewById<TextView>(R.id.title)
         title.text = bottomSheetTitle
         pager.adapter = SubfilterPagerAdapter(
-                requireActivity(),
-                childFragmentManager,
-                subfilterVmKey,
-                categories.toList()
+            requireActivity(),
+            childFragmentManager,
+            subfilterVmKey,
+            categories.toList()
         )
         tabLayout.setupWithViewPager(pager)
         pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -115,7 +116,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             val sheetDialog = dialogInterface as? BottomSheetDialog
 
             val bottomSheet = sheetDialog?.findViewById<View>(
-                    com.google.android.material.R.id.design_bottom_sheet
+                com.google.android.material.R.id.design_bottom_sheet
             ) as? FrameLayout
 
             bottomSheet?.let {

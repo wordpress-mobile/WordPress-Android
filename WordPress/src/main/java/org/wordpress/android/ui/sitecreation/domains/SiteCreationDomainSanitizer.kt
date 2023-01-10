@@ -35,5 +35,5 @@ class SiteCreationDomainSanitizer
      * removes it's scheme and finally, removes any characters that aren't alphanumeric.
      */
     fun sanitizeDomainQuery(query: String) =
-            query.firstPart.removeProtocol.removeNonAlphanumeric.lowercase(Locale.ROOT)
+        query.firstPart.removeProtocol.removeNonAlphanumeric.lowercase(Locale.ROOT)
 }

@@ -4,12 +4,12 @@ import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
 import javax.inject.Inject
 import javax.inject.Named
-import kotlinx.coroutines.launch
 
 /**
  * Injectable wrapper around ReaderSeenStatusToggleUseCase.

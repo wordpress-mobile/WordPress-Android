@@ -11,9 +11,9 @@ import javax.inject.Inject
 @Feature(LIKES_ENHANCEMENTS_REMOTE_FIELD, true)
 class LikesEnhancementsFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
-        appConfig,
-        BuildConfig.LIKES_ENHANCEMENTS,
-        LIKES_ENHANCEMENTS_REMOTE_FIELD
+    appConfig,
+    BuildConfig.LIKES_ENHANCEMENTS,
+    LIKES_ENHANCEMENTS_REMOTE_FIELD
 ) {
     companion object {
         const val LIKES_ENHANCEMENTS_REMOTE_FIELD = "likes_enhancements_enabled"

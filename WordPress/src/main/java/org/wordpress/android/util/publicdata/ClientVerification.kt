@@ -15,7 +15,7 @@ class ClientVerification @Inject constructor(
         val canTrustPackageId = callerPackage == callerExpectedPackageId
         val callerExpectedSignatureHash = jetpackPublicData.currentPublicKeyHash()
         val canTrustSignatureHash = signatureUtils.checkSignatureHash(
-                callerExpectedPackageId, callerExpectedSignatureHash
+            callerExpectedPackageId, callerExpectedSignatureHash
         )
         return canTrustPackageId && canTrustSignatureHash
     }

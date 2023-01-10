@@ -41,11 +41,11 @@ fun ColumnWithTopGlassBorder(
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
-            modifier = Modifier.background(backgroundColor)
+        modifier = Modifier.background(backgroundColor)
     ) {
         Divider(
-                color = borderColor,
-                thickness = borderThickness,
+            color = borderColor,
+            thickness = borderThickness,
         )
         content()
     }
@@ -62,8 +62,8 @@ fun ColumnWithFrostedGlassBackground(
     SubcomposeLayout { constraints ->
         val buttonsPlaceables = subcompose(Buttons) {
             ColumnWithTopGlassBorder(
-                    backgroundColor = backgroundColor,
-                    borderColor = borderColor,
+                backgroundColor = backgroundColor,
+                borderColor = borderColor,
             ) {
                 content()
             }
@@ -73,28 +73,28 @@ fun ColumnWithFrostedGlassBackground(
         val buttonsClipShape = object : Shape {
             override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Rectangle {
                 return Rectangle(
-                        Rect(
-                                bottom = size.height,
-                                left = 0f,
-                                right = size.width,
-                                top = size.height - buttonsHeight,
-                        )
+                    Rect(
+                        bottom = size.height,
+                        left = 0f,
+                        right = size.width,
+                        top = size.height - buttonsHeight,
+                    )
                 )
             }
         }
 
         val clippedBackgroundPlaceables = subcompose(ClippedBackground) {
             background(
-                    clipModifier = Modifier.clip(buttonsClipShape),
-                    blurModifier = Modifier.composed {
-                        if (VERSION.SDK_INT >= VERSION_CODES.S) {
-                            blur(blurRadius, BlurredEdgeTreatment.Unbounded)
-                        } else {
-                            // On versions older than Android 12 the blur modifier is not supported,
-                            // so we make the text transparent to have the buttons stand out.
-                            alpha(0.05f)
-                        }
+                clipModifier = Modifier.clip(buttonsClipShape),
+                blurModifier = Modifier.composed {
+                    if (VERSION.SDK_INT >= VERSION_CODES.S) {
+                        blur(blurRadius, BlurredEdgeTreatment.Unbounded)
+                    } else {
+                        // On versions older than Android 12 the blur modifier is not supported,
+                        // so we make the text transparent to have the buttons stand out.
+                        alpha(0.05f)
                     }
+                }
             )
         }.map { it.measure(constraints) }
 

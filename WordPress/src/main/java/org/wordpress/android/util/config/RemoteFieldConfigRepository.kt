@@ -42,8 +42,8 @@ class RemoteFieldConfigRepository
         RemoteFieldConfigDefaults.remoteFieldConfigDefaults.mapNotNull { remoteField ->
             remoteField.let {
                 remoteConfigStore.insertRemoteConfig(
-                        remoteField.key,
-                        remoteField.value.toString()
+                    remoteField.key,
+                    remoteField.value.toString()
                 )
             }
         }
@@ -61,8 +61,8 @@ class RemoteFieldConfigRepository
         response.remoteConfig?.let { configValues ->
             AppLog.e(UTILS, "Remote field config values synced")
             AnalyticsTracker.track(
-                    Stat.REMOTE_FIELD_CONFIG_SYNCED_STATE,
-                    configValues
+                Stat.REMOTE_FIELD_CONFIG_SYNCED_STATE,
+                configValues
             )
         }
         if (response.isError) {

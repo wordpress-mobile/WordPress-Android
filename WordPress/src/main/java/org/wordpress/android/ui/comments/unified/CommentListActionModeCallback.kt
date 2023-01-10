@@ -10,7 +10,6 @@ import androidx.lifecycle.Lifecycle.Event.ON_STOP
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.DELETED
@@ -25,7 +24,7 @@ class CommentListActionModeCallback(
     private val viewModel: UnifiedCommentListViewModel,
     private val activityViewModel: UnifiedCommentActivityViewModel
 ) : Callback,
-        LifecycleOwner {
+    LifecycleOwner {
     private lateinit var lifecycleRegistry: LifecycleRegistry
     override fun onCreateActionMode(
         actionMode: ActionMode,

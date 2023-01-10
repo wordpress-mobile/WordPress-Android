@@ -11,8 +11,8 @@ class ThreatFileNameViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : JetpackViewHolder<ThreatDetailsListFileNameItemBinding>(
-        parent,
-        ThreatDetailsListFileNameItemBinding::inflate
+    parent,
+    ThreatDetailsListFileNameItemBinding::inflate
 ) {
     override fun onBind(itemUiState: JetpackListItemState) {
         val threatFileNameState = itemUiState as ThreatFileNameState

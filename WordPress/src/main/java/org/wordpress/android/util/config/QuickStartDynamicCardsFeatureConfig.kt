@@ -12,6 +12,6 @@ class QuickStartDynamicCardsFeatureConfig
 @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.QUICK_START_DYNAMIC_CARDS
+    appConfig,
+    BuildConfig.QUICK_START_DYNAMIC_CARDS
 )

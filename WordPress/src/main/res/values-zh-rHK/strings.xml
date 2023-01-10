@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-12-06 09:54:10+0000
+Translation-Revision-Date: 2022-12-20 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_TW
 -->
 <resources>
+    <string name="reader_toast_user_blocked">將不再顯示此使用者的文章</string>
+    <string name="reader_menu_block_user">封鎖使用者</string>
+    <string name="reader_menu_report_user">檢舉此使用者</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">在 WordPress 開啟連結</string>
     <string name="wp_jetpack_deep_link_overlay_description">你似乎已安裝 Jetpack 應用程式。\n\n之後要在 Jetpack 應用程式中開啟連結嗎？\n\n你隨時可在「應用程式設定」&gt;「在 Jetpack 中開啟連結」變更此設定</string>
     <string name="wp_jetpack_deep_link_overlay_title">在 Jetpack 中開啟連結嗎？</string>
@@ -26,7 +29,6 @@ Language: zh_TW
     <string name="preference_open_links_in_jetpack">在 Jetpack 中開啟連結</string>
     <string name="jp_migration_need_help_button">需要協助嗎？</string>
     <string name="jp_migration_got_it_button">知道了</string>
-    <string name="jp_migration_delete_message">請&lt;b&gt;刪除 WordPress 應用程式&lt;/b&gt;以&lt;br&gt;避免資料衝突。</string>
     <string name="jp_migration_delete_subtitle">你似乎仍有安裝 WordPress 應用程式。 建議刪除 WordPress 應用程式以避免資料衝突。</string>
     <string name="jp_migration_delete_title">你不再需要 WordPress 應用程式了</string>
     <string name="jp_migration_network_error_title">無法連線到網際網路。</string>
@@ -38,7 +40,6 @@ Language: zh_TW
     <string name="jp_migration_try_again_button">再試一次</string>
     <string name="jp_migration_finish_button">完成</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">移除 WordPress 應用程式圖示</string>
-    <string name="jp_migration_done_delete_wp_message">請&lt;b&gt;刪除 WordPress 應用程式&lt;/b&gt;以&lt;br&gt;避免資料衝突。</string>
     <string name="jp_migration_done_subtitle">我們已轉移你的所有資料和設定。 一切全部順暢銜接。</string>
     <string name="jp_migration_done_title">感謝改用 Jetpack！</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">我們會關閉 WordPress 應用程式的通知。</string>

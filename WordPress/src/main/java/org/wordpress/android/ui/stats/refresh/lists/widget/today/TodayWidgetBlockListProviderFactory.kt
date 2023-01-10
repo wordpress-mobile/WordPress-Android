@@ -7,7 +7,8 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvid
 import javax.inject.Inject
 
 class TodayWidgetBlockListProviderFactory(val context: Context, val intent: Intent) {
-    @Inject lateinit var viewModel: TodayWidgetBlockListViewModel
+    @Inject
+    lateinit var viewModel: TodayWidgetBlockListViewModel
 
     init {
         (context.applicationContext as WordPress).component().inject(this)

@@ -7,9 +7,9 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class HistoryViewHolder(parent: ViewGroup, @LayoutRes layout: Int) : RecyclerView.ViewHolder(
-        LayoutInflater.from(
-                parent.context
-        ).inflate(layout, parent, false)
+    LayoutInflater.from(
+        parent.context
+    ).inflate(layout, parent, false)
 ) {
-    open fun updateChanges(bundle: Bundle) { }
+    open fun updateChanges(bundle: Bundle) {}
 }

@@ -92,14 +92,14 @@ class SelectedSiteRepository @Inject constructor(
                 showSiteIconProgressBar(false)
             }
             siteSettings = siteSettingsInterfaceFactory.build(
-                    selectedSite,
-                    onSaveError = ::onError,
-                    onFetchError = ::onError,
-                    onSettingsSaved = {
-                        getSelectedSite()?.let { site ->
-                            dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site))
-                        }
+                selectedSite,
+                onSaveError = ::onError,
+                onFetchError = ::onError,
+                onSettingsSaved = {
+                    getSelectedSite()?.let { site ->
+                        dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site))
                     }
+                }
             )
 
             siteSettings?.init(true)

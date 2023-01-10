@@ -35,32 +35,32 @@ class SiteSettingsInterfaceWrapper(private val siteSettingsInterface: SiteSettin
             onCredentialsValidated: (() -> Unit)? = null
         ): SiteSettingsInterfaceWrapper? {
             val siteSettingsInterface = SiteSettingsInterface.getInterface(
-                    contextProvider.getContext(),
-                    site,
-                    object : SiteSettingsInterface.SiteSettingsListener {
-                        override fun onSaveError(error: Exception?) {
-                            onSaveError?.invoke()
-                        }
+                contextProvider.getContext(),
+                site,
+                object : SiteSettingsInterface.SiteSettingsListener {
+                    override fun onSaveError(error: Exception?) {
+                        onSaveError?.invoke()
+                    }
 
-                        override fun onFetchError(error: Exception?) {
-                            onFetchError?.invoke()
-                        }
+                    override fun onFetchError(error: Exception?) {
+                        onFetchError?.invoke()
+                    }
 
-                        override fun onSettingsUpdated() {
-                            onSettingsUpdated?.invoke()
-                        }
+                    override fun onSettingsUpdated() {
+                        onSettingsUpdated?.invoke()
+                    }
 
-                        override fun onSettingsSaved() {
-                            onSettingsSaved?.invoke()
-                        }
+                    override fun onSettingsSaved() {
+                        onSettingsSaved?.invoke()
+                    }
 
-                        override fun onCredentialsValidated(error: Exception?) {
-                            onCredentialsValidated?.invoke()
-                        }
-                    })
+                    override fun onCredentialsValidated(error: Exception?) {
+                        onCredentialsValidated?.invoke()
+                    }
+                })
             return siteSettingsInterface?.let {
                 SiteSettingsInterfaceWrapper(
-                        it
+                    it
                 )
             }
         }

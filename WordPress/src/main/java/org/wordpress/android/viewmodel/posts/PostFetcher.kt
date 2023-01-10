@@ -41,17 +41,17 @@ class PostFetcher constructor(
     @Suppress("ForbiddenComment")
     fun fetchPosts(site: SiteModel, remoteItemIds: List<RemoteId>) {
         remoteItemIds
-                .filter {
-                    // ignore duplicate requests
-                    !ongoingRequests.contains(it)
-                }
-                .forEach { remoteId ->
-                    ongoingRequests.add(remoteId)
+            .filter {
+                // ignore duplicate requests
+                !ongoingRequests.contains(it)
+            }
+            .forEach { remoteId ->
+                ongoingRequests.add(remoteId)
 
-                    val postToFetch = PostModel()
-                    postToFetch.setRemotePostId(remoteId.value)
-                    dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(postToFetch, site)))
-                }
+                val postToFetch = PostModel()
+                postToFetch.setRemotePostId(remoteId.value)
+                dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(postToFetch, site)))
+            }
     }
 
     @Suppress("unused")

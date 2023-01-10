@@ -47,11 +47,11 @@ class ConversationNotificationsViewModel @Inject constructor(
 
     private val _updateFollowStatus = MediatorLiveData<FollowCommentsState>()
     val updateFollowUiState: LiveData<FollowConversationUiState> =
-            _updateFollowStatus.map { state -> buildFollowCommentsUiState(state) }
+        _updateFollowStatus.map { state -> buildFollowCommentsUiState(state) }
 
     private val _pushNotificationsStatusUpdate = MediatorLiveData<FollowStateChanged>()
     val pushNotificationsStatusUpdate: LiveData<Event<Boolean>> =
-            _pushNotificationsStatusUpdate.map { state -> buildPushNotificationsUiState(state) }
+        _pushNotificationsStatusUpdate.map { state -> buildPushNotificationsUiState(state) }
 
     private var blogId: Long = 0
     private var postId: Long = 0
@@ -89,11 +89,11 @@ class ConversationNotificationsViewModel @Inject constructor(
         followStatusSetJob?.cancel()
         followStatusSetJob = launch(bgDispatcher) {
             followCommentsHandler.handleEnableByPushNotificationsClicked(
-                    blogId,
-                    postId,
-                    enable,
-                    source,
-                    getSnackbarAction(fromSnackbar, enable)
+                blogId,
+                postId,
+                enable,
+                source,
+                getSnackbarAction(fromSnackbar, enable)
             )
         }
     }
@@ -153,11 +153,11 @@ class ConversationNotificationsViewModel @Inject constructor(
         followStatusSetJob?.cancel()
         followStatusSetJob = launch(bgDispatcher) {
             followCommentsHandler.handleFollowCommentsClicked(
-                    blogId,
-                    postId,
-                    askSubscribe,
-                    source,
-                    if (askSubscribe) ::enablePushNotificationsFromSnackbarAction else null
+                blogId,
+                postId,
+                askSubscribe,
+                source,
+                if (askSubscribe) ::enablePushNotificationsFromSnackbarAction else null
             )
         }
     }
@@ -166,9 +166,9 @@ class ConversationNotificationsViewModel @Inject constructor(
         followStatusGetJob?.cancel()
         followStatusGetJob = launch(bgDispatcher) {
             val post = readerPostTableWrapper.getBlogPost(
-                    blogId,
-                    postId,
-                    true
+                blogId,
+                postId,
+                true
             )
 
             post?.let {
@@ -190,38 +190,38 @@ class ConversationNotificationsViewModel @Inject constructor(
     private fun buildFollowCommentsUiState(followCommentsState: FollowCommentsState): FollowConversationUiState {
         if (followCommentsState is FlagsMappedState) {
             return FollowConversationUiState(
-                    flags = followCommentsState.flags,
-                    onFollowTapped = if (listOf(DISABLED, LOADING).contains(followCommentsState.flags.type)) {
-                        null
-                    } else {
-                        ::onFollowTapped
-                    },
-                    onManageNotificationsTapped = ::onManageNotificationsTapped
+                flags = followCommentsState.flags,
+                onFollowTapped = if (listOf(DISABLED, LOADING).contains(followCommentsState.flags.type)) {
+                    null
+                } else {
+                    ::onFollowTapped
+                },
+                onManageNotificationsTapped = ::onManageNotificationsTapped
             )
         } else {
             val stateType = mapToStateType(followCommentsState)
             val isFollowing = if (followCommentsState is FollowStateChanged) followCommentsState.isFollowing else false
 
             return FollowConversationUiState(
-                    FollowConversationStatusFlags(
-                            type = stateType,
-                            isFollowing = isFollowing,
-                            isReceivingNotifications = if (followCommentsState is FollowStateChanged) {
-                                followCommentsState.isReceivingNotifications
-                            } else {
-                                false
-                            },
-                            isMenuEnabled = stateType != DISABLED && stateType != LOADING,
-                            showMenuShimmer = stateType == LOADING,
-                            isBellMenuVisible = if (stateType != VISIBLE_WITH_STATE) false else isFollowing,
-                            isFollowMenuVisible = when (stateType) {
-                                DISABLED, LOADING -> true
-                                GONE -> false
-                                VISIBLE_WITH_STATE -> !isFollowing
-                            }
-                    ),
-                    onFollowTapped = if (listOf(DISABLED, LOADING).contains(stateType)) null else ::onFollowTapped,
-                    onManageNotificationsTapped = ::onManageNotificationsTapped
+                FollowConversationStatusFlags(
+                    type = stateType,
+                    isFollowing = isFollowing,
+                    isReceivingNotifications = if (followCommentsState is FollowStateChanged) {
+                        followCommentsState.isReceivingNotifications
+                    } else {
+                        false
+                    },
+                    isMenuEnabled = stateType != DISABLED && stateType != LOADING,
+                    showMenuShimmer = stateType == LOADING,
+                    isBellMenuVisible = if (stateType != VISIBLE_WITH_STATE) false else isFollowing,
+                    isFollowMenuVisible = when (stateType) {
+                        DISABLED, LOADING -> true
+                        GONE -> false
+                        VISIBLE_WITH_STATE -> !isFollowing
+                    }
+                ),
+                onFollowTapped = if (listOf(DISABLED, LOADING).contains(stateType)) null else ::onFollowTapped,
+                onManageNotificationsTapped = ::onManageNotificationsTapped
             )
         }
     }

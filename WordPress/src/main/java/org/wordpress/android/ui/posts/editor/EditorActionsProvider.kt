@@ -10,7 +10,8 @@ import javax.inject.Inject
 
 @Reusable
 class EditorActionsProvider @Inject constructor() {
-    @JvmOverloads fun getPrimaryAction(
+    @JvmOverloads
+    fun getPrimaryAction(
         postStatus: PostStatus,
         userCanPublish: Boolean,
         isLandingEditor: Boolean = false
@@ -31,15 +32,19 @@ class EditorActionsProvider @Inject constructor() {
                 PostStatus.PENDING,
                 PostStatus.UNKNOWN -> PrimaryEditorAction.SUBMIT_FOR_REVIEW
                 PostStatus.TRASHED -> {
-                    AppLog.e(T.EDITOR, "User shouldn't be able to open a trashed post in an editor " +
-                            "without publishing rights.")
+                    AppLog.e(
+                        T.EDITOR, "User shouldn't be able to open a trashed post in an editor " +
+                                "without publishing rights."
+                    )
                     PrimaryEditorAction.SAVE
                 }
                 PostStatus.PUBLISHED,
                 PostStatus.SCHEDULED,
                 PostStatus.PRIVATE -> {
-                    AppLog.e(T.EDITOR, "User shouldn't be able to open a public ($postStatus) post in an editor " +
-                            "without publishing rights.")
+                    AppLog.e(
+                        T.EDITOR, "User shouldn't be able to open a public ($postStatus) post in an editor " +
+                                "without publishing rights."
+                    )
                     PrimaryEditorAction.SUBMIT_FOR_REVIEW
                 }
             }
@@ -64,15 +69,19 @@ class EditorActionsProvider @Inject constructor() {
                 PostStatus.PENDING,
                 PostStatus.UNKNOWN -> SecondaryEditorAction.NONE
                 PostStatus.TRASHED -> {
-                    AppLog.e(T.EDITOR, "User shouldn't be able to open a trashed post in an editor " +
-                            "without publishing rights.")
+                    AppLog.e(
+                        T.EDITOR, "User shouldn't be able to open a trashed post in an editor " +
+                                "without publishing rights."
+                    )
                     SecondaryEditorAction.SAVE_AS_DRAFT
                 }
                 PostStatus.PUBLISHED,
                 PostStatus.SCHEDULED,
                 PostStatus.PRIVATE -> {
-                    AppLog.e(T.EDITOR, "User shouldn't be able to open a public ($postStatus) post in an editor " +
-                            "without publishing rights.")
+                    AppLog.e(
+                        T.EDITOR, "User shouldn't be able to open a public ($postStatus) post in an editor " +
+                                "without publishing rights."
+                    )
                     SecondaryEditorAction.NONE
                 }
             }

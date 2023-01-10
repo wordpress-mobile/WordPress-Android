@@ -10,7 +10,7 @@ class GetCommentUseCase @Inject constructor(
 ) {
     suspend fun execute(siteModel: SiteModel, remoteCommentId: Long): CommentEntity? {
         val localCommentEntityList =
-                commentsStore.getCommentByLocalSiteAndRemoteId(siteModel.id, remoteCommentId)
+            commentsStore.getCommentByLocalSiteAndRemoteId(siteModel.id, remoteCommentId)
         return if (localCommentEntityList.isNullOrEmpty()) {
             val commentResponse = commentsStore.fetchComment(siteModel, remoteCommentId, null)
             val remoteCommentEntityList = commentResponse.data?.comments

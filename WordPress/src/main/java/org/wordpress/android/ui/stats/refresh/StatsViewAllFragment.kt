@@ -41,11 +41,20 @@ import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
-    @Inject lateinit var viewModelFactoryBuilder: StatsViewAllViewModelFactory.Builder
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var navigator: StatsNavigator
-    @Inject lateinit var statsSiteProvider: StatsSiteProvider
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var viewModelFactoryBuilder: StatsViewAllViewModelFactory.Builder
+
+    @Inject
+    lateinit var imageManager: ImageManager
+
+    @Inject
+    lateinit var navigator: StatsNavigator
+
+    @Inject
+    lateinit var statsSiteProvider: StatsSiteProvider
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private var binding: StatsViewAllFragmentBinding? = null
@@ -68,14 +77,14 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         if (intent != null) {
             if (intent.hasExtra(ARGS_VIEW_TYPE)) {
                 outState.putSerializable(
-                        ARGS_VIEW_TYPE,
-                        intent.getSerializableExtra(ARGS_VIEW_TYPE)
+                    ARGS_VIEW_TYPE,
+                    intent.getSerializableExtra(ARGS_VIEW_TYPE)
                 )
             }
             if (intent.hasExtra(ARGS_TIMEFRAME)) {
                 outState.putSerializable(
-                        ARGS_TIMEFRAME,
-                        intent.getSerializableExtra(ARGS_TIMEFRAME)
+                    ARGS_TIMEFRAME,
+                    intent.getSerializableExtra(ARGS_TIMEFRAME)
                 )
             }
             outState.putInt(WordPress.LOCAL_SITE_ID, intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0))
@@ -157,7 +166,7 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         }
 
         val siteId = savedInstanceState?.getInt(WordPress.LOCAL_SITE_ID, 0)
-                ?: nonNullIntent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
+            ?: nonNullIntent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
         statsSiteProvider.start(siteId)
 
         val viewModelFactory = viewModelFactoryBuilder.build(type, granularity)
@@ -242,18 +251,18 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         if (parent != null) {
             if (holder.buttonTitle == null) {
                 WPSnackbar.make(
-                        parent,
-                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                        Snackbar.LENGTH_LONG
+                    parent,
+                    uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                    Snackbar.LENGTH_LONG
                 ).show()
             } else {
                 val snackbar = WPSnackbar.make(
-                        parent,
-                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                        Snackbar.LENGTH_LONG
+                    parent,
+                    uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                    Snackbar.LENGTH_LONG
                 )
                 snackbar.setAction(
-                        uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)
+                    uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)
                 ) { holder.buttonAction() }
                 snackbar.show()
             }
@@ -305,7 +314,7 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
             }
 
             (toolbar.layoutParams as LayoutParams).scrollFlags =
-                    LayoutParams.SCROLL_FLAG_SCROLL.or(LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
+                LayoutParams.SCROLL_FLAG_SCROLL.or(LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
             tabLayout.visibility = View.VISIBLE
 
             data.filter { it !is TabsItem }

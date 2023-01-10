@@ -34,10 +34,10 @@ class SelectedDateProvider
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     private val mutableDates = mutableMapOf(
-            DAYS to SelectedDate(loading = true),
-            WEEKS to SelectedDate(loading = true),
-            MONTHS to SelectedDate(loading = true),
-            YEARS to SelectedDate(loading = true)
+        DAYS to SelectedDate(loading = true),
+        WEEKS to SelectedDate(loading = true),
+        MONTHS to SelectedDate(loading = true),
+        YEARS to SelectedDate(loading = true)
     )
 
     private val selectedDateChanged = MutableLiveData<SectionChange?>()
@@ -59,8 +59,8 @@ class SelectedDateProvider
         val selectedDate = getSelectedDateState(statsSection)
         if (selectedDate.dateValue != updatedDate || selectedDate.availableDates != availableDates) {
             updateSelectedDate(
-                    selectedDate.copy(dateValue = updatedDate, availableDates = availableDates),
-                    statsSection
+                selectedDate.copy(dateValue = updatedDate, availableDates = availableDates),
+                statsSection
             )
         }
     }

@@ -11,6 +11,7 @@ class StatsBlockDiffCallback(
     private val newList: List<StatsBlock>
 ) : Callback() {
     object Payload
+
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]

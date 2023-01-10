@@ -7,7 +7,8 @@ import org.wordpress.android.workers.notification.local.LocalNotification.Type
 import javax.inject.Inject
 
 class LocalNotificationScheduler(private val workManager: WorkManager) {
-    @Inject constructor(context: Context) : this(WorkManager.getInstance(context))
+    @Inject
+    constructor(context: Context) : this(WorkManager.getInstance(context))
 
     fun scheduleOneTimeNotification(vararg localNotifications: LocalNotification) {
         workManager.enqueue(localNotifications.map { buildOneTimeWorkRequest(it) })
@@ -18,9 +19,9 @@ class LocalNotificationScheduler(private val workManager: WorkManager) {
     }
 
     private fun buildOneTimeWorkRequest(localNotification: LocalNotification) =
-            OneTimeWorkRequestBuilder<LocalNotificationWorker>()
-                    .setInitialDelay(localNotification.delay, localNotification.delayUnits)
-                    .addTag(localNotification.type.tag)
-                    .setInputData(LocalNotificationWorker.buildData(localNotification))
-                    .build()
+        OneTimeWorkRequestBuilder<LocalNotificationWorker>()
+            .setInitialDelay(localNotification.delay, localNotification.delayUnits)
+            .addTag(localNotification.type.tag)
+            .setInputData(LocalNotificationWorker.buildData(localNotification))
+            .build()
 }

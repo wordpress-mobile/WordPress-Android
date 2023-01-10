@@ -30,9 +30,9 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
     defStyle: Int = 0,
     defStyleRes: Int = 0
 ) : LinearLayout(context, attrs, defStyle, defStyleRes),
-        OnCheckedChangeListener,
-        OnLongClickListener,
-        OnClickListener {
+    OnCheckedChangeListener,
+    OnLongClickListener,
+    OnClickListener {
     // We should refactor this part to use style attributes, since enum is not too theming friendly
     enum class PrefMainSwitchToolbarViewStyle constructor(
         val value: Int,
@@ -40,19 +40,19 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
         @AttrRes val backgroundColorResId: Int
     ) {
         HIGHLIGHTED(
-                0,
-                R.attr.colorOnPrimary,
-                R.attr.colorPrimary
+            0,
+            R.attr.colorOnPrimary,
+            R.attr.colorPrimary
         ),
         NORMAL(
-                1,
-                R.attr.colorOnSurface,
-                R.attr.colorSurface
+            1,
+            R.attr.colorOnSurface,
+            R.attr.colorSurface
         );
 
         companion object {
             fun fromInt(value: Int): PrefMainSwitchToolbarViewStyle? =
-                    values().firstOrNull { it.value == value }
+                values().firstOrNull { it.value == value }
         }
     }
 
@@ -94,12 +94,12 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
 
         attrs?.let {
             val typedArray = context.obtainStyledAttributes(
-                    it,
-                    R.styleable.PrefMainSwitchToolbarView, 0, 0
+                it,
+                R.styleable.PrefMainSwitchToolbarView, 0, 0
             )
             try {
                 titleContentDescription = typedArray
-                        .getString(R.styleable.PrefMainSwitchToolbarView_mainContentDescription)
+                    .getString(R.styleable.PrefMainSwitchToolbarView_mainContentDescription)
 
                 val titleOn = typedArray.getString(R.styleable.PrefMainSwitchToolbarView_mainTitleOn)
                 val titleOff = typedArray.getString(R.styleable.PrefMainSwitchToolbarView_mainTitleOff)
@@ -107,10 +107,10 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
                 val hintOff = typedArray.getString(R.styleable.PrefMainSwitchToolbarView_mainHintOff)
 
                 val contentInsetStart = resources.getDimensionPixelSize(
-                        typedArray.getResourceId(
-                                R.styleable.PrefMainSwitchToolbarView_mainContentInsetStart,
-                                R.dimen.toolbar_content_offset
-                        )
+                    typedArray.getResourceId(
+                        R.styleable.PrefMainSwitchToolbarView_mainContentInsetStart,
+                        R.dimen.toolbar_content_offset
+                    )
                 )
                 val offsetEndResId = typedArray.getResourceId(R.styleable.PrefMainSwitchToolbarView_mainOffsetEnd, -1)
                 var offsetEnd = -1
@@ -166,10 +166,10 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
     fun setOffsetEnd(offsetEnd: Int) {
         if (offsetEnd != -1) {
             mainSwitch.setPaddingRelative(
-                    mainSwitch.left,
-                    mainSwitch.top,
-                    offsetEnd,
-                    mainSwitch.bottom
+                mainSwitch.left,
+                mainSwitch.top,
+                offsetEnd,
+                mainSwitch.bottom
             )
         }
     }
@@ -227,8 +227,8 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
             throw IllegalStateException("Unknown view style id: $viewStyleInt")
         } else {
             AppLog.e(
-                    AppLog.T.SETTINGS,
-                    "PrefMainSwitchToolbarView.setViewStyle called from xml with an unknown viewStyle."
+                AppLog.T.SETTINGS,
+                "PrefMainSwitchToolbarView.setViewStyle called from xml with an unknown viewStyle."
             )
         }
     }
@@ -266,9 +266,9 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
 
         if (toastText?.isNotEmpty() == true) {
             Toast.makeText(
-                    context,
-                    toastText,
-                    Toast.LENGTH_SHORT
+                context,
+                toastText,
+                Toast.LENGTH_SHORT
             ).show()
         }
         return true

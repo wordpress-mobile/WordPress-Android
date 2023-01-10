@@ -23,13 +23,13 @@ fun RepeatingColumn(
     content: @Composable () -> Unit
 ) {
     Layout(
-            content = {
-                Column(modifier = modifier) {
-                    repeat(repeat) {
-                        content()
-                    }
+        content = {
+            Column(modifier = modifier) {
+                repeat(repeat) {
+                    content()
                 }
             }
+        }
     ) { measurables, constraints ->
         val placeables = measurables.map {
             it.measure(constraints.copy(maxHeight = Constraints.Infinity))

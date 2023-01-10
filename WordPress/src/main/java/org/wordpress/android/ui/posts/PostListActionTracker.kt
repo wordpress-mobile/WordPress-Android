@@ -32,7 +32,7 @@ fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postDat
     properties["action"] = when (buttonType) {
         BUTTON_EDIT -> {
             properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils
-                    .contentContainsGutenbergBlocks(postData.content)
+                .contentContainsGutenbergBlocks(postData.content)
             "edit"
         }
         BUTTON_RETRY -> "retry"

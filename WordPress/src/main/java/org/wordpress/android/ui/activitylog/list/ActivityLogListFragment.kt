@@ -56,8 +56,11 @@ private const val BACKUP_TRACKING_SOURCE = "backup"
  * screen's architecture.
  */
 class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: ActivityLogViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var listView: EmptyViewRecyclerView
@@ -68,8 +71,8 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         val nonNullActivity = requireActivity()
         (nonNullActivity.application as WordPress).component().inject(this@ActivityLogListFragment)
         viewModel = ViewModelProvider(
-                this@ActivityLogListFragment,
-                viewModelFactory
+            this@ActivityLogListFragment,
+            viewModelFactory
         ).get(ActivityLogViewModel::class.java)
 
         with(ActivityLogListFragmentBinding.bind(view)) {
@@ -131,7 +134,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
     @Suppress("UNCHECKED_CAST")
     private fun restoreDateRangePickerListeners() {
         (childFragmentManager.findFragmentByTag(DATE_PICKER_TAG) as? MaterialDatePicker<Pair<Long, Long>>)
-                ?.let { initDateRangePickerButtonClickListener(it) }
+            ?.let { initDateRangePickerButtonClickListener(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -166,12 +169,12 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
 
         viewModel.emptyUiState.observe(viewLifecycleOwner, { emptyState ->
             actionableEmptyView.title.text = uiHelpers.getTextOfUiString(
-                    requireContext(),
-                    emptyState.emptyScreenTitle
+                requireContext(),
+                emptyState.emptyScreenTitle
             )
             actionableEmptyView.subtitle.text = uiHelpers.getTextOfUiString(
-                    requireContext(),
-                    emptyState.emptyScreenSubtitle
+                requireContext(),
+                emptyState.emptyScreenSubtitle
             )
         })
 
@@ -186,12 +189,12 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         viewModel.showItemDetail.observe(viewLifecycleOwner, {
             if (it is ActivityLogListItem.Event) {
                 ActivityLauncher.viewActivityLogDetailForResult(
-                        activity,
-                        viewModel.site,
-                        it.activityId,
-                        it.isButtonVisible,
-                        it.isRestoreHidden,
-                        viewModel.rewindableOnly
+                    activity,
+                    viewModel.site,
+                    it.activityId,
+                    it.isButtonVisible,
+                    it.isRestoreHidden,
+                    viewModel.rewindableOnly
                 )
             }
         })
@@ -215,7 +218,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
     private fun navigate(events: ActivityLogNavigationEvents) {
         val trackingSource = when {
             requireNotNull(
-                    requireActivity().intent.extras?.containsKey(ACTIVITY_LOG_REWINDABLE_ONLY_KEY)
+                requireActivity().intent.extras?.containsKey(ACTIVITY_LOG_REWINDABLE_ONLY_KEY)
             ) ->
                 BACKUP_TRACKING_SOURCE
             else -> {
@@ -225,18 +228,18 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
 
         when (events) {
             is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
-                    requireActivity(),
-                    viewModel.site,
-                    events.event.activityId,
-                    RequestCodes.BACKUP_DOWNLOAD,
-                    trackingSource
+                requireActivity(),
+                viewModel.site,
+                events.event.activityId,
+                RequestCodes.BACKUP_DOWNLOAD,
+                trackingSource
             )
             is ShowRestore -> ActivityLauncher.showRestoreForResult(
-                    requireActivity(),
-                    viewModel.site,
-                    events.event.activityId,
-                    RequestCodes.RESTORE,
-                    trackingSource
+                requireActivity(),
+                viewModel.site,
+                events.event.activityId,
+                RequestCodes.RESTORE,
+                trackingSource
             )
             is DownloadBackupFile -> ActivityLauncher.downloadBackupDownloadFile(requireActivity(), events.url)
         }
@@ -244,16 +247,16 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
 
     private fun showDateRangePicker(initialDateRange: DateRange?) {
         val picker = MaterialDatePicker.Builder
-                .dateRangePicker()
-                .setTheme(R.style.WordPress_MaterialCalendarFullscreenTheme)
-                .setCalendarConstraints(
-                        CalendarConstraints.Builder()
-                                .setValidator(DateValidatorPointBackward.now())
-                                .setEnd(MaterialDatePicker.todayInUtcMilliseconds())
-                                .build()
-                )
-                .setSelection(initialDateRange)
-                .build()
+            .dateRangePicker()
+            .setTheme(R.style.WordPress_MaterialCalendarFullscreenTheme)
+            .setCalendarConstraints(
+                CalendarConstraints.Builder()
+                    .setValidator(DateValidatorPointBackward.now())
+                    .setEnd(MaterialDatePicker.todayInUtcMilliseconds())
+                    .build()
+            )
+            .setSelection(initialDateRange)
+            .build()
         initDateRangePickerButtonClickListener(picker)
         picker.show(childFragmentManager, DATE_PICKER_TAG)
     }
@@ -268,7 +271,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         dateRange: DateRange?
     ) {
         ActivityLogTypeFilterFragment.newInstance(remoteSiteId, initialSelection, dateRange)
-                .show(childFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
+            .show(childFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
     }
 
     private fun updateFilters(uiState: FiltersShown) {
@@ -282,7 +285,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         with(requireActivity().findViewById<Chip>(R.id.activity_type_filter)) {
             text = uiHelpers.getTextOfUiString(requireContext(), uiState.activityTypeLabel)
             contentDescription = uiHelpers
-                    .getTextOfUiString(requireContext(), uiState.activityTypeLabelContentDescription)
+                .getTextOfUiString(requireContext(), uiState.activityTypeLabelContentDescription)
             isCloseIconVisible = uiState.onClearActivityTypeFilterClicked != null
             setOnCloseIconClickListener { uiState.onClearActivityTypeFilterClicked?.invoke() }
         }
@@ -318,9 +321,9 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         val adapter: ActivityLogAdapter
         if (logListView.adapter == null) {
             adapter = ActivityLogAdapter(
-                    this@ActivityLogListFragment::onItemClicked,
-                    this@ActivityLogListFragment::onSecondaryActionClicked,
-                    uiHelpers
+                this@ActivityLogListFragment::onItemClicked,
+                this@ActivityLogListFragment::onSecondaryActionClicked,
+                uiHelpers
             )
             logListView.adapter = adapter
         } else {

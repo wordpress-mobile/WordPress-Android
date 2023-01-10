@@ -43,9 +43,9 @@ class PostListButton : LinearLayout {
         var buttonType = 0
         if (attrs != null) {
             val a = context.theme.obtainStyledAttributes(
-                    attrs,
-                    R.styleable.wpPostListButton,
-                    0, 0
+                attrs,
+                R.styleable.wpPostListButton,
+                0, 0
             )
             try {
                 buttonType = a.getInteger(R.styleable.wpPostListButton_wpPostButtonType, 0)
@@ -85,9 +85,9 @@ class PostListButton : LinearLayout {
     private fun loadResourcesForButtonType(buttonType: PostListButtonType) {
         val color = context.getColorFromAttribute(buttonType.colorAttrId)
         ColorUtils.setImageResourceWithTint(
-                imageView,
-                buttonType.iconResId,
-                context.getColorResIdFromAttribute(buttonType.colorAttrId)
+            imageView,
+            buttonType.iconResId,
+            context.getColorResIdFromAttribute(buttonType.colorAttrId)
         )
         textView.setText(buttonType.textResId)
         textView.setTextColor(color)

@@ -28,8 +28,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapIt
 import org.wordpress.android.util.extensions.getColorFromAttribute
 
 class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_web_view_item
+    parent,
+    R.layout.stats_block_web_view_item
 ) {
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private val webView: WebView = itemView.findViewById(R.id.web_view)

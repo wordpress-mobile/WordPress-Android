@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-29 13:41:00+0000
+Translation-Revision-Date: 2022-12-19 23:07:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: en_GB
 -->
 <resources>
+    <string name="reader_menu_block_user">Block user</string>
+    <string name="reader_toast_user_blocked">Posts from this user will no longer be shown</string>
+    <string name="reader_menu_report_user">Report this user</string>
     <string name="wp_jetpack_continue_without_jetpack">Continue without Jetpack</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Create a new WordPress site with the Jetpack app</string>
     <string name="wp_jetpack_deep_link_overlay_description">It looks like you have the Jetpack app installed.\n\nWould you like to open links in the Jetpack app in the future?\n\nYou can always change this in App Settings &gt; Open links in Jetpack</string>
@@ -24,7 +27,6 @@ Language: en_GB
     <string name="jp_migration_got_it_button">Got it</string>
     <string name="jp_migration_need_help_button">Need help?</string>
     <string name="preference_open_links_in_jetpack">Open links in Jetpack</string>
-    <string name="jp_migration_delete_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to&lt;br&gt;avoid data conflicts.</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Unable to disable open links in Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Unable to enable open links in Jetpack</string>
     <string name="jp_migration_delete_subtitle">It looks like you still have the WordPress app installed. We recommend you delete the WordPress app to avoid data conflicts.</string>
@@ -35,7 +37,6 @@ Language: en_GB
     <string name="jp_migration_generic_error_subtitle">We’re sorry but something didn’t go as planned. Your data is safe, but we’re unable to transfer it at this time.</string>
     <string name="jp_migration_delete_title">You no longer need the WordPress app</string>
     <string name="jp_migration_finish_button">Finish</string>
-    <string name="jp_migration_done_delete_wp_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to&lt;br&gt;avoid data conflicts.</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Remove WordPress App icon</string>
     <string name="jp_migration_try_again_button">Try again</string>
     <string name="jp_migration_generic_error_title">Uh oh, something went wrong..</string>

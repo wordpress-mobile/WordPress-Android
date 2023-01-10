@@ -44,16 +44,16 @@ class GetDiscoverCardsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = GetDiscoverCardsUseCase(
-                parseDiscoverCardsJsonUseCase,
-                readerDiscoverCardsTableWrapper,
-                readerPostTableWrapper,
-                readerBlogTableWrapper,
-                appLogWrapper,
-                appPrefsWrapper,
-                testDispatcher()
+            parseDiscoverCardsJsonUseCase,
+            readerDiscoverCardsTableWrapper,
+            readerPostTableWrapper,
+            readerBlogTableWrapper,
+            appLogWrapper,
+            appPrefsWrapper,
+            testDispatcher()
         )
         whenever(parseDiscoverCardsJsonUseCase.convertListOfJsonArraysIntoSingleJsonArray(anyOrNull()))
-                .thenReturn(mockedJsonArray)
+            .thenReturn(mockedJsonArray)
         whenever(mockedJsonArray.length()).thenReturn(3)
         whenever(mockedJsonArray.getJSONObject(0)).thenReturn(mockedPostCardJson)
         whenever(mockedJsonArray.getJSONObject(1)).thenReturn(mockedInterestsCardJson)
@@ -61,24 +61,24 @@ class GetDiscoverCardsUseCaseTest : BaseUnitTest() {
         whenever(readerDiscoverCardsTableWrapper.loadDiscoverCardsJsons()).thenReturn(listOf(""))
         whenever(parseDiscoverCardsJsonUseCase.parseInterestCard(anyOrNull())).thenReturn(mock())
         whenever(parseDiscoverCardsJsonUseCase.parseSimplifiedRecommendedBlogsCard(anyOrNull()))
-                .thenReturn(listOf(Pair(1L, 0L), Pair(2L, 0L)))
+            .thenReturn(listOf(Pair(1L, 0L), Pair(2L, 0L)))
         whenever(parseDiscoverCardsJsonUseCase.parseSimplifiedPostCard(anyOrNull())).thenReturn(Pair(101, 102))
         whenever(readerPostTableWrapper.getBlogPost(anyLong(), anyLong(), anyBoolean())).thenReturn(mock())
         whenever(mockedPostCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
-                .thenReturn(ReaderConstants.JSON_CARD_POST)
+            .thenReturn(ReaderConstants.JSON_CARD_POST)
         whenever(mockedInterestsCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
-                .thenReturn(ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE)
+            .thenReturn(ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE)
         whenever(mockedRecommendedBlogsCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
-                .thenReturn(ReaderConstants.JSON_CARD_RECOMMENDED_BLOGS)
+            .thenReturn(ReaderConstants.JSON_CARD_RECOMMENDED_BLOGS)
         whenever(appPrefsWrapper.readerDiscoverWelcomeBannerShown)
-                .thenReturn(true)
+            .thenReturn(true)
     }
 
     @Test
     fun `welcome card is added as first card if it has not been shown yet`() = test {
         // Arrange
         whenever(appPrefsWrapper.readerDiscoverWelcomeBannerShown)
-                .thenReturn(false)
+            .thenReturn(false)
         // Act
         val result = useCase.get()
         // Assert
@@ -89,7 +89,7 @@ class GetDiscoverCardsUseCaseTest : BaseUnitTest() {
     fun `welcome card is not added to list of cards if was already shown once`() = test {
         // Arrange
         whenever(appPrefsWrapper.readerDiscoverWelcomeBannerShown)
-                .thenReturn(true)
+            .thenReturn(true)
         // Act
         val result = useCase.get()
         // Assert
@@ -110,7 +110,7 @@ class GetDiscoverCardsUseCaseTest : BaseUnitTest() {
     fun `interest you might like card json is transformed into InterestsYouMayLikeCard object`() = test {
         // Arrange
         whenever(mockedPostCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
-                .thenReturn(ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE)
+            .thenReturn(ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE)
         // Act
         val result = useCase.get()
         // Assert
@@ -121,7 +121,7 @@ class GetDiscoverCardsUseCaseTest : BaseUnitTest() {
     fun `recommended blogs card json is transformed into ReaderRecommendedBlogsCard object`() = test {
         // Arrange
         whenever(mockedPostCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
-                .thenReturn(ReaderConstants.JSON_CARD_RECOMMENDED_BLOGS)
+            .thenReturn(ReaderConstants.JSON_CARD_RECOMMENDED_BLOGS)
         // Act
         val result = useCase.get()
         // Assert
@@ -132,7 +132,7 @@ class GetDiscoverCardsUseCaseTest : BaseUnitTest() {
     fun `post card json is transformed into ReaderPostCard object`() = test {
         // Arrange
         whenever(mockedPostCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
-                .thenReturn(ReaderConstants.JSON_CARD_POST)
+            .thenReturn(ReaderConstants.JSON_CARD_POST)
         // Act
         val result = useCase.get()
         // Assert

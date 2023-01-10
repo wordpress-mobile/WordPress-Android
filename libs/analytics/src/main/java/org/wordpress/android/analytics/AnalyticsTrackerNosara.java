@@ -2469,6 +2469,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "remove_feature_overlay_button_tapped";
             case JETPACK_REMOVE_FEATURE_OVERLAY_DISMISSED:
                 return "remove_feature_overlay_dismissed";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED:
+                return "remove_feature_overlay_link_tapped";
             case JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISPLAYED:
                 return "remove_site_creation_overlay_displayed";
             case JETPACK_REMOVE_SITE_CREATION_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED:

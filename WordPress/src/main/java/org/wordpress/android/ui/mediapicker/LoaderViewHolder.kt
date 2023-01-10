@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager.LayoutParams
 import org.wordpress.android.R
 
 class LoaderViewHolder(parent: ViewGroup) :
-        ThumbnailViewHolder(parent, R.layout.media_picker_loader_item) {
+    ThumbnailViewHolder(parent, R.layout.media_picker_loader_item) {
     private val progress: View = itemView.findViewById(R.id.progress)
     private val retry: Button = itemView.findViewById(R.id.button)
     fun bind(item: MediaPickerUiItem.NextPageLoader) {

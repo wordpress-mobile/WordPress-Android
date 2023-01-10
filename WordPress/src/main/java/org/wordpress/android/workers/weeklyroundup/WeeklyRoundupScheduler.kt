@@ -25,22 +25,22 @@ class WeeklyRoundupScheduler @Inject constructor(
 
     fun scheduleIfNeeded() {
         val isNotificationSettingsEnabled = sharedPrefs.getBoolean(
-                context.getString(R.string.wp_pref_notifications_main),
-                true
+            context.getString(R.string.wp_pref_notifications_main),
+            true
         )
         if (isNotificationSettingsEnabled) {
             val next = LocalDate.now().with(next(MONDAY)).atTime(DEFAULT_START_TIME)
             val delay = Duration.between(LocalDateTime.now(), next)
 
             val constraints = Constraints.Builder()
-                    .setRequiredNetworkType(CONNECTED)
-                    .build()
+                .setRequiredNetworkType(CONNECTED)
+                .build()
 
             val workRequest = OneTimeWorkRequestBuilder<WeeklyRoundupWorker>()
-                    .addTag(TAG)
-                    .setInitialDelay(delay.toMillis(), MILLISECONDS)
-                    .setConstraints(constraints)
-                    .build()
+                .addTag(TAG)
+                .setInitialDelay(delay.toMillis(), MILLISECONDS)
+                .setConstraints(constraints)
+                .build()
 
             workManager.enqueueUniqueWork(TAG, KEEP, workRequest)
         }

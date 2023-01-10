@@ -1,4 +1,0 @@
-21.3:
-- Der Text im QR-Code-Scanvorgang wird in die Sprache deiner App übersetzt.
-- Über den Schalter „Benachrichtigungseinstellungen“ können wöchentliche Zusammenfassungen, Blog-Erinnerungen und Website-Benachrichtigungen deaktiviert werden.
-- Unter „Meine Website“ > „Kommentare“ wurde ein Fehler behoben, durch den die App bei selbst gehosteten Websites mit bestimmten Plugins abstürzte.

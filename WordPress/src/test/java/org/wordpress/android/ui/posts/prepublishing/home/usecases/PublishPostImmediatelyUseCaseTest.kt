@@ -18,17 +18,18 @@ class PublishPostImmediatelyUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: PublishPostImmediatelyUseCase
     private lateinit var editPostRepository: EditPostRepository
 
-    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    @Mock
+    lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
 
     @Before
     fun setup() {
         useCase = PublishPostImmediatelyUseCase(dateTimeUtilsWrapper)
         editPostRepository = EditPostRepository(
-                mock(),
-                mock(),
-                mock(),
-                testDispatcher(),
-                testDispatcher()
+            mock(),
+            mock(),
+            mock(),
+            testDispatcher(),
+            testDispatcher()
         )
         editPostRepository.set { PostModel() }
     }

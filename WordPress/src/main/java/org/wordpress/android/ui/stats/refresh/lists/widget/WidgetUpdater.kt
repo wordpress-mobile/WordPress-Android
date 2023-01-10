@@ -33,11 +33,11 @@ interface WidgetUpdater {
         private val context: Context
     ) {
         private val widgetUpdaters = listOf(
-                viewsWidgetUpdater,
-                allTimeWidgetUpdater,
-                todayWidgetUpdater,
-                minifiedWidgetUpdater,
-                weekViewsWidgetUpdater
+            viewsWidgetUpdater,
+            allTimeWidgetUpdater,
+            todayWidgetUpdater,
+            minifiedWidgetUpdater,
+            weekViewsWidgetUpdater
         )
 
         fun update(context: Context) {

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-30 14:54:29+0000
+Translation-Revision-Date: 2023-01-04 13:35:46+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: tr
 -->
 <resources>
+    <string name="reader_toast_user_blocked">Bu kullanıcıdan yazılar artık gösterilmeyecek</string>
+    <string name="reader_menu_block_user">Kullanıcıyı engelle</string>
+    <string name="reader_menu_report_user">Bu kullanıcıyı bildir</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">WordPress\'te bağlantıları aç</string>
     <string name="wp_jetpack_deep_link_overlay_description">Görünüşe göre Jetpack uygulaması cihazınızda yüklü.\n\nBundan sonra bağlantıları Jetpack uygulamasında açmak ister misiniz?\n\nİstediğiniz zaman bunu Uygulama Ayarları &gt; Bağlantıları Jetpack\'te aç seçeneğini kullanarak değiştirebilirsiniz.</string>
     <string name="wp_jetpack_deep_link_overlay_title">Bağlantılar Jetpack\'te açılsın mı?</string>
@@ -15,6 +18,7 @@ Language: tr
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Jetpack uygulamasıyla yeni bir WordPress sitesi oluşturun</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Cihazınızda gerçek zamanlı bildirimler almaya devam etmek için Jetpack uygulamasına geçiş yapın.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Okuyucu ile tüm favori sitelerinizi ve gönderilerinizi bulmak, takip etmek ve beğenmek için Jetpack\'e geçiş yapın.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">İstatistikler ve bilgilerle sitenizin trafiğinin büyümesini izlemek için Jetpack uygulamasına geçiş yapın.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Bildirimlerinizi Jetpack uygulamasıyla alın</string>
@@ -25,7 +29,6 @@ Language: tr
     <string name="preference_open_links_in_jetpack">Bağlantıları Jetpack\'te aç</string>
     <string name="jp_migration_need_help_button">Yardıma mı ihtiyacınız var?</string>
     <string name="jp_migration_got_it_button">Anladım</string>
-    <string name="jp_migration_delete_message">Veri çakışmalarını&lt;br&gt;önlemek için lütfen &lt;b&gt;WordPress uygulamasını silin&lt;/b&gt;.</string>
     <string name="jp_migration_delete_subtitle">Görünüşe göre WordPress uygulaması hâlâ yüklü. Veri çakışmalarını önlemek için WordPress uygulamasını silmenizi öneririz.</string>
     <string name="jp_migration_delete_title">Artık WordPress uygulamasına ihtiyacınız yok</string>
     <string name="jp_migration_network_error_message">Ağ bağlantısı olmadığı için verilerinizi ve ayarlarınızı aktaramıyoruz.</string>
@@ -37,7 +40,6 @@ Language: tr
     <string name="jp_migration_try_again_button">Tekrar deneyin</string>
     <string name="jp_migration_finish_button">Bitir</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">WordPress Uygulaması simgesini kaldır</string>
-    <string name="jp_migration_done_delete_wp_message">Veri çakışmalarını&lt;br&gt;önlemek için lütfen &lt;b&gt;WordPress uygulamasını silin&lt;/b&gt;.</string>
     <string name="jp_migration_done_subtitle">Tüm verilerinizi ve ayarlarınızı aktardık. Her şey bıraktığınız yerde.</string>
     <string name="jp_migration_done_title">Jetpack\'e geçtiğiniz için teşekkürler!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">WordPress uygulamasından gelen bildirimleri kapatacağız.</string>

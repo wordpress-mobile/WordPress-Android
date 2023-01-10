@@ -8,9 +8,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import kotlinx.parcelize.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.collect
+import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -66,7 +65,6 @@ import org.wordpress.android.util.wizard.WizardState
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Date
-import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -159,10 +157,10 @@ class BackupDownloadViewModel @Inject constructor(
     private fun constructProgressEvent() {
         _wizardFinishedObservable.value = if (backupDownloadState.downloadId != null) {
             Event(
-                    BackupDownloadInProgress(
-                            backupDownloadState.rewindId as String,
-                            backupDownloadState.downloadId as Long
-                    )
+                BackupDownloadInProgress(
+                    backupDownloadState.rewindId as String,
+                    backupDownloadState.downloadId as Long
+                )
             )
         } else {
             Event(BackupDownloadCanceled)
@@ -172,10 +170,10 @@ class BackupDownloadViewModel @Inject constructor(
     private fun constructCompleteEvent() {
         _wizardFinishedObservable.value = if (backupDownloadState.downloadId != null) {
             Event(
-                    BackupDownloadCompleted(
-                            backupDownloadState.rewindId as String,
-                            backupDownloadState.downloadId as Long
-                    )
+                BackupDownloadCompleted(
+                    backupDownloadState.rewindId as String,
+                    backupDownloadState.downloadId as Long
+                )
             )
         } else {
             Event(BackupDownloadCanceled)
@@ -193,14 +191,14 @@ class BackupDownloadViewModel @Inject constructor(
             val activityLogModel = getActivityLogItemUseCase.get(activityId)
             if (activityLogModel != null) {
                 _uiState.value = DetailsState(
-                        activityLogModel = activityLogModel,
-                        items = stateListItemBuilder.buildDetailsListStateItems(
-                                availableItems = availableItems,
-                                published = activityLogModel.published,
-                                onCreateDownloadClick = this@BackupDownloadViewModel::onCreateDownloadClick,
-                                onCheckboxItemClicked = this@BackupDownloadViewModel::onCheckboxItemClicked
-                        ),
-                        type = StateType.DETAILS
+                    activityLogModel = activityLogModel,
+                    items = stateListItemBuilder.buildDetailsListStateItems(
+                        availableItems = availableItems,
+                        published = activityLogModel.published,
+                        onCreateDownloadClick = this@BackupDownloadViewModel::onCreateDownloadClick,
+                        onCheckboxItemClicked = this@BackupDownloadViewModel::onCheckboxItemClicked
+                    ),
+                    type = StateType.DETAILS
                 )
             } else {
                 trackError(TRACKING_ERROR_CAUSE_OTHER)
@@ -211,32 +209,32 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun buildProgress() {
         _uiState.value = ProgressState(
-                items = stateListItemBuilder.buildProgressListStateItems(
-                        progress = progressStart,
-                        published = backupDownloadState.published as Date
-                ),
-                type = StateType.PROGRESS
+            items = stateListItemBuilder.buildProgressListStateItems(
+                progress = progressStart,
+                published = backupDownloadState.published as Date
+            ),
+            type = StateType.PROGRESS
         )
         queryStatus()
     }
 
     private fun buildComplete() {
         _uiState.value = CompleteState(
-                items = stateListItemBuilder.buildCompleteListStateItems(
-                        published = backupDownloadState.published as Date,
-                        onDownloadFileClick = this@BackupDownloadViewModel::onDownloadFileClick,
-                        onShareLinkClick = this@BackupDownloadViewModel::onShareLinkClick
-                ), type = StateType.COMPLETE
+            items = stateListItemBuilder.buildCompleteListStateItems(
+                published = backupDownloadState.published as Date,
+                onDownloadFileClick = this@BackupDownloadViewModel::onDownloadFileClick,
+                onShareLinkClick = this@BackupDownloadViewModel::onShareLinkClick
+            ), type = StateType.COMPLETE
         )
     }
 
     private fun buildError(errorType: BackupDownloadErrorTypes) {
         _uiState.value = ErrorState(
+            errorType = errorType,
+            items = stateListItemBuilder.buildErrorListStateErrorItems(
                 errorType = errorType,
-                items = stateListItemBuilder.buildErrorListStateErrorItems(
-                        errorType = errorType,
-                        onDoneClick = this@BackupDownloadViewModel::onDoneClick
-                )
+                onDoneClick = this@BackupDownloadViewModel::onDoneClick
+            )
         )
     }
 
@@ -247,9 +245,9 @@ class BackupDownloadViewModel @Inject constructor(
             PROGRESS -> buildProgress()
             COMPLETE -> buildComplete()
             ERROR -> buildError(
-                    BackupDownloadErrorTypes.fromInt(
-                            target.wizardState.errorType ?: BackupDownloadErrorTypes.GenericFailure.id
-                    )
+                BackupDownloadErrorTypes.fromInt(
+                    target.wizardState.errorType ?: BackupDownloadErrorTypes.GenericFailure.id
+                )
             )
         }
     }
@@ -271,15 +269,15 @@ class BackupDownloadViewModel @Inject constructor(
         val checkboxes = items.filterIsInstance(CheckboxState::class.java)
 
         return BackupDownloadRequestTypes(
-                themes = checkboxes.firstOrNull { it.availableItemType == THEMES }?.checked ?: true,
-                plugins = checkboxes.firstOrNull { it.availableItemType == PLUGINS }?.checked
-                        ?: true,
-                uploads = checkboxes.firstOrNull { it.availableItemType == MEDIA_UPLOADS }?.checked
-                        ?: true,
-                sqls = checkboxes.firstOrNull { it.availableItemType == SQLS }?.checked ?: true,
-                roots = checkboxes.firstOrNull { it.availableItemType == ROOTS }?.checked ?: true,
-                contents = checkboxes.firstOrNull { it.availableItemType == CONTENTS }?.checked
-                        ?: true
+            themes = checkboxes.firstOrNull { it.availableItemType == THEMES }?.checked ?: true,
+            plugins = checkboxes.firstOrNull { it.availableItemType == PLUGINS }?.checked
+                ?: true,
+            uploads = checkboxes.firstOrNull { it.availableItemType == MEDIA_UPLOADS }?.checked
+                ?: true,
+            sqls = checkboxes.firstOrNull { it.availableItemType == SQLS }?.checked ?: true,
+            roots = checkboxes.firstOrNull { it.availableItemType == ROOTS }?.checked ?: true,
+            contents = checkboxes.firstOrNull { it.availableItemType == CONTENTS }?.checked
+                ?: true
         )
     }
 
@@ -304,9 +302,9 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun handleBackupDownloadRequestSuccess(result: Success) {
         backupDownloadState = backupDownloadState.copy(
-                rewindId = result.rewindId,
-                downloadId = result.downloadId,
-                published = extractPublishedDate()
+            rewindId = result.rewindId,
+            downloadId = result.downloadId,
+            published = extractPublishedDate()
         )
         wizardManager.showNextStep()
     }
@@ -318,7 +316,7 @@ class BackupDownloadViewModel @Inject constructor(
     private fun queryStatus() {
         launch {
             getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, backupDownloadState.downloadId as Long)
-                    .collect { state -> handleQueryStatus(state) }
+                .collect { state -> handleQueryStatus(state) }
         }
     }
 
@@ -348,8 +346,8 @@ class BackupDownloadViewModel @Inject constructor(
                 if (contentState.type == ViewType.PROGRESS) {
                     contentState as JetpackListItemState.ProgressState
                     contentState.copy(
-                            progress = state.progress ?: 0,
-                            progressLabel = UiStringText(percentFormatter.format(state.progress ?: 0))
+                        progress = state.progress ?: 0,
+                        progressLabel = UiStringText(percentFormatter.format(state.progress ?: 0))
                     )
                 } else {
                     contentState
@@ -367,10 +365,10 @@ class BackupDownloadViewModel @Inject constructor(
     private fun clearOldBackupDownloadState(wizardStep: BackupDownloadStep) {
         if (wizardStep == DETAILS) {
             backupDownloadState = backupDownloadState.copy(
-                    rewindId = null,
-                    downloadId = null,
-                    url = null,
-                    errorType = null
+                rewindId = null,
+                downloadId = null,
+                url = null,
+                errorType = null
             )
         }
     }
@@ -390,9 +388,9 @@ class BackupDownloadViewModel @Inject constructor(
             trackBackupDownloadConfirmed(types)
             launch {
                 val result = postBackupDownloadUseCase.postBackupDownloadRequest(
-                        rewindId,
-                        site,
-                        types
+                    rewindId,
+                    site,
+                    types
                 )
                 handleBackupDownloadRequestResult(result)
             }
@@ -420,12 +418,12 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun trackBackupDownloadConfirmed(types: BackupDownloadRequestTypes) {
         val propertiesSetup = mapOf(
-                "themes" to types.themes,
-                "plugins" to types.plugins,
-                "uploads" to types.uploads,
-                "sqls" to types.sqls,
-                "roots" to types.roots,
-                "contents" to types.contents
+            "themes" to types.themes,
+            "plugins" to types.plugins,
+            "uploads" to types.uploads,
+            "sqls" to types.sqls,
+            "roots" to types.roots,
+            "contents" to types.contents
         )
         val map = mapOf("restore_types" to JSONObject(propertiesSetup))
         AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_CONFIRMED, map)
@@ -441,7 +439,7 @@ class BackupDownloadViewModel @Inject constructor(
         private val NetworkUnavailableMsg = SnackbarMessageHolder(UiStringRes(string.error_network_connection))
         private val GenericFailureMsg = SnackbarMessageHolder(UiStringRes(string.backup_download_generic_failure))
         private val OtherRequestRunningMsg = SnackbarMessageHolder(
-                UiStringRes(string.backup_download_another_download_running)
+            UiStringRes(string.backup_download_another_download_running)
         )
     }
 

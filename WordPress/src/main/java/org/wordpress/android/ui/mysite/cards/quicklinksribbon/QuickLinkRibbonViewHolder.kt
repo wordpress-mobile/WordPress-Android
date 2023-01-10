@@ -17,7 +17,7 @@ private const val Y_BUFFER = 10
 class QuickLinkRibbonViewHolder(
     parent: ViewGroup
 ) : MySiteCardAndItemViewHolder<QuickLinkRibbonListBinding>(
-        parent.viewBinding(QuickLinkRibbonListBinding::inflate)
+    parent.viewBinding(QuickLinkRibbonListBinding::inflate)
 ) {
     init {
         with(binding.quickLinkRibbonItemList) {

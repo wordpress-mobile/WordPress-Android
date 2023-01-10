@@ -32,22 +32,24 @@ class QuickStartCardSource @Inject constructor(
         val quickStartTaskTypes = refresh.filter { it == true }.mapAsync(coroutineScope) {
             quickStartRepository.getQuickStartTaskTypes(siteLocalId).onEach { taskType ->
                 if (!isEmptyCategory(siteLocalId, taskType) &&
-                        quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteLocalId, taskType)) {
+                    quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteLocalId, taskType)
+                ) {
                     quickStartRepository.onCategoryCompleted(siteLocalId, taskType)
                 }
             }
         }
         return merge(quickStartTaskTypes, quickStartRepository.activeTask) { types, activeTask ->
             val categories =
-                    if (selectedSite != null &&
-                            quickStartUtilsWrapper.isQuickStartAvailableForTheSite(selectedSite) &&
-                            quickStartRepository.quickStartType
-                                    .isQuickStartInProgress(quickStartStore, siteLocalId.toLong())) {
-                        types?.map { quickStartRepository.buildQuickStartCategory(siteLocalId, it) }
-                                ?.filter { !isEmptyCategory(siteLocalId, it.taskType) } ?: listOf()
-                    } else {
-                        listOf()
-                    }
+                if (selectedSite != null &&
+                    quickStartUtilsWrapper.isQuickStartAvailableForTheSite(selectedSite) &&
+                    quickStartRepository.quickStartType
+                        .isQuickStartInProgress(quickStartStore, siteLocalId.toLong())
+                ) {
+                    types?.map { quickStartRepository.buildQuickStartCategory(siteLocalId, it) }
+                        ?.filter { !isEmptyCategory(siteLocalId, it.taskType) } ?: listOf()
+                } else {
+                    listOf()
+                }
             getState(QuickStartUpdate(activeTask, categories))
         }
     }

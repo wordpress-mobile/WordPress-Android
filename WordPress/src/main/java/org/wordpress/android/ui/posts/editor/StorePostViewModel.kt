@@ -82,8 +82,8 @@ class StorePostViewModel
         savePostToDbUseCase.savePostToDb(editPostRepository, site)
         return if (networkUtils.isNetworkAvailable()) {
             postUtils.trackSavePostAnalytics(
-                    editPostRepository.getPost(),
-                    requireNotNull(siteStore.getSiteByLocalId(editPostRepository.localSiteId))
+                editPostRepository.getPost(),
+                requireNotNull(siteStore.getSiteByLocalId(editPostRepository.localSiteId))
             )
             uploadService.uploadPost(context, editPostRepository.id, isFirstTimePublish)
             SAVED_ONLINE
@@ -118,9 +118,9 @@ class StorePostViewModel
     ) {
         postRepository.updateAsync({ postModel ->
             updatePostObjectWithUI(
-                    getUpdatedTitleAndContent,
-                    postModel,
-                    postRepository
+                getUpdatedTitleAndContent,
+                postModel,
+                postRepository
             )
         }, onCompleted)
     }
@@ -137,15 +137,15 @@ class StorePostViewModel
         return when (val updateFromEditor = getUpdatedTitleAndContent(postModel.content)) {
             is PostFields -> {
                 val postTitleOrContentChanged = updatePostContentNewEditor(
-                        postModel,
-                        updateFromEditor.title,
-                        updateFromEditor.content
+                    postModel,
+                    updateFromEditor.title,
+                    updateFromEditor.content
                 )
 
                 // only makes sense to change the publish date and locally changed date if the Post was actually changed
                 if (postTitleOrContentChanged) {
                     postRepository.updatePublishDateIfShouldBePublishedImmediately(
-                            postModel
+                        postModel
                     )
                 }
 

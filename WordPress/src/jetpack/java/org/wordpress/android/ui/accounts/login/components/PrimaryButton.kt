@@ -22,25 +22,25 @@ fun PrimaryButton(
     modifier: Modifier = Modifier,
 ) {
     Button(
-            onClick = onClick,
-            elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp,
-            ),
-            colors = ButtonDefaults.buttonColors(
-                    backgroundColor = colorResource(R.color.bg_jetpack_login_splash_primary_button),
-                    contentColor = colorResource(R.color.text_color_jetpack_login_splash_primary_button),
-            ),
-            modifier = modifier
-                    .padding(horizontal = dimensionResource(R.dimen.login_prologue_revamped_buttons_padding))
-                    .padding(top = Margin.ExtraLarge.value)
-                    .fillMaxWidth(),
+        onClick = onClick,
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 0.dp,
+        ),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = colorResource(R.color.bg_jetpack_login_splash_primary_button),
+            contentColor = colorResource(R.color.text_color_jetpack_login_splash_primary_button),
+        ),
+        modifier = modifier
+            .padding(horizontal = dimensionResource(R.dimen.login_prologue_revamped_buttons_padding))
+            .padding(top = Margin.ExtraLarge.value)
+            .fillMaxWidth(),
     ) {
         Text(
-                text = stringResource(R.string.continue_with_wpcom_no_signup),
-                style = TextStyle(
-                        fontWeight = FontWeight.SemiBold,
-                ),
+            text = stringResource(R.string.continue_with_wpcom_no_signup),
+            style = TextStyle(
+                fontWeight = FontWeight.SemiBold,
+            ),
         )
     }
 }

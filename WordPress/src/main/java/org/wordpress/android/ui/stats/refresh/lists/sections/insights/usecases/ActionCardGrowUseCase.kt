@@ -30,14 +30,14 @@ class ActionCardGrowUseCase @Inject constructor(
 
     override fun buildUiModel(domainModel: Boolean): List<BlockListItem> {
         return listOf(
-                ListItemActionCard(
-                        titleResource = string.stats_action_card_grow_audience_title,
-                        text = string.stats_action_card_grow_audience_message,
-                        positiveButtonText = string.stats_action_card_grow_audience_button_label,
-                        positiveAction = ListItemInteraction.create(this::onCheckCourse),
-                        negativeButtonText = string.stats_management_dismiss_insights_news_card,
-                        negativeAction = ListItemInteraction.create(this::onDismiss)
-                )
+            ListItemActionCard(
+                titleResource = string.stats_action_card_grow_audience_title,
+                text = string.stats_action_card_grow_audience_message,
+                positiveButtonText = string.stats_action_card_grow_audience_button_label,
+                positiveAction = ListItemInteraction.create(this::onCheckCourse),
+                negativeButtonText = string.stats_management_dismiss_insights_news_card,
+                negativeAction = ListItemInteraction.create(this::onDismiss)
+            )
         )
     }
 

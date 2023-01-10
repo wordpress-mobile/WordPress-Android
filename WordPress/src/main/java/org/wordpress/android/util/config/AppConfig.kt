@@ -88,13 +88,13 @@ class AppConfig
         val value = experimentValues.getOrPut(experiment.remoteField) {
             val remoteValue = featureFlagConfig.getString(experiment.remoteField)
             analyticsTracker.track(
-                    Stat.EXPERIMENT_VARIANT_SET,
-                    mapOf(experiment.remoteField to remoteValue)
+                Stat.EXPERIMENT_VARIANT_SET,
+                mapOf(experiment.remoteField to remoteValue)
             )
             remoteValue
         }
         return experiment.variants.find { it.value == value }
-                ?: throw IllegalArgumentException("Remote variant does not match local value: $value")
+            ?: throw IllegalArgumentException("Remote variant does not match local value: $value")
     }
 
     /**

@@ -21,27 +21,27 @@ fun generateMockComments(numComments: Int): List<CommentEntity> {
     val comments = ArrayList<CommentEntity>()
     for (i in 0..numComments) {
         comments.add(
-                CommentEntity(
-                        id = i.toLong(),
-                        remoteCommentId = i.toLong(),
-                        remotePostId = i.toLong() * 2,
-                        authorId = i.toLong() * 3,
-                        localSiteId = 5,
-                        remoteSiteId = 95,
-                        authorUrl = "http://author$i.org",
-                        authorName = "Author $i",
-                        authorEmail = "author$i@wordpress.org",
-                        authorProfileImageUrl = "http://author$i.org/profile.jpg",
-                        postTitle = "POst $i",
-                        status = "approved",
-                        datePublished = "some date",
-                        publishedTimestamp = 0L,
-                        content = "Content $i",
-                        url = "",
-                        hasParent = false,
-                        parentId = 0L,
-                        iLike = false
-                )
+            CommentEntity(
+                id = i.toLong(),
+                remoteCommentId = i.toLong(),
+                remotePostId = i.toLong() * 2,
+                authorId = i.toLong() * 3,
+                localSiteId = 5,
+                remoteSiteId = 95,
+                authorUrl = "http://author$i.org",
+                authorName = "Author $i",
+                authorEmail = "author$i@wordpress.org",
+                authorProfileImageUrl = "http://author$i.org/profile.jpg",
+                postTitle = "POst $i",
+                status = "approved",
+                datePublished = "some date",
+                publishedTimestamp = 0L,
+                content = "Content $i",
+                url = "",
+                hasParent = false,
+                parentId = 0L,
+                iLike = false
+            )
         )
     }
     return comments

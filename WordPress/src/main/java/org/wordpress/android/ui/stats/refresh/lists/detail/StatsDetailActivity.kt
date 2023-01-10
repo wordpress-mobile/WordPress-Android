@@ -77,8 +77,8 @@ class StatsDetailActivity : LocaleAwareActivity() {
                 statsPostViewIntent.putExtra(POST_URL, postUrl)
             }
             AnalyticsUtils.trackWithSiteId(
-                    Stat.STATS_SINGLE_POST_ACCESSED,
-                    site.siteId
+                Stat.STATS_SINGLE_POST_ACCESSED,
+                site.siteId
             )
             context.startActivity(statsPostViewIntent)
         }

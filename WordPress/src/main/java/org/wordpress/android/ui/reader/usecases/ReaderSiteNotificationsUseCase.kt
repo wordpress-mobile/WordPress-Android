@@ -98,9 +98,9 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
         if (event.isError) {
             continuation?.resume(false)
             AppLog.e(
-                    API,
-                    ReaderSiteNotificationsUseCase::class.java.simpleName + ".onSubscriptionUpdated: " +
-                            event.error.type + " - " + event.error.message
+                API,
+                ReaderSiteNotificationsUseCase::class.java.simpleName + ".onSubscriptionUpdated: " +
+                        event.error.type + " - " + event.error.message
             )
         } else {
             continuation?.resume(true)

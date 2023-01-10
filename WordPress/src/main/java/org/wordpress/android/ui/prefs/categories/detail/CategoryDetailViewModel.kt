@@ -78,33 +78,33 @@ class CategoryDetailViewModel @Inject constructor(
             val siteCategories = getCategoriesUseCase.getSiteCategories(siteModel)
             siteCategories.add(0, topLevelCategory)
             categoryId?.let { initializeEditCategoryState(siteCategories, categoryId) }
-                    ?: initializeAddCategoryState(siteCategories)
+                ?: initializeAddCategoryState(siteCategories)
         }
     }
 
     private fun initializeAddCategoryState(siteCategories: ArrayList<CategoryNode>) {
         _uiState.postValue(
-                UiState(
-                        categories = siteCategories,
-                        selectedParentCategoryPosition = 0,
-                        categoryName = ""
-                )
+            UiState(
+                categories = siteCategories,
+                selectedParentCategoryPosition = 0,
+                categoryName = ""
+            )
         )
     }
 
     private fun initializeEditCategoryState(siteCategories: ArrayList<CategoryNode>, categoryId: Long) {
         existingCategory = getCategoriesUseCase.getCategoriesForSite(siteModel)
-                .find { it.remoteTermId == categoryId }
+            .find { it.remoteTermId == categoryId }
         var parentCategoryPosition = siteCategories.indexOfFirst { it.categoryId == existingCategory!!.parentRemoteId }
         if (parentCategoryPosition == -1) parentCategoryPosition = 0
         _uiState.postValue(
-                UiState(
-                        categories = siteCategories,
-                        selectedParentCategoryPosition = parentCategoryPosition,
-                        categoryName = existingCategory!!.name,
-                        categoryId = categoryId,
-                        submitButtonUiState = SubmitButtonUiState(buttonText = UiStringRes(R.string.update_category))
-                )
+            UiState(
+                categories = siteCategories,
+                selectedParentCategoryPosition = parentCategoryPosition,
+                categoryName = existingCategory!!.name,
+                categoryId = categoryId,
+                submitButtonUiState = SubmitButtonUiState(buttonText = UiStringRes(R.string.update_category))
+            )
         )
     }
 
@@ -119,7 +119,7 @@ class CategoryDetailViewModel @Inject constructor(
     private fun addCategory(categoryText: String, parentCategory: CategoryNode) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onCategoryPush.postValue(
-                    Event(Failure(UiStringRes(R.string.no_network_message)))
+                Event(Failure(UiStringRes(R.string.no_network_message)))
             )
             return
         }
@@ -132,18 +132,18 @@ class CategoryDetailViewModel @Inject constructor(
     private fun editCategory(categoryId: Long, categoryText: String, parentCategory: CategoryNode) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onCategoryPush.postValue(
-                    Event(Failure(UiStringRes(R.string.no_network_message)))
+                Event(Failure(UiStringRes(R.string.no_network_message)))
             )
             return
         }
         launch {
             _onCategoryPush.postValue(Event(InProgress(R.string.updating_cat)))
             editCategoryUseCase.editCategory(
-                    categoryId,
-                    existingCategory!!.slug,
-                    categoryText,
-                    parentCategory.categoryId,
-                    siteModel
+                categoryId,
+                existingCategory!!.slug,
+                categoryText,
+                parentCategory.categoryId,
+                siteModel
             )
         }
     }
@@ -160,8 +160,8 @@ class CategoryDetailViewModel @Inject constructor(
                 state.submitButtonUiState.copy(enabled = false)
             }
             _uiState.value = state.copy(
-                    categoryName = inputValue,
-                    submitButtonUiState = submitButtonUiState
+                categoryName = inputValue,
+                submitButtonUiState = submitButtonUiState
             )
         }
     }
@@ -172,8 +172,8 @@ class CategoryDetailViewModel @Inject constructor(
                 state.submitButtonUiState.copy(enabled = true)
             } ?: state.submitButtonUiState
             _uiState.value = state.copy(
-                    selectedParentCategoryPosition = position,
-                    submitButtonUiState = submitButtonUiState
+                selectedParentCategoryPosition = position,
+                submitButtonUiState = submitButtonUiState
             )
         }
     }
@@ -182,8 +182,8 @@ class CategoryDetailViewModel @Inject constructor(
     @Subscribe(threadMode = MAIN)
     fun onTermUploaded(event: OnTermUploaded) {
         if (event.isError) AppLog.e(
-                T.SETTINGS,
-                "An error occurred while uploading taxonomy with type: " + event.error.type
+            T.SETTINGS,
+            "An error occurred while uploading taxonomy with type: " + event.error.type
         )
         val categoryUiState = if (event.isError) Failure(UiStringRes(getTermUploadErrorMessage()))
         else Success(UiStringRes(getTermUploadSuccessMessage()))
@@ -194,8 +194,8 @@ class CategoryDetailViewModel @Inject constructor(
     @Subscribe(threadMode = MAIN)
     fun onTaxonomyChanged(event: OnTaxonomyChanged) {
         if (event.isError) AppLog.e(
-                T.SETTINGS,
-                "An error occurred while deleting taxonomy with type: " + event.error.type
+            T.SETTINGS,
+            "An error occurred while deleting taxonomy with type: " + event.error.type
         )
         when (event.causeOfChange) {
             REMOVE_TERM -> showDeleteStatusMessage(event.isError)
@@ -220,7 +220,7 @@ class CategoryDetailViewModel @Inject constructor(
     fun deleteCategory() {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onCategoryPush.postValue(
-                    Event(Failure(UiStringRes(R.string.no_network_message)))
+                Event(Failure(UiStringRes(R.string.no_network_message)))
             )
             return
         }

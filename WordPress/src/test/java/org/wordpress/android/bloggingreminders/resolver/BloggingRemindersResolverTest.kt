@@ -50,15 +50,15 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     private val bloggingRemindersModelMapper: BloggingRemindersModelMapper = mock()
     private val localMigrationContentResolver: LocalMigrationContentResolver = mock()
     private val classToTest = BloggingRemindersResolver(
-            jetpackBloggingRemindersSyncFlag,
-            appPrefsWrapper,
-            bloggingRemindersSyncAnalyticsTracker,
-            siteStore,
-            bloggingRemindersStore,
-            testScope(),
-            reminderScheduler,
-            bloggingRemindersModelMapper,
-            localMigrationContentResolver,
+        jetpackBloggingRemindersSyncFlag,
+        appPrefsWrapper,
+        bloggingRemindersSyncAnalyticsTracker,
+        siteStore,
+        bloggingRemindersStore,
+        testScope(),
+        reminderScheduler,
+        bloggingRemindersModelMapper,
+        localMigrationContentResolver,
     )
 
     private val context: Context = mock()
@@ -69,7 +69,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     private val userSetBloggingRemindersModel = BloggingRemindersModel(validLocalId, setOf(MONDAY), 5, 43, false)
     private val defaultBloggingRemindersModel = BloggingRemindersModel(validLocalId)
     private val bloggingRemindersUiModel = BloggingRemindersUiModel(
-            validLocalId, setOf(DayOfWeek.MONDAY), 5, 43, false
+        validLocalId, setOf(DayOfWeek.MONDAY), 5, 43, false
     )
 
     @Before
@@ -171,11 +171,11 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     fun `Should track success if result map has entries`() = test {
         whenever(bloggingRemindersModelMapper.toUiModel(any())).thenReturn(bloggingRemindersUiModel)
         whenever(bloggingRemindersStore.bloggingRemindersModel(validLocalId))
-                .thenReturn(flowOf(defaultBloggingRemindersModel))
+            .thenReturn(flowOf(defaultBloggingRemindersModel))
         featureEnabled()
         whenever(mockCursor.getString(0)).thenReturn(
-                "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
-                        ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
+            "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
+                    ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
         )
         classToTest.trySyncBloggingReminders({}, {})
         verify(bloggingRemindersSyncAnalyticsTracker).trackSuccess(1)
@@ -184,11 +184,11 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     @Test
     fun `Should trigger success callback if result map has entries`() = test {
         whenever(bloggingRemindersStore.bloggingRemindersModel(validLocalId))
-                .thenReturn(flowOf(userSetBloggingRemindersModel))
+            .thenReturn(flowOf(userSetBloggingRemindersModel))
         featureEnabled()
         whenever(mockCursor.getString(0)).thenReturn(
-                "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
-                        ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
+            "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
+                    ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
         )
         val onSuccess: () -> Unit = mock()
         classToTest.trySyncBloggingReminders(onSuccess) {}
@@ -199,21 +199,21 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     fun `Should update blogging reminder if site local ID is valid AND store returns default reminder`() = test {
         whenever(bloggingRemindersModelMapper.toUiModel(any())).thenReturn(bloggingRemindersUiModel)
         whenever(bloggingRemindersStore.bloggingRemindersModel(validLocalId))
-                .thenReturn(flowOf(defaultBloggingRemindersModel))
+            .thenReturn(flowOf(defaultBloggingRemindersModel))
         featureEnabled()
         whenever(mockCursor.getString(0)).thenReturn(
-                "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
-                        ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
+            "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
+                    ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
         )
         classToTest.trySyncBloggingReminders({}, {})
         verify(bloggingRemindersStore, times(1)).updateBloggingReminders(
-                BloggingRemindersModel(
-                        siteId = validLocalId,
-                        enabledDays = setOf(MONDAY),
-                        hour = 5,
-                        minute = 43,
-                        isPromptIncluded = false
-                )
+            BloggingRemindersModel(
+                siteId = validLocalId,
+                enabledDays = setOf(MONDAY),
+                hour = 5,
+                minute = 43,
+                isPromptIncluded = false
+            )
         )
     }
 
@@ -221,11 +221,11 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     fun `Should map blogging reminder when setting local notification`() = test {
         whenever(bloggingRemindersModelMapper.toUiModel(any())).thenReturn(bloggingRemindersUiModel)
         whenever(bloggingRemindersStore.bloggingRemindersModel(validLocalId))
-                .thenReturn(flowOf(defaultBloggingRemindersModel))
+            .thenReturn(flowOf(defaultBloggingRemindersModel))
         featureEnabled()
         whenever(mockCursor.getString(0)).thenReturn(
-                "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
-                        ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
+            "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
+                    ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
         )
         classToTest.trySyncBloggingReminders({}, {})
         verify(bloggingRemindersModelMapper).toUiModel(userSetBloggingRemindersModel)
@@ -235,18 +235,18 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     fun `Should schedule blogging reminder local notification`() = test {
         whenever(bloggingRemindersModelMapper.toUiModel(any())).thenReturn(bloggingRemindersUiModel)
         whenever(bloggingRemindersStore.bloggingRemindersModel(validLocalId))
-                .thenReturn(flowOf(defaultBloggingRemindersModel))
+            .thenReturn(flowOf(defaultBloggingRemindersModel))
         featureEnabled()
         whenever(mockCursor.getString(0)).thenReturn(
-                "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
-                        ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
+            "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
+                    ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
         )
         classToTest.trySyncBloggingReminders({}, {})
         verify(reminderScheduler).schedule(
-                validLocalId,
-                bloggingRemindersUiModel.hour,
-                bloggingRemindersUiModel.minute,
-                bloggingRemindersUiModel.toReminderConfig()
+            validLocalId,
+            bloggingRemindersUiModel.hour,
+            bloggingRemindersUiModel.minute,
+            bloggingRemindersUiModel.toReminderConfig()
         )
     }
 
@@ -255,8 +255,8 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
         val invalidLocalId = 0
         featureEnabled()
         whenever(mockCursor.getString(0)).thenReturn(
-                "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
-                        ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":$invalidLocalId}}]"
+            "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
+                    ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":$invalidLocalId}}]"
         )
         classToTest.trySyncBloggingReminders({}, {})
         verify(bloggingRemindersStore, times(0)).updateBloggingReminders(any())
@@ -265,11 +265,11 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     @Test
     fun `Should NOT update blogging reminder if reminder is already set`() = test {
         whenever(bloggingRemindersStore.bloggingRemindersModel(validLocalId))
-                .thenReturn(flowOf(userSetBloggingRemindersModel))
+            .thenReturn(flowOf(userSetBloggingRemindersModel))
         featureEnabled()
         whenever(mockCursor.getString(0)).thenReturn(
-                "[{\"enabledDays\":[],\"hour\":5" +
-                        ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
+            "[{\"enabledDays\":[],\"hour\":5" +
+                    ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
         )
         classToTest.trySyncBloggingReminders({}, {})
         verify(bloggingRemindersStore, times(0)).updateBloggingReminders(any())

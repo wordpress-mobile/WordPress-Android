@@ -17,8 +17,8 @@ class CommentViewHolder(
     private val imageManager: ImageManager,
     private val threadedCommentsUtils: ThreadedCommentsUtils
 ) : CommentsSnippetViewHolder<ReaderListitemCommentBinding>(
-        parent,
-        ReaderListitemCommentBinding::inflate
+    parent,
+    ReaderListitemCommentBinding::inflate
 ) {
     override fun onBind(itemUiState: CommentSnippetItemState) = with(binding) {
         val state = itemUiState as CommentState
@@ -42,11 +42,11 @@ class CommentViewHolder(
 
         threadedCommentsUtils.setLinksClickable(textCommentText, state.isPrivatePost)
         CommentUtils.displayHtmlComment(
-                textCommentText,
-                state.commentText,
-                threadedCommentsUtils.getMaxWidthForContent(),
-                textCommentText.lineHeight,
-                itemView.resources.getString(R.string.comment_unable_to_show_error)
+            textCommentText,
+            state.commentText,
+            threadedCommentsUtils.getMaxWidthForContent(),
+            textCommentText.lineHeight,
+            itemView.resources.getString(R.string.comment_unable_to_show_error)
         )
     }
 }

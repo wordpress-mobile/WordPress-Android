@@ -10,9 +10,9 @@ class JetpackLocalUserFlagsFeatureConfig
 @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.JETPACK_LOCAL_USER_FLAGS,
-        JETPACK_LOCAL_USER_FLAGS_REMOTE_FIELD
+    appConfig,
+    BuildConfig.JETPACK_LOCAL_USER_FLAGS,
+    JETPACK_LOCAL_USER_FLAGS_REMOTE_FIELD
 ) {
     companion object {
         const val JETPACK_LOCAL_USER_FLAGS_REMOTE_FIELD = "jetpack_local_user_flags_remote_field"

@@ -6,31 +6,43 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.ui.bloggingprompts.promptslist.model.BloggingPromptsListItemModel
+import org.wordpress.android.ui.bloggingprompts.promptslist.mapper.BloggingPromptsListItemModelMapper
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Failure
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
-import java.util.Date
 
 @ExperimentalCoroutinesApi
 class BloggingPromptsListViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var fetchBloggingPromptsListUseCase: FetchBloggingPromptsListUseCase
-    @Mock private lateinit var tracker: BloggingPromptsListAnalyticsTracker
-    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    private lateinit var fetchBloggingPromptsListUseCase: FetchBloggingPromptsListUseCase
+
+    @Mock
+    private lateinit var itemMapper: BloggingPromptsListItemModelMapper
+
+    @Mock
+    private lateinit var tracker: BloggingPromptsListAnalyticsTracker
+
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     lateinit var viewModel: BloggingPromptsListViewModel
 
     @Before
     fun setUp() {
+        whenever(itemMapper.toUiModel(argThat { id == BloggingPromptsListFixtures.UI_MODEL.id }))
+            .thenReturn(BloggingPromptsListFixtures.UI_MODEL)
+
         viewModel = BloggingPromptsListViewModel(
-                fetchBloggingPromptsListUseCase,
-                tracker,
-                networkUtilsWrapper,
-                testDispatcher()
+            fetchBloggingPromptsListUseCase,
+            itemMapper,
+            tracker,
+            networkUtilsWrapper,
+            testDispatcher()
         )
     }
 
@@ -42,10 +54,9 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given successful fetch, when start, then update uiState to Loading then Content`() = test {
-        val promptsList = listOf(BloggingPromptsListItemModel(0, "prompt", Date(), false, 0))
         whenever(fetchBloggingPromptsListUseCase.execute()).doSuspendableAnswer {
             delay(10)
-            Success(promptsList)
+            Success(listOf(BloggingPromptsListFixtures.DOMAIN_MODEL))
         }
         mockNetworkAvailability(true)
 
@@ -59,7 +70,8 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
 
         val result = viewModel.uiStateFlow.value
         assertThat(result).isInstanceOf(BloggingPromptsListViewModel.UiState.Content::class.java)
-        assertThat((result as BloggingPromptsListViewModel.UiState.Content).content).isEqualTo(promptsList)
+        assertThat((result as BloggingPromptsListViewModel.UiState.Content).content)
+            .isEqualTo(listOf(BloggingPromptsListFixtures.UI_MODEL))
     }
 
     @Test

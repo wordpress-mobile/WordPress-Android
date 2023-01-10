@@ -11,7 +11,7 @@ class MySiteInfoItemViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
 ) : CardViewHolder<MySiteInfoItemBinding>(
-        parent.viewBinding(MySiteInfoItemBinding::inflate)
+    parent.viewBinding(MySiteInfoItemBinding::inflate)
 ) {
     fun bind(item: InfoItem) = with(binding) {
         uiHelpers.setTextOrHide(mySiteInfoMessage, item.title)

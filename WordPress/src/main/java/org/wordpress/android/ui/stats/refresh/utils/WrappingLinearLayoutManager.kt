@@ -17,9 +17,9 @@ class WrappingLinearLayoutManager(
     orientation: Int,
     reverseLayout: Boolean
 ) : LinearLayoutManager(
-        context,
-        orientation,
-        reverseLayout
+    context,
+    orientation,
+    reverseLayout
 ) {
     private var enableAutoMeasure: Boolean = true
 

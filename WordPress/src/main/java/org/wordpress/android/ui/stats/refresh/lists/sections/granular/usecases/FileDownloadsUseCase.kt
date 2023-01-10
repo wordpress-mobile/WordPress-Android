@@ -21,7 +21,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
-import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
@@ -30,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Calendar
@@ -55,12 +55,12 @@ class FileDownloadsUseCase constructor(
     private val statsUtils: StatsUtils,
     private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<FileDownloadsModel>(
-        FILE_DOWNLOADS,
-        mainDispatcher,
-        backgroundDispatcher,
-        selectedDateProvider,
-        statsSiteProvider,
-        statsGranularity
+    FILE_DOWNLOADS,
+    mainDispatcher,
+    backgroundDispatcher,
+    selectedDateProvider,
+    statsSiteProvider,
+    statsGranularity
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
@@ -68,10 +68,10 @@ class FileDownloadsUseCase constructor(
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): FileDownloadsModel? {
         return store.getFileDownloads(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate
         )
     }
 
@@ -92,11 +92,11 @@ class FileDownloadsUseCase constructor(
         forced: Boolean
     ): State<FileDownloadsModel> {
         val response = store.fetchFileDownloads(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate,
-                forced
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate,
+            forced
         )
         val model = response.model
         val error = response.error
@@ -122,23 +122,23 @@ class FileDownloadsUseCase constructor(
             items.add(header)
             items.addAll(domainModel.fileDownloads.mapIndexed { index, fileDownloads ->
                 ListItemWithIcon(
-                        text = fileDownloads.filename,
-                        value = statsUtils.toFormattedString(fileDownloads.downloads),
-                        showDivider = index < domainModel.fileDownloads.size - 1,
-                        contentDescription = contentDescriptionHelper.buildContentDescription(
-                                header,
-                                fileDownloads.filename,
-                                fileDownloads.downloads
-                        )
+                    text = fileDownloads.filename,
+                    value = statsUtils.toFormattedString(fileDownloads.downloads),
+                    showDivider = index < domainModel.fileDownloads.size - 1,
+                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
+                        fileDownloads.filename,
+                        fileDownloads.downloads
+                    )
                 )
             })
 
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
-                        Link(
-                                text = R.string.stats_insights_view_more,
-                                navigateAction = ListItemInteraction.create(statsGranularity, this::onViewMoreClick)
-                        )
+                    Link(
+                        text = R.string.stats_insights_view_more,
+                        navigateAction = ListItemInteraction.create(statsGranularity, this::onViewMoreClick)
+                    )
                 )
             }
         }
@@ -148,10 +148,10 @@ class FileDownloadsUseCase constructor(
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_FILE_DOWNLOADS_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(
-                ViewFileDownloads(
-                        statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
-                )
+            ViewFileDownloads(
+                statsGranularity,
+                selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+            )
         )
     }
 
@@ -168,18 +168,18 @@ class FileDownloadsUseCase constructor(
         private val localeManagerWrapper: LocaleManagerWrapper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
-                FileDownloadsUseCase(
-                        granularity,
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        store,
-                        statsSiteProvider,
-                        selectedDateProvider,
-                        analyticsTracker,
-                        contentDescriptionHelper,
-                        localeManagerWrapper,
-                        statsUtils,
-                        useCaseMode
-                )
+            FileDownloadsUseCase(
+                granularity,
+                mainDispatcher,
+                backgroundDispatcher,
+                store,
+                statsSiteProvider,
+                selectedDateProvider,
+                analyticsTracker,
+                contentDescriptionHelper,
+                localeManagerWrapper,
+                statsUtils,
+                useCaseMode
+            )
     }
 }

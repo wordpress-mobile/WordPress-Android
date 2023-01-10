@@ -90,7 +90,7 @@ class StatsViewAllViewModel(
                 useCase.fetch(refresh, forced)
             } else {
                 _showSnackbarMessage.postValue(
-                        Event(SnackbarMessageHolder(UiStringRes(R.string.stats_site_not_loaded_yet)))
+                    Event(SnackbarMessageHolder(UiStringRes(R.string.stats_site_not_loaded_yet)))
                 )
             }
         }

@@ -29,19 +29,19 @@ sealed class LoadingItemOptions(
 )
 
 object LoadingItemDefaultPost : LoadingItemOptions(
-        showEditButton = true,
-        showViewButton = true,
-        showMoreButton = true,
-        showMoveToDraftButton = false,
-        showDeletePermanentlyButton = false
+    showEditButton = true,
+    showViewButton = true,
+    showMoreButton = true,
+    showMoveToDraftButton = false,
+    showDeletePermanentlyButton = false
 )
 
 object LoadingItemTrashedPost : LoadingItemOptions(
-        showEditButton = false,
-        showViewButton = false,
-        showMoreButton = false,
-        showMoveToDraftButton = true,
-        showDeletePermanentlyButton = true
+    showEditButton = false,
+    showViewButton = false,
+    showMoreButton = false,
+    showMoveToDraftButton = true,
+    showDeletePermanentlyButton = true
 )
 
 data class PostListItemUiStateData(
@@ -61,7 +61,7 @@ data class PostListItemUiStateData(
 
 sealed class PostListItemAction(val buttonType: PostListButtonType, val onButtonClicked: (PostListButtonType) -> Unit) {
     class SingleItem(buttonType: PostListButtonType, onButtonClicked: (PostListButtonType) -> Unit) :
-            PostListItemAction(buttonType, onButtonClicked)
+        PostListItemAction(buttonType, onButtonClicked)
 
     class MoreItem(
         val actions: List<PostListItemAction>,

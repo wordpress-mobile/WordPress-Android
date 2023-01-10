@@ -79,26 +79,26 @@ class PageListEventListener(
                 is CauseOfOnPostChanged.RemoteAutoSavePost -> {
                     if (event.isError) {
                         AppLog.d(
-                                T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
-                                event.error.type + " - " + event.error.message
+                            T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
+                                    event.error.type + " - " + event.error.message
                         )
                     }
 
                     uploadStatusChanged(
-                            LocalId((event.causeOfChange as CauseOfOnPostChanged.RemoteAutoSavePost).localPostId)
+                        LocalId((event.causeOfChange as CauseOfOnPostChanged.RemoteAutoSavePost).localPostId)
                     )
                     handleRemoteAutoSave.invoke(
-                            LocalId((event.causeOfChange as CauseOfOnPostChanged.RemoteAutoSavePost).localPostId),
-                            event.isError
+                        LocalId((event.causeOfChange as CauseOfOnPostChanged.RemoteAutoSavePost).localPostId),
+                        event.isError
                     )
                 }
 
                 is CauseOfOnPostChanged.UpdatePost -> {
                     if (event.isError) {
                         AppLog.e(
-                                T.POSTS,
-                                "Error updating the post with type: ${event.error.type} and" +
-                                        " message: ${event.error.message}"
+                            T.POSTS,
+                            "Error updating the post with type: ${event.error.type} and" +
+                                    " message: ${event.error.message}"
                         )
                     }
                     uploadStatusChanged(LocalId((event.causeOfChange as CauseOfOnPostChanged.UpdatePost).localPostId))
@@ -185,8 +185,9 @@ class PageListEventListener(
         if (!event.isError && siteStore.hasSiteWithLocalId(site.id)) {
             siteStore.getSiteByLocalId(site.id)?.let { updatedSite ->
                 if (updatedSite.showOnFront != site.showOnFront ||
-                        updatedSite.pageForPosts != site.pageForPosts ||
-                        updatedSite.pageOnFront != site.pageForPosts) {
+                    updatedSite.pageForPosts != site.pageForPosts ||
+                    updatedSite.pageOnFront != site.pageForPosts
+                ) {
                     handleHomepageSettingsChange(updatedSite)
                 }
             }
@@ -212,16 +213,16 @@ class PageListEventListener(
             handleHomepageSettingsChange: (SiteModel) -> Unit
         ): PageListEventListener {
             return PageListEventListener(
-                    dispatcher = dispatcher,
-                    bgDispatcher = bgDispatcher,
-                    postStore = postStore,
-                    eventBusWrapper = eventBusWrapper,
-                    siteStore = siteStore,
-                    site = site,
-                    invalidateUploadStatus = invalidateUploadStatus,
-                    handleRemoteAutoSave = handleRemoteAutoSave,
-                    handlePostUploadFinished = handlePostUploadFinished,
-                    handleHomepageSettingsChange = handleHomepageSettingsChange
+                dispatcher = dispatcher,
+                bgDispatcher = bgDispatcher,
+                postStore = postStore,
+                eventBusWrapper = eventBusWrapper,
+                siteStore = siteStore,
+                site = site,
+                invalidateUploadStatus = invalidateUploadStatus,
+                handleRemoteAutoSave = handleRemoteAutoSave,
+                handlePostUploadFinished = handlePostUploadFinished,
+                handleHomepageSettingsChange = handleHomepageSettingsChange
             )
         }
     }

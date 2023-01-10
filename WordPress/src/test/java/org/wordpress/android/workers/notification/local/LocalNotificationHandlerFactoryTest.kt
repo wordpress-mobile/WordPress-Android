@@ -23,8 +23,8 @@ class LocalNotificationHandlerFactoryTest {
     @Before
     fun setUp() {
         localNotificationHandlerFactory = LocalNotificationHandlerFactory(
-                createSiteNotificationHandler,
-                bloggingPromptsOnboardingNotificationHandler
+            createSiteNotificationHandler,
+            bloggingPromptsOnboardingNotificationHandler
         )
     }
 

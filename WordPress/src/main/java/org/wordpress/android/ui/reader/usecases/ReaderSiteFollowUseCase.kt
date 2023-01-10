@@ -64,12 +64,12 @@ class ReaderSiteFollowUseCase @Inject constructor(
             val deleteNotificationSubscription = !readerUtilsWrapper.isExternalFeed(param.blogId, param.feedId) &&
                     !isAskingToFollow
             emit(
-                    FollowStatusChanged(
-                            param.blogId,
-                            param.feedId,
-                            isAskingToFollow,
-                            deleteNotificationSubscription = deleteNotificationSubscription
-                    )
+                FollowStatusChanged(
+                    param.blogId,
+                    param.feedId,
+                    isAskingToFollow,
+                    deleteNotificationSubscription = deleteNotificationSubscription
+                )
             )
             emit(Success)
         }
@@ -88,12 +88,12 @@ class ReaderSiteFollowUseCase @Inject constructor(
         return suspendCoroutine { cont ->
             continuations[param] = cont
             readerBlogActionsWrapper.followBlog(
-                    param.blogId,
-                    param.feedId,
-                    isAskingToFollow,
-                    actionListener,
-                    source,
-                    readerTracker
+                param.blogId,
+                param.feedId,
+                isAskingToFollow,
+                actionListener,
+                source,
+                readerTracker
             )
         }
     }

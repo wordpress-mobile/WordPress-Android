@@ -50,21 +50,51 @@ import java.util.Date
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
     private lateinit var builder: ReaderPostDetailUiStateBuilder
-    @Mock lateinit var postUiStateBuilder: ReaderPostUiStateBuilder
-    @Mock lateinit var headerViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
-    @Mock lateinit var featuredImageUtils: FeaturedImageUtils
-    @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
-    @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var contextProvider: ContextProvider
-    @Mock lateinit var context: Context
-    @Mock lateinit var resources: Resources
-    @Mock lateinit var htmlUtilsWrapper: HtmlUtilsWrapper
-    @Mock lateinit var htmlMessageUtils: HtmlMessageUtils
-    @Mock lateinit var readerSimplePost: ReaderSimplePost
-    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
-    @Mock lateinit var gravatarUtilsWrapper: GravatarUtilsWrapper
-    @Mock lateinit var threadedCommentsUtils: ThreadedCommentsUtils
+
+    @Mock
+    lateinit var postUiStateBuilder: ReaderPostUiStateBuilder
+
+    @Mock
+    lateinit var headerViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
+
+    @Mock
+    lateinit var featuredImageUtils: FeaturedImageUtils
+
+    @Mock
+    lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+
+    @Mock
+    lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var contextProvider: ContextProvider
+
+    @Mock
+    lateinit var context: Context
+
+    @Mock
+    lateinit var resources: Resources
+
+    @Mock
+    lateinit var htmlUtilsWrapper: HtmlUtilsWrapper
+
+    @Mock
+    lateinit var htmlMessageUtils: HtmlMessageUtils
+
+    @Mock
+    lateinit var readerSimplePost: ReaderSimplePost
+
+    @Mock
+    lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
+    @Mock
+    lateinit var gravatarUtilsWrapper: GravatarUtilsWrapper
+
+    @Mock
+    lateinit var threadedCommentsUtils: ThreadedCommentsUtils
     private lateinit var dummyRelatedPosts: ReaderSimplePostList
 
     private var dummySourceReaderPost = ReaderPost().apply {
@@ -83,18 +113,18 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         dummyRelatedPosts = ReaderSimplePostList().apply { add(readerSimplePost) }
 
         builder = ReaderPostDetailUiStateBuilder(
-                headerViewUiStateBuilder,
-                postUiStateBuilder,
-                featuredImageUtils,
-                readerUtilsWrapper,
-                displayUtilsWrapper,
-                contextProvider,
-                htmlUtilsWrapper,
-                htmlMessageUtils,
-                dateTimeUtilsWrapper,
-                gravatarUtilsWrapper,
-                threadedCommentsUtils,
-                resourceProvider
+            headerViewUiStateBuilder,
+            postUiStateBuilder,
+            featuredImageUtils,
+            readerUtilsWrapper,
+            displayUtilsWrapper,
+            contextProvider,
+            htmlUtilsWrapper,
+            htmlMessageUtils,
+            dateTimeUtilsWrapper,
+            gravatarUtilsWrapper,
+            threadedCommentsUtils,
+            resourceProvider
         )
     }
 
@@ -104,21 +134,21 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         val postUiState = buildPostUiState(shouldShowFeaturedImage = true)
 
         assertThat(postUiState.featuredImageUiState).isEqualTo(
-                ReaderPostFeaturedImageUiState(
-                        blogId = dummySourceReaderPost.blogId,
-                        url = dummyFeaturedImageUrl,
-                        height = (dummyDisplayPixelHeight * READER_POST_FEATURED_IMAGE_HEIGHT_PERCENT).toInt()
-                )
+            ReaderPostFeaturedImageUiState(
+                blogId = dummySourceReaderPost.blogId,
+                url = dummyFeaturedImageUrl,
+                height = (dummyDisplayPixelHeight * READER_POST_FEATURED_IMAGE_HEIGHT_PERCENT).toInt()
+            )
         )
     }
 
     @Test
     fun `given featured image should not be shown, when post ui is built, then featured image does not exists`() =
-            test {
-                val postUiState = buildPostUiState(shouldShowFeaturedImage = false)
+        test {
+            val postUiState = buildPostUiState(shouldShowFeaturedImage = false)
 
-                assertThat(postUiState.featuredImageUiState).isNull()
-            }
+            assertThat(postUiState.featuredImageUiState).isNull()
+        }
 
     /* EXCERPT FOOTER */
     @Test
@@ -131,10 +161,10 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         val postUiState = buildPostUiState(readerPost = readerPost)
 
         assertThat(postUiState.excerptFooterUiState).isEqualTo(
-                ExcerptFooterUiState(
-                        visitPostExcerptFooterLinkText = UiStringText(dummyVisitPostLinkText),
-                        postLink = readerPost.url
-                )
+            ExcerptFooterUiState(
+                visitPostExcerptFooterLinkText = UiStringText(dummyVisitPostLinkText),
+                postLink = readerPost.url
+            )
         )
     }
 
@@ -154,10 +184,10 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         val relatedPostsUiState = buildRelatedPostsUiState(isGlobal = false)
 
         assertThat(relatedPostsUiState.headerLabel).isEqualTo(
-                UiStringResWithParams(
-                        R.string.reader_label_local_related_posts,
-                        listOf(UiStringText(dummySourceReaderPost.blogName))
-                )
+            UiStringResWithParams(
+                R.string.reader_label_local_related_posts,
+                listOf(UiStringText(dummySourceReaderPost.blogName))
+            )
         )
     }
 
@@ -195,13 +225,13 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given related post without title, when related posts ui is built, then related post title does not exists`() =
-            test {
-                whenever(readerSimplePost.hasTitle()).thenReturn(false)
+        test {
+            whenever(readerSimplePost.hasTitle()).thenReturn(false)
 
-                val relatedPostsUiState = buildRelatedPostsUiState()
+            val relatedPostsUiState = buildRelatedPostsUiState()
 
-                assertThat(relatedPostsUiState.cards?.first()?.title).isNull()
-            }
+            assertThat(relatedPostsUiState.cards?.first()?.title).isNull()
+        }
 
     @Test
     fun `given related post with excerpt, when related posts ui is built, then excerpt exists`() = test {
@@ -216,34 +246,34 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given related post without excerpt, when related posts ui is built, then excerpt does not exists`() =
-            test {
-                whenever(readerSimplePost.hasExcerpt()).thenReturn(false)
+        test {
+            whenever(readerSimplePost.hasExcerpt()).thenReturn(false)
 
-                val relatedPostsUiState = buildRelatedPostsUiState()
+            val relatedPostsUiState = buildRelatedPostsUiState()
 
-                assertThat(relatedPostsUiState.cards?.first()?.excerpt).isNull()
-            }
+            assertThat(relatedPostsUiState.cards?.first()?.excerpt).isNull()
+        }
 
     @Test
     fun `given related post with featured image url, when related posts ui is built, then featured image exists`() =
-            test {
-                val url = "/featured/image/url"
-                whenever(readerSimplePost.getFeaturedImageForDisplay(any(), any())).thenReturn(url)
+        test {
+            val url = "/featured/image/url"
+            whenever(readerSimplePost.getFeaturedImageForDisplay(any(), any())).thenReturn(url)
 
-                val relatedPostsUiState = buildRelatedPostsUiState()
+            val relatedPostsUiState = buildRelatedPostsUiState()
 
-                assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl).isEqualTo(url)
-            }
+            assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl).isEqualTo(url)
+        }
 
     @Test
     fun `given related post without featured image url, when related posts ui is built, then featured image exists`() =
-            test {
-                whenever(readerSimplePost.getFeaturedImageForDisplay(any(), any())).thenReturn(null)
+        test {
+            whenever(readerSimplePost.getFeaturedImageForDisplay(any(), any())).thenReturn(null)
 
-                val relatedPostsUiState = buildRelatedPostsUiState()
+            val relatedPostsUiState = buildRelatedPostsUiState()
 
-                assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl).isNull()
-            }
+            assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl).isNull()
+        }
 
     @Test
     fun `follow conversation shown if post isWP and comments are open`() {
@@ -253,9 +283,9 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         }
 
         val snippetUiState = builder.buildCommentSnippetUiState(
-                Loading,
-                dummySourceReaderPost,
-                dummyonCommentSnippetClicked
+            Loading,
+            dummySourceReaderPost,
+            dummyonCommentSnippetClicked
         )
 
         assertThat(snippetUiState.showFollowConversation).isTrue()
@@ -289,9 +319,9 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         }
 
         val snippetUiState = builder.buildCommentSnippetUiState(
-                CommentSnippetData(comments = commentsList),
-                dummySourceReaderPost,
-                dummyonCommentSnippetClicked
+            CommentSnippetData(comments = commentsList),
+            dummySourceReaderPost,
+            dummyonCommentSnippetClicked
         )
 
         assertThat(snippetUiState.snippetItems.first().type).isEqualTo(COMMENT)
@@ -302,10 +332,10 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         relatedPosts: ReaderSimplePostList = dummyRelatedPosts,
         isGlobal: Boolean = false
     ) = builder.mapRelatedPostsToUiState(
-            sourcePost = dummySourceReaderPost,
-            relatedPosts = relatedPosts,
-            isGlobal = isGlobal,
-            onItemClicked = dummyOnRelatedPostItemClicked
+        sourcePost = dummySourceReaderPost,
+        relatedPosts = relatedPosts,
+        isGlobal = isGlobal,
+        onItemClicked = dummyOnRelatedPostItemClicked
     )
 
     private fun buildPostUiState(
@@ -318,28 +348,28 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
             val dummyLinkHexColor = "#FFFFFF"
             whenever(htmlUtilsWrapper.colorResToHtmlColor(anyOrNull(), any())).thenReturn(dummyLinkHexColor)
             whenever(
-                    htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            R.string.reader_excerpt_link,
-                            "<font color='" + dummyLinkHexColor + "'>" + post.blogName + "</font>"
-                    )
+                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                    R.string.reader_excerpt_link,
+                    "<font color='" + dummyLinkHexColor + "'>" + post.blogName + "</font>"
+                )
             ).thenReturn(dummyVisitPostLinkText)
         }
 
         whenever(featuredImageUtils.shouldAddFeaturedImage(any())).thenReturn(shouldShowFeaturedImage)
         whenever(displayUtilsWrapper.getWindowPixelHeight()).thenReturn(dummyDisplayPixelHeight)
         whenever(readerUtilsWrapper.getResizedImageUrl(any(), any(), any(), any(), any()))
-                .thenReturn(dummyFeaturedImageUrl)
+            .thenReturn(dummyFeaturedImageUrl)
 
         whenever(headerViewUiStateBuilder.mapPostToUiState(any(), any(), any(), any())).thenReturn(mock())
         whenever(postUiStateBuilder.mapPostToActions(any(), any())).thenReturn(mock())
 
         return builder.mapPostToUiState(
-                post = post,
-                moreMenuItems = null,
-                onButtonClicked = mock(),
-                onBlogSectionClicked = mock(),
-                onFollowClicked = mock(),
-                onTagItemClicked = mock()
+            post = post,
+            moreMenuItems = null,
+            onButtonClicked = mock(),
+            onBlogSectionClicked = mock(),
+            onFollowClicked = mock(),
+            onTagItemClicked = mock()
         )
     }
 }

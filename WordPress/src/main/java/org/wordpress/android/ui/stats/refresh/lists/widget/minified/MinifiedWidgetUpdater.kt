@@ -75,8 +75,8 @@ class MinifiedWidgetUpdater
             views.setViewVisibility(R.id.widget_site_icon, View.VISIBLE)
             views.setViewVisibility(R.id.widget_retry_button, View.GONE)
             views.setOnClickPendingIntent(
-                    R.id.widget_container,
-                    widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
+                R.id.widget_container,
+                widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
             )
             showValue(widgetManager, appWidgetId, views, siteModel, dataType, isWideView)
         } else {
@@ -127,8 +127,8 @@ class MinifiedWidgetUpdater
         views.setTextViewText(R.id.name, resourceProvider.getString(key))
         val startValue = if (isWideView) MILLION else ONE_THOUSAND
         views.setTextViewText(
-                R.id.value,
-                statsUtils.toFormattedString(value, startValue, defaultValue = "-")
+            R.id.value,
+            statsUtils.toFormattedString(value, startValue, defaultValue = "-")
         )
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }

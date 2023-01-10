@@ -30,26 +30,26 @@ class AccountSettingsOptimisticUpdateHandler @Inject constructor() {
             when (key) {
                 EMAIL_PREFERENCE_KEY -> {
                     uiState = uiState.copy(
-                            emailSettingsUiState = state.emailSettingsUiState.copy(
-                                    newEmail = arrayOfValues.last(),
-                                    hasPendingEmailChange = true
-                            )
+                        emailSettingsUiState = state.emailSettingsUiState.copy(
+                            newEmail = arrayOfValues.last(),
+                            hasPendingEmailChange = true
+                        )
                     )
                 }
                 WEBADDRESS_PREFERENCE_KEY -> {
                     uiState = uiState.copy(
-                            webAddressSettingsUiState = state.webAddressSettingsUiState.copy(
-                                    webAddress = arrayOfValues.last()
-                            )
+                        webAddressSettingsUiState = state.webAddressSettingsUiState.copy(
+                            webAddress = arrayOfValues.last()
+                        )
                     )
                 }
                 PRIMARYSITE_PREFERENCE_KEY -> {
                     uiState = uiState.copy(
-                            primarySiteSettingsUiState = state.primarySiteSettingsUiState.copy(
-                                    primarySite = state.primarySiteSettingsUiState.sites?.lastOrNull {
-                                        it.siteId == arrayOfValues.last()
-                                                .toLong()
-                                    })
+                        primarySiteSettingsUiState = state.primarySiteSettingsUiState.copy(
+                            primarySite = state.primarySiteSettingsUiState.sites?.lastOrNull {
+                                it.siteId == arrayOfValues.last()
+                                    .toLong()
+                            })
                     )
                 }
             }
@@ -59,14 +59,14 @@ class AccountSettingsOptimisticUpdateHandler @Inject constructor() {
 
     fun update(preferenceKey: String, value: String): () -> Unit = {
         optimisticallyChangedPreferenceMap[preferenceKey] = optimisticallyChangedPreferenceMap.getOrDefault(
-                preferenceKey,
-                listOf()
+            preferenceKey,
+            listOf()
         ).plus(value)
     }
 
     fun removeFirstChange(preferenceKey: String): () -> Unit = removeFirstChangeLambda@{
         val preferenceValue = optimisticallyChangedPreferenceMap
-                .getOrDefault(preferenceKey, listOf())
+            .getOrDefault(preferenceKey, listOf())
         if (preferenceValue.isEmpty()) return@removeFirstChangeLambda
         if (preferenceValue.size == 1) {
             optimisticallyChangedPreferenceMap.remove(preferenceKey)

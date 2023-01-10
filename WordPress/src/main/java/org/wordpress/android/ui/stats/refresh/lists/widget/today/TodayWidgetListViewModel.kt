@@ -66,30 +66,30 @@ class TodayWidgetListViewModel
             Color.LIGHT -> R.layout.stats_views_widget_item_light
         }
         return listOf(
-                TodayItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.stats_views),
-                        statsUtils.toFormattedString(domainModel.views, ONE_THOUSAND)
-                ),
-                TodayItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.stats_visitors),
-                        statsUtils.toFormattedString(domainModel.visitors, ONE_THOUSAND)
-                ),
-                TodayItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.likes),
-                        statsUtils.toFormattedString(domainModel.likes, ONE_THOUSAND)
-                ),
-                TodayItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.stats_comments),
-                        statsUtils.toFormattedString(domainModel.comments, ONE_THOUSAND)
-                )
+            TodayItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.stats_views),
+                statsUtils.toFormattedString(domainModel.views, ONE_THOUSAND)
+            ),
+            TodayItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.stats_visitors),
+                statsUtils.toFormattedString(domainModel.visitors, ONE_THOUSAND)
+            ),
+            TodayItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.likes),
+                statsUtils.toFormattedString(domainModel.likes, ONE_THOUSAND)
+            ),
+            TodayItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.stats_comments),
+                statsUtils.toFormattedString(domainModel.comments, ONE_THOUSAND)
+            )
         )
     }
 

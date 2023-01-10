@@ -53,26 +53,26 @@ class CommentListUiModelHelper @Inject constructor(
         onBatchModerationCancelled: () -> Unit
     ): CommentsUiModel {
         return CommentsUiModel(
-                buildCommentList(
-                        commentsPagingResult,
-                        selectedComments,
-                        commentFilter,
-                        onToggle,
-                        onClick,
-                        onLoadNextPage
-                ),
-                buildCommentsListUiModel(
-                        commentsPagingResult,
-                        commentFilter,
-                        previousUiModelState
-                ),
-                buildActionModeUiModel(selectedComments, commentFilter),
-                buildConfirmationDialogUiState(
-                        batchModerationStatus,
-                        selectedComments,
-                        onBatchModerationConfirmed,
-                        onBatchModerationCancelled
-                )
+            buildCommentList(
+                commentsPagingResult,
+                selectedComments,
+                commentFilter,
+                onToggle,
+                onClick,
+                onLoadNextPage
+            ),
+            buildCommentsListUiModel(
+                commentsPagingResult,
+                commentFilter,
+                previousUiModelState
+            ),
+            buildActionModeUiModel(selectedComments, commentFilter),
+            buildConfirmationDialogUiState(
+                batchModerationStatus,
+                selectedComments,
+                onBatchModerationConfirmed,
+                onBatchModerationCancelled
+            )
         )
     }
 
@@ -116,10 +116,10 @@ class CommentListUiModelHelper @Inject constructor(
         companion object {
             fun buildInitialState(): CommentsUiModel {
                 return CommentsUiModel(
-                        commentData = CommentList(emptyList(), false),
-                        commentsListUiModel = CommentsListUiModel.Loading,
-                        actionModeUiModel = Hidden,
-                        confirmationDialogUiModel = ConfirmationDialogUiModel.Hidden
+                    commentData = CommentList(emptyList(), false),
+                    commentsListUiModel = CommentsListUiModel.Loading,
+                    actionModeUiModel = Hidden,
+                    confirmationDialogUiModel = ConfirmationDialogUiModel.Hidden
                 )
             }
         }
@@ -140,12 +140,12 @@ class CommentListUiModelHelper @Inject constructor(
         }
 
         val approveActionUiModel = ActionUiModel(
-                true,
-                selectedComments.any { it.status == UNAPPROVED || it.status == CommentStatus.SPAM })
+            true,
+            selectedComments.any { it.status == UNAPPROVED || it.status == CommentStatus.SPAM })
         val unaproveActionUiModel = ActionUiModel(
-                true,
-                (commentListFilter != TRASHED && commentListFilter != SPAM && commentListFilter != PENDING) &&
-                        selectedComments.any { it.status == CommentStatus.APPROVED }
+            true,
+            (commentListFilter != TRASHED && commentListFilter != SPAM && commentListFilter != PENDING) &&
+                    selectedComments.any { it.status == CommentStatus.APPROVED }
         )
         val spamActionUiModel = ActionUiModel(commentListFilter != SPAM, true)
         val unspamActionUiModel = ActionUiModel(commentListFilter == SPAM, true)
@@ -154,14 +154,14 @@ class CommentListUiModelHelper @Inject constructor(
         val deleteActionUiModel = ActionUiModel(commentListFilter == TRASHED, true)
 
         return Visible(
-                title,
-                approveActionUiModel,
-                unaproveActionUiModel,
-                spamActionUiModel,
-                unspamActionUiModel,
-                trashActionUiModel,
-                unTrashActionUiModel,
-                deleteActionUiModel
+            title,
+            approveActionUiModel,
+            unaproveActionUiModel,
+            spamActionUiModel,
+            unspamActionUiModel,
+            trashActionUiModel,
+            unTrashActionUiModel,
+            deleteActionUiModel
         )
     }
 
@@ -182,30 +182,30 @@ class CommentListUiModelHelper @Inject constructor(
                         string.dlg_sure_to_delete_comment
                     }
                     ConfirmationDialogUiModel.Visible(
-                            title = string.delete,
-                            message = messageResId,
-                            positiveButton = string.yes,
-                            negativeButton = string.no,
-                            confirmAction = {
-                                onModerateComments.invoke(batchModerationStatus.commentStatus)
-                            },
-                            cancelAction = {
-                                onCancel.invoke()
-                            }
+                        title = string.delete,
+                        message = messageResId,
+                        positiveButton = string.yes,
+                        negativeButton = string.no,
+                        confirmAction = {
+                            onModerateComments.invoke(batchModerationStatus.commentStatus)
+                        },
+                        cancelAction = {
+                            onCancel.invoke()
+                        }
                     )
                 }
                 TRASH -> {
                     ConfirmationDialogUiModel.Visible(
-                            title = string.trash,
-                            message = string.dlg_confirm_trash_comments,
-                            positiveButton = string.dlg_confirm_action_trash,
-                            negativeButton = string.dlg_cancel_action_dont_trash,
-                            confirmAction = {
-                                onModerateComments.invoke(batchModerationStatus.commentStatus)
-                            },
-                            cancelAction = {
-                                onCancel.invoke()
-                            }
+                        title = string.trash,
+                        message = string.dlg_confirm_trash_comments,
+                        positiveButton = string.dlg_confirm_action_trash,
+                        negativeButton = string.dlg_cancel_action_dont_trash,
+                        confirmAction = {
+                            onModerateComments.invoke(batchModerationStatus.commentStatus)
+                        },
+                        cancelAction = {
+                            onCancel.invoke()
+                        }
                     )
                 }
                 else -> {
@@ -228,8 +228,8 @@ class CommentListUiModelHelper @Inject constructor(
     ): CommentList {
         val (comments, hasMore) = when (commentsDataResult) {
             is Failure -> Pair(
-                    commentsDataResult.cachedData.comments,
-                    commentsDataResult.cachedData.hasMore
+                commentsDataResult.cachedData.comments,
+                commentsDataResult.cachedData.hasMore
             )
             is Loading -> Pair(listOf(), false)
             is Success -> Pair(commentsDataResult.data.comments, commentsDataResult.data.hasMore)
@@ -251,20 +251,20 @@ class CommentListUiModelHelper @Inject constructor(
             val isPending = commentModel.status == UNAPPROVED.toString()
 
             list.add(
-                    Comment(
-                            remoteCommentId = commentModel.remoteCommentId,
-                            postTitle = commentModel.postTitle.orEmpty(),
-                            authorName = commentModel.authorName.orEmpty(),
-                            authorEmail = commentModel.authorEmail.orEmpty(),
-                            content = commentModel.content.orEmpty(),
-                            publishedDate = commentModel.datePublished.orEmpty(),
-                            publishedTimestamp = commentModel.publishedTimestamp,
-                            authorAvatarUrl = commentModel.authorProfileImageUrl.orEmpty(),
-                            isPending = isPending,
-                            isSelected = isSelected ?: false,
-                            clickAction = clickAction,
-                            toggleAction = toggleAction
-                    )
+                Comment(
+                    remoteCommentId = commentModel.remoteCommentId,
+                    postTitle = commentModel.postTitle.orEmpty(),
+                    authorName = commentModel.authorName.orEmpty(),
+                    authorEmail = commentModel.authorEmail.orEmpty(),
+                    content = commentModel.content.orEmpty(),
+                    publishedDate = commentModel.datePublished.orEmpty(),
+                    publishedTimestamp = commentModel.publishedTimestamp,
+                    authorAvatarUrl = commentModel.authorProfileImageUrl.orEmpty(),
+                    isPending = isPending,
+                    isSelected = isSelected ?: false,
+                    clickAction = clickAction,
+                    toggleAction = toggleAction
+                )
             )
         }
 
@@ -300,8 +300,8 @@ class CommentListUiModelHelper @Inject constructor(
             is Success -> {
                 if (commentsDataResult.data.comments.isEmpty()) {
                     CommentsListUiModel.Empty(
-                            UiStringRes(getEmptyViewMessageResId(commentFilter)),
-                            R.drawable.img_illustration_empty_results_216dp
+                        UiStringRes(getEmptyViewMessageResId(commentFilter)),
+                        R.drawable.img_illustration_empty_results_216dp
                     )
                 } else {
                     WithData
@@ -318,8 +318,8 @@ class CommentListUiModelHelper @Inject constructor(
                         UiStringText(errorMessage)
                     }
                     CommentsListUiModel.Empty(
-                            errorString,
-                            R.drawable.img_illustration_empty_results_216dp
+                        errorString,
+                        R.drawable.img_illustration_empty_results_216dp
                     )
                 } else {
                     return WithData

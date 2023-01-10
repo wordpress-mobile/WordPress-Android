@@ -11,8 +11,8 @@ class ThreatsHeaderViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : JetpackViewHolder<ScanListThreatsHeaderItemBinding>(
-        parent,
-        ScanListThreatsHeaderItemBinding::inflate
+    parent,
+    ScanListThreatsHeaderItemBinding::inflate
 ) {
     override fun onBind(itemUiState: JetpackListItemState) {
         val headerItemState = itemUiState as ThreatsHeaderItemState

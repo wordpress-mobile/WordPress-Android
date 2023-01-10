@@ -35,7 +35,7 @@ class LocalePickerAdapter : ListAdapter<LocalePickerListItem, LocalePickerListVi
             }
 
             override fun areContentsTheSame(oldItem: LocalePickerListItem, newItem: LocalePickerListItem) =
-                    oldItem == newItem
+                oldItem == newItem
         }
     }
 }

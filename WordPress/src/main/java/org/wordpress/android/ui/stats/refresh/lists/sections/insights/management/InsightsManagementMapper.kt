@@ -38,52 +38,52 @@ import javax.inject.Inject
 import javax.inject.Named
 
 private val POSTS_AND_PAGES_INSIGHTS = listOf(
-        LATEST_POST_SUMMARY, POSTING_ACTIVITY, TAGS_AND_CATEGORIES
+    LATEST_POST_SUMMARY, POSTING_ACTIVITY, TAGS_AND_CATEGORIES
 )
 private val ACTIVITY_INSIGHTS = mutableListOf(
-        FOLLOWERS,
-        FOLLOWER_TOTALS,
-        PUBLICIZE
+    FOLLOWERS,
+    FOLLOWER_TOTALS,
+    PUBLICIZE
 )
 private val GENERAL_INSIGHTS = mutableListOf(
-        ALL_TIME_STATS,
-        MOST_POPULAR_DAY_AND_HOUR,
-        ANNUAL_SITE_STATS,
-        TODAY_STATS
+    ALL_TIME_STATS,
+    MOST_POPULAR_DAY_AND_HOUR,
+    ANNUAL_SITE_STATS,
+    TODAY_STATS
 )
 
 class InsightsManagementMapper @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     suspend fun buildUIModel(addedTypes: Set<InsightType>, onClick: (InsightType) -> Unit) =
-            withContext(bgDispatcher) {
-                val insightListItems = mutableListOf<InsightListItem>()
-                insightListItems += Header(string.stats_insights_management_general)
-                if (BuildConfig.IS_JETPACK_APP && !GENERAL_INSIGHTS.contains(VIEWS_AND_VISITORS)) {
-                    GENERAL_INSIGHTS.add(0, VIEWS_AND_VISITORS)
-                }
-                insightListItems += GENERAL_INSIGHTS.map { type ->
-                    buildInsightModel(type, addedTypes, onClick)
-                }
-                insightListItems += Header(string.stats_insights_management_posts_and_pages)
-                insightListItems += POSTS_AND_PAGES_INSIGHTS.map { type ->
-                    buildInsightModel(type, addedTypes, onClick)
-                }
-                insightListItems += Header(string.stats_insights_management_activity)
-
-                if (BuildConfig.IS_JETPACK_APP && ACTIVITY_INSIGHTS.contains(FOLLOWER_TOTALS)) {
-                    // Replace FOLLOWER_TOTALS with Stats revamp v2 total insights
-                    val followerTotalsIndex = ACTIVITY_INSIGHTS.indexOf(FOLLOWER_TOTALS)
-                    ACTIVITY_INSIGHTS.remove(FOLLOWER_TOTALS)
-
-                    val statsRevampV2TotalInsights = listOf(TOTAL_LIKES, TOTAL_COMMENTS, TOTAL_FOLLOWERS)
-                    ACTIVITY_INSIGHTS.addAll(followerTotalsIndex, statsRevampV2TotalInsights)
-                }
-                insightListItems += ACTIVITY_INSIGHTS.map { type ->
-                    buildInsightModel(type, addedTypes, onClick)
-                }
-                insightListItems
+        withContext(bgDispatcher) {
+            val insightListItems = mutableListOf<InsightListItem>()
+            insightListItems += Header(string.stats_insights_management_general)
+            if (BuildConfig.IS_JETPACK_APP && !GENERAL_INSIGHTS.contains(VIEWS_AND_VISITORS)) {
+                GENERAL_INSIGHTS.add(0, VIEWS_AND_VISITORS)
             }
+            insightListItems += GENERAL_INSIGHTS.map { type ->
+                buildInsightModel(type, addedTypes, onClick)
+            }
+            insightListItems += Header(string.stats_insights_management_posts_and_pages)
+            insightListItems += POSTS_AND_PAGES_INSIGHTS.map { type ->
+                buildInsightModel(type, addedTypes, onClick)
+            }
+            insightListItems += Header(string.stats_insights_management_activity)
+
+            if (BuildConfig.IS_JETPACK_APP && ACTIVITY_INSIGHTS.contains(FOLLOWER_TOTALS)) {
+                // Replace FOLLOWER_TOTALS with Stats revamp v2 total insights
+                val followerTotalsIndex = ACTIVITY_INSIGHTS.indexOf(FOLLOWER_TOTALS)
+                ACTIVITY_INSIGHTS.remove(FOLLOWER_TOTALS)
+
+                val statsRevampV2TotalInsights = listOf(TOTAL_LIKES, TOTAL_COMMENTS, TOTAL_FOLLOWERS)
+                ACTIVITY_INSIGHTS.addAll(followerTotalsIndex, statsRevampV2TotalInsights)
+            }
+            insightListItems += ACTIVITY_INSIGHTS.map { type ->
+                buildInsightModel(type, addedTypes, onClick)
+            }
+            insightListItems
+        }
 
     private fun buildInsightModel(
         type: InsightType,
@@ -91,10 +91,10 @@ class InsightsManagementMapper @Inject constructor(
         onClick: (InsightType) -> Unit
     ): InsightModel {
         return InsightModel(
-                type,
-                toName(type),
-                if (addedInsightTypes.any { it == type }) ADDED else REMOVED,
-                ListItemInteraction.create(type, onClick)
+            type,
+            toName(type),
+            if (addedInsightTypes.any { it == type }) ADDED else REMOVED,
+            ListItemInteraction.create(type, onClick)
         )
     }
 

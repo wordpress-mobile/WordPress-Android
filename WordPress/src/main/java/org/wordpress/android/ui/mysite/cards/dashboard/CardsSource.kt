@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.Type
@@ -104,12 +103,12 @@ class CardsSource @Inject constructor(
         val showErrorCard = lastStateCards.isNullOrEmpty()
         val showError = lastStateCards?.isNotEmpty() == true
         postState(
-                CardsUpdate(
-                        cards = lastStateCards,
-                        showErrorCard = showErrorCard,
-                        showSnackbarError = showError,
-                        showStaleMessage = showError
-                )
+            CardsUpdate(
+                cards = lastStateCards,
+                showErrorCard = showErrorCard,
+                showSnackbarError = showError,
+                showStaleMessage = showError
+            )
         )
     }
 }

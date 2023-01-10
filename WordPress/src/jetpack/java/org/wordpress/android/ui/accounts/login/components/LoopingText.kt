@@ -49,20 +49,20 @@ private fun LargeTexts() {
     }
 
     Text(
-            text = styledText,
-            style = TextStyle(
-                    fontSize = fontSize,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = (-0.03).sp,
-            ),
+        text = styledText,
+        style = TextStyle(
+            fontSize = fontSize,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = (-0.03).sp,
+        ),
     )
 }
 
 @Composable
 fun LoopingText(modifier: Modifier = Modifier) {
     RepeatingColumn(
-            position = LocalPosition.current,
-            modifier = modifier
+        position = LocalPosition.current,
+        modifier = modifier
     ) {
         LargeTexts()
     }

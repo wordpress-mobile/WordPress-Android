@@ -46,9 +46,9 @@ class FeatureAnnouncementViewModel @Inject constructor(
     init {
         _uiModel.addSource(_currentFeatureAnnouncement) { featureAnnouncement ->
             _uiModel.value = _uiModel.value?.copy(
-                    appVersion = featureAnnouncement?.appVersionName ?: "",
-                    isProgressVisible = false,
-                    isFindOutMoreVisible = !TextUtils.isEmpty(featureAnnouncement?.detailsUrl)
+                appVersion = featureAnnouncement?.appVersionName ?: "",
+                isProgressVisible = false,
+                isFindOutMoreVisible = !TextUtils.isEmpty(featureAnnouncement?.detailsUrl)
             )
         }
 
@@ -70,7 +70,7 @@ class FeatureAnnouncementViewModel @Inject constructor(
         launch {
             // fallback to remote just in case. Should not happen.
             val latestAnnouncement = featureAnnouncementProvider.getLatestFeatureAnnouncement(true)
-                    ?: featureAnnouncementProvider.getLatestFeatureAnnouncement(false)
+                ?: featureAnnouncementProvider.getLatestFeatureAnnouncement(false)
             if (latestAnnouncement != null) {
                 appPrefsWrapper.featureAnnouncementShownVersion = latestAnnouncement.announcementVersion
                 appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = buildConfigWrapper.getAppVersionCode()
@@ -105,8 +105,8 @@ class FeatureAnnouncementViewModel @Inject constructor(
 
     fun onSessionEnded() {
         analyticsTrackerWrapper.track(
-                Stat.FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED,
-                mapOf(timeOnScreenParameter to totalSessionsLength)
+            Stat.FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED,
+            mapOf(timeOnScreenParameter to totalSessionsLength)
         )
     }
 }

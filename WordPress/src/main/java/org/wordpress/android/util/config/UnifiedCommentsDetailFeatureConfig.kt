@@ -13,9 +13,9 @@ class UnifiedCommentsDetailFeatureConfig
 @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.UNIFIED_COMMENTS_DETAILS,
-        UNIFIED_COMMENTS_DETAILS_REMOTE_FIELD
+    appConfig,
+    BuildConfig.UNIFIED_COMMENTS_DETAILS,
+    UNIFIED_COMMENTS_DETAILS_REMOTE_FIELD
 ) {
     companion object {
         const val UNIFIED_COMMENTS_DETAILS_REMOTE_FIELD = "unified_comments_detail_remote_field"

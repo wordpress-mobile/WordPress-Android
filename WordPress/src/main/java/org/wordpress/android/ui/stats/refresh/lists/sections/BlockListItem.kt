@@ -5,8 +5,8 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTION_CARD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text.Clickable
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTION_CARD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BIG_TITLE
@@ -312,7 +312,7 @@ sealed class BlockListItem(val type: Type) {
     ) : BlockListItem(CHART_LEGENDS_PURPLE)
 
     data class TabsItem(val tabs: List<Int>, val selectedTabPosition: Int, val onTabSelected: (position: Int) -> Unit) :
-            BlockListItem(TABS) {
+        BlockListItem(TABS) {
         override val itemId: Int
             get() = tabs.hashCode()
     }
@@ -328,7 +328,7 @@ sealed class BlockListItem(val type: Type) {
         val isExpanded: Boolean,
         val onExpandClicked: (isExpanded: Boolean) -> Unit
     ) : BlockListItem(
-            EXPANDABLE_ITEM
+        EXPANDABLE_ITEM
     ) {
         override val itemId: Int
             get() = header.itemId

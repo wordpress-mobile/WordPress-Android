@@ -44,28 +44,28 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
         onCheckboxItemClicked: (availableItemType: JetpackAvailableItemType) -> Unit
     ): List<JetpackListItemState> {
         val items = mutableListOf(
-                buildIconState(
-                        R.drawable.ic_get_app_white_24dp,
-                        R.string.backup_download_details_icon_content_description,
-                        R.color.success
-                ),
-                buildHeaderState(R.string.backup_download_details_header),
-                buildDescriptionState(published, R.string.backup_download_details_description_with_two_parameters),
-                buildActionButtonState(
-                        titleRes = R.string.backup_download_details_action_button,
-                        contentDescRes = R.string.backup_download_details_action_button_content_description,
-                        onClick = onCreateDownloadClick
-                ),
-                buildSubHeaderState(R.string.backup_download_details_choose_items_header)
+            buildIconState(
+                R.drawable.ic_get_app_white_24dp,
+                R.string.backup_download_details_icon_content_description,
+                R.color.success
+            ),
+            buildHeaderState(R.string.backup_download_details_header),
+            buildDescriptionState(published, R.string.backup_download_details_description_with_two_parameters),
+            buildActionButtonState(
+                titleRes = R.string.backup_download_details_action_button,
+                contentDescRes = R.string.backup_download_details_action_button_content_description,
+                onClick = onCreateDownloadClick
+            ),
+            buildSubHeaderState(R.string.backup_download_details_choose_items_header)
         )
 
         val availableItemsListItems: List<CheckboxState> = availableItems.map {
             CheckboxState(
-                    availableItemType = it.availableItemType,
-                    label = UiStringRes(it.labelResId),
-                    labelSpannable = checkboxSpannableLabel.buildSpannableLabel(it.labelResId, it.labelHintResId),
-                    checked = true,
-                    onClick = { onCheckboxItemClicked(it.availableItemType) }
+                availableItemType = it.availableItemType,
+                label = UiStringRes(it.labelResId),
+                labelSpannable = checkboxSpannableLabel.buildSpannableLabel(it.labelResId, it.labelHintResId),
+                checked = true,
+                onClick = { onCheckboxItemClicked(it.availableItemType) }
             )
         }
         items.addAll(availableItemsListItems)
@@ -77,20 +77,20 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
         published: Date
     ): List<JetpackListItemState> {
         return mutableListOf(
-                buildIconState(
-                        R.drawable.ic_get_app_white_24dp,
-                        R.string.backup_download_progress_icon_content_description,
-                        R.color.success
-                ),
-                buildHeaderState(R.string.backup_download_progress_header),
-                buildDescriptionState(published, R.string.backup_download_progress_description_with_two_parameters),
-                buildProgressState(progress),
-                buildFootnoteState(
-                        iconRes = R.drawable.ic_info_outline_white_24dp,
-                        iconSizeResId = R.dimen.jetpack_backup_restore_footnote_icon_size,
-                        textRes = R.string.backup_download_progress_footnote,
-                        isVisible = true
-                )
+            buildIconState(
+                R.drawable.ic_get_app_white_24dp,
+                R.string.backup_download_progress_icon_content_description,
+                R.color.success
+            ),
+            buildHeaderState(R.string.backup_download_progress_header),
+            buildDescriptionState(published, R.string.backup_download_progress_description_with_two_parameters),
+            buildProgressState(progress),
+            buildFootnoteState(
+                iconRes = R.drawable.ic_info_outline_white_24dp,
+                iconSizeResId = R.dimen.jetpack_backup_restore_footnote_icon_size,
+                textRes = R.string.backup_download_progress_footnote,
+                isVisible = true
+            )
         )
     }
 
@@ -100,30 +100,30 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
         onShareLinkClick: () -> Unit
     ): List<JetpackListItemState> {
         return listOf(
-                buildIconState(
-                        R.drawable.ic_cloud_done_white_24dp,
-                        R.string.backup_download_complete_icon_content_description,
-                        R.color.success
-                ),
-                buildHeaderState(R.string.backup_download_complete_header),
-                buildDescriptionState(published, R.string.backup_download_complete_description_with_two_parameters),
-                buildActionButtonState(
-                        titleRes = R.string.backup_download_complete_download_action_button,
-                        contentDescRes = R.string.backup_download_complete_download_action_button_content_description,
-                        onClick = onDownloadFileClick
-                ),
-                buildActionButtonState(
-                        titleRes = R.string.backup_download_complete_download_share_action_button,
-                        contentDescRes =
-                        R.string.backup_download_complete_download_share_action_button_content_description,
-                        isSecondary = true,
-                        iconRes = R.drawable.ic_share_white_24dp,
-                        onClick = onShareLinkClick
-                ),
-                buildFootnoteState(
-                        textRes = R.string.backup_download_complete_info,
-                        textAlphaResId = R.dimen.material_emphasis_medium
-                )
+            buildIconState(
+                R.drawable.ic_cloud_done_white_24dp,
+                R.string.backup_download_complete_icon_content_description,
+                R.color.success
+            ),
+            buildHeaderState(R.string.backup_download_complete_header),
+            buildDescriptionState(published, R.string.backup_download_complete_description_with_two_parameters),
+            buildActionButtonState(
+                titleRes = R.string.backup_download_complete_download_action_button,
+                contentDescRes = R.string.backup_download_complete_download_action_button_content_description,
+                onClick = onDownloadFileClick
+            ),
+            buildActionButtonState(
+                titleRes = R.string.backup_download_complete_download_share_action_button,
+                contentDescRes =
+                R.string.backup_download_complete_download_share_action_button_content_description,
+                isSecondary = true,
+                iconRes = R.drawable.ic_share_white_24dp,
+                onClick = onShareLinkClick
+            ),
+            buildFootnoteState(
+                textRes = R.string.backup_download_complete_info,
+                textAlphaResId = R.dimen.material_emphasis_medium
+            )
         )
     }
 
@@ -133,46 +133,46 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
             )
 
     private fun buildStatusErrorListStateItems(onDoneClick: () -> Unit) = listOf(
-            buildHeaderState(R.string.backup_download_status_failure_heading),
-            buildBulletState(
-                    R.drawable.ic_query_builder_white_24dp,
-                    R.string.backup_download_status_bullet_clock_icon_content_desc,
-                    R.color.warning,
-                    R.string.backup_download_status_failure_bullet1
-            ),
-            buildBulletState(
-                    R.drawable.ic_gridicons_checkmark_circle,
-                    R.string.backup_download_status_bullet_checkmark_icon_content_desc,
-                    R.color.success,
-                    R.string.backup_download_status_failure_bullet2
-            ),
-            buildBulletState(
-                    R.drawable.ic_gridicons_checkmark_circle,
-                    R.string.backup_download_status_bullet_checkmark_icon_content_desc,
-                    R.color.success,
-                    R.string.backup_download_status_failure_bullet3,
-                    R.dimen.jetpack_backup_restore_last_bullet_bottom_margin
-            ),
-            buildActionButtonState(
-                    titleRes = R.string.restore_complete_failed_action_button,
-                    contentDescRes = R.string.restore_complete_failed_action_button_content_description,
-                    onClick = onDoneClick
-            )
+        buildHeaderState(R.string.backup_download_status_failure_heading),
+        buildBulletState(
+            R.drawable.ic_query_builder_white_24dp,
+            R.string.backup_download_status_bullet_clock_icon_content_desc,
+            R.color.warning,
+            R.string.backup_download_status_failure_bullet1
+        ),
+        buildBulletState(
+            R.drawable.ic_gridicons_checkmark_circle,
+            R.string.backup_download_status_bullet_checkmark_icon_content_desc,
+            R.color.success,
+            R.string.backup_download_status_failure_bullet2
+        ),
+        buildBulletState(
+            R.drawable.ic_gridicons_checkmark_circle,
+            R.string.backup_download_status_bullet_checkmark_icon_content_desc,
+            R.color.success,
+            R.string.backup_download_status_failure_bullet3,
+            R.dimen.jetpack_backup_restore_last_bullet_bottom_margin
+        ),
+        buildActionButtonState(
+            titleRes = R.string.restore_complete_failed_action_button,
+            contentDescRes = R.string.restore_complete_failed_action_button_content_description,
+            onClick = onDoneClick
+        )
     )
 
     private fun buildGenericErrorListStateItems(onDoneClick: () -> Unit) = listOf(
-            buildIconState(
-                    R.drawable.ic_cloud_off_white_24dp,
-                    R.string.backup_download_complete_failed_icon_content_description,
-                    R.color.error
-            ),
-            buildHeaderState(R.string.backup_download_complete_failed_description),
-            buildDescriptionState(descRes = R.string.request_failed_message),
-            buildActionButtonState(
-                    titleRes = R.string.backup_download_complete_failed_action_button,
-                    contentDescRes = R.string.backup_download_complete_failed_action_button_content_description,
-                    onClick = onDoneClick
-            )
+        buildIconState(
+            R.drawable.ic_cloud_off_white_24dp,
+            R.string.backup_download_complete_failed_icon_content_description,
+            R.color.error
+        ),
+        buildHeaderState(R.string.backup_download_complete_failed_description),
+        buildDescriptionState(descRes = R.string.request_failed_message),
+        buildActionButtonState(
+            titleRes = R.string.backup_download_complete_failed_action_button,
+            contentDescRes = R.string.backup_download_complete_failed_action_button_content_description,
+            onClick = onDoneClick
+        )
     )
 
     private fun buildIconState(
@@ -180,25 +180,25 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
         @StringRes contentDescRes: Int,
         @ColorRes colorRes: Int
     ) = IconState(
-            icon = iconRes,
-            contentDescription = UiStringRes(contentDescRes),
-            colorResId = colorRes
+        icon = iconRes,
+        contentDescription = UiStringRes(contentDescRes),
+        colorResId = colorRes
     )
 
     private fun buildHeaderState(@StringRes titleRes: Int) = HeaderState(UiStringRes(titleRes))
 
     private fun buildDescriptionState(published: Date? = null, @StringRes descRes: Int) = DescriptionState(
-            if (published != null) {
-                UiStringResWithParams(
-                        descRes,
-                        listOf(
-                                UiStringText(published.toFormattedDateString()),
-                                UiStringText(published.toFormattedTimeString())
-                        )
+        if (published != null) {
+            UiStringResWithParams(
+                descRes,
+                listOf(
+                    UiStringText(published.toFormattedDateString()),
+                    UiStringText(published.toFormattedTimeString())
                 )
-            } else {
-                UiStringRes(descRes)
-            }
+            )
+        } else {
+            UiStringRes(descRes)
+        }
     )
 
     @Suppress("LongMethod")
@@ -210,12 +210,12 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
         isVisible: Boolean = true,
         onClick: () -> Unit
     ) = ActionButtonState(
-            text = UiStringRes(titleRes),
-            contentDescription = UiStringRes(contentDescRes),
-            isSecondary = isSecondary,
-            iconRes = iconRes,
-            onClick = onClick,
-            isVisible = isVisible
+        text = UiStringRes(titleRes),
+        contentDescription = UiStringRes(contentDescRes),
+        isSecondary = isSecondary,
+        iconRes = iconRes,
+        onClick = onClick,
+        isVisible = isVisible
     )
 
     private fun buildSubHeaderState(
@@ -223,9 +223,9 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
         @DimenRes topMarginResId: Int? = null,
         @DimenRes bottomMarginResId: Int? = null
     ) = SubHeaderState(
-            text = UiStringRes(textResId),
-            itemTopMarginResId = topMarginResId,
-            itemBottomMarginResId = bottomMarginResId
+        text = UiStringRes(textResId),
+        itemTopMarginResId = topMarginResId,
+        itemBottomMarginResId = bottomMarginResId
     )
 
     private fun buildFootnoteState(
@@ -235,16 +235,16 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
         @StringRes textRes: Int,
         isVisible: Boolean = true
     ) = FootnoteState(
-            iconRes = iconRes,
-            textAlphaResId = textAlphaResId,
-            iconSizeResId = iconSizeResId,
-            text = UiStringRes(textRes),
-            isVisible = isVisible
+        iconRes = iconRes,
+        textAlphaResId = textAlphaResId,
+        iconSizeResId = iconSizeResId,
+        text = UiStringRes(textRes),
+        isVisible = isVisible
     )
 
     private fun buildProgressState(progress: Int) = ProgressState(
-            progress = progress,
-            progressLabel = UiStringText(percentFormatter.format(progress))
+        progress = progress,
+        progressLabel = UiStringText(percentFormatter.format(progress))
     )
 
     private fun buildBulletState(
@@ -254,11 +254,11 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
         @StringRes labelRes: Int,
         @DimenRes itemBottomMarginResId: Int? = null
     ) = BulletState(
-            icon = iconRes,
-            contentDescription = UiStringRes(contentDescRes),
-            colorResId = colorRes,
-            label = UiStringRes(labelRes),
-            itemBottomMarginResId = itemBottomMarginResId
+        icon = iconRes,
+        contentDescription = UiStringRes(contentDescRes),
+        colorResId = colorRes,
+        label = UiStringRes(labelRes),
+        itemBottomMarginResId = itemBottomMarginResId
     )
 
     fun updateCheckboxes(

@@ -37,9 +37,14 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var snackbarSequencer: SnackbarSequencer
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var snackbarSequencer: SnackbarSequencer
 
     private lateinit var viewModel: UnifiedCommentsEditViewModel
 
@@ -56,9 +61,9 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
 
         val site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
         val commentIdentifier = requireNotNull(
-                requireArguments().getParcelable<CommentIdentifier>(
-                        KEY_COMMENT_IDENTIFIER
-                )
+            requireArguments().getParcelable<CommentIdentifier>(
+                KEY_COMMENT_IDENTIFIER
+            )
         )
 
         UnifiedCommentsEditFragmentBinding.bind(view).apply {
@@ -78,14 +83,14 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
             it.setHomeAsUpIndicator(R.drawable.ic_cross_white_24dp)
         }
         activity.onBackPressedDispatcher.addCallback(
-                viewLifecycleOwner,
-                object : OnBackPressedCallback(
-                        true
-                ) {
-                    override fun handleOnBackPressed() {
-                        viewModel.onBackPressed()
-                    }
-                })
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(
+                true
+            ) {
+                override fun handleOnBackPressed() {
+                    viewModel.onBackPressed()
+                }
+            })
     }
 
     private fun hideKeyboard() {
@@ -163,20 +168,20 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
 
     private fun UnifiedCommentsEditFragmentBinding.showSnackbar(holder: SnackbarMessageHolder) {
         snackbarSequencer.enqueue(
-                SnackbarItem(
-                        Info(
-                                view = coordinator,
-                                textRes = holder.message,
-                                duration = Snackbar.LENGTH_LONG
-                        ),
-                        holder.buttonTitle?.let {
-                            Action(
-                                    textRes = holder.buttonTitle,
-                                    clickListener = { holder.buttonAction() }
-                            )
-                        },
-                        dismissCallback = { _, event -> holder.onDismissAction(event) }
-                )
+            SnackbarItem(
+                Info(
+                    view = coordinator,
+                    textRes = holder.message,
+                    duration = Snackbar.LENGTH_LONG
+                ),
+                holder.buttonTitle?.let {
+                    Action(
+                        textRes = holder.buttonTitle,
+                        clickListener = { holder.buttonAction() }
+                    )
+                },
+                dismissCallback = { _, event -> holder.onDismissAction(event) }
+            )
         )
     }
 

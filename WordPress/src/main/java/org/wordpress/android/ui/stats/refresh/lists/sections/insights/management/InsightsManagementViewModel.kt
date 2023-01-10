@@ -67,8 +67,8 @@ class InsightsManagementViewModel @Inject constructor(
     private fun displayInsights() {
         launch {
             _addedInsights.value = insightsManagementMapper.buildUIModel(
-                    addedInsightTypes,
-                    this@InsightsManagementViewModel::onItemButtonClicked
+                addedInsightTypes,
+                this@InsightsManagementViewModel::onItemButtonClicked
             )
         }
     }
@@ -86,14 +86,14 @@ class InsightsManagementViewModel @Inject constructor(
     private fun onItemButtonClicked(insight: InsightType) {
         if (addedInsightTypes.contains(insight)) {
             analyticsTrackerWrapper.trackWithType(
-                    Stat.STATS_INSIGHTS_MANAGEMENT_TYPE_REMOVED,
-                    insight
+                Stat.STATS_INSIGHTS_MANAGEMENT_TYPE_REMOVED,
+                insight
             )
             addedInsightTypes.removeAll { it == insight }
         } else {
             analyticsTrackerWrapper.trackWithType(
-                    Stat.STATS_INSIGHTS_MANAGEMENT_TYPE_ADDED,
-                    insight
+                Stat.STATS_INSIGHTS_MANAGEMENT_TYPE_ADDED,
+                insight
             )
             addedInsightTypes.add(insight)
         }

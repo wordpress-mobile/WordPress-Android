@@ -14,16 +14,16 @@ class UsernameChangerFullScreenDialogFragment : BaseUsernameChangerFullScreenDia
     override fun getSuggestionsFailedStat() = SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED
     override fun canHeaderTextLiveUpdate() = true
     override fun getHeaderText(username: String?, display: String?): Spanned = HtmlCompat.fromHtml(
-            String.format(
-                    getString(R.string.username_changer_header),
-                    "<b>",
-                    username,
-                    "</b>",
-                    "<b>",
-                    display,
-                    "</b>"
-            ),
-            HtmlCompat.FROM_HTML_MODE_LEGACY
+        String.format(
+            getString(R.string.username_changer_header),
+            "<b>",
+            username,
+            "</b>",
+            "<b>",
+            display,
+            "</b>"
+        ),
+        HtmlCompat.FROM_HTML_MODE_LEGACY
     )
 
     override fun getTrackEventSource() = SOURCE
