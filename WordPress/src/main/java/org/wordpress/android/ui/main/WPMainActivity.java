@@ -394,6 +394,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (!shouldBypassMigration && mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
                         mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
                     } else {
+                        if (shouldBypassMigration) {
+                            AppPrefs.setIsJetpackMigrationInProgress(false);
+                            AppPrefs.saveIsFirstTrySharedLoginJetpack(true);
+                            AppPrefs.saveIsFirstTryUserFlagsJetpack(true);
+                            AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(true);
+                        }
                         showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
                     }
                     finish();
