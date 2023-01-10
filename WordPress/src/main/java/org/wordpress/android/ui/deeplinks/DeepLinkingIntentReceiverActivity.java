@@ -58,7 +58,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
                     getIntent().getData()
             );
             mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow(deepLinkData);
-            finish();
             return;
         }
 
