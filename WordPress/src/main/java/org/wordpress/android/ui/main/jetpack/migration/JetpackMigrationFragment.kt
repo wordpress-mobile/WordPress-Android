@@ -64,7 +64,7 @@ class JetpackMigrationFragment : Fragment() {
         observeRefreshAppThemeEvents()
         val showDeleteWpState = arguments?.getBoolean(KEY_SHOW_DELETE_WP_STATE, false) ?: false
         initBackPressHandler(showDeleteWpState)
-        viewModel.start(showDeleteWpState)
+        viewModel.start(showDeleteWpState, requireActivity().application as WordPress)
     }
 
     private fun observeViewModelEvents() {

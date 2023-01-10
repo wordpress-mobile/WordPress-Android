@@ -1,9 +1,5 @@
 package org.wordpress.android.ui.utils
 
-import android.app.Application
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.ui.ActivityLauncher
@@ -37,21 +33,8 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
             && (!accountStore.hasAccessToken()
             || appPrefsWrapper.isJetpackMigrationInProgress())
 
-    fun startJetpackMigrationFlow(application: Application?) {
-        (application as? WordPress)?.let { resetIfNeeded(it) }
-        appPrefsWrapper.setJetpackMigrationInProgress(true)
+    fun startJetpackMigrationFlow() {
         ActivityLauncher.startJetpackMigrationFlow(contextProvider.getContext())
-    }
-
-    private fun resetIfNeeded(application: WordPress) {
-        if (appPrefsWrapper.isJetpackMigrationInProgress()) {
-            WordPress.applicationScope.launch(Dispatchers.IO) {
-                application.wordPressComSignOut()
-                appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(true)
-                appPrefsWrapper.saveIsFirstTryUserFlagsJetpack(true)
-                appPrefsWrapper.saveIsFirstTryReaderSavedPostsJetpack(true)
-            }
-        }
     }
 
     private fun isWordPressInstalled() = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())

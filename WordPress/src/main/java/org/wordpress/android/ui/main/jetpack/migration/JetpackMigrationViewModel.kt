@@ -107,12 +107,21 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, Loading)
 
-    fun start(showDeleteState: Boolean) {
+    fun start(showDeleteState: Boolean, application: WordPress) {
         if (isStarted) return
         isStarted = true
 
         this.showDeleteState = showDeleteState
-        tryMigration()
+        tryMigration(application)
+    }
+
+    private fun resetIfNeeded(application: WordPress) {
+        if (appPrefsWrapper.isJetpackMigrationInProgress()) {
+            application.wordPressComSignOut()
+            appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(true)
+            appPrefsWrapper.saveIsFirstTryUserFlagsJetpack(true)
+            appPrefsWrapper.saveIsFirstTryReaderSavedPostsJetpack(true)
+        }
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -211,8 +220,10 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }
 
-    private fun tryMigration() {
+    private fun tryMigration(application: WordPress) {
         viewModelScope.launch(Dispatchers.IO) {
+            resetIfNeeded(application)
+            appPrefsWrapper.setJetpackMigrationInProgress(true)
             localMigrationOrchestrator.tryLocalMigration(migrationStateFlow)
         }
     }
