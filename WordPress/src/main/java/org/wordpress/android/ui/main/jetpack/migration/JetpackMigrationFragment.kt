@@ -87,10 +87,10 @@ class JetpackMigrationFragment : Fragment() {
     private fun handleActionEvents(actionEvent: JetpackMigrationActionEvent) {
         when (actionEvent) {
             is CompleteFlow -> ActivityLauncher.showMainActivity(requireContext())
-            is FallbackToLogin -> ActivityLauncher.showMainActivity(requireContext(), true)
             is CompleteFlowWithDeepLink -> {
                 ActivityLauncher.handleDeepLinkAfterJPMigration(requireContext(), actionEvent.action, actionEvent.uri)
             }
+            is FallbackToLogin -> ActivityLauncher.showMainActivity(requireContext(), true)
             is Logout -> (requireActivity().application as? WordPress)?.let { viewModel.signOutWordPress(it) }
             is ShowHelp -> launchHelpScreen()
         }
