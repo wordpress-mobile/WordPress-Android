@@ -272,26 +272,26 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
     }
 
     // All Feature Overlay
-    fun buildAllFeaturesOverlayState(
+    fun buildFeatureCollectionOverlayState(
         isRtl: Boolean, currentPhase: JetpackFeatureRemovalPhase, blogPostLink: String?
     ): JetpackFeatureOverlayUIState {
-        return getStateForAllFeatures(isRtl, currentPhase, blogPostLink)
+        return getStateForFeatureCollection(isRtl, currentPhase, blogPostLink)
     }
 
-    private fun getStateForAllFeatures(
+    private fun getStateForFeatureCollection(
         isRtl: Boolean,
         currentPhase: JetpackFeatureRemovalPhase,
         blogPostLink: String?
     ): JetpackFeatureOverlayUIState {
         val componentVisibility = if (currentPhase == PhaseThree)
-                JetpackFeatureOverlayComponentVisibility.AllFeaturesPhase.PhaseThree()
+                JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseThree()
             else
-                JetpackFeatureOverlayComponentVisibility.AllFeaturesPhase.Final()
-        val content = getContentForAllFeatures(isRtl, blogPostLink)
+                JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.Final()
+        val content = getContentForFeatureCollection(isRtl, blogPostLink)
         return JetpackFeatureOverlayUIState(componentVisibility, content)
     }
 
-    private fun getContentForAllFeatures(isRtl: Boolean, blogPostLink: String?): JetpackFeatureOverlayContent {
+    private fun getContentForFeatureCollection(isRtl: Boolean, blogPostLink: String?): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
                 illustration = if (isRtl) R.raw.jp_all_features_rtl else R.raw.jp_all_features_left,
                 title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features,

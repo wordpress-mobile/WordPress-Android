@@ -34,6 +34,16 @@ class JetpackFeatureOverlayShownTracker @Inject constructor(private val sharedPr
     ) {
         sharedPrefs.edit().putLong(jetpackOverlayConnectedFeature.getPreferenceKey(phase), timeStamp).apply()
     }
+
+    fun setFeatureCollectionOverlayShown() {
+        sharedPrefs.edit().putBoolean(KEY_FEATURE_COLLECTION_OVERLAY_SHOWN, true).apply()
+    }
+
+    fun getFeatureCollectionOverlayShown() = sharedPrefs.getBoolean(KEY_FEATURE_COLLECTION_OVERLAY_SHOWN, false)
+
+    companion object {
+        const val KEY_FEATURE_COLLECTION_OVERLAY_SHOWN = "KEY_FEATURE_COLLECTION_OVERLAY_SHOWN"
+    }
 }
 
 enum class JetpackOverlayConnectedFeature(private val featureSpecificPreferenceKey: String) {
