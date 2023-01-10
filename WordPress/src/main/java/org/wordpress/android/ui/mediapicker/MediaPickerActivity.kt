@@ -63,15 +63,20 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     // note that the local post id isn't required (default value is EMPTY_LOCAL_POST_ID)
     private var localPostId: Int = EMPTY_LOCAL_POST_ID
 
-    @Inject lateinit var dispatcher: Dispatcher
+    @Inject
+    lateinit var dispatcher: Dispatcher
 
-    @Inject lateinit var mediaStore: MediaStore
+    @Inject
+    lateinit var mediaStore: MediaStore
 
-    @Inject lateinit var featuredImageHelper: FeaturedImageHelper
+    @Inject
+    lateinit var featuredImageHelper: FeaturedImageHelper
 
-    @Inject lateinit var imageEditorTracker: ImageEditorTracker
+    @Inject
+    lateinit var imageEditorTracker: ImageEditorTracker
 
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var uiHelpers: UiHelpers
 
     enum class MediaPickerMediaSource {
         ANDROID_CAMERA, ANDROID_PICKER, APP_PICKER, WP_MEDIA_PICKER, STOCK_MEDIA_PICKER;
@@ -124,13 +129,13 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         if (fragment == null) {
             fragment = newInstance(this, mediaPickerSetup, site)
             supportFragmentManager.beginTransaction()
-                    .replace(
-                            R.id.fragment_container,
-                            fragment,
-                            PICKER_FRAGMENT_TAG
-                    )
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .commitAllowingStateLoss()
+                .replace(
+                    R.id.fragment_container,
+                    fragment,
+                    PICKER_FRAGMENT_TAG
+                )
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commitAllowingStateLoss()
         } else {
             fragment.setMediaPickerListener(this)
         }
@@ -140,7 +145,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     private val pickerFragment: MediaPickerFragment?
         get() {
             val fragment = supportFragmentManager.findFragmentByTag(
-                    PICKER_FRAGMENT_TAG
+                PICKER_FRAGMENT_TAG
             )
             return if (fragment != null) {
                 fragment as MediaPickerFragment
@@ -211,8 +216,8 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
             intent.putUris(uris)
         }
         intent.putExtra(
-                EXTRA_MEDIA_SOURCE,
-                APP_PICKER.name
+            EXTRA_MEDIA_SOURCE,
+            APP_PICKER.name
         )
         return intent
     }
@@ -229,8 +234,8 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                 intent.putUris(capturedImageUri)
             }
             intent.putExtra(
-                    EXTRA_MEDIA_SOURCE,
-                    ANDROID_CAMERA.name
+                EXTRA_MEDIA_SOURCE,
+                ANDROID_CAMERA.name
             )
         }
         intent
@@ -245,7 +250,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
 
     private fun launchWPStoriesCamera() {
         val intent = Intent()
-                .putExtra(EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true)
+            .putExtra(EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true)
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
@@ -273,8 +278,8 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         mediaLocalIds: List<Int>
     ) {
         this.putExtra(
-                MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS,
-                mediaLocalIds.toIntArray()
+            MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS,
+            mediaLocalIds.toIntArray()
         )
     }
 
@@ -300,8 +305,8 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         }
         val source = MediaPickerMediaSource.fromDataSource(mediaPickerSetup.primaryDataSource)
         intent.putExtra(
-                EXTRA_MEDIA_SOURCE,
-                source.name
+            EXTRA_MEDIA_SOURCE,
+            source.name
         )
         setResult(Activity.RESULT_OK, intent)
         finish()

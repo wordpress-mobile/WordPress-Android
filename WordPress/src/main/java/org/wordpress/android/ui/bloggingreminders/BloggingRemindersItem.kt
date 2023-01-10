@@ -31,13 +31,13 @@ sealed class BloggingRemindersItem(val type: Type) {
     data class Title(val text: UiString) : BloggingRemindersItem(TITLE)
     data class Caption(val text: UiString) : BloggingRemindersItem(CAPTION)
     data class HighEmphasisText(val text: EmphasizedText) : BloggingRemindersItem(
-            HIGH_EMPHASIS_TEXT
+        HIGH_EMPHASIS_TEXT
     ) {
         constructor(uiString: UiString) : this(EmphasizedText(uiString))
     }
 
     data class MediumEmphasisText(val text: EmphasizedText?, val isInvisible: Boolean = false) : BloggingRemindersItem(
-            LOW_EMPHASIS_TEXT
+        LOW_EMPHASIS_TEXT
     ) {
         constructor(uiString: UiString) : this(EmphasizedText(uiString, false))
     }

@@ -177,7 +177,7 @@ class ZendeskHelper(
      * it's successful. We'll use the return value to decide whether to show a push notification or not.
      */
     fun refreshRequest(context: Context, requestId: String?): Boolean =
-            Support.INSTANCE.refreshRequest(requestId, context)
+        Support.INSTANCE.refreshRequest(requestId, context)
 
     /**
      * This function should be called when the user logs out of WordPress.com. Push notifications are only available
@@ -204,17 +204,19 @@ class ZendeskHelper(
         // The device token will not be available if the user is not logged in, so this check serves two purposes
         wpcomPushNotificationDeviceToken?.let { deviceToken ->
             zendeskPushRegistrationProvider?.registerWithDeviceIdentifier(
-                    deviceToken,
-                    object : ZendeskCallback<String>() {
-                        override fun onSuccess(result: String?) {
-                            AppLog.v(T.SUPPORT, "Zendesk push notifications successfully enabled!")
-                        }
+                deviceToken,
+                object : ZendeskCallback<String>() {
+                    override fun onSuccess(result: String?) {
+                        AppLog.v(T.SUPPORT, "Zendesk push notifications successfully enabled!")
+                    }
 
-                        override fun onError(errorResponse: ErrorResponse?) {
-                            AppLog.v(T.SUPPORT, "Enabling Zendesk push notifications failed with" +
-                                    " error: ${errorResponse?.reason}")
-                        }
-                    })
+                    override fun onError(errorResponse: ErrorResponse?) {
+                        AppLog.v(
+                            T.SUPPORT, "Enabling Zendesk push notifications failed with" +
+                                    " error: ${errorResponse?.reason}"
+                        )
+                    }
+                })
         }
     }
 
@@ -230,16 +232,18 @@ class ZendeskHelper(
             return
         }
         zendeskPushRegistrationProvider?.unregisterDevice(
-                object : ZendeskCallback<Void>() {
-                    override fun onSuccess(response: Void?) {
-                        AppLog.v(T.SUPPORT, "Zendesk push notifications successfully disabled!")
-                    }
+            object : ZendeskCallback<Void>() {
+                override fun onSuccess(response: Void?) {
+                    AppLog.v(T.SUPPORT, "Zendesk push notifications successfully disabled!")
+                }
 
-                    override fun onError(errorResponse: ErrorResponse?) {
-                        AppLog.v(T.SUPPORT, "Disabling Zendesk push notifications failed with" +
-                                " error: ${errorResponse?.reason}")
-                    }
-                })
+                override fun onError(errorResponse: ErrorResponse?) {
+                    AppLog.v(
+                        T.SUPPORT, "Disabling Zendesk push notifications failed with" +
+                                " error: ${errorResponse?.reason}"
+                    )
+                }
+            })
     }
 
     /**
@@ -277,7 +281,7 @@ class ZendeskHelper(
             return
         }
         val (emailSuggestion, nameSuggestion) = supportHelper
-                .getSupportEmailAndNameSuggestion(accountStore.account, selectedSite)
+            .getSupportEmailAndNameSuggestion(accountStore.account, selectedSite)
         supportHelper.showSupportIdentityInputDialog(context, emailSuggestion, nameSuggestion) { email, name ->
             AppPrefs.setSupportEmail(email)
             AppPrefs.setSupportName(name)
@@ -484,9 +488,9 @@ private fun getNetworkInformation(context: Context): String {
     val carrierName = telephonyManager?.networkOperatorName ?: ZendeskConstants.unknownValue
     val countryCodeLabel = telephonyManager?.networkCountryIso ?: ZendeskConstants.unknownValue
     return listOf(
-            "${ZendeskConstants.networkTypeLabel} $networkType",
-            "${ZendeskConstants.networkCarrierLabel} $carrierName",
-            "${ZendeskConstants.networkCountryCodeLabel} ${countryCodeLabel.uppercase(context.currentLocale)}"
+        "${ZendeskConstants.networkTypeLabel} $networkType",
+        "${ZendeskConstants.networkCarrierLabel} $carrierName",
+        "${ZendeskConstants.networkCountryCodeLabel} ${countryCodeLabel.uppercase(context.currentLocale)}"
     ).joinToString(separator = "\n")
 }
 
@@ -506,6 +510,7 @@ private object ZendeskConstants {
     const val networkCarrierLabel = "Carrier:"
     const val networkCountryCodeLabel = "Country Code:"
     const val noneValue = "none"
+
     // We rely on this platform tag to filter tickets in Zendesk
     const val platformTag = "Android"
     const val jp_sourcePlatform = "mobile_-_jp_android"

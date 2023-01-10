@@ -74,7 +74,7 @@ abstract class StatsListViewModel(
 
     private val mutableNavigationTarget = MutableLiveData<Event<NavigationTarget>>()
     val navigationTarget: LiveData<Event<NavigationTarget>> = mergeNotNull(
-            statsUseCase.navigationTarget, mutableNavigationTarget
+        statsUseCase.navigationTarget, mutableNavigationTarget
     )
 
     val listSelected = statsUseCase.listSelected
@@ -88,9 +88,9 @@ abstract class StatsListViewModel(
     }
 
     val typesChanged = merge(
-            popupMenuHandler?.typeMoved,
-            newsCardHandler?.cardDismissed,
-            actionCardHandler?.actionCard
+        popupMenuHandler?.typeMoved,
+        newsCardHandler?.cardDismissed,
+        actionCardHandler?.actionCard
     )
 
     val scrollTo = newsCardHandler?.scrollTo
@@ -188,13 +188,13 @@ class InsightsListViewModel
     newsCardHandler: NewsCardHandler,
     actionCardHandler: ActionCardHandler
 ) : StatsListViewModel(
-        mainDispatcher,
-        insightsUseCase,
-        analyticsTracker,
-        dateSelectorFactory.build(INSIGHTS),
-        popupMenuHandler,
-        newsCardHandler,
-        actionCardHandler
+    mainDispatcher,
+    insightsUseCase,
+    analyticsTracker,
+    dateSelectorFactory.build(INSIGHTS),
+    popupMenuHandler,
+    newsCardHandler,
+    actionCardHandler
 )
 
 class YearsListViewModel @Inject constructor(

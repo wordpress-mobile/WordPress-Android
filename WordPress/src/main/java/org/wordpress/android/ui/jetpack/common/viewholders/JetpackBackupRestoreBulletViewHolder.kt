@@ -14,8 +14,8 @@ class JetpackBackupRestoreBulletViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : JetpackViewHolder<JetpackBackupRestoreListBulletItemBinding>(
-        parent,
-        JetpackBackupRestoreListBulletItemBinding::inflate
+    parent,
+    JetpackBackupRestoreListBulletItemBinding::inflate
 ) {
     override fun onBind(itemUiState: JetpackListItemState) = with(binding) {
         val state = itemUiState as BulletState
@@ -38,9 +38,9 @@ class JetpackBackupRestoreBulletViewHolder(
             imageManager.load(icon, state.icon)
         } else {
             ColorUtils.setImageResourceWithTint(
-                    icon,
-                    state.icon,
-                    state.colorResId
+                icon,
+                state.icon,
+                state.colorResId
             )
         }
         bulletLabel.text = uiHelpers.getTextOfUiString(itemView.context, state.label)

@@ -15,17 +15,19 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseT
 
 @RunWith(MockitoJUnitRunner::class)
 class JetpackFeatureRemovalBrandingUtilTest {
-    @Mock private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    @Mock
+    private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
+    @JvmField
+    val rule = InstantTaskExecutorRule()
 
     private lateinit var jetpackFeatureRemovalBrandingUtil: JetpackFeatureRemovalBrandingUtil
 
     @Before
     fun setup() {
         jetpackFeatureRemovalBrandingUtil = JetpackFeatureRemovalBrandingUtil(
-                jetpackFeatureRemovalPhaseHelper,
+            jetpackFeatureRemovalPhaseHelper,
         )
     }
 

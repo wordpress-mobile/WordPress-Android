@@ -29,9 +29,9 @@ sealed class LayoutPickerUiState(
         @StringRes val subtitle: Int? = null,
         @StringRes val toast: Int? = null
     ) : LayoutPickerUiState(
-            errorViewVisible = true,
-            isHeaderVisible = true,
-            isDescriptionVisible = false,
-            buttonsUiState = ButtonsUiState(retryVisible = true)
+        errorViewVisible = true,
+        isHeaderVisible = true,
+        isDescriptionVisible = false,
+        buttonsUiState = ButtonsUiState(retryVisible = true)
     )
 }

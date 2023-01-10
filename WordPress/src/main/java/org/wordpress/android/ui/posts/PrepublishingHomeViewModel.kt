@@ -73,8 +73,8 @@ class PrepublishingHomeViewModel @Inject constructor(
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             if (isStoryPost) {
                 _storyTitleUiState.postValue(StoryTitleUiState(
-                        storyTitle = UiStringText(StringUtils.notNullStr(editPostRepository.title)),
-                        storyThumbnailUrl = storyRepositoryWrapper.getCurrentStoryThumbnailUrl()
+                    storyTitle = UiStringText(StringUtils.notNullStr(editPostRepository.title)),
+                    storyThumbnailUrl = storyRepositoryWrapper.getCurrentStoryThumbnailUrl()
                 ) { storyTitle ->
                     onStoryTitleChanged(storyTitle)
                 })
@@ -95,19 +95,19 @@ class PrepublishingHomeViewModel @Inject constructor(
             }
 
             val categoriesString = getCategoriesUseCase.getPostCategoriesString(
-                    editPostRepository,
-                    site
+                editPostRepository,
+                site
             )
 
             add(HomeUiState(
-                    actionType = CATEGORIES,
-                    actionResult = if (categoriesString.isNotEmpty()) {
-                        UiStringText(categoriesString)
-                    } else {
-                        run { UiStringRes(R.string.prepublishing_nudges_home_categories_not_set) }
-                    },
-                    actionClickable = true,
-                    onActionClicked = ::onActionClicked
+                actionType = CATEGORIES,
+                actionResult = if (categoriesString.isNotEmpty()) {
+                    UiStringText(categoriesString)
+                } else {
+                    run { UiStringRes(R.string.prepublishing_nudges_home_categories_not_set) }
+                },
+                actionClickable = true,
+                onActionClicked = ::onActionClicked
             ))
 
             add(getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
@@ -125,18 +125,18 @@ class PrepublishingHomeViewModel @Inject constructor(
         site: SiteModel
     ) {
         add(HomeUiState(
-                actionType = TAGS,
-                actionResult = getPostTagsUseCase.getTags(editPostRepository)
-                        ?.let { UiStringText(it) }
-                        ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
-                actionClickable = true,
-                onActionClicked = ::onActionClicked
+            actionType = TAGS,
+            actionResult = getPostTagsUseCase.getTags(editPostRepository)
+                ?.let { UiStringText(it) }
+                ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
+            actionClickable = true,
+            onActionClicked = ::onActionClicked
         )
         )
 
         val categoryString: String = getCategoriesUseCase.getPostCategoriesString(
-                editPostRepository,
-                site
+            editPostRepository,
+            site
         )
         if (categoryString.isNotEmpty()) {
             UiStringText(categoryString)
@@ -147,21 +147,21 @@ class PrepublishingHomeViewModel @Inject constructor(
         editPostRepository: EditPostRepository
     ) {
         add(
-                HomeUiState(
-                        actionType = PUBLISH,
-                        actionResult = editPostRepository.getEditablePost()
-                                ?.let {
-                                    UiStringText(
-                                            postSettingsUtils.getPublishDateLabel(
-                                                    it
-                                            )
-                                    )
-                                },
-                        actionTypeColor = R.color.prepublishing_action_type_disabled_color,
-                        actionResultColor = R.color.prepublishing_action_result_disabled_color,
-                        actionClickable = false,
-                        onActionClicked = null
-                )
+            HomeUiState(
+                actionType = PUBLISH,
+                actionResult = editPostRepository.getEditablePost()
+                    ?.let {
+                        UiStringText(
+                            postSettingsUtils.getPublishDateLabel(
+                                it
+                            )
+                        )
+                    },
+                actionTypeColor = R.color.prepublishing_action_type_disabled_color,
+                actionResultColor = R.color.prepublishing_action_result_disabled_color,
+                actionClickable = false,
+                onActionClicked = null
+            )
         )
     }
 
@@ -169,19 +169,19 @@ class PrepublishingHomeViewModel @Inject constructor(
         editPostRepository: EditPostRepository
     ) {
         add(
-                HomeUiState(
-                        actionType = PUBLISH,
-                        actionResult = editPostRepository.getEditablePost()
-                                ?.let {
-                                    UiStringText(
-                                            postSettingsUtils.getPublishDateLabel(
-                                                    it
-                                            )
-                                    )
-                                },
-                        actionClickable = true,
-                        onActionClicked = ::onActionClicked
-                )
+            HomeUiState(
+                actionType = PUBLISH,
+                actionResult = editPostRepository.getEditablePost()
+                    ?.let {
+                        UiStringText(
+                            postSettingsUtils.getPublishDateLabel(
+                                it
+                            )
+                        )
+                    },
+                actionClickable = true,
+                onActionClicked = ::onActionClicked
+            )
         )
     }
 

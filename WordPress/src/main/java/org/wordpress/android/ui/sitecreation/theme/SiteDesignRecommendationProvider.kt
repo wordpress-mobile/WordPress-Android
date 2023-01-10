@@ -25,10 +25,10 @@ class SiteDesignRecommendationProvider @Inject constructor(private val resourceP
             val recommendedTitle = resourceProvider.getString(R.string.hpp_recommended_title, vertical)
             // Create a new category for the recommendations
             val recommendedCategory = StarterDesignCategory(
-                    slug = "recommended_$verticalSlug", // The slug is not used but should not already exist
-                    title = recommendedTitle,
-                    description = recommendedTitle,
-                    emoji = ""
+                slug = "recommended_$verticalSlug", // The slug is not used but should not already exist
+                title = recommendedTitle,
+                description = recommendedTitle,
+                emoji = ""
             )
             val designsWithRecommendations = designs.map {
                 // Add the new category to the recommended designs so that they are filtered correctly
@@ -40,26 +40,26 @@ class SiteDesignRecommendationProvider @Inject constructor(private val resourceP
                 }
             }.toLayoutModels()
             val categoriesWithRecommendations =
-                    listOf(recommendedCategory).toLayoutCategories(recommended = true) +
-                            categories.toLayoutCategories(randomizeOrder = true)
+                listOf(recommendedCategory).toLayoutCategories(recommended = true) +
+                        categories.toLayoutCategories(randomizeOrder = true)
             responseHandler(designsWithRecommendations, categoriesWithRecommendations)
         } else {
             // If no designs are recommended for the selected vertical recommend the blog category
             val recommendedTitle = resourceProvider.getString(
-                    R.string.hpp_recommended_title,
-                    resourceProvider.getString(R.string.hpp_recommended_default_vertical)
+                R.string.hpp_recommended_title,
+                resourceProvider.getString(R.string.hpp_recommended_default_vertical)
             )
             val recommendedCategory = categories.firstOrNull { it.slug == "blog" }?.copy(
-                    title = recommendedTitle,
-                    description = recommendedTitle
+                title = recommendedTitle,
+                description = recommendedTitle
             )
             if (recommendedCategory == null) {
                 // If there is no blog category do not show a recommendation
                 responseHandler(designs.toLayoutModels(), categories.toLayoutCategories(randomizeOrder = true))
             } else {
                 val categoriesWithRecommendations =
-                        listOf(recommendedCategory).toLayoutCategories(recommended = true, randomizeOrder = true) +
-                                categories.toLayoutCategories(randomizeOrder = true)
+                    listOf(recommendedCategory).toLayoutCategories(recommended = true, randomizeOrder = true) +
+                            categories.toLayoutCategories(randomizeOrder = true)
                 responseHandler(designs.toLayoutModels(), categoriesWithRecommendations)
             }
         }

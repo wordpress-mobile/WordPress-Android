@@ -68,7 +68,7 @@ constructor(
 
     open fun start(postRepository: EditPostRepository?) {
         val startCalendar = postRepository?.let { getCurrentPublishDateAsCalendar(it) }
-                ?: localeManagerWrapper.getCurrentCalendar()
+            ?: localeManagerWrapper.getCurrentCalendar()
         updateDateAndTimeFromCalendar(startCalendar)
         onPostStatusChanged(postRepository?.getPost())
     }
@@ -76,7 +76,7 @@ constructor(
     fun onPostStatusChanged(postModel: PostImmutableModel?) {
         canPublishImmediately = postModel?.let {
             PostUtils.shouldPublishImmediatelyOptionBeAvailable(
-                    it.status
+                it.status
             )
         } ?: false
         updateUiModel(postModel = postModel)
@@ -154,7 +154,7 @@ constructor(
             val publishDateLabel = postSettingsUtils.getPublishDateLabel(postModel)
             val now = localeManagerWrapper.getCurrentCalendar().timeInMillis - 10000
             val dateCreated = (DateTimeUtils.dateFromIso8601(postModel.dateCreated)
-                    ?: localeManagerWrapper.getCurrentCalendar().time).time
+                ?: localeManagerWrapper.getCurrentCalendar().time).time
             val enableNotification = areNotificationsEnabled(postModel)
             val showNotification = dateCreated > now
             val notificationLabel = if (enableNotification && showNotification) {
@@ -163,10 +163,10 @@ constructor(
                 R.string.post_notification_off
             }
             _onUiModel.value = PublishUiModel(
-                    publishDateLabel,
-                    notificationLabel = notificationLabel,
-                    notificationEnabled = enableNotification,
-                    notificationVisible = showNotification
+                publishDateLabel,
+                notificationLabel = notificationLabel,
+                notificationEnabled = enableNotification,
+                notificationVisible = showNotification
             )
         } else {
             _onUiModel.value = PublishUiModel(resourceProvider.getString(R.string.immediately))
@@ -186,16 +186,16 @@ constructor(
         val startTime = DateTimeUtils.dateFromIso8601(postRepository.dateCreated).time
         val site = siteStore.getSiteByLocalId(postRepository.localSiteId)
         val title = resourceProvider.getString(
-                R.string.calendar_scheduled_post_title,
-                postRepository.title
+            R.string.calendar_scheduled_post_title,
+            postRepository.title
         )
         val appName = resourceProvider.getString(R.string.app_name)
         val description = resourceProvider.getString(
-                R.string.calendar_scheduled_post_description,
-                postRepository.title,
-                site?.name ?: site?.url ?: "",
-                appName,
-                postRepository.link
+            R.string.calendar_scheduled_post_description,
+            postRepository.title,
+            site?.name ?: site?.url ?: "",
+            appName,
+            postRepository.link
         )
         _onAddToCalendar.value = Event(CalendarEvent(title, description, startTime))
     }
@@ -240,7 +240,7 @@ constructor(
     private fun areNotificationsEnabled(postModel: PostImmutableModel): Boolean {
         val futureTime = localeManagerWrapper.getCurrentCalendar().timeInMillis + 6000
         val dateCreated = (DateTimeUtils.dateFromIso8601(postModel.dateCreated)
-                ?: localeManagerWrapper.getCurrentCalendar().time).time
+            ?: localeManagerWrapper.getCurrentCalendar().time).time
         return dateCreated > futureTime
     }
 

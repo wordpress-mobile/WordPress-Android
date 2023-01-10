@@ -27,14 +27,14 @@ class DynamicCardsBuilder @Inject constructor(
             // current solution is good enough for a few sources.
             if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
                 list.addAll(quickStartCategories
-                        .filter { (it.completedTasks + it.uncompletedTasks).isNotEmpty() }.map { category ->
-                            quickStartItemBuilder.build(
-                                    category,
-                                    pinnedDynamicCard,
-                                    onDynamicCardMoreClick,
-                                    onQuickStartTaskCardClick
-                            )
-                        })
+                    .filter { (it.completedTasks + it.uncompletedTasks).isNotEmpty() }.map { category ->
+                        quickStartItemBuilder.build(
+                            category,
+                            pinnedDynamicCard,
+                            onDynamicCardMoreClick,
+                            onQuickStartTaskCardClick
+                        )
+                    })
             }
         }.associateBy { it.dynamicCardType }
         return visibleDynamicCards.mapNotNull { dynamicCardType -> dynamicCards[dynamicCardType] }

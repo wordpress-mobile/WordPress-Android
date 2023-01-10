@@ -103,14 +103,14 @@ class FollowerTypesUseCase @Inject constructor(
             val totalLabel = resourceProvider.getString(R.string.stats_follower_types_pie_chart_total_label)
             val totalValue = pies.sumOf { it.value }
             val pieChartItem = PieChartItem(
-                    pies,
-                    totalLabel,
-                    statsUtils.toFormattedString(totalValue),
-                    COLOR_LIST,
-                    contentDescriptionHelper.buildContentDescription(
-                            R.string.stats_follower_types_pie_chart_total_label,
-                            totalValue
-                    )
+                pies,
+                totalLabel,
+                statsUtils.toFormattedString(totalValue),
+                COLOR_LIST,
+                contentDescriptionHelper.buildContentDescription(
+                    R.string.stats_follower_types_pie_chart_total_label,
+                    totalValue
+                )
             )
             items.add(pieChartItem)
 
@@ -119,26 +119,26 @@ class FollowerTypesUseCase @Inject constructor(
                 val title = getTitle(it.key)
                 val formattedPercentage = getFormattedPercentage(it.value, total)
                 val value = resourceProvider.getString(
-                        R.string.stats_value_percent,
-                        statsUtils.toFormattedString(it.value),
-                        formattedPercentage
+                    R.string.stats_value_percent,
+                    statsUtils.toFormattedString(it.value),
+                    formattedPercentage
                 )
 
                 val contentDescription = resourceProvider.getString(
-                        R.string.stats_total_followers_content_description,
-                        it.value,
-                        formattedPercentage
+                    R.string.stats_total_followers_content_description,
+                    it.value,
+                    formattedPercentage
                 )
                 items.add(
-                        ListItem(
-                                text = resourceProvider.getString(title),
-                                value = value,
-                                showDivider = domainModel.entries.indexOf(it) < domainModel.size - 1,
-                                contentDescription = contentDescriptionHelper.buildContentDescription(
-                                        title,
-                                        contentDescription
-                                )
+                    ListItem(
+                        text = resourceProvider.getString(title),
+                        value = value,
+                        showDivider = domainModel.entries.indexOf(it) < domainModel.size - 1,
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                            title,
+                            contentDescription
                         )
+                    )
                 )
             }
         } else {
@@ -162,10 +162,10 @@ class FollowerTypesUseCase @Inject constructor(
     }
 
     private fun mapToPie(domainModel: Map<FollowerType, Int>) = domainModel
-            .map {
-                val label = resourceProvider.getString(getTitle(it.key))
-                Pie(label, it.value)
-            }
+        .map {
+            val label = resourceProvider.getString(getTitle(it.key))
+            Pie(label, it.value)
+        }
 
     enum class FollowerType { WP_COM, EMAIL, SOCIAL }
 

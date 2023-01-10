@@ -15,13 +15,13 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.extensions.setVisible
-import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.posts.PostListItemType
 import org.wordpress.android.viewmodel.posts.PostListItemType.EndListIndicatorItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.LoadingItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 
 private const val VIEW_TYPE_POST = 0
 private const val VIEW_TYPE_POST_COMPACT = 1
@@ -177,8 +177,9 @@ private val PostListDiffItemCallback = object : DiffUtil.ItemCallback<PostListIt
              * suppresses the default ItemAnimator, which is all we need in this case.
              */
             if (oldItem.data.progressBarUiState is ProgressBarUiState.Determinate &&
-                    newItem.data.progressBarUiState is ProgressBarUiState.Determinate &&
-                    oldItem.data.progressBarUiState.progress != newItem.data.progressBarUiState.progress) {
+                newItem.data.progressBarUiState is ProgressBarUiState.Determinate &&
+                oldItem.data.progressBarUiState.progress != newItem.data.progressBarUiState.progress
+            ) {
                 return true
             }
         }

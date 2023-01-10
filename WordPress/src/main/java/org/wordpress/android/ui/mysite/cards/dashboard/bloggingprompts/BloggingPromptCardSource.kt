@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -66,10 +65,10 @@ class BloggingPromptCardSource @Inject constructor(
             coroutineScope.launch(bgDispatcher) {
                 if (isPrompAvailable()) {
                     promptsStore.getPrompts(selectedSite)
-                            .map { it.model?.filter { prompt -> isSameDay(prompt.date, Date()) } }
-                            .collect { result ->
-                                postValue(BloggingPromptUpdate(result?.firstOrNull()))
-                            }
+                        .map { it.model?.filter { prompt -> isSameDay(prompt.date, Date()) } }
+                        .collect { result ->
+                            postValue(BloggingPromptUpdate(result?.firstOrNull()))
+                        }
                 } else {
                     postEmptyState()
                 }
@@ -147,7 +146,7 @@ class BloggingPromptCardSource @Inject constructor(
         val selectedSite = selectedSiteRepository.getSelectedSite() ?: return false
         val isPotentialBloggingSite = selectedSite.isPotentialBloggingSite
         val isPromptReminderOptedIn = bloggingRemindersStore.bloggingRemindersModel(selectedSite.localId().value)
-                .firstOrNull()?.isPromptIncluded == true
+            .firstOrNull()?.isPromptIncluded == true
         val promptSkippedDate = appPrefsWrapper.getSkippedPromptDay(selectedSite.localId().value)
 
         val isPromptSkippedForToday = promptSkippedDate != null && isSameDay(promptSkippedDate, Date())
@@ -158,11 +157,11 @@ class BloggingPromptCardSource @Inject constructor(
 
     private fun isSameDay(date1: Date, date2: Date): Boolean {
         val localDate1: LocalDate = date1.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
         val localDate2: LocalDate = date2.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
         return localDate1.isEqual(localDate2)
     }
 }

@@ -10,8 +10,8 @@ class CommentButtonViewHolder(
     parent: ViewGroup,
     val uiHelpers: UiHelpers
 ) : CommentsSnippetViewHolder<ReaderListitemCommentButtonBinding>(
-        parent,
-        ReaderListitemCommentButtonBinding::inflate
+    parent,
+    ReaderListitemCommentButtonBinding::inflate
 ) {
     override fun onBind(itemUiState: CommentSnippetItemState) = with(binding) {
         val state = itemUiState as ButtonState

@@ -3,18 +3,17 @@ package org.wordpress.android.ui.reader
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flowOn
+import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Named
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
-import org.wordpress.android.R
-import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 class ReaderFollowCommentsHandler @Inject constructor(
     private val readerCommentsFollowUseCase: ReaderCommentsFollowUseCase,
@@ -37,16 +36,16 @@ class ReaderFollowCommentsHandler @Inject constructor(
         onSuccessSnackbarAction: (() -> Unit)?
     ) {
         readerCommentsFollowUseCase.setMySubscriptionToPost(blogId, postId, askSubscribe, source)
-                .flowOn(bgDispatcher).collect { state ->
-            manageState(state, onSuccessSnackbarAction)
-        }
+            .flowOn(bgDispatcher).collect { state ->
+                manageState(state, onSuccessSnackbarAction)
+            }
     }
 
     suspend fun handleFollowCommentsStatusRequest(blogId: Long, postId: Long, isInit: Boolean) {
         readerCommentsFollowUseCase.getMySubscriptionToPost(blogId, postId, isInit)
-                .flowOn(bgDispatcher).collect { state ->
-            manageState(state)
-        }
+            .flowOn(bgDispatcher).collect { state ->
+                manageState(state)
+            }
     }
 
     suspend fun handleEnableByPushNotificationsClicked(
@@ -57,9 +56,9 @@ class ReaderFollowCommentsHandler @Inject constructor(
         onSuccessSnackbarAction: (() -> Unit)? = null
     ) {
         readerCommentsFollowUseCase.setEnableByPushNotifications(blogId, postId, askEnable, source)
-                .flowOn(bgDispatcher).collect { state ->
-                    manageState(state, onSuccessSnackbarAction)
-                }
+            .flowOn(bgDispatcher).collect { state ->
+                manageState(state, onSuccessSnackbarAction)
+            }
     }
 
     private fun manageState(state: FollowCommentsState, onSuccessSnackbarAction: (() -> Unit)? = null) {
@@ -71,15 +70,15 @@ class ReaderFollowCommentsHandler @Inject constructor(
                 }
                 state.userMessage?.let {
                     _snackbarEvents.postValue(Event(SnackbarMessageHolder(
-                            message = it,
-                            buttonTitle = onSuccessSnackbarAction?.let {
-                                if (state.isReceivingNotifications) {
-                                    UiStringRes(R.string.undo)
-                                } else {
-                                    UiStringRes(R.string.reader_followed_blog_notifications_action)
-                                }
-                            },
-                            buttonAction = onSuccessSnackbarAction ?: {}
+                        message = it,
+                        buttonTitle = onSuccessSnackbarAction?.let {
+                            if (state.isReceivingNotifications) {
+                                UiStringRes(R.string.undo)
+                            } else {
+                                UiStringRes(R.string.reader_followed_blog_notifications_action)
+                            }
+                        },
+                        buttonAction = onSuccessSnackbarAction ?: {}
                     )))
                 }
             }

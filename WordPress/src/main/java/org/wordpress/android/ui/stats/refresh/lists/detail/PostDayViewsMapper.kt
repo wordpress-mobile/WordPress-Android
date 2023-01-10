@@ -40,18 +40,18 @@ class PostDayViewsMapper
             else -> State.NEGATIVE
         }
         return ValueItem(
-                value = statsUtils.toFormattedString(value, HUNDRED_THOUSAND),
-                unit = R.string.stats_views,
-                isFirst = true,
-                change = change,
-                state = state,
-                contentDescription = resourceProvider.getString(
-                        R.string.stats_overview_content_description,
-                        value,
-                        resourceProvider.getString(R.string.stats_views),
-                        statsDateFormatter.printDate(selectedItem.period),
-                        unformattedChange ?: ""
-                )
+            value = statsUtils.toFormattedString(value, HUNDRED_THOUSAND),
+            unit = R.string.stats_views,
+            isFirst = true,
+            change = change,
+            state = state,
+            contentDescription = resourceProvider.getString(
+                R.string.stats_overview_content_description,
+                value,
+                resourceProvider.getString(R.string.stats_views),
+                statsDateFormatter.printDate(selectedItem.period),
+                unformattedChange ?: ""
+            )
         )
     }
 
@@ -95,26 +95,26 @@ class PostDayViewsMapper
     ): List<BlockListItem> {
         val chartItems = dayViews.map { day ->
             Bar(
-                    statsDateFormatter.printGranularDate(day.period, DAYS),
-                    day.period,
-                    day.count
+                statsDateFormatter.printGranularDate(day.period, DAYS),
+                day.period,
+                day.count
             )
         }
         val result = mutableListOf<BlockListItem>()
 
         val contentDescriptions = statsUtils.getBarChartEntryContentDescriptions(
-                R.string.stats_views,
-                chartItems
+            R.string.stats_views,
+            chartItems
         )
 
         result.add(
-                BarChartItem(
-                        chartItems,
-                        selectedItem = selectedDay,
-                        onBarSelected = onBarSelected,
-                        onBarChartDrawn = onBarChartDrawn,
-                        entryContentDescriptions = contentDescriptions
-                )
+            BarChartItem(
+                chartItems,
+                selectedItem = selectedDay,
+                onBarSelected = onBarSelected,
+                onBarChartDrawn = onBarChartDrawn,
+                entryContentDescriptions = contentDescriptions
+            )
         )
         return result
     }

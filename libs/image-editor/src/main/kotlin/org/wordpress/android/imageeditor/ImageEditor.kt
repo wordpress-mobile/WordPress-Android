@@ -64,7 +64,7 @@ class ImageEditor private constructor(
         data class EditorShown(val numOfImages: Int) : EditorAction()
         object EditorCancelled : EditorAction()
         data class EditorFinishedEditing(val outputDataList: List<OutputData>) :
-                EditorAction()
+            EditorAction()
 
         // Preview screen actions
         data class PreviewImageSelected(val highResImageUrl: String, val selectedPosition: Int) : EditorAction()

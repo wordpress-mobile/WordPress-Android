@@ -29,33 +29,33 @@ class CleanUpMediaToPostAssociationUseCase @Inject constructor(
                     uploadStore.getUploadingMediaForPost(post)
 
             mediaAssociatedWithPost
-                    .filter { media ->
-                        // Find media which is not in the post anymore
-                        val containsGutenbergBlocks = postUtilsWrapper.contentContainsGutenbergBlocks(post.content)
-                        if (containsGutenbergBlocks) {
-                            !postUtilsWrapper.isMediaInGutenbergPostBody(post.content, media.id.toString())
-                        } else {
-                            !aztecEditorWrapper.isMediaInPostBody(post.content, media.id.toString())
-                        }
+                .filter { media ->
+                    // Find media which is not in the post anymore
+                    val containsGutenbergBlocks = postUtilsWrapper.contentContainsGutenbergBlocks(post.content)
+                    if (containsGutenbergBlocks) {
+                        !postUtilsWrapper.isMediaInGutenbergPostBody(post.content, media.id.toString())
+                    } else {
+                        !aztecEditorWrapper.isMediaInPostBody(post.content, media.id.toString())
                     }
-                    .filter { media ->
-                        // Featured images are not in post content, don't delete them
-                        !media.markedLocallyAsFeatured
-                    }
-                    .toSet()
-                    .let { mediaToDeleteAssociationFor ->
-                        if (mediaToDeleteAssociationFor.isNotEmpty()) {
-                            val clearMediaPayload = ClearMediaPayload(
-                                    post,
-                                    mediaToDeleteAssociationFor
+                }
+                .filter { media ->
+                    // Featured images are not in post content, don't delete them
+                    !media.markedLocallyAsFeatured
+                }
+                .toSet()
+                .let { mediaToDeleteAssociationFor ->
+                    if (mediaToDeleteAssociationFor.isNotEmpty()) {
+                        val clearMediaPayload = ClearMediaPayload(
+                            post,
+                            mediaToDeleteAssociationFor
+                        )
+                        dispatcher.dispatch(
+                            UploadActionBuilder.newClearMediaForPostAction(
+                                clearMediaPayload
                             )
-                            dispatcher.dispatch(
-                                    UploadActionBuilder.newClearMediaForPostAction(
-                                            clearMediaPayload
-                                    )
-                            )
-                        }
+                        )
                     }
+                }
         }
     }
 }

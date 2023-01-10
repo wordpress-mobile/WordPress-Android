@@ -3,9 +3,9 @@ package org.wordpress.android.ui.prefs.homepage
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDataLoader.LoadingResult
+import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDataLoader.LoadingResult.Data
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDataLoader.LoadingResult.Error
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDataLoader.LoadingResult.Loading
-import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDataLoader.LoadingResult.Data
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsUiState.ValidityResult.Invalid
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsUiState.ValidityResult.Valid
 
@@ -29,13 +29,13 @@ data class HomepageSettingsUiState(
             }
             is Error -> this.copy(isLoading = false, error = loadingResult.message)
             is Data -> this.copy(
-                    isLoading = false,
-                    error = null,
-                    pageForPostsState = HomepageSettingsSelectorUiState.Builder.build(
-                            loadingResult.pages,
-                            pageForPostsId
-                    ),
-                    pageOnFrontState = HomepageSettingsSelectorUiState.Builder.build(loadingResult.pages, pageOnFrontId)
+                isLoading = false,
+                error = null,
+                pageForPostsState = HomepageSettingsSelectorUiState.Builder.build(
+                    loadingResult.pages,
+                    pageForPostsId
+                ),
+                pageOnFrontState = HomepageSettingsSelectorUiState.Builder.build(loadingResult.pages, pageOnFrontId)
             )
         }
     }
@@ -52,9 +52,9 @@ data class HomepageSettingsUiState(
         return if (pageForPostsState != null) {
             val validityResult = validate(newPageForPostsId = pageForPostsId)
             copy(
-                    pageForPostsState = pageForPostsState.selectItem(pageForPostsId),
-                    error = validityResult.printErrorOrNull(),
-                    isSaveEnabled = validityResult is Valid
+                pageForPostsState = pageForPostsState.selectItem(pageForPostsId),
+                error = validityResult.printErrorOrNull(),
+                isSaveEnabled = validityResult is Valid
             )
         } else {
             this
@@ -65,9 +65,9 @@ data class HomepageSettingsUiState(
         return if (pageOnFrontState != null) {
             val validityResult = validate(newPageOnFrontId = pageOnFrontId)
             copy(
-                    pageOnFrontState = pageOnFrontState.selectItem(pageOnFrontId),
-                    error = validityResult.printErrorOrNull(),
-                    isSaveEnabled = validityResult is Valid
+                pageOnFrontState = pageOnFrontState.selectItem(pageOnFrontId),
+                error = validityResult.printErrorOrNull(),
+                isSaveEnabled = validityResult is Valid
             )
         } else {
             this
@@ -77,9 +77,9 @@ data class HomepageSettingsUiState(
     fun updateClassicBlogState(isClassicBlogState: Boolean): HomepageSettingsUiState {
         val validityResult = if (isClassicBlogState) Valid else validate()
         return copy(
-                isClassicBlogState = isClassicBlogState,
-                error = validityResult.printErrorOrNull(),
-                isSaveEnabled = validityResult is Valid
+            isClassicBlogState = isClassicBlogState,
+            error = validityResult.printErrorOrNull(),
+            isSaveEnabled = validityResult is Valid
         )
     }
 

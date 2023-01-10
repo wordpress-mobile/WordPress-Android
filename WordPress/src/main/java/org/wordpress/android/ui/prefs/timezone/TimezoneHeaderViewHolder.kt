@@ -18,9 +18,9 @@ class TimezoneHeaderViewHolder(
     companion object {
         fun from(parent: ViewGroup): TimezoneHeaderViewHolder {
             val binding = SiteSettingsTimezoneBottomSheetListHeaderBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
+                LayoutInflater.from(parent.context),
+                parent,
+                false
             )
             return TimezoneHeaderViewHolder(binding)
         }

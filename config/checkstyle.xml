@@ -67,11 +67,13 @@
     <module name="RegexpMultiline">
         <property name="format" value="@Inject(\n|\r\n).*[^{,(]$"/>
         <property name="message" value="Inject annotation should be in-line with the annotated field or property"/>
+        <property name="fileExtensions" value="java"/>
     </module>
 
     <module name="RegexpSingleline">
         <property name="format" value="^(?!.*\bclass\b).*\S.*@Inject"/>
         <property name="message" value="In-line inject annotation should precede the rest of the declaration"/>
+        <property name="fileExtensions" value="java"/>
     </module>
 
     <!-- Specific to FluxC -->

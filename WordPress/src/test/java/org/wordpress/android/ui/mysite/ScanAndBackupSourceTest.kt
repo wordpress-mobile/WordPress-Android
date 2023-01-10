@@ -18,9 +18,14 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabil
 
 @ExperimentalCoroutinesApi
 class ScanAndBackupSourceTest : BaseUnitTest() {
-    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
-    @Mock lateinit var site: SiteModel
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Mock
+    lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+
+    @Mock
+    lateinit var site: SiteModel
     private lateinit var scanAndBackupSource: ScanAndBackupSource
     private val siteLocalId = 1
     private val siteRemoteId = 2L
@@ -166,13 +171,13 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         if (hasSelectedSite) {
             whenever(site.siteId).thenReturn(siteRemoteId)
             whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                    flow { emit(JetpackPurchasedProducts(scan = scanPurchased, backup = backupPurchased)) }
+                flow { emit(JetpackPurchasedProducts(scan = scanPurchased, backup = backupPurchased)) }
             )
         }
         scanAndBackupSource = ScanAndBackupSource(
-                testDispatcher(),
-                selectedSiteRepository,
-                jetpackCapabilitiesUseCase
+            testDispatcher(),
+            selectedSiteRepository,
+            jetpackCapabilitiesUseCase
         )
     }
 }

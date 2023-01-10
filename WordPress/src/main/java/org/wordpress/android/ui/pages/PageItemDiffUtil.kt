@@ -36,9 +36,10 @@ class PageItemDiffUtil(val items: List<PageItem>, val result: List<PageItem>) : 
              * suppresses the default ItemAnimator, which is all we need in this case.
              */
             if (oldItem.progressBarUiState is Determinate &&
-                    newItem.progressBarUiState is Determinate &&
-                    (oldItem.progressBarUiState as Determinate).progress !=
-                    (newItem.progressBarUiState as Determinate).progress) {
+                newItem.progressBarUiState is Determinate &&
+                (oldItem.progressBarUiState as Determinate).progress !=
+                (newItem.progressBarUiState as Determinate).progress
+            ) {
                 return true
             }
         }

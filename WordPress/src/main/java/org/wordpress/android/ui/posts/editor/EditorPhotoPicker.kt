@@ -37,7 +37,9 @@ class EditorPhotoPicker(
     private val showAztecEditor: Boolean
 ) : MediaToolbarAction.MediaToolbarButtonClickListener {
     private var photoPickerContainer: View? = null
-    @Suppress("DEPRECATION") private var photoPickerFragment: PhotoPickerFragment? = null
+
+    @Suppress("DEPRECATION")
+    private var photoPickerFragment: PhotoPickerFragment? = null
     private var photoPickerOrientation = Configuration.ORIENTATION_UNDEFINED
     var allowMultipleSelection: Boolean = false
 
@@ -59,15 +61,15 @@ class EditorPhotoPicker(
             } else MediaBrowserType.EDITOR_PICKER
 
             PhotoPickerFragment.newInstance(
-                    photoPickerListener,
-                    mediaBrowserType,
-                    site
+                photoPickerListener,
+                mediaBrowserType,
+                site
             ).let {
                 photoPickerFragment = it
                 activity.supportFragmentManager
-                        .beginTransaction()
-                        .add(R.id.photo_fragment_container, it, PHOTO_PICKER_TAG)
-                        .commit()
+                    .beginTransaction()
+                    .add(R.id.photo_fragment_container, it, PHOTO_PICKER_TAG)
+                    .commit()
             }
         }
     }
@@ -143,13 +145,13 @@ class EditorPhotoPicker(
         photoPickerFragment?.let { photoPickerFragment ->
             when (action) {
                 MediaToolbarAction.CAMERA -> photoPickerFragment.showCameraPopupMenu(
-                        activity.findViewById(action.buttonId)
+                    activity.findViewById(action.buttonId)
                 )
                 MediaToolbarAction.GALLERY -> photoPickerFragment.performActionOrShowPopup(
-                        activity.findViewById(action.buttonId)
+                    activity.findViewById(action.buttonId)
                 )
                 MediaToolbarAction.LIBRARY -> photoPickerFragment.doIconClicked(
-                        PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA
+                    PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA
                 )
             }
         }

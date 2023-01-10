@@ -6,14 +6,14 @@ sealed class DomainRegistrationNavigationAction {
     object OpenDomainSuggestions : DomainRegistrationNavigationAction()
 
     data class OpenDomainRegistrationCheckout(val site: SiteModel, val details: DomainProductDetails) :
-            DomainRegistrationNavigationAction()
+        DomainRegistrationNavigationAction()
 
     data class OpenDomainRegistrationDetails(val details: DomainProductDetails) :
-            DomainRegistrationNavigationAction()
+        DomainRegistrationNavigationAction()
 
     data class OpenDomainRegistrationResult(val event: DomainRegistrationCompletedEvent) :
-            DomainRegistrationNavigationAction()
+        DomainRegistrationNavigationAction()
 
     data class FinishDomainRegistration(val event: DomainRegistrationCompletedEvent) :
-            DomainRegistrationNavigationAction()
+        DomainRegistrationNavigationAction()
 }

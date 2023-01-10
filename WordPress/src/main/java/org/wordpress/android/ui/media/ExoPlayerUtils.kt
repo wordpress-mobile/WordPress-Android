@@ -40,7 +40,7 @@ class ExoPlayerUtils @Inject constructor(
     }
 
     private fun buildDefaultDataSourceFactory(httpDataSourceFactory: DefaultHttpDataSourceFactory) =
-            DefaultDataSourceFactory(appContext, httpDataSourceFactory)
+        DefaultDataSourceFactory(appContext, httpDataSourceFactory)
 
     @Suppress("UseCheckOrError")
     fun buildMediaSource(uri: Uri): MediaSource? {
@@ -48,14 +48,14 @@ class ExoPlayerUtils @Inject constructor(
         val defaultDataSourceFactory = buildDefaultDataSourceFactory(httpDataSourceFactory)
         return when (@ContentType val type = Util.inferContentType(uri)) {
             C.TYPE_DASH -> Factory(defaultDataSourceFactory)
-                    .setManifestParser(FilteringManifestParser(DashManifestParser(), null))
-                    .createMediaSource(uri)
+                .setManifestParser(FilteringManifestParser(DashManifestParser(), null))
+                .createMediaSource(uri)
             C.TYPE_SS -> SsMediaSource.Factory(defaultDataSourceFactory)
-                    .setManifestParser(FilteringManifestParser(SsManifestParser(), null))
-                    .createMediaSource(uri)
+                .setManifestParser(FilteringManifestParser(SsManifestParser(), null))
+                .createMediaSource(uri)
             C.TYPE_HLS -> HlsMediaSource.Factory(defaultDataSourceFactory)
-                    .setPlaylistParserFactory(DefaultHlsPlaylistParserFactory())
-                    .createMediaSource(uri)
+                .setPlaylistParserFactory(DefaultHlsPlaylistParserFactory())
+                .createMediaSource(uri)
             C.TYPE_OTHER -> ExtractorMediaSource.Factory(defaultDataSourceFactory).createMediaSource(uri)
             else -> {
                 throw IllegalStateException("$UNSUPPORTED_TYPE $type")

@@ -121,10 +121,10 @@ class ReaderPostListViewModel @Inject constructor(
     ) {
         launch {
             readerPostCardActionsHandler.onAction(
-                    post,
-                    REBLOG,
-                    bookmarksList,
-                    source = source
+                post,
+                REBLOG,
+                bookmarksList,
+                source = source
             )
         }
     }
@@ -136,10 +136,10 @@ class ReaderPostListViewModel @Inject constructor(
     ) {
         launch {
             readerPostCardActionsHandler.onAction(
-                    post,
-                    BLOCK_SITE,
-                    bookmarksList,
-                    source = source
+                post,
+                BLOCK_SITE,
+                bookmarksList,
+                source = source
             )
         }
     }
@@ -151,10 +151,10 @@ class ReaderPostListViewModel @Inject constructor(
     ) {
         launch {
             readerPostCardActionsHandler.onAction(
-                    post,
-                    BLOCK_USER,
-                    bookmarksList,
-                    source = source
+                post,
+                BLOCK_USER,
+                bookmarksList,
+                source = source
             )
         }
     }
@@ -168,10 +168,10 @@ class ReaderPostListViewModel @Inject constructor(
         launch(bgDispatcher) {
             ReaderPostTable.getBlogPost(blogId, postId, true)?.let {
                 readerPostCardActionsHandler.onAction(
-                        it,
-                        BOOKMARK,
-                        isBookmarkList,
-                        source = source
+                    it,
+                    BOOKMARK,
+                    isBookmarkList,
+                    source = source
                 )
             }
         }
@@ -184,10 +184,10 @@ class ReaderPostListViewModel @Inject constructor(
     ) {
         launch(bgDispatcher) {
             readerPostCardActionsHandler.onAction(
-                    post,
-                    FOLLOW,
-                    bookmarksList,
-                    source = source
+                post,
+                FOLLOW,
+                bookmarksList,
+                source = source
             )
         }
     }
@@ -201,10 +201,10 @@ class ReaderPostListViewModel @Inject constructor(
         launch(bgDispatcher) {
             ReaderPostTable.getBlogPost(blogId, postId, true)?.let {
                 readerPostCardActionsHandler.onAction(
-                        it,
-                        SITE_NOTIFICATIONS,
-                        isBookmarkList,
-                        source = source
+                    it,
+                    SITE_NOTIFICATIONS,
+                    isBookmarkList,
+                    source = source
                 )
             }
         }
@@ -217,10 +217,10 @@ class ReaderPostListViewModel @Inject constructor(
     ) {
         launch(bgDispatcher) {
             readerPostCardActionsHandler.onAction(
-                    post,
-                    LIKE,
-                    bookmarksList,
-                    source = source
+                post,
+                LIKE,
+                bookmarksList,
+                source = source
             )
         }
     }
@@ -232,10 +232,10 @@ class ReaderPostListViewModel @Inject constructor(
     ) {
         launch(bgDispatcher) {
             readerPostCardActionsHandler.onAction(
-                    post,
-                    REPORT_POST,
-                    bookmarksList,
-                    source = source
+                post,
+                REPORT_POST,
+                bookmarksList,
+                source = source
             )
         }
     }
@@ -247,10 +247,10 @@ class ReaderPostListViewModel @Inject constructor(
     ) {
         launch(bgDispatcher) {
             readerPostCardActionsHandler.onAction(
-                    post,
-                    REPORT_USER,
-                    bookmarksList,
-                    source = source
+                post,
+                REPORT_USER,
+                bookmarksList,
+                source = source
             )
         }
     }
@@ -262,10 +262,10 @@ class ReaderPostListViewModel @Inject constructor(
     ) {
         launch(bgDispatcher) {
             readerPostCardActionsHandler.onAction(
-                    post,
-                    TOGGLE_SEEN_STATUS,
-                    bookmarksList,
-                    source = source
+                post,
+                TOGGLE_SEEN_STATUS,
+                bookmarksList,
+                source = source
             )
         }
     }
@@ -307,8 +307,8 @@ class ReaderPostListViewModel @Inject constructor(
         subfilterListItem: SubfilterListItem?
     ) {
         AppLog.d(
-                T.READER,
-                "TRACK READER ReaderPostListFragment > START Count [mIsTopLevel = $isTopLevelFragment]"
+            T.READER,
+            "TRACK READER ReaderPostListFragment > START Count [mIsTopLevel = $isTopLevelFragment]"
         )
         if (!isTopLevelFragment && !isSearch) {
             // top level is tracked in ReaderFragment, search is tracked in ReaderSearchActivity
@@ -324,8 +324,8 @@ class ReaderPostListViewModel @Inject constructor(
 
     fun onFragmentPause(isTopLevelFragment: Boolean, isSearch: Boolean, isFilterable: Boolean) {
         AppLog.d(
-                T.READER,
-                "TRACK READER ReaderPostListFragment > STOP Count [mIsTopLevel = $isTopLevelFragment]"
+            T.READER,
+            "TRACK READER ReaderPostListFragment > STOP Count [mIsTopLevel = $isTopLevelFragment]"
         )
         if (!isTopLevelFragment && !isSearch) {
             // top level is tracked in ReaderFragment, search is tracked in ReaderSearchActivity

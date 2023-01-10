@@ -1,12 +1,5 @@
 package org.wordpress.android.ui.people
 
-import org.wordpress.android.WordPress
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.viewmodel.ContextProvider
-import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import com.android.volley.VolleyError
 import com.google.gson.Gson
 import com.google.gson.JsonParseException
@@ -16,9 +9,16 @@ import com.wordpress.rest.RestRequest.Listener
 import org.json.JSONObject
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.WordPress
 import org.wordpress.android.ui.people.InviteLinksApiCallsProvider.InviteLinksCallResult.Failure
 import org.wordpress.android.ui.people.InviteLinksApiCallsProvider.InviteLinksCallResult.Success
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.VolleyUtils
+import org.wordpress.android.viewmodel.ContextProvider
+import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class InviteLinksApiCallsProvider @Inject constructor(
     private val contextProvider: ContextProvider
@@ -29,9 +29,9 @@ class InviteLinksApiCallsProvider @Inject constructor(
         val listener = Listener { jsonObject ->
             val result = getLinks(jsonObject)
             AppLog.d(
-                    T.PEOPLE,
-                    "getInviteLinksStatus > Succeeded [blogId=$blogId - result = " +
-                            "${(result as Success).links.map { "Name: ${it.role} Expiry: ${it.expiry}" }}]"
+                T.PEOPLE,
+                "getInviteLinksStatus > Succeeded [blogId=$blogId - result = " +
+                        "${(result as Success).links.map { "Name: ${it.role} Expiry: ${it.expiry}" }}]"
             )
             cont.resume(result)
         }
@@ -41,9 +41,9 @@ class InviteLinksApiCallsProvider @Inject constructor(
         }
 
         WordPress.getRestClientUtilsV1_1().get(
-                endPointPath,
-                listener,
-                errorListener
+            endPointPath,
+            listener,
+            errorListener
         )
     }
 
@@ -52,8 +52,8 @@ class InviteLinksApiCallsProvider @Inject constructor(
 
         val listener = Listener {
             AppLog.d(
-                    T.PEOPLE,
-                    "generateLinks > Succeeded [blogId=$blogId]"
+                T.PEOPLE,
+                "generateLinks > Succeeded [blogId=$blogId]"
             )
             cont.resume(Success(listOf()))
         }
@@ -63,9 +63,9 @@ class InviteLinksApiCallsProvider @Inject constructor(
         }
 
         WordPress.getRestClientUtilsV2().post(
-                endPointPath,
-                listener,
-                errorListener
+            endPointPath,
+            listener,
+            errorListener
         )
     }
 
@@ -74,8 +74,8 @@ class InviteLinksApiCallsProvider @Inject constructor(
 
         val listener = Listener {
             AppLog.d(
-                    T.PEOPLE,
-                    "deleteLinks > Succeeded [blogId=$blogId]"
+                T.PEOPLE,
+                "deleteLinks > Succeeded [blogId=$blogId]"
             )
             cont.resume(Success(listOf()))
         }
@@ -85,9 +85,9 @@ class InviteLinksApiCallsProvider @Inject constructor(
         }
 
         WordPress.getRestClientUtilsV2().post(
-                endPointPath,
-                listener,
-                errorListener
+            endPointPath,
+            listener,
+            errorListener
         )
     }
 
@@ -119,15 +119,15 @@ class InviteLinksApiCallsProvider @Inject constructor(
         val error = VolleyUtils.errStringFromVolleyError(volleyError)
         return if (error.isNullOrEmpty()) {
             AppLog.d(
-                    T.PEOPLE,
-                    "$functionName > Failed with empty string " +
-                            "[blogId=$blogId - volleyError = $volleyError]"
+                T.PEOPLE,
+                "$functionName > Failed with empty string " +
+                        "[blogId=$blogId - volleyError = $volleyError]"
             )
             contextProvider.getContext().getString(R.string.invite_links_generic_get_data_error)
         } else {
             AppLog.d(
-                    T.PEOPLE,
-                    "$functionName > Failed [blogId=$blogId - error = $error]"
+                T.PEOPLE,
+                "$functionName > Failed [blogId=$blogId - error = $error]"
             )
             error
         }

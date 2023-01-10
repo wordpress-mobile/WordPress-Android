@@ -18,29 +18,31 @@ data class LayoutModel(
     val categories: List<LayoutCategoryModel>
 ) : Parcelable {
     constructor(starterDesign: StarterDesign) : this(
-            starterDesign.slug,
-            starterDesign.title,
-            starterDesign.preview,
-            starterDesign.previewTablet,
-            starterDesign.previewMobile,
-            starterDesign.demoUrl,
-            starterDesign.categories.toLayoutCategories()
+        starterDesign.slug,
+        starterDesign.title,
+        starterDesign.preview,
+        starterDesign.previewTablet,
+        starterDesign.previewMobile,
+        starterDesign.demoUrl,
+        starterDesign.categories.toLayoutCategories()
     )
 
     constructor(blockLayout: GutenbergLayout) : this(
-            blockLayout.slug,
-            blockLayout.title,
-            blockLayout.preview,
-            blockLayout.previewTablet,
-            blockLayout.previewMobile,
-            blockLayout.demoUrl,
-            blockLayout.categories.toLayoutCategories()
+        blockLayout.slug,
+        blockLayout.title,
+        blockLayout.preview,
+        blockLayout.previewTablet,
+        blockLayout.previewMobile,
+        blockLayout.demoUrl,
+        blockLayout.categories.toLayoutCategories()
     )
 }
 
-@JvmName("designToLayoutModel") fun List<StarterDesign>.toLayoutModels() = map { LayoutModel(starterDesign = it) }
+@JvmName("designToLayoutModel")
+fun List<StarterDesign>.toLayoutModels() = map { LayoutModel(starterDesign = it) }
 
-@JvmName("blockLayoutToLayoutModel") fun List<GutenbergLayout>.toLayoutModels() = map { LayoutModel(blockLayout = it) }
+@JvmName("blockLayoutToLayoutModel")
+fun List<GutenbergLayout>.toLayoutModels() = map { LayoutModel(blockLayout = it) }
 
 fun List<LayoutModel>.getFilteredLayouts(categorySlug: String) =
-        filter { l -> l.categories.any { c -> c.slug == categorySlug } }
+    filter { l -> l.categories.any { c -> c.slug == categorySlug } }

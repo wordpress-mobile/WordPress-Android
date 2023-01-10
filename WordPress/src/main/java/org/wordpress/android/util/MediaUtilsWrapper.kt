@@ -10,7 +10,6 @@ import org.wordpress.android.fluxc.utils.MimeTypes.Plan
 import org.wordpress.android.util.AppLog.T
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.IllegalArgumentException
 
 /**
  * Injectable wrapper around MediaUtils, WPMediaUtils, FluxC's MediaUtils & EditorMediaUtils.
@@ -21,7 +20,7 @@ import kotlin.IllegalArgumentException
 @Reusable
 class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun getRealPathFromURI(mediaUri: Uri): String? =
-            MediaUtils.getRealPathFromURI(appContext, mediaUri)
+        MediaUtils.getRealPathFromURI(appContext, mediaUri)
 
     fun isVideo(mediaUri: Uri) = MediaUtils.isVideo(mediaUri.toString())
 
@@ -30,27 +29,27 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun getLastRecordedVideoUri(): Uri = MediaUtils.getLastRecordedVideoUri(appContext)
 
     fun getOptimizedMedia(path: String, isVideo: Boolean): Uri? =
-            WPMediaUtils.getOptimizedMedia(appContext, path, isVideo)
+        WPMediaUtils.getOptimizedMedia(appContext, path, isVideo)
 
     fun fixOrientationIssue(path: String, isVideo: Boolean): Uri? =
-            WPMediaUtils.fixOrientationIssue(appContext, path, isVideo)
+        WPMediaUtils.fixOrientationIssue(appContext, path, isVideo)
 
     fun isVideoMimeType(mimeType: String?): Boolean =
         org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(mimeType)
 
     fun isInMediaStore(mediaUri: Uri?): Boolean =
-            MediaUtils.isInMediaStore(mediaUri)
+        MediaUtils.isInMediaStore(mediaUri)
 
     fun copyFileToAppStorage(imageUri: Uri, headers: Map<String, String>? = null): Uri? =
-            MediaUtils.downloadExternalMedia(appContext, imageUri, headers)
+        MediaUtils.downloadExternalMedia(appContext, imageUri, headers)
 
     fun shouldAdvertiseImageOptimization(): Boolean =
-            WPMediaUtils.shouldAdvertiseImageOptimization(appContext)
+        WPMediaUtils.shouldAdvertiseImageOptimization(appContext)
 
     fun getMimeType(uri: Uri): String? = appContext.contentResolver.getType(uri)
 
     fun getVideoThumbnail(videoPath: String, headers: Map<String, String>): String? =
-            EditorMediaUtils.getVideoThumbnail(appContext, videoPath, headers)
+        EditorMediaUtils.getVideoThumbnail(appContext, videoPath, headers)
 
     fun isLocalFile(uploadState: String): Boolean = MediaUtils.isLocalFile(uploadState)
 
@@ -61,7 +60,7 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun getSitePlanForMimeTypes(site: SiteModel?): Plan = WPMediaUtils.getSitePlanForMimeTypes(site)
 
     fun isMimeTypeSupportedBySitePlan(site: SiteModel?, mimeType: String): Boolean =
-            WPMediaUtils.isMimeTypeSupportedBySitePlan(site, mimeType)
+        WPMediaUtils.isMimeTypeSupportedBySitePlan(site, mimeType)
 
     fun isVideoFile(mediaUri: Uri): Boolean =
         isVideo(mediaUri) || isVideoMimeType(getMimeType(mediaUri))

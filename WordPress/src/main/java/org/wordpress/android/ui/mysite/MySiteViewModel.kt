@@ -195,16 +195,16 @@ class MySiteViewModel @Inject constructor(
     private val _onBloggingPromptsViewMore = SingleLiveEvent<Event<Unit>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartTabStep
-            .switchMap { quickStartSiteMenuStep ->
-                val result = MutableLiveData<TabsUiState>()
-                /* We want to filter out tabs state livedata update when state is not set in uiModel.
-                   Without this check, tabs state livedata merge with state livedata may return a null state
-                   when building UiModel. */
-                uiModel.value?.state?.tabsUiState?.let {
-                    result.value = it.copy(tabUiStates = it.update(quickStartSiteMenuStep))
-                }
-                result
+        .switchMap { quickStartSiteMenuStep ->
+            val result = MutableLiveData<TabsUiState>()
+            /* We want to filter out tabs state livedata update when state is not set in uiModel.
+               Without this check, tabs state livedata merge with state livedata may return a null state
+               when building UiModel. */
+            uiModel.value?.state?.tabsUiState?.let {
+                result.value = it.copy(tabUiStates = it.update(quickStartSiteMenuStep))
             }
+            result
+        }
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
@@ -229,7 +229,8 @@ class MySiteViewModel @Inject constructor(
     private val defaultTab: MySiteTabType
         get() = if (isMySiteTabsEnabled) {
             if (appPrefsWrapper.getMySiteInitialScreen(buildConfigWrapper.isJetpackApp) ==
-                    MySiteTabType.SITE_MENU.label) {
+                MySiteTabType.SITE_MENU.label
+            ) {
                 MySiteTabType.SITE_MENU
             } else {
                 MySiteTabType.DASHBOARD
@@ -239,8 +240,8 @@ class MySiteViewModel @Inject constructor(
         }
 
     val onScrollTo: LiveData<Event<Int>> = merge(
-            _activeTaskPosition.distinctUntilChanged(),
-            quickStartRepository.activeTask
+        _activeTaskPosition.distinctUntilChanged(),
+        quickStartRepository.activeTask
     ) { pair, activeTask ->
         if (pair != null && activeTask != null && pair.first == activeTask) {
             Event(pair.second)
@@ -265,39 +266,39 @@ class MySiteViewModel @Inject constructor(
     private var shouldMarkUpdateSiteTitleTaskComplete = false
 
     val state: LiveData<MySiteUiState> =
-            selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
-                isSiteSelected = true
-                resetShownTrackers()
-                val result = MediatorLiveData<SiteIdToState>()
-                for (newSource in mySiteSourceManager.build(viewModelScope, siteLocalId)) {
-                    result.addSource(newSource) { partialState ->
-                        if (partialState != null) {
-                            result.value = (result.value ?: SiteIdToState(siteLocalId)).update(partialState)
-                        }
+        selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
+            isSiteSelected = true
+            resetShownTrackers()
+            val result = MediatorLiveData<SiteIdToState>()
+            for (newSource in mySiteSourceManager.build(viewModelScope, siteLocalId)) {
+                result.addSource(newSource) { partialState ->
+                    if (partialState != null) {
+                        result.value = (result.value ?: SiteIdToState(siteLocalId)).update(partialState)
                     }
                 }
-                // We want to filter out the empty state where we have a site ID but site object is missing.
-                // Without this check there is an emission of a NoSites state even if we have the site
-                result.filter { it.siteId == null || it.state.site != null }.map { it.state }
             }
+            // We want to filter out the empty state where we have a site ID but site object is missing.
+            // Without this check there is an emission of a NoSites state even if we have the site
+            result.filter { it.siteId == null || it.state.site != null }.map { it.state }
+        }
 
     val uiModel: LiveData<UiModel> = merge(tabsUiState, state) { tabsUiState, mySiteUiState ->
         with(requireNotNull(mySiteUiState)) {
             val state = if (site != null) {
                 cardsUpdate?.checkAndShowSnackbarError()
                 val state = buildSiteSelectedStateAndScroll(
-                        tabsUiState,
-                        site,
-                        showSiteIconProgressBar,
-                        activeTask,
-                        isDomainCreditAvailable,
-                        quickStartCategories,
-                        pinnedDynamicCard,
-                        visibleDynamicCards,
-                        backupAvailable,
-                        scanAvailable,
-                        cardsUpdate,
-                        bloggingPromptsUpdate
+                    tabsUiState,
+                    site,
+                    showSiteIconProgressBar,
+                    activeTask,
+                    isDomainCreditAvailable,
+                    quickStartCategories,
+                    pinnedDynamicCard,
+                    visibleDynamicCards,
+                    backupAvailable,
+                    scanAvailable,
+                    cardsUpdate,
+                    bloggingPromptsUpdate
                 )
                 selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
@@ -312,7 +313,7 @@ class MySiteViewModel @Inject constructor(
     private fun CardsUpdate.checkAndShowSnackbarError() {
         if (showSnackbarError) {
             _onSnackbarMessage
-                    .postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))))
+                .postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))))
         }
     }
 
@@ -336,64 +337,64 @@ class MySiteViewModel @Inject constructor(
         bloggingPromptUpdate: BloggingPromptUpdate?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
-                site,
-                activeTask,
-                isDomainCreditAvailable,
-                quickStartCategories,
-                pinnedDynamicCard,
-                visibleDynamicCards,
-                backupAvailable,
-                scanAvailable,
-                cardsUpdate,
-                bloggingPromptUpdate
+            site,
+            activeTask,
+            isDomainCreditAvailable,
+            quickStartCategories,
+            pinnedDynamicCard,
+            visibleDynamicCards,
+            backupAvailable,
+            scanAvailable,
+            cardsUpdate,
+            bloggingPromptUpdate
         )
 
         val siteInfoCardBuilderParams = SiteInfoCardBuilderParams(
-                site = site,
-                showSiteIconProgressBar = showSiteIconProgressBar,
-                titleClick = this::titleClick,
-                iconClick = this::iconClick,
-                urlClick = this::urlClick,
-                switchSiteClick = this::switchSiteClick,
-                activeTask = activeTask
+            site = site,
+            showSiteIconProgressBar = showSiteIconProgressBar,
+            titleClick = this::titleClick,
+            iconClick = this::iconClick,
+            urlClick = this::urlClick,
+            switchSiteClick = this::switchSiteClick,
+            activeTask = activeTask
         )
 
         val siteInfo = siteInfoHeaderCardBuilder.buildSiteInfoCard(siteInfoCardBuilderParams)
 
         if (activeTask != null) {
             scrollToQuickStartTaskIfNecessary(
-                    activeTask,
-                    getPositionOfQuickStartItem(siteItems, activeTask)
+                activeTask,
+                getPositionOfQuickStartItem(siteItems, activeTask)
             )
         }
         // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
-                tabsUiState = tabsUiState?.copy(
-                        showTabs = isMySiteTabsEnabled,
-                        tabUiStates = orderedTabTypes.mapToTabUiStates(),
-                        shouldUpdateViewPager = shouldUpdateViewPager()
-                ) ?: createTabsUiState(),
-                siteInfoToolbarViewParams = getSiteInfoToolbarViewParams(),
-                siteInfoHeaderState = SiteInfoHeaderState(
-                        hasUpdates = hasSiteHeaderUpdates(siteInfo),
-                        siteInfoHeader = siteInfo
-                ),
-                cardAndItems = siteItems[MySiteTabType.ALL]!!,
-                siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
-                dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
+            tabsUiState = tabsUiState?.copy(
+                showTabs = isMySiteTabsEnabled,
+                tabUiStates = orderedTabTypes.mapToTabUiStates(),
+                shouldUpdateViewPager = shouldUpdateViewPager()
+            ) ?: createTabsUiState(),
+            siteInfoToolbarViewParams = getSiteInfoToolbarViewParams(),
+            siteInfoHeaderState = SiteInfoHeaderState(
+                hasUpdates = hasSiteHeaderUpdates(siteInfo),
+                siteInfoHeader = siteInfo
+            ),
+            cardAndItems = siteItems[MySiteTabType.ALL]!!,
+            siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
+            dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
         )
     }
 
     private fun getSiteInfoToolbarViewParams(): SiteInfoToolbarViewParams {
         return if (isMySiteTabsEnabled) {
             SiteInfoToolbarViewParams(
-                    R.dimen.app_bar_with_site_info_tabs_height,
-                    R.dimen.toolbar_bottom_margin_with_tabs
+                R.dimen.app_bar_with_site_info_tabs_height,
+                R.dimen.toolbar_bottom_margin_with_tabs
             )
         } else {
             SiteInfoToolbarViewParams(
-                    R.dimen.app_bar_with_site_info_height,
-                    R.dimen.toolbar_bottom_margin_with_no_tabs
+                R.dimen.app_bar_with_site_info_height,
+                R.dimen.toolbar_bottom_margin_with_no_tabs
             )
         }
     }
@@ -406,15 +407,15 @@ class MySiteViewModel @Inject constructor(
             val currentTab = orderedTabTypes[tabEvent.peekContent().position]
             if (currentTab == MySiteTabType.DASHBOARD && activeTask.showInSiteMenu()) {
                 (siteItems[MySiteTabType.SITE_MENU] as List<MySiteCardAndItem>)
-                        .indexOfFirst { it.activeQuickStartItem }
+                    .indexOfFirst { it.activeQuickStartItem }
             } else {
                 (siteItems[currentTab] as List<MySiteCardAndItem>)
-                        .indexOfFirst { it.activeQuickStartItem }
+                    .indexOfFirst { it.activeQuickStartItem }
             }
         } ?: LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM
     } else {
         (siteItems[MySiteTabType.ALL] as List<MySiteCardAndItem>)
-                .indexOfFirst { it.activeQuickStartItem }
+            .indexOfFirst { it.activeQuickStartItem }
     }
 
     private fun QuickStartTask.showInSiteMenu() = when (this) {
@@ -436,28 +437,28 @@ class MySiteViewModel @Inject constructor(
         bloggingPromptUpdate: BloggingPromptUpdate?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
-                InfoItemBuilderParams(
-                        isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
-                )
+            InfoItemBuilderParams(
+                isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
+            )
         )
-        val jetpackFeatureCard =  JetpackFeatureCard(
-                onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
-                onHideMenuItemClick = ListItemInteraction.create(this::onJetpackFeatureCardHideMenuItemClick),
-                onLearnMoreClick = ListItemInteraction.create(
-                        jetpackFeatureCardHelper.getLearnMoreUrl(),
-                        this::onJetpackFeatureCardLearnMoreClick
-                ),
-                onRemindMeLaterItemClick = ListItemInteraction.create(this::onJetpackFeatureCardRemindMeLaterClick),
-                onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick),
-                learnMoreUrl = jetpackFeatureCardHelper.getLearnMoreUrl()
+        val jetpackFeatureCard = JetpackFeatureCard(
+            onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
+            onHideMenuItemClick = ListItemInteraction.create(this::onJetpackFeatureCardHideMenuItemClick),
+            onLearnMoreClick = ListItemInteraction.create(
+                jetpackFeatureCardHelper.getLearnMoreUrl(),
+                this::onJetpackFeatureCardLearnMoreClick
+            ),
+            onRemindMeLaterItemClick = ListItemInteraction.create(this::onJetpackFeatureCardRemindMeLaterClick),
+            onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick),
+            learnMoreUrl = jetpackFeatureCardHelper.getLearnMoreUrl()
         ).takeIf {
             jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()
         }
 
         val migrationSuccessCard = SingleActionCard(
-                textResource = R.string.jp_migration_success_card_message,
-                imageResource = R.drawable.ic_wordpress_blue_32dp,
-                onActionClick = ::onPleaseDeleteWordPressAppCardClick
+            textResource = R.string.jp_migration_success_card_message,
+            imageResource = R.drawable.ic_wordpress_blue_32dp,
+            onActionClick = ::onPleaseDeleteWordPressAppCardClick
         ).takeIf {
             val isJetpackApp = buildConfigWrapper.isJetpackApp
             val isMigrationCompleted = appPrefsWrapper.isJetpackMigrationCompleted()
@@ -465,126 +466,126 @@ class MySiteViewModel @Inject constructor(
             isJetpackApp && isMigrationCompleted && isWordPressInstalled
         }
         val cardsResult = cardsBuilder.build(
-                QuickActionsCardBuilderParams(
-                        siteModel = site,
-                        onQuickActionStatsClick = this::quickActionStatsClick,
-                        onQuickActionPagesClick = this::quickActionPagesClick,
-                        onQuickActionPostsClick = this::quickActionPostsClick,
-                        onQuickActionMediaClick = this::quickActionMediaClick
+            QuickActionsCardBuilderParams(
+                siteModel = site,
+                onQuickActionStatsClick = this::quickActionStatsClick,
+                onQuickActionPagesClick = this::quickActionPagesClick,
+                onQuickActionPostsClick = this::quickActionPostsClick,
+                onQuickActionMediaClick = this::quickActionMediaClick
+            ),
+            DomainRegistrationCardBuilderParams(
+                isDomainCreditAvailable = isDomainCreditAvailable,
+                domainRegistrationClick = this::domainRegistrationClick
+            ),
+            QuickStartCardBuilderParams(
+                quickStartCategories = quickStartCategories,
+                onQuickStartBlockRemoveMenuItemClick = this::onQuickStartBlockRemoveMenuItemClick,
+                onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
+            ),
+            DashboardCardsBuilderParams(
+                showErrorCard = cardsUpdate?.showErrorCard == true,
+                onErrorRetryClick = this::onDashboardErrorRetry,
+                todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(
+                    todaysStatsCard = cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel }
+                            as? TodaysStatsCardModel,
+                    onTodaysStatsCardClick = this::onTodaysStatsCardClick,
+                    onGetMoreViewsClick = this::onGetMoreViewsClick,
+                    onFooterLinkClick = this::onTodaysStatsCardFooterLinkClick
                 ),
-                DomainRegistrationCardBuilderParams(
-                        isDomainCreditAvailable = isDomainCreditAvailable,
-                        domainRegistrationClick = this::domainRegistrationClick
+                postCardBuilderParams = PostCardBuilderParams(
+                    posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
+                    onPostItemClick = this::onPostItemClick,
+                    onFooterLinkClick = this::onPostCardFooterLinkClick
                 ),
-                QuickStartCardBuilderParams(
-                        quickStartCategories = quickStartCategories,
-                        onQuickStartBlockRemoveMenuItemClick = this::onQuickStartBlockRemoveMenuItemClick,
-                        onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
-                ),
-                DashboardCardsBuilderParams(
-                        showErrorCard = cardsUpdate?.showErrorCard == true,
-                        onErrorRetryClick = this::onDashboardErrorRetry,
-                        todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(
-                                todaysStatsCard = cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel }
-                                        as? TodaysStatsCardModel,
-                                onTodaysStatsCardClick = this::onTodaysStatsCardClick,
-                                onGetMoreViewsClick = this::onGetMoreViewsClick,
-                                onFooterLinkClick = this::onTodaysStatsCardFooterLinkClick
-                        ),
-                        postCardBuilderParams = PostCardBuilderParams(
-                                posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
-                                onPostItemClick = this::onPostItemClick,
-                                onFooterLinkClick = this::onPostCardFooterLinkClick
-                        ),
-                        bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
-                                bloggingPrompt = if (isBloggingPromptsFeatureConfigEnabled) {
-                                    bloggingPromptUpdate?.promptModel
-                                } else null,
-                                showViewMoreAction = isBloggingPromptsListFeatureConfigEnabled,
-                                onShareClick = this::onBloggingPromptShareClick,
-                                onAnswerClick = this::onBloggingPromptAnswerClick,
-                                onSkipClick = this::onBloggingPromptSkipClicked,
-                                onViewMoreClick = this::onBloggingPromptViewMoreClicked
-                        )
-                ),
-                QuickLinkRibbonBuilderParams(
-                        siteModel = site,
-                        onPagesClick = this::onQuickLinkRibbonPagesClick,
-                        onPostsClick = this::onQuickLinkRibbonPostsClick,
-                        onMediaClick = this::onQuickLinkRibbonMediaClick,
-                        onStatsClick = this::onQuickLinkRibbonStatsClick,
-                        activeTask = activeTask,
-                        enableFocusPoints = shouldEnableQuickLinkRibbonFocusPoints()
-                ),
-                isMySiteTabsEnabled
+                bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
+                    bloggingPrompt = if (isBloggingPromptsFeatureConfigEnabled) {
+                        bloggingPromptUpdate?.promptModel
+                    } else null,
+                    showViewMoreAction = isBloggingPromptsListFeatureConfigEnabled,
+                    onShareClick = this::onBloggingPromptShareClick,
+                    onAnswerClick = this::onBloggingPromptAnswerClick,
+                    onSkipClick = this::onBloggingPromptSkipClicked,
+                    onViewMoreClick = this::onBloggingPromptViewMoreClicked
+                )
+            ),
+            QuickLinkRibbonBuilderParams(
+                siteModel = site,
+                onPagesClick = this::onQuickLinkRibbonPagesClick,
+                onPostsClick = this::onQuickLinkRibbonPostsClick,
+                onMediaClick = this::onQuickLinkRibbonMediaClick,
+                onStatsClick = this::onQuickLinkRibbonStatsClick,
+                activeTask = activeTask,
+                enableFocusPoints = shouldEnableQuickLinkRibbonFocusPoints()
+            ),
+            isMySiteTabsEnabled
         )
         val dynamicCards = dynamicCardsBuilder.build(
-                quickStartCategories,
-                pinnedDynamicCard,
-                visibleDynamicCards,
-                this::onDynamicCardMoreClick,
-                this::onQuickStartTaskCardClick
+            quickStartCategories,
+            pinnedDynamicCard,
+            visibleDynamicCards,
+            this::onDynamicCardMoreClick,
+            this::onQuickStartTaskCardClick
         )
 
         val siteItems = siteItemsBuilder.build(
-                SiteItemsBuilderParams(
-                        site = site,
-                        activeTask = activeTask,
-                        backupAvailable = backupAvailable,
-                        scanAvailable = scanAvailable,
-                        enableStatsFocusPoint = shouldEnableSiteItemsFocusPoints(),
-                        enablePagesFocusPoint = shouldEnableSiteItemsFocusPoints(),
-                        enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
-                        onClick = this::onItemClick
-                )
+            SiteItemsBuilderParams(
+                site = site,
+                activeTask = activeTask,
+                backupAvailable = backupAvailable,
+                scanAvailable = scanAvailable,
+                enableStatsFocusPoint = shouldEnableSiteItemsFocusPoints(),
+                enablePagesFocusPoint = shouldEnableSiteItemsFocusPoints(),
+                enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
+                onClick = this::onItemClick
+            )
         )
 
         val jetpackBadge = JetpackBadge(
-                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                    ListItemInteraction.create(this::onJetpackBadgeClick)
-                } else {
-                    null
-                }
+            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                ListItemInteraction.create(this::onJetpackBadgeClick)
+            } else {
+                null
+            }
         ).takeIf { jetpackBrandingUtils.shouldShowJetpackBranding() }
 
         return mapOf(
-                MySiteTabType.ALL to orderForDisplay(
-                        infoItem = infoItem,
-                        migrationSuccessCard = migrationSuccessCard,
-                        cards = cardsResult,
-                        dynamicCards = dynamicCards,
-                        siteItems = siteItems,
-                        jetpackBadge = jetpackBadge,
-                        jetpackFeatureCard = jetpackFeatureCard
-                ),
-                MySiteTabType.SITE_MENU to orderForDisplay(
-                        infoItem = infoItem,
-                        migrationSuccessCard = migrationSuccessCard,
-                        cards = cardsResult.filterNot {
-                            getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
-                        },
-                        dynamicCards = if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) {
-                            dynamicCards
-                        } else {
-                            listOf()
-                        },
-                        siteItems = siteItems,
-                        jetpackFeatureCard = jetpackFeatureCard,
-                ),
-                MySiteTabType.DASHBOARD to orderForDisplay(
-                        infoItem = infoItem,
-                        migrationSuccessCard = migrationSuccessCard,
-                        cards = cardsResult.filterNot {
-                            getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
-                        },
-                        dynamicCards = if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) {
-                            dynamicCards
-                        } else {
-                            listOf()
-                        },
-                        siteItems = listOf(),
-                        jetpackBadge = jetpackBadge
-                )
+            MySiteTabType.ALL to orderForDisplay(
+                infoItem = infoItem,
+                migrationSuccessCard = migrationSuccessCard,
+                cards = cardsResult,
+                dynamicCards = dynamicCards,
+                siteItems = siteItems,
+                jetpackBadge = jetpackBadge,
+                jetpackFeatureCard = jetpackFeatureCard
+            ),
+            MySiteTabType.SITE_MENU to orderForDisplay(
+                infoItem = infoItem,
+                migrationSuccessCard = migrationSuccessCard,
+                cards = cardsResult.filterNot {
+                    getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
+                },
+                dynamicCards = if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) {
+                    dynamicCards
+                } else {
+                    listOf()
+                },
+                siteItems = siteItems,
+                jetpackFeatureCard = jetpackFeatureCard,
+            ),
+            MySiteTabType.DASHBOARD to orderForDisplay(
+                infoItem = infoItem,
+                migrationSuccessCard = migrationSuccessCard,
+                cards = cardsResult.filterNot {
+                    getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
+                },
+                dynamicCards = if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) {
+                    dynamicCards
+                } else {
+                    listOf()
+                },
+                siteItems = listOf(),
+                jetpackBadge = jetpackBadge
+            )
         )
     }
 
@@ -630,7 +631,7 @@ class MySiteViewModel @Inject constructor(
     private fun onGetMoreViewsClick() {
         cardsTracker.trackTodaysStatsCardGetMoreViewsNudgeClicked()
         _onNavigation.value = Event(
-                SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl(URL_GET_MORE_VIEWS_AND_TRAFFIC)
+            SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl(URL_GET_MORE_VIEWS_AND_TRAFFIC)
         )
     }
 
@@ -654,15 +655,15 @@ class MySiteViewModel @Inject constructor(
         val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
                 displayUtilsWrapper.getWindowPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
         return NoSites(
-                tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
-                siteInfoToolbarViewParams = SiteInfoToolbarViewParams(
-                        appBarHeight = R.dimen.app_bar_with_no_site_info_height,
-                        toolbarBottomMargin = R.dimen.toolbar_bottom_margin_with_no_tabs,
-                        headerVisible = false,
-                        appBarLiftOnScroll = true
+            tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
+            siteInfoToolbarViewParams = SiteInfoToolbarViewParams(
+                appBarHeight = R.dimen.app_bar_with_no_site_info_height,
+                toolbarBottomMargin = R.dimen.toolbar_bottom_margin_with_no_tabs,
+                headerVisible = false,
+                appBarLiftOnScroll = true
 
-                ),
-                shouldShowImage = shouldShowImage
+            ),
+            shouldShowImage = shouldShowImage
         )
     }
 
@@ -696,9 +697,10 @@ class MySiteViewModel @Inject constructor(
         position: Int
     ) {
         if (_activeTaskPosition.value?.first != quickStartTask && isValidQuickStartFocusPosition(
-                        quickStartTask,
-                        position
-                )) {
+                quickStartTask,
+                position
+            )
+        ) {
             _activeTaskPosition.postValue(quickStartTask to position)
         }
     }
@@ -762,13 +764,13 @@ class MySiteViewModel @Inject constructor(
                 ListItemAction.PLUGINS -> SiteNavigationAction.OpenPlugins(selectedSite)
                 ListItemAction.STATS -> {
                     quickStartRepository.completeTask(
-                            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
+                        quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
                     )
                     getStatsNavigationActionForSite(selectedSite)
                 }
                 ListItemAction.MEDIA -> {
                     quickStartRepository.requestNextStepOfTask(
-                            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
+                        quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
                     )
                     SiteNavigationAction.OpenMedia(selectedSite)
                 }
@@ -798,7 +800,7 @@ class MySiteViewModel @Inject constructor(
             quickStartTracker.track(Stat.QUICK_START_TAPPED, mapOf(TYPE to type.toString()))
         }
         _onNavigation.value = Event(
-                SiteNavigationAction.OpenQuickStartFullScreenDialog(type, quickStartCardBuilder.getTitle(type))
+            SiteNavigationAction.OpenQuickStartFullScreenDialog(type, quickStartCardBuilder.getTitle(type))
         )
     }
 
@@ -816,18 +818,18 @@ class MySiteViewModel @Inject constructor(
             _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
         } else if (!SiteUtils.isAccessedViaWPComRest(selectedSite) || !selectedSite.hasCapabilityManageOptions) {
             _onSnackbarMessage.value = Event(
-                    SnackbarMessageHolder(UiStringRes(R.string.my_site_title_changer_dialog_not_allowed_hint))
+                SnackbarMessageHolder(UiStringRes(R.string.my_site_title_changer_dialog_not_allowed_hint))
             )
         } else {
             _onTechInputDialogShown.value = Event(
-                    TextInputDialogModel(
-                            callbackId = SITE_NAME_CHANGE_CALLBACK_ID,
-                            title = R.string.my_site_title_changer_dialog_title,
-                            initialText = selectedSite.name,
-                            hint = R.string.my_site_title_changer_dialog_hint,
-                            isMultiline = false,
-                            isInputEnabled = true
-                    )
+                TextInputDialogModel(
+                    callbackId = SITE_NAME_CHANGE_CALLBACK_ID,
+                    title = R.string.my_site_title_changer_dialog_title,
+                    initialText = selectedSite.name,
+                    hint = R.string.my_site_title_changer_dialog_hint,
+                    isMultiline = false,
+                    isInputEnabled = true
+                )
             )
         }
     }
@@ -861,7 +863,7 @@ class MySiteViewModel @Inject constructor(
     private fun urlClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         quickStartRepository.completeTask(
-                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_VIEW_SITE_LABEL)
+            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_VIEW_SITE_LABEL)
         )
         _onNavigation.value = Event(SiteNavigationAction.OpenSite(selectedSite))
     }
@@ -876,7 +878,7 @@ class MySiteViewModel @Inject constructor(
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_STATS_TAPPED)
         quickStartRepository.completeTask(
-                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
+            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
         )
         _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
     }
@@ -898,7 +900,7 @@ class MySiteViewModel @Inject constructor(
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_MEDIA_TAPPED)
         quickStartRepository.requestNextStepOfTask(
-                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
+            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
         )
         _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
     }
@@ -907,7 +909,7 @@ class MySiteViewModel @Inject constructor(
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_STATS_TAPPED)
         quickStartRepository.completeTask(
-                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
+            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
         )
         _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
     }
@@ -929,7 +931,7 @@ class MySiteViewModel @Inject constructor(
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_MEDIA_TAPPED)
         quickStartRepository.requestNextStepOfTask(
-                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
+            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
         )
         _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
     }
@@ -966,7 +968,7 @@ class MySiteViewModel @Inject constructor(
     fun onSiteNameChosen(input: String) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onSnackbarMessage.postValue(
-                    Event(SnackbarMessageHolder(UiStringRes(R.string.error_update_site_title_network)))
+                Event(SnackbarMessageHolder(UiStringRes(R.string.error_update_site_title_network)))
             )
         } else {
             selectedSiteRepository.updateTitle(input)
@@ -986,11 +988,11 @@ class MySiteViewModel @Inject constructor(
                 TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
                     quickStartRepository.completeTask(QuickStartNewSiteTask.UPLOAD_SITE_ICON)
                     _onNavigation.postValue(
-                            Event(
-                                    SiteNavigationAction.OpenMediaPicker(
-                                            requireNotNull(selectedSiteRepository.getSelectedSite())
-                                    )
+                        Event(
+                            SiteNavigationAction.OpenMediaPicker(
+                                requireNotNull(selectedSiteRepository.getSelectedSite())
                             )
+                        )
                     )
                 }
                 TAG_REMOVE_NEXT_STEPS_DIALOG -> onRemoveNextStepsDialogPositiveButtonClicked()
@@ -1070,7 +1072,7 @@ class MySiteViewModel @Inject constructor(
     fun handleSuccessfulLoginResult() {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             _onNavigation.value = Event(
-                    SiteNavigationAction.OpenStats(site)
+                SiteNavigationAction.OpenStats(site)
             )
         }
     }
@@ -1127,10 +1129,10 @@ class MySiteViewModel @Inject constructor(
 
     fun onAddSitePressed() {
         _onNavigation.value = Event(
-                SiteNavigationAction.AddNewSite(
-                        accountStore.hasAccessToken(),
-                        SiteCreationSource.MY_SITE_NO_SITES
-                )
+            SiteNavigationAction.AddNewSite(
+                accountStore.hasAccessToken(),
+                SiteCreationSource.MY_SITE_NO_SITES
+            )
         )
         analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_ACTION_TAPPED)
     }
@@ -1181,7 +1183,7 @@ class MySiteViewModel @Inject constructor(
             launch(bgDispatcher) {
                 homePageDataLoader.loadHomepage(selectedSite)?.pageId?.let { localHomepageId ->
                     val landOnTheEditorAction = SiteNavigationAction
-                            .OpenHomepage(selectedSite, localHomepageId, isNewSite)
+                        .OpenHomepage(selectedSite, localHomepageId, isNewSite)
                     _onNavigation.postValue(Event(landOnTheEditorAction))
                     analyticsTrackerWrapper.track(Stat.LANDING_EDITOR_SHOWN)
                 }
@@ -1206,12 +1208,12 @@ class MySiteViewModel @Inject constructor(
     private fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
         if (siteLocalId != SelectedSiteRepository.UNAVAILABLE) {
             quickStartUtilsWrapper
-                    .startQuickStart(
-                            siteLocalId,
-                            isSiteTitleTaskCompleted,
-                            quickStartRepository.quickStartType,
-                            quickStartTracker
-                    )
+                .startQuickStart(
+                    siteLocalId,
+                    isSiteTitleTaskCompleted,
+                    quickStartRepository.quickStartType,
+                    quickStartTracker
+                )
             mySiteSourceManager.refreshQuickStart()
         }
     }
@@ -1223,14 +1225,14 @@ class MySiteViewModel @Inject constructor(
     private fun showQuickStartDialog(siteModel: SiteModel?) {
         if (siteModel != null && quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteModel)) {
             _onNavigation.postValue(
-                    Event(
-                            SiteNavigationAction.ShowQuickStartDialog(
-                                    R.string.quick_start_dialog_need_help_manage_site_title,
-                                    R.string.quick_start_dialog_need_help_manage_site_message,
-                                    R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                                    R.string.quick_start_dialog_need_help_button_negative
-                            )
+                Event(
+                    SiteNavigationAction.ShowQuickStartDialog(
+                        R.string.quick_start_dialog_need_help_manage_site_title,
+                        R.string.quick_start_dialog_need_help_manage_site_message,
+                        R.string.quick_start_dialog_need_help_manage_site_button_positive,
+                        R.string.quick_start_dialog_need_help_button_negative
                     )
+                )
             )
         }
     }
@@ -1251,11 +1253,11 @@ class MySiteViewModel @Inject constructor(
             cardsTracker.trackPostItemClicked(params.postCardType)
             when (params.postCardType) {
                 PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> _onNavigation.value =
-                        Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
+                    Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
                 PostCardType.DRAFT -> _onNavigation.value =
-                        Event(SiteNavigationAction.EditDraftPost(site, params.postId))
+                    Event(SiteNavigationAction.EditDraftPost(site, params.postId))
                 PostCardType.SCHEDULED -> _onNavigation.value =
-                        Event(SiteNavigationAction.EditScheduledPost(site, params.postId))
+                    Event(SiteNavigationAction.EditScheduledPost(site, params.postId))
             }
         }
     }
@@ -1294,13 +1296,13 @@ class MySiteViewModel @Inject constructor(
             mySiteSourceManager.refreshBloggingPrompts(true)
 
             val snackbar = SnackbarMessageHolder(
-                    message = UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar),
-                    buttonTitle = UiStringRes(R.string.undo),
-                    buttonAction = {
-                        appPrefsWrapper.setSkippedPromptDay(null, siteId)
-                        mySiteSourceManager.refreshBloggingPrompts(true)
-                    },
-                    isImportant = true
+                message = UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar),
+                buttonTitle = UiStringRes(R.string.undo),
+                buttonAction = {
+                    appPrefsWrapper.setSkippedPromptDay(null, siteId)
+                    mySiteSourceManager.refreshBloggingPrompts(true)
+                },
+                isImportant = true
             )
 
             _onSnackbarMessage.value = Event(snackbar)
@@ -1394,14 +1396,14 @@ class MySiteViewModel @Inject constructor(
 
     private fun trackCardsAndItemsShownIfNeeded(siteSelected: SiteSelected) {
         siteSelected.cardAndItems.filterIsInstance<DomainRegistrationCard>()
-                .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
+            .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
         siteSelected.cardAndItems.filterIsInstance<DashboardCards>().forEach { cardsTracker.trackShown(it) }
         siteSelected.cardAndItems.filterIsInstance<QuickStartCard>()
-                .firstOrNull()?.let { quickStartTracker.trackShown(it.type, defaultTab) }
+            .firstOrNull()?.let { quickStartTracker.trackShown(it.type, defaultTab) }
         siteSelected.dashboardCardsAndItems.filterIsInstance<QuickStartCard>()
-                .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
+            .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
         siteSelected.cardAndItems.filterIsInstance<JetpackFeatureCard>()
-                .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
+            .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
     }
 
     private fun resetShownTrackers() {
@@ -1414,33 +1416,33 @@ class MySiteViewModel @Inject constructor(
     private fun trackTabChanged(isSiteMenu: Boolean) {
         if (isSiteMenu) {
             analyticsTrackerWrapper.track(
-                    Stat.MY_SITE_TAB_TAPPED,
-                    mapOf(MY_SITE_TAB to MySiteTabType.SITE_MENU.trackingLabel)
+                Stat.MY_SITE_TAB_TAPPED,
+                mapOf(MY_SITE_TAB to MySiteTabType.SITE_MENU.trackingLabel)
             )
             analyticsTrackerWrapper.track(Stat.MY_SITE_SITE_MENU_SHOWN)
         } else {
             analyticsTrackerWrapper.track(
-                    Stat.MY_SITE_TAB_TAPPED,
-                    mapOf(MY_SITE_TAB to MySiteTabType.DASHBOARD.trackingLabel)
+                Stat.MY_SITE_TAB_TAPPED,
+                mapOf(MY_SITE_TAB to MySiteTabType.DASHBOARD.trackingLabel)
             )
             analyticsTrackerWrapper.track(Stat.MY_SITE_DASHBOARD_SHOWN)
         }
     }
 
     private fun findUiStateForTab(tabType: MySiteTabType) =
-            tabsUiState.value?.tabUiStates?.firstOrNull { it.tabType == tabType }
+        tabsUiState.value?.tabUiStates?.firstOrNull { it.tabType == tabType }
 
     private fun createTabsUiState() = TabsUiState(
-            showTabs = isMySiteTabsEnabled,
-            tabUiStates = orderedTabTypes.mapToTabUiStates(),
-            shouldUpdateViewPager = shouldUpdateViewPager()
+        showTabs = isMySiteTabsEnabled,
+        tabUiStates = orderedTabTypes.mapToTabUiStates(),
+        shouldUpdateViewPager = shouldUpdateViewPager()
     )
 
     private fun List<MySiteTabType>.mapToTabUiStates() = map {
         TabUiState(
-                label = UiStringRes(it.stringResId),
-                tabType = it,
-                showQuickStartFocusPoint = findUiStateForTab(it)?.showQuickStartFocusPoint ?: false
+            label = UiStringRes(it.stringResId),
+            tabType = it,
+            showQuickStartFocusPoint = findUiStateForTab(it)?.showQuickStartFocusPoint ?: false
         )
     }
 
@@ -1448,7 +1450,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun hasSiteHeaderUpdates(nextSiteInfoHeaderCard: SiteInfoHeaderCard): Boolean {
         return !((uiModel.value?.state as? SiteSelected)?.siteInfoHeaderState?.siteInfoHeader?.equals(
-                nextSiteInfoHeaderCard
+            nextSiteInfoHeaderCard
         ) ?: false)
     }
 
@@ -1508,9 +1510,9 @@ class MySiteViewModel @Inject constructor(
 
         fun update(quickStartTabStep: QuickStartTabStep?) = tabUiStates.map { tabUiState ->
             tabUiState.copy(
-                    showQuickStartFocusPoint = quickStartTabStep?.mySiteTabType == tabUiState.tabType &&
-                            quickStartTabStep.isStarted,
-                    pendingTask = quickStartTabStep?.task
+                showQuickStartFocusPoint = quickStartTabStep?.mySiteTabType == tabUiState.tabType &&
+                        quickStartTabStep.isStarted,
+                pendingTask = quickStartTabStep?.task
             )
         }
     }

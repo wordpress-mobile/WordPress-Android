@@ -36,7 +36,8 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PageParentViewModel
 
     private val listStateKey = "list_state"
@@ -126,7 +127,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
 
         val searchEditFrame = searchAction.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
         (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
-                .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
+            .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
 
         viewModel.isSearchExpanded.observe(this@PageParentFragment, Observer {
             if (it == true) {
@@ -170,9 +171,9 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
 
         val searchFragment = PageParentSearchFragment.newInstance()
         activity.supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.frameSearch, searchFragment)
-                .commit()
+            .beginTransaction()
+            .replace(R.id.frameSearch, searchFragment)
+            .commit()
     }
 
     private fun PageParentFragmentBinding.initializeViewModels(
@@ -181,7 +182,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
         isFirstStart: Boolean
     ) {
         viewModel = ViewModelProvider(activity, viewModelFactory)
-                .get(PageParentViewModel::class.java)
+            .get(PageParentViewModel::class.java)
 
         setupObservers()
 

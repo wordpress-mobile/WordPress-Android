@@ -15,7 +15,7 @@ import org.wordpress.android.util.extensions.viewBinding
 class ThreatContextLineViewHolder(
     parent: ViewGroup,
     val binding: ThreatContextLinesListContextLineItemBinding = parent.viewBinding(
-            ThreatContextLinesListContextLineItemBinding::inflate
+        ThreatContextLinesListContextLineItemBinding::inflate
     )
 ) : RecyclerView.ViewHolder(binding.root) {
     private val highlightedContentTextPadding = itemView.context.resources.getDimensionPixelSize(R.dimen.margin_small)
@@ -53,8 +53,8 @@ class ThreatContextLineViewHolder(
 
                 val foregroundSpan = ForegroundColorSpan(ContextCompat.getColor(context, highlightedTextColorRes))
                 val backgroundSpan = PaddingBackgroundColorSpan(
-                        backgroundColor = ContextCompat.getColor(context, highlightedBackgroundColorRes),
-                        padding = highlightedContentTextPadding
+                    backgroundColor = ContextCompat.getColor(context, highlightedBackgroundColorRes),
+                    padding = highlightedContentTextPadding
                 )
 
                 with(spannableText) {

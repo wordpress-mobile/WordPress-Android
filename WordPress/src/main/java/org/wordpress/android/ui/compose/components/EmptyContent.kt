@@ -55,16 +55,16 @@ fun EmptyContent(
     imageContentDescription: String? = null,
 ) {
     Box(
-            modifier = modifier,
-            contentAlignment = Alignment.Center,
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
     ) {
         Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             image?.let { imageRes ->
                 Image(
-                        painterResource(imageRes),
-                        contentDescription = imageContentDescription
+                    painterResource(imageRes),
+                    contentDescription = imageContentDescription
                 )
             }
 
@@ -75,15 +75,15 @@ fun EmptyContent(
 
             // To match text color in ActionableEmptyView we need to provide the "medium" content alpha from Material
             CompositionLocalProvider(
-                    LocalContentAlpha provides ContentAlpha.medium,
+                LocalContentAlpha provides ContentAlpha.medium,
             ) {
                 title?.let {
                     Text(
-                            it,
-                            modifier = Modifier.emptyContentTextModifier(),
-                            style = MaterialTheme.typography.subtitle1.copy(
-                                    fontSize = FontSize.ExtraLarge.value,
-                            )
+                        it,
+                        modifier = Modifier.emptyContentTextModifier(),
+                        style = MaterialTheme.typography.subtitle1.copy(
+                            fontSize = FontSize.ExtraLarge.value,
+                        )
                     )
                 }
 
@@ -94,11 +94,11 @@ fun EmptyContent(
 
                 subtitle?.let {
                     Text(
-                            it,
-                            modifier = Modifier.emptyContentTextModifier(),
-                            style = MaterialTheme.typography.subtitle1.copy(
-                                    fontSize = FontSize.Large.value,
-                            )
+                        it,
+                        modifier = Modifier.emptyContentTextModifier(),
+                        style = MaterialTheme.typography.subtitle1.copy(
+                            fontSize = FontSize.Large.value,
+                        )
                     )
                 }
             }
@@ -112,9 +112,9 @@ fun EmptyContent(
 fun EmptyContentPreview() {
     AppTheme {
         EmptyContent(
-                title = "Title",
-                subtitle = "Subtitle",
-                image = R.drawable.img_illustration_empty_results_216dp,
+            title = "Title",
+            subtitle = "Subtitle",
+            image = R.drawable.img_illustration_empty_results_216dp,
         )
     }
 }
@@ -125,7 +125,7 @@ fun EmptyContentPreview() {
 fun EmptyContentImagePreview() {
     AppTheme {
         EmptyContent(
-                image = R.drawable.img_illustration_empty_results_216dp,
+            image = R.drawable.img_illustration_empty_results_216dp,
         )
     }
 }
@@ -136,8 +136,8 @@ fun EmptyContentImagePreview() {
 fun EmptyContentImageTitlePreview() {
     AppTheme {
         EmptyContent(
-                title = "Title",
-                image = R.drawable.img_illustration_empty_results_216dp,
+            title = "Title",
+            image = R.drawable.img_illustration_empty_results_216dp,
         )
     }
 }
@@ -148,8 +148,8 @@ fun EmptyContentImageTitlePreview() {
 fun EmptyContentImageSubtitlePreview() {
     AppTheme {
         EmptyContent(
-                subtitle = "Subtitle",
-                image = R.drawable.img_illustration_empty_results_216dp,
+            subtitle = "Subtitle",
+            image = R.drawable.img_illustration_empty_results_216dp,
         )
     }
 }
@@ -160,7 +160,7 @@ fun EmptyContentImageSubtitlePreview() {
 fun EmptyContentTitlePreview() {
     AppTheme {
         EmptyContent(
-                title = "Title",
+            title = "Title",
         )
     }
 }
@@ -171,8 +171,8 @@ fun EmptyContentTitlePreview() {
 fun EmptyContentTitleSubtitlePreview() {
     AppTheme {
         EmptyContent(
-                title = "Title",
-                subtitle = "Subtitle",
+            title = "Title",
+            subtitle = "Subtitle",
         )
     }
 }
@@ -183,7 +183,7 @@ fun EmptyContentTitleSubtitlePreview() {
 fun EmptyContentSubtitlePreview() {
     AppTheme {
         EmptyContent(
-                subtitle = "Subtitle",
+            subtitle = "Subtitle",
         )
     }
 }

@@ -24,14 +24,14 @@ class StatsUtils @Inject constructor(
     private val percentFormatter: PercentFormatter
 ) {
     private val suffixes = TreeMap(
-            mapOf(
-                    1_000L to R.string.suffix_1_000,
-                    1_000_000L to R.string.suffix_1_000_000,
-                    1_000_000_000L to R.string.suffix_1_000_000_000,
-                    1_000_000_000_000L to R.string.suffix_1_000_000_000_000,
-                    1_000_000_000_000_000L to R.string.suffix_1_000_000_000_000_000,
-                    1_000_000_000_000_000_000L to R.string.suffix_1_000_000_000_000_000_000
-            )
+        mapOf(
+            1_000L to R.string.suffix_1_000,
+            1_000_000L to R.string.suffix_1_000_000,
+            1_000_000_000L to R.string.suffix_1_000_000_000,
+            1_000_000_000_000L to R.string.suffix_1_000_000_000_000,
+            1_000_000_000_000_000L to R.string.suffix_1_000_000_000_000_000,
+            1_000_000_000_000_000_000L to R.string.suffix_1_000_000_000_000_000_000
+        )
     )
 
     fun toFormattedString(number: Long?, startValue: Int = TEN_THOUSAND): String? {
@@ -81,11 +81,11 @@ class StatsUtils @Inject constructor(
     ): String {
         val isNegative = number < 0
         val safeNumber = abs(
-                if (number == java.lang.Long.MIN_VALUE) {
-                    number + 1
-                } else {
-                    number
-                }
+            if (number == java.lang.Long.MIN_VALUE) {
+                number + 1
+            } else {
+                number
+            }
         )
         if (safeNumber < startValue) {
             return printNumber(safeNumber, isNegative)
@@ -107,25 +107,25 @@ class StatsUtils @Inject constructor(
         hasDecimal: Boolean = false
     ): String {
         val formattedNumber =
-                DecimalFormat.getInstance(localeManager.getLocale()).format(
-                        when {
-                            suffix != null && hasDecimal -> number / 10.0
-                            suffix != null -> number / 10
-                            else -> number
-                        }
-                )
+            DecimalFormat.getInstance(localeManager.getLocale()).format(
+                when {
+                    suffix != null && hasDecimal -> number / 10.0
+                    suffix != null -> number / 10
+                    else -> number
+                }
+            )
         return if (suffix != null) {
             resourceProvider.getString(
-                    suffix,
-                    handleNegativeNumber(
-                            formattedNumber,
-                            isNegative
-                    )
+                suffix,
+                handleNegativeNumber(
+                    formattedNumber,
+                    isNegative
+                )
             )
         } else {
             handleNegativeNumber(
-                    formattedNumber,
-                    isNegative
+                formattedNumber,
+                isNegative
             )
         }
     }
@@ -147,18 +147,18 @@ class StatsUtils @Inject constructor(
         val contentDescriptions = mutableListOf<String>()
         entries.forEachIndexed { index, bar ->
             var contentDescription = resourceProvider.getString(
-                    R.string.stats_bar_chart_accessibility_entry,
-                    bar.label,
-                    bar.value,
-                    resourceProvider.getString(entryType)
+                R.string.stats_bar_chart_accessibility_entry,
+                bar.label,
+                bar.value,
+                resourceProvider.getString(entryType)
             )
 
             overlappingEntries?.getOrNull(index)?.let { overlappingBar ->
                 overlappingEntryType?.let {
                     contentDescription += resourceProvider.getString(
-                            R.string.stats_bar_chart_accessibility_overlapping_entry,
-                            overlappingBar.value,
-                            resourceProvider.getString(overlappingEntryType)
+                        R.string.stats_bar_chart_accessibility_overlapping_entry,
+                        overlappingBar.value,
+                        resourceProvider.getString(overlappingEntryType)
                     )
                 }
             }
@@ -175,10 +175,10 @@ class StatsUtils @Inject constructor(
         val contentDescriptions = mutableListOf<String>()
         entries.forEach { bar ->
             val contentDescription = resourceProvider.getString(
-                    R.string.stats_bar_chart_accessibility_entry,
-                    bar.label,
-                    bar.value,
-                    resourceProvider.getString(entryType)
+                R.string.stats_bar_chart_accessibility_entry,
+                bar.label,
+                bar.value,
+                resourceProvider.getString(entryType)
             )
             contentDescriptions.add(contentDescription)
         }

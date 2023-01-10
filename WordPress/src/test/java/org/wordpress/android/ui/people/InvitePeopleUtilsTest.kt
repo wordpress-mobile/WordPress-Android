@@ -25,39 +25,54 @@ import java.util.Date
 
 @ExperimentalCoroutinesApi
 class InvitePeopleUtilsTest : BaseUnitTest() {
-    @Mock lateinit var siteStore: SiteStore
-    @Mock lateinit var siteModel: SiteModel
-    @Mock lateinit var contextProvider: ContextProvider
-    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
-    @Mock lateinit var roleUtilsWrapper: RoleUtilsWrapper
-    @Mock lateinit var context: Context
-    @Mock lateinit var simpleDateFormatWrapper: SimpleDateFormatWrapper
-    @Mock lateinit var dateFormat: DateFormat
+    @Mock
+    lateinit var siteStore: SiteStore
+
+    @Mock
+    lateinit var siteModel: SiteModel
+
+    @Mock
+    lateinit var contextProvider: ContextProvider
+
+    @Mock
+    lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
+    @Mock
+    lateinit var roleUtilsWrapper: RoleUtilsWrapper
+
+    @Mock
+    lateinit var context: Context
+
+    @Mock
+    lateinit var simpleDateFormatWrapper: SimpleDateFormatWrapper
+
+    @Mock
+    lateinit var dateFormat: DateFormat
 
     private lateinit var invitePeopleUtils: InvitePeopleUtils
 
     private val roles = listOf(
-            RoleModel().apply {
-                name = "administrator"
-                displayName = "Administrator"
-            },
-            RoleModel().apply {
-                name = "contributor"
-                displayName = "Contributor"
-            }
+        RoleModel().apply {
+            name = "administrator"
+            displayName = "Administrator"
+        },
+        RoleModel().apply {
+            name = "contributor"
+            displayName = "Contributor"
+        }
     )
 
     private val linkItems = mutableListOf(
-            InviteLinksItem(
-                    role = "administrator",
-                    expiry = 0,
-                    link = "https://wordpress.com/linkdata"
-            ),
-            InviteLinksItem(
-                    role = "follower",
-                    expiry = 0,
-                    link = "https://wordpress.com/linkdata"
-            )
+        InviteLinksItem(
+            role = "administrator",
+            expiry = 0,
+            link = "https://wordpress.com/linkdata"
+        ),
+        InviteLinksItem(
+            role = "follower",
+            expiry = 0,
+            link = "https://wordpress.com/linkdata"
+        )
     )
 
     @Before
@@ -70,11 +85,11 @@ class InvitePeopleUtilsTest : BaseUnitTest() {
         whenever(simpleDateFormatWrapper.getDateInstance()).thenReturn(dateFormat)
 
         invitePeopleUtils = InvitePeopleUtils(
-                siteStore,
-                contextProvider,
-                dateTimeUtilsWrapper,
-                roleUtilsWrapper,
-                simpleDateFormatWrapper
+            siteStore,
+            contextProvider,
+            dateTimeUtilsWrapper,
+            roleUtilsWrapper,
+            simpleDateFormatWrapper
         )
     }
 

@@ -73,10 +73,10 @@ class LoginPrologueRevampedViewModel @Inject constructor(
         override fun onActive() {
             super.onActive()
             sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also {
-                sensorManager.registerListener( this, it, SensorManager.SENSOR_DELAY_GAME)
+                sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
             }
             sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)?.also {
-                sensorManager.registerListener( this, it, SensorManager.SENSOR_DELAY_GAME)
+                sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
             }
         }
 

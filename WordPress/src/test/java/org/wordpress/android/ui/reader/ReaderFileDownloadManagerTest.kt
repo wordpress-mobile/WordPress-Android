@@ -19,15 +19,29 @@ import org.wordpress.android.ui.utils.DownloadManagerWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class ReaderFileDownloadManagerTest {
-    @Mock lateinit var authenticationUtils: AuthenticationUtils
-    @Mock lateinit var downloadManager: DownloadManagerWrapper
-    @Mock lateinit var request: DownloadManager.Request
-    @Mock lateinit var query: DownloadManager.Query
-    @Mock lateinit var context: Context
-    @Mock lateinit var intent: Intent
-    @Mock lateinit var cursor: Cursor
+    @Mock
+    lateinit var authenticationUtils: AuthenticationUtils
+
+    @Mock
+    lateinit var downloadManager: DownloadManagerWrapper
+
+    @Mock
+    lateinit var request: DownloadManager.Request
+
+    @Mock
+    lateinit var query: DownloadManager.Query
+
+    @Mock
+    lateinit var context: Context
+
+    @Mock
+    lateinit var intent: Intent
+
+    @Mock
+    lateinit var cursor: Cursor
     private lateinit var readerFileDownloadManager: ReaderFileDownloadManager
     private lateinit var intentCaptor: KArgumentCaptor<Intent>
+
     @Before
     fun setUp() {
         readerFileDownloadManager = ReaderFileDownloadManager(authenticationUtils, downloadManager)

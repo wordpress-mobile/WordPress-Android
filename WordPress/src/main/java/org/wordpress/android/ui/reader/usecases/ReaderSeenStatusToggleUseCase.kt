@@ -79,9 +79,9 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
                 readerBlogTableWrapper.decrementUnseenCount(post.blogId)
                 if (!doNotTrack) {
                     readerTracker.trackPost(
-                            AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN,
-                            post,
-                            actionSource.toString()
+                        AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN,
+                        post,
+                        actionSource.toString()
                     )
                 }
                 PostSeenStateChanged(true, UiStringRes(string.reader_marked_post_as_seen))
@@ -98,9 +98,9 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
                 readerPostTableWrapper.setPostSeenStatusInDb(post, false)
                 readerBlogTableWrapper.incrementUnseenCount(post.blogId)
                 readerTracker.trackPost(
-                        AnalyticsTracker.Stat.READER_POST_MARKED_AS_UNSEEN,
-                        post,
-                        actionSource.toString()
+                    AnalyticsTracker.Stat.READER_POST_MARKED_AS_UNSEEN,
+                    post,
+                    actionSource.toString()
                 )
                 PostSeenStateChanged(false, UiStringRes(string.reader_marked_post_as_unseen))
             }

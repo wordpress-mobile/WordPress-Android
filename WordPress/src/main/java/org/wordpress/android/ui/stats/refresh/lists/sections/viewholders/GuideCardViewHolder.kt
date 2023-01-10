@@ -52,18 +52,18 @@ private fun SpannableString.withClickableSpan(
         override fun updateDrawState(ds: TextPaint) {
             ds.color = context.getColorFromAttribute(R.attr.colorPrimary)
             ds.typeface = Typeface.create(
-                    Typeface.DEFAULT_BOLD,
-                    Typeface.NORMAL
+                Typeface.DEFAULT_BOLD,
+                Typeface.NORMAL
             )
             ds.isUnderlineText = false
         }
     }
     val clickablePartStart = indexOf(clickablePart)
     setSpan(
-            clickableSpan,
-            clickablePartStart,
-            clickablePartStart + clickablePart.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        clickableSpan,
+        clickablePartStart,
+        clickablePartStart + clickablePart.length,
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
     )
     return this
 }
@@ -71,10 +71,10 @@ private fun SpannableString.withClickableSpan(
 private fun SpannableString.withBoldSpan(boldPart: String): SpannableString {
     val boldPartIndex = indexOf(boldPart)
     setSpan(
-            StyleSpan(Typeface.BOLD),
-            boldPartIndex,
-            boldPartIndex + boldPart.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        StyleSpan(Typeface.BOLD),
+        boldPartIndex,
+        boldPartIndex + boldPart.length,
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
     )
     return this
 }

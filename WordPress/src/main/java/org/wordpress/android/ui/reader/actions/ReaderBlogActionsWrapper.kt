@@ -15,23 +15,23 @@ class ReaderBlogActionsWrapper @Inject constructor(
         blogId: Long,
         feedId: Long
     ): BlockedBlogResult = ReaderBlogActions.blockBlogFromReaderLocal(
-            blogId,
-            feedId
+        blogId,
+        feedId
     )
 
     fun blockUserFromReaderLocal(
         authorId: Long,
         feedId: Long
     ): BlockedUserResult = ReaderBlogActions.blockUserFromReaderLocal(
-            authorId,
-            feedId
+        authorId,
+        feedId
     )
 
     fun unblockUserFromReaderLocal(blockResult: BlockedUserResult) =
-            ReaderBlogActions.undoBlockUserFromReader(blockResult)
+        ReaderBlogActions.undoBlockUserFromReader(blockResult)
 
     fun blockBlogFromReaderRemote(blockedBlogResult: BlockedBlogResult, actionListener: ActionListener?): Unit =
-            ReaderBlogActions.blockBlogFromReaderRemote(blockedBlogResult, actionListener)
+        ReaderBlogActions.blockBlogFromReaderRemote(blockedBlogResult, actionListener)
 
     @Suppress("LongParameterList")
     fun followBlog(
@@ -42,18 +42,18 @@ class ReaderBlogActionsWrapper @Inject constructor(
         source: String,
         readerTracker: ReaderTracker
     ) = ReaderBlogActions.followBlog(
-            blogId,
-            feedId,
-            isAskingToFollow,
-            actionListener,
-            source,
-            readerTracker
+        blogId,
+        feedId,
+        isAskingToFollow,
+        actionListener,
+        source,
+        readerTracker
     )
 
     fun updateBlogInfo(blogId: Long, feedId: Long, blogUrl: String?, infoListener: UpdateBlogInfoListener) =
-            if (readerUtilsWrapper.isExternalFeed(blogId, feedId)) {
-                ReaderBlogActions.updateFeedInfo(blogId, blogUrl, infoListener)
-            } else {
-                ReaderBlogActions.updateBlogInfo(blogId, blogUrl, infoListener)
-            }
+        if (readerUtilsWrapper.isExternalFeed(blogId, feedId)) {
+            ReaderBlogActions.updateFeedInfo(blogId, blogUrl, infoListener)
+        } else {
+            ReaderBlogActions.updateBlogInfo(blogId, blogUrl, infoListener)
+        }
 }

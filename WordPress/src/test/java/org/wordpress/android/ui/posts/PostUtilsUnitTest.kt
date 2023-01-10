@@ -78,12 +78,12 @@ class PostUtilsUnitTest {
     @Test
     fun `prepareForPublish updates post status to Publish when on self-hosted site`() {
         val firstPost = invokePreparePostForPublish(
-                false,
-                isSelfHosted = true
+            false,
+            isSelfHosted = true
         )
         val secondPost = invokePreparePostForPublish(
-                true,
-                isSelfHosted = true
+            true,
+            isSelfHosted = true
         )
 
         assertThat(firstPost.status).isEqualTo(PostStatus.PUBLISHED.toString())

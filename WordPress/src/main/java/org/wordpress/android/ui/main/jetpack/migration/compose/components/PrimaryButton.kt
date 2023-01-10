@@ -26,25 +26,25 @@ fun PrimaryButton(
     modifier: Modifier = Modifier
 ) {
     Button(
-            onClick = onClick,
-            enabled = !isInProgress,
-            elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp,
-            ),
-            colors = ButtonDefaults.buttonColors(
-                    disabledBackgroundColor = colorResource(R.color.jetpack_green_70),
-            ),
-            modifier = modifier
-                    .padding(top = 20.dp, bottom = 10.dp)
-                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
-                    .fillMaxWidth(),
+        onClick = onClick,
+        enabled = !isInProgress,
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 0.dp,
+        ),
+        colors = ButtonDefaults.buttonColors(
+            disabledBackgroundColor = colorResource(R.color.jetpack_green_70),
+        ),
+        modifier = modifier
+            .padding(top = 20.dp, bottom = 10.dp)
+            .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
+            .fillMaxWidth(),
     ) {
         if (isInProgress) {
             CircularProgressIndicator(
-                    color = MaterialTheme.colors.onPrimary,
-                    strokeWidth = 2.dp,
-                    modifier = Modifier.size(20.dp),
+                color = MaterialTheme.colors.onPrimary,
+                strokeWidth = 2.dp,
+                modifier = Modifier.size(20.dp),
             )
         } else {
             Text(text = text)

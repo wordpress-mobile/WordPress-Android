@@ -27,7 +27,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SubfilterPageViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var accountStore: AccountStore
+    @Mock
+    private lateinit var accountStore: AccountStore
 
     private lateinit var viewModel: SubfilterPageViewModel
 
@@ -93,42 +94,42 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
             return when (category) {
                 SITES -> {
                     VisibleEmptyUiState(
-                            title = UiStringRes(
-                                    if (accountStore.hasAccessToken())
-                                        string.reader_filter_empty_sites_list
-                                    else
-                                        string.reader_filter_self_hosted_empty_sites_list
-                            ),
-                            buttonText = UiStringRes(
-                                    if (accountStore.hasAccessToken())
-                                        string.reader_filter_empty_sites_action
-                                    else
-                                        string.reader_filter_self_hosted_empty_sites_tags_action
-                            ),
-                            action = if (accountStore.hasAccessToken())
-                                OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
+                        title = UiStringRes(
+                            if (accountStore.hasAccessToken())
+                                string.reader_filter_empty_sites_list
                             else
-                                OpenLoginPage
+                                string.reader_filter_self_hosted_empty_sites_list
+                        ),
+                        buttonText = UiStringRes(
+                            if (accountStore.hasAccessToken())
+                                string.reader_filter_empty_sites_action
+                            else
+                                string.reader_filter_self_hosted_empty_sites_tags_action
+                        ),
+                        action = if (accountStore.hasAccessToken())
+                            OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
+                        else
+                            OpenLoginPage
                     )
                 }
                 TAGS -> {
                     VisibleEmptyUiState(
-                            title = UiStringRes(
-                                    if (accountStore.hasAccessToken())
-                                        R.string.reader_filter_empty_tags_list
-                                    else
-                                        R.string.reader_filter_self_hosted_empty_tagss_list
-                            ),
-                            buttonText = UiStringRes(
-                                    if (accountStore.hasAccessToken())
-                                        R.string.reader_filter_empty_tags_action
-                                    else
-                                        R.string.reader_filter_self_hosted_empty_sites_tags_action
-                            ),
-                            action = if (accountStore.hasAccessToken())
-                                OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
+                        title = UiStringRes(
+                            if (accountStore.hasAccessToken())
+                                R.string.reader_filter_empty_tags_list
                             else
-                                OpenLoginPage
+                                R.string.reader_filter_self_hosted_empty_tagss_list
+                        ),
+                        buttonText = UiStringRes(
+                            if (accountStore.hasAccessToken())
+                                R.string.reader_filter_empty_tags_action
+                            else
+                                R.string.reader_filter_self_hosted_empty_sites_tags_action
+                        ),
+                        action = if (accountStore.hasAccessToken())
+                            OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
+                        else
+                            OpenLoginPage
                     )
                 }
             }

@@ -8,9 +8,9 @@ import javax.inject.Inject
 @Feature(BLOGGING_REMINDERS_REMOTE_FIELD, true)
 class BloggingRemindersFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
-        appConfig,
-        BuildConfig.BLOGGING_REMINDERS,
-        BLOGGING_REMINDERS_REMOTE_FIELD
+    appConfig,
+    BuildConfig.BLOGGING_REMINDERS,
+    BLOGGING_REMINDERS_REMOTE_FIELD
 ) {
     companion object {
         const val BLOGGING_REMINDERS_REMOTE_FIELD = "blogging_reminders_remote_field"

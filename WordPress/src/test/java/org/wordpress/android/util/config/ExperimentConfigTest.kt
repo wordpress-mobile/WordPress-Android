@@ -11,7 +11,8 @@ import org.wordpress.android.util.config.ExperimentConfig.Variant
 
 @RunWith(MockitoJUnitRunner::class)
 class ExperimentConfigTest {
-    @Mock lateinit var appConfig: AppConfig
+    @Mock
+    lateinit var appConfig: AppConfig
     private lateinit var experimentConfig: ExperimentConfig
 
     @Before

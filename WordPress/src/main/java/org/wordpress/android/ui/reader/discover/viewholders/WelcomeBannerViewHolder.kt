@@ -9,7 +9,7 @@ import org.wordpress.android.util.extensions.viewBinding
 class WelcomeBannerViewHolder(
     parentView: ViewGroup
 ) : ReaderViewHolder<ReaderCardviewWelcomeBannerBinding>(
-        parentView.viewBinding(ReaderCardviewWelcomeBannerBinding::inflate)
+    parentView.viewBinding(ReaderCardviewWelcomeBannerBinding::inflate)
 ) {
     override fun onBind(uiState: ReaderCardUiState) = with(binding) {
         val state = uiState as ReaderWelcomeBannerCardUiState

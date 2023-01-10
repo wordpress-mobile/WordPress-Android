@@ -70,25 +70,25 @@ class AccountSettingsViewModel @Inject constructor(
         val showChangePasswordProgressDialog = if (isInitial) false
         else _accountSettingsUiState.value.changePasswordSettingsUiState.showChangePasswordProgressDialog
         val primarySiteViewModel = siteViewModels
-                ?.firstOrNull { it.siteId == account.primarySiteId }
+            ?.firstOrNull { it.siteId == account.primarySiteId }
         val uistate = AccountSettingsUiState(
-                userNameSettingsUiState = UserNameSettingsUiState(
-                        account.userName,
-                        account.displayName,
-                        account.usernameCanBeChanged
-                ),
-                emailSettingsUiState = EmailSettingsUiState(
-                        account.email,
-                        account.newEmail,
-                        account.pendingEmailChange
-                ) { cancelPendingEmailChange() },
-                primarySiteSettingsUiState = PrimarySiteSettingsUiState(
-                        primarySiteViewModel,
-                        siteViewModels
-                ),
-                webAddressSettingsUiState = WebAddressSettingsUiState(account.webAddress),
-                changePasswordSettingsUiState = ChangePasswordSettingsUiState(showChangePasswordProgressDialog),
-                toastMessage = null
+            userNameSettingsUiState = UserNameSettingsUiState(
+                account.userName,
+                account.displayName,
+                account.usernameCanBeChanged
+            ),
+            emailSettingsUiState = EmailSettingsUiState(
+                account.email,
+                account.newEmail,
+                account.pendingEmailChange
+            ) { cancelPendingEmailChange() },
+            primarySiteSettingsUiState = PrimarySiteSettingsUiState(
+                primarySiteViewModel,
+                siteViewModels
+            ),
+            webAddressSettingsUiState = WebAddressSettingsUiState(account.webAddress),
+            changePasswordSettingsUiState = ChangePasswordSettingsUiState(showChangePasswordProgressDialog),
+            toastMessage = null
         )
         return optimisticUpdateHandler.applyOptimisticallyChangedPreferences(uistate)
     }
@@ -99,10 +99,10 @@ class AccountSettingsViewModel @Inject constructor(
         }
         _accountSettingsUiState.update { state ->
             state.copy(
-                    primarySiteSettingsUiState = PrimarySiteSettingsUiState(
-                            siteViewModels.firstOrNull { it.siteId == getAccountUseCase.account.primarySiteId },
-                            siteViewModels
-                    )
+                primarySiteSettingsUiState = PrimarySiteSettingsUiState(
+                    siteViewModels.firstOrNull { it.siteId == getAccountUseCase.account.primarySiteId },
+                    siteViewModels
+                )
             )
         }
     }
@@ -114,11 +114,11 @@ class AccountSettingsViewModel @Inject constructor(
     fun onUsernameChangeConfirmedFromServer(userName: String) {
         _accountSettingsUiState.update {
             it.copy(
-                    userNameSettingsUiState =
-                    it.userNameSettingsUiState.copy(
-                            userName = userName,
-                            showUserNameConfirmedSnackBar = true
-                    )
+                userNameSettingsUiState =
+                it.userNameSettingsUiState.copy(
+                    userName = userName,
+                    showUserNameConfirmedSnackBar = true
+                )
             )
         }
     }
@@ -159,9 +159,9 @@ class AccountSettingsViewModel @Inject constructor(
     private fun showChangePasswordDialog(show: Boolean) {
         _accountSettingsUiState.update {
             it.copy(
-                    changePasswordSettingsUiState = it.changePasswordSettingsUiState.copy(
-                            showChangePasswordProgressDialog = show
-                    )
+                changePasswordSettingsUiState = it.changePasswordSettingsUiState.copy(
+                    showChangePasswordProgressDialog = show
+                )
             )
         }
     }
@@ -199,7 +199,7 @@ class AccountSettingsViewModel @Inject constructor(
             SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR -> resourceProvider.getString(R.string.error_disabled_apis)
             SETTINGS_POST_ERROR -> {
                 if (!TextUtils.isEmpty(accountError.message)) accountError.message else resourceProvider.getString(
-                        R.string.error_post_account_settings
+                    R.string.error_post_account_settings
                 )
             }
             else -> resourceProvider.getString(R.string.error_post_account_settings)
@@ -233,11 +233,11 @@ class AccountSettingsViewModel @Inject constructor(
     ) {
         val newUserChangeConfirmedSnackBarMessageHolder
             get() = SnackbarMessageHolder(
-                    message = UiStringResWithParams(
-                            R.string.settings_username_changer_toast_content,
-                            listOf(UiStringText(userName))
-                    ),
-                    duration = Snackbar.LENGTH_LONG
+                message = UiStringResWithParams(
+                    R.string.settings_username_changer_toast_content,
+                    listOf(UiStringText(userName))
+                ),
+                duration = Snackbar.LENGTH_LONG
             )
     }
 
@@ -249,13 +249,13 @@ class AccountSettingsViewModel @Inject constructor(
     ) {
         val emailVerificationMsgSnackBarMessageHolder
             get() = SnackbarMessageHolder(
-                    message = UiStringResWithParams(
-                            R.string.pending_email_change_snackbar,
-                            listOf(UiStringText(newEmail ?: ""))
-                    ),
-                    buttonTitle = UiStringRes(R.string.button_discard),
-                    buttonAction = { onCancelEmailChange() },
-                    duration = Snackbar.LENGTH_INDEFINITE
+                message = UiStringResWithParams(
+                    R.string.pending_email_change_snackbar,
+                    listOf(UiStringText(newEmail ?: ""))
+                ),
+                buttonTitle = UiStringRes(R.string.button_discard),
+                buttonAction = { onCancelEmailChange() },
+                duration = Snackbar.LENGTH_INDEFINITE
             )
     }
 

@@ -138,20 +138,20 @@ class StatsModule {
             useCases.add(followerTotalsUseCase)
         }
         useCases.addAll(
-                listOf(
-                    allTimeStatsUseCase,
-                    latestPostSummaryUseCase,
-                    todayStatsUseCase,
-                    followersUseCaseFactory.build(BLOCK),
-                    commentsUseCase,
-                    mostPopularInsightsUseCase,
-                    tagsAndCategoriesUseCaseFactory.build(BLOCK),
-                    publicizeUseCaseFactory.build(BLOCK),
-                    postingActivityUseCase,
-                    annualSiteStatsUseCaseFactory.build(BLOCK),
-                    managementControlUseCase,
-                    managementNewsCardUseCase
-                )
+            listOf(
+                allTimeStatsUseCase,
+                latestPostSummaryUseCase,
+                todayStatsUseCase,
+                followersUseCaseFactory.build(BLOCK),
+                commentsUseCase,
+                mostPopularInsightsUseCase,
+                tagsAndCategoriesUseCaseFactory.build(BLOCK),
+                publicizeUseCaseFactory.build(BLOCK),
+                postingActivityUseCase,
+                annualSiteStatsUseCaseFactory.build(BLOCK),
+                managementControlUseCase,
+                managementNewsCardUseCase
+            )
         )
         return useCases
     }
@@ -174,13 +174,13 @@ class StatsModule {
         annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
-                followersUseCaseFactory.build(VIEW_ALL),
-                tagsAndCategoriesUseCaseFactory.build(VIEW_ALL),
-                publicizeUseCaseFactory.build(VIEW_ALL),
-                postMonthsAndYearsUseCaseFactory.build(VIEW_ALL),
-                postAverageViewsPerDayUseCaseFactory.build(VIEW_ALL),
-                postRecentWeeksUseCaseFactory.build(VIEW_ALL),
-                annualSiteStatsUseCaseFactory.build(VIEW_ALL)
+            followersUseCaseFactory.build(VIEW_ALL),
+            tagsAndCategoriesUseCaseFactory.build(VIEW_ALL),
+            publicizeUseCaseFactory.build(VIEW_ALL),
+            postMonthsAndYearsUseCaseFactory.build(VIEW_ALL),
+            postAverageViewsPerDayUseCaseFactory.build(VIEW_ALL),
+            postRecentWeeksUseCaseFactory.build(VIEW_ALL),
+            annualSiteStatsUseCaseFactory.build(VIEW_ALL)
         )
     }
 
@@ -204,15 +204,15 @@ class StatsModule {
         fileDownloadsUseCaseFactory: FileDownloadsUseCaseFactory
     ): List<@JvmSuppressWildcards GranularUseCaseFactory> {
         return listOf(
-                postsAndPagesUseCaseFactory,
-                referrersUseCaseFactory,
-                clicksUseCaseFactory,
-                countryViewsUseCaseFactory,
-                videoPlaysUseCaseFactory,
-                searchTermsUseCaseFactory,
-                authorsUseCaseFactory,
-                overviewUseCaseFactory,
-                fileDownloadsUseCaseFactory
+            postsAndPagesUseCaseFactory,
+            referrersUseCaseFactory,
+            clicksUseCaseFactory,
+            countryViewsUseCaseFactory,
+            videoPlaysUseCaseFactory,
+            searchTermsUseCaseFactory,
+            authorsUseCaseFactory,
+            overviewUseCaseFactory,
+            fileDownloadsUseCaseFactory
         )
     }
 
@@ -231,11 +231,11 @@ class StatsModule {
         postRecentWeeksUseCaseFactory: PostRecentWeeksUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
-                postHeaderUseCase,
-                postDayViewsUseCase,
-                postMonthsAndYearsUseCaseFactory.build(BLOCK),
-                postAverageViewsPerDayUseCaseFactory.build(BLOCK),
-                postRecentWeeksUseCaseFactory.build(BLOCK)
+            postHeaderUseCase,
+            postDayViewsUseCase,
+            postMonthsAndYearsUseCaseFactory.build(BLOCK),
+            postAverageViewsPerDayUseCaseFactory.build(BLOCK),
+            postRecentWeeksUseCaseFactory.build(BLOCK)
         )
     }
 
@@ -256,12 +256,12 @@ class StatsModule {
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
-                bgDispatcher,
-                mainDispatcher,
-                statsSiteProvider,
-                useCases,
-                { statsStore.getInsightTypes(it) },
-                uiModelMapper::mapInsights
+            bgDispatcher,
+            mainDispatcher,
+            statsSiteProvider,
+            useCases,
+            { statsStore.getInsightTypes(it) },
+            uiModelMapper::mapInsights
         )
     }
 
@@ -282,12 +282,12 @@ class StatsModule {
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
-                bgDispatcher,
-                mainDispatcher,
-                statsSiteProvider,
-                useCasesFactories.map { it.build(DAYS, BLOCK) },
-                { statsStore.getTimeStatsTypes(it) },
-                uiModelMapper::mapTimeStats
+            bgDispatcher,
+            mainDispatcher,
+            statsSiteProvider,
+            useCasesFactories.map { it.build(DAYS, BLOCK) },
+            { statsStore.getTimeStatsTypes(it) },
+            uiModelMapper::mapTimeStats
         )
     }
 
@@ -308,12 +308,12 @@ class StatsModule {
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
-                bgDispatcher,
-                mainDispatcher,
-                statsSiteProvider,
-                useCasesFactories.map { it.build(WEEKS, BLOCK) },
-                { statsStore.getTimeStatsTypes(it) },
-                uiModelMapper::mapTimeStats
+            bgDispatcher,
+            mainDispatcher,
+            statsSiteProvider,
+            useCasesFactories.map { it.build(WEEKS, BLOCK) },
+            { statsStore.getTimeStatsTypes(it) },
+            uiModelMapper::mapTimeStats
         )
     }
 
@@ -334,11 +334,11 @@ class StatsModule {
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
-                bgDispatcher, mainDispatcher,
-                statsSiteProvider,
-                useCasesFactories.map { it.build(MONTHS, BLOCK) },
-                { statsStore.getTimeStatsTypes(it) },
-                uiModelMapper::mapTimeStats
+            bgDispatcher, mainDispatcher,
+            statsSiteProvider,
+            useCasesFactories.map { it.build(MONTHS, BLOCK) },
+            { statsStore.getTimeStatsTypes(it) },
+            uiModelMapper::mapTimeStats
         )
     }
 
@@ -359,12 +359,12 @@ class StatsModule {
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
-                bgDispatcher,
-                mainDispatcher,
-                statsSiteProvider,
-                useCasesFactories.map { it.build(YEARS, BLOCK) },
-                { statsStore.getTimeStatsTypes(it) },
-                uiModelMapper::mapTimeStats
+            bgDispatcher,
+            mainDispatcher,
+            statsSiteProvider,
+            useCasesFactories.map { it.build(YEARS, BLOCK) },
+            { statsStore.getTimeStatsTypes(it) },
+            uiModelMapper::mapTimeStats
         )
     }
 
@@ -382,11 +382,11 @@ class StatsModule {
         @Named(YEAR_STATS_USE_CASE) yearStatsUseCase: BaseListUseCase
     ): Map<StatsSection, BaseListUseCase> {
         return mapOf(
-                StatsSection.INSIGHTS to insightsUseCase,
-                StatsSection.DAYS to dayStatsUseCase,
-                StatsSection.WEEKS to weekStatsUseCase,
-                StatsSection.MONTHS to monthStatsUseCase,
-                StatsSection.YEARS to yearStatsUseCase
+            StatsSection.INSIGHTS to insightsUseCase,
+            StatsSection.DAYS to dayStatsUseCase,
+            StatsSection.WEEKS to weekStatsUseCase,
+            StatsSection.MONTHS to monthStatsUseCase,
+            StatsSection.YEARS to yearStatsUseCase
         )
     }
 
@@ -407,12 +407,12 @@ class StatsModule {
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
-                bgDispatcher,
-                mainDispatcher,
-                statsSiteProvider,
-                useCases,
-                { statsStore.getPostDetailTypes() },
-                uiModelMapper::mapDetailStats
+            bgDispatcher,
+            mainDispatcher,
+            statsSiteProvider,
+            useCases,
+            { statsStore.getPostDetailTypes() },
+            uiModelMapper::mapDetailStats
         )
     }
 
@@ -430,9 +430,9 @@ class StatsModule {
         countryViewsUseCaseFactory: CountryViewsUseCaseFactory
     ): List<@JvmSuppressWildcards GranularUseCaseFactory> {
         return listOf(
-                viewsAndVisitorsGranularUseCaseFactory,
-                referrersUseCaseFactory,
-                countryViewsUseCaseFactory
+            viewsAndVisitorsGranularUseCaseFactory,
+            referrersUseCaseFactory,
+            countryViewsUseCaseFactory
         )
     }
 
@@ -452,14 +452,14 @@ class StatsModule {
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
-                bgDispatcher,
-                mainDispatcher,
-                statsSiteProvider,
-                useCasesFactories.map { it.build(WEEKS, BLOCK_DETAIL) },
-                {
-                    listOf(InsightType.VIEWS_AND_VISITORS, TimeStatsType.REFERRERS, TimeStatsType.COUNTRIES)
-                },
-                uiModelMapper::mapTimeStats
+            bgDispatcher,
+            mainDispatcher,
+            statsSiteProvider,
+            useCasesFactories.map { it.build(WEEKS, BLOCK_DETAIL) },
+            {
+                listOf(InsightType.VIEWS_AND_VISITORS, TimeStatsType.REFERRERS, TimeStatsType.COUNTRIES)
+            },
+            uiModelMapper::mapTimeStats
         )
     }
 
@@ -475,8 +475,8 @@ class StatsModule {
         postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory
     ): List<@JvmSuppressWildcards GranularUseCaseFactory> {
         return listOf(
-                totalLikesUseCaseFactory,
-                postsAndPagesUseCaseFactory
+            totalLikesUseCaseFactory,
+            postsAndPagesUseCaseFactory
         )
     }
 
@@ -495,12 +495,12 @@ class StatsModule {
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
-                bgDispatcher,
-                mainDispatcher,
-                statsSiteProvider,
-                useCasesFactories.map { it.build(WEEKS, BLOCK_DETAIL) },
-                { listOf(InsightType.TOTAL_LIKES, TimeStatsType.POSTS_AND_PAGES) },
-                uiModelMapper::mapTimeStats
+            bgDispatcher,
+            mainDispatcher,
+            statsSiteProvider,
+            useCasesFactories.map { it.build(WEEKS, BLOCK_DETAIL) },
+            { listOf(InsightType.TOTAL_LIKES, TimeStatsType.POSTS_AND_PAGES) },
+            uiModelMapper::mapTimeStats
         )
     }
 
@@ -517,9 +517,9 @@ class StatsModule {
         postsCommentsUseCase: PostsCommentsUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
-                totalCommentsUseCaseFactory.build(BLOCK_DETAIL),
-                authorsCommentsUseCase,
-                postsCommentsUseCase
+            totalCommentsUseCaseFactory.build(BLOCK_DETAIL),
+            authorsCommentsUseCase,
+            postsCommentsUseCase
         )
     }
 
@@ -538,12 +538,12 @@ class StatsModule {
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
-                bgDispatcher,
-                mainDispatcher,
-                statsSiteProvider,
-                useCases,
-                { listOf(InsightType.TOTAL_COMMENTS, InsightType.AUTHORS_COMMENTS, InsightType.POSTS_COMMENTS) },
-                uiModelMapper::mapInsights
+            bgDispatcher,
+            mainDispatcher,
+            statsSiteProvider,
+            useCases,
+            { listOf(InsightType.TOTAL_COMMENTS, InsightType.AUTHORS_COMMENTS, InsightType.POSTS_COMMENTS) },
+            uiModelMapper::mapInsights
         )
     }
 
@@ -559,9 +559,9 @@ class StatsModule {
         followerTypesUseCase: FollowerTypesUseCase,
         followersUseCaseFactory: FollowersUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> = listOf(
-            totalFollowersUseCaseFactory.build(VIEW_ALL),
-            followerTypesUseCase,
-            followersUseCaseFactory.build(BLOCK_DETAIL)
+        totalFollowersUseCaseFactory.build(VIEW_ALL),
+        followerTypesUseCase,
+        followersUseCaseFactory.build(BLOCK_DETAIL)
     )
 
     /**
@@ -578,11 +578,11 @@ class StatsModule {
         @Named(TOTAL_FOLLOWERS_DETAIL_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase = BaseListUseCase(
-            bgDispatcher,
-            mainDispatcher,
-            statsSiteProvider,
-            useCases,
-            { listOf(InsightType.TOTAL_FOLLOWERS, InsightType.FOLLOWER_TYPES, InsightType.FOLLOWERS) },
-            uiModelMapper::mapInsights
+        bgDispatcher,
+        mainDispatcher,
+        statsSiteProvider,
+        useCases,
+        { listOf(InsightType.TOTAL_FOLLOWERS, InsightType.FOLLOWER_TYPES, InsightType.FOLLOWERS) },
+        uiModelMapper::mapInsights
     )
 }

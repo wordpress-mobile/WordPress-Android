@@ -28,11 +28,11 @@ class EventItemViewHolder(
     override fun updateChanges(bundle: Bundle) {
         if (bundle.containsKey(ActivityLogDiffCallback.LIST_ITEM_BUTTON_VISIBILITY_KEY)) {
             actionButton.visibility =
-                    if (bundle.getBoolean(ActivityLogDiffCallback.LIST_ITEM_BUTTON_VISIBILITY_KEY)) {
-                        View.VISIBLE
-                    } else {
-                        View.GONE
-                    }
+                if (bundle.getBoolean(ActivityLogDiffCallback.LIST_ITEM_BUTTON_VISIBILITY_KEY)) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
         }
     }
 
@@ -41,9 +41,9 @@ class EventItemViewHolder(
         text.text = activity.description
 
         ColorUtils.setImageResourceWithTint(
-                actionButton,
-                activity.buttonIcon.drawable,
-                actionButton.context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
+            actionButton,
+            activity.buttonIcon.drawable,
+            actionButton.context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
         )
         if (activity.isButtonVisible) {
             actionButton.visibility = View.VISIBLE

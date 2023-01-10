@@ -12,6 +12,7 @@ class CriticalPostActionTracker(
     enum class CriticalPostAction {
         DELETING_POST, RESTORING_POST, TRASHING_POST, TRASHING_POST_WITH_LOCAL_CHANGES, MOVING_POST_TO_DRAFT
     }
+
     private val map = HashMap<LocalId, CriticalPostAction>()
 
     fun add(localPostId: LocalId, criticalPostAction: CriticalPostAction) {

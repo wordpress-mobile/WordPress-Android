@@ -44,10 +44,14 @@ import org.wordpress.android.usecase.UseCaseResult
 
 @ExperimentalCoroutinesApi
 class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
-    @Mock private lateinit var commentStore: CommentsStore
-    @Mock private lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
+    @Mock
+    private lateinit var commentStore: CommentsStore
 
-    @Mock private lateinit var moderateCommentsResourceProvider: ModerateCommentsResourceProvider
+    @Mock
+    private lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
+
+    @Mock
+    private lateinit var moderateCommentsResourceProvider: ModerateCommentsResourceProvider
 
     private lateinit var moderateCommentWithUndoUseCase: ModerateCommentWithUndoUseCase
 
@@ -57,11 +61,11 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
     fun setup() = test {
         whenever(moderateCommentsResourceProvider.commentsStore).thenReturn(commentStore)
         whenever(moderateCommentsResourceProvider.localCommentCacheUpdateHandler).thenReturn(
-                localCommentCacheUpdateHandler
+            localCommentCacheUpdateHandler
         )
 
         `when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(1)))
-                .thenReturn(listOf(approvedComment))
+            .thenReturn(listOf(approvedComment))
 
         moderateCommentWithUndoUseCase = ModerateCommentWithUndoUseCase(moderateCommentsResourceProvider)
     }
@@ -71,14 +75,14 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
     @Test
     fun `OnModerateComment action moderates comment locally and emits success when there are no errors`() = test {
         whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
-                                        rowsAffected = 1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
+                        rowsAffected = 1
+                    )
                 )
+            )
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
 
@@ -89,7 +93,7 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
         }
 
         moderateCommentWithUndoUseCase.manageAction(
-                OnModerateComment(ModerateCommentParameters(site, 1, UNAPPROVED))
+            OnModerateComment(ModerateCommentParameters(site, 1, UNAPPROVED))
         )
 
         assertThat(result).size().isEqualTo(1)
@@ -120,7 +124,7 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
         val error = CommentError(INVALID_INPUT, "test error message")
 
         whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
-                .thenReturn(CommentsActionPayload(error))
+            .thenReturn(CommentsActionPayload(error))
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
 
@@ -131,7 +135,7 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
         }
 
         moderateCommentWithUndoUseCase.manageAction(
-                OnModerateComment(ModerateCommentParameters(site, 1, UNAPPROVED))
+            OnModerateComment(ModerateCommentParameters(site, 1, UNAPPROVED))
         )
 
         assertThat(result).size().isEqualTo(1)
@@ -158,24 +162,24 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
     @Test
     fun `OnPushComment action moderates locally and remotely and emits success when there are no errors`() = test {
         whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
-                                        rowsAffected = 1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
+                        rowsAffected = 1
+                    )
                 )
+            )
 
         whenever(commentStore.pushLocalCommentByRemoteId(eq(site), eq(1)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        listOf(approvedComment.copy(status = UNAPPROVED.toString())),
-                                        1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        listOf(approvedComment.copy(status = UNAPPROVED.toString())),
+                        1
+                    )
                 )
+            )
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
 
@@ -186,7 +190,7 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
         }
 
         moderateCommentWithUndoUseCase.manageAction(
-                OnPushComment(ModerateWithFallbackParameters(site, 1, UNAPPROVED, APPROVED))
+            OnPushComment(ModerateWithFallbackParameters(site, 1, UNAPPROVED, APPROVED))
         )
 
         assertThat(result).size().isEqualTo(1)
@@ -210,24 +214,24 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
     @Test
     fun `OnPushComment calls deleteComment method of the store when comment is being deleted`() = test {
         whenever(commentStore.moderateCommentLocally(eq(site), eq(3), eq(DELETED)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        comments = listOf(trashedComment.copy(status = DELETED.toString())),
-                                        rowsAffected = 1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        comments = listOf(trashedComment.copy(status = DELETED.toString())),
+                        rowsAffected = 1
+                    )
                 )
+            )
 
         whenever(commentStore.deleteComment(eq(site), eq(3), anyOrNull()))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        listOf(trashedComment.copy(status = DELETED.toString())),
-                                        1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        listOf(trashedComment.copy(status = DELETED.toString())),
+                        1
+                    )
                 )
+            )
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
 
@@ -238,7 +242,7 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
         }
 
         moderateCommentWithUndoUseCase.manageAction(
-                OnPushComment(ModerateWithFallbackParameters(site, 3, DELETED, TRASH))
+            OnPushComment(ModerateWithFallbackParameters(site, 3, DELETED, TRASH))
         )
 
         assertThat(result).size().isEqualTo(1)
@@ -264,17 +268,17 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
         val error = CommentError(INVALID_INPUT, "test error message")
 
         whenever(commentStore.moderateCommentLocally(eq(site), eq(3), eq(DELETED)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        comments = listOf(trashedComment.copy(status = DELETED.toString())),
-                                        rowsAffected = 1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        comments = listOf(trashedComment.copy(status = DELETED.toString())),
+                        rowsAffected = 1
+                    )
                 )
+            )
 
         whenever(commentStore.deleteComment(eq(site), eq(3), anyOrNull()))
-                .thenReturn(CommentsActionPayload(error))
+            .thenReturn(CommentsActionPayload(error))
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
 
@@ -285,7 +289,7 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
         }
 
         moderateCommentWithUndoUseCase.manageAction(
-                OnPushComment(ModerateWithFallbackParameters(site, 3, DELETED, TRASH))
+            OnPushComment(ModerateWithFallbackParameters(site, 3, DELETED, TRASH))
         )
 
         assertThat(result).size().isEqualTo(1)
@@ -317,17 +321,17 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
         val error = CommentError(INVALID_INPUT, "test error message")
 
         whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
-                                        rowsAffected = 1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
+                        rowsAffected = 1
+                    )
                 )
+            )
 
         whenever(commentStore.pushLocalCommentByRemoteId(eq(site), eq(1)))
-                .thenReturn(CommentsActionPayload(error))
+            .thenReturn(CommentsActionPayload(error))
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
 
@@ -338,7 +342,7 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
         }
 
         moderateCommentWithUndoUseCase.manageAction(
-                OnPushComment(ModerateWithFallbackParameters(site, 1, UNAPPROVED, APPROVED))
+            OnPushComment(ModerateWithFallbackParameters(site, 1, UNAPPROVED, APPROVED))
         )
 
         assertThat(result).size().isEqualTo(1)
@@ -371,14 +375,14 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
     @Test
     fun `undoing moderation rolls back local comment status and emits success`() = test {
         whenever(commentStore.moderateCommentLocally(eq(site), eq(3), eq(APPROVED)))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentsActionData(
-                                        comments = listOf(trashedComment.copy(status = APPROVED.toString())),
-                                        rowsAffected = 1
-                                )
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentsActionData(
+                        comments = listOf(trashedComment.copy(status = APPROVED.toString())),
+                        rowsAffected = 1
+                    )
                 )
+            )
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
 
@@ -389,7 +393,7 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
         }
 
         moderateCommentWithUndoUseCase.manageAction(
-                OnUndoModerateComment(ModerateWithFallbackParameters(site, 3, TRASH, APPROVED))
+            OnUndoModerateComment(ModerateWithFallbackParameters(site, 3, TRASH, APPROVED))
         )
 
         assertThat(result).size().isEqualTo(1)

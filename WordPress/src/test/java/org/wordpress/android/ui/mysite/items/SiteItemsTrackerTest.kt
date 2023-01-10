@@ -17,7 +17,8 @@ private const val TYPE = "type"
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteItemsTrackerTest {
-    @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
     private lateinit var siteItemsTracker: SiteItemsTracker
 
     @Before

@@ -45,7 +45,8 @@ class ActivityLogDiffCallback(
 
         val bundle = Bundle()
         if (oldItem is IActionableItem && newItem is IActionableItem &&
-                oldItem.isButtonVisible != newItem.isButtonVisible) {
+            oldItem.isButtonVisible != newItem.isButtonVisible
+        ) {
             bundle.putBoolean(LIST_ITEM_BUTTON_VISIBILITY_KEY, newItem.isButtonVisible)
         }
 

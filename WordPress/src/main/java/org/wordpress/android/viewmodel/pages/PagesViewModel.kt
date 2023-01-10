@@ -207,8 +207,8 @@ class PagesViewModel
 
     private val pageListDialogHelper: PageListDialogHelper by lazy {
         PageListDialogHelper(
-                showDialog = { _dialogAction.postValue(it) },
-                analyticsTracker = analyticsTracker
+            showDialog = { _dialogAction.postValue(it) },
+            analyticsTracker = analyticsTracker
         )
     }
 
@@ -233,16 +233,16 @@ class PagesViewModel
         }
 
         pageListEventListener = pageListEventListenerFactory.createAndStartListening(
-                dispatcher = dispatcher,
-                bgDispatcher = defaultDispatcher,
-                postStore = postStore,
-                eventBusWrapper = eventBusWrapper,
-                siteStore = siteStore,
-                site = site,
-                invalidateUploadStatus = this::handleInvalidateUploadStatus,
-                handleRemoteAutoSave = this::handleRemoveAutoSaveEvent,
-                handlePostUploadFinished = this::postUploadedFinished,
-                handleHomepageSettingsChange = this::handleHomepageSettingsChange
+            dispatcher = dispatcher,
+            bgDispatcher = defaultDispatcher,
+            postStore = postStore,
+            eventBusWrapper = eventBusWrapper,
+            siteStore = siteStore,
+            site = site,
+            invalidateUploadStatus = this::handleInvalidateUploadStatus,
+            handleRemoteAutoSave = this::handleRemoveAutoSaveEvent,
+            handlePostUploadFinished = this::postUploadedFinished,
+            handleHomepageSettingsChange = this::handleHomepageSettingsChange
         )
 
         val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
@@ -253,9 +253,9 @@ class PagesViewModel
 
         _authorSelectionUpdated.value = authorFilterSelection
         _authorUIState.value = PagesAuthorFilterUIState(
-                isAuthorFilterVisible = isFilteringByAuthorSupported,
-                authorFilterSelection = authorFilterSelection,
-                authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
+            isAuthorFilterVisible = isFilteringByAuthorSupported,
+            authorFilterSelection = authorFilterSelection,
+            authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
     }
 
@@ -279,18 +279,18 @@ class PagesViewModel
 
     private suspend fun reloadPages(state: PageListState = REFRESHING, forced: Boolean = false) {
         if (performIfNetworkAvailableAsync {
-                    _listState.setOnUi(state)
+                _listState.setOnUi(state)
 
-                    val result = pageStore.requestPagesFromServer(site, forced)
-                    if (result.isError) {
-                        _listState.setOnUi(ERROR)
-                        showSnackbar(SnackbarMessageHolder(UiStringRes(R.string.error_refresh_pages)))
-                        AppLog.e(PAGES, "An error occurred while fetching the Pages")
-                    } else {
-                        _listState.setOnUi(DONE)
-                    }
-                    refreshPages()
-                }) else {
+                val result = pageStore.requestPagesFromServer(site, forced)
+                if (result.isError) {
+                    _listState.setOnUi(ERROR)
+                    showSnackbar(SnackbarMessageHolder(UiStringRes(R.string.error_refresh_pages)))
+                    AppLog.e(PAGES, "An error occurred while fetching the Pages")
+                } else {
+                    _listState.setOnUi(DONE)
+                }
+                refreshPages()
+            }) else {
             _listState.setOnUi(DONE)
         }
     }
@@ -385,10 +385,10 @@ class PagesViewModel
 
         // take care of exit actions on state transition
         previewStateHelper.managePreviewStateTransitions(
-                newState,
-                prevState,
-                postInfo,
-                this::handleRemotePreview
+            newState,
+            prevState,
+            postInfo,
+            this::handleRemotePreview
         )
     }
 
@@ -397,7 +397,7 @@ class PagesViewModel
         searchQuery: String
     ): SortedMap<PageListType, List<PageModel>> = withContext(defaultDispatcher) {
         val list = pageStore.search(site, searchQuery)
-                .groupBy { PageListType.fromPageStatus(it.status) }
+            .groupBy { PageListType.fromPageStatus(it.status) }
 
         return@withContext list.toSortedMap { previous, next ->
             when {
@@ -481,8 +481,8 @@ class PagesViewModel
             if (site.showOnFront == PAGE.value) {
                 launch {
                     val result = siteOptionsStore.updatePageOnFront(
-                            site,
-                            homepageId
+                        site,
+                        homepageId
                     )
                     val message = when (result.isError) {
                         true -> {
@@ -497,9 +497,9 @@ class PagesViewModel
                 }
             } else {
                 _showSnackbarMessage.postValue(
-                        SnackbarMessageHolder(
-                                message = UiStringRes(R.string.page_cannot_set_homepage)
-                        )
+                    SnackbarMessageHolder(
+                        message = UiStringRes(R.string.page_cannot_set_homepage)
+                    )
                 )
             }
         }
@@ -512,8 +512,8 @@ class PagesViewModel
             if (site.showOnFront == PAGE.value) {
                 launch {
                     val result = siteOptionsStore.updatePageForPosts(
-                            site,
-                            remoteId
+                        site,
+                        remoteId
                     )
                     val message = when (result.isError) {
                         true -> {
@@ -528,9 +528,9 @@ class PagesViewModel
                 }
             } else {
                 _showSnackbarMessage.postValue(
-                        SnackbarMessageHolder(
-                                message = UiStringRes(R.string.page_cannot_set_posts_page)
-                        )
+                    SnackbarMessageHolder(
+                        message = UiStringRes(R.string.page_cannot_set_posts_page)
+                    )
                 )
             }
         }
@@ -543,11 +543,11 @@ class PagesViewModel
             val pageLink = postStore.getPostByLocalPostId(page.localId).link
             // Copy the link to the clipboard
             context.clipboardManager?.setPrimaryClip(
-                    ClipData.newPlainText("${page.localId}", pageLink)
+                ClipData.newPlainText("${page.localId}", pageLink)
             ) ?: throw NullPointerException("ClipboardManager is not supported on this device")
 
             _showSnackbarMessage.postValue(
-                    SnackbarMessageHolder(UiStringRes(R.string.media_edit_copy_url_toast))
+                SnackbarMessageHolder(UiStringRes(R.string.media_edit_copy_url_toast))
             )
         } catch (e: Throwable) {
             /**
@@ -583,14 +583,14 @@ class PagesViewModel
             }
 
             val post = postStore.instantiatePostModel(
-                    site,
-                    true,
-                    it.title,
-                    it.post.content,
-                    PostStatus.DRAFT.toString(),
-                    it.post.categoryIdList,
-                    it.post.postFormat,
-                    false
+                site,
+                true,
+                it.title,
+                it.post.content,
+                PostStatus.DRAFT.toString(),
+                it.post.categoryIdList,
+                it.post.postFormat,
+                false
             )
 
             _editPage.postValue(Triple(site, post, false))
@@ -718,15 +718,15 @@ class PagesViewModel
                 reloadPages()
 
                 showSnackbar(
-                        if (action.undo != null) {
-                            SnackbarMessageHolder(
-                                    UiStringRes(R.string.page_parent_changed),
-                                    UiStringRes(R.string.undo),
-                                    action.undo!!
-                            )
-                        } else {
-                            SnackbarMessageHolder(UiStringRes(R.string.page_parent_changed))
-                        }
+                    if (action.undo != null) {
+                        SnackbarMessageHolder(
+                            UiStringRes(R.string.page_parent_changed),
+                            UiStringRes(R.string.undo),
+                            action.undo!!
+                        )
+                    } else {
+                        SnackbarMessageHolder(UiStringRes(R.string.page_parent_changed))
+                    }
                 )
             }
         }
@@ -898,11 +898,11 @@ class PagesViewModel
             _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.remote_preview_operation_error)))
         } else {
             updatePreviewAndDialogState(
-                    PostListRemotePreviewState.PREVIEWING,
-                    PostInfoType.PostInfo(
-                            post = post,
-                            hasError = isError
-                    )
+                PostListRemotePreviewState.PREVIEWING,
+                PostInfoType.PostInfo(
+                    post = post,
+                    hasError = isError
+                )
             )
         }
     }
@@ -911,8 +911,8 @@ class PagesViewModel
         val selection = AuthorFilterSelection.fromId(selectionId)
 
         updateViewStateTriggerPagerChange(
-                authorFilterSelection = selection,
-                authorFilterItems = getAuthorFilterItems(selection, accountStore.account?.avatarUrl)
+            authorFilterSelection = selection,
+            authorFilterItems = getAuthorFilterItems(selection, accountStore.account?.avatarUrl)
         )
         if (isFilteringByAuthorSupported) {
             prefs.postListAuthorSelection = selection
@@ -943,18 +943,18 @@ class PagesViewModel
         }
 
         _authorUIState.value = _authorUIState.value?.copy(
-                isAuthorFilterVisible = isAuthorFilterVisible ?: currentState.isAuthorFilterVisible,
-                authorFilterSelection = authorFilterSelection ?: currentState.authorFilterSelection,
-                authorFilterItems = authorFilterItems ?: currentState.authorFilterItems
+            isAuthorFilterVisible = isAuthorFilterVisible ?: currentState.isAuthorFilterVisible,
+            authorFilterSelection = authorFilterSelection ?: currentState.authorFilterSelection,
+            authorFilterItems = authorFilterItems ?: currentState.authorFilterItems
         )
 
         if (authorFilterSelection != null && currentState.authorFilterSelection != authorFilterSelection) {
             _authorSelectionUpdated.value = authorFilterSelection
 
             AnalyticsUtils.trackWithSiteDetails(
-                    PAGES_LIST_AUTHOR_FILTER_CHANGED,
-                    site,
-                    mutableMapOf(TRACKS_SELECTED_AUTHOR_FILTER to authorFilterSelection.toString() as Any)
+                PAGES_LIST_AUTHOR_FILTER_CHANGED,
+                site,
+                mutableMapOf(TRACKS_SELECTED_AUTHOR_FILTER to authorFilterSelection.toString() as Any)
             )
         }
     }
@@ -963,18 +963,18 @@ class PagesViewModel
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
         pageListDialogHelper.onPositiveClickedForBasicDialog(
-                instanceTag = instanceTag,
-                editPage = this::editPage,
-                deletePage = this::onDeleteConfirmed,
-                editPageFirst = this::onEditPageFirst
+            instanceTag = instanceTag,
+            editPage = this::editPage,
+            deletePage = this::onDeleteConfirmed,
+            editPageFirst = this::onEditPageFirst
         )
     }
 
     fun onNegativeClickedForBasicDialog(instanceTag: String) {
         pageListDialogHelper.onNegativeClickedForBasicDialog(
-                instanceTag = instanceTag,
-                editPage = this::editPage,
-                copyPage = this::onCopyPageLocal
+            instanceTag = instanceTag,
+            editPage = this::editPage,
+            copyPage = this::onCopyPageLocal
         )
     }
 
@@ -1045,7 +1045,8 @@ class PagesViewModel
     }
 }
 
-@StringRes fun PageStatus.getTitle(): Int {
+@StringRes
+fun PageStatus.getTitle(): Int {
     return when (this) {
         PageStatus.PUBLISHED -> R.string.pages_published
         PageStatus.DRAFT -> R.string.pages_drafts

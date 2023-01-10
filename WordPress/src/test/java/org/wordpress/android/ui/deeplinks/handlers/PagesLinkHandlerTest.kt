@@ -14,8 +14,11 @@ import org.wordpress.android.ui.deeplinks.buildUri
 
 @RunWith(MockitoJUnitRunner::class)
 class PagesLinkHandlerTest {
-    @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
-    @Mock lateinit var site: SiteModel
+    @Mock
+    lateinit var deepLinkUriUtils: DeepLinkUriUtils
+
+    @Mock
+    lateinit var site: SiteModel
     private lateinit var pagesLinkHandler: PagesLinkHandler
 
     @Before

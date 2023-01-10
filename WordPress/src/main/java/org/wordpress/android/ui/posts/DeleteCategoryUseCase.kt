@@ -12,8 +12,7 @@ import javax.inject.Inject
 class DeleteCategoryUseCase @Inject constructor(
     private val dispatcher: Dispatcher
 ) {
-    fun deleteCategory(termModel: TermModel, site: SiteModel)
-    {
+    fun deleteCategory(termModel: TermModel, site: SiteModel) {
         val payload = RemoteTermPayload(termModel, site)
         dispatcher.dispatch(TaxonomyActionBuilder.newDeleteTermAction(payload))
     }

@@ -32,8 +32,8 @@ private const val MIN_VALUE = 4f
 private typealias BarCount = Int
 
 class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_bar_chart_item
+    parent,
+    R.layout.stats_block_bar_chart_item
 ) {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     private val chart = itemView.findViewById<BarChart>(R.id.chart)
@@ -62,9 +62,9 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
                 val cutContentDescriptions = takeEntriesWithinGraphWidth(barCount, item.entryContentDescriptions)
                 accessibilityHelper = BarChartAccessibilityHelper(
-                        chart,
-                        contentDescriptions = cutContentDescriptions,
-                        accessibilityEvent = accessibilityEvent
+                    chart,
+                    contentDescriptions = cutContentDescriptions,
+                    accessibilityEvent = accessibilityEvent
                 )
 
                 ViewCompat.setAccessibilityDelegate(chart, accessibilityHelper)
@@ -105,12 +105,12 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
         data = BarData(dataSets)
         val greyColor = ContextCompat.getColor(
-                context,
-                R.color.neutral_30
+            context,
+            R.color.neutral_30
         )
         val lightGreyColor = ContextCompat.getColor(
-                context,
-                R.color.stats_bar_chart_gridline
+            context,
+            R.color.stats_bar_chart_gridline
         )
         axisLeft.apply {
             valueFormatter = LargeValueFormatter()
@@ -210,13 +210,13 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val emptyValues = (0 until count).map { index -> BarEntry(index.toFloat(), 1f, "empty") }
         val dataSet = BarDataSet(emptyValues, "Empty")
         dataSet.setGradientColor(
-                ContextCompat.getColor(
-                        context,
-                        R.color.primary_5
-                ), ContextCompat.getColor(
+            ContextCompat.getColor(
+                context,
+                R.color.primary_5
+            ), ContextCompat.getColor(
                 context,
                 android.R.color.transparent
-        )
+            )
         )
         dataSet.formLineWidth = 0f
         dataSet.setDrawValues(false)
@@ -229,20 +229,20 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val dataSet = BarDataSet(cut, "Data")
         dataSet.color = ContextCompat.getColor(context, R.color.stats_bar_chart_top)
         dataSet.setGradientColor(
-                ContextCompat.getColor(
-                        context,
-                        R.color.stats_bar_chart_top
-                ), ContextCompat.getColor(
+            ContextCompat.getColor(
                 context,
                 R.color.stats_bar_chart_top
-        )
+            ), ContextCompat.getColor(
+                context,
+                R.color.stats_bar_chart_top
+            )
         )
         dataSet.formLineWidth = 0f
         dataSet.setDrawValues(false)
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(
-                context,
-                R.color.stats_bar_chart_accent_top
+            context,
+            R.color.stats_bar_chart_accent_top
         )
         dataSet.highLightAlpha = 255
         return dataSet
@@ -252,20 +252,20 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val dataSet = BarDataSet(cut, "Overlapping data")
         dataSet.color = ContextCompat.getColor(context, R.color.primary_60)
         dataSet.setGradientColor(
-                ContextCompat.getColor(
-                        context,
-                        R.color.stats_bar_chart_bottom
-                ), ContextCompat.getColor(
+            ContextCompat.getColor(
                 context,
                 R.color.stats_bar_chart_bottom
-        )
+            ), ContextCompat.getColor(
+                context,
+                R.color.stats_bar_chart_bottom
+            )
         )
         dataSet.formLineWidth = 0f
         dataSet.setDrawValues(false)
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(
-                context,
-                R.color.stats_bar_chart_accent_bottom
+            context,
+            R.color.stats_bar_chart_accent_bottom
         )
         dataSet.highLightAlpha = 255
         return dataSet
@@ -279,19 +279,19 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val dataSet = BarDataSet(highlightedDataSet, "Highlight")
         dataSet.color = ContextCompat.getColor(context, android.R.color.transparent)
         dataSet.setGradientColor(
-                ContextCompat.getColor(
-                        context,
-                        android.R.color.transparent
-                ), ContextCompat.getColor(
+            ContextCompat.getColor(
                 context,
                 android.R.color.transparent
-        )
+            ), ContextCompat.getColor(
+                context,
+                android.R.color.transparent
+            )
         )
         dataSet.formLineWidth = 0f
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(
-                context,
-                R.color.stats_bar_chart_accent_top
+            context,
+            R.color.stats_bar_chart_accent_top
         )
         dataSet.setDrawValues(false)
         dataSet.highLightAlpha = 51
@@ -303,8 +303,8 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         entries: List<T>
     ): List<T> {
         return if (count < entries.size) entries.subList(
-                entries.size - count,
-                entries.size
+            entries.size - count,
+            entries.size
         ) else {
             entries
         }
@@ -321,9 +321,9 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun toBarEntry(bar: Bar, index: Int): BarEntry {
         return BarEntry(
-                index.toFloat(),
-                bar.value.toFloat(),
-                bar.id
+            index.toFloat(),
+            bar.value.toFloat(),
+            bar.id
         )
     }
 

@@ -7,5 +7,6 @@ sealed class BottomSheetUiState(val isVisible: Boolean) {
         val title: UiString,
         val categories: List<SubfilterCategory>
     ) : BottomSheetUiState(true)
+
     object BottomSheetHidden : BottomSheetUiState(false)
 }

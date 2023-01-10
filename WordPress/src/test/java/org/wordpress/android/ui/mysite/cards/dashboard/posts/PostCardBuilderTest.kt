@@ -39,16 +39,19 @@ private val POST_DATE = SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2021-12-0
 // This class contains placeholder tests until mock data is removed
 @ExperimentalCoroutinesApi
 class PostCardBuilderTest : BaseUnitTest() {
-    @Mock private lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock private lateinit var appLogWrapper: AppLogWrapper
+    @Mock
+    private lateinit var localeManagerWrapper: LocaleManagerWrapper
+
+    @Mock
+    private lateinit var appLogWrapper: AppLogWrapper
 
     private lateinit var builder: PostCardBuilder
     private val post = PostCardModel(
-            id = POST_ID,
-            title = POST_TITLE,
-            content = POST_CONTENT,
-            featuredImage = FEATURED_IMAGE_URL,
-            date = POST_DATE
+        id = POST_ID,
+        title = POST_TITLE,
+        content = POST_CONTENT,
+        featuredImage = FEATURED_IMAGE_URL,
+        date = POST_DATE
     )
 
     private val onPostCardFooterLinkClick: (PostCardType) -> Unit = { }
@@ -129,20 +132,20 @@ class PostCardBuilderTest : BaseUnitTest() {
         val postsCard = buildPostsCard(posts).filterCreateFirstPostCard()
 
         assertThat(postsCard).isEqualTo(
-                PostCardWithoutPostItems(
-                        postCardType = PostCardType.CREATE_FIRST,
-                        title = UiStringRes(R.string.my_site_create_first_post_title),
-                        excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
-                        imageRes = R.drawable.img_write_212dp,
-                        footerLink = FooterLink(
-                                label = UiStringRes(R.string.my_site_post_card_link_create_post),
-                                onClick = onPostCardFooterLinkClick
-                        ),
-                        onClick = ListItemInteraction.create(
-                                PostItemClickParams(postCardType = CREATE_FIRST, postId = NOT_SET),
-                                onPostItemClick
-                        )
+            PostCardWithoutPostItems(
+                postCardType = PostCardType.CREATE_FIRST,
+                title = UiStringRes(R.string.my_site_create_first_post_title),
+                excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
+                imageRes = R.drawable.img_write_212dp,
+                footerLink = FooterLink(
+                    label = UiStringRes(R.string.my_site_post_card_link_create_post),
+                    onClick = onPostCardFooterLinkClick
+                ),
+                onClick = ListItemInteraction.create(
+                    PostItemClickParams(postCardType = CREATE_FIRST, postId = NOT_SET),
+                    onPostItemClick
                 )
+            )
         )
     }
 
@@ -191,20 +194,20 @@ class PostCardBuilderTest : BaseUnitTest() {
         val postsCard = buildPostsCard(posts).filterCreateNextPostCard()
 
         assertThat(postsCard).isEqualTo(
-                PostCardWithoutPostItems(
-                        postCardType = PostCardType.CREATE_NEXT,
-                        title = UiStringRes(R.string.my_site_create_next_post_title),
-                        excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
-                        imageRes = R.drawable.img_write_212dp,
-                        footerLink = FooterLink(
-                                label = UiStringRes(R.string.my_site_post_card_link_create_post),
-                                onClick = onPostCardFooterLinkClick
-                        ),
-                        ListItemInteraction.create(
-                                PostItemClickParams(postCardType = PostCardType.CREATE_NEXT, postId = NOT_SET),
-                                onPostItemClick
-                        )
+            PostCardWithoutPostItems(
+                postCardType = PostCardType.CREATE_NEXT,
+                title = UiStringRes(R.string.my_site_create_next_post_title),
+                excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
+                imageRes = R.drawable.img_write_212dp,
+                footerLink = FooterLink(
+                    label = UiStringRes(R.string.my_site_post_card_link_create_post),
+                    onClick = onPostCardFooterLinkClick
+                ),
+                ListItemInteraction.create(
+                    PostItemClickParams(postCardType = PostCardType.CREATE_NEXT, postId = NOT_SET),
+                    onPostItemClick
                 )
+            )
         )
     }
 
@@ -235,7 +238,7 @@ class PostCardBuilderTest : BaseUnitTest() {
         val postsCard = buildPostsCard(posts).filterDraftPostCard()
 
         assertThat(postsCard?.footerLink?.label)
-                .isEqualTo(UiStringRes(R.string.my_site_post_card_link_go_to_drafts))
+            .isEqualTo(UiStringRes(R.string.my_site_post_card_link_go_to_drafts))
     }
 
     /* SCHEDULED POST CARD */
@@ -265,7 +268,7 @@ class PostCardBuilderTest : BaseUnitTest() {
         val postsCard = buildPostsCard(posts).filterScheduledPostCard()
 
         assertThat(postsCard?.footerLink?.label)
-                .isEqualTo(UiStringRes(R.string.my_site_post_card_link_go_to_scheduled_posts))
+            .isEqualTo(UiStringRes(R.string.my_site_post_card_link_go_to_scheduled_posts))
     }
 
     /* DRAFT OR SCHEDULED POST ITEM - TITLE */
@@ -388,11 +391,11 @@ class PostCardBuilderTest : BaseUnitTest() {
             )?.firstOrNull { it.postCardType == PostCardType.SCHEDULED }
 
     private fun buildPostsCard(posts: PostsCardModel) = builder.build(
-            PostCardBuilderParams(
-                    posts = posts,
-                    onPostItemClick = onPostItemClick,
-                    onFooterLinkClick = onPostCardFooterLinkClick
-            )
+        PostCardBuilderParams(
+            posts = posts,
+            onPostItemClick = onPostItemClick,
+            onFooterLinkClick = onPostCardFooterLinkClick
+        )
     )
 
     private fun getPosts(
@@ -400,8 +403,8 @@ class PostCardBuilderTest : BaseUnitTest() {
         draftPosts: List<PostCardModel> = emptyList(),
         scheduledPosts: List<PostCardModel> = emptyList()
     ) = PostsCardModel(
-            hasPublished = hasPublished,
-            draft = draftPosts,
-            scheduled = scheduledPosts
+        hasPublished = hasPublished,
+        draft = draftPosts,
+        scheduled = scheduledPosts
     )
 }

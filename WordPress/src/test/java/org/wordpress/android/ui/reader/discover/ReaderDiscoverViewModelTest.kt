@@ -92,17 +92,38 @@ private const val ON_RECOMMENDED_BLOG_FOLLOW_CLICKED_PARAM_POSITION = 2
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderDiscoverViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var readerDiscoverDataProvider: ReaderDiscoverDataProvider
-    @Mock private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
-    @Mock private lateinit var menuUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
-    @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
-    @Mock private lateinit var reblogUseCase: ReblogUseCase
-    @Mock private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
-    @Mock private lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
-    @Mock private lateinit var readerTracker: ReaderTracker
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock private lateinit var displayUtilsWrapper: DisplayUtilsWrapper
-    @Mock private lateinit var parentViewModel: ReaderViewModel
+    @Mock
+    private lateinit var readerDiscoverDataProvider: ReaderDiscoverDataProvider
+
+    @Mock
+    private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
+
+    @Mock
+    private lateinit var menuUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
+
+    @Mock
+    private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
+
+    @Mock
+    private lateinit var reblogUseCase: ReblogUseCase
+
+    @Mock
+    private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+
+    @Mock
+    private lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
+
+    @Mock
+    private lateinit var readerTracker: ReaderTracker
+
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    private lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+
+    @Mock
+    private lateinit var parentViewModel: ReaderViewModel
 
     private val fakeDiscoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>()
     private val fakeCommunicationChannel = MutableLiveData<Event<ReaderDiscoverCommunication>>()
@@ -115,18 +136,18 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     @Suppress("LongMethod")
     fun setUp() = test {
         viewModel = ReaderDiscoverViewModel(
-                uiStateBuilder,
-                menuUiStateBuilder,
-                readerPostCardActionsHandler,
-                readerDiscoverDataProvider,
-                reblogUseCase,
-                readerUtilsWrapper,
-                appPrefsWrapper,
-                readerTracker,
-                displayUtilsWrapper,
-                getFollowedTagsUseCase,
-                testDispatcher(),
-                testDispatcher()
+            uiStateBuilder,
+            menuUiStateBuilder,
+            readerPostCardActionsHandler,
+            readerDiscoverDataProvider,
+            reblogUseCase,
+            readerUtilsWrapper,
+            appPrefsWrapper,
+            readerTracker,
+            displayUtilsWrapper,
+            getFollowedTagsUseCase,
+            testDispatcher(),
+            testDispatcher()
         )
         whenever(readerDiscoverDataProvider.discoverFeed).thenReturn(fakeDiscoverFeed)
         whenever(readerPostCardActionsHandler.navigationEvents).thenReturn(fakeNavigationFeed)
@@ -134,56 +155,56 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         whenever(readerUtilsWrapper.getTagFromTagName(anyOrNull(), anyOrNull())).thenReturn(mock())
         whenever(menuUiStateBuilder.buildMoreMenuItems(anyOrNull(), anyOrNull())).thenReturn(mock())
         whenever(
-                uiStateBuilder.mapPostToUiState(
-                        source = anyString(),
-                        post = anyOrNull(),
-                        isDiscover = anyBoolean(),
-                        photonWidth = anyInt(),
-                        photonHeight = anyInt(),
-                        postListType = anyOrNull(),
-                        onButtonClicked = anyOrNull(),
-                        onItemClicked = anyOrNull(),
-                        onItemRendered = anyOrNull(),
-                        onDiscoverSectionClicked = anyOrNull(),
-                        onMoreButtonClicked = anyOrNull(),
-                        onMoreDismissed = anyOrNull(),
-                        onVideoOverlayClicked = anyOrNull(),
-                        onPostHeaderViewClicked = anyOrNull(),
-                        onTagItemClicked = anyOrNull(),
-                        moreMenuItems = anyOrNull()
-                )
+            uiStateBuilder.mapPostToUiState(
+                source = anyString(),
+                post = anyOrNull(),
+                isDiscover = anyBoolean(),
+                photonWidth = anyInt(),
+                photonHeight = anyInt(),
+                postListType = anyOrNull(),
+                onButtonClicked = anyOrNull(),
+                onItemClicked = anyOrNull(),
+                onItemRendered = anyOrNull(),
+                onDiscoverSectionClicked = anyOrNull(),
+                onMoreButtonClicked = anyOrNull(),
+                onMoreDismissed = anyOrNull(),
+                onVideoOverlayClicked = anyOrNull(),
+                onPostHeaderViewClicked = anyOrNull(),
+                onTagItemClicked = anyOrNull(),
+                moreMenuItems = anyOrNull()
+            )
         ).thenAnswer {
             createDummyReaderPostUiState(
-                    it.getArgument(POST_PARAM_POSITION),
-                    it.getArgument(ON_ITEM_RENDERED_PARAM_POSITION),
-                    it.getArgument(ON_TAG_CLICKED_PARAM_POSITION),
-                    it.getArgument(ON_BUTTON_CLICKED_PARAM_POSITION),
-                    it.getArgument(ON_VIDEO_OVERLAY_CLICKED_PARAM_POSITION),
-                    it.getArgument(ON_POST_HEADER_CLICKED_PARAM_POSITION),
-                    it.getArgument(ON_POST_ITEM_CLICKED_PARAM_POSITION),
-                    it.getArgument(ON_MORE_MENU_CLICKED_PARAM_POSITION),
-                    it.getArgument(ON_MORE_MENU_DISMISSED_PARAM_POSITION)
+                it.getArgument(POST_PARAM_POSITION),
+                it.getArgument(ON_ITEM_RENDERED_PARAM_POSITION),
+                it.getArgument(ON_TAG_CLICKED_PARAM_POSITION),
+                it.getArgument(ON_BUTTON_CLICKED_PARAM_POSITION),
+                it.getArgument(ON_VIDEO_OVERLAY_CLICKED_PARAM_POSITION),
+                it.getArgument(ON_POST_HEADER_CLICKED_PARAM_POSITION),
+                it.getArgument(ON_POST_ITEM_CLICKED_PARAM_POSITION),
+                it.getArgument(ON_MORE_MENU_CLICKED_PARAM_POSITION),
+                it.getArgument(ON_MORE_MENU_DISMISSED_PARAM_POSITION)
             )
         }
         whenever(readerDiscoverDataProvider.communicationChannel).thenReturn(fakeCommunicationChannel)
         whenever(uiStateBuilder.mapTagListToReaderInterestUiState(anyOrNull(), anyOrNull())).thenReturn(
-                createReaderInterestsCardUiState(createReaderTagList())
+            createReaderInterestsCardUiState(createReaderTagList())
         )
         whenever(
-                uiStateBuilder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
-                        any(),
-                        any(),
-                        any()
-                )
+            uiStateBuilder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                any(),
+                any(),
+                any()
+            )
         ).thenAnswer {
             createReaderRecommendedBlogsCardUiState(
-                    recommendedBlogs = it.getArgument(RECOMMENDED_BLOG_PARAM_POSITION),
-                    onItemClicked = it.getArgument(
-                            ON_RECOMMENDED_BLOG_ITEM_CLICKED_PARAM_POSITION
-                    ),
-                    onFollowClicked = it.getArgument(
-                            ON_RECOMMENDED_BLOG_FOLLOW_CLICKED_PARAM_POSITION
-                    )
+                recommendedBlogs = it.getArgument(RECOMMENDED_BLOG_PARAM_POSITION),
+                onItemClicked = it.getArgument(
+                    ON_RECOMMENDED_BLOG_ITEM_CLICKED_PARAM_POSITION
+                ),
+                onFollowClicked = it.getArgument(
+                    ON_RECOMMENDED_BLOG_FOLLOW_CLICKED_PARAM_POSITION
+                )
             )
         }
         whenever(reblogUseCase.onReblogSiteSelected(anyInt(), anyOrNull())).thenReturn(mock())
@@ -274,17 +295,17 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
 
     @Test
     fun `if ReaderRecommendedBlogsCard exist then ReaderRecommendedBlogsCardUiState will be present`() =
-            test {
-                // Arrange
-                val uiStates = init(autoUpdateFeed = false).uiStates
+        test {
+            // Arrange
+            val uiStates = init(autoUpdateFeed = false).uiStates
 
-                // Act
-                fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
+            // Act
+            fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
 
-                // Assert
-                val contentUiState = uiStates[1] as ContentUiState
-                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderRecommendedBlogsCardUiState::class.java)
-            }
+            // Assert
+            val contentUiState = uiStates[1] as ContentUiState
+            assertThat(contentUiState.cards.first()).isInstanceOf(ReaderRecommendedBlogsCardUiState::class.java)
+        }
 
     @Test
     fun `if ReaderPostCard exist then ReaderPostUiState will be present in the ContentUIState`() = test {
@@ -303,8 +324,8 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         val uiStates = init(autoUpdateFeed = false).uiStates
         // Act
         fakeDiscoverFeed.value = ReaderDiscoverCards(
-                createWelcomeBannerCard()
-                        .plus(createDummyReaderPostCardList())
+            createWelcomeBannerCard()
+                .plus(createDummyReaderPostCardList())
         )
         // Assert
         val contentUiState = uiStates[1] as ContentUiState
@@ -412,10 +433,10 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState).likeAction.onClicked!!.invoke(2, 200, LIKE)
         // Assert
         verify(readerPostCardActionsHandler).onAction(
-                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post),
-                eq(LIKE),
-                eq(false),
-                anyString()
+            eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post),
+            eq(LIKE),
+            eq(false),
+            anyString()
         )
     }
 
@@ -427,7 +448,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState).onVideoOverlayClicked(2, 200)
         // Assert
         verify(readerPostCardActionsHandler).handleVideoOverlayClicked(
-                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.featuredVideo)
+            eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.featuredVideo)
         )
     }
 
@@ -437,12 +458,12 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         val uiStates = init().uiStates
         // Act
         ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
-                .blogSection.blogSectionClickData!!.onBlogSectionClicked!!.invoke(2, 200)
+            .blogSection.blogSectionClickData!!.onBlogSectionClicked!!.invoke(2, 200)
         // Assert
         verify(readerPostCardActionsHandler).handleHeaderClicked(
-                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.blogId),
-                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.feedId),
-                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.isFollowedByCurrentUser)
+            eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.blogId),
+            eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.feedId),
+            eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.isFollowedByCurrentUser)
         )
     }
 
@@ -452,11 +473,11 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         val uiStates = init().uiStates
         // Act
         ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
-                .onItemClicked.invoke(2, 200)
+            .onItemClicked.invoke(2, 200)
         // Assert
         verify(readerPostCardActionsHandler).handleOnItemClicked(
-                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post),
-                eq(ReaderTracker.SOURCE_DISCOVER)
+            eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post),
+            eq(ReaderTracker.SOURCE_DISCOVER)
         )
     }
 
@@ -527,8 +548,8 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
 
         // Assert
         verify(readerPostCardActionsHandler).handleFollowRecommendedSiteClicked(
-                eq(blog),
-                anyString()
+            eq(blog),
+            anyString()
         )
     }
 
@@ -636,17 +657,17 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     // since we are adding an InterestsYouMayLikeCard we remove one item from the numberOfItems since it counts as 1.
     private fun createDummyReaderCardsList(numberOfItems: Long = NUMBER_OF_ITEMS): ReaderDiscoverCards {
         return ReaderDiscoverCards(
-                if (numberOfItems != 0L) {
-                    createInterestsYouMayLikeCardList()
-                            .plus(createDummyReaderPostCardList(numberOfItems - 1))
-                } else {
-                    listOf()
-                }
+            if (numberOfItems != 0L) {
+                createInterestsYouMayLikeCardList()
+                    .plus(createDummyReaderPostCardList(numberOfItems - 1))
+            } else {
+                listOf()
+            }
         )
     }
 
     private fun createDummyReaderPostCardList(numberOfItems: Long = NUMBER_OF_ITEMS) =
-            (1..numberOfItems).map { ReaderPostCard(createDummyReaderPost(it)) }.toList()
+        (1..numberOfItems).map { ReaderPostCard(createDummyReaderPost(it)) }.toList()
 
     private fun createDummyReaderPost(id: Long): ReaderPost = ReaderPost().apply {
         this.postId = id
@@ -669,52 +690,52 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         onMoreMenuDismissed: (ReaderPostUiState) -> Unit
     ): ReaderPostUiState {
         return ReaderPostUiState(
-                source = "source",
-                postId = post.postId,
-                blogId = post.blogId,
-                feedId = post.feedId,
-                isFollowed = post.isFollowedByCurrentUser,
-                blogSection = ReaderBlogSectionUiState(
-                        post.postId,
-                        post.blogId,
-                        "",
-                        mock(),
-                        "",
-                        "",
-                        "",
-                        false,
-                        blavatarType = BLAVATAR_CIRCULAR,
-                        ReaderBlogSectionClickData(postHeaderClicked, 0)
-                ),
-                tagItems = listOf(TagUiState("", "", false, onTagClicked)),
-                excerpt = "",
-                title = mock(),
-                photoFrameVisibility = false,
-                photoTitle = "",
-                featuredImageUrl = "",
-                featuredImageCornerRadius = mock(),
-                thumbnailStripSection = mock(),
-                videoOverlayVisibility = false,
-                featuredImageVisibility = false,
-                moreMenuVisibility = false,
-                fullVideoUrl = "",
-                discoverSection = mock(),
-                expandableTagsViewVisibility = false,
-                bookmarkAction = PrimaryAction(true, onClicked = onButtonClicked, type = BOOKMARK),
-                likeAction = PrimaryAction(true, onClicked = onButtonClicked, type = LIKE),
-                reblogAction = PrimaryAction(true, onClicked = onButtonClicked, type = REBLOG),
-                commentsAction = PrimaryAction(true, onClicked = onButtonClicked, type = COMMENTS),
-                onItemClicked = onItemClicked,
-                onItemRendered = onItemRendered,
-                onMoreButtonClicked = onMoreMenuClicked,
-                onVideoOverlayClicked = onVideoOverlayClicked,
-                moreMenuItems = mock(),
-                onMoreDismissed = onMoreMenuDismissed
+            source = "source",
+            postId = post.postId,
+            blogId = post.blogId,
+            feedId = post.feedId,
+            isFollowed = post.isFollowedByCurrentUser,
+            blogSection = ReaderBlogSectionUiState(
+                post.postId,
+                post.blogId,
+                "",
+                mock(),
+                "",
+                "",
+                "",
+                false,
+                blavatarType = BLAVATAR_CIRCULAR,
+                ReaderBlogSectionClickData(postHeaderClicked, 0)
+            ),
+            tagItems = listOf(TagUiState("", "", false, onTagClicked)),
+            excerpt = "",
+            title = mock(),
+            photoFrameVisibility = false,
+            photoTitle = "",
+            featuredImageUrl = "",
+            featuredImageCornerRadius = mock(),
+            thumbnailStripSection = mock(),
+            videoOverlayVisibility = false,
+            featuredImageVisibility = false,
+            moreMenuVisibility = false,
+            fullVideoUrl = "",
+            discoverSection = mock(),
+            expandableTagsViewVisibility = false,
+            bookmarkAction = PrimaryAction(true, onClicked = onButtonClicked, type = BOOKMARK),
+            likeAction = PrimaryAction(true, onClicked = onButtonClicked, type = LIKE),
+            reblogAction = PrimaryAction(true, onClicked = onButtonClicked, type = REBLOG),
+            commentsAction = PrimaryAction(true, onClicked = onButtonClicked, type = COMMENTS),
+            onItemClicked = onItemClicked,
+            onItemRendered = onItemRendered,
+            onMoreButtonClicked = onMoreMenuClicked,
+            onVideoOverlayClicked = onVideoOverlayClicked,
+            moreMenuItems = mock(),
+            onMoreDismissed = onMoreMenuDismissed
         )
     }
 
     private fun createReaderInterestsCardUiState(readerTagList: ReaderTagList) =
-            ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState("", mock(), mock()) })
+        ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState("", mock(), mock()) })
 
     private fun createReaderRecommendedBlogsCardUiState(
         recommendedBlogs: List<ReaderBlog>,
@@ -722,19 +743,19 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
     ): ReaderRecommendedBlogsCardUiState {
         return ReaderRecommendedBlogsCardUiState(
-                blogs = recommendedBlogs.map {
-                    ReaderRecommendedBlogUiState(
-                            blogId = it.blogId,
-                            name = it.name,
-                            url = it.url,
-                            description = it.description,
-                            iconUrl = it.imageUrl,
-                            feedId = it.feedId,
-                            onItemClicked = onItemClicked,
-                            onFollowClicked = onFollowClicked,
-                            isFollowed = it.isFollowing
-                    )
-                }
+            blogs = recommendedBlogs.map {
+                ReaderRecommendedBlogUiState(
+                    blogId = it.blogId,
+                    name = it.name,
+                    url = it.url,
+                    description = it.description,
+                    iconUrl = it.imageUrl,
+                    feedId = it.feedId,
+                    onItemClicked = onItemClicked,
+                    onFollowClicked = onFollowClicked,
+                    isFollowed = it.isFollowing
+                )
+            }
         )
     }
 
@@ -749,12 +770,12 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     }
 
     private fun createReaderTag() = ReaderTag(
-            "",
-            "",
-            "",
-            null,
-            mock(),
-            false
+        "",
+        "",
+        "",
+        null,
+        mock(),
+        false
     )
 
     private fun createRecommendedBlog() = ReaderBlog().apply {

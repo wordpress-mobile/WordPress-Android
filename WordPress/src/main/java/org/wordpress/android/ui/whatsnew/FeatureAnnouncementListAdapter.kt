@@ -19,8 +19,11 @@ import javax.inject.Inject
 class FeatureAnnouncementListAdapter(
     val fragment: Fragment
 ) : Adapter<RecyclerView.ViewHolder>() {
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var imageManager: ImageManager
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private var viewModel: FeatureAnnouncementViewModel
     private val list = mutableListOf<FeatureAnnouncementItem>()
     private var isFindOutMoreVisible = true
@@ -28,7 +31,7 @@ class FeatureAnnouncementListAdapter(
     init {
         (fragment.requireActivity().applicationContext as WordPress).component().inject(this)
         viewModel = ViewModelProvider(fragment, viewModelFactory)
-                .get(FeatureAnnouncementViewModel::class.java)
+            .get(FeatureAnnouncementViewModel::class.java)
     }
 
     companion object {
@@ -84,8 +87,8 @@ class FeatureAnnouncementListAdapter(
         parent: ViewGroup,
         val imageManager: ImageManager
     ) : RecyclerView.ViewHolder(
-            LayoutInflater.from(parent.context)
-                    .inflate(R.layout.feature_announcement_list_item, parent, false)
+        LayoutInflater.from(parent.context)
+            .inflate(R.layout.feature_announcement_list_item, parent, false)
     ) {
         private val featureIcon: ImageView = itemView.findViewById(R.id.feature_item_icon)
         private val title: TextView = itemView.findViewById(R.id.feature_title)
@@ -97,8 +100,8 @@ class FeatureAnnouncementListAdapter(
 
             if (!TextUtils.isEmpty(featureAnnouncementItem.iconUrl)) {
                 imageManager.loadIntoCircle(
-                        featureIcon, ImageType.PLAN,
-                        StringUtils.notNullStr(featureAnnouncementItem.iconUrl)
+                    featureIcon, ImageType.PLAN,
+                    StringUtils.notNullStr(featureAnnouncementItem.iconUrl)
                 )
             } else {
                 val originalBase64String = StringUtils.notNullStr(featureAnnouncementItem.iconBase64)
@@ -113,10 +116,10 @@ class FeatureAnnouncementListAdapter(
         parent: ViewGroup,
         val viewModel: FeatureAnnouncementViewModel
     ) :
-            RecyclerView.ViewHolder(
-                    LayoutInflater.from(parent.context)
-                            .inflate(R.layout.feature_announcement_list_footer, parent, false)
-            ) {
+        RecyclerView.ViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.feature_announcement_list_footer, parent, false)
+        ) {
         private val findMoreButton: TextView = itemView.findViewById(R.id.feature_announcement_find_mode_button)
 
         fun bind() {

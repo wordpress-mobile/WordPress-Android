@@ -27,15 +27,32 @@ import org.wordpress.android.viewmodel.ContextProvider
 
 @ExperimentalCoroutinesApi
 class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
-    @Mock lateinit var deepLinkHandlers: DeepLinkHandlers
-    @Mock lateinit var accountStore: AccountStore
-    @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
-    @Mock lateinit var serverTrackingHandler: ServerTrackingHandler
-    @Mock lateinit var deepLinkTrackingUtils: DeepLinkTrackingUtils
-    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
-    @Mock lateinit var contextProvider: ContextProvider
-    @Mock lateinit var context: Context
-    @Mock lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
+    @Mock
+    lateinit var deepLinkHandlers: DeepLinkHandlers
+
+    @Mock
+    lateinit var accountStore: AccountStore
+
+    @Mock
+    lateinit var deepLinkUriUtils: DeepLinkUriUtils
+
+    @Mock
+    lateinit var serverTrackingHandler: ServerTrackingHandler
+
+    @Mock
+    lateinit var deepLinkTrackingUtils: DeepLinkTrackingUtils
+
+    @Mock
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+
+    @Mock
+    lateinit var contextProvider: ContextProvider
+
+    @Mock
+    lateinit var context: Context
+
+    @Mock
+    lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
     private lateinit var viewModel: DeepLinkingIntentReceiverViewModel
     private var isFinished = false
     private lateinit var navigateActions: MutableList<NavigateAction>
@@ -43,14 +60,14 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = DeepLinkingIntentReceiverViewModel(
-                testDispatcher(),
-                deepLinkHandlers,
-                deepLinkUriUtils,
-                accountStore,
-                serverTrackingHandler,
-                deepLinkTrackingUtils,
-                analyticsUtilsWrapper,
-                openWebLinksWithJetpackHelper
+            testDispatcher(),
+            deepLinkHandlers,
+            deepLinkUriUtils,
+            accountStore,
+            serverTrackingHandler,
+            deepLinkTrackingUtils,
+            analyticsUtilsWrapper,
+            openWebLinksWithJetpackHelper
         )
         isFinished = false
         viewModel.finish.observeForever {

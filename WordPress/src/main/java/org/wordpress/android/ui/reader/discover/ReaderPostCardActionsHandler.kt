@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -145,10 +144,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 }
             }
             handleAction(
-                    post,
-                    type,
-                    isBookmarkList,
-                    source
+                post,
+                type,
+                isBookmarkList,
+                source
             )
         }
     }
@@ -163,12 +162,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
             }
             FetchSiteState.Failed.NoNetwork -> {
                 _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                    Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
                 )
             }
             FetchSiteState.Failed.RequestFailed -> {
                 _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                    Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
                 )
             }
         }
@@ -206,16 +205,16 @@ class ReaderPostCardActionsHandler @Inject constructor(
     ) {
         withContext(bgDispatcher) {
             appRatingDialogWrapper.incrementInteractions(
-                    AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
+                AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
             )
 
             if (post.isBookmarked) {
                 readerTracker.trackBlog(
-                        AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST,
-                        post.blogId,
-                        post.feedId,
-                        post.isFollowedByCurrentUser,
-                        source
+                    AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST,
+                    post.blogId,
+                    post.feedId,
+                    post.isFollowedByCurrentUser,
+                    source
                 )
             }
             _navigationEvents.postValue(Event(ShowPostDetail(post)))
@@ -237,10 +236,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
     suspend fun handleReportPostClicked(post: ReaderPost) {
         withContext(bgDispatcher) {
             readerTracker.trackBlogPost(
-                    AnalyticsTracker.Stat.READER_POST_REPORTED,
-                    post.blogId,
-                    post.postId,
-                    post.isJetpack
+                AnalyticsTracker.Stat.READER_POST_REPORTED,
+                post.blogId,
+                post.postId,
+                post.isJetpack
             )
             _navigationEvents.postValue(Event(ShowReportPost(post.blogUrl)))
         }
@@ -249,11 +248,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
     suspend fun handleReportUserClicked(post: ReaderPost) {
         withContext(bgDispatcher) {
             readerTracker.trackBlogPostAuthor(
-                    AnalyticsTracker.Stat.READER_USER_REPORTED,
-                    post.blogId,
-                    post.postId,
-                    post.isJetpack,
-                    post.authorId
+                AnalyticsTracker.Stat.READER_USER_REPORTED,
+                post.blogId,
+                post.postId,
+                post.isJetpack,
+                post.authorId
             )
             _navigationEvents.postValue(Event(ShowReportUser(post.blogUrl, post.authorId)))
         }
@@ -270,21 +269,21 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 is Error -> {
                     state.message?.let {
                         _snackbarEvents.postValue(
-                                Event(SnackbarMessageHolder(it))
+                            Event(SnackbarMessageHolder(it))
                         )
                     }
                 }
                 is PostSeenStateChanged -> {
                     state.userMessage?.let {
                         _snackbarEvents.postValue(
-                                Event(SnackbarMessageHolder(it))
+                            Event(SnackbarMessageHolder(it))
                         )
                     }
                 }
                 is UserNotAuthenticated -> { // should not happen with current implementation
                     AppLog.e(
-                            T.READER,
-                            "User was not authenticated when attempting to toggle Seen/Unseen status of the post"
+                        T.READER,
+                        "User was not authenticated when attempting to toggle Seen/Unseen status of the post"
                     )
                 }
             }
@@ -296,9 +295,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
         source: String
     ) {
         val param = ReaderSiteFollowUseCase.Param(
-                blogId = recommendedBlogUiState.blogId,
-                blogName = recommendedBlogUiState.name,
-                feedId = recommendedBlogUiState.feedId
+            blogId = recommendedBlogUiState.blogId,
+            blogName = recommendedBlogUiState.name,
+            feedId = recommendedBlogUiState.feedId
         )
         followSite(param, source)
     }
@@ -308,11 +307,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
         source: String
     ) {
         followSite(
-                ReaderSiteFollowUseCase.Param(
-                        post.blogId,
-                        post.feedId,
-                        post.blogName
-                ), source
+            ReaderSiteFollowUseCase.Param(
+                post.blogId,
+                post.feedId,
+                post.blogName
+            ), source
         )
     }
 
@@ -324,12 +323,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
             when (it) {
                 is FollowSiteState.Failed.NoNetwork -> {
                     _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                        Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
                     )
                 }
                 is FollowSiteState.Failed.RequestFailed -> {
                     _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                        Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
                     )
                 }
                 is FollowSiteState.AlreadyRunning, FollowSiteState.Success -> Unit // Do nothing
@@ -339,9 +338,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
                     if (it.showEnableNotification) {
                         val action = prepareEnableNotificationSnackbarAction(
-                                followSiteParam.blogName,
-                                it.blogId,
-                                it.feedId
+                            followSiteParam.blogName,
+                            it.blogId,
+                            it.feedId
                         )
                         action.invoke()
                     } else if (it.deleteNotificationSubscription) {
@@ -359,12 +358,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
             }
             is SiteNotificationState.Failed.NoNetwork -> {
                 _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                    Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
                 )
             }
             is SiteNotificationState.Failed.RequestFailed -> {
                 _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                    Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
                 )
             }
         }
@@ -376,11 +375,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
         source: String
     ) {
         readerTracker.trackBlog(
-                AnalyticsTracker.Stat.SHARED_ITEM_READER,
-                post.blogId,
-                post.feedId,
-                post.isFollowedByCurrentUser,
-                source
+            AnalyticsTracker.Stat.SHARED_ITEM_READER,
+            post.blogId,
+            post.feedId,
+            post.isFollowedByCurrentUser,
+            source
         )
         try {
             _navigationEvents.postValue(Event(SharePost(post)))
@@ -404,29 +403,29 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 is BlockSiteState.SiteBlockedInLocalDb -> {
                     _refreshPosts.postValue(Event(Unit))
                     _snackbarEvents.postValue(
-                            Event(
-                                    SnackbarMessageHolder(
-                                            UiStringRes(R.string.reader_toast_blog_blocked),
-                                            UiStringRes(R.string.undo),
-                                            {
-                                                coroutineScope.launch {
-                                                    undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData, source)
-                                                    _refreshPosts.postValue(Event(Unit))
-                                                }
-                                            })
-                            )
+                        Event(
+                            SnackbarMessageHolder(
+                                UiStringRes(R.string.reader_toast_blog_blocked),
+                                UiStringRes(R.string.undo),
+                                {
+                                    coroutineScope.launch {
+                                        undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData, source)
+                                        _refreshPosts.postValue(Event(Unit))
+                                    }
+                                })
+                        )
                     )
                 }
                 BlockSiteState.Success, BlockSiteState.Failed.AlreadyRunning -> Unit // do nothing
                 BlockSiteState.Failed.NoNetwork -> {
                     _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
+                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
                     )
                 }
                 BlockSiteState.Failed.RequestFailed -> {
                     _refreshPosts.postValue(Event(Unit))
                     _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
+                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
                     )
                 }
             }
@@ -442,17 +441,17 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 is BlockUserState.UserBlockedInLocalDb -> {
                     _refreshPosts.postValue(Event(Unit))
                     _snackbarEvents.postValue(
-                            Event(
-                                    SnackbarMessageHolder(
-                                            UiStringRes(R.string.reader_toast_user_blocked),
-                                            UiStringRes(R.string.undo),
-                                            {
-                                                coroutineScope.launch {
-                                                    blockUserUseCase.undoBlockUser(it.blockedUserData)
-                                                    _refreshPosts.postValue(Event(Unit))
-                                                }
-                                            })
-                            )
+                        Event(
+                            SnackbarMessageHolder(
+                                UiStringRes(R.string.reader_toast_user_blocked),
+                                UiStringRes(R.string.undo),
+                                {
+                                    coroutineScope.launch {
+                                        blockUserUseCase.undoBlockUser(it.blockedUserData)
+                                        _refreshPosts.postValue(Event(Unit))
+                                    }
+                                })
+                        )
                     )
                 }
                 BlockUserState.Failed.AlreadyRunning -> Unit // do nothing
@@ -474,7 +473,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 is PostLikeState.Failed.RequestFailed -> {
                     _refreshPosts.postValue(Event(Unit))
                     _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
                     )
                 }
             }
@@ -489,7 +488,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         bookmarkUseCase.toggleBookmark(post, isBookmarkList, source).collect {
             when (it) {
                 is PreLoadPostContent -> _preloadPostEvents.postValue(
-                        Event(PreLoadPostContent(post.blogId, post.postId))
+                    Event(PreLoadPostContent(post.blogId, post.postId))
                 )
                 is Success -> {
                     // Content needs to be manually refreshed in the legacy ReaderPostListAdapter and
@@ -498,30 +497,30 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
                     val showSnackbarAction = {
                         _snackbarEvents.postValue(
-                                Event(
-                                        SnackbarMessageHolder(
-                                                UiStringRes(R.string.reader_bookmark_snack_title),
-                                                UiStringRes(R.string.reader_bookmark_snack_btn),
-                                                buttonAction = {
-                                                    readerTracker.track(
-                                                            AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN,
-                                                            ReaderTracker.SOURCE_POST_LIST_SAVED_POST_NOTICE
-                                                    )
-                                                    _navigationEvents.postValue(Event(ShowBookmarkedTab))
-                                                })
-                                )
+                            Event(
+                                SnackbarMessageHolder(
+                                    UiStringRes(R.string.reader_bookmark_snack_title),
+                                    UiStringRes(R.string.reader_bookmark_snack_btn),
+                                    buttonAction = {
+                                        readerTracker.track(
+                                            AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN,
+                                            ReaderTracker.SOURCE_POST_LIST_SAVED_POST_NOTICE
+                                        )
+                                        _navigationEvents.postValue(Event(ShowBookmarkedTab))
+                                    })
+                            )
                         )
                     }
                     if (it.bookmarked && !isBookmarkList) {
                         if (appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()) {
                             _navigationEvents.postValue(
-                                    Event(
-                                            ShowBookmarkedSavedOnlyLocallyDialog(
-                                                    okButtonAction = {
-                                                        appPrefsWrapper.setBookmarksSavedLocallyDialogShown()
-                                                        showSnackbarAction.invoke()
-                                                    })
-                                    )
+                                Event(
+                                    ShowBookmarkedSavedOnlyLocallyDialog(
+                                        okButtonAction = {
+                                            appPrefsWrapper.setBookmarksSavedLocallyDialogShown()
+                                            showSnackbarAction.invoke()
+                                        })
+                                )
                             )
                         } else {
                             showSnackbarAction.invoke()
@@ -543,11 +542,15 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleCommentsClicked(postId: Long, blogId: Long, source: String) {
-        _navigationEvents.postValue(Event(ShowReaderComments(
-                blogId,
-                postId,
-                ThreadedCommentsActionSource.mapReaderPostSource(source)
-        )))
+        _navigationEvents.postValue(
+            Event(
+                ShowReaderComments(
+                    blogId,
+                    postId,
+                    ThreadedCommentsActionSource.mapReaderPostSource(source)
+                )
+            )
+        )
     }
 
     private fun prepareEnableNotificationSnackbarAction(
@@ -559,30 +562,30 @@ class ReaderPostCardActionsHandler @Inject constructor(
             val thisSite = resourceProvider.getString(R.string.reader_followed_blog_notifications_this)
             val blog = if (blogName?.isEmpty() == true) thisSite else blogName
             val notificationMessage = htmlMessageUtils
-                    .getHtmlMessageFromStringFormatResId(
-                            R.string.reader_followed_blog_notifications,
-                            "<b>",
-                            blog,
-                            "</b>"
-                    )
+                .getHtmlMessageFromStringFormatResId(
+                    R.string.reader_followed_blog_notifications,
+                    "<b>",
+                    blog,
+                    "</b>"
+                )
             _snackbarEvents.postValue(
-                    Event(
-                            SnackbarMessageHolder(
-                                    UiStringText(notificationMessage),
-                                    UiStringRes(R.string.reader_followed_blog_notifications_action),
-                                    buttonAction = {
-                                        coroutineScope.launch(bgDispatcher) {
-                                            readerTracker.trackBlog(
-                                                    AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
-                                                    blogId,
-                                                    feedId
-                                            )
-                                            siteNotificationsUseCase.updateSubscription(blogId, NEW)
-                                            siteNotificationsUseCase.updateNotificationEnabledForBlogInDb(blogId, true)
-                                        }
-                                    }
-                            )
+                Event(
+                    SnackbarMessageHolder(
+                        UiStringText(notificationMessage),
+                        UiStringRes(R.string.reader_followed_blog_notifications_action),
+                        buttonAction = {
+                            coroutineScope.launch(bgDispatcher) {
+                                readerTracker.trackBlog(
+                                    AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
+                                    blogId,
+                                    feedId
+                                )
+                                siteNotificationsUseCase.updateSubscription(blogId, NEW)
+                                siteNotificationsUseCase.updateNotificationEnabledForBlogInDb(blogId, true)
+                            }
+                        }
                     )
+                )
             )
         }
     }

@@ -70,13 +70,13 @@ class ReferrersUseCase(
     private val useCaseMode: UseCaseMode,
     private val popupMenuHandler: ReferrerPopupMenuHandler,
 ) : GranularStatefulUseCase<ReferrersModel, SelectedGroup>(
-        REFERRERS,
-        mainDispatcher,
-        backgroundDispatcher,
-        statsSiteProvider,
-        selectedDateProvider,
-        statsGranularity,
-        SelectedGroup()
+    REFERRERS,
+    mainDispatcher,
+    backgroundDispatcher,
+    statsSiteProvider,
+    selectedDateProvider,
+    statsGranularity,
+    SelectedGroup()
 ) {
     private val itemsToLoad = if (useCaseMode == BLOCK) BLOCK_ITEM_COUNT else VIEW_ALL_ITEM_COUNT
     private val itemsToShow = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
@@ -85,20 +85,20 @@ class ReferrersUseCase(
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): ReferrersModel? {
         return referrersStore.getReferrers(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate
         )
     }
 
     override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<ReferrersModel> {
         val response = referrersStore.fetchReferrers(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate,
-                forced
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate,
+            forced
         )
         val model = response.model
         val error = response.error
@@ -128,38 +128,38 @@ class ReferrersUseCase(
             val itemCount = min(itemsToShow, domainModel.groups.size)
             domainModel.groups.subList(0, itemCount).forEachIndexed { index, group ->
                 val contentDescription =
-                        contentDescriptionHelper.buildContentDescription(
-                                header,
-                                group.name ?: "",
-                                group.total ?: 0
-                        )
+                    contentDescriptionHelper.buildContentDescription(
+                        header,
+                        group.name ?: "",
+                        group.total ?: 0
+                    )
                 val spam = group.markedAsSpam
                 val icon = buildIcon(group.icon, spam)
                 if (group.referrers.isEmpty()) {
                     val headerItem = ListItemWithIcon(
-                            icon = icon,
-                            iconUrl = if (icon == null) group.icon else null,
-                            textStyle = buildTextStyle(spam),
-                            text = group.name,
-                            value = group.total?.let { statsUtils.toFormattedString(it) },
-                            showDivider = index < domainModel.groups.size - 1,
-                            navigationAction = group.url?.let {
-                                create(it, this::onItemClick)
-                            },
-                            longClickAction = { view -> this.onMenuClick(view, group, spam) },
-                            contentDescription = contentDescription
+                        icon = icon,
+                        iconUrl = if (icon == null) group.icon else null,
+                        textStyle = buildTextStyle(spam),
+                        text = group.name,
+                        value = group.total?.let { statsUtils.toFormattedString(it) },
+                        showDivider = index < domainModel.groups.size - 1,
+                        navigationAction = group.url?.let {
+                            create(it, this::onItemClick)
+                        },
+                        longClickAction = { view -> this.onMenuClick(view, group, spam) },
+                        contentDescription = contentDescription
                     )
                     items.add(headerItem)
                 } else {
                     val headerItem = ListItemWithIcon(
-                            icon = icon,
-                            iconUrl = if (icon == null) group.icon else null,
-                            textStyle = buildTextStyle(spam),
-                            text = group.name,
-                            value = group.total?.let { statsUtils.toFormattedString(it) },
-                            showDivider = index < domainModel.groups.size - 1,
-                            contentDescription = contentDescription,
-                            longClickAction = { view -> this.onMenuClick(view, group, spam) }
+                        icon = icon,
+                        iconUrl = if (icon == null) group.icon else null,
+                        textStyle = buildTextStyle(spam),
+                        text = group.name,
+                        value = group.total?.let { statsUtils.toFormattedString(it) },
+                        showDivider = index < domainModel.groups.size - 1,
+                        contentDescription = contentDescription,
+                        longClickAction = { view -> this.onMenuClick(view, group, spam) }
                     )
                     val isExpanded = group.groupId == uiState.groupId
                     items.add(ExpandableItem(headerItem, isExpanded) { changedExpandedState ->
@@ -175,21 +175,21 @@ class ReferrersUseCase(
                                 NORMAL
                             }
                             ListItemWithIcon(
-                                    icon = referrerIcon,
-                                    iconUrl = if (referrerIcon == null) referrer.icon else null,
-                                    iconStyle = iconStyle,
-                                    textStyle = buildTextStyle(referrerSpam),
-                                    text = referrer.name,
-                                    value = statsUtils.toFormattedString(referrer.views),
-                                    showDivider = false,
-                                    navigationAction = referrer.url?.let {
-                                        create(it, this::onItemClick)
-                                    },
-                                    contentDescription = contentDescriptionHelper.buildContentDescription(
-                                            header,
-                                            referrer.name,
-                                            referrer.views
-                                    )
+                                icon = referrerIcon,
+                                iconUrl = if (referrerIcon == null) referrer.icon else null,
+                                iconStyle = iconStyle,
+                                textStyle = buildTextStyle(referrerSpam),
+                                text = referrer.name,
+                                value = statsUtils.toFormattedString(referrer.views),
+                                showDivider = false,
+                                navigationAction = referrer.url?.let {
+                                    create(it, this::onItemClick)
+                                },
+                                contentDescription = contentDescriptionHelper.buildContentDescription(
+                                    header,
+                                    referrer.name,
+                                    referrer.views
+                                )
                             )
                         })
                         items.add(Divider)
@@ -201,10 +201,10 @@ class ReferrersUseCase(
                     (useCaseMode == BLOCK && domainModel.hasMore)
             if (shouldShowViewMore) {
                 items.add(
-                        Link(
-                                text = R.string.stats_insights_view_more,
-                                navigateAction = create(statsGranularity, this::onViewMoreClicked)
-                        )
+                    Link(
+                        text = R.string.stats_insights_view_more,
+                        navigateAction = create(statsGranularity, this::onViewMoreClicked)
+                    )
                 )
             }
         }
@@ -220,13 +220,13 @@ class ReferrersUseCase(
         // If the wordpress group and search group can be found add them, otherwise add the first and second groups
         if (wordPressGroup != null && searchGroup != null) {
             firstPie = Pie(
-                    resourceProvider.getString(R.string.stats_referrers_pie_chart_wordpress),
-                    wordPressGroup.total ?: 0
+                resourceProvider.getString(R.string.stats_referrers_pie_chart_wordpress),
+                wordPressGroup.total ?: 0
             )
 
             secondPie = Pie(
-                    resourceProvider.getString(R.string.stats_referrers_pie_chart_search),
-                    searchGroup.total ?: 0
+                resourceProvider.getString(R.string.stats_referrers_pie_chart_search),
+                searchGroup.total ?: 0
             )
         } else {
             if (domainModel.groups.isNotEmpty()) {
@@ -239,8 +239,8 @@ class ReferrersUseCase(
 
         val othersPie = if (domainModel.groups.size > 2) {
             Pie(
-                    resourceProvider.getString(R.string.stats_referrers_pie_chart_others),
-                    domainModel.totalViews - (firstPie?.value ?: 0) - (secondPie?.value ?: 0)
+                resourceProvider.getString(R.string.stats_referrers_pie_chart_others),
+                domainModel.totalViews - (firstPie?.value ?: 0) - (secondPie?.value ?: 0)
             )
         } else {
             null
@@ -249,14 +249,14 @@ class ReferrersUseCase(
         val totalLabel = resourceProvider.getString(R.string.stats_referrers_pie_chart_total_label)
         val totalValue = pies.sumOf { it.value }
         return PieChartItem(
-                pies,
-                totalLabel,
-                statsUtils.toFormattedString(totalValue),
-                COLOR_LIST,
-                contentDescriptionHelper.buildContentDescription(
-                        R.string.stats_referrers_pie_chart_total_label,
-                        totalValue
-                )
+            pies,
+            totalLabel,
+            statsUtils.toFormattedString(totalValue),
+            COLOR_LIST,
+            contentDescriptionHelper.buildContentDescription(
+                R.string.stats_referrers_pie_chart_total_label,
+                totalValue
+            )
         )
     }
 
@@ -274,10 +274,10 @@ class ReferrersUseCase(
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(
-                ViewReferrers(
-                        statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
-                )
+            ViewReferrers(
+                statsGranularity,
+                selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+            )
         )
     }
 
@@ -302,9 +302,9 @@ class ReferrersUseCase(
         } else {
             // Show snackbar with error message
             WPSnackbar.make(
-                    view,
-                    R.string.stats_referrer_snackbar_cant_mark_as_spam,
-                    Snackbar.LENGTH_LONG
+                view,
+                R.string.stats_referrer_snackbar_cant_mark_as_spam,
+                Snackbar.LENGTH_LONG
             ).show()
         }
 
@@ -314,11 +314,11 @@ class ReferrersUseCase(
     suspend fun markReferrerAsSpam(urlDomain: String) {
         selectedDateProvider.getSelectedDate(statsGranularity)?.let {
             referrersStore.reportReferrerAsSpam(
-                    statsSiteProvider.siteModel,
-                    urlDomain,
-                    statsGranularity,
-                    LimitMode.Top(itemsToLoad),
-                    it
+                statsSiteProvider.siteModel,
+                urlDomain,
+                statsGranularity,
+                LimitMode.Top(itemsToLoad),
+                it
             )
         }
     }
@@ -326,11 +326,11 @@ class ReferrersUseCase(
     suspend fun unmarkReferrerAsSpam(urlDomain: String) {
         selectedDateProvider.getSelectedDate(statsGranularity)?.let {
             referrersStore.unreportReferrerAsSpam(
-                    statsSiteProvider.siteModel,
-                    urlDomain,
-                    statsGranularity,
-                    LimitMode.Top(itemsToLoad),
-                    it
+                statsSiteProvider.siteModel,
+                urlDomain,
+                statsGranularity,
+                LimitMode.Top(itemsToLoad),
+                it
             )
         }
     }
@@ -351,20 +351,20 @@ class ReferrersUseCase(
         private val popupMenuHandler: ReferrerPopupMenuHandler
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
-                ReferrersUseCase(
-                        granularity,
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        referrersStore,
-                        statsSiteProvider,
-                        selectedDateProvider,
-                        analyticsTracker,
-                        contentDescriptionHelper,
-                        statsUtils,
-                        resourceProvider,
-                        useCaseMode,
-                        popupMenuHandler
-                )
+            ReferrersUseCase(
+                granularity,
+                mainDispatcher,
+                backgroundDispatcher,
+                referrersStore,
+                statsSiteProvider,
+                selectedDateProvider,
+                analyticsTracker,
+                contentDescriptionHelper,
+                statsUtils,
+                resourceProvider,
+                useCaseMode,
+                popupMenuHandler
+            )
     }
 
     companion object {

@@ -27,8 +27,8 @@ class SharedLoginAnalyticsTrackerTest {
     fun `Should track login failed WPNotLoggedInError correctly`() {
         classToTest.trackLoginFailed(ErrorType.WPNotLoggedInError)
         verify(analyticsTrackerWrapper).track(
-                Stat.SHARED_LOGIN_FAILED,
-                mapOf("error_type" to "wp_not_logged_in_error")
+            Stat.SHARED_LOGIN_FAILED,
+            mapOf("error_type" to "wp_not_logged_in_error")
         )
     }
 
@@ -36,8 +36,8 @@ class SharedLoginAnalyticsTrackerTest {
     fun `Should track login failed QueryLoginDataError correctly`() {
         classToTest.trackLoginFailed(ErrorType.QueryLoginDataError)
         verify(analyticsTrackerWrapper).track(
-                Stat.SHARED_LOGIN_FAILED,
-                mapOf("error_type" to "query_login_data_error")
+            Stat.SHARED_LOGIN_FAILED,
+            mapOf("error_type" to "query_login_data_error")
         )
     }
 }

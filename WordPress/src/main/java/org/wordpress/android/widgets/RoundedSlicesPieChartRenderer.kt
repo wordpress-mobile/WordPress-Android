@@ -99,16 +99,16 @@ class RoundedSlicesPieChartRenderer(chart: PieChart) : PieChartRenderer(chart, c
 
             // API < 21 does not receive floats in addArc, but a RectF
             innerRectBuffer[center.x - innerRadius, center.y - innerRadius, center.x + innerRadius] =
-                    center.y + innerRadius
+                center.y + innerRadius
             if (innerRadius > 0f || accountForSliceSpacing) {
                 if (accountForSliceSpacing) {
                     var minSpacedRadius = calculateMinimumRadiusForSpacedSlice(
-                            center,
-                            radius,
-                            sliceAngle * phaseY,
-                            arcStartPointX, arcStartPointY,
-                            startAngleOuter,
-                            sweepAngleOuter
+                        center,
+                        radius,
+                        sliceAngle * phaseY,
+                        arcStartPointX, arcStartPointY,
+                        startAngleOuter,
+                        sweepAngleOuter
                     )
                     if (minSpacedRadius < 0f) {
                         minSpacedRadius = -minSpacedRadius
@@ -141,13 +141,13 @@ class RoundedSlicesPieChartRenderer(chart: PieChart) : PieChartRenderer(chart, c
                     if (accountForSliceSpacing) {
                         val angleMiddle = startAngleOuter + sweepAngleOuter / 2f
                         val sliceSpaceOffset = calculateMinimumRadiusForSpacedSlice(
-                                center,
-                                radius,
-                                sliceAngle * phaseY,
-                                arcStartPointX,
-                                arcStartPointY,
-                                startAngleOuter,
-                                sweepAngleOuter
+                            center,
+                            radius,
+                            sliceAngle * phaseY,
+                            arcStartPointX,
+                            arcStartPointY,
+                            startAngleOuter,
+                            sweepAngleOuter
                         )
                         val arcEndPointX = center.x + sliceSpaceOffset * cos(angleMiddle * Utils.FDEG2RAD)
                         val arcEndPointY = center.y + sliceSpaceOffset * sin(angleMiddle * Utils.FDEG2RAD)

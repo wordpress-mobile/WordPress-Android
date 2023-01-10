@@ -29,9 +29,9 @@ sealed class UnifiedCommentListItem(val type: CommentListItemType) {
     }
 
     data class NextPageLoader(val isLoading: Boolean, override val id: Long, val loadAction: () -> Unit) :
-            UnifiedCommentListItem(
-                    NEXT_PAGE_LOADER
-            )
+        UnifiedCommentListItem(
+            NEXT_PAGE_LOADER
+        )
 
     enum class CommentListItemType {
         SUB_HEADER,

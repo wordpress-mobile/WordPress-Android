@@ -31,8 +31,8 @@ class LikerViewHolder(
         }
 
         val likerAvatarUrl = GravatarUtils.fixGravatarUrl(
-                liker.userAvatarUrl,
-                likerRootView.context.resources.getDimensionPixelSize(R.dimen.avatar_sz_medium)
+            liker.userAvatarUrl,
+            likerRootView.context.resources.getDimensionPixelSize(R.dimen.avatar_sz_medium)
         )
 
         imageManager.loadIntoCircle(this.likerAvatar, ImageType.AVATAR_WITH_BACKGROUND, likerAvatarUrl)
@@ -41,17 +41,17 @@ class LikerViewHolder(
             likerRootView.isEnabled = true
             likerRootView.setOnClickListener {
                 liker.onClick.invoke(
-                        UserProfile(
-                                userAvatarUrl = liker.userAvatarUrl,
-                                blavatarUrl = liker.preferredBlogBlavatar,
-                                userName = liker.name,
-                                userLogin = liker.login,
-                                userBio = liker.userBio,
-                                siteTitle = liker.preferredBlogName,
-                                siteUrl = liker.preferredBlogUrl,
-                                siteId = liker.preferredBlogId
-                        ),
-                        liker.source
+                    UserProfile(
+                        userAvatarUrl = liker.userAvatarUrl,
+                        blavatarUrl = liker.preferredBlogBlavatar,
+                        userName = liker.name,
+                        userLogin = liker.login,
+                        userBio = liker.userBio,
+                        siteTitle = liker.preferredBlogName,
+                        siteUrl = liker.preferredBlogUrl,
+                        siteId = liker.preferredBlogId
+                    ),
+                    liker.source
                 )
             }
         } else {

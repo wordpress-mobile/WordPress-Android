@@ -17,8 +17,11 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
 
 class StatsDetailFragment : DaggerFragment(R.layout.stats_detail_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var statsSiteProvider: StatsSiteProvider
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var statsSiteProvider: StatsSiteProvider
     private lateinit var viewModel: StatsDetailViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
@@ -60,12 +63,12 @@ class StatsDetailFragment : DaggerFragment(R.layout.stats_detail_fragment) {
         val postUrl = activity.intent?.getSerializableExtra(POST_URL) as String?
 
         viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(StatsSection.DETAIL.name, StatsDetailViewModel::class.java)
+            .get(StatsSection.DETAIL.name, StatsDetailViewModel::class.java)
         viewModel.init(
-                checkNotNull(postId),
-                checkNotNull(postType),
-                checkNotNull(postTitle),
-                postUrl
+            checkNotNull(postId),
+            checkNotNull(postType),
+            checkNotNull(postTitle),
+            postUrl
         )
 
         setupObservers(viewModel)

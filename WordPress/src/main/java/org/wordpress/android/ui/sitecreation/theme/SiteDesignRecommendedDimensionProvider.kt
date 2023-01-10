@@ -6,7 +6,7 @@ import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
 class SiteDesignRecommendedDimensionProvider @Inject constructor(private val contextProvider: ContextProvider) :
-        ThumbDimensionProvider {
+    ThumbDimensionProvider {
     override val previewWidth: Int
         get() = contextProvider.getContext().resources.getDimensionPixelSize(dimen.hpp_recommended_card_width)
 

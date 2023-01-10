@@ -30,8 +30,12 @@ import javax.inject.Inject
  */
 class StatsConnectJetpackActivity : LocaleAwareActivity() {
     private var mIsJetpackConnectStarted = false
-    @Inject lateinit var mAccountStore: AccountStore
-    @Inject lateinit var mDispatcher: Dispatcher
+
+    @Inject
+    lateinit var mAccountStore: AccountStore
+
+    @Inject
+    lateinit var mDispatcher: Dispatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,13 +85,13 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
             WPWebViewActivity.openURL(this@StatsConnectJetpackActivity, FAQ_URL)
         }
         jetpackTermsAndConditions.text = HtmlCompat.fromHtml(
-                String.format(resources.getString(string.jetpack_connection_terms_and_conditions), "<u>", "</u>"),
-                HtmlCompat.FROM_HTML_MODE_LEGACY
+            String.format(resources.getString(string.jetpack_connection_terms_and_conditions), "<u>", "</u>"),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         jetpackTermsAndConditions.setOnClickListener {
             WPWebViewActivity.openURL(
-                    this@StatsConnectJetpackActivity,
-                    WPUrlUtils.buildTermsOfServiceUrl(this@StatsConnectJetpackActivity)
+                this@StatsConnectJetpackActivity,
+                WPUrlUtils.buildTermsOfServiceUrl(this@StatsConnectJetpackActivity)
             )
         }
     }
@@ -115,7 +119,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
     private fun startJetpackConnectionFlow(siteModel: SiteModel) {
         mIsJetpackConnectStarted = true
         JetpackConnectionWebViewActivity
-                .startJetpackConnectionFlow(this, STATS, siteModel, mAccountStore.hasAccessToken())
+            .startJetpackConnectionFlow(this, STATS, siteModel, mAccountStore.hasAccessToken())
         finish()
     }
 
@@ -126,8 +130,9 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
                 val error = "${event.error.type} - ${event.error.message}"
                 AppLog.e(API, "StatsConnectJetpackActivity.onAccountChanged error: $error")
             } else if (!mIsJetpackConnectStarted &&
-                    event.causeOfChange == FETCH_ACCOUNT &&
-                    !TextUtils.isEmpty(mAccountStore.account.userName)) {
+                event.causeOfChange == FETCH_ACCOUNT &&
+                !TextUtils.isEmpty(mAccountStore.account.userName)
+            ) {
                 startJetpackConnectionFlow(intent.getSerializableExtra(WordPress.SITE) as SiteModel)
             }
         }

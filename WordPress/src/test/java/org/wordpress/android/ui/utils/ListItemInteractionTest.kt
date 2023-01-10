@@ -17,6 +17,7 @@ class ListItemInteractionTest {
 
         assertThat(clicked).isTrue()
     }
+
     @Test
     fun `triggers click with params`() {
         val param = "param"

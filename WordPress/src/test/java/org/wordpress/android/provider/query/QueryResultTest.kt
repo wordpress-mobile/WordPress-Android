@@ -23,8 +23,8 @@ class QueryResultTest {
     @Test
     fun `Should get JSON from provided Cursor and return expected object mapped correctly using the provided Type`() {
         val expected = mapOf(
-                1 to TestQueryResult("a", 1, true),
-                2 to TestQueryResult("b", 2, false)
+            1 to TestQueryResult("a", 1, true),
+            2 to TestQueryResult("b", 2, false)
         )
         val expectedCursor = mock<MatrixCursor>()
         whenever(expectedCursor.getString(0)).thenReturn(Gson().toJson(expected))

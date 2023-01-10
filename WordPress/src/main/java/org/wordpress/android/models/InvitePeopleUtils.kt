@@ -56,13 +56,13 @@ class InvitePeopleUtils @Inject constructor(
 
         AppLog.d(T.PEOPLE, "getMappedLinksUiItems > ${siteModel.siteId}")
         AppLog.d(
-                T.PEOPLE,
-                "getMappedLinksUiItems > roles: ${roles.map { "DisplayName: ${it.displayName} Name: ${it.name}" }}"
+            T.PEOPLE,
+            "getMappedLinksUiItems > roles: ${roles.map { "DisplayName: ${it.displayName} Name: ${it.name}" }}"
         )
         AppLog.d(
-                T.PEOPLE,
-                "getMappedLinksUiItems > " +
-                        "inviteLinksData: ${inviteLinksData.map { "DisplayName: ${it.role} Expiry: ${it.expiry}" }}"
+            T.PEOPLE,
+            "getMappedLinksUiItems > " +
+                    "inviteLinksData: ${inviteLinksData.map { "DisplayName: ${it.role} Expiry: ${it.expiry}" }}"
         )
 
         return roles.let {
@@ -76,9 +76,9 @@ class InvitePeopleUtils @Inject constructor(
                 }
 
                 InviteLinksUiItem(
-                        roleName = role.name,
-                        roleDisplayName = role.displayName,
-                        expiryDate = formatter.format(dateTimeUtilsWrapper.dateFromTimestamp(linksData.expiry))
+                    roleName = role.name,
+                    roleDisplayName = role.displayName,
+                    expiryDate = formatter.format(dateTimeUtilsWrapper.dateFromTimestamp(linksData.expiry))
                 )
             }
         }

@@ -19,7 +19,8 @@ private const val INVALID_IMAGE_URL = "INVALID_IMAGE_URL"
  */
 @RunWith(MockitoJUnitRunner::class)
 class ReblogUtilsTest {
-    @Mock private lateinit var urlUtils: UrlUtilsWrapper
+    @Mock
+    private lateinit var urlUtils: UrlUtilsWrapper
     private lateinit var reblogUtils: ReblogUtils
 
     @Before
@@ -159,11 +160,11 @@ class ReblogUtilsTest {
                 """<!-- wp:quote --><blockquote class="wp-block-quote"><p>some quote</p>""" +
                 """<cite><a href="$VALID_URL">some text</a></cite></blockquote><!-- /wp:quote -->"""
         val actual = reblogUtils.reblogContent(
-                VALID_IMAGE_URL,
-                "some quote",
-                "some text",
-                VALID_URL,
-                true
+            VALID_IMAGE_URL,
+            "some quote",
+            "some text",
+            VALID_URL,
+            true
         )
         assertEquals(expected, actual)
     }
@@ -173,11 +174,11 @@ class ReblogUtilsTest {
         val expected = """<!-- wp:quote --><blockquote class="wp-block-quote"><p>some quote</p>""" +
                 """<cite><a href="$VALID_URL">some text</a></cite></blockquote><!-- /wp:quote -->"""
         val actual = reblogUtils.reblogContent(
-                INVALID_IMAGE_URL,
-                "some quote",
-                "some text",
-                VALID_URL,
-                true
+            INVALID_IMAGE_URL,
+            "some quote",
+            "some text",
+            VALID_URL,
+            true
         )
         assertEquals(expected, actual)
     }
@@ -187,11 +188,11 @@ class ReblogUtilsTest {
         val expected = """<p><img src="$VALID_IMAGE_URL"></p>""" +
                 """<blockquote><p>some quote</p><cite><a href="$VALID_URL">some text</a></cite></blockquote>"""
         val actual = reblogUtils.reblogContent(
-                VALID_IMAGE_URL,
-                "some quote",
-                "some text",
-                VALID_URL,
-                false
+            VALID_IMAGE_URL,
+            "some quote",
+            "some text",
+            VALID_URL,
+            false
         )
         assertEquals(expected, actual)
     }
@@ -200,11 +201,11 @@ class ReblogUtilsTest {
     fun `create reblog content with quote, citation and an invalid image for Aztec editor`() {
         val expected = """<blockquote><p>some quote</p><cite><a href="$VALID_URL">some text</a></cite></blockquote>"""
         val actual = reblogUtils.reblogContent(
-                INVALID_IMAGE_URL,
-                "some quote",
-                "some text",
-                VALID_URL,
-                false
+            INVALID_IMAGE_URL,
+            "some quote",
+            "some text",
+            VALID_URL,
+            false
         )
         assertEquals(expected, actual)
     }

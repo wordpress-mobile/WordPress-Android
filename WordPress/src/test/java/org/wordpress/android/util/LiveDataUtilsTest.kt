@@ -31,9 +31,9 @@ class LiveDataUtilsTest : BaseUnitTest() {
         val sourceB = MutableLiveData<String>()
 
         val mergedSources = mergeAsyncNotNull(
-                testScope(),
-                sourceA,
-                sourceB
+            testScope(),
+            sourceA,
+            sourceB
         ) { i, s ->
             "$s: $i"
         }

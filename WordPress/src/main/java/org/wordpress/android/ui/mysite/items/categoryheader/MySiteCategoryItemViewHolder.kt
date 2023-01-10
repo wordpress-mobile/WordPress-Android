@@ -11,7 +11,7 @@ class MySiteCategoryItemViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
 ) : MySiteCardAndItemViewHolder<MySiteCategoryHeaderItemBinding>(
-        parent.viewBinding(MySiteCategoryHeaderItemBinding::inflate)
+    parent.viewBinding(MySiteCategoryHeaderItemBinding::inflate)
 ) {
     fun bind(item: CategoryHeaderItem) = with(binding) {
         uiHelpers.setTextOrHide(category, item.title)

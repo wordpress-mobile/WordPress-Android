@@ -55,220 +55,220 @@ class UploadUtilsTest {
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and published post eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = false,
-                postStatus = PUBLISHED,
-                isEligibleForAutoUpload = true,
-                resId = R.string.error_post_not_published_retrying
+            GENERIC_ERROR,
+            isPage = false,
+            postStatus = PUBLISHED,
+            isEligibleForAutoUpload = true,
+            resId = R.string.error_post_not_published_retrying
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and published page eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = true,
-                postStatus = PUBLISHED,
-                isEligibleForAutoUpload = true,
-                resId = R.string.error_page_not_published_retrying
+            GENERIC_ERROR,
+            isPage = true,
+            postStatus = PUBLISHED,
+            isEligibleForAutoUpload = true,
+            resId = R.string.error_page_not_published_retrying
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and private post eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = false,
-                postStatus = PRIVATE,
-                isEligibleForAutoUpload = true,
-                resId = R.string.error_post_not_published_retrying_private
+            GENERIC_ERROR,
+            isPage = false,
+            postStatus = PRIVATE,
+            isEligibleForAutoUpload = true,
+            resId = R.string.error_post_not_published_retrying_private
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and private page eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = true,
-                postStatus = PRIVATE,
-                isEligibleForAutoUpload = true,
-                resId = R.string.error_page_not_published_retrying_private
+            GENERIC_ERROR,
+            isPage = true,
+            postStatus = PRIVATE,
+            isEligibleForAutoUpload = true,
+            resId = R.string.error_page_not_published_retrying_private
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and DRAFT post eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = false,
-                postStatus = DRAFT,
-                isEligibleForAutoUpload = true,
-                resId = R.string.error_generic_error_retrying
+            GENERIC_ERROR,
+            isPage = false,
+            postStatus = DRAFT,
+            isEligibleForAutoUpload = true,
+            resId = R.string.error_generic_error_retrying
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and DRAFT page eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = true,
-                postStatus = DRAFT,
-                isEligibleForAutoUpload = true,
-                resId = R.string.error_generic_error_retrying
+            GENERIC_ERROR,
+            isPage = true,
+            postStatus = DRAFT,
+            isEligibleForAutoUpload = true,
+            resId = R.string.error_generic_error_retrying
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and SCHEDULED post eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = false,
-                postStatus = SCHEDULED,
-                isEligibleForAutoUpload = true,
-                resId = R.string.error_post_not_scheduled_retrying
+            GENERIC_ERROR,
+            isPage = false,
+            postStatus = SCHEDULED,
+            isEligibleForAutoUpload = true,
+            resId = R.string.error_post_not_scheduled_retrying
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and SCHEDULED page eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = true,
-                postStatus = SCHEDULED,
-                isEligibleForAutoUpload = true,
-                resId = R.string.error_page_not_scheduled_retrying
+            GENERIC_ERROR,
+            isPage = true,
+            postStatus = SCHEDULED,
+            isEligibleForAutoUpload = true,
+            resId = R.string.error_page_not_scheduled_retrying
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and PENDING post eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = false,
-                postStatus = PENDING,
-                isEligibleForAutoUpload = true,
-                resId = R.string.error_post_not_submitted_retrying
+            GENERIC_ERROR,
+            isPage = false,
+            postStatus = PENDING,
+            isEligibleForAutoUpload = true,
+            resId = R.string.error_post_not_submitted_retrying
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and PENDING page eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = true,
-                postStatus = PENDING,
-                isEligibleForAutoUpload = true,
-                resId = R.string.error_page_not_submitted_retrying
+            GENERIC_ERROR,
+            isPage = true,
+            postStatus = PENDING,
+            isEligibleForAutoUpload = true,
+            resId = R.string.error_page_not_submitted_retrying
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and published post NOT eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = false,
-                postStatus = PUBLISHED,
-                isEligibleForAutoUpload = false,
-                resId = R.string.error_post_not_published
+            GENERIC_ERROR,
+            isPage = false,
+            postStatus = PUBLISHED,
+            isEligibleForAutoUpload = false,
+            resId = R.string.error_post_not_published
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and published page NOT eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = true,
-                postStatus = PUBLISHED,
-                isEligibleForAutoUpload = false,
-                resId = R.string.error_page_not_published
+            GENERIC_ERROR,
+            isPage = true,
+            postStatus = PUBLISHED,
+            isEligibleForAutoUpload = false,
+            resId = R.string.error_page_not_published
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and private post NOT eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = false,
-                postStatus = PRIVATE,
-                isEligibleForAutoUpload = false,
-                resId = R.string.error_post_not_published_private
+            GENERIC_ERROR,
+            isPage = false,
+            postStatus = PRIVATE,
+            isEligibleForAutoUpload = false,
+            resId = R.string.error_post_not_published_private
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and private page NOT eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = true,
-                postStatus = PRIVATE,
-                isEligibleForAutoUpload = false,
-                resId = R.string.error_page_not_published_private
+            GENERIC_ERROR,
+            isPage = true,
+            postStatus = PRIVATE,
+            isEligibleForAutoUpload = false,
+            resId = R.string.error_page_not_published_private
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and DRAFT post NOT eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = false,
-                postStatus = DRAFT,
-                isEligibleForAutoUpload = false,
-                resId = R.string.error_generic_error
+            GENERIC_ERROR,
+            isPage = false,
+            postStatus = DRAFT,
+            isEligibleForAutoUpload = false,
+            resId = R.string.error_generic_error
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and DRAFT page NOT eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = true,
-                postStatus = DRAFT,
-                isEligibleForAutoUpload = false,
-                resId = R.string.error_generic_error
+            GENERIC_ERROR,
+            isPage = true,
+            postStatus = DRAFT,
+            isEligibleForAutoUpload = false,
+            resId = R.string.error_generic_error
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and SCHEDULED post NOT eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = false,
-                postStatus = SCHEDULED,
-                isEligibleForAutoUpload = false,
-                resId = R.string.error_post_not_scheduled
+            GENERIC_ERROR,
+            isPage = false,
+            postStatus = SCHEDULED,
+            isEligibleForAutoUpload = false,
+            resId = R.string.error_post_not_scheduled
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and SCHEDULED page NOT eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = true,
-                postStatus = SCHEDULED,
-                isEligibleForAutoUpload = false,
-                resId = R.string.error_page_not_scheduled
+            GENERIC_ERROR,
+            isPage = true,
+            postStatus = SCHEDULED,
+            isEligibleForAutoUpload = false,
+            resId = R.string.error_page_not_scheduled
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and PENDING post NOT eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = false,
-                postStatus = PENDING,
-                isEligibleForAutoUpload = false,
-                resId = R.string.error_post_not_submitted
+            GENERIC_ERROR,
+            isPage = false,
+            postStatus = PENDING,
+            isEligibleForAutoUpload = false,
+            resId = R.string.error_post_not_submitted
         )
     }
 
     @Test
     fun `getErrorMessageResIdFromPostError on generic error and PENDING page NOT eligible for auto upload`() {
         verifyGenericError(
-                GENERIC_ERROR,
-                isPage = true,
-                postStatus = PENDING,
-                isEligibleForAutoUpload = false,
-                resId = R.string.error_page_not_submitted
+            GENERIC_ERROR,
+            isPage = true,
+            postStatus = PENDING,
+            isEligibleForAutoUpload = false,
+            resId = R.string.error_page_not_submitted
         )
     }
 
@@ -283,10 +283,10 @@ class UploadUtilsTest {
         val error = PostError(errorType)
         // Act
         val msgId = UploadUtils.getErrorMessageResIdFromPostError(
-                postStatus,
-                isPage,
-                error,
-                isEligibleForAutoUpload
+            postStatus,
+            isPage,
+            error,
+            isEligibleForAutoUpload
         )
         // Assert
         assertThat(msgId).isEqualTo(UiStringRes(resId))

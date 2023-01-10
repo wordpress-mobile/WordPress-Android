@@ -39,7 +39,7 @@ class ClientVerificationTest {
     @Test
     fun `Should return false if caller signature hash does not match the expected when canTrust is called`() {
         whenever(signatureUtils.checkSignatureHash(expectedPackage, expectedSignatureHash))
-                .thenReturn(false)
+            .thenReturn(false)
         val expected = false
         val actual = classToTest.canTrust(expectedPackage)
         Assert.assertEquals(expected, actual)
@@ -48,7 +48,7 @@ class ClientVerificationTest {
     @Test
     fun `Should return true if caller package and signature hash match the expected when canTrust is called`() {
         whenever(signatureUtils.checkSignatureHash(expectedPackage, expectedSignatureHash))
-                .thenReturn(true)
+            .thenReturn(true)
         val expected = true
         val actual = classToTest.canTrust(expectedPackage)
         Assert.assertEquals(expected, actual)

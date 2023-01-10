@@ -56,15 +56,29 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     private lateinit var unifiedCommentsListHandler: UnifiedCommentsListHandler
     private lateinit var commentListUiModelHelper: CommentListUiModelHelper
 
-    @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
-    @Mock private lateinit var paginateCommentsResourceProvider: PaginateCommentsResourceProvider
-    @Mock private lateinit var moderateCommentsResourceProvider: ModerateCommentsResourceProvider
+    @Mock
+    private lateinit var selectedSiteRepository: SelectedSiteRepository
 
-    @Mock private lateinit var commentStore: CommentsStore
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
+    @Mock
+    private lateinit var paginateCommentsResourceProvider: PaginateCommentsResourceProvider
+
+    @Mock
+    private lateinit var moderateCommentsResourceProvider: ModerateCommentsResourceProvider
+
+    @Mock
+    private lateinit var commentStore: CommentsStore
     private lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
     private lateinit var paginateCommentsUseCase: PaginateCommentsUseCase
     private lateinit var batchModerateCommentsUseCase: BatchModerateCommentsUseCase
@@ -88,30 +102,30 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         moderationWithUndoUseCase = ModerateCommentWithUndoUseCase(moderateCommentsResourceProvider)
         paginateCommentsUseCase = PaginateCommentsUseCase(paginateCommentsResourceProvider)
         unifiedCommentsListHandler = UnifiedCommentsListHandler(
-                paginateCommentsUseCase,
-                batchModerateCommentsUseCase,
-                moderationWithUndoUseCase
+            paginateCommentsUseCase,
+            batchModerateCommentsUseCase,
+            moderationWithUndoUseCase
         )
 
         localCommentCacheUpdateUseCase = LocalCommentCacheUpdateUseCase()
         localCommentCacheUpdateHandler = LocalCommentCacheUpdateHandler(localCommentCacheUpdateUseCase)
 
         `when`(commentStore.fetchCommentsPage(any(), any(), eq(0), any(), any()))
-                .thenReturn(testCommentsPayload30)
+            .thenReturn(testCommentsPayload30)
         `when`(commentStore.fetchCommentsPage(any(), any(), eq(30), any(), any()))
-                .thenReturn(testCommentsPayload60)
+            .thenReturn(testCommentsPayload60)
 
         commentListUiModelHelper = CommentListUiModelHelper(resourceProvider, dateTimeUtilsWrapper, networkUtilsWrapper)
 
         viewModel = UnifiedCommentListViewModel(
-                commentListUiModelHelper,
-                selectedSiteRepository,
-                networkUtilsWrapper,
-                analyticsTrackerWrapper,
-                testDispatcher(),
-                testDispatcher(),
-                unifiedCommentsListHandler,
-                localCommentCacheUpdateHandler
+            commentListUiModelHelper,
+            selectedSiteRepository,
+            networkUtilsWrapper,
+            analyticsTrackerWrapper,
+            testDispatcher(),
+            testDispatcher(),
+            unifiedCommentsListHandler,
+            localCommentCacheUpdateHandler
         )
     }
 
@@ -187,7 +201,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     @Test
     fun `comment list contains load more row when there are more comments`() = test {
         whenever((commentStore.fetchCommentsPage(any(), any(), any(), any(), any())))
-                .thenReturn(CommentsActionPayload(PagingData(comments = testComments.take(30), hasMore = true)))
+            .thenReturn(CommentsActionPayload(PagingData(comments = testComments.take(30), hasMore = true)))
 
         val result = mutableListOf<CommentsUiModel>()
         val job = launch {
@@ -209,9 +223,9 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     @Test
     fun `comment list does not contain load more row when there are no more comments`() = test {
         whenever(commentStore.fetchCommentsPage(any(), any(), any(), any(), any())).thenReturn(
-                CommentsActionPayload(
-                        PagingData(comments = testComments.take(15), hasMore = false)
-                )
+            CommentsActionPayload(
+                PagingData(comments = testComments.take(15), hasMore = false)
+            )
         )
 
         val result = mutableListOf<CommentsUiModel>()
@@ -282,12 +296,12 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         assertThat(loadMoreFooter).isInstanceOf(NextPageLoader::class.java)
 
         whenever(commentStore.fetchCommentsPage(any(), any(), eq(30), any(), any()))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentError(GENERIC_ERROR, "test error message"),
-                                PagingData(comments = testComments.take(30), hasMore = true)
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentError(GENERIC_ERROR, "test error message"),
+                    PagingData(comments = testComments.take(30), hasMore = true)
                 )
+            )
 
         (loadMoreFooter as NextPageLoader).loadAction.invoke()
 
@@ -310,7 +324,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     @Test
     fun `tapping retry button in footer shows error snackbar when there is no internet`() = test {
         whenever(commentStore.getCommentsForSite(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(testComments.take(30))
+            .thenReturn(testComments.take(30))
 
         val result = mutableListOf<CommentsUiModel>()
         val job = launch {
@@ -335,12 +349,12 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         assertThat(loadMoreFooter).isInstanceOf(NextPageLoader::class.java)
 
         whenever(commentStore.fetchCommentsPage(any(), any(), eq(30), any(), any()))
-                .thenReturn(
-                        CommentsActionPayload(
-                                CommentError(GENERIC_ERROR, "test error message"),
-                                PagingData(comments = testComments.take(30), hasMore = true)
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    CommentError(GENERIC_ERROR, "test error message"),
+                    PagingData(comments = testComments.take(30), hasMore = true)
                 )
+            )
 
         // produce error footer
         (loadMoreFooter as NextPageLoader).loadAction.invoke()

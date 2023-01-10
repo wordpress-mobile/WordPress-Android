@@ -11,7 +11,7 @@ class ReaderBlogTableWrapper
     fun getFeedInfo(feedId: Long): ReaderBlog? = ReaderBlogTable.getFeedInfo(feedId)
     fun isNotificationsEnabled(blogId: Long): Boolean = ReaderBlogTable.isNotificationsEnabled(blogId)
     fun setNotificationsEnabledByBlogId(blogId: Long, isEnabled: Boolean) =
-            ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, isEnabled)
+        ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, isEnabled)
 
     fun getReaderBlog(blogId: Long, feedId: Long): ReaderBlog? {
         return if (readerUtilsWrapper.isExternalFeed(blogId, feedId)) {

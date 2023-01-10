@@ -11,11 +11,11 @@ class BloggingRemindersSyncAnalyticsTracker @Inject constructor(
     fun trackStart() = analyticsTracker.track(Stat.BLOGGING_REMINDERS_SYNC_START)
 
     fun trackSuccess(remindersSyncedCount: Int) = analyticsTracker.track(
-            Stat.BLOGGING_REMINDERS_SYNC_SUCCESS, mapOf(REMINDERS_SYNCED_COUNT to remindersSyncedCount)
+        Stat.BLOGGING_REMINDERS_SYNC_SUCCESS, mapOf(REMINDERS_SYNCED_COUNT to remindersSyncedCount)
     )
 
     fun trackFailed(errorType: ErrorType) =
-            analyticsTracker.track(Stat.BLOGGING_REMINDERS_SYNC_FAILED, mapOf(ERROR_TYPE to errorType.value))
+        analyticsTracker.track(Stat.BLOGGING_REMINDERS_SYNC_FAILED, mapOf(ERROR_TYPE to errorType.value))
 
     sealed class ErrorType(val value: String) {
         object QueryBloggingRemindersError : ErrorType("query_blogging_reminders_error")

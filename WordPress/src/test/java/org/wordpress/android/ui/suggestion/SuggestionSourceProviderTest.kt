@@ -15,23 +15,29 @@ import org.wordpress.android.ui.suggestion.SuggestionType.XPosts
 
 @RunWith(MockitoJUnitRunner::class)
 class SuggestionSourceProviderTest {
-    @Mock lateinit var mockSuggestionSourceSubcomponentFactory: SuggestionSourceSubcomponent.Factory
-    @Mock lateinit var mockSuggestionSourceSubcomponent: SuggestionSourceSubcomponent
-    @Mock lateinit var mockSite: SiteModel
+    @Mock
+    lateinit var mockSuggestionSourceSubcomponentFactory: SuggestionSourceSubcomponent.Factory
 
-    @InjectMocks lateinit var provider: SuggestionSourceProvider
+    @Mock
+    lateinit var mockSuggestionSourceSubcomponent: SuggestionSourceSubcomponent
+
+    @Mock
+    lateinit var mockSite: SiteModel
+
+    @InjectMocks
+    lateinit var provider: SuggestionSourceProvider
 
     @Before
     fun setUp() {
         whenever(mockSuggestionSourceSubcomponentFactory.create(mockSite))
-                .thenReturn(mockSuggestionSourceSubcomponent)
+            .thenReturn(mockSuggestionSourceSubcomponent)
     }
 
     @Test
     fun `gets xpost source`() {
         val expected = mock<XPostsSuggestionSource>()
         whenever(mockSuggestionSourceSubcomponent.xPostSuggestionSource())
-                .thenReturn(expected)
+            .thenReturn(expected)
         val actual = provider.get(XPosts, mockSite)
         assertThat(expected).isEqualTo(actual)
     }
@@ -40,7 +46,7 @@ class SuggestionSourceProviderTest {
     fun `gets user source`() {
         val expected = mock<UserSuggestionSource>()
         whenever(mockSuggestionSourceSubcomponent.userSuggestionSource())
-                .thenReturn(expected)
+            .thenReturn(expected)
         val actual = provider.get(Users, mockSite)
         assertThat(expected).isEqualTo(actual)
     }

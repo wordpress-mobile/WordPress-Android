@@ -57,8 +57,8 @@ data class MediaLoader(
             is Start -> {
                 if (state.domainItems.isEmpty()) {
                     buildDomainModel(
-                            mediaSource.load(filter = loadAction.filter),
-                            state.copy(filter = loadAction.filter)
+                        mediaSource.load(filter = loadAction.filter),
+                        state.copy(filter = loadAction.filter)
                     )
                 } else {
                     state
@@ -67,10 +67,10 @@ data class MediaLoader(
             is Refresh -> {
                 if (loadAction.forced || state.domainItems.isEmpty()) {
                     buildDomainModel(
-                            mediaSource.load(
-                                    filter = state.filter,
-                                    forced = loadAction.forced
-                            ), state
+                        mediaSource.load(
+                            filter = state.filter,
+                            forced = loadAction.forced
+                        ), state
                     )
                 } else {
                     state
@@ -107,34 +107,34 @@ data class MediaLoader(
     ): DomainModel {
         return when (partialResult) {
             is Success -> state.copy(
-                    isLoading = false,
-                    hasMore = partialResult.hasMore,
-                    domainItems = partialResult.data,
-                    emptyState = null
+                isLoading = false,
+                hasMore = partialResult.hasMore,
+                domainItems = partialResult.data,
+                emptyState = null
             )
             is Empty -> state.copy(
-                    isLoading = false,
-                    hasMore = false,
-                    domainItems = listOf(),
-                    emptyState = EmptyState(
-                            partialResult.title,
-                            partialResult.htmlSubtitle,
-                            partialResult.image,
-                            partialResult.bottomImage,
-                            partialResult.bottomImageContentDescription,
-                            isError = false
-                    )
+                isLoading = false,
+                hasMore = false,
+                domainItems = listOf(),
+                emptyState = EmptyState(
+                    partialResult.title,
+                    partialResult.htmlSubtitle,
+                    partialResult.image,
+                    partialResult.bottomImage,
+                    partialResult.bottomImageContentDescription,
+                    isError = false
+                )
             )
             is Failure -> state.copy(
-                    isLoading = false,
-                    hasMore = partialResult.data.isNotEmpty(),
-                    domainItems = partialResult.data,
-                    emptyState = EmptyState(
-                            partialResult.title,
-                            partialResult.htmlSubtitle,
-                            partialResult.image,
-                            isError = true
-                    )
+                isLoading = false,
+                hasMore = partialResult.data.isNotEmpty(),
+                domainItems = partialResult.data,
+                emptyState = EmptyState(
+                    partialResult.title,
+                    partialResult.htmlSubtitle,
+                    partialResult.image,
+                    isError = true
+                )
             )
         }
     }

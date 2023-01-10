@@ -20,8 +20,11 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ChipGroup(context, attrs, defStyleAttr) {
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var readerTracker: ReaderTracker
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var readerTracker: ReaderTracker
 
     private var tagsUiState: List<TagUiState>? = null
 
@@ -126,14 +129,14 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         val showOverflowIndicatorChip = hiddenTagChipsCount > 0 || !isSingleLine
         uiHelpers.updateVisibility(overflowIndicatorChip, showOverflowIndicatorChip)
         overflowIndicatorChip.contentDescription = String.format(
-                resources.getString(R.string.show_n_hidden_items_desc),
-                hiddenTagChipsCount
+            resources.getString(R.string.show_n_hidden_items_desc),
+            hiddenTagChipsCount
         )
 
         overflowIndicatorChip.text = if (isSingleLine) {
             String.format(
-                    resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title),
-                    hiddenTagChipsCount
+                resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title),
+                hiddenTagChipsCount
             )
         } else {
             resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_collapse_title)

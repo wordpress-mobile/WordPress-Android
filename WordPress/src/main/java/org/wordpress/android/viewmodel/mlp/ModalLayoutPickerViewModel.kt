@@ -20,9 +20,9 @@ import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel
-import org.wordpress.android.ui.mlp.ModalLayoutPickerDimensionProvider
 import org.wordpress.android.ui.layoutpicker.toLayoutCategories
 import org.wordpress.android.ui.layoutpicker.toLayoutModels
+import org.wordpress.android.ui.mlp.ModalLayoutPickerDimensionProvider
 import org.wordpress.android.ui.mlp.ModalLayoutPickerTracker
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -81,7 +81,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         open class Create(template: String?, val title: String) : PageRequest(template)
         object Blank : Create(null, "")
         class Preview(template: String?, val content: String, val site: SiteModel, val demoUrl: String?) : PageRequest(
-                template
+            template
         )
     }
 
@@ -105,13 +105,13 @@ class ModalLayoutPickerViewModel @Inject constructor(
         }
         launch {
             val payload = FetchBlockLayoutsPayload(
-                    selectedSite,
-                    supportedBlocksProvider.fromAssets().supported,
-                    thumbDimensionProvider.previewWidth.toFloat(),
-                    thumbDimensionProvider.previewHeight.toFloat(),
-                    thumbDimensionProvider.scale.toFloat(),
-                    BuildConfig.DEBUG,
-                    preferCache
+                selectedSite,
+                supportedBlocksProvider.fromAssets().supported,
+                thumbDimensionProvider.previewWidth.toFloat(),
+                thumbDimensionProvider.previewHeight.toFloat(),
+                thumbDimensionProvider.scale.toFloat(),
+                BuildConfig.DEBUG,
+                preferCache
             )
             dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(payload))
         }
@@ -123,8 +123,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
             setErrorState()
         } else {
             handleResponse(
-                    (event.layouts ?: listOf()).toLayoutModels(),
-                    (event.categories ?: listOf()).toLayoutCategories()
+                (event.layouts ?: listOf()).toLayoutModels(),
+                (event.categories ?: listOf()).toLayoutCategories()
             )
         }
     }

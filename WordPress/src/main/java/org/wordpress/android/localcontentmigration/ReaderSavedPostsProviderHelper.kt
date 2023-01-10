@@ -8,11 +8,11 @@ import javax.inject.Inject
 
 class ReaderSavedPostsProviderHelper @Inject constructor(
     private val readerPostTableWrapper: ReaderPostTableWrapper,
-): LocalDataProviderHelper {
+) : LocalDataProviderHelper {
     override fun getData(localEntityId: Int?): LocalContentEntityData =
-            readerPostTableWrapper.getPostsWithTag(
-                    readerTag = ReaderTag("", "", "", "", BOOKMARKED),
-                    maxRows = 0,
-                    excludeTextColumn = false
-            ).let { ReaderPostsData(posts = it) }
+        readerPostTableWrapper.getPostsWithTag(
+            readerTag = ReaderTag("", "", "", "", BOOKMARKED),
+            maxRows = 0,
+            excludeTextColumn = false
+        ).let { ReaderPostsData(posts = it) }
 }

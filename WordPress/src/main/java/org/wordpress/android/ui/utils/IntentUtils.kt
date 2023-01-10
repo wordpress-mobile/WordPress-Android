@@ -13,5 +13,5 @@ class IntentUtils @Inject constructor(
      * If so, it returns true. Otherwise, it returns false.
      */
     fun canResolveWith(action: String, uri: UriWrapper): Boolean =
-            Intent(action, uri.uri).resolveActivity(contextProvider.getContext().packageManager) != null
+        Intent(action, uri.uri).resolveActivity(contextProvider.getContext().packageManager) != null
 }

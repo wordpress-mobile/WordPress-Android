@@ -384,10 +384,10 @@ fun <T> LiveData<T>.throttle(
     mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 ): ThrottleLiveData<T> {
     val mediatorLiveData: ThrottleLiveData<T> = ThrottleLiveData(
-            coroutineScope = coroutineScope,
-            offset = offset,
-            backgroundDispatcher = backgroundDispatcher,
-            mainDispatcher = mainDispatcher
+        coroutineScope = coroutineScope,
+        offset = offset,
+        backgroundDispatcher = backgroundDispatcher,
+        mainDispatcher = mainDispatcher
     )
     mediatorLiveData.addSource(this) {
         if ((it != mediatorLiveData.value || !distinct) && it != null) {

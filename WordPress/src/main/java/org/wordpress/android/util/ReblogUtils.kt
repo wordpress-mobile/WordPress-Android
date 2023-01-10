@@ -73,8 +73,8 @@ class ReblogUtils @Inject constructor(private val urlUtils: UrlUtilsWrapper) {
     ): String = when {
         citationUrl == null -> htmlParagraph(quote)
         citationTitle == null -> htmlParagraph(quote) + embeddedCitation(
-                hyperLink(citationUrl)
-                        ?: ""
+            hyperLink(citationUrl)
+                ?: ""
         )
         else -> htmlParagraph(quote) + (hyperLink(citationUrl, citationTitle)?.let { embeddedCitation(it) } ?: "")
     }

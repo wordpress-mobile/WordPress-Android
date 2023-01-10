@@ -23,10 +23,10 @@ sealed class PrepublishingHomeItemUiState {
         val storyTitle: UiStringText? = null,
         val onStoryTitleChanged: (String) -> Unit
     ) :
-            PrepublishingHomeItemUiState()
+        PrepublishingHomeItemUiState()
 
     data class HeaderUiState(val siteName: UiStringText, val siteIconUrl: String) :
-            PrepublishingHomeItemUiState()
+        PrepublishingHomeItemUiState()
 
     sealed class ButtonUiState(
         val buttonText: UiStringRes,
@@ -35,28 +35,28 @@ sealed class PrepublishingHomeItemUiState {
         open val onButtonClicked: ((PublishPost) -> Unit)? = null
 
         data class PublishButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
-                UiStringRes(R.string.prepublishing_nudges_home_publish_button),
-                true
+            UiStringRes(R.string.prepublishing_nudges_home_publish_button),
+            true
         )
 
         data class ScheduleButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
-                UiStringRes(R.string.prepublishing_nudges_home_schedule_button),
-                false
+            UiStringRes(R.string.prepublishing_nudges_home_schedule_button),
+            false
         )
 
         data class UpdateButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
-                UiStringRes(R.string.prepublishing_nudges_home_update_button),
-                false
+            UiStringRes(R.string.prepublishing_nudges_home_update_button),
+            false
         )
 
         data class SubmitButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
-                UiStringRes(R.string.prepublishing_nudges_home_submit_button),
-                true
+            UiStringRes(R.string.prepublishing_nudges_home_submit_button),
+            true
         )
 
         data class SaveButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
-                UiStringRes(R.string.prepublishing_nudges_home_save_button),
-                false
+            UiStringRes(R.string.prepublishing_nudges_home_save_button),
+            false
         )
     }
 

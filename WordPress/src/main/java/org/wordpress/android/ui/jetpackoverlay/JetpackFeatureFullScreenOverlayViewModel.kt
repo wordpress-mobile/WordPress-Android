@@ -42,7 +42,7 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     private var isDeepLinkOverlayScreen: Boolean = false
     private var isFeatureCollectionOverlayScreen: Boolean = false
     private var featureCollectionOverlayOrigin: JetpackFeatureCollectionOverlaySource =
-            JetpackFeatureCollectionOverlaySource.UNSPECIFIED
+        JetpackFeatureCollectionOverlaySource.UNSPECIFIED
 
     fun openJetpackAppDownloadLink() {
         if (isSiteCreationOverlayScreen) {
@@ -54,7 +54,7 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         } else if (isFeatureCollectionOverlayScreen) {
             _action.value = JetpackFeatureOverlayActions.OpenPlayStore
             jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInFeatureCollectionOverlay(
-                    featureCollectionOverlayOrigin
+                featureCollectionOverlayOrigin
             )
         } else {
             _action.value = JetpackFeatureOverlayActions.OpenPlayStore
@@ -66,15 +66,16 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         _action.value = JetpackFeatureOverlayActions.DismissDialog
         if (isSiteCreationOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInSiteCreationOverlay(
-                    siteCreationOrigin,
-                    CONTINUE_BUTTON
+                siteCreationOrigin,
+                CONTINUE_BUTTON
             )
         else if (isDeepLinkOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInDeepLinkOverlay(CONTINUE_BUTTON)
         else if (isFeatureCollectionOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInFeatureCollectionOverlay(
-                    featureCollectionOverlayOrigin,
-                    CONTINUE_BUTTON)
+                featureCollectionOverlayOrigin,
+                CONTINUE_BUTTON
+            )
         else jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CONTINUE_BUTTON)
     }
 
@@ -82,15 +83,15 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         _action.value = JetpackFeatureOverlayActions.DismissDialog
         if (isSiteCreationOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInSiteCreationOverlay(
-                    siteCreationOrigin,
-                    CLOSE_BUTTON
+                siteCreationOrigin,
+                CLOSE_BUTTON
             )
         else if (isDeepLinkOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInDeepLinkOverlay(CLOSE_BUTTON)
         else if (isFeatureCollectionOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInFeatureCollectionOverlay(
-                    featureCollectionOverlayOrigin,
-                    CLOSE_BUTTON
+                featureCollectionOverlayOrigin,
+                CLOSE_BUTTON
             )
         else jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CLOSE_BUTTON)
     }
@@ -109,10 +110,10 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
             isSiteCreationOverlayScreen = true
             siteCreationOrigin = siteCreationSource
             _uiState.postValue(
-                    jetpackFeatureOverlayContentBuilder.buildSiteCreationOverlayState(
-                            getSiteCreationPhase()!!,
-                            rtlLayout
-                    )
+                jetpackFeatureOverlayContentBuilder.buildSiteCreationOverlayState(
+                    getSiteCreationPhase()!!,
+                    rtlLayout
+                )
             )
             jetpackFeatureRemovalOverlayUtil.trackSiteCreationOverlayShown(siteCreationOrigin)
             return
@@ -128,23 +129,25 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         if (isFeatureCollectionOverlay) {
             isFeatureCollectionOverlayScreen = true
             featureCollectionOverlayOrigin = featureCollectionOverlaySource
-            _uiState.postValue(jetpackFeatureOverlayContentBuilder.buildFeatureCollectionOverlayState(
+            _uiState.postValue(
+                jetpackFeatureOverlayContentBuilder.buildFeatureCollectionOverlayState(
                     rtlLayout,
                     getCurrentPhase()!!,
                     phaseThreeBlogPostLinkConfig.getValue()
-            ))
+                )
+            )
             jetpackFeatureRemovalOverlayUtil.onFeatureCollectionOverlayShown(featureCollectionOverlaySource)
             return
         }
 
         screenType = overlayScreenType ?: return
         val params = JetpackFeatureOverlayContentBuilderParams(
-                currentPhase = getCurrentPhase()!!,
-                isRtl = rtlLayout,
-                feature = overlayScreenType,
-                jpDeadlineDate = jpDeadlineConfig.getValue(),
-                phaseTwoBlogPostLink = phaseTwoBlogPostLinkConfig.getValue(),
-                phaseThreeBlogPostLink = phaseThreeBlogPostLinkConfig.getValue()
+            currentPhase = getCurrentPhase()!!,
+            isRtl = rtlLayout,
+            feature = overlayScreenType,
+            jpDeadlineDate = jpDeadlineConfig.getValue(),
+            phaseTwoBlogPostLink = phaseTwoBlogPostLinkConfig.getValue(),
+            phaseThreeBlogPostLink = phaseThreeBlogPostLinkConfig.getValue()
         )
         _uiState.postValue(jetpackFeatureOverlayContentBuilder.build(params = params))
         jetpackFeatureRemovalOverlayUtil.onOverlayShown(overlayScreenType)
@@ -157,7 +160,7 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     fun openJetpackMigrationInfoLink(migrationInfoRedirectUrl: String) {
         if (isFeatureCollectionOverlayScreen) {
             jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClickedInFeatureCollectionOverlay(
-                    featureCollectionOverlayOrigin
+                featureCollectionOverlayOrigin
             )
         } else {
             jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClicked(screenType)

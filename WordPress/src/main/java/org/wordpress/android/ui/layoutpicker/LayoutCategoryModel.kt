@@ -26,13 +26,13 @@ class LayoutCategoryModel(
 
 @JvmName("starterDesignToLayoutCategories")
 fun List<StarterDesignCategory>.toLayoutCategories(recommended: Boolean = false, randomizeOrder: Boolean = false) =
-        map {
-            LayoutCategoryModel(
-                    starterDesignCategory = it,
-                    isRecommended = recommended,
-                    randomizeOrder = randomizeOrder
-            )
-        }
+    map {
+        LayoutCategoryModel(
+            starterDesignCategory = it,
+            isRecommended = recommended,
+            randomizeOrder = randomizeOrder
+        )
+    }
 
 @JvmName("gutenbergLayoutToLayoutCategories")
 fun List<GutenbergLayoutCategory>.toLayoutCategories() = map { LayoutCategoryModel(blockLayoutCategory = it) }

@@ -40,13 +40,13 @@ class UploadUtilsWrapper @Inject constructor(
         site: SiteModel?,
         messageForUser: String?
     ) = UploadUtils.onMediaUploadedSnackbarHandler(
-            activity,
-            snackbarAttachView,
-            isError,
-            mediaList,
-            site,
-            messageForUser,
-            sequencer
+        activity,
+        snackbarAttachView,
+        isError,
+        mediaList,
+        site,
+        messageForUser,
+        sequencer
     )
 
     @JvmOverloads
@@ -61,16 +61,16 @@ class UploadUtilsWrapper @Inject constructor(
         site: SiteModel?,
         onPublishingCallback: OnPublishingCallback? = null
     ) = UploadUtils.onPostUploadedSnackbarHandler(
-            activity,
-            snackbarAttachView,
-            isError,
-            isFirstTimePublish,
-            post,
-            errorMessage,
-            site,
-            dispatcher,
-            sequencer,
-            onPublishingCallback
+        activity,
+        snackbarAttachView,
+        isError,
+        isFirstTimePublish,
+        post,
+        errorMessage,
+        site,
+        dispatcher,
+        sequencer,
+        onPublishingCallback
     )
 
     @JvmOverloads
@@ -85,16 +85,16 @@ class UploadUtilsWrapper @Inject constructor(
         publishPostListener: OnClickListener?,
         onPublishingCallback: OnPublishingCallback? = null
     ) = UploadUtils.handleEditPostModelResultSnackbars(
-            activity,
-            dispatcher,
-            snackbarAttachView,
-            data,
-            post,
-            site,
-            uploadAction,
-            sequencer,
-            publishPostListener,
-            onPublishingCallback
+        activity,
+        dispatcher,
+        snackbarAttachView,
+        data,
+        post,
+        site,
+        uploadAction,
+        sequencer,
+        publishPostListener,
+        onPublishingCallback
     )
 
     fun showSnackbarError(
@@ -125,10 +125,10 @@ class UploadUtilsWrapper @Inject constructor(
         postError: PostError,
         isEligibleForAutoUpload: Boolean
     ) = UploadUtils.getErrorMessageResIdFromPostError(
-            postStatus,
-            isPage,
-            postError,
-            isEligibleForAutoUpload
+        postStatus,
+        isPage,
+        postError,
+        isEligibleForAutoUpload
     )
 
     fun publishPost(

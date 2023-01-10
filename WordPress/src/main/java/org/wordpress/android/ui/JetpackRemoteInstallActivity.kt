@@ -33,8 +33,8 @@ class JetpackRemoteInstallActivity : LocaleAwareActivity() {
 
     override fun onBackPressed() {
         trackWithSource(
-                INSTALL_JETPACK_CANCELLED,
-                intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
+            INSTALL_JETPACK_CANCELLED,
+            intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
         )
         super.onBackPressed()
     }

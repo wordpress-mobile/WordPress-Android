@@ -14,7 +14,8 @@ import org.wordpress.android.databinding.DebugCookiesFragmentBinding
 import javax.inject.Inject
 
 class DebugCookiesFragment : Fragment(R.layout.debug_cookies_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DebugCookiesViewModel
 
     override fun onAttach(context: Context) {
@@ -51,9 +52,9 @@ class DebugCookiesFragment : Fragment(R.layout.debug_cookies_fragment) {
 
         setCookieButton.setOnClickListener {
             viewModel.setCookie(
-                    hostInput.text.toString(),
-                    nameInput.text.toString(),
-                    valueInput.text.toString()
+                hostInput.text.toString(),
+                nameInput.text.toString(),
+                valueInput.text.toString()
             )
         }
     }

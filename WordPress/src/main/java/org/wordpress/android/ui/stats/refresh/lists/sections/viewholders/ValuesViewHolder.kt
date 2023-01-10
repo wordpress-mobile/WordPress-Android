@@ -6,8 +6,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValuesItem
 
 class ValuesViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_values_item
+    parent,
+    R.layout.stats_block_values_item
 ) {
     private val container1 = itemView.findViewById<ViewGroup>(R.id.values_container1)
     private val container2 = itemView.findViewById<ViewGroup>(R.id.values_container2)

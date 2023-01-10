@@ -59,19 +59,19 @@ class MediaLibraryDataSource(
     ): MediaLoadingResult {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return Failure(
-                    UiStringRes(R.string.no_network_title),
-                    htmlSubtitle = UiStringRes(R.string.no_network_message),
-                    image = R.drawable.img_illustration_cloud_off_152dp,
-                    data = if (loadMore) get(mediaTypes, filter) else listOf()
+                UiStringRes(R.string.no_network_title),
+                htmlSubtitle = UiStringRes(R.string.no_network_message),
+                image = R.drawable.img_illustration_cloud_off_152dp,
+                data = if (loadMore) get(mediaTypes, filter) else listOf()
             )
         }
         return withContext(bgDispatcher) {
             val loadingResults = mediaTypes.map { mediaType ->
                 async {
                     loadPage(
-                            siteModel,
-                            loadMore,
-                            mediaType.toMimeType()
+                        siteModel,
+                        loadMore,
+                        mediaType.toMimeType()
                     )
                 }
             }.awaitAll()
@@ -88,10 +88,10 @@ class MediaLibraryDataSource(
             }
             if (error != null) {
                 Failure(
-                        UiStringRes(R.string.media_loading_failed),
-                        htmlSubtitle = UiStringText(error),
-                        image = R.drawable.img_illustration_cloud_off_152dp,
-                        data = if (loadMore) get(mediaTypes, filter) else listOf()
+                    UiStringRes(R.string.media_loading_failed),
+                    htmlSubtitle = UiStringText(error),
+                    image = R.drawable.img_illustration_cloud_off_152dp,
+                    data = if (loadMore) get(mediaTypes, filter) else listOf()
                 )
             } else {
                 val data = get(mediaTypes, filter)
@@ -99,8 +99,8 @@ class MediaLibraryDataSource(
                     MediaLoadingResult.Success(data, hasMore)
                 } else {
                     Empty(
-                            UiStringRes(R.string.media_empty_search_list),
-                            image = R.drawable.img_illustration_empty_results_216dp
+                        UiStringRes(R.string.media_empty_search_list),
+                        image = R.drawable.img_illustration_empty_results_216dp
                     )
                 }
             }
@@ -127,12 +127,12 @@ class MediaLibraryDataSource(
     private fun List<MediaModel>.toMediaItems(mediaType: MediaType): List<MediaItem> {
         return this.filter { it.url != null }.map { mediaModel ->
             MediaItem(
-                    RemoteId(mediaModel.mediaId),
-                    mediaModel.url,
-                    mediaModel.title,
-                    mediaType,
-                    mediaModel.mimeType,
-                    dateTimeUtilsWrapper.dateFromIso8601(mediaModel.uploadDate).time
+                RemoteId(mediaModel.mediaId),
+                mediaModel.url,
+                mediaModel.title,
+                mediaType,
+                mediaModel.mimeType,
+                dateTimeUtilsWrapper.dateFromIso8601(mediaModel.uploadDate).time
             )
         }
     }
@@ -156,16 +156,16 @@ class MediaLibraryDataSource(
     }
 
     private suspend fun loadPage(siteModel: SiteModel, loadMore: Boolean, filter: MimeType.Type): OnMediaListFetched =
-            suspendCoroutine { cont ->
-                loadContinuations[filter] = cont
-                val payload = FetchMediaListPayload(
-                        siteModel,
-                        NUM_MEDIA_PER_FETCH,
-                        loadMore,
-                        filter
-                )
-                dispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload))
-            }
+        suspendCoroutine { cont ->
+            loadContinuations[filter] = cont
+            val payload = FetchMediaListPayload(
+                siteModel,
+                NUM_MEDIA_PER_FETCH,
+                loadMore,
+                filter
+            )
+            dispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload))
+        }
 
     private fun MediaType.toMimeType(): MimeType.Type {
         return when (this) {
@@ -195,14 +195,14 @@ class MediaLibraryDataSource(
         private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
     ) {
         fun build(siteModel: SiteModel, mediaTypes: Set<MediaType>) =
-                MediaLibraryDataSource(
-                        mediaStore,
-                        dispatcher,
-                        bgDispatcher,
-                        networkUtilsWrapper,
-                        dateTimeUtilsWrapper,
-                        siteModel,
-                        mediaTypes
-                )
+            MediaLibraryDataSource(
+                mediaStore,
+                dispatcher,
+                bgDispatcher,
+                networkUtilsWrapper,
+                dateTimeUtilsWrapper,
+                siteModel,
+                mediaTypes
+            )
     }
 }

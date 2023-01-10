@@ -22,7 +22,7 @@ fun Dialog.setStatusBarAsSurfaceColor() {
         statusBarColor = context.getColorFromAttribute(attr.colorSurface)
         if (!context.resources.configuration.isDarkTheme()) {
             decorView.systemUiVisibility = decorView
-                    .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
     }
 }

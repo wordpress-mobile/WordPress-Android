@@ -21,7 +21,8 @@ private const val TEST_OUTPUT_FILE_EXTENSION = "jpg"
 
 class CropViewModelTest {
     @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
+    @JvmField
+    val rule = InstantTaskExecutorRule()
     private val cacheDir = File("/cache/dir")
 
     // Class under test

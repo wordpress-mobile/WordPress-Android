@@ -27,17 +27,17 @@ class UserFlagsHelperTest {
     private val wordPressPublicData: WordPressPublicData = mock()
     private val queryResult: QueryResult = mock()
     private val localMigrationContentResolver = LocalMigrationContentResolver(
-            contextProvider,
-            wordPressPublicData,
-            queryResult,
+        contextProvider,
+        wordPressPublicData,
+        queryResult,
     )
     private val resolverUtility: ResolverUtility = mock()
     private val classToTest = UserFlagsHelper(
-            jetpackLocalUserFlagsFlag,
-            appPrefsWrapper,
-            userFlagsAnalyticsTracker,
-            localMigrationContentResolver,
-            resolverUtility,
+        jetpackLocalUserFlagsFlag,
+        appPrefsWrapper,
+        userFlagsAnalyticsTracker,
+        localMigrationContentResolver,
+        resolverUtility,
     )
 
     @Test

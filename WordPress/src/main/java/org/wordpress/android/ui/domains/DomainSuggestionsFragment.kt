@@ -22,7 +22,8 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var mainViewModel: DomainRegistrationMainViewModel
     private lateinit var viewModel: DomainSuggestionsViewModel
 
@@ -38,10 +39,10 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
         (requireActivity().application as WordPress).component().inject(this)
 
         mainViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(DomainRegistrationMainViewModel::class.java)
+            .get(DomainRegistrationMainViewModel::class.java)
 
         viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(DomainSuggestionsViewModel::class.java)
+            .get(DomainSuggestionsViewModel::class.java)
 
         with(DomainSuggestionsFragmentBinding.bind(view)) {
             val intent = requireActivity().intent

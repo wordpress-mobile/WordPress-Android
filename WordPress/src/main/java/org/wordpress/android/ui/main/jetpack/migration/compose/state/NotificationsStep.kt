@@ -23,13 +23,13 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.components.Title
 @Composable
 fun NotificationsStep(uiState: UiState.Content.Notifications) = with(uiState) {
     Column(
-            modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         val scrollState = rememberScrollState()
         Column(
-                modifier = Modifier
-                        .verticalScroll(scrollState)
-                        .weight(1f)
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .weight(1f)
         ) {
             ScreenIcon(iconRes = screenIconRes)
             Title(text = uiStringText(title))
@@ -38,8 +38,8 @@ fun NotificationsStep(uiState: UiState.Content.Notifications) = with(uiState) {
         }
         ButtonsColumn {
             PrimaryButton(
-                    text = uiStringText(primaryActionButton.text),
-                    onClick = primaryActionButton.onClick,
+                text = uiStringText(primaryActionButton.text),
+                onClick = primaryActionButton.onClick,
             )
         }
     }

@@ -11,7 +11,8 @@ object LoginFlowThemeHelper {
      * Instead of extending the LoginFlow theme only to include these attributes and having to maintain them in multiple
      * places, we use this function to "inject" them directly.
      */
-    @JvmStatic fun injectMissingCustomAttributes(theme: Resources.Theme) {
+    @JvmStatic
+    fun injectMissingCustomAttributes(theme: Resources.Theme) {
         theme.applyStyle(R.style.WordPress_NoActionBar, false)
     }
 }

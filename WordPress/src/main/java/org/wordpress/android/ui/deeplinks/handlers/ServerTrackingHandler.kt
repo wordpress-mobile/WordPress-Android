@@ -28,10 +28,10 @@ class ServerTrackingHandler
     fun request(uri: UriWrapper) {
         launch {
             queue.add(
-                    StringRequest(
-                            Method.GET, uri.toString(),
-                            { appLogWrapper.d(API, "DeepLink tracking URI successfully requested") },
-                            { error -> appLogWrapper.e(API, "DeepLink tracking URI request failed: $error") })
+                StringRequest(
+                    Method.GET, uri.toString(),
+                    { appLogWrapper.d(API, "DeepLink tracking URI successfully requested") },
+                    { error -> appLogWrapper.e(API, "DeepLink tracking URI request failed: $error") })
             )
         }
     }

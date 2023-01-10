@@ -30,10 +30,10 @@ class OverviewMapper @Inject constructor(
     private val contentDescriptionHelper: ContentDescriptionHelper
 ) {
     private val units = listOf(
-            R.string.stats_views,
-            R.string.stats_visitors,
-            R.string.stats_likes,
-            R.string.stats_comments
+        R.string.stats_views,
+        R.string.stats_visitors,
+        R.string.stats_likes,
+        R.string.stats_comments
     )
 
     enum class SelectedType(val value: Int) {
@@ -66,18 +66,18 @@ class OverviewMapper @Inject constructor(
             else -> State.NEGATIVE
         }
         return ValueItem(
-                value = statsUtils.toFormattedString(value, startValue),
-                unit = units[selectedPosition],
-                isFirst = true,
-                change = change,
-                state = state,
-                contentDescription = resourceProvider.getString(
-                        R.string.stats_overview_content_description,
-                        value,
-                        resourceProvider.getString(units[selectedPosition]),
-                        statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
-                        unformattedChange ?: ""
-                )
+            value = statsUtils.toFormattedString(value, startValue),
+            unit = units[selectedPosition],
+            isFirst = true,
+            change = change,
+            state = state,
+            contentDescription = resourceProvider.getString(
+                R.string.stats_overview_content_description,
+                value,
+                resourceProvider.getString(units[selectedPosition]),
+                statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
+                unformattedChange ?: ""
+            )
         )
     }
 
@@ -103,42 +103,42 @@ class OverviewMapper @Inject constructor(
         val likes = selectedItem?.likes ?: 0
         val comments = selectedItem?.comments ?: 0
         return Columns(
-                listOf(
-                        Column(
-                                R.string.stats_views,
-                                statsUtils.toFormattedString(views),
-                                contentDescriptionHelper.buildContentDescription(
-                                        R.string.stats_views,
-                                        views
-                                )
-                        ),
-                        Column(
-                                R.string.stats_visitors,
-                                statsUtils.toFormattedString(visitors),
-                                contentDescriptionHelper.buildContentDescription(
-                                        R.string.stats_visitors,
-                                        visitors
-                                )
-                        ),
-                        Column(
-                                R.string.stats_likes,
-                                statsUtils.toFormattedString(likes),
-                                contentDescriptionHelper.buildContentDescription(
-                                        R.string.stats_likes,
-                                        likes
-                                )
-                        ),
-                        Column(
-                                R.string.stats_comments,
-                                statsUtils.toFormattedString(comments),
-                                contentDescriptionHelper.buildContentDescription(
-                                        R.string.stats_comments,
-                                        comments
-                                )
-                        )
+            listOf(
+                Column(
+                    R.string.stats_views,
+                    statsUtils.toFormattedString(views),
+                    contentDescriptionHelper.buildContentDescription(
+                        R.string.stats_views,
+                        views
+                    )
                 ),
-                selectedPosition,
-                onColumnSelected
+                Column(
+                    R.string.stats_visitors,
+                    statsUtils.toFormattedString(visitors),
+                    contentDescriptionHelper.buildContentDescription(
+                        R.string.stats_visitors,
+                        visitors
+                    )
+                ),
+                Column(
+                    R.string.stats_likes,
+                    statsUtils.toFormattedString(likes),
+                    contentDescriptionHelper.buildContentDescription(
+                        R.string.stats_likes,
+                        likes
+                    )
+                ),
+                Column(
+                    R.string.stats_comments,
+                    statsUtils.toFormattedString(comments),
+                    contentDescriptionHelper.buildContentDescription(
+                        R.string.stats_comments,
+                        comments
+                    )
+                )
+            ),
+            selectedPosition,
+            onColumnSelected
         )
     }
 
@@ -160,9 +160,9 @@ class OverviewMapper @Inject constructor(
                 else -> 0L
             }
             Bar(
-                    statsDateFormatter.printGranularDate(it.period, statsGranularity),
-                    it.period,
-                    value.toInt()
+                statsDateFormatter.printGranularDate(it.period, statsGranularity),
+                it.period,
+                value.toInt()
             )
         }
         // Only show overlapping visitors when we are showing views
@@ -170,9 +170,9 @@ class OverviewMapper @Inject constructor(
         val overlappingItems = if (shouldShowVisitors) {
             dates.map {
                 Bar(
-                        statsDateFormatter.printGranularDate(it.period, statsGranularity),
-                        it.period,
-                        it.visitors.toInt()
+                    statsDateFormatter.printGranularDate(it.period, statsGranularity),
+                    it.period,
+                    it.visitors.toInt()
                 )
             }
         } else {
@@ -197,21 +197,21 @@ class OverviewMapper @Inject constructor(
         }
 
         val contentDescriptions = statsUtils.getBarChartEntryContentDescriptions(
-                entryType,
-                chartItems,
-                overlappingType,
-                overlappingItems
+            entryType,
+            chartItems,
+            overlappingType,
+            overlappingItems
         )
 
         result.add(
-                BarChartItem(
-                        chartItems,
-                        overlappingEntries = overlappingItems,
-                        selectedItem = selectedItemPeriod,
-                        onBarSelected = onBarSelected,
-                        onBarChartDrawn = onBarChartDrawn,
-                        entryContentDescriptions = contentDescriptions
-                )
+            BarChartItem(
+                chartItems,
+                overlappingEntries = overlappingItems,
+                selectedItem = selectedItemPeriod,
+                onBarSelected = onBarSelected,
+                onBarChartDrawn = onBarChartDrawn,
+                entryContentDescriptions = contentDescriptions
+            )
         )
         return result
     }

@@ -3,7 +3,6 @@ package org.wordpress.android.ui.people
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -31,23 +30,23 @@ class InviteLinksHandler @Inject constructor(
 
     suspend fun handleInviteLinksStatusRequest(blogId: Long, scenarioContext: UseCaseScenarioContext) {
         inviteLinksUseCase.getInviteLinksStatus(blogId, scenarioContext)
-                .flowOn(bgDispatcher).collect { state ->
-                    manageState(state)
-                }
+            .flowOn(bgDispatcher).collect { state ->
+                manageState(state)
+            }
     }
 
     suspend fun handleGenerateLinks(blogId: Long) {
         inviteLinksUseCase.generateLinks(blogId)
-                .flowOn(bgDispatcher).collect { state ->
-                    manageState(state)
-                }
+            .flowOn(bgDispatcher).collect { state ->
+                manageState(state)
+            }
     }
 
     suspend fun handleDisableLinks(blogId: Long) {
         inviteLinksUseCase.disableLinks(blogId)
-                .flowOn(bgDispatcher).collect { state ->
-                    manageState(state)
-                }
+            .flowOn(bgDispatcher).collect { state ->
+                manageState(state)
+            }
     }
 
     private fun manageState(state: InviteLinksState) {
@@ -55,7 +54,9 @@ class InviteLinksHandler @Inject constructor(
             InviteLinksNotAllowed,
             UserNotAuthenticated,
             is InviteLinksData,
-            is InviteLinksLoading -> { _inviteLinksState.postValue(state) }
+            is InviteLinksLoading -> {
+                _inviteLinksState.postValue(state)
+            }
             is InviteLinksError -> {
                 _inviteLinksState.postValue(state)
                 _snackbarEvents.postValue(Event(SnackbarMessageHolder(state.error)))

@@ -11,7 +11,7 @@ import androidx.compose.runtime.CompositionLocalProvider
  */
 fun withFullContentAlpha(content: @Composable () -> Unit): @Composable () -> Unit = {
     CompositionLocalProvider(
-            LocalContentAlpha provides 1f,
-            content = content
+        LocalContentAlpha provides 1f,
+        content = content
     )
 }

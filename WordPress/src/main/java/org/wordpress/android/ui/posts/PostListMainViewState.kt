@@ -16,13 +16,13 @@ data class PostListMainViewState(
 
 sealed class PostListViewLayoutTypeMenuUiState(@DrawableRes val iconRes: Int, val title: UiString) {
     object StandardViewLayoutTypeMenuUiState : PostListViewLayoutTypeMenuUiState(
-            iconRes = R.drawable.ic_view_post_compact_white_24dp,
-            title = UiStringRes(R.string.post_list_toggle_item_layout_list_view)
+        iconRes = R.drawable.ic_view_post_compact_white_24dp,
+        title = UiStringRes(R.string.post_list_toggle_item_layout_list_view)
     )
 
     object CompactViewLayoutTypeMenuUiState : PostListViewLayoutTypeMenuUiState(
-            iconRes = R.drawable.ic_view_post_full_white_24dp,
-            title = UiStringRes(R.string.post_list_toggle_item_layout_cards_view)
+        iconRes = R.drawable.ic_view_post_full_white_24dp,
+        title = UiStringRes(R.string.post_list_toggle_item_layout_cards_view)
     )
 }
 
@@ -32,18 +32,18 @@ sealed class AuthorFilterListItemUIState(
     open val isSelected: Boolean
 ) {
     data class Everyone(override val isSelected: Boolean, @DrawableRes val imageRes: Int) :
-            AuthorFilterListItemUIState(
-                    id = EVERYONE.id,
-                    text = UiStringRes(R.string.everyone),
-                    isSelected = isSelected
-            )
+        AuthorFilterListItemUIState(
+            id = EVERYONE.id,
+            text = UiStringRes(R.string.everyone),
+            isSelected = isSelected
+        )
 
     data class Me(val avatarUrl: String?, override val isSelected: Boolean) :
-            AuthorFilterListItemUIState(
-                    id = ME.id,
-                    text = UiStringRes(R.string.me),
-                    isSelected = isSelected
-            )
+        AuthorFilterListItemUIState(
+            id = ME.id,
+            text = UiStringRes(R.string.me),
+            isSelected = isSelected
+        )
 }
 
 fun getAuthorFilterItems(
@@ -54,8 +54,8 @@ fun getAuthorFilterItems(
         when (value) {
             ME -> AuthorFilterListItemUIState.Me(avatarUrl, selection == value)
             EVERYONE -> AuthorFilterListItemUIState.Everyone(
-                    selection == value,
-                    R.drawable.bg_oval_neutral_30_multiple_users_white_40dp
+                selection == value,
+                R.drawable.bg_oval_neutral_30_multiple_users_white_40dp
             )
         }
     }

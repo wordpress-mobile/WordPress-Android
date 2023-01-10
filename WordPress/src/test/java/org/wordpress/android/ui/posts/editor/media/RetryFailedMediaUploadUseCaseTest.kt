@@ -46,9 +46,9 @@ class RetryFailedMediaUploadUseCaseTest : BaseUnitTest() {
 
         // Assert
         verify(updateMediaModelUseCase, times(FAILED_MEDIA_IDS.size)).updateMediaModel(
-                any(),
-                anyOrNull(),
-                eq(QUEUED)
+            any(),
+            anyOrNull(),
+            eq(QUEUED)
         )
     }
 
@@ -63,8 +63,8 @@ class RetryFailedMediaUploadUseCaseTest : BaseUnitTest() {
 
         // Assert
         verify(uploadMediaUseCase).saveQueuedPostAndStartUpload(
-                anyOrNull(),
-                argThat { this.size == FAILED_MEDIA_IDS.size }
+            anyOrNull(),
+            argThat { this.size == FAILED_MEDIA_IDS.size }
         )
     }
 
@@ -115,10 +115,10 @@ class RetryFailedMediaUploadUseCaseTest : BaseUnitTest() {
             tracker: AnalyticsTrackerWrapper = mock()
         ): RetryFailedMediaUploadUseCase {
             return RetryFailedMediaUploadUseCase(
-                    getMediaModelUseCase,
-                    updateMediaModelUseCase,
-                    uploadMediaUseCase,
-                    tracker
+                getMediaModelUseCase,
+                updateMediaModelUseCase,
+                uploadMediaUseCase,
+                tracker
             )
         }
 
@@ -126,15 +126,15 @@ class RetryFailedMediaUploadUseCaseTest : BaseUnitTest() {
             onBlocking { loadMediaByLocalId(any()) } doAnswer { invocation ->
                 // Creates dummy media models from provided model ids
                 (invocation.getArgument(0) as Iterable<Int>)
-                        .map { createMediaModel(it) }
-                        .toList()
+                    .map { createMediaModel(it) }
+                    .toList()
             }
         }
 
         fun createMediaModel(mediaModelId: Int) =
-                MediaModel().apply {
-                    this.id = mediaModelId
-                    this.uploadState = MediaUploadState.FAILED.name
-                }
+            MediaModel().apply {
+                this.id = mediaModelId
+                this.uploadState = MediaUploadState.FAILED.name
+            }
     }
 }

@@ -30,9 +30,14 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), ScrollableViewInitializedListener {
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+
+    @Inject
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     private val viewModel: ScanHistoryViewModel by activityViewModels()
     private var binding: ScanHistoryFragmentBinding? = null
 
@@ -93,8 +98,8 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = uiHelpers.getTextOfUiString(requireContext(), list[position].label)
-                    .toString()
-                    .uppercase(localeManagerWrapper.getLocale())
+                .toString()
+                .uppercase(localeManagerWrapper.getLocale())
         }.attach()
         tabLayout.addOnTabSelectedListener(onTabSelectedListener)
     }
@@ -150,7 +155,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
             binding?.root?.post {
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
                 val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
-                        ?: return@post
+                    ?: return@post
 
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
@@ -159,8 +164,8 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
                     binding?.jetpackBanner?.root?.setOnClickListener {
                         jetpackBrandingUtils.trackBannerTapped(SCAN)
                         JetpackPoweredBottomSheetFragment
-                                .newInstance()
-                                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                            .newInstance()
+                            .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
                     }
                 }
             }

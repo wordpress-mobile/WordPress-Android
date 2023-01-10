@@ -15,10 +15,10 @@ data class BloggingRemindersUiModel(
     val isPromptIncluded: Boolean
 ) {
     fun getNotificationTime(): CharSequence =
-            LocalTime.of(hour, minute).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+        LocalTime.of(hour, minute).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
 
     fun getNotificationTime24hour(): CharSequence =
-            LocalTime.of(hour, minute).format(DateTimeFormatter.ofPattern("HH:mm", Locale.ROOT))
+        LocalTime.of(hour, minute).format(DateTimeFormatter.ofPattern("HH:mm", Locale.ROOT))
 
     fun toReminderConfig() = WeeklyReminder(this.enabledDays)
 }

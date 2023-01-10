@@ -7,5 +7,5 @@ import javax.inject.Inject
 
 class ContentResolverWrapper @Inject constructor() {
     fun queryUri(contentResolver: ContentResolver, uriValue: String): Cursor? =
-            contentResolver.query(Uri.parse(uriValue), arrayOf(), "", arrayOf(), "")
+        contentResolver.query(Uri.parse(uriValue), arrayOf(), "", arrayOf(), "")
 }

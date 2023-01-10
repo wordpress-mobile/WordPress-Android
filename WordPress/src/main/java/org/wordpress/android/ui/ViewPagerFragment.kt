@@ -64,7 +64,7 @@ abstract class ViewPagerFragment : Fragment {
             }
             host?.let {
                 (host as ScrollableViewInitializedListener).onScrollableViewInitialized(
-                        setUniqueIdToView(scrollableContainer)
+                    setUniqueIdToView(scrollableContainer)
                 )
             }
         }

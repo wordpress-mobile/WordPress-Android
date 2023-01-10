@@ -46,13 +46,26 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var store: PostDetailStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var statsPostProvider: StatsPostProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var postDetailMapper: PostDetailMapper
+    @Mock
+    lateinit var store: PostDetailStore
+
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+
+    @Mock
+    lateinit var statsPostProvider: StatsPostProvider
+
+    @Mock
+    lateinit var site: SiteModel
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var postDetailMapper: PostDetailMapper
     private lateinit var useCase: PostAverageViewsPerDayUseCase
     private lateinit var expandCaptor: KArgumentCaptor<(ExpandedYearUiState) -> Unit>
     private val postId: Long = 1L
@@ -61,13 +74,13 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = PostAverageViewsPerDayUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                statsSiteProvider,
-                statsPostProvider,
-                store,
-                postDetailMapper,
-                BLOCK
+            testDispatcher(),
+            testDispatcher(),
+            statsSiteProvider,
+            statsPostProvider,
+            store,
+            postDetailMapper,
+            BLOCK
         )
         expandCaptor = argumentCaptor()
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -81,44 +94,44 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
         val model = PostDetailStatsModel(0, listOf(), listOf(), listOf(), data)
         whenever(store.getPostDetail(site, postId)).thenReturn(model)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         val nonExpandedUiState = ExpandedYearUiState()
         val expandedUiState = ExpandedYearUiState(expandedYear = 2019)
         whenever(
-                postDetailMapper.mapYears(
-                        eq(data),
-                        eq(nonExpandedUiState),
-                        any(),
-                        expandCaptor.capture()
-                )
+            postDetailMapper.mapYears(
+                eq(data),
+                eq(nonExpandedUiState),
+                any(),
+                expandCaptor.capture()
+            )
         ).thenReturn(
-                listOf(
-                        ExpandableItem(
-                                ListItemWithIcon(text = "2010", value = "150", contentDescription = "2010: 150"),
-                                false
-                        ) {
-                            expandCaptor.lastValue.invoke(expandedUiState)
-                        })
+            listOf(
+                ExpandableItem(
+                    ListItemWithIcon(text = "2010", value = "150", contentDescription = "2010: 150"),
+                    false
+                ) {
+                    expandCaptor.lastValue.invoke(expandedUiState)
+                })
         )
         whenever(
-                postDetailMapper.mapYears(
-                        eq(data),
-                        eq(expandedUiState),
-                        any(),
-                        expandCaptor.capture()
-                )
+            postDetailMapper.mapYears(
+                eq(data),
+                eq(expandedUiState),
+                any(),
+                expandCaptor.capture()
+            )
         ).thenReturn(
-                listOf(
-                        ExpandableItem(
-                                ListItemWithIcon(text = "2010", value = "150", contentDescription = "2010: 150"),
-                                false
-                        ) {
-                            expandCaptor.lastValue.invoke(expandedUiState)
-                        }, ListItemWithIcon(text = "Jan", value = "100", contentDescription = "Jan: 100")
-                )
+            listOf(
+                ExpandableItem(
+                    ListItemWithIcon(text = "2010", value = "150", contentDescription = "2010: 150"),
+                    false
+                ) {
+                    expandCaptor.lastValue.invoke(expandedUiState)
+                }, ListItemWithIcon(text = "Jan", value = "100", contentDescription = "Jan: 100")
+            )
         )
 
         val result = loadData(true, forced)
@@ -159,27 +172,27 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
         val model = PostDetailStatsModel(0, listOf(), listOf(), listOf(), data)
         whenever(store.getPostDetail(site, postId)).thenReturn(model)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         val nonExpandedUiState = ExpandedYearUiState()
         val expandedUiState = ExpandedYearUiState(expandedYear = 2019)
         whenever(
-                postDetailMapper.mapYears(
-                        eq(data.takeLast(6)),
-                        eq(nonExpandedUiState),
-                        any(),
-                        expandCaptor.capture()
-                )
+            postDetailMapper.mapYears(
+                eq(data.takeLast(6)),
+                eq(nonExpandedUiState),
+                any(),
+                expandCaptor.capture()
+            )
         ).thenReturn(
-                listOf(
-                        ExpandableItem(
-                                ListItemWithIcon(text = "2010", value = "150", contentDescription = "2010: 150"),
-                                false
-                        ) {
-                            expandCaptor.lastValue.invoke(expandedUiState)
-                        })
+            listOf(
+                ExpandableItem(
+                    ListItemWithIcon(text = "2010", value = "150", contentDescription = "2010: 150"),
+                    false
+                ) {
+                    expandCaptor.lastValue.invoke(expandedUiState)
+                })
         )
 
         val result = loadData(true, forced)
@@ -199,9 +212,9 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadData(true, forced)
@@ -213,15 +226,15 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
     fun `maps list of empty items to empty UI model`() = test {
         val forced = false
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
-                OnStatsFetched(
-                        model = PostDetailStatsModel(
-                                0,
-                                listOf(Day("1970", 0), Day("1970", 1)),
-                                listOf(Week(listOf(), 10, 10)),
-                                listOf(Year(2020, listOf(), 100)),
-                                listOf(Year(2020, listOf(), 0))
-                        )
+            OnStatsFetched(
+                model = PostDetailStatsModel(
+                    0,
+                    listOf(Day("1970", 0), Day("1970", 1)),
+                    listOf(Week(listOf(), 10, 10)),
+                    listOf(Year(2020, listOf(), 100)),
+                    listOf(Year(2020, listOf(), 0))
                 )
+            )
         )
 
         val result = loadData(true, forced)

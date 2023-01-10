@@ -13,19 +13,19 @@ class PackageManagerWrapper @Inject constructor(
     private val contextProvider: ContextProvider,
 ) {
     fun isPackageInstalled(packageName: String) =
-            contextProvider.getContext().packageManager.getLaunchIntentForPackage(packageName) != null
+        contextProvider.getContext().packageManager.getLaunchIntentForPackage(packageName) != null
 
     fun disableComponentEnabledSetting(name: String) {
         contextProvider.getContext().packageManager.setComponentEnabledSetting(
-                ComponentName(contextProvider.getContext(), name),
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
+            ComponentName(contextProvider.getContext(), name),
+            PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
         )
     }
 
     fun enableComponentEnabledSetting(name: String) {
         contextProvider.getContext().packageManager.setComponentEnabledSetting(
-                ComponentName(contextProvider.getContext(), name),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
+            ComponentName(contextProvider.getContext(), name),
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
         )
     }
 
@@ -34,7 +34,7 @@ class PackageManagerWrapper @Inject constructor(
 
 
     @Suppress("SwallowedException")
-    fun getActivityLabelResFromIntent(intent: Intent) : Int? {
+    fun getActivityLabelResFromIntent(intent: Intent): Int? {
         intent.component?.let {
             try {
                 val context = contextProvider.getContext()

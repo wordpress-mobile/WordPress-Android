@@ -43,27 +43,39 @@ import org.wordpress.android.viewmodel.Event
 @RunWith(MockitoJUnitRunner::class)
 class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingCategoriesViewModel
-    @Mock lateinit var getCategoriesUseCase: GetCategoriesUseCase
-    @Mock lateinit var addCategoryUseCase: AddCategoryUseCase
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var editPostRepository: EditPostRepository
-    @Mock lateinit var siteModel: SiteModel
+
+    @Mock
+    lateinit var getCategoriesUseCase: GetCategoriesUseCase
+
+    @Mock
+    lateinit var addCategoryUseCase: AddCategoryUseCase
+
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var editPostRepository: EditPostRepository
+
+    @Mock
+    lateinit var siteModel: SiteModel
 
     @Before
     fun setup() = test {
         viewModel = PrepublishingCategoriesViewModel(
-                getCategoriesUseCase,
-                addCategoryUseCase,
-                analyticsTrackerWrapper,
-                networkUtilsWrapper,
-                testDispatcher()
+            getCategoriesUseCase,
+            addCategoryUseCase,
+            analyticsTrackerWrapper,
+            networkUtilsWrapper,
+            testDispatcher()
         )
 
         whenever(getCategoriesUseCase.getPostCategories(anyOrNull()))
-                .thenReturn(postCategoriesList())
+            .thenReturn(postCategoriesList())
         whenever(getCategoriesUseCase.getSiteCategories(any()))
-                .thenReturn(siteCategoriesList())
+            .thenReturn(siteCategoriesList())
         whenever(addCategoryUseCase.addCategory(anyString(), anyLong(), any())).doAnswer { }
     }
 
@@ -75,7 +87,7 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
         val title: UiStringRes? = toolbarTitleUiState[0] as UiStringRes
 
         assertThat(title?.stringRes)
-                .isEqualTo(R.string.prepublishing_nudges_toolbar_title_categories)
+            .isEqualTo(R.string.prepublishing_nudges_toolbar_title_categories)
     }
 
     @Test
@@ -86,7 +98,7 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
         val addCategoryButtonVisibility: Boolean = uiStates[0].addCategoryActionButtonVisibility
 
         Assertions.assertThat(addCategoryButtonVisibility)
-                .isEqualTo(true)
+            .isEqualTo(true)
     }
 
     @Test
@@ -97,7 +109,7 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
         val progressVisibility: Boolean = uiStates[0].progressVisibility
 
         Assertions.assertThat(progressVisibility)
-                .isEqualTo(false)
+            .isEqualTo(false)
     }
 
     @Test
@@ -108,7 +120,7 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
         val progressVisibility: Boolean = uiStates[0].progressVisibility
 
         Assertions.assertThat(progressVisibility)
-                .isEqualTo(true)
+            .isEqualTo(true)
     }
 
     @Test
@@ -171,7 +183,7 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
         assertThat(viewModel.uiState.value).isInstanceOf(UiState::class.java)
         assertThat(uiStates[0].categoriesListItemUiState.size).isEqualTo(siteCategories.size)
         val categoriesListItems =
-                uiStates[0].categoriesListItemUiState
+            uiStates[0].categoriesListItemUiState
         assertThat(categoriesListItems.count { item ->
             item.checked
         }).isEqualTo(postCategories.size)
@@ -189,7 +201,7 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
         assertThat(viewModel.uiState.value).isInstanceOf(UiState::class.java)
         assertThat(uiStates[0].categoriesListItemUiState.size).isEqualTo(siteCategories.size)
         val categoriesListItems =
-                uiStates[0].categoriesListItemUiState
+            uiStates[0].categoriesListItemUiState
         assertThat(categoriesListItems.count { item ->
             item.checked
         }).isEqualTo(postCategories.size)
@@ -214,19 +226,19 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
         val selectedCategoriesCount = postCategoriesList().size + 1
 
         whenever(getCategoriesUseCase.getSiteCategories(any()))
-                .thenReturn(siteCategoriesList())
+            .thenReturn(siteCategoriesList())
 
         viewModel.start(editPostRepository, siteModel, null, listOf())
         val termModel = getTermModel()
         val onTermUploaded = TaxonomyStore.OnTermUploaded(termModel)
 
         whenever(getCategoriesUseCase.getSiteCategories(any()))
-                .thenReturn(updatedSiteCategoriesList())
+            .thenReturn(updatedSiteCategoriesList())
         viewModel.onTermUploadedComplete(onTermUploaded)
 
         assertThat(uiStates[1].categoriesListItemUiState.size).isEqualTo(siteCategories.size)
         val categoriesListItems =
-                uiStates[1].categoriesListItemUiState
+            uiStates[1].categoriesListItemUiState
         assertThat(categoriesListItems.count { item ->
             item.checked
         }).isEqualTo(selectedCategoriesCount)
@@ -263,7 +275,7 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
         val onTermUploaded = TaxonomyStore.OnTermUploaded(getTermModel())
 
         whenever(getCategoriesUseCase.getSiteCategories(any()))
-                .thenReturn(updatedSiteCategoriesList())
+            .thenReturn(updatedSiteCategoriesList())
         viewModel.onTermUploadedComplete(onTermUploaded)
 
         viewModel.onBackButtonClick()
@@ -274,14 +286,14 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
     private fun postCategoriesList() = listOf<Long>(1, 2, 3, 4, 5)
     private fun siteCategoriesList(): ArrayList<CategoryNode> {
         return arrayListOf(
-                CategoryNode(1, 0, "Animals"),
-                CategoryNode(2, 0, "Colors"),
-                CategoryNode(3, 0, "Flavors"),
-                CategoryNode(4, 0, "Articles"),
-                CategoryNode(14, 4, "New"),
-                CategoryNode(5, 0, "Fruit"),
-                CategoryNode(6, 0, "Recipes"),
-                CategoryNode(16, 6, "New")
+            CategoryNode(1, 0, "Animals"),
+            CategoryNode(2, 0, "Colors"),
+            CategoryNode(3, 0, "Flavors"),
+            CategoryNode(4, 0, "Articles"),
+            CategoryNode(14, 4, "New"),
+            CategoryNode(5, 0, "Fruit"),
+            CategoryNode(6, 0, "Recipes"),
+            CategoryNode(16, 6, "New")
         )
     }
 
@@ -312,11 +324,11 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
         viewModel.snackbarEvents.observeForever { msgs.add(it) }
 
         return Observers(
-                uiStates,
-                navigateToHome,
-                navigateToAddCategoryScreen,
-                toolbarTitleUiState,
-                msgs
+            uiStates,
+            navigateToHome,
+            navigateToAddCategoryScreen,
+            toolbarTitleUiState,
+            msgs
         )
     }
 
@@ -330,10 +342,10 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
     )
 
     private val addCategoryRequest =
-            PrepublishingAddCategoryRequest(
-                    categoryText = "Flowers",
-                    categoryParentId = 0
-            )
+        PrepublishingAddCategoryRequest(
+            categoryText = "Flowers",
+            categoryParentId = 0
+        )
 
     private fun getTermModel(): TermModel {
         val termModel = TermModel()

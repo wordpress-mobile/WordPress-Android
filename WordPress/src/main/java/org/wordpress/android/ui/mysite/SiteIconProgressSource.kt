@@ -13,6 +13,6 @@ class SiteIconProgressSource @Inject constructor(
         coroutineScope: CoroutineScope,
         siteLocalId: Int
     ) = selectedSiteRepository.showSiteIconProgressBar
-            .map { ShowSiteIconProgressBar(it) }
-            .distinctUntilChanged()
+        .map { ShowSiteIconProgressBar(it) }
+        .distinctUntilChanged()
 }

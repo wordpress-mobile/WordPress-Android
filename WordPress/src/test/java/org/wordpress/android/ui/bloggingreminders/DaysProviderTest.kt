@@ -19,7 +19,8 @@ import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
 class DaysProviderTest {
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
     private lateinit var daysProvider: DaysProvider
 
     @Before
@@ -34,13 +35,13 @@ class DaysProviderTest {
         val days = daysProvider.getDaysOfWeekByLocale()
 
         assertThat(days).containsExactly(
-                SUNDAY,
-                MONDAY,
-                TUESDAY,
-                WEDNESDAY,
-                THURSDAY,
-                FRIDAY,
-                SATURDAY
+            SUNDAY,
+            MONDAY,
+            TUESDAY,
+            WEDNESDAY,
+            THURSDAY,
+            FRIDAY,
+            SATURDAY
         )
     }
 
@@ -51,13 +52,13 @@ class DaysProviderTest {
         val days = daysProvider.getDaysOfWeekByLocale()
 
         assertThat(days).containsExactly(
-                MONDAY,
-                TUESDAY,
-                WEDNESDAY,
-                THURSDAY,
-                FRIDAY,
-                SATURDAY,
-                SUNDAY
+            MONDAY,
+            TUESDAY,
+            WEDNESDAY,
+            THURSDAY,
+            FRIDAY,
+            SATURDAY,
+            SUNDAY
         )
     }
 }

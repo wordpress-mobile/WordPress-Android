@@ -12,7 +12,7 @@ class DateTimeUtilsWrapper @Inject constructor(
     private val contextProvider: ContextProvider
 ) {
     fun currentTimeInIso8601(): String =
-            DateTimeUtils.iso8601FromTimestamp(localeManagerWrapper.getCurrentCalendar().timeInMillis / 1000)
+        DateTimeUtils.iso8601FromTimestamp(localeManagerWrapper.getCurrentCalendar().timeInMillis / 1000)
 
     fun javaDateToTimeSpan(date: Date?): String = DateTimeUtils.javaDateToTimeSpan(date, contextProvider.getContext())
 
@@ -30,7 +30,7 @@ class DateTimeUtilsWrapper @Inject constructor(
         // Format Decemeber 22, 2020
         val targetFormat = DateTimeFormatter.ofPattern(targetDateFormatPattern)
         return runCatching { LocalDate.parse(date, originalFormat).format(targetFormat) }
-                .onFailure { AppLog.e(T.UTILS, "Couldn't parse date: $date", it) }
-                .getOrNull()
+            .onFailure { AppLog.e(T.UTILS, "Couldn't parse date: $date", it) }
+            .getOrNull()
     }
 }

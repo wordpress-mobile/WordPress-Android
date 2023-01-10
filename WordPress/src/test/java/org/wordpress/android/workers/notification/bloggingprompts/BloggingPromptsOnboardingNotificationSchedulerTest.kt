@@ -17,7 +17,7 @@ class BloggingPromptsOnboardingNotificationSchedulerTest {
     private val bloggingPromptsOnboardingNotificationHandler: BloggingPromptsOnboardingNotificationHandler = mock()
     private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig = mock()
     private val classToTest = BloggingPromptsOnboardingNotificationScheduler(
-            localnotificationScheduler, bloggingPromptsOnboardingNotificationHandler, bloggingPromptsFeatureConfig
+        localnotificationScheduler, bloggingPromptsOnboardingNotificationHandler, bloggingPromptsFeatureConfig
     )
 
     @Test
@@ -25,16 +25,16 @@ class BloggingPromptsOnboardingNotificationSchedulerTest {
         whenever(bloggingPromptsOnboardingNotificationHandler.shouldShowNotification()).thenReturn(true)
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         val expectedLocalNotification = LocalNotification(
-                type = BLOGGING_PROMPTS_ONBOARDING,
-                delay = 3000,
-                delayUnits = MILLISECONDS,
-                title = R.string.blogging_prompts_onboarding_notification_title,
-                text = R.string.blogging_prompts_onboarding_notification_text,
-                icon = R.drawable.ic_wordpress_white_24dp,
-                firstActionIcon = -1,
-                firstActionTitle = R.string.blogging_prompts_onboarding_notification_action,
-                secondActionIcon = -1,
-                secondActionTitle = R.string.blogging_prompts_notification_dismiss
+            type = BLOGGING_PROMPTS_ONBOARDING,
+            delay = 3000,
+            delayUnits = MILLISECONDS,
+            title = R.string.blogging_prompts_onboarding_notification_title,
+            text = R.string.blogging_prompts_onboarding_notification_text,
+            icon = R.drawable.ic_wordpress_white_24dp,
+            firstActionIcon = -1,
+            firstActionTitle = R.string.blogging_prompts_onboarding_notification_action,
+            secondActionIcon = -1,
+            secondActionTitle = R.string.blogging_prompts_notification_dismiss
         )
         classToTest.scheduleBloggingPromptsOnboardingNotificationIfNeeded()
         verify(localnotificationScheduler).scheduleOneTimeNotification(expectedLocalNotification)

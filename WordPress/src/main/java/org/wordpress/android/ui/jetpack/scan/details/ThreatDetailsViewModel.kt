@@ -104,7 +104,7 @@ class ThreatDetailsViewModel @Inject constructor(
             updateThreatActionButtons(isEnabled = false)
             when (ignoreThreatUseCase.ignoreThreat(site.siteId, threatModel.baseThreatModel.id)) {
                 is IgnoreThreatState.Success -> updateNavigationEvent(
-                        ShowUpdatedScanStateWithMessage(R.string.threat_ignore_success_message)
+                    ShowUpdatedScanStateWithMessage(R.string.threat_ignore_success_message)
                 )
 
                 is IgnoreThreatState.Failure.NetworkUnavailable -> {
@@ -125,11 +125,11 @@ class ThreatDetailsViewModel @Inject constructor(
         scanTracker.trackOnFixThreatButtonClicked(threatModel.baseThreatModel.signature)
         val fixable = requireNotNull(threatModel.baseThreatModel.fixable)
         updateNavigationEvent(
-                OpenThreatActionDialog(
-                        title = UiStringRes(R.string.threat_fix),
-                        message = requireNotNull(builder.buildFixableThreatDescription(fixable).text),
-                        okButtonAction = this@ThreatDetailsViewModel::fixThreat
-                )
+            OpenThreatActionDialog(
+                title = UiStringRes(R.string.threat_fix),
+                message = requireNotNull(builder.buildFixableThreatDescription(fixable).text),
+                okButtonAction = this@ThreatDetailsViewModel::fixThreat
+            )
         )
     }
 
@@ -137,17 +137,17 @@ class ThreatDetailsViewModel @Inject constructor(
         scanTracker.trackOnIgnoreThreatButtonClicked(threatModel.baseThreatModel.signature)
         val siteName = site.name ?: resourceProvider.getString(R.string.scan_this_site)
         updateNavigationEvent(
-                OpenThreatActionDialog(
-                        title = UiStringRes(R.string.threat_ignore),
-                        message = UiStringText(
-                                htmlMessageUtils
-                                        .getHtmlMessageFromStringFormatResId(
-                                                R.string.threat_ignore_warning,
-                                                "<b>$siteName</b>"
-                                        )
-                        ),
-                        okButtonAction = this@ThreatDetailsViewModel::ignoreThreat
-                )
+            OpenThreatActionDialog(
+                title = UiStringRes(R.string.threat_ignore),
+                message = UiStringText(
+                    htmlMessageUtils
+                        .getHtmlMessageFromStringFormatResId(
+                            R.string.threat_ignore_warning,
+                            "<b>$siteName</b>"
+                        )
+                ),
+                okButtonAction = this@ThreatDetailsViewModel::ignoreThreat
+            )
         )
     }
 
@@ -186,15 +186,15 @@ class ThreatDetailsViewModel @Inject constructor(
     }
 
     private fun buildContentUiState(model: ThreatModel, siteId: Long, scanStateHasValidCredentials: Boolean) = Content(
-            builder.buildThreatDetailsListItems(
-                    model,
-                    scanStateHasValidCredentials,
-                    siteId,
-                    this@ThreatDetailsViewModel::onFixThreatButtonClicked,
-                    this@ThreatDetailsViewModel::onGetFreeEstimateButtonClicked,
-                    this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked,
-                    this@ThreatDetailsViewModel::onEnterServerCredsIconClicked
-            )
+        builder.buildThreatDetailsListItems(
+            model,
+            scanStateHasValidCredentials,
+            siteId,
+            this@ThreatDetailsViewModel::onFixThreatButtonClicked,
+            this@ThreatDetailsViewModel::onGetFreeEstimateButtonClicked,
+            this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked,
+            this@ThreatDetailsViewModel::onEnterServerCredsIconClicked
+        )
     )
 
     @Suppress("ForbiddenComment")

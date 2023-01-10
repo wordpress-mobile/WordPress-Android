@@ -26,42 +26,42 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.dimmed
 @Composable
 fun ErrorStep(uiState: UiState.Error) = with(uiState) {
     Column(
-            modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         val scrollState = rememberScrollState()
         Column(
-                modifier = Modifier
-                        .verticalScroll(scrollState)
-                        .weight(1f)
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .weight(1f)
         ) {
             ScreenIcon(
-                    iconRes = screenIconRes,
-                    modifier = Modifier.dimmed(isProcessing)
+                iconRes = screenIconRes,
+                modifier = Modifier.dimmed(isProcessing)
             )
             Title(
-                    text = uiStringText(type.title),
-                    modifier = Modifier.dimmed(isProcessing)
+                text = uiStringText(type.title),
+                modifier = Modifier.dimmed(isProcessing)
             )
             Subtitle(
-                    text = uiStringText(type.subtitle),
-                    modifier = Modifier.dimmed(isProcessing)
+                text = uiStringText(type.subtitle),
+                modifier = Modifier.dimmed(isProcessing)
             )
             Message(
-                    text = uiStringText(type.message),
-                    modifier = Modifier.dimmed(isProcessing)
+                text = uiStringText(type.message),
+                modifier = Modifier.dimmed(isProcessing)
             )
         }
         ButtonsColumn {
             PrimaryButton(
-                    text = uiStringText(primaryActionButton.text),
-                    onClick = primaryActionButton.onClick,
-                    isInProgress = isProcessing,
+                text = uiStringText(primaryActionButton.text),
+                onClick = primaryActionButton.onClick,
+                isInProgress = isProcessing,
             )
             SecondaryButton(
-                    text = uiStringText(secondaryActionButton.text),
-                    onClick = secondaryActionButton.onClick,
-                    enabled = !isProcessing,
-                    modifier = Modifier.dimmed(isProcessing)
+                text = uiStringText(secondaryActionButton.text),
+                onClick = secondaryActionButton.onClick,
+                enabled = !isProcessing,
+                modifier = Modifier.dimmed(isProcessing)
             )
         }
     }

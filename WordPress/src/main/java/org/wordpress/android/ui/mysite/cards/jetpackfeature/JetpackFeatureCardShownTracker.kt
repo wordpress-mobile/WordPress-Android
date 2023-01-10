@@ -22,8 +22,9 @@ class JetpackFeatureCardShownTracker @Inject constructor(
             if (!cardsShownTracked.contains(itemType)) {
                 cardsShownTracked.add(itemType)
                 analyticsTrackerWrapper.track(
-                        Stat.REMOVE_FEATURE_CARD_DISPLAYED,
-                        mapOf("phase" to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName))
+                    Stat.REMOVE_FEATURE_CARD_DISPLAYED,
+                    mapOf("phase" to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName)
+                )
             }
         }
     }

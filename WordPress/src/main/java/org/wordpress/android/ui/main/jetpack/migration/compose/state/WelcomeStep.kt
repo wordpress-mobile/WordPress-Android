@@ -50,58 +50,58 @@ fun WelcomeStep(uiState: UiState.Content.Welcome) = with(uiState) {
         val blurredListState = rememberLazyListState()
 
         SiteListScaffold(
-                blurRadius = 4.dp,
-                backgroundColor = colorResource(R.color.bg_jp_migration_buttons_panel),
-                borderColor = colorResource(R.color.gray_10).let {
-                    if (isProcessing) it.copy(alpha = DIM_ALPHA) else it
-                },
-                borderThickness = 0.5.dp,
-                siteList = { clipModifier, buttonsHeightPx ->
-                    SiteList(
-                            uiState = uiState,
-                            listState = listState,
-                            userScrollEnabled = !isProcessing,
-                            bottomPaddingPx = buttonsHeightPx,
-                            modifier = clipModifier,
-                    )
-                },
-                blurBackground = { clipModifier, blurModifier, buttonsHeightPx ->
-                    SiteList(
-                            uiState = uiState,
-                            listState = blurredListState,
-                            userScrollEnabled = false,
-                            bottomPaddingPx = buttonsHeightPx,
-                            modifier = clipModifier.clearAndSetSemantics {},
-                            blurModifier = blurModifier,
-                    )
-                },
-                buttonsColumn = {
-                    PrimaryButton(
-                            text = uiStringText(primaryActionButton.text),
-                            onClick = primaryActionButton.onClick,
-                            isInProgress = isProcessing,
-                    )
-                    SecondaryButton(
-                            text = uiStringText(secondaryActionButton.text),
-                            onClick = secondaryActionButton.onClick,
-                            enabled = !isProcessing,
-                            modifier = Modifier
-                                    .padding(bottom = 10.dp)
-                                    .dimmed(isProcessing),
-                    )
-                }
+            blurRadius = 4.dp,
+            backgroundColor = colorResource(R.color.bg_jp_migration_buttons_panel),
+            borderColor = colorResource(R.color.gray_10).let {
+                if (isProcessing) it.copy(alpha = DIM_ALPHA) else it
+            },
+            borderThickness = 0.5.dp,
+            siteList = { clipModifier, buttonsHeightPx ->
+                SiteList(
+                    uiState = uiState,
+                    listState = listState,
+                    userScrollEnabled = !isProcessing,
+                    bottomPaddingPx = buttonsHeightPx,
+                    modifier = clipModifier,
+                )
+            },
+            blurBackground = { clipModifier, blurModifier, buttonsHeightPx ->
+                SiteList(
+                    uiState = uiState,
+                    listState = blurredListState,
+                    userScrollEnabled = false,
+                    bottomPaddingPx = buttonsHeightPx,
+                    modifier = clipModifier.clearAndSetSemantics {},
+                    blurModifier = blurModifier,
+                )
+            },
+            buttonsColumn = {
+                PrimaryButton(
+                    text = uiStringText(primaryActionButton.text),
+                    onClick = primaryActionButton.onClick,
+                    isInProgress = isProcessing,
+                )
+                SecondaryButton(
+                    text = uiStringText(secondaryActionButton.text),
+                    onClick = secondaryActionButton.onClick,
+                    enabled = !isProcessing,
+                    modifier = Modifier
+                        .padding(bottom = 10.dp)
+                        .dimmed(isProcessing),
+                )
+            }
         )
 
         UserAvatarImage(
-                avatarUrl = uiState.userAvatarUrl,
-                onClick = onAvatarClicked,
-                modifier = Modifier.dimmed(isProcessing),
+            avatarUrl = uiState.userAvatarUrl,
+            onClick = onAvatarClicked,
+            modifier = Modifier.dimmed(isProcessing),
         )
 
         LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
             blurredListState.scrollToItem(
-                    listState.firstVisibleItemIndex,
-                    listState.firstVisibleItemScrollOffset,
+                listState.firstVisibleItemIndex,
+                listState.firstVisibleItemScrollOffset,
             )
         }
     }
@@ -127,9 +127,9 @@ private fun SiteListScaffold(
     SubcomposeLayout { constraints ->
         val buttonsPlaceables = subcompose(SlotsEnum.Buttons) {
             ColumnWithTopGlassBorder(
-                    backgroundColor = backgroundColor,
-                    borderColor = borderColor,
-                    borderThickness = borderThickness,
+                backgroundColor = backgroundColor,
+                borderColor = borderColor,
+                borderThickness = borderThickness,
             ) {
                 buttonsColumn()
             }
@@ -140,47 +140,47 @@ private fun SiteListScaffold(
         val siteListClipShape = object : Shape {
             override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Rectangle {
                 return Rectangle(
-                        Rect(
-                                top = 0f,
-                                bottom = size.height - buttonsHeight,
-                                left = 0f,
-                                right = size.width,
-                        )
+                    Rect(
+                        top = 0f,
+                        bottom = size.height - buttonsHeight,
+                        left = 0f,
+                        right = size.width,
+                    )
                 )
             }
         }
 
         val siteListPlaceables = subcompose(SlotsEnum.SiteList) {
             siteList(
-                    clipModifier = Modifier.clip(siteListClipShape),
-                    buttonsHeightPx = buttonsHeight
+                clipModifier = Modifier.clip(siteListClipShape),
+                buttonsHeightPx = buttonsHeight
             )
         }.map { it.measure(constraints) }
 
         val buttonsClipShape = object : Shape {
             override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Rectangle {
                 return Rectangle(
-                        Rect(
-                                bottom = size.height,
-                                left = 0f,
-                                right = size.width,
-                                top = size.height - buttonsHeight,
-                        )
+                    Rect(
+                        bottom = size.height,
+                        left = 0f,
+                        right = size.width,
+                        top = size.height - buttonsHeight,
+                    )
                 )
             }
         }
 
         val clippedBackgroundPlaceables = subcompose(SlotsEnum.ClippedBackground) {
             blurBackground(
-                    clipModifier = Modifier.clip(buttonsClipShape),
-                    blurModifier = Modifier.composed {
-                        if (VERSION.SDK_INT >= VERSION_CODES.S) {
-                            blur(blurRadius, BlurredEdgeTreatment.Unbounded)
-                        } else {
-                            alpha(0.05f)
-                        }
-                    },
-                    buttonsHeightPx = buttonsHeight,
+                clipModifier = Modifier.clip(buttonsClipShape),
+                blurModifier = Modifier.composed {
+                    if (VERSION.SDK_INT >= VERSION_CODES.S) {
+                        blur(blurRadius, BlurredEdgeTreatment.Unbounded)
+                    } else {
+                        alpha(0.05f)
+                    }
+                },
+                buttonsHeightPx = buttonsHeight,
             )
         }.map { it.measure(constraints) }
 
@@ -194,18 +194,18 @@ private fun SiteListScaffold(
 
 private val previewSiteListItems = List(10) {
     SiteListItemUiState(
-            id = it,
-            name = "Site $it",
-            url = "site-$it-name.com",
-            iconUrl = "",
+        id = it,
+        name = "Site $it",
+        url = "site-$it-name.com",
+        iconUrl = "",
     )
 }
 
 private val previewUiState = UiState.Content.Welcome(
-        sites = previewSiteListItems,
-        primaryActionButton = WelcomePrimaryButton {},
-        secondaryActionButton = WelcomeSecondaryButton {},
-        onAvatarClicked = {},
+    sites = previewSiteListItems,
+    primaryActionButton = WelcomePrimaryButton {},
+    secondaryActionButton = WelcomeSecondaryButton {},
+    onAvatarClicked = {},
 )
 
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL)

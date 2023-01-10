@@ -42,7 +42,7 @@ class UserSuggestionSource @Inject constructor(
     private fun postSavedSuggestions(suggestionsWereJustUpdated: Boolean) {
         launch {
             val suggestions = Suggestion.fromUserSuggestions(
-                    UserSuggestionTable.getSuggestionsForSite(site.siteId)
+                UserSuggestionTable.getSuggestionsForSite(site.siteId)
             )
 
             // Only send empty suggestions if they are recent

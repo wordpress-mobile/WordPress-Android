@@ -76,19 +76,19 @@ class SiteIconUploadHandler
                     selectedSiteRepository.updateSiteIconMediaId(media.mediaId.toInt(), true)
                 } else {
                     AppLog.w(
-                            MAIN,
-                            "Site icon upload completed, but mediaList is empty."
+                        MAIN,
+                        "Site icon upload completed, but mediaList is empty."
                     )
                 }
             } else if (event.mediaModelList != null && event.mediaModelList.isNotEmpty()) {
                 _onUploadedItem.postValue(
-                        Event(
-                                MediaUploaded(
-                                        event.mediaModelList,
-                                        selectedSite,
-                                        event.successMessage
-                                )
+                    Event(
+                        MediaUploaded(
+                            event.mediaModelList,
+                            selectedSite,
+                            event.successMessage
                         )
+                    )
                 )
             }
         }

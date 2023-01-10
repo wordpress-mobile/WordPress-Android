@@ -19,7 +19,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 import javax.inject.Inject
 
 class InsightsManagementFragment : DaggerFragment(R.layout.insights_management_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: InsightsManagementViewModel
 
     private var menu: Menu? = null

@@ -23,14 +23,14 @@ class BetterScrollToAction(
 ) : ViewAction by original {
     override fun getConstraints(): Matcher<View> {
         return allOf(
-                ViewMatchers.withEffectiveVisibility(VISIBLE), ViewMatchers.isDescendantOfA(
+            ViewMatchers.withEffectiveVisibility(VISIBLE), ViewMatchers.isDescendantOfA(
                 Matchers.anyOf(
-                        isAssignableFrom(ScrollView::class.java),
-                        isAssignableFrom(HorizontalScrollView::class.java),
-                        isAssignableFrom(NestedScrollView::class.java),
-                        isAssignableFrom(ListView::class.java)
+                    isAssignableFrom(ScrollView::class.java),
+                    isAssignableFrom(HorizontalScrollView::class.java),
+                    isAssignableFrom(NestedScrollView::class.java),
+                    isAssignableFrom(ListView::class.java)
                 )
-        )
+            )
         )
     }
 

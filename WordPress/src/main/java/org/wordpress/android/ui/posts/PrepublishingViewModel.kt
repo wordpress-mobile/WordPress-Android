@@ -80,7 +80,8 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         // For the case where this is not a story and hence there's no EditText in the HOME screen, we're ok too,
         // because there wouldn't have been a keyboard up anyway.
         if (prepublishingScreen == PUBLISH ||
-                prepublishingScreen == CATEGORIES) {
+            prepublishingScreen == CATEGORIES
+        ) {
             _dismissKeyboard.postValue(Event(Unit))
         }
         updateNavigationTarget(PrepublishingNavigationTarget(site, prepublishingScreen, bundle))
@@ -148,8 +149,8 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     fun onTaxonomyChanged(event: OnTaxonomyChanged) {
         if (event.isError) {
             AppLog.e(
-                    T.POSTS,
-                    "An error occurred while updating taxonomy with type: " + event.error.type
+                T.POSTS,
+                "An error occurred while updating taxonomy with type: " + event.error.type
             )
         }
     }

@@ -24,8 +24,8 @@ class GetButtonUiStateUseCase @Inject constructor(
         onButtonClicked: (PublishPost) -> Unit
     ): ButtonUiState {
         val editorAction = editorActionsProvider.getPrimaryAction(
-                editPostRepository.status,
-                uploadUtilsWrapper.userCanPublish(site)
+            editPostRepository.status,
+            uploadUtilsWrapper.userCanPublish(site)
         )
 
         return when (editorAction) {

@@ -11,6 +11,8 @@ import javax.inject.Named
 @TestInstallIn(components = [SingletonComponent::class], replaces = [InterceptorModule::class])
 @Module
 class DummyInterceptorModule {
-    @Provides @IntoSet @Named("network-interceptors")
+    @Provides
+    @IntoSet
+    @Named("network-interceptors")
     fun provideNetworkInterceptor(): Interceptor = Interceptor { it.proceed(it.request()) }
 }

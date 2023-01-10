@@ -16,8 +16,8 @@ import org.wordpress.android.R.id
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 
 class ValueWithChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_value_with_chart_item
+    parent,
+    R.layout.stats_block_value_with_chart_item
 ) {
     private val value = itemView.findViewById<TextView>(id.value)
     private val chart = itemView.findViewById<LineChart>(id.line_chart)

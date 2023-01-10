@@ -14,8 +14,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 
 class ValueViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_value_item
+    parent,
+    R.layout.stats_block_value_item
 ) {
     private val container = itemView.findViewById<LinearLayout>(R.id.value_container)
     private val value = itemView.findViewById<TextView>(R.id.value)

@@ -31,7 +31,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
-    @Inject lateinit var activityLauncherWrapper: ActivityLauncherWrapper
+    @Inject
+    lateinit var activityLauncherWrapper: ActivityLauncherWrapper
     private val viewModel: JetpackPoweredDialogViewModel by viewModels()
     private var fullScreen: Boolean = false
 
@@ -69,7 +70,7 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
         (dialog as? BottomSheetDialog)?.apply {
             setOnShowListener {
                 val bottomSheet: FrameLayout = dialog?.findViewById(
-                        com.google.android.material.R.id.design_bottom_sheet
+                    com.google.android.material.R.id.design_bottom_sheet
                 ) ?: return@setOnShowListener
                 val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
                 if (fullScreen && bottomSheet.layoutParams != null) {
@@ -125,7 +126,7 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
                 is OpenPlayStore -> {
                     dismiss()
                     activity?.let {
-                       activityLauncherWrapper.openPlayStoreLink(it, JETPACK_PACKAGE_NAME)
+                        activityLauncherWrapper.openPlayStoreLink(it, JETPACK_PACKAGE_NAME)
                     }
                 }
                 is DismissDialog -> {
