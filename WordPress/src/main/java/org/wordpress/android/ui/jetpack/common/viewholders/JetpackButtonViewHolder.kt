@@ -23,8 +23,8 @@ sealed class JetpackButtonViewHolder<T : ViewBinding>(
         private val uiHelpers: UiHelpers,
         parent: ViewGroup
     ) : JetpackButtonViewHolder<JetpackListButtonPrimaryItemBinding>(
-            parent,
-            JetpackListButtonPrimaryItemBinding::inflate
+        parent,
+        JetpackListButtonPrimaryItemBinding::inflate
     ) {
         override fun onBind(itemUiState: JetpackListItemState) {
             binding.button.updateState(binding.root, itemUiState as ActionButtonState, uiHelpers)
@@ -35,8 +35,8 @@ sealed class JetpackButtonViewHolder<T : ViewBinding>(
         private val uiHelpers: UiHelpers,
         parent: ViewGroup
     ) : JetpackButtonViewHolder<JetpackListButtonSecondaryItemBinding>(
-            parent,
-            JetpackListButtonSecondaryItemBinding::inflate
+        parent,
+        JetpackListButtonSecondaryItemBinding::inflate
     ) {
         override fun onBind(itemUiState: JetpackListItemState) {
             binding.button.updateState(binding.root, itemUiState as ActionButtonState, uiHelpers)

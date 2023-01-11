@@ -106,6 +106,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public static final String ARG_STORY_BLOCK_EXTERNALLY_EDITED_ORIGINAL_HASH = "story_block_original_hash";
     public static final String ARG_FAILED_MEDIAS = "arg_failed_medias";
     public static final String ARG_FEATURED_IMAGE_ID = "featured_image_id";
+    public static final String ARG_JETPACK_FEATURES_ENABLED = "jetpack_features_enabled";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -158,7 +159,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       boolean isNewPost,
                                                       GutenbergWebViewAuthorizationData webViewAuthorizationData,
                                                       GutenbergPropsBuilder gutenbergPropsBuilder,
-                                                      int storyBlockEditRequestCode) {
+                                                      int storyBlockEditRequestCode,
+                                                      boolean jetpackFeaturesEnabled) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -167,6 +169,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putParcelable(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, webViewAuthorizationData);
         args.putParcelable(ARG_GUTENBERG_PROPS_BUILDER, gutenbergPropsBuilder);
         args.putInt(ARG_STORY_EDITOR_REQUEST_CODE, storyBlockEditRequestCode);
+        args.putBoolean(ARG_JETPACK_FEATURES_ENABLED, jetpackFeaturesEnabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -658,9 +661,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return otherMediaOptions;
         }
 
+        boolean jetpackFeaturesEnabled = arguments.getBoolean(ARG_JETPACK_FEATURES_ENABLED);
         GutenbergWebViewAuthorizationData gutenbergWebViewAuthorizationData =
                 arguments.getParcelable(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA);
-        boolean supportStockPhotos = gutenbergWebViewAuthorizationData.isSiteUsingWPComRestAPI();
+        boolean supportStockPhotos = gutenbergWebViewAuthorizationData.isSiteUsingWPComRestAPI()
+                                     && jetpackFeaturesEnabled;
+        boolean supportsTenor = jetpackFeaturesEnabled;
 
         String packageName = activity.getApplication().getPackageName();
         if (supportStockPhotos) {
@@ -669,9 +675,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
             otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
         }
-        int gifMediaResourceId =
-                getResources().getIdentifier("photo_picker_gif", "string", packageName);
-        otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
+        if (supportsTenor) {
+            int gifMediaResourceId =
+                    getResources().getIdentifier("photo_picker_gif", "string", packageName);
+            otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
+        }
 
         return otherMediaOptions;
     }

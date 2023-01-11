@@ -20,18 +20,22 @@ import org.wordpress.android.util.DateTimeUtilsWrapper
 class UpdatePostStatusUseCaseTest : BaseUnitTest() {
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var updatePostStatusUseCase: UpdatePostStatusUseCase
-    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
-    @Mock lateinit var postUtilsWrapper: PostUtilsWrapper
+
+    @Mock
+    lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
+    @Mock
+    lateinit var postUtilsWrapper: PostUtilsWrapper
 
     @Before
     fun setup() {
         updatePostStatusUseCase = UpdatePostStatusUseCase(dateTimeUtilsWrapper, postUtilsWrapper)
         editPostRepository = EditPostRepository(
-                mock(),
-                mock(),
-                mock(),
-                testDispatcher(),
-                testDispatcher()
+            mock(),
+            mock(),
+            mock(),
+            testDispatcher(),
+            testDispatcher()
         )
     }
 

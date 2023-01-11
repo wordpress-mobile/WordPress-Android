@@ -28,51 +28,51 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
     }
 
     fun trackScreenShown(screen: Screen) = track(
-            BLOGGING_REMINDERS_SCREEN_SHOWN,
-            mapOf(SCREEN_KEY to screen.trackingName)
+        BLOGGING_REMINDERS_SCREEN_SHOWN,
+        mapOf(SCREEN_KEY to screen.trackingName)
     )
 
     fun trackPrimaryButtonPressed(screen: Screen) = trackButtonPressed(screen, CONTINUE)
 
     private fun trackButtonPressed(screen: Screen, button: Button) = track(
-            BLOGGING_REMINDERS_BUTTON_PRESSED,
-            mapOf(
-                    SCREEN_KEY to screen.trackingName,
-                    BUTTON_KEY to button.trackingName
-            )
+        BLOGGING_REMINDERS_BUTTON_PRESSED,
+        mapOf(
+            SCREEN_KEY to screen.trackingName,
+            BUTTON_KEY to button.trackingName
+        )
     )
 
     fun trackFlowStart(source: Source) = track(
-            BLOGGING_REMINDERS_FLOW_START,
-            mapOf(SOURCE_KEY to source.trackingName)
+        BLOGGING_REMINDERS_FLOW_START,
+        mapOf(SOURCE_KEY to source.trackingName)
     )
 
     fun trackFlowDismissed(source: Screen) = track(
-            BLOGGING_REMINDERS_FLOW_DISMISSED,
-            mapOf(SOURCE_KEY to source.trackingName)
+        BLOGGING_REMINDERS_FLOW_DISMISSED,
+        mapOf(SOURCE_KEY to source.trackingName)
     )
 
     fun trackFlowCompleted() = track(BLOGGING_REMINDERS_FLOW_COMPLETED)
 
     fun trackRemindersScheduled(daysCount: Int, timeSelected: CharSequence) = track(
-            BLOGGING_REMINDERS_SCHEDULED,
-            mapOf(DAYS_OF_WEEK_COUNT_KEY to daysCount, SELECTED_TIME_KEY to timeSelected)
+        BLOGGING_REMINDERS_SCHEDULED,
+        mapOf(DAYS_OF_WEEK_COUNT_KEY to daysCount, SELECTED_TIME_KEY to timeSelected)
     )
 
     fun trackRemindersCancelled() = track(BLOGGING_REMINDERS_CANCELLED)
 
     fun trackNotificationReceived(promptIncluded: Boolean) = track(
-            BLOGGING_REMINDERS_NOTIFICATION_RECEIVED, mapOf(PROMPT_INCLUDED to "$promptIncluded")
+        BLOGGING_REMINDERS_NOTIFICATION_RECEIVED, mapOf(PROMPT_INCLUDED to "$promptIncluded")
     )
 
     fun trackRemindersIncludePromptPressed(promptEnabled: Boolean) =
-            track(Stat.BLOGGING_REMINDERS_INCLUDE_PROMPT_TAPPED, mapOf(PROMPT_ENABLED_KEY to "$promptEnabled"))
+        track(Stat.BLOGGING_REMINDERS_INCLUDE_PROMPT_TAPPED, mapOf(PROMPT_ENABLED_KEY to "$promptEnabled"))
 
     fun trackRemindersIncludePromptHelpPressed() = track(Stat.BLOGGING_REMINDERS_INCLUDE_PROMPT_HELP_TAPPED)
 
     private fun track(stat: Stat, properties: Map<String, Any?> = emptyMap()) = analyticsTracker.track(
-            stat,
-            properties + (BLOG_TYPE_KEY to siteType?.trackingName)
+        stat,
+        properties + (BLOG_TYPE_KEY to siteType?.trackingName)
     )
 
     private enum class SiteType(val trackingName: String) {

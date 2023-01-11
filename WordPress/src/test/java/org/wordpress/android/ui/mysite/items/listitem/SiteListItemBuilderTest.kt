@@ -32,34 +32,47 @@ import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteListItemBuilderTest {
-    @Mock lateinit var accountStore: AccountStore
-    @Mock lateinit var pluginUtilsWrapper: PluginUtilsWrapper
-    @Mock lateinit var siteUtilsWrapper: SiteUtilsWrapper
-    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
-    @Mock lateinit var themeBrowserUtils: ThemeBrowserUtils
-    @Mock lateinit var siteModel: SiteModel
-    @Mock lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
+    @Mock
+    lateinit var accountStore: AccountStore
+
+    @Mock
+    lateinit var pluginUtilsWrapper: PluginUtilsWrapper
+
+    @Mock
+    lateinit var siteUtilsWrapper: SiteUtilsWrapper
+
+    @Mock
+    lateinit var buildConfigWrapper: BuildConfigWrapper
+
+    @Mock
+    lateinit var themeBrowserUtils: ThemeBrowserUtils
+
+    @Mock
+    lateinit var siteModel: SiteModel
+
+    @Mock
+    lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
     private lateinit var siteListItemBuilder: SiteListItemBuilder
 
     @Before
     fun setUp() {
         siteListItemBuilder = SiteListItemBuilder(
-                accountStore,
-                pluginUtilsWrapper,
-                siteUtilsWrapper,
-                buildConfigWrapper,
-                themeBrowserUtils,
-                siteDomainsFeatureConfig
+            accountStore,
+            pluginUtilsWrapper,
+            siteUtilsWrapper,
+            buildConfigWrapper,
+            themeBrowserUtils,
+            siteDomainsFeatureConfig
         )
     }
 
     @Test
     fun `activity item built when site uses WPComRest, can manage options and is not WP for teams`() {
         setupActivityLogItem(
-                isAccessedViaWPComRest = true,
-                canManageOptions = true,
-                isJetpackConnected = false,
-                isWpForTeams = false
+            isAccessedViaWPComRest = true,
+            canManageOptions = true,
+            isJetpackConnected = false,
+            isWpForTeams = false
         )
 
         val item = siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, SITE_ITEM_ACTION)
@@ -70,10 +83,10 @@ class SiteListItemBuilderTest {
     @Test
     fun `activity item built when site is Jetpack, can manage options and is not WP for teams`() {
         setupActivityLogItem(
-                isAccessedViaWPComRest = false,
-                canManageOptions = true,
-                isJetpackConnected = true,
-                isWpForTeams = false
+            isAccessedViaWPComRest = false,
+            canManageOptions = true,
+            isJetpackConnected = true,
+            isWpForTeams = false
         )
 
         val item = siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, SITE_ITEM_ACTION)
@@ -160,11 +173,11 @@ class SiteListItemBuilderTest {
     @Test
     fun `plan item built when plan not empty, site can manage options, is not WP for teams and is WPcom`() {
         setupPlanItem(
-                planShortName = PLAN_NAME,
-                canManageOptions = true,
-                isWpForTeams = false,
-                isWPCom = true,
-                isAutomatedTransfer = false
+            planShortName = PLAN_NAME,
+            canManageOptions = true,
+            isWpForTeams = false,
+            isWPCom = true,
+            isAutomatedTransfer = false
         )
         val showFocusPoint = true
 
@@ -177,11 +190,11 @@ class SiteListItemBuilderTest {
     @Test
     fun `plan item built when plan not empty, site can manage options, is not WP for teams and is AT`() {
         setupPlanItem(
-                planShortName = PLAN_NAME,
-                canManageOptions = true,
-                isWpForTeams = false,
-                isWPCom = false,
-                isAutomatedTransfer = true
+            planShortName = PLAN_NAME,
+            canManageOptions = true,
+            isWpForTeams = false,
+            isWPCom = false,
+            isAutomatedTransfer = true
         )
 
         val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, false, SITE_ITEM_ACTION)

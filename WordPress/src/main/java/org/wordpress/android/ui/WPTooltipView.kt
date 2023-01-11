@@ -46,22 +46,22 @@ class WPTooltipView @JvmOverloads constructor(
     init {
         attrs?.also {
             val stylesAttributes = context.theme.obtainStyledAttributes(
-                    attrs,
-                    R.styleable.WPTooltipView,
-                    0,
-                    0
+                attrs,
+                R.styleable.WPTooltipView,
+                0,
+                0
             )
 
             try {
                 position = TooltipPosition.fromInt(
-                        stylesAttributes.getInt(R.styleable.WPTooltipView_wpTooltipPosition, 0)
+                    stylesAttributes.getInt(R.styleable.WPTooltipView_wpTooltipPosition, 0)
                 )
                 messageId = stylesAttributes.getResourceId(R.styleable.WPTooltipView_wpTooltipMessage, 0)
                 arrowHorizontalOffsetFromEndResId = stylesAttributes.getResourceId(
-                        R.styleable.WPTooltipView_wpArrowHorizontalOffsetFromEnd, 0
+                    R.styleable.WPTooltipView_wpArrowHorizontalOffsetFromEnd, 0
                 )
                 arrowHorizontalOffsetFromStartResId = stylesAttributes.getResourceId(
-                        R.styleable.WPTooltipView_wpArrowHorizontalOffsetFromStart, 0
+                    R.styleable.WPTooltipView_wpArrowHorizontalOffsetFromStart, 0
                 )
             } finally {
                 stylesAttributes.recycle()
@@ -111,8 +111,8 @@ class WPTooltipView @JvmOverloads constructor(
 
         companion object {
             fun fromInt(value: Int): TooltipPosition =
-                    values().firstOrNull { it.value == value }
-                            ?: throw IllegalArgumentException("TooltipPosition wrong value $value")
+                values().firstOrNull { it.value == value }
+                    ?: throw IllegalArgumentException("TooltipPosition wrong value $value")
         }
     }
 
@@ -124,9 +124,9 @@ class WPTooltipView @JvmOverloads constructor(
                 alpha = 0f
                 visibility = View.VISIBLE
                 animate()
-                        .alpha(1f)
-                        .setDuration(animationDuration.toLong())
-                        .setListener(null)
+                    .alpha(1f)
+                    .setDuration(animationDuration.toLong())
+                    .setListener(null)
             }
         }, 400)
     }
@@ -134,14 +134,14 @@ class WPTooltipView @JvmOverloads constructor(
     fun hide() {
         this.apply {
             animate()
-                    .alpha(0f)
-                    .setDuration(HIDE_ANIMATION_DURATION)
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator?) {
-                            super.onAnimationEnd(animation)
-                            visibility = View.GONE
-                        }
-                    })
+                .alpha(0f)
+                .setDuration(HIDE_ANIMATION_DURATION)
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator?) {
+                        super.onAnimationEnd(animation)
+                        visibility = View.GONE
+                    }
+                })
         }
     }
 

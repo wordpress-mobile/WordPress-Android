@@ -10,10 +10,10 @@ import javax.inject.Inject
 @Reusable
 class ReaderPostTableWrapper @Inject constructor() {
     fun getBlogPost(blogId: Long, postId: Long, excludeTextColumn: Boolean): ReaderPost? =
-            ReaderPostTable.getBlogPost(blogId, postId, excludeTextColumn)
+        ReaderPostTable.getBlogPost(blogId, postId, excludeTextColumn)
 
     fun getFeedPost(blogId: Long, postId: Long, excludeTextColumn: Boolean): ReaderPost? = ReaderPostTable
-            .getFeedPost(blogId, postId, excludeTextColumn)
+        .getFeedPost(blogId, postId, excludeTextColumn)
 
     fun isPostFollowed(post: ReaderPost): Boolean = ReaderPostTable.isPostFollowed(post)
 
@@ -26,10 +26,10 @@ class ReaderPostTableWrapper @Inject constructor() {
         maxRows: Int,
         excludeTextColumn: Boolean
     ): ReaderPostList =
-            ReaderPostTable.getPostsWithTag(readerTag, maxRows, excludeTextColumn)
+        ReaderPostTable.getPostsWithTag(readerTag, maxRows, excludeTextColumn)
 
     fun getNumPostsWithTag(readerTag: ReaderTag): Int = ReaderPostTable.getNumPostsWithTag(readerTag)
 
     fun addOrUpdatePosts(readerTag: ReaderTag, posts: ReaderPostList) =
-            ReaderPostTable.addOrUpdatePosts(readerTag, posts)
+        ReaderPostTable.addOrUpdatePosts(readerTag, posts)
 }

@@ -11,6 +11,7 @@ sealed class EngagedListNavigationEvent(val closeUserProfileIfOpened: Boolean = 
         val postOrCommentId: Long,
         val source: ThreadedCommentsActionSource
     ) : EngagedListNavigationEvent()
+
     data class PreviewPostInReader(val siteId: Long, val postId: Long) : EngagedListNavigationEvent()
     data class OpenUserProfileBottomSheet(
         val userProfile: UserProfile,

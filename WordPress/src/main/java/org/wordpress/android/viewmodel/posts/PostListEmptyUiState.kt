@@ -26,17 +26,17 @@ sealed class PostListEmptyUiState(
         onButtonClick: (() -> Unit)? = null,
         @DrawableRes imageResId: Int = R.drawable.img_illustration_posts_75dp
     ) : PostListEmptyUiState(
-            title = title,
-            imgResId = imageResId,
-            buttonText = buttonText,
-            onButtonClick = onButtonClick
+        title = title,
+        imgResId = imageResId,
+        buttonText = buttonText,
+        onButtonClick = onButtonClick
     )
 
     object DataShown : PostListEmptyUiState(emptyViewVisible = false)
 
     object Loading : PostListEmptyUiState(
-            title = UiStringRes(R.string.posts_fetching),
-            imgResId = R.drawable.img_illustration_posts_75dp
+        title = UiStringRes(R.string.posts_fetching),
+        imgResId = R.drawable.img_illustration_posts_75dp
     )
 
     class RefreshError(
@@ -44,15 +44,15 @@ sealed class PostListEmptyUiState(
         buttonText: UiString? = null,
         onButtonClick: (() -> Unit)? = null
     ) : PostListEmptyUiState(
-            title = title,
-            imgResId = R.drawable.img_illustration_empty_results_216dp,
-            buttonText = buttonText,
-            onButtonClick = onButtonClick
+        title = title,
+        imgResId = R.drawable.img_illustration_empty_results_216dp,
+        buttonText = buttonText,
+        onButtonClick = onButtonClick
     )
 
     object PermissionsError : PostListEmptyUiState(
-            title = UiStringRes(R.string.error_refresh_unauthorized_posts),
-            imgResId = R.drawable.img_illustration_posts_75dp
+        title = UiStringRes(R.string.error_refresh_unauthorized_posts),
+        imgResId = R.drawable.img_illustration_posts_75dp
     )
 }
 
@@ -70,9 +70,9 @@ fun createEmptyUiState(
     return if (isListEmpty) {
         when {
             error != null -> createErrorListUiState(
-                    isNetworkAvailable = isNetworkAvailable,
-                    error = error,
-                    fetchFirstPage = fetchFirstPage
+                isNetworkAvailable = isNetworkAvailable,
+                error = error,
+                fetchFirstPage = fetchFirstPage
             )
             isLoadingData -> {
                 // don't show intermediate screen when loading search results
@@ -83,9 +83,9 @@ fun createEmptyUiState(
                 }
             }
             else -> createEmptyListUiState(
-                    postListType = postListType,
-                    newPost = newPost,
-                    isSearchPromptRequired = isSearchPromptRequired
+                postListType = postListType,
+                newPost = newPost,
+                isSearchPromptRequired = isSearchPromptRequired
             )
         }
     } else {
@@ -107,9 +107,9 @@ private fun createErrorListUiState(
             UiStringRes(R.string.no_network_message)
         }
         PostListEmptyUiState.RefreshError(
-                errorText,
-                UiStringRes(R.string.retry),
-                fetchFirstPage
+            errorText,
+            UiStringRes(R.string.retry),
+            fetchFirstPage
         )
     }
 }
@@ -121,19 +121,19 @@ private fun createEmptyListUiState(
 ): PostListEmptyUiState.EmptyList {
     return when (postListType) {
         PUBLISHED -> PostListEmptyUiState.EmptyList(
-                UiStringRes(R.string.posts_published_empty),
-                UiStringRes(R.string.posts_empty_list_button),
-                newPost
+            UiStringRes(R.string.posts_published_empty),
+            UiStringRes(R.string.posts_empty_list_button),
+            newPost
         )
         DRAFTS -> PostListEmptyUiState.EmptyList(
-                UiStringRes(R.string.posts_draft_empty),
-                UiStringRes(R.string.posts_empty_list_button),
-                newPost
+            UiStringRes(R.string.posts_draft_empty),
+            UiStringRes(R.string.posts_empty_list_button),
+            newPost
         )
         SCHEDULED -> PostListEmptyUiState.EmptyList(
-                UiStringRes(R.string.posts_scheduled_empty),
-                UiStringRes(R.string.posts_empty_list_button),
-                newPost
+            UiStringRes(R.string.posts_scheduled_empty),
+            UiStringRes(R.string.posts_empty_list_button),
+            newPost
         )
         SEARCH -> {
             val messageResId = if (isSearchPromptRequired) {

@@ -45,12 +45,12 @@ class StatsNavigator @Inject constructor(
             }
             is NavigationTarget.ViewPost -> {
                 StatsNavigatorHelper.openPostInReaderOrInAppWebView(
-                        activity,
-                        siteProvider.siteModel.siteId,
-                        target.postId,
-                        target.postType,
-                        target.postUrl,
-                        readerTracker
+                    activity,
+                    siteProvider.siteModel.siteId,
+                    target.postId,
+                    target.postType,
+                    target.postUrl,
+                    readerTracker
                 )
             }
             is NavigationTarget.SharePost -> {
@@ -66,28 +66,28 @@ class StatsNavigator @Inject constructor(
             }
             is NavigationTarget.ViewPostDetailStats -> {
                 StatsDetailActivity.start(
-                        activity,
-                        siteProvider.siteModel,
-                        target.postId,
-                        postType = target.postType,
-                        postTitle = target.postTitle,
-                        postUrl = target.postUrl
+                    activity,
+                    siteProvider.siteModel,
+                    target.postId,
+                    postType = target.postType,
+                    postTitle = target.postTitle,
+                    postUrl = target.postUrl
                 )
             }
             is NavigationTarget.ViewFollowersStats -> {
                 ActivityLauncher.viewAllTabbedInsightsStats(
-                        activity,
-                        FOLLOWERS,
-                        target.selectedTab,
-                        siteProvider.siteModel.id
+                    activity,
+                    FOLLOWERS,
+                    target.selectedTab,
+                    siteProvider.siteModel.id
                 )
             }
             is NavigationTarget.ViewCommentsStats -> {
                 ActivityLauncher.viewAllTabbedInsightsStats(
-                        activity,
-                        COMMENTS,
-                        target.selectedTab,
-                        siteProvider.siteModel.id
+                    activity,
+                    COMMENTS,
+                    target.selectedTab,
+                    siteProvider.siteModel.id
                 )
             }
             is NavigationTarget.ViewTagsAndCategoriesStats -> {
@@ -107,83 +107,83 @@ class StatsNavigator @Inject constructor(
             }
             is NavigationTarget.ViewPostsAndPages -> {
                 ActivityLauncher.viewAllGranularStats(
-                        activity,
-                        target.statsGranularity,
-                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
-                        TOP_POSTS_AND_PAGES,
-                        siteProvider.siteModel.id
+                    activity,
+                    target.statsGranularity,
+                    selectedDateProvider.getSelectedDateState(target.statsGranularity),
+                    TOP_POSTS_AND_PAGES,
+                    siteProvider.siteModel.id
                 )
             }
             is NavigationTarget.ViewReferrers -> {
                 ActivityLauncher.viewAllGranularStats(
-                        activity,
-                        target.statsGranularity,
-                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
-                        REFERRERS,
-                        siteProvider.siteModel.id
+                    activity,
+                    target.statsGranularity,
+                    selectedDateProvider.getSelectedDateState(target.statsGranularity),
+                    REFERRERS,
+                    siteProvider.siteModel.id
                 )
             }
             is NavigationTarget.ViewClicks -> {
                 ActivityLauncher.viewAllGranularStats(
-                        activity,
-                        target.statsGranularity,
-                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
-                        CLICKS,
-                        siteProvider.siteModel.id
+                    activity,
+                    target.statsGranularity,
+                    selectedDateProvider.getSelectedDateState(target.statsGranularity),
+                    CLICKS,
+                    siteProvider.siteModel.id
                 )
             }
             is NavigationTarget.ViewCountries -> {
                 ActivityLauncher.viewAllGranularStats(
-                        activity,
-                        target.statsGranularity,
-                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
-                        GEOVIEWS,
-                        siteProvider.siteModel.id
+                    activity,
+                    target.statsGranularity,
+                    selectedDateProvider.getSelectedDateState(target.statsGranularity),
+                    GEOVIEWS,
+                    siteProvider.siteModel.id
                 )
             }
             is NavigationTarget.ViewVideoPlays -> {
                 ActivityLauncher.viewAllGranularStats(
-                        activity,
-                        target.statsGranularity,
-                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
-                        VIDEO_PLAYS,
-                        siteProvider.siteModel.id
+                    activity,
+                    target.statsGranularity,
+                    selectedDateProvider.getSelectedDateState(target.statsGranularity),
+                    VIDEO_PLAYS,
+                    siteProvider.siteModel.id
                 )
             }
             is NavigationTarget.ViewSearchTerms -> {
                 ActivityLauncher.viewAllGranularStats(
-                        activity,
-                        target.statsGranularity,
-                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
-                        SEARCH_TERMS,
-                        siteProvider.siteModel.id
+                    activity,
+                    target.statsGranularity,
+                    selectedDateProvider.getSelectedDateState(target.statsGranularity),
+                    SEARCH_TERMS,
+                    siteProvider.siteModel.id
                 )
             }
             is NavigationTarget.ViewAuthors -> {
                 ActivityLauncher.viewAllGranularStats(
-                        activity,
-                        target.statsGranularity,
-                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
-                        AUTHORS,
-                        siteProvider.siteModel.id
+                    activity,
+                    target.statsGranularity,
+                    selectedDateProvider.getSelectedDateState(target.statsGranularity),
+                    AUTHORS,
+                    siteProvider.siteModel.id
                 )
             }
             is NavigationTarget.ViewFileDownloads -> {
                 ActivityLauncher.viewAllGranularStats(
-                        activity,
-                        target.statsGranularity,
-                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
-                        FILE_DOWNLOADS,
-                        siteProvider.siteModel.id
+                    activity,
+                    target.statsGranularity,
+                    selectedDateProvider.getSelectedDateState(target.statsGranularity),
+                    FILE_DOWNLOADS,
+                    siteProvider.siteModel.id
                 )
             }
             is NavigationTarget.ViewAnnualStats -> {
                 ActivityLauncher.viewAllGranularStats(
-                        activity,
-                        YEARS,
-                        selectedDateProvider.getSelectedDateState(YEARS),
-                        ANNUAL_STATS,
-                        siteProvider.siteModel.id
+                    activity,
+                    YEARS,
+                    selectedDateProvider.getSelectedDateState(YEARS),
+                    ANNUAL_STATS,
+                    siteProvider.siteModel.id
                 )
             }
             is NavigationTarget.ViewUrl -> {
@@ -194,24 +194,24 @@ class StatsNavigator @Inject constructor(
             }
             is NavigationTarget.ViewAttachment -> {
                 StatsNavigatorHelper.openPostInReaderOrInAppWebView(
-                        activity,
-                        siteProvider.siteModel.siteId,
-                        target.postId,
-                        target.postType,
-                        target.postUrl,
-                        readerTracker
+                    activity,
+                    siteProvider.siteModel.siteId,
+                    target.postId,
+                    target.postType,
+                    target.postUrl,
+                    readerTracker
                 )
             }
             is NavigationTarget.ViewInsightDetails -> {
                 ActivityLauncher.viewInsightsDetail(
-                        activity,
-                        target.statsSection,
-                        target.statsViewType,
-                        target.statsGranularity,
-                        target.statsGranularity?.let {
-                            selectedDateProvider.getSelectedDateState(target.statsGranularity)
-                        },
-                        siteProvider.siteModel.id
+                    activity,
+                    target.statsSection,
+                    target.statsViewType,
+                    target.statsGranularity,
+                    target.statsGranularity?.let {
+                        selectedDateProvider.getSelectedDateState(target.statsGranularity)
+                    },
+                    siteProvider.siteModel.id
                 )
             }
 
@@ -220,8 +220,8 @@ class StatsNavigator @Inject constructor(
             }
             is NavigationTarget.CheckCourse -> {
                 ActivityLauncher.openStatsUrl(
-                        activity,
-                        "https://wpcourses.com/course/intro-to-blogging/"
+                    activity,
+                    "https://wpcourses.com/course/intro-to-blogging/"
                 )
             }
             is NavigationTarget.SchedulePost -> {

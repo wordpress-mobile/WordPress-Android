@@ -31,11 +31,16 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     private var closeListener: PrepublishingScreenClosedListener? = null
     private var actionListener: PrepublishingActionClickedListener? = null
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingCategoriesViewModel
     private lateinit var parentViewModel: PrepublishingViewModel
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var dispatcher: Dispatcher
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var dispatcher: Dispatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,30 +102,30 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
 
     private fun PrepublishingCategoriesFragmentBinding.initRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(
-                context,
-                RecyclerView.VERTICAL,
-                false
+            context,
+            RecyclerView.VERTICAL,
+            false
         )
         recyclerView.adapter = PrepublishingCategoriesAdapter(uiHelpers)
         recyclerView.addItemDecoration(
-                DividerItemDecoration(
-                        recyclerView.context,
-                        DividerItemDecoration.VERTICAL
-                )
+            DividerItemDecoration(
+                recyclerView.context,
+                DividerItemDecoration.VERTICAL
+            )
         )
     }
 
     private fun PrepublishingCategoriesFragmentBinding.initViewModel() {
         viewModel = ViewModelProvider(this@PrepublishingCategoriesFragment, viewModelFactory)
-                .get(PrepublishingCategoriesViewModel::class.java)
+            .get(PrepublishingCategoriesViewModel::class.java)
         parentViewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
-                .get(PrepublishingViewModel::class.java)
+            .get(PrepublishingViewModel::class.java)
         startObserving()
         val siteModel = requireArguments().getSerializable(WordPress.SITE) as SiteModel
         val addCategoryRequest: PrepublishingAddCategoryRequest? =
-                arguments?.getSerializable(ADD_CATEGORY_REQUEST) as? PrepublishingAddCategoryRequest
+            arguments?.getSerializable(ADD_CATEGORY_REQUEST) as? PrepublishingAddCategoryRequest
         val selectedCategoryIds: List<Long> =
-                arguments?.getLongArray(SELECTED_CATEGORY_IDS)?.toList() ?: listOf()
+            arguments?.getLongArray(SELECTED_CATEGORY_IDS)?.toList() ?: listOf()
 
         viewModel.start(getEditPostRepository(), siteModel, addCategoryRequest, selectedCategoryIds)
     }
@@ -145,7 +150,7 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
 
         viewModel.uiState.observe(viewLifecycleOwner, {
             (recyclerView.adapter as PrepublishingCategoriesAdapter).update(
-                    it.categoriesListItemUiState
+                it.categoriesListItemUiState
             )
             with(uiHelpers) {
                 updateVisibility(includePrepublishingToolbar.addActionButton, it.addCategoryActionButtonVisibility)
@@ -179,8 +184,8 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     private fun SnackbarMessageHolder.showToast() {
         val message = uiHelpers.getTextOfUiString(requireContext(), this.message).toString()
         ToastUtils.showToast(
-                requireContext(), message,
-                SHORT
+            requireContext(), message,
+            SHORT
         )
     }
 
@@ -189,7 +194,9 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         const val NEEDS_REQUEST_LAYOUT = "prepublishing_categories_fragment_needs_request_layout"
         const val ADD_CATEGORY_REQUEST = "prepublishing_add_category_request"
         const val SELECTED_CATEGORY_IDS = "prepublishing_selected_category_ids"
-        @JvmStatic fun newInstance(
+
+        @JvmStatic
+        fun newInstance(
             site: SiteModel,
             needsRequestLayout: Boolean,
             bundle: Bundle? = null

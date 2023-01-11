@@ -25,8 +25,8 @@ class PageListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemViewHolder {
         return when (viewType) {
             PageItem.Type.PAGE.viewType -> PageViewHolder(
-                    parent, onMenuAction, onItemTapped, imageManager,
-                    isSitePhotonCapable, isPrivateAtSite, uiHelpers
+                parent, onMenuAction, onItemTapped, imageManager,
+                isSitePhotonCapable, isPrivateAtSite, uiHelpers
             )
             PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
             PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent, onEmptyActionButtonTapped)

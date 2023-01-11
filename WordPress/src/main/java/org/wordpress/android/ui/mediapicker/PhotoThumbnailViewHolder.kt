@@ -22,11 +22,11 @@ class PhotoThumbnailViewHolder(
     fun bind(item: MediaPickerUiItem.PhotoItem, animateSelection: Boolean, updateCount: Boolean) {
         val isSelected = item.isSelected
         mediaThumbnailViewUtils.setupTextSelectionCount(
-                txtSelectionCount,
-                isSelected,
-                item.selectedOrder,
-                item.showOrderCounter,
-                animateSelection
+            txtSelectionCount,
+            isSelected,
+            item.selectedOrder,
+            item.showOrderCounter,
+            animateSelection
         )
         // Only count is updated so do not redraw the whole item
         if (updateCount) {
@@ -34,21 +34,21 @@ class PhotoThumbnailViewHolder(
         }
         imageManager.cancelRequestAndClearImageView(imgThumbnail)
         imageManager.load(
-                imgThumbnail,
-                PHOTO,
-                item.url,
-                FIT_CENTER
+            imgThumbnail,
+            PHOTO,
+            item.url,
+            FIT_CENTER
         )
         imgThumbnail.apply {
             contentDescription = resources.getString(R.string.photo_picker_image_thumbnail_content_description)
         }
         mediaThumbnailViewUtils.setupListeners(
-                imgThumbnail,
-                false,
-                item.isSelected,
-                item.toggleAction,
-                item.clickAction,
-                animateSelection
+            imgThumbnail,
+            false,
+            item.isSelected,
+            item.toggleAction,
+            item.clickAction,
+            animateSelection
         )
     }
 }

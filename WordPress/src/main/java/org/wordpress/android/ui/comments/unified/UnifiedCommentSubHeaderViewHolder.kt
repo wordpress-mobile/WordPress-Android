@@ -8,7 +8,7 @@ import org.wordpress.android.util.extensions.viewBinding
 class UnifiedCommentSubHeaderViewHolder(
     parent: ViewGroup
 ) : UnifiedCommentListViewHolder<CommentListSubheaderBinding>(
-        parent.viewBinding(CommentListSubheaderBinding::inflate)
+    parent.viewBinding(CommentListSubheaderBinding::inflate)
 ) {
     fun bind(item: SubHeader) = with(binding) {
         label.text = item.label

@@ -33,6 +33,8 @@ import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
@@ -87,20 +89,39 @@ import java.io.File
 import javax.inject.Inject
 
 class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
-        TextInputDialogFragment.Callback,
-        QuickStartPromptClickInterface,
-        OnConfirmListener,
-        OnDismissListener {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
-    @Inject lateinit var snackbarSequencer: SnackbarSequencer
-    @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
-    @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
-    @Inject lateinit var quickStartUtils: QuickStartUtilsWrapper
-    @Inject lateinit var quickStartTracker: QuickStartTracker
-    @Inject lateinit var htmlCompatWrapper: HtmlCompatWrapper
+    TextInputDialogFragment.Callback,
+    QuickStartPromptClickInterface,
+    OnConfirmListener,
+    OnDismissListener {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var imageManager: ImageManager
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
+
+    @Inject
+    lateinit var snackbarSequencer: SnackbarSequencer
+
+    @Inject
+    lateinit var mediaPickerLauncher: MediaPickerLauncher
+
+    @Inject
+    lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+
+    @Inject
+    lateinit var quickStartUtils: QuickStartUtilsWrapper
+
+    @Inject
+    lateinit var quickStartTracker: QuickStartTracker
+
+    @Inject
+    lateinit var htmlCompatWrapper: HtmlCompatWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
@@ -138,16 +159,16 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     private fun initViewModels() {
         viewModel = ViewModelProvider(requireParentFragment(), viewModelFactory).get(MySiteViewModel::class.java)
         dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(BasicDialogViewModel::class.java)
+            .get(BasicDialogViewModel::class.java)
         dynamicCardMenuViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(DynamicCardMenuViewModel::class.java)
+            .get(DynamicCardMenuViewModel::class.java)
     }
 
     private fun initTabType() {
         mySiteTabType = if (viewModel.isMySiteTabsEnabled) {
             MySiteTabType.fromString(
-                    this.arguments?.getString(KEY_MY_SITE_TAB_TYPE, MySiteTabType.SITE_MENU.label)
-                            ?: MySiteTabType.SITE_MENU.label
+                this.arguments?.getString(KEY_MY_SITE_TAB_TYPE, MySiteTabType.SITE_MENU.label)
+                    ?: MySiteTabType.SITE_MENU.label
             )
         } else {
             MySiteTabType.ALL
@@ -163,17 +184,17 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
         recyclerView.layoutManager = layoutManager
         recyclerView.addItemDecoration(
-                MySiteCardAndItemDecoration(
-                        horizontalMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large),
-                        verticalMargin = resources.getDimensionPixelSize(R.dimen.margin_medium)
-                )
+            MySiteCardAndItemDecoration(
+                horizontalMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large),
+                verticalMargin = resources.getDimensionPixelSize(R.dimen.margin_medium)
+            )
         )
 
         val adapter = MySiteAdapter(
-                imageManager,
-                uiHelpers,
-                bloggingPromptsCardAnalyticsTracker,
-                htmlCompatWrapper
+            imageManager,
+            uiHelpers,
+            bloggingPromptsCardAnalyticsTracker,
+            htmlCompatWrapper
         ) { viewModel.onBloggingPromptsLearnMoreClicked() }
 
         adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
@@ -211,42 +232,42 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         })
         viewModel.onBasicDialogShown.observeEvent(viewLifecycleOwner, { model ->
             dialogViewModel.showDialog(requireActivity().supportFragmentManager,
-                    BasicDialogModel(
-                            model.tag,
-                            getString(model.title),
-                            getString(model.message),
-                            getString(model.positiveButtonLabel),
-                            model.negativeButtonLabel?.let { label -> getString(label) },
-                            model.cancelButtonLabel?.let { label -> getString(label) }
-                    ))
+                BasicDialogModel(
+                    model.tag,
+                    getString(model.title),
+                    getString(model.message),
+                    getString(model.positiveButtonLabel),
+                    model.negativeButtonLabel?.let { label -> getString(label) },
+                    model.cancelButtonLabel?.let { label -> getString(label) }
+                ))
         })
         viewModel.onTextInputDialogShown.observeEvent(viewLifecycleOwner, { model ->
             val inputDialog = TextInputDialogFragment.newInstance(
-                    getString(model.title),
-                    model.initialText,
-                    getString(model.hint),
-                    model.isMultiline,
-                    model.isInputEnabled,
-                    model.callbackId
+                getString(model.title),
+                model.initialText,
+                getString(model.hint),
+                model.isMultiline,
+                model.isInputEnabled,
+                model.callbackId
             )
             inputDialog.setTargetFragment(this@MySiteTabFragment, 0)
             inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
         })
         viewModel.onDynamicCardMenuShown.observeEvent(viewLifecycleOwner, { dynamicCardMenuModel ->
             ((parentFragmentManager.findFragmentByTag(dynamicCardMenuModel.id) as? DynamicCardMenuFragment)
-                    ?: DynamicCardMenuFragment.newInstance(
-                            dynamicCardMenuModel.cardType,
-                            dynamicCardMenuModel.isPinned
-                    ))
-                    .show(parentFragmentManager, dynamicCardMenuModel.id)
+                ?: DynamicCardMenuFragment.newInstance(
+                    dynamicCardMenuModel.cardType,
+                    dynamicCardMenuModel.isPinned
+                ))
+                .show(parentFragmentManager, dynamicCardMenuModel.id)
         })
         viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
         viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner, { showSnackbar(it) })
         viewModel.onQuickStartMySitePrompts.observeEvent(viewLifecycleOwner, { activeTutorialPrompt ->
             val message = quickStartUtils.stylizeQuickStartPrompt(
-                    requireContext(),
-                    activeTutorialPrompt.shortMessagePrompt,
-                    activeTutorialPrompt.iconId
+                requireContext(),
+                activeTutorialPrompt.shortMessagePrompt,
+                activeTutorialPrompt.iconId
             )
             showSnackbar(SnackbarMessageHolder(UiStringText(message)))
         })
@@ -261,12 +282,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             val site = it.first
             val bloggingPromptId = it.second
             ActivityLauncher.addNewPostForResult(
-                    activity,
-                    site,
-                    false,
-                    PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
-                    bloggingPromptId,
-                    EntryPoint.MY_SITE_CARD_ANSWER_PROMPT
+                activity,
+                site,
+                false,
+                PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
+                bloggingPromptId,
+                EntryPoint.MY_SITE_CARD_ANSWER_PROMPT
             )
         }
         viewModel.onBloggingPromptsLearnMore.observeEvent(viewLifecycleOwner) {
@@ -292,10 +313,10 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         is SiteNavigationAction.OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
         is SiteNavigationAction.OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
         is SiteNavigationAction.OpenHomepage -> ActivityLauncher.editLandingPageForResult(
-                this,
-                action.site,
-                action.homepageLocalId,
-                action.isNewSite
+            this,
+            action.site,
+            action.homepageLocalId,
+            action.isNewSite
         )
         is SiteNavigationAction.OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
         is SiteNavigationAction.OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
@@ -316,32 +337,32 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         is SiteNavigationAction.AddNewStory ->
             ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)
         is SiteNavigationAction.AddNewStoryWithMediaIds -> ActivityLauncher.addNewStoryWithMediaIdsForResult(
-                activity,
-                action.site,
-                action.source,
-                action.mediaIds.toLongArray()
+            activity,
+            action.site,
+            action.source,
+            action.mediaIds.toLongArray()
         )
         is SiteNavigationAction.AddNewStoryWithMediaUris -> ActivityLauncher.addNewStoryWithMediaUrisForResult(
-                activity,
-                action.site,
-                action.source,
-                action.mediaUris.toTypedArray()
+            activity,
+            action.site,
+            action.source,
+            action.mediaUris.toTypedArray()
         )
         is SiteNavigationAction.OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
-                activity,
-                action.site
+            activity,
+            action.site
         )
         is SiteNavigationAction.OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
-                activity,
-                action.site,
-                CTA_DOMAIN_CREDIT_REDEMPTION
+            activity,
+            action.site,
+            CTA_DOMAIN_CREDIT_REDEMPTION
         )
         is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken, action.source)
         is SiteNavigationAction.ShowQuickStartDialog -> showQuickStartDialog(
-                action.title,
-                action.message,
-                action.positiveButtonLabel,
-                action.negativeButtonLabel
+            action.title,
+            action.message,
+            action.positiveButtonLabel,
+            action.negativeButtonLabel
         )
         is SiteNavigationAction.OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
         is SiteNavigationAction.OpenDraftsPosts ->
@@ -369,52 +390,64 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
         is SiteNavigationAction.OpenJetpackPoweredBottomSheet -> showJetpackPoweredBottomSheet()
         is SiteNavigationAction.OpenJetpackMigrationDeleteWP -> showJetpackMigrationDeleteWP()
+        is SiteNavigationAction.OpenJetpackFeatureOverlay -> showJetpackFeatureOverlay(action.source)
+        is SiteNavigationAction.OpenJetpackFeatureCardLearnMoreLink ->
+            ActivityLauncher.openUrlExternal(requireActivity(), action.url)
     }
 
     private fun showJetpackPoweredBottomSheet() {
         JetpackPoweredBottomSheetFragment
-                .newInstance()
-                .show(requireActivity().supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+            .newInstance()
+            .show(requireActivity().supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
     }
 
     private fun showJetpackMigrationDeleteWP() {
         val intent = JetpackMigrationActivity.createIntent(
-                context = requireActivity(),
-                showDeleteWpState = true
+            context = requireActivity(),
+            showDeleteWpState = true
         )
         startActivity(intent)
+    }
+
+    private fun showJetpackFeatureOverlay(source: JetpackFeatureCollectionOverlaySource) {
+        JetpackFeatureFullScreenOverlayFragment
+            .newInstance(
+                isFeatureCollectionOverlay = true,
+                featureCollectionOverlaySource = source
+            )
+            .show(requireActivity().supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
     }
 
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {
         val bundle = QuickStartFullScreenDialogFragment.newBundle(action.type)
         Builder(requireContext())
-                .setOnConfirmListener(this)
-                .setOnDismissListener(this)
-                .setContent(QuickStartFullScreenDialogFragment::class.java, bundle)
-                .build()
-                .show(requireActivity().supportFragmentManager, FullScreenDialogFragment.TAG)
+            .setOnConfirmListener(this)
+            .setOnDismissListener(this)
+            .setContent(QuickStartFullScreenDialogFragment::class.java, bundle)
+            .build()
+            .show(requireActivity().supportFragmentManager, FullScreenDialogFragment.TAG)
     }
 
     private fun handleUploadedItem(itemUploadedModel: ItemUploadedModel) = when (itemUploadedModel) {
         is ItemUploadedModel.PostUploaded -> {
             uploadUtilsWrapper.onPostUploadedSnackbarHandler(
-                    activity,
-                    requireActivity().findViewById(R.id.coordinator),
-                    isError = true,
-                    isFirstTimePublish = false,
-                    post = itemUploadedModel.post,
-                    errorMessage = itemUploadedModel.errorMessage,
-                    site = itemUploadedModel.site
+                activity,
+                requireActivity().findViewById(R.id.coordinator),
+                isError = true,
+                isFirstTimePublish = false,
+                post = itemUploadedModel.post,
+                errorMessage = itemUploadedModel.errorMessage,
+                site = itemUploadedModel.site
             )
         }
         is ItemUploadedModel.MediaUploaded -> {
             uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
-                    activity,
-                    requireActivity().findViewById(R.id.coordinator),
-                    isError = true,
-                    mediaList = itemUploadedModel.media,
-                    site = itemUploadedModel.site,
-                    messageForUser = itemUploadedModel.errorMessage
+                activity,
+                requireActivity().findViewById(R.id.coordinator),
+                isError = true,
+                mediaList = itemUploadedModel.media,
+                site = itemUploadedModel.site,
+                messageForUser = itemUploadedModel.errorMessage
             )
         }
     }
@@ -429,9 +462,9 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
         UCrop.of(imageUri.uri, Uri.fromFile(File(context.cacheDir, "cropped_for_site_icon.jpg")))
-                .withAspectRatio(1f, 1f)
-                .withOptions(options)
-                .start(requireActivity(), this)
+            .withAspectRatio(1f, 1f)
+            .withOptions(options)
+            .start(requireActivity(), this)
     }
 
     override fun onResume() {
@@ -484,19 +517,19 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                     }
                     data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) -> {
                         val mediaUriStringsArray = data.getStringArrayExtra(
-                                MediaPickerConstants.EXTRA_MEDIA_URIS
+                            MediaPickerConstants.EXTRA_MEDIA_URIS
                         ) ?: return
 
                         val source = PhotoPickerActivity.PhotoPickerMediaSource.fromString(
-                                data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
+                            data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
                         )
                         val iconUrl = mediaUriStringsArray.getOrNull(0) ?: return
                         viewModel.handleTakenSiteIcon(iconUrl, source)
                     }
                     else -> {
                         AppLog.e(
-                                UTILS,
-                                "Can't resolve picked or captured image"
+                            UTILS,
+                            "Can't resolve picked or captured image"
                         )
                     }
                 }
@@ -508,9 +541,9 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             UCrop.REQUEST_CROP -> {
                 if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(
-                            MAIN,
-                            "Image cropping failed!",
-                            UCrop.getError(data)
+                        MAIN,
+                        "Image cropping failed!",
+                        UCrop.getError(data)
                     )
                 }
                 viewModel.handleCropResult(UCrop.getOutput(data), resultCode == Activity.RESULT_OK)
@@ -524,18 +557,18 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                         data.getBooleanExtra(LoginEpilogueActivity.KEY_SITE_CREATED_FROM_LOGIN_EPILOGUE, false)
                 viewModel.onCreateSiteResult()
                 viewModel.performFirstStepAfterSiteCreation(
-                        data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
-                        data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
-                        isNewSite = isNewSite
+                    data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
+                    data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
+                    isNewSite = isNewSite
                 )
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                     viewModel.onCreateSiteResult()
                     viewModel.performFirstStepAfterSiteCreation(
-                            data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
-                            data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
-                            isNewSite = true
+                        data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
+                        data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
+                        isNewSite = true
                     )
                 } else {
                     viewModel.onSitePicked()
@@ -543,9 +576,9 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             }
             RequestCodes.EDIT_LANDING_PAGE -> {
                 viewModel.checkAndStartQuickStart(
-                        data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
-                        data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
-                        isNewSite = data.getBooleanExtra(EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false)
+                    data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
+                    data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
+                    isNewSite = data.getBooleanExtra(EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false)
                 )
             }
         }
@@ -560,12 +593,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         val tag = TAG_QUICK_START_DIALOG
         val quickStartPromptDialogFragment = QuickStartPromptDialogFragment()
         quickStartPromptDialogFragment.initialize(
-                tag,
-                getString(title),
-                getString(message),
-                getString(positiveButtonLabel),
-                R.drawable.img_illustration_site_about_280dp,
-                getString(negativeButtonLabel)
+            tag,
+            getString(title),
+            getString(message),
+            getString(positiveButtonLabel),
+            R.drawable.img_illustration_site_about_280dp,
+            getString(negativeButtonLabel)
         )
         quickStartPromptDialogFragment.show(parentFragmentManager, tag)
         quickStartTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
@@ -588,21 +621,21 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     private fun showSnackbar(holder: SnackbarMessageHolder) {
         activity?.let { parent ->
             snackbarSequencer.enqueue(
-                    SnackbarItem(
-                            info = Info(
-                                    view = parent.findViewById(R.id.coordinator),
-                                    textRes = holder.message,
-                                    duration = holder.duration,
-                                    isImportant = holder.isImportant
-                            ),
-                            action = holder.buttonTitle?.let {
-                                Action(
-                                        textRes = holder.buttonTitle,
-                                        clickListener = { holder.buttonAction() }
-                                )
-                            },
-                            dismissCallback = { _, event -> holder.onDismissAction(event) }
-                    )
+                SnackbarItem(
+                    info = Info(
+                        view = parent.findViewById(R.id.coordinator),
+                        textRes = holder.message,
+                        duration = holder.duration,
+                        isImportant = holder.isImportant
+                    ),
+                    action = holder.buttonTitle?.let {
+                        Action(
+                            textRes = holder.buttonTitle,
+                            clickListener = { holder.buttonAction() }
+                        )
+                    },
+                    dismissCallback = { _, event -> holder.onDismissAction(event) }
+                )
             )
         }
     }
@@ -619,10 +652,10 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         shareIntent.putExtra(Intent.EXTRA_TEXT, message)
 
         startActivity(
-                Intent.createChooser(
-                        shareIntent,
-                        resources.getString(R.string.my_site_blogging_prompt_card_share_chooser_title)
-                )
+            Intent.createChooser(
+                shareIntent,
+                resources.getString(R.string.my_site_blogging_prompt_card_share_chooser_title)
+            )
         )
     }
 

@@ -55,9 +55,9 @@ class PromptReminderNotifier @Inject constructor(
 
         val prompt = bloggingPromptsStore.getPromptForDate(site, Date()).firstOrNull()?.model
         val contentPendingIntent =
-                createContentPendingIntent(context, notificationId + 1, notificationId, prompt)
+            createContentPendingIntent(context, notificationId + 1, notificationId, prompt)
         val openEditorPendingIntent =
-                createOpenEditorPendingIntent(context, notificationId + 2, notificationId, prompt)
+            createOpenEditorPendingIntent(context, notificationId + 2, notificationId, prompt)
         val dismissNotificationButtonPendingIntent = createDismissNotificationButtonPendingIntent(
             context,
             notificationId + 3,
@@ -77,7 +77,7 @@ class PromptReminderNotifier @Inject constructor(
             contentIntentBuilder = { contentPendingIntent },
             deleteIntentBuilder = { dismissNotificationSwipePendingIntent },
             contentTitle = resourceProvider.getString(
-                    string.blogging_prompts_answer_prompt_notification_title, SiteUtils.getSiteNameOrHomeURL(site)
+                string.blogging_prompts_answer_prompt_notification_title, SiteUtils.getSiteNameOrHomeURL(site)
             ),
             contentText = htmlCompatWrapper.fromHtml(prompt?.text.orEmpty()).toString(),
             priority = PRIORITY_DEFAULT,

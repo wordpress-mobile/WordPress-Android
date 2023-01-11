@@ -86,11 +86,11 @@ class FormattableContentClickHandler @Inject constructor(
     ) {
         val post: ReaderPost? = ReaderPostTable.getBlogPost(siteId, postId, true)
         ReaderActivityLauncher.showReaderBlogPreview(
-                activity,
-                siteId,
-                post?.isFollowedByCurrentUser,
-                source,
-                readerTracker
+            activity,
+            siteId,
+            post?.isFollowedByCurrentUser,
+            source,
+            readerTracker
         )
     }
 
@@ -146,11 +146,11 @@ class FormattableContentClickHandler @Inject constructor(
         source: ThreadedCommentsActionSource
     ) {
         ReaderActivityLauncher.showReaderComments(
-                activity,
-                siteId,
-                postId,
-                commentId,
-                source.sourceDescription
+            activity,
+            siteId,
+            postId,
+            commentId,
+            source.sourceDescription
         )
     }
 

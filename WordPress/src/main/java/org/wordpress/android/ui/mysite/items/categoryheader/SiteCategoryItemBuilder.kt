@@ -28,8 +28,9 @@ class SiteCategoryItemBuilder
     fun buildConfigurationHeaderIfAvailable(site: SiteModel): MySiteCardAndItem? {
         // if either people or settings is visible, configuration header should be visible
         return if (site.hasCapabilityManageOptions ||
-                !siteUtilsWrapper.isAccessedViaWPComRest(site) ||
-                site.hasCapabilityListUsers) {
+            !siteUtilsWrapper.isAccessedViaWPComRest(site) ||
+            site.hasCapabilityListUsers
+        ) {
             CategoryHeaderItem(UiStringRes(R.string.my_site_header_configuration))
         } else null
     }

@@ -91,8 +91,8 @@ class StatsSinceLabelFormatter @Inject constructor(
     }
 
     private fun getLabelString(@StringRes labelId: Int, labelTime: Long? = null) = labelTime
-            ?.let { resourceProvider.getString(labelId, labelTime.roundUp()) }
-            ?: resourceProvider.getString(labelId)
+        ?.let { resourceProvider.getString(labelId, labelTime.roundUp()) }
+        ?: resourceProvider.getString(labelId)
 
     private fun Long.roundUp(increment: Double = 0.5) = plus(increment).roundToLong()
 

@@ -22,8 +22,11 @@ import org.wordpress.android.util.image.ImageType.NO_PLACEHOLDER
 import javax.inject.Inject
 
 class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var imageManager: ImageManager
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
 
     private val items = mutableListOf<AuthorFilterListItemUIState>()
 
@@ -140,14 +143,14 @@ class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
             val elevationOverlayProvider = ElevationOverlayProvider(context)
             val appbarElevation = context.resources.getDimension(R.dimen.appbar_elevation)
             val elevatedSurfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
-                    appbarElevation
+                appbarElevation
             )
 
             val selectedColor = ColorUtils
-                    .setAlphaComponent(
-                            context.getColorFromAttribute(R.attr.colorOnSurface),
-                            context.resources.getInteger(R.integer.custom_popup_selected_list_item_opacity_dec)
-                    )
+                .setAlphaComponent(
+                    context.getColorFromAttribute(R.attr.colorOnSurface),
+                    context.resources.getInteger(R.integer.custom_popup_selected_list_item_opacity_dec)
+                )
 
             text.text = uiHelpers.getTextOfUiString(context, state.text)
             if (state.isSelected) {

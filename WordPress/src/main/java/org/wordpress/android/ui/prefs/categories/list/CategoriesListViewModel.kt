@@ -93,8 +93,8 @@ class CategoriesListViewModel @Inject constructor(
     @Subscribe(threadMode = MAIN)
     fun onTaxonomyChanged(event: OnTaxonomyChanged) {
         if (event.isError) AppLog.e(
-                T.SETTINGS,
-                "An error occurred while updating taxonomy with type: " + event.error.type
+            T.SETTINGS,
+            "An error occurred while updating taxonomy with type: " + event.error.type
         )
 
         if (event.causeOfChange == TaxonomyAction.FETCH_CATEGORIES)

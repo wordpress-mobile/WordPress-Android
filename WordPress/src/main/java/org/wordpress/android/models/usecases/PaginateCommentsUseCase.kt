@@ -28,8 +28,8 @@ class PaginateCommentsUseCase @Inject constructor(
     paginateCommentsResourceProvider: PaginateCommentsResourceProvider
 ) : FlowFSMUseCase<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData,
         CommentsUseCaseType, CommentError>(
-        resourceProvider = paginateCommentsResourceProvider,
-        initialState = Idle
+    resourceProvider = paginateCommentsResourceProvider,
+    initialState = Idle
 ) {
     @Suppress("LongMethod") // temporary suppress until we come up with better architecture for use cases
     sealed class PaginateCommentsState : StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction,
@@ -54,30 +54,30 @@ class PaginateCommentsUseCase @Inject constructor(
                         val result = if (!utilsProvider.networkUtilsWrapper.isNetworkAvailable()) {
                             val cachedComments = if (parameters.offset > 0) {
                                 commentsStore.getCommentsForSite(
-                                        site = parameters.site,
-                                        orderByDateAscending = false,
-                                        limit = parameters.offset,
-                                        statuses = parameters.commentFilter.toCommentCacheStatuses().toTypedArray()
+                                    site = parameters.site,
+                                    orderByDateAscending = false,
+                                    limit = parameters.offset,
+                                    statuses = parameters.commentFilter.toCommentCacheStatuses().toTypedArray()
                                 )
                             } else {
                                 listOf()
                             }
                             CommentsActionPayload(
-                                    CommentError(
-                                            GENERIC_ERROR,
-                                            utilsProvider.resourceProvider.getString(R.string.no_network_message)
-                                    ), PagingData(
+                                CommentError(
+                                    GENERIC_ERROR,
+                                    utilsProvider.resourceProvider.getString(R.string.no_network_message)
+                                ), PagingData(
                                     comments = cachedComments,
                                     hasMore = cachedComments.isNotEmpty()
-                            )
+                                )
                             )
                         } else {
                             commentsStore.fetchCommentsPage(
-                                    site = parameters.site,
-                                    number = parameters.number,
-                                    offset = parameters.offset,
-                                    networkStatusFilter = parameters.commentFilter.toCommentStatus(),
-                                    cacheStatuses = parameters.commentFilter.toCommentCacheStatuses()
+                                site = parameters.site,
+                                number = parameters.number,
+                                offset = parameters.offset,
+                                networkStatusFilter = parameters.commentFilter.toCommentStatus(),
+                                cacheStatuses = parameters.commentFilter.toCommentCacheStatuses()
                             )
                         }
 
@@ -100,9 +100,9 @@ class PaginateCommentsUseCase @Inject constructor(
                         val commentsStore = utilsProvider.commentsStore
 
                         val result = commentsStore.getCachedComments(
-                                site = parameters.pagingParameters.site,
-                                cacheStatuses = parameters.pagingParameters.commentFilter.toCommentCacheStatuses(),
-                                imposeHasMore = parameters.hasMore
+                            site = parameters.pagingParameters.site,
+                            cacheStatuses = parameters.pagingParameters.commentFilter.toCommentCacheStatuses(),
+                            imposeHasMore = parameters.hasMore
                         )
 
                         val data = (result.data ?: PagingData.empty()).let {

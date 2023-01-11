@@ -19,7 +19,8 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 
 @RunWith(MockitoJUnitRunner::class)
 class PageItemProgressUiStateUseCaseTest {
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var useCase: PageItemProgressUiStateUseCase
 
     @Before
@@ -153,9 +154,9 @@ class PageItemProgressUiStateUseCaseTest {
     fun `do NOT show overlay when upload fails`() {
         // Arrange
         val uploadState = UploadFailed(
-                mock(),
-                false,
-                retryWillPushChanges = false
+            mock(),
+            false,
+            retryWillPushChanges = false
         )
         // Act
         val (_, showOverlay) = useCase.getProgressStateForPage(uploadState)

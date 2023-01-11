@@ -16,12 +16,12 @@ class DialogHolder(
     fun show(context: Context, fragmentManager: FragmentManager, uiHelpers: UiHelpers) {
         val dialog = BasicFragmentDialog()
         dialog.initialize(
-                tag = tag,
-                title = title?.let { uiHelpers.getTextOfUiString(context, title) },
-                message = uiHelpers.getTextOfUiString(context, message),
-                positiveButtonLabel = uiHelpers.getTextOfUiString(context, positiveButton),
-                negativeButtonLabel = uiHelpers.getTextOfUiString(context, negativeButton),
-                cancelButtonLabel = null
+            tag = tag,
+            title = title?.let { uiHelpers.getTextOfUiString(context, title) },
+            message = uiHelpers.getTextOfUiString(context, message),
+            positiveButtonLabel = uiHelpers.getTextOfUiString(context, positiveButton),
+            negativeButtonLabel = uiHelpers.getTextOfUiString(context, negativeButton),
+            cancelButtonLabel = null
         )
         dialog.show(fragmentManager, tag)
     }

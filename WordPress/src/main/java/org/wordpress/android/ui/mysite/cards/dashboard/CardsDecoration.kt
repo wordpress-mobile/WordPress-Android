@@ -16,6 +16,8 @@ class CardsDecoration(
     ) {
         val position = parent.getChildAdapterPosition(view)
         if (position < 0) return
-        if (position > 0) { outRect.top = verticalMargin }
+        if (position > 0) {
+            outRect.top = verticalMargin
+        }
     }
 }

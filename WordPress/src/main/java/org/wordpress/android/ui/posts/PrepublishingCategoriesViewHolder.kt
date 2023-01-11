@@ -20,7 +20,7 @@ sealed class PrepublishingCategoriesViewHolder<T : ViewBinding>(
         parentView: ViewGroup,
         private val uiHelpers: UiHelpers
     ) : PrepublishingCategoriesViewHolder<PrepublishingCategoriesRowBinding>(
-            parentView.viewBinding(PrepublishingCategoriesRowBinding::inflate)
+        parentView.viewBinding(PrepublishingCategoriesRowBinding::inflate)
     ) {
         override fun onBind(uiState: PrepublishingCategoriesListItemUiState, position: Int) = with(binding) {
             prepublishingCategoryRowLayout.setOnClickListener {
@@ -32,19 +32,19 @@ sealed class PrepublishingCategoriesViewHolder<T : ViewBinding>(
                 uiState.onItemTapped(position)
             }
             val verticalPadding: Int = uiHelpers.getPxOfUiDimen(
-                    prepublishingCategoryText.context,
-                    UIDimenRes(uiState.verticalPaddingResId)
+                prepublishingCategoryText.context,
+                UIDimenRes(uiState.verticalPaddingResId)
             )
             val horizontalPadding: Int = uiHelpers.getPxOfUiDimen(
-                    prepublishingCategoryText.context,
-                    UIDimenRes(uiState.horizontalPaddingResId)
+                prepublishingCategoryText.context,
+                UIDimenRes(uiState.horizontalPaddingResId)
             )
             ViewCompat.setPaddingRelative(
-                    prepublishingCategoryText,
-                    horizontalPadding * uiState.categoryNode.level,
-                    verticalPadding,
-                    horizontalPadding,
-                    verticalPadding
+                prepublishingCategoryText,
+                horizontalPadding * uiState.categoryNode.level,
+                verticalPadding,
+                horizontalPadding,
+                verticalPadding
             )
         }
     }

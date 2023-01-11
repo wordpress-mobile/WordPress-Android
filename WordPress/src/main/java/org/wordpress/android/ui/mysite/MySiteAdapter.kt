@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationViewHolder
+import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardViewHolder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsViewHolder
 import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonViewHolder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
@@ -48,24 +50,25 @@ class MySiteAdapter(
             MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD.ordinal -> DomainRegistrationViewHolder(parent)
             MySiteCardAndItem.Type.QUICK_START_CARD.ordinal -> QuickStartCardViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD.ordinal -> QuickStartDynamicCardViewHolder(
-                    parent,
-                    quickStartViewPool,
-                    nestedScrollStates,
-                    uiHelpers
+                parent,
+                quickStartViewPool,
+                nestedScrollStates,
+                uiHelpers
             )
             MySiteCardAndItem.Type.INFO_ITEM.ordinal -> MySiteInfoItemViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM.ordinal -> MySiteCategoryItemViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.DASHBOARD_CARDS.ordinal -> CardsViewHolder(
-                    parent,
-                    imageManager,
-                    uiHelpers,
-                    bloggingPromptsCardAnalyticsTracker,
-                    htmlCompatWrapper,
-                    learnMoreClicked
+                parent,
+                imageManager,
+                uiHelpers,
+                bloggingPromptsCardAnalyticsTracker,
+                htmlCompatWrapper,
+                learnMoreClicked
             )
             MySiteCardAndItem.Type.JETPACK_BADGE.ordinal -> MySiteJetpackBadgeViewHolder(parent)
             MySiteCardAndItem.Type.SINGLE_ACTION_CARD.ordinal -> SingleActionCardViewHolder(parent)
+            MySiteCardAndItem.Type.JETPACK_FEATURE_CARD.ordinal -> JetpackFeatureCardViewHolder(parent, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -83,6 +86,7 @@ class MySiteAdapter(
             is MySiteJetpackBadgeViewHolder -> holder.bind(getItem(position) as JetpackBadge)
             is CardsViewHolder -> holder.bind(getItem(position) as DashboardCards)
             is SingleActionCardViewHolder -> holder.bind(getItem(position) as SingleActionCard)
+            is JetpackFeatureCardViewHolder -> holder.bind(getItem(position) as JetpackFeatureCard)
         }
     }
 

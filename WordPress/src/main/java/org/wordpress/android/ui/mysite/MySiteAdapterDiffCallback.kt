@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite
 import androidx.recyclerview.widget.DiffUtil
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
@@ -31,6 +32,7 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
                 oldItem.textResource == updatedItem.textResource
                         && oldItem.imageResource == updatedItem.imageResource
             }
+            oldItem is JetpackFeatureCard && updatedItem is JetpackFeatureCard -> true
             else -> throw UnsupportedOperationException("Diff not implemented yet")
         }
     }

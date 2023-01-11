@@ -50,8 +50,8 @@ class UploadMediaUseCaseTest {
 
         // Act
         createUploadMediaUseCase(uploadServiceFacade = uploadServiceFacade).saveQueuedPostAndStartUpload(
-                createEditorMediaListener(),
-                models
+            createEditorMediaListener(),
+            models
         )
 
         // Assert
@@ -67,8 +67,8 @@ class UploadMediaUseCaseTest {
 
         // Act
         createUploadMediaUseCase(uploadServiceFacade = uploadServiceFacade).saveQueuedPostAndStartUpload(
-                createEditorMediaListener(),
-                models
+            createEditorMediaListener(),
+            models
         )
 
         // Assert
@@ -88,6 +88,6 @@ class UploadMediaUseCaseTest {
         }
 
         private fun createMediaModel(uploadState: MediaUploadState = MediaUploadState.QUEUED) =
-                MediaModel().apply { this.uploadState = uploadState.name }
+            MediaModel().apply { this.uploadState = uploadState.name }
     }
 }

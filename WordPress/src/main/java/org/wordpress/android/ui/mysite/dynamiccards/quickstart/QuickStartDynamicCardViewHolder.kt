@@ -32,7 +32,7 @@ class QuickStartDynamicCardViewHolder(
     private val nestedScrollStates: Bundle,
     private val uiHelpers: UiHelpers
 ) : MySiteCardAndItemViewHolder<QuickStartDynamicCardBinding>(
-        parent.viewBinding(QuickStartDynamicCardBinding::inflate)
+    parent.viewBinding(QuickStartDynamicCardBinding::inflate)
 ) {
     private var currentItem: QuickStartDynamicCard? = null
     private val lowEmphasisAlpha = ResourcesCompat.getFloat(itemView.resources, R.dimen.emphasis_low)
@@ -45,10 +45,10 @@ class QuickStartDynamicCardViewHolder(
                 layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
                 setRecycledViewPool(viewPool)
                 addItemDecoration(
-                        QuickStartListItemDecoration(
-                                resources.getDimensionPixelSize(R.dimen.margin_extra_small),
-                                resources.getDimensionPixelSize(R.dimen.margin_large)
-                        )
+                    QuickStartListItemDecoration(
+                        resources.getDimensionPixelSize(R.dimen.margin_extra_small),
+                        resources.getDimensionPixelSize(R.dimen.margin_large)
+                    )
                 )
                 addOnScrollListener(object : OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -66,7 +66,7 @@ class QuickStartDynamicCardViewHolder(
         currentItem = item
 
         ObjectAnimator.ofInt(quickStartCardProgress, PROGRESS_PROPERTY_NAME, item.progress)
-                .setDuration(PROGRESS_DURATION).start()
+            .setDuration(PROGRESS_DURATION).start()
 
         val progressIndicatorColor = ContextCompat.getColor(root.context, item.accentColor)
         val progressTrackColor = ColorUtils.applyEmphasisToColor(progressIndicatorColor, lowEmphasisAlpha)

@@ -13,16 +13,17 @@ typealias RemoteSiteId = Long
 class BloggingRemindersProviderHelper @Inject constructor(
     private val bloggingRemindersStore: BloggingRemindersStore,
     private val siteStore: SiteStore,
-): LocalDataProviderHelper {
+) : LocalDataProviderHelper {
     override fun getData(localEntityId: Int?) = BloggingRemindersData(
-            reminders = runBlocking {
-                siteStore.sites.mapNotNull { site ->
-                    bloggingRemindersStore.bloggingRemindersModel(site.id).first().let {
-                        shouldInclude(it)
-                    }
+        reminders = runBlocking {
+            siteStore.sites.mapNotNull { site ->
+                bloggingRemindersStore.bloggingRemindersModel(site.id).first().let {
+                    shouldInclude(it)
                 }
             }
+        }
     )
+
     private fun shouldInclude(reminder: BloggingRemindersModel) =
-             if (reminder.enabledDays.isNotEmpty()) reminder else null
+        if (reminder.enabledDays.isNotEmpty()) reminder else null
 }

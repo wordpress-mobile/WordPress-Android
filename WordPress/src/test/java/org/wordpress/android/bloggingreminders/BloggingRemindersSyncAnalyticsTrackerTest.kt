@@ -22,7 +22,7 @@ class BloggingRemindersSyncAnalyticsTrackerTest {
         val remindersSyncedCount = 3
         classToTest.trackSuccess(remindersSyncedCount)
         verify(analyticsTrackerWrapper).track(
-                Stat.BLOGGING_REMINDERS_SYNC_SUCCESS, mapOf(REMINDERS_SYNCED_COUNT to remindersSyncedCount)
+            Stat.BLOGGING_REMINDERS_SYNC_SUCCESS, mapOf(REMINDERS_SYNCED_COUNT to remindersSyncedCount)
         )
     }
 
@@ -30,8 +30,8 @@ class BloggingRemindersSyncAnalyticsTrackerTest {
     fun `Should track failed with QueryBloggingRemindersError correctly`() {
         classToTest.trackFailed(ErrorType.QueryBloggingRemindersError)
         verify(analyticsTrackerWrapper).track(
-                Stat.BLOGGING_REMINDERS_SYNC_FAILED,
-                mapOf("error_type" to "query_blogging_reminders_error")
+            Stat.BLOGGING_REMINDERS_SYNC_FAILED,
+            mapOf("error_type" to "query_blogging_reminders_error")
         )
     }
 
@@ -39,8 +39,8 @@ class BloggingRemindersSyncAnalyticsTrackerTest {
     fun `Should track failed with UpdateBloggingRemindersError correctly`() {
         classToTest.trackFailed(ErrorType.UpdateBloggingRemindersError)
         verify(analyticsTrackerWrapper).track(
-                Stat.BLOGGING_REMINDERS_SYNC_FAILED,
-                mapOf("error_type" to "update_blogging_reminders_error")
+            Stat.BLOGGING_REMINDERS_SYNC_FAILED,
+            mapOf("error_type" to "update_blogging_reminders_error")
         )
     }
 }

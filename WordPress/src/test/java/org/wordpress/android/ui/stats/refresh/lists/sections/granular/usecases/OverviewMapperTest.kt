@@ -23,10 +23,17 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class OverviewMapperTest : BaseUnitTest() {
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var statsUtils: StatsUtils
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock
+    lateinit var statsDateFormatter: StatsDateFormatter
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var statsUtils: StatsUtils
+
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var mapper: OverviewMapper
     private val views: Long = 10
     private val visitors: Long = 15
@@ -35,6 +42,7 @@ class OverviewMapperTest : BaseUnitTest() {
     private val selectedItem = PeriodData("2010-10-10", views, visitors, likes, 30, comments, 40)
     private val likesTitle = "Likes"
     private val printedDate = "10. 10. 2010"
+
     @Before
     fun setUp() {
         mapper = OverviewMapper(statsDateFormatter, resourceProvider, statsUtils, contentDescriptionHelper)
@@ -47,19 +55,21 @@ class OverviewMapperTest : BaseUnitTest() {
     fun `builds title from item and position with empty previous item`() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
-        whenever(resourceProvider.getString(
+        whenever(
+            resourceProvider.getString(
                 eq(R.string.stats_overview_content_description),
                 eq(likes),
                 eq(likesTitle),
                 eq(printedDate),
                 eq("")
-        )).thenReturn("$likes")
+            )
+        ).thenReturn("$likes")
 
         val title = mapper.buildTitle(
-                selectedItem,
-                null,
-                uiState.selectedPosition,
-                false
+            selectedItem,
+            null,
+            uiState.selectedPosition,
+            false
         )
 
         assertThat(title.value).isEqualTo(likes.toString())
@@ -75,21 +85,23 @@ class OverviewMapperTest : BaseUnitTest() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
         val positiveLabel = "+15 (300%)"
-        whenever(resourceProvider.getString(
+        whenever(
+            resourceProvider.getString(
                 eq(R.string.stats_overview_content_description),
                 eq(likes),
                 eq(likesTitle),
                 eq(printedDate),
                 eq(positiveLabel)
-        )).thenReturn(positiveLabel)
+            )
+        ).thenReturn(positiveLabel)
         whenever(statsUtils.buildChange(eq(previousLikes), eq(likes), positive = eq(true), any()))
-                .then { positiveLabel }
+            .then { positiveLabel }
 
         val title = mapper.buildTitle(
-                selectedItem,
-                previousItem,
-                uiState.selectedPosition,
-                false
+            selectedItem,
+            previousItem,
+            uiState.selectedPosition,
+            false
         )
 
         assertThat(title.value).isEqualTo(likes.toString())
@@ -105,21 +117,23 @@ class OverviewMapperTest : BaseUnitTest() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
         val positiveLabel = "+20 (∞%)"
-        whenever(resourceProvider.getString(
+        whenever(
+            resourceProvider.getString(
                 eq(R.string.stats_overview_content_description),
                 eq(likes),
                 eq(likesTitle),
                 eq(printedDate),
                 eq(positiveLabel)
-        )).thenReturn(positiveLabel)
+            )
+        ).thenReturn(positiveLabel)
         whenever(statsUtils.buildChange(eq(previousLikes), eq(likes), positive = eq(true), any()))
-                .then { positiveLabel }
+            .then { positiveLabel }
 
         val title = mapper.buildTitle(
-                selectedItem,
-                previousItem,
-                uiState.selectedPosition,
-                false
+            selectedItem,
+            previousItem,
+            uiState.selectedPosition,
+            false
         )
 
         assertThat(title.value).isEqualTo(likes.toString())
@@ -135,21 +149,23 @@ class OverviewMapperTest : BaseUnitTest() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
         val negativeLabel = "-10 (-33%)"
-        whenever(resourceProvider.getString(
+        whenever(
+            resourceProvider.getString(
                 eq(R.string.stats_overview_content_description),
                 eq(likes),
                 eq(likesTitle),
                 eq(printedDate),
                 eq(negativeLabel)
-        )).thenReturn(negativeLabel)
+            )
+        ).thenReturn(negativeLabel)
         whenever(statsUtils.buildChange(eq(previousLikes), eq(likes), positive = eq(false), any()))
-                .then { negativeLabel }
+            .then { negativeLabel }
 
         val title = mapper.buildTitle(
-                selectedItem,
-                previousItem,
-                uiState.selectedPosition,
-                false
+            selectedItem,
+            previousItem,
+            uiState.selectedPosition,
+            false
         )
 
         assertThat(title.value).isEqualTo(likes.toString())
@@ -165,21 +181,23 @@ class OverviewMapperTest : BaseUnitTest() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
         val negativeLabel = "-20 (-100%)"
-        whenever(resourceProvider.getString(
+        whenever(
+            resourceProvider.getString(
                 eq(R.string.stats_overview_content_description),
                 eq(newLikes),
                 eq(likesTitle),
                 eq(printedDate),
                 eq(negativeLabel)
-        )).thenReturn(negativeLabel)
+            )
+        ).thenReturn(negativeLabel)
         whenever(statsUtils.buildChange(eq(likes), eq(newLikes), positive = eq(false), any()))
-                .then { negativeLabel }
+            .then { negativeLabel }
 
         val title = mapper.buildTitle(
-                newItem,
-                selectedItem,
-                uiState.selectedPosition,
-                false
+            newItem,
+            selectedItem,
+            uiState.selectedPosition,
+            false
         )
 
         assertThat(title.value).isEqualTo(newLikes.toString())
@@ -195,21 +213,23 @@ class OverviewMapperTest : BaseUnitTest() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
         val positiveLabel = "+0 (0%)"
-        whenever(resourceProvider.getString(
+        whenever(
+            resourceProvider.getString(
                 eq(R.string.stats_overview_content_description),
                 eq(likes),
                 eq(likesTitle),
                 eq(printedDate),
                 eq(positiveLabel)
-        )).thenReturn(positiveLabel)
+            )
+        ).thenReturn(positiveLabel)
         whenever(statsUtils.buildChange(eq(previousLikes), eq(likes), positive = eq(true), any()))
-                .then { positiveLabel }
+            .then { positiveLabel }
 
         val title = mapper.buildTitle(
-                selectedItem,
-                previousItem,
-                uiState.selectedPosition,
-                false
+            selectedItem,
+            previousItem,
+            uiState.selectedPosition,
+            false
         )
 
         assertThat(title.value).isEqualTo(likes.toString())
@@ -226,21 +246,23 @@ class OverviewMapperTest : BaseUnitTest() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
         val negativeLabel = "-10 (-33%)"
-        whenever(resourceProvider.getString(
+        whenever(
+            resourceProvider.getString(
                 eq(R.string.stats_overview_content_description),
                 eq(likes),
                 eq(likesTitle),
                 eq(printedDate),
                 eq(negativeLabel)
-        )).thenReturn(negativeLabel)
+            )
+        ).thenReturn(negativeLabel)
         whenever(statsUtils.buildChange(eq(previousLikes), eq(likes), positive = eq(false), any()))
-                .then { negativeLabel }
+            .then { negativeLabel }
 
         val title = mapper.buildTitle(
-                selectedItem,
-                previousItem,
-                uiState.selectedPosition,
-                true
+            selectedItem,
+            previousItem,
+            uiState.selectedPosition,
+            true
         )
 
         assertThat(title.value).isEqualTo(likes.toString())
@@ -257,28 +279,36 @@ class OverviewMapperTest : BaseUnitTest() {
         val onColumnSelected: (Int) -> Unit = {}
 
         val viewsContentDescription = "views description"
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 eq(R.string.stats_views),
                 eq(views)
-        )).thenReturn(viewsContentDescription)
+            )
+        ).thenReturn(viewsContentDescription)
 
         val visitorsContentDescription = "visitors description"
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 eq(R.string.stats_visitors),
                 eq(visitors)
-        )).thenReturn(visitorsContentDescription)
+            )
+        ).thenReturn(visitorsContentDescription)
 
         val likesContentDescription = "likes description"
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 eq(R.string.stats_likes),
                 eq(likes)
-        )).thenReturn(likesContentDescription)
+            )
+        ).thenReturn(likesContentDescription)
 
         val commentsContentDescription = "comments description"
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 eq(R.string.stats_comments),
                 eq(comments)
-        )).thenReturn(commentsContentDescription)
+            )
+        ).thenReturn(commentsContentDescription)
 
         val result = mapper.buildColumns(selectedItem, onColumnSelected, uiState.selectedPosition)
 

@@ -2,8 +2,10 @@ package org.wordpress.android.ui.photopicker
 
 import org.wordpress.android.util.UriWrapper
 
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.mediapicker.MedaPickerUiItem}")
+@Deprecated(
+    "This class is being refactored, if you implement any change, please also update " +
+            "{@link org.wordpress.android.ui.mediapicker.MedaPickerUiItem}"
+)
 sealed class PhotoPickerUiItem(
     val type: Type,
     open val id: Long,

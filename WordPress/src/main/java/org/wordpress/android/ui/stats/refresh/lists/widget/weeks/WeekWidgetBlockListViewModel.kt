@@ -77,22 +77,22 @@ class WeekWidgetBlockListViewModel
             Color.LIGHT -> R.layout.stats_widget_block_item_light
         }
         return listOf(
-                BlockItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(string.stats_views),
-                        statsUtils.toFormattedString(domainModel.dates.last().views, MILLION),
-                        resourceProvider.getString(string.stats_visitors),
-                        statsUtils.toFormattedString(domainModel.dates.last().visitors, MILLION)
-                ),
-                BlockItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(string.likes),
-                        statsUtils.toFormattedString(domainModel.dates.last().likes, MILLION),
-                        resourceProvider.getString(string.stats_comments),
-                        statsUtils.toFormattedString(domainModel.dates.last().comments, MILLION)
-                )
+            BlockItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(string.stats_views),
+                statsUtils.toFormattedString(domainModel.dates.last().views, MILLION),
+                resourceProvider.getString(string.stats_visitors),
+                statsUtils.toFormattedString(domainModel.dates.last().visitors, MILLION)
+            ),
+            BlockItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(string.likes),
+                statsUtils.toFormattedString(domainModel.dates.last().likes, MILLION),
+                resourceProvider.getString(string.stats_comments),
+                statsUtils.toFormattedString(domainModel.dates.last().comments, MILLION)
+            )
         )
     }
 }

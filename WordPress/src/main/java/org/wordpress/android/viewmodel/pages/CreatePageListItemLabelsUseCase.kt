@@ -25,6 +25,7 @@ import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostU
 import javax.inject.Inject
 
 typealias LabelColor = Int?
+
 /**
  * Most of this code has been copied from PostListItemUIStateHelper.
  */
@@ -37,18 +38,18 @@ class CreatePageListItemLabelsUseCase @Inject constructor(
         val hasUnhandledAutoSave = autoSaveConflictResolver.hasUnhandledAutoSave(postModel)
         val hasUnhandledConflicts = false // version conflicts aren't currently supported on page list
         val labels = getLabels(
-                PostStatus.fromPost(postModel),
-                postModel.isLocalDraft,
-                postModel.isLocallyChanged,
-                uploadUiState,
-                hasUnhandledConflicts,
-                hasUnhandledAutoSave
+            PostStatus.fromPost(postModel),
+            postModel.isLocalDraft,
+            postModel.isLocallyChanged,
+            uploadUiState,
+            hasUnhandledConflicts,
+            hasUnhandledAutoSave
         )
         val labelColor = labelColorUseCase.getLabelsColor(
-                postModel,
-                uploadUiState,
-                hasUnhandledConflicts,
-                hasUnhandledAutoSave
+            postModel,
+            uploadUiState,
+            hasUnhandledConflicts,
+            hasUnhandledAutoSave
         )
         return Pair(labels, labelColor)
     }
@@ -82,9 +83,9 @@ class CreatePageListItemLabelsUseCase @Inject constructor(
                     SCHEDULED -> labels.add(UiStringRes(R.string.page_waiting_for_connection_scheduled))
                     DRAFT -> labels.add(UiStringRes(R.string.page_waiting_for_connection_draft))
                     TRASHED -> AppLog.e(
-                            PAGES,
-                            "Developer error: This state shouldn't happen. Trashed pages is in " +
-                                    "UploadWaitingForConnection state."
+                        PAGES,
+                        "Developer error: This state shouldn't happen. Trashed pages is in " +
+                                "UploadWaitingForConnection state."
                     )
                 }
             }
@@ -112,14 +113,14 @@ class CreatePageListItemLabelsUseCase @Inject constructor(
     private fun getErrorLabel(uploadUiState: UploadFailed, postStatus: PostStatus): UiString? {
         return when {
             uploadUiState.error.mediaError != null -> getMediaUploadErrorLabel(
-                    uploadUiState,
-                    postStatus
+                uploadUiState,
+                postStatus
             )
             uploadUiState.error.postError != null -> uploadUtilsWrapper.getErrorMessageResIdFromPostError(
-                    postStatus,
-                    true,
-                    uploadUiState.error.postError,
-                    uploadUiState.isEligibleForAutoUpload
+                postStatus,
+                true,
+                uploadUiState.error.postError,
+                uploadUiState.isEligibleForAutoUpload
             )
             else -> {
                 val errorMsg = "MediaError and postError are both null."

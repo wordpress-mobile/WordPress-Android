@@ -29,17 +29,17 @@ class SharedLoginHelperTest {
     private val wordPressPublicData: WordPressPublicData = mock()
     private val queryResult: QueryResult = mock()
     private val localMigrationContentResolver = LocalMigrationContentResolver(
-            contextProvider,
-            wordPressPublicData,
-            queryResult,
+        contextProvider,
+        wordPressPublicData,
+        queryResult,
     )
     private val classToTest = SharedLoginHelper(
-            jetpackSharedLoginFlag,
-            appPrefsWrapper,
-            sharedLoginAnalyticsTracker,
-            localMigrationContentResolver,
-            dispatcher,
-            accountActionBuilderWrapper,
+        jetpackSharedLoginFlag,
+        appPrefsWrapper,
+        sharedLoginAnalyticsTracker,
+        localMigrationContentResolver,
+        dispatcher,
+        accountActionBuilderWrapper,
     )
 
     @Test

@@ -21,7 +21,8 @@ import org.wordpress.android.ui.quickstart.QuickStartTaskState
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class QuickStartViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var store: QuickStartStore
+    @Mock
+    private lateinit var store: QuickStartStore
     private val siteId = 1L
     private lateinit var viewModel: QuickStartViewModel
     private var mQuickStartDetailStateList: List<QuickStartTaskState>? = null
@@ -53,8 +54,10 @@ class QuickStartViewModelTest : BaseUnitTest() {
         whenever(store.hasDoneTask(siteId, ENABLE_POST_SHARING)).thenReturn(true)
         viewModel.completeTask(ENABLE_POST_SHARING, true)
 
-        assertEquals(1, mQuickStartDetailStateList?.filter { it.task == ENABLE_POST_SHARING &&
-                it.isTaskCompleted }?.size)
+        assertEquals(1, mQuickStartDetailStateList?.filter {
+            it.task == ENABLE_POST_SHARING &&
+                    it.isTaskCompleted
+        }?.size)
     }
 
     @Test

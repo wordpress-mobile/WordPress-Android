@@ -78,24 +78,27 @@ sealed class ReaderCardUiState {
             @ColorRes val chipFillColorResId: Int
         ) {
             object ChipStyleGreen : ChipStyle(
-                    chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_green_stroke,
-                    chipFontColorResId = R.color.reader_topics_you_might_like_chip_green_font,
-                    chipFillColorResId = R.color.reader_topics_you_might_like_chip_green_fill
+                chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_green_stroke,
+                chipFontColorResId = R.color.reader_topics_you_might_like_chip_green_font,
+                chipFillColorResId = R.color.reader_topics_you_might_like_chip_green_fill
             )
+
             object ChipStylePurple : ChipStyle(
-                    chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_purple_stroke,
-                    chipFontColorResId = R.color.reader_topics_you_might_like_chip_purple_font,
-                    chipFillColorResId = R.color.reader_topics_you_might_like_chip_purple_fill
+                chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_purple_stroke,
+                chipFontColorResId = R.color.reader_topics_you_might_like_chip_purple_font,
+                chipFillColorResId = R.color.reader_topics_you_might_like_chip_purple_fill
             )
+
             object ChipStyleYellow : ChipStyle(
-                    chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_yellow_stroke,
-                    chipFontColorResId = R.color.reader_topics_you_might_like_chip_yellow_font,
-                    chipFillColorResId = R.color.reader_topics_you_might_like_chip_yellow_fill
+                chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_yellow_stroke,
+                chipFontColorResId = R.color.reader_topics_you_might_like_chip_yellow_font,
+                chipFillColorResId = R.color.reader_topics_you_might_like_chip_yellow_fill
             )
+
             object ChipStyleOrange : ChipStyle(
-                    chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_orange_stroke,
-                    chipFontColorResId = R.color.reader_topics_you_might_like_chip_orange_font,
-                    chipFillColorResId = R.color.reader_topics_you_might_like_chip_orange_fill
+                chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_orange_stroke,
+                chipFontColorResId = R.color.reader_topics_you_might_like_chip_orange_font,
+                chipFillColorResId = R.color.reader_topics_you_might_like_chip_orange_fill
             )
         }
     }

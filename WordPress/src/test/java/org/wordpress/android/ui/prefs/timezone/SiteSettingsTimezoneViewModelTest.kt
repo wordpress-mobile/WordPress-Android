@@ -12,8 +12,11 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class SiteSettingsTimezoneViewModelTest : BaseUnitTest() {
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var context: Context
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var context: Context
 
     private lateinit var viewModel: SiteSettingsTimezoneViewModel
 

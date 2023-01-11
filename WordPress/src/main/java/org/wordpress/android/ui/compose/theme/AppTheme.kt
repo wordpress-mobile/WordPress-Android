@@ -36,8 +36,8 @@ fun AppThemeWithoutBackground(
     }
 
     MaterialTheme(
-            colors = colorPalette,
-            content = content
+        colors = colorPalette,
+        content = content
     )
 }
 

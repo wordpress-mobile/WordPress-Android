@@ -10,11 +10,11 @@ import org.wordpress.android.fluxc.module.ReleaseToolsModule
 
 @InstallIn(SingletonComponent::class)
 @Module(
-        includes = [
-            ReleaseNetworkModule::class,
-            OkHttpClientModule::class,
-            ReleaseToolsModule::class,
-            DatabaseModule::class
-        ]
+    includes = [
+        ReleaseNetworkModule::class,
+        OkHttpClientModule::class,
+        ReleaseToolsModule::class,
+        DatabaseModule::class
+    ]
 )
 interface FluxCModule

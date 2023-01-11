@@ -51,8 +51,8 @@ class DeviceListBuilder(
                 when (mediaType) {
                     IMAGE, VIDEO, AUDIO -> async {
                         mediaType to loadMedia(
-                                mediaType,
-                                lowerCaseFilter
+                            mediaType,
+                            lowerCaseFilter
                         )
                     }
                     DOCUMENT -> async { mediaType to loadDownloads(lowerCaseFilter) }
@@ -88,8 +88,8 @@ class DeviceListBuilder(
                 MediaLoadingResult.Success(mediaItems, lastShownTimestamp > 0L)
             } else {
                 Empty(
-                        UiStringRes(R.string.media_empty_search_list),
-                        image = R.drawable.img_illustration_empty_results_216dp
+                    UiStringRes(R.string.media_empty_search_list),
+                    image = R.drawable.img_illustration_empty_results_216dp
                 )
             }
         }
@@ -105,11 +105,11 @@ class DeviceListBuilder(
             val mimeType = deviceMediaLoader.getMimeType(it.uri)
             val isMimeTypeSupported = mimeType != null && site?.let {
                 mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(
-                        site,
-                        mimeType
+                    site,
+                    mimeType
                 )
             } ?: true && MediaUtils.isSupportedMimeType(
-                    mimeType
+                mimeType
             )
 
             if (isMimeTypeSupported) {
@@ -133,22 +133,22 @@ class DeviceListBuilder(
             val mimeType = deviceMediaLoader.getMimeType(document.uri)
             val isMimeTypeSupported = mimeType != null && site?.let {
                 mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(
-                        site,
-                        mimeType
+                    site,
+                    mimeType
                 )
             } ?: true && MediaUtils.isSupportedMimeType(
-                    mimeType
+                mimeType
             )
             val isSupportedApplicationType = mimeType != null && mimeTypes.isSupportedApplicationType(mimeType)
 
             if (isSupportedApplicationType && isMimeTypeSupported) {
                 MediaItem(
-                        LocalUri(document.uri),
-                        document.uri.toString(),
-                        document.title,
-                        DOCUMENT,
-                        mimeType,
-                        document.dateModified
+                    LocalUri(document.uri),
+                    document.uri.toString(),
+                    document.title,
+                    DOCUMENT,
+                    mimeType,
+                    document.dateModified
                 )
             } else {
                 null
@@ -180,13 +180,13 @@ class DeviceListBuilder(
     ) {
         fun build(mediaTypes: Set<MediaType>, site: SiteModel?): DeviceListBuilder {
             return DeviceListBuilder(
-                    localeManagerWrapper,
-                    deviceMediaLoader,
-                    mediaUtilsWrapper,
-                    site,
-                    bgDispatcher,
-                    mediaTypes,
-                    PAGE_SIZE
+                localeManagerWrapper,
+                deviceMediaLoader,
+                mediaUtilsWrapper,
+                site,
+                bgDispatcher,
+                mediaTypes,
+                PAGE_SIZE
             )
         }
 

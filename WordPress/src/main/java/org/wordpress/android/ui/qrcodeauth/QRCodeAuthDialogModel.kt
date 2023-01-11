@@ -12,10 +12,10 @@ sealed class QRCodeAuthDialogModel(
     @StringRes val cancelButtonLabel: Int? = null
 ) {
     object ShowDismissDialog : QRCodeAuthDialogModel(
-            QRCodeAuthViewModel.TAG_DISMISS_DIALOG,
-            R.string.qrcode_auth_flow_dismiss_dialog_title,
-            R.string.qrcode_auth_flow_dismiss_dialog_message,
-            R.string.ok,
-            R.string.cancel
+        QRCodeAuthViewModel.TAG_DISMISS_DIALOG,
+        R.string.qrcode_auth_flow_dismiss_dialog_title,
+        R.string.qrcode_auth_flow_dismiss_dialog_message,
+        R.string.ok,
+        R.string.cancel
     )
 }

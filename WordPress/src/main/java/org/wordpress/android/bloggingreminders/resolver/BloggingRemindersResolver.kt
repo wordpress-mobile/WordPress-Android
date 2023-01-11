@@ -39,16 +39,16 @@ class BloggingRemindersResolver @Inject constructor(
             return
         }
         localMigrationContentResolver.getResultForEntityType<BloggingRemindersData>(BloggingReminders)
-                .thenWith { (reminders) ->
-                    if (reminders.isNotEmpty()) {
-                        val success = setBloggingReminders(reminders)
-                        if (success) onSuccess() else onFailure()
-                    } else {
-                        bloggingRemindersSyncAnalyticsTracker.trackSuccess(0)
-                        onSuccess()
-                    }
-                    EmptyResult
-        }.otherwise { onFailure() }
+            .thenWith { (reminders) ->
+                if (reminders.isNotEmpty()) {
+                    val success = setBloggingReminders(reminders)
+                    if (success) onSuccess() else onFailure()
+                } else {
+                    bloggingRemindersSyncAnalyticsTracker.trackSuccess(0)
+                    onSuccess()
+                }
+                EmptyResult
+            }.otherwise { onFailure() }
     }
 
     @Suppress("ReturnCount")
@@ -89,15 +89,15 @@ class BloggingRemindersResolver @Inject constructor(
     }
 
     private suspend fun isBloggingReminderAlreadySet(siteLocalId: Int) =
-            bloggingRemindersStore.bloggingRemindersModel(siteLocalId).first().enabledDays.isNotEmpty()
+        bloggingRemindersStore.bloggingRemindersModel(siteLocalId).first().enabledDays.isNotEmpty()
 
     private fun setLocalReminderNotification(bloggingRemindersModel: BloggingRemindersModel) {
         val bloggingRemindersUiModel = bloggingRemindersModelMapper.toUiModel(bloggingRemindersModel)
         reminderScheduler.schedule(
-                bloggingRemindersUiModel.siteId,
-                bloggingRemindersUiModel.hour,
-                bloggingRemindersUiModel.minute,
-                bloggingRemindersUiModel.toReminderConfig()
+            bloggingRemindersUiModel.siteId,
+            bloggingRemindersUiModel.hour,
+            bloggingRemindersUiModel.minute,
+            bloggingRemindersUiModel.toReminderConfig()
         )
     }
 }

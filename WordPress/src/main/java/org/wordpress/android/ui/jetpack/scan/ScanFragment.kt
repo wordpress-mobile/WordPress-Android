@@ -37,8 +37,11 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ScanFragment : Fragment(R.layout.scan_fragment) {
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var imageManager: ImageManager
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
     private lateinit var listView: EmptyViewRecyclerView
     private var fixThreatsConfirmationDialog: AlertDialog? = null
     private val viewModel: ScanViewModel by viewModels()
@@ -62,7 +65,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     private fun ScanFragmentBinding.initRecyclerView() {
         recyclerView.itemAnimator = null
         recyclerView.addItemDecoration(
-                HorizontalMarginItemDecoration(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
+            HorizontalMarginItemDecoration(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
         )
         initAdapter()
         initActionableEmptyView()
@@ -84,39 +87,39 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
     private fun ScanFragmentBinding.setupObservers() {
         viewModel.uiState.observe(
-                viewLifecycleOwner,
-                { uiState ->
-                    uiHelpers.updateVisibility(progressBar, uiState.loadingVisible)
-                    uiHelpers.updateVisibility(recyclerView, uiState.contentVisible)
-                    uiHelpers.updateVisibility(actionableEmptyView, uiState.errorVisible)
+            viewLifecycleOwner,
+            { uiState ->
+                uiHelpers.updateVisibility(progressBar, uiState.loadingVisible)
+                uiHelpers.updateVisibility(recyclerView, uiState.contentVisible)
+                uiHelpers.updateVisibility(actionableEmptyView, uiState.errorVisible)
 
-                    when (uiState) {
-                        is ContentUiState -> updateContentLayout(uiState)
+                when (uiState) {
+                    is ContentUiState -> updateContentLayout(uiState)
 
-                        is FullScreenLoadingUiState -> { // Do Nothing
-                        }
-
-                        is ErrorUiState.NoConnection,
-                        is ErrorUiState.GenericRequestFailed,
-                        is ErrorUiState.ScanRequestFailed,
-                        is ErrorUiState.MultisiteNotSupported,
-                        is ErrorUiState.VaultPressActiveOnSite -> updateErrorLayout(uiState as ErrorUiState)
+                    is FullScreenLoadingUiState -> { // Do Nothing
                     }
+
+                    is ErrorUiState.NoConnection,
+                    is ErrorUiState.GenericRequestFailed,
+                    is ErrorUiState.ScanRequestFailed,
+                    is ErrorUiState.MultisiteNotSupported,
+                    is ErrorUiState.VaultPressActiveOnSite -> updateErrorLayout(uiState as ErrorUiState)
                 }
+            }
         )
 
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar() })
 
         viewModel.navigationEvents.observeEvent(
-                viewLifecycleOwner
+            viewLifecycleOwner
         ) { events ->
             when (events) {
                 is OpenFixThreatsConfirmationDialog -> showFixThreatsConfirmationDialog(events)
 
                 is ShowThreatDetails -> ActivityLauncher.viewThreatDetails(
-                        this@ScanFragment,
-                        events.siteModel,
-                        events.threatId
+                    this@ScanFragment,
+                    events.siteModel,
+                    events.threatId
                 )
 
                 is ShowContactSupport ->
@@ -147,9 +150,9 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     private fun SnackbarMessageHolder.showSnackbar() {
         view?.let {
             val snackbar = WPSnackbar.make(
-                    it,
-                    uiHelpers.getTextOfUiString(requireContext(), message),
-                    Snackbar.LENGTH_LONG
+                it,
+                uiHelpers.getTextOfUiString(requireContext(), message),
+                Snackbar.LENGTH_LONG
             )
             snackbar.show()
         }
@@ -157,12 +160,12 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
     private fun showFixThreatsConfirmationDialog(holder: OpenFixThreatsConfirmationDialog) {
         fixThreatsConfirmationDialog = MaterialAlertDialogBuilder(requireActivity())
-                .setTitle(uiHelpers.getTextOfUiString(requireContext(), holder.title))
-                .setMessage(uiHelpers.getTextOfUiString(requireContext(), holder.message))
-                .setPositiveButton(holder.positiveButtonLabel) { _, _ -> holder.okButtonAction.invoke() }
-                .setNegativeButton(holder.negativeButtonLabel) { _, _ -> fixThreatsConfirmationDialog?.dismiss() }
-                .setCancelable(true)
-                .create()
+            .setTitle(uiHelpers.getTextOfUiString(requireContext(), holder.title))
+            .setMessage(uiHelpers.getTextOfUiString(requireContext(), holder.message))
+            .setPositiveButton(holder.positiveButtonLabel) { _, _ -> holder.okButtonAction.invoke() }
+            .setNegativeButton(holder.negativeButtonLabel) { _, _ -> fixThreatsConfirmationDialog?.dismiss() }
+            .setCancelable(true)
+            .create()
         fixThreatsConfirmationDialog?.show()
     }
 

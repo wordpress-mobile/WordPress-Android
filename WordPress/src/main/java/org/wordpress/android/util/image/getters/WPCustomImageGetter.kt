@@ -33,7 +33,8 @@ class WPCustomImageGetter @JvmOverloads constructor(
      */
     private val targets = HashSet<WPRemoteResourceViewTarget>()
 
-    @Inject lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var imageManager: ImageManager
 
     init {
         (WordPress.getContext().applicationContext as WordPress).component().inject(this)

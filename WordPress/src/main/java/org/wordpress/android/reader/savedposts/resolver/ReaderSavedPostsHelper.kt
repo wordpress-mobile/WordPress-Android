@@ -46,13 +46,13 @@ class ReaderSavedPostsHelper @Inject constructor(
         if (postsData.posts.isNotEmpty()) {
             readerDatabaseWrapper.reset(false)
             readerTagTableWrapper.addOrUpdateTag(
-                    ReaderTag(
-                            "",
-                            contextProvider.getContext().getString(R.string.reader_save_for_later_display_name),
-                            contextProvider.getContext().getString(R.string.reader_save_for_later_title),
-                            "",
-                            BOOKMARKED
-                    )
+                ReaderTag(
+                    "",
+                    contextProvider.getContext().getString(R.string.reader_save_for_later_display_name),
+                    contextProvider.getContext().getString(R.string.reader_save_for_later_title),
+                    "",
+                    BOOKMARKED
+                )
             )
 
             requireNotNull(readerTagTableWrapper.getBookmarkTags()) {

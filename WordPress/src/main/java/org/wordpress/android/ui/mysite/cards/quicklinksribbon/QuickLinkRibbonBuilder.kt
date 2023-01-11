@@ -14,45 +14,45 @@ class QuickLinkRibbonBuilder @Inject constructor(
     val quickStartRepository: QuickStartRepository
 ) {
     fun build(params: QuickLinkRibbonBuilderParams) = QuickLinkRibbon(
-            quickLinkRibbonItems = getQuickLinkRibbonItems(params),
-            showPagesFocusPoint = shouldShowPagesFocusPoint(params),
-            showStatsFocusPoint = shouldShowStatsFocusPoint(params),
-            showMediaFocusPoint = shouldShowMediaFocusPoint(params)
+        quickLinkRibbonItems = getQuickLinkRibbonItems(params),
+        showPagesFocusPoint = shouldShowPagesFocusPoint(params),
+        showStatsFocusPoint = shouldShowStatsFocusPoint(params),
+        showMediaFocusPoint = shouldShowMediaFocusPoint(params)
     )
 
     private fun getQuickLinkRibbonItems(params: QuickLinkRibbonBuilderParams): MutableList<QuickLinkRibbonItem> {
         val items = mutableListOf<QuickLinkRibbonItem>()
         items.apply {
             add(
-                    QuickLinkRibbonItem(
-                            label = R.string.stats,
-                            icon = R.drawable.ic_stats_alt_white_24dp,
-                            onClick = ListItemInteraction.create(params.onStatsClick),
-                            showFocusPoint = shouldShowStatsFocusPoint(params)
-                    )
+                QuickLinkRibbonItem(
+                    label = R.string.stats,
+                    icon = R.drawable.ic_stats_alt_white_24dp,
+                    onClick = ListItemInteraction.create(params.onStatsClick),
+                    showFocusPoint = shouldShowStatsFocusPoint(params)
+                )
             )
             add(
-                    QuickLinkRibbonItem(
-                            label = R.string.posts,
-                            icon = R.drawable.ic_posts_white_24dp,
-                            onClick = ListItemInteraction.create(params.onPostsClick)
-                    )
+                QuickLinkRibbonItem(
+                    label = R.string.posts,
+                    icon = R.drawable.ic_posts_white_24dp,
+                    onClick = ListItemInteraction.create(params.onPostsClick)
+                )
             )
             add(
-                    QuickLinkRibbonItem(
-                            label = R.string.media,
-                            icon = R.drawable.ic_media_white_24dp,
-                            onClick = ListItemInteraction.create(params.onMediaClick),
-                            showFocusPoint = shouldShowMediaFocusPoint(params)
-                    )
+                QuickLinkRibbonItem(
+                    label = R.string.media,
+                    icon = R.drawable.ic_media_white_24dp,
+                    onClick = ListItemInteraction.create(params.onMediaClick),
+                    showFocusPoint = shouldShowMediaFocusPoint(params)
+                )
             )
         }
         if (params.siteModel.isSelfHostedAdmin || params.siteModel.hasCapabilityEditPages) {
             val pages = QuickLinkRibbonItem(
-                    label = R.string.pages,
-                    icon = R.drawable.ic_pages_white_24dp,
-                    onClick = ListItemInteraction.create(params.onPagesClick),
-                    showFocusPoint = shouldShowPagesFocusPoint(params)
+                label = R.string.pages,
+                icon = R.drawable.ic_pages_white_24dp,
+                onClick = ListItemInteraction.create(params.onPagesClick),
+                showFocusPoint = shouldShowPagesFocusPoint(params)
             )
             items.add(QUICK_LINK_PAGE_INDEX, pages)
         }
@@ -65,13 +65,13 @@ class QuickLinkRibbonBuilder @Inject constructor(
 
     private fun shouldShowStatsFocusPoint(params: QuickLinkRibbonBuilderParams): Boolean {
         return params.enableFocusPoints && params.activeTask == quickStartRepository.quickStartType.getTaskFromString(
-                QuickStartStore.QUICK_START_CHECK_STATS_LABEL
+            QuickStartStore.QUICK_START_CHECK_STATS_LABEL
         )
     }
 
     private fun shouldShowMediaFocusPoint(params: QuickLinkRibbonBuilderParams): Boolean {
         return params.enableFocusPoints && params.activeTask == quickStartRepository.quickStartType.getTaskFromString(
-                QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL
+            QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL
         )
     }
 

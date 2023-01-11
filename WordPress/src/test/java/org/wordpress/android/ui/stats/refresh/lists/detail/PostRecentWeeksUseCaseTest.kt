@@ -47,13 +47,26 @@ import java.util.Calendar
 
 @ExperimentalCoroutinesApi
 class PostRecentWeeksUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var store: PostDetailStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var statsPostProvider: StatsPostProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var postDetailMapper: PostDetailMapper
+    @Mock
+    lateinit var store: PostDetailStore
+
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+
+    @Mock
+    lateinit var statsPostProvider: StatsPostProvider
+
+    @Mock
+    lateinit var site: SiteModel
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var postDetailMapper: PostDetailMapper
     private lateinit var useCase: PostRecentWeeksUseCase
     private lateinit var expandCaptor: KArgumentCaptor<(ExpandedWeekUiState) -> Unit>
     private val postId: Long = 1L
@@ -64,13 +77,13 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = PostRecentWeeksUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                statsSiteProvider,
-                statsPostProvider,
-                store,
-                postDetailMapper,
-                BLOCK
+            testDispatcher(),
+            testDispatcher(),
+            statsSiteProvider,
+            statsPostProvider,
+            store,
+            postDetailMapper,
+            BLOCK
         )
         expandCaptor = argumentCaptor()
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -85,55 +98,55 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
         val model = PostDetailStatsModel(0, listOf(), data, listOf(), listOf())
         whenever(store.getPostDetail(site, postId)).thenReturn(model)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         val nonExpandedUiState = ExpandedWeekUiState()
         val lastDayCalendar = Calendar.getInstance()
         lastDayCalendar.set(2019, 3, 24)
         val expandedUiState = ExpandedWeekUiState(expandedWeekFirstDay = lastDayCalendar.time)
         whenever(
-                postDetailMapper.mapWeeks(
-                        eq(data),
-                        eq(6),
-                        eq(nonExpandedUiState),
-                        any(),
-                        expandCaptor.capture()
-                )
+            postDetailMapper.mapWeeks(
+                eq(data),
+                eq(6),
+                eq(nonExpandedUiState),
+                any(),
+                expandCaptor.capture()
+            )
         ).thenReturn(
-                listOf(
-                        ExpandableItem(
-                                ListItemWithIcon(
-                                        text = "Mar 18 - Mar 24, 2019",
-                                        value = "150",
-                                        contentDescription = "Mar: 150"
-                                ), false
-                        ) {
-                            expandCaptor.lastValue.invoke(expandedUiState)
-                        })
+            listOf(
+                ExpandableItem(
+                    ListItemWithIcon(
+                        text = "Mar 18 - Mar 24, 2019",
+                        value = "150",
+                        contentDescription = "Mar: 150"
+                    ), false
+                ) {
+                    expandCaptor.lastValue.invoke(expandedUiState)
+                })
         )
         whenever(
-                postDetailMapper.mapWeeks(
-                        eq(data),
-                        eq(6),
-                        eq(expandedUiState),
-                        any(),
-                        expandCaptor.capture()
-                )
+            postDetailMapper.mapWeeks(
+                eq(data),
+                eq(6),
+                eq(expandedUiState),
+                any(),
+                expandCaptor.capture()
+            )
         ).thenReturn(
-                listOf(
-                        ExpandableItem(
-                                ListItemWithIcon(
-                                        text = "Mar 18 - Mar 24, 2019",
-                                        value = "150",
-                                        contentDescription = "Mar: 150"
-                                ),
-                                false
-                        ) { expandCaptor.lastValue.invoke(expandedUiState) },
-                        ListItemWithIcon(text = "Mar 18", value = "50", contentDescription = "Mar: 50"),
-                        ListItemWithIcon(text = "Mar 24", value = "100", contentDescription = "Mar: 100")
-                )
+            listOf(
+                ExpandableItem(
+                    ListItemWithIcon(
+                        text = "Mar 18 - Mar 24, 2019",
+                        value = "150",
+                        contentDescription = "Mar: 150"
+                    ),
+                    false
+                ) { expandCaptor.lastValue.invoke(expandedUiState) },
+                ListItemWithIcon(text = "Mar 18", value = "50", contentDescription = "Mar: 50"),
+                ListItemWithIcon(text = "Mar 24", value = "100", contentDescription = "Mar: 100")
+            )
         )
 
         val result = loadData(true, forced)
@@ -170,33 +183,33 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
         val model = PostDetailStatsModel(0, listOf(), data, listOf(), listOf())
         whenever(store.getPostDetail(site, postId)).thenReturn(model)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         val nonExpandedUiState = ExpandedWeekUiState()
         val lastDayCalendar = Calendar.getInstance()
         lastDayCalendar.set(2019, 3, 24)
         val expandedUiState = ExpandedWeekUiState(expandedWeekFirstDay = lastDayCalendar.time)
         whenever(
-                postDetailMapper.mapWeeks(
-                        eq(data),
-                        eq(6),
-                        eq(nonExpandedUiState),
-                        any(),
-                        expandCaptor.capture()
-                )
+            postDetailMapper.mapWeeks(
+                eq(data),
+                eq(6),
+                eq(nonExpandedUiState),
+                any(),
+                expandCaptor.capture()
+            )
         ).thenReturn(
-                listOf(
-                        ExpandableItem(
-                                ListItemWithIcon(
-                                        text = "Mar 18 - Mar 24, 2019",
-                                        value = "150",
-                                        contentDescription = "Mar: 150"
-                                ), false
-                        ) {
-                            expandCaptor.lastValue.invoke(expandedUiState)
-                        })
+            listOf(
+                ExpandableItem(
+                    ListItemWithIcon(
+                        text = "Mar 18 - Mar 24, 2019",
+                        value = "150",
+                        contentDescription = "Mar: 150"
+                    ), false
+                ) {
+                    expandCaptor.lastValue.invoke(expandedUiState)
+                })
         )
 
         val result = loadData(true, forced)
@@ -216,9 +229,9 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadData(true, forced)
@@ -230,15 +243,15 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
     fun `maps list of empty items to empty UI model`() = test {
         val forced = false
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
-                OnStatsFetched(
-                        model = PostDetailStatsModel(
-                                0,
-                                listOf(Day("1970", 0), Day("1970", 1)),
-                                listOf(Week(listOf(Day("Monday", 0)), 0, 0)),
-                                listOf(Year(2020, listOf(Month(1, 55)), 10)),
-                                listOf(Year(2020, listOf(), 10))
-                        )
+            OnStatsFetched(
+                model = PostDetailStatsModel(
+                    0,
+                    listOf(Day("1970", 0), Day("1970", 1)),
+                    listOf(Week(listOf(Day("Monday", 0)), 0, 0)),
+                    listOf(Year(2020, listOf(Month(1, 55)), 10)),
+                    listOf(Year(2020, listOf(), 10))
                 )
+            )
         )
 
         val result = loadData(true, forced)

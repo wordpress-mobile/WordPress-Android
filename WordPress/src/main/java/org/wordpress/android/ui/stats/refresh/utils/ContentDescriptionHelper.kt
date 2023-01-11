@@ -20,11 +20,11 @@ class ContentDescriptionHelper
         value: Any
     ): String {
         return resourceProvider.getString(
-                R.string.stats_list_item_description,
-                resourceProvider.getString(keyLabel),
-                key,
-                resourceProvider.getString(valueLabel),
-                value
+            R.string.stats_list_item_description,
+            resourceProvider.getString(keyLabel),
+            key,
+            resourceProvider.getString(valueLabel),
+            value
         )
     }
 

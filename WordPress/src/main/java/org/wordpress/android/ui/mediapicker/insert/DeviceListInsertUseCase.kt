@@ -36,8 +36,8 @@ class DeviceListInsertUseCase(
     ) {
         fun build(queueResults: Boolean): DeviceListInsertUseCase {
             return DeviceListInsertUseCase(
-                    wpMediaUtilsWrapper,
-                    queueResults
+                wpMediaUtilsWrapper,
+                queueResults
             )
         }
     }

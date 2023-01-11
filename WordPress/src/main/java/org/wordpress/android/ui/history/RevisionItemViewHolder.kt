@@ -34,8 +34,10 @@ class RevisionItemViewHolder(
         subtitle.text = boundRevision.authorDisplayName
 
         if (!TextUtils.isEmpty(this.boundRevision.authorAvatarURL)) {
-            imageManager.loadIntoCircle(avatar, ImageType.AVATAR_WITH_BACKGROUND,
-                    StringUtils.notNullStr(boundRevision.authorAvatarURL))
+            imageManager.loadIntoCircle(
+                avatar, ImageType.AVATAR_WITH_BACKGROUND,
+                StringUtils.notNullStr(boundRevision.authorAvatarURL)
+            )
         }
 
         if (boundRevision.totalAdditions == 0 && boundRevision.totalDeletions == 0) {

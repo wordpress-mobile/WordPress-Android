@@ -3,7 +3,6 @@ package org.wordpress.android.ui.comments.unified
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.COMMENTS
-import java.util.ArrayList
 
 /**
  * Adaptation of ReaderCommentLeveler. We should combine them together as part of Comment Unification.

@@ -36,9 +36,10 @@ class TimezoneAdapter(
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TimezonesList>() {
             override fun areItemsTheSame(oldItem: TimezonesList, newItem: TimezonesList) =
-                    oldItem.label == newItem.label
+                oldItem.label == newItem.label
+
             override fun areContentsTheSame(oldItem: TimezonesList, newItem: TimezonesList) =
-                    oldItem == newItem
+                oldItem == newItem
         }
     }
 }

@@ -17,9 +17,9 @@ class AppendMediaToEditorUseCaseTest {
     fun `invokes appendMediaFile for all mediaModels`() {
         // Arrange
         val mediaModels = listOf(
-                createMediaModel(url = "1"),
-                createMediaModel(url = "2"),
-                createMediaModel(url = "3")
+            createMediaModel(url = "1"),
+            createMediaModel(url = "2"),
+            createMediaModel(url = "3")
         )
         val editorMediaListener = mock<EditorMediaListener>()
         // Act
@@ -74,7 +74,7 @@ class AppendMediaToEditorUseCaseTest {
         val editorMediaListener = mock<EditorMediaListener>()
         // Act
         createAppendMediaToEditorUseCase(fluxCUtilsWrapper = fluxCUtilsWrapper)
-                .addMediaToEditor(editorMediaListener, mediaModels)
+            .addMediaToEditor(editorMediaListener, mediaModels)
         // Assert
         verify(editorMediaListener).appendMediaFiles(argThat { this[url] == mediaFile })
     }
@@ -88,7 +88,7 @@ class AppendMediaToEditorUseCaseTest {
         val editorMediaListener = mock<EditorMediaListener>()
         // Act
         createAppendMediaToEditorUseCase(fluxCUtilsWrapper = fluxCUtilsWrapper)
-                .addMediaToEditor(editorMediaListener, mediaModels)
+            .addMediaToEditor(editorMediaListener, mediaModels)
         // Assert
         verify(editorMediaListener).appendMediaFiles(argThat { this.isEmpty() })
     }

@@ -177,6 +177,8 @@ public class AppPrefs {
         SKIPPED_BLOGGING_PROMPT_DAY,
         OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP,
         OPEN_WEB_LINKS_WITH_JETPACK,
+        SHOULD_HIDE_JETPACK_FEATURE_CARD,
+        JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP
     }
 
     /**
@@ -292,6 +294,9 @@ public class AppPrefs {
 
         // Indicates if the user has completed the Jetpack migration flow
         IS_JETPACK_MIGRATION_COMPLETED,
+
+        // Indicates if the the Jetpack migration flow is in progress (useful for resetting after interruptions)
+        IS_JETPACK_MIGRATION_IS_IN_PROGRESS,
 
         // Indicates if the user is eligible for the Jetpack migration flow
         IS_JETPACK_MIGRATION_ELIGIBLE,
@@ -1487,6 +1492,14 @@ public class AppPrefs {
         setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_COMPLETED, isCompleted);
     }
 
+    public static boolean getIsJetpackMigrationInProgress() {
+        return getBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_IS_IN_PROGRESS, false);
+    }
+
+    public static void setIsJetpackMigrationInProgress(final boolean isInProgress) {
+        setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_IS_IN_PROGRESS, isInProgress);
+    }
+
     public static boolean getIsJetpackMigrationEligible() {
         return getBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_ELIGIBLE, true);
     }
@@ -1509,5 +1522,21 @@ public class AppPrefs {
 
     public static void setIsOpenWebLinksWithJetpack(final boolean isOpenWebLinksWithJetpack) {
         setBoolean(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK, isOpenWebLinksWithJetpack);
+    }
+
+    public static Boolean getShouldHideJetpackFeatureCard() {
+        return getBoolean(DeletablePrefKey.SHOULD_HIDE_JETPACK_FEATURE_CARD, false);
+    }
+
+    public static void setShouldHideJetpackFeatureCard(final boolean isHidden) {
+        setBoolean(DeletablePrefKey.SHOULD_HIDE_JETPACK_FEATURE_CARD, isHidden);
+    }
+
+    public static Long getJetpackFeatureCardLastShownTimestamp() {
+        return getLong(DeletablePrefKey.JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP, 0L);
+    }
+
+    public static void setJetpackFeatureCardLastShownTimestamp(final Long lastShownTimestamp) {
+        setLong(DeletablePrefKey.JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP, lastShownTimestamp);
     }
 }

@@ -36,8 +36,8 @@ class ViewsAndVisitorsMapper
     private val contentDescriptionHelper: ContentDescriptionHelper
 ) {
     private val units = listOf(
-            string.stats_views,
-            string.stats_visitors
+        string.stats_views,
+        string.stats_visitors
     )
 
     enum class SelectedType(val value: Int) {
@@ -50,6 +50,7 @@ class ViewsAndVisitorsMapper
                 0 -> color.blue_50
                 else -> color.purple_50
             }
+
             fun getFillDrawable(selectedType: Int): Int = when (selectedType) {
                 0 -> R.drawable.bg_rectangle_stats_line_chart_blue_gradient
                 else -> R.drawable.bg_rectangle_stats_line_chart_purple_gradient
@@ -58,14 +59,14 @@ class ViewsAndVisitorsMapper
     }
 
     fun buildChartLegendsBlue() = ChartLegendsBlue(
-            string.stats_timeframe_this_week,
-            string.stats_timeframe_previous_week
-        )
+        string.stats_timeframe_this_week,
+        string.stats_timeframe_previous_week
+    )
 
     fun buildChartLegendsPurple() = ChartLegendsPurple(
-            string.stats_timeframe_this_week,
-            string.stats_timeframe_previous_week
-        )
+        string.stats_timeframe_this_week,
+        string.stats_timeframe_previous_week
+    )
 
     fun buildTitle(
         dates: List<PeriodData>,
@@ -77,25 +78,25 @@ class ViewsAndVisitorsMapper
         val (thisWeekCount, prevWeekCount) = mapDatesToWeeks(dates, selectedPosition)
 
         return ValuesItem(
-                selectedItem = selectedPosition,
-                value1 = statsUtils.toFormattedString(thisWeekCount, startValue),
-                unit1 = units[selectedPosition],
-                contentDescription1 = resourceProvider.getString(
-                        string.stats_overview_content_description,
-                        thisWeekCount,
-                        resourceProvider.getString(units[selectedPosition]),
-                        statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
-                        ""
-                ),
-                value2 = statsUtils.toFormattedString(prevWeekCount, startValue),
-                unit2 = units[selectedPosition],
-                contentDescription2 = resourceProvider.getString(
-                        string.stats_overview_content_description,
-                        prevWeekCount,
-                        resourceProvider.getString(units[selectedPosition]),
-                        statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
-                        ""
-                )
+            selectedItem = selectedPosition,
+            value1 = statsUtils.toFormattedString(thisWeekCount, startValue),
+            unit1 = units[selectedPosition],
+            contentDescription1 = resourceProvider.getString(
+                string.stats_overview_content_description,
+                thisWeekCount,
+                resourceProvider.getString(units[selectedPosition]),
+                statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
+                ""
+            ),
+            value2 = statsUtils.toFormattedString(prevWeekCount, startValue),
+            unit2 = units[selectedPosition],
+            contentDescription2 = resourceProvider.getString(
+                string.stats_overview_content_description,
+                prevWeekCount,
+                resourceProvider.getString(units[selectedPosition]),
+                statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
+                ""
+            )
         )
     }
 
@@ -118,9 +119,9 @@ class ViewsAndVisitorsMapper
             val value = it.getValue(selectedType)
             val date = statsDateFormatter.parseStatsDate(statsGranularity, it.period)
             Line(
-                    statsDateFormatter.printDayWithoutYear(date).enforceWesternArabicNumerals() as String,
-                    it.period,
-                    value.toInt()
+                statsDateFormatter.printDayWithoutYear(date).enforceWesternArabicNumerals() as String,
+                it.period,
+                value.toInt()
             )
         }
 
@@ -132,19 +133,19 @@ class ViewsAndVisitorsMapper
         }
 
         val contentDescriptions = statsUtils.getLineChartEntryContentDescriptions(
-                entryType,
-                chartItems
+            entryType,
+            chartItems
         )
 
         result.add(
-                LineChartItem(
-                        selectedType = selectedType,
-                        entries = chartItems,
-                        selectedItemPeriod = selectedItemPeriod,
-                        onLineSelected = onLineSelected,
-                        onLineChartDrawn = onLineChartDrawn,
-                        entryContentDescriptions = contentDescriptions
-                )
+            LineChartItem(
+                selectedType = selectedType,
+                entries = chartItems,
+                selectedItemPeriod = selectedItemPeriod,
+                onLineSelected = onLineSelected,
+                onLineChartDrawn = onLineChartDrawn,
+                entryContentDescriptions = contentDescriptions
+            )
         )
         return result
     }
@@ -158,18 +159,18 @@ class ViewsAndVisitorsMapper
 
         if (thisWeekCount <= 0 || prevWeekCount <= 0) {
             return Text(
-                    text = resourceProvider.getString(
-                            string.stats_insights_views_and_visitors_visitors_empty_state,
-                            EXTERNAL_LINK_ICON_TOKEN
-                    ),
-                    links = listOf(
-                            Clickable(
-                                    icon = R.drawable.ic_external_white_24dp,
-                                    navigationAction = ListItemInteraction.create(
-                                            action = { navigationAction?.invoke() }
-                                    )
-                            )
+                text = resourceProvider.getString(
+                    string.stats_insights_views_and_visitors_visitors_empty_state,
+                    EXTERNAL_LINK_ICON_TOKEN
+                ),
+                links = listOf(
+                    Clickable(
+                        icon = R.drawable.ic_external_white_24dp,
+                        navigationAction = ListItemInteraction.create(
+                            action = { navigationAction?.invoke() }
+                        )
                     )
+                )
             )
         }
 
@@ -192,11 +193,11 @@ class ViewsAndVisitorsMapper
         }
 
         return Text(
-                text = resourceProvider.getString(stringRes, change),
-                color = when {
-                    positive -> mapOf(color.stats_color_positive to change)
-                    else -> mapOf(color.stats_color_negative to change)
-                }
+            text = resourceProvider.getString(stringRes, change),
+            color = when {
+                positive -> mapOf(color.stats_color_positive to change)
+                else -> mapOf(color.stats_color_negative to change)
+            }
         )
     }
 
@@ -205,24 +206,24 @@ class ViewsAndVisitorsMapper
         selectedPosition: Int
     ): Chips {
         return Chips(
-                listOf(
-                        Chip(
-                                string.stats_views,
-                                contentDescriptionHelper.buildContentDescription(
-                                        string.stats_views,
-                                        0
-                                )
-                        ),
-                        Chip(
-                                string.stats_visitors,
-                                contentDescriptionHelper.buildContentDescription(
-                                        string.stats_visitors,
-                                        1
-                                )
-                        )
+            listOf(
+                Chip(
+                    string.stats_views,
+                    contentDescriptionHelper.buildContentDescription(
+                        string.stats_views,
+                        0
+                    )
                 ),
-                selectedPosition,
-                onChipSelected
+                Chip(
+                    string.stats_visitors,
+                    contentDescriptionHelper.buildContentDescription(
+                        string.stats_visitors,
+                        1
+                    )
+                )
+            ),
+            selectedPosition,
+            onChipSelected
         )
     }
 

@@ -13,7 +13,7 @@ class GetNumPostsForTagUseCase @Inject constructor(
     private val readerPostTableWrapper: ReaderPostTableWrapper
 ) {
     suspend fun get(readerTag: ReaderTag): Int =
-            withContext(ioDispatcher) {
-                readerPostTableWrapper.getNumPostsWithTag(readerTag)
-            }
+        withContext(ioDispatcher) {
+            readerPostTableWrapper.getNumPostsWithTag(readerTag)
+        }
 }

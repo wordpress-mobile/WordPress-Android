@@ -16,9 +16,14 @@ import org.wordpress.android.util.SiteUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteCategoryItemBuilderTest {
-    @Mock lateinit var themeBrowserUtils: ThemeBrowserUtils
-    @Mock lateinit var siteUtilsWrapper: SiteUtilsWrapper
-    @Mock lateinit var siteModel: SiteModel
+    @Mock
+    lateinit var themeBrowserUtils: ThemeBrowserUtils
+
+    @Mock
+    lateinit var siteUtilsWrapper: SiteUtilsWrapper
+
+    @Mock
+    lateinit var siteModel: SiteModel
     private lateinit var siteCategoryItemBuilder: SiteCategoryItemBuilder
 
     @Before
@@ -78,7 +83,7 @@ class SiteCategoryItemBuilderTest {
         val configurationHeader = siteCategoryItemBuilder.buildConfigurationHeaderIfAvailable(siteModel)
 
         assertThat(configurationHeader)
-                .isEqualTo(CategoryHeaderItem(UiStringRes(R.string.my_site_header_configuration)))
+            .isEqualTo(CategoryHeaderItem(UiStringRes(R.string.my_site_header_configuration)))
     }
 
     @Test
@@ -88,7 +93,7 @@ class SiteCategoryItemBuilderTest {
         val configurationHeader = siteCategoryItemBuilder.buildConfigurationHeaderIfAvailable(siteModel)
 
         assertThat(configurationHeader)
-                .isEqualTo(CategoryHeaderItem(UiStringRes(R.string.my_site_header_configuration)))
+            .isEqualTo(CategoryHeaderItem(UiStringRes(R.string.my_site_header_configuration)))
     }
 
     @Test
@@ -98,7 +103,7 @@ class SiteCategoryItemBuilderTest {
         val configurationHeader = siteCategoryItemBuilder.buildConfigurationHeaderIfAvailable(siteModel)
 
         assertThat(configurationHeader)
-                .isEqualTo(CategoryHeaderItem(UiStringRes(R.string.my_site_header_configuration)))
+            .isEqualTo(CategoryHeaderItem(UiStringRes(R.string.my_site_header_configuration)))
     }
 
     @Test

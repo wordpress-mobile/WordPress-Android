@@ -87,6 +87,9 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsRemind
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
@@ -214,6 +217,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_STAT_TO_TRACK = "stat_to_track";
     public static final String ARG_EDITOR_ORIGIN = "editor_origin";
     public static final String ARG_CURRENT_FOCUS = "CURRENT_FOCUS";
+    public static final String ARG_BYPASS_MIGRATION = "bypass_migration";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -264,6 +268,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
     @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
     @Inject QRCodeAuthFlowFeatureConfig mQrCodeAuthFlowFeatureConfig;
+    @Inject JetpackFeatureRemovalOverlayUtil mJetpackFeatureRemovalOverlayUtil;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -328,7 +333,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 InstallationReferrerServiceStarter.startService(this, null);
             }
 
-            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
+                && !AppPrefs.getIsJetpackMigrationInProgress()) {
                 NotificationType notificationType =
                         (NotificationType) getIntent().getSerializableExtra(ARG_NOTIFICATION_TYPE);
                 if (notificationType != null) {
@@ -387,7 +393,19 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
-                    showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
+                    boolean shouldBypassMigration = (getIntent() != null && getIntent()
+                            .getBooleanExtra(ARG_BYPASS_MIGRATION, false));
+                    if (!shouldBypassMigration && mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
+                        mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
+                    } else {
+                        if (shouldBypassMigration) {
+                            AppPrefs.setIsJetpackMigrationInProgress(false);
+                            AppPrefs.saveIsFirstTrySharedLoginJetpack(true);
+                            AppPrefs.saveIsFirstTryUserFlagsJetpack(true);
+                            AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(true);
+                        }
+                        showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
+                    }
                     finish();
                 }
             }
@@ -464,9 +482,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             initSelectedSite();
         }
 
-        if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
-            mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
-        }
+        displayJetpackFeatureCollectionOverlayIfNeeded();
     }
 
     private void showBloggingPromptsOnboarding() {
@@ -498,7 +514,20 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (BuildConfig.IS_JETPACK_APP) {
             ActivityLauncher.showSignInForResultJetpackOnly(activity);
         } else {
-            ActivityLauncher.showSignInForResult(activity);
+            ActivityLauncher.showSignInForResult(activity, true);
+        }
+    }
+
+    private void displayJetpackFeatureCollectionOverlayIfNeeded() {
+        if (mJetpackFeatureRemovalOverlayUtil.shouldShowFeatureCollectionJetpackOverlay()) {
+            JetpackFeatureFullScreenOverlayFragment.newInstance(
+                    null,
+                    false,
+                    false,
+                    SiteCreationSource.UNSPECIFIED,
+                    true,
+                    JetpackFeatureCollectionOverlaySource.APP_OPEN
+            ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
         }
     }
 

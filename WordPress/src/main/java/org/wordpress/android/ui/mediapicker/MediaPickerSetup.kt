@@ -84,24 +84,24 @@ data class MediaPickerSetup(
             val defaultSearchView = bundle.getBoolean(KEY_DEFAULT_SEARCH_VIEW)
             val title = bundle.getInt(KEY_TITLE)
             return MediaPickerSetup(
-                    dataSource,
-                    availableDataSources,
-                    multipleSelectionAllowed,
-                    requiresStoragePermissions,
-                    allowedTypes,
-                    cameraSetup,
-                    systemPickerEnabled,
-                    editingEnabled,
-                    queueResults,
-                    defaultSearchView,
-                    title
+                dataSource,
+                availableDataSources,
+                multipleSelectionAllowed,
+                requiresStoragePermissions,
+                allowedTypes,
+                cameraSetup,
+                systemPickerEnabled,
+                editingEnabled,
+                queueResults,
+                defaultSearchView,
+                title
             )
         }
 
         fun fromIntent(intent: Intent): MediaPickerSetup {
             val dataSource = DataSource.values()[intent.getIntExtra(KEY_PRIMARY_DATA_SOURCE, -1)]
             val availableDataSources = (intent.getIntegerArrayListExtra(KEY_AVAILABLE_DATA_SOURCES)
-                    ?: listOf<Int>()).map {
+                ?: listOf<Int>()).map {
                 DataSource.values()[it]
             }.toSet()
             val allowedTypes = (intent.getIntegerArrayListExtra(KEY_ALLOWED_TYPES) ?: listOf<Int>()).map {
@@ -116,17 +116,17 @@ data class MediaPickerSetup(
             val defaultSearchView = intent.getBooleanExtra(KEY_DEFAULT_SEARCH_VIEW, false)
             val title = intent.getIntExtra(KEY_TITLE, R.string.photo_picker_photo_or_video_title)
             return MediaPickerSetup(
-                    dataSource,
-                    availableDataSources,
-                    multipleSelectionAllowed,
-                    requiresStoragePermissions,
-                    allowedTypes,
-                    cameraSetup,
-                    systemPickerEnabled,
-                    editingEnabled,
-                    queueResults,
-                    defaultSearchView,
-                    title
+                dataSource,
+                availableDataSources,
+                multipleSelectionAllowed,
+                requiresStoragePermissions,
+                allowedTypes,
+                cameraSetup,
+                systemPickerEnabled,
+                editingEnabled,
+                queueResults,
+                defaultSearchView,
+                title
             )
         }
     }

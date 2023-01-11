@@ -151,16 +151,4 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:key="@string/pref_key_about_section"
-        android:title="@string/about_the_app">
-
-        <Preference
-            android:key="@string/pref_key_app_about"
-            android:title="@string/app_title" />
-
-        <Preference
-            android:key="@string/pref_key_oss_licenses"
-            android:title="@string/open_source_licenses" />
-    </PreferenceCategory>
 </PreferenceScreen>

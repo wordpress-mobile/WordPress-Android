@@ -8,11 +8,11 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.Login
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditor
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForPost
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForSite
-import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenMySite
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenJetpackForDeepLink
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenLoginPrologue
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenMySite
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenNotifications
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenPages
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenPagesForSite
@@ -42,36 +42,36 @@ class DeepLinkNavigator
             ShowSignInFlow -> ActivityLauncher.showSignInForResultWpComOnly(activity)
             OpenEditor -> ActivityLauncher.openEditorInNewStack(activity)
             is OpenEditorForSite -> ActivityLauncher.openEditorForSiteInNewStack(
-                    activity,
-                    navigateAction.site
+                activity,
+                navigateAction.site
             )
             is OpenInBrowser -> {
                 val browserIntent = Intent(Intent.ACTION_VIEW, navigateAction.uri.uri)
                 activity.startActivity(browserIntent)
             }
             is OpenEditorForPost -> ActivityLauncher.openEditorForPostInNewStack(
-                    activity,
-                    navigateAction.site,
-                    navigateAction.postId
+                activity,
+                navigateAction.site,
+                navigateAction.postId
             )
             OpenStats -> ActivityLauncher.viewStatsInNewStack(activity)
             is OpenStatsForTimeframe -> ActivityLauncher.viewStatsForTimeframeInNewStack(
-                    activity,
-                    navigateAction.statsTimeframe
+                activity,
+                navigateAction.statsTimeframe
             )
             is OpenStatsForSite -> ActivityLauncher.viewStatsInNewStack(activity, navigateAction.site)
             is OpenStatsForSiteAndTimeframe -> ActivityLauncher.viewStatsInNewStack(
-                    activity,
-                    navigateAction.site,
-                    navigateAction.statsTimeframe
+                activity,
+                navigateAction.site,
+                navigateAction.statsTimeframe
             )
             OpenReader -> ActivityLauncher.viewReaderInNewStack(activity)
             is OpenInReader -> ActivityLauncher.viewPostDeeplinkInNewStack(activity, navigateAction.uri.uri)
             is ViewPostInReader -> ActivityLauncher.viewReaderPostDetailInNewStack(
-                    activity,
-                    navigateAction.blogId,
-                    navigateAction.postId,
-                    navigateAction.uri.uri
+                activity,
+                navigateAction.blogId,
+                navigateAction.postId,
+                navigateAction.uri.uri
             )
             OpenNotifications -> ActivityLauncher.viewNotificationsInNewStack(activity)
             is OpenPagesForSite -> ActivityLauncher.viewPagesInNewStack(activity, navigateAction.site)
@@ -97,7 +97,7 @@ class DeepLinkNavigator
         data class ViewPostInReader(val blogId: Long, val postId: Long, val uri: UriWrapper) : NavigateAction()
         object OpenEditor : NavigateAction()
         data class OpenStatsForSiteAndTimeframe(val site: SiteModel, val statsTimeframe: StatsTimeframe) :
-                NavigateAction()
+            NavigateAction()
 
         data class OpenStatsForSite(val site: SiteModel) : NavigateAction()
         data class OpenStatsForTimeframe(val statsTimeframe: StatsTimeframe) : NavigateAction()

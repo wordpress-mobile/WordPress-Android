@@ -18,7 +18,8 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import javax.inject.Inject
 
 class MainBottomSheetFragment : BottomSheetDialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: WPMainActivityViewModel
 
     override fun onCreateView(
@@ -45,7 +46,7 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
                 val sheetDialog = dialogInterface as? BottomSheetDialog
 
                 val bottomSheet = sheetDialog?.findViewById<View>(
-                        com.google.android.material.R.id.design_bottom_sheet
+                    com.google.android.material.R.id.design_bottom_sheet
                 ) as? FrameLayout
 
                 bottomSheet?.let {

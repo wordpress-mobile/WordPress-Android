@@ -25,7 +25,8 @@ class SaveInitialPostUseCase @Inject constructor(
         // something on it
         editPostRepository.updateAsync({ postModel ->
             postModel.setDateLocallyChanged(
-                    DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000))
+                DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000)
+            )
             true
         }, { _, result ->
             if (result == UpdatePostResult.Updated) {

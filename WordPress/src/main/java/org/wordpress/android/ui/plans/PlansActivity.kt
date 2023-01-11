@@ -22,15 +22,15 @@ class PlansActivity : LocaleAwareActivity(), PlansListInterface {
     override fun onPlanItemClicked(plan: PlanOffersModel) {
         val bundle = PlanDetailsFragment.newBundle(plan)
         val planDetailsDialog = FullScreenDialogFragment.Builder(this)
-                .setTitle(StringUtils.notNullStr(plan.name))
-                .setContent(PlanDetailsFragment::class.java, bundle)
-                .build()
+            .setTitle(StringUtils.notNullStr(plan.name))
+            .setContent(PlanDetailsFragment::class.java, bundle)
+            .build()
         planDetailsDialog!!.show(this.supportFragmentManager, FullScreenDialogFragment.TAG)
     }
 
     override fun onPlansUpdating() {
         val planDetailsDialogFragment = supportFragmentManager.findFragmentByTag(
-                FullScreenDialogFragment.TAG
+            FullScreenDialogFragment.TAG
         )
         if (planDetailsDialogFragment != null && planDetailsDialogFragment is FullScreenDialogFragment) {
             planDetailsDialogFragment.dismissAllowingStateLoss()

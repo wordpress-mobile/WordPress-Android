@@ -23,7 +23,8 @@ import javax.inject.Inject
 class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
     private lateinit var loginPrologueListener: LoginPrologueListener
 
-    @Inject lateinit var unifiedLoginTracker: UnifiedLoginTracker
+    @Inject
+    lateinit var unifiedLoginTracker: UnifiedLoginTracker
 
     companion object {
         const val TAG = "login_prologue_fragment_tag"
@@ -110,8 +111,8 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
 
         if (adapter.itemCount > 1) {
             TabLayoutMediator(
-                    binding.tabLayoutIndicator,
-                    binding.introsPager
+                binding.tabLayoutIndicator,
+                binding.introsPager
             ) { _, _ -> }.attach()
         }
 

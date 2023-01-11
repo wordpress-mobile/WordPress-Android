@@ -29,7 +29,8 @@ class LineChartMarkerView @Inject constructor(
     context: Context,
     private val selectedType: Int
 ) : MarkerView(context, R.layout.stats_line_chart_marker) {
-    @Inject lateinit var statsUtils: StatsUtils
+    @Inject
+    lateinit var statsUtils: StatsUtils
     private val changeView = findViewById<TextView>(R.id.marker_text1)
     private val countView = findViewById<TextView>(R.id.marker_text2)
 
@@ -52,9 +53,9 @@ class LineChartMarkerView @Inject constructor(
                 if (i == 0) {
                     thisWeekCount = y.toLong()
                     countView.text = context.getString(
-                            R.string.stats_insights_views_and_visitors_tooltip_count,
-                            y.toInt().toString(),
-                            SelectedType.valueOf(selectedType).toString()
+                        R.string.stats_insights_views_and_visitors_tooltip_count,
+                        y.toInt().toString(),
+                        SelectedType.valueOf(selectedType).toString()
                     )
                 }
                 if (i == 1) {

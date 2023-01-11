@@ -22,19 +22,24 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class ManagementNewsCardUseCaseTest : BaseUnitTest() {
-    @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var newsCardHandler: NewsCardHandler
-    @Mock private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    private lateinit var newsCardHandler: NewsCardHandler
+
+    @Mock
+    private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var useCase: ManagementNewsCardUseCase
 
     @Before
     fun setUp() {
         useCase = ManagementNewsCardUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                resourceProvider,
-                newsCardHandler,
-                analyticsTrackerWrapper
+            testDispatcher(),
+            testDispatcher(),
+            resourceProvider,
+            newsCardHandler,
+            analyticsTrackerWrapper
         )
     }
 
@@ -43,13 +48,13 @@ class ManagementNewsCardUseCaseTest : BaseUnitTest() {
         val editTextButton = "Edit"
         val newsCardMessage = "You can $editTextButton your insights"
         whenever(resourceProvider.getString(R.string.stats_management_add_new_stats_card)).thenReturn(
-                editTextButton
+            editTextButton
         )
         whenever(
-                resourceProvider.getString(
-                        R.string.stats_management_news_card_message,
-                        editTextButton
-                )
+            resourceProvider.getString(
+                R.string.stats_management_news_card_message,
+                editTextButton
+            )
         ).thenReturn(newsCardMessage)
         val result = loadData()
 

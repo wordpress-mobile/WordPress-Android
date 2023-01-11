@@ -18,7 +18,8 @@ import org.wordpress.android.ui.pages.PageItem.Empty
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class PageParentSearchViewModelTest : BaseUnitTest() {
-    @Mock lateinit var pageParentViewModel: PageParentViewModel
+    @Mock
+    lateinit var pageParentViewModel: PageParentViewModel
 
     private lateinit var searchPages: MutableLiveData<List<PageItem>>
     private lateinit var viewModel: PageParentSearchViewModel
@@ -26,7 +27,7 @@ class PageParentSearchViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = PageParentSearchViewModel(
-                testDispatcher()
+            testDispatcher()
         )
         searchPages = MutableLiveData()
         whenever(pageParentViewModel.searchPages).thenReturn(searchPages)

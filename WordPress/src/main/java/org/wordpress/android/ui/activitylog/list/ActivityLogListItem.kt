@@ -42,17 +42,17 @@ sealed class ActivityLogListItem(val type: ViewType) {
             rewindDisabled: Boolean,
             isRestoreHidden: Boolean
         ) : this(
-                activityId = model.activityID,
-                title = model.summary,
-                description = model.content?.text ?: "",
-                gridIcon = model.gridicon,
-                eventStatus = model.status,
-                isRewindable = model.rewindable ?: false,
-                rewindId = model.rewindID,
-                date = model.published,
-                isButtonVisible = !rewindDisabled && model.rewindable ?: false,
-                buttonIcon = MORE,
-                isRestoreHidden = isRestoreHidden
+            activityId = model.activityID,
+            title = model.summary,
+            description = model.content?.text ?: "",
+            gridIcon = model.gridicon,
+            eventStatus = model.status,
+            isRewindable = model.rewindable ?: false,
+            rewindId = model.rewindID,
+            date = model.published,
+            isButtonVisible = !rewindDisabled && model.rewindable ?: false,
+            buttonIcon = MORE,
+            isRestoreHidden = isRestoreHidden
         )
 
         override fun longId(): Long = activityId.hashCode().toLong()

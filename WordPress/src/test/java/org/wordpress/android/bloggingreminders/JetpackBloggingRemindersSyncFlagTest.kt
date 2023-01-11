@@ -11,8 +11,8 @@ class JetpackBloggingRemindersSyncFlagTest {
     private val jetpackBloggingRemindersSyncFeatureConfig: JetpackBloggingRemindersSyncFeatureConfig = mock()
     private val buildConfigWrapper: BuildConfigWrapper = mock()
     private val classToTest = JetpackBloggingRemindersSyncFlag(
-            jetpackBloggingRemindersSyncFeatureConfig,
-            buildConfigWrapper
+        jetpackBloggingRemindersSyncFeatureConfig,
+        buildConfigWrapper
     )
 
     @Test

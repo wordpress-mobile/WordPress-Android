@@ -92,7 +92,7 @@ sealed class ListState<T>(val data: List<T>) {
         constructor(previous: ListState<T>, loadingMore: Boolean = false) : this(previous.data, loadingMore)
 
         override fun transform(transformFunc: (List<T>) -> List<T>) =
-                Loading(transformFunc(data), loadingMore)
+            Loading(transformFunc(data), loadingMore)
     }
 
     /** This state means that at least one fetch has successfully completed.
@@ -105,7 +105,7 @@ sealed class ListState<T>(val data: List<T>) {
      */
     class Success<T>(data: List<T>, val canLoadMore: Boolean = false) : ListState<T>(data) {
         override fun transform(transformFunc: (List<T>) -> List<T>) =
-                Success(transformFunc(data), canLoadMore)
+            Success(transformFunc(data), canLoadMore)
     }
 
     /**
@@ -130,6 +130,6 @@ sealed class ListState<T>(val data: List<T>) {
         ) : this(previous.data, errorMessage, errorMessageResId)
 
         override fun transform(transformFunc: (List<T>) -> List<T>) =
-                Error(transformFunc(data), errorMessage, errorMessageResId)
+            Error(transformFunc(data), errorMessage, errorMessageResId)
     }
 }

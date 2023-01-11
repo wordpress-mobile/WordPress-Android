@@ -42,14 +42,29 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: TagsStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var statsUtils: StatsUtils
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock
+    lateinit var insightsStore: TagsStore
+
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+
+    @Mock
+    lateinit var site: SiteModel
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var statsUtils: StatsUtils
+
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var popupMenuHandler: ItemPopupMenuHandler
+
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCase: TagsAndCategoriesUseCase
     private val blockItemCount = 6
     private val singleTagViews: Long = 10
@@ -62,27 +77,31 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = TagsAndCategoriesUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                insightsStore,
-                statsSiteProvider,
-                resourceProvider,
-                statsUtils,
-                tracker,
-                popupMenuHandler,
-                contentDescriptionHelper,
-                BLOCK
+            testDispatcher(),
+            testDispatcher(),
+            insightsStore,
+            statsSiteProvider,
+            resourceProvider,
+            statsUtils,
+            tracker,
+            popupMenuHandler,
+            contentDescriptionHelper,
+            BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<String>(),
                 any()
-        )).thenReturn(contentDescription)
-        whenever(contentDescriptionHelper.buildContentDescription(
+            )
+        ).thenReturn(contentDescription)
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<String>()
-        )).thenReturn(contentDescription)
+            )
+        ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Long>(), any())).then { (it.arguments[0] as Long).toString() }
     }
 
@@ -91,18 +110,18 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         val forced = false
         val categoryName = "category name"
         whenever(resourceProvider.getString(eq(R.string.stats_category_folded_name), any(), any())).thenReturn(
-                categoryName
+            categoryName
         )
         val category = TagModel(
-                listOf(firstTag, secondTag),
-                categoryViews
+            listOf(firstTag, secondTag),
+            categoryViews
         )
         val model = TagsModel(listOf(singleTag, category), hasMore = false)
         whenever(insightsStore.getTags(site, LimitMode.Top(blockItemCount))).thenReturn(model)
         whenever(insightsStore.fetchTags(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadTags(true, forced)
@@ -150,9 +169,9 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         val model = TagsModel(listOf(tag), hasMore = true)
         whenever(insightsStore.getTags(site, LimitMode.Top(blockItemCount))).thenReturn(model)
         whenever(insightsStore.fetchTags(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadTags(true, forced)
@@ -171,7 +190,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     fun `maps empty tags to UI model`() = test {
         val forced = false
         whenever(insightsStore.fetchTags(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
-                OnStatsFetched(TagsModel(listOf(), hasMore = false))
+            OnStatsFetched(TagsModel(listOf(), hasMore = false))
         )
 
         val result = loadTags(true, forced)
@@ -188,9 +207,9 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(insightsStore.fetchTags(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadTags(true, forced)

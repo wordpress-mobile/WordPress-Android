@@ -40,9 +40,14 @@ private const val ON_ITEM_CLICKED_PARAM_POSITION = 1
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ScanHistoryListViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var scanThreatItemBuilder: ThreatItemBuilder
-    @Mock private lateinit var scanHistoryViewModel: ScanHistoryViewModel
-    @Mock private lateinit var scanTracker: ScanTracker
+    @Mock
+    private lateinit var scanThreatItemBuilder: ThreatItemBuilder
+
+    @Mock
+    private lateinit var scanHistoryViewModel: ScanHistoryViewModel
+
+    @Mock
+    private lateinit var scanTracker: ScanTracker
     private val captor = argumentCaptor<ThreatModel>()
 
     private lateinit var viewModel: ScanHistoryListViewModel
@@ -52,17 +57,17 @@ class ScanHistoryListViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() = test {
         viewModel = ScanHistoryListViewModel(
-                scanThreatItemBuilder,
-                scanTracker,
-                testDispatcher()
+            scanThreatItemBuilder,
+            scanTracker,
+            testDispatcher()
         )
         val threats = listOf(
-                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
-                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.UNKNOWN)),
-                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
-                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.IGNORED)),
-                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
-                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.CURRENT))
+            GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
+            GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.UNKNOWN)),
+            GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
+            GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.IGNORED)),
+            GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
+            GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.CURRENT))
         )
         whenever(scanHistoryViewModel.threats).thenReturn(MutableLiveData(threats))
         whenever(scanThreatItemBuilder.buildThreatItem(anyOrNull(), anyOrNull(), anyBoolean())).thenAnswer {
@@ -101,7 +106,7 @@ class ScanHistoryListViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
         assertThat((viewModel.uiState.value as ContentUiState).items.first())
-                .isInstanceOf(ThreatDateItemState::class.java)
+            .isInstanceOf(ThreatDateItemState::class.java)
     }
 
     @Test
@@ -109,43 +114,43 @@ class ScanHistoryListViewModelTest : BaseUnitTest() {
         // assign
         val calendar = Calendar.getInstance()
         val threats = listOf(
-                GenericThreatModel(
-                        genericThreatModel.baseThreatModel.copy(
-                                firstDetected = calendar.time,
-                                status = ThreatStatus.FIXED
-                        )
-                ),
-
-                GenericThreatModel(
-                        genericThreatModel.baseThreatModel.copy(
-                                firstDetected = calendar.apply {
-                                    add(Calendar.DAY_OF_YEAR, 1)
-                                }.time,
-                                status = ThreatStatus.FIXED
-                        )
-                ),
-                GenericThreatModel(
-                        genericThreatModel.baseThreatModel.copy(
-                                firstDetected = calendar.time,
-                                status = ThreatStatus.FIXED
-                        )
-                ),
-                GenericThreatModel(
-                        genericThreatModel.baseThreatModel.copy(
-                                firstDetected = calendar.apply {
-                                    add(Calendar.DAY_OF_YEAR, 1)
-                                }.time,
-                                status = ThreatStatus.FIXED
-                        )
-                ),
-                GenericThreatModel(
-                        genericThreatModel.baseThreatModel.copy(
-                                firstDetected = calendar.apply {
-                                    add(Calendar.DAY_OF_YEAR, 1)
-                                }.time,
-                                status = ThreatStatus.FIXED
-                        )
+            GenericThreatModel(
+                genericThreatModel.baseThreatModel.copy(
+                    firstDetected = calendar.time,
+                    status = ThreatStatus.FIXED
                 )
+            ),
+
+            GenericThreatModel(
+                genericThreatModel.baseThreatModel.copy(
+                    firstDetected = calendar.apply {
+                        add(Calendar.DAY_OF_YEAR, 1)
+                    }.time,
+                    status = ThreatStatus.FIXED
+                )
+            ),
+            GenericThreatModel(
+                genericThreatModel.baseThreatModel.copy(
+                    firstDetected = calendar.time,
+                    status = ThreatStatus.FIXED
+                )
+            ),
+            GenericThreatModel(
+                genericThreatModel.baseThreatModel.copy(
+                    firstDetected = calendar.apply {
+                        add(Calendar.DAY_OF_YEAR, 1)
+                    }.time,
+                    status = ThreatStatus.FIXED
+                )
+            ),
+            GenericThreatModel(
+                genericThreatModel.baseThreatModel.copy(
+                    firstDetected = calendar.apply {
+                        add(Calendar.DAY_OF_YEAR, 1)
+                    }.time,
+                    status = ThreatStatus.FIXED
+                )
+            )
         )
         whenever(scanHistoryViewModel.threats).thenReturn(MutableLiveData(threats))
 
@@ -164,12 +169,12 @@ class ScanHistoryListViewModelTest : BaseUnitTest() {
         // asset
         assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
         val dateItemStates = (viewModel.uiState.value as ContentUiState)
-                .items
-                .filterIndexed { index, _ ->
-                    index == 0 || index == 2 || index == 5 || index == 7
-                }
+            .items
+            .filterIndexed { index, _ ->
+                index == 0 || index == 2 || index == 5 || index == 7
+            }
         assertThat(dateItemStates)
-                .allMatch { it is ThreatDateItemState }
+            .allMatch { it is ThreatDateItemState }
     }
 
     @Test

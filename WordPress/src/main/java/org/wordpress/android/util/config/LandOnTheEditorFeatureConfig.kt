@@ -10,6 +10,6 @@ import javax.inject.Inject
 @FeatureInDevelopment
 class LandOnTheEditorFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
-        appConfig,
-        BuildConfig.LAND_ON_THE_EDITOR
+    appConfig,
+    BuildConfig.LAND_ON_THE_EDITOR
 )

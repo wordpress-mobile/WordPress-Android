@@ -51,8 +51,8 @@ class SubfilterListItemMapper @Inject constructor(
             SubfilterListItem.ItemType.TAG.value -> {
                 if (mappedItem.tagSlug.isNotEmpty()) {
                     val tag = readerUtilsWrapper.getTagFromTagName(
-                            mappedItem.tagSlug,
-                            ReaderTagType.fromInt(mappedItem.tagType)
+                        mappedItem.tagSlug,
+                        ReaderTagType.fromInt(mappedItem.tagType)
                     )
                     SubfilterListItem.Tag(
                         tag = tag,
@@ -64,8 +64,8 @@ class SubfilterListItemMapper @Inject constructor(
                 }
             }
             SubfilterListItem.ItemType.SITE_ALL.value -> SubfilterListItem.SiteAll(
-                    onClickAction = onClickAction,
-                    isSelected = isSelected
+                onClickAction = onClickAction,
+                isSelected = isSelected
             )
             else -> throw IllegalArgumentException("fromJson > Unexpected Subfilter type $mappedItem.type")
         }

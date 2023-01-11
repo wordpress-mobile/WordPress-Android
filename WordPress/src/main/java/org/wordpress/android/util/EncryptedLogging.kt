@@ -57,11 +57,11 @@ class EncryptedLogging @Inject constructor(
         if (logFile.exists()) {
             val uuid = UUID.randomUUID().toString()
             val payload = UploadEncryptedLogPayload(
-                    uuid = uuid,
-                    file = logFile,
-                    // If the connection is not available, we shouldn't try to upload immediately
-                    shouldStartUploadImmediately = shouldStartUploadImmediately &&
-                            networkUtilsWrapper.isNetworkAvailable()
+                uuid = uuid,
+                file = logFile,
+                // If the connection is not available, we shouldn't try to upload immediately
+                shouldStartUploadImmediately = shouldStartUploadImmediately &&
+                        networkUtilsWrapper.isNetworkAvailable()
             )
             dispatcher.dispatch(EncryptedLogActionBuilder.newUploadLogAction(payload))
             return uuid
@@ -82,8 +82,8 @@ class EncryptedLogging @Inject constructor(
                 // Only track final errors
                 if (!event.willRetry) {
                     analyticsTrackerWrapper.track(
-                            Stat.ENCRYPTED_LOGGING_UPLOAD_FAILED,
-                            mapOf("error_type" to event.error.javaClass.simpleName)
+                        Stat.ENCRYPTED_LOGGING_UPLOAD_FAILED,
+                        mapOf("error_type" to event.error.javaClass.simpleName)
                     )
                 }
             }

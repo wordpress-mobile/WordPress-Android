@@ -15,6 +15,7 @@ class ReaderPostActionsWrapper @Inject constructor(private val siteStore: SiteSt
         isAskingToLike: Boolean,
         wpComUserId: Long
     ): Boolean = ReaderPostActions.performLikeActionLocal(post, isAskingToLike, wpComUserId)
+
     fun performLikeActionRemote(
         post: ReaderPost?,
         isAskingToLike: Boolean,

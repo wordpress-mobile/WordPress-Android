@@ -19,10 +19,10 @@ abstract class GranularStatelessUseCase<DOMAIN_MODEL>(
     val statsSiteProvider: StatsSiteProvider,
     val statsGranularity: StatsGranularity
 ) : StatelessUseCase<DOMAIN_MODEL>(
-        type,
-        mainDispatcher,
-        backgroundDispatcher,
-        listOf(UseCaseParam.SelectedDateParam(statsGranularity.toStatsSection()))
+    type,
+    mainDispatcher,
+    backgroundDispatcher,
+    listOf(UseCaseParam.SelectedDateParam(statsGranularity.toStatsSection()))
 ) {
     abstract suspend fun loadCachedData(selectedDate: Date, site: SiteModel): DOMAIN_MODEL?
 

@@ -31,31 +31,31 @@ fun PrimaryButton(
     enabled: Boolean = true
 ) {
     Button(
-            onClick = onClick,
-            enabled = enabled,
-            elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp,
-            ),
-            shape = RoundedCornerShape(5.dp),
-            colors = ButtonDefaults.buttonColors(
-                    contentColor = Color.White,
-                    backgroundColor = colorResource(id = color.blue_50),
-                    disabledBackgroundColor = MaterialTheme.colors.background,
-            ),
-            modifier = modifier
-                    .fillMaxWidth()
-                    .padding(
-                            vertical = Margin.Small.value,
-                            horizontal = dimensionResource(dimen.login_prologue_revamped_buttons_padding),
-                    )
+        onClick = onClick,
+        enabled = enabled,
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 0.dp,
+        ),
+        shape = RoundedCornerShape(5.dp),
+        colors = ButtonDefaults.buttonColors(
+            contentColor = Color.White,
+            backgroundColor = colorResource(id = color.blue_50),
+            disabledBackgroundColor = MaterialTheme.colors.background,
+        ),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(
+                vertical = Margin.Small.value,
+                horizontal = dimensionResource(dimen.login_prologue_revamped_buttons_padding),
+            )
     ) {
         Text(
-                text = text,
-                style = TextStyle(
-                        fontWeight = FontWeight.Medium,
-                        letterSpacing = (-0.25).sp,
-                ),
+            text = text,
+            style = TextStyle(
+                fontWeight = FontWeight.Medium,
+                letterSpacing = (-0.25).sp,
+            ),
         )
     }
 }

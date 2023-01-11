@@ -16,32 +16,33 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettings
 import javax.inject.Inject
 
 class PostTimePickerDialogFragment : DialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PublishSettingsViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val publishSettingsFragmentType = arguments?.getParcelable<PublishSettingsFragmentType>(
-                ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE
+            ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE
         )
 
         viewModel = when (publishSettingsFragmentType) {
             PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(requireActivity(), viewModelFactory)
-                        .get(EditPostPublishSettingsViewModel::class.java)
+                .get(EditPostPublishSettingsViewModel::class.java)
             PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(requireActivity(), viewModelFactory)
-                        .get(PrepublishingPublishSettingsViewModel::class.java)
+                .get(PrepublishingPublishSettingsViewModel::class.java)
             null -> error("PublishSettingsViewModel not initialized")
         }
 
         val is24HrFormat = DateFormat.is24HourFormat(activity)
         val context = ContextThemeWrapper(activity, style.PostSettingsCalendar)
         val timePickerDialog = TimePickerDialog(
-                context,
-                OnTimeSetListener { _, selectedHour, selectedMinute ->
-                    viewModel.onTimeSelected(selectedHour, selectedMinute)
-                },
-                viewModel.hour ?: 0,
-                viewModel.minute ?: 0,
-                is24HrFormat
+            context,
+            OnTimeSetListener { _, selectedHour, selectedMinute ->
+                viewModel.onTimeSelected(selectedHour, selectedMinute)
+            },
+            viewModel.hour ?: 0,
+            viewModel.minute ?: 0,
+            is24HrFormat
         )
         return timePickerDialog
     }
@@ -59,8 +60,8 @@ class PostTimePickerDialogFragment : DialogFragment() {
             return PostTimePickerDialogFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(
-                            ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE,
-                            publishSettingsFragmentType
+                        ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE,
+                        publishSettingsFragmentType
                     )
                 }
             }

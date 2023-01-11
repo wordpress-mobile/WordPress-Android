@@ -57,11 +57,20 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, ScrollableViewInitializedListener {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
-    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-    @Inject lateinit var snackbarSequencer: SnackbarSequencer
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+
+    @Inject
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
+    @Inject
+    lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: ReaderViewModel
 
     private var searchMenuItem: MenuItem? = null
@@ -120,7 +129,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
             settingsMenuItemFocusPoint = this.actionView.findViewById(R.id.menu_quick_start_focus_point)
             this.isVisible = viewModel.uiState.value?.settingsMenuItemUiState?.isVisible ?: false
             settingsMenuItemFocusPoint?.isVisible =
-                    viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
+                viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
             this.actionView.setOnClickListener { viewModel.onSettingsActionClicked() }
         }
     }
@@ -163,7 +172,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
                 searchMenuItem?.isVisible = uiState.searchMenuItemUiState.isVisible
                 settingsMenuItem?.isVisible = uiState.settingsMenuItemUiState.isVisible
                 settingsMenuItemFocusPoint?.isVisible =
-                        viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
+                    viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
             }
         }
 
@@ -193,27 +202,27 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
 
         viewModel.quickStartPromptEvent.observeEvent(viewLifecycleOwner) { prompt ->
             val message = quickStartUtilsWrapper.stylizeQuickStartPrompt(
-                    requireActivity(),
-                    prompt.shortMessagePrompt,
-                    prompt.iconId
+                requireActivity(),
+                prompt.shortMessagePrompt,
+                prompt.iconId
             )
 
             showSnackbar(
-                    SnackbarMessageHolder(
-                            message = UiStringText(message),
-                            duration = prompt.duration,
-                            onDismissAction = {
-                                viewModel.onQuickStartPromptDismissed()
-                            },
-                            isImportant = false
-                    )
+                SnackbarMessageHolder(
+                    message = UiStringText(message),
+                    duration = prompt.duration,
+                    onDismissAction = {
+                        viewModel.onQuickStartPromptDismissed()
+                    },
+                    isImportant = false
+                )
             )
         }
 
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
             JetpackPoweredBottomSheetFragment
-                    .newInstance(it, READER)
-                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                .newInstance(it, READER)
+                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
 
         observeJetpackOverlayEvent(savedInstanceState)
@@ -225,28 +234,28 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         if (savedInstanceState == null)
             viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
                 JetpackFeatureFullScreenOverlayFragment
-                        .newInstance(JetpackFeatureOverlayScreenType.READER)
-                        .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
+                    .newInstance(JetpackFeatureOverlayScreenType.READER)
+                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
             }
     }
 
     private fun ReaderFragmentLayoutBinding.showSnackbar(holder: SnackbarMessageHolder) {
         if (!isAdded || view == null) return
         snackbarSequencer.enqueue(
-                SnackbarItem(
-                        info = Info(
-                                view = coordinatorLayout,
-                                textRes = holder.message,
-                                duration = holder.duration,
-                                isImportant = holder.isImportant
-                        ),
-                        action = holder.buttonTitle?.let {
-                            Action(
-                                    textRes = holder.buttonTitle,
-                                    clickListener = { holder.buttonAction() }
-                            )
-                        }
-                )
+            SnackbarItem(
+                info = Info(
+                    view = coordinatorLayout,
+                    textRes = holder.message,
+                    duration = holder.duration,
+                    isImportant = holder.isImportant
+                ),
+                action = holder.buttonTitle?.let {
+                    Action(
+                        textRes = holder.buttonTitle,
+                        clickListener = { holder.buttonAction() }
+                    )
+                }
+            )
         )
     }
 
@@ -283,7 +292,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
 
     private fun ReaderFragmentLayoutBinding.createTabCustomView(tab: TabLayout.Tab): View {
         val customView = LayoutInflater.from(context)
-                .inflate(R.layout.tab_custom_view, tabLayout, false)
+            .inflate(R.layout.tab_custom_view, tabLayout, false)
         tab.customView = customView
         return customView
     }
@@ -300,9 +309,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
                 ReaderDiscoverFragment()
             } else {
                 ReaderPostListFragment.newInstanceForTag(
-                        tags[position],
-                        ReaderPostListType.TAG_FOLLOWED,
-                        true
+                    tags[position],
+                    ReaderPostListType.TAG_FOLLOWED,
+                    true
                 )
             }
         }
@@ -312,12 +321,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
         if (readerInterestsFragment == null) {
             childFragmentManager.beginTransaction()
-                    .replace(
-                            R.id.interests_fragment_container,
-                            ReaderInterestsFragment(),
-                            ReaderInterestsFragment.TAG
-                    )
-                    .commitNow()
+                .replace(
+                    R.id.interests_fragment_container,
+                    ReaderInterestsFragment(),
+                    ReaderInterestsFragment.TAG
+                )
+                .commitNow()
         }
     }
 
@@ -325,8 +334,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
         if (readerInterestsFragment?.isAdded == true) {
             childFragmentManager.beginTransaction()
-                    .remove(readerInterestsFragment)
-                    .commitNow()
+                .remove(readerInterestsFragment)
+                .commitNow()
         }
     }
 
@@ -345,8 +354,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
                     jetpackBannerView.setOnClickListener {
                         jetpackBrandingUtils.trackBannerTapped(Screen.READER)
                         JetpackPoweredBottomSheetFragment
-                                .newInstance()
-                                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                            .newInstance()
+                            .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
                     }
                 }
             }

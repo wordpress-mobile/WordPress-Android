@@ -103,15 +103,15 @@ class LocalNotificationWorker(
 
         fun buildData(localNotification: LocalNotification): Data {
             return workDataOf(
-                    TYPE to localNotification.type.tag,
-                    ID to localNotification.id,
-                    TITLE to localNotification.title,
-                    TEXT to localNotification.text,
-                    ICON to localNotification.icon,
-                    FIRST_ACTION_ICON to localNotification.firstActionIcon,
-                    FIRST_ACTION_TITLE to localNotification.firstActionTitle,
-                    SECOND_ACTION_ICON to localNotification.secondActionIcon,
-                    SECOND_ACTION_TITLE to localNotification.secondActionTitle
+                TYPE to localNotification.type.tag,
+                ID to localNotification.id,
+                TITLE to localNotification.title,
+                TEXT to localNotification.text,
+                ICON to localNotification.icon,
+                FIRST_ACTION_ICON to localNotification.firstActionIcon,
+                FIRST_ACTION_TITLE to localNotification.firstActionTitle,
+                SECOND_ACTION_ICON to localNotification.secondActionIcon,
+                SECOND_ACTION_TITLE to localNotification.secondActionTitle
             )
         }
     }

@@ -19,15 +19,16 @@ import org.wordpress.android.ui.reader.reblog.ReblogState.SingleSite
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReblogUseCaseTest : BaseUnitTest() {
-    @Mock private lateinit var siteStore: SiteStore
+    @Mock
+    private lateinit var siteStore: SiteStore
 
     private lateinit var reblogUseCase: ReblogUseCase
 
     @Before
     fun setUp() = test {
         reblogUseCase = ReblogUseCase(
-                siteStore,
-                testDispatcher()
+            siteStore,
+            testDispatcher()
         )
     }
 
@@ -79,22 +80,22 @@ class ReblogUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `when having more than one visible WPCOM sites and selecting site to reblog the post editor is triggered`() =
-            test {
-        val siteId = 1
-        val site = SiteModel()
-        val post = ReaderPost()
-        val visibleWPComSites = listOf(site, site) // More sites
+        test {
+            val siteId = 1
+            val site = SiteModel()
+            val post = ReaderPost()
+            val visibleWPComSites = listOf(site, site) // More sites
 
-        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
-        whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
+            whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
+            whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
 
-        val afterButtonClickedState = reblogUseCase.onReblogButtonClicked(post) as MultipleSites
-        val state = reblogUseCase.onReblogSiteSelected(siteId, afterButtonClickedState.post)
+            val afterButtonClickedState = reblogUseCase.onReblogButtonClicked(post) as MultipleSites
+            val state = reblogUseCase.onReblogSiteSelected(siteId, afterButtonClickedState.post)
 
-        Assertions.assertThat(state).isInstanceOf(SingleSite::class.java)
+            Assertions.assertThat(state).isInstanceOf(SingleSite::class.java)
 
-        val peState = state as? SingleSite
-        Assertions.assertThat(peState?.site).isEqualTo(site)
-        Assertions.assertThat(peState?.post).isEqualTo(post)
-    }
+            val peState = state as? SingleSite
+            Assertions.assertThat(peState?.site).isEqualTo(site)
+            Assertions.assertThat(peState?.post).isEqualTo(post)
+        }
 }

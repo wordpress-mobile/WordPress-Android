@@ -38,9 +38,9 @@ class AddLocalMediaToPostUseCase @Inject constructor(
     ) {
         // Add media to editor and optionally initiate upload
         addToEditorAndOptionallyUpload(
-                getMediaModelUseCase.loadMediaByLocalId(localMediaIds),
-                editorMediaListener,
-                doUploadAfterAdding
+            getMediaModelUseCase.loadMediaByLocalId(localMediaIds),
+            editorMediaListener,
+            doUploadAfterAdding
         )
     }
 
@@ -67,12 +67,13 @@ class AddLocalMediaToPostUseCase @Inject constructor(
         }
 
         return processMediaUris(
-                allowedUris,
-                site,
-                freshlyTaken,
-                editorMediaListener,
-                doUploadAfterAdding,
-                trackEvent)
+            allowedUris,
+            site,
+            freshlyTaken,
+            editorMediaListener,
+            doUploadAfterAdding,
+            trackEvent
+        )
     }
 
     private suspend fun processMediaUris(
@@ -88,24 +89,24 @@ class AddLocalMediaToPostUseCase @Inject constructor(
 
         // Optimize and rotate the media
         val optimizeMediaResult: OptimizeMediaResult = optimizeMediaUseCase
-                .optimizeMediaIfSupportedAsync(
-                        site,
-                        freshlyTaken,
-                        copyFilesResult.permanentlyAccessibleUris,
-                        trackEvent
-                )
+            .optimizeMediaIfSupportedAsync(
+                site,
+                freshlyTaken,
+                copyFilesResult.permanentlyAccessibleUris,
+                trackEvent
+            )
 
         // Transform Uris to MediaModels
         val createMediaModelsResult: CreateMediaModelsResult = getMediaModelUseCase.createMediaModelFromUri(
-                site.id,
-                optimizeMediaResult.optimizedMediaUris
+            site.id,
+            optimizeMediaResult.optimizedMediaUris
         )
         // here we pass a map of "old" (before optimisation) Uris to the new MediaModels which contain
         // both the mediaModel ids and the optimized media URLs.
         // this way, the listener will be able to process from other models pointing to the old URLs
         // and make any needed updates
         editorMediaListener.onMediaModelsCreatedFromOptimizedUris(
-                uriList.zip(createMediaModelsResult.mediaModels).toMap()
+            uriList.zip(createMediaModelsResult.mediaModels).toMap()
         )
 
         // Add media to editor and optionally initiate upload
@@ -141,9 +142,9 @@ class AddLocalMediaToPostUseCase @Inject constructor(
     ) {
         mediaModels.forEach {
             updateMediaModelUseCase.updateMediaModel(
-                    it,
-                    editorMediaListener.getImmutablePost(),
-                    QUEUED
+                it,
+                editorMediaListener.getImmutablePost(),
+                QUEUED
             )
         }
     }

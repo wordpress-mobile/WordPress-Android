@@ -8,8 +8,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Velocity
 
 fun Modifier.disableUserScroll() = nestedScroll(
-        connection = object : NestedScrollConnection {
-            override fun onPreScroll(available: Offset, source: NestedScrollSource) = available.copy(x = 0f)
-            override suspend fun onPreFling(available: Velocity) = available.copy(x = 0f)
-        }
+    connection = object : NestedScrollConnection {
+        override fun onPreScroll(available: Offset, source: NestedScrollSource) = available.copy(x = 0f)
+        override suspend fun onPreFling(available: Velocity) = available.copy(x = 0f)
+    }
 )

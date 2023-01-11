@@ -11,10 +11,10 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BigTitle
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.DialogButtons
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ImageItem
-import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Tag
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -38,16 +38,16 @@ class ManagementNewsCardUseCase
         val highlightedText = resourceProvider.getString(R.string.stats_management_add_new_stats_card)
         val newsCardMessage = resourceProvider.getString(R.string.stats_management_news_card_message, highlightedText)
         return listOf(
-                ImageItem(R.drawable.insights_management_feature_image),
-                Tag(R.string.stats_management_new),
-                BigTitle(R.string.stats_manage_your_stats),
-                Text(text = newsCardMessage, bolds = listOf(highlightedText)),
-                DialogButtons(
-                        R.string.stats_management_try_it_now,
-                        ListItemInteraction.create(this::onEditInsights),
-                        R.string.stats_management_dismiss_insights_news_card,
-                        ListItemInteraction.create(this::onDismiss)
-                )
+            ImageItem(R.drawable.insights_management_feature_image),
+            Tag(R.string.stats_management_new),
+            BigTitle(R.string.stats_manage_your_stats),
+            Text(text = newsCardMessage, bolds = listOf(highlightedText)),
+            DialogButtons(
+                R.string.stats_management_try_it_now,
+                ListItemInteraction.create(this::onEditInsights),
+                R.string.stats_management_dismiss_insights_news_card,
+                ListItemInteraction.create(this::onDismiss)
+            )
         )
     }
 

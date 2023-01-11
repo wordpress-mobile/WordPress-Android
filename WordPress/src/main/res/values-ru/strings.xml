@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-30 14:54:27+0000
+Translation-Revision-Date: 2023-01-05 22:34:33+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Альтернативным вариантом вы можете рассоединить и отредактировать эти блоки по отдельности, нажав на \"преобразовать в обычные блоки\".</string>
+    <string name="dlg_confirm_delete_category">Навсегда удалить рубрику \'%s\'?</string>
+    <string name="deleting_cat_success">Рубрика удалена</string>
+    <string name="deleting_cat_failed">Не удалось удалить рубрику</string>
+    <string name="deleting_cat">Удаление рубрики</string>
+    <string name="updating_cat">Обновление рубрики</string>
+    <string name="update_category">Обновить рубрику</string>
+    <string name="reader_toast_user_blocked">Записи этого пользователя больше не будут отображаться</string>
+    <string name="reader_menu_block_user">Заблокировать пользователя</string>
+    <string name="reader_menu_report_user">Пожаловаться на пользователя</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">Открывать ссылки в WordPress</string>
     <string name="wp_jetpack_deep_link_overlay_description">Кажется, у вас установлено приложение Jetpack.\n\nОткрывать в дальнейшем ссылки в приложении Jetpack?\n\nЭто можно изменить в любой момент в разделе «Настройки приложения &gt; Открывать ссылки в Jetpack»</string>
     <string name="wp_jetpack_deep_link_overlay_title">Открывать ссылки в Jetpack?</string>
@@ -601,6 +611,7 @@ Language: ru
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Нажмите дважды для того, чтобы открыть панель действий для добавления изображения или видео</string>
     <string name="gutenberg_native_current_unit_is_s">Текущая единица - %s</string>
     <string name="gutenberg_native_crosspost">Кросспост</string>
+    <string name="gutenberg_native_s_converted_to_regular_block">%s сконвертирован в обычные блоки</string>
     <string name="gutenberg_native_columns_settings">Настройки столбцов</string>
     <string name="gutenberg_native_add_link_to_s">Добавить ссылку к %s</string>
     <string name="gutenberg_native_add_link_text">Добавить текст ссылки</string>
@@ -3370,8 +3381,10 @@ Language: ru
     <string name="categories">Рубрики</string>
     <string name="sdcard_title">Требуется SD-карта</string>
     <string name="media">Медиа</string>
+    <string name="updating_cat_success">Рубрика обновлена</string>
     <string name="approve">Одобрить</string>
     <string name="delete">Удалить</string>
+    <string name="updating_cat_failed">Не удалось обновить рубрику</string>
     <string name="none">Пусто</string>
     <string name="publish_now">Опубликовать</string>
     <string name="reply">Ответ</string>

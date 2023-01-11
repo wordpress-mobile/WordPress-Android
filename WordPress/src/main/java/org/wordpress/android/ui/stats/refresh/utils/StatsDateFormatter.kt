@@ -23,6 +23,7 @@ import kotlin.math.abs
 private const val STATS_INPUT_FORMAT = "yyyy-MM-dd"
 private const val MONTH_FORMAT = "MMM, yyyy"
 private const val YEAR_FORMAT = "yyyy"
+
 @Suppress("CheckStyle")
 private const val REMOVE_YEAR = "([^\\p{Alpha}']|('[\\p{Alpha}]+'))*y+([^\\p{Alpha}']|('[\\p{Alpha}]+'))*"
 
@@ -60,7 +61,7 @@ class StatsDateFormatter
     fun printDate(period: String): String {
         try {
             return inputFormat.parse(period)?.let { outputFormat.format(it) }
-                    ?: throw RuntimeException("Unexpected date format")
+                ?: throw RuntimeException("Unexpected date format")
         } catch (e: ParseException) {
             throw RuntimeException("Unexpected date format")
         }
@@ -100,7 +101,7 @@ class StatsDateFormatter
                 return printWeek(startCalendar, endCalendar)
             }
             MONTHS -> outputMonthFormat.format(date)
-                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
             YEARS -> outputYearFormat.format(date)
         }
     }
@@ -145,13 +146,13 @@ class StatsDateFormatter
         showSecondYear: Boolean
     ): String {
         return resourceProvider.getString(
-                R.string.stats_from_to_dates_in_week_label,
-                if (showFirstYear) outputFormat.format(startCalendar.time) else outputFormatWithoutYear.format(
-                        startCalendar.time
-                ),
-                if (showSecondYear) outputFormat.format(endCalendar.time) else outputFormatWithoutYear.format(
-                        endCalendar.time
-                )
+            R.string.stats_from_to_dates_in_week_label,
+            if (showFirstYear) outputFormat.format(startCalendar.time) else outputFormatWithoutYear.format(
+                startCalendar.time
+            ),
+            if (showSecondYear) outputFormat.format(endCalendar.time) else outputFormatWithoutYear.format(
+                endCalendar.time
+            )
         )
     }
 
@@ -248,8 +249,8 @@ class StatsDateFormatter
                 "${abs(hourOffset)}:${abs(minuteRemain)}"
             }
             resourceProvider.getString(
-                    timeZoneResource,
-                    utcTime
+                timeZoneResource,
+                utcTime
             )
         } else null
     }

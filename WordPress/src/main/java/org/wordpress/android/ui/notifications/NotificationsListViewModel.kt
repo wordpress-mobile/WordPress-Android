@@ -14,7 +14,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
-class NotificationsListViewModel@Inject constructor(
+class NotificationsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
@@ -35,7 +35,7 @@ class NotificationsListViewModel@Inject constructor(
     }
 
     fun onResume() {
-        if(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(NOTIFICATIONS))
+        if (jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(NOTIFICATIONS))
             showJetpackOverlay()
     }
 

@@ -69,22 +69,22 @@ class AllTimeWidgetBlockListViewModel
             Color.LIGHT -> R.layout.stats_widget_block_item_light
         }
         return listOf(
-                BlockItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.stats_views),
-                        statsUtils.toFormattedString(domainModel.views, MILLION),
-                        resourceProvider.getString(R.string.stats_visitors),
-                        statsUtils.toFormattedString(domainModel.visitors, MILLION)
-                ),
-                BlockItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.posts),
-                        statsUtils.toFormattedString(domainModel.posts, MILLION),
-                        resourceProvider.getString(R.string.stats_insights_best_ever),
-                        statsUtils.toFormattedString(domainModel.viewsBestDayTotal, MILLION)
-                )
+            BlockItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.stats_views),
+                statsUtils.toFormattedString(domainModel.views, MILLION),
+                resourceProvider.getString(R.string.stats_visitors),
+                statsUtils.toFormattedString(domainModel.visitors, MILLION)
+            ),
+            BlockItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.posts),
+                statsUtils.toFormattedString(domainModel.posts, MILLION),
+                resourceProvider.getString(R.string.stats_insights_best_ever),
+                statsUtils.toFormattedString(domainModel.viewsBestDayTotal, MILLION)
+            )
         )
     }
 }

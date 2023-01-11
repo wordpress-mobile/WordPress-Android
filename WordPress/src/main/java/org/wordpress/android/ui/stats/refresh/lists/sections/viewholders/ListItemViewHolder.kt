@@ -8,8 +8,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 
 class ListItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_list_item
+    parent,
+    R.layout.stats_block_list_item
 ) {
     private val icon = itemView.findViewById<ImageView>(R.id.icon)
     private val text = itemView.findViewById<TextView>(R.id.text)

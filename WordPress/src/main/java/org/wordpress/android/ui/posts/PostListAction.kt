@@ -28,15 +28,18 @@ sealed class PostListAction {
         val showToast: (ToastMessageHolder) -> Unit,
         val messageMediaUploading: ToastMessageHolder
     ) : PostListAction()
+
     class RemotePreviewPost(
         val site: SiteModel,
         val post: PostModel,
         val remotePreviewType: RemotePreviewType
     ) : PostListAction()
+
     class RetryUpload(
         val post: PostModel,
         val trackAnalytics: Boolean = PostUtils.isFirstTimePublish(post)
     ) : PostListAction()
+
     class CopyUrl(
         val site: SiteModel,
         val post: PostModel,
@@ -68,7 +71,7 @@ fun handlePostListAction(
         is PostListAction.NewStoryPost -> {
             if (AppPrefs.shouldShowStoriesIntro()) {
                 StoriesIntroDialogFragment.newInstance(action.site)
-                        .show(activity.supportFragmentManager, StoriesIntroDialogFragment.TAG)
+                    .show(activity.supportFragmentManager, StoriesIntroDialogFragment.TAG)
             } else {
                 mediaPickerLauncher.showStoriesPhotoPickerForResultAndTrack(activity, action.site)
             }
@@ -76,10 +79,10 @@ fun handlePostListAction(
         is PostListAction.PreviewPost -> {
             val helperFunctions = previewStateHelper.getUploadStrategyFunctions(activity, action)
             remotePreviewLogicHelper.runPostPreviewLogic(
-                    activity = activity,
-                    site = action.site,
-                    post = action.post,
-                    helperFunctions = helperFunctions
+                activity = activity,
+                site = action.site,
+                post = action.post,
+                helperFunctions = helperFunctions
             )
         }
         is PostListAction.RemotePreviewPost -> {
@@ -88,9 +91,9 @@ fun handlePostListAction(
         is PostListAction.RetryUpload -> {
             // restart the UploadService with retry parameters
             val intent = UploadService.getRetryUploadServiceIntent(
-                    activity,
-                    action.post,
-                    action.trackAnalytics
+                activity,
+                action.post,
+                action.trackAnalytics
             )
             activity.startService(intent)
         }
@@ -106,7 +109,7 @@ fun handlePostListAction(
         is PostListAction.CopyUrl -> {
             try {
                 activity.clipboardManager?.setPrimaryClip(
-                        ClipData.newPlainText("${action.post.id}", action.post.link)
+                    ClipData.newPlainText("${action.post.id}", action.post.link)
                 ) ?: throw NullPointerException("ClipboardManager is not supported on this device")
 
                 action.showSnackbar.invoke(action.messageSuccess)

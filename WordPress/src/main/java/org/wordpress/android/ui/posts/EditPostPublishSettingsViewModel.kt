@@ -22,11 +22,11 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     postSchedulingNotificationStore: PostSchedulingNotificationStore,
     private val siteStore: SiteStore
 ) : PublishSettingsViewModel(
-        resourceProvider,
-        postSettingsUtils,
-        localeManagerWrapper,
-        postSchedulingNotificationStore,
-        siteStore
+    resourceProvider,
+    postSettingsUtils,
+    localeManagerWrapper,
+    postSchedulingNotificationStore,
+    siteStore
 ) {
     private val _authors = MutableLiveData<List<Person>>()
     val authors: LiveData<List<Person>> = _authors

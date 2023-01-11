@@ -65,31 +65,44 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     // region Set-up
     private lateinit var builder: ReaderPostUiStateBuilder
 
-    @Mock lateinit var accountStore: AccountStore
-    @Mock lateinit var urlUtilsWrapper: UrlUtilsWrapper
-    @Mock lateinit var gravatarUtilsWrapper: GravatarUtilsWrapper
-    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
-    @Mock lateinit var readerImageScannerProvider: ReaderImageScannerProvider
-    @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
-    @Mock lateinit var readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder
+    @Mock
+    lateinit var accountStore: AccountStore
+
+    @Mock
+    lateinit var urlUtilsWrapper: UrlUtilsWrapper
+
+    @Mock
+    lateinit var gravatarUtilsWrapper: GravatarUtilsWrapper
+
+    @Mock
+    lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
+    @Mock
+    lateinit var readerImageScannerProvider: ReaderImageScannerProvider
+
+    @Mock
+    lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+
+    @Mock
+    lateinit var readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder
 
     @Before
     fun setUp() = test {
         builder = ReaderPostUiStateBuilder(
-                accountStore,
-                urlUtilsWrapper,
-                gravatarUtilsWrapper,
-                dateTimeUtilsWrapper,
-                readerImageScannerProvider,
-                readerUtilsWrapper,
-                readerPostTagsUiStateBuilder,
-                testDispatcher()
+            accountStore,
+            urlUtilsWrapper,
+            gravatarUtilsWrapper,
+            dateTimeUtilsWrapper,
+            readerImageScannerProvider,
+            readerUtilsWrapper,
+            readerPostTagsUiStateBuilder,
+            testDispatcher()
         )
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
         whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("")
         val imageScanner: ReaderImageScanner = mock()
         whenever(readerImageScannerProvider.createReaderImageScanner(anyOrNull(), anyBoolean()))
-                .thenReturn(imageScanner)
+            .thenReturn(imageScanner)
         whenever(imageScanner.getImageList(anyInt(), anyInt())).thenReturn(ReaderImageList(false))
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(readerUtilsWrapper.getLongLikeLabelText(anyInt(), anyBoolean())).thenReturn("")
@@ -521,16 +534,16 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     fun `p2 posts in the feed show author's first name (or full name) alongside the blog name`() = test {
         // Arrange
         val postWithFirstName = createPost(
-                isp2Post = true,
-                blogName = "Fancy Blog",
-                authorFirstName = "John",
-                authorName = "John Smith"
+            isp2Post = true,
+            blogName = "Fancy Blog",
+            authorFirstName = "John",
+            authorName = "John Smith"
         )
         val postWithoutFirstName = createPost(
-                isp2Post = true,
-                blogName = "Fancy Blog",
-                authorFirstName = "",
-                authorName = "John Smith"
+            isp2Post = true,
+            blogName = "Fancy Blog",
+            authorFirstName = "",
+            authorName = "John Smith"
         )
         // Act
         val firstNameUiState = mapPostToUiState(postWithFirstName)
@@ -864,9 +877,9 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         whenever(urlUtilsWrapper.removeScheme(url)).thenReturn("dummy.url")
         // Act
         val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
-                listOf(blog),
-                { _, _, _ -> },
-                { }
+            listOf(blog),
+            { _, _, _ -> },
+            { }
         )
         // Assert
         assertThat(uiState.blogs[0].url).isEqualTo("dummy.url")
@@ -880,9 +893,9 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
 
         // Act
         val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
-                blogs,
-                { _, _, _ -> },
-                { }
+            blogs,
+            { _, _, _ -> },
+            { }
         )
 
         // Assert
@@ -897,9 +910,9 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
 
         // Act
         val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
-                blogs,
-                { _, _, _ -> },
-                { }
+            blogs,
+            { _, _, _ -> },
+            { }
         )
 
         // Assert
@@ -913,21 +926,21 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
     ): ReaderPostUiState {
         return builder.mapPostToUiState(
-                source = "source",
-                post = post,
-                isDiscover = false,
-                photonWidth = 0,
-                photonHeight = 0,
-                postListType = postListType,
-                onButtonClicked = onButtonClicked,
-                onItemClicked = mock(),
-                onItemRendered = mock(),
-                onDiscoverSectionClicked = mock(),
-                onMoreButtonClicked = mock(),
-                onVideoOverlayClicked = mock(),
-                onPostHeaderViewClicked = mock(),
-                onTagItemClicked = mock(),
-                onMoreDismissed = mock()
+            source = "source",
+            post = post,
+            isDiscover = false,
+            photonWidth = 0,
+            photonHeight = 0,
+            postListType = postListType,
+            onButtonClicked = onButtonClicked,
+            onItemClicked = mock(),
+            onItemRendered = mock(),
+            onDiscoverSectionClicked = mock(),
+            onMoreButtonClicked = mock(),
+            onVideoOverlayClicked = mock(),
+            onPostHeaderViewClicked = mock(),
+            onTagItemClicked = mock(),
+            onMoreDismissed = mock()
         )
     }
 
@@ -998,12 +1011,12 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     private fun createReaderTag() = ReaderTag(
-            "",
-            "",
-            "",
-            null,
-            mock(),
-            false
+        "",
+        "",
+        "",
+        null,
+        mock(),
+        false
     )
 
     private fun createRecommendedBlog(

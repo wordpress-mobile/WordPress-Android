@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-30 11:54:11+0000
+Translation-Revision-Date: 2022-12-20 13:54:10+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.3
 Language: ar
 -->
 <resources>
+    <string name="reader_menu_block_user">حظر مستخدم</string>
+    <string name="reader_toast_user_blocked">لن تظهر التدوينات الواردة من هذا المستخدم بعد الآن</string>
+    <string name="reader_menu_report_user">الإبلاغ عن هذا المستخدم</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">فتح الروابط في ووردبريس</string>
     <string name="wp_jetpack_deep_link_overlay_description">يبدو أن تطبيق Jetpack مثبت لديك.\n\nهل ترغب في فتح الروابط في تطبيق Jetpack في المستقبل؟\n\nيمكنك دومًا تغيير ذلك في إعدادات التطبيق &gt; فتح الروابط في Jetpack</string>
     <string name="wp_jetpack_deep_link_overlay_title">هل تفتح الروابط في Jetpack؟</string>
@@ -26,7 +29,6 @@ Language: ar
     <string name="preference_open_links_in_jetpack">فتح الروابط في Jetpack</string>
     <string name="jp_migration_need_help_button">هل تحتاج إلى مساعدة؟</string>
     <string name="jp_migration_got_it_button">فهمت</string>
-    <string name="jp_migration_delete_message">يرجى &lt;b&gt;حذف تطبيق ووردبريس&lt;/b&gt; لتفادي&lt;br&gt;تعارضات البيانات.</string>
     <string name="jp_migration_delete_subtitle">يبدو أن تطبيق ووردبريس لا يزال مثبتًا لديك. نوصي بأن تحذف تطبيق ووردبريس لتفادي تعارضات البيانات.</string>
     <string name="jp_migration_delete_title">لن تحتاج إلى تطبيق ووردبريس بعد الآن</string>
     <string name="jp_migration_network_error_message">يتعذر علينا نقل بياناتك وإعداداتك من دون اتصال الشبكة.</string>
@@ -38,7 +40,6 @@ Language: ar
     <string name="jp_migration_try_again_button">المحاولة مجددًا</string>
     <string name="jp_migration_finish_button">إنهاء</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">إزالة أيقونة تطبيق ووردبريس</string>
-    <string name="jp_migration_done_delete_wp_message">يرجى &lt;b&gt;حذف تطبيق ووردبريس&lt;/b&gt; لتفادي&lt;br&gt;تعارضات البيانات.</string>
     <string name="jp_migration_done_subtitle">لقد نقلنا كل بياناتك وإعداداتك. يصبح كل شيء صحيحًا عندما تتركه.</string>
     <string name="jp_migration_done_title">شكرًا على التبديل إلى Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">سنقوم بإيقاف تشغيل التنبيهات من تطبيق ووردبريس.</string>

@@ -13,9 +13,13 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class ContentDescriptionHelperTest {
-    @Mock lateinit var rtlUtils: RtlUtils
-    @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var rtlUtils: RtlUtils
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
     private lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
     @Before
     fun setUp() {
         contentDescriptionHelper = ContentDescriptionHelper(resourceProvider, rtlUtils)

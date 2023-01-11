@@ -89,7 +89,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
             @JvmStatic
             fun fromNameString(iconTypeName: String): MediaPickerIconType {
                 return values().firstOrNull { it.name == iconTypeName }
-                        ?: throw IllegalArgumentException("MediaPickerIconType not found with name $iconTypeName")
+                    ?: throw IllegalArgumentException("MediaPickerIconType not found with name $iconTypeName")
             }
         }
     }
@@ -133,8 +133,8 @@ class MediaPickerFragment : Fragment(), MenuProvider {
             when (this) {
                 is ChooseFromAndroidDevice -> {
                     bundle.putStringArrayList(
-                            KEY_LAST_TAPPED_ICON_ALLOWED_TYPES,
-                            ArrayList(allowedTypes.map { it.name })
+                        KEY_LAST_TAPPED_ICON_ALLOWED_TYPES,
+                        ArrayList(allowedTypes.map { it.name })
                     )
                 }
                 is SwitchSource -> {
@@ -153,9 +153,9 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                 return when (iconTypeName.let { MediaPickerIconType.fromNameString(iconTypeName) }) {
                     ANDROID_CHOOSE_FROM_DEVICE -> {
                         val allowedTypes = (bundle.getStringArrayList(KEY_LAST_TAPPED_ICON_ALLOWED_TYPES)
-                                ?: listOf<String>()).map {
+                            ?: listOf<String>()).map {
                             MediaType.valueOf(
-                                    it
+                                it
                             )
                         }.toSet()
                         ChooseFromAndroidDevice(allowedTypes)
@@ -186,10 +186,17 @@ class MediaPickerFragment : Fragment(), MenuProvider {
 
     private var listener: MediaPickerListener? = null
 
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var snackbarSequencer: SnackbarSequencer
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var imageManager: ImageManager
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var snackbarSequencer: SnackbarSequencer
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: MediaPickerViewModel
     private var binding: MediaPickerFragmentBinding? = null
 
@@ -205,9 +212,9 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(
-                R.layout.media_picker_fragment,
-                container,
-                false
+            R.layout.media_picker_fragment,
+            container,
+            false
         )
     }
 
@@ -228,8 +235,8 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         }
 
         val layoutManager = GridLayoutManager(
-                activity,
-                NUM_COLUMNS
+            activity,
+            NUM_COLUMNS
         )
 
         savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
@@ -250,9 +257,9 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                     if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
                         isShowingActionMode = true
                         (activity as AppCompatActivity).startSupportActionMode(
-                                MediaPickerActionModeCallback(
-                                        viewModel
-                                )
+                            MediaPickerActionModeCallback(
+                                viewModel
+                            )
                         )
                     } else if (uiState.actionModeUiModel is ActionModeUiModel.Hidden && isShowingActionMode) {
                         isShowingActionMode = false
@@ -286,25 +293,25 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         when (navigationEvent) {
             is PreviewUrl -> {
                 MediaPreviewActivity.showPreview(
-                        requireContext(),
-                        null,
-                        navigationEvent.url
+                    requireContext(),
+                    null,
+                    navigationEvent.url
                 )
                 AccessibilityUtils.setActionModeDoneButtonContentDescription(
-                        activity,
-                        getString(R.string.cancel)
+                    activity,
+                    getString(R.string.cancel)
                 )
             }
             is PreviewMedia -> MediaPreviewActivity.showPreview(
-                    requireContext(),
-                    null,
-                    navigationEvent.media,
-                    null
+                requireContext(),
+                null,
+                navigationEvent.media,
+                null
             )
             is EditMedia -> {
                 val inputData = WPMediaUtils.createListOfEditImageInputData(
-                        requireContext(),
-                        navigationEvent.uris.map { wrapper -> wrapper.uri }
+                    requireContext(),
+                    navigationEvent.uris.map { wrapper -> wrapper.uri }
                 )
                 ActivityLauncher.openImageEditor(activity, inputData)
             }
@@ -475,11 +482,11 @@ class MediaPickerFragment : Fragment(), MenuProvider {
 
                 actionableEmptyView.subtitle.applyOrHide(uiModel.htmlSubtitle) { htmlSubtitle ->
                     actionableEmptyView.subtitle.text = HtmlCompat.fromHtml(
-                            uiHelpers.getTextOfUiString(
-                                    requireContext(),
-                                    htmlSubtitle
-                            ).toString(),
-                            HtmlCompat.FROM_HTML_MODE_LEGACY
+                        uiHelpers.getTextOfUiString(
+                            requireContext(),
+                            htmlSubtitle
+                        ).toString(),
+                        HtmlCompat.FROM_HTML_MODE_LEGACY
                     )
                     actionableEmptyView.subtitle.movementMethod = WPLinkMovementMethod.getInstance()
                 }
@@ -490,8 +497,8 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                     this.setImageResource(bottomImage)
                     if (uiModel.bottomImageDescription != null) {
                         this.contentDescription = uiHelpers.getTextOfUiString(
-                                requireContext(),
-                                uiModel.bottomImageDescription
+                            requireContext(),
+                            uiModel.bottomImageDescription
                         ).toString()
                     }
                 }
@@ -518,20 +525,20 @@ class MediaPickerFragment : Fragment(), MenuProvider {
     private fun MediaPickerFragmentBinding.setupAdapter(items: List<MediaPickerUiItem>) {
         if (recycler.adapter == null) {
             recycler.adapter = MediaPickerAdapter(
-                    imageManager,
-                    viewModel.viewModelScope
+                imageManager,
+                viewModel.viewModelScope
             )
         }
         val adapter = recycler.adapter as MediaPickerAdapter
 
         (recycler.layoutManager as? GridLayoutManager)?.spanSizeLookup =
-                object : SpanSizeLookup() {
-                    override fun getSpanSize(position: Int) = if (items[position].fullWidthItem) {
-                        NUM_COLUMNS
-                    } else {
-                        1
-                    }
+            object : SpanSizeLookup() {
+                override fun getSpanSize(position: Int) = if (items[position].fullWidthItem) {
+                    NUM_COLUMNS
+                } else {
+                    1
                 }
+            }
         val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
         adapter.loadData(items)
         recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
@@ -559,7 +566,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                             builder.setTitle(this.title)
                             builder.setView(R.layout.media_picker_progress_dialog)
                             builder.setNegativeButton(
-                                    R.string.cancel
+                                R.string.cancel
                             ) { _, _ -> this.cancelAction() }
                             builder.setOnCancelListener { this.cancelAction() }
                             builder.setCancelable(true)
@@ -580,20 +587,20 @@ class MediaPickerFragment : Fragment(), MenuProvider {
 
     private fun MediaPickerFragmentBinding.showSnackbar(holder: SnackbarMessageHolder) {
         snackbarSequencer.enqueue(
-                SnackbarItem(
-                        Info(
-                                view = coordinator,
-                                textRes = holder.message,
-                                duration = Snackbar.LENGTH_LONG
-                        ),
-                        holder.buttonTitle?.let {
-                            Action(
-                                    textRes = holder.buttonTitle,
-                                    clickListener = { holder.buttonAction() }
-                            )
-                        },
-                        dismissCallback = { _, event -> holder.onDismissAction(event) }
-                )
+            SnackbarItem(
+                Info(
+                    view = coordinator,
+                    textRes = holder.message,
+                    duration = Snackbar.LENGTH_LONG
+                ),
+                holder.buttonTitle?.let {
+                    Action(
+                        textRes = holder.buttonTitle,
+                        clickListener = { holder.buttonAction() }
+                    )
+                },
+                dismissCallback = { _, event -> holder.onDismissAction(event) }
+            )
         )
     }
 
@@ -620,7 +627,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
 
     private val isStoragePermissionAlwaysDenied: Boolean
         get() = WPPermissionUtils.isPermissionAlwaysDenied(
-                requireActivity(), permission.WRITE_EXTERNAL_STORAGE
+            requireActivity(), permission.WRITE_EXTERNAL_STORAGE
         )
 
     /*
@@ -638,7 +645,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
     private fun requestStoragePermission() {
         val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE)
         requestPermissions(
-                permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE
+            permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE
         )
     }
 
@@ -646,8 +653,8 @@ class MediaPickerFragment : Fragment(), MenuProvider {
     private fun requestCameraPermission() {
         // in addition to CAMERA permission we also need a storage permission, to store media from the camera
         val permissions = arrayOf(
-                permission.CAMERA,
-                permission.WRITE_EXTERNAL_STORAGE
+            permission.CAMERA,
+            permission.WRITE_EXTERNAL_STORAGE
         )
         requestPermissions(permissions, WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE)
     }
@@ -660,7 +667,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
     ) {
         val checkForAlwaysDenied = requestCode == WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE
         val allGranted = WPPermissionUtils.setPermissionListAsked(
-                requireActivity(), requestCode, permissions, grantResults, checkForAlwaysDenied
+            requireActivity(), requestCode, permissions, grantResults, checkForAlwaysDenied
         )
         when (requestCode) {
             WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE -> checkStoragePermission()
@@ -677,7 +684,9 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         private const val KEY_SELECTED_IDS = "selected_ids"
         private const val KEY_LIST_STATE = "list_state"
         const val NUM_COLUMNS = 3
-        @JvmStatic fun newInstance(
+
+        @JvmStatic
+        fun newInstance(
             listener: MediaPickerListener,
             mediaPickerSetup: MediaPickerSetup,
             site: SiteModel?

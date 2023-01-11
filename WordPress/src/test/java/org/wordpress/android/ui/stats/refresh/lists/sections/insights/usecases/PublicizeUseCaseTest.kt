@@ -37,12 +37,23 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
 class PublicizeUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: PublicizeStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var serviceMapper: ServiceMapper
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock
+    lateinit var insightsStore: PublicizeStore
+
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+
+    @Mock
+    lateinit var site: SiteModel
+
+    @Mock
+    lateinit var serviceMapper: ServiceMapper
+
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var popupMenuHandler: ItemPopupMenuHandler
     private lateinit var useCase: PublicizeUseCase
     private val itemsToLoad = 6
     private val limitMode = LimitMode.Top(itemsToLoad)
@@ -50,14 +61,14 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = PublicizeUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                insightsStore,
-                statsSiteProvider,
-                serviceMapper,
-                tracker,
-                popupMenuHandler,
-                BLOCK
+            testDispatcher(),
+            testDispatcher(),
+            insightsStore,
+            statsSiteProvider,
+            serviceMapper,
+            tracker,
+            popupMenuHandler,
+            BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
@@ -70,15 +81,17 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         val model = PublicizeModel(services, false)
         whenever(insightsStore.getPublicizeData(site, limitMode)).thenReturn(model)
         whenever(insightsStore.fetchPublicizeData(site, limitMode, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         val mockedItem = mock<ListItemWithIcon>()
-        whenever(serviceMapper.map(
+        whenever(
+            serviceMapper.map(
                 eq(services),
                 any()
-        )).thenReturn(listOf(mockedItem))
+            )
+        ).thenReturn(listOf(mockedItem))
 
         val result = loadPublicizeModel(true, forced)
 
@@ -99,20 +112,22 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         val forced = false
         val followers = 100
         val services = listOf(
-                Service("service1", followers)
+            Service("service1", followers)
         )
         val model = PublicizeModel(services, true)
         whenever(insightsStore.getPublicizeData(site, limitMode)).thenReturn(model)
         whenever(insightsStore.fetchPublicizeData(site, limitMode, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         val mockedItem = mock<ListItemWithIcon>()
-        whenever(serviceMapper.map(
+        whenever(
+            serviceMapper.map(
                 eq(services.take(5)),
                 any()
-        )).thenReturn(listOf(mockedItem))
+            )
+        ).thenReturn(listOf(mockedItem))
 
         val result = loadPublicizeModel(true, forced)
 
@@ -135,7 +150,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         val model = PublicizeModel(listOf(), false)
         whenever(insightsStore.getPublicizeData(site, limitMode)).thenReturn(model)
         whenever(insightsStore.fetchPublicizeData(site, limitMode, forced)).thenReturn(
-                OnStatsFetched(PublicizeModel(listOf(), false))
+            OnStatsFetched(PublicizeModel(listOf(), false))
         )
 
         val result = loadPublicizeModel(true, forced)
@@ -153,9 +168,9 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(insightsStore.fetchPublicizeData(site, limitMode, forced)).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadPublicizeModel(true, forced)

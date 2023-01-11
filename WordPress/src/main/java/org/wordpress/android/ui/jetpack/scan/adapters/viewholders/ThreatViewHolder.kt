@@ -13,8 +13,8 @@ class ThreatViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : JetpackViewHolder<ScanListThreatItemBinding>(
-        parent,
-        ScanListThreatItemBinding::inflate
+    parent,
+    ScanListThreatItemBinding::inflate
 ) {
     override fun onBind(itemUiState: JetpackListItemState) = with(binding) {
         val threatItemState = itemUiState as ThreatItemState

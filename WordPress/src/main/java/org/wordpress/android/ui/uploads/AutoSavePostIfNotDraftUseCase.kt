@@ -36,7 +36,7 @@ interface OnAutoSavePostIfNotDraftCallback {
 sealed class AutoSavePostIfNotDraftResult(open val post: PostModel) {
     // Initial fetch post status request failed
     data class FetchPostStatusFailed(override val post: PostModel, val error: PostError) :
-            AutoSavePostIfNotDraftResult(post)
+        AutoSavePostIfNotDraftResult(post)
 
     // Post status is `DRAFT` in remote which means we'll want to update the draft directly
     data class PostIsDraftInRemote(override val post: PostModel) : AutoSavePostIfNotDraftResult(post)
@@ -46,7 +46,7 @@ sealed class AutoSavePostIfNotDraftResult(open val post: PostModel) {
 
     // Post status is not `DRAFT` in remote but the post auto-save failed
     data class PostAutoSaveFailed(override val post: PostModel, val error: PostError) :
-            AutoSavePostIfNotDraftResult(post)
+        AutoSavePostIfNotDraftResult(post)
 }
 
 /**
@@ -84,10 +84,11 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
             throw IllegalArgumentException("Local drafts should not be auto-saved")
         }
         if (postStatusContinuations.containsKey(remotePostId) ||
-                autoSaveContinuations.containsKey(remotePostId)) {
+            autoSaveContinuations.containsKey(remotePostId)
+        ) {
             throw IllegalArgumentException(
-                    "This post is already being processed. Make sure not to start an autoSave " +
-                            "or update draft action while another one is going on."
+                "This post is already being processed. Make sure not to start an autoSave " +
+                        "or update draft action while another one is going on."
             )
         }
         coroutineScope.launch {
@@ -95,8 +96,8 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
             val result = when {
                 onPostStatusFetched.isError -> {
                     FetchPostStatusFailed(
-                            post = remotePostPayload.post,
-                            error = onPostStatusFetched.error
+                        post = remotePostPayload.post,
+                        error = onPostStatusFetched.error
                     )
                 }
                 onPostStatusFetched.remotePostStatus == DRAFT_POST_STATUS -> {
@@ -128,8 +129,8 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
             PostAutoSaveFailed(remotePostPayload.post, onPostChanged.error)
         } else {
             val updatedPost = postStore.getPostByRemotePostId(
-                    remotePostId.value,
-                    remotePostPayload.site
+                remotePostId.value,
+                remotePostPayload.site
             )
             PostAutoSaved(updatedPost)
         }

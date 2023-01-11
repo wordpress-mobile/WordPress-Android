@@ -9,9 +9,9 @@ class JetpackReaderSavedPostsFeatureConfig
 @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.JETPACK_READER_SAVED_POSTS,
-        JETPACK_READER_SAVED_POSTS_REMOTE_FIELD
+    appConfig,
+    BuildConfig.JETPACK_READER_SAVED_POSTS,
+    JETPACK_READER_SAVED_POSTS_REMOTE_FIELD
 ) {
     companion object {
         const val JETPACK_READER_SAVED_POSTS_REMOTE_FIELD = "jetpack_reader_saved_posts_remote_field"

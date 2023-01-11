@@ -8,9 +8,9 @@ import javax.inject.Inject
 class JetpackPoweredBottomSheetFeatureConfig @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.JETPACK_POWERED_BOTTOM_SHEET,
-        JETPACK_POWERED_BOTTOM_SHEET_REMOTE_FIELD
+    appConfig,
+    BuildConfig.JETPACK_POWERED_BOTTOM_SHEET,
+    JETPACK_POWERED_BOTTOM_SHEET_REMOTE_FIELD
 ) {
     companion object {
         const val JETPACK_POWERED_BOTTOM_SHEET_REMOTE_FIELD = "jetpack_powered_bottom_sheet_remote_field"

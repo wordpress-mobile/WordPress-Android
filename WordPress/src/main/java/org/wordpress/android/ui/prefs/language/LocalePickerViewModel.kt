@@ -43,9 +43,9 @@ class LocalePickerViewModel @Inject constructor(
 
     private val searchInput = MutableLiveData<String>()
     private val _filteredLocales: LiveData<List<LocalePickerListItem>> =
-            Transformations.switchMap(searchInput) { term ->
-                filterLocales(term)
-            }
+        Transformations.switchMap(searchInput) { term ->
+            filterLocales(term)
+        }
 
     private val locales = MediatorLiveData<List<LocalePickerListItem>>().apply {
         addSource(_loadedLocales) {
@@ -57,14 +57,14 @@ class LocalePickerViewModel @Inject constructor(
     }.distinctUntilChanged()
 
     val uiState: LiveData<LocalePickerUiState> = merge(
-            locales,
-            _suggestedLocale,
-            _isEmptyViewVisible
+        locales,
+        _suggestedLocale,
+        _isEmptyViewVisible
     ) { locales, suggestedLocale, emptyViewVisible ->
         LocalePickerUiState(
-                locales,
-                suggestedLocale,
-                emptyViewVisible ?: false
+            locales,
+            suggestedLocale,
+            emptyViewVisible ?: false
         )
     }
 
@@ -125,8 +125,8 @@ class LocalePickerViewModel @Inject constructor(
             when (locale) {
                 is LocaleRow -> {
                     query.isBlank() or locale.label.contains(query, true) or locale.localizedLabel.contains(
-                            query,
-                            true
+                        query,
+                        true
                     )
                 }
             }
@@ -147,8 +147,8 @@ class LocalePickerViewModel @Inject constructor(
         val availableLocales = resourceProvider.getStringArray(array.available_languages).distinct()
 
         val availableLocalesData = localeProvider.createSortedLocalizedLanguageDisplayStrings(
-                availableLocales.toTypedArray(),
-                appLocale
+            availableLocales.toTypedArray(),
+            appLocale
         ) ?: return
 
         val sortedEntries = availableLocalesData.first
@@ -157,12 +157,12 @@ class LocalePickerViewModel @Inject constructor(
 
         for (i in availableLocalesData.first.indices) {
             cachedLocales.add(
-                    LocaleRow(
-                            sortedEntries[i],
-                            sortedLocalizedEntries[i],
-                            sortedValues[i],
-                            ClickAction(sortedValues[i], this::clickItem)
-                    )
+                LocaleRow(
+                    sortedEntries[i],
+                    sortedLocalizedEntries[i],
+                    sortedValues[i],
+                    ClickAction(sortedValues[i], this::clickItem)
+                )
             )
         }
 

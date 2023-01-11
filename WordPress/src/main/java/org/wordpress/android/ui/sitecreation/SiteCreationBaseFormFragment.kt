@@ -13,7 +13,8 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.SiteCreationFormScreenBinding
 
 abstract class SiteCreationBaseFormFragment : Fragment(R.layout.site_creation_form_screen), MenuProvider {
-    @LayoutRes protected abstract fun getContentLayout(): Int
+    @LayoutRes
+    protected abstract fun getContentLayout(): Int
 
     protected abstract val screenTitle: String
 

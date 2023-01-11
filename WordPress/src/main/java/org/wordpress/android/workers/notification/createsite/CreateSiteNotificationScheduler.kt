@@ -20,17 +20,17 @@ class CreateSiteNotificationScheduler
     fun scheduleCreateSiteNotificationIfNeeded() {
         if (createSiteNotificationHandler.shouldShowNotification() && appsPrefs.shouldScheduleCreateSiteNotification) {
             val firstNotification = LocalNotification(
-                    type = CREATE_SITE,
-                    delay = 1, // 1 day from now
-                    delayUnits = TimeUnit.DAYS,
-                    title = R.string.create_site_notification_title,
-                    text = R.string.create_site_notification_text,
-                    icon = R.drawable.ic_wordpress_white_24dp,
-                    firstActionIcon = -1,
-                    firstActionTitle = R.string.create_site_notification_create_site_action
+                type = CREATE_SITE,
+                delay = 1, // 1 day from now
+                delayUnits = TimeUnit.DAYS,
+                title = R.string.create_site_notification_title,
+                text = R.string.create_site_notification_text,
+                icon = R.drawable.ic_wordpress_white_24dp,
+                firstActionIcon = -1,
+                firstActionTitle = R.string.create_site_notification_create_site_action
             )
             val secondNotification = firstNotification.copy(
-                    delay = 8 // 1 week after first notification
+                delay = 8 // 1 week after first notification
             )
             localNotificationScheduler.scheduleOneTimeNotification(firstNotification, secondNotification)
 

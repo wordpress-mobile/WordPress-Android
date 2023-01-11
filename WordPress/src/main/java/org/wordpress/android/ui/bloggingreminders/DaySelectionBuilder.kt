@@ -38,44 +38,45 @@ class DaySelectionBuilder
         val daysOfWeek = daysProvider.getDaysOfWeekByLocale()
         val text = dayLabelUtils.buildNTimesLabel(bloggingRemindersModel)
         val nTimesLabel = MediumEmphasisText(
-                EmphasizedText(text),
-                bloggingRemindersModel?.enabledDays?.isEmpty() == true
+            EmphasizedText(text),
+            bloggingRemindersModel?.enabledDays?.isEmpty() == true
         )
         val selectionList = mutableListOf(
-                Illustration(R.drawable.img_illustration_calendar),
-                Title(UiStringRes(R.string.blogging_reminders_select_days)),
-                MediumEmphasisText(UiStringRes(R.string.blogging_reminders_select_days_message)),
-                DayButtons(daysOfWeek.map {
-                    DayItem(
-                            UiStringText(it.getDisplayName(SHORT, localeManagerWrapper.getLocale())),
-                            bloggingRemindersModel?.enabledDays?.contains(it) == true,
-                            ListItemInteraction.create(it, onSelectDay)
-                    )
-                }),
-                nTimesLabel
+            Illustration(R.drawable.img_illustration_calendar),
+            Title(UiStringRes(R.string.blogging_reminders_select_days)),
+            MediumEmphasisText(UiStringRes(R.string.blogging_reminders_select_days_message)),
+            DayButtons(daysOfWeek.map {
+                DayItem(
+                    UiStringText(it.getDisplayName(SHORT, localeManagerWrapper.getLocale())),
+                    bloggingRemindersModel?.enabledDays?.contains(it) == true,
+                    ListItemInteraction.create(it, onSelectDay)
+                )
+            }),
+            nTimesLabel
         )
 
         if (bloggingRemindersModel?.enabledDays?.isNotEmpty() == true) {
             selectionList.add(
-                    TimeItem(
-                            UiStringText(bloggingRemindersModel.getNotificationTime()),
-                            ListItemInteraction.create(onSelectTime)
-                    )
+                TimeItem(
+                    UiStringText(bloggingRemindersModel.getNotificationTime()),
+                    ListItemInteraction.create(onSelectTime)
+                )
             )
 
             if (bloggingPromptsFeatureConfig.isEnabled()) {
                 selectionList.add(
-                        PromptSwitch(
-                                bloggingRemindersModel.isPromptIncluded,
-                                ListItemInteraction.create(onPromptSwitchToggled),
-                                ListItemInteraction.create(onPromptHelpButtonClicked)
-                        )
+                    PromptSwitch(
+                        bloggingRemindersModel.isPromptIncluded,
+                        ListItemInteraction.create(onPromptSwitchToggled),
+                        ListItemInteraction.create(onPromptHelpButtonClicked)
+                    )
                 )
             }
         }
 
         selectionList.add(
-                Tip(UiStringRes(string.blogging_reminders_tip), UiStringRes(string.blogging_reminders_tip_message)))
+            Tip(UiStringRes(string.blogging_reminders_tip), UiStringRes(string.blogging_reminders_tip_message))
+        )
 
         return selectionList
     }
@@ -100,9 +101,9 @@ class DaySelectionBuilder
             R.string.blogging_reminders_update
         }
         return PrimaryButton(
-                UiStringRes(buttonText),
-                enabled = buttonEnabled,
-                ListItemInteraction.create(bloggingRemindersModel, onConfirm)
+            UiStringRes(buttonText),
+            enabled = buttonEnabled,
+            ListItemInteraction.create(bloggingRemindersModel, onConfirm)
         )
     }
 }

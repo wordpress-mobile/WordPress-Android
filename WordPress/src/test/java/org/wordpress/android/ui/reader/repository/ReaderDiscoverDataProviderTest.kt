@@ -39,22 +39,31 @@ private const val NUMBER_OF_ITEMS = 10L
 class ReaderDiscoverDataProviderTest : BaseUnitTest() {
     private lateinit var dataProvider: ReaderDiscoverDataProvider
 
-    @Mock private lateinit var eventBusWrapper: EventBusWrapper
-    @Mock private lateinit var getDiscoverCardsUseCase: GetDiscoverCardsUseCase
-    @Mock private lateinit var shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase
-    @Mock private lateinit var fetchDiscoverCardsUseCase: FetchDiscoverCardsUseCase
-    @Mock private lateinit var readerTagWrapper: ReaderTagWrapper
+    @Mock
+    private lateinit var eventBusWrapper: EventBusWrapper
+
+    @Mock
+    private lateinit var getDiscoverCardsUseCase: GetDiscoverCardsUseCase
+
+    @Mock
+    private lateinit var shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase
+
+    @Mock
+    private lateinit var fetchDiscoverCardsUseCase: FetchDiscoverCardsUseCase
+
+    @Mock
+    private lateinit var readerTagWrapper: ReaderTagWrapper
 
     @Before
     fun setUp() {
         dataProvider = ReaderDiscoverDataProvider(
-                testDispatcher(),
-                testDispatcher(),
-                eventBusWrapper,
-                readerTagWrapper,
-                getDiscoverCardsUseCase,
-                shouldAutoUpdateTagUseCase,
-                fetchDiscoverCardsUseCase
+            testDispatcher(),
+            testDispatcher(),
+            eventBusWrapper,
+            readerTagWrapper,
+            getDiscoverCardsUseCase,
+            shouldAutoUpdateTagUseCase,
+            fetchDiscoverCardsUseCase
         )
     }
 
@@ -67,7 +76,7 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
         dataProvider.refreshCards()
 
         assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
-                .isEqualTo(Started(REQUEST_FIRST_PAGE))
+            .isEqualTo(Started(REQUEST_FIRST_PAGE))
     }
 
     @Test
@@ -80,7 +89,7 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
         dataProvider.onCardsUpdated(event)
 
         assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
-                .isEqualTo(RemoteRequestFailure(REQUEST_FIRST_PAGE))
+            .isEqualTo(RemoteRequestFailure(REQUEST_FIRST_PAGE))
     }
 
     @Test
@@ -93,7 +102,7 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
         dataProvider.onCardsUpdated(event)
 
         assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
-                .isEqualTo(Success(REQUEST_FIRST_PAGE))
+            .isEqualTo(Success(REQUEST_FIRST_PAGE))
     }
 
     @Test
@@ -106,7 +115,7 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
         dataProvider.onCardsUpdated(event)
 
         assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
-                .isEqualTo(Success(REQUEST_FIRST_PAGE))
+            .isEqualTo(Success(REQUEST_FIRST_PAGE))
     }
 
     @Test
@@ -144,9 +153,9 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(requireNotNull(dataProvider.discoverFeed.value))
-                .isInstanceOf(ReaderDiscoverCards::class.java)
+            .isInstanceOf(ReaderDiscoverCards::class.java)
         assertThat(requireNotNull(dataProvider.discoverFeed.value).cards.size)
-                .isEqualTo(NUMBER_OF_ITEMS)
+            .isEqualTo(NUMBER_OF_ITEMS)
     }
 
     @Test
@@ -251,7 +260,7 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
     }
 
     private fun createDummyReaderPostCardList(numberOfItems: Long = NUMBER_OF_ITEMS) =
-            (1..numberOfItems).map { ReaderPostCard(createDummyReaderPost(it)) }.toList()
+        (1..numberOfItems).map { ReaderPostCard(createDummyReaderPost(it)) }.toList()
 
     private fun createDummyReaderPost(id: Long): ReaderPost = ReaderPost().apply {
         this.postId = id

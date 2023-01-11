@@ -7,10 +7,10 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
-import org.wordpress.android.ui.suggestion.SuggestionType.Users
-import org.wordpress.android.ui.suggestion.SuggestionType.XPosts
 import org.wordpress.android.ui.suggestion.FinishAttempt.NotExactlyOneAvailable
 import org.wordpress.android.ui.suggestion.FinishAttempt.OnlyOneAvailable
+import org.wordpress.android.ui.suggestion.SuggestionType.Users
+import org.wordpress.android.ui.suggestion.SuggestionType.XPosts
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -39,23 +39,23 @@ class SuggestionViewModel @Inject constructor(
 
     val suggestionTypeString: String by lazy {
         resourceProvider.getString(
-                when (type) {
-                    XPosts -> R.string.suggestion_xpost
-                    Users -> R.string.suggestion_user
-                }
+            when (type) {
+                XPosts -> R.string.suggestion_xpost
+                Users -> R.string.suggestion_user
+            }
         )
     }
 
     fun init(type: SuggestionType, site: SiteModel) =
-            if (supportsSuggestions(site)) {
-                this.type = type
-                suggestionSource = suggestionSourceProvider.get(type, site)
-                suggestionSource.initialize()
-                true
-            } else {
-                AppLog.e(T.EDITOR, "Attempting to initialize suggestions for an unsupported site")
-                false
-            }
+        if (supportsSuggestions(site)) {
+            this.type = type
+            suggestionSource = suggestionSourceProvider.get(type, site)
+            suggestionSource.initialize()
+            true
+        } else {
+            AppLog.e(T.EDITOR, "Attempting to initialize suggestions for an unsupported site")
+            false
+        }
 
     private fun supportsSuggestions(site: SiteModel): Boolean = SiteUtils.isAccessedViaWPComRest(site)
 
@@ -119,9 +119,9 @@ class SuggestionViewModel @Inject constructor(
                 resourceProvider.getString(R.string.suggestion_selection_needed)
             } else {
                 resourceProvider.getString(
-                        R.string.suggestion_invalid,
-                        currentUserInput,
-                        suggestionTypeString
+                    R.string.suggestion_invalid,
+                    currentUserInput,
+                    suggestionTypeString
                 )
             }
             NotExactlyOneAvailable(message)
@@ -134,8 +134,8 @@ class SuggestionViewModel @Inject constructor(
             Users -> "user"
         }
         val properties = mapOf(
-                "did_select_suggestion" to withSuggestion,
-                "suggestion_type" to trackingSuggestionType
+            "did_select_suggestion" to withSuggestion,
+            "suggestion_type" to trackingSuggestionType
         )
         analyticsTracker.track(AnalyticsTracker.Stat.SUGGESTION_SESSION_FINISHED, properties)
     }

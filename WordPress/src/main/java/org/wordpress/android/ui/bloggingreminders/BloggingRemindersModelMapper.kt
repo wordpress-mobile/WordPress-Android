@@ -16,31 +16,31 @@ class BloggingRemindersModelMapper
 @Inject constructor() {
     fun toDomainModel(uiModel: BloggingRemindersUiModel): BloggingRemindersModel {
         return BloggingRemindersModel(
-                uiModel.siteId,
-                uiModel.enabledDays.map {
-                    when (it) {
-                        SATURDAY -> Day.SATURDAY
-                        MONDAY -> Day.MONDAY
-                        TUESDAY -> Day.TUESDAY
-                        WEDNESDAY -> Day.WEDNESDAY
-                        THURSDAY -> Day.THURSDAY
-                        FRIDAY -> Day.FRIDAY
-                        SUNDAY -> Day.SUNDAY
-                    }
-                }.toSet(),
-                uiModel.hour,
-                uiModel.minute,
-                uiModel.isPromptIncluded
+            uiModel.siteId,
+            uiModel.enabledDays.map {
+                when (it) {
+                    SATURDAY -> Day.SATURDAY
+                    MONDAY -> Day.MONDAY
+                    TUESDAY -> Day.TUESDAY
+                    WEDNESDAY -> Day.WEDNESDAY
+                    THURSDAY -> Day.THURSDAY
+                    FRIDAY -> Day.FRIDAY
+                    SUNDAY -> Day.SUNDAY
+                }
+            }.toSet(),
+            uiModel.hour,
+            uiModel.minute,
+            uiModel.isPromptIncluded
         )
     }
 
     fun toUiModel(domainModel: BloggingRemindersModel): BloggingRemindersUiModel {
         return BloggingRemindersUiModel(
-                domainModel.siteId,
-                domainModel.enabledDays.map { DayOfWeek.valueOf(it.name) }.toSet(),
-                domainModel.hour,
-                domainModel.minute,
-                domainModel.isPromptIncluded
+            domainModel.siteId,
+            domainModel.enabledDays.map { DayOfWeek.valueOf(it.name) }.toSet(),
+            domainModel.hour,
+            domainModel.minute,
+            domainModel.isPromptIncluded
         )
     }
 }

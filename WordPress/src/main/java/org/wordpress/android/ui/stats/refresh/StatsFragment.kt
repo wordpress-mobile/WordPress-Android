@@ -55,8 +55,11 @@ private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
 @AndroidEntryPoint
 class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     private val viewModel: StatsViewModel by activityViewModels()
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var selectedTabListener: SelectedTabListener
@@ -93,7 +96,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         val adapter = StatsPagerAdapter(this@StatsFragment)
         statsPager.adapter = adapter
         statsPager.setPageTransformer(
-                MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
+            MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
         )
         statsPager.offscreenPageLimit = 2
         selectedTabListener = SelectedTabListener(viewModel)
@@ -137,16 +140,16 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
             if (isFirstStart) {
                 JetpackPoweredBottomSheetFragment
-                        .newInstance(it, MY_SITE)
-                        .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                    .newInstance(it, MY_SITE)
+                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
             }
         }
 
         viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
             if (isFirstStart) {
                 JetpackFeatureFullScreenOverlayFragment
-                        .newInstance(JetpackFeatureOverlayScreenType.STATS)
-                        .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
+                    .newInstance(JetpackFeatureOverlayScreenType.STATS)
+                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
             }
         }
     }
@@ -246,15 +249,15 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         if (holder != null && parent != null) {
             if (holder.buttonTitle == null) {
                 WPSnackbar.make(
-                        parent,
-                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                        Snackbar.LENGTH_LONG
+                    parent,
+                    uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                    Snackbar.LENGTH_LONG
                 ).show()
             } else {
                 val snackbar = WPSnackbar.make(
-                        parent,
-                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                        Snackbar.LENGTH_LONG
+                    parent,
+                    uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                    Snackbar.LENGTH_LONG
                 )
                 snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)) {
                     holder.buttonAction()
@@ -274,7 +277,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
             binding?.root?.post {
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
                 val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
-                        ?: return@post
+                    ?: return@post
 
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
@@ -283,8 +286,8 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
                     binding?.jetpackBanner?.root?.setOnClickListener {
                         jetpackBrandingUtils.trackBannerTapped(STATS)
                         JetpackPoweredBottomSheetFragment
-                                .newInstance()
-                                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                            .newInstance()
+                            .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
                     }
                 }
             }

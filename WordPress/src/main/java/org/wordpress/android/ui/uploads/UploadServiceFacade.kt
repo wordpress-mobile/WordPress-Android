@@ -5,7 +5,6 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import java.util.ArrayList
 import javax.inject.Inject
 
 /**
@@ -21,30 +20,30 @@ class UploadServiceFacade @Inject constructor(private val appContext: Context) {
     }
 
     fun uploadPost(context: Context, postId: Int, isFirstTimePublish: Boolean) =
-            UploadService.uploadPost(context, postId, isFirstTimePublish)
+        UploadService.uploadPost(context, postId, isFirstTimePublish)
 
     fun isPostUploadingOrQueued(post: PostImmutableModel) =
-            UploadService.isPostUploadingOrQueued(post)
+        UploadService.isPostUploadingOrQueued(post)
 
     fun cancelFinalNotification(post: PostImmutableModel) =
-            UploadService.cancelFinalNotification(appContext, post)
+        UploadService.cancelFinalNotification(appContext, post)
 
     fun cancelFinalNotificationForMedia(site: SiteModel) =
-            UploadService.cancelFinalNotificationForMedia(appContext, site)
+        UploadService.cancelFinalNotificationForMedia(appContext, site)
 
     fun uploadMedia(mediaList: ArrayList<MediaModel>) =
-            UploadService.uploadMedia(appContext, mediaList)
+        UploadService.uploadMedia(appContext, mediaList)
 
     fun getPendingOrInProgressFeaturedImageUploadForPost(post: PostImmutableModel): MediaModel? =
-            UploadService.getPendingOrInProgressFeaturedImageUploadForPost(post)
+        UploadService.getPendingOrInProgressFeaturedImageUploadForPost(post)
 
     fun uploadMediaFromEditor(mediaList: ArrayList<MediaModel>) {
         UploadService.uploadMediaFromEditor(appContext, mediaList)
     }
 
     fun isPendingOrInProgressMediaUpload(mediaModel: MediaModel): Boolean =
-            UploadService.isPendingOrInProgressMediaUpload(mediaModel)
+        UploadService.isPendingOrInProgressMediaUpload(mediaModel)
 
     fun getUploadProgressForMedia(mediaModel: MediaModel): Float =
-            UploadService.getUploadProgressForMedia(mediaModel)
+        UploadService.getUploadProgressForMedia(mediaModel)
 }

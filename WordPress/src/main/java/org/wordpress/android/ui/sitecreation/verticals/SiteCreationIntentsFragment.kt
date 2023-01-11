@@ -22,8 +22,11 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 class SiteCreationIntentsFragment : Fragment() {
-    @Inject internal lateinit var uiHelper: UiHelpers
-    @Inject internal lateinit var displayUtils: DisplayUtilsWrapper
+    @Inject
+    internal lateinit var uiHelper: UiHelpers
+
+    @Inject
+    internal lateinit var displayUtils: DisplayUtilsWrapper
 
     private val viewModel: SiteCreationIntentsViewModel by activityViewModels()
     private var binding: SiteCreationIntentsFragmentBinding? = null
@@ -74,16 +77,18 @@ class SiteCreationIntentsFragment : Fragment() {
     private fun SiteCreationIntentsFragmentBinding.updateTitleVisibility(shouldAppBarTitleBeVisible: Boolean) {
         // In landscape mode this code doesn't apply, since the header texts are not in the layout
         uiHelper.fadeInfadeOutViews(
-                siteCreationIntentsTitlebar.appBarTitle,
-                siteCreationIntentsHeader.title,
-                shouldAppBarTitleBeVisible
+            siteCreationIntentsTitlebar.appBarTitle,
+            siteCreationIntentsHeader.title,
+            shouldAppBarTitleBeVisible
         )
     }
 
     private fun SiteCreationIntentsFragmentBinding.setupViewModel() {
         viewModel.uiState.observe(viewLifecycleOwner) { updateUiState(it) }
-        viewModel.onIntentSelected.observe(viewLifecycleOwner, (requireActivity() as
-                IntentsScreenListener)::onIntentSelected)
+        viewModel.onIntentSelected.observe(
+            viewLifecycleOwner, (requireActivity() as
+                    IntentsScreenListener)::onIntentSelected
+        )
         viewModel.initializeFromResources(resources)
         viewModel.start()
     }

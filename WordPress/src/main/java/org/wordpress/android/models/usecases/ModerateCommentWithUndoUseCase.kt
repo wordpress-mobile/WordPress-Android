@@ -25,8 +25,8 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
     moderateCommentsResourceProvider: ModerateCommentsResourceProvider
 ) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentsAction, Any,
         CommentsUseCaseType, CommentError>(
-        resourceProvider = moderateCommentsResourceProvider,
-        initialState = Idle
+    resourceProvider = moderateCommentsResourceProvider,
+    initialState = Idle
 ) {
     @Suppress("LongMethod") // temporary, until we came up with a different use case layout
     sealed class ModerateCommentsState : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction,
@@ -44,39 +44,39 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
                     is OnModerateComment -> {
                         val parameters = action.parameters
                         val commentBeforeModeration = commentsStore.getCommentByLocalSiteAndRemoteId(
-                                parameters.site.id,
-                                parameters.remoteCommentId
+                            parameters.site.id,
+                            parameters.remoteCommentId
                         ).firstOrNull()
 
                         if (commentBeforeModeration == null) {
                             flowChannel.emit(
-                                    Failure(
-                                            MODERATE_USE_CASE,
-                                            CommentError(INVALID_INPUT, "Comment cannot be null!"),
-                                            DoNotCare
-                                    )
+                                Failure(
+                                    MODERATE_USE_CASE,
+                                    CommentError(INVALID_INPUT, "Comment cannot be null!"),
+                                    DoNotCare
+                                )
                             )
                             Idle
                         }
 
                         val localModerationResult = commentsStore.moderateCommentLocally(
-                                site = parameters.site,
-                                remoteCommentId = parameters.remoteCommentId,
-                                newStatus = parameters.newStatus
+                            site = parameters.site,
+                            remoteCommentId = parameters.remoteCommentId,
+                            newStatus = parameters.newStatus
                         )
 
                         if (localModerationResult.isError) {
                             flowChannel.emit(Failure(MODERATE_USE_CASE, localModerationResult.error, DoNotCare))
                         } else {
                             flowChannel.emit(
-                                    Success(
-                                            MODERATE_USE_CASE,
-                                            SingleCommentModerationResult(
-                                                    parameters.remoteCommentId,
-                                                    parameters.newStatus,
-                                                    CommentStatus.fromString(commentBeforeModeration!!.status)
-                                            )
+                                Success(
+                                    MODERATE_USE_CASE,
+                                    SingleCommentModerationResult(
+                                        parameters.remoteCommentId,
+                                        parameters.newStatus,
+                                        CommentStatus.fromString(commentBeforeModeration!!.status)
                                     )
+                                )
                             )
                             utilsProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
                         }
@@ -88,31 +88,31 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
                         // we need to try and moderate comment locally again, since user might have refresh the list
                         // while moderation was not finalized yet
                         commentsStore.moderateCommentLocally(
-                                site = parameters.site,
-                                remoteCommentId = parameters.remoteCommentId,
-                                newStatus = parameters.newStatus
+                            site = parameters.site,
+                            remoteCommentId = parameters.remoteCommentId,
+                            newStatus = parameters.newStatus
                         )
                         utilsProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
 
                         val result = if (parameters.newStatus == DELETED) {
                             commentsStore.deleteComment(
-                                    site = parameters.site,
-                                    remoteCommentId = parameters.remoteCommentId,
-                                    null
+                                site = parameters.site,
+                                remoteCommentId = parameters.remoteCommentId,
+                                null
                             )
                         } else {
                             commentsStore.pushLocalCommentByRemoteId(
-                                    site = parameters.site,
-                                    remoteCommentId = parameters.remoteCommentId
+                                site = parameters.site,
+                                remoteCommentId = parameters.remoteCommentId
                             )
                         }
 
                         if (result.isError) {
                             // revert local moderation
                             commentsStore.moderateCommentLocally(
-                                    site = parameters.site,
-                                    remoteCommentId = parameters.remoteCommentId,
-                                    newStatus = parameters.fallbackStatus
+                                site = parameters.site,
+                                remoteCommentId = parameters.remoteCommentId,
+                                newStatus = parameters.fallbackStatus
                             )
                             flowChannel.emit(Failure(MODERATE_USE_CASE, result.error, DoNotCare))
                         } else {
@@ -124,9 +124,9 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
                     is OnUndoModerateComment -> {
                         val parameters = action.parameters
                         commentsStore.moderateCommentLocally(
-                                site = parameters.site,
-                                remoteCommentId = parameters.remoteCommentId,
-                                newStatus = parameters.fallbackStatus
+                            site = parameters.site,
+                            remoteCommentId = parameters.remoteCommentId,
+                            newStatus = parameters.fallbackStatus
                         )
                         flowChannel.emit(Success(MODERATE_USE_CASE, DoNotCare))
                         utilsProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()

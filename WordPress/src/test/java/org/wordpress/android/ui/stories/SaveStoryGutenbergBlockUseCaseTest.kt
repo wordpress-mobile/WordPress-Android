@@ -32,22 +32,34 @@ import org.wordpress.android.util.helpers.MediaFile
 class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     private lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
     private lateinit var editPostRepository: EditPostRepository
-    @Mock lateinit var storiesPrefs: StoriesPrefs
-    @Mock lateinit var crashLogging: CrashLogging
-    @Mock lateinit var context: Context
-    @Mock lateinit var postStore: PostStore
-    @Mock lateinit var mediaFile: MediaFile
-    @Mock lateinit var mediaFile2: MediaFile
+
+    @Mock
+    lateinit var storiesPrefs: StoriesPrefs
+
+    @Mock
+    lateinit var crashLogging: CrashLogging
+
+    @Mock
+    lateinit var context: Context
+
+    @Mock
+    lateinit var postStore: PostStore
+
+    @Mock
+    lateinit var mediaFile: MediaFile
+
+    @Mock
+    lateinit var mediaFile2: MediaFile
 
     @Before
     fun setUp() {
         saveStoryGutenbergBlockUseCase = SaveStoryGutenbergBlockUseCase(storiesPrefs, crashLogging)
         editPostRepository = EditPostRepository(
-                mock(),
-                postStore,
-                mock(),
-                testDispatcher(),
-                testDispatcher()
+            mock(),
+            postStore,
+            mock(),
+            testDispatcher(),
+            testDispatcher()
         )
     }
 
@@ -59,8 +71,8 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
 
         // When
         saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockInPost(
-                editPostRepository,
-                mediaFiles
+            editPostRepository,
+            mediaFiles
         )
 
         // Then
@@ -75,8 +87,8 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
 
         // When
         saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockInPost(
-                editPostRepository,
-                mediaFiles
+            editPostRepository,
+            mediaFiles
         )
 
         // Then
@@ -90,7 +102,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
 
         // When
         val result = saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockStringFromStoryMediaFileData(
-                mediaFileDataList
+            mediaFileDataList
         )
 
         // Then
@@ -104,7 +116,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
 
         // When
         val result = saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockStringFromStoryMediaFileData(
-                mediaFileDataList
+            mediaFileDataList
         )
 
         // Then
@@ -119,15 +131,15 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
 
         // When
         val mediaFileData = saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
-                mediaFile,
-                TEMPORARY_ID_PREFIX + mediaFileId
+            mediaFile,
+            TEMPORARY_ID_PREFIX + mediaFileId
         )
 
         // Then
         Assertions.assertThat(mediaFileData.alt).isEqualTo("")
         Assertions.assertThat(mediaFileData.id).isEqualTo(TEMPORARY_ID_PREFIX + mediaFileId)
         Assertions.assertThat(mediaFileData.link).isEqualTo(
-                "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg"
+            "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg"
         )
         Assertions.assertThat(mediaFileData.type).isEqualTo("image")
         Assertions.assertThat(mediaFileData.mime).isEqualTo(mediaFile.mimeType)
@@ -145,9 +157,9 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
 
         // When
         saveStoryGutenbergBlockUseCase.replaceLocalMediaIdsWithRemoteMediaIdsInPost(
-                postModel,
-                siteModel,
-                mediaFile
+            postModel,
+            siteModel,
+            mediaFile
         )
 
         // Then
@@ -164,9 +176,9 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
 
         // When
         saveStoryGutenbergBlockUseCase.saveNewLocalFilesToStoriesPrefsTempSlides(
-                mock(),
-                0,
-                frames
+            mock(),
+            0,
+            frames
         )
 
         // Then
@@ -227,9 +239,9 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
 
         // When
         saveStoryGutenbergBlockUseCase.findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
-                postModel,
-                siteModel,
-                mock()
+            postModel,
+            siteModel,
+            mock()
         )
 
         // Then
@@ -269,8 +281,8 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
 
     private fun getOneStoryFrameItem(id: String): StoryFrameItem {
         return StoryFrameItem(
-                source = mock(),
-                id = id
+            source = mock(),
+            id = id
         )
     }
 
@@ -283,13 +295,13 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
                 val mediaFiles = ArrayList<StoryMediaFileData>()
                 for (i in 1..10) {
                     val mediaFile = StoryMediaFileData(
-                            id = i.toString(),
-                            mime = "image/jpeg",
-                            link = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg",
-                            url = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg",
-                            alt = "",
-                            type = "image",
-                            caption = ""
+                        id = i.toString(),
+                        mime = "image/jpeg",
+                        link = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg",
+                        url = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg",
+                        alt = "",
+                        type = "image",
+                        caption = ""
                     )
                     mediaFiles.add(mediaFile)
                 }

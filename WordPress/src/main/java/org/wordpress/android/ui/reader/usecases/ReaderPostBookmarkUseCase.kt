@@ -48,7 +48,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     @Suppress("UseCheckOrError")
     private fun updatePostInDb(blogId: Long, postId: Long): Boolean {
         val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
-                ?: throw IllegalStateException("Post displayed on the UI not found in DB.")
+            ?: throw IllegalStateException("Post displayed on the UI not found in DB.")
 
         val setToBookmarked = !post.isBookmarked
 

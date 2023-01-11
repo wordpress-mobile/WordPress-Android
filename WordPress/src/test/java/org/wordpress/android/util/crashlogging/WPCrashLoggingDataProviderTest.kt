@@ -56,13 +56,13 @@ class WPCrashLoggingDataProviderTest {
     @Before
     fun setUp() {
         sut = WPCrashLoggingDataProvider(
-                sharedPreferences,
-                resourceProvider,
-                accountStore,
-                localeManager,
-                encryptedLogging,
-                logFileProvider,
-                buildConfig
+            sharedPreferences,
+            resourceProvider,
+            accountStore,
+            localeManager,
+            encryptedLogging,
+            logFileProvider,
+            buildConfig
         )
     }
 
@@ -127,11 +127,11 @@ class WPCrashLoggingDataProviderTest {
     @Test
     fun `should drop wrapping exception for eventbus exceptions`() {
         assertThat(
-                sut.shouldDropWrappingException(
-                        module = EVENT_BUS_MODULE,
-                        type = EVENT_BUS_EXCEPTION,
-                        value = EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR
-                )
+            sut.shouldDropWrappingException(
+                module = EVENT_BUS_MODULE,
+                type = EVENT_BUS_EXCEPTION,
+                value = EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR
+            )
         ).isTrue
     }
 

@@ -38,13 +38,13 @@ class JetpackBackupRestoreAdapter(
             ViewType.SECONDARY_ACTION_BUTTON.id -> JetpackButtonViewHolder.Secondary(uiHelpers, parent)
             ViewType.CHECKBOX.id -> JetpackCheckboxViewHolder(uiHelpers, parent)
             ViewType.BACKUP_RESTORE_FOOTNOTE.id -> JetpackBackupRestoreFootnoteViewHolder(
-                    imageManager,
-                    uiHelpers,
-                    parent
+                imageManager,
+                uiHelpers,
+                parent
             )
             ViewType.BACKUP_RESTORE_SUB_HEADER.id -> JetpackBackupRestoreSubHeaderViewHolder(
-                    uiHelpers,
-                    parent
+                uiHelpers,
+                parent
             )
             ViewType.BACKUP_RESTORE_BULLET.id -> JetpackBackupRestoreBulletViewHolder(imageManager, uiHelpers, parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")
@@ -66,10 +66,10 @@ class JetpackBackupRestoreAdapter(
     @MainThread
     fun update(newItems: List<JetpackListItemState>) {
         val diffResult = DiffUtil.calculateDiff(
-                JetpackBackupRestoreListDiffUtils(
-                        items.toList(),
-                        newItems
-                )
+            JetpackBackupRestoreListDiffUtils(
+                items.toList(),
+                newItems
+            )
         )
         items.clear()
         items.addAll(newItems)

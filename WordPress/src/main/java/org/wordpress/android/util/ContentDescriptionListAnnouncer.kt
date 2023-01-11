@@ -19,35 +19,35 @@ class ContentDescriptionListAnnouncer {
         targetView: View
     ) {
         AccessibilityUtils.setAccessibilityDelegateSafely(
-                targetView,
-                object : AccessibilityDelegateCompat() {
-                    override fun onPopulateAccessibilityEvent(
-                        host: View,
-                        event: AccessibilityEvent
-                    ) {
-                        super.onPopulateAccessibilityEvent(host, event)
-                        if (event.eventType == TYPE_VIEW_ACCESSIBILITY_FOCUSED) {
-                            currentIndex = 0
-                        }
+            targetView,
+            object : AccessibilityDelegateCompat() {
+                override fun onPopulateAccessibilityEvent(
+                    host: View,
+                    event: AccessibilityEvent
+                ) {
+                    super.onPopulateAccessibilityEvent(host, event)
+                    if (event.eventType == TYPE_VIEW_ACCESSIBILITY_FOCUSED) {
+                        currentIndex = 0
                     }
+                }
 
-                    override fun onInitializeAccessibilityNodeInfo(
-                        host: View,
-                        info: AccessibilityNodeInfoCompat
-                    ) {
-                        super.onInitializeAccessibilityNodeInfo(host, info)
+                override fun onInitializeAccessibilityNodeInfo(
+                    host: View,
+                    info: AccessibilityNodeInfoCompat
+                ) {
+                    super.onInitializeAccessibilityNodeInfo(host, info)
 
-                        clickActionText?.let {
-                            info.addAction(
-                                    AccessibilityNodeInfoCompat.AccessibilityActionCompat(
-                                            ACTION_CLICK, host.context?.getString(
-                                            it
-                                    )
-                                    )
+                    clickActionText?.let {
+                        info.addAction(
+                            AccessibilityNodeInfoCompat.AccessibilityActionCompat(
+                                ACTION_CLICK, host.context?.getString(
+                                    it
+                                )
                             )
-                        }
+                        )
                     }
-                })
+                }
+            })
 
         targetView.setOnClickListener {
             if (contentDescriptions.isEmpty()) {

@@ -17,7 +17,8 @@ import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.
 import javax.inject.Inject
 
 class PostSignupInterstitialActivity : LocaleAwareActivity() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PostSignupInterstitialViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +28,7 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
         LoginFlowThemeHelper.injectMissingCustomAttributes(theme)
 
         viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(PostSignupInterstitialViewModel::class.java)
+            .get(PostSignupInterstitialViewModel::class.java)
         val binding = PostSignupInterstitialActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         with(binding) {
@@ -41,13 +42,13 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
     }
 
     private fun PostSignupInterstitialActivityBinding.createNewSiteButton() =
-            root.findViewById<MaterialButton>(R.id.create_new_site_button)
+        root.findViewById<MaterialButton>(R.id.create_new_site_button)
 
     private fun PostSignupInterstitialActivityBinding.addSelfHostedSiteButton() =
-            root.findViewById<MaterialButton>(R.id.add_self_hosted_site_button)
+        root.findViewById<MaterialButton>(R.id.add_self_hosted_site_button)
 
     private fun PostSignupInterstitialActivityBinding.dismissButton() =
-            root.findViewById<MaterialButton>(R.id.dismiss_button)
+        root.findViewById<MaterialButton>(R.id.dismiss_button)
 
     override fun onBackPressed() {
         viewModel.onBackButtonPressed()

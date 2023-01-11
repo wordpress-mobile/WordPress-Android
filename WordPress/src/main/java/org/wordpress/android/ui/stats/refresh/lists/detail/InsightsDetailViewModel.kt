@@ -30,9 +30,9 @@ class InsightsDetailViewModel
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
     private val _showSnackbarMessage = mergeNotNull(
-            detailUseCase.snackbarMessage,
-            distinct = true,
-            singleEvent = true
+        detailUseCase.snackbarMessage,
+        distinct = true,
+        singleEvent = true
     )
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.prefs.homepage
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -24,7 +23,8 @@ import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDataLoader.Loadin
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class HomepageSettingsDataLoaderTest : BaseUnitTest() {
-    @Mock lateinit var pageStore: PageStore
+    @Mock
+    lateinit var pageStore: PageStore
     private val siteModel = SiteModel()
     private lateinit var homepageSettingsDataLoader: HomepageSettingsDataLoader
 
@@ -48,9 +48,9 @@ class HomepageSettingsDataLoaderTest : BaseUnitTest() {
         homepageSettingsDataLoader.loadPages(siteModel).collect { results.add(it) }
 
         assertThat(results).containsExactly(
-                LoadingResult.Loading,
-                LoadingResult.Data(databasePages),
-                LoadingResult.Data(remotePages)
+            LoadingResult.Loading,
+            LoadingResult.Data(databasePages),
+            LoadingResult.Data(remotePages)
         )
     }
 
@@ -67,9 +67,9 @@ class HomepageSettingsDataLoaderTest : BaseUnitTest() {
         homepageSettingsDataLoader.loadPages(siteModel).collect { results.add(it) }
 
         assertThat(results).containsExactly(
-                LoadingResult.Loading,
-                LoadingResult.Data(expectedPages),
-                LoadingResult.Data(expectedPages)
+            LoadingResult.Loading,
+            LoadingResult.Data(expectedPages),
+            LoadingResult.Data(expectedPages)
         )
     }
 
@@ -78,16 +78,16 @@ class HomepageSettingsDataLoaderTest : BaseUnitTest() {
         val pages = listOf<PageModel>()
         whenever(pageStore.getPagesFromDb(siteModel)).thenReturn(pages)
         whenever(pageStore.requestPagesFromServer(siteModel, false)).thenReturn(
-                OnPageChanged.Error(PostError(GENERIC_ERROR, "Generic error"))
+            OnPageChanged.Error(PostError(GENERIC_ERROR, "Generic error"))
         )
         val results = mutableListOf<LoadingResult>()
 
         homepageSettingsDataLoader.loadPages(siteModel).collect { results.add(it) }
 
         assertThat(results).containsExactly(
-                LoadingResult.Loading,
-                LoadingResult.Data(emptyList()),
-                LoadingResult.Error(R.string.site_settings_failed_to_load_pages)
+            LoadingResult.Loading,
+            LoadingResult.Data(emptyList()),
+            LoadingResult.Error(R.string.site_settings_failed_to_load_pages)
         )
     }
 }
