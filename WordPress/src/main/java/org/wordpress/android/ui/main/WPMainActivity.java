@@ -392,7 +392,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     boolean shouldBypassMigration = (getIntent() != null && getIntent()
                             .getBooleanExtra(ARG_BYPASS_MIGRATION, false));
                     if (!shouldBypassMigration && mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
-                        mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow(null);
+                        mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
                     } else {
                         if (shouldBypassMigration) {
                             AppPrefs.setIsJetpackMigrationInProgress(false);

@@ -40,6 +40,7 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
             && (!accountStore.hasAccessToken()
             || appPrefsWrapper.isJetpackMigrationInProgress())
 
+    @JvmOverloads
     fun startJetpackMigrationFlow(deepLinkData: PreMigrationDeepLinkData? = null) {
         ActivityLauncher.startJetpackMigrationFlow(contextProvider.getContext(), deepLinkData)
     }
