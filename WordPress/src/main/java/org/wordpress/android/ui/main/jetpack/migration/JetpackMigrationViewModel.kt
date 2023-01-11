@@ -134,6 +134,10 @@ class JetpackMigrationViewModel @Inject constructor(
             migrationAnalyticsTracker.trackWelcomeScreenShown()
         }
 
+        if (data.prefsMigrated) {
+            _refreshAppTheme.value = Unit
+        }
+
         return Welcome(
             userAvatarUrl = resizeAvatarUrl(data.avatarUrl),
             isProcessing = isContinueClicked,
