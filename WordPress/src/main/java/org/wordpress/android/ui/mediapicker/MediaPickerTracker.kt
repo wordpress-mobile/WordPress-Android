@@ -38,55 +38,55 @@ class MediaPickerTracker
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
 ) {
     suspend fun trackPreview(isVideo: Boolean, identifier: Identifier, mediaPickerSetup: MediaPickerSetup) =
-            withContext(bgDispatcher) {
-                val properties = if (identifier is LocalUri) {
-                    analyticsUtilsWrapper.getMediaProperties(
+        withContext(bgDispatcher) {
+            val properties = if (identifier is LocalUri) {
+                analyticsUtilsWrapper.getMediaProperties(
+                    isVideo,
+                    identifier.value,
+                    null
+                )
+            } else {
+                mutableMapOf()
+            }
+            properties.addMediaPickerProperties(mediaPickerSetup)
+            properties["is_video"] = isVideo
+            analyticsTrackerWrapper.track(MEDIA_PICKER_PREVIEW_OPENED, properties)
+        }
+
+    suspend fun trackItemsPicked(identifiers: List<Identifier>, mediaPickerSetup: MediaPickerSetup) =
+        withContext(bgDispatcher) {
+            launch {
+                val isMultiselection = identifiers.size > 1
+                for (identifier in identifiers) {
+                    val isVideo = org.wordpress.android.util.MediaUtils.isVideo(identifier.toString())
+                    val properties = if (identifier is LocalUri) {
+                        analyticsUtilsWrapper.getMediaProperties(
                             isVideo,
                             identifier.value,
                             null
-                    )
-                } else {
-                    mutableMapOf()
-                }
-                properties.addMediaPickerProperties(mediaPickerSetup)
-                properties["is_video"] = isVideo
-                analyticsTrackerWrapper.track(MEDIA_PICKER_PREVIEW_OPENED, properties)
-            }
-
-    suspend fun trackItemsPicked(identifiers: List<Identifier>, mediaPickerSetup: MediaPickerSetup) =
-            withContext(bgDispatcher) {
-                launch {
-                    val isMultiselection = identifiers.size > 1
-                    for (identifier in identifiers) {
-                        val isVideo = org.wordpress.android.util.MediaUtils.isVideo(identifier.toString())
-                        val properties = if (identifier is LocalUri) {
-                            analyticsUtilsWrapper.getMediaProperties(
-                                    isVideo,
-                                    identifier.value,
-                                    null
-                            )
-                        } else {
-                            mutableMapOf()
-                        }
-                        properties["is_part_of_multiselection"] = isMultiselection
-                        if (isMultiselection) {
-                            properties["number_of_media_selected"] = identifiers.size
-                        }
-                        properties.addMediaPickerProperties(mediaPickerSetup)
-                        analyticsTrackerWrapper.track(MEDIA_PICKER_RECENT_MEDIA_SELECTED, properties)
+                        )
+                    } else {
+                        mutableMapOf()
                     }
+                    properties["is_part_of_multiselection"] = isMultiselection
+                    if (isMultiselection) {
+                        properties["number_of_media_selected"] = identifiers.size
+                    }
+                    properties.addMediaPickerProperties(mediaPickerSetup)
+                    analyticsTrackerWrapper.track(MEDIA_PICKER_RECENT_MEDIA_SELECTED, properties)
                 }
             }
+        }
 
     fun trackIconClick(icon: MediaPickerIcon, mediaPickerSetup: MediaPickerSetup) {
         when (icon) {
             is MediaPickerIcon.WpStoriesCapture -> analyticsTrackerWrapper.track(
-                    MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE,
-                    mediaPickerSetup.toProperties()
+                MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE,
+                mediaPickerSetup.toProperties()
             )
             is MediaPickerIcon.ChooseFromAndroidDevice -> analyticsTrackerWrapper.track(
-                    MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
-                    mediaPickerSetup.toProperties()
+                MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
+                mediaPickerSetup.toProperties()
             )
             is MediaPickerIcon.SwitchSource -> {
                 val event = when (icon.dataSource) {

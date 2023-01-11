@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -32,10 +34,10 @@ private val ItemSubtitleTextStyle
     @ReadOnlyComposable
     @Composable
     get() = TextStyle(
-            color = LocalContentColor.current.copy(alpha = 0.6f),
-            fontSize = FontSize.Small.value,
-            fontWeight = FontWeight.W400,
-            letterSpacing = 0.4.sp,
+        color = LocalContentColor.current.copy(alpha = 0.6f),
+        fontSize = FontSize.Small.value,
+        fontWeight = FontWeight.W400,
+        letterSpacing = 0.4.sp,
     )
 
 @Composable
@@ -44,41 +46,42 @@ fun BloggingPromptsListItem(
     modifier: Modifier = Modifier,
 ) {
     Column(
-            modifier = modifier
-                    .background(MaterialTheme.colors.surface)
-                    .padding(Margin.ExtraLarge.value),
-            verticalArrangement = Arrangement.spacedBy(Margin.Small.value),
+        modifier = modifier
+            .semantics(mergeDescendants = true) { }
+            .background(MaterialTheme.colors.surface)
+            .padding(Margin.ExtraLarge.value),
+        verticalArrangement = Arrangement.spacedBy(Margin.Small.value),
     ) {
         Text(
-                text = model.text,
-                style = TextStyle(
-                        fontSize = FontSize.Large.value,
-                        fontWeight = FontWeight.W700,
-                        fontFamily = FontFamily.Serif,
-                ),
+            text = model.text,
+            style = TextStyle(
+                fontSize = FontSize.Large.value,
+                fontWeight = FontWeight.W700,
+                fontFamily = FontFamily.Serif,
+            ),
         )
         Row {
             Text(
-                    text = model.formattedDate,
-                    style = ItemSubtitleTextStyle,
+                text = model.formattedDate,
+                style = ItemSubtitleTextStyle,
             )
             ItemSubtitleDivider()
             Text(
-                    text = UiStringPluralRes(
-                            zeroRes = R.string.blogging_prompts_list_number_of_answers_zero,
-                            oneRes = R.string.blogging_prompts_list_number_of_answers_one,
-                            otherRes = R.string.blogging_prompts_list_number_of_answers_other,
-                            count = model.answersCount,
-                    ).asString(),
-                    style = ItemSubtitleTextStyle,
+                text = UiStringPluralRes(
+                    zeroRes = R.string.blogging_prompts_list_number_of_answers_zero,
+                    oneRes = R.string.blogging_prompts_list_number_of_answers_one,
+                    otherRes = R.string.blogging_prompts_list_number_of_answers_other,
+                    count = model.answersCount,
+                ).asString(),
+                style = ItemSubtitleTextStyle,
             )
 
             if (model.isAnswered) {
                 ItemSubtitleDivider()
                 Text(
-                        text = stringResource(R.string.blogging_prompts_list_answered_prompt),
-                        color = AppColor.Green50,
-                        style = ItemSubtitleTextStyle,
+                    text = stringResource(R.string.blogging_prompts_list_answered_prompt),
+                    color = AppColor.Green50,
+                    style = ItemSubtitleTextStyle,
                 )
             }
         }
@@ -88,9 +91,11 @@ fun BloggingPromptsListItem(
 @Composable
 private fun ItemSubtitleDivider() {
     Text(
-            text = stringResource(R.string.blogging_prompts_list_subtitle_divider),
-            modifier = Modifier.padding(horizontal = Margin.Medium.value),
-            style = ItemSubtitleTextStyle,
+        text = stringResource(R.string.blogging_prompts_list_subtitle_divider),
+        modifier = Modifier
+            .clearAndSetSemantics { }
+            .padding(horizontal = Margin.Medium.value),
+        style = ItemSubtitleTextStyle,
     )
 }
 

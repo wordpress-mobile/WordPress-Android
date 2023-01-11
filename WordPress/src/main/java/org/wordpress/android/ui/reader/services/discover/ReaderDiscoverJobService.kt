@@ -18,8 +18,12 @@ import kotlin.coroutines.CoroutineContext
 
 @AndroidEntryPoint
 class ReaderDiscoverJobService : JobService(), ServiceCompletionListener, CoroutineScope {
-    @Inject @field:Named("IO_THREAD") lateinit var ioDispatcher: CoroutineDispatcher
-    @Inject lateinit var readerDiscoverLogic: ReaderDiscoverLogic
+    @Inject
+    @field:Named("IO_THREAD")
+    lateinit var ioDispatcher: CoroutineDispatcher
+
+    @Inject
+    lateinit var readerDiscoverLogic: ReaderDiscoverLogic
 
     private var job: Job = Job()
 

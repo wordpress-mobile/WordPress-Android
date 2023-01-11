@@ -68,30 +68,30 @@ class WeekViewsWidgetListViewModel @Inject constructor(
             Color.LIGHT -> R.layout.stats_views_widget_item_light
         }
         return listOf(
-                WeekItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.stats_views),
-                        statsUtils.toFormattedString(domainModel.dates.last().views, ONE_THOUSAND)
-                ),
-                WeekItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.stats_visitors),
-                        statsUtils.toFormattedString(domainModel.dates.last().visitors, ONE_THOUSAND)
-                ),
-                WeekItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.likes),
-                        statsUtils.toFormattedString(domainModel.dates.last().likes, ONE_THOUSAND)
-                ),
-                WeekItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.stats_comments),
-                        statsUtils.toFormattedString(domainModel.dates.last().comments, ONE_THOUSAND)
-                )
+            WeekItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.stats_views),
+                statsUtils.toFormattedString(domainModel.dates.last().views, ONE_THOUSAND)
+            ),
+            WeekItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.stats_visitors),
+                statsUtils.toFormattedString(domainModel.dates.last().visitors, ONE_THOUSAND)
+            ),
+            WeekItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.likes),
+                statsUtils.toFormattedString(domainModel.dates.last().likes, ONE_THOUSAND)
+            ),
+            WeekItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.stats_comments),
+                statsUtils.toFormattedString(domainModel.dates.last().comments, ONE_THOUSAND)
+            )
         )
     }
 

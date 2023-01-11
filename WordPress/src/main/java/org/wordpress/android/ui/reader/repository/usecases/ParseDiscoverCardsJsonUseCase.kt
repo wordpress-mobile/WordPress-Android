@@ -33,16 +33,16 @@ class ParseDiscoverCardsJsonUseCase @Inject constructor(
 
     fun parseSimplifiedRecommendedBlogsCard(recommendedBlogsCardJson: JSONObject): List<Pair<Long, Long>> {
         return recommendedBlogsCardJson.optJSONArray(ReaderConstants.JSON_CARD_DATA)
-                ?.let { recommendedBlogsJson ->
-                    List(recommendedBlogsJson.length()) { index ->
-                        val recommendedBlog = recommendedBlogsJson.getJSONObject(index)
-                        Pair(
-                                recommendedBlog.optLong(ReaderConstants.RECOMMENDED_BLOG_ID),
-                                recommendedBlog.optLong(ReaderConstants.RECOMMENDED_FEED_ID)
-                        )
-                    }
+            ?.let { recommendedBlogsJson ->
+                List(recommendedBlogsJson.length()) { index ->
+                    val recommendedBlog = recommendedBlogsJson.getJSONObject(index)
+                    Pair(
+                        recommendedBlog.optLong(ReaderConstants.RECOMMENDED_BLOG_ID),
+                        recommendedBlog.optLong(ReaderConstants.RECOMMENDED_FEED_ID)
+                    )
                 }
-                ?: emptyList()
+            }
+            ?: emptyList()
     }
 
     fun parseInterestCard(interestCardJson: JSONObject?): ReaderTagList {
@@ -69,16 +69,16 @@ class ParseDiscoverCardsJsonUseCase @Inject constructor(
 
     fun parseRecommendedBlogsCard(cardJson: JSONObject): List<ReaderBlog> {
         return cardJson.optJSONArray(ReaderConstants.JSON_CARD_DATA)
-                ?.let { jsonRecommendedBlogs ->
-                    List(jsonRecommendedBlogs.length()) { index ->
-                        ReaderBlog.fromJson(jsonRecommendedBlogs.getJSONObject(index))
-                    }
+            ?.let { jsonRecommendedBlogs ->
+                List(jsonRecommendedBlogs.length()) { index ->
+                    ReaderBlog.fromJson(jsonRecommendedBlogs.getJSONObject(index))
                 }
-                ?: emptyList()
+            }
+            ?: emptyList()
     }
 
     fun parseNextPageHandle(jsonObject: JSONObject): String =
-            jsonObject.getString(ReaderConstants.JSON_NEXT_PAGE_HANDLE)
+        jsonObject.getString(ReaderConstants.JSON_NEXT_PAGE_HANDLE)
 
     fun convertListOfJsonArraysIntoSingleJsonArray(jsons: List<String>): JSONArray {
         val arrays = jsons.map { JSONArray(it) }

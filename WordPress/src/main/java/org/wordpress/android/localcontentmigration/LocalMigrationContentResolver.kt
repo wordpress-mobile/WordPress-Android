@@ -13,13 +13,15 @@ import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
-@PublishedApi internal const val CONTENT_SCHEME = "content"
+@PublishedApi
+internal const val CONTENT_SCHEME = "content"
 
-@PublishedApi internal fun ContentResolver.query(
+@PublishedApi
+internal fun ContentResolver.query(
     builder: Uri.Builder,
     entityType: LocalContentEntity,
     entityId: Int?,
-) : Cursor? {
+): Cursor? {
     val entityPath = entityType.getPathForContent(entityId)
     builder.appendEncodedPath(entityPath)
     return query(builder.build(), arrayOf(), "", arrayOf(), "")
@@ -30,9 +32,10 @@ class LocalMigrationContentResolver @Inject constructor(
     @PublishedApi internal val contextProvider: ContextProvider,
     @PublishedApi internal val wordPressPublicData: WordPressPublicData,
     @PublishedApi internal val queryResult: QueryResult,
-){
-    @PublishedApi internal inline fun <reified T : LocalContentEntityData> Cursor.getValue() =
-            queryResult.getValue<T>(this)
+) {
+    @PublishedApi
+    internal inline fun <reified T : LocalContentEntityData> Cursor.getValue() =
+        queryResult.getValue<T>(this)
 
     inline fun <reified T : LocalContentEntityData> getResultForEntityType(
         entityType: LocalContentEntity,
@@ -43,7 +46,7 @@ class LocalMigrationContentResolver @Inject constructor(
             authority("${packageId}.${LocalMigrationContentProvider::class.simpleName}")
         }
     }.let { uriBuilder ->
-        with (contextProvider.getContext().contentResolver) {
+        with(contextProvider.getContext().contentResolver) {
             val cursor = query(uriBuilder, entityType, entityId)
             if (cursor == null) Failure(NullCursor(entityType))
             else runCatching {

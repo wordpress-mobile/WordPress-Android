@@ -12,6 +12,8 @@ import javax.inject.Named
 @InstallIn(SingletonComponent::class)
 @Module
 class InterceptorModuleTest {
-    @Provides @IntoSet @Named("interceptors")
+    @Provides
+    @IntoSet
+    @Named("interceptors")
     fun provideMockingInterceptor(): Interceptor = MockingInterceptor()
 }

@@ -29,7 +29,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class GetLikesHandlerTest : BaseUnitTest() {
-    @Mock lateinit var getLikesUseCase: GetLikesUseCase
+    @Mock
+    lateinit var getLikesUseCase: GetLikesUseCase
 
     private lateinit var getLikesHandler: GetLikesHandler
     private var likesState: GetLikesState? = null
@@ -41,15 +42,15 @@ class GetLikesHandlerTest : BaseUnitTest() {
     private val expectedNumLikes = 6
     private val defaultPageLenght = 20
     private val pageInfo = PagingInfo(
-            20,
-            1
+        20,
+        1
     )
 
     @Before
     fun setup() {
         getLikesHandler = GetLikesHandler(
-                getLikesUseCase,
-                testDispatcher()
+            getLikesUseCase,
+            testDispatcher()
         )
     }
 
@@ -60,22 +61,22 @@ class GetLikesHandlerTest : BaseUnitTest() {
         val likesData = getDefaultLikers(expectedNumLikes, POST_LIKE, siteId, postId)
 
         val state = LikesData(
-                likes = likesData,
-                expectedNumLikes = expectedNumLikes,
-                hasMore = false,
-                pageInfo = pageInfo
+            likes = likesData,
+            expectedNumLikes = expectedNumLikes,
+            hasMore = false,
+            pageInfo = pageInfo
         )
 
         whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams)).thenReturn(
-                flow { emit(state) }
+            flow { emit(state) }
         )
 
         setupObservers()
 
         getLikesHandler.handleGetLikesForPost(
-                fingerPrint,
-                paginationParams.requestNextPage,
-                paginationParams.pageLength
+            fingerPrint,
+            paginationParams.requestNextPage,
+            paginationParams.pageLength
         )
 
         requireNotNull(likesState).let {
@@ -93,25 +94,25 @@ class GetLikesHandlerTest : BaseUnitTest() {
         val likesData = getDefaultLikers(expectedNumLikes, POST_LIKE, siteId, postId)
 
         val state = Failure(
-                failureType = FailureType.GENERIC,
-                error = error,
-                cachedLikes = likesData,
-                emptyStateData = EmptyStateData(false),
-                expectedNumLikes = expectedNumLikes,
-                hasMore = false,
-                pageInfo = pageInfo
+            failureType = FailureType.GENERIC,
+            error = error,
+            cachedLikes = likesData,
+            emptyStateData = EmptyStateData(false),
+            expectedNumLikes = expectedNumLikes,
+            hasMore = false,
+            pageInfo = pageInfo
         )
 
         whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams)).thenReturn(
-                flow { emit(state) }
+            flow { emit(state) }
         )
 
         setupObservers()
 
         getLikesHandler.handleGetLikesForPost(
-                fingerPrint,
-                paginationParams.requestNextPage,
-                paginationParams.pageLength
+            fingerPrint,
+            paginationParams.requestNextPage,
+            paginationParams.pageLength
         )
 
         requireNotNull(likesState).let {
@@ -130,22 +131,22 @@ class GetLikesHandlerTest : BaseUnitTest() {
         val likesData = getDefaultLikers(expectedNumLikes, COMMENT_LIKE, siteId, commentId)
 
         val state = LikesData(
-                likes = likesData,
-                expectedNumLikes = expectedNumLikes,
-                hasMore = false,
-                pageInfo = pageInfo
+            likes = likesData,
+            expectedNumLikes = expectedNumLikes,
+            hasMore = false,
+            pageInfo = pageInfo
         )
 
         whenever(getLikesUseCase.getLikesForComment(fingerPrint, paginationParams)).thenReturn(
-                flow { emit(state) }
+            flow { emit(state) }
         )
 
         setupObservers()
 
         getLikesHandler.handleGetLikesForComment(
-                fingerPrint,
-                paginationParams.requestNextPage,
-                paginationParams.pageLength
+            fingerPrint,
+            paginationParams.requestNextPage,
+            paginationParams.pageLength
         )
 
         requireNotNull(likesState).let {
@@ -163,25 +164,25 @@ class GetLikesHandlerTest : BaseUnitTest() {
         val likesData = getDefaultLikers(expectedNumLikes, COMMENT_LIKE, siteId, commentId)
 
         val state = Failure(
-                failureType = FailureType.GENERIC,
-                error = error,
-                cachedLikes = likesData,
-                emptyStateData = EmptyStateData(false),
-                expectedNumLikes = expectedNumLikes,
-                hasMore = false,
-                pageInfo = pageInfo
+            failureType = FailureType.GENERIC,
+            error = error,
+            cachedLikes = likesData,
+            emptyStateData = EmptyStateData(false),
+            expectedNumLikes = expectedNumLikes,
+            hasMore = false,
+            pageInfo = pageInfo
         )
 
         whenever(getLikesUseCase.getLikesForComment(fingerPrint, paginationParams)).thenReturn(
-                flow { emit(state) }
+            flow { emit(state) }
         )
 
         setupObservers()
 
         getLikesHandler.handleGetLikesForComment(
-                fingerPrint,
-                paginationParams.requestNextPage,
-                paginationParams.pageLength
+            fingerPrint,
+            paginationParams.requestNextPage,
+            paginationParams.pageLength
         )
 
         requireNotNull(likesState).let {

@@ -17,8 +17,10 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
 class UiModelMapperTest : BaseUnitTest() {
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     private lateinit var mapper: UiModelMapper
+
     @Before
     fun setUp() {
         mapper = UiModelMapper(networkUtilsWrapper)
@@ -28,9 +30,10 @@ class UiModelMapperTest : BaseUnitTest() {
     fun `mapInsights returns success ui model when all the inputs are successful`() {
         var error: Int? = null
         val uiModel = mapper.mapInsights(
-                listOf(
-                        UseCaseModel(FOLLOWER_TOTALS, data = listOf(), state = SUCCESS),
-                        UseCaseModel(ManagementType.CONTROL, data = listOf(), state = SUCCESS))
+            listOf(
+                UseCaseModel(FOLLOWER_TOTALS, data = listOf(), state = SUCCESS),
+                UseCaseModel(ManagementType.CONTROL, data = listOf(), state = SUCCESS)
+            )
         ) {
             error = it
         }
@@ -50,9 +53,10 @@ class UiModelMapperTest : BaseUnitTest() {
     fun `mapInsights returns empty when there are only management blocks visible`() {
         var error: Int? = null
         val uiModel = mapper.mapInsights(
-                listOf(
-                        UseCaseModel(ManagementType.NEWS_CARD, data = listOf(), state = SUCCESS),
-                        UseCaseModel(ManagementType.CONTROL, data = listOf(), state = SUCCESS))
+            listOf(
+                UseCaseModel(ManagementType.NEWS_CARD, data = listOf(), state = SUCCESS),
+                UseCaseModel(ManagementType.CONTROL, data = listOf(), state = SUCCESS)
+            )
         ) {
             error = it
         }

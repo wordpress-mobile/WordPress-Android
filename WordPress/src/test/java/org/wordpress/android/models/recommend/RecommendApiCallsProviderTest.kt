@@ -32,14 +32,29 @@ import org.wordpress.android.viewmodel.ContextProvider
 
 @ExperimentalCoroutinesApi
 class RecommendApiCallsProviderTest : BaseUnitTest() {
-    @Mock lateinit var contextProvider: ContextProvider
-    @Mock lateinit var context: Context
-    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var restClientProvider: RestClientProvider
-    @Mock lateinit var restClientUtils: RestClientUtils
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var jsonObject: JSONObject
+    @Mock
+    lateinit var contextProvider: ContextProvider
+
+    @Mock
+    lateinit var context: Context
+
+    @Mock
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var restClientProvider: RestClientProvider
+
+    @Mock
+    lateinit var restClientUtils: RestClientUtils
+
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+
+    @Mock
+    lateinit var jsonObject: JSONObject
 
     private lateinit var callsProvider: RecommendApiCallsProvider
     private lateinit var listenerCaptor: KArgumentCaptor<RestRequest.Listener>
@@ -48,11 +63,11 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
     @Before
     fun setUp() {
         callsProvider = RecommendApiCallsProvider(
-                contextProvider,
-                analyticsUtilsWrapper,
-                networkUtilsWrapper,
-                restClientProvider,
-                localeManagerWrapper
+            contextProvider,
+            analyticsUtilsWrapper,
+            networkUtilsWrapper,
+            restClientProvider,
+            localeManagerWrapper
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(contextProvider.getContext()).thenReturn(context)
@@ -84,8 +99,8 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
         callsProvider.getRecommendTemplate(WordPress.appName, ME)
 
         verify(analyticsUtilsWrapper, times(1)).trackRecommendAppFetchFailed(
-                eq(ME),
-                eq("getRecommendTemplate > No Network available")
+            eq(ME),
+            eq("getRecommendTemplate > No Network available")
         )
     }
 
@@ -102,8 +117,8 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
         callsProvider.getRecommendTemplate(WordPress.appName, ME)
 
         verify(analyticsUtilsWrapper, times(1)).trackRecommendAppFetchFailed(
-                eq(ME),
-                startsWith("getTemplateFromJson > Error parsing server API")
+            eq(ME),
+            startsWith("getTemplateFromJson > Error parsing server API")
         )
     }
 
@@ -120,8 +135,8 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
         callsProvider.getRecommendTemplate(WordPress.appName, ME)
 
         verify(analyticsUtilsWrapper, times(1)).trackRecommendAppFetchFailed(
-                eq(ME),
-                startsWith("getTemplateFromJson > wrong app name received: ")
+            eq(ME),
+            startsWith("getTemplateFromJson > wrong app name received: ")
         )
     }
 
@@ -137,8 +152,8 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
         callsProvider.getRecommendTemplate(WordPress.appName, ME)
 
         verify(analyticsUtilsWrapper, times(1)).trackRecommendAppFetchFailed(
-                eq(ME),
-                eq("getTemplateFromJson > null response received")
+            eq(ME),
+            eq("getTemplateFromJson > null response received")
         )
     }
 
@@ -154,8 +169,8 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
         callsProvider.getRecommendTemplate(WordPress.appName, ME)
 
         verify(analyticsUtilsWrapper, times(1)).trackRecommendAppFetchFailed(
-                eq(ME),
-                startsWith("getRecommendTemplate > Failed with empty string [volleyError = ")
+            eq(ME),
+            startsWith("getRecommendTemplate > Failed with empty string [volleyError = ")
         )
     }
 }

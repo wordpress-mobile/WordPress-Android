@@ -72,19 +72,19 @@ class TotalFollowersUseCase @Inject constructor(
     }
 
     private fun buildTitle() = TitleWithMore(
-            string.stats_view_total_followers,
-            navigationAction = if (useCaseMode == VIEW_ALL) null else ListItemInteraction.create(this::onViewMoreClick)
+        string.stats_view_total_followers,
+        navigationAction = if (useCaseMode == VIEW_ALL) null else ListItemInteraction.create(this::onViewMoreClick)
     )
 
     private fun onViewMoreClick() {
         analyticsTracker.trackWithType(AnalyticsTracker.Stat.STATS_INSIGHTS_VIEW_MORE, TOTAL_FOLLOWERS)
         navigateTo(
-                ViewInsightDetails(
-                        StatsSection.TOTAL_FOLLOWERS_DETAIL,
-                        StatsViewType.TOTAL_FOLLOWERS,
-                        null,
-                        null
-                )
+            ViewInsightDetails(
+                StatsSection.TOTAL_FOLLOWERS_DETAIL,
+                StatsViewType.TOTAL_FOLLOWERS,
+                null,
+                null
+            )
         )
     }
 
@@ -99,15 +99,15 @@ class TotalFollowersUseCase @Inject constructor(
         private val actionCardHandler: ActionCardHandler
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) = TotalFollowersUseCase(
-                mainDispatcher,
-                backgroundDispatcher,
-                summaryStore,
-                statsSiteProvider,
-                resourceProvider,
-                totalStatsMapper,
-                analyticsTracker,
-                actionCardHandler,
-                useCaseMode
+            mainDispatcher,
+            backgroundDispatcher,
+            summaryStore,
+            statsSiteProvider,
+            resourceProvider,
+            totalStatsMapper,
+            analyticsTracker,
+            actionCardHandler,
+            useCaseMode
         )
     }
 }

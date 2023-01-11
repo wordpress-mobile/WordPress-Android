@@ -31,14 +31,14 @@ class GetMediaModelUseCase @Inject constructor(
     suspend fun loadMediaByLocalId(mediaModelLocalIds: Iterable<Int>): List<MediaModel> {
         return withContext(bgDispatcher) {
             mediaModelLocalIds
-                    .mapNotNull {
-                        val mediaModel = mediaStore.getMediaWithLocalId(it)
-                        mediaModel ?: AppLog.e(
-                                AppLog.T.MEDIA,
-                                "Media model not found in the local database. Id $it"
-                        )
-                        mediaModel
-                    }
+                .mapNotNull {
+                    val mediaModel = mediaStore.getMediaWithLocalId(it)
+                    mediaModel ?: AppLog.e(
+                        AppLog.T.MEDIA,
+                        "Media model not found in the local database. Id $it"
+                    )
+                    mediaModel
+                }
         }
     }
 
@@ -48,14 +48,14 @@ class GetMediaModelUseCase @Inject constructor(
     ): List<MediaModel> {
         return withContext(bgDispatcher) {
             mediaModelsRemoteIds
-                    .mapNotNull {
-                        val mediaModel: MediaModel? = mediaStore.getSiteMediaWithId(site, it)
-                        mediaModel ?: AppLog.w(
-                                AppLog.T.POSTS,
-                                "Media model not found in the local database. Id $it"
-                        )
-                        mediaModel
-                    }
+                .mapNotNull {
+                    val mediaModel: MediaModel? = mediaStore.getSiteMediaWithId(site, it)
+                    mediaModel ?: AppLog.w(
+                        AppLog.T.POSTS,
+                        "Media model not found in the local database. Id $it"
+                    )
+                    mediaModel
+                }
         }
     }
 
@@ -69,20 +69,20 @@ class GetMediaModelUseCase @Inject constructor(
     ): CreateMediaModelsResult {
         return withContext(bgDispatcher) {
             uris
-                    .map { uri ->
-                        if (verifyFileExists(uri)) {
-                            createNewMediaModel(localSiteId, uri)
-                        } else {
-                            null
-                        }
+                .map { uri ->
+                    if (verifyFileExists(uri)) {
+                        createNewMediaModel(localSiteId, uri)
+                    } else {
+                        null
                     }
-                    .toList()
-                    .let {
-                        CreateMediaModelsResult(
-                                mediaModels = it.filterNotNull(),
-                                loadingSomeMediaFailed = it.contains(null)
-                        )
-                    }
+                }
+                .toList()
+                .let {
+                    CreateMediaModelsResult(
+                        mediaModels = it.filterNotNull(),
+                        loadingSomeMediaFailed = it.contains(null)
+                    )
+                }
         }
     }
 
@@ -115,7 +115,7 @@ class GetMediaModelUseCase @Inject constructor(
         return mediaUtilsWrapper.getRealPathFromURI(uri)?.let { path ->
             fileProvider.createFile(path).exists()
         }
-                ?: false
+            ?: false
     }
 
     data class CreateMediaModelsResult(

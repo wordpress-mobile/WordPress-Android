@@ -42,27 +42,27 @@ class StorageNotificationDialogFragment : DialogFragment() {
                     dialogContext?.startActivity(settingsIntent)
                 }
                 AnalyticsUtils.trackStorageWarningDialogEvent(
-                        Stat.STORAGE_WARNING_ACKNOWLEDGED,
-                        sourceDescription,
-                        isInternalStorageSettingsResolved
+                    Stat.STORAGE_WARNING_ACKNOWLEDGED,
+                    sourceDescription,
+                    isInternalStorageSettingsResolved
                 )
             }
             setNeutralButton(dontShowAgainLabel) { _, _ ->
                 dismiss()
                 AppPrefs.setShouldShowStorageWarning(false)
                 AnalyticsUtils.trackStorageWarningDialogEvent(
-                        Stat.STORAGE_WARNING_DONT_SHOW_AGAIN,
-                        sourceDescription,
-                        isInternalStorageSettingsResolved
+                    Stat.STORAGE_WARNING_DONT_SHOW_AGAIN,
+                    sourceDescription,
+                    isInternalStorageSettingsResolved
                 )
             }
             if (isInternalStorageSettingsResolved) {
                 setNegativeButton(android.R.string.cancel) { _, _ ->
                     dismiss()
                     AnalyticsUtils.trackStorageWarningDialogEvent(
-                            Stat.STORAGE_WARNING_CANCELED,
-                            sourceDescription,
-                            isInternalStorageSettingsResolved
+                        Stat.STORAGE_WARNING_CANCELED,
+                        sourceDescription,
+                        isInternalStorageSettingsResolved
                     )
                 }
             }
@@ -77,9 +77,9 @@ class StorageNotificationDialogFragment : DialogFragment() {
         val sourceDescription = args.getString(ARG_DIALOG_SOURCE_DESCRIPTION)
 
         AnalyticsUtils.trackStorageWarningDialogEvent(
-                Stat.STORAGE_WARNING_CANCELED,
-                sourceDescription,
-                isInternalStorageSettingsResolved
+            Stat.STORAGE_WARNING_CANCELED,
+            sourceDescription,
+            isInternalStorageSettingsResolved
         )
         super.onCancel(dialog)
     }
@@ -98,9 +98,9 @@ class StorageNotificationDialogFragment : DialogFragment() {
             source: String
         ): StorageNotificationDialogFragment {
             AnalyticsUtils.trackStorageWarningDialogEvent(
-                    Stat.STORAGE_WARNING_SHOWN,
-                    source,
-                    isInternalStorageSettingsResolved
+                Stat.STORAGE_WARNING_SHOWN,
+                source,
+                isInternalStorageSettingsResolved
             )
 
             return StorageNotificationDialogFragment().apply {

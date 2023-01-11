@@ -87,31 +87,31 @@ class ActivityLogDetailViewModel @Inject constructor(
 
         if (activityLogId != _item.value?.activityID) {
             _item.value = activityLogStore
-                    .getActivityLogForSite(site)
-                    .find { it.activityID == activityLogId }
-                    ?.let {
-                        ActivityLogDetailModel(
-                                activityID = it.activityID,
-                                rewindId = it.rewindID,
-                                actorIconUrl = it.actor?.avatarURL,
-                                showJetpackIcon = it.actor?.showJetpackIcon(),
-                                isRewindButtonVisible = it.rewindable ?: false,
-                                actorName = it.actor?.displayName,
-                                actorRole = it.actor?.role,
-                                content = it.content,
-                                summary = it.summary,
-                                createdDate = it.published.toFormattedDateString(),
-                                createdTime = it.published.toFormattedTimeString()
-                        )
-                    }
+                .getActivityLogForSite(site)
+                .find { it.activityID == activityLogId }
+                ?.let {
+                    ActivityLogDetailModel(
+                        activityID = it.activityID,
+                        rewindId = it.rewindID,
+                        actorIconUrl = it.actor?.avatarURL,
+                        showJetpackIcon = it.actor?.showJetpackIcon(),
+                        isRewindButtonVisible = it.rewindable ?: false,
+                        actorName = it.actor?.displayName,
+                        actorRole = it.actor?.role,
+                        content = it.content,
+                        summary = it.summary,
+                        createdDate = it.published.toFormattedDateString(),
+                        createdTime = it.published.toFormattedTimeString()
+                    )
+                }
         }
     }
 
     private fun getMultisiteMessage(): SpannableString {
         val clickableText = resourceProvider.getString(R.string.activity_log_visit_our_documentation_page)
         val multisiteMessage = htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                R.string.activity_log_multisite_message,
-                clickableText
+            R.string.activity_log_multisite_message,
+            clickableText
         )
         return constructMultisiteSpan(multisiteMessage, clickableText)
     }

@@ -14,9 +14,14 @@ import org.wordpress.android.util.BuildConfigWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class ManualFeatureConfigTest {
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock lateinit var appConfig: AppConfig
-    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    lateinit var appConfig: AppConfig
+
+    @Mock
+    lateinit var buildConfigWrapper: BuildConfigWrapper
     private lateinit var manualFeatureConfig: ManualFeatureConfig
     private lateinit var localFeatureConfig: FeatureConfig
     private lateinit var remoteFeatureConfig: FeatureConfig

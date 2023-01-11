@@ -11,8 +11,8 @@ class JetpackBackupRestoreSubHeaderViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : JetpackViewHolder<JetpackBackupRestoreListSubheaderItemBinding>(
-        parent,
-        JetpackBackupRestoreListSubheaderItemBinding::inflate
+    parent,
+    JetpackBackupRestoreListSubheaderItemBinding::inflate
 ) {
     override fun onBind(itemUiState: JetpackListItemState) = with(binding) {
         val subHeaderItemState = itemUiState as SubHeaderState

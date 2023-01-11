@@ -31,9 +31,9 @@ class SelectedSiteSource @Inject constructor(
         coroutineScope: CoroutineScope,
         siteLocalId: Int
     ) = selectedSiteRepository.selectedSiteChange
-            .filter { it == null || it.id == siteLocalId }
-            .apply { onRefreshedMainThread() }
-            .map { SelectedSite(it) }
+        .filter { it == null || it.id == siteLocalId }
+        .apply { onRefreshedMainThread() }
+        .map { SelectedSite(it) }
 
     override fun refresh() {
         updateSiteSettingsIfNecessary()

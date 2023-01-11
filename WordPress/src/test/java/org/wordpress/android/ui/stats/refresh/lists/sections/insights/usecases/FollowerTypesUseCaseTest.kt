@@ -31,19 +31,32 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class FollowerTypesUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var followersStore: FollowersStore
-    @Mock lateinit var publicizeStore: PublicizeStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
-    @Mock lateinit var statsUtils: StatsUtils
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var site: SiteModel
+    @Mock
+    lateinit var followersStore: FollowersStore
+
+    @Mock
+    lateinit var publicizeStore: PublicizeStore
+
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
+    @Mock
+    lateinit var statsUtils: StatsUtils
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var site: SiteModel
     private lateinit var useCase: FollowerTypesUseCase
 
     private val wpModel = FollowersModel(3, emptyList(), false)
     private val emailModel = FollowersModel(7, emptyList(), false)
     private val socialModel = PublicizeModel(
-            listOf(Service("Twitter", 10), Service("FB", 5)), false
+        listOf(Service("Twitter", 10), Service("FB", 5)), false
     )
     private val wpComTitle = "WordPress"
     private val emailTitle = "Email"
@@ -55,14 +68,14 @@ class FollowerTypesUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = FollowerTypesUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                followersStore,
-                publicizeStore,
-                statsSiteProvider,
-                contentDescriptionHelper,
-                statsUtils,
-                resourceProvider
+            testDispatcher(),
+            testDispatcher(),
+            followersStore,
+            publicizeStore,
+            statsSiteProvider,
+            contentDescriptionHelper,
+            statsUtils,
+            resourceProvider
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
 
@@ -72,17 +85,17 @@ class FollowerTypesUseCaseTest : BaseUnitTest() {
         whenever(contentDescriptionHelper.buildContentDescription(any(), any())).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
         whenever(
-                resourceProvider.getString(
-                        eq(R.string.stats_total_followers_content_description),
-                        any<Int>(),
-                        any<String>()
-                )
+            resourceProvider.getString(
+                eq(R.string.stats_total_followers_content_description),
+                any<Int>(),
+                any<String>()
+            )
         ).then { contentDescriptionValue }
         whenever(resourceProvider.getString(R.string.stats_followers_wordpress_com)).then { wpComTitle }
         whenever(resourceProvider.getString(R.string.email)).then { emailTitle }
         whenever(resourceProvider.getString(R.string.stats_insights_social)).then { socialTitle }
         whenever(resourceProvider.getString(eq(R.string.stats_value_percent), any<String>(), any<String>()))
-                .then { "${it.arguments[1]} (${it.arguments[2]}%)" }
+            .then { "${it.arguments[1]} (${it.arguments[2]}%)" }
         whenever(resourceProvider.getString(R.string.stats_follower_types_pie_chart_total_label)).then { totalLabel }
     }
 

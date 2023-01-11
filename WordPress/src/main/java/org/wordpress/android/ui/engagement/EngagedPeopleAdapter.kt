@@ -9,7 +9,6 @@ import org.wordpress.android.ui.engagement.EngageItem.Liker
 import org.wordpress.android.ui.engagement.EngageItem.NextLikesPageLoader
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.lang.IllegalArgumentException
 
 class EngagedPeopleAdapter constructor(
     private val imageManager: ImageManager,
@@ -19,7 +18,7 @@ class EngagedPeopleAdapter constructor(
 
     fun loadData(items: List<EngageItem>) {
         val diffResult = DiffUtil.calculateDiff(
-                EngagedPeopleAdapterDiffCallback(itemsList, items)
+            EngagedPeopleAdapterDiffCallback(itemsList, items)
         )
         itemsList = items
         diffResult.dispatchUpdatesTo(this)

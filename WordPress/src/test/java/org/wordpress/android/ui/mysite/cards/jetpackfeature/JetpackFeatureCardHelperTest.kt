@@ -20,24 +20,35 @@ import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class JetpackFeatureCardHelperTest {
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
-    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
-    @Mock lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
-    @Mock lateinit var phaseThreeBlogPostLinkConfig: PhaseThreeBlogPostLinkConfig
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    lateinit var buildConfigWrapper: BuildConfigWrapper
+
+    @Mock
+    lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
+    @Mock
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
+    @Mock
+    lateinit var phaseThreeBlogPostLinkConfig: PhaseThreeBlogPostLinkConfig
 
     private lateinit var helper: JetpackFeatureCardHelper
 
     @Before
     fun setUp() {
         helper = JetpackFeatureCardHelper(
-                analyticsTrackerWrapper,
-                appPrefsWrapper,
-                buildConfigWrapper,
-                dateTimeUtilsWrapper,
-                jetpackFeatureRemovalPhaseHelper,
-                phaseThreeBlogPostLinkConfig
+            analyticsTrackerWrapper,
+            appPrefsWrapper,
+            buildConfigWrapper,
+            dateTimeUtilsWrapper,
+            jetpackFeatureRemovalPhaseHelper,
+            phaseThreeBlogPostLinkConfig
         )
     }
 
@@ -127,13 +138,13 @@ class JetpackFeatureCardHelperTest {
 
     private fun setDaysBetween(lastShownTimestamp: Long) {
         val between =
-                DateTimeUtils.daysBetween(Date(lastShownTimestamp), Date(getDateXDaysAgoInMilliseconds(0)))
+            DateTimeUtils.daysBetween(Date(lastShownTimestamp), Date(getDateXDaysAgoInMilliseconds(0)))
 
         whenever(dateTimeUtilsWrapper.daysBetween(any(), any())).thenReturn(between)
     }
 
     private fun getDateXDaysAgoInMilliseconds(daysAgo: Int) =
-            System.currentTimeMillis().minus(DAY_IN_MILLISECONDS * daysAgo)
+        System.currentTimeMillis().minus(DAY_IN_MILLISECONDS * daysAgo)
 
     companion object {
         private const val DAY_IN_MILLISECONDS = 86400000

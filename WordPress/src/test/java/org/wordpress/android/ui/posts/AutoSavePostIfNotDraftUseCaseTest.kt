@@ -38,14 +38,15 @@ private const val PUBLISH_STATUS = "publish"
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class AutoSavePostIfNotDraftUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var postStore: PostStore
+    @Mock
+    lateinit var postStore: PostStore
 
     @Test(expected = IllegalArgumentException::class)
     fun `local draft throws IllegalArgumentException`() {
         val useCase = AutoSavePostIfNotDraftUseCase(
-                mock(),
-                postStore,
-                testDispatcher()
+            mock(),
+            postStore,
+            testDispatcher()
         )
         val post = PostModel()
         post.setIsLocalDraft(true)
@@ -56,9 +57,9 @@ class AutoSavePostIfNotDraftUseCaseTest : BaseUnitTest() {
     fun `error while fetching post status will result in FetchPostStatusFailed`() {
         val remotePostPayload = createRemotePostPayload()
         val onPostStatusFetched = createOnPostStatusFetchedEvent(
-                post = remotePostPayload.post,
-                status = PUBLISH_STATUS,
-                error = PostError(UNKNOWN_POST, FETCH_POST_STATUS_ERROR_MESSAGE)
+            post = remotePostPayload.post,
+            status = PUBLISH_STATUS,
+            error = PostError(UNKNOWN_POST, FETCH_POST_STATUS_ERROR_MESSAGE)
         )
         val useCase = createUseCase(onPostStatusFetched)
         useCase.autoSavePostOrUpdateDraftAndAssertResult(remotePostPayload) { result ->
@@ -70,8 +71,8 @@ class AutoSavePostIfNotDraftUseCaseTest : BaseUnitTest() {
     fun `post is draft in remote`() {
         val remotePostPayload = createRemotePostPayload()
         val onPostStatusFetched = createOnPostStatusFetchedEvent(
-                post = remotePostPayload.post,
-                status = DRAFT_STATUS
+            post = remotePostPayload.post,
+            status = DRAFT_STATUS
         )
         val useCase = createUseCase(onPostStatusFetched)
         useCase.autoSavePostOrUpdateDraftAndAssertResult(remotePostPayload) { result ->
@@ -83,12 +84,12 @@ class AutoSavePostIfNotDraftUseCaseTest : BaseUnitTest() {
     fun `error while auto-saving will result in PostAutoSaveFailed`() {
         val remotePostPayload = createRemotePostPayload()
         val onPostStatusFetched = createOnPostStatusFetchedEvent(
-                post = remotePostPayload.post,
-                status = PUBLISH_STATUS
+            post = remotePostPayload.post,
+            status = PUBLISH_STATUS
         )
         val onPostChanged = createOnPostChangedEvent(
-                remotePostPayload.post,
-                error = PostError(UNKNOWN_POST, AUTO_SAVE_POST_ERROR_MESSAGE)
+            remotePostPayload.post,
+            error = PostError(UNKNOWN_POST, AUTO_SAVE_POST_ERROR_MESSAGE)
         )
         val useCase = createUseCase(onPostStatusFetched, onPostChanged)
         useCase.autoSavePostOrUpdateDraftAndAssertResult(remotePostPayload) { result ->
@@ -101,8 +102,8 @@ class AutoSavePostIfNotDraftUseCaseTest : BaseUnitTest() {
         whenever(postStore.getPostByRemotePostId(any(), any())).thenReturn(PostModel())
         val remotePostPayload = createRemotePostPayload()
         val onPostStatusFetched = createOnPostStatusFetchedEvent(
-                post = remotePostPayload.post,
-                status = PUBLISH_STATUS
+            post = remotePostPayload.post,
+            status = PUBLISH_STATUS
         )
         val onPostChanged = createOnPostChangedEvent(remotePostPayload.post)
         val useCase = createUseCase(onPostStatusFetched, onPostChanged)
@@ -117,9 +118,9 @@ class AutoSavePostIfNotDraftUseCaseTest : BaseUnitTest() {
     ): AutoSavePostIfNotDraftUseCase {
         val dispatcher = mock<Dispatcher>()
         val useCase = AutoSavePostIfNotDraftUseCase(
-                dispatcher = dispatcher,
-                postStore = postStore,
-                bgDispatcher = testDispatcher()
+            dispatcher = dispatcher,
+            postStore = postStore,
+            bgDispatcher = testDispatcher()
         )
         whenever(dispatcher.dispatch(argWhere<Action<Void>> { it.type == PostAction.FETCH_POST_STATUS })).then {
             useCase.onPostStatusFetched(onPostStatusFetched)
@@ -144,9 +145,9 @@ class AutoSavePostIfNotDraftUseCaseTest : BaseUnitTest() {
         error: PostError? = null
     ): OnPostStatusFetched {
         val constructor: Constructor<OnPostStatusFetched> = OnPostStatusFetched::class.java.getDeclaredConstructor(
-                PostModel::class.java,
-                String::class.java,
-                PostError::class.java
+            PostModel::class.java,
+            String::class.java,
+            PostError::class.java
         )
         constructor.isAccessible = true
         return constructor.newInstance(post, status, error)
@@ -165,12 +166,12 @@ private fun AutoSavePostIfNotDraftUseCase.autoSavePostOrUpdateDraftAndAssertResu
 ) {
     val countDownLatch = CountDownLatch(1)
     autoSavePostOrUpdateDraft(
-            remotePostPayload,
-            object : OnAutoSavePostIfNotDraftCallback {
-                override fun handleAutoSavePostIfNotDraftResult(result: AutoSavePostIfNotDraftResult) {
-                    assertionBlock(result)
-                    countDownLatch.countDown()
-                }
-            })
+        remotePostPayload,
+        object : OnAutoSavePostIfNotDraftCallback {
+            override fun handleAutoSavePostIfNotDraftResult(result: AutoSavePostIfNotDraftResult) {
+                assertionBlock(result)
+                countDownLatch.countDown()
+            }
+        })
     assertThat(countDownLatch.await(1, TimeUnit.SECONDS)).isTrue()
 }

@@ -16,6 +16,6 @@ class LocalCommentCacheUpdateHandler @Inject constructor(
     fun subscribe() = useCases.map { it.subscribe() }.merge()
 
     suspend fun requestCommentsUpdate() = localCommentCacheUpdateUseCase.manageAction(
-            UpdatedComments
+        UpdatedComments
     )
 }

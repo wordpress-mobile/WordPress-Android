@@ -24,7 +24,8 @@ import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
 
 class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var timezoneViewModel: SiteSettingsTimezoneViewModel
 
     private val timezoneAdapter = TimezoneAdapter { timezone ->
@@ -45,7 +46,7 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
         super.onCreate(savedInstanceState)
         (requireActivity().applicationContext as WordPress).component().inject(this)
         timezoneViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(SiteSettingsTimezoneViewModel::class.java)
+            .get(SiteSettingsTimezoneViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -81,7 +82,7 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
                 val sheetDialog = dialogInterface as? BottomSheetDialog
 
                 bottomSheet = sheetDialog?.findViewById<View>(
-                        com.google.android.material.R.id.design_bottom_sheet
+                    com.google.android.material.R.id.design_bottom_sheet
                 ) as? FrameLayout
 
                 if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) expandBottomSheet()
@@ -134,7 +135,8 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
                 ActivityUtils.hideKeyboardForced(binding?.searchInputLayout)
             }
 
-            btnTimezoneSuggestion.setOnClickListener { it as MaterialButton
+            btnTimezoneSuggestion.setOnClickListener {
+                it as MaterialButton
                 timezoneViewModel.onTimezoneSelected(it.text.toString())
             }
         }

@@ -43,13 +43,13 @@ class FetchDomainsUseCase @Inject constructor(
          * reasonable results in case SKIP button is pressed ("default" template)
          */
         val payload = SuggestDomainsPayload(
-                query = query,
-                segmentId = segmentId,
-                quantity = size,
-                includeVendorDot = includeVendorDot,
-                includeWordpressCom = true,
-                onlyWordpressCom = true,
-                includeDotBlogSubdomain = includeDotBlog
+            query = query,
+            segmentId = segmentId,
+            quantity = size,
+            includeVendorDot = includeVendorDot,
+            includeWordpressCom = true,
+            onlyWordpressCom = true,
+            includeDotBlogSubdomain = includeDotBlog
         )
 
         return suspendCancellableCoroutine { cont ->

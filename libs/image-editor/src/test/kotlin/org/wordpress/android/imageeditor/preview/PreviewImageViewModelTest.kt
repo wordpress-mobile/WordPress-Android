@@ -37,7 +37,8 @@ private const val TEST_ERROR = "Error"
 
 class PreviewImageViewModelTest {
     @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
+    @JvmField
+    val rule = InstantTaskExecutorRule()
 
     // Class under test
     private lateinit var viewModel: PreviewImageViewModel

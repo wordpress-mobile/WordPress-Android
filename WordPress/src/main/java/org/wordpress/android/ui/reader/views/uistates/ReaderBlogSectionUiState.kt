@@ -20,5 +20,6 @@ data class ReaderBlogSectionUiState(
         val onBlogSectionClicked: ((Long, Long) -> Unit)?,
         @AttrRes val background: Int
     )
+
     val dotSeparatorVisibility: Boolean = blogUrl != null
 }

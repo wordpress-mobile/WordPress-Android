@@ -16,9 +16,14 @@ import org.wordpress.android.ui.utils.UrlUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class FollowedBlogsProviderTest {
-    @Mock lateinit var accountStore: AccountStore
-    @Mock lateinit var readerBlogTable: ReaderBlogTableWrapper
-    @Mock lateinit var urlUtils: UrlUtilsWrapper
+    @Mock
+    lateinit var accountStore: AccountStore
+
+    @Mock
+    lateinit var readerBlogTable: ReaderBlogTableWrapper
+
+    @Mock
+    lateinit var urlUtils: UrlUtilsWrapper
     private lateinit var followedBlogsProvider: FollowedBlogsProvider
     private val blogName = "blog name"
     private val url = "http://blog.url.com/feed"
@@ -38,13 +43,13 @@ class FollowedBlogsProviderTest {
         val blogPost = setupBlogPost(readerBlogId, blogName, url, urlHost)
         whenever(readerBlogTable.getFollowedBlogs()).thenReturn(listOf(blogPost))
         val subscriptionModel = setupSubscriptionModel(
-                readerBlogId.toString(),
-                shouldNotifyPosts = true,
-                shouldEmailPosts = false,
-                shouldEmailComments = false,
-                emailFrequency = emailFrequency,
-                subscriptionUrl = subscriptionUrl,
-                subscriptionUrlHost = subscriptionUrl
+            readerBlogId.toString(),
+            shouldNotifyPosts = true,
+            shouldEmailPosts = false,
+            shouldEmailComments = false,
+            emailFrequency = emailFrequency,
+            subscriptionUrl = subscriptionUrl,
+            subscriptionUrlHost = subscriptionUrl
         )
         whenever(accountStore.subscriptions).thenReturn(listOf(subscriptionModel))
 
@@ -53,10 +58,10 @@ class FollowedBlogsProviderTest {
         assertThat(result).hasSize(1)
         result.first().assertModel(readerBlogId, blogName, urlHost)
         result.first().assertClickHandler(
-                shouldNotifyPosts = true,
-                shouldEmailPosts = false,
-                shouldEmailComments = false,
-                emailFrequency = emailFrequency
+            shouldNotifyPosts = true,
+            shouldEmailPosts = false,
+            shouldEmailComments = false,
+            emailFrequency = emailFrequency
         )
     }
 
@@ -67,11 +72,11 @@ class FollowedBlogsProviderTest {
         val blogPost = setupBlogPost(readerBlogId, feedId = feedId)
         whenever(readerBlogTable.getFollowedBlogs()).thenReturn(listOf(blogPost))
         val subscriptionModel = setupSubscriptionModel(
-                "2",
-                shouldNotifyPosts = false,
-                shouldEmailPosts = true,
-                shouldEmailComments = false,
-                feedId = feedId.toString()
+            "2",
+            shouldNotifyPosts = false,
+            shouldEmailPosts = true,
+            shouldEmailComments = false,
+            feedId = feedId.toString()
         )
         whenever(accountStore.subscriptions).thenReturn(listOf(subscriptionModel))
 
@@ -80,10 +85,10 @@ class FollowedBlogsProviderTest {
         assertThat(result).hasSize(1)
         result.first().assertModel(readerBlogId, blogName, urlHost)
         result.first().assertClickHandler(
-                shouldNotifyPosts = false,
-                shouldEmailPosts = true,
-                shouldEmailComments = false,
-                emailFrequency = emailFrequency
+            shouldNotifyPosts = false,
+            shouldEmailPosts = true,
+            shouldEmailComments = false,
+            emailFrequency = emailFrequency
         )
     }
 
@@ -94,11 +99,11 @@ class FollowedBlogsProviderTest {
         val blogPost = setupBlogPost(readerBlogId, feedId = feedId)
         whenever(readerBlogTable.getFollowedBlogs()).thenReturn(listOf(blogPost))
         val subscriptionModel = setupSubscriptionModel(
-                "false",
-                shouldNotifyPosts = false,
-                shouldEmailPosts = true,
-                shouldEmailComments = false,
-                feedId = feedId.toString()
+            "false",
+            shouldNotifyPosts = false,
+            shouldEmailPosts = true,
+            shouldEmailComments = false,
+            feedId = feedId.toString()
         )
         whenever(accountStore.subscriptions).thenReturn(listOf(subscriptionModel))
 
@@ -115,12 +120,12 @@ class FollowedBlogsProviderTest {
         val blogPost = setupBlogPost(readerBlogId, blogUrl = url, blogUrlHost = urlHost)
         whenever(readerBlogTable.getFollowedBlogs()).thenReturn(listOf(blogPost))
         val subscriptionModel = setupSubscriptionModel(
-                readerBlogId = "2",
-                shouldNotifyPosts = false,
-                shouldEmailPosts = false,
-                shouldEmailComments = true,
-                subscriptionUrl = url,
-                subscriptionUrlHost = urlHost
+            readerBlogId = "2",
+            shouldNotifyPosts = false,
+            shouldEmailPosts = false,
+            shouldEmailComments = true,
+            subscriptionUrl = url,
+            subscriptionUrlHost = urlHost
         )
         whenever(accountStore.subscriptions).thenReturn(listOf(subscriptionModel))
 
@@ -129,10 +134,10 @@ class FollowedBlogsProviderTest {
         assertThat(result).hasSize(1)
         result.first().assertModel(readerBlogId, blogName, urlHost)
         result.first().assertClickHandler(
-                shouldNotifyPosts = false,
-                shouldEmailPosts = false,
-                shouldEmailComments = true,
-                emailFrequency = emailFrequency
+            shouldNotifyPosts = false,
+            shouldEmailPosts = false,
+            shouldEmailComments = true,
+            emailFrequency = emailFrequency
         )
     }
 
@@ -142,10 +147,10 @@ class FollowedBlogsProviderTest {
         val blogPost = setupBlogPost(readerBlogId, blogName, url, urlHost)
         whenever(readerBlogTable.getFollowedBlogs()).thenReturn(listOf(blogPost))
         val subscriptionModel = setupSubscriptionModel(
-                "false",
-                emailFrequency = emailFrequency,
-                subscriptionUrl = subscriptionUrl,
-                subscriptionUrlHost = subscriptionUrl
+            "false",
+            emailFrequency = emailFrequency,
+            subscriptionUrl = subscriptionUrl,
+            subscriptionUrlHost = subscriptionUrl
         )
         whenever(accountStore.subscriptions).thenReturn(listOf(subscriptionModel))
 
@@ -175,10 +180,10 @@ class FollowedBlogsProviderTest {
         whenever(readerBlogTable.getFollowedBlogs()).thenReturn(listOf(blogPostWithQuery, blogPostWithoutQuery))
 
         val subscriptionModel = setupSubscriptionModel(
-                "false",
-                emailFrequency = emailFrequency,
-                subscriptionUrl = subscriptionUrl,
-                subscriptionUrlHost = subscriptionUrl
+            "false",
+            emailFrequency = emailFrequency,
+            subscriptionUrl = subscriptionUrl,
+            subscriptionUrlHost = subscriptionUrl
         )
         whenever(accountStore.subscriptions).thenReturn(listOf(subscriptionModel))
 
@@ -195,10 +200,10 @@ class FollowedBlogsProviderTest {
         whenever(readerBlogTable.getFollowedBlogs()).thenReturn(listOf())
 
         val subscriptionModel = setupSubscriptionModel(
-                "$readerBlogId",
-                emailFrequency = emailFrequency,
-                subscriptionUrl = subscriptionUrl,
-                subscriptionUrlHost = subscriptionUrl
+            "$readerBlogId",
+            emailFrequency = emailFrequency,
+            subscriptionUrl = subscriptionUrl,
+            subscriptionUrlHost = subscriptionUrl
         )
         whenever(accountStore.subscriptions).thenReturn(listOf(subscriptionModel))
 
@@ -207,10 +212,10 @@ class FollowedBlogsProviderTest {
         assertThat(result).hasSize(1)
         result.first().assertModel(readerBlogId, subscriptionUrl, subscriptionUrl)
         result.first().assertClickHandler(
-                shouldNotifyPosts = false,
-                shouldEmailPosts = false,
-                shouldEmailComments = false,
-                emailFrequency = emailFrequency
+            shouldNotifyPosts = false,
+            shouldEmailPosts = false,
+            shouldEmailComments = false,
+            emailFrequency = emailFrequency
         )
     }
 

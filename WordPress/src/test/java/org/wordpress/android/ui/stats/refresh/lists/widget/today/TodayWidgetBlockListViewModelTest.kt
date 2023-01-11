@@ -26,27 +26,43 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class TodayWidgetBlockListViewModelTest {
-    @Mock private lateinit var siteStore: SiteStore
-    @Mock private lateinit var store: TodayInsightsStore
-    @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var statsUtils: StatsUtils
-    @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var context: Context
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock private lateinit var todayWidgetUpdater: TodayWidgetUpdater
+    @Mock
+    private lateinit var siteStore: SiteStore
+
+    @Mock
+    private lateinit var store: TodayInsightsStore
+
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    private lateinit var statsUtils: StatsUtils
+
+    @Mock
+    private lateinit var site: SiteModel
+
+    @Mock
+    private lateinit var context: Context
+
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    private lateinit var todayWidgetUpdater: TodayWidgetUpdater
     private lateinit var viewModel: TodayWidgetBlockListViewModel
     private val siteId: Int = 15
     private val appWidgetId: Int = 1
     private val color = Color.LIGHT
+
     @Before
     fun setUp() {
         viewModel = TodayWidgetBlockListViewModel(
-                siteStore,
-                store,
-                resourceProvider,
-                todayWidgetUpdater,
-                appPrefsWrapper,
-                statsUtils
+            siteStore,
+            store,
+            resourceProvider,
+            todayWidgetUpdater,
+            appPrefsWrapper,
+            statsUtils
         )
         viewModel.start(siteId, color, appWidgetId)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
@@ -68,7 +84,7 @@ class TodayWidgetBlockListViewModelTest {
         whenever(resourceProvider.getString(string.likes)).thenReturn(likesKey)
         whenever(resourceProvider.getString(string.stats_comments)).thenReturn(commentsKey)
         whenever(store.getTodayInsights(site)).thenReturn(
-                VisitsModel("2019-10-10", views, visitors, likes, 0, comments, 0)
+            VisitsModel("2019-10-10", views, visitors, likes, 0, comments, 0)
         )
 
         viewModel.onDataSetChanged(context)

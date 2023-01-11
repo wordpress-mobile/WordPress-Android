@@ -78,13 +78,13 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = MaterialAlertDialogBuilder(requireActivity())
         builder.setMessage(mMessage)
-                .setPositiveButton(mPositiveButtonLabel) { _, _ ->
-                    dismissedByPositiveButton = true
-                    val activity = activity
-                    if (activity != null) {
-                        (activity as BasicDialogPositiveClickInterface).onPositiveClicked(mTag)
-                    }
-                }.setCancelable(true)
+            .setPositiveButton(mPositiveButtonLabel) { _, _ ->
+                dismissedByPositiveButton = true
+                val activity = activity
+                if (activity != null) {
+                    (activity as BasicDialogPositiveClickInterface).onPositiveClicked(mTag)
+                }
+            }.setCancelable(true)
 
         mTitle?.let {
             builder.setTitle(mTitle)

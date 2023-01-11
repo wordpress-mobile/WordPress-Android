@@ -38,31 +38,37 @@ import java.util.Date
 @ExperimentalCoroutinesApi
 class PostRestoreUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: PostRestoreUseCase
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var activityLogStore: ActivityLogStore
-    @Mock lateinit var siteModel: SiteModel
+
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var activityLogStore: ActivityLogStore
+
+    @Mock
+    lateinit var siteModel: SiteModel
 
     private val rewindId = "rewindId"
     private val restoreId = 1L
     private val types: RewindRequestTypes = RewindRequestTypes(
-            themes = true,
-            plugins = true,
-            uploads = true,
-            sqls = true,
-            roots = true,
-            contents = true
+        themes = true,
+        plugins = true,
+        uploads = true,
+        sqls = true,
+        roots = true,
+        contents = true
     )
 
     @Before
     fun setup() = test {
         useCase = PostRestoreUseCase(
-                networkUtilsWrapper,
-                activityLogStore,
-                testDispatcher()
+            networkUtilsWrapper,
+            activityLogStore,
+            testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(activityLogStore.fetchActivitiesRewind(any())).thenReturn(
-                OnRewindStatusFetched(ActivityLogAction.FETCH_REWIND_STATE)
+            OnRewindStatusFetched(ActivityLogAction.FETCH_REWIND_STATE)
         )
     }
 
@@ -114,10 +120,10 @@ class PostRestoreUseCaseTest : BaseUnitTest() {
     @Test
     fun `given fetch error, then RemoteRequestFailure is returned`() = test {
         whenever(activityLogStore.fetchActivitiesRewind(any())).thenReturn(
-                OnRewindStatusFetched(
-                        RewindStatusError(RewindStatusErrorType.GENERIC_ERROR),
-                        ActivityLogAction.FETCH_REWIND_STATE
-                )
+            OnRewindStatusFetched(
+                RewindStatusError(RewindStatusErrorType.GENERIC_ERROR),
+                ActivityLogAction.FETCH_REWIND_STATE
+            )
         )
 
         val result = useCase.postRestoreRequest(rewindId, siteModel, types)
@@ -128,7 +134,7 @@ class PostRestoreUseCaseTest : BaseUnitTest() {
     @Test
     fun `given fetch success, when process is running, then OtherRequestRunning is returned`() = test {
         whenever(activityLogStore.getRewindStatusForSite(siteModel))
-                .thenReturn(buildStatusModel(RUNNING))
+            .thenReturn(buildStatusModel(RUNNING))
 
         val result = useCase.postRestoreRequest(rewindId, siteModel, types)
 
@@ -138,7 +144,7 @@ class PostRestoreUseCaseTest : BaseUnitTest() {
     @Test
     fun `given fetch success, when process is queued, then OtherRequestRunning is returned`() = test {
         whenever(activityLogStore.getRewindStatusForSite(siteModel))
-                .thenReturn(buildStatusModel(QUEUED))
+            .thenReturn(buildStatusModel(QUEUED))
 
         val result = useCase.postRestoreRequest(rewindId, siteModel, types)
 
@@ -146,19 +152,19 @@ class PostRestoreUseCaseTest : BaseUnitTest() {
     }
 
     private fun buildStatusModel(status: Status) = RewindStatusModel(
-            state = ACTIVE,
-            reason = Reason.NO_REASON,
-            lastUpdated = Date(1609690147756),
-            canAutoconfigure = null,
-            credentials = null,
-            rewind = Rewind(
-                    rewindId = rewindId,
-                    restoreId = restoreId,
-                    status = status,
-                    progress = null,
-                    reason = null,
-                    message = null,
-                    currentEntry = null
-            )
+        state = ACTIVE,
+        reason = Reason.NO_REASON,
+        lastUpdated = Date(1609690147756),
+        canAutoconfigure = null,
+        credentials = null,
+        rewind = Rewind(
+            rewindId = rewindId,
+            restoreId = restoreId,
+            status = status,
+            progress = null,
+            reason = null,
+            message = null,
+            currentEntry = null
+        )
     )
 }

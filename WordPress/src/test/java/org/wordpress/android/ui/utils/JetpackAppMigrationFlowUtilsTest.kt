@@ -31,14 +31,14 @@ class JetpackAppMigrationFlowUtilsTest {
     private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()
 
     private val jetpackAppMigrationFlowUtils = JetpackAppMigrationFlowUtils(
-            buildConfigWrapper,
-            jetpackMigrationFlowFeatureConfig,
-            contextProvider,
-            appPrefsWrapper,
-            accountStore,
-            appStatus,
-            wordPressPublicData,
-            contentMigrationAnalyticsTracker,
+        buildConfigWrapper,
+        jetpackMigrationFlowFeatureConfig,
+        contextProvider,
+        appPrefsWrapper,
+        accountStore,
+        appStatus,
+        wordPressPublicData,
+        contentMigrationAnalyticsTracker,
     )
 
     @Before

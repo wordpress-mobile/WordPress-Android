@@ -19,9 +19,9 @@ class UndoBlockBlogUseCase @Inject constructor(
     ) {
         withContext(bgDispatcher) {
             ReaderBlogActions.undoBlockBlogFromReader(
-                    blockedBlogData,
-                    source,
-                    readerTracker
+                blockedBlogData,
+                source,
+                readerTracker
             )
         }
     }

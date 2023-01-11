@@ -10,8 +10,8 @@ val SiteModel.logInformation: String
         val planLog = if (isUsingWpComRestApi) "Plan: $planShortName ($planId)" else ""
         val jetpackVersionLog = if (isJetpackInstalled) "Jetpack-version: $jetpackVersion" else ""
         return listOf(typeLog, usernameLog, urlLog, planLog, jetpackVersionLog)
-                .filter { it != "" }
-                .joinToString(separator = " ", prefix = "<", postfix = ">")
+            .filter { it != "" }
+            .joinToString(separator = " ", prefix = "<", postfix = ">")
     }
 
 val SiteModel.stateLogInformation: String

@@ -49,8 +49,8 @@ class QuickStartCardViewHolder(
         mySiteCardToolbarMore.isVisible = card.moreMenuVisible
         mySiteCardToolbarMore.setOnClickListener {
             showQuickStartCardMenu(
-                    card.onRemoveMenuItemClick,
-                    mySiteCardToolbarMore
+                card.onRemoveMenuItemClick,
+                mySiteCardToolbarMore
             )
         }
     }
@@ -102,8 +102,8 @@ class QuickStartCardViewHolder(
         quickStartItemRoot.setOnClickListener { item.onClick.click() }
         quickStartItemMoreIcon.setOnClickListener {
             showQuickStartCardMenu(
-                    onRemoveMenuItemClick,
-                    quickStartItemMoreIcon
+                onRemoveMenuItemClick,
+                quickStartItemMoreIcon
             )
         }
     }

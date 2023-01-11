@@ -49,13 +49,26 @@ private val selectedDate = Date(0)
 
 @ExperimentalCoroutinesApi
 class AuthorsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var store: AuthorsStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
-    @Mock lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var store: AuthorsStore
+
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+
+    @Mock
+    lateinit var site: SiteModel
+
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
+
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
+    @Mock
+    lateinit var statsUtils: StatsUtils
     private lateinit var useCase: AuthorsUseCase
     private val firstAuthorViews = 20
     private val secondAuthorViews = 40
@@ -67,36 +80,40 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = AuthorsUseCase(
-                statsGranularity,
-                testDispatcher(),
-                testDispatcher(),
-                store,
-                statsSiteProvider,
-                selectedDateProvider,
-                tracker,
-                contentDescriptionHelper,
-                statsUtils,
-                BLOCK
+            statsGranularity,
+            testDispatcher(),
+            testDispatcher(),
+            store,
+            statsSiteProvider,
+            selectedDateProvider,
+            tracker,
+            contentDescriptionHelper,
+            statsUtils,
+            BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
-                SelectedDate(
-                        selectedDate,
-                        listOf(selectedDate)
-                )
+            SelectedDate(
+                selectedDate,
+                listOf(selectedDate)
+            )
         )
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<String>(),
                 any()
-        )).thenReturn(contentDescription)
-        whenever(contentDescriptionHelper.buildContentDescription(
+            )
+        ).thenReturn(contentDescription)
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 any(),
                 any(),
                 any(),
                 any<Int>()
-        )).thenReturn(contentDescription)
+            )
+        ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
@@ -107,9 +124,9 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         val limitMode = LimitMode.Top(ITEMS_TO_LOAD)
         whenever(store.getAuthors(site, statsGranularity, limitMode, selectedDate)).thenReturn(model)
         whenever(store.fetchAuthors(site, statsGranularity, limitMode, selectedDate, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadData(true, forced)
@@ -130,18 +147,18 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         assertTitle(this[0])
         assertLabel(this[1])
         assertSingleItem(
-                this[2],
-                authorWithoutPosts.name,
-                authorWithoutPosts.views,
-                authorWithoutPosts.avatarUrl,
-                50
+            this[2],
+            authorWithoutPosts.name,
+            authorWithoutPosts.views,
+            authorWithoutPosts.avatarUrl,
+            50
         )
         return assertExpandableItem(
-                this[3],
-                authorWithPosts.name,
-                authorWithPosts.views,
-                authorWithPosts.avatarUrl,
-                100
+            this[3],
+            authorWithPosts.name,
+            authorWithPosts.views,
+            authorWithPosts.avatarUrl,
+            100
         )
     }
 
@@ -151,18 +168,18 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         assertTitle(this[0])
         assertLabel(this[1])
         assertSingleItem(
-                this[2],
-                authorWithoutPosts.name,
-                authorWithoutPosts.views,
-                authorWithoutPosts.avatarUrl,
-                50
+            this[2],
+            authorWithoutPosts.name,
+            authorWithoutPosts.views,
+            authorWithoutPosts.avatarUrl,
+            50
         )
         val expandableItem = assertExpandableItem(
-                this[3],
-                authorWithPosts.name,
-                authorWithPosts.views,
-                authorWithPosts.avatarUrl,
-                100
+            this[3],
+            authorWithPosts.name,
+            authorWithPosts.views,
+            authorWithPosts.avatarUrl,
+            100
         )
         assertSingleItem(this[4], post.title, post.views, null)
         assertThat(this[5]).isEqualTo(Divider)
@@ -175,14 +192,14 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         val model = AuthorsModel(10, listOf(authorWithoutPosts), true)
         whenever(store.getAuthors(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate)).thenReturn(model)
         whenever(
-                store.fetchAuthors(
-                        site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate, forced
-                )
+            store.fetchAuthors(
+                site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate, forced
+            )
         ).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         val result = loadData(true, forced)
 
@@ -192,11 +209,11 @@ class AuthorsUseCaseTest : BaseUnitTest() {
             assertTitle(this[0])
             assertLabel(this[1])
             assertSingleItem(
-                    this[2],
-                    authorWithoutPosts.name,
-                    authorWithoutPosts.views,
-                    authorWithoutPosts.avatarUrl,
-                    100
+                this[2],
+                authorWithoutPosts.name,
+                authorWithoutPosts.views,
+                authorWithoutPosts.avatarUrl,
+                100
             )
             assertLink(this[3])
         }
@@ -206,12 +223,12 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     fun `maps empty authors to UI model`() = test {
         val forced = false
         whenever(
-                store.fetchAuthors(
-                        site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate, forced
-                )
+            store.fetchAuthors(
+                site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate, forced
+            )
         ).thenReturn(
-                OnStatsFetched(AuthorsModel(0, listOf(), false))
+            OnStatsFetched(AuthorsModel(0, listOf(), false))
         )
 
         val result = loadData(true, forced)
@@ -229,17 +246,17 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(
-                store.fetchAuthors(
-                        site,
-                        statsGranularity,
-                        LimitMode.Top(ITEMS_TO_LOAD),
-                        selectedDate,
-                        forced
-                )
+            store.fetchAuthors(
+                site,
+                statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate,
+                forced
+            )
         ).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadData(true, forced)

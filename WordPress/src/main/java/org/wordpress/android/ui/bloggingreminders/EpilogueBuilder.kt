@@ -37,10 +37,10 @@ class EpilogueBuilder @Inject constructor(
         val body = when (enabledDays.size) {
             ZERO -> UiStringRes(string.blogging_reminders_epilogue_body_no_reminders)
             SEVEN_DAYS -> UiStringText(
-                    htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            string.blogging_reminders_epilogue_body_everyday_with_time,
-                            bloggingRemindersModel?.getNotificationTime()
-                    )
+                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                    string.blogging_reminders_epilogue_body_everyday_with_time,
+                    bloggingRemindersModel?.getNotificationTime()
+                )
             )
             else -> {
                 val numberOfTimes = (dayLabelUtils.buildLowercaseNTimesLabel(bloggingRemindersModel) ?: "").toBold()
@@ -48,21 +48,21 @@ class EpilogueBuilder @Inject constructor(
                 val selectedDays = listFormatterUtils.formatList(enabledDays.print().map { it.toBold() })
 
                 UiStringText(
-                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                string.blogging_reminders_epilogue_body_days_with_time,
-                                numberOfTimes,
-                                selectedDays,
-                                bloggingRemindersModel?.getNotificationTime().toString().toBold()
-                        )
+                    htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                        string.blogging_reminders_epilogue_body_days_with_time,
+                        numberOfTimes,
+                        selectedDays,
+                        bloggingRemindersModel?.getNotificationTime().toString().toBold()
+                    )
                 )
             }
         }
 
         return listOf(
-                Illustration(drawable.img_illustration_bell_yellow_96dp),
-                Title(title),
-                HighEmphasisText(EmphasizedText(body, false)),
-                Caption(UiStringRes(string.blogging_reminders_epilogue_caption))
+            Illustration(drawable.img_illustration_bell_yellow_96dp),
+            Title(title),
+            HighEmphasisText(EmphasizedText(body, false)),
+            Caption(UiStringRes(string.blogging_reminders_epilogue_caption))
         )
     }
 
@@ -70,9 +70,9 @@ class EpilogueBuilder @Inject constructor(
         onDone: () -> Unit
     ): PrimaryButton {
         return PrimaryButton(
-                UiStringRes(string.blogging_reminders_done),
-                enabled = true,
-                ListItemInteraction.create(onDone)
+            UiStringRes(string.blogging_reminders_done),
+            enabled = true,
+            ListItemInteraction.create(onDone)
         )
     }
 

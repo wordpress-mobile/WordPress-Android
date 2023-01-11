@@ -21,11 +21,16 @@ import javax.inject.Provider
 
 @ExperimentalCoroutinesApi
 class BaseStatsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var localDataProvider: Provider<String?>
-    @Mock lateinit var remoteDataProvider: Provider<String?>
+    @Mock
+    lateinit var localDataProvider: Provider<String?>
+
+    @Mock
+    lateinit var remoteDataProvider: Provider<String?>
     private val localData = "local data"
     private val remoteData = "remote data"
-    @Mock lateinit var site: SiteModel
+
+    @Mock
+    lateinit var site: SiteModel
     private lateinit var block: TestUseCase
     private val result = mutableListOf<UseCaseModel?>()
     private val loadingData = listOf<BlockListItem>(Title(R.string.stats_insights_all_time))
@@ -33,9 +38,9 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         block = TestUseCase(
-                localDataProvider,
-                remoteDataProvider,
-                loadingData
+            localDataProvider,
+            remoteDataProvider,
+            loadingData
         )
         whenever(localDataProvider.get()).thenReturn(localData)
         whenever(remoteDataProvider.get()).thenReturn(remoteData)
@@ -106,11 +111,11 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         private val remoteDataProvider: Provider<String?>,
         private val loadingItems: List<BlockListItem>
     ) : BaseStatsUseCase<String, Int>(
-            ALL_TIME_STATS,
-            UnconfinedTestDispatcher(),
-            UnconfinedTestDispatcher(),
-            0,
-            listOf()
+        ALL_TIME_STATS,
+        UnconfinedTestDispatcher(),
+        UnconfinedTestDispatcher(),
+        0,
+        listOf()
     ) {
         override fun buildLoadingItem(): List<BlockListItem> {
             return loadingItems

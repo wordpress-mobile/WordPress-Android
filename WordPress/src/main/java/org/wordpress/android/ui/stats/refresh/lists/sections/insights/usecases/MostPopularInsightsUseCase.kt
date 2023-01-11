@@ -75,42 +75,42 @@ class MostPopularInsightsUseCase
             items.add(Empty(R.string.stats_most_popular_percent_views_empty))
         } else {
             val highestDayPercent = resourceProvider.getString(
-                    R.string.stats_most_popular_percent_views,
-                    percentFormatter.format(
-                            value = domainModel.highestDayPercent.roundToInt(),
-                            rounding = RoundingMode.HALF_UP
-                    )
+                R.string.stats_most_popular_percent_views,
+                percentFormatter.format(
+                    value = domainModel.highestDayPercent.roundToInt(),
+                    rounding = RoundingMode.HALF_UP
+                )
             )
             val highestHourPercent = resourceProvider.getString(
-                    R.string.stats_most_popular_percent_views,
-                    percentFormatter.format(
-                            value = domainModel.highestHourPercent.roundToInt(),
-                            rounding = RoundingMode.HALF_UP
-                    )
+                R.string.stats_most_popular_percent_views,
+                percentFormatter.format(
+                    value = domainModel.highestHourPercent.roundToInt(),
+                    rounding = RoundingMode.HALF_UP
+                )
             )
             items.add(
-                    QuickScanItem(
-                            Column(
-                                    R.string.stats_insights_best_day,
-                                    statsDateUtils.getWeekDay(domainModel.highestDayOfWeek),
-                                    if (BuildConfig.IS_JETPACK_APP) {
-                                        highestDayPercent
-                                    } else {
-                                        null
-                                    },
-                                    highestDayPercent
-                            ),
-                            Column(
-                                    R.string.stats_insights_best_hour,
-                                    statsDateUtils.getHour(domainModel.highestHour),
-                                    if (BuildConfig.IS_JETPACK_APP) {
-                                        highestHourPercent
-                                    } else {
-                                        null
-                                    },
-                                    highestHourPercent
-                            )
+                QuickScanItem(
+                    Column(
+                        R.string.stats_insights_best_day,
+                        statsDateUtils.getWeekDay(domainModel.highestDayOfWeek),
+                        if (BuildConfig.IS_JETPACK_APP) {
+                            highestDayPercent
+                        } else {
+                            null
+                        },
+                        highestDayPercent
+                    ),
+                    Column(
+                        R.string.stats_insights_best_hour,
+                        statsDateUtils.getHour(domainModel.highestHour),
+                        if (BuildConfig.IS_JETPACK_APP) {
+                            highestHourPercent
+                        } else {
+                            null
+                        },
+                        highestHourPercent
                     )
+                )
             )
         }
 
@@ -131,16 +131,17 @@ class MostPopularInsightsUseCase
     }
 
     private fun buildTitle() = Title(
-            textResource = if (BuildConfig.IS_JETPACK_APP) {
-                R.string.stats_insights_popular_title
-            } else {
-                R.string.stats_insights_popular
-            },
-            menuAction = if (BuildConfig.IS_JETPACK_APP) {
-                null
-            } else {
-                this::onMenuClick
-            })
+        textResource = if (BuildConfig.IS_JETPACK_APP) {
+            R.string.stats_insights_popular_title
+        } else {
+            R.string.stats_insights_popular
+        },
+        menuAction = if (BuildConfig.IS_JETPACK_APP) {
+            null
+        } else {
+            this::onMenuClick
+        }
+    )
 
     private fun onMenuClick(view: View) {
         popupMenuHandler.onMenuClick(view, type)

@@ -70,7 +70,7 @@ class ImageEditorInitializer {
             }
 
         private fun loadIntoFileWithResultListener(imageManager: ImageManager):
-            (Uri, ImageEditor.RequestListener<File>) -> Unit = { imageUri, listener ->
+                    (Uri, ImageEditor.RequestListener<File>) -> Unit = { imageUri, listener ->
             imageManager.loadIntoFileWithResultListener(
                 imageUri,
                 object : RequestListener<File> {
@@ -82,7 +82,7 @@ class ImageEditorInitializer {
         }
 
         private fun loadIntoImageView(imageManager: ImageManager):
-            (String, ImageView, ScaleType) -> Unit = { imageUrl, imageView, scaleType ->
+                    (String, ImageView, ScaleType) -> Unit = { imageUrl, imageView, scaleType ->
             imageManager.load(imageView, IMAGE, imageUrl, scaleType)
         }
 
@@ -90,14 +90,14 @@ class ImageEditorInitializer {
             if (model != null && (model is String || model is Uri)) {
                 listener.onResourceReady(resource, model.toString())
             } else {
-                throw(IllegalArgumentException(IMAGE_STRING_URL_MSG))
+                throw (IllegalArgumentException(IMAGE_STRING_URL_MSG))
             }
 
         private fun <T : Any> onLoadFailed(model: Any?, listener: ImageEditor.RequestListener<T>, e: Exception?) =
             if (model != null && (model is String || model is Uri)) {
                 listener.onLoadFailed(e, model.toString())
             } else {
-                throw(IllegalArgumentException(IMAGE_STRING_URL_MSG))
+                throw (IllegalArgumentException(IMAGE_STRING_URL_MSG))
             }
 
         private fun onEditorAction(imageEditorTracker: ImageEditorTracker): (EditorAction) -> Unit = { action ->

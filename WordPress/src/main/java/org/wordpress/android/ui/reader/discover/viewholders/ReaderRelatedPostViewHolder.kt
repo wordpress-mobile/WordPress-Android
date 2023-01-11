@@ -6,16 +6,16 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ReaderCardviewRelatedPostBinding
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.RelatedPostsUiState.ReaderRelatedPostUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.extensions.viewBinding
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
-import org.wordpress.android.util.extensions.viewBinding
 
 class ReaderRelatedPostViewHolder(
     private val uiHelpers: UiHelpers,
     private val imageManager: ImageManager,
     private val parent: ViewGroup,
     private val binding: ReaderCardviewRelatedPostBinding =
-            parent.viewBinding(ReaderCardviewRelatedPostBinding::inflate)
+        parent.viewBinding(ReaderCardviewRelatedPostBinding::inflate)
 ) : RecyclerView.ViewHolder(binding.root) {
     fun onBind(state: ReaderRelatedPostUiState) = with(binding) {
         updateFeaturedImage(state)
@@ -30,10 +30,10 @@ class ReaderRelatedPostViewHolder(
             imageManager.cancelRequestAndClearImageView(imageFeatured)
         } else {
             imageManager.loadImageWithCorners(
-                    imageFeatured,
-                    PHOTO,
-                    state.featuredImageUrl,
-                    uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
+                imageFeatured,
+                PHOTO,
+                state.featuredImageUrl,
+                uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
             )
         }
     }

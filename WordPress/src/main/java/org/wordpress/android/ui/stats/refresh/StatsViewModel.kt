@@ -86,9 +86,9 @@ class StatsViewModel
     private var isInitialized = false
 
     private val _showSnackbarMessage = mergeNotNull(
-            listUseCases.values.map { it.snackbarMessage },
-            distinct = true,
-            singleEvent = true
+        listUseCases.values.map { it.snackbarMessage },
+        distinct = true,
+        singleEvent = true
     )
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
@@ -166,9 +166,9 @@ class StatsViewModel
 
             // Added today's stats feature config to check whether that card is enabled when stats screen is accessed
             analyticsTracker.track(
-                    stat = AnalyticsTracker.Stat.STATS_ACCESSED,
-                    site = statsSiteProvider.siteModel,
-                    feature = todaysStatsCardFeatureConfig
+                stat = AnalyticsTracker.Stat.STATS_ACCESSED,
+                site = statsSiteProvider.siteModel,
+                feature = todaysStatsCardFeatureConfig
             )
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
@@ -208,7 +208,7 @@ class StatsViewModel
 
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
 
-        if(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(STATS))
+        if (jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(STATS))
             showJetpackOverlay()
     }
 
@@ -248,7 +248,7 @@ class StatsViewModel
     }
 
     private fun isStatsModuleEnabled() =
-            statsSiteProvider.siteModel.isActiveModuleEnabled("stats") || statsSiteProvider.siteModel.isWPCom
+        statsSiteProvider.siteModel.isActiveModuleEnabled("stats") || statsSiteProvider.siteModel.isWPCom
 
     private fun loadData(executeLoading: suspend () -> Unit) = launch {
         _isRefreshing.value = true
@@ -330,7 +330,7 @@ class StatsViewModel
                 is RemoteRequestFailure -> {
                     _statsModuleUiModel.value = Event(buildShowStatsDisabledViewUiModel())
                     _showSnackbarMessage.value =
-                            SnackbarMessageHolder(UiStringRes(R.string.stats_disabled_enable_stats_error_message))
+                        SnackbarMessageHolder(UiStringRes(R.string.stats_disabled_enable_stats_error_message))
                 }
                 is Success -> {
                     _statsModuleUiModel.value = Event(buildShowStatsEnabledViewUiModel())
@@ -342,10 +342,10 @@ class StatsViewModel
     private fun buildShowStatsEnabledViewUiModel() = StatsModuleUiModel(disabledStatsViewVisible = false)
 
     private fun buildShowStatsDisabledViewUiModel() =
-            StatsModuleUiModel(disabledStatsViewVisible = true, disabledStatsProgressVisible = false)
+        StatsModuleUiModel(disabledStatsViewVisible = true, disabledStatsProgressVisible = false)
 
     private fun buildShowStatsActivatingViewUiModel() =
-            StatsModuleUiModel(disabledStatsViewVisible = true, disabledStatsProgressVisible = true)
+        StatsModuleUiModel(disabledStatsViewVisible = true, disabledStatsProgressVisible = true)
 
     data class DateSelectorUiModel(
         val isVisible: Boolean = false,

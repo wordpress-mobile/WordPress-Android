@@ -41,10 +41,17 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
 class PaginateCommentsUseCaseTest : BaseUnitTest() {
-    @Mock private lateinit var commentStore: CommentsStore
-    @Mock private lateinit var paginateCommentsResourceProvider: PaginateCommentsResourceProvider
-    @Mock private lateinit var unrepliedCommentsUtils: UnrepliedCommentsUtils
-    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock
+    private lateinit var commentStore: CommentsStore
+
+    @Mock
+    private lateinit var paginateCommentsResourceProvider: PaginateCommentsResourceProvider
+
+    @Mock
+    private lateinit var unrepliedCommentsUtils: UnrepliedCommentsUtils
+
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     private lateinit var paginateCommentsUseCase: PaginateCommentsUseCase
 
@@ -58,13 +65,13 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
         whenever(paginateCommentsResourceProvider.networkUtilsWrapper).thenReturn(networkUtilsWrapper)
 
         `when`(commentStore.fetchCommentsPage(eq(site), any(), eq(0), any(), any()))
-                .thenReturn(testCommentsPayload30)
+            .thenReturn(testCommentsPayload30)
         `when`(commentStore.fetchCommentsPage(eq(site), any(), eq(30), any(), any()))
-                .thenReturn(testCommentsPayload60)
+            .thenReturn(testCommentsPayload60)
         `when`(commentStore.fetchCommentsPage(eq(site), any(), eq(60), any(), any()))
-                .thenReturn(testCommentsPayloadLastPage)
+            .thenReturn(testCommentsPayloadLastPage)
         `when`(commentStore.getCachedComments(eq(site), any(), any()))
-                .thenReturn(testCommentsPayload60)
+            .thenReturn(testCommentsPayload60)
 
         paginateCommentsUseCase = PaginateCommentsUseCase(paginateCommentsResourceProvider)
     }
@@ -76,21 +83,21 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
         paginateCommentsUseCase.manageAction(OnGetPage(GetPageParameters(site, 30, 0, ALL)))
 
         verify(commentStore, times(1)).fetchCommentsPage(
-                site,
-                30,
-                0,
-                ALL.toCommentStatus(),
-                ALL.toCommentCacheStatuses()
+            site,
+            30,
+            0,
+            ALL.toCommentStatus(),
+            ALL.toCommentCacheStatuses()
         )
 
         paginateCommentsUseCase.manageAction(OnGetPage(GetPageParameters(site, 40, 30, PENDING)))
 
         verify(commentStore, times(1)).fetchCommentsPage(
-                site,
-                40,
-                30,
-                PENDING.toCommentStatus(),
-                PENDING.toCommentCacheStatuses()
+            site,
+            40,
+            30,
+            PENDING.toCommentStatus(),
+            PENDING.toCommentCacheStatuses()
         )
     }
 
@@ -222,12 +229,12 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
         val cachedData = PagingData.empty()
 
         whenever(commentStore.fetchCommentsPage(any(), any(), eq(0), any(), any()))
-                .thenReturn(
-                        CommentsActionPayload(
-                                error,
-                                cachedData
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    error,
+                    cachedData
                 )
+            )
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>()
 
@@ -255,12 +262,12 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
         val cachedData = PagingData(comments = testComments.take(30), hasMore = true)
 
         whenever(commentStore.fetchCommentsPage(any(), any(), eq(0), any(), any()))
-                .thenReturn(
-                        CommentsActionPayload(
-                                error,
-                                cachedData
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    error,
+                    cachedData
                 )
+            )
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>()
 
@@ -287,40 +294,40 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `comment store is called when requesting cached comments`() = test {
         paginateCommentsUseCase.manageAction(
-                OnReloadFromCache(
-                        ReloadFromCacheParameters(
-                                GetPageParameters(
-                                        site,
-                                        30,
-                                        0,
-                                        ALL
-                                ), true
-                        )
+            OnReloadFromCache(
+                ReloadFromCacheParameters(
+                    GetPageParameters(
+                        site,
+                        30,
+                        0,
+                        ALL
+                    ), true
                 )
+            )
         )
 
         verify(commentStore, times(1)).getCachedComments(
-                site,
-                ALL.toCommentCacheStatuses(),
-                true
+            site,
+            ALL.toCommentCacheStatuses(),
+            true
         )
 
         paginateCommentsUseCase.manageAction(
-                OnReloadFromCache(
-                        ReloadFromCacheParameters(
-                                GetPageParameters(
-                                        site, 430,
-                                        0,
-                                        PENDING
-                                ), false
-                        )
+            OnReloadFromCache(
+                ReloadFromCacheParameters(
+                    GetPageParameters(
+                        site, 430,
+                        0,
+                        PENDING
+                    ), false
                 )
+            )
         )
 
         verify(commentStore, times(1)).getCachedComments(
-                site,
-                PENDING.toCommentCacheStatuses(),
-                false
+            site,
+            PENDING.toCommentCacheStatuses(),
+            false
         )
     }
 
@@ -335,29 +342,29 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
         }
 
         paginateCommentsUseCase.manageAction(
-                OnReloadFromCache(
-                        ReloadFromCacheParameters(
-                                GetPageParameters(
-                                        site,
-                                        30,
-                                        0,
-                                        ALL
-                                ), true
-                        )
+            OnReloadFromCache(
+                ReloadFromCacheParameters(
+                    GetPageParameters(
+                        site,
+                        30,
+                        0,
+                        ALL
+                    ), true
                 )
+            )
         )
 
         paginateCommentsUseCase.manageAction(
-                OnReloadFromCache(
-                        ReloadFromCacheParameters(
-                                GetPageParameters(
-                                        site,
-                                        30,
-                                        30,
-                                        ALL
-                                ), true
-                        )
+            OnReloadFromCache(
+                ReloadFromCacheParameters(
+                    GetPageParameters(
+                        site,
+                        30,
+                        30,
+                        ALL
+                    ), true
                 )
+            )
         )
 
         assertThat(result.any { it is UseCaseResult.Loading }).isFalse
@@ -376,16 +383,16 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
         }
 
         paginateCommentsUseCase.manageAction(
-                OnReloadFromCache(
-                        ReloadFromCacheParameters(
-                                GetPageParameters(
-                                        site,
-                                        30,
-                                        0,
-                                        ALL
-                                ), true
-                        )
+            OnReloadFromCache(
+                ReloadFromCacheParameters(
+                    GetPageParameters(
+                        site,
+                        30,
+                        0,
+                        ALL
+                    ), true
                 )
+            )
         )
 
         val dataResult = result[0]
@@ -407,12 +414,12 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
         val cachedData = PagingData.empty()
 
         whenever(commentStore.getCachedComments(any(), any(), any()))
-                .thenReturn(
-                        CommentsActionPayload(
-                                error,
-                                cachedData
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    error,
+                    cachedData
                 )
+            )
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>()
 
@@ -423,16 +430,16 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
         }
 
         paginateCommentsUseCase.manageAction(
-                OnReloadFromCache(
-                        ReloadFromCacheParameters(
-                                GetPageParameters(
-                                        site,
-                                        30,
-                                        0,
-                                        ALL
-                                ), true
-                        )
+            OnReloadFromCache(
+                ReloadFromCacheParameters(
+                    GetPageParameters(
+                        site,
+                        30,
+                        0,
+                        ALL
+                    ), true
                 )
+            )
         )
 
         val errorResult = result[0]
@@ -451,12 +458,12 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
         val cachedData = PagingData(comments = testComments.take(60), hasMore = true)
 
         whenever(commentStore.getCachedComments(any(), any(), any()))
-                .thenReturn(
-                        CommentsActionPayload(
-                                error,
-                                cachedData
-                        )
+            .thenReturn(
+                CommentsActionPayload(
+                    error,
+                    cachedData
                 )
+            )
 
         val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>()
 
@@ -467,16 +474,16 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
         }
 
         paginateCommentsUseCase.manageAction(
-                OnReloadFromCache(
-                        ReloadFromCacheParameters(
-                                GetPageParameters(
-                                        site,
-                                        30,
-                                        0,
-                                        ALL
-                                ), true
-                        )
+            OnReloadFromCache(
+                ReloadFromCacheParameters(
+                    GetPageParameters(
+                        site,
+                        30,
+                        0,
+                        ALL
+                    ), true
                 )
+            )
         )
 
         val errorResult = result[0]

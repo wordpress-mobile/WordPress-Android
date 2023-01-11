@@ -19,10 +19,11 @@ class PreviewStateHelper @Inject constructor() {
         PostListRemotePreviewState.PREVIEWING -> {
             prevState?.let {
                 if (it == PostListRemotePreviewState.UPLOADING_FOR_PREVIEW ||
-                        it == PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW) {
+                    it == PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW
+                ) {
                     handleRemotePreview(
-                            (postInfo as PostInfoType.PostInfo).post.id,
-                            mapRemotePreviewStateToType(prevState)
+                        (postInfo as PostInfoType.PostInfo).post.id,
+                        mapRemotePreviewStateToType(prevState)
                     )
                 }
             }
@@ -51,28 +52,28 @@ class PreviewStateHelper @Inject constructor() {
         override fun startUploading(isRemoteAutoSave: Boolean, post: PostImmutableModel) {
             if (isRemoteAutoSave) {
                 action.triggerPreviewStateUpdate.invoke(
-                        PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW,
-                        PostInfoType.PostNoInfo
+                    PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW,
+                    PostInfoType.PostNoInfo
                 )
                 if (!UploadService.isPostUploadingOrQueued(post)) {
                     UploadService.uploadPost(activity, post.id, false)
                 } else {
                     AppLog.d(
-                            AppLog.T.POSTS,
-                            "Remote auto save for preview not possible: post already uploading or queued"
+                        AppLog.T.POSTS,
+                        "Remote auto save for preview not possible: post already uploading or queued"
                     )
                 }
             } else {
                 action.triggerPreviewStateUpdate.invoke(
-                        PostListRemotePreviewState.UPLOADING_FOR_PREVIEW,
-                        PostInfoType.PostNoInfo
+                    PostListRemotePreviewState.UPLOADING_FOR_PREVIEW,
+                    PostInfoType.PostNoInfo
                 )
                 if (!UploadService.isPostUploadingOrQueued(post)) {
                     UploadService.uploadPost(activity, post.id, false)
                 } else {
                     AppLog.d(
-                            AppLog.T.POSTS,
-                            "Upload for preview not possible: post already uploading or queued"
+                        AppLog.T.POSTS,
+                        "Upload for preview not possible: post already uploading or queued"
                     )
                 }
             }

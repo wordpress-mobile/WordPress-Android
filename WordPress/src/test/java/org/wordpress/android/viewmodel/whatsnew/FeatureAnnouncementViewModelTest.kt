@@ -28,46 +28,60 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 @ExperimentalCoroutinesApi
 class FeatureAnnouncementViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: FeatureAnnouncementViewModel
-    @Mock lateinit var onDialogClosedObserver: Observer<Unit>
-    @Mock lateinit var onAnnouncementDetailsRequestedObserver: Observer<String>
-    @Mock lateinit var featuresObserver: Observer<List<FeatureAnnouncementItem>>
-    @Mock lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
-    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    lateinit var onDialogClosedObserver: Observer<Unit>
+
+    @Mock
+    lateinit var onAnnouncementDetailsRequestedObserver: Observer<String>
+
+    @Mock
+    lateinit var featuresObserver: Observer<List<FeatureAnnouncementItem>>
+
+    @Mock
+    lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
+
+    @Mock
+    lateinit var buildConfigWrapper: BuildConfigWrapper
+
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
 
     private val uiModelResults = mutableListOf<FeatureAnnouncementUiModel>()
 
     private val testFeatures = listOf(
-            FeatureAnnouncementItem(
-                    "Test Feature 1",
-                    "Test Description 1",
-                    "",
-                    "https://wordpress.org/icon1.png"
-            ),
-            FeatureAnnouncementItem(
-                    "Test Feature 2",
-                    "Test Description 1",
-                    "",
-                    "https://wordpress.org/icon2.png"
-            ),
-            FeatureAnnouncementItem(
-                    "Test Feature 3",
-                    "Test Description 3",
-                    "",
-                    "https://wordpress.org/icon3.png"
-            )
+        FeatureAnnouncementItem(
+            "Test Feature 1",
+            "Test Description 1",
+            "",
+            "https://wordpress.org/icon1.png"
+        ),
+        FeatureAnnouncementItem(
+            "Test Feature 2",
+            "Test Description 1",
+            "",
+            "https://wordpress.org/icon2.png"
+        ),
+        FeatureAnnouncementItem(
+            "Test Feature 3",
+            "Test Description 3",
+            "",
+            "https://wordpress.org/icon3.png"
+        )
     )
 
     private val featureAnnouncement = FeatureAnnouncement(
-            "14.7",
-            1,
-            "14.5",
-            "14.7",
-            emptyList(),
-            "https://wordpress.org/",
-            true,
-            testFeatures
+        "14.7",
+        1,
+        "14.5",
+        "14.7",
+        emptyList(),
+        "https://wordpress.org/",
+        true,
+        testFeatures
     )
 
     @Before
@@ -77,11 +91,11 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(any())).thenReturn(featureAnnouncement)
         whenever(buildConfigWrapper.getAppVersionCode()).thenReturn(850)
         viewModel = FeatureAnnouncementViewModel(
-                featureAnnouncementProvider,
-                analyticsTrackerWrapper,
-                buildConfigWrapper,
-                appPrefsWrapper,
-                NoDelayCoroutineDispatcher()
+            featureAnnouncementProvider,
+            analyticsTrackerWrapper,
+            buildConfigWrapper,
+            appPrefsWrapper,
+            NoDelayCoroutineDispatcher()
         )
         viewModel.uiModel.observeForever { if (it != null) uiModelResults.add(it) }
         viewModel.onDialogClosed.observeForever(onDialogClosedObserver)
@@ -124,10 +138,10 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
     fun `screen time is tracked when session ends`() {
         viewModel.onSessionEnded()
         verify(analyticsTrackerWrapper).track(
-                eq(
-                        Stat.FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED
-                ),
-                any<Map<String, *>>()
+            eq(
+                Stat.FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED
+            ),
+            any<Map<String, *>>()
         )
     }
 
@@ -140,7 +154,7 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
     @Test
     fun `find Out More is not visible when detailsUrl is missing`() = test {
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
-                featureAnnouncement.copy(detailsUrl = "")
+            featureAnnouncement.copy(detailsUrl = "")
         )
 
         viewModel.start()
@@ -158,7 +172,7 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
     @Test
     fun `when no cached announcement is available we will try to fetch one from endpoint`() = test {
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
-                null
+            null
         )
         viewModel.start()
 

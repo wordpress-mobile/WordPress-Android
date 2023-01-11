@@ -171,39 +171,39 @@ class DomainSuggestionsViewModel @Inject constructor(
         }
         if (event.isError) {
             AppLog.e(
-                    T.DOMAIN_REGISTRATION,
-                    "An error occurred while fetching the domain suggestions with type: " + event.error.type
+                T.DOMAIN_REGISTRATION,
+                "An error occurred while fetching the domain suggestions with type: " + event.error.type
             )
             suggestions = ListState.Error(suggestions, event.error.message)
             return
         }
 
         event.suggestions
-                .filter { !it.is_free }
-                .map {
-                    val product = products?.firstOrNull { product -> product.productId == it.product_id }
-                    DomainSuggestionItem(
-                            domainName = it.domain_name,
-                            cost = it.cost,
-                            isOnSale = product?.isSaleDomain() ?: false,
-                            saleCost = product?.saleCostForDisplay().toString(),
-                            isFree = it.is_free,
-                            supportsPrivacy = it.supports_privacy,
-                            productId = it.product_id,
-                            productSlug = it.product_slug,
-                            vendor = it.vendor,
-                            relevance = it.relevance,
-                            isSelected = _selectedSuggestion.value?.domainName == it.domain_name,
-                            isCostVisible = siteDomainsFeatureConfig.isEnabled(),
-                            isFreeWithCredits = domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION,
-                            isEnabled = true
-                    )
-                }
-                .sortedBy { it.relevance }
-                .asReversed()
-                .let {
-                    suggestions = ListState.Success(it)
-                }
+            .filter { !it.is_free }
+            .map {
+                val product = products?.firstOrNull { product -> product.productId == it.product_id }
+                DomainSuggestionItem(
+                    domainName = it.domain_name,
+                    cost = it.cost,
+                    isOnSale = product?.isSaleDomain() ?: false,
+                    saleCost = product?.saleCostForDisplay().toString(),
+                    isFree = it.is_free,
+                    supportsPrivacy = it.supports_privacy,
+                    productId = it.product_id,
+                    productSlug = it.product_slug,
+                    vendor = it.vendor,
+                    relevance = it.relevance,
+                    isSelected = _selectedSuggestion.value?.domainName == it.domain_name,
+                    isCostVisible = siteDomainsFeatureConfig.isEnabled(),
+                    isFreeWithCredits = domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION,
+                    isEnabled = true
+                )
+            }
+            .sortedBy { it.relevance }
+            .asReversed()
+            .let {
+                suggestions = ListState.Success(it)
+            }
     }
 
     fun onDomainSuggestionSelected(selectedSuggestion: DomainSuggestionItem?) {
@@ -245,11 +245,11 @@ class DomainSuggestionsViewModel @Inject constructor(
         showLoadingButton(true)
 
         val event = createCartUseCase.execute(
-                site,
-                selectedSuggestion.productId,
-                selectedSuggestion.domainName,
-                selectedSuggestion.supportsPrivacy,
-                false
+            site,
+            selectedSuggestion.productId,
+            selectedSuggestion.domainName,
+            selectedSuggestion.supportsPrivacy,
+            false
         )
 
         showLoadingButton(false)

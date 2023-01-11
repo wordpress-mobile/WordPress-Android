@@ -23,11 +23,11 @@ class TotalStatsMapper @Inject constructor(
         val positive = currentWeekLikes.sum() >= previousWeekLikes.sum()
 
         return ValueWithChartItem(
-                value = currentWeekSumFormatted,
-                chartValues = currentWeekLikes,
-                positive = positive,
-                // Add extra bottom margin if there is no information text.
-                extraBottomMargin = !shouldShowTotalInformation(currentWeekLikes.sum(), previousWeekLikes.sum())
+            value = currentWeekSumFormatted,
+            chartValues = currentWeekLikes,
+            positive = positive,
+            // Add extra bottom margin if there is no information text.
+            extraBottomMargin = !shouldShowTotalInformation(currentWeekLikes.sum(), previousWeekLikes.sum())
         )
     }
 
@@ -39,16 +39,16 @@ class TotalStatsMapper @Inject constructor(
         val positive = currentWeekComments.sum() >= previousWeekComments.sum()
 
         return ValueWithChartItem(
-                value = currentWeekSumFormatted,
-                chartValues = currentWeekComments,
-                positive = positive,
-                // Add extra bottom margin if there is no information text.
-                extraBottomMargin = !shouldShowTotalInformation(currentWeekComments.sum(), previousWeekComments.sum())
+            value = currentWeekSumFormatted,
+            chartValues = currentWeekComments,
+            positive = positive,
+            // Add extra bottom margin if there is no information text.
+            extraBottomMargin = !shouldShowTotalInformation(currentWeekComments.sum(), previousWeekComments.sum())
         )
     }
 
     private fun shouldShowTotalInformation(currentWeekSum: Long, previousWeekSum: Long) =
-            currentWeekSum != 0L || previousWeekSum != 0L
+        currentWeekSum != 0L || previousWeekSum != 0L
 
     fun shouldShowCommentsGuideCard(dates: List<PeriodData>): Boolean {
         return getCurrentWeekDays(dates, COMMENTS).sum() > 0
@@ -81,11 +81,11 @@ class TotalStatsMapper @Inject constructor(
         }
 
         return Text(
-                text = resourceProvider.getString(stringRes, change),
-                color = when {
-                    positive -> mapOf(R.color.stats_color_positive to change)
-                    else -> mapOf(R.color.stats_color_negative to change)
-                }
+            text = resourceProvider.getString(stringRes, change),
+            color = when {
+                positive -> mapOf(R.color.stats_color_positive to change)
+                else -> mapOf(R.color.stats_color_negative to change)
+            }
         )
     }
 
@@ -110,8 +110,8 @@ class TotalStatsMapper @Inject constructor(
             return emptyList()
         }
         val previousWeekDays = dates.subList(
-                dates.lastIndex - DAY_COUNT_TOTAL + 1,
-                dates.lastIndex - DAY_COUNT_FOR_PREVIOUS_WEEK + 1
+            dates.lastIndex - DAY_COUNT_TOTAL + 1,
+            dates.lastIndex - DAY_COUNT_FOR_PREVIOUS_WEEK + 1
         )
         return mapToStatsType(previousWeekDays, type)
     }

@@ -41,7 +41,7 @@ class ImageBlockProcessorTest {
     @Test
     fun `processBlock leaves image block with colliding prefix unchanged`() {
         val processedBlock = processor.processBlock(
-                TestContent.imageBlockWithPrefixCollision
+            TestContent.imageBlockWithPrefixCollision
         )
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.imageBlockWithPrefixCollision)
     }
@@ -49,7 +49,7 @@ class ImageBlockProcessorTest {
     @Test
     fun `processBlock leaves image block with colliding suffix unchanged`() {
         val processedBlock = processor.processBlock(
-                TestContent.imageBlockWithSuffixCollision
+            TestContent.imageBlockWithSuffixCollision
         )
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.imageBlockWithSuffixCollision)
     }

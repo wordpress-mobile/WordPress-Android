@@ -42,18 +42,41 @@ import java.util.Calendar
 
 @ExperimentalCoroutinesApi
 class OverviewUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var store: VisitsAndViewsStore
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
-    @Mock lateinit var overviewMapper: OverviewMapper
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var columns: Columns
-    @Mock lateinit var title: ValueItem
-    @Mock lateinit var barChartItem: BarChartItem
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock
+    lateinit var store: VisitsAndViewsStore
+
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
+
+    @Mock
+    lateinit var statsDateFormatter: StatsDateFormatter
+
+    @Mock
+    lateinit var overviewMapper: OverviewMapper
+
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var columns: Columns
+
+    @Mock
+    lateinit var title: ValueItem
+
+    @Mock
+    lateinit var barChartItem: BarChartItem
+
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
     private lateinit var useCase: OverviewUseCase
     private val site = SiteModel()
     private val siteId = 1L
@@ -66,18 +89,18 @@ class OverviewUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = OverviewUseCase(
-                statsGranularity,
-                store,
-                selectedDateProvider,
-                statsSiteProvider,
-                statsDateFormatter,
-                overviewMapper,
-                testDispatcher(),
-                testDispatcher(),
-                analyticsTrackerWrapper,
-                statsWidgetUpdaters,
-                localeManagerWrapper,
-                resourceProvider
+            statsGranularity,
+            store,
+            selectedDateProvider,
+            statsSiteProvider,
+            statsDateFormatter,
+            overviewMapper,
+            testDispatcher(),
+            testDispatcher(),
+            analyticsTrackerWrapper,
+            statsWidgetUpdaters,
+            localeManagerWrapper,
+            resourceProvider
         )
         site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -93,9 +116,9 @@ class OverviewUseCaseTest : BaseUnitTest() {
         setupCalendar()
         whenever(store.getVisits(site, statsGranularity, LimitMode.All)).thenReturn(model)
         whenever(store.fetchVisits(site, statsGranularity, limitMode, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadData(true, forced)
@@ -115,9 +138,9 @@ class OverviewUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(store.fetchVisits(site, statsGranularity, limitMode, forced)).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadData(true, forced)
@@ -130,9 +153,9 @@ class OverviewUseCaseTest : BaseUnitTest() {
         val forced = false
         setupCalendar(1)
         whenever(store.fetchVisits(site, statsGranularity, limitMode, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         loadData(true, forced)
@@ -145,22 +168,22 @@ class OverviewUseCaseTest : BaseUnitTest() {
         val forced = false
         setupCalendar(2)
         whenever(store.fetchVisits(site, statsGranularity, limitMode, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         loadData(true, forced)
 
         verify(analyticsTrackerWrapper).track(
-                STATS_OVERVIEW_ERROR, mapOf(
+            STATS_OVERVIEW_ERROR, mapOf(
                 "stats_last_date" to "2020-12-13",
                 "stats_current_date" to "2020-12-15",
                 "stats_age_in_days" to 2,
                 "is_jetpack_connected" to false,
                 "is_atomic" to false,
                 "action_source" to "remote"
-        )
+            )
         )
     }
 
@@ -177,8 +200,8 @@ class OverviewUseCaseTest : BaseUnitTest() {
         lastItemAge.set(Calendar.DAY_OF_MONTH, lastItemDay)
         lastItemAge.set(Calendar.HOUR_OF_DAY, 22)
         whenever(localeManagerWrapper.getCurrentCalendar()).then {
-                Calendar.getInstance()
-                        .apply { this.time = today.time }
+            Calendar.getInstance()
+                .apply { this.time = today.time }
         }
         whenever(statsDateFormatter.parseStatsDate(any(), any())).thenReturn(lastItemAge.time)
         whenever(statsDateFormatter.printStatsDate(lastItemAge.time)).thenReturn("2020-12-$lastItemDay")

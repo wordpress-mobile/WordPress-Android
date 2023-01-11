@@ -31,27 +31,41 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class ViewsWidgetListViewModelTest {
-    @Mock private lateinit var siteStore: SiteStore
-    @Mock private lateinit var visitsAndViewsStore: VisitsAndViewsStore
-    @Mock private lateinit var overviewMapper: OverviewMapper
-    @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var statsDateFormatter: StatsDateFormatter
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock private lateinit var site: SiteModel
+    @Mock
+    private lateinit var siteStore: SiteStore
+
+    @Mock
+    private lateinit var visitsAndViewsStore: VisitsAndViewsStore
+
+    @Mock
+    private lateinit var overviewMapper: OverviewMapper
+
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    private lateinit var statsDateFormatter: StatsDateFormatter
+
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    private lateinit var site: SiteModel
     private lateinit var viewModel: ViewsWidgetListViewModel
     private val siteId: Int = 15
     private val appWidgetId: Int = 1
     private val color = Color.LIGHT
     private val showChangeColumn = true
+
     @Before
     fun setUp() {
         viewModel = ViewsWidgetListViewModel(
-                siteStore,
-                visitsAndViewsStore,
-                overviewMapper,
-                resourceProvider,
-                statsDateFormatter,
-                appPrefsWrapper
+            siteStore,
+            visitsAndViewsStore,
+            overviewMapper,
+            resourceProvider,
+            statsDateFormatter,
+            appPrefsWrapper
         )
     }
 
@@ -62,12 +76,12 @@ class ViewsWidgetListViewModelTest {
         val firstViews: Long = 5
         val todayViews: Long = 20
         val dates = listOf(
-                PeriodData("2019-01-06", firstViews, 0, 0, 0, 0, 0),
-                PeriodData("2019-01-07", firstViews, 0, 0, 0, 0, 0),
-                PeriodData("2019-01-08", todayViews, 0, 0, 0, 0, 0)
+            PeriodData("2019-01-06", firstViews, 0, 0, 0, 0, 0),
+            PeriodData("2019-01-07", firstViews, 0, 0, 0, 0, 0),
+            PeriodData("2019-01-08", todayViews, 0, 0, 0, 0, 0)
         )
         whenever(visitsAndViewsStore.getVisits(any(), eq(DAYS), eq(LimitMode.All))).thenReturn(
-                VisitsAndViewsModel("2019-01-08", dates)
+            VisitsAndViewsModel("2019-01-08", dates)
         )
         val todayString = "Today"
         whenever(resourceProvider.getString(R.string.stats_insights_today_stats)).thenReturn(todayString)
@@ -76,34 +90,34 @@ class ViewsWidgetListViewModelTest {
         }
         val change = "+10%"
         whenever(
-                overviewMapper.buildTitle(
-                        eq(dates[0]),
-                        isNull(),
-                        any(),
-                        any(),
-                        any(),
-                        any()
-                )
+            overviewMapper.buildTitle(
+                eq(dates[0]),
+                isNull(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
         ).thenReturn(ValueItem(firstViews.toString(), 0, false, change, POSITIVE, change))
         whenever(
-                overviewMapper.buildTitle(
-                        eq(dates[1]),
-                        eq(dates[0]),
-                        any(),
-                        any(),
-                        any(),
-                        any()
-                )
+            overviewMapper.buildTitle(
+                eq(dates[1]),
+                eq(dates[0]),
+                any(),
+                any(),
+                any(),
+                any()
+            )
         ).thenReturn(ValueItem(todayViews.toString(), 0, true, change, NEGATIVE, change))
         whenever(
-                overviewMapper.buildTitle(
-                        eq(dates[2]),
-                        eq(dates[1]),
-                        any(),
-                        any(),
-                        any(),
-                        any()
-                )
+            overviewMapper.buildTitle(
+                eq(dates[2]),
+                eq(dates[1]),
+                any(),
+                any(),
+                any(),
+                any()
+            )
         ).thenReturn(ValueItem(todayViews.toString(), 0, true, change, NEUTRAL, change))
 
         viewModel.start(siteId, color, showChangeColumn, appWidgetId)

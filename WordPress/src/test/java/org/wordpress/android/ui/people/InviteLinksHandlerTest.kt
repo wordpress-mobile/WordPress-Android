@@ -20,7 +20,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @ExperimentalCoroutinesApi
 class InviteLinksHandlerTest : BaseUnitTest() {
-    @Mock lateinit var inviteLinksUseCase: InviteLinksUseCase
+    @Mock
+    lateinit var inviteLinksUseCase: InviteLinksUseCase
 
     private lateinit var inviteLinksHandler: InviteLinksHandler
     private var uiState: InviteLinksState? = null
@@ -30,8 +31,8 @@ class InviteLinksHandlerTest : BaseUnitTest() {
     @Before
     fun setUp() {
         inviteLinksHandler = InviteLinksHandler(
-                inviteLinksUseCase,
-                testDispatcher()
+            inviteLinksUseCase,
+            testDispatcher()
         )
         setupObservers()
     }
@@ -41,12 +42,12 @@ class InviteLinksHandlerTest : BaseUnitTest() {
         val errorMessage = UiStringText("error message")
 
         val state = InviteLinksError(
-                scenarioContext = INITIALIZING,
-                error = errorMessage
+            scenarioContext = INITIALIZING,
+            error = errorMessage
         )
 
         whenever(
-                inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING)
+            inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING)
         ).thenReturn(flow { emit(state) })
 
         inviteLinksHandler.handleInviteLinksStatusRequest(blogId, INITIALIZING)
@@ -63,12 +64,12 @@ class InviteLinksHandlerTest : BaseUnitTest() {
     @Test
     fun `handleInviteLinksStatusRequest collects expected state`() = test {
         val state = InviteLinksData(
-                scenarioContext = INITIALIZING,
-                links = listOf(mock(), mock())
+            scenarioContext = INITIALIZING,
+            links = listOf(mock(), mock())
         )
 
         whenever(
-                inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING)
+            inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING)
         ).thenReturn(flow { emit(state) })
 
         inviteLinksHandler.handleInviteLinksStatusRequest(blogId, INITIALIZING)
@@ -83,8 +84,8 @@ class InviteLinksHandlerTest : BaseUnitTest() {
     @Test
     fun `handleGenerateLinks collects expected state`() = test {
         val state = InviteLinksData(
-                scenarioContext = GENERATING_LINKS,
-                links = listOf(mock(), mock())
+            scenarioContext = GENERATING_LINKS,
+            links = listOf(mock(), mock())
         )
 
         whenever(inviteLinksUseCase.generateLinks(blogId)).thenReturn(flow { emit(state) })
@@ -101,8 +102,8 @@ class InviteLinksHandlerTest : BaseUnitTest() {
     @Test
     fun `handleDisableLinks collects expected state`() = test {
         val state = InviteLinksData(
-                scenarioContext = MANAGING_AVAILABLE_LINKS,
-                links = listOf()
+            scenarioContext = MANAGING_AVAILABLE_LINKS,
+            links = listOf()
         )
 
         whenever(inviteLinksUseCase.disableLinks(blogId)).thenReturn(flow { emit(state) })

@@ -325,7 +325,8 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 <!-- /wp:gallery -->
 """
 
-    const val paragraphBlock = """<!-- wp:paragraph {"align":"center","fontSize":"small","className":"gutenberg-landing\u002d\u002dbutton-disclaimer"} -->
+    const val paragraphBlock =
+        """<!-- wp:paragraph {"align":"center","fontSize":"small","className":"gutenberg-landing\u002d\u002dbutton-disclaimer"} -->
 <p class="has-text-align-center has-small-font-size gutenberg-landing--button-disclaimer"><em>Gutenberg is available as a plugin today, and will be included in version 5.0 of WordPress. The <a href="https://wordpress.org/plugins/classic-editor/">classic editor</a> will be available as a plugin if needed.</em></p>
 <!-- /wp:paragraph -->
 """"
@@ -392,7 +393,8 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 <!-- /wp:gallery -->
 """
 
-    const val oldGalleryBlockLinkToAttachmentPage = """<!-- wp:gallery {"ids":[203,${localMediaId},369],"linkTo":"post"} -->
+    const val oldGalleryBlockLinkToAttachmentPage =
+        """<!-- wp:gallery {"ids":[203,${localMediaId},369],"linkTo":"post"} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
@@ -409,7 +411,8 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 <!-- /wp:gallery -->
 """
 
-    const val newGalleryBlockLinkToAttachmentPage = """<!-- wp:gallery {"ids":[203,${remoteMediaId},369],"linkTo":"post"} -->
+    const val newGalleryBlockLinkToAttachmentPage =
+        """<!-- wp:gallery {"ids":[203,${remoteMediaId},369],"linkTo":"post"} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
@@ -463,7 +466,8 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 </div>
 <!-- /wp:cover -->
 """
-    const val oldCoverBlockWithNestedCoverBlockOuter = """<!-- wp:cover {"url":"$localImageUrl2","id":$localMediaId2} -->
+    const val oldCoverBlockWithNestedCoverBlockOuter =
+        """<!-- wp:cover {"url":"$localImageUrl2","id":$localMediaId2} -->
 <div class="wp-block-cover has-background-dim" style="background-image:url($localImageUrl2)">
   <div class="wp-block-cover__inner-container">
   $oldCoverBlock
@@ -471,7 +475,8 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 </div>
 <!-- /wp:cover -->
 """
-    const val newCoverBlockWithNestedCoverBlockOuter = """<!-- wp:cover {"url":"$remoteImageUrl2","id":$remoteMediaId2} -->
+    const val newCoverBlockWithNestedCoverBlockOuter =
+        """<!-- wp:cover {"url":"$remoteImageUrl2","id":$remoteMediaId2} -->
 <div class="wp-block-cover has-background-dim" style="background-image:url($remoteImageUrl2)">
   <div class="wp-block-cover__inner-container">
   $oldCoverBlock
@@ -479,7 +484,8 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 </div>
 <!-- /wp:cover -->
 """
-    const val oldCoverBlockWithNestedCoverBlockInner = """<!-- wp:cover {"url":"$localImageUrl2","id":$localMediaId2} -->
+    const val oldCoverBlockWithNestedCoverBlockInner =
+        """<!-- wp:cover {"url":"$localImageUrl2","id":$localMediaId2} -->
 <div class="wp-block-cover has-background-dim" style="background-image:url($localImageUrl2)">
   <div class="wp-block-cover__inner-container">
   $oldCoverBlock
@@ -487,7 +493,8 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 </div>
 <!-- /wp:cover -->
 """
-    const val newCoverBlockWithNestedCoverBlockInner = """<!-- wp:cover {"url":"$localImageUrl2","id":$localMediaId2} -->
+    const val newCoverBlockWithNestedCoverBlockInner =
+        """<!-- wp:cover {"url":"$localImageUrl2","id":$localMediaId2} -->
 <div class="wp-block-cover has-background-dim" style="background-image:url($localImageUrl2)">
   <div class="wp-block-cover__inner-container">
   $newCoverBlock
@@ -511,7 +518,8 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 </div>
 <!-- /wp:cover -->
 """
-    const val malformedCoverBlock = """<!-- wp:cover {"url":"$localImageUrl","id":$localMediaId,"someOtherAttribute":5} -->
+    const val malformedCoverBlock =
+        """<!-- wp:cover {"url":"$localImageUrl","id":$localMediaId,"someOtherAttribute":5} -->
 <div class="wp-block-cover has-background-dim" style="background-image:url($localImageUrl)">
   <div class="wp-block-cover__inner-container">
     <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
@@ -520,7 +528,8 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
   </div>
 </div>
 """
-    const val oldCoverBlockDifferentStyleOrder = """<!-- wp:cover {"url":"$localImageUrl","id":$localMediaId,"someOtherAttribute":5} -->
+    const val oldCoverBlockDifferentStyleOrder =
+        """<!-- wp:cover {"url":"$localImageUrl","id":$localMediaId,"someOtherAttribute":5} -->
 <div class="wp-block-cover has-background-dim" style="color:black;background-image:url($localImageUrl)">
   <div class="wp-block-cover__inner-container">
     <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
@@ -531,7 +540,8 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 <!-- /wp:cover -->
 """
 
-    const val newCoverBlockDifferentStyleOrder = """<!-- wp:cover {"url":"$remoteImageUrl","id":$remoteMediaId,"someOtherAttribute":5} -->
+    const val newCoverBlockDifferentStyleOrder =
+        """<!-- wp:cover {"url":"$remoteImageUrl","id":$remoteMediaId,"someOtherAttribute":5} -->
 <div class="wp-block-cover has-background-dim" style="color:black;background-image:url($remoteImageUrl)">
   <div class="wp-block-cover__inner-container">
     <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
@@ -541,7 +551,8 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 </div>
 <!-- /wp:cover -->
 """
-    const val oldCoverBlockStyleOrderWithSpace = """<!-- wp:cover {"url":"$localImageUrl","id":$localMediaId,"someOtherAttribute":5} -->
+    const val oldCoverBlockStyleOrderWithSpace =
+        """<!-- wp:cover {"url":"$localImageUrl","id":$localMediaId,"someOtherAttribute":5} -->
 <div class="wp-block-cover has-background-dim" style="background-image: url($localImageUrl)">
   <div class="wp-block-cover__inner-container">
     <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
@@ -552,7 +563,8 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 <!-- /wp:cover -->
 """
 
-    const val newCoverBlockStyleOrderWithoutSpace = """<!-- wp:cover {"url":"$remoteImageUrl","id":$remoteMediaId,"someOtherAttribute":5} -->
+    const val newCoverBlockStyleOrderWithoutSpace =
+        """<!-- wp:cover {"url":"$remoteImageUrl","id":$remoteMediaId,"someOtherAttribute":5} -->
 <div class="wp-block-cover has-background-dim" style="background-image:url($remoteImageUrl)">
   <div class="wp-block-cover__inner-container">
     <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
@@ -563,7 +575,8 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 <!-- /wp:cover -->
 """
 
-    const val oldCoverBlockWithVideo = """<!-- wp:cover {"url":"$localVideoUrl","id":$localMediaId,"backgroundType":"video"} -->
+    const val oldCoverBlockWithVideo =
+        """<!-- wp:cover {"url":"$localVideoUrl","id":$localMediaId,"backgroundType":"video"} -->
 <div class="wp-block-cover has-background-dim">
   <video class="wp-block-cover__video-background" autoplay muted loop playsinline src="$localVideoUrl"></video>
   <div class="wp-block-cover__inner-container">
@@ -575,7 +588,8 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 <!-- /wp:cover -->
 """
 
-    const val newCoverBlockWithVideo = """<!-- wp:cover {"url":"$remoteVideoUrl","id":$remoteMediaId,"backgroundType":"video"} -->
+    const val newCoverBlockWithVideo =
+        """<!-- wp:cover {"url":"$remoteVideoUrl","id":$remoteMediaId,"backgroundType":"video"} -->
 <div class="wp-block-cover has-background-dim">
   <video class="wp-block-cover__video-background" autoplay muted loop playsinline src="$remoteVideoUrl"></video>
   <div class="wp-block-cover__inner-container">
@@ -611,10 +625,12 @@ $newRefactoredGalleryBlockInnerBlocks</figure>
 <!-- /wp:gallery -->
 """
     const val storyMediaFileMimeTypeImage = "image/jpeg"
-    const val storyBlockWithLocalIdsAndUrls = """<!-- wp:jetpack/story {"mediaFiles":[{"alt":"","id":"$localMediaId","link":"$localImageUrl","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$localImageUrl"},{"alt":"","id":"$localMediaId2","link":"$localImageUrl2","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$localImageUrl2"}]} -->
+    const val storyBlockWithLocalIdsAndUrls =
+        """<!-- wp:jetpack/story {"mediaFiles":[{"alt":"","id":"$localMediaId","link":"$localImageUrl","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$localImageUrl"},{"alt":"","id":"$localMediaId2","link":"$localImageUrl2","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$localImageUrl2"}]} -->
 <div class="wp-story wp-block-jetpack-story"></div>
 <!-- /wp:jetpack/story -->"""
-    const val storyBlockWithFirstRemoteIdsAndUrlsReplaced = """<!-- wp:jetpack/story {"mediaFiles":[{"alt":"","id":"$remoteMediaId","link":"$remoteImageUrl","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$remoteImageUrl"},{"alt":"","id":"$localMediaId2","link":"$localImageUrl2","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$localImageUrl2"}]} -->
+    const val storyBlockWithFirstRemoteIdsAndUrlsReplaced =
+        """<!-- wp:jetpack/story {"mediaFiles":[{"alt":"","id":"$remoteMediaId","link":"$remoteImageUrl","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$remoteImageUrl"},{"alt":"","id":"$localMediaId2","link":"$localImageUrl2","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$localImageUrl2"}]} -->
 <div class="wp-story wp-block-jetpack-story"></div>
 <!-- /wp:jetpack/story -->"""
 

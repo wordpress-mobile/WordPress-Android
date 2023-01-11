@@ -11,7 +11,8 @@ import org.wordpress.android.WordPress
 import javax.inject.Inject
 
 class BloggingReminderTimePicker : DialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: BloggingRemindersViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -20,13 +21,14 @@ class BloggingReminderTimePicker : DialogFragment() {
         val is24HrFormat = DateFormat.is24HourFormat(activity)
 
         return TimePickerDialog(
-                activity,
-                { _, selectedHour, selectedMinute ->
-                    viewModel.onChangeTime(selectedHour, selectedMinute)
-                },
-                time.first,
-                time.second,
-                is24HrFormat)
+            activity,
+            { _, selectedHour, selectedMinute ->
+                viewModel.onChangeTime(selectedHour, selectedMinute)
+            },
+            time.first,
+            time.second,
+            is24HrFormat
+        )
     }
 
     override fun onAttach(context: Context) {

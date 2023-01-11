@@ -39,8 +39,8 @@ class EngagementUtilsTest {
         val onClickFunction = ::onClickDummy
 
         val engageItems = engagementUtils.likesToEngagedPeople(
-                likersList,
-                onClickFunction
+            likersList,
+            onClickFunction
         )
 
         assertThat(engageItems.all { (it as Liker).onClick == onClickFunction }).isTrue
@@ -53,9 +53,9 @@ class EngagementUtilsTest {
         val source = EngagementNavigationSource.LIKE_READER_LIST
 
         val engageItems = engagementUtils.likesToEngagedPeople(
-                likersList,
-                onClickFunction,
-                source
+            likersList,
+            onClickFunction,
+            source
         )
 
         assertThat(engageItems.all { (it as Liker).source == source }).isTrue

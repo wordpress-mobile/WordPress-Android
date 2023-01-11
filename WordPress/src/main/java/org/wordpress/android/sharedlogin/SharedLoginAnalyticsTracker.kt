@@ -13,7 +13,7 @@ class SharedLoginAnalyticsTracker @Inject constructor(
     fun trackLoginSuccess() = analyticsTracker.track(Stat.SHARED_LOGIN_SUCCESS)
 
     fun trackLoginFailed(errorType: ErrorType) =
-            analyticsTracker.track(Stat.SHARED_LOGIN_FAILED, mapOf(ERROR_TYPE to errorType.value))
+        analyticsTracker.track(Stat.SHARED_LOGIN_FAILED, mapOf(ERROR_TYPE to errorType.value))
 
     sealed class ErrorType(val value: String) {
         object WPNotLoggedInError : ErrorType("wp_not_logged_in_error")

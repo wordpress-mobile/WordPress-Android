@@ -54,8 +54,8 @@ class ReferrerPopupMenuHandler
                         MARK_AS_SPAM -> {
                             coroutineScope.launch {
                                 analyticsTrackerWrapper.trackGranular(
-                                        Stat.STATS_REFERRERS_ITEM_MARKED_AS_SPAM,
-                                        statsGranularity
+                                    Stat.STATS_REFERRERS_ITEM_MARKED_AS_SPAM,
+                                    statsGranularity
                                 )
                                 referrersUseCase.markReferrerAsSpam(url)
                                 referrersUseCase.fetch(refresh = true, forced = false)
@@ -64,8 +64,8 @@ class ReferrerPopupMenuHandler
                         MARK_AS_NOT_SPAM -> {
                             coroutineScope.launch {
                                 analyticsTrackerWrapper.trackGranular(
-                                        Stat.STATS_REFERRERS_ITEM_MARKED_AS_NOT_SPAM,
-                                        statsGranularity
+                                    Stat.STATS_REFERRERS_ITEM_MARKED_AS_NOT_SPAM,
+                                    statsGranularity
                                 )
                                 referrersUseCase.unmarkReferrerAsSpam(url)
                                 referrersUseCase.fetch(refresh = true, forced = false)

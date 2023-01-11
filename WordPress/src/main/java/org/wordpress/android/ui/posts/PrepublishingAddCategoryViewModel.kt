@@ -69,8 +69,8 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
                 SubmitButtonDisabledUiState
             }
             _uiState.value = state.copy(
-                    categoryName = inputValue,
-                    submitButtonUiState = submitButtonUiState
+                categoryName = inputValue,
+                submitButtonUiState = submitButtonUiState
             )
         }
     }
@@ -84,8 +84,8 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
     fun onSubmitButtonClick() {
         _uiState.value?.let { state ->
             addCategory(
-                    state.categoryName,
-                    state.categories[state.selectedParentCategoryPosition]
+                state.categoryName,
+                state.categories[state.selectedParentCategoryPosition]
             )
         }
     }
@@ -107,15 +107,15 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
     private fun initCategories() {
         val categoryLevels = getCategoryLevels()
         categoryLevels.add(
-                0, CategoryNode(
+            0, CategoryNode(
                 0, 0,
                 resourceProvider.getString(R.string.top_level_category_name)
-        )
+            )
         )
         _uiState.value = UiState(
-                categories = categoryLevels,
-                selectedParentCategoryPosition = 0,
-                categoryName = ""
+            categories = categoryLevels,
+            selectedParentCategoryPosition = 0,
+            categoryName = ""
         )
     }
 
@@ -123,14 +123,16 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _dismissKeyboard.postValue(Event(Unit))
             _snackbarEvents.postValue(
-                    Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
+                Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
             )
             return
         }
 
         val bundle = Bundle().apply {
-            putSerializable(ADD_CATEGORY_REQUEST,
-                    PrepublishingAddCategoryRequest(categoryText, parentCategory.categoryId))
+            putSerializable(
+                ADD_CATEGORY_REQUEST,
+                PrepublishingAddCategoryRequest(categoryText, parentCategory.categoryId)
+            )
         }
 
         cleanupAndFinish(bundle)
@@ -145,7 +147,7 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
     }
 
     private fun getCategoryLevels(): ArrayList<CategoryNode> =
-            getCategoriesUseCase.getSiteCategories(siteModel)
+        getCategoriesUseCase.getSiteCategories(siteModel)
 
     // States
     data class UiState(
@@ -160,11 +162,11 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
         val enabled: Boolean = false
     ) {
         object SubmitButtonEnabledUiState : SubmitButtonUiState(
-                enabled = true
+            enabled = true
         )
 
         object SubmitButtonDisabledUiState : SubmitButtonUiState(
-                enabled = false
+            enabled = false
         )
     }
 }

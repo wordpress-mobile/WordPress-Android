@@ -326,7 +326,7 @@ class PreviewImageViewModel : ViewModel() {
     ) {
         fun hasValidLowResImageUrlEqualTo(imageUrl: String): Boolean {
             val hasValidLowResImageUrl = this.lowResImageUrl?.isNotEmpty() == true &&
-                this.lowResImageUrl != this.highResImageUrl
+                    this.lowResImageUrl != this.highResImageUrl
             val isGivenUrlEqualToLowResImageUrl = imageUrl == this.lowResImageUrl
 
             return hasValidLowResImageUrl && isGivenUrlEqualToLowResImageUrl

@@ -38,8 +38,8 @@ class FeaturedImageUtils
     }
 
     private fun getLastIndexOfDashInUrl(url: URL) = url.path.split("/").last()
-            .lastIndexOf("-").takeIf { it > 0 }
-            ?.let { it + url.path.lastIndexOf("/") } ?: -1
+        .lastIndexOf("-").takeIf { it > 0 }
+        ?.let { it + url.path.lastIndexOf("/") } ?: -1
 
     /*
      * returns true if the post has a featured image and the featured image is not found in the post body

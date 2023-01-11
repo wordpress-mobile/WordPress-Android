@@ -87,6 +87,9 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsRemind
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
@@ -265,6 +268,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
     @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
     @Inject QRCodeAuthFlowFeatureConfig mQrCodeAuthFlowFeatureConfig;
+    @Inject JetpackFeatureRemovalOverlayUtil mJetpackFeatureRemovalOverlayUtil;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -477,6 +481,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (!mSelectedSiteRepository.hasSelectedSite()) {
             initSelectedSite();
         }
+
+        displayJetpackFeatureCollectionOverlayIfNeeded();
     }
 
     private void showBloggingPromptsOnboarding() {
@@ -508,7 +514,20 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (BuildConfig.IS_JETPACK_APP) {
             ActivityLauncher.showSignInForResultJetpackOnly(activity);
         } else {
-            ActivityLauncher.showSignInForResult(activity);
+            ActivityLauncher.showSignInForResult(activity, true);
+        }
+    }
+
+    private void displayJetpackFeatureCollectionOverlayIfNeeded() {
+        if (mJetpackFeatureRemovalOverlayUtil.shouldShowFeatureCollectionJetpackOverlay()) {
+            JetpackFeatureFullScreenOverlayFragment.newInstance(
+                    null,
+                    false,
+                    false,
+                    SiteCreationSource.UNSPECIFIED,
+                    true,
+                    JetpackFeatureCollectionOverlaySource.APP_OPEN
+            ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
         }
     }
 

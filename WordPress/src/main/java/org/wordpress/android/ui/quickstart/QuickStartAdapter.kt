@@ -46,7 +46,7 @@ class QuickStartAdapter(
         }
 
         override fun areContentsTheSame(oldItem: QuickStartListCard, newItem: QuickStartListCard) =
-                oldItem == newItem
+            oldItem == newItem
     }
 
     companion object {

@@ -14,11 +14,11 @@ class FetchBloggingPromptsListUseCase @Inject constructor(
 ) {
     suspend fun execute(): Result {
         return fetchBloggingPrompts()
-                ?.sortedByDescending { it.date }
-                ?.dropWhile { it.date > Date() } // don't display future prompts
-                ?.take(NUMBER_OF_PROMPTS)
-                ?.let { Result.Success(it) } // success if fetchBloggingPrompts was not null
-                ?: Result.Failure // failure otherwise
+            ?.sortedByDescending { it.date }
+            ?.dropWhile { it.date > Date() } // don't display future prompts
+            ?.take(NUMBER_OF_PROMPTS)
+            ?.let { Result.Success(it) } // success if fetchBloggingPrompts was not null
+            ?: Result.Failure // failure otherwise
     }
 
     /**
@@ -29,15 +29,15 @@ class FetchBloggingPromptsListUseCase @Inject constructor(
         // get the starting date to fetch the prompts from
         // it is today's date minus (number of prompts - 1) because it needs to fetch today's prompt as well
         val fromDate = LocalDate.now()
-                .minusDays(NUMBER_OF_PROMPTS.toLong() - 1)
-                .atStartOfDay(ZoneId.systemDefault())
-                .toInstant()
-                .let { Date.from(it) }
+            .minusDays(NUMBER_OF_PROMPTS.toLong() - 1)
+            .atStartOfDay(ZoneId.systemDefault())
+            .toInstant()
+            .let { Date.from(it) }
 
         return selectedSiteRepository.getSelectedSite()?.let { site ->
             bloggingPromptsStore.fetchPrompts(site, NUMBER_OF_PROMPTS, fromDate)
-                    .takeUnless { it.isError }
-                    ?.model
+                .takeUnless { it.isError }
+                ?.model
         }
     }
 

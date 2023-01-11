@@ -42,10 +42,17 @@ import java.util.Date
 
 @ExperimentalCoroutinesApi
 class MediaLibraryDataSourceTest : BaseUnitTest() {
-    @Mock lateinit var mediaStore: MediaStore
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    @Mock
+    lateinit var mediaStore: MediaStore
+
+    @Mock
+    lateinit var dispatcher: Dispatcher
+
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
     private lateinit var mediaLibraryDataSourceFactory: MediaLibraryDataSourceFactory
     private val siteModel = SiteModel()
     private var mediaIdCounter = 1L
@@ -55,11 +62,11 @@ class MediaLibraryDataSourceTest : BaseUnitTest() {
     @Before
     fun setUp() {
         mediaLibraryDataSourceFactory = MediaLibraryDataSourceFactory(
-                mediaStore,
-                dispatcher,
-                testDispatcher(),
-                networkUtilsWrapper,
-                dateTimeUtilsWrapper
+            mediaStore,
+            dispatcher,
+            testDispatcher(),
+            networkUtilsWrapper,
+            dateTimeUtilsWrapper
         )
         mediaIdCounter = 1L
         actions.clear()
@@ -265,11 +272,11 @@ class MediaLibraryDataSourceTest : BaseUnitTest() {
                 dataSource.onMediaListFetched(OnMediaListFetched(siteModel, hasMore, element.payload.mimeType))
             } else {
                 dataSource.onMediaListFetched(
-                        OnMediaListFetched(
-                                siteModel,
-                                MediaError(GENERIC_ERROR, errorMessage),
-                                element.payload.mimeType
-                        )
+                    OnMediaListFetched(
+                        siteModel,
+                        MediaError(GENERIC_ERROR, errorMessage),
+                        element.payload.mimeType
+                    )
                 )
             }
         }.whenever(dispatcher).dispatch(any())

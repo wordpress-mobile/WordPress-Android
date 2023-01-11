@@ -8,7 +8,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.publicize.PublicizeConstants.PUBLICIZE_FACEBOOK_SHARING_SUPPORT_LINK
-import java.lang.NullPointerException
 
 class PublicizeErrorDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -23,8 +22,8 @@ class PublicizeErrorDialogFragment : DialogFragment() {
                         setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
                         setNegativeButton(R.string.learn_more) { _, _ ->
                             WPWebViewActivity.openURL(
-                                    activity,
-                                    PUBLICIZE_FACEBOOK_SHARING_SUPPORT_LINK
+                                activity,
+                                PUBLICIZE_FACEBOOK_SHARING_SUPPORT_LINK
                             )
                         }
                     }.create()

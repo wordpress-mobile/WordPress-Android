@@ -14,8 +14,8 @@ class BloggingPromptsListAnalyticsTrackerTest {
     fun `Should track screen viewed`() {
         tracker.trackScreenShown()
         verify(analyticsTracker).track(
-                Stat.BLOGGING_PROMPTS_LIST_SCREEN_VIEWED,
-                emptyMap()
+            Stat.BLOGGING_PROMPTS_LIST_SCREEN_VIEWED,
+            emptyMap()
         )
     }
 }

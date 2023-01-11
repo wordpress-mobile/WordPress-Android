@@ -27,5 +27,6 @@ interface CrashLoggingModule {
         }
     }
 
-    @Binds fun bindCrashLoggingDataProvider(dataProvider: WPCrashLoggingDataProvider): CrashLoggingDataProvider
+    @Binds
+    fun bindCrashLoggingDataProvider(dataProvider: WPCrashLoggingDataProvider): CrashLoggingDataProvider
 }

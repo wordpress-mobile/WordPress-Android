@@ -34,15 +34,32 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class StatsWidgetConfigureFragment : DaggerFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
-    @Inject lateinit var allTimeWidgetUpdater: AllTimeWidgetUpdater
-    @Inject lateinit var todayWidgetUpdater: TodayWidgetUpdater
-    @Inject lateinit var weekViewsWidgetUpdater: WeekViewsWidgetUpdater
-    @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Inject lateinit var siteStore: SiteStore
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
+
+    @Inject
+    lateinit var allTimeWidgetUpdater: AllTimeWidgetUpdater
+
+    @Inject
+    lateinit var todayWidgetUpdater: TodayWidgetUpdater
+
+    @Inject
+    lateinit var weekViewsWidgetUpdater: WeekViewsWidgetUpdater
+
+    @Inject
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Inject
+    lateinit var siteStore: SiteStore
+
+    @Inject
+    lateinit var imageManager: ImageManager
+
+    @Inject
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var viewModel: StatsWidgetConfigureViewModel
     private lateinit var siteSelectionViewModel: StatsSiteSelectionViewModel
     private lateinit var colorSelectionViewModel: StatsColorSelectionViewModel
@@ -76,16 +93,16 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         val nonNullActivity = requireActivity()
         viewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
-                .get(StatsWidgetConfigureViewModel::class.java)
+            .get(StatsWidgetConfigureViewModel::class.java)
         siteSelectionViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
-                .get(StatsSiteSelectionViewModel::class.java)
+            .get(StatsSiteSelectionViewModel::class.java)
         colorSelectionViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
-                .get(StatsColorSelectionViewModel::class.java)
+            .get(StatsColorSelectionViewModel::class.java)
         nonNullActivity.setResult(AppCompatActivity.RESULT_CANCELED)
 
         val appWidgetId = nonNullActivity.intent?.extras?.getInt(
-                AppWidgetManager.EXTRA_APPWIDGET_ID,
-                AppWidgetManager.INVALID_APPWIDGET_ID
+            AppWidgetManager.EXTRA_APPWIDGET_ID,
+            AppWidgetManager.INVALID_APPWIDGET_ID
         ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
 
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
@@ -112,16 +129,16 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
 
             colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
                 StatsWidgetColorSelectionDialogFragment().show(
-                        requireFragmentManager(),
-                        "stats_view_mode_selection_fragment"
+                    requireFragmentManager(),
+                    "stats_view_mode_selection_fragment"
                 )
             })
 
             merge(siteSelectionViewModel.notification, colorSelectionViewModel.notification).observeEvent(
-                    viewLifecycleOwner,
-                    {
-                        ToastUtils.showToast(activity, it)
-                    })
+                viewLifecycleOwner,
+                {
+                    ToastUtils.showToast(activity, it)
+                })
 
             viewModel.settingsModel.observe(viewLifecycleOwner, { uiModel ->
                 uiModel?.let {

@@ -13,11 +13,11 @@ class CompactBloggingPromptCardViewHolder(
     private val uiHelpers: UiHelpers,
     private val htmlCompatWrapper: HtmlCompatWrapper
 ) : AddContentViewHolder<BloggingPromptCardCompactBinding>(
-        parent.viewBinding(BloggingPromptCardCompactBinding::inflate)
+    parent.viewBinding(BloggingPromptCardCompactBinding::inflate)
 ) {
     fun bind(action: AnswerBloggingPromptAction) = with(binding) {
         val cardPrompt = htmlCompatWrapper.fromHtml(
-                uiHelpers.getTextOfUiString(promptContent.context, action.promptTitle).toString()
+            uiHelpers.getTextOfUiString(promptContent.context, action.promptTitle).toString()
         )
         uiHelpers.setTextOrHide(promptContent, cardPrompt)
         uiHelpers.updateVisibility(attributionContainer, action.attribution == DAY_ONE)

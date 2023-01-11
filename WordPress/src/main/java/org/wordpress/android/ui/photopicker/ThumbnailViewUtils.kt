@@ -11,12 +11,14 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.SHORT
 import org.wordpress.android.util.PhotoPickerUtils
 import org.wordpress.android.util.ViewUtils
-import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
+import org.wordpress.android.util.image.ImageManager
 import java.util.Locale
 
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.mediapicker.ThumbnailViewUtils}")
+@Deprecated(
+    "This class is being refactored, if you implement any change, please also update " +
+            "{@link org.wordpress.android.ui.mediapicker.ThumbnailViewUtils}"
+)
 class ThumbnailViewUtils(val imageManager: ImageManager) {
     @Suppress("DEPRECATION", "LongParameterList")
     fun setupListeners(
@@ -31,9 +33,9 @@ class ThumbnailViewUtils(val imageManager: ImageManager) {
         imgThumbnail.setOnClickListener {
             toggleAction.toggle()
             PhotoPickerUtils.announceSelectedMediaForAccessibility(
-                    imgThumbnail,
-                    isVideo,
-                    !isSelected
+                imgThumbnail,
+                isVideo,
+                !isSelected
             )
         }
         imgThumbnail.setOnLongClickListener {
@@ -49,20 +51,20 @@ class ThumbnailViewUtils(val imageManager: ImageManager) {
         isSelected: Boolean
     ) {
         AccessibilityUtils.addPopulateAccessibilityEventFocusedListener(
-                imageView
+            imageView
         ) {
             val imageSelectedText = imageView.context
-                    .getString(string.photo_picker_image_selected)
+                .getString(string.photo_picker_image_selected)
             if (isSelected) {
                 if (!imageView.contentDescription.toString().contains(imageSelectedText)) {
                     imageView.contentDescription = ("${imageView.contentDescription} $imageSelectedText")
                 }
             } else {
                 imageView.contentDescription = imageView.contentDescription
-                        .toString().replace(
-                                imageSelectedText,
-                                ""
-                        )
+                    .toString().replace(
+                        imageSelectedText,
+                        ""
+                    )
             }
         }
     }
@@ -71,17 +73,17 @@ class ThumbnailViewUtils(val imageManager: ImageManager) {
         if (animate) {
             if (isSelected) {
                 AniUtils.scale(
-                        imageView,
-                        SCALE_NORMAL,
-                        SCALE_SELECTED,
-                        ANI_DURATION
+                    imageView,
+                    SCALE_NORMAL,
+                    SCALE_SELECTED,
+                    ANI_DURATION
                 )
             } else {
                 AniUtils.scale(
-                        imageView,
-                        SCALE_SELECTED,
-                        SCALE_NORMAL,
-                        ANI_DURATION
+                    imageView,
+                    SCALE_SELECTED,
+                    SCALE_NORMAL,
+                    ANI_DURATION
                 )
             }
         } else {
@@ -103,20 +105,20 @@ class ThumbnailViewUtils(val imageManager: ImageManager) {
             when {
                 showOrderCounter -> {
                     AniUtils.startAnimation(
-                            txtSelectionCount,
-                            anim.pop
+                        txtSelectionCount,
+                        anim.pop
                     )
                 }
                 isSelected -> {
                     AniUtils.fadeIn(
-                            txtSelectionCount,
-                            ANI_DURATION
+                        txtSelectionCount,
+                        ANI_DURATION
                     )
                 }
                 else -> {
                     AniUtils.fadeOut(
-                            txtSelectionCount,
-                            ANI_DURATION
+                        txtSelectionCount,
+                        ANI_DURATION
                     )
                 }
             }
@@ -144,7 +146,7 @@ class ThumbnailViewUtils(val imageManager: ImageManager) {
         animateSelection: Boolean
     ) {
         ViewUtils.addCircularShadowOutline(
-                txtSelectionCount
+            txtSelectionCount
         )
         txtSelectionCount.isSelected = isSelected
         updateSelectionCountForPosition(txtSelectionCount, selectedOrder)
@@ -152,10 +154,10 @@ class ThumbnailViewUtils(val imageManager: ImageManager) {
             txtSelectionCount.setBackgroundResource(drawable.photo_picker_circle_pressed)
         }
         displayTextSelectionCount(
-                animateSelection,
-                showOrderCounter,
-                isSelected,
-                txtSelectionCount
+            animateSelection,
+            showOrderCounter,
+            isSelected,
+            txtSelectionCount
         )
     }
 

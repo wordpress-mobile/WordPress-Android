@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.models.wrappers.CategoryNodeWrapper
 import org.wordpress.android.util.AppLog.T.PREPUBLISHING_NUDGES
-import java.util.ArrayList
 import javax.inject.Inject
 
 @Reusable
@@ -26,23 +25,23 @@ class GetCategoriesUseCase @Inject constructor(
         siteModel: SiteModel
     ): String {
         val post = editPostRepository.getPost()
-                if (post == null) {
-                    appLogWrapper.d(PREPUBLISHING_NUDGES, "Post is null in EditPostRepository")
-                    return ""
-                }
+        if (post == null) {
+            appLogWrapper.d(PREPUBLISHING_NUDGES, "Post is null in EditPostRepository")
+            return ""
+        }
         val categories: List<TermModel> = taxonomyStore.getCategoriesForPost(
-                post,
-                siteModel
+            post,
+            siteModel
         )
         return formatCategories(categories)
     }
 
     fun getPostCategories(editPostRepository: EditPostRepository) =
-            editPostRepository.getPost()?.categoryIdList ?: listOf()
+        editPostRepository.getPost()?.categoryIdList ?: listOf()
 
     fun getSiteCategories(siteModel: SiteModel): ArrayList<CategoryNode> {
         val rootCategory = categoryNodeWrapper.createCategoryTreeFromList(
-                getCategoriesForSite(siteModel)
+            getCategoriesForSite(siteModel)
         )
         return categoryNodeWrapper.getSortedListOfCategoriesFromRoot(rootCategory)
     }

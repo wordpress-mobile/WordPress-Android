@@ -93,16 +93,16 @@ class PostActionHandler(
             BUTTON_SUBMIT -> publishPost(post.id)
             BUTTON_VIEW -> triggerPostListAction.invoke(ViewPost(site, post))
             BUTTON_PREVIEW -> triggerPostListAction.invoke(
-                    PreviewPost(
-                            site = site,
-                            post = post,
-                            triggerPreviewStateUpdate = triggerPreviewStateUpdate,
-                            showToast = showToast,
-                            messageMediaUploading = ToastMessageHolder(
-                                    R.string.editor_toast_uploading_please_wait,
-                                    Duration.SHORT
-                            )
+                PreviewPost(
+                    site = site,
+                    post = post,
+                    triggerPreviewStateUpdate = triggerPreviewStateUpdate,
+                    showToast = showToast,
+                    messageMediaUploading = ToastMessageHolder(
+                        R.string.editor_toast_uploading_please_wait,
+                        Duration.SHORT
                     )
+                )
             )
             BUTTON_STATS -> triggerPostListAction.invoke(ViewStats(site, post))
             BUTTON_TRASH -> {
@@ -133,19 +133,19 @@ class PostActionHandler(
     }
 
     private fun copyUrlAction(post: PostModel) = PostListAction.CopyUrl(
-            site = site,
-            post = post,
-            showSnackbar = showSnackbar,
-            messageSuccess = SnackbarMessageHolder(
-                    UiStringRes(R.string.post_link_copied_to_clipboard),
-                    duration = Snackbar.LENGTH_SHORT,
-                    isImportant = false
-            ),
-            messageError = SnackbarMessageHolder(
-                    UiStringRes(R.string.error_copy_to_clipboard),
-                    duration = Snackbar.LENGTH_SHORT,
-                    isImportant = false
-            )
+        site = site,
+        post = post,
+        showSnackbar = showSnackbar,
+        messageSuccess = SnackbarMessageHolder(
+            UiStringRes(R.string.post_link_copied_to_clipboard),
+            duration = Snackbar.LENGTH_SHORT,
+            isImportant = false
+        ),
+        messageError = SnackbarMessageHolder(
+            UiStringRes(R.string.error_copy_to_clipboard),
+            duration = Snackbar.LENGTH_SHORT,
+            isImportant = false
+        )
     )
 
     private fun cancelPendingAutoUpload(post: PostModel) {
@@ -219,10 +219,10 @@ class PostActionHandler(
         criticalPostActionTracker.add(localPostId, MOVING_POST_TO_DRAFT)
 
         val snackBarHolder = SnackbarMessageHolder(
-                message = UiStringRes(R.string.post_moving_to_draft),
-                onDismissAction = {
-                    criticalPostActionTracker.remove(localPostId, MOVING_POST_TO_DRAFT)
-                }
+            message = UiStringRes(R.string.post_moving_to_draft),
+            onDismissAction = {
+                criticalPostActionTracker.remove(localPostId, MOVING_POST_TO_DRAFT)
+            }
         )
         showSnackbar.invoke(snackBarHolder)
     }
@@ -340,14 +340,14 @@ class PostActionHandler(
         } else {
             val snackBarHolder = when (criticalAction) {
                 TRASHING_POST -> SnackbarMessageHolder(
-                        message = UiStringRes(R.string.post_trashed),
-                        buttonTitle = UiStringRes(R.string.undo),
-                        buttonAction = {
-                            val post = postStore.getPostByLocalPostId(localPostId.value)
-                            if (post != null) {
-                                restorePost(post)
-                            }
+                    message = UiStringRes(R.string.post_trashed),
+                    buttonTitle = UiStringRes(R.string.undo),
+                    buttonAction = {
+                        val post = postStore.getPostByLocalPostId(localPostId.value)
+                        if (post != null) {
+                            restorePost(post)
                         }
+                    }
                 )
                 TRASHING_POST_WITH_LOCAL_CHANGES -> SnackbarMessageHolder(message = UiStringRes(R.string.post_trashed))
                 else -> throw IllegalStateException("Unexpected action in handlePostTrashed(): $criticalAction")

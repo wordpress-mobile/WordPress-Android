@@ -11,6 +11,7 @@ class DaysProvider
         val firstDayOfTheWeek = WeekFields.of(localeManagerWrapper.getLocale()).firstDayOfWeek
         return (START_OFFSET..END_OFFSET).map { firstDayOfTheWeek.plus(it) }
     }
+
     companion object {
         private const val START_OFFSET = 0
         private const val END_OFFSET = 6L

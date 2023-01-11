@@ -46,29 +46,29 @@ const val POST_DATE = "2021-12-27 11:33:55"
 /* MODEL */
 
 private val TODAYS_STATS_CARDS_MODEL = TodaysStatsCardModel(
-        views = STATS_VIEWS,
-        visitors = STATS_VISITORS,
-        likes = STATS_LIKES,
-        comments = STATS_COMMENTS
+    views = STATS_VIEWS,
+    visitors = STATS_VISITORS,
+    likes = STATS_LIKES,
+    comments = STATS_COMMENTS
 )
 
 private val POST_MODEL = PostCardModel(
-        id = POST_ID,
-        title = POST_TITLE,
-        content = POST_CONTENT,
-        featuredImage = POST_FEATURED_IMAGE,
-        date = CardsUtils.fromDate(POST_DATE)
+    id = POST_ID,
+    title = POST_TITLE,
+    content = POST_CONTENT,
+    featuredImage = POST_FEATURED_IMAGE,
+    date = CardsUtils.fromDate(POST_DATE)
 )
 
 private val POSTS_MODEL = PostsCardModel(
-        hasPublished = false,
-        draft = listOf(POST_MODEL),
-        scheduled = listOf(POST_MODEL)
+    hasPublished = false,
+    draft = listOf(POST_MODEL),
+    scheduled = listOf(POST_MODEL)
 )
 
 private val CARDS_MODEL: List<CardModel> = listOf(
-        TODAYS_STATS_CARDS_MODEL,
-        POSTS_MODEL
+    TODAYS_STATS_CARDS_MODEL,
+    POSTS_MODEL
 )
 
 private val DEFAULT_CARD_TYPE = listOf(CardModel.Type.POSTS)
@@ -76,18 +76,25 @@ private val STATS_FEATURED_ENABLED_CARD_TYPES = listOf(CardModel.Type.TODAYS_STA
 
 @ExperimentalCoroutinesApi
 class CardsSourceTest : BaseUnitTest() {
-    @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock private lateinit var cardsStore: CardsStore
-    @Mock private lateinit var siteModel: SiteModel
-    @Mock private lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
+    @Mock
+    private lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Mock
+    private lateinit var cardsStore: CardsStore
+
+    @Mock
+    private lateinit var siteModel: SiteModel
+
+    @Mock
+    private lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
     private lateinit var cardSource: CardsSource
 
     private val data = CardsResult(
-            model = CARDS_MODEL
+        model = CARDS_MODEL
     )
     private val success = CardsResult<List<CardModel>>()
     private val apiError = CardsResult<List<CardModel>>(
-            error = CardsError(CardsErrorType.API_ERROR)
+        error = CardsError(CardsErrorType.API_ERROR)
     )
 
     @Before
@@ -98,10 +105,10 @@ class CardsSourceTest : BaseUnitTest() {
     private fun init(isTodaysStatsCardFeatureConfigEnabled: Boolean = false) {
         setUpMocks(isTodaysStatsCardFeatureConfigEnabled)
         cardSource = CardsSource(
-                selectedSiteRepository,
-                cardsStore,
-                todaysStatsCardFeatureConfig,
-                testDispatcher()
+            selectedSiteRepository,
+            cardsStore,
+            todaysStatsCardFeatureConfig,
+            testDispatcher()
         )
     }
 
@@ -179,20 +186,20 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given today's stats feature enabled, when refresh is invoked, then todays stats are requested from network`() =
-            test {
-                init(isTodaysStatsCardFeatureConfigEnabled = true)
-                val result = mutableListOf<CardsUpdate>()
-                whenever(cardsStore.getCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(flowOf(data))
-                whenever(cardsStore.fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(success)
-                cardSource.refresh.observeForever { }
+        test {
+            init(isTodaysStatsCardFeatureConfigEnabled = true)
+            val result = mutableListOf<CardsUpdate>()
+            whenever(cardsStore.getCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(flowOf(data))
+            whenever(cardsStore.fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(success)
+            cardSource.refresh.observeForever { }
 
-                cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
-                    it?.let { result.add(it) }
-                }
-                advanceUntilIdle()
-
-                verify(cardsStore).fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)
+            cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+                it?.let { result.add(it) }
             }
+            advanceUntilIdle()
+
+            verify(cardsStore).fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)
+        }
 
     @Test
     fun `given error, when build is invoked, then error snackbar with stale message is also shown (network)`() = test {
@@ -208,18 +215,18 @@ class CardsSourceTest : BaseUnitTest() {
 
         assertThat(result.size).isEqualTo(2)
         assertThat(result[0]).isEqualTo(
-                CardsUpdate(
-                        cards = data.model,
-                        showSnackbarError = false,
-                        showStaleMessage = false
-                )
+            CardsUpdate(
+                cards = data.model,
+                showSnackbarError = false,
+                showStaleMessage = false
+            )
         )
         assertThat(result[1]).isEqualTo(
-                CardsUpdate(
-                        cards = data.model,
-                        showSnackbarError = true,
-                        showStaleMessage = true
-                )
+            CardsUpdate(
+                cards = data.model,
+                showSnackbarError = true,
+                showStaleMessage = true
+            )
         )
     }
 
@@ -255,11 +262,11 @@ class CardsSourceTest : BaseUnitTest() {
         assertThat(result.size).isEqualTo(2)
         assertThat(result.first()).isEqualTo(CardsUpdate(data.model))
         assertThat(result.last()).isEqualTo(
-                CardsUpdate(
-                        cards = data.model,
-                        showSnackbarError = true,
-                        showStaleMessage = true
-                )
+            CardsUpdate(
+                cards = data.model,
+                showSnackbarError = true,
+                showStaleMessage = true
+            )
         )
     }
 

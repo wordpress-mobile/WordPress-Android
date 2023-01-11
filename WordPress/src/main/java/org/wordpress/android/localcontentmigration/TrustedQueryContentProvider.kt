@@ -28,8 +28,12 @@ abstract class TrustedQueryContentProvider : QueryContentProvider() {
         sortOrder: String?
     ): Cursor? {
         val context = checkNotNull(context) { "Cannot find context from the provider." }
-        with(EntryPointAccessors.fromApplication(context.applicationContext,
-                TrustedQueryContentProviderEntryPoint::class.java)) {
+        with(
+            EntryPointAccessors.fromApplication(
+                context.applicationContext,
+                TrustedQueryContentProviderEntryPoint::class.java
+            )
+        ) {
             return if (jetpackProviderSyncFeatureConfig().isEnabled() && clientVerification().canTrust(callingPackage))
                 query(uri)
             else
@@ -37,5 +41,5 @@ abstract class TrustedQueryContentProvider : QueryContentProvider() {
         }
     }
 
-    abstract fun query(uri: Uri) : Cursor?
+    abstract fun query(uri: Uri): Cursor?
 }

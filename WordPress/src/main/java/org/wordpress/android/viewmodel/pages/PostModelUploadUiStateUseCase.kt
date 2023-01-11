@@ -27,16 +27,16 @@ class PostModelUploadUiStateUseCase @Inject constructor() {
         val uploadStatus = uploadStatusTracker.getUploadStatus(post, site)
         return when {
             uploadStatus.hasInProgressMediaUpload -> UploadingMedia(
-                    uploadStatus.mediaUploadProgress
+                uploadStatus.mediaUploadProgress
             )
             uploadStatus.isUploading -> UploadingPost(
-                    postStatus == DRAFT
+                postStatus == DRAFT
             )
             // the upload error is not null on retry -> it needs to be evaluated after UploadingMedia and UploadingPost
             uploadStatus.uploadError != null -> UploadFailed(
-                    uploadStatus.uploadError,
-                    uploadStatus.isEligibleForAutoUpload,
-                    uploadStatus.uploadWillPushChanges
+                uploadStatus.uploadError,
+                uploadStatus.isEligibleForAutoUpload,
+                uploadStatus.uploadWillPushChanges
             )
             uploadStatus.hasPendingMediaUpload ||
                     uploadStatus.isQueued ||

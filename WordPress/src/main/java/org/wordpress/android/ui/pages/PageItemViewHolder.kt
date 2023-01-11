@@ -30,15 +30,15 @@ import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.extensions.capitalizeWithLocaleWithoutLint
 import org.wordpress.android.util.extensions.currentLocale
 import org.wordpress.android.util.extensions.getDrawableFromAttribute
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
-import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.Locale
 
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
-        RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
+    RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(pageItem: PageItem)
 
     class PageViewHolder(
@@ -62,7 +62,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val pageItemContainer = itemView.findViewById<ViewGroup>(R.id.page_item)
         private val pageLayout = itemView.findViewById<ViewGroup>(R.id.page_layout)
         private val selectableBackground: Drawable? = parent.context.getDrawableFromAttribute(
-                android.R.attr.selectableItemBackground
+            android.R.attr.selectableItemBackground
         )
 
         companion object {
@@ -85,13 +85,13 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 showSubtitle(page.date, page.author, page.subtitle, page.icon)
 
                 labels.text = page.labels.map { uiHelper.getTextOfUiString(parent.context, it).toString() }.sorted()
-                        .joinToString(separator = " · ")
+                    .joinToString(separator = " · ")
                 page.labelsColor?.let { labelsColor ->
                     labels.setTextColor(
-                            ContextCompat.getColor(
-                                    itemView.context,
-                                    labelsColor
-                            )
+                        ContextCompat.getColor(
+                            itemView.context,
+                            labelsColor
+                        )
                     )
                 }
 
@@ -104,7 +104,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
                 pageMore.setOnClickListener { view -> moreClick(page, view) }
                 pageMore.visibility =
-                        if (page.actions.isNotEmpty() && page.actionsEnabled) View.VISIBLE else View.INVISIBLE
+                    if (page.actions.isNotEmpty() && page.actionsEnabled) View.VISIBLE else View.INVISIBLE
 
                 setBackground(page.tapActionEnabled)
                 showFeaturedImage(page.imageUrl)
@@ -119,10 +119,10 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                         val horizontalOffset = pageItemContainer.width / 2
                         val verticalOffset = (pageItemContainer.height)
                         QuickStartUtils.addQuickStartFocusPointAboveTheView(
-                                pageItemContainer,
-                                pageMore,
-                                horizontalOffset,
-                                -verticalOffset
+                            pageItemContainer,
+                            pageMore,
+                            horizontalOffset,
+                            -verticalOffset
                         )
                     }
                 }
@@ -170,7 +170,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             } else if (imageUrl.startsWith("http")) {
                 featuredImage.visibility = View.VISIBLE
                 val photonUrl = ReaderUtils.getResizedImageUrl(
-                        imageUrl, imageSize, imageSize, !isSitePhotonCapable, isPrivateAtSite
+                    imageUrl, imageSize, imageSize, !isSitePhotonCapable, isPrivateAtSite
                 )
                 imageManager?.load(featuredImage, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
             } else {
@@ -188,7 +188,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private fun showSubtitle(inputDate: Date, author: String?, subtitle: Int?, icon: Int?) {
             val date = if (inputDate == Date(0)) Date() else inputDate
             val stringDate = DateTimeUtils.javaDateToTimeSpan(date, parent.context)
-                    .capitalizeWithLocaleWithoutLint(parent.context.currentLocale)
+                .capitalizeWithLocaleWithoutLint(parent.context.currentLocale)
 
             /** The subtitle is split in two TextViews:
              * - Date and Author (if not null) occupy the [pageSubtitle] TextView
@@ -197,24 +197,24 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             if (subtitle != null) {
                 pageSubtitle.text = author?.let {
                     String.format(
-                            Locale.getDefault(),
-                            parent.context.getString(R.string.pages_item_date_author_subtitle),
-                            stringDate,
-                            it
+                        Locale.getDefault(),
+                        parent.context.getString(R.string.pages_item_date_author_subtitle),
+                        stringDate,
+                        it
                     )
                 } ?: String.format(
-                        Locale.getDefault(),
-                        parent.context.getString(R.string.pages_item_date_subtitle),
-                        stringDate
+                    Locale.getDefault(),
+                    parent.context.getString(R.string.pages_item_date_subtitle),
+                    stringDate
                 )
                 pageSubtitleSuffix.text = parent.context.getString(subtitle)
             } else {
                 pageSubtitle.text = author?.let {
                     String.format(
-                            Locale.getDefault(),
-                            parent.context.getString(R.string.pages_item_date_author),
-                            stringDate,
-                            it
+                        Locale.getDefault(),
+                        parent.context.getString(R.string.pages_item_date_author),
+                        stringDate,
+                        it
                     )
                 } ?: stringDate
                 pageSubtitleSuffix.text = ""

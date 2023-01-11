@@ -39,44 +39,44 @@ class GifMediaDataSource
 
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return Failure(
-                    UiStringRes(R.string.no_network_title),
-                    htmlSubtitle = UiStringRes(R.string.no_network_message),
-                    image = R.drawable.img_illustration_cloud_off_152dp,
-                    data = items
+                UiStringRes(R.string.no_network_title),
+                htmlSubtitle = UiStringRes(R.string.no_network_message),
+                image = R.drawable.img_illustration_cloud_off_152dp,
+                data = items
             )
         }
 
         return if (!filter.isNullOrBlank()) {
             suspendCoroutine { cont ->
                 tenorClient.search(filter,
-                        nextPosition,
-                        PAGE_SIZE,
-                        onSuccess = { response ->
-                            val gifList = response.results.map { it.toMediaItem() }
+                    nextPosition,
+                    PAGE_SIZE,
+                    onSuccess = { response ->
+                        val gifList = response.results.map { it.toMediaItem() }
 
-                            items.addAll(gifList)
-                            val newPosition = response.next.toIntOrNull() ?: 0
-                            val hasMore = newPosition > nextPosition
-                            nextPosition = newPosition
-                            val result = if (items.isNotEmpty()) {
-                                Success(items.toList(), hasMore)
-                            } else {
-                                Empty(UiStringRes(R.string.gif_picker_empty_search_list))
-                            }
-                            cont.resume(result)
-                        },
-                        onFailure = {
-                            val errorMessage = it?.message
-                                    ?: context.getString(R.string.gif_list_search_returned_unknown_error)
-                            cont.resume(
-                                    Failure(
-                                            UiStringRes(R.string.media_loading_failed),
-                                            htmlSubtitle = UiStringText(errorMessage),
-                                            image = R.drawable.img_illustration_cloud_off_152dp,
-                                            data = items
-                                    )
-                            )
+                        items.addAll(gifList)
+                        val newPosition = response.next.toIntOrNull() ?: 0
+                        val hasMore = newPosition > nextPosition
+                        nextPosition = newPosition
+                        val result = if (items.isNotEmpty()) {
+                            Success(items.toList(), hasMore)
+                        } else {
+                            Empty(UiStringRes(R.string.gif_picker_empty_search_list))
                         }
+                        cont.resume(result)
+                    },
+                    onFailure = {
+                        val errorMessage = it?.message
+                            ?: context.getString(R.string.gif_list_search_returned_unknown_error)
+                        cont.resume(
+                            Failure(
+                                UiStringRes(R.string.media_loading_failed),
+                                htmlSubtitle = UiStringText(errorMessage),
+                                image = R.drawable.img_illustration_cloud_off_152dp,
+                                data = items
+                            )
+                        )
+                    }
                 )
             }
         } else {
@@ -87,26 +87,26 @@ class GifMediaDataSource
     private fun buildDefaultScreen(): MediaLoadingResult {
         val title = UiStringRes(R.string.gif_picker_initial_empty_text)
         return Empty(
-                title,
-                null,
-                R.drawable.img_illustration_media_105dp,
-                R.drawable.img_tenor_100dp,
-                UiStringRes(R.string.gif_powered_by_tenor)
+            title,
+            null,
+            R.drawable.img_illustration_media_105dp,
+            R.drawable.img_tenor_100dp,
+            UiStringRes(R.string.gif_powered_by_tenor)
         )
     }
 
     private fun Result.toMediaItem() = MediaItem(
-            identifier = GifMediaIdentifier(
-                    uriUtilsWrapper.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF)),
-                    title
-            ),
-            url = uriUtilsWrapper.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF_NANO)).toString(),
-            type = IMAGE,
-            dataModified = 0
+        identifier = GifMediaIdentifier(
+            uriUtilsWrapper.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF)),
+            title
+        ),
+        url = uriUtilsWrapper.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF_NANO)).toString(),
+        type = IMAGE,
+        dataModified = 0
     )
 
     private fun Result.urlFromCollectionFormat(format: String) =
-            medias.firstOrNull()?.get(format)?.url
+        medias.firstOrNull()?.get(format)?.url
 
     companion object {
         private const val PAGE_SIZE = 36

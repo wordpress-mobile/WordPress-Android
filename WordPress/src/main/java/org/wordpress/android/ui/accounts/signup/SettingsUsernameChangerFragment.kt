@@ -35,17 +35,19 @@ import org.wordpress.android.widgets.WPDialogSnackbar
  */
 class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragment() {
     private lateinit var dialogController: FullScreenDialogController
-    @Suppress("DEPRECATION") private var progressDialog: ProgressDialog? = null
+
+    @Suppress("DEPRECATION")
+    private var progressDialog: ProgressDialog? = null
 
     override fun getSuggestionsFailedStat() = ACCOUNT_SETTINGS_CHANGE_USERNAME_SUGGESTIONS_FAILED
     override fun canHeaderTextLiveUpdate() = false
     override fun getHeaderText(username: String?, display: String?): Spanned = HtmlCompat.fromHtml(
-            String.format(
-                    getString(R.string.settings_username_changer_header),
-                    "<b>",
-                    username,
-                    "</b>"
-            ), HtmlCompat.FROM_HTML_MODE_LEGACY
+        String.format(
+            getString(R.string.settings_username_changer_header),
+            "<b>",
+            username,
+            "</b>"
+        ), HtmlCompat.FROM_HTML_MODE_LEGACY
     )
 
     override fun getTrackEventSource() = SOURCE
@@ -85,19 +87,19 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
         val usernameControl = layout.findViewById<EditText>(R.id.username_edit)
 
         content.text = HtmlCompat.fromHtml(
-                String.format(
-                        getString(R.string.settings_username_changer_confirm_dialog_content),
-                        "<b>",
-                        username,
-                        "</b>"
-                ), HtmlCompat.FROM_HTML_MODE_LEGACY
+            String.format(
+                getString(R.string.settings_username_changer_confirm_dialog_content),
+                "<b>",
+                username,
+                "</b>"
+            ), HtmlCompat.FROM_HTML_MODE_LEGACY
         )
 
         MaterialAlertDialogBuilder(requireActivity()).apply {
             setTitle(R.string.settings_username_changer_confirm_dialog_title)
             setView(layout)
             setPositiveButton(
-                    R.string.settings_username_changer_confirm_dialog_positive_action
+                R.string.settings_username_changer_confirm_dialog_positive_action
             ) { _, _ -> saveUsername(username) }
             setNegativeButton(android.R.string.cancel, null)
             create()
@@ -133,7 +135,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
     private fun saveUsername(username: String) {
         showProgress()
         val payload = PushUsernamePayload(
-                username, KEEP_OLD_SITE_AND_ADDRESS
+            username, KEEP_OLD_SITE_AND_ADDRESS
         )
         mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload))
     }
@@ -143,8 +145,8 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
         if (event.isError) {
             AnalyticsTracker.track(ACCOUNT_SETTINGS_CHANGE_USERNAME_FAILED)
             AppLog.e(
-                    T.API, "SettingsUsernameChangerFragment.onUsernameChanged: " +
-                    event.error.type + " - " + event.error.message
+                T.API, "SettingsUsernameChangerFragment.onUsernameChanged: " +
+                        event.error.type + " - " + event.error.message
             )
             endProgress()
             showErrorDialog(SpannableStringBuilder(getString(R.string.signup_epilogue_error_generic)))
@@ -185,11 +187,11 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
 
     private fun showChangeUsernameActionCancelledMessage() = view?.let {
         WPDialogSnackbar.make(
-                it,
-                getString(R.string.settings_username_changer_snackbar_cancel),
-                Snackbar.LENGTH_LONG
+            it,
+            getString(R.string.settings_username_changer_snackbar_cancel),
+            Snackbar.LENGTH_LONG
         )
-                .show()
+            .show()
     }
 
     companion object {

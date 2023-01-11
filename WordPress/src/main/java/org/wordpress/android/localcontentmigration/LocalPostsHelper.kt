@@ -41,9 +41,9 @@ class LocalPostsHelper @Inject constructor(
     }.getOrElse { Failure(FailedToResetSequenceForPosts(it)) }
 
     private fun copyPostWithId(localPostId: Int) =
-            localMigrationContentResolver.getResultForEntityType<PostData>(Post, localPostId).thenWith { (post) ->
-                insertPostWithId(post)
-            }
+        localMigrationContentResolver.getResultForEntityType<PostData>(Post, localPostId).thenWith { (post) ->
+            insertPostWithId(post)
+        }
 
     private fun insertPostWithId(post: PostModel) = runCatching {
         with(dbWrapper.giveMeWritableDb()) {

@@ -89,9 +89,9 @@ class JetpackMigrationViewModel @Inject constructor(
     private var deepLinkData: PreMigrationDeepLinkData? = null
 
     val uiState = combineTransform(
-            migrationStateFlow,
-            continueClickedFlow,
-            notificationContinueClickedFlow
+        migrationStateFlow,
+        continueClickedFlow,
+        notificationContinueClickedFlow
     ) { migrationState, continueClicked, notificationContinueClicked ->
         when {
             showDeleteState -> emit(initPleaseDeleteWordPressAppScreenUi())
@@ -103,7 +103,7 @@ class JetpackMigrationViewModel @Inject constructor(
             migrationState is Initial -> emit(Loading)
             migrationState is Migrating
                     || migrationState is Successful && !continueClicked -> emit(
-                    initWelcomeScreenUi(migrationState.data, continueClicked)
+                initWelcomeScreenUi(migrationState.data, continueClicked)
             )
             migrationState is Successful && continueClicked -> when {
                 !notificationContinueClicked -> emit(initNotificationsScreenUi())
@@ -145,14 +145,14 @@ class JetpackMigrationViewModel @Inject constructor(
         }
 
         return Welcome(
-                userAvatarUrl = resizeAvatarUrl(data.avatarUrl),
-                isProcessing = isContinueClicked,
-                sites = data.sites.map(::siteUiFromModel),
-                onAvatarClicked = { onHelpClicked(source = HelpButtonSource.WelcomeAvatar) },
-                primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
-                secondaryActionButton = WelcomeSecondaryButton {
-                    onHelpClicked(source = HelpButtonSource.Welcome)
-                },
+            userAvatarUrl = resizeAvatarUrl(data.avatarUrl),
+            isProcessing = isContinueClicked,
+            sites = data.sites.map(::siteUiFromModel),
+            onAvatarClicked = { onHelpClicked(source = HelpButtonSource.WelcomeAvatar) },
+            primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
+            secondaryActionButton = WelcomeSecondaryButton {
+                onHelpClicked(source = HelpButtonSource.Welcome)
+            },
         )
     }
 
@@ -161,7 +161,7 @@ class JetpackMigrationViewModel @Inject constructor(
         migrationAnalyticsTracker.trackNotificationsScreenShown()
 
         return Notifications(
-                primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
+            primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
         )
     }
 
@@ -170,7 +170,7 @@ class JetpackMigrationViewModel @Inject constructor(
         migrationAnalyticsTracker.trackThanksScreenShown()
 
         return Done(
-                primaryActionButton = DonePrimaryButton(::onFinishClicked)
+            primaryActionButton = DonePrimaryButton(::onFinishClicked)
         )
     }
 
@@ -179,10 +179,10 @@ class JetpackMigrationViewModel @Inject constructor(
         migrationAnalyticsTracker.trackPleaseDeleteWordPressScreenShown()
 
         return Delete(
-                primaryActionButton = DeletePrimaryButton(::onGotItClicked),
-                secondaryActionButton = DeleteSecondaryButton {
-                    onHelpClicked(source = HelpButtonSource.Delete)
-                },
+            primaryActionButton = DeletePrimaryButton(::onGotItClicked),
+            secondaryActionButton = DeleteSecondaryButton {
+                onHelpClicked(source = HelpButtonSource.Delete)
+            },
         )
     }
 
@@ -191,11 +191,11 @@ class JetpackMigrationViewModel @Inject constructor(
         migrationAnalyticsTracker.trackErrorScreenShown()
 
         return UiState.Error(
-                primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
-                secondaryActionButton = ErrorSecondaryButton {
-                    onHelpClicked(source = HelpButtonSource.Error)
-                },
-                type = Generic,
+            primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
+            secondaryActionButton = ErrorSecondaryButton {
+                onHelpClicked(source = HelpButtonSource.Error)
+            },
+            type = Generic,
         )
     }
 
@@ -207,13 +207,13 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun siteUiFromModel(site: SiteModel) = SiteListItemUiState(
-            id = site.siteId,
-            name = siteUtilsWrapper.getSiteNameOrHomeURL(site),
-            url = siteUtilsWrapper.getHomeURLOrHostName(site),
-            iconUrl = siteUtilsWrapper.getSiteIconUrlOfResourceSize(
-                    site,
-                    R.dimen.jp_migration_site_icon_size,
-            ),
+        id = site.id,
+        name = siteUtilsWrapper.getSiteNameOrHomeURL(site),
+        url = siteUtilsWrapper.getHomeURLOrHostName(site),
+        iconUrl = siteUtilsWrapper.getSiteIconUrlOfResourceSize(
+            site,
+            R.dimen.jp_migration_site_icon_size,
+        ),
     )
 
     private fun onContinueClicked() {
@@ -267,17 +267,17 @@ class JetpackMigrationViewModel @Inject constructor(
         appPrefsWrapper.setJetpackMigrationInProgress(false)
 
         val completionEvent = deepLinkData
-                ?.let {
-                    if (it.action != null && it.uri != null) {
-                        CompleteFlowWithDeepLink(
-                                action = it.action,
-                                uri = it.uri,
-                        )
-                    } else {
-                        CompleteFlow
-                    }
+            ?.let {
+                if (it.action != null && it.uri != null) {
+                    CompleteFlowWithDeepLink(
+                        action = it.action,
+                        uri = it.uri,
+                    )
+                } else {
+                    CompleteFlow
                 }
-                ?: CompleteFlow
+            }
+            ?: CompleteFlow
 
         postActionEvent(completionEvent)
     }
@@ -298,8 +298,8 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun resizeAvatarUrl(avatarUrl: String) = gravatarUtilsWrapper.fixGravatarUrlWithResource(
-            avatarUrl,
-            R.dimen.jp_migration_user_avatar_size
+        avatarUrl,
+        R.dimen.jp_migration_user_avatar_size
     )
 
     private fun postActionEvent(actionEvent: JetpackMigrationActionEvent) {
@@ -327,38 +327,38 @@ class JetpackMigrationViewModel @Inject constructor(
                 override val primaryActionButton: ActionButton,
                 override val secondaryActionButton: ActionButton,
             ) : Content(
-                    primaryActionButton = primaryActionButton,
-                    secondaryActionButton = secondaryActionButton,
-                    screenIconRes = R.drawable.ic_wordpress_jetpack_logo,
-                    title = UiStringRes(R.string.jp_migration_welcome_title),
-                    subtitle = UiStringRes(R.string.jp_migration_welcome_subtitle),
-                    message = UiStringRes(
-                            if (sites.size > 1) {
-                                R.string.jp_migration_welcome_sites_found_message
-                            } else {
-                                R.string.jp_migration_welcome_site_found_message
-                            }
-                    ),
+                primaryActionButton = primaryActionButton,
+                secondaryActionButton = secondaryActionButton,
+                screenIconRes = R.drawable.ic_wordpress_jetpack_logo,
+                title = UiStringRes(R.string.jp_migration_welcome_title),
+                subtitle = UiStringRes(R.string.jp_migration_welcome_subtitle),
+                message = UiStringRes(
+                    if (sites.size > 1) {
+                        R.string.jp_migration_welcome_sites_found_message
+                    } else {
+                        R.string.jp_migration_welcome_site_found_message
+                    }
+                ),
             )
 
             data class Notifications(
                 override val primaryActionButton: ActionButton,
             ) : Content(
-                    primaryActionButton = primaryActionButton,
-                    screenIconRes = R.drawable.ic_jetpack_migration_notifications,
-                    title = UiStringRes(R.string.jp_migration_notifications_title),
-                    subtitle = UiStringRes(R.string.jp_migration_notifications_subtitle),
-                    message = UiStringRes(R.string.jp_migration_notifications_disabled_in_wp_message),
+                primaryActionButton = primaryActionButton,
+                screenIconRes = R.drawable.ic_jetpack_migration_notifications,
+                title = UiStringRes(R.string.jp_migration_notifications_title),
+                subtitle = UiStringRes(R.string.jp_migration_notifications_subtitle),
+                message = UiStringRes(R.string.jp_migration_notifications_disabled_in_wp_message),
             )
 
             data class Done(
                 override val primaryActionButton: ActionButton,
             ) : Content(
-                    primaryActionButton = primaryActionButton,
-                    screenIconRes = R.drawable.ic_jetpack_migration_success,
-                    title = UiStringRes(R.string.jp_migration_done_title),
-                    subtitle = UiStringRes(R.string.jp_migration_done_subtitle),
-                    message = UiStringRes(R.string.jp_migration_done_delete_wp_message),
+                primaryActionButton = primaryActionButton,
+                screenIconRes = R.drawable.ic_jetpack_migration_success,
+                title = UiStringRes(R.string.jp_migration_done_title),
+                subtitle = UiStringRes(R.string.jp_migration_done_subtitle),
+                message = UiStringRes(R.string.jp_migration_done_delete_wp_message),
             ) {
                 val deleteWpIcon = R.drawable.ic_jetpack_migration_delete_wp
             }
@@ -367,11 +367,11 @@ class JetpackMigrationViewModel @Inject constructor(
                 override val primaryActionButton: ActionButton,
                 override val secondaryActionButton: ActionButton
             ) : Content(
-                    primaryActionButton = primaryActionButton,
-                    screenIconRes = R.drawable.ic_jetpack_migration_delete,
-                    title = UiStringRes(R.string.jp_migration_delete_title),
-                    subtitle = UiStringRes(R.string.jp_migration_delete_subtitle),
-                    message = UiStringRes(R.string.jp_migration_delete_message),
+                primaryActionButton = primaryActionButton,
+                screenIconRes = R.drawable.ic_jetpack_migration_delete,
+                title = UiStringRes(R.string.jp_migration_delete_title),
+                subtitle = UiStringRes(R.string.jp_migration_delete_subtitle),
+                message = UiStringRes(R.string.jp_migration_delete_message),
             ) {
                 val deleteWpIcon = R.drawable.ic_jetpack_migration_delete_wp
             }
@@ -383,7 +383,8 @@ class JetpackMigrationViewModel @Inject constructor(
             val type: ErrorType,
             val isProcessing: Boolean = false,
         ) : UiState() {
-            @DrawableRes val screenIconRes = R.drawable.ic_jetpack_migration_error
+            @DrawableRes
+            val screenIconRes = R.drawable.ic_jetpack_migration_error
 
             sealed class ErrorType(
                 val title: UiString,
@@ -392,21 +393,21 @@ class JetpackMigrationViewModel @Inject constructor(
             )
 
             object Generic : ErrorType(
-                    title = UiStringRes(R.string.jp_migration_generic_error_title),
-                    subtitle = UiStringRes(R.string.jp_migration_generic_error_subtitle),
-                    message = UiStringRes(R.string.jp_migration_generic_error_message),
+                title = UiStringRes(R.string.jp_migration_generic_error_title),
+                subtitle = UiStringRes(R.string.jp_migration_generic_error_subtitle),
+                message = UiStringRes(R.string.jp_migration_generic_error_message),
             )
 
             object Networking : ErrorType(
-                    title = UiStringRes(R.string.jp_migration_network_error_title),
-                    subtitle = UiStringRes(R.string.jp_migration_network_error_subtitle),
-                    message = UiStringRes(R.string.jp_migration_network_error_message),
+                title = UiStringRes(R.string.jp_migration_network_error_title),
+                subtitle = UiStringRes(R.string.jp_migration_network_error_subtitle),
+                message = UiStringRes(R.string.jp_migration_network_error_message),
             )
         }
     }
 
     data class SiteListItemUiState(
-        val id: Long,
+        val id: Int,
         val name: String,
         val url: String,
         val iconUrl: String,
@@ -419,57 +420,57 @@ class JetpackMigrationViewModel @Inject constructor(
         data class WelcomePrimaryButton(
             override val onClick: () -> Unit,
         ) : ActionButton(
-                onClick = onClick,
-                text = UiStringRes(R.string.jp_migration_continue_button),
+            onClick = onClick,
+            text = UiStringRes(R.string.jp_migration_continue_button),
         )
 
         data class WelcomeSecondaryButton(
             override val onClick: () -> Unit,
         ) : ActionButton(
-                onClick = onClick,
-                text = UiStringRes(R.string.jp_migration_help_button),
+            onClick = onClick,
+            text = UiStringRes(R.string.jp_migration_help_button),
         )
 
         data class NotificationsPrimaryButton(
             override val onClick: () -> Unit,
         ) : ActionButton(
-                onClick = onClick,
-                text = UiStringRes(R.string.jp_migration_continue_button),
+            onClick = onClick,
+            text = UiStringRes(R.string.jp_migration_continue_button),
         )
 
         data class DonePrimaryButton(
             override val onClick: () -> Unit,
         ) : ActionButton(
-                onClick = onClick,
-                text = UiStringRes(R.string.jp_migration_finish_button),
+            onClick = onClick,
+            text = UiStringRes(R.string.jp_migration_finish_button),
         )
 
         data class ErrorPrimaryButton(
             override val onClick: () -> Unit,
         ) : ActionButton(
-                onClick = onClick,
-                text = UiStringRes(R.string.jp_migration_try_again_button),
+            onClick = onClick,
+            text = UiStringRes(R.string.jp_migration_try_again_button),
         )
 
         data class ErrorSecondaryButton(
             override val onClick: () -> Unit,
         ) : ActionButton(
-                onClick = onClick,
-                text = UiStringRes(R.string.jp_migration_help_button),
+            onClick = onClick,
+            text = UiStringRes(R.string.jp_migration_help_button),
         )
 
         data class DeletePrimaryButton(
             override val onClick: () -> Unit
         ) : ActionButton(
-                onClick = onClick,
-                text = UiStringRes(R.string.jp_migration_got_it_button)
+            onClick = onClick,
+            text = UiStringRes(R.string.jp_migration_got_it_button)
         )
 
         data class DeleteSecondaryButton(
             override val onClick: () -> Unit
         ) : ActionButton(
-                onClick = onClick,
-                text = UiStringRes(R.string.jp_migration_need_help_button)
+            onClick = onClick,
+            text = UiStringRes(R.string.jp_migration_need_help_button)
         )
     }
 
@@ -487,7 +488,6 @@ class JetpackMigrationViewModel @Inject constructor(
             val action: String,
             val uri: Uri,
         ) : JetpackMigrationActionEvent()
-
         object FallbackToLogin : JetpackMigrationActionEvent()
         object Logout : JetpackMigrationActionEvent()
     }

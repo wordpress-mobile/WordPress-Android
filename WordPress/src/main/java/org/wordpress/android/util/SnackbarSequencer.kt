@@ -78,8 +78,8 @@ class SnackbarSequencer @Inject constructor(
                 AppLog.d(T.UTILS, "SnackbarSequencer > after delay")
             } else {
                 AppLog.d(
-                        T.UTILS,
-                        "SnackbarSequencer > start context was ${if (context == null) "null" else "not alive"}"
+                    T.UTILS,
+                    "SnackbarSequencer > start context was ${if (context == null) "null" else "not alive"}"
                 )
             }
             if (snackBarQueue.peek() == item) {
@@ -107,8 +107,8 @@ class SnackbarSequencer @Inject constructor(
 
             item.action?.let { actionInfo ->
                 snackbar.setAction(
-                        uiHelper.getTextOfUiString(context, actionInfo.textRes),
-                        actionInfo.clickListener.get()
+                    uiHelper.getTextOfUiString(context, actionInfo.textRes),
+                    actionInfo.clickListener.get()
                 )
             }
 

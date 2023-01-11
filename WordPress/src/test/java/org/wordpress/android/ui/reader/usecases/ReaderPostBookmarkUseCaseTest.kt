@@ -26,18 +26,26 @@ private const val SOURCE = "source"
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
     lateinit var useCase: ReaderPostBookmarkUseCase
-    @Mock lateinit var readerTracker: ReaderTracker
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
-    @Mock lateinit var readerPostTableWrapper: ReaderPostTableWrapper
+
+    @Mock
+    lateinit var readerTracker: ReaderTracker
+
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
+
+    @Mock
+    lateinit var readerPostTableWrapper: ReaderPostTableWrapper
 
     @Before
     fun setup() {
         useCase = ReaderPostBookmarkUseCase(
-                readerTracker,
-                networkUtilsWrapper,
-                readerPostActionsWrapper,
-                readerPostTableWrapper
+            readerTracker,
+            networkUtilsWrapper,
+            readerPostActionsWrapper,
+            readerPostTableWrapper
         )
     }
 
@@ -47,9 +55,9 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         val dummyPost = init(isBookmarked = false)
         // Act
         useCase.toggleBookmark(
-                post(),
-                false,
-                SOURCE
+            post(),
+            false,
+            SOURCE
         ).toList(mutableListOf())
 
         // Assert
@@ -62,9 +70,9 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         val dummyPost = init(isBookmarked = true)
         // Act
         useCase.toggleBookmark(
-                post(),
-                false,
-                SOURCE
+            post(),
+            false,
+            SOURCE
         ).toList(mutableListOf())
 
         // Assert
@@ -78,9 +86,9 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
 
         // Act
         val result = useCase.toggleBookmark(
-                post(),
-                false,
-                SOURCE
+            post(),
+            false,
+            SOURCE
         ).toList(mutableListOf())
 
         // Assert
@@ -94,9 +102,9 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
 
         // Act
         val result = useCase.toggleBookmark(
-                post(),
-                false,
-                SOURCE
+            post(),
+            false,
+            SOURCE
         ).toList(mutableListOf())
 
         // Assert
@@ -110,9 +118,9 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
 
         // Act
         val result = useCase.toggleBookmark(
-                post(),
-                false,
-                SOURCE
+            post(),
+            false,
+            SOURCE
         ).toList(mutableListOf())
 
         // Assert
@@ -126,9 +134,9 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
 
         // Act
         val result = useCase.toggleBookmark(
-                post(),
-                true,
-                SOURCE
+            post(),
+            true,
+            SOURCE
         ).toList(mutableListOf())
 
         // Assert
@@ -138,7 +146,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
     private fun init(isBookmarked: Boolean = false, networkAvailable: Boolean = true): ReaderPost {
         val post = ReaderPost().apply { this.isBookmarked = isBookmarked }
         whenever(readerPostTableWrapper.getBlogPost(anyLong(), anyLong(), anyBoolean()))
-                .thenReturn(post)
+            .thenReturn(post)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(networkAvailable)
         return post
     }

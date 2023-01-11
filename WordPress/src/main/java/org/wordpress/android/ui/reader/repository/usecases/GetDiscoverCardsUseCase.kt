@@ -36,7 +36,7 @@ class GetDiscoverCardsUseCase @Inject constructor(
 
         if (cardJsonList.isNotEmpty()) {
             val jsonObjects = parseDiscoverCardsJsonUseCase.convertListOfJsonArraysIntoSingleJsonArray(
-                    cardJsonList
+                cardJsonList
             )
 
             forLoop@ for (i in 0 until jsonObjects.length()) {
@@ -60,9 +60,9 @@ class GetDiscoverCardsUseCase @Inject constructor(
                     ReaderConstants.JSON_CARD_RECOMMENDED_BLOGS -> {
                         cardJson?.let {
                             val recommendedBlogs = parseDiscoverCardsJsonUseCase.parseSimplifiedRecommendedBlogsCard(it)
-                                    .mapNotNull { (blogId, feedId) ->
-                                        readerBlogTableWrapper.getReaderBlog(blogId, feedId)
-                                    }
+                                .mapNotNull { (blogId, feedId) ->
+                                    readerBlogTableWrapper.getReaderBlog(blogId, feedId)
+                                }
                             cards.add(ReaderRecommendedBlogsCard(recommendedBlogs))
                         }
                     }

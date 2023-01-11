@@ -45,11 +45,11 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = DomainsDashboardViewModel(
-                siteStore,
-                analyticsTracker,
-                htmlMessageUtils,
-                fetchPlansUseCase,
-                testDispatcher()
+            siteStore,
+            analyticsTracker,
+            htmlMessageUtils,
+            fetchPlansUseCase,
+            testDispatcher()
         )
 
         viewModel.uiModel.observeForever { if (it != null) uiModel += it }
@@ -58,9 +58,9 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
     @Test
     fun `free plan with custom domains`() = test {
         setupWith(
-                hasPaidPlan = false,
-                hasCustomDomains = true,
-                hasDomainCredits = false
+            hasPaidPlan = false,
+            hasCustomDomains = true,
+            hasDomainCredits = false
         )
 
         val dashboardItems = uiModel
@@ -77,9 +77,9 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
     @Test
     fun `free plan with no custom domains`() = test {
         setupWith(
-                hasPaidPlan = false,
-                hasCustomDomains = false,
-                hasDomainCredits = false
+            hasPaidPlan = false,
+            hasCustomDomains = false,
+            hasDomainCredits = false
         )
 
         val dashboardItems = uiModel
@@ -89,15 +89,15 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
         assertThat(dashboardItems[0]).isInstanceOf(FreeDomain::class.java)
         assertThat(dashboardItems[1]).isInstanceOf(PurchaseDomain::class.java)
         assertThat((dashboardItems[1] as PurchaseDomain).title)
-                .isEqualTo(UiStringRes(R.string.domains_free_plan_get_your_domain_title))
+            .isEqualTo(UiStringRes(R.string.domains_free_plan_get_your_domain_title))
     }
 
     @Test
     fun `paid plan with custom domains and credits`() = test {
         setupWith(
-                hasPaidPlan = true,
-                hasCustomDomains = true,
-                hasDomainCredits = true
+            hasPaidPlan = true,
+            hasCustomDomains = true,
+            hasDomainCredits = true
         )
 
         val dashboardItems = uiModel
@@ -109,15 +109,15 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
         assertThat(dashboardItems[2]).isInstanceOf(SiteDomains::class.java)
         assertThat(dashboardItems[3]).isInstanceOf(PurchaseDomain::class.java)
         assertThat((dashboardItems[3] as PurchaseDomain).title)
-                .isEqualTo(UiStringRes(R.string.domains_paid_plan_claim_your_domain_title))
+            .isEqualTo(UiStringRes(R.string.domains_paid_plan_claim_your_domain_title))
     }
 
     @Test
     fun `paid plan with custom domains and no credits`() = test {
         setupWith(
-                hasPaidPlan = true,
-                hasCustomDomains = true,
-                hasDomainCredits = false
+            hasPaidPlan = true,
+            hasCustomDomains = true,
+            hasDomainCredits = false
         )
 
         val dashboardItems = uiModel
@@ -133,9 +133,9 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
     @Test
     fun `paid plan with no custom domains and credits`() = test {
         setupWith(
-                hasPaidPlan = true,
-                hasCustomDomains = false,
-                hasDomainCredits = true
+            hasPaidPlan = true,
+            hasCustomDomains = false,
+            hasDomainCredits = true
         )
 
         val dashboardItems = uiModel
@@ -149,9 +149,9 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
     @Test
     fun `paid plan with no custom domains and no credits`() = test {
         setupWith(
-                hasPaidPlan = true,
-                hasCustomDomains = false,
-                hasDomainCredits = false
+            hasPaidPlan = true,
+            hasCustomDomains = false,
+            hasDomainCredits = false
         )
 
         val dashboardItems = uiModel
@@ -161,7 +161,7 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
         assertThat(dashboardItems[0]).isInstanceOf(FreeDomain::class.java)
         assertThat(dashboardItems[1]).isInstanceOf(PurchaseDomain::class.java)
         assertThat((dashboardItems[1] as PurchaseDomain).title)
-                .isEqualTo(UiStringRes(R.string.domains_paid_plan_add_your_domain_title))
+            .isEqualTo(UiStringRes(R.string.domains_paid_plan_add_your_domain_title))
     }
 
     private suspend fun setupWith(hasPaidPlan: Boolean, hasCustomDomains: Boolean, hasDomainCredits: Boolean) {
@@ -180,12 +180,12 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
         private const val TEST_DOMAIN_NAME = "testdomain.blog"
 
         private val customDomain = Domain(
-                domain = "henna.tattoo",
-                expired = false,
-                expiry = "June 8, 2022",
-                expirySoon = false,
-                primaryDomain = false,
-                wpcomDomain = false
+            domain = "henna.tattoo",
+            expired = false,
+            expiry = "June 8, 2022",
+            expirySoon = false,
+            primaryDomain = false,
+            wpcomDomain = false
         )
 
         private val siteWithFreePlan = SiteModel().apply {
@@ -203,18 +203,18 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
         }
 
         private val planWithNoCredits = PlanModel(
-                productId = 1,
-                productSlug = "plan-1",
-                productName = "Plan 1",
-                isCurrentPlan = true,
-                hasDomainCredit = false
+            productId = 1,
+            productSlug = "plan-1",
+            productName = "Plan 1",
+            isCurrentPlan = true,
+            hasDomainCredit = false
         )
         private val planWithCredits = PlanModel(
-                productId = 2,
-                productSlug = "plan-2",
-                productName = "Plan 2",
-                isCurrentPlan = true,
-                hasDomainCredit = true
+            productId = 2,
+            productSlug = "plan-2",
+            productName = "Plan 2",
+            isCurrentPlan = true,
+            hasDomainCredit = true
         )
     }
 }

@@ -28,11 +28,11 @@ class CommentEssentialsTest {
     @Test
     fun `Should return the expected default parameters`() {
         val expected = CommentEssentials(
-                commentId = -1,
-                userName = "",
-                commentText = "",
-                userUrl = "",
-                userEmail = ""
+            commentId = -1,
+            userName = "",
+            commentText = "",
+            userUrl = "",
+            userEmail = ""
         )
         val actual = CommentEssentials()
         assertEquals(expected, actual)

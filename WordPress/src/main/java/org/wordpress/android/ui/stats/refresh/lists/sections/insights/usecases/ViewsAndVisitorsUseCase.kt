@@ -64,28 +64,28 @@ class ViewsAndVisitorsUseCase
     private val resourceProvider: ResourceProvider,
     private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<VisitsAndViewsModel, UiState>(
-        statsType,
-        mainDispatcher,
-        backgroundDispatcher,
-        UiState(),
-        uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(statsGranularity.toStatsSection()))
+    statsType,
+    mainDispatcher,
+    backgroundDispatcher,
+    UiState(),
+    uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(statsGranularity.toStatsSection()))
 ) {
     override fun buildLoadingItem(): List<BlockListItem> =
-            listOf(
-                    ValueItem(
-                            value = "0",
-                            unit = string.stats_views,
-                            isFirst = true,
-                            contentDescription = resourceProvider.getString(string.stats_loading_card)
-                    )
+        listOf(
+            ValueItem(
+                value = "0",
+                unit = string.stats_views,
+                isFirst = true,
+                contentDescription = resourceProvider.getString(string.stats_loading_card)
             )
+        )
 
     override suspend fun loadCachedData(): VisitsAndViewsModel? {
         statsWidgetUpdaters.updateViewsWidget(statsSiteProvider.siteModel.siteId)
         val cachedData = visitsAndViewsStore.getVisits(
-                statsSiteProvider.siteModel,
-                statsGranularity,
-                LimitMode.Top(VIEWS_AND_VISITORS_ITEMS_TO_LOAD)
+            statsSiteProvider.siteModel,
+            statsGranularity,
+            LimitMode.Top(VIEWS_AND_VISITORS_ITEMS_TO_LOAD)
         )
         if (cachedData != null) {
             logIfIncorrectData(cachedData, statsGranularity, statsSiteProvider.siteModel, false)
@@ -95,10 +95,10 @@ class ViewsAndVisitorsUseCase
 
     override suspend fun fetchRemoteData(forced: Boolean): State<VisitsAndViewsModel> {
         val response = visitsAndViewsStore.fetchVisits(
-                statsSiteProvider.siteModel,
-                statsGranularity,
-                LimitMode.Top(VIEWS_AND_VISITORS_ITEMS_TO_LOAD),
-                forced
+            statsSiteProvider.siteModel,
+            statsGranularity,
+            LimitMode.Top(VIEWS_AND_VISITORS_ITEMS_TO_LOAD),
+            forced
         )
         val model = response.model
         val error = response.error
@@ -136,15 +136,15 @@ class ViewsAndVisitorsUseCase
                 val currentCalendar = localeManagerWrapper.getCurrentCalendar()
                 val lastItemAge = ceil((currentCalendar.timeInMillis - lastDayDate.time) / 86400000.0)
                 analyticsTracker.track(
-                        STATS_VIEWS_AND_VISITORS_ERROR,
-                        mapOf(
-                                "stats_last_date" to statsDateFormatter.printStatsDate(lastDayDate),
-                                "stats_current_date" to statsDateFormatter.printStatsDate(currentCalendar.time),
-                                "stats_age_in_days" to lastItemAge.toInt(),
-                                "is_jetpack_connected" to site.isJetpackConnected,
-                                "is_atomic" to site.isWPComAtomic,
-                                "action_source" to if (fetched) "remote" else "cached"
-                        )
+                    STATS_VIEWS_AND_VISITORS_ERROR,
+                    mapOf(
+                        "stats_last_date" to statsDateFormatter.printStatsDate(lastDayDate),
+                        "stats_current_date" to statsDateFormatter.printStatsDate(currentCalendar.time),
+                        "stats_age_in_days" to lastItemAge.toInt(),
+                        "is_jetpack_connected" to site.isJetpackConnected,
+                        "is_atomic" to site.isWPComAtomic,
+                        "action_source" to if (fetched) "remote" else "cached"
+                    )
                 )
             }
         }
@@ -168,8 +168,8 @@ class ViewsAndVisitorsUseCase
             val visibleLineCount = uiState.visibleLineCount ?: domainModel.dates.size
             val availableDates = domainModel.dates.map {
                 statsDateFormatter.parseStatsDate(
-                        statsGranularity,
-                        it.period
+                    statsGranularity,
+                    it.period
                 )
             }
             val selectedDate = dateFromProvider ?: availableDates.last()
@@ -180,35 +180,35 @@ class ViewsAndVisitorsUseCase
             val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
 
             items.add(
-                    viewsAndVisitorsMapper.buildTitle(
-                            domainModel.dates,
-                            statsGranularity = statsGranularity,
-                            selectedItem,
-                            uiState.selectedPosition
-                    )
+                viewsAndVisitorsMapper.buildTitle(
+                    domainModel.dates,
+                    statsGranularity = statsGranularity,
+                    selectedItem,
+                    uiState.selectedPosition
+                )
             )
             items.addAll(
-                    viewsAndVisitorsMapper.buildChart(
-                            domainModel.dates,
-                            statsGranularity,
-                            this::onLineSelected,
-                            this::onLineChartDrawn,
-                            uiState.selectedPosition,
-                            selectedItem.period
-                    )
+                viewsAndVisitorsMapper.buildChart(
+                    domainModel.dates,
+                    statsGranularity,
+                    this::onLineSelected,
+                    this::onLineChartDrawn,
+                    uiState.selectedPosition,
+                    selectedItem.period
+                )
             )
             items.add(
-                    viewsAndVisitorsMapper.buildInformation(
-                            domainModel.dates,
-                            uiState.selectedPosition,
-                            this::onTopTipsLinkClick
-                    )
+                viewsAndVisitorsMapper.buildInformation(
+                    domainModel.dates,
+                    uiState.selectedPosition,
+                    this::onTopTipsLinkClick
+                )
             )
             items.add(
-                    viewsAndVisitorsMapper.buildChips(
-                            this::onChipSelected,
-                            uiState.selectedPosition
-                    )
+                viewsAndVisitorsMapper.buildChips(
+                    this::onChipSelected,
+                    uiState.selectedPosition
+                )
             )
         } else {
             selectedDateProvider.onDateLoadingFailed(statsGranularity)
@@ -218,19 +218,19 @@ class ViewsAndVisitorsUseCase
     }
 
     private fun buildTitle() = TitleWithMore(
-            string.stats_insights_views_and_visitors,
-            navigationAction = if (useCaseMode == BLOCK) ListItemInteraction.create(this::onViewMoreClick) else null
+        string.stats_insights_views_and_visitors,
+        navigationAction = if (useCaseMode == BLOCK) ListItemInteraction.create(this::onViewMoreClick) else null
     )
 
     private fun onViewMoreClick() {
         analyticsTracker.trackWithType(AnalyticsTracker.Stat.STATS_INSIGHTS_VIEW_MORE, InsightType.VIEWS_AND_VISITORS)
         navigateTo(
-                ViewInsightDetails(
-                        INSIGHT_DETAIL,
-                        INSIGHTS_VIEWS_AND_VISITORS,
-                        statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity)
-                )
+            ViewInsightDetails(
+                INSIGHT_DETAIL,
+                INSIGHTS_VIEWS_AND_VISITORS,
+                statsGranularity,
+                selectedDateProvider.getSelectedDate(statsGranularity)
+            )
         )
     }
 
@@ -240,14 +240,14 @@ class ViewsAndVisitorsUseCase
 
     private fun onLineSelected(period: String?) {
         analyticsTracker.trackGranular(
-                AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_LINE_CHART_TAPPED,
-                statsGranularity
+            AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_LINE_CHART_TAPPED,
+            statsGranularity
         )
         if (period != null && period != "empty") {
             val selectedDate = statsDateFormatter.parseStatsDate(statsGranularity, period)
             selectedDateProvider.selectDate(
-                    selectedDate,
-                    statsGranularity
+                selectedDate,
+                statsGranularity
             )
         }
     }
@@ -278,21 +278,21 @@ class ViewsAndVisitorsUseCase
         private val resourceProvider: ResourceProvider
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
-                ViewsAndVisitorsUseCase(
-                        InsightType.VIEWS_AND_VISITORS,
-                        DAYS,
-                        visitsAndViewsStore,
-                        selectedDateProvider,
-                        statsSiteProvider,
-                        statsDateFormatter,
-                        viewsAndVisitorsMapper,
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        analyticsTracker,
-                        statsWidgetUpdaters,
-                        localeManagerWrapper,
-                        resourceProvider,
-                        useCaseMode
-                )
+            ViewsAndVisitorsUseCase(
+                InsightType.VIEWS_AND_VISITORS,
+                DAYS,
+                visitsAndViewsStore,
+                selectedDateProvider,
+                statsSiteProvider,
+                statsDateFormatter,
+                viewsAndVisitorsMapper,
+                mainDispatcher,
+                backgroundDispatcher,
+                analyticsTracker,
+                statsWidgetUpdaters,
+                localeManagerWrapper,
+                resourceProvider,
+                useCaseMode
+            )
     }
 }

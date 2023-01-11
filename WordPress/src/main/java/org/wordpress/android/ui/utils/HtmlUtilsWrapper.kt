@@ -7,5 +7,5 @@ import javax.inject.Inject
 
 class HtmlUtilsWrapper @Inject constructor() {
     fun colorResToHtmlColor(context: Context, @ColorRes colorRes: Int): String =
-            HtmlUtils.colorResToHtmlColor(context, colorRes)
+        HtmlUtils.colorResToHtmlColor(context, colorRes)
 }

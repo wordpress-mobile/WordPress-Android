@@ -22,25 +22,25 @@ fun SecondaryButton(
     modifier: Modifier = Modifier,
 ) {
     Button(
-            onClick = onClick,
-            elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp,
-            ),
-            colors = ButtonDefaults.buttonColors(
-                    contentColor = colorResource(R.color.text_color_jetpack_login_splash_secondary_button),
-                    backgroundColor = Color.Transparent,
-            ),
-            modifier = modifier
-                    .padding(horizontal = dimensionResource(R.dimen.login_prologue_revamped_buttons_padding))
-                    .padding(bottom = 60.dp)
-                    .fillMaxWidth(),
+        onClick = onClick,
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 0.dp,
+        ),
+        colors = ButtonDefaults.buttonColors(
+            contentColor = colorResource(R.color.text_color_jetpack_login_splash_secondary_button),
+            backgroundColor = Color.Transparent,
+        ),
+        modifier = modifier
+            .padding(horizontal = dimensionResource(R.dimen.login_prologue_revamped_buttons_padding))
+            .padding(bottom = 60.dp)
+            .fillMaxWidth(),
     ) {
         Text(
-                text = stringResource(R.string.enter_your_site_address),
-                style = TextStyle(
-                        fontWeight = FontWeight.Medium,
-                ),
+            text = stringResource(R.string.enter_your_site_address),
+            style = TextStyle(
+                fontWeight = FontWeight.Medium,
+            ),
         )
     }
 }

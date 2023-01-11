@@ -33,11 +33,11 @@ object ReaderDiscoverServiceStarter {
             val extras = PersistableBundle()
             extras.putInt(ARG_DISCOVER_TASK, task.ordinal)
             val jobInfo = Builder(JobServiceId.JOB_READER_DISCOVER_SERVICE_ID, componentName)
-                    .setRequiresCharging(false)
-                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                    .setOverrideDeadline(0) // if possible, try to run right away
-                    .setExtras(extras)
-                    .build()
+                .setRequiresCharging(false)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setOverrideDeadline(0) // if possible, try to run right away
+                .setExtras(extras)
+                .build()
             val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
             val resultCode = jobScheduler.schedule(jobInfo)
             if (resultCode == JobScheduler.RESULT_SUCCESS) {

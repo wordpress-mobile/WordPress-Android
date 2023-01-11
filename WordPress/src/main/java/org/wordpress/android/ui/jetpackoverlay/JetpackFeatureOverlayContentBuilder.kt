@@ -42,22 +42,22 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         val componentVisibility = JetpackFeatureOverlayComponentVisibility.PhaseThree()
         val content = when (params.feature!!) {
             JetpackFeatureOverlayScreenType.STATS -> getStateForPhaseTwoStats(
-                    params,
-                    params.jpDeadlineDate,
-                    params.phaseThreeBlogPostLink
+                params,
+                params.jpDeadlineDate,
+                params.phaseThreeBlogPostLink
             )
             JetpackFeatureOverlayScreenType.NOTIFICATIONS -> getStateForPhaseTwoNotifications(
-                    params,
-                    params.jpDeadlineDate,
-                    params.phaseThreeBlogPostLink
+                params,
+                params.jpDeadlineDate,
+                params.phaseThreeBlogPostLink
             )
             JetpackFeatureOverlayScreenType.READER -> getStateForPhaseTwoReader(
-                    params,
-                    params.jpDeadlineDate,
-                    params.phaseThreeBlogPostLink
+                params,
+                params.jpDeadlineDate,
+                params.phaseThreeBlogPostLink
             )
         }.copy(
-                migrationText = R.string.wp_jetpack_feature_removal_overlay_migration_helper_text
+            migrationText = R.string.wp_jetpack_feature_removal_overlay_migration_helper_text
         )
         return JetpackFeatureOverlayUIState(componentVisibility, content)
     }
@@ -68,19 +68,19 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         val componentVisibility = JetpackFeatureOverlayComponentVisibility.PhaseTwo()
         val content = when (params.feature!!) {
             JetpackFeatureOverlayScreenType.STATS -> getStateForPhaseTwoStats(
-                    params,
-                    params.jpDeadlineDate,
-                    params.phaseTwoBlogPostLink
+                params,
+                params.jpDeadlineDate,
+                params.phaseTwoBlogPostLink
             )
             JetpackFeatureOverlayScreenType.NOTIFICATIONS -> getStateForPhaseTwoNotifications(
-                    params,
-                    params.jpDeadlineDate,
-                    params.phaseTwoBlogPostLink
+                params,
+                params.jpDeadlineDate,
+                params.phaseTwoBlogPostLink
             )
             JetpackFeatureOverlayScreenType.READER -> getStateForPhaseTwoReader(
-                    params,
-                    params.jpDeadlineDate,
-                    params.phaseTwoBlogPostLink
+                params,
+                params.jpDeadlineDate,
+                params.phaseTwoBlogPostLink
             )
         }
         return JetpackFeatureOverlayUIState(componentVisibility, content)
@@ -92,14 +92,14 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         blogPostLink: String?
     ): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
-                illustration = if (params.isRtl) R.raw.jp_stats_rtl else R.raw.jp_stats_left,
-                title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats,
-                caption = getCaptionForPhaseTwoAndThree(jpDeadlineDate),
-                migrationInfoText = if (!blogPostLink.isNullOrEmpty())
-                    R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
-                migrationInfoUrl = blogPostLink,
-                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
-                secondaryButtonText = R.string.wp_jetpack_continue_to_stats
+            illustration = if (params.isRtl) R.raw.jp_stats_rtl else R.raw.jp_stats_left,
+            title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats,
+            caption = getCaptionForPhaseTwoAndThree(jpDeadlineDate),
+            migrationInfoText = if (!blogPostLink.isNullOrEmpty())
+                R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
+            migrationInfoUrl = blogPostLink,
+            primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
+            secondaryButtonText = R.string.wp_jetpack_continue_to_stats
         )
     }
 
@@ -109,14 +109,14 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         blogPostLink: String?
     ): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
-                illustration = if (params.isRtl) R.raw.jp_reader_rtl else R.raw.jp_reader_left,
-                title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader,
-                caption = getCaptionForPhaseTwoAndThree(jpDeadlineDate),
-                migrationInfoText = if (!blogPostLink.isNullOrEmpty())
-                    R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
-                migrationInfoUrl = blogPostLink,
-                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
-                secondaryButtonText = R.string.wp_jetpack_continue_to_reader
+            illustration = if (params.isRtl) R.raw.jp_reader_rtl else R.raw.jp_reader_left,
+            title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader,
+            caption = getCaptionForPhaseTwoAndThree(jpDeadlineDate),
+            migrationInfoText = if (!blogPostLink.isNullOrEmpty())
+                R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
+            migrationInfoUrl = blogPostLink,
+            primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
+            secondaryButtonText = R.string.wp_jetpack_continue_to_reader
         )
     }
 
@@ -126,14 +126,14 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         blogPostLink: String?
     ): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
-                illustration = if (params.isRtl) R.raw.jp_notifications_rtl else R.raw.jp_notifications_left,
-                title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications,
-                caption = getCaptionForPhaseTwoAndThree(jpDeadlineDate),
-                migrationInfoText = if (!blogPostLink.isNullOrEmpty())
-                    R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
-                migrationInfoUrl = blogPostLink,
-                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
-                secondaryButtonText = R.string.wp_jetpack_continue_to_notifications
+            illustration = if (params.isRtl) R.raw.jp_notifications_rtl else R.raw.jp_notifications_left,
+            title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications,
+            caption = getCaptionForPhaseTwoAndThree(jpDeadlineDate),
+            migrationInfoText = if (!blogPostLink.isNullOrEmpty())
+                R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
+            migrationInfoUrl = blogPostLink,
+            primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
+            secondaryButtonText = R.string.wp_jetpack_continue_to_notifications
         )
     }
 
@@ -141,9 +141,9 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         return if (jpDeadlineDate.isNullOrEmpty()) getPhaseTwoAndThreeCaptionWithoutDeadline()
         else {
             val deadlineDate = dateTimeUtilsWrapper.convertDateFormat(
-                    jpDeadlineDate,
-                    JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT,
-                    JETPACK_OVERLAY_TARGET_DATE_FORMAT
+                jpDeadlineDate,
+                JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT,
+                JETPACK_OVERLAY_TARGET_DATE_FORMAT
             )
             if (deadlineDate.isNullOrEmpty())
                 return getPhaseTwoAndThreeCaptionWithoutDeadline()
@@ -153,15 +153,15 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
 
     private fun getPhaseTwoAndThreeCaptionWithDeadline(jpDeadlineDate: String): UiString {
         return UiStringText(
-                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                        R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline,
-                        "<b>$jpDeadlineDate</b>"
-                )
+            htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline,
+                "<b>$jpDeadlineDate</b>"
+            )
         )
     }
 
     private fun getPhaseTwoAndThreeCaptionWithoutDeadline() = UiStringRes(
-            R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline
+        R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline
     )
 
     private fun getStateForPhaseOne(
@@ -179,31 +179,31 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
 
     private fun getStateForPhaseOneStats(rtl: Boolean): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
-                illustration = if (rtl) R.raw.jp_stats_rtl else R.raw.jp_stats_left,
-                title = R.string.wp_jetpack_feature_removal_overlay_phase_one_title_stats,
-                caption = UiStringRes(R.string.wp_jetpack_feature_removal_overlay_phase_one_description_stats),
-                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
-                secondaryButtonText = R.string.wp_jetpack_continue_to_stats
+            illustration = if (rtl) R.raw.jp_stats_rtl else R.raw.jp_stats_left,
+            title = R.string.wp_jetpack_feature_removal_overlay_phase_one_title_stats,
+            caption = UiStringRes(R.string.wp_jetpack_feature_removal_overlay_phase_one_description_stats),
+            primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
+            secondaryButtonText = R.string.wp_jetpack_continue_to_stats
         )
     }
 
     private fun getStateForPhaseOneReader(rtl: Boolean): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
-                illustration = if (rtl) R.raw.jp_reader_rtl else R.raw.jp_reader_left,
-                title = R.string.wp_jetpack_feature_removal_overlay_phase_one_title_reader,
-                caption = UiStringRes(R.string.wp_jetpack_feature_removal_overlay_phase_one_description_reader),
-                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
-                secondaryButtonText = R.string.wp_jetpack_continue_to_reader
+            illustration = if (rtl) R.raw.jp_reader_rtl else R.raw.jp_reader_left,
+            title = R.string.wp_jetpack_feature_removal_overlay_phase_one_title_reader,
+            caption = UiStringRes(R.string.wp_jetpack_feature_removal_overlay_phase_one_description_reader),
+            primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
+            secondaryButtonText = R.string.wp_jetpack_continue_to_reader
         )
     }
 
     private fun getStateForPhaseOneNotifications(rtl: Boolean): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
-                illustration = if (rtl) R.raw.jp_notifications_rtl else R.raw.jp_notifications_left,
-                title = R.string.wp_jetpack_feature_removal_overlay_phase_one_title_notifications,
-                caption = UiStringRes(R.string.wp_jetpack_feature_removal_overlay_phase_one_description_notifications),
-                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
-                secondaryButtonText = R.string.wp_jetpack_continue_to_notifications
+            illustration = if (rtl) R.raw.jp_notifications_rtl else R.raw.jp_notifications_left,
+            title = R.string.wp_jetpack_feature_removal_overlay_phase_one_title_notifications,
+            caption = UiStringRes(R.string.wp_jetpack_feature_removal_overlay_phase_one_description_notifications),
+            primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
+            secondaryButtonText = R.string.wp_jetpack_continue_to_notifications
         )
     }
 
@@ -219,34 +219,34 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
 
     private fun getStateForSiteCreationPhaseOne(isRtl: Boolean): JetpackFeatureOverlayUIState {
         val componentVisibility = JetpackFeatureOverlayComponentVisibility
-                .SiteCreationPhase.PhaseOne()
+            .SiteCreationPhase.PhaseOne()
         val content = getContentForSiteCreationPhaseOne(isRtl)
         return JetpackFeatureOverlayUIState(componentVisibility, content)
     }
 
     private fun getContentForSiteCreationPhaseOne(rtl: Boolean): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
-                illustration = if (rtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
-                title = R.string.wp_jetpack_feature_removal_site_creation_overlay_title,
-                caption = UiStringRes(R.string.wp_jetpack_feature_removal_site_creation_overlay_phase_one_description),
-                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
-                secondaryButtonText = R.string.wp_jetpack_continue_without_jetpack
+            illustration = if (rtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
+            title = R.string.wp_jetpack_feature_removal_site_creation_overlay_title,
+            caption = UiStringRes(R.string.wp_jetpack_feature_removal_site_creation_overlay_phase_one_description),
+            primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
+            secondaryButtonText = R.string.wp_jetpack_continue_without_jetpack
         )
     }
 
     private fun getStateForSiteCreationPhaseTwo(rtl: Boolean): JetpackFeatureOverlayUIState {
         val componentVisibility = JetpackFeatureOverlayComponentVisibility
-                .SiteCreationPhase.PhaseTwo()
+            .SiteCreationPhase.PhaseTwo()
         val content = getContentForSiteCreationPhaseTwo(rtl)
         return JetpackFeatureOverlayUIState(componentVisibility, content)
     }
 
     private fun getContentForSiteCreationPhaseTwo(rtl: Boolean): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
-                illustration = if (rtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
-                title = R.string.wp_jetpack_feature_removal_site_creation_overlay_title,
-                caption = UiStringRes(R.string.wp_jetpack_feature_removal_site_creation_overlay_phase_two_description),
-                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
+            illustration = if (rtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
+            title = R.string.wp_jetpack_feature_removal_site_creation_overlay_title,
+            caption = UiStringRes(R.string.wp_jetpack_feature_removal_site_creation_overlay_phase_two_description),
+            primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
         )
     }
 
@@ -256,52 +256,52 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
 
     private fun getStateForDeepLink(isRtl: Boolean): JetpackFeatureOverlayUIState {
         val componentVisibility = JetpackFeatureOverlayComponentVisibility
-                .DeepLinkPhase.All()
+            .DeepLinkPhase.All()
         val content = getContentForDeepLink(isRtl)
         return JetpackFeatureOverlayUIState(componentVisibility, content)
     }
 
     private fun getContentForDeepLink(rtl: Boolean): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
-                illustration = if (rtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
-                title = R.string.wp_jetpack_deep_link_overlay_title,
-                caption = UiStringRes(R.string.wp_jetpack_deep_link_overlay_description),
-                primaryButtonText = R.string.wp_jetpack_deep_link_open_in_jetpack,
-                secondaryButtonText = R.string.wp_jetpack_deep_link_open_in_wordpress
+            illustration = if (rtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
+            title = R.string.wp_jetpack_deep_link_overlay_title,
+            caption = UiStringRes(R.string.wp_jetpack_deep_link_overlay_description),
+            primaryButtonText = R.string.wp_jetpack_deep_link_open_in_jetpack,
+            secondaryButtonText = R.string.wp_jetpack_deep_link_open_in_wordpress
         )
     }
 
     // All Feature Overlay
-    fun buildAllFeaturesOverlayState(
+    fun buildFeatureCollectionOverlayState(
         isRtl: Boolean, currentPhase: JetpackFeatureRemovalPhase, blogPostLink: String?
     ): JetpackFeatureOverlayUIState {
-        return getStateForAllFeatures(isRtl, currentPhase, blogPostLink)
+        return getStateForFeatureCollection(isRtl, currentPhase, blogPostLink)
     }
 
-    private fun getStateForAllFeatures(
+    private fun getStateForFeatureCollection(
         isRtl: Boolean,
         currentPhase: JetpackFeatureRemovalPhase,
         blogPostLink: String?
     ): JetpackFeatureOverlayUIState {
         val componentVisibility = if (currentPhase == PhaseThree)
-                JetpackFeatureOverlayComponentVisibility.AllFeaturesPhase.PhaseThree()
-            else
-                JetpackFeatureOverlayComponentVisibility.AllFeaturesPhase.Final()
-        val content = getContentForAllFeatures(isRtl, blogPostLink)
+            JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseThree()
+        else
+            JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.Final()
+        val content = getContentForFeatureCollection(isRtl, blogPostLink)
         return JetpackFeatureOverlayUIState(componentVisibility, content)
     }
 
-    private fun getContentForAllFeatures(isRtl: Boolean, blogPostLink: String?): JetpackFeatureOverlayContent {
+    private fun getContentForFeatureCollection(isRtl: Boolean, blogPostLink: String?): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
-                illustration = if (isRtl) R.raw.jp_all_features_rtl else R.raw.jp_all_features_left,
-                title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features,
-                caption = UiStringRes(R.string.wp_jetpack_feature_removal_overlay_phase_three_all_features_description),
-                migrationText = R.string.wp_jetpack_feature_removal_overlay_migration_helper_text,
-                migrationInfoText = if (!blogPostLink.isNullOrEmpty())
-                    R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
-                migrationInfoUrl = blogPostLink,
-                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app,
-                secondaryButtonText = R.string.wp_jetpack_feature_removal_overlay_continue_without_jetpack
+            illustration = if (isRtl) R.raw.jp_all_features_rtl else R.raw.jp_all_features_left,
+            title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features,
+            caption = UiStringRes(R.string.wp_jetpack_feature_removal_overlay_phase_three_all_features_description),
+            migrationText = R.string.wp_jetpack_feature_removal_overlay_migration_helper_text,
+            migrationInfoText = if (!blogPostLink.isNullOrEmpty())
+                R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
+            migrationInfoUrl = blogPostLink,
+            primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app,
+            secondaryButtonText = R.string.wp_jetpack_feature_removal_overlay_continue_without_jetpack
         )
     }
 }

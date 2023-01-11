@@ -7,10 +7,10 @@ import androidx.lifecycle.MutableLiveData
  *  situations because those methods are unreachable using straight up LiveData
  */
 class ReactiveMutableLiveData<T>(private val onReactiveListener: OnReactiveListener) :
-        MutableLiveData<T>() {
+    MutableLiveData<T>() {
     // Allow a way to hook up the external listeners
     constructor(onActive: () -> Unit = {}, onInactive: () -> Unit = {}) : this(
-            setReactiveListener(onActive, onInactive)
+        setReactiveListener(onActive, onInactive)
     )
 
     override fun onActive() {

@@ -27,16 +27,16 @@ typealias NavigationIcon = @Composable () -> Unit
 object NavigationIcons {
     val BackIcon: NavigationIcon = {
         Icon(
-                Icons.Default.ArrowBack,
-                contentDescription = stringResource(R.string.navigate_up_desc)
+            Icons.Default.ArrowBack,
+            contentDescription = stringResource(R.string.navigate_up_desc)
         )
     }
 
     @Suppress("unused")
     val CloseIcon: NavigationIcon = {
         Icon(
-                Icons.Default.Close,
-                contentDescription = stringResource(R.string.close_desc)
+            Icons.Default.Close,
+            contentDescription = stringResource(R.string.close_desc)
         )
     }
 }
@@ -70,20 +70,20 @@ fun MainTopAppBar(
     onNavigationIconClick: () -> Unit = {},
 ) {
     TopAppBar(
-            modifier = modifier,
-            backgroundColor = MaterialTheme.colors.surface,
-            contentColor = MaterialTheme.colors.onSurface,
-            elevation = 0.dp,
-            title = withFullContentAlpha {
-                Text(title)
-            },
-            navigationIcon = navigationIcon?.let {
-                withFullContentAlpha {
-                    IconButton(onClick = onNavigationIconClick) {
-                        navigationIcon()
-                    }
+        modifier = modifier,
+        backgroundColor = MaterialTheme.colors.surface,
+        contentColor = MaterialTheme.colors.onSurface,
+        elevation = 0.dp,
+        title = withFullContentAlpha {
+            Text(title)
+        },
+        navigationIcon = navigationIcon?.let {
+            withFullContentAlpha {
+                IconButton(onClick = onNavigationIconClick) {
+                    navigationIcon()
                 }
-            },
+            }
+        },
     )
 }
 
@@ -93,9 +93,9 @@ fun MainTopAppBar(
 fun MainTopAppBarPreview() {
     AppTheme {
         MainTopAppBar(
-                title = "Preview",
-                navigationIcon = NavigationIcons.BackIcon,
-                onNavigationIconClick = {}
+            title = "Preview",
+            navigationIcon = NavigationIcons.BackIcon,
+            onNavigationIconClick = {}
         )
     }
 }

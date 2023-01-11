@@ -29,12 +29,14 @@ class MediaUploadCompletionProcessorPatternsTest {
         Assertions.assertThat(outcome).isEqualTo(true)
         Assertions.assertThat(matcher.group(1)).isEqualTo(BLOCK_TYPE)
     }
+
     @Test
     fun `PATTERN_BLOCK_CAPTURES captures the block header json`() {
         val matcher = PATTERN_BLOCK_CAPTURES.matcher(RAW_BLOCK)
         Assertions.assertThat(matcher.find()).isEqualTo(true)
         Assertions.assertThat(matcher.group(2)).isEqualTo(BLOCK_JSON)
     }
+
     @Test
     fun `PATTERN_BLOCK_CAPTURES captures the block content`() {
         val matcher = PATTERN_BLOCK_CAPTURES.matcher(RAW_BLOCK)

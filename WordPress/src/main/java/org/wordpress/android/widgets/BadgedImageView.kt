@@ -75,36 +75,36 @@ class BadgedImageView @JvmOverloads constructor(
         val styledAttributes = context.obtainStyledAttributes(attrs, R.styleable.BadgedImageView)
 
         badgeBackground = styledAttributes.getDrawable(
-                R.styleable.BadgedImageView_badgeBackground
+            R.styleable.BadgedImageView_badgeBackground
         )
 
         badgeBackgroundSize = styledAttributes.getDimension(
-                R.styleable.BadgedImageView_badgeBackgroundSize,
-                DisplayUtils.dpToPx(context, DEFAULT_BADGE_BACKGROUND_SIZE.toInt()).toFloat()
+            R.styleable.BadgedImageView_badgeBackgroundSize,
+            DisplayUtils.dpToPx(context, DEFAULT_BADGE_BACKGROUND_SIZE.toInt()).toFloat()
         )
 
         badgeBackgroundBorderWidth = styledAttributes.getDimension(
-                R.styleable.BadgedImageView_badgeBackgroundBorderWidth,
-                DisplayUtils.dpToPx(context, DEFAULT_BADGE_BACKGROUND_BORDER_WIDTH.toInt()).toFloat()
+            R.styleable.BadgedImageView_badgeBackgroundBorderWidth,
+            DisplayUtils.dpToPx(context, DEFAULT_BADGE_BACKGROUND_BORDER_WIDTH.toInt()).toFloat()
         )
 
         badgeIcon = styledAttributes.getDrawable(
-                R.styleable.BadgedImageView_badgeIcon
+            R.styleable.BadgedImageView_badgeIcon
         )
 
         badgeIconSize = styledAttributes.getDimension(
-                R.styleable.BadgedImageView_badgeIconSize,
-                DisplayUtils.dpToPx(context, DEFAULT_BADGE_ICON_SIZE.toInt()).toFloat()
+            R.styleable.BadgedImageView_badgeIconSize,
+            DisplayUtils.dpToPx(context, DEFAULT_BADGE_ICON_SIZE.toInt()).toFloat()
         )
 
         badgeHorizontalOffset = styledAttributes.getDimension(
-                R.styleable.BadgedImageView_badgeHorizontalOffset,
-                DisplayUtils.dpToPx(context, DEFAULT_BADGE_HORIZONTAL_OFFSET.toInt()).toFloat()
+            R.styleable.BadgedImageView_badgeHorizontalOffset,
+            DisplayUtils.dpToPx(context, DEFAULT_BADGE_HORIZONTAL_OFFSET.toInt()).toFloat()
         )
 
         badgeVerticalOffset = styledAttributes.getDimension(
-                R.styleable.BadgedImageView_badgeVerticalOffset,
-                DisplayUtils.dpToPx(context, DEFAULT_BADGE_VERTICAL_OFFSET.toInt()).toFloat()
+            R.styleable.BadgedImageView_badgeVerticalOffset,
+            DisplayUtils.dpToPx(context, DEFAULT_BADGE_VERTICAL_OFFSET.toInt()).toFloat()
         )
 
         styledAttributes.recycle()
@@ -142,9 +142,9 @@ class BadgedImageView @JvmOverloads constructor(
 
         if (isValid && (tempCanvas == null || sizeChanged)) {
             tempCanvasBitmap = Bitmap.createBitmap(
-                    width + badgeBackgroundSize.toInt() / 2,
-                    height + badgeBackgroundSize.toInt() / 2,
-                    ARGB_8888
+                width + badgeBackgroundSize.toInt() / 2,
+                height + badgeBackgroundSize.toInt() / 2,
+                ARGB_8888
             )
             tempCanvas = tempCanvasBitmap?.let { Canvas(it) }
             invalidated = true

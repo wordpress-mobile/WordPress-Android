@@ -8,9 +8,9 @@ import javax.inject.Inject
 @Feature(BLOGGING_PROMPTS_REMOTE_FIELD, true)
 class BloggingPromptsFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
-        appConfig,
-        BuildConfig.BLOGGING_PROMPTS,
-        BLOGGING_PROMPTS_REMOTE_FIELD
+    appConfig,
+    BuildConfig.BLOGGING_PROMPTS,
+    BLOGGING_PROMPTS_REMOTE_FIELD
 ) {
     override fun isEnabled(): Boolean {
         return super.isEnabled() && BuildConfig.IS_JETPACK_APP

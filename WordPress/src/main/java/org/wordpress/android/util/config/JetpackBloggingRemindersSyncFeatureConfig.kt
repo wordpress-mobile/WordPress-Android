@@ -10,9 +10,9 @@ class JetpackBloggingRemindersSyncFeatureConfig
 @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.JETPACK_BLOGGING_REMINDERS_SYNC,
-        JETPACK_BLOGGING_REMINDERS_SYNC_REMOTE_FIELD
+    appConfig,
+    BuildConfig.JETPACK_BLOGGING_REMINDERS_SYNC,
+    JETPACK_BLOGGING_REMINDERS_SYNC_REMOTE_FIELD
 ) {
     companion object {
         const val JETPACK_BLOGGING_REMINDERS_SYNC_REMOTE_FIELD = "jetpack_blogging_reminders_sync_remote_field"

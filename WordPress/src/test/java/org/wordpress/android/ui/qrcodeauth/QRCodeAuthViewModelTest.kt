@@ -56,7 +56,7 @@ const val LOCATION = "location"
 const val BROWSER = "browser"
 const val TOKEN = "token"
 const val SCANNED_VALUE =
-        "https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=scannedtoken&data=scanneddata"
+    "https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=scannedtoken&data=scanneddata"
 const val VALID_EXPIRED_MESSAGE = "qr code data expired"
 const val INVALID_EXPIRED_MESSAGE = "invalid qr code data expired"
 
@@ -64,11 +64,21 @@ const val INVALID_EXPIRED_MESSAGE = "invalid qr code data expired"
 @ExperimentalCoroutinesApi
 class QRCodeAuthViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: QRCodeAuthViewModel
-    @Mock lateinit var store: QRCodeAuthStore
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var savedInstanceState: Bundle
-    @Mock lateinit var validator: QRCodeAuthValidator
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var store: QRCodeAuthStore
+
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var savedInstanceState: Bundle
+
+    @Mock
+    lateinit var validator: QRCodeAuthValidator
+
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private val uiStateMapper = QRCodeAuthUiStateMapper()
 
     private val validQueryParams = mapOf(DATA_KEY to DATA, TOKEN_KEY to TOKEN)
@@ -81,11 +91,11 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = QRCodeAuthViewModel(
-                store,
-                uiStateMapper,
-                networkUtilsWrapper,
-                validator,
-                analyticsTrackerWrapper
+            store,
+            uiStateMapper,
+            networkUtilsWrapper,
+            validator,
+            analyticsTrackerWrapper
         )
 
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
@@ -546,13 +556,13 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     }
 
     private fun buildValidateError(errorType: QRCodeAuthErrorType, errorMessage: String? = null) =
-            QRCodeAuthResult<QRCodeAuthValidateResult>(QRCodeAuthError(errorType, errorMessage))
+        QRCodeAuthResult<QRCodeAuthValidateResult>(QRCodeAuthError(errorType, errorMessage))
 
     private fun buildValidateSuccess() =
-            QRCodeAuthResult(model = QRCodeAuthValidateResult(browser = BROWSER, location = LOCATION))
+        QRCodeAuthResult(model = QRCodeAuthValidateResult(browser = BROWSER, location = LOCATION))
 
     private fun buildAuthenticateError(errorType: QRCodeAuthErrorType, errorMessage: String? = null) =
-            QRCodeAuthResult<QRCodeAuthAuthenticateResult>(QRCodeAuthError(errorType, errorMessage))
+        QRCodeAuthResult<QRCodeAuthAuthenticateResult>(QRCodeAuthError(errorType, errorMessage))
 
     private val authenticateSuccess = QRCodeAuthResult(model = QRCodeAuthAuthenticateResult(authenticated = true))
 
@@ -584,11 +594,11 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         errorMessage: String? = null
     ) {
         whenever(store.validate(any(), any())).thenReturn(
-                if (successResponse) {
-                    buildValidateSuccess()
-                } else {
-                    buildValidateError(errorType as QRCodeAuthErrorType, errorMessage)
-                }
+            if (successResponse) {
+                buildValidateSuccess()
+            } else {
+                buildValidateError(errorType as QRCodeAuthErrorType, errorMessage)
+            }
         )
     }
 
@@ -598,11 +608,11 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         errorMessage: String? = null
     ) {
         whenever(store.authenticate(any(), any())).thenReturn(
-                if (successResponse) {
-                    authenticateSuccess
-                } else {
-                    buildAuthenticateError(errorType as QRCodeAuthErrorType, errorMessage)
-                }
+            if (successResponse) {
+                authenticateSuccess
+            } else {
+                buildAuthenticateError(errorType as QRCodeAuthErrorType, errorMessage)
+            }
         )
     }
 

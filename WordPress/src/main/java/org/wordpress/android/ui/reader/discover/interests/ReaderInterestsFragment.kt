@@ -22,8 +22,11 @@ import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layout) {
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ReaderInterestsViewModel
     private var parentViewModel: ReaderViewModel? = null
 
@@ -35,7 +38,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val entryPoint = requireActivity().intent.getSerializableExtra(READER_INTEREST_ENTRY_POINT) as? EntryPoint
-                ?: EntryPoint.DISCOVER
+            ?: EntryPoint.DISCOVER
         with(ReaderInterestsFragmentLayoutBinding.bind(view)) {
             initDoneButton()
             initRetryButton()
@@ -67,8 +70,8 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     private fun ReaderInterestsFragmentLayoutBinding.initViewModel(entryPoint: EntryPoint) {
         viewModel = ViewModelProvider(
-                this@ReaderInterestsFragment,
-                viewModelFactory
+            this@ReaderInterestsFragment,
+            viewModelFactory
         ).get(ReaderInterestsViewModel::class.java)
         if (entryPoint == EntryPoint.DISCOVER) {
             parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
@@ -105,9 +108,9 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         }
 
         viewModel.start(
-                LocaleManager.getLanguage(WordPress.getContext()),
-                parentViewModel,
-                entryPoint
+            LocaleManager.getLanguage(WordPress.getContext()),
+            parentViewModel,
+            entryPoint
         )
     }
 
@@ -122,7 +125,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     private fun ReaderInterestsFragmentLayoutBinding.updateInterests(interestsUiState: List<TagUiState>) {
         interestsUiState.forEachIndexed { index, interestTagUiState ->
             val chip = interestsChipGroup.findViewWithTag(interestTagUiState.slug)
-                    ?: createChipView(interestTagUiState.slug, index)
+                ?: createChipView(interestTagUiState.slug, index)
             with(chip) {
                 text = interestTagUiState.title
                 isChecked = interestTagUiState.isChecked
@@ -138,9 +141,9 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     private fun SnackbarMessageHolder.showSnackbar(anchorView: View) {
         val snackbar = WPSnackbar.make(
-                anchorView,
-                uiHelpers.getTextOfUiString(requireContext(), this.message),
-                Snackbar.LENGTH_LONG
+            anchorView,
+            uiHelpers.getTextOfUiString(requireContext(), this.message),
+            Snackbar.LENGTH_LONG
         )
         if (this.buttonTitle != null) {
             snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), this.buttonTitle)) {
@@ -153,9 +156,9 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     private fun ReaderInterestsFragmentLayoutBinding.createChipView(slug: String, index: Int): Chip {
         val chip = layoutInflater.inflate(
-                R.layout.reader_interest_filter_chip,
-                interestsChipGroup,
-                false
+            R.layout.reader_interest_filter_chip,
+            interestsChipGroup,
+            false
         ) as Chip
         with(chip) {
             tag = slug

@@ -15,7 +15,7 @@ class ThrottleLiveData<T> constructor(
     private val backgroundDispatcher: CoroutineDispatcher = Dispatchers.Default,
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) :
-        MediatorLiveData<T>() {
+    MediatorLiveData<T>() {
     private var tempValue: T? = null
     private var currentJob: Job? = null
 

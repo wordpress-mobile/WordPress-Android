@@ -81,17 +81,17 @@ class UpdateMediaModelUseCaseTest {
         }
 
         fun createPostData(localId: Int = LOCAL_ID, remoteId: Long = REMOTE_ID) =
-                mock<PostImmutableModel> {
-                    on { remotePostId }.thenReturn(remoteId)
-                    on { id }.thenReturn(localId)
-                }
+            mock<PostImmutableModel> {
+                on { remotePostId }.thenReturn(remoteId)
+                on { id }.thenReturn(localId)
+            }
 
         fun createMediaModel(uploadState: MediaUploadState = MediaUploadState.QUEUED) =
-                MediaModel().apply {
-                    this.uploadState = uploadState.name
-                    this.id = 1
-                    this.postId = 2
-                    this.localPostId = 3
-                }
+            MediaModel().apply {
+                this.uploadState = uploadState.name
+                this.id = 1
+                this.postId = 2
+                this.localPostId = 3
+            }
     }
 }

@@ -16,7 +16,8 @@ class SupportedBlocksProviderTest {
     @get:Rule
     val hiltRule = HiltAndroidRule(this)
 
-    @Inject lateinit var context: Context
+    @Inject
+    lateinit var context: Context
 
     @Before
     fun setUp() {

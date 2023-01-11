@@ -45,8 +45,8 @@ class StartScanUseCase @Inject constructor(
 
     private suspend fun FlowCollector<StartScanState>.updateScanScanningStateInDb(site: SiteModel) {
         val model = scanStore.getScanStateForSite(site)?.copy(state = SCANNING) ?: ScanStateModel(
-                state = SCANNING,
-                reason = Reason.NO_REASON
+            state = SCANNING,
+            reason = Reason.NO_REASON
         )
         scanStore.addOrUpdateScanStateModelForSite(START_SCAN, site, model)
         emit(ScanningStateUpdatedInDb(model))

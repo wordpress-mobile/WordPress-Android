@@ -49,14 +49,29 @@ private val statsGranularity = DAYS
 
 @ExperimentalCoroutinesApi
 class FileDownloadsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var store: FileDownloadsStore
-    @Mock lateinit var siteModelProvider: StatsSiteProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var store: FileDownloadsStore
+
+    @Mock
+    lateinit var siteModelProvider: StatsSiteProvider
+
+    @Mock
+    lateinit var site: SiteModel
+
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
+
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+
+    @Mock
+    lateinit var statsUtils: StatsUtils
     private lateinit var useCase: FileDownloadsUseCase
     private lateinit var selectedDate: Date
     private val contentDescription = "file, downloads"
@@ -64,17 +79,17 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = FileDownloadsUseCase(
-                statsGranularity,
-                testDispatcher(),
-                testDispatcher(),
-                store,
-                siteModelProvider,
-                selectedDateProvider,
-                tracker,
-                contentDescriptionHelper,
-                localeManagerWrapper,
-                statsUtils,
-                BLOCK
+            statsGranularity,
+            testDispatcher(),
+            testDispatcher(),
+            store,
+            siteModelProvider,
+            selectedDateProvider,
+            tracker,
+            contentDescriptionHelper,
+            localeManagerWrapper,
+            statsUtils,
+            BLOCK
         )
         val selectedCalendar = Calendar.getInstance()
         selectedCalendar.set(2019, 6, 1)
@@ -82,16 +97,18 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
         whenever(siteModelProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
-                SelectedDate(
-                        selectedDate,
-                        listOf(selectedDate)
-                )
+            SelectedDate(
+                selectedDate,
+                listOf(selectedDate)
+            )
         )
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<String>(),
                 any()
-        )).thenReturn(contentDescription)
+            )
+        ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
@@ -101,13 +118,13 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
         val refresh = true
         val message = "error"
         whenever(
-                store.fetchFileDownloads(
-                        site,
-                        statsGranularity,
-                        Top(ITEMS_TO_LOAD),
-                        selectedDate,
-                        forced
-                )
+            store.fetchFileDownloads(
+                site,
+                statsGranularity,
+                Top(ITEMS_TO_LOAD),
+                selectedDate,
+                forced
+            )
         ).thenReturn(OnStatsFetched(StatsError(GENERIC_ERROR, message)))
 
         val result = loadData(refresh, forced)
@@ -122,13 +139,13 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
         val refresh = true
         val emptyModel = FileDownloadsModel(listOf(), false)
         whenever(
-                store.fetchFileDownloads(
-                        site,
-                        statsGranularity,
-                        Top(ITEMS_TO_LOAD),
-                        selectedDate,
-                        forced
-                )
+            store.fetchFileDownloads(
+                site,
+                statsGranularity,
+                Top(ITEMS_TO_LOAD),
+                selectedDate,
+                forced
+            )
         ).thenReturn(OnStatsFetched(emptyModel))
         val calendar = Calendar.getInstance(Locale.US)
         calendar.set(2019, 8, 10)
@@ -157,19 +174,19 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
         val pastSelectedDate = calendar.time
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(pastSelectedDate)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
-                SelectedDate(
-                        pastSelectedDate,
-                        listOf(pastSelectedDate)
-                )
+            SelectedDate(
+                pastSelectedDate,
+                listOf(pastSelectedDate)
+            )
         )
         whenever(
-                store.fetchFileDownloads(
-                        site,
-                        statsGranularity,
-                        Top(ITEMS_TO_LOAD),
-                        pastSelectedDate,
-                        forced
-                )
+            store.fetchFileDownloads(
+                site,
+                statsGranularity,
+                Top(ITEMS_TO_LOAD),
+                pastSelectedDate,
+                forced
+            )
         ).thenReturn(OnStatsFetched(emptyModel))
 
         val result = loadData(refresh, forced)
@@ -191,21 +208,21 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
         val file = FileDownloads("file.txt", 10)
         val model = FileDownloadsModel(listOf(file), false)
         whenever(
-                store.getFileDownloads(
-                        site,
-                        statsGranularity,
-                        Top(ITEMS_TO_LOAD),
-                        selectedDate
-                )
+            store.getFileDownloads(
+                site,
+                statsGranularity,
+                Top(ITEMS_TO_LOAD),
+                selectedDate
+            )
         ).thenReturn(model)
         whenever(
-                store.fetchFileDownloads(
-                        site,
-                        statsGranularity,
-                        Top(ITEMS_TO_LOAD),
-                        selectedDate,
-                        forced
-                )
+            store.fetchFileDownloads(
+                site,
+                statsGranularity,
+                Top(ITEMS_TO_LOAD),
+                selectedDate,
+                forced
+            )
         ).thenReturn(OnStatsFetched(model))
 
         val result = loadData(refresh, forced)
@@ -232,21 +249,21 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
         val homePage = FileDownloads("file2.txt", 5)
         val model = FileDownloadsModel(listOf(page, homePage), false)
         whenever(
-                store.getFileDownloads(
-                        site,
-                        statsGranularity,
-                        Top(ITEMS_TO_LOAD),
-                        selectedDate
-                )
+            store.getFileDownloads(
+                site,
+                statsGranularity,
+                Top(ITEMS_TO_LOAD),
+                selectedDate
+            )
         ).thenReturn(model)
         whenever(
-                store.fetchFileDownloads(
-                        site,
-                        statsGranularity,
-                        Top(ITEMS_TO_LOAD),
-                        selectedDate,
-                        forced
-                )
+            store.fetchFileDownloads(
+                site,
+                statsGranularity,
+                Top(ITEMS_TO_LOAD),
+                selectedDate,
+                forced
+            )
         ).thenReturn(OnStatsFetched(model))
 
         val result = loadData(refresh, forced)
@@ -270,21 +287,21 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
         val hasMore = true
         val model = FileDownloadsModel(listOf(page), hasMore)
         whenever(
-                store.getFileDownloads(
-                        site,
-                        statsGranularity,
-                        Top(ITEMS_TO_LOAD),
-                        selectedDate
-                )
+            store.getFileDownloads(
+                site,
+                statsGranularity,
+                Top(ITEMS_TO_LOAD),
+                selectedDate
+            )
         ).thenReturn(model)
         whenever(
-                store.fetchFileDownloads(
-                        site,
-                        statsGranularity,
-                        Top(ITEMS_TO_LOAD),
-                        selectedDate,
-                        forced
-                )
+            store.fetchFileDownloads(
+                site,
+                statsGranularity,
+                Top(ITEMS_TO_LOAD),
+                selectedDate,
+                forced
+            )
         ).thenReturn(OnStatsFetched(model))
 
         val result = loadData(refresh, forced)

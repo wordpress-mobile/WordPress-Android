@@ -37,9 +37,9 @@ class PostingActivityMapper
             firstDayOfMonth.set(month.year, month.month, firstDayOfMonth.getActualMinimum(Calendar.DAY_OF_MONTH))
             val getMonthDisplayName = { style: Int ->
                 firstDayOfMonth.getDisplayName(
-                        Calendar.MONTH,
-                        style,
-                        localeManagerWrapper.getLocale()
+                    Calendar.MONTH,
+                    style,
+                    localeManagerWrapper.getLocale()
                 )
             }
             val firstDayOfWeek = Calendar.getInstance(localeManagerWrapper.getLocale())
@@ -63,16 +63,16 @@ class PostingActivityMapper
             }
             val monthDisplayName = getMonthDisplayName(Calendar.LONG) ?: ""
             val labelContentDescription = resourceProvider.getString(
-                    R.string.stats_posting_activity_label_content_description,
-                    monthDisplayName
+                R.string.stats_posting_activity_label_content_description,
+                monthDisplayName
             )
             blocks.add(
-                    Block(
-                            getMonthDisplayName(Calendar.SHORT) ?: "",
-                            boxes,
-                            labelContentDescription,
-                            addBlockContentDescriptions(boxDaysForAccessibility, monthDisplayName)
-                    )
+                Block(
+                    getMonthDisplayName(Calendar.SHORT) ?: "",
+                    boxes,
+                    labelContentDescription,
+                    addBlockContentDescriptions(boxDaysForAccessibility, monthDisplayName)
+                )
             )
         }
 
@@ -91,23 +91,23 @@ class PostingActivityMapper
 
         val descriptions = mutableListOf<String>()
         boxes.filter { box -> box.first != INVISIBLE && box.first != VERY_LOW }
-                .sortedByDescending { box -> box.first }
-                .groupBy { box -> box.first }
-                .forEach { entry ->
-                    val readableBoxType = resourceProvider.getString(
-                            resolveBoxTypeStringId(
-                                    entry.key
-                            )
+            .sortedByDescending { box -> box.first }
+            .groupBy { box -> box.first }
+            .forEach { entry ->
+                val readableBoxType = resourceProvider.getString(
+                    resolveBoxTypeStringId(
+                        entry.key
                     )
-                    val days = entry.value.map { box -> box.second }.joinToString(separator = ". ")
-                    val activityDescription = resourceProvider.getString(
-                            R.string.stats_posting_activity_content_description,
-                            readableBoxType,
-                            month,
-                            days
-                    )
-                    descriptions.add(activityDescription)
-                }
+                )
+                val days = entry.value.map { box -> box.second }.joinToString(separator = ". ")
+                val activityDescription = resourceProvider.getString(
+                    R.string.stats_posting_activity_content_description,
+                    readableBoxType,
+                    month,
+                    days
+                )
+                descriptions.add(activityDescription)
+            }
 
         return descriptions
     }

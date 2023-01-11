@@ -34,33 +34,56 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class PostDayViewsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var store: PostDetailStore
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
-    @Mock lateinit var mapper: PostDayViewsMapper
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var statsPostProvider: StatsPostProvider
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var title: ValueItem
-    @Mock lateinit var barChartItem: BarChartItem
-    @Mock lateinit var emptyModel: PostDetailStatsModel
-    @Mock lateinit var model: PostDetailStatsModel
+    @Mock
+    lateinit var store: PostDetailStore
+
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
+
+    @Mock
+    lateinit var statsDateFormatter: StatsDateFormatter
+
+    @Mock
+    lateinit var mapper: PostDayViewsMapper
+
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+
+    @Mock
+    lateinit var statsPostProvider: StatsPostProvider
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var site: SiteModel
+
+    @Mock
+    lateinit var title: ValueItem
+
+    @Mock
+    lateinit var barChartItem: BarChartItem
+
+    @Mock
+    lateinit var emptyModel: PostDetailStatsModel
+
+    @Mock
+    lateinit var model: PostDetailStatsModel
     private lateinit var useCase: PostDayViewsUseCase
     private val postId = 1L
 
     @Before
     fun setUp() {
         useCase = PostDayViewsUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                mapper,
-                statsDateFormatter,
-                selectedDateProvider,
-                statsSiteProvider,
-                statsPostProvider,
-                store,
-                resourceProvider
+            testDispatcher(),
+            testDispatcher(),
+            mapper,
+            statsDateFormatter,
+            selectedDateProvider,
+            statsSiteProvider,
+            statsPostProvider,
+            store,
+            resourceProvider
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(statsPostProvider.postId).thenReturn(postId)
@@ -76,9 +99,9 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
 
         whenever(store.getPostDetail(site, postId)).thenReturn(model)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadData(true, forced)
@@ -96,9 +119,9 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadData(true, forced)
@@ -120,9 +143,9 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
         whenever(model.dayViews).thenReturn(listOf(Day("2019-10-10", 50)))
         whenever(store.getPostDetail(site, postId)).thenReturn(emptyModel)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadData(true, forced)
@@ -135,15 +158,15 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
     fun `maps list of empty items to empty UI model`() = test {
         val forced = false
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
-                OnStatsFetched(
-                        model = PostDetailStatsModel(
-                                0,
-                                listOf(Day("1970", 0), Day("1975", 0)),
-                                listOf(Week(listOf(), 10, 10)),
-                                listOf(Year(2020, listOf(), 100)),
-                                listOf(Year(2020, listOf(), 100))
-                        )
+            OnStatsFetched(
+                model = PostDetailStatsModel(
+                    0,
+                    listOf(Day("1970", 0), Day("1975", 0)),
+                    listOf(Week(listOf(), 10, 10)),
+                    listOf(Year(2020, listOf(), 100)),
+                    listOf(Year(2020, listOf(), 100))
                 )
+            )
         )
 
         val result = loadData(true, forced)

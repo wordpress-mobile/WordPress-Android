@@ -32,14 +32,29 @@ import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
 class PeopleInviteViewModelTest : BaseUnitTest() {
-    @Mock lateinit var inviteLinksHandler: InviteLinksHandler
-    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
-    @Mock lateinit var contextProvider: ContextProvider
-    @Mock lateinit var invitePeopleUtils: InvitePeopleUtils
-    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
-    @Mock lateinit var siteModel: SiteModel
-    @Mock lateinit var context: Context
-    @Mock lateinit var inviteLinksItem: InviteLinksItem
+    @Mock
+    lateinit var inviteLinksHandler: InviteLinksHandler
+
+    @Mock
+    lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
+    @Mock
+    lateinit var contextProvider: ContextProvider
+
+    @Mock
+    lateinit var invitePeopleUtils: InvitePeopleUtils
+
+    @Mock
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+
+    @Mock
+    lateinit var siteModel: SiteModel
+
+    @Mock
+    lateinit var context: Context
+
+    @Mock
+    lateinit var inviteLinksItem: InviteLinksItem
 
     private lateinit var viewModel: PeopleInviteViewModel
     private val blogId = 100L
@@ -61,12 +76,12 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
         whenever(contextProvider.getContext()).thenReturn(context)
 
         viewModel = PeopleInviteViewModel(
-                inviteLinksHandler,
-                testDispatcher(),
-                dateTimeUtilsWrapper,
-                contextProvider,
-                invitePeopleUtils,
-                analyticsUtilsWrapper
+            inviteLinksHandler,
+            testDispatcher(),
+            dateTimeUtilsWrapper,
+            contextProvider,
+            invitePeopleUtils,
+            analyticsUtilsWrapper
         )
     }
 
@@ -79,7 +94,7 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
         }
 
         verify(
-                inviteLinksHandler, times(1)
+            inviteLinksHandler, times(1)
         ).handleInviteLinksStatusRequest(anyLong(), eq(INITIALIZING))
     }
 
@@ -133,7 +148,7 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
 
         whenever(inviteLinksItem.role).thenReturn(role)
         whenever(
-                invitePeopleUtils.getInviteLinkDataFromRoleDisplayName(anyList(), eq(siteModel), eq(role))
+            invitePeopleUtils.getInviteLinkDataFromRoleDisplayName(anyList(), eq(siteModel), eq(role))
         ).thenReturn(inviteLinksItem)
 
         setupObvserversAndStart()
@@ -152,7 +167,7 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
 
         whenever(inviteLinksItem.role).thenReturn(role)
         whenever(
-                invitePeopleUtils.getInviteLinkDataFromRoleDisplayName(anyList(), eq(siteModel), eq(role))
+            invitePeopleUtils.getInviteLinkDataFromRoleDisplayName(anyList(), eq(siteModel), eq(role))
         ).thenReturn(null)
         whenever(context.getString(anyInt(), eq(role))).thenReturn(message)
 
@@ -207,16 +222,16 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
             isActionButtonsEnabled: Boolean = !startShimmer
         ): InviteLinksUiState {
             return InviteLinksUiState(
-                    type = type,
-                    isLinksSectionVisible = isLinksSectionVisible,
-                    loadAndRetryUiState = loadAndRetryUiState,
-                    isShimmerSectionVisible = isShimmerSectionVisible,
-                    isRoleSelectionAllowed = isRoleSelectionAllowed,
-                    links = links,
-                    inviteLinksSelectedRole = inviteLinksSelectedRole,
-                    enableManageLinksActions = enableManageLinksActions,
-                    startShimmer = startShimmer,
-                    isActionButtonsEnabled = isActionButtonsEnabled
+                type = type,
+                isLinksSectionVisible = isLinksSectionVisible,
+                loadAndRetryUiState = loadAndRetryUiState,
+                isShimmerSectionVisible = isShimmerSectionVisible,
+                isRoleSelectionAllowed = isRoleSelectionAllowed,
+                links = links,
+                inviteLinksSelectedRole = inviteLinksSelectedRole,
+                enableManageLinksActions = enableManageLinksActions,
+                startShimmer = startShimmer,
+                isActionButtonsEnabled = isActionButtonsEnabled
             )
         }
     }

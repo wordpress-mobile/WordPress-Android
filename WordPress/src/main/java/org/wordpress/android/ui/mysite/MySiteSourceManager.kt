@@ -32,15 +32,15 @@ class MySiteSourceManager @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
-            selectedSiteSource,
-            siteIconProgressSource,
-            quickStartCardSource,
-            currentAvatarSource,
-            domainRegistrationSource,
-            scanAndBackupSource,
-            dynamicCardsSource,
-            cardsSource,
-            bloggingPromptCardSource
+        selectedSiteSource,
+        siteIconProgressSource,
+        quickStartCardSource,
+        currentAvatarSource,
+        domainRegistrationSource,
+        scanAndBackupSource,
+        dynamicCardsSource,
+        cardsSource,
+        bloggingPromptCardSource
     )
 
     private val showDashboardCards: Boolean

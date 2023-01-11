@@ -7,8 +7,8 @@ import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.viewmodel.posts.PostListItemUploadStatus
-import kotlin.math.roundToInt
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 /**
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
@@ -35,16 +35,16 @@ class PostModelUploadStatusTracker @Inject constructor(
         val isUploadingOrQueued = UploadService.isPostUploadingOrQueued(post)
         val hasInProgressMediaUpload = UploadService.hasInProgressMediaUploadsForPost(post)
         val newStatus = PostListItemUploadStatus(
-                uploadError = uploadError,
-                mediaUploadProgress = (UploadService.getMediaUploadProgressForPost(post) * 100).roundToInt(),
-                isUploading = UploadService.isPostUploading(post),
-                isUploadingOrQueued = isUploadingOrQueued,
-                isQueued = UploadService.isPostQueued(post),
-                isUploadFailed = uploadStore.isFailedPost(post),
-                hasInProgressMediaUpload = hasInProgressMediaUpload,
-                hasPendingMediaUpload = UploadService.hasPendingMediaUploadsForPost(post),
-                isEligibleForAutoUpload = uploadActionUseCase.isEligibleForAutoUpload(siteModel, post),
-                uploadWillPushChanges = uploadActionUseCase.uploadWillPushChanges(post)
+            uploadError = uploadError,
+            mediaUploadProgress = (UploadService.getMediaUploadProgressForPost(post) * 100).roundToInt(),
+            isUploading = UploadService.isPostUploading(post),
+            isUploadingOrQueued = isUploadingOrQueued,
+            isQueued = UploadService.isPostQueued(post),
+            isUploadFailed = uploadStore.isFailedPost(post),
+            hasInProgressMediaUpload = hasInProgressMediaUpload,
+            hasPendingMediaUpload = UploadService.hasPendingMediaUploadsForPost(post),
+            isEligibleForAutoUpload = uploadActionUseCase.isEligibleForAutoUpload(siteModel, post),
+            uploadWillPushChanges = uploadActionUseCase.uploadWillPushChanges(post)
         )
         uploadStatusMap[post.id] = newStatus
         return newStatus

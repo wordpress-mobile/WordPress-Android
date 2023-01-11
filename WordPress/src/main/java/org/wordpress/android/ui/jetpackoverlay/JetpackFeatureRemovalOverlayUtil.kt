@@ -4,6 +4,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_THREE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_TWO
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.APP_OPEN
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.NOTIFICATIONS
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.READER
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.STATS
@@ -38,8 +39,8 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     fun shouldShowFeatureSpecificJetpackOverlay(feature: JetpackOverlayConnectedFeature): Boolean {
         return !buildConfigWrapper.isJetpackApp && isWpComSite() &&
                 isInFeatureSpecificRemovalPhase() && hasExceededOverlayFrequency(
-                feature,
-                getCurrentPhasePreference()!!
+            feature,
+            getCurrentPhasePreference()!!
         )
     }
 
@@ -51,6 +52,11 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         return shouldShowSiteCreationOverlay() &&
                 jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase() ==
                 JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
+    }
+
+    fun shouldShowFeatureCollectionJetpackOverlay(): Boolean {
+        return !jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown() &&
+                jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == PhaseThree
     }
 
     private fun isInSiteCreationPhase(): Boolean {
@@ -84,12 +90,12 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     ): Boolean {
         // Feature Overlay is never shown
         val overlayShownDate = jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(
-                feature,
-                phase
+            feature,
+            phase
         )?.let { Date(it) } ?: return true
         val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
-                overlayShownDate,
-                dateTimeUtilsWrapper.getTodaysDate()
+            overlayShownDate,
+            dateTimeUtilsWrapper.getTodaysDate()
         )
         return daysPastOverlayShown >= PhaseOne.featureSpecificOverlayFrequency
     }
@@ -97,10 +103,10 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private fun hasExceededGlobalOverlayFrequency(phase: JetpackFeatureRemovalOverlayPhase): Boolean {
         // Overlay is never shown
         val overlayShownDate = jetpackFeatureOverlayShownTracker.getEarliestOverlayShownTime(phase)
-                ?.let { Date(it) } ?: return true
+            ?.let { Date(it) } ?: return true
         val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
-                overlayShownDate,
-                dateTimeUtilsWrapper.getTodaysDate()
+            overlayShownDate,
+            dateTimeUtilsWrapper.getTodaysDate()
         )
         return daysPastOverlayShown >= PhaseOne.globalOverlayFrequency
     }
@@ -122,9 +128,9 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private fun onFeatureSpecificOverlayShown(feature: JetpackOverlayConnectedFeature) {
         if (isInFeatureSpecificRemovalPhase())
             jetpackFeatureOverlayShownTracker.setFeatureOverlayShownTimeStamp(
-                    feature,
-                    getCurrentPhasePreference()!!,
-                    System.currentTimeMillis()
+                feature,
+                getCurrentPhasePreference()!!,
+                System.currentTimeMillis()
             )
     }
 
@@ -147,11 +153,11 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
 
     private fun trackOverlayShown(jetpackFeatureOverlayScreenType: JetpackFeatureOverlayScreenType) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED,
-                mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
-                        SCREEN_TYPE_KEY to jetpackFeatureOverlayScreenType.trackingName
-                )
+            AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED,
+            mapOf(
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                SCREEN_TYPE_KEY to jetpackFeatureOverlayScreenType.trackingName
+            )
         )
     }
 
@@ -160,42 +166,42 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         dismissalType: JetpackOverlayDismissalType
     ) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISMISSED,
-                mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
-                        SCREEN_TYPE_KEY to jetpackFeatureOverlayScreenType.trackingName,
-                        DISMISSAL_TYPE_KEY to dismissalType.trackingName
-                )
+            AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISMISSED,
+            mapOf(
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                SCREEN_TYPE_KEY to jetpackFeatureOverlayScreenType.trackingName,
+                DISMISSAL_TYPE_KEY to dismissalType.trackingName
+            )
         )
     }
 
     fun trackInstallJetpackTapped(screenType: JetpackFeatureOverlayScreenType) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
-                mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
-                        SCREEN_TYPE_KEY to screenType.trackingName
-                )
+            AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
+            mapOf(
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                SCREEN_TYPE_KEY to screenType.trackingName
+            )
         )
     }
 
     fun trackSiteCreationOverlayShown(siteCreationSource: SiteCreationSource) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISPLAYED,
-                mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName,
-                        SCREEN_TYPE_KEY to siteCreationSource.label
-                )
+            AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISPLAYED,
+            mapOf(
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName,
+                SCREEN_TYPE_KEY to siteCreationSource.label
+            )
         )
     }
 
     fun trackInstallJetpackTappedInSiteCreationOverlay(siteCreationSource: SiteCreationSource) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
-                mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName,
-                        SCREEN_TYPE_KEY to siteCreationSource.label
-                )
+            AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
+            mapOf(
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName,
+                SCREEN_TYPE_KEY to siteCreationSource.label
+            )
         )
     }
 
@@ -204,30 +210,30 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         dismissalType: JetpackOverlayDismissalType
     ) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISMISSED,
-                mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName,
-                        SCREEN_TYPE_KEY to siteCreationSource.label,
-                        DISMISSAL_TYPE_KEY to dismissalType.trackingName
-                )
+            AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISMISSED,
+            mapOf(
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName,
+                SCREEN_TYPE_KEY to siteCreationSource.label,
+                DISMISSAL_TYPE_KEY to dismissalType.trackingName
+            )
         )
     }
 
     fun trackDeepLinkOverlayShown() {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_DEEP_LINK_OVERLAY_DISPLAYED,
-                mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getDeepLinkPhase()?.trackingName
-                )
+            AnalyticsTracker.Stat.JETPACK_DEEP_LINK_OVERLAY_DISPLAYED,
+            mapOf(
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getDeepLinkPhase()?.trackingName
+            )
         )
     }
 
     fun trackInstallJetpackTappedInDeepLinkOverlay() {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_DEEP_LINK_OVERLAY_BUTTON_OPEN_IN_JETPACK_APP_TAPPED,
-                mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getDeepLinkPhase()?.trackingName
-                )
+            AnalyticsTracker.Stat.JETPACK_DEEP_LINK_OVERLAY_BUTTON_OPEN_IN_JETPACK_APP_TAPPED,
+            mapOf(
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getDeepLinkPhase()?.trackingName
+            )
         )
     }
 
@@ -235,65 +241,72 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         dismissalType: JetpackOverlayDismissalType
     ) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_DEEP_LINK_OVERLAY_DISMISSED,
-                mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getDeepLinkPhase()?.trackingName,
-                        DISMISSAL_TYPE_KEY to dismissalType.trackingName
-                )
+            AnalyticsTracker.Stat.JETPACK_DEEP_LINK_OVERLAY_DISMISSED,
+            mapOf(
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getDeepLinkPhase()?.trackingName,
+                DISMISSAL_TYPE_KEY to dismissalType.trackingName
+            )
         )
     }
 
     fun trackLearnMoreAboutMigrationClicked(screenType: JetpackFeatureOverlayScreenType) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED,
-                mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
-                        SCREEN_TYPE_KEY to screenType.trackingName
-                )
+            AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED,
+            mapOf(
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                SCREEN_TYPE_KEY to screenType.trackingName
+            )
         )
     }
 
-    fun trackAllFeatureOverlayShown(source: JetpackAllFeaturesOverlaySource) {
+    fun onFeatureCollectionOverlayShown(source: JetpackFeatureCollectionOverlaySource) {
+        if (source == APP_OPEN) {
+            jetpackFeatureOverlayShownTracker.setFeatureCollectionOverlayShown()
+        }
+        trackFeatureCollectionOverlayShown(source)
+    }
+
+    private fun trackFeatureCollectionOverlayShown(source: JetpackFeatureCollectionOverlaySource) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED,
-                mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
-                        SCREEN_TYPE_KEY to source.label
-                )
+            AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED,
+            mapOf(
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                SCREEN_TYPE_KEY to source.label
+            )
         )
     }
 
-    fun trackBottomSheetDismissedInAllFeaturesOverlay(
-        source: JetpackAllFeaturesOverlaySource,
+    fun trackBottomSheetDismissedInFeatureCollectionOverlay(
+        source: JetpackFeatureCollectionOverlaySource,
         dismissalType: JetpackOverlayDismissalType
     ) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISMISSED,
-                mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
-                        SCREEN_TYPE_KEY to source.label,
-                        DISMISSAL_TYPE_KEY to dismissalType.trackingName
-                )
+            AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISMISSED,
+            mapOf(
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                SCREEN_TYPE_KEY to source.label,
+                DISMISSAL_TYPE_KEY to dismissalType.trackingName
+            )
         )
     }
 
-    fun trackInstallJetpackTappedInAllFeaturesOverlay(source: JetpackAllFeaturesOverlaySource) {
+    fun trackInstallJetpackTappedInFeatureCollectionOverlay(source: JetpackFeatureCollectionOverlaySource) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
-                mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
-                        SCREEN_TYPE_KEY to source.label
-                )
+            AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
+            mapOf(
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                SCREEN_TYPE_KEY to source.label
+            )
         )
     }
 
-    fun trackLearnMoreAboutMigrationClickedInAllFeaturesOverlay(source: JetpackAllFeaturesOverlaySource) {
+    fun trackLearnMoreAboutMigrationClickedInFeatureCollectionOverlay(source: JetpackFeatureCollectionOverlaySource) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED,
-                mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
-                        SCREEN_TYPE_KEY to source.label
-                )
+            AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED,
+            mapOf(
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                SCREEN_TYPE_KEY to source.label
+            )
         )
     }
 
@@ -302,15 +315,19 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         CONTINUE_BUTTON("continue")
     }
 
-    enum class JetpackAllFeaturesOverlaySource(val label: String) {
+    enum class JetpackFeatureCollectionOverlaySource(val label: String) {
         FEATURE_CARD("card"),
+        APP_OPEN("app_open"),
         UNSPECIFIED("unspecified");
 
         companion object {
             @JvmStatic
-            fun fromString(label: String?) = when (FEATURE_CARD.label) {
-                label -> FEATURE_CARD
-                else -> UNSPECIFIED
+            fun fromString(label: String?): JetpackFeatureCollectionOverlaySource {
+                return when (label) {
+                    FEATURE_CARD.label -> FEATURE_CARD
+                    APP_OPEN.label -> APP_OPEN
+                    else -> UNSPECIFIED
+                }
             }
         }
     }

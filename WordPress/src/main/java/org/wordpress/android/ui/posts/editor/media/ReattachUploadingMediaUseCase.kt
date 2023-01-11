@@ -30,8 +30,8 @@ class ReattachUploadingMediaUseCase @Inject constructor(
         // now do proper re-attachment of upload progress on each media item
         allUploadingMediaInPost.forEach { mediaModel ->
             editorMediaUploadListener.onMediaUploadReattached(
-                    mediaModel.id.toString(),
-                    uploadServiceFacade.getUploadProgressForMedia(mediaModel)
+                mediaModel.id.toString(),
+                uploadServiceFacade.getUploadProgressForMedia(mediaModel)
             )
         }
     }

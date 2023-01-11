@@ -59,32 +59,33 @@ class ReaderDiscoverDataProvider @Inject constructor(
         get() = ioDispatcher + job
 
     private var isStarted = false
+
     // Indicates that the data was changed in the db while no-one was subscribed to the feed.
     private val isDirty = AtomicBoolean()
     private var isLoadMoreRequestInProgress = false
     private val _discoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>(
-            onActive = { onActiveDiscoverFeed() }, onInactive = { onInactiveDiscoverFeed() })
+        onActive = { onActiveDiscoverFeed() }, onInactive = { onInactiveDiscoverFeed() })
     val discoverFeed: LiveData<ReaderDiscoverCards> = _discoverFeed
-            /* Since we listen to all updates of the database the feed is sometimes updated several times within a few
-            ms. For example, when we are about to insert posts, we delete them first. However, we don't need/want
-            to propagate this state to the VM. */
-            .throttle(
-                    this,
-                    offset = DISCOVER_FEED_THROTTLE,
-                    backgroundDispatcher = ioDispatcher,
-                    mainDispatcher = mainDispatcher
-            )
+        /* Since we listen to all updates of the database the feed is sometimes updated several times within a few
+        ms. For example, when we are about to insert posts, we delete them first. However, we don't need/want
+        to propagate this state to the VM. */
+        .throttle(
+            this,
+            offset = DISCOVER_FEED_THROTTLE,
+            backgroundDispatcher = ioDispatcher,
+            mainDispatcher = mainDispatcher
+        )
 
     private var hasMoreCards = true
 
     private val _communicationChannel = MutableLiveData<Event<ReaderDiscoverCommunication>>()
     val communicationChannel: LiveData<Event<ReaderDiscoverCommunication>> = _communicationChannel
-            .perform {
-                if (it.peekContent().task == REQUEST_MORE && it.peekContent() !is Started) {
-                    AppLog.w(READER, "reader discover load more cards task is finished")
-                    isLoadMoreRequestInProgress = false
-                }
+        .perform {
+            if (it.peekContent().task == REQUEST_MORE && it.peekContent() !is Started) {
+                AppLog.w(READER, "reader discover load more cards task is finished")
+                isLoadMoreRequestInProgress = false
             }
+        }
 
     val readerTag: ReaderTag
         get() = readerTagWrapper.createDiscoverPostCardsTag()
@@ -165,13 +166,13 @@ class ReaderDiscoverDataProvider @Inject constructor(
     private fun onUnchanged(task: DiscoverTasks) {
         hasMoreCards = false
         _communicationChannel.postValue(
-                Event(Success(task))
+            Event(Success(task))
         )
     }
 
     private fun onFailed(task: DiscoverTasks) {
         _communicationChannel.postValue(
-                Event(RemoteRequestFailure(task))
+            Event(RemoteRequestFailure(task))
         )
     }
 

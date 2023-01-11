@@ -10,7 +10,8 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 class DismissNotificationReceiver : BroadcastReceiver() {
-    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     override fun onReceive(context: Context?, intent: Intent?) {
         (context?.applicationContext as WordPress).component().inject(this)
         if (intent != null) {
@@ -37,9 +38,9 @@ class DismissNotificationReceiver : BroadcastReceiver() {
         private const val EXTRA_STAT_TO_TRACK = "EXTRA_STAT_TO_TRACK"
 
         fun newIntent(context: Context, notificationId: Int, stat: Stat? = null): Intent =
-                Intent(context, DismissNotificationReceiver::class.java).apply {
-                    putExtra(EXTRA_NOTIFICATION_ID, notificationId)
-                    putExtra(EXTRA_STAT_TO_TRACK, stat)
-                }
+            Intent(context, DismissNotificationReceiver::class.java).apply {
+                putExtra(EXTRA_NOTIFICATION_ID, notificationId)
+                putExtra(EXTRA_STAT_TO_TRACK, stat)
+            }
     }
 }

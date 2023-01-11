@@ -12,7 +12,8 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class UnifiedAboutActivity : LocaleAwareActivity(), AboutConfigProvider {
-    @Inject lateinit var viewModel: UnifiedAboutViewModel
+    @Inject
+    lateinit var viewModel: UnifiedAboutViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -12,9 +12,9 @@ import javax.inject.Inject
 class JetpackFeatureRemovalNewUsersConfig @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.JETPACK_FEATURE_REMOVAL_NEW_USERS,
-        JETPACK_FEATURE_REMOVAL_NEW_USERS_REMOTE_FIELD
+    appConfig,
+    BuildConfig.JETPACK_FEATURE_REMOVAL_NEW_USERS,
+    JETPACK_FEATURE_REMOVAL_NEW_USERS_REMOTE_FIELD
 ) {
     companion object {
         const val JETPACK_FEATURE_REMOVAL_NEW_USERS_REMOTE_FIELD = "jp_removal_new_users"

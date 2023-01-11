@@ -33,25 +33,25 @@ class UserProfileViewModel @Inject constructor(
     ) {
         _bottomSheetUiState.value = with(userProfile) {
             UserProfileUiState(
-                    userAvatarUrl = userAvatarUrl,
-                    blavatarUrl = blavatarUrl,
-                    userName = userName,
-                    userLogin = userLogin,
-                    userBio = userBio,
-                    siteTitle = if (siteTitle.isBlank()) {
-                        resourceProvider.getString(R.string.user_profile_untitled_site)
-                    } else {
-                        siteTitle
-                    },
-                    siteUrl = siteUrl,
-                    siteId = siteId,
-                    onSiteClickListener = onClick,
-                    blogPreviewSource = source?.let {
-                        when (it) {
-                            LIKE_NOTIFICATION_LIST -> ReaderTracker.SOURCE_NOTIF_LIKE_LIST_USER_PROFILE
-                            LIKE_READER_LIST -> ReaderTracker.SOURCE_READER_LIKE_LIST_USER_PROFILE
-                        }
-                    } ?: ReaderTracker.SOURCE_USER_PROFILE_UNKNOWN
+                userAvatarUrl = userAvatarUrl,
+                blavatarUrl = blavatarUrl,
+                userName = userName,
+                userLogin = userLogin,
+                userBio = userBio,
+                siteTitle = if (siteTitle.isBlank()) {
+                    resourceProvider.getString(R.string.user_profile_untitled_site)
+                } else {
+                    siteTitle
+                },
+                siteUrl = siteUrl,
+                siteId = siteId,
+                onSiteClickListener = onClick,
+                blogPreviewSource = source?.let {
+                    when (it) {
+                        LIKE_NOTIFICATION_LIST -> ReaderTracker.SOURCE_NOTIF_LIKE_LIST_USER_PROFILE
+                        LIKE_READER_LIST -> ReaderTracker.SOURCE_READER_LIKE_LIST_USER_PROFILE
+                    }
+                } ?: ReaderTracker.SOURCE_USER_PROFILE_UNKNOWN
             )
         }
         analyticsUtilsWrapper.trackUserProfileShown(EngagementNavigationSource.getSourceDescription(source))

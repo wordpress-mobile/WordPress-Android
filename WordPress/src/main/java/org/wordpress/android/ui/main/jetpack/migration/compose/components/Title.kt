@@ -16,11 +16,11 @@ fun Title(
     modifier: Modifier = Modifier,
 ) {
     Text(
-            text = text,
-            fontSize = FontSize.ExtraExtraExtraLarge.value,
-            fontWeight = FontWeight.Bold,
-            modifier = modifier
-                    .padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
-                    .padding(top = 30.dp)
+        text = text,
+        fontSize = FontSize.ExtraExtraExtraLarge.value,
+        fontWeight = FontWeight.Bold,
+        modifier = modifier
+            .padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
+            .padding(top = 30.dp)
     )
 }

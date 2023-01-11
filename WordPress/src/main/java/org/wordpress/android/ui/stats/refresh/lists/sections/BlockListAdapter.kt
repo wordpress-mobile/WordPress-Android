@@ -77,8 +77,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.values
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ActionCardViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValuesItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ActionCardViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ActivityViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BarChartViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BigTitleViewHolder
@@ -121,10 +121,10 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
     private var items: List<BlockListItem> = listOf()
     fun update(newItems: List<BlockListItem>) {
         val diffResult = DiffUtil.calculateDiff(
-                BlockDiffCallback(
-                        items,
-                        newItems
-                )
+            BlockDiffCallback(
+                items,
+                newItems
+            )
         )
         items = newItems
         diffResult.dispatchUpdatesTo(this)
@@ -205,8 +205,8 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is InformationViewHolder -> holder.bind(item as Information)
             is HeaderViewHolder -> holder.bind(item as Header)
             is ExpandableItemViewHolder -> holder.bind(
-                    item as ExpandableItem,
-                    payloads.contains(EXPAND_CHANGED)
+                item as ExpandableItem,
+                payloads.contains(EXPAND_CHANGED)
             )
             is MapViewHolder -> holder.bind(item as MapItem)
             is MapLegendViewHolder -> holder.bind(item as MapLegend)

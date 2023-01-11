@@ -3,7 +3,6 @@ package org.wordpress.android.util
 import android.content.Intent
 import android.provider.Settings
 import androidx.fragment.app.FragmentManager
-import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.viewmodel.ContextProvider
@@ -23,27 +22,27 @@ class StorageUtilsProvider @Inject constructor(
 
     fun notifyOnLowStorageSpace(fm: FragmentManager, source: Source) {
         if (
-                isDeviceRunningOutOfSpace() &&
-                AppPrefs.shouldShowStorageWarning() &&
-                fm.findFragmentByTag(DIALOG_FRAGMENT_TAG) == null
+            isDeviceRunningOutOfSpace() &&
+            AppPrefs.shouldShowStorageWarning() &&
+            fm.findFragmentByTag(DIALOG_FRAGMENT_TAG) == null
         ) {
             val intent = Intent(Settings.ACTION_INTERNAL_STORAGE_SETTINGS)
             val context = contextProvider.getContext()
             val isInternalStorageSettingsResolved = intent.resolveActivity(context.packageManager) != null
 
             StorageNotificationDialogFragment.newInstance(
-                    dialogLabels = DialogLabels(
-                            title = context.getString(string.storage_utils_dialog_title),
-                            message = context.getString(string.storage_utils_dialog_message),
-                            okLabel = if (isInternalStorageSettingsResolved) {
-                                context.getString(string.storage_utils_dialog_ok_button)
-                            } else {
-                                context.getString(android.R.string.ok)
-                            },
-                            dontShowAgainLabel = context.getString(string.storage_utils_dialog_dont_show_button)
-                    ),
-                    isInternalStorageSettingsResolved = isInternalStorageSettingsResolved,
-                    source = source.description
+                dialogLabels = DialogLabels(
+                    title = context.getString(string.storage_utils_dialog_title),
+                    message = context.getString(string.storage_utils_dialog_message),
+                    okLabel = if (isInternalStorageSettingsResolved) {
+                        context.getString(string.storage_utils_dialog_ok_button)
+                    } else {
+                        context.getString(android.R.string.ok)
+                    },
+                    dontShowAgainLabel = context.getString(string.storage_utils_dialog_dont_show_button)
+                ),
+                isInternalStorageSettingsResolved = isInternalStorageSettingsResolved,
+                source = source.description
             ).show(fm, DIALOG_FRAGMENT_TAG)
         }
     }

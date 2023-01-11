@@ -33,7 +33,7 @@ class AppStatusTest {
     fun `Should return FALSE if installed app package info IS NOT found`() {
         val packageName = "package"
         whenever(packageManagerWrapper.getPackageInfo(packageName))
-                .doAnswer { throw NameNotFoundException() }
+            .doAnswer { throw NameNotFoundException() }
         val expected = false
         val actual = classToTest.isAppInstalled(packageName)
         assertEquals(expected, actual)

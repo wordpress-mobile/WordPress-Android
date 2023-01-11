@@ -98,22 +98,22 @@ class QRCodeAuthViewModel @Inject constructor(
         when (lastState) {
             LOADING, SCANNING -> updateUiStateAndLaunchScanner()
             VALIDATED -> postUiState(
-                    uiStateMapper.mapToValidated(
-                            location,
-                            browser,
-                            this::onAuthenticateClicked,
-                            this::onAuthenticateCancelClicked
-                    )
+                uiStateMapper.mapToValidated(
+                    location,
+                    browser,
+                    this::onAuthenticateClicked,
+                    this::onAuthenticateCancelClicked
+                )
             )
             AUTHENTICATING -> postUiState(uiStateMapper.mapToAuthenticating(location = location, browser = browser))
             DONE -> postUiState(uiStateMapper.mapToDone(this::onDismissClicked))
             // errors
             INVALID_DATA -> postUiState(uiStateMapper.mapToInvalidData(this::onScanAgainClicked, this::onCancelClicked))
             AUTHENTICATION_FAILED -> postUiState(
-                    uiStateMapper.mapToAuthFailed(
-                            this::onScanAgainClicked,
-                            this::onCancelClicked
-                    )
+                uiStateMapper.mapToAuthFailed(
+                    this::onScanAgainClicked,
+                    this::onCancelClicked
+                )
             )
             EXPIRED_TOKEN -> postUiState(uiStateMapper.mapToExpired(this::onScanAgainClicked, this::onCancelClicked))
             NO_INTERNET -> {
@@ -208,12 +208,12 @@ class QRCodeAuthViewModel @Inject constructor(
     }
 
     private fun mapScanSuccessToValidatedState(result: QRCodeAuthResult<QRCodeAuthValidateResult>) =
-            uiStateMapper.mapToValidated(
-                    browser = result.model?.browser,
-                    location = result.model?.location,
-                    onAuthenticateClick = this::onAuthenticateClicked,
-                    onCancelClick = this::onAuthenticateCancelClicked
-            )
+        uiStateMapper.mapToValidated(
+            browser = result.model?.browser,
+            location = result.model?.location,
+            onAuthenticateClick = this::onAuthenticateClicked,
+            onCancelClick = this::onAuthenticateCancelClicked
+        )
 
     private fun mapScanErrorToErrorState(error: QRCodeAuthError) = when (error.type) {
         NOT_AUTHORIZED -> uiStateMapper.mapToAuthFailed(this::onScanAgainClicked, this::onCancelClicked)

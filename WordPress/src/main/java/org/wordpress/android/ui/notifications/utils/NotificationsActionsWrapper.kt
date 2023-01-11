@@ -8,10 +8,10 @@ import kotlin.coroutines.suspendCoroutine
 @Reusable
 class NotificationsActionsWrapper @Inject constructor() {
     suspend fun downloadNoteAndUpdateDB(noteId: String): Boolean =
-            suspendCoroutine { continuation ->
-                NotificationsActions.downloadNoteAndUpdateDB(
-                        noteId,
-                        { continuation.resume(true) },
-                        { continuation.resume(true) })
-            }
+        suspendCoroutine { continuation ->
+            NotificationsActions.downloadNoteAndUpdateDB(
+                noteId,
+                { continuation.resume(true) },
+                { continuation.resume(true) })
+        }
 }

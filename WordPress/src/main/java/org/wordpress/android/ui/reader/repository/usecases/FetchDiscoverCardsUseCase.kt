@@ -20,7 +20,7 @@ class FetchDiscoverCardsUseCase @Inject constructor(
         }
 
         val isStarted =
-                ReaderDiscoverServiceStarter.startService(contextProvider.getContext(), discoverTask)
+            ReaderDiscoverServiceStarter.startService(contextProvider.getContext(), discoverTask)
 
         return if (isStarted)
             Started(discoverTask)
