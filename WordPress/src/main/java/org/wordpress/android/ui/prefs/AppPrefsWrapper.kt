@@ -253,7 +253,11 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setJetpackMigrationCompleted(isCompleted: Boolean) = AppPrefs.setIsJetpackMigrationCompleted(isCompleted)
 
-    fun isJetpackMigrationCompleted(): Boolean = AppPrefs.getIsJetpackMigrationCompleted()
+    fun isJetpackMigrationCompleted() = AppPrefs.getIsJetpackMigrationCompleted()
+
+    fun setJetpackMigrationInProgress(isInProgress: Boolean) = AppPrefs.setIsJetpackMigrationInProgress(isInProgress)
+
+    fun isJetpackMigrationInProgress() = AppPrefs.getIsJetpackMigrationInProgress()
 
     fun setJetpackMigrationEligible(isEligible: Boolean) = AppPrefs.setIsJetpackMigrationEligible(isEligible)
 

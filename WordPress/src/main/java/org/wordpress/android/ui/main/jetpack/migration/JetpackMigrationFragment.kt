@@ -65,7 +65,7 @@ class JetpackMigrationFragment : Fragment() {
         observeRefreshAppThemeEvents()
         val showDeleteWpState = arguments?.getBoolean(KEY_SHOW_DELETE_WP_STATE, false) ?: false
         initBackPressHandler(showDeleteWpState)
-        viewModel.start(showDeleteWpState)
+        viewModel.start(showDeleteWpState, requireActivity().application as WordPress)
     }
 
     private fun observeViewModelEvents() {
@@ -80,7 +80,8 @@ class JetpackMigrationFragment : Fragment() {
 
     private fun handleActionEvents(actionEvent: JetpackMigrationActionEvent) {
         when (actionEvent) {
-            is CompleteFlow, FallbackToLogin -> ActivityLauncher.showMainActivity(requireContext())
+            is CompleteFlow -> ActivityLauncher.showMainActivity(requireContext())
+            is FallbackToLogin -> ActivityLauncher.showMainActivity(requireContext(), true)
             is Logout -> (requireActivity().application as? WordPress)?.let { viewModel.signOutWordPress(it) }
             is ShowHelp -> launchHelpScreen()
         }
@@ -103,7 +104,7 @@ class JetpackMigrationFragment : Fragment() {
                 true
             ) {
                 override fun handleOnBackPressed() {
-                    viewModel.onBackPressed()
+                    viewModel.logoutAndFallbackToLogin()
                 }
             })
     }
