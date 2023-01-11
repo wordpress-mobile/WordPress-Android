@@ -33,16 +33,16 @@ class UiModelMapper
                     when (useCaseModel.state) {
                         SUCCESS -> StatsBlock.Success(useCaseModel.type, useCaseModel.data ?: listOf())
                         ERROR -> StatsBlock.Error(
-                                useCaseModel.type,
-                                useCaseModel.stateData ?: useCaseModel.data ?: listOf()
+                            useCaseModel.type,
+                            useCaseModel.stateData ?: useCaseModel.data ?: listOf()
                         )
                         LOADING -> StatsBlock.Loading(
-                                useCaseModel.type,
-                                useCaseModel.stateData ?: useCaseModel.data ?: listOf()
+                            useCaseModel.type,
+                            useCaseModel.stateData ?: useCaseModel.data ?: listOf()
                         )
                         EMPTY -> StatsBlock.EmptyBlock(
-                                useCaseModel.type,
-                                useCaseModel.stateData ?: useCaseModel.data ?: listOf()
+                            useCaseModel.type,
+                            useCaseModel.stateData ?: useCaseModel.data ?: listOf()
                         )
                     }
                 }
@@ -51,8 +51,8 @@ class UiModelMapper
                 showError(getErrorMessage())
                 UiModel.Success(useCaseModels.map { useCaseModel ->
                     StatsBlock.Error(
-                            useCaseModel.type,
-                            useCaseModel.data ?: useCaseModel.stateData ?: listOf()
+                        useCaseModel.type,
+                        useCaseModel.data ?: useCaseModel.stateData ?: listOf()
                     )
                 })
             } else {
@@ -60,10 +60,10 @@ class UiModelMapper
             }
         } else {
             return UiModel.Empty(
-                    R.string.stats_empty_insights_title,
-                    R.string.stats_insights_management_title,
-                    R.drawable.img_illustration_insights_94dp,
-                    true
+                R.string.stats_empty_insights_title,
+                R.string.stats_insights_management_title,
+                R.drawable.img_illustration_insights_94dp,
+                true
             )
         }
     }
@@ -95,9 +95,9 @@ class UiModelMapper
         showError: (Int) -> Unit
     ): UiModel {
         val allFailing = useCaseModels.isNotEmpty() && useCaseModels
-                .fold(true) { acc, useCaseModel ->
-                    acc && useCaseModel.state == ERROR
-                }
+            .fold(true) { acc, useCaseModel ->
+                acc && useCaseModel.state == ERROR
+            }
         val overviewIsFailing = useCaseModels.any { it.type == overViewType && it.state == ERROR }
         val overviewHasData = useCaseModels.any { it.type == overViewType && it.data != null }
         return if (!allFailing && (overviewHasData || !overviewIsFailing)) {
@@ -110,20 +110,20 @@ class UiModelMapper
                             SUCCESS -> StatsBlock.Success(useCaseModel.type, useCaseModel.data ?: listOf())
                             ERROR -> useCaseModel.stateData?.let {
                                 StatsBlock.Error(
-                                        useCaseModel.type,
-                                        useCaseModel.stateData
+                                    useCaseModel.type,
+                                    useCaseModel.stateData
                                 )
                             }
                             LOADING -> useCaseModel.stateData?.let {
                                 StatsBlock.Loading(
-                                        useCaseModel.type,
-                                        useCaseModel.stateData
+                                    useCaseModel.type,
+                                    useCaseModel.stateData
                                 )
                             }
                             EMPTY -> useCaseModel.stateData?.let {
                                 StatsBlock.EmptyBlock(
-                                        useCaseModel.type,
-                                        useCaseModel.stateData
+                                    useCaseModel.type,
+                                    useCaseModel.stateData
                                 )
                             }
                         }
@@ -140,8 +140,8 @@ class UiModelMapper
                 } else {
                     useCaseModel.stateData?.let {
                         StatsBlock.Error(
-                                useCaseModel.type,
-                                useCaseModel.stateData
+                            useCaseModel.type,
+                            useCaseModel.stateData
                         )
                     }
                 }

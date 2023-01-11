@@ -15,15 +15,15 @@ class PrologueBuilder
     fun buildUiItems(): List<BloggingRemindersItem> {
         return if (bloggingPromptsFeatureConfig.isEnabled()) {
             listOf(
-                    Illustration(R.drawable.img_illustration_celebration_150dp),
-                    Title(UiStringRes(R.string.set_your_blogging_prompts_title)),
-                    HighEmphasisText(UiStringRes(R.string.post_publishing_set_up_blogging_prompts_message))
+                Illustration(R.drawable.img_illustration_celebration_150dp),
+                Title(UiStringRes(R.string.set_your_blogging_prompts_title)),
+                HighEmphasisText(UiStringRes(R.string.post_publishing_set_up_blogging_prompts_message))
             )
         } else {
             listOf(
-                    Illustration(R.drawable.img_illustration_celebration_150dp),
-                    Title(UiStringRes(R.string.set_your_blogging_reminders_title)),
-                    HighEmphasisText(UiStringRes(R.string.post_publishing_set_up_blogging_reminders_message))
+                Illustration(R.drawable.img_illustration_celebration_150dp),
+                Title(UiStringRes(R.string.set_your_blogging_reminders_title)),
+                HighEmphasisText(UiStringRes(R.string.post_publishing_set_up_blogging_reminders_message))
             )
         }
     }
@@ -31,15 +31,15 @@ class PrologueBuilder
     fun buildUiItemsForSettings(): List<BloggingRemindersItem> {
         return if (bloggingPromptsFeatureConfig.isEnabled()) {
             listOf(
-                    Illustration(R.drawable.img_illustration_celebration_150dp),
-                    Title(UiStringRes(R.string.set_your_blogging_prompts_title)),
-                    HighEmphasisText(UiStringRes(R.string.post_publishing_set_up_blogging_prompts_message))
+                Illustration(R.drawable.img_illustration_celebration_150dp),
+                Title(UiStringRes(R.string.set_your_blogging_prompts_title)),
+                HighEmphasisText(UiStringRes(R.string.post_publishing_set_up_blogging_prompts_message))
             )
         } else {
             listOf(
-                    Illustration(R.drawable.img_illustration_celebration_150dp),
-                    Title(UiStringRes(R.string.set_your_blogging_reminders_title)),
-                    HighEmphasisText(UiStringRes(R.string.set_up_blogging_reminders_message))
+                Illustration(R.drawable.img_illustration_celebration_150dp),
+                Title(UiStringRes(R.string.set_your_blogging_reminders_title)),
+                HighEmphasisText(UiStringRes(R.string.set_up_blogging_reminders_message))
             )
         }
     }
@@ -49,9 +49,9 @@ class PrologueBuilder
         onContinue: (Boolean) -> Unit
     ): PrimaryButton {
         return PrimaryButton(
-                UiStringRes(R.string.set_your_blogging_reminders_button),
-                enabled = true,
-                ListItemInteraction.create(isFirstTimeFlow, onContinue)
+            UiStringRes(R.string.set_your_blogging_reminders_button),
+            enabled = true,
+            ListItemInteraction.create(isFirstTimeFlow, onContinue)
         )
     }
 }

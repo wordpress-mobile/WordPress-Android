@@ -41,81 +41,81 @@ class PostCardBuilder @Inject constructor(
     }
 
     private fun buildPostCardsWithData(params: PostCardBuilderParams) =
-            mutableListOf<PostCard>().apply {
-                val posts = params.posts
-                posts?.hasPublished?.takeIf { !posts.hasDraftsOrScheduledPosts() }
-                        ?.let { hasPublished ->
-                            if (hasPublished) {
-                                add(createNextPostCard(params.onPostItemClick, params.onFooterLinkClick))
-                            } else {
-                                add(createFirstPostCard(params.onPostItemClick, params.onFooterLinkClick))
-                            }
-                        }
-                posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard(params)) }
-                posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard(params)) }
-            }.toList()
+        mutableListOf<PostCard>().apply {
+            val posts = params.posts
+            posts?.hasPublished?.takeIf { !posts.hasDraftsOrScheduledPosts() }
+                ?.let { hasPublished ->
+                    if (hasPublished) {
+                        add(createNextPostCard(params.onPostItemClick, params.onFooterLinkClick))
+                    } else {
+                        add(createFirstPostCard(params.onPostItemClick, params.onFooterLinkClick))
+                    }
+                }
+            posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard(params)) }
+            posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard(params)) }
+        }.toList()
 
     private fun createPostErrorCard() = PostCard.Error(
-            title = UiStringRes(R.string.posts)
+        title = UiStringRes(R.string.posts)
     )
 
     private fun createFirstPostCard(
         onPostItemClick: (params: PostItemClickParams) -> Unit,
         onFooterLinkClick: (postCardType: PostCardType) -> Unit
     ) = PostCardWithoutPostItems(
-            postCardType = PostCardType.CREATE_FIRST,
-            title = UiStringRes(R.string.my_site_create_first_post_title),
-            excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
-            imageRes = R.drawable.img_write_212dp,
-            footerLink = FooterLink(
-                    label = UiStringRes(R.string.my_site_post_card_link_create_post),
-                    onClick = onFooterLinkClick
-            ),
-            onClick = ListItemInteraction.create(
-                    PostItemClickParams(postCardType = PostCardType.CREATE_FIRST, postId = NOT_SET),
-                    onPostItemClick
-            )
+        postCardType = PostCardType.CREATE_FIRST,
+        title = UiStringRes(R.string.my_site_create_first_post_title),
+        excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
+        imageRes = R.drawable.img_write_212dp,
+        footerLink = FooterLink(
+            label = UiStringRes(R.string.my_site_post_card_link_create_post),
+            onClick = onFooterLinkClick
+        ),
+        onClick = ListItemInteraction.create(
+            PostItemClickParams(postCardType = PostCardType.CREATE_FIRST, postId = NOT_SET),
+            onPostItemClick
+        )
     )
 
     private fun createNextPostCard(
         onPostItemClick: (params: PostItemClickParams) -> Unit,
         onFooterLinkClick: (postCardType: PostCardType) -> Unit
     ) = PostCardWithoutPostItems(
-            postCardType = PostCardType.CREATE_NEXT,
-            title = UiStringRes(R.string.my_site_create_next_post_title),
-            excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
-            imageRes = R.drawable.img_write_212dp,
-            footerLink = FooterLink(
-                    label = UiStringRes(R.string.my_site_post_card_link_create_post),
-                    onClick = onFooterLinkClick
-            ),
-            onClick = ListItemInteraction.create(
-                    PostItemClickParams(postCardType = PostCardType.CREATE_NEXT, postId = NOT_SET),
-                    onPostItemClick
-            )
+        postCardType = PostCardType.CREATE_NEXT,
+        title = UiStringRes(R.string.my_site_create_next_post_title),
+        excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
+        imageRes = R.drawable.img_write_212dp,
+        footerLink = FooterLink(
+            label = UiStringRes(R.string.my_site_post_card_link_create_post),
+            onClick = onFooterLinkClick
+        ),
+        onClick = ListItemInteraction.create(
+            PostItemClickParams(postCardType = PostCardType.CREATE_NEXT, postId = NOT_SET),
+            onPostItemClick
+        )
     )
 
     private fun List<PostCardModel>.createDraftPostsCard(params: PostCardBuilderParams) =
-            PostCardWithPostItems(
-                    postCardType = PostCardType.DRAFT,
-                    title = UiStringRes(R.string.my_site_post_card_draft_title),
-                    postItems = mapToDraftPostItems(params.onPostItemClick),
-                    footerLink = FooterLink(
-                            label = UiStringRes(R.string.my_site_post_card_link_go_to_drafts),
-                            onClick = params.onFooterLinkClick
-                    )
+        PostCardWithPostItems(
+            postCardType = PostCardType.DRAFT,
+            title = UiStringRes(R.string.my_site_post_card_draft_title),
+            postItems = mapToDraftPostItems(params.onPostItemClick),
+            footerLink = FooterLink(
+                label = UiStringRes(R.string.my_site_post_card_link_go_to_drafts),
+                onClick = params.onFooterLinkClick
             )
+        )
 
     private fun List<PostCardModel>.createScheduledPostsCard(params: PostCardBuilderParams) =
-            PostCardWithPostItems(
-                    postCardType = PostCardType.SCHEDULED,
-                    title = UiStringRes(R.string.my_site_post_card_scheduled_title),
-                    postItems = mapToScheduledPostItems(params.onPostItemClick),
-                    footerLink = FooterLink(
-                            label = UiStringRes(R.string.my_site_post_card_link_go_to_scheduled_posts),
-                            onClick = params.onFooterLinkClick
-                    )
+        PostCardWithPostItems(
+            postCardType = PostCardType.SCHEDULED,
+            title = UiStringRes(R.string.my_site_post_card_scheduled_title),
+            postItems = mapToScheduledPostItems(params.onPostItemClick),
+            footerLink = FooterLink(
+                label = UiStringRes(R.string.my_site_post_card_link_go_to_scheduled_posts),
+                onClick = params.onFooterLinkClick
             )
+        )
 
     private fun PostsCardModel.hasDraftsOrScheduledPosts() = draft.isNotEmpty() || scheduled.isNotEmpty()
 
@@ -123,39 +123,39 @@ class PostCardBuilder @Inject constructor(
         onPostItemClick: (params: PostItemClickParams) -> Unit
     ) = map { post ->
         PostItem(
-                title = constructPostTitle(post.title),
-                excerpt = constructPostContent(post.content),
-                featuredImageUrl = post.featuredImage,
-                onClick = ListItemInteraction.create(
-                        PostItemClickParams(PostCardType.DRAFT, post.id),
-                        onPostItemClick
-                )
+            title = constructPostTitle(post.title),
+            excerpt = constructPostContent(post.content),
+            featuredImageUrl = post.featuredImage,
+            onClick = ListItemInteraction.create(
+                PostItemClickParams(PostCardType.DRAFT, post.id),
+                onPostItemClick
+            )
         )
     }
 
     private fun constructPostTitle(title: String) =
-            if (title.isEmpty()) UiStringRes(R.string.my_site_untitled_post) else UiStringText(title)
+        if (title.isEmpty()) UiStringRes(R.string.my_site_untitled_post) else UiStringText(title)
 
     private fun constructPostContent(content: String) =
-            content.takeIf { it.isNotEmpty() }?.let { UiStringText(content) }
+        content.takeIf { it.isNotEmpty() }?.let { UiStringText(content) }
 
     private fun List<PostCardModel>.mapToScheduledPostItems(
         onPostItemClick: (params: PostItemClickParams) -> Unit
     ) = map { post ->
         PostItem(
-                title = constructPostTitle(post.title),
-                excerpt = UiStringText(constructPostDate(post.date)),
-                featuredImageUrl = post.featuredImage,
-                isTimeIconVisible = true,
-                onClick = ListItemInteraction.create(
-                        PostItemClickParams(PostCardType.SCHEDULED, post.id),
-                        onPostItemClick
-                )
+            title = constructPostTitle(post.title),
+            excerpt = UiStringText(constructPostDate(post.date)),
+            featuredImageUrl = post.featuredImage,
+            isTimeIconVisible = true,
+            onClick = ListItemInteraction.create(
+                PostItemClickParams(PostCardType.SCHEDULED, post.id),
+                onPostItemClick
+            )
         )
     }
 
     private fun constructPostDate(date: Date) =
-            SimpleDateFormat(MONTH_DAY_FORMAT, localeManagerWrapper.getLocale()).format(date)
+        SimpleDateFormat(MONTH_DAY_FORMAT, localeManagerWrapper.getLocale()).format(date)
 
     private fun shouldShowError(error: PostCardError) = error.type == PostCardErrorType.GENERIC_ERROR
 

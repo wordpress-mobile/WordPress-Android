@@ -21,7 +21,7 @@ class EditorActionsProviderTest {
     fun `Verify actions of a DRAFT`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
-                getPrimaryAndSecondaryActions(PostStatus.DRAFT, userCanPublish = true)
+            getPrimaryAndSecondaryActions(PostStatus.DRAFT, userCanPublish = true)
         // Assert
         assertThat(primaryAction).isEqualTo(PrimaryEditorAction.PUBLISH_NOW)
         assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.SAVE)
@@ -31,7 +31,7 @@ class EditorActionsProviderTest {
     fun `Verify actions of a DRAFT when the user doesn't have publishing rights`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
-                getPrimaryAndSecondaryActions(PostStatus.DRAFT, userCanPublish = false)
+            getPrimaryAndSecondaryActions(PostStatus.DRAFT, userCanPublish = false)
         // Assert
         assertThat(primaryAction).isEqualTo(PrimaryEditorAction.SUBMIT_FOR_REVIEW)
         assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.NONE)
@@ -41,7 +41,7 @@ class EditorActionsProviderTest {
     fun `Verify actions of a PUBLISHED post`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
-                getPrimaryAndSecondaryActions(PostStatus.PUBLISHED, userCanPublish = true)
+            getPrimaryAndSecondaryActions(PostStatus.PUBLISHED, userCanPublish = true)
         // Assert
         assertThat(primaryAction).isEqualTo(PrimaryEditorAction.UPDATE)
         assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.NONE)
@@ -51,7 +51,7 @@ class EditorActionsProviderTest {
     fun `Verify actions of a PUBLISHED post in Landing Editor mode`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
-                getPrimaryAndSecondaryActions(PostStatus.PUBLISHED, userCanPublish = true, isLandInTheEditor = true)
+            getPrimaryAndSecondaryActions(PostStatus.PUBLISHED, userCanPublish = true, isLandInTheEditor = true)
         // Assert
         assertThat(primaryAction).isEqualTo(PrimaryEditorAction.CONTINUE)
         assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.NONE)
@@ -61,7 +61,7 @@ class EditorActionsProviderTest {
     fun `Verify actions of a SCHEDULED post`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
-                getPrimaryAndSecondaryActions(PostStatus.SCHEDULED, userCanPublish = true)
+            getPrimaryAndSecondaryActions(PostStatus.SCHEDULED, userCanPublish = true)
         // Assert
         assertThat(primaryAction).isEqualTo(PrimaryEditorAction.SCHEDULE)
         assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.PUBLISH_NOW)
@@ -71,7 +71,7 @@ class EditorActionsProviderTest {
     fun `Verify actions of a TRASHED post`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
-                getPrimaryAndSecondaryActions(PostStatus.TRASHED, userCanPublish = true)
+            getPrimaryAndSecondaryActions(PostStatus.TRASHED, userCanPublish = true)
         // Assert
         assertThat(primaryAction).isEqualTo(PrimaryEditorAction.SAVE)
         assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.SAVE_AS_DRAFT)
@@ -81,7 +81,7 @@ class EditorActionsProviderTest {
     fun `Verify actions of a PENDING post`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
-                getPrimaryAndSecondaryActions(PostStatus.PENDING, userCanPublish = true)
+            getPrimaryAndSecondaryActions(PostStatus.PENDING, userCanPublish = true)
         // Assert
         assertThat(primaryAction).isEqualTo(PrimaryEditorAction.SAVE)
         assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.PUBLISH_NOW)
@@ -91,7 +91,7 @@ class EditorActionsProviderTest {
     fun `Verify actions of a PENDING post when the user doesn't have publishing rights`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
-                getPrimaryAndSecondaryActions(PostStatus.PENDING, userCanPublish = false)
+            getPrimaryAndSecondaryActions(PostStatus.PENDING, userCanPublish = false)
         // Assert
         assertThat(primaryAction).isEqualTo(PrimaryEditorAction.SUBMIT_FOR_REVIEW)
         // TODO Would it make sense to have "SAVE/SAVE_AS_DRAFT" action here?
@@ -102,7 +102,7 @@ class EditorActionsProviderTest {
     fun `Verify actions of a PRIVATE post`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
-                getPrimaryAndSecondaryActions(PostStatus.PRIVATE, userCanPublish = true)
+            getPrimaryAndSecondaryActions(PostStatus.PRIVATE, userCanPublish = true)
         // Assert
         assertThat(primaryAction).isEqualTo(PrimaryEditorAction.UPDATE)
         assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.NONE)
@@ -112,7 +112,7 @@ class EditorActionsProviderTest {
     fun `Verify actions of an UNKNOWN post`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
-                getPrimaryAndSecondaryActions(PostStatus.UNKNOWN, userCanPublish = true)
+            getPrimaryAndSecondaryActions(PostStatus.UNKNOWN, userCanPublish = true)
         // Assert
         assertThat(primaryAction).isEqualTo(PrimaryEditorAction.UPDATE)
         assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.SAVE_AS_DRAFT)
@@ -122,7 +122,7 @@ class EditorActionsProviderTest {
     fun `Verify actions of an UNKNOWN post when the user doesn't have the publishing rights`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
-                getPrimaryAndSecondaryActions(PostStatus.UNKNOWN, userCanPublish = false)
+            getPrimaryAndSecondaryActions(PostStatus.UNKNOWN, userCanPublish = false)
         // Assert
         assertThat(primaryAction).isEqualTo(PrimaryEditorAction.SUBMIT_FOR_REVIEW)
         assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.NONE)
@@ -133,7 +133,7 @@ class EditorActionsProviderTest {
         userCanPublish: Boolean,
         isLandInTheEditor: Boolean = false
     ): Pair<PrimaryEditorAction, SecondaryEditorAction> = Pair(
-            actionsProvider.getPrimaryAction(postStatus, userCanPublish, isLandInTheEditor),
-            actionsProvider.getSecondaryAction(postStatus, userCanPublish)
+        actionsProvider.getPrimaryAction(postStatus, userCanPublish, isLandInTheEditor),
+        actionsProvider.getSecondaryAction(postStatus, userCanPublish)
     )
 }

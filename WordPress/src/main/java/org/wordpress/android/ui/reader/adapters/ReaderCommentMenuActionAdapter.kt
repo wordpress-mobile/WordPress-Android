@@ -56,9 +56,9 @@ class ReaderCommentMenuActionAdapter(
             handleSpacer(convertView, parent)
         } else {
             handleAction(
-                    cardAction as PrimaryItemMenu,
-                    convertView,
-                    parent
+                cardAction as PrimaryItemMenu,
+                convertView,
+                parent
             )
         }
     }

@@ -45,33 +45,33 @@ class LocalMigrationOrchestrator @Inject constructor(
 ) {
     fun tryLocalMigration(migrationStateFlow: MutableStateFlow<LocalMigrationState>) {
         eligibilityHelper.validate()
-                .then(sharedLoginHelper::login).emitTo(migrationStateFlow)
-                .then(sitesMigrationHelper::migrateSites).emitTo(migrationStateFlow)
-                .then(userFlagsHelper::migrateUserFlags)
-                .then(readerSavedPostsHelper::migrateReaderSavedPosts)
-                .then(localPostsHelper::migratePosts)
-                .orElse { error ->
-                    migrationStateFlow.value = when (error) {
-                        is Ineligibility -> Ineligible
-                        else -> Finished.Failure(error)
-                    }
-                    Failure(error)
+            .then(sharedLoginHelper::login).emitTo(migrationStateFlow)
+            .then(sitesMigrationHelper::migrateSites).emitTo(migrationStateFlow)
+            .then(userFlagsHelper::migrateUserFlags)
+            .then(readerSavedPostsHelper::migrateReaderSavedPosts)
+            .then(localPostsHelper::migratePosts)
+            .orElse { error ->
+                migrationStateFlow.value = when (error) {
+                    is Ineligibility -> Ineligible
+                    else -> Finished.Failure(error)
                 }
-                .then {
-                    with (migrationStateFlow) {
-                        value = Finished.Successful(
-                                (value as? Migrating)?.data ?: WelcomeScreenData()
-                        )
-                    }
-                    EmptyResult
+                Failure(error)
+            }
+            .then {
+                with(migrationStateFlow) {
+                    value = Finished.Successful(
+                        (value as? Migrating)?.data ?: WelcomeScreenData()
+                    )
                 }
-                .otherwise(::handleErrors)
+                EmptyResult
+            }
+            .otherwise(::handleErrors)
     }
 
     @Suppress("ForbiddenComment")
     // TODO: Handle the errors appropriately
     private fun handleErrors(error: LocalMigrationError) {
-        when(error) {
+        when (error) {
             is ProviderError -> Unit
             is Ineligibility -> when (error.reason) {
                 WPNotLoggedIn -> sharedLoginAnalyticsTracker.trackLoginFailed(WPNotLoggedInError)

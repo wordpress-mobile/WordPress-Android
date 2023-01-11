@@ -23,8 +23,8 @@ class FeatureAnnouncementProvider @Inject constructor(
             whatsNewStore.fetchCachedAnnouncements()
         } else {
             whatsNewStore.fetchRemoteAnnouncements(
-                    buildConfigWrapper.getAppVersionName(),
-                    if (buildConfigWrapper.isJetpackApp) JP_ANDROID else WP_ANDROID
+                buildConfigWrapper.getAppVersionName(),
+                if (buildConfigWrapper.isJetpackApp) JP_ANDROID else WP_ANDROID
             )
         }
         onWhatsNewFetched.whatsNewItems?.map { featureAnnouncements.add(it.build()) }?.toList()
@@ -33,22 +33,22 @@ class FeatureAnnouncementProvider @Inject constructor(
 
     fun WhatsNewAnnouncementModel.build(): FeatureAnnouncement {
         return FeatureAnnouncement(
-                appVersionName,
-                announcementVersion,
-                minimumAppVersion,
-                maximumAppVersion,
-                appVersionTargets,
-                detailsUrl,
-                isLocalized,
-                features.map { it.build() })
+            appVersionName,
+            announcementVersion,
+            minimumAppVersion,
+            maximumAppVersion,
+            appVersionTargets,
+            detailsUrl,
+            isLocalized,
+            features.map { it.build() })
     }
 
     fun WhatsNewAnnouncementModel.WhatsNewAnnouncementFeature.build(): FeatureAnnouncementItem {
         return FeatureAnnouncementItem(
-                StringUtils.notNullStr(title),
-                StringUtils.notNullStr(subtitle),
-                StringUtils.notNullStr(iconBase64),
-                StringUtils.notNullStr(iconUrl)
+            StringUtils.notNullStr(title),
+            StringUtils.notNullStr(subtitle),
+            StringUtils.notNullStr(iconBase64),
+            StringUtils.notNullStr(iconUrl)
         )
     }
 }

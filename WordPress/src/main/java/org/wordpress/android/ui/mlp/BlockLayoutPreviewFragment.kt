@@ -18,5 +18,5 @@ class BlockLayoutPreviewFragment : LayoutPreviewFragment() {
     override fun getChooseButtonText() = R.string.mlp_create_page
 
     override fun getViewModel() =
-            ViewModelProvider(requireActivity(), viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
+        ViewModelProvider(requireActivity(), viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
 }

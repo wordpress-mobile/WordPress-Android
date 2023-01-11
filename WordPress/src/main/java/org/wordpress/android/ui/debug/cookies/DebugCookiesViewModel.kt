@@ -17,37 +17,37 @@ class DebugCookiesViewModel @Inject constructor(
         if (!host.isNullOrBlank() && !name.isNullOrBlank()) {
             debugCookieManager.add(DebugCookie(host, name, value))
             _uiState.value = UiState(
-                    items = getUpdatedItems(),
-                    hostInputText = host,
-                    nameInputText = name,
-                    valueInputText = value
+                items = getUpdatedItems(),
+                hostInputText = host,
+                nameInputText = name,
+                valueInputText = value
             )
         }
     }
 
     private fun onItemClick(debugCookie: DebugCookie) {
         _uiState.value = _uiState.value?.copy(
-                hostInputText = debugCookie.host,
-                nameInputText = debugCookie.name,
-                valueInputText = debugCookie.value
+            hostInputText = debugCookie.host,
+            nameInputText = debugCookie.name,
+            valueInputText = debugCookie.value
         )
     }
 
     private fun onDeleteClick(debugCookie: DebugCookie) {
         debugCookieManager.remove(debugCookie)
         _uiState.value = _uiState.value?.copy(
-                items = getUpdatedItems()
+            items = getUpdatedItems()
         )
     }
 
     private fun getUpdatedItems() = debugCookieManager.getAll().sortedBy { it.key }.map {
         DebugCookieItem(
-                it.key,
-                it.host,
-                it.name,
-                it.value,
-                ListItemInteraction.create(it, ::onItemClick),
-                ListItemInteraction.create(it, ::onDeleteClick)
+            it.key,
+            it.host,
+            it.name,
+            it.value,
+            ListItemInteraction.create(it, ::onItemClick),
+            ListItemInteraction.create(it, ::onDeleteClick)
         )
     }
 

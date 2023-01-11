@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-12-06 04:38:17+0000
+Translation-Revision-Date: 2022-12-17 15:04:56+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: id
 -->
 <resources>
+    <string name="reader_toast_user_blocked">Pos dari pengguna ini tidak akan ditampilkan lagi</string>
+    <string name="reader_menu_block_user">Blokir pengguna</string>
+    <string name="reader_menu_report_user">Laporkan pengguna ini</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">Buka tautan di WordPress</string>
     <string name="wp_jetpack_deep_link_overlay_description">Aplikasi Jetpack sepertinya sudah terinstal.\n\nUntuk selanjutnya, apakah Anda ingin membuka tautan langsung di aplikasi Jetpack?\n\nPengaturan ini bisa diubah kapan pun lewat Pengaturan Aplikasi &gt; Buka tautan di Jetpack</string>
     <string name="wp_jetpack_deep_link_overlay_title">Buka tautan di Jetpack?</string>
@@ -26,7 +29,6 @@ Language: id
     <string name="preference_open_links_in_jetpack">Buka tautan di Jetpack</string>
     <string name="jp_migration_need_help_button">Butuh bantuan?</string>
     <string name="jp_migration_got_it_button">Saya mengerti</string>
-    <string name="jp_migration_delete_message">Harap &lt;b&gt;hapus aplikasi WordPress&lt;/b&gt; untuk&lt;br&gt;mencegah terjadinya konflik data.</string>
     <string name="jp_migration_delete_subtitle">Aplikasi WordPress sepertinya masih terinstal. Kami sarankan untuk menghapus aplikasi WordPress guna mencegah terjadinya konflik data.</string>
     <string name="jp_migration_delete_title">Anda tidak lagi membutuhkan aplikasi WordPress</string>
     <string name="jp_migration_network_error_message">Tanpa koneksi internet, kami tidak dapat mentransfer data dan pengaturan.</string>
@@ -38,7 +40,6 @@ Language: id
     <string name="jp_migration_try_again_button">Coba lagi</string>
     <string name="jp_migration_finish_button">Selesai</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Hapus ikon Aplikasi WordPress</string>
-    <string name="jp_migration_done_delete_wp_message">Harap &lt;b&gt;hapus aplikasi WordPress&lt;/b&gt; untuk&lt;br&gt;mencegah terjadinya konflik data.</string>
     <string name="jp_migration_done_subtitle">Kami telah mentransfer semua data dan pengaturan Anda. Semua percis seperti terakhir Anda tinggalkan.</string>
     <string name="jp_migration_done_title">Terima kasih telah beralih ke Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Kami akan menonaktifkan pemberitahuan dari aplikasi WordPress.</string>

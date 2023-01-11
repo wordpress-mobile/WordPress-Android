@@ -22,11 +22,11 @@ class PrepublishingPublishSettingsViewModel @Inject constructor(
     postSchedulingNotificationStore: PostSchedulingNotificationStore,
     siteStore: SiteStore
 ) : PublishSettingsViewModel(
-        resourceProvider,
-        postSettingsUtils,
-        localeManagerWrapper,
-        postSchedulingNotificationStore,
-        siteStore
+    resourceProvider,
+    postSettingsUtils,
+    localeManagerWrapper,
+    postSchedulingNotificationStore,
+    siteStore
 ) {
     private val _navigateToHomeScreen = MutableLiveData<Event<Unit>>()
     val navigateToHomeScreen: LiveData<Event<Unit>> = _navigateToHomeScreen

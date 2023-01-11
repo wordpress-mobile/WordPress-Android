@@ -44,9 +44,9 @@ class XPostsSuggestionSource @Inject constructor(
     }
 
     private fun suggestionsFromResult(result: XPostsResult.Result): List<Suggestion> =
-            result.xPosts
-                    .map { Suggestion.fromXpost(it) }
-                    .sortedBy { it.value }
+        result.xPosts
+            .map { Suggestion.fromXpost(it) }
+            .sortedBy { it.value }
 
     override fun refreshSuggestions() {
         if (fetchJob?.isActive != true) {
@@ -68,5 +68,6 @@ class XPostsSuggestionSource @Inject constructor(
 
     override fun isFetchInProgress(): Boolean = fetchJob?.isActive == true
 
-    override fun onCleared() { /* Do nothing */ }
+    override fun onCleared() { /* Do nothing */
+    }
 }

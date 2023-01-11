@@ -5,7 +5,6 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
@@ -53,10 +52,10 @@ class ScanAndBackupSource @Inject constructor(
             coroutineScope.launch(bgDispatcher) {
                 jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(selectedSite.siteId).collect {
                     postState(
-                            JetpackCapabilities(
-                                    scanAvailable = SiteUtils.isScanEnabled(it.scan, selectedSite),
-                                    backupAvailable = it.backup
-                            )
+                        JetpackCapabilities(
+                            scanAvailable = SiteUtils.isScanEnabled(it.scan, selectedSite),
+                            backupAvailable = it.backup
+                        )
                     )
                 }
             }

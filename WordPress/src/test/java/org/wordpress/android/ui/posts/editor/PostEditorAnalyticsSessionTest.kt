@@ -31,7 +31,7 @@ class PostEditorAnalyticsSessionTest {
 
         // verify that all invocations have the blog_id entry
         verify(analyticsTracker, times(4))
-                .track(anyOrNull(), argThat(MapHasEntry("blog_id" to blogId)))
+            .track(anyOrNull(), argThat(MapHasEntry("blog_id" to blogId)))
     }
 
     internal class MapHasEntry(val entry: Pair<*, *>) : ArgumentMatcher<Map<String, Any?>> {
@@ -56,11 +56,11 @@ class PostEditorAnalyticsSessionTest {
             whenever(site.siteId).thenReturn(blogId)
             site.getSiteId()
             return PostEditorAnalyticsSession.getNewPostEditorAnalyticsSession(
-                    GUTENBERG,
-                    mock(),
-                    site,
-                    false,
-                    analyticsTrackerWrapper
+                GUTENBERG,
+                mock(),
+                site,
+                false,
+                analyticsTrackerWrapper
             )
         }
     }

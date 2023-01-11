@@ -37,9 +37,14 @@ const val KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID = "key_backup_download_download_id"
 const val KEY_BACKUP_DOWNLOAD_ACTION_STATE_ID = "key_backup_download_action_state_id"
 
 class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var imageManager: ImageManager
     private lateinit var viewModel: BackupDownloadViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,14 +63,14 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
 
     private fun initBackPressHandler() {
         requireActivity().onBackPressedDispatcher.addCallback(
-                viewLifecycleOwner,
-                object : OnBackPressedCallback(
-                        true
-                ) {
-                    override fun handleOnBackPressed() {
-                        onBackPressed()
-                    }
-                })
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(
+                true
+            ) {
+                override fun handleOnBackPressed() {
+                    onBackPressed()
+                }
+            })
     }
 
     private fun onBackPressed() {
@@ -76,21 +81,21 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
         recyclerView.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
         recyclerView.itemAnimator = null
         recyclerView.addItemDecoration(
-                HorizontalMarginItemDecoration(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
+            HorizontalMarginItemDecoration(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
         )
     }
 
     private fun JetpackBackupRestoreFragmentBinding.initViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(
-                this@BackupDownloadFragment,
-                viewModelFactory
+            this@BackupDownloadFragment,
+            viewModelFactory
         ).get(BackupDownloadViewModel::class.java)
 
         val (site, activityId) = when {
             requireActivity().intent?.extras != null -> {
                 val site = requireNotNull(requireActivity().intent.extras).getSerializable(WordPress.SITE) as SiteModel
                 val activityId = requireNotNull(requireActivity().intent.extras).getString(
-                        KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY
+                    KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY
                 ) as String
                 site to activityId
             }
@@ -130,19 +135,19 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
             val intent = Intent()
             val (backupDownloadCreated, ids, actionType) = when (state) {
                 is BackupDownloadCanceled -> Triple(
-                        false,
-                        null,
-                        JetpackBackupDownloadActionState.CANCEL
+                    false,
+                    null,
+                    JetpackBackupDownloadActionState.CANCEL
                 )
                 is BackupDownloadInProgress -> Triple(
-                        true,
-                        Pair(state.rewindId, state.downloadId),
-                        JetpackBackupDownloadActionState.PROGRESS
+                    true,
+                    Pair(state.rewindId, state.downloadId),
+                    JetpackBackupDownloadActionState.PROGRESS
                 )
                 is BackupDownloadCompleted -> Triple(
-                        true,
-                        Pair(state.rewindId, state.downloadId),
-                        JetpackBackupDownloadActionState.COMPLETE
+                    true,
+                    Pair(state.rewindId, state.downloadId),
+                    JetpackBackupDownloadActionState.COMPLETE
                 )
             }
             intent.putExtra(KEY_BACKUP_DOWNLOAD_REWIND_ID, ids?.first)
@@ -172,16 +177,16 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
     private fun SnackbarMessageHolder.showSnackbar() {
         activity?.findViewById<View>(R.id.coordinator_layout)?.let { coordinator ->
             val snackbar = WPSnackbar.make(
-                    coordinator,
-                    uiHelpers.getTextOfUiString(requireContext(), this.message),
-                    Snackbar.LENGTH_LONG
+                coordinator,
+                uiHelpers.getTextOfUiString(requireContext(), this.message),
+                Snackbar.LENGTH_LONG
             )
             if (this.buttonTitle != null) {
                 snackbar.setAction(
-                        uiHelpers.getTextOfUiString(
-                                requireContext(),
-                                this.buttonTitle
-                        )
+                    uiHelpers.getTextOfUiString(
+                        requireContext(),
+                        this.buttonTitle
+                    )
                 ) {
                     this.buttonAction.invoke()
                 }

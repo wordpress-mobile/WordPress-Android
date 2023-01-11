@@ -22,8 +22,11 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class SubfilterListItemMapperTest {
-    @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
-    @Mock lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
+    @Mock
+    lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+
+    @Mock
+    lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
 
     private lateinit var listItemMapper: SubfilterListItemMapper
     private val jsonTester = JsonParser()
@@ -32,11 +35,11 @@ class SubfilterListItemMapperTest {
     private val feed: ReaderBlog = ReaderBlog.fromJson(JSONObject(SITE_JSON_WITH_FEED_ID))
 
     private val tag = ReaderTag(
-            "news",
-            "",
-            "",
-            "",
-            FOLLOWED
+        "news",
+        "",
+        "",
+        "",
+        FOLLOWED
     )
 
     @Before
@@ -55,9 +58,9 @@ class SubfilterListItemMapperTest {
 
         // When
         val item = listItemMapper.fromJson(
-                json = json,
-                onClickAction = mock(),
-                isSelected = false
+            json = json,
+            onClickAction = mock(),
+            isSelected = false
         )
 
         // Then
@@ -71,9 +74,9 @@ class SubfilterListItemMapperTest {
 
         // When
         listItemMapper.fromJson(
-                json = json,
-                onClickAction = mock(),
-                isSelected = false
+            json = json,
+            onClickAction = mock(),
+            isSelected = false
         )
 
         // Then
@@ -87,9 +90,9 @@ class SubfilterListItemMapperTest {
 
         // When
         val item = listItemMapper.fromJson(
-                json = json,
-                onClickAction = mock(),
-                isSelected = false
+            json = json,
+            onClickAction = mock(),
+            isSelected = false
         )
 
         // Then
@@ -103,9 +106,9 @@ class SubfilterListItemMapperTest {
 
         // When
         val item = listItemMapper.fromJson(
-                json = json,
-                onClickAction = mock(),
-                isSelected = false
+            json = json,
+            onClickAction = mock(),
+            isSelected = false
         )
 
         // Then
@@ -119,9 +122,9 @@ class SubfilterListItemMapperTest {
 
         // When
         val item = listItemMapper.fromJson(
-                json = json,
-                onClickAction = mock(),
-                isSelected = false
+            json = json,
+            onClickAction = mock(),
+            isSelected = false
         )
 
         // Then
@@ -135,9 +138,9 @@ class SubfilterListItemMapperTest {
 
         // When
         val item = listItemMapper.fromJson(
-                json = json,
-                onClickAction = mock(),
-                isSelected = false
+            json = json,
+            onClickAction = mock(),
+            isSelected = false
         )
 
         // Then
@@ -151,9 +154,9 @@ class SubfilterListItemMapperTest {
 
         // When
         val item = listItemMapper.fromJson(
-                json = json,
-                onClickAction = mock(),
-                isSelected = false
+            json = json,
+            onClickAction = mock(),
+            isSelected = false
         )
 
         // Then
@@ -180,8 +183,8 @@ class SubfilterListItemMapperTest {
         // Given
         val blog = ReaderBlog.fromJson(JSONObject(SITE_JSON))
         val item = Site(
-                onClickAction = mock(),
-                blog = blog
+            onClickAction = mock(),
+            blog = blog
         )
 
         // When
@@ -198,8 +201,8 @@ class SubfilterListItemMapperTest {
     fun `toJson returns correct Tag JSON`() {
         // Given
         val item = Tag(
-                onClickAction = mock(),
-                tag = tag
+            onClickAction = mock(),
+            tag = tag
         )
 
         // When
@@ -216,9 +219,9 @@ class SubfilterListItemMapperTest {
         private const val SITE_ALL_JSON = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":0,\"type\":1}"
         private const val SITE_JSON = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":0,\"type\":2}"
         private const val SITE_JSON_WITH_BLOG_ID =
-                "{\"blogId\":1234,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":0,\"type\":2}"
+            "{\"blogId\":1234,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":0,\"type\":2}"
         private const val SITE_JSON_WITH_FEED_ID =
-                "{\"blogId\":0,\"feedId\":1234,\"tagSlug\":\"\",\"tagType\":0,\"type\":2}"
+            "{\"blogId\":0,\"feedId\":1234,\"tagSlug\":\"\",\"tagType\":0,\"type\":2}"
         private const val TAG_JSON = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":4}"
         private const val TAG_JSON_EMPTY_SLUG = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":1,\"type\":4}"
         private const val WRONG_TYPE_JSON = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":10}"

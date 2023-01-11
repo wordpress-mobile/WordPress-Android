@@ -30,38 +30,65 @@ import org.wordpress.android.viewmodel.ResourceProvider
 @ExperimentalCoroutinesApi
 class PhotoPickerViewModelTest : BaseUnitTest() {
     @Suppress("DEPRECATION")
-    @Mock lateinit var deviceMediaListBuilder: DeviceMediaListBuilder
-    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var uriWrapper1: UriWrapper
-    @Mock lateinit var uriWrapper2: UriWrapper
-    @Mock lateinit var permissionsHandler: PermissionsHandler
-    @Mock lateinit var context: Context
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var copyMediaToAppStorageUseCase: CopyMediaToAppStorageUseCase
-    @Mock lateinit var getMediaModelUseCase: GetMediaModelUseCase
-    @Suppress("DEPRECATION") private lateinit var viewModel: PhotoPickerViewModel
-    @Suppress("DEPRECATION") private var uiStates = mutableListOf<PhotoPickerViewModel.PhotoPickerUiState>()
+    @Mock
+    lateinit var deviceMediaListBuilder: DeviceMediaListBuilder
+
+    @Mock
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var uriWrapper1: UriWrapper
+
+    @Mock
+    lateinit var uriWrapper2: UriWrapper
+
+    @Mock
+    lateinit var permissionsHandler: PermissionsHandler
+
+    @Mock
+    lateinit var context: Context
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var copyMediaToAppStorageUseCase: CopyMediaToAppStorageUseCase
+
+    @Mock
+    lateinit var getMediaModelUseCase: GetMediaModelUseCase
+
+    @Suppress("DEPRECATION")
+    private lateinit var viewModel: PhotoPickerViewModel
+
+    @Suppress("DEPRECATION")
+    private var uiStates = mutableListOf<PhotoPickerViewModel.PhotoPickerUiState>()
     private var navigateEvents = mutableListOf<Event<UriWrapper>>()
     private val singleSelectBrowserType = MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER
     private val multiSelectBrowserType = MediaBrowserType.GUTENBERG_IMAGE_PICKER
     private val site = SiteModel()
-    @Suppress("DEPRECATION") private lateinit var firstItem: PhotoPickerItem
-    @Suppress("DEPRECATION") private lateinit var secondItem: PhotoPickerItem
+
+    @Suppress("DEPRECATION")
+    private lateinit var firstItem: PhotoPickerItem
+
+    @Suppress("DEPRECATION")
+    private lateinit var secondItem: PhotoPickerItem
 
     @Before
     @Suppress("DEPRECATION")
     fun setUp() {
         viewModel = PhotoPickerViewModel(
-                testDispatcher(),
-                testDispatcher(),
-                deviceMediaListBuilder,
-                analyticsUtilsWrapper,
-                analyticsTrackerWrapper,
-                permissionsHandler,
-                resourceProvider,
-                copyMediaToAppStorageUseCase,
-                getMediaModelUseCase
+            testDispatcher(),
+            testDispatcher(),
+            deviceMediaListBuilder,
+            analyticsUtilsWrapper,
+            analyticsTrackerWrapper,
+            permissionsHandler,
+            resourceProvider,
+            copyMediaToAppStorageUseCase,
+            getMediaModelUseCase
         )
         uiStates.clear()
         firstItem = PhotoPickerItem(1, uriWrapper1, false)
@@ -88,9 +115,9 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
 
         assertThat(uiStates).hasSize(2)
         assertDataList(
-                singleSelectBrowserType,
-                selectedItems = listOf(),
-                domainItems = listOf(firstItem, secondItem)
+            singleSelectBrowserType,
+            selectedItems = listOf(),
+            domainItems = listOf(firstItem, secondItem)
         )
         assertSingleIconMediaBottomBarVisible()
         assertActionModeHidden()
@@ -99,9 +126,9 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
 
         assertThat(uiStates).hasSize(3)
         assertDataList(
-                singleSelectBrowserType,
-                selectedItems = listOf(firstItem),
-                domainItems = listOf(firstItem, secondItem)
+            singleSelectBrowserType,
+            selectedItems = listOf(firstItem),
+            domainItems = listOf(firstItem, secondItem)
         )
         assertInsertEditBottomBarVisible()
         assertActionModeVisible(UiStringRes(R.string.photo_picker_use_photo))
@@ -122,9 +149,9 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         assertThat(uiStates).hasSize(4)
 
         assertDataList(
-                singleSelectBrowserType,
-                selectedItems = listOf(),
-                domainItems = listOf(firstItem, secondItem)
+            singleSelectBrowserType,
+            selectedItems = listOf(),
+            domainItems = listOf(firstItem, secondItem)
         )
         assertSingleIconMediaBottomBarVisible()
     }
@@ -136,23 +163,23 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         viewModel.refreshData(false)
 
         assertDataList(
-                singleSelectBrowserType,
-                selectedItems = listOf(),
-                domainItems = listOf(firstItem, secondItem)
+            singleSelectBrowserType,
+            selectedItems = listOf(),
+            domainItems = listOf(firstItem, secondItem)
         )
         selectItem(0)
 
         assertDataList(
-                singleSelectBrowserType,
-                selectedItems = listOf(firstItem),
-                domainItems = listOf(firstItem, secondItem)
+            singleSelectBrowserType,
+            selectedItems = listOf(firstItem),
+            domainItems = listOf(firstItem, secondItem)
         )
         selectItem(1)
 
         assertDataList(
-                singleSelectBrowserType,
-                selectedItems = listOf(secondItem),
-                domainItems = listOf(firstItem, secondItem)
+            singleSelectBrowserType,
+            selectedItems = listOf(secondItem),
+            domainItems = listOf(firstItem, secondItem)
         )
     }
 
@@ -164,34 +191,34 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         viewModel.refreshData(false)
 
         assertDataList(
-                multiSelectBrowserType,
-                selectedItems = listOf(),
-                domainItems = listOf(firstItem, secondItem)
+            multiSelectBrowserType,
+            selectedItems = listOf(),
+            domainItems = listOf(firstItem, secondItem)
         )
         assertSingleIconMediaBottomBarVisible()
         selectItem(1)
 
         assertDataList(
-                multiSelectBrowserType,
-                selectedItems = listOf(secondItem),
-                domainItems = listOf(firstItem, secondItem)
+            multiSelectBrowserType,
+            selectedItems = listOf(secondItem),
+            domainItems = listOf(firstItem, secondItem)
         )
         assertInsertEditBottomBarVisible()
         selectItem(0)
 
         assertDataList(
-                multiSelectBrowserType,
-                selectedItems = listOf(secondItem, firstItem),
-                domainItems = listOf(firstItem, secondItem)
+            multiSelectBrowserType,
+            selectedItems = listOf(secondItem, firstItem),
+            domainItems = listOf(firstItem, secondItem)
         )
         assertInsertEditBottomBarVisible()
 
         selectItem(1)
 
         assertDataList(
-                multiSelectBrowserType,
-                selectedItems = listOf(firstItem),
-                domainItems = listOf(firstItem, secondItem)
+            multiSelectBrowserType,
+            selectedItems = listOf(firstItem),
+            domainItems = listOf(firstItem, secondItem)
         )
         assertInsertEditBottomBarVisible()
     }
@@ -200,13 +227,13 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     fun `navigates to preview on item click`() = test {
         setupViewModel(listOf(firstItem, secondItem), singleSelectBrowserType)
         whenever(
-                analyticsUtilsWrapper.getMediaProperties(
-                        eq(firstItem.isVideo),
-                        eq(firstItem.uri),
-                        isNull()
-                )
+            analyticsUtilsWrapper.getMediaProperties(
+                eq(firstItem.isVideo),
+                eq(firstItem.uri),
+                isNull()
+            )
         ).thenReturn(
-                mutableMapOf()
+            mutableMapOf()
         )
 
         viewModel.refreshData(false)
@@ -292,17 +319,17 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     @Suppress("DEPRECATION")
     private fun selectItem(position: Int) {
         (uiStates.last().photoListUiModel as PhotoPickerViewModel.PhotoListUiModel.Data)
-                .items[position]
-                .toggleAction
-                .toggle()
+            .items[position]
+            .toggleAction
+            .toggle()
     }
 
     @Suppress("DEPRECATION")
     private fun clickItem() {
         (uiStates.last().photoListUiModel as PhotoPickerViewModel.PhotoListUiModel.Data)
-                .items[0]
-                .clickAction
-                .click()
+            .items[0]
+            .clickAction
+            .click()
     }
 
     @Suppress("DEPRECATION")
@@ -318,11 +345,11 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 domainItems.forEachIndexed { index, photoPickerItem ->
                     val isSelected = selectedItems.any { it.id == photoPickerItem.id }
                     assertSelection(
-                            position = index,
-                            isSelected = isSelected,
-                            domainItem = photoPickerItem,
-                            selectedOrder = selectedItems.indexOfFirst { it.id == photoPickerItem.id },
-                            isMultiSelection = browserType.canMultiselect()
+                        position = index,
+                        isSelected = isSelected,
+                        domainItem = photoPickerItem,
+                        selectedOrder = selectedItems.indexOfFirst { it.id == photoPickerItem.id },
+                        isMultiSelection = browserType.canMultiselect()
                     )
                 }
             }

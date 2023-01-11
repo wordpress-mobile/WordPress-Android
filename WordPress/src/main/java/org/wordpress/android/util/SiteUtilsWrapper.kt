@@ -18,7 +18,7 @@ import javax.inject.Inject
 class SiteUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isPhotonCapable(site: SiteModel): Boolean = SiteUtils.isPhotonCapable(site)
     fun getAccessibilityInfoFromSite(site: SiteModel): SiteAccessibilityInfo =
-            SiteUtils.getAccessibilityInfoFromSite(site)
+        SiteUtils.getAccessibilityInfoFromSite(site)
 
     fun isAccessedViaWPComRest(site: SiteModel): Boolean = SiteUtils.isAccessedViaWPComRest(site)
     fun onFreePlan(site: SiteModel): Boolean = SiteUtils.onFreePlan(site)

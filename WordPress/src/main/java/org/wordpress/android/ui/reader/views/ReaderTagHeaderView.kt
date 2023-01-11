@@ -20,7 +20,8 @@ class ReaderTagHeaderView @JvmOverloads constructor(
 ) : RelativeLayout(context, attrs, defStyleAttr) {
     private val binding = ReaderTagHeaderViewBinding.inflate(LayoutInflater.from(context), this, true)
 
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var uiHelpers: UiHelpers
 
     private var onFollowBtnClicked: (() -> Unit)? = null
 

@@ -21,9 +21,14 @@ private const val SUBTYPE = "subtype"
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsTrackerTest {
-    @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
-    @Mock lateinit var cardsShownTracker: CardsShownTracker
-    @Mock lateinit var quickStartTracker: QuickStartTracker
+    @Mock
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var cardsShownTracker: CardsShownTracker
+
+    @Mock
+    lateinit var quickStartTracker: QuickStartTracker
     private lateinit var cardsTracker: CardsTracker
 
     @Before
@@ -119,8 +124,8 @@ class CardsTrackerTest {
         subtypeValue: String
     ) {
         verify(analyticsTracker).track(
-                Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
-                mapOf(TYPE to typeValue.label, SUBTYPE to subtypeValue)
+            Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
+            mapOf(TYPE to typeValue.label, SUBTYPE to subtypeValue)
         )
     }
 
@@ -129,8 +134,8 @@ class CardsTrackerTest {
         subtypeValue: String
     ) {
         verify(analyticsTracker).track(
-                Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED,
-                mapOf(TYPE to typeValue.label, SUBTYPE to subtypeValue)
+            Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED,
+            mapOf(TYPE to typeValue.label, SUBTYPE to subtypeValue)
         )
     }
 
@@ -138,8 +143,8 @@ class CardsTrackerTest {
         subtypeValue: String
     ) {
         verify(quickStartTracker).track(
-                Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED,
-                mapOf(TYPE to Type.QUICK_START.label, SUBTYPE to subtypeValue)
+            Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED,
+            mapOf(TYPE to Type.QUICK_START.label, SUBTYPE to subtypeValue)
         )
     }
 }

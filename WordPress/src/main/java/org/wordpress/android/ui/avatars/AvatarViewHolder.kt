@@ -14,8 +14,8 @@ class AvatarViewHolder(
 ) : TrainOfAvatarsViewHolder<AvatarItemBinding>(parent.viewBinding(AvatarItemBinding::inflate)) {
     fun bind(avatarDetails: AvatarItem) = with(binding) {
         val likerAvatarUrl = GravatarUtils.fixGravatarUrl(
-                avatarDetails.userAvatarUrl,
-                itemView.context.resources.getDimensionPixelSize(AVATAR_SIZE_DIMEN)
+            avatarDetails.userAvatarUrl,
+            itemView.context.resources.getDimensionPixelSize(AVATAR_SIZE_DIMEN)
         )
 
         this.avatar.setOnClickListener(null)

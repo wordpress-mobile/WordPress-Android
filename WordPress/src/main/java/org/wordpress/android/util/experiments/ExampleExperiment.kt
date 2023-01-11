@@ -6,6 +6,6 @@ class ExampleExperiment
 @Inject constructor(
     exPlat: ExPlat
 ) : Experiment(
-        "example_experiment",
-        exPlat
+    "example_experiment",
+    exPlat
 )

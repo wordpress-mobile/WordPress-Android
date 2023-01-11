@@ -13,12 +13,12 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
-import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Calendar
 import java.util.Date
@@ -75,18 +75,18 @@ class AnnualSiteStatsUseCase(
                 items.addAll(annualStatsMapper.mapYearInBlock(domainModel.years.last()))
                 if (domainModel.years.size > VISIBLE_ITEMS) {
                     items.add(
-                            Link(
-                                    text = R.string.stats_insights_view_more,
-                                    navigateAction = ListItemInteraction.create(this::onViewMoreClicked)
-                            )
+                        Link(
+                            text = R.string.stats_insights_view_more,
+                            navigateAction = ListItemInteraction.create(this::onViewMoreClicked)
+                        )
                     )
                 }
             }
             UseCaseMode.VIEW_ALL -> {
                 items.addAll(
-                        annualStatsMapper.mapYearInViewAll(
-                                domainModel.years.getOrNull(index) ?: domainModel.years.last()
-                        )
+                    annualStatsMapper.mapYearInViewAll(
+                        domainModel.years.getOrNull(index) ?: domainModel.years.last()
+                    )
                 )
             }
             UseCaseMode.BLOCK_DETAIL -> Unit // Do nothing
@@ -125,16 +125,16 @@ class AnnualSiteStatsUseCase(
         private val popupMenuHandler: ItemPopupMenuHandler
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
-                AnnualSiteStatsUseCase(
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        mostPopularStore,
-                        statsSiteProvider,
-                        selectedDateProvider,
-                        annualStatsMapper,
-                        localeManagerWrapper,
-                        popupMenuHandler,
-                        useCaseMode
-                )
+            AnnualSiteStatsUseCase(
+                mainDispatcher,
+                backgroundDispatcher,
+                mostPopularStore,
+                statsSiteProvider,
+                selectedDateProvider,
+                annualStatsMapper,
+                localeManagerWrapper,
+                popupMenuHandler,
+                useCaseMode
+            )
     }
 }

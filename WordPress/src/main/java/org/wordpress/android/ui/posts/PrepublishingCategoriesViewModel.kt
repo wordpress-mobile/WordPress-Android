@@ -102,10 +102,10 @@ class PrepublishingCategoriesViewModel @Inject constructor(
 
         val siteCategories = getSiteCategories()
         _uiState.value = UiState(
-                categoriesListItemUiState = buildListOfCategoriesItemUiState(
-                        siteCategories = siteCategories,
-                        selectedCategoryIds = selectedIds
-                ), progressVisibility = addCategoryRequest != null
+            categoriesListItemUiState = buildListOfCategoriesItemUiState(
+                siteCategories = siteCategories,
+                selectedCategoryIds = selectedIds
+            ), progressVisibility = addCategoryRequest != null
         )
     }
 
@@ -125,7 +125,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     private fun updateCategories() {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarEvents.postValue(
-                    Event(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
+                Event(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
             )
             return
         }
@@ -156,16 +156,16 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     private fun getSelectedIds(): List<Long> {
         val uiState = uiState.value as UiState
         return uiState.categoriesListItemUiState.toMutableList()
-                .filter { x -> x.checked }
-                .map { id -> id.categoryNode.categoryId }
-                .toList()
+            .filter { x -> x.checked }
+            .map { id -> id.categoryNode.categoryId }
+            .toList()
     }
 
     private fun getSiteCategories() =
-            getCategoriesUseCase.getSiteCategories(siteModel)
+        getCategoriesUseCase.getSiteCategories(siteModel)
 
     private fun getPostCategories() =
-            getCategoriesUseCase.getPostCategories(editPostRepository)
+        getCategoriesUseCase.getPostCategories(editPostRepository)
 
     private fun hasChanges(): Boolean {
         val postCategories = getPostCategories()
@@ -189,8 +189,8 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     fun onAddCategoryClick() {
         val bundle = Bundle().apply {
             putSerializable(
-                    PrepublishingCategoriesFragment.SELECTED_CATEGORY_IDS,
-                    getSelectedIds().toLongArray()
+                PrepublishingCategoriesFragment.SELECTED_CATEGORY_IDS,
+                getSelectedIds().toLongArray()
             )
         }
         _navigateToAddCategoryScreen.postValue(bundle)
@@ -210,17 +210,17 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         if (!isError) {
             val currentState = uiState.value as UiState
             val selectedIds = currentState.categoriesListItemUiState.toMutableList()
-                    .filter { x -> x.checked }
-                    .map { id -> id.categoryNode.categoryId }
-                    .toMutableList()
+                .filter { x -> x.checked }
+                .map { id -> id.categoryNode.categoryId }
+                .toMutableList()
             selectedIds.add(event.term.remoteTermId)
             val categoryLevels = getSiteCategories()
             val recreatedListItemUiState = buildListOfCategoriesItemUiState(
-                    categoryLevels,
-                    selectedIds
+                categoryLevels,
+                selectedIds
             )
             _uiState.value = uiState.value?.copy(
-                    categoriesListItemUiState = recreatedListItemUiState, progressVisibility = false
+                categoriesListItemUiState = recreatedListItemUiState, progressVisibility = false
             )
         } else {
             _uiState.value = uiState.value?.copy(progressVisibility = false)
@@ -246,7 +246,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         val currentUiState = uiState.value as UiState
         val newListItemUiState = currentUiState.categoriesListItemUiState.toMutableList()
         newListItemUiState[position] = currentUiState.categoriesListItemUiState[position].copy(
-                checked = checked, onItemTapped = { onCategoryToggled(position, !checked) }
+            checked = checked, onItemTapped = { onCategoryToggled(position, !checked) }
         )
         return newListItemUiState
     }
@@ -258,11 +258,11 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         val items: ArrayList<PrepublishingCategoriesListItemUiState> = arrayListOf()
         siteCategories.forEachIndexed { index, categoryNode ->
             val itemUiState =
-                    buildCategoriesListItemUiState(
-                            categoryNode,
-                            selectedCategoryIds.contains(categoryNode.categoryId),
-                            index
-                    )
+                buildCategoriesListItemUiState(
+                    categoryNode,
+                    selectedCategoryIds.contains(categoryNode.categoryId),
+                    index
+                )
             items.add(itemUiState)
         }
 
@@ -274,11 +274,11 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         checked: Boolean,
         index: Int
     ): PrepublishingCategoriesListItemUiState =
-            PrepublishingCategoriesListItemUiState(
-                    categoryNode = categoryNode,
-                    checked = checked,
-                    onItemTapped = { onCategoryToggled(index, !checked) }
-            )
+        PrepublishingCategoriesListItemUiState(
+            categoryNode = categoryNode,
+            checked = checked,
+            onItemTapped = { onCategoryToggled(index, !checked) }
+        )
 
     data class UiState(
         val addCategoryActionButtonVisibility: Boolean = true,

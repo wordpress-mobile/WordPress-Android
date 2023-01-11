@@ -52,28 +52,28 @@ class MySiteCardAndItemTest {
         showIconFocusPoint: Boolean = false
     ): SiteInfoHeaderCard {
         return SiteInfoHeaderCard(
-                title = "test",
-                url = "url",
-                iconState = Visible(null),
-                showTitleFocusPoint = showTitleFocusPoint,
-                showSubtitleFocusPoint = showSubtitleFocusPoint,
-                showIconFocusPoint = showIconFocusPoint,
-                onTitleClick = null,
-                onIconClick = interaction,
-                onUrlClick = interaction,
-                onSwitchSiteClick = interaction
+            title = "test",
+            url = "url",
+            iconState = Visible(null),
+            showTitleFocusPoint = showTitleFocusPoint,
+            showSubtitleFocusPoint = showSubtitleFocusPoint,
+            showIconFocusPoint = showIconFocusPoint,
+            onTitleClick = null,
+            onIconClick = interaction,
+            onUrlClick = interaction,
+            onSwitchSiteClick = interaction
         )
     }
 
     @Test
     fun `quick actions card is never active`() {
         val quickActionsCard = QuickActionsCard(
-                title = UiStringText("test"),
-                onStatsClick = interaction,
-                onPagesClick = interaction,
-                onPostsClick = interaction,
-                onMediaClick = interaction,
-                showPages = true
+            title = UiStringText("test"),
+            onStatsClick = interaction,
+            onPagesClick = interaction,
+            onPostsClick = interaction,
+            onMediaClick = interaction,
+            showPages = true
         )
 
         assertThat(quickActionsCard.activeQuickStartItem).isFalse
@@ -89,12 +89,12 @@ class MySiteCardAndItemTest {
     @Test
     fun `quick start card is never active`() {
         val quickStartCard = QuickStartDynamicCard(
-                GROW_QUICK_START,
-                UiStringText("title"),
-                listOf(),
-                color.pink_40,
-                0,
-                interaction
+            GROW_QUICK_START,
+            UiStringText("title"),
+            listOf(),
+            color.pink_40,
+            0,
+            interaction
         )
 
         assertThat(quickStartCard.activeQuickStartItem).isFalse()
@@ -122,11 +122,11 @@ class MySiteCardAndItemTest {
     }
 
     private fun initListItem(showFocusPoint: Boolean) = ListItem(
-            primaryIcon = drawable.ic_dropdown_primary_30_24dp,
-            primaryText = UiStringText("title"),
-            secondaryIcon = null,
-            secondaryText = null,
-            showFocusPoint = showFocusPoint,
-            onClick = interaction
+        primaryIcon = drawable.ic_dropdown_primary_30_24dp,
+        primaryText = UiStringText("title"),
+        secondaryIcon = null,
+        secondaryText = null,
+        showFocusPoint = showFocusPoint,
+        onClick = interaction
     )
 }

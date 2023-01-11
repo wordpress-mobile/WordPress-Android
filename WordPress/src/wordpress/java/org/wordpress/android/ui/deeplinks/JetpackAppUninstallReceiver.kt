@@ -11,13 +11,14 @@ import org.wordpress.android.util.AppLog.T.UTILS
 
 @AndroidEntryPoint
 class JetpackAppUninstallReceiver : BroadcastReceiver() {
-    @Inject lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
+    @Inject
+    lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
 
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
             ACTION_PACKAGE_FULLY_REMOVED -> {
                 onJetpackUninstalled()
-                AppLog.i(UTILS,"JetpackAppUninstallReceiver ACTION_PACKAGE_FULLY_REMOVED handled")
+                AppLog.i(UTILS, "JetpackAppUninstallReceiver ACTION_PACKAGE_FULLY_REMOVED handled")
             }
         }
     }

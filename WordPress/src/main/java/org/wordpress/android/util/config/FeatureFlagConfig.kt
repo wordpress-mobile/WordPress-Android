@@ -56,8 +56,8 @@ class FeatureFlagConfig
             }
             defaultValue?.let {
                 featureFlagStore.insertFeatureFlagValue(
-                        remoteField.key,
-                        defaultValue
+                    remoteField.key,
+                    defaultValue
                 )
             }
         }
@@ -72,18 +72,18 @@ class FeatureFlagConfig
 
     private suspend fun fetchRemoteFlags() {
         val response = featureFlagStore.fetchFeatureFlags(
-                buildNumber = BuildConfig.VERSION_CODE.toString(),
-                deviceId = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null)
-                        ?: generateAndStoreUUID(),
-                identifier = BuildConfig.APPLICATION_ID,
-                marketingVersion = BuildConfig.VERSION_NAME,
-                platform = FEATURE_FLAG_PLATFORM_PARAMETER
+            buildNumber = BuildConfig.VERSION_CODE.toString(),
+            deviceId = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null)
+                ?: generateAndStoreUUID(),
+            identifier = BuildConfig.APPLICATION_ID,
+            marketingVersion = BuildConfig.VERSION_NAME,
+            platform = FEATURE_FLAG_PLATFORM_PARAMETER
         )
         response.featureFlags?.let { configValues ->
             AppLog.e(UTILS, "Feature flag values synced")
             AnalyticsTracker.track(
-                    Stat.FEATURE_FLAGS_SYNCED_STATE,
-                    configValues
+                Stat.FEATURE_FLAGS_SYNCED_STATE,
+                configValues
             )
         }
         if (response.isError) {
@@ -110,8 +110,8 @@ class FeatureFlagConfig
             if (defaultValue != null) {
                 appScope.launch {
                     featureFlagStore.insertFeatureFlagValue(
-                            remoteField,
-                            defaultValue
+                        remoteField,
+                        defaultValue
                     )
                     flags = featureFlagStore.getFeatureFlags()
                 }
@@ -119,8 +119,8 @@ class FeatureFlagConfig
             } else {
                 appScope.launch {
                     featureFlagStore.insertFeatureFlagValue(
-                            remoteField,
-                            buildConfigValue
+                        remoteField,
+                        buildConfigValue
                     )
                     flags = featureFlagStore.getFeatureFlags()
                 }

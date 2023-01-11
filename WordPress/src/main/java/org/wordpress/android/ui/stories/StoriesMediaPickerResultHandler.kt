@@ -36,21 +36,21 @@ class StoriesMediaPickerResultHandler
         }
         when (val navigationAction = buildNavigationAction(data, selectedSite, source)) {
             is AddNewStory -> ActivityLauncher.addNewStoryForResult(
-                    activity,
-                    navigationAction.site,
-                    navigationAction.source
+                activity,
+                navigationAction.site,
+                navigationAction.source
             )
             is AddNewStoryWithMediaIds -> ActivityLauncher.addNewStoryWithMediaIdsForResult(
-                    activity,
-                    navigationAction.site,
-                    navigationAction.source,
-                    navigationAction.mediaIds.toLongArray()
+                activity,
+                navigationAction.site,
+                navigationAction.source,
+                navigationAction.mediaIds.toLongArray()
             )
             is AddNewStoryWithMediaUris -> ActivityLauncher.addNewStoryWithMediaUrisForResult(
-                    activity,
-                    navigationAction.site,
-                    navigationAction.source,
-                    navigationAction.mediaUris.toTypedArray()
+                activity,
+                navigationAction.site,
+                navigationAction.source,
+                navigationAction.mediaUris.toTypedArray()
             )
             else -> {
                 return false
@@ -87,21 +87,21 @@ class StoriesMediaPickerResultHandler
                 return AddNewStoryWithMediaIds(selectedSite, source, mediaIds)
             } else {
                 val mediaUriStringsArray = data.getStringArrayExtra(
-                        MediaPickerConstants.EXTRA_MEDIA_URIS
+                    MediaPickerConstants.EXTRA_MEDIA_URIS
                 )
                 if (mediaUriStringsArray.isNullOrEmpty()) {
                     AppLog.e(
-                            UTILS,
-                            "Can't resolve picked or captured image"
+                        UTILS,
+                        "Can't resolve picked or captured image"
                     )
                     return null
                 }
                 val mediaUris = mediaUriStringsArray.asList()
                 return AddNewStoryWithMediaUris(
-                                        selectedSite,
-                                        source,
-                                        mediaUris = mediaUris
-                                )
+                    selectedSite,
+                    source,
+                    mediaUris = mediaUris
+                )
             }
         }
         return null

@@ -57,7 +57,7 @@ sealed class DomainsDashboardItem(val type: Type) {
         companion object {
             fun fromItemId(itemId: Int): Action {
                 return values().firstOrNull { it.itemId == itemId }
-                        ?: throw IllegalArgumentException("Unexpected item ID in context menu")
+                    ?: throw IllegalArgumentException("Unexpected item ID in context menu")
             }
         }
     }

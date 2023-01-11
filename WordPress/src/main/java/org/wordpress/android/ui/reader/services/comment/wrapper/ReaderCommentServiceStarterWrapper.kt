@@ -8,9 +8,9 @@ import javax.inject.Inject
 @Reusable
 class ReaderCommentServiceStarterWrapper @Inject constructor() {
     fun startServiceForCommentSnippet(context: Context?, blogId: Long, postId: Long) =
-            ReaderCommentService.startServiceForCommentSnippet(
-                    context,
-                    blogId,
-                    postId
-            )
+        ReaderCommentService.startServiceForCommentSnippet(
+            context,
+            blogId,
+            postId
+        )
 }

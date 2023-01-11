@@ -68,7 +68,7 @@ class LocalMigrationResultTest {
     fun `Should invoke handleError function if Failure on orElse`() {
         val error = LocalMigrationError.ProviderError.NullValueFromQuery(Sites)
         val handleError: (LocalMigrationError) -> LocalMigrationResult<LocalContentEntityData, LocalMigrationError> =
-                spy { LocalMigrationResult.EmptyResult }
+            spy { LocalMigrationResult.EmptyResult }
         Failure(error).orElse(handleError)
         verify(handleError).invoke(error)
     }

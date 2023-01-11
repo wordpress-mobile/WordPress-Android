@@ -10,8 +10,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsI
 import org.wordpress.android.util.image.ImageManager
 
 class TabsViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_tabs_item
+    parent,
+    R.layout.stats_block_tabs_item
 ) {
     private val tabLayout = itemView.findViewById<TabLayout>(id.tab_layout)
 

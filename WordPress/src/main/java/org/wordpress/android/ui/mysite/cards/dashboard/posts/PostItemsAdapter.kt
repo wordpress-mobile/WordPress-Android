@@ -14,9 +14,9 @@ class PostItemsAdapter(
 ) : Adapter<PostItemViewHolder>() {
     private val items = mutableListOf<PostItem>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = PostItemViewHolder(
-            parent,
-            imageManager,
-            uiHelpers
+        parent,
+        imageManager,
+        uiHelpers
     )
 
     override fun getItemCount(): Int = items.size

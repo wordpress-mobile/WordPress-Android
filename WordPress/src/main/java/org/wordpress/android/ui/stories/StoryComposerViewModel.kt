@@ -11,7 +11,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
-import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
@@ -33,6 +32,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 class StoryComposerViewModel @Inject constructor(
@@ -111,8 +111,8 @@ class StoryComposerViewModel @Inject constructor(
 
     private fun setupPostEditorAnalyticsSession(postEditorAnalyticsSession: PostEditorAnalyticsSession?) {
         this.postEditorAnalyticsSession = postEditorAnalyticsSession ?: createPostEditorAnalyticsSessionTracker(
-                editPostRepository.getPost(),
-                site
+            editPostRepository.getPost(),
+            site
         )
     }
 
@@ -121,8 +121,8 @@ class StoryComposerViewModel @Inject constructor(
         site: SiteModel?
     ): PostEditorAnalyticsSession {
         return postEditorAnalyticsSessionWrapper.getNewPostEditorAnalyticsSession(
-                PostEditorAnalyticsSession.Editor.WP_STORIES_CREATOR,
-                post, site, true
+            PostEditorAnalyticsSession.Editor.WP_STORIES_CREATOR,
+            post, site, true
         )
     }
 

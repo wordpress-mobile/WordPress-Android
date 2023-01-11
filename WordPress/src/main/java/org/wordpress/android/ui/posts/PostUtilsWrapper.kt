@@ -20,35 +20,35 @@ class PostUtilsWrapper @Inject constructor(private val dateProvider: DateProvide
     fun isPublishable(post: PostImmutableModel) = PostUtils.isPublishable(post)
 
     fun isPostInConflictWithRemote(post: PostImmutableModel) =
-            PostUtils.isPostInConflictWithRemote(post)
+        PostUtils.isPostInConflictWithRemote(post)
 
     fun isPostCurrentlyBeingEdited(post: PostImmutableModel) =
-            PostUtils.isPostCurrentlyBeingEdited(post)
+        PostUtils.isPostCurrentlyBeingEdited(post)
 
     fun shouldPublishImmediately(postStatus: PostStatus, dateCreated: String) =
-            PostUtils.shouldPublishImmediately(postStatus, dateCreated)
+        PostUtils.shouldPublishImmediately(postStatus, dateCreated)
 
     fun postHasEdits(oldPost: PostImmutableModel?, newPost: PostImmutableModel) =
-            PostUtils.postHasEdits(oldPost, newPost)
+        PostUtils.postHasEdits(oldPost, newPost)
 
     fun isMediaInGutenbergPostBody(postContent: String, localMediaId: String) =
-            PostUtils.isMediaInGutenbergPostBody(postContent, localMediaId)
+        PostUtils.isMediaInGutenbergPostBody(postContent, localMediaId)
 
     fun contentContainsGutenbergBlocks(postContent: String): Boolean =
-            PostUtils.contentContainsGutenbergBlocks(postContent)
+        PostUtils.contentContainsGutenbergBlocks(postContent)
 
     fun trackSavePostAnalytics(post: PostImmutableModel?, site: SiteModel) =
-            PostUtils.trackSavePostAnalytics(post, site)
+        PostUtils.trackSavePostAnalytics(post, site)
 
     fun preparePostForPublish(post: PostModel, site: SiteModel) =
-            PostUtils.preparePostForPublish(post, site)
+        PostUtils.preparePostForPublish(post, site)
 
     fun isPublishDateInTheFuture(dateCreated: String) =
-            PostUtils.isPublishDateInTheFuture(dateCreated, dateProvider.getCurrentDate())
+        PostUtils.isPublishDateInTheFuture(dateCreated, dateProvider.getCurrentDate())
 
     fun isPublishDateInThePast(dateCreated: String) =
-            PostUtils.isPublishDateInThePast(dateCreated, dateProvider.getCurrentDate())
+        PostUtils.isPublishDateInThePast(dateCreated, dateProvider.getCurrentDate())
 
     fun shouldPublishImmediatelyOptionBeAvailable(status: PostStatus?) =
-            PostUtils.shouldPublishImmediatelyOptionBeAvailable(status)
+        PostUtils.shouldPublishImmediatelyOptionBeAvailable(status)
 }

@@ -18,17 +18,17 @@ fun SecondaryButton(
     enabled: Boolean = true
 ) {
     Button(
-            onClick = onClick,
-            enabled = enabled,
-            elevation = ButtonDefaults.elevation(0.dp),
-            colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.background,
-                    disabledBackgroundColor = MaterialTheme.colors.background,
-            ),
-            modifier = modifier.padding(
-                    vertical = Margin.Small.value,
-                    horizontal = Margin.ExtraExtraMediumLarge.value,
-            )
+        onClick = onClick,
+        enabled = enabled,
+        elevation = ButtonDefaults.elevation(0.dp),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.background,
+            disabledBackgroundColor = MaterialTheme.colors.background,
+        ),
+        modifier = modifier.padding(
+            vertical = Margin.Small.value,
+            horizontal = Margin.ExtraExtraMediumLarge.value,
+        )
     ) {
         Text(text = text)
     }

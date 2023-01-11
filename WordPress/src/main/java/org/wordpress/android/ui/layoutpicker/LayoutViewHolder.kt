@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ModalLayoutPickerLayoutsCardBinding
 import org.wordpress.android.networking.MShot
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageManager.RequestListener
-import org.wordpress.android.util.extensions.setVisible
 
 /**
  * Renders the Layout card
@@ -25,14 +25,14 @@ class LayoutViewHolder(
         imageManager: ImageManager
     ) {
         imageManager.loadWithResultListener(binding.preview, MShot(uiState.mShotPreview),
-                object : RequestListener<Drawable> {
-                    override fun onLoadFailed(e: Exception?, model: Any?) {
-                    }
+            object : RequestListener<Drawable> {
+                override fun onLoadFailed(e: Exception?, model: Any?) {
+                }
 
-                    override fun onResourceReady(resource: Drawable, model: Any?) {
-                        uiState.onThumbnailReady.invoke()
-                    }
-                })
+                override fun onResourceReady(resource: Drawable, model: Any?) {
+                    uiState.onThumbnailReady.invoke()
+                }
+            })
 
         binding.selectedOverlay.setVisible(uiState.selectedOverlayVisible)
         binding.preview.updateLayoutParams {
@@ -55,9 +55,9 @@ class LayoutViewHolder(
     companion object {
         fun from(parent: ViewGroup, thumbDimensionProvider: ThumbDimensionProvider): LayoutViewHolder {
             val binding = ModalLayoutPickerLayoutsCardBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
+                LayoutInflater.from(parent.context),
+                parent,
+                false
             )
             return LayoutViewHolder(parent, binding, thumbDimensionProvider)
         }

@@ -9,6 +9,7 @@ class WPMediaUtilsWrapper
     fun fetchMedia(mediaUri: Uri): Uri? {
         return WPMediaUtils.fetchMedia(context, mediaUri)
     }
+
     fun fetchMediaToUriWrapper(mediaUri: UriWrapper): UriWrapper? {
         return WPMediaUtils.fetchMedia(context, mediaUri.uri)?.let { UriWrapper(it) }
     }

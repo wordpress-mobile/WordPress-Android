@@ -19,22 +19,22 @@ class GetPostsForTagWithCountUseCase @Inject constructor(
         maxRows: Int = 0,
         excludeTextColumns: Boolean = true
     ): Pair<ReaderPostList, Int> =
-            withContext(ioDispatcher) {
-                val postsForTagFromLocalDeferred = async {
-                    readerPostTableWrapper.getPostsWithTag(
-                            readerTag,
-                            maxRows,
-                            excludeTextColumns
-                    )
-                }
-
-                val totalPostsForTagFromLocalDeferred = async {
-                    readerPostTableWrapper.getNumPostsWithTag(readerTag)
-                }
-
-                val readerPostList = postsForTagFromLocalDeferred.await()
-                val totalEntriesForTag = totalPostsForTagFromLocalDeferred.await()
-
-                Pair(readerPostList, totalEntriesForTag)
+        withContext(ioDispatcher) {
+            val postsForTagFromLocalDeferred = async {
+                readerPostTableWrapper.getPostsWithTag(
+                    readerTag,
+                    maxRows,
+                    excludeTextColumns
+                )
             }
+
+            val totalPostsForTagFromLocalDeferred = async {
+                readerPostTableWrapper.getNumPostsWithTag(readerTag)
+            }
+
+            val readerPostList = postsForTagFromLocalDeferred.await()
+            val totalEntriesForTag = totalPostsForTagFromLocalDeferred.await()
+
+            Pair(readerPostList, totalEntriesForTag)
+        }
 }

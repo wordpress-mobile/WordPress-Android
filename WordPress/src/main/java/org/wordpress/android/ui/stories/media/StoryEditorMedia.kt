@@ -60,8 +60,8 @@ class StoryEditorMedia @Inject constructor(
         if (mediaUtilsWrapper.shouldAdvertiseImageOptimization()) {
             editorMediaListener.advertiseImageOptimization {
                 addNewMediaItemsToEditorAsync(
-                        uriList,
-                        false
+                    uriList,
+                    false
                 )
             }
         } else {
@@ -77,12 +77,12 @@ class StoryEditorMedia @Inject constructor(
                 AddingSingleMediaToStory
             }
             val allMediaSucceed = addLocalMediaToPostUseCase.addNewMediaToEditorAsync(
-                    uriList,
-                    site,
-                    freshlyTaken,
-                    editorMediaListener,
-                    false // don't start upload for StoryComposer, that'll be all started
-                                            // when finished composing
+                uriList,
+                site,
+                freshlyTaken,
+                editorMediaListener,
+                false // don't start upload for StoryComposer, that'll be all started
+                // when finished composing
             )
             if (!allMediaSucceed) {
                 _snackBarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.gallery_error)))
@@ -104,10 +104,10 @@ class StoryEditorMedia @Inject constructor(
     fun addExistingMediaToEditorAsync(source: AddExistingMediaSource, mediaIdList: List<Long>) {
         launch {
             addExistingMediaToPostUseCase.addMediaExistingInRemoteToEditorAsync(
-                    site,
-                    source,
-                    mediaIdList,
-                    editorMediaListener
+                site,
+                source,
+                mediaIdList,
+                editorMediaListener
             )
         }
     }
@@ -126,12 +126,12 @@ class StoryEditorMedia @Inject constructor(
          * before all items were added
          */
         object AddingMultipleMediaToStory : AddMediaToStoryPostUiState(
-                editorOverlayVisibility = true,
-                progressDialogUiState = VisibleProgressDialog(
-                        messageString = UiStringRes(R.string.add_media_progress),
-                        cancelable = false,
-                        indeterminate = true
-                )
+            editorOverlayVisibility = true,
+            progressDialogUiState = VisibleProgressDialog(
+                messageString = UiStringRes(R.string.add_media_progress),
+                cancelable = false,
+                indeterminate = true
+            )
         )
 
         object AddingSingleMediaToStory : AddMediaToStoryPostUiState(true, HiddenProgressDialog)

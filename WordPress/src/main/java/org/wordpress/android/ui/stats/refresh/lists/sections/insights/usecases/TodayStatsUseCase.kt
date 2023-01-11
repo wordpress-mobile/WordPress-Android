@@ -50,7 +50,7 @@ class TodayStatsUseCase
     }
 
     private fun VisitsModel.hasData() =
-            this.comments > 0 || this.views > 0 || this.likes > 0 || this.visitors > 0
+        this.comments > 0 || this.views > 0 || this.likes > 0 || this.visitors > 0
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_today_stats))
 
@@ -70,16 +70,16 @@ class TodayStatsUseCase
             items.add(Empty())
         } else {
             items.add(
-                    QuickScanItem(
-                            Column(R.string.stats_views, statsUtils.toFormattedString(domainModel.views)),
-                            Column(R.string.stats_visitors, statsUtils.toFormattedString(domainModel.visitors))
-                    )
+                QuickScanItem(
+                    Column(R.string.stats_views, statsUtils.toFormattedString(domainModel.views)),
+                    Column(R.string.stats_visitors, statsUtils.toFormattedString(domainModel.visitors))
+                )
             )
             items.add(
-                    QuickScanItem(
-                            Column(R.string.stats_likes, statsUtils.toFormattedString(domainModel.likes)),
-                            Column(R.string.stats_comments, statsUtils.toFormattedString(domainModel.comments))
-                    )
+                QuickScanItem(
+                    Column(R.string.stats_likes, statsUtils.toFormattedString(domainModel.likes)),
+                    Column(R.string.stats_comments, statsUtils.toFormattedString(domainModel.comments))
+                )
             )
         }
         return items

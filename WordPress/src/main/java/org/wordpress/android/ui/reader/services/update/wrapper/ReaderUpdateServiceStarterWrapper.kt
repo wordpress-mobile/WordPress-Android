@@ -10,5 +10,5 @@ import javax.inject.Inject
 @Reusable
 class ReaderUpdateServiceStarterWrapper @Inject constructor() {
     fun startService(context: Context, tasks: EnumSet<ReaderUpdateLogic.UpdateTask>) =
-            ReaderUpdateServiceStarter.startService(context, tasks)
+        ReaderUpdateServiceStarter.startService(context, tasks)
 }

@@ -34,14 +34,29 @@ import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
 class StorePostViewModelTest : BaseUnitTest() {
-    @Mock lateinit var siteStore: SiteStore
-    @Mock lateinit var postUtils: PostUtilsWrapper
-    @Mock lateinit var uploadService: UploadServiceFacade
-    @Mock lateinit var postRepository: EditPostRepository
-    @Mock lateinit var savePostToDbUseCase: SavePostToDbUseCase
-    @Mock lateinit var networkUtils: NetworkUtilsWrapper
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var context: Context
+    @Mock
+    lateinit var siteStore: SiteStore
+
+    @Mock
+    lateinit var postUtils: PostUtilsWrapper
+
+    @Mock
+    lateinit var uploadService: UploadServiceFacade
+
+    @Mock
+    lateinit var postRepository: EditPostRepository
+
+    @Mock
+    lateinit var savePostToDbUseCase: SavePostToDbUseCase
+
+    @Mock
+    lateinit var networkUtils: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var dispatcher: Dispatcher
+
+    @Mock
+    lateinit var context: Context
 
     private lateinit var viewModel: StorePostViewModel
     private val title = "title"
@@ -57,13 +72,13 @@ class StorePostViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = StorePostViewModel(
-                testDispatcher(),
-                siteStore,
-                postUtils,
-                uploadService,
-                savePostToDbUseCase,
-                networkUtils,
-                dispatcher
+            testDispatcher(),
+            siteStore,
+            postUtils,
+            uploadService,
+            savePostToDbUseCase,
+            networkUtils,
+            dispatcher
         )
         postModel.setId(postId)
         postModel.setTitle(title)
@@ -110,11 +125,11 @@ class StorePostViewModelTest : BaseUnitTest() {
         var postUpdated = false
 
         viewModel.updatePostObjectWithUIAsync(
-                postRepository,
-                getUpdatedTitleAndContent = { PostFields(title, content) },
-                onCompleted = { _, _ ->
-                    postUpdated = true
-                })
+            postRepository,
+            getUpdatedTitleAndContent = { PostFields(title, content) },
+            onCompleted = { _, _ ->
+                postUpdated = true
+            })
 
         verify(postRepository).updateAsync(any(), any())
 
@@ -127,11 +142,11 @@ class StorePostViewModelTest : BaseUnitTest() {
         var postUpdated = false
 
         viewModel.updatePostObjectWithUIAsync(
-                postRepository,
-                getUpdatedTitleAndContent = { PostFields(title, content) },
-                onCompleted = { _, _ ->
-                    postUpdated = true
-                })
+            postRepository,
+            getUpdatedTitleAndContent = { PostFields(title, content) },
+            onCompleted = { _, _ ->
+                postUpdated = true
+            })
 
         verify(postRepository).updateAsync(any(), any())
         assertThat(postUpdated).isFalse()
@@ -143,15 +158,15 @@ class StorePostViewModelTest : BaseUnitTest() {
         var postUpdated = false
 
         viewModel.updatePostObjectWithUIAsync(
-                postRepository,
-                getUpdatedTitleAndContent = {
-                    UpdateFromEditor.Failed(
-                            RuntimeException("Not found")
-                    )
-                },
-                onCompleted = { _, _ ->
-                    postUpdated = true
-                })
+            postRepository,
+            getUpdatedTitleAndContent = {
+                UpdateFromEditor.Failed(
+                    RuntimeException("Not found")
+                )
+            },
+            onCompleted = { _, _ ->
+                postUpdated = true
+            })
 
         assertThat(postUpdated).isFalse()
     }
@@ -163,16 +178,16 @@ class StorePostViewModelTest : BaseUnitTest() {
         var postUpdated = false
 
         viewModel.updatePostObjectWithUIAsync(
-                postRepository,
-                getUpdatedTitleAndContent = {
-                    PostFields(
-                            updatedTitle,
-                            content
-                    )
-                },
-                onCompleted = { _, _ ->
-                    postUpdated = true
-                })
+            postRepository,
+            getUpdatedTitleAndContent = {
+                PostFields(
+                    updatedTitle,
+                    content
+                )
+            },
+            onCompleted = { _, _ ->
+                postUpdated = true
+            })
 
         assertThat(postUpdated).isTrue()
         assertThat(postModel.title).isEqualTo(updatedTitle)
@@ -186,16 +201,16 @@ class StorePostViewModelTest : BaseUnitTest() {
         var postUpdated = false
 
         viewModel.updatePostObjectWithUIAsync(
-                postRepository,
-                getUpdatedTitleAndContent = {
-                    PostFields(
-                            title,
-                            updatedContent
-                    )
-                },
-                onCompleted = { _, _ ->
-                    postUpdated = true
-                })
+            postRepository,
+            getUpdatedTitleAndContent = {
+                PostFields(
+                    title,
+                    updatedContent
+                )
+            },
+            onCompleted = { _, _ ->
+                postUpdated = true
+            })
 
         assertThat(postUpdated).isTrue()
         assertThat(postModel.content).isEqualTo(updatedContent)
@@ -207,10 +222,10 @@ class StorePostViewModelTest : BaseUnitTest() {
         whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
 
         val result = viewModel.savePostOnline(
-                true,
-                context,
-                postRepository,
-                site
+            true,
+            context,
+            postRepository,
+            site
         )
 
         verify(savePostToDbUseCase).savePostToDb(postRepository, site)
@@ -225,10 +240,10 @@ class StorePostViewModelTest : BaseUnitTest() {
 
         val isFirstTimePublish = true
         val result = viewModel.savePostOnline(
-                isFirstTimePublish,
-                context,
-                postRepository,
-                site
+            isFirstTimePublish,
+            context,
+            postRepository,
+            site
         )
 
         verify(savePostToDbUseCase).savePostToDb(postRepository, site)

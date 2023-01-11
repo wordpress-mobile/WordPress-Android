@@ -25,23 +25,23 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         val listener = Listener { jsonObject ->
             val result = canFollowComments(blogId, jsonObject)
             AppLog.d(
-                    T.READER,
-                    "getCanFollowComments > Succeeded [blogId=$blogId - result = $result]"
+                T.READER,
+                "getCanFollowComments > Succeeded [blogId=$blogId - result = $result]"
             )
             cont.resume(result is Success)
         }
         val errorListener = ErrorListener { volleyError ->
             AppLog.d(
-                    T.READER,
-                    "getCanFollowComments > Failed [blogId=$blogId - volleyError = $volleyError]"
+                T.READER,
+                "getCanFollowComments > Failed [blogId=$blogId - volleyError = $volleyError]"
             )
             cont.resume(false)
         }
 
         WordPress.getRestClientUtilsV1_1().get(
-                endPointPath,
-                listener,
-                errorListener
+            endPointPath,
+            listener,
+            errorListener
         )
     }
 
@@ -54,8 +54,8 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         val listener = Listener { jsonObject ->
             val result = getFollowingStateResult(jsonObject)
             AppLog.d(
-                    T.READER,
-                    "getMySubscriptionToPost > Succeeded [blogId=$blogId - postId=$postId - result = $result]"
+                T.READER,
+                "getMySubscriptionToPost > Succeeded [blogId=$blogId - postId=$postId - result = $result]"
             )
             cont.resume(result)
         }
@@ -65,9 +65,9 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         }
 
         WordPress.getRestClientUtilsV1_1().get(
-                endPointPath,
-                listener,
-                errorListener
+            endPointPath,
+            listener,
+            errorListener
         )
     }
 
@@ -77,8 +77,8 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         val listener = Listener { jsonObject ->
             val result = wasSubscribed(jsonObject)
             AppLog.d(
-                    T.READER,
-                    "subscribeMeToPost > Succeeded [blogId=$blogId - postId=$postId - result = $result]"
+                T.READER,
+                "subscribeMeToPost > Succeeded [blogId=$blogId - postId=$postId - result = $result]"
             )
             cont.resume(result)
         }
@@ -88,9 +88,9 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         }
 
         WordPress.getRestClientUtilsV1_1().post(
-                endPointPath,
-                listener,
-                errorListener
+            endPointPath,
+            listener,
+            errorListener
         )
     }
 
@@ -103,8 +103,8 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         val listener = Listener { jsonObject ->
             val result = wasUnsubscribed(jsonObject)
             AppLog.d(
-                    T.READER,
-                    "unsubscribeMeFromPost > Succeeded [blogId=$blogId - postId=$postId - result = $result]"
+                T.READER,
+                "unsubscribeMeFromPost > Succeeded [blogId=$blogId - postId=$postId - result = $result]"
             )
             cont.resume(result)
         }
@@ -114,9 +114,9 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         }
 
         WordPress.getRestClientUtilsV1_1().post(
-                endPointPath,
-                listener,
-                errorListener
+            endPointPath,
+            listener,
+            errorListener
         )
     }
 
@@ -134,8 +134,8 @@ class PostSubscribersApiCallsProvider @Inject constructor(
                 wasUnsubscribedFromPushNotifications(jsonObject)
             }
             AppLog.d(
-                    T.READER,
-                    "managePushNotificationsForPost > Succeeded [blogId=$blogId - postId=$postId - result = $result]"
+                T.READER,
+                "managePushNotificationsForPost > Succeeded [blogId=$blogId - postId=$postId - result = $result]"
             )
             cont.resume(result)
         }
@@ -148,11 +148,11 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         params["receive_notifications"] = if (activate) "true" else "false"
 
         WordPress.getRestClientUtilsV1_1().post(
-                endPointPath,
-                params,
-                null,
-                listener,
-                errorListener
+            endPointPath,
+            params,
+            null,
+            listener,
+            errorListener
         )
     }
 
@@ -165,15 +165,15 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         val error = VolleyUtils.errStringFromVolleyError(volleyError)
         return if (error.isNullOrEmpty()) {
             AppLog.d(
-                    T.READER,
-                    "$functionName > Failed with empty string " +
-                            "[blogId=$blogId - postId=$postId - volleyError = $volleyError]"
+                T.READER,
+                "$functionName > Failed with empty string " +
+                        "[blogId=$blogId - postId=$postId - volleyError = $volleyError]"
             )
             contextProvider.getContext().getString(R.string.reader_follow_comments_get_status_error)
         } else {
             AppLog.d(
-                    T.READER,
-                    "$functionName > Failed [blogId=$blogId - postId=$postId - error = $error]"
+                T.READER,
+                "$functionName > Failed [blogId=$blogId - postId=$postId - error = $error]"
             )
             error
         }
@@ -182,10 +182,11 @@ class PostSubscribersApiCallsProvider @Inject constructor(
     private fun getFollowingStateResult(json: JSONObject?): PostSubscribersCallResult {
         return json?.let {
             if (it.has(KEY_I_SUBSCRIBE) &&
-                    (it.has(KEY_RECEIVES_NOTIFICATIONS))) {
+                (it.has(KEY_RECEIVES_NOTIFICATIONS))
+            ) {
                 Success(
-                        isFollowing = it.optBoolean(KEY_I_SUBSCRIBE, false),
-                        isReceivingNotifications = it.optBoolean(KEY_RECEIVES_NOTIFICATIONS, false)
+                    isFollowing = it.optBoolean(KEY_I_SUBSCRIBE, false),
+                    isReceivingNotifications = it.optBoolean(KEY_RECEIVES_NOTIFICATIONS, false)
                 )
             } else {
                 Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
@@ -213,9 +214,11 @@ class PostSubscribersApiCallsProvider @Inject constructor(
                 if (subscribed) {
                     Success(isFollowing = true, isReceivingNotifications = receivingNotifications)
                 } else {
-                    Failure(contextProvider.getContext().getString(
+                    Failure(
+                        contextProvider.getContext().getString(
                             R.string.reader_follow_comments_could_not_subscribe_error
-                    ))
+                        )
+                    )
                 }
             } else {
                 Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
@@ -233,9 +236,11 @@ class PostSubscribersApiCallsProvider @Inject constructor(
                 if (!subscribed) {
                     Success(isFollowing = false, isReceivingNotifications = receivingNotifications)
                 } else {
-                    Failure(contextProvider.getContext().getString(
+                    Failure(
+                        contextProvider.getContext().getString(
                             R.string.reader_follow_comments_could_not_unsubscribe_error
-                    ))
+                        )
+                    )
                 }
             } else {
                 Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
@@ -252,9 +257,11 @@ class PostSubscribersApiCallsProvider @Inject constructor(
                 if (receivingNotifications) {
                     Success(isFollowing = subscribed, isReceivingNotifications = receivingNotifications)
                 } else {
-                    Failure(contextProvider.getContext().getString(
+                    Failure(
+                        contextProvider.getContext().getString(
                             R.string.reader_follow_comments_could_not_unsubscribe_error
-                    ))
+                        )
+                    )
                 }
             } else {
                 Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
@@ -271,9 +278,11 @@ class PostSubscribersApiCallsProvider @Inject constructor(
                 if (!receivingNotifications) {
                     Success(isFollowing = subscribed, isReceivingNotifications = receivingNotifications)
                 } else {
-                    Failure(contextProvider.getContext().getString(
+                    Failure(
+                        contextProvider.getContext().getString(
                             R.string.reader_follow_comments_could_not_unsubscribe_error
-                    ))
+                        )
+                    )
                 }
             } else {
                 Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
@@ -286,6 +295,7 @@ class PostSubscribersApiCallsProvider @Inject constructor(
             val isFollowing: Boolean,
             val isReceivingNotifications: Boolean
         ) : PostSubscribersCallResult()
+
         data class Failure(val error: String) : PostSubscribersCallResult()
     }
 

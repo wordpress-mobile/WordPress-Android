@@ -60,14 +60,14 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
     private val localPostsHelper: LocalPostsHelper = mock()
     private val eligibilityHelper: EligibilityHelper = mock()
     private val classToTest = LocalMigrationOrchestrator(
-            sharedLoginAnalyticsTracker,
-            migrationAnalyticsTracker,
-            userFlagsHelper,
-            readerSavedPostsHelper,
-            sharedLoginHelper,
-            sitesMigrationHelper,
-            localPostsHelper,
-            eligibilityHelper,
+        sharedLoginAnalyticsTracker,
+        migrationAnalyticsTracker,
+        userFlagsHelper,
+        readerSavedPostsHelper,
+        sharedLoginHelper,
+        sitesMigrationHelper,
+        localPostsHelper,
+        eligibilityHelper,
     )
     private val avatarUrl = "avatarUrl"
     private val sites = listOf(SiteModel(), SiteModel())
@@ -100,7 +100,7 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
     @Test
     fun `Should emit Ineligible state when eligibilityHelper validate returns LocalDraftContentIsPresent`() {
         whenever(eligibilityHelper.validate())
-                .thenReturn(Failure(LocalMigrationError.Ineligibility(LocalDraftContentIsPresent)))
+            .thenReturn(Failure(LocalMigrationError.Ineligibility(LocalDraftContentIsPresent)))
         val mutableStateFlow: MutableStateFlow<LocalMigrationState> = MutableStateFlow(Initial)
         classToTest.tryLocalMigration(mutableStateFlow)
         val expected = Ineligible
@@ -111,7 +111,7 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
     @Test
     fun `Should trackContentMigrationFailed when eligibilityHelper validate returns LocalDraftContentIsPresent`() {
         whenever(eligibilityHelper.validate())
-                .thenReturn(Failure(LocalMigrationError.Ineligibility(LocalDraftContentIsPresent)))
+            .thenReturn(Failure(LocalMigrationError.Ineligibility(LocalDraftContentIsPresent)))
         val mutableStateFlow: MutableStateFlow<LocalMigrationState> = MutableStateFlow(Initial)
         classToTest.tryLocalMigration(mutableStateFlow)
         migrationAnalyticsTracker.trackContentMigrationFailed(LocalDraftContent)
@@ -209,7 +209,7 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
         whenever(sitesMigrationHelper.migrateSites()).thenReturn(Success(SitesData(sites)))
         whenever(userFlagsHelper.migrateUserFlags()).thenReturn(Success(UserFlagsData(mapOf(), listOf(), listOf())))
         whenever(readerSavedPostsHelper.migrateReaderSavedPosts())
-                .thenReturn(Success(ReaderPostsData(ReaderPostList())))
+            .thenReturn(Success(ReaderPostsData(ReaderPostList())))
         whenever(localPostsHelper.migratePosts()).thenReturn(Success(PostData(PostModel())))
     }
 

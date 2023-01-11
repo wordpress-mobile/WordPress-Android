@@ -66,33 +66,33 @@ class ScanHistoryListViewModel @Inject constructor(
         parentViewModel: ScanHistoryViewModel,
         tabType: ScanHistoryTabType
     ) = parentViewModel.threats
-            .map { threatList -> filterByTabType(threatList, tabType) }
-            .map { threatList -> mapToThreatUiStateList(threatList) }
-            .map { threatItemStateList -> addDateHeaders(threatItemStateList) }
-            .map { threatUiStateList ->
-                if (threatUiStateList.isEmpty()) {
-                    EmptyHistory
-                } else {
-                    ContentUiState(threatUiStateList)
-                }
+        .map { threatList -> filterByTabType(threatList, tabType) }
+        .map { threatList -> mapToThreatUiStateList(threatList) }
+        .map { threatItemStateList -> addDateHeaders(threatItemStateList) }
+        .map { threatUiStateList ->
+            if (threatUiStateList.isEmpty()) {
+                EmptyHistory
+            } else {
+                ContentUiState(threatUiStateList)
             }
+        }
 
     private fun filterByTabType(threatList: List<ThreatModel>, tabType: ScanHistoryTabType) =
-            threatList.filter { mapTabTypeToThreatStatuses(tabType).contains(it.baseThreatModel.status) }
+        threatList.filter { mapTabTypeToThreatStatuses(tabType).contains(it.baseThreatModel.status) }
 
     private fun mapToThreatUiStateList(threatList: List<ThreatModel>) =
-            threatList.map { model ->
-                scanThreatItemBuilder.buildThreatItem(model, this::onItemClicked)
-            }
+        threatList.map { model ->
+            scanThreatItemBuilder.buildThreatItem(model, this::onItemClicked)
+        }
 
     private fun addDateHeaders(threatItemList: List<ThreatItemState>) =
-            threatItemList.groupBy { threatItem -> threatItem.firstDetectedDate }
-                    .flatMap { entry ->
-                        val uiStateList = mutableListOf<ScanListItemState>()
-                        uiStateList.add(ThreatDateItemState(entry.key))
-                        uiStateList.addAll(entry.value)
-                        uiStateList
-                    }
+        threatItemList.groupBy { threatItem -> threatItem.firstDetectedDate }
+            .flatMap { entry ->
+                val uiStateList = mutableListOf<ScanListItemState>()
+                uiStateList.add(ThreatDateItemState(entry.key))
+                uiStateList.addAll(entry.value)
+                uiStateList
+            }
 
     private fun onItemClicked(threatId: Long) {
         launch {
@@ -102,11 +102,11 @@ class ScanHistoryListViewModel @Inject constructor(
     }
 
     private fun mapTabTypeToThreatStatuses(tabType: ScanHistoryTabType): List<ThreatStatus> =
-            when (tabType) {
-                ALL -> listOf(ThreatStatus.FIXED, ThreatStatus.IGNORED)
-                FIXED -> listOf(ThreatStatus.FIXED)
-                IGNORED -> listOf(ThreatStatus.IGNORED)
-            }
+        when (tabType) {
+            ALL -> listOf(ThreatStatus.FIXED, ThreatStatus.IGNORED)
+            FIXED -> listOf(ThreatStatus.FIXED)
+            IGNORED -> listOf(ThreatStatus.IGNORED)
+        }
 
     sealed class ScanHistoryUiState(
         open val emptyVisibility: Boolean = false,
@@ -115,7 +115,9 @@ class ScanHistoryListViewModel @Inject constructor(
         sealed class EmptyUiState : ScanHistoryUiState(emptyVisibility = true) {
             object EmptyHistory : EmptyUiState() {
                 val label: UiString = UiStringRes(R.string.scan_history_no_threats_found)
-                @DrawableRes val img: Int = R.drawable.img_illustration_empty_results_216dp
+
+                @DrawableRes
+                val img: Int = R.drawable.img_illustration_empty_results_216dp
             }
         }
 

@@ -29,8 +29,11 @@ import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
 class ConversationNotificationsViewModelTest : BaseUnitTest() {
-    @Mock lateinit var followCommentsHandler: ReaderFollowCommentsHandler
-    @Mock lateinit var readerPostTableWrapper: ReaderPostTableWrapper
+    @Mock
+    lateinit var followCommentsHandler: ReaderFollowCommentsHandler
+
+    @Mock
+    lateinit var readerPostTableWrapper: ReaderPostTableWrapper
 
     private lateinit var viewModel: ConversationNotificationsViewModel
     private val blogId = 100L
@@ -51,9 +54,9 @@ class ConversationNotificationsViewModelTest : BaseUnitTest() {
         whenever(readerPostTableWrapper.getBlogPost(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(internalPost)
 
         viewModel = ConversationNotificationsViewModel(
-                followCommentsHandler,
-                readerPostTableWrapper,
-                testDispatcher()
+            followCommentsHandler,
+            readerPostTableWrapper,
+            testDispatcher()
         )
     }
 
@@ -101,11 +104,11 @@ class ConversationNotificationsViewModelTest : BaseUnitTest() {
             stateChanged = FollowStateChanged(blogId, postId, true, false)
             followStatusUpdate.postValue(stateChanged)
         }.whenever(followCommentsHandler).handleFollowCommentsClicked(
-                eq(blogId),
-                eq(postId),
-                eq(true),
-                eq(READER_THREADED_COMMENTS),
-                anyOrNull()
+            eq(blogId),
+            eq(postId),
+            eq(true),
+            eq(READER_THREADED_COMMENTS),
+            anyOrNull()
         )
 
         setupObserversAndStart()
@@ -133,11 +136,11 @@ class ConversationNotificationsViewModelTest : BaseUnitTest() {
             stateChanged = FollowStateChanged(blogId, postId, false, false)
             followStatusUpdate.postValue(stateChanged)
         }.whenever(followCommentsHandler).handleFollowCommentsClicked(
-                blogId,
-                postId,
-                false,
-                READER_THREADED_COMMENTS,
-                null
+            blogId,
+            postId,
+            false,
+            READER_THREADED_COMMENTS,
+            null
         )
 
         setupObserversAndStart()
@@ -165,11 +168,11 @@ class ConversationNotificationsViewModelTest : BaseUnitTest() {
             stateChanged = FollowStateChanged(blogId, postId, true, true)
             followStatusUpdate.postValue(stateChanged)
         }.whenever(followCommentsHandler).handleEnableByPushNotificationsClicked(
-                blogId,
-                postId,
-                true,
-                READER_THREADED_COMMENTS,
-                null
+            blogId,
+            postId,
+            true,
+            READER_THREADED_COMMENTS,
+            null
         )
 
         setupObserversAndStart()

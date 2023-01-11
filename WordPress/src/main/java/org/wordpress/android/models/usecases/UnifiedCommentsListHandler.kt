@@ -26,27 +26,27 @@ class UnifiedCommentsListHandler @Inject constructor(
     fun subscribe() = useCases.map { it.subscribe() }.merge()
 
     suspend fun requestPage(parameters: GetPageParameters) = paginateCommentsUseCase.manageAction(
-            OnGetPage(parameters)
+        OnGetPage(parameters)
     )
 
     suspend fun moderateComments(parameters: ModerateCommentsParameters) = batchModerationUseCase.manageAction(
-            OnModerateComments(parameters)
+        OnModerateComments(parameters)
     )
 
     suspend fun preModerateWithUndo(parameters: ModerateCommentParameters) = moderationWithUndoUseCase.manageAction(
-            OnModerateComment(parameters)
+        OnModerateComment(parameters)
     )
 
     suspend fun moderateAfterUndo(parameters: ModerateWithFallbackParameters) = moderationWithUndoUseCase.manageAction(
-            OnPushComment(parameters)
+        OnPushComment(parameters)
     )
 
     suspend fun undoCommentModeration(parameters: ModerateWithFallbackParameters) =
-            moderationWithUndoUseCase.manageAction(
-                    OnUndoModerateComment(parameters)
-            )
+        moderationWithUndoUseCase.manageAction(
+            OnUndoModerateComment(parameters)
+        )
 
     suspend fun refreshFromCache(parameters: ReloadFromCacheParameters) = paginateCommentsUseCase.manageAction(
-            OnReloadFromCache(parameters)
+        OnReloadFromCache(parameters)
     )
 }

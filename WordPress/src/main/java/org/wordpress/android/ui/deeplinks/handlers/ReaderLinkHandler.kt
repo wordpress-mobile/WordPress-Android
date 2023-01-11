@@ -17,7 +17,6 @@ import org.wordpress.android.ui.utils.IntentUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
-import java.lang.StringBuilder
 import javax.inject.Inject
 
 class ReaderLinkHandler
@@ -38,8 +37,8 @@ class ReaderLinkHandler
      */
     override fun shouldHandleUrl(uri: UriWrapper): Boolean {
         return DEEP_LINK_HOST_READ == uri.host || DEEP_LINK_HOST_VIEWPOST == uri.host || intentUtils.canResolveWith(
-                ReaderConstants.ACTION_VIEW_POST,
-                uri
+            ReaderConstants.ACTION_VIEW_POST,
+            uri
         )
     }
 
@@ -111,7 +110,8 @@ class ReaderLinkHandler
     private fun stripHost(uri: UriWrapper): String {
         val domains = uri.host?.split(".") ?: listOf()
         return if (domains.size >= CUSTOM_DOMAIN_POSITION &&
-                domains[domains.size - CUSTOM_DOMAIN_POSITION] != "www") {
+            domains[domains.size - CUSTOM_DOMAIN_POSITION] != "www"
+        ) {
             "$SITE_DOMAIN.$HOST_WORDPRESS_COM"
         } else {
             uri.host ?: HOST_WORDPRESS_COM

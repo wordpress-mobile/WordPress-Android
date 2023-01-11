@@ -25,7 +25,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Heade
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
-import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
@@ -35,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 import javax.inject.Inject
@@ -53,13 +53,13 @@ class ClicksUseCase constructor(
     private val statsUtils: StatsUtils,
     private val useCaseMode: UseCaseMode
 ) : GranularStatefulUseCase<ClicksModel, SelectedClicksGroup>(
-        CLICKS,
-        mainDispatcher,
-        backgroundDispatcher,
-        statsSiteProvider,
-        selectedDateProvider,
-        statsGranularity,
-        SelectedClicksGroup()
+    CLICKS,
+    mainDispatcher,
+    backgroundDispatcher,
+    statsSiteProvider,
+    selectedDateProvider,
+    statsGranularity,
+    SelectedClicksGroup()
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
@@ -67,20 +67,20 @@ class ClicksUseCase constructor(
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): ClicksModel? {
         return store.getClicks(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate
         )
     }
 
     override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<ClicksModel> {
         val response = store.fetchClicks(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate,
-                forced
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate,
+            forced
         )
         val model = response.model
         val error = response.error
@@ -107,16 +107,16 @@ class ClicksUseCase constructor(
             domainModel.groups.forEachIndexed { index, group ->
                 val groupName = group.name
                 val contentDescription = contentDescriptionHelper.buildContentDescription(
-                        header,
-                        groupName ?: "",
-                        group.views ?: 0
+                    header,
+                    groupName ?: "",
+                    group.views ?: 0
                 )
                 val headerItem = ListItemWithIcon(
-                        text = groupName,
-                        value = statsUtils.toFormattedString(group.views),
-                        showDivider = index < domainModel.groups.size - 1,
-                        navigationAction = group.url?.let { create(it, this::onItemClick) },
-                        contentDescription = contentDescription
+                    text = groupName,
+                    value = statsUtils.toFormattedString(group.views),
+                    showDivider = index < domainModel.groups.size - 1,
+                    navigationAction = group.url?.let { create(it, this::onItemClick) },
+                    contentDescription = contentDescription
                 )
                 if (group.clicks.isEmpty()) {
                     items.add(headerItem)
@@ -128,16 +128,16 @@ class ClicksUseCase constructor(
                     if (isExpanded) {
                         items.addAll(group.clicks.map { click ->
                             ListItemWithIcon(
-                                    text = click.name,
-                                    textStyle = LIGHT,
-                                    value = statsUtils.toFormattedString(click.views),
-                                    showDivider = false,
-                                    navigationAction = click.url?.let { create(it, this::onItemClick) },
-                                    contentDescription = contentDescriptionHelper.buildContentDescription(
-                                            header,
-                                            click.name,
-                                            click.views
-                                    )
+                                text = click.name,
+                                textStyle = LIGHT,
+                                value = statsUtils.toFormattedString(click.views),
+                                showDivider = false,
+                                navigationAction = click.url?.let { create(it, this::onItemClick) },
+                                contentDescription = contentDescriptionHelper.buildContentDescription(
+                                    header,
+                                    click.name,
+                                    click.views
+                                )
                             )
                         })
                         items.add(Divider)
@@ -147,10 +147,10 @@ class ClicksUseCase constructor(
 
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
-                        Link(
-                                text = R.string.stats_insights_view_more,
-                                navigateAction = create(statsGranularity, this::onViewMoreClick)
-                        )
+                    Link(
+                        text = R.string.stats_insights_view_more,
+                        navigateAction = create(statsGranularity, this::onViewMoreClick)
+                    )
                 )
             }
         }
@@ -160,10 +160,10 @@ class ClicksUseCase constructor(
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_CLICKS_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(
-                ViewClicks(
-                        statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
-                )
+            ViewClicks(
+                statsGranularity,
+                selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+            )
         )
     }
 
@@ -186,17 +186,17 @@ class ClicksUseCase constructor(
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
-                ClicksUseCase(
-                        granularity,
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        store,
-                        statsSiteProvider,
-                        selectedDateProvider,
-                        analyticsTracker,
-                        contentDescriptionHelper,
-                        statsUtils,
-                        useCaseMode
-                )
+            ClicksUseCase(
+                granularity,
+                mainDispatcher,
+                backgroundDispatcher,
+                store,
+                statsSiteProvider,
+                selectedDateProvider,
+                analyticsTracker,
+                contentDescriptionHelper,
+                statsUtils,
+                useCaseMode
+            )
     }
 }

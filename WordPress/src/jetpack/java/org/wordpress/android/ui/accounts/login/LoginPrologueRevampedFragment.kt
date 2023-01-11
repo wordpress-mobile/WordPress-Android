@@ -50,8 +50,8 @@ class LoginPrologueRevampedFragment : Fragment() {
             AppTheme {
                 PositionProvider {
                     LoginScreenRevamped(
-                            onWpComLoginClicked = loginPrologueListener::showEmailLoginScreen,
-                            onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
+                        onWpComLoginClicked = loginPrologueListener::showEmailLoginScreen,
+                        onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
                     )
                 }
             }
@@ -117,16 +117,16 @@ private fun LoginScreenRevamped(
         LoopingTextWithBackground()
         TopLinearGradient()
         JetpackLogo(
-                modifier = Modifier
-                        .padding(top = 60.dp)
-                        .size(60.dp)
-                        .align(Alignment.TopCenter)
+            modifier = Modifier
+                .padding(top = 60.dp)
+                .size(60.dp)
+                .align(Alignment.TopCenter)
         )
         ColumnWithFrostedGlassBackground(
-                blurRadius = 30.dp,
-                backgroundColor = colorResource(R.color.bg_jetpack_login_splash_bottom_panel),
-                borderColor = colorResource(R.color.border_top_jetpack_login_splash_bottom_panel),
-                background = { clipModifier, blurModifier -> LoopingTextWithBackground(clipModifier, blurModifier) }
+            blurRadius = 30.dp,
+            backgroundColor = colorResource(R.color.bg_jetpack_login_splash_bottom_panel),
+            borderColor = colorResource(R.color.border_top_jetpack_login_splash_bottom_panel),
+            background = { clipModifier, blurModifier -> LoopingTextWithBackground(clipModifier, blurModifier) }
         ) {
             PrimaryButton(onClick = onWpComLoginClicked)
             SecondaryButton(onClick = onSiteAddressLoginClicked)
@@ -140,8 +140,8 @@ private fun LoginScreenRevamped(
 fun PreviewLoginScreenRevamped() {
     AppTheme {
         LoginScreenRevamped(
-                onWpComLoginClicked = {},
-                onSiteAddressLoginClicked = {}
+            onWpComLoginClicked = {},
+            onSiteAddressLoginClicked = {}
         )
     }
 }

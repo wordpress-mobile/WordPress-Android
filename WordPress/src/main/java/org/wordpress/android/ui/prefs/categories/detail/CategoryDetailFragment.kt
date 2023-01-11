@@ -37,11 +37,15 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     private val viewModel: CategoryDetailViewModel by viewModels()
-    @Inject lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
     private lateinit var categoryAdapter: ParentCategorySpinnerAdapter
 
     private var spinnerTouched: Boolean = false
-    @Suppress("DEPRECATION") private var progressDialog: ProgressDialog? = null
+
+    @Suppress("DEPRECATION")
+    private var progressDialog: ProgressDialog? = null
 
     private var isInEditMode: Boolean = false
 
@@ -67,7 +71,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
 
     private fun getCategoryId(savedInstanceState: Bundle?): Long? {
         val categoryId = savedInstanceState?.getLong(ActivityLauncher.CATEGORY_DETAIL_ID)
-                ?: requireActivity().intent.getLongExtra(ActivityLauncher.CATEGORY_DETAIL_ID, 0L)
+            ?: requireActivity().intent.getLongExtra(ActivityLauncher.CATEGORY_DETAIL_ID, 0L)
         if (categoryId == 0L)
             return null
         isInEditMode = true
@@ -76,9 +80,9 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
 
     private fun CategoryDetailFragmentBinding.initAdapter() {
         categoryAdapter = ParentCategorySpinnerAdapter(
-                activity,
-                R.layout.categories_row_parent,
-                arrayListOf<CategoryNode>()
+            activity,
+            R.layout.categories_row_parent,
+            arrayListOf<CategoryNode>()
         )
         parentCategory.adapter = categoryAdapter
     }
@@ -217,12 +221,14 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     }
 
     private fun confirmDeleteCategory() {
-        val message = String.format(getString(R.string.dlg_confirm_delete_category),
-                viewModel.existingCategory!!.name)
+        val message = String.format(
+            getString(R.string.dlg_confirm_delete_category),
+            viewModel.existingCategory!!.name
+        )
         val dialogBuilder: Builder = MaterialAlertDialogBuilder(requireActivity())
         dialogBuilder.setMessage(message)
         dialogBuilder.setPositiveButton(
-                resources.getText(R.string.delete_yes)
+            resources.getText(R.string.delete_yes)
         ) { _: DialogInterface?, _: Int ->
             viewModel.deleteCategory()
         }
@@ -234,8 +240,8 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     private fun showToast(uiString: UiString) {
         val message = uiHelpers.getTextOfUiString(requireContext(), uiString).toString()
         ToastUtils.showToast(
-                requireContext(), message,
-                SHORT
+            requireContext(), message,
+            SHORT
         )
     }
 }

@@ -19,35 +19,35 @@ class CardsBuilder @Inject constructor(
     fun build(
         dashboardCardsBuilderParams: DashboardCardsBuilderParams
     ): DashboardCards = DashboardCards(
-            cards = mutableListOf<DashboardCard>().apply {
-                if (dashboardCardsBuilderParams.showErrorCard) {
-                    add(createErrorCard(dashboardCardsBuilderParams.onErrorRetryClick))
-                } else {
-                    var bloggingPromptCardAdded = false
-                    bloggingPromptCardBuilder.build(dashboardCardsBuilderParams.bloggingPromptCardBuilderParams)
-                            ?.let {
-                                bloggingPromptCardAdded = true
-                                add(it)
-                            }
-                    todaysStatsCardBuilder.build(dashboardCardsBuilderParams.todaysStatsCardBuilderParams)
-                            ?.let { add(it) }
-
-                    // if blogging prompt card is visible and the post card is "Write first/next post" we only show
-                    // blogging prompt, since they are very similar
-                    val postCards = postCardBuilder.build(dashboardCardsBuilderParams.postCardBuilderParams)
-                    val hasNextPostPrompt = postCards.find {
-                        it.dashboardCardType == POST_CARD_WITHOUT_POST_ITEMS
-                    } != null
-                    val showPostCards = !hasNextPostPrompt || !bloggingPromptCardAdded
-
-                    if (showPostCards) {
-                        addAll(postCards)
+        cards = mutableListOf<DashboardCard>().apply {
+            if (dashboardCardsBuilderParams.showErrorCard) {
+                add(createErrorCard(dashboardCardsBuilderParams.onErrorRetryClick))
+            } else {
+                var bloggingPromptCardAdded = false
+                bloggingPromptCardBuilder.build(dashboardCardsBuilderParams.bloggingPromptCardBuilderParams)
+                    ?.let {
+                        bloggingPromptCardAdded = true
+                        add(it)
                     }
+                todaysStatsCardBuilder.build(dashboardCardsBuilderParams.todaysStatsCardBuilderParams)
+                    ?.let { add(it) }
+
+                // if blogging prompt card is visible and the post card is "Write first/next post" we only show
+                // blogging prompt, since they are very similar
+                val postCards = postCardBuilder.build(dashboardCardsBuilderParams.postCardBuilderParams)
+                val hasNextPostPrompt = postCards.find {
+                    it.dashboardCardType == POST_CARD_WITHOUT_POST_ITEMS
+                } != null
+                val showPostCards = !hasNextPostPrompt || !bloggingPromptCardAdded
+
+                if (showPostCards) {
+                    addAll(postCards)
                 }
-            }.toList()
+            }
+        }.toList()
     )
 
     private fun createErrorCard(onErrorRetryClick: () -> Unit) = ErrorCard(
-            onRetryClick = ListItemInteraction.create(onErrorRetryClick)
+        onRetryClick = ListItemInteraction.create(onErrorRetryClick)
     )
 }

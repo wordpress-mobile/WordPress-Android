@@ -34,9 +34,9 @@ class LocalPostProviderHelperTest {
 
     // Object under test
     private val localPostProviderHelper = LocalPostProviderHelper(
-            postStore,
-            dbWrapper,
-            siteProviderHelper,
+        postStore,
+        dbWrapper,
+        siteProviderHelper,
     )
 
     @Before
@@ -48,9 +48,11 @@ class LocalPostProviderHelperTest {
         whenever(siteProviderHelper.getData()).thenReturn(SitesData(sites = listOf(mockSiteModel)))
         whenever(mockSiteModel.id).thenReturn(mockSiteId)
         whenever(dbWrapper.giveMeReadableDb()).thenReturn(mockDb)
-        whenever(mockDb.query(
+        whenever(
+            mockDb.query(
                 anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
-        )).thenReturn(mockCursor)
+            )
+        ).thenReturn(mockCursor)
         whenever(mockCursor.moveToNext()).thenReturn(true, true, false)
         whenever(mockCursor.getInt(0)).thenReturn(mockPostId, mockPostId2)
     }

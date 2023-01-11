@@ -17,18 +17,25 @@ import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
 class StorageUtilsViewModelTest : BaseUnitTest() {
-    @Mock lateinit var storageUtilsProvider: StorageUtilsProvider
-    @Mock lateinit var checkStorageWarningObserver: Observer<Event<Unit>>
-    @Mock lateinit var fm: FragmentManager
-    @Mock lateinit var source: Source
+    @Mock
+    lateinit var storageUtilsProvider: StorageUtilsProvider
+
+    @Mock
+    lateinit var checkStorageWarningObserver: Observer<Event<Unit>>
+
+    @Mock
+    lateinit var fm: FragmentManager
+
+    @Mock
+    lateinit var source: Source
 
     private lateinit var viewModel: StorageUtilsViewModel
 
     @Before
     fun setUp() {
         viewModel = StorageUtilsViewModel(
-                testDispatcher(),
-                storageUtilsProvider
+            testDispatcher(),
+            storageUtilsProvider
         )
     }
 

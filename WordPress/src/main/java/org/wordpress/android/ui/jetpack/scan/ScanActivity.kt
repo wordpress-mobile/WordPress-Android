@@ -21,7 +21,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ScanActivity : AppCompatActivity(), ScrollableViewInitializedListener {
-    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Inject
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     private var binding: ScanActivityBinding? = null
 
     override fun onNewIntent(intent: Intent?) {
@@ -53,7 +54,7 @@ class ScanActivity : AppCompatActivity(), ScrollableViewInitializedListener {
             binding?.root?.post {
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
                 val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
-                        ?: return@post
+                    ?: return@post
 
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
@@ -62,8 +63,8 @@ class ScanActivity : AppCompatActivity(), ScrollableViewInitializedListener {
                     binding?.jetpackBanner?.root?.setOnClickListener {
                         jetpackBrandingUtils.trackBannerTapped(SCAN)
                         JetpackPoweredBottomSheetFragment
-                                .newInstance()
-                                .show(supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                            .newInstance()
+                            .show(supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
                     }
                 }
             }

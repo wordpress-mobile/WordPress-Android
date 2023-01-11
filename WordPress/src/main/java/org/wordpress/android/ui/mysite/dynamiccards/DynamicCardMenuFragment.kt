@@ -17,8 +17,11 @@ import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class DynamicCardMenuFragment : BottomSheetDialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var imageManager: ImageManager
     private lateinit var viewModel: DynamicCardMenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,8 +29,8 @@ class DynamicCardMenuFragment : BottomSheetDialogFragment() {
         (requireActivity().applicationContext as WordPress).component().inject(this)
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(DynamicCardMenuViewModel::class.java)
         viewModel.start(
-                requireNotNull(requireArguments().getString(ID_ARG_KEY)),
-                requireArguments().getBoolean(IS_PINNED_KEY)
+            requireNotNull(requireArguments().getString(ID_ARG_KEY)),
+            requireArguments().getBoolean(IS_PINNED_KEY)
         )
     }
 
@@ -56,7 +59,7 @@ class DynamicCardMenuFragment : BottomSheetDialogFragment() {
             val sheetDialog = dialogInterface as? BottomSheetDialog
 
             val bottomSheet = sheetDialog?.findViewById<View>(
-                    com.google.android.material.R.id.design_bottom_sheet
+                com.google.android.material.R.id.design_bottom_sheet
             ) as? FrameLayout
 
             bottomSheet?.let {

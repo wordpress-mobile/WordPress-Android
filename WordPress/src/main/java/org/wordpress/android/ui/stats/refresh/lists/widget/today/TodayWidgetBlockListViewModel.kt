@@ -73,22 +73,22 @@ class TodayWidgetBlockListViewModel
             Color.LIGHT -> R.layout.stats_widget_block_item_light
         }
         return listOf(
-                BlockItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.stats_views),
-                        statsUtils.toFormattedString(domainModel.views, MILLION),
-                        resourceProvider.getString(R.string.stats_visitors),
-                        statsUtils.toFormattedString(domainModel.visitors, MILLION)
-                ),
-                BlockItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.likes),
-                        statsUtils.toFormattedString(domainModel.likes, MILLION),
-                        resourceProvider.getString(R.string.stats_comments),
-                        statsUtils.toFormattedString(domainModel.comments, MILLION)
-                )
+            BlockItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.stats_views),
+                statsUtils.toFormattedString(domainModel.views, MILLION),
+                resourceProvider.getString(R.string.stats_visitors),
+                statsUtils.toFormattedString(domainModel.visitors, MILLION)
+            ),
+            BlockItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.likes),
+                statsUtils.toFormattedString(domainModel.likes, MILLION),
+                resourceProvider.getString(R.string.stats_comments),
+                statsUtils.toFormattedString(domainModel.comments, MILLION)
+            )
         )
     }
 }

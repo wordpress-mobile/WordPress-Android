@@ -28,7 +28,7 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
         val mediaUtilsWrapper = createMediaUtilsWrapper(resultForIsInMediaStore = true)
         // Act
         val result = createCopyMediaToAppStorageUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .copyFilesToAppStorageIfNecessary(uris)
+            .copyFilesToAppStorageIfNecessary(uris)
 
         // Assert
         verify(mediaUtilsWrapper, never()).copyFileToAppStorage(any(), any())
@@ -42,7 +42,7 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
         val mediaUtilsWrapper = createMediaUtilsWrapper(resultForIsFile = true)
         // Act
         val result = createCopyMediaToAppStorageUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .copyFilesToAppStorageIfNecessary(uris)
+            .copyFilesToAppStorageIfNecessary(uris)
 
         // Assert
         verify(mediaUtilsWrapper, never()).copyFileToAppStorage(any(), any())
@@ -55,12 +55,12 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
         val expectedCopiedFileUri = mock<Uri>()
         val uris = listOf<Uri>(mock())
         val mediaUtilsWrapper = createMediaUtilsWrapper(
-                resultForIsInMediaStore = false,
-                resultForCopiedFileUri = (uris[0] to expectedCopiedFileUri)
+            resultForIsInMediaStore = false,
+            resultForCopiedFileUri = (uris[0] to expectedCopiedFileUri)
         )
         // Act
         val result = createCopyMediaToAppStorageUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .copyFilesToAppStorageIfNecessary(uris)
+            .copyFilesToAppStorageIfNecessary(uris)
 
         // Assert
         verify(mediaUtilsWrapper).copyFileToAppStorage(uris[0], null)
@@ -74,7 +74,7 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
         val mediaUtilsWrapper = createMediaUtilsWrapper(resultForCopiedFileUri = (uris[0] to null))
         // Act
         val result = createCopyMediaToAppStorageUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .copyFilesToAppStorageIfNecessary(uris)
+            .copyFilesToAppStorageIfNecessary(uris)
 
         // Assert
         assertThat(result.permanentlyAccessibleUris.size).isEqualTo(uris.size - 1)
@@ -87,7 +87,7 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
         val mediaUtilsWrapper = createMediaUtilsWrapper(resultForCopiedFileUri = (uris[1] to null))
         // Act
         val result = createCopyMediaToAppStorageUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .copyFilesToAppStorageIfNecessary(uris)
+            .copyFilesToAppStorageIfNecessary(uris)
 
         // Assert
         assertThat(result.copyingSomeMediaFailed).isTrue()
@@ -99,7 +99,7 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
         val uris = listOf<Uri>(mock(), mock(), mock())
         // Act
         val result = createCopyMediaToAppStorageUseCase()
-                .copyFilesToAppStorageIfNecessary(uris)
+            .copyFilesToAppStorageIfNecessary(uris)
         // Assert
         assertThat(result.copyingSomeMediaFailed).isFalse()
     }
@@ -109,9 +109,9 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
             mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper(),
             authenticationUtils: AuthenticationUtils = createAuthenticationUtils()
         ) = CopyMediaToAppStorageUseCase(
-                mediaUtilsWrapper,
-                authenticationUtils,
-                UnconfinedTestDispatcher()
+            mediaUtilsWrapper,
+            authenticationUtils,
+            UnconfinedTestDispatcher()
         )
 
         fun createMediaUtilsWrapper(
@@ -119,22 +119,22 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
             resultForIsFile: Boolean = false,
             resultForCopiedFileUri: Pair<Uri, Uri?>? = null
         ) =
-                mock<MediaUtilsWrapper> {
-                    on { isInMediaStore(any()) }.thenReturn(resultForIsInMediaStore)
-                    on { isFile(any()) }.thenReturn(resultForIsFile)
-                    on { copyFileToAppStorage(any(), or(isNull(), anyMap())) }.thenReturn(mock())
-                    resultForCopiedFileUri?.let {
-                        on { copyFileToAppStorage(resultForCopiedFileUri.first, null) }.thenReturn(
-                                resultForCopiedFileUri.second
-                        )
-                    }
+            mock<MediaUtilsWrapper> {
+                on { isInMediaStore(any()) }.thenReturn(resultForIsInMediaStore)
+                on { isFile(any()) }.thenReturn(resultForIsFile)
+                on { copyFileToAppStorage(any(), or(isNull(), anyMap())) }.thenReturn(mock())
+                resultForCopiedFileUri?.let {
+                    on { copyFileToAppStorage(resultForCopiedFileUri.first, null) }.thenReturn(
+                        resultForCopiedFileUri.second
+                    )
                 }
+            }
 
         fun createAuthenticationUtils(
             resultForAuthHeader: Map<String, String>? = null
         ) =
-                mock<AuthenticationUtils> {
-                    on { getAuthHeaders(any()) }.thenReturn(resultForAuthHeader)
-                }
+            mock<AuthenticationUtils> {
+                on { getAuthHeaders(any()) }.thenReturn(resultForAuthHeader)
+            }
     }
 }

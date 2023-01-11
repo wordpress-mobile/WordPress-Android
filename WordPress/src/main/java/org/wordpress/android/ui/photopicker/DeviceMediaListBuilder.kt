@@ -16,8 +16,10 @@ import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.mediapicker.loader.DeviceListBuilder}")
+@Deprecated(
+    "This class is being refactored, if you implement any change, please also update " +
+            "{@link org.wordpress.android.ui.mediapicker.loader.DeviceListBuilder}"
+)
 class DeviceMediaListBuilder
 @Inject constructor(
     val context: Context,
@@ -50,11 +52,11 @@ class DeviceMediaListBuilder
         val result = mutableListOf<PhotoPickerItem>()
         try {
             cursor = context.contentResolver.query(
-                    baseUri,
-                    projection,
-                    null,
-                    null,
-                    null
+                baseUri,
+                projection,
+                null,
+                null,
+                null
             )
         } catch (e: SecurityException) {
             AppLog.e(MEDIA, e)
@@ -68,9 +70,9 @@ class DeviceMediaListBuilder
                 val id = cursor.getLong(idIndex)
                 val completeUri = Uri.withAppendedPath(baseUri, "" + id)
                 val item = PhotoPickerItem(
-                        id,
-                        UriWrapper(completeUri),
-                        isVideo
+                    id,
+                    UriWrapper(completeUri),
+                    isVideo
                 )
                 result.add(item)
             }

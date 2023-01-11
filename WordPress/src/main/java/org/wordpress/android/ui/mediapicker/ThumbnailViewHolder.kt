@@ -8,6 +8,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
  * ViewHolder containing a device thumbnail
  */
 open class ThumbnailViewHolder(parent: ViewGroup, layout: Int) : ViewHolder(
-        LayoutInflater.from(parent.context)
-                .inflate(layout, parent, false)
+    LayoutInflater.from(parent.context)
+        .inflate(layout, parent, false)
 )

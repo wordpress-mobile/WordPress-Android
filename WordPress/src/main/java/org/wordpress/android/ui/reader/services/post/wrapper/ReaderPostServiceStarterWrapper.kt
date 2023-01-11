@@ -10,5 +10,5 @@ import javax.inject.Inject
 @Reusable
 class ReaderPostServiceStarterWrapper @Inject constructor() {
     fun startServiceForTag(context: Context, readerTag: ReaderTag, action: UpdateAction) =
-            ReaderPostServiceStarter.startServiceForTag(context, readerTag, action)
+        ReaderPostServiceStarter.startServiceForTag(context, readerTag, action)
 }

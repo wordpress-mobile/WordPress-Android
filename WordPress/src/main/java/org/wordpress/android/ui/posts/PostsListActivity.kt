@@ -70,27 +70,56 @@ const val STATE_KEY_PREVIEW_STATE = "stateKeyPreviewState"
 const val STATE_KEY_BOTTOMSHEET_POST_ID = "stateKeyBottomSheetPostId"
 
 class PostsListActivity : LocaleAwareActivity(),
-        EditPostActivityHook,
-        PrepublishingBottomSheetListener,
-        BasicDialogPositiveClickInterface,
-        BasicDialogNegativeClickInterface,
-        BasicDialogOnDismissByOutsideTouchInterface,
-        ScrollableViewInitializedListener {
-    @Inject internal lateinit var siteStore: SiteStore
-    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject internal lateinit var uiHelpers: UiHelpers
-    @Inject internal lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
-    @Inject internal lateinit var previewStateHelper: PreviewStateHelper
-    @Inject internal lateinit var progressDialogHelper: ProgressDialogHelper
-    @Inject internal lateinit var dispatcher: Dispatcher
-    @Inject internal lateinit var uploadActionUseCase: UploadActionUseCase
-    @Inject internal lateinit var snackbarSequencer: SnackbarSequencer
-    @Inject internal lateinit var uploadUtilsWrapper: UploadUtilsWrapper
-    @Inject internal lateinit var systemNotificationTracker: SystemNotificationsTracker
-    @Inject internal lateinit var editPostRepository: EditPostRepository
-    @Inject internal lateinit var mediaPickerLauncher: MediaPickerLauncher
-    @Inject internal lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
-    @Inject internal lateinit var bloggingRemindersViewModel: BloggingRemindersViewModel
+    EditPostActivityHook,
+    PrepublishingBottomSheetListener,
+    BasicDialogPositiveClickInterface,
+    BasicDialogNegativeClickInterface,
+    BasicDialogOnDismissByOutsideTouchInterface,
+    ScrollableViewInitializedListener {
+    @Inject
+    internal lateinit var siteStore: SiteStore
+
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    internal lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
+
+    @Inject
+    internal lateinit var previewStateHelper: PreviewStateHelper
+
+    @Inject
+    internal lateinit var progressDialogHelper: ProgressDialogHelper
+
+    @Inject
+    internal lateinit var dispatcher: Dispatcher
+
+    @Inject
+    internal lateinit var uploadActionUseCase: UploadActionUseCase
+
+    @Inject
+    internal lateinit var snackbarSequencer: SnackbarSequencer
+
+    @Inject
+    internal lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+
+    @Inject
+    internal lateinit var systemNotificationTracker: SystemNotificationsTracker
+
+    @Inject
+    internal lateinit var editPostRepository: EditPostRepository
+
+    @Inject
+    internal lateinit var mediaPickerLauncher: MediaPickerLauncher
+
+    @Inject
+    internal lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
+
+    @Inject
+    internal lateinit var bloggingRemindersViewModel: BloggingRemindersViewModel
 
     private lateinit var site: SiteModel
     private lateinit var binding: PostListActivityBinding
@@ -107,7 +136,8 @@ class PostsListActivity : LocaleAwareActivity(),
 
     private var restorePreviousSearch = false
 
-    @Suppress("DEPRECATION") private var progressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION")
+    private var progressDialog: ProgressDialog? = null
 
     private var onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -227,7 +257,7 @@ class PostsListActivity : LocaleAwareActivity(),
 
     private fun PostListActivityBinding.initCreateMenuViewModel(tabIndex: Int, actionsShownByDefault: Boolean) {
         postListCreateMenuViewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)
-                .get(PostListCreateMenuViewModel::class.java)
+            .get(PostListCreateMenuViewModel::class.java)
 
         postListCreateMenuViewModel.isBottomSheetShowing.observeEvent(this@PostsListActivity, { isBottomSheetShowing ->
             var createMenuFragment = supportFragmentManager.findFragmentByTag(PostListCreateMenuFragment.TAG)
@@ -290,11 +320,11 @@ class PostsListActivity : LocaleAwareActivity(),
         viewModel.postListAction.observe(this@PostsListActivity, { postListAction ->
             postListAction?.let { action ->
                 handlePostListAction(
-                        this@PostsListActivity,
-                        action,
-                        remotePreviewLogicHelper,
-                        previewStateHelper,
-                        mediaPickerLauncher
+                    this@PostsListActivity,
+                    action,
+                    remotePreviewLogicHelper,
+                    previewStateHelper,
+                    mediaPickerLauncher
                 )
             }
         })
@@ -316,10 +346,10 @@ class PostsListActivity : LocaleAwareActivity(),
         })
         viewModel.previewState.observe(this@PostsListActivity, {
             progressDialog = progressDialogHelper.updateProgressDialogState(
-                    this@PostsListActivity,
-                    progressDialog,
-                    it.progressDialogUiState,
-                    uiHelpers
+                this@PostsListActivity,
+                progressDialog,
+                it.progressDialogUiState,
+                uiHelpers
             )
         })
         setupActions()
@@ -327,9 +357,9 @@ class PostsListActivity : LocaleAwareActivity(),
             val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
             if (fragment == null) {
                 val prepublishingFragment = newInstance(
-                        site = site,
-                        isPage = editPostRepository.isPage,
-                        isStoryPost = false
+                    site = site,
+                    isPage = editPostRepository.isPage,
+                    isStoryPost = false
                 )
                 prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
             }
@@ -340,21 +370,21 @@ class PostsListActivity : LocaleAwareActivity(),
 
     private fun initBloggingReminders() {
         bloggingRemindersViewModel = ViewModelProvider(
-                this,
-                viewModelFactory
+            this,
+            viewModelFactory
         ).get(BloggingRemindersViewModel::class.java)
 
         observeBottomSheet(
-                bloggingRemindersViewModel.isBottomSheetShowing,
-                this,
-                BLOGGING_REMINDERS_FRAGMENT_TAG,
-                {
-                    if (!this.isFinishing) {
-                        this.supportFragmentManager
-                    } else {
-                        null
-                    }
+            bloggingRemindersViewModel.isBottomSheetShowing,
+            this,
+            BLOGGING_REMINDERS_FRAGMENT_TAG,
+            {
+                if (!this.isFinishing) {
+                    this.supportFragmentManager
+                } else {
+                    null
                 }
+            }
         )
     }
 
@@ -365,11 +395,11 @@ class PostsListActivity : LocaleAwareActivity(),
         viewModel.postUploadAction.observe(this@PostsListActivity, {
             it?.let { uploadAction ->
                 handleUploadAction(
-                        uploadAction,
-                        this@PostsListActivity,
-                        findViewById(R.id.coordinator),
-                        uploadActionUseCase,
-                        uploadUtilsWrapper
+                    uploadAction,
+                    this@PostsListActivity,
+                    findViewById(R.id.coordinator),
+                    uploadActionUseCase,
+                    uploadUtilsWrapper
                 ) { isFirstTimePublishing ->
                     bloggingRemindersViewModel.onPublishingPost(site.id, isFirstTimePublishing)
                 }
@@ -407,9 +437,9 @@ class PostsListActivity : LocaleAwareActivity(),
         postListTabLayoutFadingEdge.visibility = authorSelectionVisibility
 
         val tabLayoutPaddingStart =
-                if (state.isAuthorFilterVisible) {
-                    resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
-                } else 0
+            if (state.isAuthorFilterVisible) {
+                resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
+            } else 0
         tabLayout.setPaddingRelative(tabLayoutPaddingStart, 0, 0, 0)
         val authorSelectionAdapter = postListAuthorSelection.adapter as AuthorSelectionAdapter
         authorSelectionAdapter.updateItems(state.authorFilterItems)
@@ -422,20 +452,20 @@ class PostsListActivity : LocaleAwareActivity(),
     private fun showSnackBar(holder: SnackbarMessageHolder) {
         findViewById<View>(R.id.coordinator)?.let { parent ->
             snackbarSequencer.enqueue(
-                    SnackbarItem(
-                            SnackbarItem.Info(
-                                    view = parent,
-                                    textRes = holder.message,
-                                    duration = Snackbar.LENGTH_LONG
-                            ),
-                            holder.buttonTitle?.let {
-                                SnackbarItem.Action(
-                                        textRes = holder.buttonTitle,
-                                        clickListener = { holder.buttonAction() }
-                                )
-                            },
-                            dismissCallback = { _, event -> holder.onDismissAction(event) }
-                    )
+                SnackbarItem(
+                    SnackbarItem.Info(
+                        view = parent,
+                        textRes = holder.message,
+                        duration = Snackbar.LENGTH_LONG
+                    ),
+                    holder.buttonTitle?.let {
+                        SnackbarItem.Action(
+                            textRes = holder.buttonTitle,
+                            clickListener = { holder.buttonAction() }
+                        )
+                    },
+                    dismissCallback = { _, event -> holder.onDismissAction(event) }
+                )
             )
         }
     }
@@ -443,7 +473,7 @@ class PostsListActivity : LocaleAwareActivity(),
     private fun loadIntentData(intent: Intent) {
         if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
             val notificationType: NotificationType =
-                    intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
+                intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
             systemNotificationTracker.trackTappedNotification(notificationType)
         }
 
@@ -467,8 +497,8 @@ class PostsListActivity : LocaleAwareActivity(),
             requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK -> {
                 if (data != null && EditPostActivity.checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(
-                            data, this, site,
-                            data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+                        data, this, site,
+                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
                     )
 
                     // a restart will happen so, no need to continue here
@@ -484,17 +514,17 @@ class PostsListActivity : LocaleAwareActivity(),
                     resultCode == Activity.RESULT_OK &&
                     data != null -> {
                 storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
-                        data,
-                        this,
-                        site,
-                        STORY_FROM_POSTS_LIST
+                    data,
+                    this,
+                    site,
+                    STORY_FROM_POSTS_LIST
                 )
             }
             requestCode == RequestCodes.CREATE_STORY -> {
                 val isNewStory = data?.getStringExtra(GutenbergEditorFragment.ARG_STORY_BLOCK_ID) == null
                 bloggingRemindersViewModel.onPublishingPost(
-                        site.id,
-                        isNewStory
+                    site.id,
+                    isNewStory
                 )
             }
         }
@@ -537,9 +567,9 @@ class PostsListActivity : LocaleAwareActivity(),
         if (searchFragment == null) {
             searchFragment = PostListFragment.newInstance(site, SEARCH)
             supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.search_container, searchFragment, searchFragmentTag)
-                    .commit()
+                .beginTransaction()
+                .replace(R.id.search_container, searchFragment, searchFragmentTag)
+                .commit()
         }
     }
 

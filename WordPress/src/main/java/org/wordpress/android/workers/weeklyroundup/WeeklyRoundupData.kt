@@ -18,11 +18,11 @@ data class WeeklyRoundupData(
         private const val COMMENTS_WEIGHT = 0.5
 
         fun create(site: SiteModel, periodData: PeriodData) = WeeklyRoundupData(
-                site = site,
-                period = periodData.period,
-                views = periodData.views,
-                likes = periodData.likes,
-                comments = periodData.comments
+            site = site,
+            period = periodData.period,
+            views = periodData.views,
+            likes = periodData.likes,
+            comments = periodData.comments
         )
     }
 }

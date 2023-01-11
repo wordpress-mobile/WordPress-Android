@@ -83,9 +83,9 @@ class PostLikeUseCase @Inject constructor(
         request: PostLikeRequest
     ) {
         val response = readerPostActionsWrapper.performLikeActionLocal(
-                post,
-                request.isAskingToLike,
-                request.wpComUserId
+            post,
+            request.isAskingToLike,
+            request.wpComUserId
         )
         if (response) {
             emit(PostLikeState.PostLikedInLocalDb)
@@ -113,10 +113,10 @@ class PostLikeUseCase @Inject constructor(
         return suspendCancellableCoroutine { cont ->
             continuations[request] = cont
             readerPostActionsWrapper.performLikeActionRemote(
-                    post,
-                    request.isAskingToLike,
-                    request.wpComUserId,
-                    actionListener
+                post,
+                request.isAskingToLike,
+                request.wpComUserId,
+                actionListener
             )
         }
     }

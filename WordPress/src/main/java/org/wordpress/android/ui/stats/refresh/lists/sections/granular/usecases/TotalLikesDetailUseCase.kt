@@ -37,13 +37,13 @@ class TotalLikesDetailUseCase @Inject constructor(
     private val totalStatsMapper: TotalStatsMapper,
     private val statsWidgetUpdaters: StatsWidgetUpdaters
 ) : GranularStatefulUseCase<VisitsAndViewsModel, UiState>(
-        TOTAL_LIKES,
-        mainDispatcher,
-        bgDispatcher,
-        statsSiteProvider,
-        selectedDateProvider,
-        statsGranularity,
-        UiState()
+    TOTAL_LIKES,
+    mainDispatcher,
+    bgDispatcher,
+    statsSiteProvider,
+    selectedDateProvider,
+    statsGranularity,
+    UiState()
 ) {
     override fun buildLoadingItem() = listOf(TitleWithMore(string.stats_view_total_likes))
 
@@ -52,10 +52,10 @@ class TotalLikesDetailUseCase @Inject constructor(
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): VisitsAndViewsModel? {
         statsWidgetUpdaters.updateViewsWidget(statsSiteProvider.siteModel.siteId)
         val cachedData = visitsAndViewsStore.getVisits(
-                site,
-                DAYS,
-                LimitMode.Top(TOTAL_LIKES_ITEMS_TO_LOAD),
-                selectedDate
+            site,
+            DAYS,
+            LimitMode.Top(TOTAL_LIKES_ITEMS_TO_LOAD),
+            selectedDate
         )
         if (cachedData != null) {
             selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
@@ -69,11 +69,11 @@ class TotalLikesDetailUseCase @Inject constructor(
         forced: Boolean
     ): State<VisitsAndViewsModel> {
         val response = visitsAndViewsStore.fetchVisits(
-                statsSiteProvider.siteModel,
-                DAYS,
-                LimitMode.Top(TOTAL_LIKES_ITEMS_TO_LOAD),
-                selectedDate,
-                forced
+            statsSiteProvider.siteModel,
+            DAYS,
+            LimitMode.Top(TOTAL_LIKES_ITEMS_TO_LOAD),
+            selectedDate,
+            forced
         )
         val model = response.model
         val error = response.error
@@ -124,15 +124,15 @@ class TotalLikesDetailUseCase @Inject constructor(
         private val statsWidgetUpdaters: StatsWidgetUpdaters
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
-                TotalLikesDetailUseCase(
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        granularity,
-                        selectedDateProvider,
-                        visitsAndViewsStore,
-                        statsSiteProvider,
-                        totalStatsMapper,
-                        statsWidgetUpdaters
-                )
+            TotalLikesDetailUseCase(
+                mainDispatcher,
+                backgroundDispatcher,
+                granularity,
+                selectedDateProvider,
+                visitsAndViewsStore,
+                statsSiteProvider,
+                totalStatsMapper,
+                statsWidgetUpdaters
+            )
     }
 }

@@ -19,14 +19,17 @@ import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class StatsWidgetDataTypeSelectionDialogFragment : AppCompatDialogFragment() {
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var imageManager: ImageManager
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsDataTypeSelectionViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val nonNullActivity = requireActivity()
         viewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
-                .get(StatsDataTypeSelectionViewModel::class.java)
+            .get(StatsDataTypeSelectionViewModel::class.java)
         val alertDialogBuilder = MaterialAlertDialogBuilder(nonNullActivity)
         val view = nonNullActivity.layoutInflater.inflate(R.layout.stats_data_type_selector, null) as RadioGroup
         view.setOnCheckedChangeListener { _, checkedId ->

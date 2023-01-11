@@ -15,8 +15,6 @@ import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
 import org.wordpress.android.util.StringUtils
-import java.util.ArrayList
-import java.util.HashMap
 import javax.inject.Inject
 
 @Reusable
@@ -34,9 +32,9 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
                 mediaIds.add(rawIdField)
             } else {
                 val mediaIdLong = rawIdField
-                        .toString()
-                        .toDouble() // this conversion is needed to strip off decimals that can come from RN
-                        .toLong()
+                    .toString()
+                    .toDouble() // this conversion is needed to strip off decimals that can come from RN
+                    .toLong()
                 val mediaIdString = mediaIdLong.toString()
                 mediaIds.add(mediaIdString)
             }
@@ -53,7 +51,8 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
                 }
             } else {
                 if (!storiesPrefs.isValidSlide(site.id.toLong(), RemoteId(mediaId.toLong())) &&
-                        !storiesPrefs.isValidSlide(site.id.toLong(), LocalId(StringUtils.stringToInt(mediaId)))) {
+                    !storiesPrefs.isValidSlide(site.id.toLong(), LocalId(StringUtils.stringToInt(mediaId)))
+                ) {
                     return false
                 }
             }
@@ -75,15 +74,15 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
             // let's check if this is a temporary id
             if (mediaId.startsWith(TEMPORARY_ID_PREFIX)) {
                 storiesPrefs.getSlideWithTempId(
-                        site.getId().toLong(),
-                        TempId(mediaId)
+                    site.getId().toLong(),
+                    TempId(mediaId)
                 )?.let {
                     storyRepositoryWrapper.addStoryFrameItemToCurrentStory(it)
                 }
             } else {
                 storiesPrefs.getSlideWithRemoteId(
-                        site.getId().toLong(),
-                        RemoteId(mediaId.toLong())
+                    site.getId().toLong(),
+                    RemoteId(mediaId.toLong())
                 )?.let {
                     // verify the background media referenced here is still valid for editing, otherwise
                     // use the actual uploaded flattened media for safety
@@ -116,14 +115,14 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
     ): ReCreateStoryResult {
         // for this missing frame we'll create a new frame using the actual uploaded flattened media
         val mediaModelList: List<MediaModel> = mediaStore.getSiteMediaWithIds(
-                site,
-                mediaIds
+            site,
+            mediaIds
         )
 
         for (mediaModel in mediaModelList) {
             val storyFrameItem = StoryFrameItem.getNewStoryFrameItemFromUri(
-                    Uri.parse(mediaModel.url),
-                    mediaModel.isVideo
+                Uri.parse(mediaModel.url),
+                mediaModel.isVideo
             )
             storyFrameItem.id = mediaModel.mediaId.toString()
             storyRepositoryWrapper.addStoryFrameItemToCurrentStory(storyFrameItem)
@@ -135,11 +134,11 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
 
     fun loadStoryFromMemoryOrRecreateFromPrefs(site: SiteModel, mediaFiles: ArrayList<Any>): ReCreateStoryResult {
         val mediaIds = getMediaIdsFromStoryBlockBridgeMediaFiles(
-                mediaFiles
+            mediaFiles
         )
         val allStorySlidesAreEditable = areAllStorySlidesEditable(
-                site,
-                mediaIds
+            site,
+            mediaIds
         )
 
         // now look for a Story in the StoryRepository that has all these frames and, if not found, let's
@@ -149,8 +148,8 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
             // the StoryRepository didn't have it but we have editable serialized slides so,
             // create a new Story from scratch with these deserialized StoryFrameItems
             return loadOrReCreateStoryFromStoriesPrefs(
-                    site,
-                    mediaIds
+                site,
+                mediaIds
             )
         } else {
             return ReCreateStoryResult(storyIndex, allStorySlidesAreEditable, false)

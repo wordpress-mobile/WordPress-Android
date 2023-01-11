@@ -21,7 +21,7 @@ class QuickStartTaskCardAdapter(private val uiHelpers: UiHelpers) : Adapter<Quic
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = QuickStartTaskCardViewHolder(
-            parent.viewBinding(QuickStartTaskCardBinding::inflate)
+        parent.viewBinding(QuickStartTaskCardBinding::inflate)
     )
 
     override fun onBindViewHolder(holder: QuickStartTaskCardViewHolder, position: Int) {
@@ -53,9 +53,9 @@ class QuickStartTaskCardAdapter(private val uiHelpers: UiHelpers) : Adapter<Quic
         override fun getNewListSize() = newItems.size
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-                oldItems[oldItemPosition].quickStartTask == newItems[newItemPosition].quickStartTask
+            oldItems[oldItemPosition].quickStartTask == newItems[newItemPosition].quickStartTask
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-                oldItems[oldItemPosition] == newItems[newItemPosition]
+            oldItems[oldItemPosition] == newItems[newItemPosition]
     }
 }

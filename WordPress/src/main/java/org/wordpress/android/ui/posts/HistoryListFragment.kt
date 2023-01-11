@@ -25,7 +25,9 @@ import javax.inject.Inject
 class HistoryListFragment : Fragment(R.layout.history_list_fragment) {
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var viewModel: HistoryViewModel
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     companion object {
         private const val KEY_POST_LOCAL_ID = "key_post_local_id"
@@ -84,8 +86,8 @@ class HistoryListFragment : Fragment(R.layout.history_list_fragment) {
 
             viewModel = ViewModelProvider(this@HistoryListFragment, viewModelFactory).get(HistoryViewModel::class.java)
             viewModel.create(
-                    localPostId = arguments?.getInt(KEY_POST_LOCAL_ID) ?: 0,
-                    site = arguments?.get(KEY_SITE) as SiteModel
+                localPostId = arguments?.getInt(KEY_POST_LOCAL_ID) ?: 0,
+                site = arguments?.get(KEY_SITE) as SiteModel
             )
             updatePostOrPageEmptyView()
             setObservers()
@@ -153,8 +155,8 @@ class HistoryListFragment : Fragment(R.layout.history_list_fragment) {
         viewModel.showDialog.observe(viewLifecycleOwner, Observer { showDialogItem ->
             if (showDialogItem != null && showDialogItem.historyListItem is Revision) {
                 (activity as HistoryItemClickInterface).onHistoryItemClicked(
-                        showDialogItem.historyListItem,
-                        showDialogItem.revisionsList
+                    showDialogItem.historyListItem,
+                    showDialogItem.revisionsList
                 )
             }
         })

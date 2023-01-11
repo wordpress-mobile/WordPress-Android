@@ -21,7 +21,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
-import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
@@ -30,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 import javax.inject.Inject
@@ -48,12 +48,12 @@ class SearchTermsUseCase constructor(
     private val statsUtils: StatsUtils,
     private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<SearchTermsModel>(
-        SEARCH_TERMS,
-        mainDispatcher,
-        backgroundDispatcher,
-        selectedDateProvider,
-        statsSiteProvider,
-        statsGranularity
+    SEARCH_TERMS,
+    mainDispatcher,
+    backgroundDispatcher,
+    selectedDateProvider,
+    statsSiteProvider,
+    statsGranularity
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
@@ -61,10 +61,10 @@ class SearchTermsUseCase constructor(
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): SearchTermsModel? {
         return store.getSearchTerms(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate
         )
     }
 
@@ -74,11 +74,11 @@ class SearchTermsUseCase constructor(
         forced: Boolean
     ): State<SearchTermsModel> {
         val response = store.fetchSearchTerms(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate,
-                forced
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate,
+            forced
         )
         val model = response.model
         val error = response.error
@@ -105,29 +105,29 @@ class SearchTermsUseCase constructor(
             val hasEncryptedCount = domainModel.unknownSearchCount > 0
             val mappedSearchTerms = domainModel.searchTerms.mapIndexed { index, searchTerm ->
                 ListItemWithIcon(
-                        text = searchTerm.text,
-                        value = statsUtils.toFormattedString(searchTerm.views),
-                        showDivider = index < domainModel.searchTerms.size - 1,
-                        contentDescription = contentDescriptionHelper.buildContentDescription(
-                                header,
-                                searchTerm.text,
-                                searchTerm.views
-                        )
+                    text = searchTerm.text,
+                    value = statsUtils.toFormattedString(searchTerm.views),
+                    showDivider = index < domainModel.searchTerms.size - 1,
+                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
+                        searchTerm.text,
+                        searchTerm.views
+                    )
                 )
             }
             if (hasEncryptedCount) {
                 items.addAll(mappedSearchTerms.take(mappedSearchTerms.size - 1))
                 items.add(
-                        ListItemWithIcon(
-                                textResource = R.string.stats_search_terms_unknown_search_terms,
-                                value = statsUtils.toFormattedString(domainModel.unknownSearchCount),
-                                showDivider = false,
-                                contentDescription = contentDescriptionHelper.buildContentDescription(
-                                        header,
-                                        R.string.stats_search_terms_unknown_search_terms,
-                                        domainModel.unknownSearchCount
-                                )
+                    ListItemWithIcon(
+                        textResource = R.string.stats_search_terms_unknown_search_terms,
+                        value = statsUtils.toFormattedString(domainModel.unknownSearchCount),
+                        showDivider = false,
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                            header,
+                            R.string.stats_search_terms_unknown_search_terms,
+                            domainModel.unknownSearchCount
                         )
+                    )
                 )
             } else {
                 items.addAll(mappedSearchTerms)
@@ -135,10 +135,10 @@ class SearchTermsUseCase constructor(
 
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
-                        Link(
-                                text = R.string.stats_insights_view_more,
-                                navigateAction = create(statsGranularity, this::onViewMoreClick)
-                        )
+                    Link(
+                        text = R.string.stats_insights_view_more,
+                        navigateAction = create(statsGranularity, this::onViewMoreClick)
+                    )
                 )
             }
         }
@@ -148,10 +148,10 @@ class SearchTermsUseCase constructor(
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_SEARCH_TERMS_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(
-                ViewSearchTerms(
-                        statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
-                )
+            ViewSearchTerms(
+                statsGranularity,
+                selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+            )
         )
     }
 
@@ -167,17 +167,17 @@ class SearchTermsUseCase constructor(
         private val contentDescriptionHelper: ContentDescriptionHelper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
-                SearchTermsUseCase(
-                        granularity,
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        store,
-                        statsSiteProvider,
-                        selectedDateProvider,
-                        analyticsTracker,
-                        contentDescriptionHelper,
-                        statsUtils,
-                        useCaseMode
-                )
+            SearchTermsUseCase(
+                granularity,
+                mainDispatcher,
+                backgroundDispatcher,
+                store,
+                statsSiteProvider,
+                selectedDateProvider,
+                analyticsTracker,
+                contentDescriptionHelper,
+                statsUtils,
+                useCaseMode
+            )
     }
 }

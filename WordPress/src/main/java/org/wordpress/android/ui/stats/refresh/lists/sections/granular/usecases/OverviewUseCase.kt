@@ -50,29 +50,29 @@ class OverviewUseCase constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val resourceProvider: ResourceProvider
 ) : BaseStatsUseCase<VisitsAndViewsModel, UiState>(
-        OVERVIEW,
-        mainDispatcher,
-        backgroundDispatcher,
-        UiState(),
-        uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(statsGranularity.toStatsSection()))
+    OVERVIEW,
+    mainDispatcher,
+    backgroundDispatcher,
+    UiState(),
+    uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(statsGranularity.toStatsSection()))
 ) {
     override fun buildLoadingItem(): List<BlockListItem> =
-            listOf(
-                    ValueItem(
-                            value = "0",
-                            unit = R.string.stats_views,
-                            isFirst = true,
-                            contentDescription = resourceProvider.getString(R.string.stats_loading_card)
-                    )
+        listOf(
+            ValueItem(
+                value = "0",
+                unit = R.string.stats_views,
+                isFirst = true,
+                contentDescription = resourceProvider.getString(R.string.stats_loading_card)
             )
+        )
 
     override suspend fun loadCachedData(): VisitsAndViewsModel? {
         statsWidgetUpdaters.updateViewsWidget(statsSiteProvider.siteModel.siteId)
         statsWidgetUpdaters.updateWeekViewsWidget(statsSiteProvider.siteModel.siteId)
         val cachedData = visitsAndViewsStore.getVisits(
-                statsSiteProvider.siteModel,
-                statsGranularity,
-                LimitMode.All
+            statsSiteProvider.siteModel,
+            statsGranularity,
+            LimitMode.All
         )
         if (cachedData != null) {
             logIfIncorrectData(cachedData, statsGranularity, statsSiteProvider.siteModel, false)
@@ -83,10 +83,10 @@ class OverviewUseCase constructor(
 
     override suspend fun fetchRemoteData(forced: Boolean): State<VisitsAndViewsModel> {
         val response = visitsAndViewsStore.fetchVisits(
-                statsSiteProvider.siteModel,
-                statsGranularity,
-                LimitMode.Top(OVERVIEW_ITEMS_TO_LOAD),
-                forced
+            statsSiteProvider.siteModel,
+            statsGranularity,
+            LimitMode.Top(OVERVIEW_ITEMS_TO_LOAD),
+            forced
         )
         val model = response.model
         val error = response.error
@@ -126,15 +126,15 @@ class OverviewUseCase constructor(
                 val currentCalendar = localeManagerWrapper.getCurrentCalendar()
                 val lastItemAge = ceil((currentCalendar.timeInMillis - lastDayDate.time) / 86400000.0)
                 analyticsTracker.track(
-                        STATS_OVERVIEW_ERROR,
-                        mapOf(
-                                "stats_last_date" to statsDateFormatter.printStatsDate(lastDayDate),
-                                "stats_current_date" to statsDateFormatter.printStatsDate(currentCalendar.time),
-                                "stats_age_in_days" to lastItemAge.toInt(),
-                                "is_jetpack_connected" to site.isJetpackConnected,
-                                "is_atomic" to site.isWPComAtomic,
-                                "action_source" to if (fetched) "remote" else "cached"
-                        )
+                    STATS_OVERVIEW_ERROR,
+                    mapOf(
+                        "stats_last_date" to statsDateFormatter.printStatsDate(lastDayDate),
+                        "stats_current_date" to statsDateFormatter.printStatsDate(currentCalendar.time),
+                        "stats_age_in_days" to lastItemAge.toInt(),
+                        "is_jetpack_connected" to site.isJetpackConnected,
+                        "is_atomic" to site.isWPComAtomic,
+                        "action_source" to if (fetched) "remote" else "cached"
+                    )
                 )
             }
         }
@@ -150,45 +150,45 @@ class OverviewUseCase constructor(
             val visibleBarCount = uiState.visibleBarCount ?: domainModel.dates.size
             val availableDates = domainModel.dates.map {
                 statsDateFormatter.parseStatsDate(
-                        statsGranularity,
-                        it.period
+                    statsGranularity,
+                    it.period
                 )
             }
             val selectedDate = dateFromProvider ?: availableDates.last()
             val index = availableDates.indexOf(selectedDate)
 
             selectedDateProvider.selectDate(
-                    selectedDate,
-                    availableDates.takeLast(visibleBarCount),
-                    statsGranularity
+                selectedDate,
+                availableDates.takeLast(visibleBarCount),
+                statsGranularity
             )
             val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
             val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
             items.add(
-                    overviewMapper.buildTitle(
-                            selectedItem,
-                            previousItem,
-                            uiState.selectedPosition,
-                            isLast = selectedItem == domainModel.dates.last(),
-                            statsGranularity = statsGranularity
-                    )
+                overviewMapper.buildTitle(
+                    selectedItem,
+                    previousItem,
+                    uiState.selectedPosition,
+                    isLast = selectedItem == domainModel.dates.last(),
+                    statsGranularity = statsGranularity
+                )
             )
             items.addAll(
-                    overviewMapper.buildChart(
-                            domainModel.dates,
-                            statsGranularity,
-                            this::onBarSelected,
-                            this::onBarChartDrawn,
-                            uiState.selectedPosition,
-                            selectedItem.period
-                    )
+                overviewMapper.buildChart(
+                    domainModel.dates,
+                    statsGranularity,
+                    this::onBarSelected,
+                    this::onBarChartDrawn,
+                    uiState.selectedPosition,
+                    selectedItem.period
+                )
             )
             items.add(
-                    overviewMapper.buildColumns(
-                            selectedItem,
-                            this::onColumnSelected,
-                            uiState.selectedPosition
-                    )
+                overviewMapper.buildColumns(
+                    selectedItem,
+                    this::onColumnSelected,
+                    uiState.selectedPosition
+                )
             )
         } else {
             selectedDateProvider.onDateLoadingFailed(statsGranularity)
@@ -199,22 +199,22 @@ class OverviewUseCase constructor(
 
     private fun onBarSelected(period: String?) {
         analyticsTracker.trackGranular(
-                AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED,
-                statsGranularity
+            AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED,
+            statsGranularity
         )
         if (period != null && period != "empty") {
             val selectedDate = statsDateFormatter.parseStatsDate(statsGranularity, period)
             selectedDateProvider.selectDate(
-                    selectedDate,
-                    statsGranularity
+                selectedDate,
+                statsGranularity
             )
         }
     }
 
     private fun onColumnSelected(position: Int) {
         analyticsTracker.trackGranular(
-                AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED,
-                statsGranularity
+            AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED,
+            statsGranularity
         )
         updateUiState { it.copy(selectedPosition = position) }
     }
@@ -240,19 +240,19 @@ class OverviewUseCase constructor(
         private val resourceProvider: ResourceProvider
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
-                OverviewUseCase(
-                        granularity,
-                        visitsAndViewsStore,
-                        selectedDateProvider,
-                        statsSiteProvider,
-                        statsDateFormatter,
-                        overviewMapper,
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        analyticsTracker,
-                        statsWidgetUpdaters,
-                        localeManagerWrapper,
-                        resourceProvider
-                )
+            OverviewUseCase(
+                granularity,
+                visitsAndViewsStore,
+                selectedDateProvider,
+                statsSiteProvider,
+                statsDateFormatter,
+                overviewMapper,
+                mainDispatcher,
+                backgroundDispatcher,
+                analyticsTracker,
+                statsWidgetUpdaters,
+                localeManagerWrapper,
+                resourceProvider
+            )
     }
 }

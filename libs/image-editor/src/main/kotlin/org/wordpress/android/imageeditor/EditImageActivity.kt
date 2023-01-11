@@ -26,8 +26,8 @@ class EditImageActivity : AppCompatActivity() {
         setContentView(R.layout.activity_edit_image)
 
         hostFragment = supportFragmentManager
-                .findFragmentById(R.id.nav_host_fragment) as NavHostFragment?
-                ?: throw(NullPointerException("Host fragment is null inside ${this::class.java.simpleName} onCreate."))
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment?
+            ?: throw (NullPointerException("Host fragment is null inside ${this::class.java.simpleName} onCreate."))
 
         setupActionBar()
     }

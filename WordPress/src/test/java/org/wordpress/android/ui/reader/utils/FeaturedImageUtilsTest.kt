@@ -11,7 +11,8 @@ import org.wordpress.android.util.PhotonUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class FeaturedImageUtilsTest {
-    @Mock private lateinit var photonUtilsWrapper: PhotonUtilsWrapper
+    @Mock
+    private lateinit var photonUtilsWrapper: PhotonUtilsWrapper
 
     private lateinit var featuredImageUtils: FeaturedImageUtils
 

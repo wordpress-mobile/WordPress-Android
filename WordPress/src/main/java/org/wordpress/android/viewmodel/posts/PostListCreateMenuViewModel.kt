@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
@@ -23,7 +24,8 @@ import javax.inject.Inject
 
 class PostListCreateMenuViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) : ViewModel() {
     private var isStarted = false
     private lateinit var site: SiteModel
@@ -58,29 +60,29 @@ class PostListCreateMenuViewModel @Inject constructor(
         val actionsList = ArrayList<MainActionListItem>()
 
         actionsList.add(
-                CreateAction(
-                        actionType = NO_ACTION,
-                        iconRes = 0,
-                        labelRes = R.string.my_site_bottom_sheet_title,
-                        onClickAction = null
-                )
+            CreateAction(
+                actionType = NO_ACTION,
+                iconRes = 0,
+                labelRes = R.string.my_site_bottom_sheet_title,
+                onClickAction = null
+            )
         )
         actionsList.add(
-                CreateAction(
-                        actionType = CREATE_NEW_STORY,
-                        iconRes = R.drawable.ic_story_icon_24dp,
-                        labelRes = R.string.my_site_bottom_sheet_add_story,
-                        onClickAction = ::onCreateActionClicked
+            CreateAction(
+                actionType = CREATE_NEW_STORY,
+                iconRes = R.drawable.ic_story_icon_24dp,
+                labelRes = R.string.my_site_bottom_sheet_add_story,
+                onClickAction = ::onCreateActionClicked
 
-                )
+            )
         )
         actionsList.add(
-                CreateAction(
-                        actionType = CREATE_NEW_POST,
-                        iconRes = R.drawable.ic_posts_white_24dp,
-                        labelRes = R.string.my_site_bottom_sheet_add_post,
-                        onClickAction = ::onCreateActionClicked
-                )
+            CreateAction(
+                actionType = CREATE_NEW_POST,
+                iconRes = R.drawable.ic_posts_white_24dp,
+                labelRes = R.string.my_site_bottom_sheet_add_post,
+                onClickAction = ::onCreateActionClicked
+            )
         )
 
         _mainActions.postValue(actionsList)
@@ -95,9 +97,9 @@ class PostListCreateMenuViewModel @Inject constructor(
 
     private fun setMainFabUiState() {
         val newState = MainFabUiState(
-                isFabVisible = true,
-                isFabTooltipVisible = !appPrefsWrapper.isPostListFabTooltipDisabled(),
-                CreateContentMessageId = getCreateContentMessageId()
+            isFabVisible = true,
+            isFabTooltipVisible = !appPrefsWrapper.isPostListFabTooltipDisabled(),
+            CreateContentMessageId = getCreateContentMessageId()
         )
 
         _fabUiState.value = newState
@@ -124,9 +126,9 @@ class PostListCreateMenuViewModel @Inject constructor(
         val oldState = _fabUiState.value
         oldState?.let {
             _fabUiState.value = MainFabUiState(
-                    isFabVisible = it.isFabVisible,
-                    isFabTooltipVisible = false,
-                    CreateContentMessageId = getCreateContentMessageId()
+                isFabVisible = it.isFabVisible,
+                isFabTooltipVisible = false,
+                CreateContentMessageId = getCreateContentMessageId()
             )
         }
     }
@@ -135,15 +137,15 @@ class PostListCreateMenuViewModel @Inject constructor(
         val oldState = _fabUiState.value
         oldState?.let {
             _fabUiState.value = MainFabUiState(
-                    isFabVisible = it.isFabVisible,
-                    isFabTooltipVisible = it.isFabTooltipVisible,
-                    CreateContentMessageId = getCreateContentMessageId()
+                isFabVisible = it.isFabVisible,
+                isFabTooltipVisible = it.isFabTooltipVisible,
+                CreateContentMessageId = getCreateContentMessageId()
             )
         }
     }
 
     private fun getCreateContentMessageId(): Int {
-        return if (SiteUtils.supportsStoriesFeature(site)) {
+        return if (SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
             R.string.create_post_story_fab_tooltip
         } else {
             R.string.create_post_fab_tooltip

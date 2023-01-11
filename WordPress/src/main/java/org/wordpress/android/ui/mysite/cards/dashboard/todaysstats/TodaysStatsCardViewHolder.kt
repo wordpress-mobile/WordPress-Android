@@ -25,7 +25,7 @@ class TodaysStatsCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
 ) : CardViewHolder<MySiteTodaysStatsCardBinding>(
-        parent.viewBinding(MySiteTodaysStatsCardBinding::inflate)
+    parent.viewBinding(MySiteTodaysStatsCardBinding::inflate)
 ) {
     private val linkColor = itemView.context.getColorFromAttribute(R.attr.colorPrimary)
 
@@ -81,17 +81,17 @@ class TodaysStatsCardViewHolder(
             override fun updateDrawState(ds: TextPaint) {
                 ds.color = linkColor
                 ds.typeface = Typeface.create(
-                        Typeface.DEFAULT_BOLD,
-                        Typeface.NORMAL
+                    Typeface.DEFAULT_BOLD,
+                    Typeface.NORMAL
                 )
                 ds.isUnderlineText = false
             }
         }
         setSpan(
-                clickableSpan,
-                startIndex,
-                endIndex,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            clickableSpan,
+            startIndex,
+            endIndex,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
     }
 
@@ -100,10 +100,10 @@ class TodaysStatsCardViewHolder(
         endIndex: Int
     ) {
         setSpan(
-                StyleSpan(Typeface.BOLD),
-                startIndex,
-                endIndex,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            StyleSpan(Typeface.BOLD),
+            startIndex,
+            endIndex,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
     }
 }

@@ -44,7 +44,8 @@ class MediaPickerAdapterDiffCallback(
                 return SELECTION_CHANGE
             }
             if (oldItem.showOrderCounter == updatedItem.showOrderCounter &&
-                    oldItem.selectedOrder != updatedItem.selectedOrder) {
+                oldItem.selectedOrder != updatedItem.selectedOrder
+            ) {
                 return COUNT_CHANGE
             }
         }

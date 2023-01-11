@@ -48,9 +48,9 @@ class DownloadManagerWrapper
             fileUri.path?.let { path ->
                 val file = File(path)
                 FileProvider.getUriForFile(
-                        context,
-                        "${BuildConfig.APPLICATION_ID}.provider",
-                        file
+                    context,
+                    "${BuildConfig.APPLICATION_ID}.provider",
+                    file
                 )
             } ?: fileUri
         } else {
@@ -76,5 +76,5 @@ class DownloadManagerWrapper
     }
 
     private fun downloadManager() =
-            (context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager)
+        (context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager)
 }

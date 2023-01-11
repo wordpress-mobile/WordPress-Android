@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-12-02 21:16:48+0000
+Translation-Revision-Date: 2023-01-06 07:14:36+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativ, poți detașa și edita aceste blocuri separat, atingând „Convertește în blocuri normale”.</string>
+    <string name="deleting_cat_failed">Ștergerea categoriei a eșuat</string>
+    <string name="deleting_cat_success">Am șters cu succes categoria</string>
+    <string name="dlg_confirm_delete_category">Ștergi definitiv categoria „%s”?</string>
+    <string name="update_category">Actualizează categoria</string>
+    <string name="updating_cat">Actualizez categoria</string>
+    <string name="deleting_cat">Șterg categoria</string>
+    <string name="reader_menu_report_user">Raportează acest utilizator</string>
+    <string name="reader_menu_block_user">Blochează utilizatorul</string>
+    <string name="reader_toast_user_blocked">Articolele acestui utilizator nu vor mai fi afișate</string>
     <string name="deep_linking_weblinks_alias_label">legături web</string>
     <string name="wp_jetpack_continue_without_jetpack">Continuă fără Jetpack</string>
     <string name="wp_jetpack_deep_link_overlay_title">Deschizi legăturile în Jetpack?</string>
@@ -20,13 +30,13 @@ Language: ro
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Comută la aplicația Jetpack pentru a găsi, urmări și aprecia toate site-urile și articolele tale preferate din Cititor.</string>
     <string name="jp_migration_got_it_button">Am înțeles</string>
     <string name="jp_migration_need_help_button">Ai nevoie de ajutor?</string>
-    <string name="jp_migration_delete_message">Te rog &lt;b&gt;șterge aplicația WordPress&lt;/b&gt; pentru &lt;br&gt;a evita conflictele de date.</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Nu pot activa deschiderea legăturilor în Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Nu pot dezactiva deschiderea legăturilor în Jetpack</string>
     <string name="preference_open_links_in_jetpack">Deschide legăturile în Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Cu aplicația Jetpack, primești notificări</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Cu aplicația Jetpack, poți să urmărești orice site</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Folosind noua aplicație Jetpack, îți vezi statisticile</string>
+    <string name="jp_migration_delete_message">Te rog &lt;b&gt;șterge aplicația WordPress&lt;/b&gt; pentru a evita conflictele de date.</string>
     <string name="jp_migration_network_error_title">Nu mă pot conecta la internet.</string>
     <string name="jp_migration_delete_title">Nu mai ai nevoie de aplicația WordPress</string>
     <string name="jp_migration_delete_subtitle">Se pare că încă ai aplicația WordPress instalată. Îți recomandăm să ștergi aplicația WordPress pentru a evita conflictele de date.</string>
@@ -36,9 +46,9 @@ Language: ro
     <string name="jp_migration_network_error_message">Nu putem să transferăm datele și setările fără o conexiune la rețea.</string>
     <string name="jp_migration_finish_button">Finalizează</string>
     <string name="jp_migration_try_again_button">Încearcă din nou</string>
-    <string name="jp_migration_done_delete_wp_message">Te rog &lt;b&gt;șterge aplicația WordPress&lt;/b&gt; pentru &lt;br&gt;a evita conflictele de date.</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Înlătură iconul aplicației WordPress</string>
     <string name="jp_migration_generic_error_title">Of nu, ceva nu a mers bine…</string>
+    <string name="jp_migration_done_delete_wp_message">Te rog &lt;b&gt;șterge aplicația WordPress&lt;/b&gt; pentru a evita conflictele de date.</string>
     <string name="jp_migration_done_subtitle">Am transferat toate datele și setările tale. Toate sunt acolo, exact unde erau.</string>
     <string name="jp_migration_notifications_subtitle">Vei primi aceleași notificări, dar acum vor veni din aplicația Jetpack.</string>
     <string name="jp_migration_done_title">Îți mulțumim că ai comutat la Jetpack!</string>
@@ -602,6 +612,7 @@ Language: ro
     <string name="gutenberg_native_crosspost">Crosspost</string>
     <string name="gutenberg_native_columns_settings">Setări coloane</string>
     <string name="gutenberg_native_current_unit_is_s">Unitatea curentă este %s</string>
+    <string name="gutenberg_native_s_converted_to_regular_block">%s a fost convertit într-un bloc normal</string>
     <string name="gutenberg_native_add_link_text">Adaugă text la legătură</string>
     <string name="gutenberg_native_add_link_to_s">Adaugă o legătură la %s</string>
     <string name="gutenberg_native_add_image_or_video_b7b3d22b">Adaugă imagine sau video</string>
@@ -3370,9 +3381,11 @@ Language: ro
     <string name="tags_separate_with_commas">Separă etichetele cu virgulă</string>
     <string name="sdcard_title">Cardul SD e necesar</string>
     <string name="media">Media</string>
+    <string name="updating_cat_success">Am actualizat cu succes categoria</string>
     <string name="delete">Șterge</string>
     <string name="approve">Aprobă</string>
     <string name="none">Niciuna</string>
+    <string name="updating_cat_failed">Actualizarea categoriei a eșuat</string>
     <string name="cancel">Anulare</string>
     <string name="save">Salvare</string>
     <string name="add">Adaugă</string>

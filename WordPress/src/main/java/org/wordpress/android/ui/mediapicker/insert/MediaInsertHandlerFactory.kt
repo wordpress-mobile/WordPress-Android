@@ -2,11 +2,11 @@ package org.wordpress.android.ui.mediapicker.insert
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
-import org.wordpress.android.ui.mediapicker.insert.DeviceListInsertUseCase.DeviceListInsertUseCaseFactory
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
+import org.wordpress.android.ui.mediapicker.insert.DeviceListInsertUseCase.DeviceListInsertUseCaseFactory
 import org.wordpress.android.ui.mediapicker.insert.GifMediaInsertUseCase.GifMediaInsertUseCaseFactory
 import org.wordpress.android.ui.mediapicker.insert.StockMediaInsertUseCase.StockMediaInsertUseCaseFactory
 import javax.inject.Inject

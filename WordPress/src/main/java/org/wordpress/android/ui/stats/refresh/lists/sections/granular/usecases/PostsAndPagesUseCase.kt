@@ -59,12 +59,12 @@ class PostsAndPagesUseCase
     private val statsUtils: StatsUtils,
     private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<PostAndPageViewsModel>(
-        POSTS_AND_PAGES,
-        mainDispatcher,
-        backgroundDispatcher,
-        selectedDateProvider,
-        statsSiteProvider,
-        statsGranularity
+    POSTS_AND_PAGES,
+    mainDispatcher,
+    backgroundDispatcher,
+    selectedDateProvider,
+    statsSiteProvider,
+    statsGranularity
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
@@ -72,10 +72,10 @@ class PostsAndPagesUseCase
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): PostAndPageViewsModel? {
         return postsAndPageViewsStore.getPostAndPageViews(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate
         )
     }
 
@@ -85,11 +85,11 @@ class PostsAndPagesUseCase
         forced: Boolean
     ): State<PostAndPageViewsModel> {
         val response = postsAndPageViewsStore.fetchPostAndPageViews(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate,
-                forced
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate,
+            forced
         )
         val model = response.model
         val error = response.error
@@ -120,28 +120,28 @@ class PostsAndPagesUseCase
                     OTHER, HOMEPAGE, PAGE, ATTACHMENT -> R.drawable.ic_pages_white_24dp
                 }
                 ListItemWithIcon(
-                        icon = icon,
-                        text = viewsModel.title,
-                        value = statsUtils.toFormattedString(viewsModel.views),
-                        showDivider = index < domainModel.views.size - 1,
-                        barWidth = getBarWidth(viewsModel.views, maxViews),
-                        navigationAction = create(
-                                LinkClickParams(viewsModel.id, viewsModel.url, viewsModel.title, viewsModel.type),
-                                this::onLinkClicked
-                        ),
-                        contentDescription = contentDescriptionHelper.buildContentDescription(
-                                header,
-                                viewsModel.title,
-                                viewsModel.views
-                        )
+                    icon = icon,
+                    text = viewsModel.title,
+                    value = statsUtils.toFormattedString(viewsModel.views),
+                    showDivider = index < domainModel.views.size - 1,
+                    barWidth = getBarWidth(viewsModel.views, maxViews),
+                    navigationAction = create(
+                        LinkClickParams(viewsModel.id, viewsModel.url, viewsModel.title, viewsModel.type),
+                        this::onLinkClicked
+                    ),
+                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
+                        viewsModel.title,
+                        viewsModel.views
+                    )
                 )
             })
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
-                        Link(
-                                text = R.string.stats_insights_view_more,
-                                navigateAction = create(statsGranularity, this::onViewMoreClicked)
-                        )
+                    Link(
+                        text = R.string.stats_insights_view_more,
+                        navigateAction = create(statsGranularity, this::onViewMoreClicked)
+                    )
                 )
             }
         }
@@ -151,10 +151,10 @@ class PostsAndPagesUseCase
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(
-                ViewPostsAndPages(
-                        statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
-                )
+            ViewPostsAndPages(
+                statsGranularity,
+                selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+            )
         )
     }
 
@@ -166,12 +166,12 @@ class PostsAndPagesUseCase
         }
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED, statsGranularity)
         navigateTo(
-                ViewPostDetailStats(
-                        postId = params.postId,
-                        postTitle = params.postTitle,
-                        postUrl = params.postUrl,
-                        postType = type
-                )
+            ViewPostDetailStats(
+                postId = params.postId,
+                postTitle = params.postTitle,
+                postUrl = params.postUrl,
+                postType = type
+            )
         )
     }
 
@@ -194,17 +194,17 @@ class PostsAndPagesUseCase
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
-                PostsAndPagesUseCase(
-                        granularity,
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        postsAndPageViewsStore,
-                        statsSiteProvider,
-                        selectedDateProvider,
-                        analyticsTracker,
-                        contentDescriptionHelper,
-                        statsUtils,
-                        useCaseMode
-                )
+            PostsAndPagesUseCase(
+                granularity,
+                mainDispatcher,
+                backgroundDispatcher,
+                postsAndPageViewsStore,
+                statsSiteProvider,
+                selectedDateProvider,
+                analyticsTracker,
+                contentDescriptionHelper,
+                statsUtils,
+                useCaseMode
+            )
     }
 }

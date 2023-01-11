@@ -11,9 +11,9 @@ import javax.inject.Inject
 class PreventDuplicateNotifsFeatureConfig @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD,
-        PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD
+    appConfig,
+    BuildConfig.PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD,
+    PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD
 ) {
     companion object {
         const val PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD = "prevent_duplicate_notifs_remote_field"

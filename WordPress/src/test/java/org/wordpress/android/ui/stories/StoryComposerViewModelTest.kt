@@ -32,31 +32,47 @@ import org.wordpress.android.ui.stories.usecase.SetUntitledStoryTitleIfTitleEmpt
 class StoryComposerViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: StoryComposerViewModel
     private lateinit var editPostRepository: EditPostRepository
-    @Mock lateinit var systemNotificationsTracker: SystemNotificationsTracker
-    @Mock lateinit var saveInitialPostUseCase: SaveInitialPostUseCase
-    @Mock lateinit var savePostToDbUseCase: SavePostToDbUseCase
-    @Mock lateinit var setUntitledStoryTitleIfTitleEmptyUseCase: SetUntitledStoryTitleIfTitleEmptyUseCase
-    @Mock lateinit var postEditorAnalyticsSessionWrapper: PostEditorAnalyticsSessionWrapper
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var postStore: PostStore
-    @Mock lateinit var site: SiteModel
+
+    @Mock
+    lateinit var systemNotificationsTracker: SystemNotificationsTracker
+
+    @Mock
+    lateinit var saveInitialPostUseCase: SaveInitialPostUseCase
+
+    @Mock
+    lateinit var savePostToDbUseCase: SavePostToDbUseCase
+
+    @Mock
+    lateinit var setUntitledStoryTitleIfTitleEmptyUseCase: SetUntitledStoryTitleIfTitleEmptyUseCase
+
+    @Mock
+    lateinit var postEditorAnalyticsSessionWrapper: PostEditorAnalyticsSessionWrapper
+
+    @Mock
+    lateinit var dispatcher: Dispatcher
+
+    @Mock
+    lateinit var postStore: PostStore
+
+    @Mock
+    lateinit var site: SiteModel
 
     @Before
     fun setUp() {
         viewModel = StoryComposerViewModel(
-                systemNotificationsTracker,
-                saveInitialPostUseCase,
-                savePostToDbUseCase,
-                setUntitledStoryTitleIfTitleEmptyUseCase,
-                postEditorAnalyticsSessionWrapper,
-                dispatcher
+            systemNotificationsTracker,
+            saveInitialPostUseCase,
+            savePostToDbUseCase,
+            setUntitledStoryTitleIfTitleEmptyUseCase,
+            postEditorAnalyticsSessionWrapper,
+            dispatcher
         )
         editPostRepository = EditPostRepository(
-                mock(),
-                postStore,
-                mock(),
-                testDispatcher(),
-                testDispatcher()
+            mock(),
+            postStore,
+            mock(),
+            testDispatcher(),
+            testDispatcher()
         )
     }
 
@@ -109,16 +125,16 @@ class StoryComposerViewModelTest : BaseUnitTest() {
         // arrange
         val postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
         whenever(
-                postStore.getPostByLocalPostId(any())
+            postStore.getPostByLocalPostId(any())
         ).thenReturn(mock())
 
         whenever(
-                postEditorAnalyticsSessionWrapper.getNewPostEditorAnalyticsSession(
-                        any(),
-                        any(),
-                        anyOrNull(),
-                        any()
-                )
+            postEditorAnalyticsSessionWrapper.getNewPostEditorAnalyticsSession(
+                any(),
+                any(),
+                anyOrNull(),
+                any()
+            )
         ).thenReturn(mock())
 
         // act
@@ -126,10 +142,10 @@ class StoryComposerViewModelTest : BaseUnitTest() {
 
         // assert
         verify(postEditorAnalyticsSessionWrapper, times(1)).getNewPostEditorAnalyticsSession(
-                any(),
-                anyOrNull(),
-                anyOrNull(),
-                any()
+            any(),
+            anyOrNull(),
+            anyOrNull(),
+            any()
         )
     }
 
@@ -143,10 +159,10 @@ class StoryComposerViewModelTest : BaseUnitTest() {
 
         // assert
         verify(postEditorAnalyticsSessionWrapper, times(0)).getNewPostEditorAnalyticsSession(
-                any(),
-                anyOrNull(),
-                anyOrNull(),
-                any()
+            any(),
+            anyOrNull(),
+            anyOrNull(),
+            any()
         )
     }
 
@@ -232,7 +248,7 @@ class StoryComposerViewModelTest : BaseUnitTest() {
 
         // assert
         verify(setUntitledStoryTitleIfTitleEmptyUseCase, times(1))
-                .setUntitledStoryTitleIfTitleEmpty(any())
+            .setUntitledStoryTitleIfTitleEmpty(any())
     }
 
     @Test
@@ -258,7 +274,7 @@ class StoryComposerViewModelTest : BaseUnitTest() {
     fun `if editPostRepository does not have a post then vm start() returns false`() {
         // arrange
         whenever(
-                postStore.getPostByLocalPostId(any())
+            postStore.getPostByLocalPostId(any())
         ).thenReturn(null)
 
         // act
@@ -272,7 +288,7 @@ class StoryComposerViewModelTest : BaseUnitTest() {
     fun `if editPostRepository does have a post then vm start() returns true`() {
         // arrange
         whenever(
-                postStore.getPostByLocalPostId(any())
+            postStore.getPostByLocalPostId(any())
         ).thenReturn(mock())
 
         // act
@@ -286,7 +302,7 @@ class StoryComposerViewModelTest : BaseUnitTest() {
     fun `if originalStorySaveResult is passed and is a retry, onStoryDiscarded returns true`() {
         // arrange
         val originalStorySaveReult = StorySaveResult(
-                isRetry = true
+            isRetry = true
         )
 
         // act

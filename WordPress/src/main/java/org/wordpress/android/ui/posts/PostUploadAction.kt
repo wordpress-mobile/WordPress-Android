@@ -61,51 +61,51 @@ fun handleUploadAction(
     when (action) {
         is PostUploadAction.EditPostResult -> {
             uploadUtilsWrapper.handleEditPostResultSnackbars(
-                    activity,
-                    snackbarAttachView,
-                    action.data,
-                    action.post,
-                    action.site,
-                    uploadActionUseCase.getUploadAction(action.post),
-                    { action.publishAction() },
-                    onPublishingCallback
+                activity,
+                snackbarAttachView,
+                action.data,
+                action.post,
+                action.site,
+                uploadActionUseCase.getUploadAction(action.post),
+                { action.publishAction() },
+                onPublishingCallback
             )
         }
         is PostUploadAction.PublishPost -> {
             UploadUtils.publishPost(
-                    activity,
-                    action.post,
-                    action.site,
-                    action.dispatcher,
-                    onPublishingCallback
+                activity,
+                action.post,
+                action.site,
+                action.dispatcher,
+                onPublishingCallback
             )
         }
         is PostUploadAction.PostUploadedSnackbar -> {
             uploadUtilsWrapper.onPostUploadedSnackbarHandler(
-                    activity,
-                    snackbarAttachView,
-                    action.isError,
-                    action.isFirstTimePublish,
-                    action.post,
-                    action.errorMessage,
-                    action.site,
-                    onPublishingCallback
+                activity,
+                snackbarAttachView,
+                action.isError,
+                action.isFirstTimePublish,
+                action.post,
+                action.errorMessage,
+                action.site,
+                onPublishingCallback
             )
         }
         is PostUploadAction.MediaUploadedSnackbar -> {
             uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
-                    activity,
-                    snackbarAttachView,
-                    action.isError,
-                    action.mediaList,
-                    action.site,
-                    action.message
+                activity,
+                snackbarAttachView,
+                action.isError,
+                action.mediaList,
+                action.site,
+                action.message
             )
         }
         is PostUploadAction.PostRemotePreviewSnackbarError -> {
             uploadUtilsWrapper.showSnackbarError(
-                    snackbarAttachView,
-                    snackbarAttachView.resources.getString(action.messageResId)
+                snackbarAttachView,
+                snackbarAttachView.resources.getString(action.messageResId)
             )
         }
         is PostUploadAction.CancelPostAndMediaUpload -> {

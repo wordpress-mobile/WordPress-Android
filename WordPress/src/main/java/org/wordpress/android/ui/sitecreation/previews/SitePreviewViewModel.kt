@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.parcelize.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -15,6 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.parcelize.Parcelize
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -61,10 +61,10 @@ const val LOADING_STATE_TEXT_ANIMATION_DELAY = 2000L
 private const val ERROR_CONTEXT = "site_preview"
 
 private val loadingTexts = listOf(
-        UiStringRes(R.string.new_site_creation_creating_site_loading_1),
-        UiStringRes(R.string.new_site_creation_creating_site_loading_2),
-        UiStringRes(R.string.new_site_creation_creating_site_loading_3),
-        UiStringRes(R.string.new_site_creation_creating_site_loading_4)
+    UiStringRes(R.string.new_site_creation_creating_site_loading_1),
+    UiStringRes(R.string.new_site_creation_creating_site_loading_2),
+    UiStringRes(R.string.new_site_creation_creating_site_loading_3),
+    UiStringRes(R.string.new_site_creation_creating_site_loading_4)
 )
 
 @HiltViewModel
@@ -167,10 +167,10 @@ class SitePreviewViewModel @Inject constructor(
                 // https://github.com/wordpress-mobile/WordPress-Android/issues/13749
                 val segmentIdentifier = if (siteDesign != null) null else segmentId
                 val serviceData = SiteCreationServiceData(
-                        segmentIdentifier,
-                        siteDesign,
-                        urlWithoutScheme,
-                        siteTitle
+                    segmentIdentifier,
+                    siteDesign,
+                    urlWithoutScheme,
+                    siteTitle
                 )
                 _startCreateSiteService.value = SitePreviewStartServiceData(serviceData, previousState)
             }
@@ -233,9 +233,9 @@ class SitePreviewViewModel @Inject constructor(
             FAILURE -> {
                 serviceStateForRetry = event.payload as SiteCreationServiceState
                 tracker.trackErrorShown(
-                        ERROR_CONTEXT,
-                        UNKNOWN,
-                        "SiteCreation service failed"
+                    ERROR_CONTEXT,
+                    UNKNOWN,
+                    "SiteCreation service failed"
                 )
                 updateUiStateAsync(SitePreviewGenericErrorUiState)
             }
@@ -283,8 +283,8 @@ class SitePreviewViewModel @Inject constructor(
         // Load the newly created site in the webview
         urlWithoutScheme?.let { url ->
             val urlToLoad = urlUtils.addUrlSchemeIfNeeded(
-                    url = url,
-                    addHttps = isWordPressComSubDomain(url)
+                url = url,
+                addHttps = isWordPressComSubDomain(url)
             )
             AppLog.v(T.SITE_CREATION, "Site preview will load for url: $urlToLoad")
             _preloadPreview.postValue(urlToLoad)
@@ -317,14 +317,14 @@ class SitePreviewViewModel @Inject constructor(
         val fullUrl = urlUtils.addUrlSchemeIfNeeded(url, true)
         val subDomainIndices: Pair<Int, Int> = Pair(0, subDomain.length)
         val domainIndices: Pair<Int, Int> = Pair(
-                Math.min(subDomainIndices.second, url.length),
-                url.length
+            Math.min(subDomainIndices.second, url.length),
+            url.length
         )
         return SitePreviewData(
-                fullUrl,
-                url,
-                subDomainIndices,
-                domainIndices
+            fullUrl,
+            url,
+            subDomainIndices,
+            domainIndices
         )
     }
 
@@ -335,10 +335,10 @@ class SitePreviewViewModel @Inject constructor(
             val listSize = loadingTexts.size
             while (isActive) {
                 updateUiState(
-                        SitePreviewFullscreenProgressUiState(
-                                animate = i != 0, // the first text should appear without an animation
-                                loadingTextResId = loadingTexts[i++ % listSize]
-                        )
+                    SitePreviewFullscreenProgressUiState(
+                        animate = i != 0, // the first text should appear without an animation
+                        loadingTextResId = loadingTexts[i++ % listSize]
+                    )
                 )
                 delay(LOADING_STATE_TEXT_ANIMATION_DELAY)
             }
@@ -368,24 +368,24 @@ class SitePreviewViewModel @Inject constructor(
         val fullscreenErrorLayoutVisibility: Boolean = false
     ) {
         data class SitePreviewContentUiState(val data: SitePreviewData) : SitePreviewUiState(
-                contentLayoutVisibility = true,
-                webViewVisibility = true,
-                webViewErrorVisibility = false
+            contentLayoutVisibility = true,
+            webViewVisibility = true,
+            webViewErrorVisibility = false
         )
 
         data class SitePreviewWebErrorUiState(val data: SitePreviewData) : SitePreviewUiState(
-                contentLayoutVisibility = true,
-                webViewVisibility = false,
-                webViewErrorVisibility = true
+            contentLayoutVisibility = true,
+            webViewVisibility = false,
+            webViewErrorVisibility = true
         )
 
         data class SitePreviewLoadingShimmerState(val data: SitePreviewData) : SitePreviewUiState(
-                contentLayoutVisibility = true,
-                shimmerVisibility = true
+            contentLayoutVisibility = true,
+            shimmerVisibility = true
         )
 
         data class SitePreviewFullscreenProgressUiState(val loadingTextResId: UiString, val animate: Boolean) :
-                SitePreviewUiState(fullscreenProgressLayoutVisibility = true)
+            SitePreviewUiState(fullscreenProgressLayoutVisibility = true)
 
         sealed class SitePreviewFullscreenErrorUiState constructor(
             val titleResId: Int,
@@ -393,17 +393,17 @@ class SitePreviewViewModel @Inject constructor(
             val showContactSupport: Boolean = false,
             val showCancelWizardButton: Boolean = true
         ) : SitePreviewUiState(
-                fullscreenErrorLayoutVisibility = true
+            fullscreenErrorLayoutVisibility = true
         ) {
             object SitePreviewGenericErrorUiState :
-                    SitePreviewFullscreenErrorUiState(
-                            R.string.site_creation_error_generic_title,
-                            R.string.site_creation_error_generic_subtitle,
-                            showContactSupport = true
-                    )
+                SitePreviewFullscreenErrorUiState(
+                    R.string.site_creation_error_generic_title,
+                    R.string.site_creation_error_generic_subtitle,
+                    showContactSupport = true
+                )
 
             object SitePreviewConnectionErrorUiState : SitePreviewFullscreenErrorUiState(
-                    R.string.no_network_message
+                R.string.no_network_message
             )
         }
     }

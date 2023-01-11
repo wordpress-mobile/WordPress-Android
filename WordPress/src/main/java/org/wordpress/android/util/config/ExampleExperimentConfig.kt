@@ -18,6 +18,7 @@ class ExampleExperimentConfig
     private val controlGroup = Variant(CONTROL_GROUP)
     override val variants: List<Variant>
         get() = listOf(variantA, variantB, controlGroup)
+
     /**
      * Define the methods you need
      */

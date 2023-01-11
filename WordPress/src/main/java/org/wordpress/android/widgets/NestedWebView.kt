@@ -118,13 +118,13 @@ class NestedWebView @JvmOverloads constructor(
         consumed: IntArray
     ) {
         nestedScrollingChildHelper.dispatchNestedScroll(
-                dxConsumed,
-                dyConsumed,
-                dxUnconsumed,
-                dyUnconsumed,
-                offsetInWindow,
-                type,
-                consumed
+            dxConsumed,
+            dyConsumed,
+            dxUnconsumed,
+            dyUnconsumed,
+            offsetInWindow,
+            type,
+            consumed
         )
     }
 
@@ -137,12 +137,12 @@ class NestedWebView @JvmOverloads constructor(
         type: Int
     ): Boolean {
         return nestedScrollingChildHelper.dispatchNestedScroll(
-                dxConsumed,
-                dyConsumed,
-                dxUnconsumed,
-                dyUnconsumed,
-                offsetInWindow,
-                type
+            dxConsumed,
+            dyConsumed,
+            dxUnconsumed,
+            dyUnconsumed,
+            offsetInWindow,
+            type
         )
     }
 
@@ -154,11 +154,11 @@ class NestedWebView @JvmOverloads constructor(
         offsetInWindow: IntArray?
     ): Boolean {
         return nestedScrollingChildHelper.dispatchNestedScroll(
-                dxConsumed,
-                dyConsumed,
-                dxUnconsumed,
-                dyUnconsumed,
-                offsetInWindow
+            dxConsumed,
+            dyConsumed,
+            dxUnconsumed,
+            dyUnconsumed,
+            offsetInWindow
         )
     }
 

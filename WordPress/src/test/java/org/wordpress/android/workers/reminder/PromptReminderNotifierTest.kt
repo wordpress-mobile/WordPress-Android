@@ -38,16 +38,16 @@ class PromptReminderNotifierTest : BaseUnitTest() {
     private val htmlCompatWrapper: HtmlCompatWrapper = mock()
 
     private val classToTest = PromptReminderNotifier(
-            contextProvider = contextProvider,
-            resourceProvider = resourceProvider,
-            siteStore = siteStore,
-            accountStore = accountStore,
-            reminderNotificationManager = reminderNotificationManager,
-            bloggingPromptsFeatureConfig = bloggingPromptsFeatureConfig,
-            bloggingPromptsStore = bloggingPromptsStore,
-            bloggingRemindersAnalyticsTracker = bloggingRemindersAnalyticsTracker,
-            htmlCompatWrapper = htmlCompatWrapper,
-            bloggingRemindersStore = bloggingRemindersStore
+        contextProvider = contextProvider,
+        resourceProvider = resourceProvider,
+        siteStore = siteStore,
+        accountStore = accountStore,
+        reminderNotificationManager = reminderNotificationManager,
+        bloggingPromptsFeatureConfig = bloggingPromptsFeatureConfig,
+        bloggingPromptsStore = bloggingPromptsStore,
+        bloggingRemindersAnalyticsTracker = bloggingRemindersAnalyticsTracker,
+        htmlCompatWrapper = htmlCompatWrapper,
+        bloggingRemindersStore = bloggingRemindersStore
     )
 
     @Before
@@ -79,11 +79,11 @@ class PromptReminderNotifierTest : BaseUnitTest() {
         val siteId = 123
         val siteModel: SiteModel = mock()
         val disabledPromptBloggingReminderModel = BloggingRemindersModel(
-                siteId = siteId,
-                isPromptIncluded = false
+            siteId = siteId,
+            isPromptIncluded = false
         )
         whenever(bloggingRemindersStore.bloggingRemindersModel(any())).thenReturn(
-                flowOf(disabledPromptBloggingReminderModel)
+            flowOf(disabledPromptBloggingReminderModel)
         )
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(siteModel)
@@ -95,11 +95,11 @@ class PromptReminderNotifierTest : BaseUnitTest() {
         val siteId = 123
         val siteModel: SiteModel = mock()
         val enabledPromptBloggingReminderModel = BloggingRemindersModel(
-                siteId = siteId,
-                isPromptIncluded = true
+            siteId = siteId,
+            isPromptIncluded = true
         )
         whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(
-                flowOf(enabledPromptBloggingReminderModel)
+            flowOf(enabledPromptBloggingReminderModel)
         )
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)

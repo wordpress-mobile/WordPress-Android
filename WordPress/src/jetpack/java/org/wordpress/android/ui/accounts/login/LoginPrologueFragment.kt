@@ -58,14 +58,14 @@ class LoginPrologueFragment : Fragment(R.layout.jetpack_login_prologue_screen) {
 
         viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             updateButtonUiState(
-                    bottomButtonsContainer.continueWithWpcomButton,
-                    uiState.continueWithWpcomButtonState.title,
-                    uiState.continueWithWpcomButtonState.onClick
+                bottomButtonsContainer.continueWithWpcomButton,
+                uiState.continueWithWpcomButtonState.title,
+                uiState.continueWithWpcomButtonState.onClick
             )
             updateButtonUiState(
-                    bottomButtonsContainer.enterYourSiteAddressButton,
-                    uiState.enterYourSiteAddressButtonState.title,
-                    uiState.enterYourSiteAddressButtonState.onClick
+                bottomButtonsContainer.enterYourSiteAddressButton,
+                uiState.enterYourSiteAddressButtonState.title,
+                uiState.enterYourSiteAddressButtonState.onClick
             )
         })
     }

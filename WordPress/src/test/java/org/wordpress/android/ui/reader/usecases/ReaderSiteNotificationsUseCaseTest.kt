@@ -37,10 +37,18 @@ private const val ERROR = "Error"
 @RunWith(MockitoJUnitRunner::class)
 class ReaderSiteNotificationsUseCaseTest : BaseUnitTest() {
     lateinit var useCase: ReaderSiteNotificationsUseCase
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var readerTracker: ReaderTracker
-    @Mock lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var dispatcher: Dispatcher
+
+    @Mock
+    lateinit var readerTracker: ReaderTracker
+
+    @Mock
+    lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
+
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     private val event = OnSubscriptionUpdated()
 
     private lateinit var dispatchCaptor: KArgumentCaptor<Action<AddOrDeleteSubscriptionPayload>>
@@ -48,10 +56,10 @@ class ReaderSiteNotificationsUseCaseTest : BaseUnitTest() {
     @Before
     fun setup() {
         useCase = ReaderSiteNotificationsUseCase(
-                dispatcher,
-                readerTracker,
-                readerBlogTableWrapper,
-                networkUtilsWrapper
+            dispatcher,
+            readerTracker,
+            readerBlogTableWrapper,
+            networkUtilsWrapper
         )
 
         doNothing().whenever(readerTracker).trackBlog(any(), any(), any())
@@ -60,7 +68,7 @@ class ReaderSiteNotificationsUseCaseTest : BaseUnitTest() {
             it.type == AccountAction.UPDATE_SUBSCRIPTION_NOTIFICATION_POST
         })).then {
             useCase.onSubscriptionUpdated(
-                    event
+                event
             )
         }
         dispatchCaptor = argumentCaptor()
@@ -151,7 +159,7 @@ class ReaderSiteNotificationsUseCaseTest : BaseUnitTest() {
             it.type == AccountAction.UPDATE_SUBSCRIPTION_NOTIFICATION_POST
         })).then {
             useCase.onSubscriptionUpdated(
-                    failedEvent
+                failedEvent
             )
         }
 

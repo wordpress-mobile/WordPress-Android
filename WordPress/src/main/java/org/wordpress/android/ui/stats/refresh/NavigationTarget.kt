@@ -9,7 +9,7 @@ import java.util.Date
 sealed class NavigationTarget {
     object AddNewPost : NavigationTarget()
     data class ViewPost(val postId: Long, val postUrl: String, val postType: String = StatsConstants.ITEM_TYPE_POST) :
-            NavigationTarget()
+        NavigationTarget()
 
     data class SharePost(val url: String, val title: String) : NavigationTarget()
     data class ViewPostDetailStats(

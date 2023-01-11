@@ -17,7 +17,8 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class PrepublishingPublishSettingsFragment : PublishSettingsFragment() {
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var uiHelpers: UiHelpers
     private var closeListener: PrepublishingScreenClosedListener? = null
 
     override fun getContentLayout() = R.layout.prepublishing_published_settings_fragment
@@ -27,7 +28,7 @@ class PrepublishingPublishSettingsFragment : PublishSettingsFragment() {
         super.onCreate(savedInstanceState)
         (requireActivity().applicationContext as WordPress).component().inject(this)
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(PrepublishingPublishSettingsViewModel::class.java)
+            .get(PrepublishingPublishSettingsViewModel::class.java)
     }
 
     override fun onAttach(context: Context) {
@@ -53,8 +54,8 @@ class PrepublishingPublishSettingsFragment : PublishSettingsFragment() {
 
             viewModel.updateToolbarTitle.observe(this, { uiString ->
                 toolbarTitle.text = uiHelpers.getTextOfUiString(
-                        requireContext(),
-                        uiString
+                    requireContext(),
+                    uiString
                 )
             })
         }

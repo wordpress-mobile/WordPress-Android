@@ -43,8 +43,6 @@ import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.StringUtils
-import java.util.ArrayList
-import java.util.HashMap
 import javax.inject.Inject
 
 class StoriesEventListener @Inject constructor(
@@ -118,9 +116,9 @@ class StoriesEventListener @Inject constructor(
         // within a story block in this post: we will only replace items for which a local-keyed frame has
         // been created before, which can only happen when using the Story Creator.
         storiesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
-                mediaModel.getId(),
-                mediaModel.getMediaId(),
-                mediaModel.localSiteId.toLong()
+            mediaModel.getId(),
+            mediaModel.getMediaId(),
+            mediaModel.localSiteId.toLong()
         )
 
         // also, let's post a sticky event for StoriesEventListener to catch - if the listener is not yet
@@ -128,12 +126,12 @@ class StoriesEventListener @Inject constructor(
         // to process events
         // see subscriber method fun onStoryFrameMediaUploadedEvent(event: StoryFrameMediaUploadedEvent) below
         eventBusWrapper.postSticky(
-                StoryFrameMediaUploadedEvent(
-                        LocalId(mediaModel.id),
-                        RemoteId(mediaModel.mediaId),
-                        "",
-                        mediaModel.url
-                )
+            StoryFrameMediaUploadedEvent(
+                LocalId(mediaModel.id),
+                RemoteId(mediaModel.mediaId),
+                "",
+                mediaModel.url
+            )
         )
     }
 
@@ -155,8 +153,8 @@ class StoriesEventListener @Inject constructor(
         }
         val localMediaId = event.frameId.toString()
         val progress: Float = storyRepositoryWrapper.getCurrentStorySaveProgress(
-                event.storyIndex,
-                event.progress
+            event.storyIndex,
+            event.progress
         )
         storySaveMediaListener?.onMediaSaveProgress(localMediaId, progress)
     }
@@ -179,14 +177,14 @@ class StoriesEventListener @Inject constructor(
         // first, update the media's url
         val frame = frames[event.frameIndex]
         storySaveMediaListener?.onMediaSaveSucceeded(
-                localMediaId,
-                Uri.fromFile(frame.composedFrameFile).toString()
+            localMediaId,
+            Uri.fromFile(frame.composedFrameFile).toString()
         )
 
         // now update progress
         val totalProgress: Float = storyRepositoryWrapper.getCurrentStorySaveProgress(
-                event.storyIndex,
-                0.0f
+            event.storyIndex,
+            0.0f
         )
         storySaveMediaListener?.onMediaSaveProgress(localMediaId, totalProgress)
     }
@@ -243,10 +241,10 @@ class StoriesEventListener @Inject constructor(
             return
         }
         storySaveMediaListener?.onStoryMediaSavedToRemote(
-                event.localId.value.toString(),
-                event.assignedMediaId.value.toString(),
-                event.oldUrl,
-                event.newUrl
+            event.localId.value.toString(),
+            event.assignedMediaId.value.toString(),
+            event.oldUrl,
+            event.newUrl
         )
     }
 
@@ -260,27 +258,27 @@ class StoriesEventListener @Inject constructor(
     ): Boolean {
         if (mediaFiles.isEmpty()) {
             ActivityLauncher.editEmptyStoryForResult(
-                    activity,
-                    site,
-                    postId,
-                    storyRepositoryWrapper.getCurrentStoryIndex(),
-                    blockId
+                activity,
+                site,
+                postId,
+                storyRepositoryWrapper.getCurrentStoryIndex(),
+                blockId
             )
             return false
         }
 
         val reCreateStoryResult = loadStoryFromStoriesPrefsUseCase
-                .loadStoryFromMemoryOrRecreateFromPrefs(site, mediaFiles)
+            .loadStoryFromMemoryOrRecreateFromPrefs(site, mediaFiles)
         if (!reCreateStoryResult.noSlidesLoaded) {
             // Story instance loaded or re-created! Load it onto the StoryComposer for editing now
             ActivityLauncher.editStoryForResult(
-                    activity,
-                    site,
-                    postId,
-                    reCreateStoryResult.storyIndex,
-                    reCreateStoryResult.allStorySlidesAreEditable,
-                    true,
-                    blockId
+                activity,
+                site,
+                postId,
+                reCreateStoryResult.storyIndex,
+                reCreateStoryResult.allStorySlidesAreEditable,
+                true,
+                blockId
             )
         } else {
             // unfortunately we couldn't even load the remote media Ids indicated by the StoryBlock so we can't allow
@@ -289,7 +287,7 @@ class StoriesEventListener @Inject constructor(
                 // there was an error fetching media when we were loading the editor,
                 // we *may* still have a possibility, tell the user they may try refreshing the media again
                 val builder: Builder = MaterialAlertDialogBuilder(
-                        activity
+                    activity
                 )
                 builder.setTitle(activity.getString(R.string.dialog_edit_story_unavailable_title))
                 builder.setMessage(activity.getString(R.string.dialog_edit_story_unavailable_message))
@@ -301,7 +299,7 @@ class StoriesEventListener @Inject constructor(
             } else {
                 // unrecoverable error, nothing we can do, inform the user :(.
                 val builder: Builder = MaterialAlertDialogBuilder(
-                        activity
+                    activity
                 )
                 builder.setTitle(activity.getString(R.string.dialog_edit_story_unrecoverable_title))
                 builder.setMessage(activity.getString(R.string.dialog_edit_story_unrecoverable_message))
@@ -318,7 +316,7 @@ class StoriesEventListener @Inject constructor(
         // just cancel upload for each media
         for (mediaFile in mediaFiles) {
             val localMediaId = StringUtils.stringToInt(
-                    (mediaFile as HashMap<String?, Any?>)["id"].toString(), 0
+                (mediaFile as HashMap<String?, Any?>)["id"].toString(), 0
             )
             if (localMediaId != 0) {
                 editorMedia.cancelMediaUploadAsync(localMediaId, false)
@@ -335,7 +333,7 @@ class StoriesEventListener @Inject constructor(
         val mediaIdsToRetry = ArrayList<Int>()
         for (mediaFile in mediaFiles) {
             val localMediaId = StringUtils.stringToInt(
-                    (mediaFile as HashMap<String?, Any?>)["id"].toString(), 0
+                (mediaFile as HashMap<String?, Any?>)["id"].toString(), 0
             )
             if (localMediaId != 0) {
                 val media: MediaModel? = mediaStore.getMediaWithLocalId(localMediaId)
@@ -343,11 +341,11 @@ class StoriesEventListener @Inject constructor(
                 // for which we don't have a local MediaModel, just tell the user and bail
                 if (media == null) {
                     AppLog.e(
-                            MEDIA,
-                            "Can't find media with local id: $localMediaId"
+                        MEDIA,
+                        "Can't find media with local id: $localMediaId"
                     )
                     val builder: Builder = MaterialAlertDialogBuilder(
-                            activity
+                        activity
                     )
                     builder.setTitle(activity.getString(R.string.cannot_retry_deleted_media_item_fatal))
                     builder.setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
@@ -361,13 +359,13 @@ class StoriesEventListener @Inject constructor(
                     // Notify the editor fragment upload was successful and it should replace the local url by the
                     // remote url.
                     editorMediaUploadListener?.onMediaUploadSucceeded(
-                            media.id.toString(),
-                            FluxCUtils.mediaFileFromMediaModel(media)
+                        media.id.toString(),
+                        FluxCUtils.mediaFileFromMediaModel(media)
                     )
                 } else {
                     UploadService.cancelFinalNotification(
-                            activity,
-                            editPostRepository.getPost()
+                        activity,
+                        editPostRepository.getPost()
                     )
                     UploadService.cancelFinalNotificationForMedia(activity, site)
                     mediaIdsToRetry.add(localMediaId)

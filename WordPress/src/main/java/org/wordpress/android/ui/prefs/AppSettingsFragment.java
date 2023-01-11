@@ -43,7 +43,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
-import org.wordpress.android.ui.about.UnifiedAboutActivity;
 import org.wordpress.android.ui.debug.DebugSettingsActivity;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
@@ -67,7 +66,6 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig;
-import org.wordpress.android.util.config.UnifiedAboutFeatureConfig;
 import org.wordpress.android.viewmodel.ContextProvider;
 
 import java.util.Collections;
@@ -106,7 +104,6 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject ContextProvider mContextProvider;
     @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
-    @Inject UnifiedAboutFeatureConfig mUnifiedAboutFeatureConfig;
     @Inject MySiteDashboardTabsFeatureConfig mMySiteDashboardTabsFeatureConfig;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject LocaleProvider mLocaleProvider;
@@ -162,10 +159,6 @@ public class AppSettingsFragment extends PreferenceFragment
         findPreference(getString(R.string.pref_key_device_settings))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_debug_settings))
-                .setOnPreferenceClickListener(this);
-        findPreference(getString(R.string.pref_key_app_about))
-                .setOnPreferenceClickListener(this);
-        findPreference(getString(R.string.pref_key_oss_licenses))
                 .setOnPreferenceClickListener(this);
 
         mOptimizedImage =
@@ -224,10 +217,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         removeWhatsNewPreference();
         mDispatcher.dispatch(WhatsNewActionBuilder.newFetchCachedAnnouncementAction());
-
-        if (mUnifiedAboutFeatureConfig.isEnabled()) {
-            removeAboutCategory();
-        }
 
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
@@ -288,14 +277,6 @@ public class AppSettingsFragment extends PreferenceFragment
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(experimentalPreference);
-    }
-
-    private void removeAboutCategory() {
-        PreferenceCategory aboutPreferenceCategory =
-                (PreferenceCategory) findPreference(getString(R.string.pref_key_about_section));
-        PreferenceScreen preferenceScreen =
-                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
-        preferenceScreen.removePreference(aboutPreferenceCategory);
     }
 
     private void removeWhatsNewPreference() {
@@ -422,10 +403,6 @@ public class AppSettingsFragment extends PreferenceFragment
             return handleDevicePreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_debug_settings))) {
             return handleDebugSettingsPreferenceClick();
-        } else if (preferenceKey.equals(getString(R.string.pref_key_app_about))) {
-            return handleAboutPreferenceClick();
-        } else if (preferenceKey.equals(getString(R.string.pref_key_oss_licenses))) {
-            return handleOssPreferenceClick();
         } else if (preference == mPrivacySettings) {
             return handlePrivacyClick();
         } else if (preference == mWhatsNew) {
@@ -550,16 +527,6 @@ public class AppSettingsFragment extends PreferenceFragment
         ReaderUpdateServiceStarter.startService(WordPress.getContext(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
     }
 
-    private boolean handleAboutPreferenceClick() {
-        // Temporarily limiting this feature to the WordPress app
-        if (mUnifiedAboutFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
-            startActivity(new Intent(getActivity(), UnifiedAboutActivity.class));
-        } else {
-            startActivity(new Intent(getActivity(), AboutActivity.class));
-        }
-        return true;
-    }
-
     private boolean handleDebugSettingsPreferenceClick() {
         startActivity(new Intent(getActivity(), DebugSettingsActivity.class));
         return true;
@@ -579,11 +546,6 @@ public class AppSettingsFragment extends PreferenceFragment
         }
 
         AnalyticsTracker.track(Stat.APP_SETTINGS_OPEN_DEVICE_SETTINGS_TAPPED);
-        return true;
-    }
-
-    private boolean handleOssPreferenceClick() {
-        startActivity(new Intent(getActivity(), LicensesActivity.class));
         return true;
     }
 

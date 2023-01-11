@@ -46,13 +46,26 @@ private val selectedDate = Date(0)
 
 @ExperimentalCoroutinesApi
 class SearchTermsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var store: SearchTermsStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
-    @Mock lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var store: SearchTermsStore
+
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+
+    @Mock
+    lateinit var site: SiteModel
+
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
+
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
+    @Mock
+    lateinit var statsUtils: StatsUtils
     private lateinit var useCase: SearchTermsUseCase
     private val searchTerm = SearchTerm("search term", 10)
     private val contentDescription = "title, views"
@@ -62,35 +75,39 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = SearchTermsUseCase(
-                statsGranularity,
-                testDispatcher(),
-                testDispatcher(),
-                store,
-                statsSiteProvider,
-                selectedDateProvider,
-                tracker,
-                contentDescriptionHelper,
-                statsUtils,
-                BLOCK
+            statsGranularity,
+            testDispatcher(),
+            testDispatcher(),
+            store,
+            statsSiteProvider,
+            selectedDateProvider,
+            tracker,
+            contentDescriptionHelper,
+            statsUtils,
+            BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
-                SelectedDate(
-                        selectedDate,
-                        listOf(selectedDate)
-                )
+            SelectedDate(
+                selectedDate,
+                listOf(selectedDate)
+            )
         )
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<Int>(),
                 any()
-        )).thenReturn(contentDescription)
-        whenever(contentDescriptionHelper.buildContentDescription(
+            )
+        ).thenReturn(contentDescription)
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<String>(),
                 any()
-        )).thenReturn(contentDescription)
+            )
+        ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
@@ -100,14 +117,14 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         val model = SearchTermsModel(10, 15, 0, listOf(searchTerm), false)
         whenever(store.getSearchTerms(site, statsGranularity, limitMode, selectedDate)).thenReturn(model)
         whenever(
-                store.fetchSearchTerms(
-                        site, statsGranularity, limitMode, selectedDate,
-                        forced
-                )
+            store.fetchSearchTerms(
+                site, statsGranularity, limitMode, selectedDate,
+                forced
+            )
         ).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadData(true, forced)
@@ -127,11 +144,11 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         val model = SearchTermsModel(10, 15, 0, listOf(searchTerm), true)
         whenever(store.getSearchTerms(site, statsGranularity, limitMode, selectedDate)).thenReturn(model)
         whenever(
-                store.fetchSearchTerms(site, statsGranularity, limitMode, selectedDate, forced)
+            store.fetchSearchTerms(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         val result = loadData(true, forced)
 
@@ -149,19 +166,19 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         val forced = false
         val unknownSearchCount = 500
         val model = SearchTermsModel(
-                0,
-                0,
-                unknownSearchCount,
-                listOf(searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, searchTerm),
-                false
+            0,
+            0,
+            unknownSearchCount,
+            listOf(searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, searchTerm),
+            false
         )
         whenever(store.getSearchTerms(site, statsGranularity, limitMode, selectedDate)).thenReturn(model)
         whenever(
-                store.fetchSearchTerms(site, statsGranularity, limitMode, selectedDate, forced)
+            store.fetchSearchTerms(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         val result = loadData(true, forced)
 
@@ -188,9 +205,9 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         val model = SearchTermsModel(0, 0, 0, listOf(), false)
         whenever(store.getSearchTerms(site, statsGranularity, limitMode, selectedDate)).thenReturn(model)
         whenever(
-                store.fetchSearchTerms(site, statsGranularity, limitMode, selectedDate, forced)
+            store.fetchSearchTerms(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
-                OnStatsFetched(model)
+            OnStatsFetched(model)
         )
 
         val result = loadData(true, forced)
@@ -209,11 +226,11 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(
-                store.fetchSearchTerms(site, statsGranularity, limitMode, selectedDate, forced)
+            store.fetchSearchTerms(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadData(true, forced)

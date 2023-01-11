@@ -20,8 +20,12 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @ExperimentalCoroutinesApi
 class FixThreatsUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: FixThreatsUseCase
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var scanStore: ScanStore
+
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var scanStore: ScanStore
 
     private val fakeSiteId = 1L
     private val fakeThreatIds = listOf(11L)
@@ -29,9 +33,9 @@ class FixThreatsUseCaseTest : BaseUnitTest() {
     @Before
     fun setup() = test {
         useCase = FixThreatsUseCase(
-                networkUtilsWrapper,
-                scanStore,
-                testDispatcher()
+            networkUtilsWrapper,
+            scanStore,
+            testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
@@ -48,7 +52,7 @@ class FixThreatsUseCaseTest : BaseUnitTest() {
     @Test
     fun `given invalid response, when fix threats is triggered, then RemoteRequestFailure is returned`() = test {
         whenever(scanStore.fixThreats(any())).thenReturn(
-                OnFixThreatsStarted(FixThreatsError(INVALID_RESPONSE), FIX_THREATS)
+            OnFixThreatsStarted(FixThreatsError(INVALID_RESPONSE), FIX_THREATS)
         )
 
         val result = useCase.fixThreats(fakeSiteId, fakeThreatIds)

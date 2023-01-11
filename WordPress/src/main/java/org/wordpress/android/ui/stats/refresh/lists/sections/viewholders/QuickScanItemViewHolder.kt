@@ -10,8 +10,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Quick
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 
 class QuickScanItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_quick_scan_item
+    parent,
+    R.layout.stats_quick_scan_item
 ) {
     private val startValueContainer = itemView.findViewById<LinearLayout>(R.id.start_value_container)
     private val startLabel = itemView.findViewById<TextView>(R.id.start_label)

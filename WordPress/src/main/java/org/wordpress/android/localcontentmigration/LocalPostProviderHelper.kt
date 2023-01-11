@@ -12,7 +12,7 @@ class LocalPostProviderHelper @Inject constructor(
     private val postStore: PostStore,
     private val dbWrapper: DbWrapper,
     private val localMigrationSiteProviderHelper: LocalSiteProviderHelper,
-): LocalDataProviderHelper {
+) : LocalDataProviderHelper {
     override fun getData(localEntityId: Int?) = localEntityId?.let { localPostId ->
         PostData(post = postStore.getPostByLocalPostId(localPostId))
     } ?: run {
@@ -29,13 +29,13 @@ class LocalPostProviderHelper @Inject constructor(
         with(dbWrapper.giveMeReadableDb()) {
             val ids = mutableListOf<Int>()
             query(
-                    "PostModel",
-                    arrayOf(PostModelTable.ID),
-                    "${PostModelTable.LOCAL_SITE_ID}=?",
-                    arrayOf("$localSiteId"),
-                    null,
-                    null,
-                    "${PostModelTable.ID} ASC",
+                "PostModel",
+                arrayOf(PostModelTable.ID),
+                "${PostModelTable.LOCAL_SITE_ID}=?",
+                arrayOf("$localSiteId"),
+                null,
+                null,
+                "${PostModelTable.ID} ASC",
             ).apply {
                 runCatching {
                     while (moveToNext()) {

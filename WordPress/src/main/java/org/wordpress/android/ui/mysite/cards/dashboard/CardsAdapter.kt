@@ -42,12 +42,12 @@ class CardsAdapter(
             DashboardCardType.POST_CARD_WITH_POST_ITEMS.ordinal ->
                 PostCardViewHolder.PostCardWithPostItemsViewHolder(parent, imageManager, uiHelpers)
             DashboardCardType.BLOGGING_PROMPT_CARD.ordinal -> BloggingPromptCardViewHolder(
-                    parent,
-                    uiHelpers,
-                    imageManager,
-                    bloggingPromptsCardAnalyticsTracker,
-                    htmlCompatWrapper,
-                    learnMoreClicked
+                parent,
+                uiHelpers,
+                imageManager,
+                bloggingPromptsCardAnalyticsTracker,
+                htmlCompatWrapper,
+                learnMoreClicked
             )
             else -> throw IllegalArgumentException("Unexpected view type")
         }

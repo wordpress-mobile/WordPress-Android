@@ -19,7 +19,8 @@ const val PROGRESS_INFO_COLOR = R.color.neutral_50
 const val STATE_INFO_COLOR = R.color.warning_dark
 
 class PostPageListLabelColorUseCase @Inject constructor() {
-    @ColorRes fun getLabelsColor(
+    @ColorRes
+    fun getLabelsColor(
         post: PostModel,
         uploadUiState: PostUploadUiState,
         hasUnhandledConflicts: Boolean,
@@ -44,8 +45,8 @@ class PostPageListLabelColorUseCase @Inject constructor() {
             hasUnhandledConflicts
 
     private fun isProgressInfo(uploadUiState: PostUploadUiState) =
-            uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
-                    uploadUiState is UploadQueued
+        uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
+                uploadUiState is UploadQueued
 
     private fun isStateInfoState(
         uploadUiState: PostUploadUiState,

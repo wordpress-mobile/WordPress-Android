@@ -30,14 +30,14 @@ class ActionCardReminderUseCase @Inject constructor(
 
     override fun buildUiModel(domainModel: Boolean): List<BlockListItem> {
         return listOf(
-                ListItemActionCard(
-                        titleResource = string.stats_action_card_blogging_reminders_title,
-                        text = string.stats_action_card_blogging_reminders_message,
-                        positiveButtonText = string.stats_action_card_blogging_reminders_button_label,
-                        positiveAction = ListItemInteraction.create(this::onSetReminders),
-                        negativeButtonText = string.stats_management_dismiss_insights_news_card,
-                        negativeAction = ListItemInteraction.create(this::onDismiss)
-                )
+            ListItemActionCard(
+                titleResource = string.stats_action_card_blogging_reminders_title,
+                text = string.stats_action_card_blogging_reminders_message,
+                positiveButtonText = string.stats_action_card_blogging_reminders_button_label,
+                positiveAction = ListItemInteraction.create(this::onSetReminders),
+                negativeButtonText = string.stats_management_dismiss_insights_news_card,
+                negativeAction = ListItemInteraction.create(this::onDismiss)
+            )
         )
     }
 

@@ -21,7 +21,8 @@ import org.wordpress.android.util.ActivityUtils
 import javax.inject.Inject
 
 class LocalePickerBottomSheet : BottomSheetDialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: LocalePickerViewModel
 
     private val localeAdapter = LocalePickerAdapter()
@@ -122,7 +123,7 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
         dialog?.setOnShowListener { dialogInterface ->
             val sheetDialog = dialogInterface as? BottomSheetDialog
             bottomSheet = sheetDialog?.findViewById<View>(
-                    com.google.android.material.R.id.design_bottom_sheet
+                com.google.android.material.R.id.design_bottom_sheet
             ) as? FrameLayout
         }
     }
@@ -198,6 +199,7 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "LOCALE_PICKER_TAG"
+
         @JvmStatic
         fun newInstance(): LocalePickerBottomSheet = LocalePickerBottomSheet()
     }

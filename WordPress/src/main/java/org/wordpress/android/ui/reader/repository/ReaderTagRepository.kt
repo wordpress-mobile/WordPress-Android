@@ -83,10 +83,10 @@ class ReaderTagRepository @Inject constructor(
     }
 
     suspend fun getRecommendedInterests(): LiveData<ReaderTagList> =
-            withContext(bgDispatcher) {
-                delay(TimeUnit.SECONDS.toMillis(5))
-                getMockRecommendedInterests()
-            }
+        withContext(bgDispatcher) {
+            delay(TimeUnit.SECONDS.toMillis(5))
+            getMockRecommendedInterests()
+        }
 
     private suspend fun getMockRecommendedInterests(): LiveData<ReaderTagList> {
         return withContext(ioDispatcher) {
@@ -98,14 +98,14 @@ class ReaderTagRepository @Inject constructor(
     // todo: remove method post implementation
     @Suppress("ForbiddenComment")
     private fun getMockInterests() =
-            ReaderTagList().apply {
-                for (c in 'A'..'Z')
-                    (add(
-                            ReaderTag(
-                                    c.toString(), c.toString(), c.toString(),
-                                    "https://public-api.wordpress.com/rest/v1.2/read/tags/$c/posts",
-                                    ReaderTagType.DEFAULT
-                            )
-                    ))
-            }
+        ReaderTagList().apply {
+            for (c in 'A'..'Z')
+                (add(
+                    ReaderTag(
+                        c.toString(), c.toString(), c.toString(),
+                        "https://public-api.wordpress.com/rest/v1.2/read/tags/$c/posts",
+                        ReaderTagType.DEFAULT
+                    )
+                ))
+        }
 }

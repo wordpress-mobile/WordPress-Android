@@ -12,7 +12,8 @@ import javax.inject.Inject
  * Implements the Home Page Picker Design Preview UI
  */
 class DesignPreviewFragment : LayoutPreviewFragment() {
-    @Inject lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
+    @Inject
+    lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
 
     companion object {
         const val DESIGN_PREVIEW_TAG = "DESIGN_PREVIEW_TAG"
@@ -26,7 +27,7 @@ class DesignPreviewFragment : LayoutPreviewFragment() {
     }
 
     override fun getViewModel() =
-            ViewModelProvider(requireActivity(), viewModelFactory).get(HomePagePickerViewModel::class.java)
+        ViewModelProvider(requireActivity(), viewModelFactory).get(HomePagePickerViewModel::class.java)
 
     override fun getChooseButtonText() = if (siteNameFeatureConfig.isEnabled()) {
         R.string.hpp_choose_and_create_site

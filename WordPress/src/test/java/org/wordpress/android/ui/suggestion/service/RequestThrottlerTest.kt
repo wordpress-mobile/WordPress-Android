@@ -24,7 +24,7 @@ class RequestThrottlerTest {
     @Test
     fun `results are stale when no responses have been received`() {
         whenever(timeFunction())
-                .thenReturn(currentMs)
+            .thenReturn(currentMs)
 
         assertTrue(requestThrottler.areResultsStale(key))
     }
@@ -32,8 +32,8 @@ class RequestThrottlerTest {
     @Test
     fun `results are stale even if results were received for a different site recently`() {
         whenever(timeFunction())
-                .thenReturn(currentMs - 1)
-                .thenReturn(currentMs)
+            .thenReturn(currentMs - 1)
+            .thenReturn(currentMs)
 
         val differentSiteId = key + 1
         requestThrottler.onResponseReceived(differentSiteId)
@@ -43,8 +43,8 @@ class RequestThrottlerTest {
     @Test
     fun `results are stale when enough time has passed since last successful response`() {
         whenever(timeFunction())
-                .thenReturn(currentMs - longEnoughToRefresh)
-                .thenReturn(currentMs)
+            .thenReturn(currentMs - longEnoughToRefresh)
+            .thenReturn(currentMs)
         requestThrottler.onResponseReceived(key)
         assertTrue(requestThrottler.areResultsStale(key))
     }
@@ -53,8 +53,8 @@ class RequestThrottlerTest {
     fun `results are not stale when not enough time has passed since last successful response`() {
         val notLongEnoughToRefresh = currentMs - longEnoughToRefresh + 1
         whenever(timeFunction())
-                .thenReturn(notLongEnoughToRefresh)
-                .thenReturn(currentMs)
+            .thenReturn(notLongEnoughToRefresh)
+            .thenReturn(currentMs)
 
         requestThrottler.onResponseReceived(key)
         assertFalse(requestThrottler.areResultsStale(key))

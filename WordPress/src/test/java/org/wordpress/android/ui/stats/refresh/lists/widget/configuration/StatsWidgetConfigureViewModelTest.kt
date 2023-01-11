@@ -20,9 +20,14 @@ import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
 class StatsWidgetConfigureViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock private lateinit var siteSelectionViewModel: StatsSiteSelectionViewModel
-    @Mock private lateinit var colorSelectionViewModel: StatsColorSelectionViewModel
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    private lateinit var siteSelectionViewModel: StatsSiteSelectionViewModel
+
+    @Mock
+    private lateinit var colorSelectionViewModel: StatsColorSelectionViewModel
     private lateinit var viewModel: StatsWidgetConfigureViewModel
     private val selectedSite = MutableLiveData<SiteUiModel>()
     private val viewMode = MutableLiveData<Color>()
@@ -35,8 +40,8 @@ class StatsWidgetConfigureViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = StatsWidgetConfigureViewModel(
-                testDispatcher(),
-                appPrefsWrapper
+            testDispatcher(),
+            appPrefsWrapper
         )
         whenever(siteSelectionViewModel.selectedSite).thenReturn(selectedSite)
         whenever(colorSelectionViewModel.viewMode).thenReturn(viewMode)

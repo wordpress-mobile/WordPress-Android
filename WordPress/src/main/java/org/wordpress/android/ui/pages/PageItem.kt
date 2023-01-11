@@ -52,21 +52,21 @@ sealed class PageItem(open val type: Type) {
         override val author: String? = null,
         override var showQuickStartFocusPoint: Boolean = false
     ) : Page(
-            remoteId = remoteId,
-            localId = localId,
-            title = title,
-            date = date,
-            labels = labels,
-            labelsColor = labelsColor,
-            indent = indent,
-            imageUrl = imageUrl,
-            actions = actions,
-            actionsEnabled = actionsEnabled,
-            tapActionEnabled = true,
-            progressBarUiState = progressBarUiState,
-            showOverlay = showOverlay,
-            author = author,
-            showQuickStartFocusPoint = showQuickStartFocusPoint
+        remoteId = remoteId,
+        localId = localId,
+        title = title,
+        date = date,
+        labels = labels,
+        labelsColor = labelsColor,
+        indent = indent,
+        imageUrl = imageUrl,
+        actions = actions,
+        actionsEnabled = actionsEnabled,
+        tapActionEnabled = true,
+        progressBarUiState = progressBarUiState,
+        showOverlay = showOverlay,
+        author = author,
+        showQuickStartFocusPoint = showQuickStartFocusPoint
     )
 
     @Suppress("DataClassShouldBeImmutable")
@@ -86,21 +86,21 @@ sealed class PageItem(open val type: Type) {
         override val author: String? = null,
         override var showQuickStartFocusPoint: Boolean = false
     ) : Page(
-            remoteId = remoteId,
-            localId = localId,
-            title = title,
-            date = date,
-            labels = labels,
-            labelsColor = labelsColor,
-            indent = 0,
-            imageUrl = imageUrl,
-            actions = actions,
-            actionsEnabled = actionsEnabled,
-            tapActionEnabled = true,
-            progressBarUiState = progressBarUiState,
-            showOverlay = showOverlay,
-            author = author,
-            showQuickStartFocusPoint = showQuickStartFocusPoint
+        remoteId = remoteId,
+        localId = localId,
+        title = title,
+        date = date,
+        labels = labels,
+        labelsColor = labelsColor,
+        indent = 0,
+        imageUrl = imageUrl,
+        actions = actions,
+        actionsEnabled = actionsEnabled,
+        tapActionEnabled = true,
+        progressBarUiState = progressBarUiState,
+        showOverlay = showOverlay,
+        author = author,
+        showQuickStartFocusPoint = showQuickStartFocusPoint
     )
 
     @Suppress("DataClassShouldBeImmutable")
@@ -120,21 +120,21 @@ sealed class PageItem(open val type: Type) {
         override val author: String? = null,
         override var showQuickStartFocusPoint: Boolean = false
     ) : Page(
-            remoteId = remoteId,
-            localId = localId,
-            title = title,
-            date = date,
-            labels = labels,
-            labelsColor = labelsColor,
-            indent = 0,
-            imageUrl = imageUrl,
-            actions = actions,
-            actionsEnabled = actionsEnabled,
-            tapActionEnabled = true,
-            progressBarUiState = progressBarUiState,
-            showOverlay = showOverlay,
-            author = author,
-            showQuickStartFocusPoint = showQuickStartFocusPoint
+        remoteId = remoteId,
+        localId = localId,
+        title = title,
+        date = date,
+        labels = labels,
+        labelsColor = labelsColor,
+        indent = 0,
+        imageUrl = imageUrl,
+        actions = actions,
+        actionsEnabled = actionsEnabled,
+        tapActionEnabled = true,
+        progressBarUiState = progressBarUiState,
+        showOverlay = showOverlay,
+        author = author,
+        showQuickStartFocusPoint = showQuickStartFocusPoint
     )
 
     @Suppress("DataClassShouldBeImmutable")
@@ -154,21 +154,21 @@ sealed class PageItem(open val type: Type) {
         override val author: String? = null,
         override var showQuickStartFocusPoint: Boolean = false
     ) : Page(
-            remoteId = remoteId,
-            localId = localId,
-            title = title,
-            date = date,
-            labels = labels,
-            labelsColor = labelsColor,
-            indent = 0,
-            imageUrl = imageUrl,
-            actions = actions,
-            actionsEnabled = actionsEnabled,
-            tapActionEnabled = false,
-            progressBarUiState = progressBarUiState,
-            showOverlay = showOverlay,
-            author = author,
-            showQuickStartFocusPoint = showQuickStartFocusPoint
+        remoteId = remoteId,
+        localId = localId,
+        title = title,
+        date = date,
+        labels = labels,
+        labelsColor = labelsColor,
+        indent = 0,
+        imageUrl = imageUrl,
+        actions = actions,
+        actionsEnabled = actionsEnabled,
+        tapActionEnabled = false,
+        progressBarUiState = progressBarUiState,
+        showOverlay = showOverlay,
+        author = author,
+        showQuickStartFocusPoint = showQuickStartFocusPoint
     )
 
     @Suppress("DataClassShouldBeImmutable")
@@ -212,7 +212,7 @@ sealed class PageItem(open val type: Type) {
         companion object {
             fun fromItemId(itemId: Int): Action {
                 return values().firstOrNull { it.itemId == itemId }
-                        ?: throw IllegalArgumentException("Unexpected item ID in context menu")
+                    ?: throw IllegalArgumentException("Unexpected item ID in context menu")
             }
         }
     }

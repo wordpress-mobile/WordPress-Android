@@ -8,13 +8,13 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
+import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
-import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
-import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
-import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
-import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -89,10 +89,10 @@ class HomePagePickerViewModel @Inject constructor(
                     updateUiState(Error())
                 } else {
                     recommendationProvider.handleResponse(
-                            vertical,
-                            event.designs,
-                            event.categories,
-                            this@HomePagePickerViewModel::handleResponse
+                        vertical,
+                        event.designs,
+                        event.categories,
+                        this@HomePagePickerViewModel::handleResponse
                     )
                 }
             }

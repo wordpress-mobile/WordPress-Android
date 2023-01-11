@@ -53,7 +53,8 @@ class DeepLinkingIntentReceiverViewModel
         action: String?,
         data: UriWrapper?,
         entryPoint: DeepLinkEntryPoint,
-        savedInstanceState: Bundle?) {
+        savedInstanceState: Bundle?
+    ) {
         extractSavedInstanceStateIfNeeded(savedInstanceState)
         applyFromArgsIfNeeded(action, data, entryPoint, savedInstanceState != null)
 
@@ -67,12 +68,12 @@ class DeepLinkingIntentReceiverViewModel
             if (!handleUrl(uri, action)) {
                 trackWithDeepLinkDataAndFinish()
             }
-        }?:trackWithDeepLinkDataAndFinish()
+        } ?: trackWithDeepLinkDataAndFinish()
     }
 
     private fun trackWithDeepLinkDataAndFinish() {
         action?.let {
-            analyticsUtilsWrapper.trackWithDeepLinkData( DEEP_LINKED, it,uriWrapper?.host ?: "",  uriWrapper?.uri )
+            analyticsUtilsWrapper.trackWithDeepLinkData(DEEP_LINKED, it, uriWrapper?.host ?: "", uriWrapper?.uri)
         }
         _finish.value = Event(Unit)
     }
@@ -97,7 +98,7 @@ class DeepLinkingIntentReceiverViewModel
             } else {
                 handleRequest()
             }
-        }?: handleRequest()
+        } ?: handleRequest()
     }
 
     /**
@@ -113,7 +114,7 @@ class DeepLinkingIntentReceiverViewModel
                 deepLinkTrackingUtils.track(action, it, uriWrapper)
             }
             if (loginIsUnnecessary(it)) {
-                 _navigateAction.value = Event(it)
+                _navigateAction.value = Event(it)
             } else {
                 _navigateAction.value = Event(LoginForResult)
             }
@@ -130,11 +131,11 @@ class DeepLinkingIntentReceiverViewModel
     private fun buildNavigateAction(uri: UriWrapper, rootUri: UriWrapper = uri): NavigateAction? {
         return when {
             deepLinkUriUtils.isTrackingUrl(uri) -> getRedirectUriAndBuildNavigateAction(uri, rootUri)
-                    ?.also {
-                        // The new URL was build so we need to hit the original `mbar` tracking URL
-                        serverTrackingHandler.request(uri)
-                    }
-                    ?: OpenInBrowser(rootUri.copy(REGULAR_TRACKING_PATH))
+                ?.also {
+                    // The new URL was build so we need to hit the original `mbar` tracking URL
+                    serverTrackingHandler.request(uri)
+                }
+                ?: OpenInBrowser(rootUri.copy(REGULAR_TRACKING_PATH))
             deepLinkUriUtils.isWpLoginUrl(uri) -> getRedirectUriAndBuildNavigateAction(uri, rootUri)
             else -> deepLinkHandlers.buildNavigateAction(uri)
         }
@@ -149,8 +150,9 @@ class DeepLinkingIntentReceiverViewModel
             val uri: Uri? = savedInstanceState.getParcelable(URI_KEY)
             uriWrapper = uri?.let { UriWrapper(it) }
             deepLinkEntryPoint =
-                    DeepLinkEntryPoint.valueOf(
-                    savedInstanceState.getString(DEEP_LINK_ENTRY_POINT_KEY, DeepLinkEntryPoint.DEFAULT.name))
+                DeepLinkEntryPoint.valueOf(
+                    savedInstanceState.getString(DEEP_LINK_ENTRY_POINT_KEY, DeepLinkEntryPoint.DEFAULT.name)
+                )
         }
     }
 
@@ -167,10 +169,11 @@ class DeepLinkingIntentReceiverViewModel
         deepLinkEntryPoint = deepLinkEntryPointValue
     }
 
-    private fun checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded() : Boolean {
+    private fun checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded(): Boolean {
         return if (deepLinkEntryPoint == WEB_LINKS &&
-                accountStore.hasAccessToken() && // Already logged in
-                openWebLinksWithJetpackHelper.shouldShowOpenLinksInJetpackOverlay()) {
+            accountStore.hasAccessToken() && // Already logged in
+            openWebLinksWithJetpackHelper.shouldShowOpenLinksInJetpackOverlay()
+        ) {
             openWebLinksWithJetpackHelper.onOverlayShown()
             _showOpenWebLinksWithJetpackOverlay.value = Event(Unit)
             true

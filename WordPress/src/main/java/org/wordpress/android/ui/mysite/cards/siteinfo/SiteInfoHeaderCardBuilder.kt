@@ -23,10 +23,10 @@ class SiteInfoHeaderCardBuilder
         val blogTitle = SiteUtils.getSiteNameOrHomeURL(params.site)
         val siteIcon = if (!params.showSiteIconProgressBar && !params.site.iconUrl.isNullOrEmpty()) {
             IconState.Visible(
-                    SiteUtils.getSiteIconUrl(
-                            params.site,
-                            resourceProvider.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-                    )
+                SiteUtils.getSiteIconUrl(
+                    params.site,
+                    resourceProvider.getDimensionPixelSize(R.dimen.blavatar_sz_small)
+                )
             )
         } else if (params.showSiteIconProgressBar) {
             IconState.Progress
@@ -34,17 +34,17 @@ class SiteInfoHeaderCardBuilder
             IconState.Visible()
         }
         return SiteInfoHeaderCard(
-                blogTitle,
-                homeUrl,
-                siteIcon,
-                params.activeTask == QuickStartNewSiteTask.UPDATE_SITE_TITLE,
-                params.activeTask ==
-                        quickStartRepository.quickStartType.getTaskFromString(QUICK_START_VIEW_SITE_LABEL),
-                params.activeTask == QuickStartNewSiteTask.UPLOAD_SITE_ICON,
-                buildTitleClick(params.site, params.titleClick),
-                ListItemInteraction.create(params.iconClick),
-                ListItemInteraction.create(params.urlClick),
-                ListItemInteraction.create(params.switchSiteClick)
+            blogTitle,
+            homeUrl,
+            siteIcon,
+            params.activeTask == QuickStartNewSiteTask.UPDATE_SITE_TITLE,
+            params.activeTask ==
+                    quickStartRepository.quickStartType.getTaskFromString(QUICK_START_VIEW_SITE_LABEL),
+            params.activeTask == QuickStartNewSiteTask.UPLOAD_SITE_ICON,
+            buildTitleClick(params.site, params.titleClick),
+            ListItemInteraction.create(params.iconClick),
+            ListItemInteraction.create(params.urlClick),
+            ListItemInteraction.create(params.switchSiteClick)
         )
     }
 

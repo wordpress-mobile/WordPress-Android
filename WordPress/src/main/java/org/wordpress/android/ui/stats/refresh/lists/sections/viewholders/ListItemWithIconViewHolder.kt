@@ -15,8 +15,8 @@ import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 import org.wordpress.android.util.image.ImageManager
 
 class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_list_item
+    parent,
+    R.layout.stats_block_list_item
 ) {
     private val iconContainer = itemView.findViewById<LinearLayout>(R.id.icon_container)
     private val text = itemView.findViewById<TextView>(R.id.text)

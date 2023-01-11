@@ -19,8 +19,11 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
 @ExperimentalCoroutinesApi
 class ReaderLinkHandlerTest : BaseUnitTest() {
-    @Mock lateinit var intentUtils: IntentUtils
-    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock
+    lateinit var intentUtils: IntentUtils
+
+    @Mock
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     private lateinit var readerLinkHandler: ReaderLinkHandler
     val blogId: Long = 111
     val postId: Long = 222
@@ -90,9 +93,9 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `URI with viewpost host with non-number query params opens reader`() {
         val uri = buildUri(
-                host = "viewpost",
-                queryParam1 = "blogId" to "abc",
-                queryParam2 = "postId" to "cba"
+            host = "viewpost",
+            queryParam1 = "blogId" to "abc",
+            queryParam2 = "postId" to "cba"
         )
 
         val navigateAction = readerLinkHandler.buildNavigateAction(uri)
@@ -103,9 +106,9 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `URI with viewpost host with query params opens post in reader`() {
         val uri = buildUri(
-                host = "viewpost",
-                queryParam1 = "blogId" to blogId.toString(),
-                queryParam2 = "postId" to postId.toString()
+            host = "viewpost",
+            queryParam1 = "blogId" to blogId.toString(),
+            queryParam2 = "postId" to postId.toString()
         )
 
         val navigateAction = readerLinkHandler.buildNavigateAction(uri)
@@ -135,9 +138,9 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `correctly strips VIEWPOST applink with all params`() {
         val uri = buildUri(
-                host = "viewpost",
-                queryParam1 = "blogId" to blogId.toString(),
-                queryParam2 = "postId" to postId.toString()
+            host = "viewpost",
+            queryParam1 = "blogId" to blogId.toString(),
+            queryParam2 = "postId" to postId.toString()
         )
 
         val strippedUrl = readerLinkHandler.stripUrl(uri)
@@ -148,8 +151,8 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `correctly strips VIEWPOST applink with blog ID param`() {
         val uri = buildUri(
-                host = "viewpost",
-                queryParam1 = "blogId" to blogId.toString()
+            host = "viewpost",
+            queryParam1 = "blogId" to blogId.toString()
         )
 
         val strippedUrl = readerLinkHandler.stripUrl(uri)
@@ -160,7 +163,7 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `correctly strips VIEWPOST applink without params`() {
         val uri = buildUri(
-                host = "viewpost"
+            host = "viewpost"
         )
 
         val strippedUrl = readerLinkHandler.stripUrl(uri)

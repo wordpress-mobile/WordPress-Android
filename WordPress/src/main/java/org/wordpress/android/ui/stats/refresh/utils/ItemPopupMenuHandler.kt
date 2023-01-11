@@ -59,8 +59,8 @@ class ItemPopupMenuHandler
                     when (InsightsMenuItem.values()[id.toInt()]) {
                         UP -> {
                             analyticsTrackerWrapper.trackWithType(
-                                    Stat.STATS_INSIGHTS_TYPE_MOVED_UP,
-                                    statsType
+                                Stat.STATS_INSIGHTS_TYPE_MOVED_UP,
+                                statsType
                             )
                             coroutineScope.launch {
                                 statsStore.moveTypeUp(statsSiteProvider.siteModel, type)
@@ -70,8 +70,8 @@ class ItemPopupMenuHandler
                         DOWN -> {
                             coroutineScope.launch {
                                 analyticsTrackerWrapper.trackWithType(
-                                        Stat.STATS_INSIGHTS_TYPE_MOVED_DOWN,
-                                        statsType
+                                    Stat.STATS_INSIGHTS_TYPE_MOVED_DOWN,
+                                    statsType
                                 )
                                 statsStore.moveTypeDown(statsSiteProvider.siteModel, type)
                                 mutableTypeMoved.postValue(Event(type))
@@ -80,8 +80,8 @@ class ItemPopupMenuHandler
                         REMOVE -> {
                             coroutineScope.launch {
                                 analyticsTrackerWrapper.trackWithType(
-                                        Stat.STATS_INSIGHTS_TYPE_REMOVED,
-                                        statsType
+                                    Stat.STATS_INSIGHTS_TYPE_REMOVED,
+                                    statsType
                                 )
                                 statsStore.removeType(statsSiteProvider.siteModel, type)
                                 mutableTypeMoved.postValue(Event(type))

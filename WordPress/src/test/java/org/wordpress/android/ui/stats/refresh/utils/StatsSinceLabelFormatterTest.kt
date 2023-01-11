@@ -33,104 +33,104 @@ class StatsSinceLabelFormatterTest {
     @Test
     fun `get since seconds label`() {
         makeAssertions(
-                closestValidDate = now,
-                farthestValidDate = fortyFiveSecondsAgo.plusSeconds(1),
-                expectedLabel = SECONDS_AGO
+            closestValidDate = now,
+            farthestValidDate = fortyFiveSecondsAgo.plusSeconds(1),
+            expectedLabel = SECONDS_AGO
         )
     }
 
     @Test
     fun `get since a minute label`() {
         makeAssertions(
-                closestValidDate = fortyFiveSecondsAgo,
-                farthestValidDate = ninetySecondsAgo.plusSeconds(1),
-                expectedLabel = ONE_MINUTE_AGO
+            closestValidDate = fortyFiveSecondsAgo,
+            farthestValidDate = ninetySecondsAgo.plusSeconds(1),
+            expectedLabel = ONE_MINUTE_AGO
         )
     }
 
     @Test
     fun `get since minutes label`() {
         makeAssertions(
-                closestValidDate = ninetySecondsAgo,
-                farthestValidDate = fortyFiveMinutesAgo.plusSeconds(1),
-                expectedLabelOnClosestDate = X_MINUTES_AGO.format(2),
-                expectedLabelOnFarthestDate = X_MINUTES_AGO.format(45)
+            closestValidDate = ninetySecondsAgo,
+            farthestValidDate = fortyFiveMinutesAgo.plusSeconds(1),
+            expectedLabelOnClosestDate = X_MINUTES_AGO.format(2),
+            expectedLabelOnFarthestDate = X_MINUTES_AGO.format(45)
         )
     }
 
     @Test
     fun `get since an hour label`() {
         makeAssertions(
-                closestValidDate = fortyFiveMinutesAgo,
-                farthestValidDate = ninetyMinutesAgo.plusSeconds(1),
-                expectedLabel = ONE_HOUR_AGO
+            closestValidDate = fortyFiveMinutesAgo,
+            farthestValidDate = ninetyMinutesAgo.plusSeconds(1),
+            expectedLabel = ONE_HOUR_AGO
         )
     }
 
     @Test
     fun `get since hours label`() {
         makeAssertions(
-                closestValidDate = ninetyMinutesAgo,
-                farthestValidDate = twentyTwoHoursAgo.plusSeconds(1),
-                expectedLabelOnClosestDate = X_HOURS_AGO.format(2),
-                expectedLabelOnFarthestDate = X_HOURS_AGO.format(22)
+            closestValidDate = ninetyMinutesAgo,
+            farthestValidDate = twentyTwoHoursAgo.plusSeconds(1),
+            expectedLabelOnClosestDate = X_HOURS_AGO.format(2),
+            expectedLabelOnFarthestDate = X_HOURS_AGO.format(22)
         )
     }
 
     @Test
     fun `get since a day label`() {
         makeAssertions(
-                closestValidDate = twentyTwoHoursAgo,
-                farthestValidDate = thirtySixHoursAgo.plusSeconds(1),
-                expectedLabel = ONE_DAY_AGO
+            closestValidDate = twentyTwoHoursAgo,
+            farthestValidDate = thirtySixHoursAgo.plusSeconds(1),
+            expectedLabel = ONE_DAY_AGO
         )
     }
 
     @Test
     fun `get since days label`() {
         makeAssertions(
-                closestValidDate = thirtySixHoursAgo,
-                farthestValidDate = twentyFiveDaysAgo.plusSeconds(1),
-                expectedLabelOnClosestDate = X_DAYS_AGO.format(2),
-                expectedLabelOnFarthestDate = X_DAYS_AGO.format(25)
+            closestValidDate = thirtySixHoursAgo,
+            farthestValidDate = twentyFiveDaysAgo.plusSeconds(1),
+            expectedLabelOnClosestDate = X_DAYS_AGO.format(2),
+            expectedLabelOnFarthestDate = X_DAYS_AGO.format(25)
         )
     }
 
     @Test
     fun `get since a month label`() {
         makeAssertions(
-                closestValidDate = twentyFiveDaysAgo,
-                farthestValidDate = fortyFiveDaysAgo.plusSeconds(1),
-                expectedLabel = ONE_MONTH_AGO
+            closestValidDate = twentyFiveDaysAgo,
+            farthestValidDate = fortyFiveDaysAgo.plusSeconds(1),
+            expectedLabel = ONE_MONTH_AGO
         )
     }
 
     @Test
     fun `get since months label`() {
         makeAssertions(
-                closestValidDate = fortyFiveDaysAgo,
-                farthestValidDate = threeHundredAndTwentyDaysAgo.plusSeconds(1),
-                expectedLabelOnClosestDate = X_MONTHS_AGO.format(2),
-                expectedLabelOnFarthestDate = X_MONTHS_AGO.format(11)
+            closestValidDate = fortyFiveDaysAgo,
+            farthestValidDate = threeHundredAndTwentyDaysAgo.plusSeconds(1),
+            expectedLabelOnClosestDate = X_MONTHS_AGO.format(2),
+            expectedLabelOnFarthestDate = X_MONTHS_AGO.format(11)
         )
     }
 
     @Test
     fun `get since a year label`() {
         makeAssertions(
-                closestValidDate = threeHundredAndTwentyDaysAgo,
-                farthestValidDate = fiveHundredAndFortyEightDaysAgo.plusSeconds(1),
-                expectedLabel = ONE_YEAR_AGO
+            closestValidDate = threeHundredAndTwentyDaysAgo,
+            farthestValidDate = fiveHundredAndFortyEightDaysAgo.plusSeconds(1),
+            expectedLabel = ONE_YEAR_AGO
         )
     }
 
     @Test
     fun `get since years label`() {
         makeAssertions(
-                closestValidDate = fiveHundredAndFortyEightDaysAgo,
-                farthestValidDate = now.minusYears(20).plusSeconds(1),
-                expectedLabelOnClosestDate = X_YEARS_AGO.format(2),
-                expectedLabelOnFarthestDate = X_YEARS_AGO.format(20)
+            closestValidDate = fiveHundredAndFortyEightDaysAgo,
+            farthestValidDate = now.minusYears(20).plusSeconds(1),
+            expectedLabelOnClosestDate = X_YEARS_AGO.format(2),
+            expectedLabelOnFarthestDate = X_YEARS_AGO.format(20)
         )
     }
 

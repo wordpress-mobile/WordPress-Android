@@ -16,7 +16,7 @@ class EditPostPublishSettingsFragment : PublishSettingsFragment() {
         super.onCreate(savedInstanceState)
         (requireActivity().applicationContext as WordPress).component().inject(this)
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(EditPostPublishSettingsViewModel::class.java)
+            .get(EditPostPublishSettingsViewModel::class.java)
     }
 
     companion object {

@@ -76,17 +76,17 @@ class FloatingActionButtonBehavior : CoordinatorLayout.Behavior<FloatingActionBu
 
     private fun moveChildUp(child: View, translation: Int) {
         child.animate()
-                .translationY((-translation).toFloat())
-                .setInterpolator(AccelerateInterpolator())
-                .setDuration(child.resources.getInteger(android.R.integer.config_shortAnimTime).toLong())
-                .start()
+            .translationY((-translation).toFloat())
+            .setInterpolator(AccelerateInterpolator())
+            .setDuration(child.resources.getInteger(android.R.integer.config_shortAnimTime).toLong())
+            .start()
     }
 
     private fun moveChildToInitialPosition(child: View) {
         child.animate()
-                .translationY(0f)
-                .setInterpolator(AccelerateInterpolator())
-                .setDuration(child.resources.getInteger(android.R.integer.config_shortAnimTime).toLong())
-                .start()
+            .translationY(0f)
+            .setInterpolator(AccelerateInterpolator())
+            .setDuration(child.resources.getInteger(android.R.integer.config_shortAnimTime).toLong())
+            .start()
     }
 }

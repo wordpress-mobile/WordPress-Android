@@ -25,7 +25,8 @@ import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: JetpackRemoteInstallViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,7 +48,7 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
             val source = intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
             val retrievedState = savedInstanceState?.getSerializable(VIEW_STATE) as? JetpackRemoteInstallViewState.Type
             viewModel = ViewModelProvider(
-                    this@JetpackRemoteInstallFragment, viewModelFactory
+                this@JetpackRemoteInstallFragment, viewModelFactory
             ).get(JetpackRemoteInstallViewModel::class.java)
             viewModel.start(site, retrievedState)
 
@@ -71,10 +72,10 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
         result: JetpackResultActionData
     ) {
         JetpackConnectionWebViewActivity.startManualFlow(
-                activity,
-                source,
-                result.site,
-                result.loggedIn
+            activity,
+            source,
+            result.site,
+            result.loggedIn
         )
         activity.finish()
     }
@@ -96,10 +97,10 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
         result: JetpackResultActionData
     ) {
         JetpackConnectionWebViewActivity.startJetpackConnectionFlow(
-                activity,
-                source,
-                result.site,
-                result.loggedIn
+            activity,
+            source,
+            result.site,
+            result.loggedIn
         )
         activity.finish()
     }
@@ -112,8 +113,11 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
                 }
                 jetpackInstallIcon.setImageResource(viewState.icon)
                 if (viewState.iconTint != null) {
-                    jetpackInstallIcon.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(
-                            jetpackInstallIcon.context, viewState.iconTint))
+                    jetpackInstallIcon.imageTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            jetpackInstallIcon.context, viewState.iconTint
+                        )
+                    )
                 } else {
                     jetpackInstallIcon.imageTintList = null
                 }

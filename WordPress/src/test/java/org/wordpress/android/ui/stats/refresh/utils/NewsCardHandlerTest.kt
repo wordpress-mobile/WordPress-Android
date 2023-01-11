@@ -15,14 +15,15 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsType
 
 @ExperimentalCoroutinesApi
 class NewsCardHandlerTest : BaseUnitTest() {
-    @Mock private lateinit var statsStore: StatsStore
+    @Mock
+    private lateinit var statsStore: StatsStore
     private lateinit var newsCardHandler: NewsCardHandler
 
     @Before
     fun setUp() {
         newsCardHandler = NewsCardHandler(
-                testDispatcher(),
-                statsStore
+            testDispatcher(),
+            statsStore
         )
     }
 

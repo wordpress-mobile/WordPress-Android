@@ -27,11 +27,20 @@ class CommentSnippetAdapter constructor(
     context: Context,
     val post: ReaderPost?
 ) : Adapter<CommentsSnippetViewHolder<*>>() {
-    @Inject lateinit var threadedCommentsUtils: ThreadedCommentsUtils
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var accountStore: AccountStore
-    @Inject lateinit var readerTracker: ReaderTracker
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var threadedCommentsUtils: ThreadedCommentsUtils
+
+    @Inject
+    lateinit var imageManager: ImageManager
+
+    @Inject
+    lateinit var accountStore: AccountStore
+
+    @Inject
+    lateinit var readerTracker: ReaderTracker
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
 
     private var itemsList = listOf<CommentSnippetItemState>()
     private var contentWidth: Int
@@ -44,7 +53,7 @@ class CommentSnippetAdapter constructor(
 
     fun loadData(items: List<CommentSnippetItemState>) {
         val diffResult = DiffUtil.calculateDiff(
-                CommentSnippetAdatperDiffCallback(itemsList, items)
+            CommentSnippetAdatperDiffCallback(itemsList, items)
         )
         itemsList = items
         diffResult.dispatchUpdatesTo(this)

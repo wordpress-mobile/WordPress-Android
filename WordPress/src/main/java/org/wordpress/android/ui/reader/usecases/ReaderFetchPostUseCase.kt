@@ -5,10 +5,10 @@ import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.AlreadyRunning
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Failed.NoNetwork
-import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Failed.RequestFailed
-import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Failed.NotAuthorised
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Failed.PostNotFound
+import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Failed.RequestFailed
+import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.net.HttpURLConnection
 import javax.inject.Inject
@@ -58,15 +58,15 @@ class ReaderFetchPostUseCase @Inject constructor(
 
             if (requestParams.isFeed) {
                 readerPostActionsWrapper.requestFeedPost(
-                        feedId = requestParams.blogId,
-                        postId = requestParams.postId,
-                        requestListener = listener
+                    feedId = requestParams.blogId,
+                    postId = requestParams.postId,
+                    requestListener = listener
                 )
             } else {
                 readerPostActionsWrapper.requestBlogPost(
-                        blogId = requestParams.blogId,
-                        postId = requestParams.postId,
-                        requestListener = listener
+                    blogId = requestParams.blogId,
+                    postId = requestParams.postId,
+                    requestListener = listener
                 )
             }
         }

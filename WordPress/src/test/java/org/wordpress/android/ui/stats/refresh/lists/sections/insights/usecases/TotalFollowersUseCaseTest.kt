@@ -29,29 +29,44 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class TotalFollowersUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: SummaryStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var totalStatsMapper: TotalStatsMapper
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var useCaseMode: UseCaseMode
-    @Mock lateinit var actionCardHandler: ActionCardHandler
+    @Mock
+    lateinit var insightsStore: SummaryStore
+
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+
+    @Mock
+    lateinit var totalStatsMapper: TotalStatsMapper
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var site: SiteModel
+
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var useCaseMode: UseCaseMode
+
+    @Mock
+    lateinit var actionCardHandler: ActionCardHandler
     private lateinit var useCase: TotalFollowersUseCase
     private val followers = 100
 
     @Before
     fun setUp() {
         useCase = TotalFollowersUseCase(
-                testDispatcher(),
-                testDispatcher(),
-                insightsStore,
-                statsSiteProvider,
-                resourceProvider,
-                totalStatsMapper,
-                analyticsTrackerWrapper,
-                actionCardHandler,
-                useCaseMode
+            testDispatcher(),
+            testDispatcher(),
+            insightsStore,
+            statsSiteProvider,
+            resourceProvider,
+            totalStatsMapper,
+            analyticsTrackerWrapper,
+            actionCardHandler,
+            useCaseMode
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
@@ -80,7 +95,7 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
         val refresh = true
         val message = "Generic error"
         whenever(insightsStore.fetchSummary(site, forced)).thenReturn(
-                OnStatsFetched(StatsError(GENERIC_ERROR, message))
+            OnStatsFetched(StatsError(GENERIC_ERROR, message))
         )
 
         val result = loadSummary(refresh, forced)

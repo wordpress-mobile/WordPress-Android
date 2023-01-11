@@ -51,15 +51,32 @@ class SubFilterViewModelTest : BaseUnitTest() {
     /**
      * First tag for which the card was shown.
      */
-    @Mock private lateinit var initialTag: ReaderTag
-    @Mock private lateinit var savedTag: ReaderTag
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock private lateinit var subfilterListItemMapper: SubfilterListItemMapper
-    @Mock private lateinit var eventBusWrapper: EventBusWrapper
-    @Mock private lateinit var accountStore: AccountStore
-    @Mock private lateinit var readerTracker: ReaderTracker
-    @Mock private lateinit var savedState: Bundle
-    @Mock private lateinit var filter: SubfilterListItem
+    @Mock
+    private lateinit var initialTag: ReaderTag
+
+    @Mock
+    private lateinit var savedTag: ReaderTag
+
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    private lateinit var subfilterListItemMapper: SubfilterListItemMapper
+
+    @Mock
+    private lateinit var eventBusWrapper: EventBusWrapper
+
+    @Mock
+    private lateinit var accountStore: AccountStore
+
+    @Mock
+    private lateinit var readerTracker: ReaderTracker
+
+    @Mock
+    private lateinit var savedState: Bundle
+
+    @Mock
+    private lateinit var filter: SubfilterListItem
 
     private lateinit var viewModel: SubFilterViewModel
 
@@ -69,13 +86,13 @@ class SubFilterViewModelTest : BaseUnitTest() {
         whenever(savedTag.label).thenReturn("tag-label")
 
         viewModel = SubFilterViewModel(
-                testDispatcher(),
-                testDispatcher(),
-                appPrefsWrapper,
-                subfilterListItemMapper,
-                eventBusWrapper,
-                accountStore,
-                readerTracker
+            testDispatcher(),
+            testDispatcher(),
+            appPrefsWrapper,
+            subfilterListItemMapper,
+            eventBusWrapper,
+            accountStore,
+            readerTracker
         )
 
         viewModel.start(initialTag, savedTag, savedState)
@@ -89,13 +106,13 @@ class SubFilterViewModelTest : BaseUnitTest() {
         whenever(subfilterListItemMapper.fromJson(eq(json), any(), any())).thenReturn(filter)
 
         viewModel = SubFilterViewModel(
-                testDispatcher(),
-                testDispatcher(),
-                appPrefsWrapper,
-                subfilterListItemMapper,
-                eventBusWrapper,
-                accountStore,
-                readerTracker
+            testDispatcher(),
+            testDispatcher(),
+            appPrefsWrapper,
+            subfilterListItemMapper,
+            eventBusWrapper,
+            accountStore,
+            readerTracker
         )
 
         viewModel.start(initialTag, savedTag, savedState)
@@ -182,7 +199,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.bottomSheetUiState.value!!.peekContent()).isEqualTo(BottomSheetHidden)
         assertThat(viewModel.bottomSheetEmptyViewAction.value!!.peekContent())
-                .isEqualTo(action)
+            .isEqualTo(action)
     }
 
     @Test
@@ -192,7 +209,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.bottomSheetUiState.value!!.peekContent()).isEqualTo(BottomSheetHidden)
         assertThat(viewModel.bottomSheetEmptyViewAction.value!!.peekContent())
-                .isEqualTo(action)
+            .isEqualTo(action)
     }
 
     @Test
@@ -202,7 +219,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.bottomSheetUiState.value!!.peekContent()).isEqualTo(BottomSheetHidden)
         assertThat(viewModel.bottomSheetEmptyViewAction.value!!.peekContent())
-                .isEqualTo(action)
+            .isEqualTo(action)
     }
 
     @Test
@@ -220,10 +237,10 @@ class SubFilterViewModelTest : BaseUnitTest() {
         verify(appPrefsWrapper, times(0)).setLastReaderKnownAccessTokenStatus(any())
 
         assertThat(viewModel.updateTagsAndSites.value!!.peekContent()).isEqualTo(
-                EnumSet.of(
-                        UpdateTask.TAGS,
-                        UpdateTask.FOLLOWED_BLOGS
-                )
+            EnumSet.of(
+                UpdateTask.TAGS,
+                UpdateTask.FOLLOWED_BLOGS
+            )
         )
 
         assertThat(viewModel.currentSubFilter.value).isInstanceOf(SiteAll::class.java)
@@ -241,10 +258,10 @@ class SubFilterViewModelTest : BaseUnitTest() {
         verify(appPrefsWrapper, times(1)).setLastReaderKnownAccessTokenStatus(any())
 
         assertThat(viewModel.updateTagsAndSites.value!!.peekContent()).isEqualTo(
-                EnumSet.of(
-                        UpdateTask.TAGS,
-                        UpdateTask.FOLLOWED_BLOGS
-                )
+            EnumSet.of(
+                UpdateTask.TAGS,
+                UpdateTask.FOLLOWED_BLOGS
+            )
         )
 
         assertThat(viewModel.currentSubFilter.value).isInstanceOf(SiteAll::class.java)
@@ -295,10 +312,12 @@ class SubFilterViewModelTest : BaseUnitTest() {
 
         viewModel.onSubFiltersListButtonClicked()
 
-        assertThat(updateTasks).isEqualTo(EnumSet.of(
+        assertThat(updateTasks).isEqualTo(
+            EnumSet.of(
                 UpdateTask.TAGS,
                 UpdateTask.FOLLOWED_BLOGS
-        ))
+            )
+        )
 
         assertThat(uiState).isInstanceOf(BottomSheetVisible::class.java)
     }

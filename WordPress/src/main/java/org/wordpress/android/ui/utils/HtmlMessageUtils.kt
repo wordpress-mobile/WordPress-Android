@@ -9,14 +9,15 @@ class HtmlMessageUtils
 @Inject constructor(private val resourceProvider: ResourceProvider) {
     fun getHtmlMessageFromStringFormatResId(@StringRes formatResId: Int, vararg args: Any?): CharSequence {
         return HtmlCompat.fromHtml(
-                String.format(resourceProvider.getString(formatResId), *args),
-                HtmlCompat.FROM_HTML_MODE_LEGACY
+            String.format(resourceProvider.getString(formatResId), *args),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
         )
     }
+
     fun getHtmlMessageFromStringFormat(text: String, vararg args: Any?): CharSequence {
         return HtmlCompat.fromHtml(
-                String.format(text, *args),
-                HtmlCompat.FROM_HTML_MODE_LEGACY
+            String.format(text, *args),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
         )
     }
 }

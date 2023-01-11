@@ -28,11 +28,11 @@ sealed class ReminderConfig(val type: ReminderType) {
     private fun LocalDate.withNextDayOfWeekFrom(days: Set<DayOfWeek>) = days.map { with(next(it)) }.minOrNull()
 
     fun toMap() = mapOf(
-            REMINDER_TYPE to type.name,
-            REMINDER_DAYS to when (this) {
-                is DailyReminder -> null
-                is WeeklyReminder -> days.joinToString(DAYS_SEPARATOR)
-            }
+        REMINDER_TYPE to type.name,
+        REMINDER_DAYS to when (this) {
+            is DailyReminder -> null
+            is WeeklyReminder -> days.joinToString(DAYS_SEPARATOR)
+        }
     )
 
     companion object {
@@ -42,17 +42,17 @@ sealed class ReminderConfig(val type: ReminderType) {
 
         fun fromMap(map: Map<String, Any?>): ReminderConfig {
             val type: ReminderType = (map[REMINDER_TYPE] as? String)
-                    ?.let {
-                        runCatching { ReminderType.valueOf(it) }.getOrNull()
-                    }
-                    ?: DAILY
+                ?.let {
+                    runCatching { ReminderType.valueOf(it) }.getOrNull()
+                }
+                ?: DAILY
             val days: Set<DayOfWeek> = (map[REMINDER_DAYS] as? String)
-                    ?.split(DAYS_SEPARATOR)
-                    ?.mapNotNull {
-                        runCatching { DayOfWeek.valueOf(it) }.getOrNull()
-                    }
-                    ?.toSet()
-                    .orEmpty()
+                ?.split(DAYS_SEPARATOR)
+                ?.mapNotNull {
+                    runCatching { DayOfWeek.valueOf(it) }.getOrNull()
+                }
+                ?.toSet()
+                .orEmpty()
             return when (type) {
                 DAILY -> DailyReminder
                 WEEKLY -> if (days.isEmpty()) DailyReminder else WeeklyReminder(days)

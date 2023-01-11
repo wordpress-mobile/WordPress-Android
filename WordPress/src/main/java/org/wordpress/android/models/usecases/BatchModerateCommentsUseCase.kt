@@ -26,8 +26,8 @@ class BatchModerateCommentsUseCase @Inject constructor(
     moderateCommentsResourceProvider: ModerateCommentsResourceProvider
 ) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentsAction, DoNotCare,
         CommentsUseCaseType, CommentError>(
-        resourceProvider = moderateCommentsResourceProvider,
-        initialState = Idle
+    resourceProvider = moderateCommentsResourceProvider,
+    initialState = Idle
 ) {
     @Suppress("LongMethod") // temporary, until we came up with a different use case layout
     sealed class ModerateCommentsState : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction,
@@ -48,19 +48,19 @@ class BatchModerateCommentsUseCase @Inject constructor(
                             val deferredList = parameters.remoteCommentIds.map {
                                 async {
                                     val commentBeforeModeration = commentsStore.getCommentByLocalSiteAndRemoteId(
-                                            parameters.site.id,
-                                            it
+                                        parameters.site.id,
+                                        it
                                     ).firstOrNull() ?: return@async CommentsActionPayload(
-                                            CommentError(
-                                                    INVALID_RESPONSE,
-                                                    "Comment not found"
-                                            )
+                                        CommentError(
+                                            INVALID_RESPONSE,
+                                            "Comment not found"
+                                        )
                                     )
 
                                     val localModerationResult = commentsStore.moderateCommentLocally(
-                                            site = parameters.site,
-                                            remoteCommentId = it,
-                                            newStatus = parameters.newStatus
+                                        site = parameters.site,
+                                        remoteCommentId = it,
+                                        newStatus = parameters.newStatus
                                     )
 
                                     if (localModerationResult.isError) {
@@ -71,23 +71,23 @@ class BatchModerateCommentsUseCase @Inject constructor(
 
                                     val result = if (parameters.newStatus == DELETED) {
                                         commentsStore.deleteComment(
-                                                site = parameters.site,
-                                                remoteCommentId = it,
-                                                null
+                                            site = parameters.site,
+                                            remoteCommentId = it,
+                                            null
                                         )
                                     } else {
                                         commentsStore.pushLocalCommentByRemoteId(
-                                                site = parameters.site,
-                                                remoteCommentId = it
+                                            site = parameters.site,
+                                            remoteCommentId = it
                                         )
                                     }
 
                                     if (result.isError) {
                                         // revert local moderation
                                         commentsStore.moderateCommentLocally(
-                                                site = parameters.site,
-                                                remoteCommentId = it,
-                                                newStatus = CommentStatus.fromString(commentBeforeModeration.status)
+                                            site = parameters.site,
+                                            remoteCommentId = it,
+                                            newStatus = CommentStatus.fromString(commentBeforeModeration.status)
                                         )
                                         utilsProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
                                     }
@@ -97,11 +97,11 @@ class BatchModerateCommentsUseCase @Inject constructor(
 
                             if (deferredList.any { it.isError }) {
                                 flowChannel.emit(
-                                        Failure(
-                                                BATCH_MODERATE_USE_CASE,
-                                                CommentError(GENERIC_ERROR, ""),
-                                                DoNotCare
-                                        )
+                                    Failure(
+                                        BATCH_MODERATE_USE_CASE,
+                                        CommentError(GENERIC_ERROR, ""),
+                                        DoNotCare
+                                    )
                                 )
                             }
                         }

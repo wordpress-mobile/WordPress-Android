@@ -10,7 +10,8 @@ import org.wordpress.android.WordPress
 import javax.inject.Inject
 
 class EditCancelDialogFragment : DialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private var viewModel: UnifiedCommentsEditViewModel? = null
 
@@ -24,8 +25,8 @@ class EditCancelDialogFragment : DialogFragment() {
 
         (parentFragment as? UnifiedCommentsEditFragment)?.let {
             viewModel = ViewModelProvider(
-                    it,
-                    viewModelFactory
+                it,
+                viewModelFactory
             ).get(UnifiedCommentsEditViewModel::class.java)
         }
 

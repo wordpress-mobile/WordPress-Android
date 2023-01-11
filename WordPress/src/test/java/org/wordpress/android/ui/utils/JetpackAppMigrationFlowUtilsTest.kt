@@ -31,21 +31,20 @@ class JetpackAppMigrationFlowUtilsTest {
     private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()
 
     private val jetpackAppMigrationFlowUtils = JetpackAppMigrationFlowUtils(
-            buildConfigWrapper,
-            jetpackMigrationFlowFeatureConfig,
-            contextProvider,
-            appPrefsWrapper,
-            accountStore,
-            appStatus,
-            wordPressPublicData,
-            contentMigrationAnalyticsTracker,
+        buildConfigWrapper,
+        jetpackMigrationFlowFeatureConfig,
+        contextProvider,
+        appPrefsWrapper,
+        accountStore,
+        appStatus,
+        wordPressPublicData,
+        contentMigrationAnalyticsTracker,
     )
 
     @Before
     fun setUp() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(jetpackMigrationFlowFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
         whenever(appPrefsWrapper.isJetpackMigrationEligible()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(wordPressPublicData.currentPackageId()).thenReturn("package")
@@ -85,9 +84,10 @@ class JetpackAppMigrationFlowUtilsTest {
     }
 
     @Test
-    fun `When it is not the first migration attempt the Jetpack app the migration flow should not be shown`() {
-        whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(false)
-        val expected = false
+    fun `When user is logged in and migration was in progress the Jetpack app the migration flow should be shown`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(appPrefsWrapper.isJetpackMigrationInProgress()).thenReturn(true)
+        val expected = true
         val actual = jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
         Assert.assertEquals(expected, actual)
     }

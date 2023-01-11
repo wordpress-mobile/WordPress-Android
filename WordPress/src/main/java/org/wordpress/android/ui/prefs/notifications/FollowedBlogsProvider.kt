@@ -19,7 +19,7 @@ class FollowedBlogsProvider
         }
         val allFollowedBlogs = if (query != null) {
             readerBlogTable.getFollowedBlogs()
-                    .filter { it.name.contains(query) || it.url.contains(query) }
+                .filter { it.name.contains(query) || it.url.contains(query) }
         } else {
             readerBlogTable.getFollowedBlogs()
         }
@@ -28,19 +28,19 @@ class FollowedBlogsProvider
             return subscriptions.map { subscription ->
                 val clickHandler = if (subscription.blogId != null && subscription.blogId != "false") {
                     ClickHandler(
-                            subscription.shouldNotifyPosts,
-                            subscription.shouldEmailPosts,
-                            subscription.emailPostsFrequency,
-                            subscription.shouldEmailComments
+                        subscription.shouldNotifyPosts,
+                        subscription.shouldEmailPosts,
+                        subscription.emailPostsFrequency,
+                        subscription.shouldEmailComments
                     )
                 } else {
                     null
                 }
                 PreferenceModel(
-                        getSiteNameOrHostFromSubscription(subscription.blogName, subscription.url),
-                        urlUtils.getHost(subscription.url),
-                        subscription.blogId.toString(),
-                        clickHandler
+                    getSiteNameOrHostFromSubscription(subscription.blogName, subscription.url),
+                    urlUtils.getHost(subscription.url),
+                    subscription.blogId.toString(),
+                    clickHandler
                 )
             }
         }
@@ -53,19 +53,19 @@ class FollowedBlogsProvider
             // We don't have notification settings for feeds
             val clickHandler = if (match != null && match.blogId != null && match.blogId != "false") {
                 ClickHandler(
-                        match.shouldNotifyPosts,
-                        match.shouldEmailPosts,
-                        match.emailPostsFrequency,
-                        match.shouldEmailComments
+                    match.shouldNotifyPosts,
+                    match.shouldEmailPosts,
+                    match.emailPostsFrequency,
+                    match.shouldEmailComments
                 )
             } else {
                 null
             }
             PreferenceModel(
-                    getSiteNameOrHostFromSubscription(readerBlog.name, readerBlog.url),
-                    urlUtils.getHost(readerBlog.url),
-                    readerBlog.blogId.toString(),
-                    clickHandler
+                getSiteNameOrHostFromSubscription(readerBlog.name, readerBlog.url),
+                urlUtils.getHost(readerBlog.url),
+                readerBlog.blogId.toString(),
+                clickHandler
             )
         }
     }

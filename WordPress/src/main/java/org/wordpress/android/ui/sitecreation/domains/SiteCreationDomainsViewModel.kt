@@ -140,9 +140,11 @@ class SiteCreationDomainsViewModel @Inject constructor(
             updateUiStateToContent(query, Loading(Ready(emptyList()), false))
             fetchDomainsJob = launch {
                 delay(THROTTLE_DELAY)
-                val onSuggestedDomains: OnSuggestedDomains = fetchDomainsUseCase.fetchDomains(query.value,
-                            includeVendorDot = true,
-                            includeDotBlog = true)
+                val onSuggestedDomains: OnSuggestedDomains = fetchDomainsUseCase.fetchDomains(
+                    query.value,
+                    includeVendorDot = true,
+                    includeDotBlog = true
+                )
 
                 withContext(mainDispatcher) {
                     onDomainsFetched(query, onSuggestedDomains)
@@ -151,8 +153,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
         } else {
             tracker.trackErrorShown(ERROR_CONTEXT, SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
             updateUiStateToContent(
-                    query,
-                    Error(listState, errorMessageResId = R.string.no_network_message)
+                query,
+                Error(listState, errorMessageResId = R.string.no_network_message)
             )
         }
     }
@@ -161,16 +163,16 @@ class SiteCreationDomainsViewModel @Inject constructor(
         // We want to treat `INVALID_QUERY` as if it's an empty result, so we'll ignore it
         if (event.isError && event.error.type != SuggestDomainErrorType.INVALID_QUERY) {
             tracker.trackErrorShown(
-                    ERROR_CONTEXT,
-                    event.error.type.toString(),
-                    event.error.message
+                ERROR_CONTEXT,
+                event.error.type.toString(),
+                event.error.message
             )
             updateUiStateToContent(
-                    query,
-                    Error(
-                            listState,
-                            errorMessageResId = R.string.site_creation_fetch_suggestions_error_unknown
-                    )
+                query,
+                Error(
+                    listState,
+                    errorMessageResId = R.string.site_creation_fetch_suggestions_error_unknown
+                )
             )
         } else {
             /**
@@ -179,8 +181,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
              * other part for the others. We then combine them back again into a single list.
              */
             val domainNames = event.suggestions.map { it.domain_name }
-                    .partition { it.startsWith("${query.value}.") }
-                    .toList().flatten()
+                .partition { it.startsWith("${query.value}.") }
+                .toList().flatten()
 
             // We inform the user when the search query contains non-alphanumeric characters
             val emptyListMessage = if (event.isError && event.error.type == SuggestDomainErrorType.INVALID_QUERY) {
@@ -201,19 +203,19 @@ class SiteCreationDomainsViewModel @Inject constructor(
         listState = state
         val isNonEmptyUserQuery = isNonEmptyUserQuery(query)
         updateUiState(
-                DomainsUiState(
-                        headerUiState = createHeaderUiState(
-                                !isNonEmptyUserQuery
-                        ),
-                        searchInputUiState = createSearchInputUiState(
-                                showProgress = state is Loading,
-                                showClearButton = isNonEmptyUserQuery,
-                                showDivider = state.data.isNotEmpty(),
-                                showKeyboard = true
-                        ),
-                        contentState = createDomainsUiContentState(query, state, emptyListMessage),
-                        createSiteButtonContainerVisibility = selectedDomain != null
-                )
+            DomainsUiState(
+                headerUiState = createHeaderUiState(
+                    !isNonEmptyUserQuery
+                ),
+                searchInputUiState = createSearchInputUiState(
+                    showProgress = state is Loading,
+                    showClearButton = isNonEmptyUserQuery,
+                    showDivider = state.data.isNotEmpty(),
+                    showKeyboard = true
+                ),
+                contentState = createDomainsUiContentState(query, state, emptyListMessage),
+                createSiteButtonContainerVisibility = selectedDomain != null
+            )
         )
     }
 
@@ -230,11 +232,11 @@ class SiteCreationDomainsViewModel @Inject constructor(
         val isError = isNonEmptyUserQuery(query) && state is Error
 
         val items = createSuggestionsUiStates(
-                onRetry = { updateQueryInternal(query) },
-                query = query?.value,
-                data = state.data,
-                errorFetchingSuggestions = isError,
-                errorResId = if (isError) (state as Error).errorMessageResId else null
+            onRetry = { updateQueryInternal(query) },
+            query = query?.value,
+            data = state.data,
+            errorFetchingSuggestions = isError,
+            errorResId = if (isError) (state as Error).errorMessageResId else null
         )
         return if (items.isEmpty()) {
             if (isNonEmptyUserQuery(query) && (state is Success || state is Ready)) {
@@ -255,8 +257,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
         val items: ArrayList<DomainsListItemUiState> = ArrayList()
         if (errorFetchingSuggestions) {
             val errorUiState = DomainsFetchSuggestionsErrorUiState(
-                    messageResId = errorResId ?: R.string.site_creation_fetch_suggestions_error_unknown,
-                    retryButtonResId = R.string.button_retry
+                messageResId = errorResId ?: R.string.site_creation_fetch_suggestions_error_unknown,
+                retryButtonResId = R.string.button_retry
             )
             errorUiState.onItemTapped = onRetry
             items.add(errorUiState)
@@ -269,9 +271,9 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
             data.forEach { domainName ->
                 val itemUiState = DomainsModelAvailableUiState(
-                        domainSanitizer.getName(domainName),
-                        domainSanitizer.getDomain(domainName),
-                        checked = domainName == selectedDomain
+                    domainSanitizer.getName(domainName),
+                    domainSanitizer.getDomain(domainName),
+                    checked = domainName == selectedDomain
                 )
                 itemUiState.onItemTapped = { setSelectedDomainName(domainName) }
                 items.add(itemUiState)
@@ -296,9 +298,9 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
         return if (isDomainUnavailable) {
             DomainsModelUnavailabilityUiState(
-                    sanitizedQuery,
-                    ".wordpress.com",
-                    UiStringRes(R.string.new_site_creation_unavailable_domain)
+                sanitizedQuery,
+                ".wordpress.com",
+                UiStringRes(R.string.new_site_creation_unavailable_domain)
             )
         } else {
             null
@@ -309,8 +311,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
         isVisible: Boolean
     ): SiteCreationHeaderUiState? {
         return if (isVisible) SiteCreationHeaderUiState(
-                UiStringRes(R.string.new_site_creation_domain_header_title),
-                UiStringRes(R.string.new_site_creation_domain_header_subtitle)
+            UiStringRes(R.string.new_site_creation_domain_header_title),
+            UiStringRes(R.string.new_site_creation_domain_header_subtitle)
         ) else null
     }
 
@@ -321,11 +323,11 @@ class SiteCreationDomainsViewModel @Inject constructor(
         showKeyboard: Boolean
     ): SiteCreationSearchInputUiState {
         return SiteCreationSearchInputUiState(
-                hint = UiStringRes(R.string.new_site_creation_search_domain_input_hint),
-                showProgress = showProgress,
-                showClearButton = showClearButton,
-                showDivider = showDivider,
-                showKeyboard = showKeyboard
+            hint = UiStringRes(R.string.new_site_creation_search_domain_input_hint),
+            showProgress = showProgress,
+            showClearButton = showClearButton,
+            showDivider = showDivider,
+            showKeyboard = showKeyboard
         )
     }
 
@@ -335,7 +337,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     private fun isNonEmptyUserQuery(query: DomainSuggestionsQuery?): Boolean =
-            query is UserQuery && !query.value.isBlank()
+        query is UserQuery && !query.value.isBlank()
 
     data class DomainsUiState(
         val headerUiState: SiteCreationHeaderUiState?,
@@ -349,21 +351,21 @@ class SiteCreationDomainsViewModel @Inject constructor(
             val items: List<DomainsListItemUiState>
         ) {
             object Initial : DomainsUiContentState(
-                    emptyViewVisibility = false,
-                    exampleViewVisibility = true,
-                    items = emptyList()
+                emptyViewVisibility = false,
+                exampleViewVisibility = true,
+                items = emptyList()
             )
 
             class Empty(val message: UiString?) : DomainsUiContentState(
-                    emptyViewVisibility = true,
-                    exampleViewVisibility = false,
-                    items = emptyList()
+                emptyViewVisibility = true,
+                exampleViewVisibility = false,
+                items = emptyList()
             )
 
             class VisibleItems(items: List<DomainsListItemUiState>) : DomainsUiContentState(
-                    emptyViewVisibility = false,
-                    exampleViewVisibility = false,
-                    items = items
+                emptyViewVisibility = false,
+                exampleViewVisibility = false,
+                items = items
             )
         }
     }

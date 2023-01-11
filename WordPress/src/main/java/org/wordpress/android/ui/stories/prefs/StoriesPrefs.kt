@@ -53,9 +53,9 @@ class StoriesPrefs @Inject constructor(
 
     private fun getIncrementalTempId(): Long {
         return PreferenceManager.getDefaultSharedPreferences(context).getLong(
-                        KEY_STORIES_SLIDE_INCREMENTAL_ID,
-                        0
-                )
+            KEY_STORIES_SLIDE_INCREMENTAL_ID,
+            0
+        )
     }
 
     fun checkSlideIdExists(siteId: Long, mediaId: RemoteId): Boolean {
@@ -214,19 +214,19 @@ class StoriesPrefs @Inject constructor(
     ) {
         // look for the slide saved with the local id key (mediaFile.id), and re-convert to mediaId.
         getSlideWithLocalId(
-                localSiteId,
-                LocalId(localIdKey)
+            localSiteId,
+            LocalId(localIdKey)
         )?.let {
             it.id = remoteIdKey.toString() // update the StoryFrameItem id to hold the same value as the remote mediaID
             saveSlideWithRemoteId(
-                    localSiteId,
-                    RemoteId(remoteIdKey), // use the new mediaId as key
-                    it
+                localSiteId,
+                RemoteId(remoteIdKey), // use the new mediaId as key
+                it
             )
             // now delete the old entry
             deleteSlideWithLocalId(
-                    localSiteId,
-                    LocalId(localIdKey)
+                localSiteId,
+                LocalId(localIdKey)
             )
         }
     }
@@ -241,19 +241,19 @@ class StoriesPrefs @Inject constructor(
     ): StoryFrameItem? {
         // look for the slide saved with the local id key (mediaFile.id), and re-convert to mediaId.
         getSlideWithTempId(
-                localSiteId,
-                tempId
+            localSiteId,
+            tempId
         )?.let {
             it.id = localId.value.toString()
             saveSlideWithLocalId(
-                    localSiteId,
-                    localId, // use the new localId as key
-                    it
+                localSiteId,
+                localId, // use the new localId as key
+                it
             )
             // now delete the old entry
             deleteSlideWithTempId(
-                    localSiteId,
-                    tempId
+                localSiteId,
+                tempId
             )
             return it
         }

@@ -2469,6 +2469,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "remove_feature_overlay_button_tapped";
             case JETPACK_REMOVE_FEATURE_OVERLAY_DISMISSED:
                 return "remove_feature_overlay_dismissed";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED:
+                return "remove_feature_overlay_link_tapped";
             case JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISPLAYED:
                 return "remove_site_creation_overlay_displayed";
             case JETPACK_REMOVE_SITE_CREATION_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED:
@@ -2481,6 +2483,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_deep_link_overlay_button_open_in_jetpack_app_tapped";
             case JETPACK_DEEP_LINK_OVERLAY_DISMISSED:
                 return "jetpack_deep_link_overlay_dismissed";
+            case REMOVE_FEATURE_CARD_DISPLAYED:
+                return "remove_feature_card_displayed";
+            case REMOVE_FEATURE_CARD_TAPPED:
+                return "remove_feature_card_tapped";
+            case REMOVE_FEATURE_CARD_LINK_TAPPED:
+                return "remove_feature_card_link_tapped";
+            case REMOVE_FEATURE_CARD_MENU_ACCESSED:
+                return "remove_feature_card_menu_accessed";
+            case REMOVE_FEATURE_CARD_HIDE_TAPPED:
+                return "remove_feature_card_hide_tapped";
+            case REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED:
+                return "remove_feature_card_remind_later_tapped";
         }
         return null;
     }

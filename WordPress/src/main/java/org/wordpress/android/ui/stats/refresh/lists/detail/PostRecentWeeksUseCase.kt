@@ -17,11 +17,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
-import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.utils.ListItemInteraction
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -35,18 +35,18 @@ class PostRecentWeeksUseCase(
     private val postDetailMapper: PostDetailMapper,
     private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<PostDetailStatsModel, ExpandedWeekUiState>(
-        PostDetailType.CLICKS_BY_WEEKS,
-        mainDispatcher,
-        backgroundDispatcher,
-        ExpandedWeekUiState()
+    PostDetailType.CLICKS_BY_WEEKS,
+    mainDispatcher,
+    backgroundDispatcher,
+    ExpandedWeekUiState()
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
     override suspend fun loadCachedData(): PostDetailStatsModel? {
         return statsPostProvider.postId?.let { postId ->
             postDetailStore.getPostDetail(
-                    statsSiteProvider.siteModel,
-                    postId
+                statsSiteProvider.siteModel,
+                postId
             )
         }
     }
@@ -71,27 +71,27 @@ class PostRecentWeeksUseCase(
             items.add(Title(R.string.stats_detail_recent_weeks))
         }
         val header = Header(
-                R.string.stats_months_and_years_period_label,
-                R.string.stats_months_and_years_views_label
+            R.string.stats_months_and_years_period_label,
+            R.string.stats_months_and_years_views_label
         )
         items.add(
-                header
+            header
         )
         val yearList = postDetailMapper.mapWeeks(
-                domainModel.weekViews,
-                itemsToLoad,
-                uiState,
-                header,
-                this::onUiState
+            domainModel.weekViews,
+            itemsToLoad,
+            uiState,
+            header,
+            this::onUiState
         )
 
         items.addAll(yearList)
         if (useCaseMode == BLOCK && domainModel.weekViews.size > itemsToLoad) {
             items.add(
-                    Link(
-                            text = R.string.stats_insights_view_more,
-                            navigateAction = ListItemInteraction.create(this::onLinkClick)
-                    )
+                Link(
+                    text = R.string.stats_insights_view_more,
+                    navigateAction = ListItemInteraction.create(this::onLinkClick)
+                )
             )
         }
         return items
@@ -119,14 +119,14 @@ class PostRecentWeeksUseCase(
         private val postDetailStore: PostDetailStore
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
-                PostRecentWeeksUseCase(
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        statsSiteProvider,
-                        statsPostProvider,
-                        postDetailStore,
-                        postDetailMapper,
-                        useCaseMode
-                )
+            PostRecentWeeksUseCase(
+                mainDispatcher,
+                backgroundDispatcher,
+                statsSiteProvider,
+                statsPostProvider,
+                postDetailStore,
+                postDetailMapper,
+                useCaseMode
+            )
     }
 }

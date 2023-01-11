@@ -19,8 +19,8 @@ class CategoryViewHolder(
         binding.category.text = uiState.title
         binding.emoji.text = uiState.emoji
         binding.categoryContainer.contentDescription = parent.context.getString(
-                uiState.contentDescriptionResId,
-                uiState.title
+            uiState.contentDescriptionResId,
+            uiState.title
         )
         binding.categoryContainer.setOnClickListener {
             uiState.onItemTapped.invoke()
@@ -38,9 +38,9 @@ class CategoryViewHolder(
     companion object {
         fun from(parent: ViewGroup): CategoryViewHolder {
             val binding = ModalLayoutPickerCategoryBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
+                LayoutInflater.from(parent.context),
+                parent,
+                false
             )
             return CategoryViewHolder(parent, binding)
         }

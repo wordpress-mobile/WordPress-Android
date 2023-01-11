@@ -13,7 +13,7 @@ class UserFlagsAnalyticsTracker @Inject constructor(
     fun trackSuccess() = analyticsTracker.track(Stat.USER_FLAGS_SUCCESS)
 
     fun trackFailed(errorType: ErrorType) =
-            analyticsTracker.track(Stat.USER_FLAGS_FAILED, mapOf(ERROR_TYPE to errorType.value))
+        analyticsTracker.track(Stat.USER_FLAGS_FAILED, mapOf(ERROR_TYPE to errorType.value))
 
     sealed class ErrorType(val value: String) {
         object NoUserFlagsFoundError : ErrorType("no_user_flags_found_error")

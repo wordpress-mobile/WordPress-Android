@@ -33,7 +33,7 @@ class NestedCoordinatorLayout @JvmOverloads constructor(
     }
 
     override fun hasNestedScrollingParent(type: Int): Boolean =
-            helper.hasNestedScrollingParent(type)
+        helper.hasNestedScrollingParent(type)
 
     override fun hasNestedScrollingParent(): Boolean = helper.hasNestedScrollingParent()
 
@@ -76,13 +76,13 @@ class NestedCoordinatorLayout @JvmOverloads constructor(
     ) {
         dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, null, type)
         super.onNestedScroll(
-                target,
-                dxConsumed,
-                dyConsumed,
-                dxUnconsumed,
-                dyUnconsumed,
-                type,
-                consumed
+            target,
+            dxConsumed,
+            dyConsumed,
+            dxUnconsumed,
+            dyUnconsumed,
+            type,
+            consumed
         )
     }
 
@@ -135,7 +135,7 @@ class NestedCoordinatorLayout @JvmOverloads constructor(
     }
 
     override fun startNestedScroll(axes: Int, type: Int): Boolean =
-            helper.startNestedScroll(axes, type)
+        helper.startNestedScroll(axes, type)
 
     override fun startNestedScroll(axes: Int): Boolean = helper.startNestedScroll(axes)
 
@@ -157,13 +157,13 @@ class NestedCoordinatorLayout @JvmOverloads constructor(
         consumed: IntArray
     ) {
         helper.dispatchNestedScroll(
-                dxConsumed,
-                dyConsumed,
-                dxUnconsumed,
-                dyUnconsumed,
-                offsetInWindow,
-                type,
-                consumed
+            dxConsumed,
+            dyConsumed,
+            dxUnconsumed,
+            dyUnconsumed,
+            offsetInWindow,
+            type,
+            consumed
         )
     }
 
@@ -175,12 +175,12 @@ class NestedCoordinatorLayout @JvmOverloads constructor(
         offsetInWindow: IntArray?,
         type: Int
     ): Boolean = helper.dispatchNestedScroll(
-            dxConsumed,
-            dyConsumed,
-            dxUnconsumed,
-            dyUnconsumed,
-            offsetInWindow,
-            type
+        dxConsumed,
+        dyConsumed,
+        dxUnconsumed,
+        dyUnconsumed,
+        offsetInWindow,
+        type
     )
 
     override fun dispatchNestedScroll(
@@ -190,11 +190,11 @@ class NestedCoordinatorLayout @JvmOverloads constructor(
         dyUnconsumed: Int,
         offsetInWindow: IntArray?
     ): Boolean = helper.dispatchNestedScroll(
-            dxConsumed,
-            dyConsumed,
-            dxUnconsumed,
-            dyUnconsumed,
-            offsetInWindow
+        dxConsumed,
+        dyConsumed,
+        dxUnconsumed,
+        dyUnconsumed,
+        offsetInWindow
     )
 
     override fun dispatchNestedPreScroll(
@@ -213,7 +213,7 @@ class NestedCoordinatorLayout @JvmOverloads constructor(
     ): Boolean = helper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
 
     override fun dispatchNestedPreFling(velocityX: Float, velocityY: Float): Boolean =
-            helper.dispatchNestedPreFling(velocityX, velocityY)
+        helper.dispatchNestedPreFling(velocityX, velocityY)
 
     override fun dispatchNestedFling(
         velocityX: Float,

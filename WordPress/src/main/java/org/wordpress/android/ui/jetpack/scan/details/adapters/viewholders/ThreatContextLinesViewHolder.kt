@@ -8,8 +8,8 @@ import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.
 import org.wordpress.android.ui.jetpack.scan.details.adapters.ThreatContextLinesAdapter
 
 class ThreatContextLinesViewHolder(parent: ViewGroup) : JetpackViewHolder<ThreatDetailsListContextLinesItemBinding>(
-        parent,
-        ThreatDetailsListContextLinesItemBinding::inflate
+    parent,
+    ThreatDetailsListContextLinesItemBinding::inflate
 ) {
     override fun onBind(itemUiState: JetpackListItemState) = with(binding) {
         val contextLinesItemState = itemUiState as ThreatContextLinesItemState

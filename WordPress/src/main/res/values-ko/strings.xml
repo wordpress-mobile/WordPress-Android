@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-12-01 16:54:12+0000
+Translation-Revision-Date: 2022-12-20 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ko_KR
 -->
 <resources>
+    <string name="reader_toast_user_blocked">이 사용자의 글이 더는 표시되지 않음</string>
+    <string name="reader_menu_block_user">사용자 차단</string>
+    <string name="reader_menu_report_user">이 사용자 신고</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">워드프레스에서 링크 열기</string>
     <string name="wp_jetpack_deep_link_overlay_description">젯팩 앱을 설치하신 것 같습니다.\n\n앞으로 젯팩 앱에서 링크를 여시겠어요?\n\n언제든지 젯팩의 앱 설정 &gt; 링크 열기에서 변경하실 수 있습니다.</string>
     <string name="wp_jetpack_deep_link_overlay_title">젯팩에서 링크 열기 여부</string>
@@ -26,7 +29,6 @@ Language: ko_KR
     <string name="preference_open_links_in_jetpack">젯팩에서 링크 열기</string>
     <string name="jp_migration_need_help_button">도움말이 필요하신가요?</string>
     <string name="jp_migration_got_it_button">알겠습니다.</string>
-    <string name="jp_migration_delete_message">데이터가 충돌하지 않도록 &lt;br&gt;&lt;b&gt;워드프레스 앱을 삭제하세요&lt;/b&gt;.</string>
     <string name="jp_migration_delete_subtitle">아직 워드프레스 앱이 설치되어 있는 것 같습니다. 데이터가 충돌하지 않도록 워드프레스 앱을 삭제하는 것이 좋습니다.</string>
     <string name="jp_migration_delete_title">더는 워드프레스 앱 필요 없음</string>
     <string name="jp_migration_network_error_message">네트워크 연결 없이 데이터와 설정을 이전할 수 없습니다.</string>
@@ -38,7 +40,6 @@ Language: ko_KR
     <string name="jp_migration_try_again_button">다시 시도</string>
     <string name="jp_migration_finish_button">마침</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">워드프레스 앱 아이콘 제거</string>
-    <string name="jp_migration_done_delete_wp_message">데이터가 충돌하지 않도록 &lt;br&gt;&lt;b&gt;워드프레스 앱을 삭제하세요&lt;/b&gt;.</string>
     <string name="jp_migration_done_subtitle">모든 데이터와 설정을 이전했습니다. 모든 것이 그대로 다 남아 있습니다.</string>
     <string name="jp_migration_done_title">젯팩으로 전환해 주셔서 감사합니다!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">워드프레스 앱의 알림을 해제하겠습니다.</string>

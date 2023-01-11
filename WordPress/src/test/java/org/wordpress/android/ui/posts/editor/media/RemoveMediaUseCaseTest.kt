@@ -36,11 +36,11 @@ class RemoveMediaUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         removeMediaUseCase = RemoveMediaUseCase(
-                mediaStore,
-                dispatcher,
-                mediaUtilsWrapper,
-                uploadServiceFacade,
-                testDispatcher()
+            mediaStore,
+            dispatcher,
+            mediaUtilsWrapper,
+            uploadServiceFacade,
+            testDispatcher()
         )
         whenever(mediaStore.getMediaWithLocalId(anyInt())).thenReturn(MediaModel().apply {
             uploadState = "non-empty-state"
