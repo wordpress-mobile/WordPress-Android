@@ -12,6 +12,11 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
+import org.wordpress.android.localcontentmigration.EligibilityHelper
+import org.wordpress.android.localcontentmigration.LocalContentEntityData
+import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.*
+import org.wordpress.android.localcontentmigration.LocalMigrationError
+import org.wordpress.android.localcontentmigration.LocalMigrationResult
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.JetpackMigrationFlowFeatureConfig
@@ -29,6 +34,7 @@ class JetpackAppMigrationFlowUtilsTest {
     private val appStatus: AppStatus = mock()
     private val wordPressPublicData: WordPressPublicData = mock()
     private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()
+    private val eligibilityHelper: EligibilityHelper = mock()
 
     private val jetpackAppMigrationFlowUtils = JetpackAppMigrationFlowUtils(
         buildConfigWrapper,
@@ -39,6 +45,7 @@ class JetpackAppMigrationFlowUtilsTest {
         appStatus,
         wordPressPublicData,
         contentMigrationAnalyticsTracker,
+        eligibilityHelper,
     )
 
     @Before
@@ -50,6 +57,8 @@ class JetpackAppMigrationFlowUtilsTest {
         whenever(wordPressPublicData.currentPackageId()).thenReturn("package")
         whenever(appStatus.isAppInstalled(any())).thenReturn(true)
         whenever(wordPressPublicData.nonSemanticPackageVersion()).thenReturn("21.3")
+        whenever(eligibilityHelper.validate())
+            .thenReturn(LocalMigrationResult.Success(LocalContentEntityData.EligibilityStatusData(true)))
     }
 
     @Test
@@ -78,6 +87,16 @@ class JetpackAppMigrationFlowUtilsTest {
     @Test
     fun `When the jetpackMigrationFlow is not eligible the Jetpack app the migration flow should not be shown`() {
         whenever(appPrefsWrapper.isJetpackMigrationEligible()).thenReturn(false)
+        val expected = false
+        val actual = jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
+        Assert.assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `When content is not eligible for migration the migration flow should not be shown`() {
+        whenever(eligibilityHelper.validate())
+            .thenReturn(LocalMigrationResult.Failure(LocalMigrationError.Ineligibility(LocalDraftContentIsPresent)))
+
         val expected = false
         val actual = jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
         Assert.assertEquals(expected, actual)
