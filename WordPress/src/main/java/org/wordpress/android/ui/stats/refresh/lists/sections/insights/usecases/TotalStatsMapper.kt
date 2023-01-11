@@ -97,33 +97,32 @@ class TotalStatsMapper @Inject constructor(
     /**
      * Gives list of data with StatsType for the current week.
      */
-    private fun getCurrentWeekDays(dates: List<PeriodData>, type: TotalStatsType): List<Long> {
-        val currentWeekDays = dates.takeLast(DAY_COUNT_FOR_CURRENT_WEEK)
-        return mapToStatsType(currentWeekDays, type)
+    fun getCurrentWeekDays(dates: List<PeriodData>, type: TotalStatsType): List<Long> {
+        // taking data for last 14 days excluding today
+        return mapToStatsType(dates.dropLast(1).takeLast(DAY_COUNT_FOR_CURRENT_WEEK), type)
     }
 
     /**
      * Gives list of data with StatsType for previous week.
      */
-    private fun getPreviousWeekDays(dates: List<PeriodData>, type: TotalStatsType): List<Long> {
-        if (dates.size < DAY_COUNT_TOTAL) {
-            return emptyList()
+    fun getPreviousWeekDays(dates: List<PeriodData>, type: TotalStatsType): List<Long> {
+        return if (dates.size < DAY_COUNT_TOTAL) {
+            emptyList()
+        } else {
+            mapToStatsType(dates.take(DAY_COUNT_FOR_PREVIOUS_WEEK), type)
         }
-        val previousWeekDays = dates.subList(
-            dates.lastIndex - DAY_COUNT_TOTAL + 1,
-            dates.lastIndex - DAY_COUNT_FOR_PREVIOUS_WEEK + 1
-        )
-        return mapToStatsType(previousWeekDays, type)
     }
 
     private fun mapToStatsType(dates: List<PeriodData>, type: TotalStatsType) = dates.map {
         when (type) {
+            TotalStatsType.VIEWS -> it.views
+            TotalStatsType.VISITORS -> it.visitors
             LIKES -> it.likes
             COMMENTS -> it.comments
         }
     }
 
-    private enum class TotalStatsType { LIKES, COMMENTS }
+    enum class TotalStatsType { VIEWS, VISITORS, LIKES, COMMENTS }
 
     companion object {
         private const val DAY_COUNT_FOR_CURRENT_WEEK = 7 // Last 7 days

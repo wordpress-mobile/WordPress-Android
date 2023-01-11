@@ -33,7 +33,8 @@ class ViewsAndVisitorsMapper
     private val statsDateFormatter: StatsDateFormatter,
     private val resourceProvider: ResourceProvider,
     private val statsUtils: StatsUtils,
-    private val contentDescriptionHelper: ContentDescriptionHelper
+    private val contentDescriptionHelper: ContentDescriptionHelper,
+    private val totalStatsMapper: TotalStatsMapper
 ) {
     private val units = listOf(
         string.stats_views,
@@ -228,20 +229,12 @@ class ViewsAndVisitorsMapper
     }
 
     private fun mapDatesToWeeks(dates: List<PeriodData>, selectedPosition: Int): Pair<Long, Long> {
-        val values = dates.map {
-            val value = it.getValue(selectedPosition)
-            value.toInt()
-        }
+        val statsType = TotalStatsMapper.TotalStatsType.values()[selectedPosition]
 
-        val hasData = values.isNotEmpty() && values.size >= 7
+        val prevWeekData = totalStatsMapper.getPreviousWeekDays(dates, statsType)
+        val thisWeekData = totalStatsMapper.getCurrentWeekDays(dates, statsType)
 
-        val prevWeekData = if (hasData) values.subList(0, 7) else values.subList(0, values.size)
-        val thisWeekData = if (hasData) values.subList(7, values.size) else emptyList()
-
-        val prevWeekCount = prevWeekData.fold(0L) { acc, next -> acc + next }
-        val thisWeekCount = thisWeekData.fold(0L) { acc, next -> acc + next }
-
-        return Pair(thisWeekCount, prevWeekCount)
+        return Pair(thisWeekData.sum(), prevWeekData.sum())
     }
 
     companion object {
