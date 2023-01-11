@@ -54,7 +54,6 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
                 }
             }
         }
-        viewModel.onMainBottomSheetCreated()
     }
 
     override fun onAttach(context: Context) {

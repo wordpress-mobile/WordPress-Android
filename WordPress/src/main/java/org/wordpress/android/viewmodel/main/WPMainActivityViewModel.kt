@@ -138,6 +138,8 @@ class WPMainActivityViewModel @Inject constructor(
     val isSignedInWPComOrHasWPOrgSite: Boolean
         get() = FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)
 
+    private var hasLoadedMainActions = false
+
     fun start(site: SiteModel?) {
         if (isStarted) return
         isStarted = true
@@ -214,6 +216,10 @@ class WPMainActivityViewModel @Inject constructor(
         }
 
         _mainActions.postValue(actionsList)
+        if (hasLoadedMainActions && actionsList.any { it is AnswerBloggingPromptAction }) {
+            analyticsTracker.track(Stat.BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED)
+        }
+        hasLoadedMainActions = true
     }
 
     private fun onCreateActionClicked(actionType: ActionType) {
@@ -385,14 +391,6 @@ class WPMainActivityViewModel @Inject constructor(
 
     fun handleSiteRemoved() {
         selectedSiteRepository.removeSite()
-    }
-
-    fun onMainBottomSheetCreated() {
-        _mainActions.value?.let { actions ->
-            if (actions.any { it is AnswerBloggingPromptAction }) {
-                analyticsTracker.track(Stat.BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED)
-            }
-        }
     }
 
     data class FocusPointInfo(
