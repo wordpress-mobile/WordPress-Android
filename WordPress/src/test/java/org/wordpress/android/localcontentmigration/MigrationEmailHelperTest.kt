@@ -18,9 +18,9 @@ class MigrationEmailHelperTest : BaseUnitTest() {
     private val migrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()
 
     private val classToTest = MigrationEmailHelper(
-            jetpackMigrationStore,
-            migrationAnalyticsTracker,
-            testDispatcher(),
+        jetpackMigrationStore,
+        migrationAnalyticsTracker,
+        testDispatcher(),
     )
 
     @Test

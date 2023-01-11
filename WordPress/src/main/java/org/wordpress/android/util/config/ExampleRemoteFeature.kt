@@ -11,9 +11,9 @@ import javax.inject.Inject
 @Feature(remoteField = EXAMPLE_REMOTE_FEATURE_FIELD, defaultValue = false)
 class ExampleRemoteFeature
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
-        appConfig,
-        false,
-        EXAMPLE_REMOTE_FEATURE_FIELD
+    appConfig,
+    false,
+    EXAMPLE_REMOTE_FEATURE_FIELD
 ) {
     companion object {
         const val EXAMPLE_REMOTE_FEATURE_FIELD = "example_remote_feature_field"

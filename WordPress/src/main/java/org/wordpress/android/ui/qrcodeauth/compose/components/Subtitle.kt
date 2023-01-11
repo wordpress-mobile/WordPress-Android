@@ -17,17 +17,17 @@ fun Subtitle(
     modifier: Modifier = Modifier
 ) {
     Text(
-            text = text,
-            textAlign = TextAlign.Center,
-            fontSize = FontSize.Large.value,
-            color = color,
-            modifier = modifier
-                    .wrapContentSize()
-                    .padding(
-                            start = Margin.ExtraExtraMediumLarge.value,
-                            end = Margin.ExtraExtraMediumLarge.value,
-                            top = Margin.ExtraLarge.value + Margin.Small.value,
-                            bottom = Margin.Medium.value
-                    )
+        text = text,
+        textAlign = TextAlign.Center,
+        fontSize = FontSize.Large.value,
+        color = color,
+        modifier = modifier
+            .wrapContentSize()
+            .padding(
+                start = Margin.ExtraExtraMediumLarge.value,
+                end = Margin.ExtraExtraMediumLarge.value,
+                top = Margin.ExtraLarge.value + Margin.Small.value,
+                bottom = Margin.Medium.value
+            )
     )
 }

@@ -12,8 +12,8 @@ class JetpackHeaderViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : JetpackViewHolder<JetpackListHeaderItemBinding>(
-        parent,
-        JetpackListHeaderItemBinding::inflate
+    parent,
+    JetpackListHeaderItemBinding::inflate
 ) {
     override fun onBind(itemUiState: JetpackListItemState) {
         val headerState = itemUiState as HeaderState

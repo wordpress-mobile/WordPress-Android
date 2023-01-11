@@ -15,10 +15,10 @@ data class QuickStartListItemDecoration(
         val isFirst = itemPosition == 0
         val isLast = itemCount > 0 && itemPosition == itemCount - 1
         outRect.set(
-                if (isFirst) edgeHorizontalSpacing else itemHorizontalSpacing,
-                0,
-                if (isLast) edgeHorizontalSpacing else itemHorizontalSpacing,
-                0
+            if (isFirst) edgeHorizontalSpacing else itemHorizontalSpacing,
+            0,
+            if (isLast) edgeHorizontalSpacing else itemHorizontalSpacing,
+            0
         )
     }
 }

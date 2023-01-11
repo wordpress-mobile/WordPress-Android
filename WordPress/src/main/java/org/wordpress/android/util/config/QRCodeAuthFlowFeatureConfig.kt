@@ -7,9 +7,9 @@ import javax.inject.Inject
 @Feature(QRCodeAuthFlowFeatureConfig.QRCODE_AUTH_FLOW_REMOTE_FIELD, true)
 class QRCodeAuthFlowFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
-        appConfig,
-        BuildConfig.QRCODE_AUTH_FLOW,
-        QRCODE_AUTH_FLOW_REMOTE_FIELD
+    appConfig,
+    BuildConfig.QRCODE_AUTH_FLOW,
+    QRCODE_AUTH_FLOW_REMOTE_FIELD
 ) {
     override fun isEnabled(): Boolean {
         return super.isEnabled() && BuildConfig.ENABLE_QRCODE_AUTH_FLOW

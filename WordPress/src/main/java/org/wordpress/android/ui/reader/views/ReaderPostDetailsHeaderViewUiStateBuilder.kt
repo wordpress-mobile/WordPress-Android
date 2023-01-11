@@ -29,17 +29,17 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     ): ReaderPostDetailsHeaderUiState {
         val hasAccessToken = accountStore.hasAccessToken()
         val textTitle = post
-                .takeIf { post.hasTitle() }
-                ?.title?.let { UiStringText(it) } ?: UiStringRes(string.reader_untitled_post)
+            .takeIf { post.hasTitle() }
+            ?.title?.let { UiStringText(it) } ?: UiStringRes(string.reader_untitled_post)
 
         return ReaderPostDetailsHeaderUiState(
-                title = textTitle,
-                authorName = post.authorName,
-                tagItems = buildTagItems(post, onTagItemClicked),
-                tagItemsVisibility = buildTagItemsVisibility(post),
-                blogSectionUiState = buildBlogSectionUiState(post, onBlogSectionClicked),
-                followButtonUiState = buildFollowButtonUiState(onFollowClicked, post, hasAccessToken),
-                dateLine = buildDateLine(post)
+            title = textTitle,
+            authorName = post.authorName,
+            tagItems = buildTagItems(post, onTagItemClicked),
+            tagItemsVisibility = buildTagItemsVisibility(post),
+            blogSectionUiState = buildBlogSectionUiState(post, onBlogSectionClicked),
+            followButtonUiState = buildFollowButtonUiState(onFollowClicked, post, hasAccessToken),
+            dateLine = buildDateLine(post)
         )
     }
 
@@ -67,10 +67,10 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     }
 
     private fun buildTagItems(post: ReaderPost, onClicked: (String) -> Unit) =
-            readerPostTagsUiStateBuilder.mapPostTagsToTagUiStates(post, onClicked)
+        readerPostTagsUiStateBuilder.mapPostTagsToTagUiStates(post, onClicked)
 
     private fun buildTagItemsVisibility(post: ReaderPost) = post.tags.isNotEmpty()
 
     private fun buildDateLine(post: ReaderPost) =
-            dateTimeUtilsWrapper.javaDateToTimeSpan(post.getDisplayDate(dateTimeUtilsWrapper))
+        dateTimeUtilsWrapper.javaDateToTimeSpan(post.getDisplayDate(dateTimeUtilsWrapper))
 }

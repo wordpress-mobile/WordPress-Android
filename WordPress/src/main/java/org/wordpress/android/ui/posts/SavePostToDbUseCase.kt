@@ -55,15 +55,15 @@ class SavePostToDbUseCase
         if (editPostRepository.status == PostStatus.DRAFT) {
             // now set the pending notification alarm to be triggered in the next day, week, and month
             pendingDraftsNotificationsUtils
-                    .scheduleNextNotifications(
-                            context,
-                            editPostRepository.id,
-                            editPostRepository.dateLocallyChanged
-                    )
+                .scheduleNextNotifications(
+                    context,
+                    editPostRepository.id,
+                    editPostRepository.dateLocallyChanged
+                )
         } else {
             pendingDraftsNotificationsUtils.cancelPendingDraftAlarms(
-                    context,
-                    editPostRepository.id
+                context,
+                editPostRepository.id
             )
         }
     }

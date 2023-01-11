@@ -65,9 +65,9 @@ class DeviceMediaLoader
                 val title = cursor.getString(titleIndex)
                 val uri = Uri.withAppendedPath(baseUri, "" + id)
                 val item = DeviceMediaItem(
-                        UriWrapper(uri),
-                        title,
-                        dateModified
+                    UriWrapper(uri),
+                    title,
+                    dateModified
                 )
                 result.add(item)
             }
@@ -92,25 +92,25 @@ class DeviceMediaLoader
         val bundle = Bundle().apply {
             putString(ContentResolver.QUERY_ARG_SQL_SELECTION, condition)
             putStringArray(
-                    ContentResolver.QUERY_ARG_SORT_COLUMNS, arrayOf(FileColumns.DATE_MODIFIED)
+                ContentResolver.QUERY_ARG_SORT_COLUMNS, arrayOf(FileColumns.DATE_MODIFIED)
             )
             putInt(ContentResolver.QUERY_ARG_SORT_DIRECTION, ContentResolver.QUERY_SORT_DIRECTION_DESCENDING)
             putInt(ContentResolver.QUERY_ARG_LIMIT, pageSize + 1)
             putInt(ContentResolver.QUERY_ARG_OFFSET, 0)
         }
         context.contentResolver.query(
-                baseUri,
-                projection,
-                bundle,
-                null
+            baseUri,
+            projection,
+            bundle,
+            null
         )
     } else {
         context.contentResolver.query(
-                baseUri,
-                projection,
-                condition,
-                null,
-                "$ID_DATE_MODIFIED DESC LIMIT ${(pageSize + 1)}"
+            baseUri,
+            projection,
+            condition,
+            null,
+            "$ID_DATE_MODIFIED DESC LIMIT ${(pageSize + 1)}"
         )
     }
 
@@ -119,7 +119,7 @@ class DeviceMediaLoader
         val storagePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val nextPage = (storagePublicDirectory?.listFiles() ?: arrayOf()).filter {
             (limitDate == null || it.lastModifiedInSecs() <= limitDate) && (filter == null || it.name.lowercase(
-                    localeManagerWrapper.getLocale()
+                localeManagerWrapper.getLocale()
             ).contains(filter))
         }.sortedByDescending { it.lastModified() }.take(pageSize + 1)
 
@@ -131,9 +131,9 @@ class DeviceMediaLoader
         val result = nextPage.take(pageSize).map { file ->
             val uri = Uri.parse(file.toURI().toString())
             DeviceMediaItem(
-                    UriWrapper(uri),
-                    file.name,
-                    file.lastModifiedInSecs()
+                UriWrapper(uri),
+                file.name,
+                file.lastModifiedInSecs()
             )
         }
         return DeviceMediaList(result, nextItem)

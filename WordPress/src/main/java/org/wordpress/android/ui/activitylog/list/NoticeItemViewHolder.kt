@@ -6,7 +6,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiHelpers
 
 class NoticeItemViewHolder(parent: ViewGroup) :
-        ActivityLogViewHolder(parent, R.layout.activity_log_list_notice_item) {
+    ActivityLogViewHolder(parent, R.layout.activity_log_list_notice_item) {
     private val label: TextView = itemView.findViewById(R.id.label)
     private val primaryButton: TextView = itemView.findViewById(R.id.primary_button)
     private val secondaryButton: TextView = itemView.findViewById(R.id.secondary_button)

@@ -42,11 +42,20 @@ private const val FORWARD_SLASH = "/"
 
 @AndroidEntryPoint
 class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
-    @Inject lateinit var formattableContentClickHandler: FormattableContentClickHandler
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Inject
+    lateinit var imageManager: ImageManager
+
+    @Inject
+    lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
+
+    @Inject
+    lateinit var formattableContentClickHandler: FormattableContentClickHandler
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     private val viewModel: ActivityLogDetailViewModel by viewModels()
 
@@ -102,18 +111,18 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
         viewModel.navigationEvents.observeEvent(viewLifecycleOwner, {
             when (it) {
                 is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
-                        requireActivity(),
-                        viewModel.site,
-                        it.model.activityID,
-                        RequestCodes.BACKUP_DOWNLOAD,
-                        buildTrackingSource()
+                    requireActivity(),
+                    viewModel.site,
+                    it.model.activityID,
+                    RequestCodes.BACKUP_DOWNLOAD,
+                    buildTrackingSource()
                 )
                 is ShowRestore -> ActivityLauncher.showRestoreForResult(
-                        requireActivity(),
-                        viewModel.site,
-                        it.model.activityID,
-                        RequestCodes.RESTORE,
-                        buildTrackingSource()
+                    requireActivity(),
+                    viewModel.site,
+                    it.model.activityID,
+                    RequestCodes.RESTORE,
+                    buildTrackingSource()
                 )
                 is ShowDocumentationPage -> ActivityLauncher.openUrlExternal(requireContext(), it.url)
             }
@@ -122,17 +131,17 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
         viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner, { range ->
             if (range != null) {
                 formattableContentClickHandler.onClick(
-                        requireActivity(),
-                        range,
-                        ReaderTracker.SOURCE_ACTIVITY_LOG_DETAIL
+                    requireActivity(),
+                    range,
+                    ReaderTracker.SOURCE_ACTIVITY_LOG_DETAIL
                 )
             }
         })
 
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
             JetpackPoweredBottomSheetFragment
-                    .newInstance()
-                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                .newInstance()
+                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
     }
 
@@ -160,19 +169,19 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
 
         val spannable = activityLogModel?.content?.let {
             notificationsUtilsWrapper.getSpannableContentForRanges(
-                    it,
-                    activityMessage,
-                    { range ->
-                        viewModel.onRangeClicked(range)
-                    },
-                    false
+                it,
+                activityMessage,
+                { range ->
+                    viewModel.onRangeClicked(range)
+                },
+                false
             )
         }
 
         val noteBlockSpans = spannable?.getSpans(
-                0,
-                spannable.length,
-                NoteBlockClickableSpan::class.java
+            0,
+            spannable.length,
+            NoteBlockClickableSpan::class.java
         )
 
         noteBlockSpans?.forEach {
@@ -199,9 +208,9 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
         savedInstanceState != null -> {
             val site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
             val activityLogId = requireNotNull(
-                    savedInstanceState.getString(
-                            ACTIVITY_LOG_ID_KEY
-                    )
+                savedInstanceState.getString(
+                    ACTIVITY_LOG_ID_KEY
+                )
             )
             site to activityLogId
         }

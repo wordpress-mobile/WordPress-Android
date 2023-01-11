@@ -10,7 +10,7 @@ class CategoriesDiffCallback(
     private val newList: List<CategoryListItemUiState>
 ) : Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-            newList[newItemPosition].slug == oldList[oldItemPosition].slug
+        newList[newItemPosition].slug == oldList[oldItemPosition].slug
 
     override fun getOldListSize(): Int = oldList.size
 

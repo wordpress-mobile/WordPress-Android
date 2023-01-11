@@ -19,18 +19,23 @@ import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
 class LoginPrologueViewModelTest : BaseUnitTest() {
-    @Mock lateinit var unifiedLoginTracker: UnifiedLoginTracker
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock
+    lateinit var unifiedLoginTracker: UnifiedLoginTracker
+
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var buildConfigWrapper: BuildConfigWrapper
     private lateinit var viewModel: LoginPrologueViewModel
 
     @Before
     fun setUp() {
         viewModel = LoginPrologueViewModel(
-                unifiedLoginTracker,
-                analyticsTrackerWrapper,
-                buildConfigWrapper,
-                testDispatcher()
+            unifiedLoginTracker,
+            analyticsTrackerWrapper,
+            buildConfigWrapper,
+            testDispatcher()
         )
     }
 
@@ -40,7 +45,7 @@ class LoginPrologueViewModelTest : BaseUnitTest() {
         val observers = init()
 
         assertThat(observers.uiStates.last().continueWithWpcomButtonState.title)
-                .isEqualTo(R.string.continue_with_wpcom_no_signup)
+            .isEqualTo(R.string.continue_with_wpcom_no_signup)
     }
 
     @Test
@@ -50,7 +55,7 @@ class LoginPrologueViewModelTest : BaseUnitTest() {
         val observers = init()
 
         assertThat(observers.uiStates.last().continueWithWpcomButtonState.title)
-                .isEqualTo(R.string.continue_with_wpcom)
+            .isEqualTo(R.string.continue_with_wpcom)
     }
 
     @Test
@@ -58,7 +63,7 @@ class LoginPrologueViewModelTest : BaseUnitTest() {
         val observers = init()
 
         assertThat(observers.uiStates.last().enterYourSiteAddressButtonState.title)
-                .isEqualTo(R.string.enter_your_site_address)
+            .isEqualTo(R.string.enter_your_site_address)
     }
 
     @Test

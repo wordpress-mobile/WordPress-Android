@@ -13,7 +13,7 @@ class ShouldAutoUpdateTagUseCase @Inject constructor(
     private val readerTagTableWrapper: ReaderTagTableWrapper
 ) {
     suspend fun get(readerTag: ReaderTag): Boolean =
-            withContext(ioDispatcher) {
-                readerTagTableWrapper.shouldAutoUpdateTag(readerTag)
-            }
+        withContext(ioDispatcher) {
+            readerTagTableWrapper.shouldAutoUpdateTag(readerTag)
+        }
 }

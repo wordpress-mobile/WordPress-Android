@@ -5,15 +5,15 @@ import android.net.Uri
 object DomainRegistrationCheckoutWebViewNavigationDelegate {
     private val optionalLanguagePath = "(?:/(?:\\w{2}-)?\\w{2})?".toRegex()
     private val allowedUrls = listOf(
-            UrlMatcher(
-                    ".*wordpress.com".toRegex(),
-                    listOf(
-                            "/automattic-domain-name-registration-agreement.*".toRegex(),
-                            "/checkout.*".toRegex(),
-                            "$optionalLanguagePath/tos.*".toRegex(),
-                            "$optionalLanguagePath/support.*".toRegex()
-                    )
+        UrlMatcher(
+            ".*wordpress.com".toRegex(),
+            listOf(
+                "/automattic-domain-name-registration-agreement.*".toRegex(),
+                "/checkout.*".toRegex(),
+                "$optionalLanguagePath/tos.*".toRegex(),
+                "$optionalLanguagePath/support.*".toRegex()
             )
+        )
     )
 
     fun canNavigateTo(url: Url) = allowedUrls.any { it.matches(url) }

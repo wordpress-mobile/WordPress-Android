@@ -15,12 +15,12 @@ fun PrimaryButton(
     enabled: Boolean = true
 ) {
     Button(
-            onClick = onClick,
-            enabled = enabled,
-            modifier = modifier.padding(
-                    vertical = Margin.Small.value,
-                    horizontal = Margin.ExtraExtraMediumLarge.value,
-            )
+        onClick = onClick,
+        enabled = enabled,
+        modifier = modifier.padding(
+            vertical = Margin.Small.value,
+            horizontal = Margin.ExtraExtraMediumLarge.value,
+        )
     ) {
         Text(text = text)
     }

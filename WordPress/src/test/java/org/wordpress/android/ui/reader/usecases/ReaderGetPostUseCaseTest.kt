@@ -16,7 +16,8 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType
 
 @ExperimentalCoroutinesApi
 class ReaderGetPostUseCaseTest : BaseUnitTest() {
-    @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
+    @Mock
+    private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
     private val readerPostId = 1L
     private val readerBlogId = 2L
     private val discoverPostId = 3L
@@ -37,21 +38,21 @@ class ReaderGetPostUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = ReaderGetPostUseCase(
-                testDispatcher(),
-                readerPostTableWrapper
+            testDispatcher(),
+            readerPostTableWrapper
         )
     }
 
     @Test
     fun `given feed, when reader post is retrieved, feed post is returned`() = test {
         whenever(
-                readerPostTableWrapper.getFeedPost(
-                        blogId = readerBlogId,
-                        postId = readerPostId,
-                        excludeTextColumn = false
-                )
+            readerPostTableWrapper.getFeedPost(
+                blogId = readerBlogId,
+                postId = readerPostId,
+                excludeTextColumn = false
+            )
         )
-                .thenReturn(readerPost)
+            .thenReturn(readerPost)
 
         val result = useCase.get(blogId = readerBlogId, postId = readerPostId, isFeed = true)
 
@@ -61,13 +62,13 @@ class ReaderGetPostUseCaseTest : BaseUnitTest() {
     @Test
     fun `given blog, when reader post is retrieved, blog post is returned`() = test {
         whenever(
-                readerPostTableWrapper.getBlogPost(
-                        blogId = readerBlogId,
-                        postId = readerPostId,
-                        excludeTextColumn = false
-                )
+            readerPostTableWrapper.getBlogPost(
+                blogId = readerBlogId,
+                postId = readerPostId,
+                excludeTextColumn = false
+            )
         )
-                .thenReturn(readerPost)
+            .thenReturn(readerPost)
 
         val result = useCase.get(blogId = readerBlogId, postId = readerPostId, isFeed = false)
 
@@ -76,44 +77,44 @@ class ReaderGetPostUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `given editor pick discover post is found, when reader post is retrieved, discover source post returned`() =
-            test {
-                val readerPost = createPost(discoverType = DiscoverType.EDITOR_PICK)
-                whenever(
-                        readerPostTableWrapper.getBlogPost(
-                                blogId = readerBlogId,
-                                postId = readerPostId,
-                                excludeTextColumn = false
-                        )
-                ).thenReturn(readerPost)
-                whenever(
-                        readerPostTableWrapper.getBlogPost(
-                                blogId = readerDiscoverSourcePost.blogId,
-                                postId = readerDiscoverSourcePost.postId,
-                                excludeTextColumn = false
-                        )
-                ).thenReturn(readerDiscoverSourcePost)
+        test {
+            val readerPost = createPost(discoverType = DiscoverType.EDITOR_PICK)
+            whenever(
+                readerPostTableWrapper.getBlogPost(
+                    blogId = readerBlogId,
+                    postId = readerPostId,
+                    excludeTextColumn = false
+                )
+            ).thenReturn(readerPost)
+            whenever(
+                readerPostTableWrapper.getBlogPost(
+                    blogId = readerDiscoverSourcePost.blogId,
+                    postId = readerDiscoverSourcePost.postId,
+                    excludeTextColumn = false
+                )
+            ).thenReturn(readerDiscoverSourcePost)
 
-                val result = useCase.get(blogId = readerBlogId, postId = readerPostId, isFeed = false)
+            val result = useCase.get(blogId = readerBlogId, postId = readerPostId, isFeed = false)
 
-                assertThat(result).isEqualTo(Pair<ReaderPost?, Boolean>(readerDiscoverSourcePost, false))
-            }
+            assertThat(result).isEqualTo(Pair<ReaderPost?, Boolean>(readerDiscoverSourcePost, false))
+        }
 
     @Test
     fun `given non editor pick reader post is found, when reader post is retrieved, reader post is returned`() =
-            test {
-                val readerPost = createPost(discoverType = DiscoverType.SITE_PICK)
-                whenever(
-                        readerPostTableWrapper.getBlogPost(
-                                blogId = readerBlogId,
-                                postId = readerPostId,
-                                excludeTextColumn = false
-                        )
-                ).thenReturn(readerPost)
+        test {
+            val readerPost = createPost(discoverType = DiscoverType.SITE_PICK)
+            whenever(
+                readerPostTableWrapper.getBlogPost(
+                    blogId = readerBlogId,
+                    postId = readerPostId,
+                    excludeTextColumn = false
+                )
+            ).thenReturn(readerPost)
 
-                val result = useCase.get(blogId = readerBlogId, postId = readerPostId, isFeed = false)
+            val result = useCase.get(blogId = readerBlogId, postId = readerPostId, isFeed = false)
 
-                assertThat(result).isEqualTo(Pair<ReaderPost?, Boolean>(readerPost, false))
-            }
+            assertThat(result).isEqualTo(Pair<ReaderPost?, Boolean>(readerPost, false))
+        }
 
     private fun createPost(discoverType: DiscoverType = DiscoverType.OTHER): ReaderPost {
         val post = spy(readerPost)

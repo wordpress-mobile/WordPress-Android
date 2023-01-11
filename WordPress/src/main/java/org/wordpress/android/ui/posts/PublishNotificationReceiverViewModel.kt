@@ -25,16 +25,16 @@ class PublishNotificationReceiverViewModel
                 if (postStatus == SCHEDULED) {
                     val (titleRes, messageRes) = when (notification.scheduledTime) {
                         ONE_HOUR -> Pair(
-                                R.string.notification_scheduled_post_one_hour_reminder,
-                                R.string.notification_post_will_be_published_in_one_hour
+                            R.string.notification_scheduled_post_one_hour_reminder,
+                            R.string.notification_post_will_be_published_in_one_hour
                         )
                         TEN_MINUTES -> Pair(
-                                R.string.notification_scheduled_post_ten_minute_reminder,
-                                R.string.notification_post_will_be_published_in_ten_minutes
+                            R.string.notification_scheduled_post_ten_minute_reminder,
+                            R.string.notification_post_will_be_published_in_ten_minutes
                         )
                         WHEN_PUBLISHED -> Pair(
-                                R.string.notification_scheduled_post,
-                                R.string.notification_post_has_been_published
+                            R.string.notification_scheduled_post,
+                            R.string.notification_post_has_been_published
                         )
                         OFF -> return null
                     }

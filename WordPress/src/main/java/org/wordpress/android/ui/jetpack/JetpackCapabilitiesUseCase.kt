@@ -45,16 +45,16 @@ class JetpackCapabilitiesUseCase @Inject constructor(
     }
 
     fun getCachedJetpackPurchasedProducts(remoteSiteId: Long): JetpackPurchasedProducts =
-            mapToJetpackPurchasedProducts(getCachedJetpackCapabilities(remoteSiteId))
+        mapToJetpackPurchasedProducts(getCachedJetpackCapabilities(remoteSiteId))
 
     suspend fun fetchJetpackPurchasedProducts(remoteSiteId: Long): JetpackPurchasedProducts =
-            mapToJetpackPurchasedProducts(fetchJetpackCapabilities(remoteSiteId))
+        mapToJetpackPurchasedProducts(fetchJetpackCapabilities(remoteSiteId))
 
     private fun mapToJetpackPurchasedProducts(capabilities: List<JetpackCapability>) =
-            JetpackPurchasedProducts(
-                    scan = capabilities.find { SCAN_CAPABILITIES.contains(it) } != null,
-                    backup = capabilities.find { BACKUP_CAPABILITIES.contains(it) } != null
-            )
+        JetpackPurchasedProducts(
+            scan = capabilities.find { SCAN_CAPABILITIES.contains(it) } != null,
+            backup = capabilities.find { BACKUP_CAPABILITIES.contains(it) } != null
+        )
 
     private fun getCachedJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
         return appPrefsWrapper.getSiteJetpackCapabilities(remoteSiteId)
@@ -80,7 +80,7 @@ class JetpackCapabilitiesUseCase @Inject constructor(
         continuation[remoteSiteId]?.let {
             continuation.remove(remoteSiteId)
             val event = OnJetpackCapabilitiesFetched(
-                    remoteSiteId, listOf(), JetpackCapabilitiesError(GENERIC_ERROR, "Already running")
+                remoteSiteId, listOf(), JetpackCapabilitiesError(GENERIC_ERROR, "Already running")
             )
             it.resume(event)
         }
@@ -91,8 +91,8 @@ class JetpackCapabilitiesUseCase @Inject constructor(
         capabilities: List<JetpackCapability>
     ) {
         appPrefsWrapper.setSiteJetpackCapabilities(
-                remoteSiteId,
-                capabilities
+            remoteSiteId,
+            capabilities
         )
     }
 

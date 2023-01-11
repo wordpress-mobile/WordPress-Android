@@ -38,8 +38,8 @@ class AllTimeWidgetUpdater
     ) {
         val widgetManager = appWidgetManager ?: AppWidgetManager.getInstance(context)
         val isWideView = widgetUtils.isWidgetWiderThanLimit(
-                widgetManager,
-                appWidgetId
+            widgetManager,
+            appWidgetId
         )
         val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: LIGHT
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
@@ -54,30 +54,30 @@ class AllTimeWidgetUpdater
             widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
             siteModel.let {
                 views.setOnClickPendingIntent(
-                        R.id.widget_title_container,
-                        widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
+                    R.id.widget_title_container,
+                    widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
                 )
             }
             widgetUtils.showList(
-                    widgetManager,
-                    views,
-                    context,
-                    appWidgetId,
-                    colorMode,
-                    siteModel.id,
-                    ALL_TIME_VIEWS,
-                    isWideView
+                widgetManager,
+                views,
+                context,
+                appWidgetId,
+                colorMode,
+                siteModel.id,
+                ALL_TIME_VIEWS,
+                isWideView
             )
         } else if (!widgetHasData || !hasToken || siteModel == null) {
             widgetUtils.showError(
-                    widgetManager,
-                    views,
-                    appWidgetId,
-                    networkAvailable,
-                    hasToken,
-                    resourceProvider,
-                    context,
-                    StatsAllTimeWidget::class.java
+                widgetManager,
+                views,
+                appWidgetId,
+                networkAvailable,
+                hasToken,
+                resourceProvider,
+                context,
+                StatsAllTimeWidget::class.java
             )
         }
     }

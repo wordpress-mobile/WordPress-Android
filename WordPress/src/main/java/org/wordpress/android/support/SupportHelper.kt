@@ -34,13 +34,13 @@ class SupportHelper {
         emailAndNameSelected: (String, String) -> Unit
     ) {
         val (layout, emailEditText, nameEditText) =
-                supportIdentityInputDialogLayout(context, isNameInputHidden, email, name)
+            supportIdentityInputDialogLayout(context, isNameInputHidden, email, name)
 
         val dialog = MaterialAlertDialogBuilder(context)
-                .setView(layout)
-                .setPositiveButton(android.R.string.ok, null)
-                .setNegativeButton(android.R.string.cancel, null)
-                .create()
+            .setView(layout)
+            .setPositiveButton(android.R.string.ok, null)
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
         dialog.setOnShowListener {
             val button = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             button.setOnClickListener {

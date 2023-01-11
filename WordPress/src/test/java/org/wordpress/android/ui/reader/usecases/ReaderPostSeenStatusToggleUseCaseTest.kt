@@ -34,12 +34,23 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostSeenStatusToggleUseCaseTest : BaseUnitTest() {
-    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock private lateinit var postSeenStatusApiCallsProvider: PostSeenStatusApiCallsProvider
-    @Mock private lateinit var accountStore: AccountStore
-    @Mock private lateinit var readerTracker: ReaderTracker
-    @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
-    @Mock private lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    private lateinit var postSeenStatusApiCallsProvider: PostSeenStatusApiCallsProvider
+
+    @Mock
+    private lateinit var accountStore: AccountStore
+
+    @Mock
+    private lateinit var readerTracker: ReaderTracker
+
+    @Mock
+    private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
+
+    @Mock
+    private lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
 
     private lateinit var seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase
 
@@ -50,12 +61,12 @@ class ReaderPostSeenStatusToggleUseCaseTest : BaseUnitTest() {
         whenever(readerPostTableWrapper.isPostSeen(any())).thenReturn(true)
 
         seenStatusToggleUseCase = ReaderSeenStatusToggleUseCase(
-                networkUtilsWrapper,
-                postSeenStatusApiCallsProvider,
-                accountStore,
-                readerTracker,
-                readerPostTableWrapper,
-                readerBlogTableWrapper
+            networkUtilsWrapper,
+            postSeenStatusApiCallsProvider,
+            accountStore,
+            readerTracker,
+            readerPostTableWrapper,
+            readerBlogTableWrapper
         )
     }
 
@@ -78,7 +89,7 @@ class ReaderPostSeenStatusToggleUseCaseTest : BaseUnitTest() {
 
         val result = flow.toList()
         assertThat(result).isEqualTo(
-                listOf(Error(UiStringRes(string.error_network_connection)))
+            listOf(Error(UiStringRes(string.error_network_connection)))
         )
     }
 
@@ -89,14 +100,14 @@ class ReaderPostSeenStatusToggleUseCaseTest : BaseUnitTest() {
 
         val result = flow.toList()
         assertThat(result).isEqualTo(
-                listOf(Error(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post)))
+            listOf(Error(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post)))
         )
     }
 
     @Test
     fun `markPostAsSeenIfNecessary correctly marks post as seen depending on if it is seen or not`() = test {
         whenever(
-                postSeenStatusApiCallsProvider.markPostAsSeen(any())
+            postSeenStatusApiCallsProvider.markPostAsSeen(any())
         ).thenReturn(Success(true))
 
         val unseenPost = createDummyReaderPost(isSeen = false)
@@ -107,9 +118,9 @@ class ReaderPostSeenStatusToggleUseCaseTest : BaseUnitTest() {
         verify(postSeenStatusApiCallsProvider, times(0)).markPostAsSeen(any())
         verify(readerPostTableWrapper, times(0)).setPostSeenStatusInDb(any(), any())
         verify(readerTracker, times(0)).trackPost(
-                stat = any(),
-                post = any(),
-                source = any()
+            stat = any(),
+            post = any(),
+            source = any()
         )
 
         seenStatusToggleUseCase.markPostAsSeenIfNecessary(unseenPost)
@@ -117,19 +128,19 @@ class ReaderPostSeenStatusToggleUseCaseTest : BaseUnitTest() {
         verify(postSeenStatusApiCallsProvider, times(1)).markPostAsSeen(unseenPost)
         verify(readerPostTableWrapper, times(1)).setPostSeenStatusInDb(unseenPost, true)
         verify(readerTracker, never()).trackPost(
-                AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN,
-                unseenPost,
-                READER_POST_DETAILS.toString()
+            AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN,
+            unseenPost,
+            READER_POST_DETAILS.toString()
         )
     }
 
     @Test
     fun `toggleSeenStatus emits correct state when toggling post seen status`() = test {
         whenever(
-                postSeenStatusApiCallsProvider.markPostAsUnseen(any())
+            postSeenStatusApiCallsProvider.markPostAsUnseen(any())
         ).thenReturn(Success(false))
         whenever(
-                postSeenStatusApiCallsProvider.markPostAsSeen(any())
+            postSeenStatusApiCallsProvider.markPostAsSeen(any())
         ).thenReturn(Success(true))
 
         val unseenPost = createDummyReaderPost(isSeen = false)
@@ -141,12 +152,12 @@ class ReaderPostSeenStatusToggleUseCaseTest : BaseUnitTest() {
         val markAsUnseenFlow = seenStatusToggleUseCase.toggleSeenStatus(seenPost, READER_POST_CARD)
 
         assertThat(markAsSeenFlow.toList()).isEqualTo(
-                listOf(
-                        PostSeenStateChanged(
-                                true,
-                                UiStringRes(string.reader_marked_post_as_seen)
-                        )
+            listOf(
+                PostSeenStateChanged(
+                    true,
+                    UiStringRes(string.reader_marked_post_as_seen)
                 )
+            )
         )
 
         // local DB status toggle check
@@ -155,18 +166,18 @@ class ReaderPostSeenStatusToggleUseCaseTest : BaseUnitTest() {
 
         // analytics check
         verify(readerTracker, times(1)).trackPost(
-                AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN,
-                unseenPost,
-                READER_POST_DETAILS.toString()
+            AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN,
+            unseenPost,
+            READER_POST_DETAILS.toString()
         )
 
         assertThat(markAsUnseenFlow.toList()).isEqualTo(
-                listOf(
-                        PostSeenStateChanged(
-                                false,
-                                UiStringRes(string.reader_marked_post_as_unseen)
-                        )
+            listOf(
+                PostSeenStateChanged(
+                    false,
+                    UiStringRes(string.reader_marked_post_as_unseen)
                 )
+            )
         )
 
         // local DB status toggle check
@@ -175,18 +186,18 @@ class ReaderPostSeenStatusToggleUseCaseTest : BaseUnitTest() {
 
         // analytics check
         verify(readerTracker, times(1)).trackPost(
-                AnalyticsTracker.Stat.READER_POST_MARKED_AS_UNSEEN,
-                seenPost,
-                READER_POST_CARD.toString()
+            AnalyticsTracker.Stat.READER_POST_MARKED_AS_UNSEEN,
+            seenPost,
+            READER_POST_CARD.toString()
         )
     }
 
     private fun createDummyReaderPost(isSeen: Boolean = false, isSeenSupported: Boolean = true): ReaderPost =
-            ReaderPost().apply {
-                this.postId = 1
-                this.blogId = 2
-                this.feedId = 3
-                this.isSeen = isSeen
-                this.isSeenSupported = isSeenSupported
-            }
+        ReaderPost().apply {
+            this.postId = 1
+            this.blogId = 2
+            this.feedId = 3
+            this.isSeen = isSeen
+            this.isSeenSupported = isSeenSupported
+        }
 }

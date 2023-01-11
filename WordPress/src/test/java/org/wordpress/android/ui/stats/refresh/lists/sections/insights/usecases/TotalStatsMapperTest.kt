@@ -14,8 +14,11 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class TotalStatsMapperTest : BaseUnitTest() {
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var statsUtils: StatsUtils
     private lateinit var mapper: TotalStatsMapper
     private val previousWeekData = listOf(5L, 10, 15, 20, 25, 30, 35)
     private val currentWeekData = listOf(40L, 45, 50, 55, 60, 65, 70)

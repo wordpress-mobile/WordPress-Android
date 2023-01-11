@@ -15,7 +15,8 @@ import javax.inject.Inject
  * Basic dialog fragment with support for 1,2 or 3 buttons.
  */
 class BasicDialog : AppCompatDialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: BasicDialogViewModel
     private lateinit var model: BasicDialogModel
     private var dismissedByPositiveButton: Boolean = false
@@ -44,13 +45,13 @@ class BasicDialog : AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(BasicDialogViewModel::class.java)
+            .get(BasicDialogViewModel::class.java)
         val builder = MaterialAlertDialogBuilder(requireActivity())
         builder.setMessage(model.message)
-                .setPositiveButton(model.positiveButtonLabel) { _, _ ->
-                    dismissedByPositiveButton = true
-                    viewModel.onPositiveClicked(model.tag)
-                }.setCancelable(true)
+            .setPositiveButton(model.positiveButtonLabel) { _, _ ->
+                dismissedByPositiveButton = true
+                viewModel.onPositiveClicked(model.tag)
+            }.setCancelable(true)
 
         model.title?.let {
             builder.setTitle(it)

@@ -49,14 +49,14 @@ class PushAccountSettingsUseCase @Inject constructor(
     }
 
     private suspend fun updateAccountSettings(addPayload: (PushAccountSettingsPayload) -> Unit): OnAccountChanged =
-            withContext(ioDispatcher) {
-                continuationWrapper.suspendCoroutine {
-                    val payload = PushAccountSettingsPayload()
-                    payload.params = HashMap()
-                    addPayload(payload)
-                    dispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload))
-                }
+        withContext(ioDispatcher) {
+            continuationWrapper.suspendCoroutine {
+                val payload = PushAccountSettingsPayload()
+                payload.params = HashMap()
+                addPayload(payload)
+                dispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload))
             }
+        }
 
     @Subscribe(threadMode = BACKGROUND)
     fun onAccountChanged(event: OnAccountChanged) {

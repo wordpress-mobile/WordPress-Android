@@ -20,8 +20,10 @@ class GalleryBlockProcessorTest {
         whenever(mediaFile.fileURL).thenReturn(TestContent.remoteImageUrl)
         whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteImageUrl)
         whenever(mediaFile.getAttachmentPageURL(any())).thenReturn(TestContent.attachmentPageUrl)
-        processor = GalleryBlockProcessor(TestContent.localMediaId, mediaFile, TestContent.siteUrl,
-                mediaUploadCompletionProcessor)
+        processor = GalleryBlockProcessor(
+            TestContent.localMediaId, mediaFile, TestContent.siteUrl,
+            mediaUploadCompletionProcessor
+        )
     }
 
     @Test

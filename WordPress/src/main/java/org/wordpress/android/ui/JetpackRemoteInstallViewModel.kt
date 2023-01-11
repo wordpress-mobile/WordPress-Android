@@ -40,14 +40,14 @@ private const val ACTIVATION_ON_INSTALL_FAILURE = "ACTIVATION_ON_INSTALL_FAILURE
 private const val ACTIVATION_RESPONSE_ERROR = "ACTIVATION_RESPONSE_ERROR"
 private const val ACTIVATION_FAILURE = "ACTIVATION_FAILURE"
 private val BLOCKING_FAILURES = listOf(
-        FORBIDDEN,
-        INSTALL_FAILURE,
-        INSTALL_RESPONSE_ERROR,
-        LOGIN_FAILURE,
-        INVALID_CREDENTIALS,
-        ACTIVATION_ON_INSTALL_FAILURE,
-        ACTIVATION_RESPONSE_ERROR,
-        ACTIVATION_FAILURE
+    FORBIDDEN,
+    INSTALL_FAILURE,
+    INSTALL_RESPONSE_ERROR,
+    LOGIN_FAILURE,
+    INVALID_CREDENTIALS,
+    ACTIVATION_ON_INSTALL_FAILURE,
+    ACTIVATION_RESPONSE_ERROR,
+    ACTIVATION_FAILURE
 )
 private const val CONTEXT = "JetpackRemoteInstall"
 private const val EMPTY_TYPE = "EMPTY_TYPE"
@@ -138,11 +138,11 @@ class JetpackRemoteInstallViewModel
         hasAccessToken: Boolean = accountStore.hasAccessToken()
     ) {
         mutableActionOnResult.postValue(
-                JetpackResultActionData(
-                        siteStore.getSiteByLocalId(siteId)!!,
-                        hasAccessToken,
-                        action
-                )
+            JetpackResultActionData(
+                siteStore.getSiteByLocalId(siteId)!!,
+                hasAccessToken,
+                action
+            )
         )
     }
 
@@ -153,10 +153,10 @@ class JetpackRemoteInstallViewModel
         val site = siteModel ?: return
         if (event.isError) {
             AnalyticsTracker.track(
-                    AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_FAILED,
-                    CONTEXT,
-                    event.error?.apiError ?: EMPTY_TYPE,
-                    event.error?.message ?: EMPTY_MESSAGE
+                AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_FAILED,
+                CONTEXT,
+                event.error?.apiError ?: EMPTY_TYPE,
+                event.error?.message ?: EMPTY_MESSAGE
             )
             when {
                 event.error?.apiError == SITE_IS_JETPACK -> {

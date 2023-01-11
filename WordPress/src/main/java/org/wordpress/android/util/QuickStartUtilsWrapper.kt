@@ -34,9 +34,9 @@ class QuickStartUtilsWrapper
         iconId: Int = QuickStartUtils.ICON_NOT_SET
     ): Spannable {
         return QuickStartUtils.stylizeQuickStartPrompt(
-                activityContext = activityContext,
-                messageId = messageId,
-                iconId = iconId
+            activityContext = activityContext,
+            messageId = messageId,
+            iconId = iconId
         )
     }
 
@@ -77,12 +77,12 @@ class QuickStartUtilsWrapper
 
             if (context != null && quickStartType.isQuickStartInProgress(quickStartStore, siteLocalId)) {
                 val nextTask =
-                        QuickStartUtils.getNextUncompletedQuickStartTaskForReminderNotification(
-                                quickStartStore,
-                                siteLocalId,
-                                task.taskType,
-                                quickStartType
-                        )
+                    QuickStartUtils.getNextUncompletedQuickStartTaskForReminderNotification(
+                        quickStartStore,
+                        siteLocalId,
+                        task.taskType,
+                        quickStartType
+                    )
                 if (nextTask != null) {
                     QuickStartUtils.startQuickStartReminderTimer(context, nextTask)
                 }
@@ -113,5 +113,5 @@ class QuickStartUtilsWrapper
     }
 
     fun getNextUncompletedQuickStartTask(quickStartType: QuickStartType, siteLocalId: Long) =
-            QuickStartUtils.getNextUncompletedQuickStartTask(quickStartStore, quickStartType, siteLocalId)
+        QuickStartUtils.getNextUncompletedQuickStartTask(quickStartStore, quickStartType, siteLocalId)
 }

@@ -6,10 +6,10 @@ import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.UploadWorker
 import org.wordpress.android.workers.notification.local.LocalNotificationHandlerFactory
 import org.wordpress.android.workers.notification.local.LocalNotificationWorker
-import org.wordpress.android.workers.reminder.prompt.PromptReminderNotifier
 import org.wordpress.android.workers.reminder.ReminderNotifier
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import org.wordpress.android.workers.reminder.ReminderWorker
+import org.wordpress.android.workers.reminder.prompt.PromptReminderNotifier
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupNotifier
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupWorker
 import javax.inject.Inject

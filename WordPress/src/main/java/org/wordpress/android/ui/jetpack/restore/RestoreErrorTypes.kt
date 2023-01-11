@@ -5,7 +5,7 @@ enum class RestoreErrorTypes(val id: Int) {
 
     companion object {
         fun fromInt(value: Int): RestoreErrorTypes =
-                values().firstOrNull { it.id == value }
-                        ?: throw IllegalArgumentException("RestoreErrorTypes wrong value $value")
+            values().firstOrNull { it.id == value }
+                ?: throw IllegalArgumentException("RestoreErrorTypes wrong value $value")
     }
 }

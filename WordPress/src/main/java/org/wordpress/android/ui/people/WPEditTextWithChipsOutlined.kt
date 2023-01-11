@@ -33,7 +33,6 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.WpEditTextWithChipsOutlinedBinding
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
-import java.util.LinkedHashMap
 
 /**
  * As of our understanding, currently the TextInputLayout (that is a LinearLayout) works in OutlinedBox mode having
@@ -108,7 +107,8 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         VALIDATED(R.attr.colorPrimary),
         VALIDATED_WITH_ERRORS(R.attr.wpColorError);
 
-        @ColorInt fun colorFromState(context: Context): Int {
+        @ColorInt
+        fun colorFromState(context: Context): Int {
             val color = context.getColorResIdFromAttribute(this.colorAttr)
 
             return ContextCompat.getColor(context, color)
@@ -126,24 +126,24 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     init {
         attrs?.also {
             val stylesAttributes = context.theme.obtainStyledAttributes(
-                    attrs,
-                    R.styleable.WPEditTextWithChipsOutlined,
-                    0,
-                    0
+                attrs,
+                R.styleable.WPEditTextWithChipsOutlined,
+                0,
+                0
             )
 
             try {
                 hintResourceId = stylesAttributes.getResourceId(
-                        R.styleable.WPEditTextWithChipsOutlined_wpHint,
-                        0
+                    R.styleable.WPEditTextWithChipsOutlined_wpHint,
+                    0
                 )
                 chipifyEnabled = stylesAttributes.getBoolean(
-                        R.styleable.WPEditTextWithChipsOutlined_wpChipifyEnabled,
-                        false
+                    R.styleable.WPEditTextWithChipsOutlined_wpChipifyEnabled,
+                    false
                 )
 
                 maxChips = stylesAttributes.getInteger(
-                        R.styleable.WPEditTextWithChipsOutlined_wpMaxNumberChips, 0
+                    R.styleable.WPEditTextWithChipsOutlined_wpMaxNumberChips, 0
                 )
             } finally {
                 stylesAttributes.recycle()
@@ -229,11 +229,11 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
 
     private fun loadOutlineDrawable() {
         val shapeAppearanceModel = ShapeAppearanceModel.builder()
-                .setAllCorners(
-                        CornerFamily.ROUNDED,
-                        resources.getDimension(R.dimen.edit_with_chips_outline_radius)
-                )
-                .build()
+            .setAllCorners(
+                CornerFamily.ROUNDED,
+                resources.getDimension(R.dimen.edit_with_chips_outline_radius)
+            )
+            .build()
 
         outlineDrawable = MaterialShapeDrawable(shapeAppearanceModel)
     }
@@ -245,33 +245,33 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
 
     private fun loadColors() {
         outlineColorDefault = ContextCompat.getColor(context,
-                TypedValue().let {
-                    getContext().theme.resolveAttribute(R.attr.colorOnSurface, it, true)
-                    it.resourceId
-                })
+            TypedValue().let {
+                getContext().theme.resolveAttribute(R.attr.colorOnSurface, it, true)
+                it.resourceId
+            })
         outlineColorFocused = ContextCompat.getColor(context,
-                TypedValue().let {
-                    getContext().theme.resolveAttribute(R.attr.colorPrimary, it, true)
-                    it.resourceId
-                })
+            TypedValue().let {
+                getContext().theme.resolveAttribute(R.attr.colorPrimary, it, true)
+                it.resourceId
+            })
         colorSurface = ContextCompat.getColor(context,
-                TypedValue().let {
-                    getContext().theme.resolveAttribute(R.attr.colorSurface, it, true)
-                    it.resourceId
-                })
+            TypedValue().let {
+                getContext().theme.resolveAttribute(R.attr.colorSurface, it, true)
+                it.resourceId
+            })
 
         outlineColorAlphaDefault = ResourcesCompat.getFloat(
-                resources,
-                R.dimen.edit_with_chips_outline_default_alpha
+            resources,
+            R.dimen.edit_with_chips_outline_default_alpha
         )
         outlineColorAlphaFocused = ResourcesCompat.getFloat(
-                resources,
-                R.dimen.edit_with_chips_outline_focused_alpha
+            resources,
+            R.dimen.edit_with_chips_outline_focused_alpha
         )
 
         hintLabelColorAlphaDefault = ResourcesCompat.getFloat(
-                resources,
-                R.dimen.edit_with_chips_hint_label_default_alpha
+            resources,
+            R.dimen.edit_with_chips_hint_label_default_alpha
         )
     }
 
@@ -311,7 +311,8 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
 
             editor.setOnEditorActionListener(OnEditorActionListener { _, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_DONE ||
-                        event != null && event.keyCode == KeyEvent.KEYCODE_ENTER) {
+                    event != null && event.keyCode == KeyEvent.KEYCODE_ENTER
+                ) {
                     val editable = editor.text
 
                     editable?.let {
@@ -378,8 +379,8 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         chip.isCheckable = false
         chip.ellipsize = TruncateAt.MIDDLE
         chip.closeIconContentDescription = resources.getString(
-                R.string.invite_user_delete_desc,
-                item
+            R.string.invite_user_delete_desc,
+            item
         )
 
         if (!isAlreadyInGroup) {
@@ -475,15 +476,15 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         setLabelColor(hint, outlineColorDefault, hintLabelColorAlphaDefault)
         if (hasFocus) {
             setOutlineStroke(
-                    outlinePixelWidthFocused,
-                    outlineColorFocused,
-                    outlineColorAlphaFocused
+                outlinePixelWidthFocused,
+                outlineColorFocused,
+                outlineColorAlphaFocused
             )
         } else {
             setOutlineStroke(
-                    outlinePixelWidthDefault,
-                    outlineColorDefault,
-                    outlineColorAlphaDefault
+                outlinePixelWidthDefault,
+                outlineColorDefault,
+                outlineColorAlphaDefault
             )
         }
 
@@ -545,25 +546,25 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                 }
 
                 hint.animate()
-                        .translationY(0f)
-                        .scaleX(1f)
-                        .scaleY(1f)
-                        .setDuration(LABEL_ANIMATION_DURATION)
-                        .setListener(object : Animator.AnimatorListener {
-                            override fun onAnimationStart(animation: Animator?) {
-                                label.visibility = View.INVISIBLE
-                                hint.visibility = View.VISIBLE
-                            }
+                    .translationY(0f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(LABEL_ANIMATION_DURATION)
+                    .setListener(object : Animator.AnimatorListener {
+                        override fun onAnimationStart(animation: Animator?) {
+                            label.visibility = View.INVISIBLE
+                            hint.visibility = View.VISIBLE
+                        }
 
-                            override fun onAnimationEnd(animation: Animator?) {
-                            }
+                        override fun onAnimationEnd(animation: Animator?) {
+                        }
 
-                            override fun onAnimationCancel(animation: Animator?) {
-                            }
+                        override fun onAnimationCancel(animation: Animator?) {
+                        }
 
-                            override fun onAnimationRepeat(animation: Animator?) {
-                            }
-                        }).start()
+                        override fun onAnimationRepeat(animation: Animator?) {
+                        }
+                    }).start()
             }
             HelperTextState.LABEL_VISIBLE -> {
                 hint.animate().cancel()
@@ -575,28 +576,28 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                 }
 
                 hint.animate()
-                        .translationY(label.y - hint.y)
-                        .scaleX(label.width.toFloat() / hint.width)
-                        .scaleY(label.height.toFloat() / hint.height)
-                        .setDuration(LABEL_ANIMATION_DURATION)
-                        .setListener(object : Animator.AnimatorListener {
-                            override fun onAnimationStart(animation: Animator?) {
-                                setLabelColor(label, colorSurface, outlineColorAlphaFocused)
-                                label.visibility = View.VISIBLE
-                                hint.visibility = View.VISIBLE
-                            }
+                    .translationY(label.y - hint.y)
+                    .scaleX(label.width.toFloat() / hint.width)
+                    .scaleY(label.height.toFloat() / hint.height)
+                    .setDuration(LABEL_ANIMATION_DURATION)
+                    .setListener(object : Animator.AnimatorListener {
+                        override fun onAnimationStart(animation: Animator?) {
+                            setLabelColor(label, colorSurface, outlineColorAlphaFocused)
+                            label.visibility = View.VISIBLE
+                            hint.visibility = View.VISIBLE
+                        }
 
-                            override fun onAnimationEnd(animation: Animator?) {
-                                hint.visibility = View.INVISIBLE
-                                setLabelColor(label, outlineColorFocused, outlineColorAlphaFocused)
-                            }
+                        override fun onAnimationEnd(animation: Animator?) {
+                            hint.visibility = View.INVISIBLE
+                            setLabelColor(label, outlineColorFocused, outlineColorAlphaFocused)
+                        }
 
-                            override fun onAnimationCancel(animation: Animator?) {
-                            }
+                        override fun onAnimationCancel(animation: Animator?) {
+                        }
 
-                            override fun onAnimationRepeat(animation: Animator?) {
-                            }
-                        }).start()
+                        override fun onAnimationRepeat(animation: Animator?) {
+                        }
+                    }).start()
             }
         }
     }
@@ -627,9 +628,9 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         savedState.hasText = hasItemsOrText()
         savedState.chipsData.clear()
         savedState.chipsData.addAll(
-                getChipsMap().map { (_, v) ->
-                    ChipData(v.text.toString(), v.currentTextColor)
-                }
+            getChipsMap().map { (_, v) ->
+                ChipData(v.text.toString(), v.currentTextColor)
+            }
         )
         return savedState
     }
@@ -655,8 +656,8 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
 
     private data class ChipData(val text: String, val color: Int) : Parcelable {
         constructor(parcel: Parcel) : this(
-                parcel.readString()!!,
-                parcel.readInt()
+            parcel.readString()!!,
+            parcel.readInt()
         )
 
         override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -686,6 +687,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         var chipsData = mutableListOf<ChipData>()
 
         constructor(superState: Parcelable?) : super(superState) {}
+
         @Suppress("unused")
         private constructor(`in`: Parcel) : super(`in`) {
             this.labelState = HelperTextState.values()[`in`.readInt()]

@@ -17,7 +17,8 @@ private const val DURATION = 24 * 60 * 60 * 1000.toLong()
 @ExperimentalCoroutinesApi
 class ImageEditorFileUtilsTest : BaseUnitTest() {
     @Rule
-    @JvmField val temporaryFolder = TemporaryFolder()
+    @JvmField
+    val temporaryFolder = TemporaryFolder()
 
     // Class under test
     private lateinit var fileUtils: ImageEditorFileUtils

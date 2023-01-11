@@ -18,9 +18,10 @@ const val EXTRA_PAGE_REMOTE_ID_KEY = "extra_page_remote_id_key"
 const val EXTRA_PAGE_PARENT_ID_KEY = "extra_page_parent_id_key"
 
 class PagesActivity : LocaleAwareActivity(),
-        BasicDialogPositiveClickInterface,
-        BasicDialogNegativeClickInterface {
-    @Inject internal lateinit var systemNotificationTracker: SystemNotificationsTracker
+    BasicDialogPositiveClickInterface,
+    BasicDialogNegativeClickInterface {
+    @Inject
+    internal lateinit var systemNotificationTracker: SystemNotificationsTracker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +40,7 @@ class PagesActivity : LocaleAwareActivity(),
     private fun handleIntent(intent: Intent) {
         if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
             val notificationType: NotificationType =
-                    intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
+                intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
             systemNotificationTracker.trackTappedNotification(notificationType)
         }
 

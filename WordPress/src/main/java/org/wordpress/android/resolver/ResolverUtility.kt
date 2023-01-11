@@ -64,16 +64,16 @@ class ResolverUtility @Inject constructor(
 
         try {
             if (
-                    copyWithIndexes(
-                            "QuickStartStatusModel",
-                            MapperAdapter(QuickStartStatusModelMapper()),
-                            statusList
-                    )
-                    && copyWithIndexes(
-                            "QuickStartTaskModel",
-                            MapperAdapter(QuickStartTaskModelMapper()),
-                            taskList
-                    )
+                copyWithIndexes(
+                    "QuickStartStatusModel",
+                    MapperAdapter(QuickStartStatusModelMapper()),
+                    statusList
+                )
+                && copyWithIndexes(
+                    "QuickStartTaskModel",
+                    MapperAdapter(QuickStartTaskModelMapper()),
+                    taskList
+                )
             ) {
                 db.setTransactionSuccessful()
                 wasSuccessful = true

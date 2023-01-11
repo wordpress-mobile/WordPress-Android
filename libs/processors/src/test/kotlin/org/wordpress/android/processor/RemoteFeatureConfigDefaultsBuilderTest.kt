@@ -16,7 +16,7 @@ class RemoteFeatureConfigDefaultsBuilderTest {
         val fileContent = remoteConfigDefaultsBuilder.getContent()
 
         assertThat(fileContent.toString()).isEqualTo(
-                """
+            """
             // Automatically generated file. DO NOT MODIFY
             package org.wordpress.android.util.config
 

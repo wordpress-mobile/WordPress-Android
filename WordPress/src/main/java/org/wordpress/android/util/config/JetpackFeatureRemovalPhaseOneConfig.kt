@@ -9,9 +9,9 @@ import javax.inject.Inject
 class JetpackFeatureRemovalPhaseOneConfig @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.JETPACK_FEATURE_REMOVAL_PHASE_ONE,
-        JETPACK_FEATURE_REMOVAL_PHASE_ONE_REMOTE_FIELD
+    appConfig,
+    BuildConfig.JETPACK_FEATURE_REMOVAL_PHASE_ONE,
+    JETPACK_FEATURE_REMOVAL_PHASE_ONE_REMOTE_FIELD
 ) {
     companion object {
         const val JETPACK_FEATURE_REMOVAL_PHASE_ONE_REMOTE_FIELD = "jp_removal_one"

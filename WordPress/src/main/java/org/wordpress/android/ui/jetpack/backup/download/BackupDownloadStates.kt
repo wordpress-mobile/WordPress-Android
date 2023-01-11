@@ -60,22 +60,28 @@ enum class StateType(val id: Int) {
 
 sealed class ToolbarState {
     abstract val title: Int
-    @DrawableRes val icon: Int = R.drawable.ic_close_24px
+
+    @DrawableRes
+    val icon: Int = R.drawable.ic_close_24px
 
     object DetailsToolbarState : ToolbarState() {
-        @StringRes override val title: Int = R.string.backup_download_details_page_title
+        @StringRes
+        override val title: Int = R.string.backup_download_details_page_title
     }
 
     object ProgressToolbarState : ToolbarState() {
-        @StringRes override val title: Int = R.string.backup_download_progress_page_title
+        @StringRes
+        override val title: Int = R.string.backup_download_progress_page_title
     }
 
     object CompleteToolbarState : ToolbarState() {
-        @StringRes override val title: Int = R.string.backup_download_complete_page_title
+        @StringRes
+        override val title: Int = R.string.backup_download_complete_page_title
     }
 
     object ErrorToolbarState : ToolbarState() {
-        @StringRes override val title: Int = R.string.backup_download_complete_failed_title
+        @StringRes
+        override val title: Int = R.string.backup_download_complete_failed_title
     }
 }
 

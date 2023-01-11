@@ -17,10 +17,14 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_fragment) {
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var uiHelpers: UiHelpers
 
-    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var imageManager: ImageManager
+
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingHomeViewModel
 
     private var actionClickedListener: PrepublishingActionClickedListener? = null
@@ -62,7 +66,7 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
 
     private fun PostPrepublishingHomeFragmentBinding.initViewModel() {
         viewModel = ViewModelProvider(this@PrepublishingHomeFragment, viewModelFactory)
-                .get(PrepublishingHomeViewModel::class.java)
+            .get(PrepublishingHomeViewModel::class.java)
 
         viewModel.storyTitleUiState.observe(viewLifecycleOwner, { storyTitleUiState ->
             uiHelpers.updateVisibility(storyTitleHeaderView, true)
@@ -119,10 +123,10 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
         const val IS_STORY_POST = "prepublishing_home_fragment_is_story_post"
 
         fun newInstance(isStoryPost: Boolean) =
-                PrepublishingHomeFragment().apply {
-                    arguments = Bundle().apply {
-                        putBoolean(IS_STORY_POST, isStoryPost)
-                    }
+            PrepublishingHomeFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(IS_STORY_POST, isStoryPost)
                 }
+            }
     }
 }

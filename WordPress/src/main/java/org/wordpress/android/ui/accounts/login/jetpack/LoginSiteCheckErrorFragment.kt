@@ -34,8 +34,11 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.jetpack_login_empty_view) 
         }
     }
 
-    @Inject lateinit var unifiedLoginTracker: UnifiedLoginTracker
-    @Inject lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Inject
+    lateinit var unifiedLoginTracker: UnifiedLoginTracker
+
+    @Inject
+    lateinit var htmlMessageUtils: HtmlMessageUtils
     private var loginListener: LoginListener? = null
     private var siteAddress: String? = null
     private val viewModel: LoginSiteCheckErrorViewModel by viewModels()
@@ -62,8 +65,8 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.jetpack_login_empty_view) 
 
     private fun JetpackLoginEmptyViewBinding.initErrorMessageView() {
         loginErrorMessageText.text = htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                R.string.login_not_a_jetpack_site,
-                "<b>$siteAddress</b>"
+            R.string.login_not_a_jetpack_site,
+            "<b>$siteAddress</b>"
         )
     }
 
@@ -113,13 +116,13 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.jetpack_login_empty_view) 
 
     private fun initBackPressHandler() {
         requireActivity().onBackPressedDispatcher.addCallback(
-                viewLifecycleOwner,
-                object : OnBackPressedCallback(
-                        true
-                ) {
-                    override fun handleOnBackPressed() {
-                        viewModel.onBackPressed()
-                    }
-                })
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(
+                true
+            ) {
+                override fun handleOnBackPressed() {
+                    viewModel.onBackPressed()
+                }
+            })
     }
 }

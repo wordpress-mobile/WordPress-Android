@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-30 08:55:33+0000
+Translation-Revision-Date: 2023-01-07 11:55:45+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: pl
 -->
 <resources>
+    <string name="reader_toast_user_blocked">Wpisy użytkownika nie będą więcej pokazywane</string>
+    <string name="reader_menu_block_user">Zablokuj użytkownika</string>
+    <string name="reader_menu_report_user">Zgłoś użytkownika</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">Otwiera odnośniki w WordPressie</string>
+    <string name="jp_migration_got_it_button">Rozumiem</string>
+    <string name="jp_migration_need_help_button">Potrzebujesz pomocy?</string>
+    <string name="jp_migration_try_again_button">Spróbuj ponownie</string>
+    <string name="jp_migration_finish_button">Koniec</string>
+    <string name="support_title">Pomoc techniczna</string>
     <string name="jp_migration_help_button">Potrzebujesz pomocy?</string>
     <string name="jp_migration_continue_button">Dalej</string>
     <string name="jp_migration_avatar_content_description">Twoje zdjęcie profilowe</string>
@@ -3128,9 +3136,11 @@ Language: pl
     <string name="tags_separate_with_commas">Oddzielaj tagi przecinkami</string>
     <string name="sdcard_title">Wymagana karta pamięci SD</string>
     <string name="media">Media</string>
+    <string name="updating_cat_success">Zaktualizowano kategorię</string>
     <string name="delete">Usuń</string>
     <string name="approve">Zatwierdź</string>
     <string name="none">Brak</string>
+    <string name="updating_cat_failed">Nie udało się zaktualizować kategorii</string>
     <string name="add">Dodaj</string>
     <string name="error">Błąd</string>
     <string name="save">Zapisz</string>

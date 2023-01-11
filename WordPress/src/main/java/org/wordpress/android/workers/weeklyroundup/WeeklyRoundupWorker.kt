@@ -15,8 +15,8 @@ class WeeklyRoundupWorker(
     override suspend fun doWork(): Result = coroutineScope {
         if (notifier.shouldShowNotifications()) {
             notifier.buildNotifications()
-                    .onEach(::showNotification)
-                    .also(notifier::onNotificationsShown)
+                .onEach(::showNotification)
+                .also(notifier::onNotificationsShown)
         }
 
         Result.success()
@@ -24,7 +24,7 @@ class WeeklyRoundupWorker(
 
     private fun showNotification(notification: WeeklyRoundupNotification) {
         NotificationManagerCompat.from(context)
-                .notify(notification.id, notification.asNotificationCompatBuilder(context).build())
+            .notify(notification.id, notification.asNotificationCompatBuilder(context).build())
     }
 
     class Factory(

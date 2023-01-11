@@ -21,22 +21,22 @@ fun SecondaryButton(
     enabled: Boolean = true
 ) {
     Button(
-            onClick = onClick,
-            enabled = enabled,
-            elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp,
-            ),
-            colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Transparent,
-                    contentColor = MaterialTheme.colors.primary,
-                    disabledBackgroundColor = Color.Transparent,
-                    disabledContentColor = MaterialTheme.colors.primary,
-            ),
-            modifier = modifier
-                    .padding(bottom = 10.dp)
-                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
-                    .fillMaxWidth()
+        onClick = onClick,
+        enabled = enabled,
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 0.dp,
+        ),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = Color.Transparent,
+            contentColor = MaterialTheme.colors.primary,
+            disabledBackgroundColor = Color.Transparent,
+            disabledContentColor = MaterialTheme.colors.primary,
+        ),
+        modifier = modifier
+            .padding(bottom = 10.dp)
+            .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
+            .fillMaxWidth()
     ) {
         Text(text = text)
     }

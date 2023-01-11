@@ -20,12 +20,16 @@ class PageParentAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemViewHolder {
         return when (viewType) {
-            PageItem.Type.PARENT.viewType -> PageParentViewHolder(parent,
-                    this::selectParent,
-                    R.layout.page_parent_list_item)
-            PageItem.Type.TOP_LEVEL_PARENT.viewType -> PageParentViewHolder(parent,
-                    this::selectParent,
-                    R.layout.page_parent_top_level_item)
+            PageItem.Type.PARENT.viewType -> PageParentViewHolder(
+                parent,
+                this::selectParent,
+                R.layout.page_parent_list_item
+            )
+            PageItem.Type.TOP_LEVEL_PARENT.viewType -> PageParentViewHolder(
+                parent,
+                this::selectParent,
+                R.layout.page_parent_top_level_item
+            )
             PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
             PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent) { }
             else -> throw Throwable("Unexpected view type")

@@ -8,24 +8,27 @@ import org.wordpress.android.databinding.JetpackFeatureCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
 
 class JetpackFeatureCardViewHolder(
-    parent: ViewGroup
+    parent: ViewGroup,
+    private val uiHelpers: UiHelpers
 ) : MySiteCardAndItemViewHolder<JetpackFeatureCardBinding>(
-        parent.viewBinding(JetpackFeatureCardBinding::inflate)
+    parent.viewBinding(JetpackFeatureCardBinding::inflate)
 ) {
     fun bind(card: JetpackFeatureCard) = with(binding) {
         mySiteJetpackFeatureCardCta.setOnClickListener { card.onClick.click() }
         mySiteJetpackFeatureCardLearnMore.setOnClickListener { card.onLearnMoreClick.click() }
         mySiteJetpackFeatureCardMore.setOnClickListener {
             showMoreMenu(
-                    card.onHideMenuItemClick,
-                    card.onRemindMeLaterItemClick,
-                    card.onMoreMenuClick,
-                    mySiteJetpackFeatureCardMore,
+                card.onHideMenuItemClick,
+                card.onRemindMeLaterItemClick,
+                card.onMoreMenuClick,
+                mySiteJetpackFeatureCardMore,
             )
         }
+        uiHelpers.updateVisibility(mySiteJetpackFeatureCardLearnMore, !card.learnMoreUrl.isNullOrEmpty())
     }
 
     private fun showMoreMenu(

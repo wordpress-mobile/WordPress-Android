@@ -29,13 +29,13 @@ class AddExistingMediaToPostUseCaseTest : BaseUnitTest() {
         val captor = argumentCaptor<List<MediaModel>>()
         // Act
         createAddExistingMediaToPostUseCase(
-                getMediaModelUseCase = getMediaModelUseCase,
-                appendMediaToEditorUseCase = appendMediaToEditorUseCase
+            getMediaModelUseCase = getMediaModelUseCase,
+            appendMediaToEditorUseCase = appendMediaToEditorUseCase
         ).addMediaExistingInRemoteToEditorAsync(
-                mock(),
-                mock(),
-                remoteIds,
-                mock()
+            mock(),
+            mock(),
+            remoteIds,
+            mock()
         )
         // Assert
         verify(appendMediaToEditorUseCase).addMediaToEditor(anyOrNull(), captor.capture())
@@ -53,13 +53,13 @@ class AddExistingMediaToPostUseCaseTest : BaseUnitTest() {
         val inOrder = inOrder(appendMediaToEditorUseCase, editorMediaListener)
         // Act
         createAddExistingMediaToPostUseCase(
-                getMediaModelUseCase = getMediaModelUseCase,
-                appendMediaToEditorUseCase = appendMediaToEditorUseCase
+            getMediaModelUseCase = getMediaModelUseCase,
+            appendMediaToEditorUseCase = appendMediaToEditorUseCase
         ).addMediaExistingInRemoteToEditorAsync(
-                mock(),
-                mock(),
-                remoteIds,
-                editorMediaListener
+            mock(),
+            mock(),
+            remoteIds,
+            editorMediaListener
         )
         // Assert
         inOrder.verify(appendMediaToEditorUseCase).addMediaToEditor(anyOrNull(), anyOrNull())
@@ -75,12 +75,12 @@ class AddExistingMediaToPostUseCaseTest : BaseUnitTest() {
 
         // Act
         createAddExistingMediaToPostUseCase(
-                editorTracker = editorTracker
+            editorTracker = editorTracker
         ).addMediaExistingInRemoteToEditorAsync(
-                mock(),
-                mock(),
-                remoteIds,
-                mock()
+            mock(),
+            mock(),
+            remoteIds,
+            mock()
         )
         // Assert
         verify(editorTracker, times(remoteIds.size)).trackAddMediaEvent(any(), any(), any())
@@ -93,9 +93,9 @@ class AddExistingMediaToPostUseCaseTest : BaseUnitTest() {
             appendMediaToEditorUseCase: AppendMediaToEditorUseCase = mock()
         ): AddExistingMediaToPostUseCase {
             return AddExistingMediaToPostUseCase(
-                    editorTracker,
-                    getMediaModelUseCase,
-                    appendMediaToEditorUseCase
+                editorTracker,
+                getMediaModelUseCase,
+                appendMediaToEditorUseCase
             )
         }
 
@@ -103,14 +103,14 @@ class AddExistingMediaToPostUseCaseTest : BaseUnitTest() {
             onBlocking { loadMediaByRemoteId(anyOrNull(), anyOrNull()) } doAnswer { invocation ->
                 // Creates dummy media models from provided model ids
                 (invocation.getArgument(1) as Iterable<Long>)
-                        .map { createMediaModel(it) }
-                        .toList()
+                    .map { createMediaModel(it) }
+                    .toList()
             }
         }
 
         fun createMediaModel(mediaModelId: Long) =
-                MediaModel().apply {
-                    this.mediaId = mediaModelId
-                }
+            MediaModel().apply {
+                this.mediaId = mediaModelId
+            }
     }
 }

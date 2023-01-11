@@ -18,7 +18,8 @@ import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class PrologueBuilderTest {
-    @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    @Mock
+    lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     private lateinit var prologueBuilder: PrologueBuilder
     private var confirmed = false
 
@@ -71,11 +72,11 @@ class PrologueBuilderTest {
         val primaryButton = prologueBuilder.buildPrimaryButton(isFirstTimeFlow, onConfirm)
 
         assertThat(primaryButton).isEqualTo(
-                PrimaryButton(
-                        UiStringRes(R.string.set_your_blogging_reminders_button),
-                        true,
-                        Companion.create(isFirstTimeFlow, onConfirm)
-                )
+            PrimaryButton(
+                UiStringRes(R.string.set_your_blogging_reminders_button),
+                true,
+                Companion.create(isFirstTimeFlow, onConfirm)
+            )
         )
     }
 
@@ -94,9 +95,9 @@ class PrologueBuilderTest {
         assertThat(uiModel[0]).isEqualTo(Illustration(R.drawable.img_illustration_celebration_150dp))
         assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(R.string.set_your_blogging_reminders_title)))
         assertThat(uiModel[2]).isEqualTo(
-                HighEmphasisText(
-                        UiStringRes(R.string.post_publishing_set_up_blogging_reminders_message)
-                )
+            HighEmphasisText(
+                UiStringRes(R.string.post_publishing_set_up_blogging_reminders_message)
+            )
         )
     }
 
@@ -106,9 +107,9 @@ class PrologueBuilderTest {
         assertThat(uiModel[0]).isEqualTo(Illustration(R.drawable.img_illustration_celebration_150dp))
         assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(R.string.set_your_blogging_reminders_title)))
         assertThat(uiModel[2]).isEqualTo(
-                HighEmphasisText(
-                        UiStringRes(R.string.set_up_blogging_reminders_message)
-                )
+            HighEmphasisText(
+                UiStringRes(R.string.set_up_blogging_reminders_message)
+            )
         )
     }
 
@@ -118,9 +119,9 @@ class PrologueBuilderTest {
         assertThat(uiModel[0]).isEqualTo(Illustration(R.drawable.img_illustration_celebration_150dp))
         assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(R.string.set_your_blogging_prompts_title)))
         assertThat(uiModel[2]).isEqualTo(
-                HighEmphasisText(
-                        UiStringRes(R.string.post_publishing_set_up_blogging_prompts_message)
-                )
+            HighEmphasisText(
+                UiStringRes(R.string.post_publishing_set_up_blogging_prompts_message)
+            )
         )
     }
 }

@@ -33,18 +33,41 @@ const val SITE_LOCAL_ID = 1
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class MySiteSourceManagerTest : BaseUnitTest() {
-    @Mock lateinit var quickStartTracker: QuickStartTracker
-    @Mock lateinit var domainRegistrationSource: DomainRegistrationSource
-    @Mock lateinit var scanAndBackupSource: ScanAndBackupSource
-    @Mock lateinit var currentAvatarSource: CurrentAvatarSource
-    @Mock lateinit var dynamicCardsSource: DynamicCardsSource
-    @Mock lateinit var cardsSource: CardsSource
-    @Mock lateinit var quickStartCardSource: QuickStartCardSource
-    @Mock lateinit var siteIconProgressSource: SiteIconProgressSource
-    @Mock lateinit var selectedSiteSource: SelectedSiteSource
-    @Mock lateinit var bloggingPromptCardSource: BloggingPromptCardSource
-    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock lateinit var siteModel: SiteModel
+    @Mock
+    lateinit var quickStartTracker: QuickStartTracker
+
+    @Mock
+    lateinit var domainRegistrationSource: DomainRegistrationSource
+
+    @Mock
+    lateinit var scanAndBackupSource: ScanAndBackupSource
+
+    @Mock
+    lateinit var currentAvatarSource: CurrentAvatarSource
+
+    @Mock
+    lateinit var dynamicCardsSource: DynamicCardsSource
+
+    @Mock
+    lateinit var cardsSource: CardsSource
+
+    @Mock
+    lateinit var quickStartCardSource: QuickStartCardSource
+
+    @Mock
+    lateinit var siteIconProgressSource: SiteIconProgressSource
+
+    @Mock
+    lateinit var selectedSiteSource: SelectedSiteSource
+
+    @Mock
+    lateinit var bloggingPromptCardSource: BloggingPromptCardSource
+
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Mock
+    lateinit var siteModel: SiteModel
     private lateinit var mySiteSourceManager: MySiteSourceManager
     private val selectedSite = MediatorLiveData<SelectedSite>()
     private lateinit var allRefreshedMySiteSources: List<MySiteSource<*>>
@@ -61,47 +84,47 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(true)
 
         mySiteSourceManager = MySiteSourceManager(
-                quickStartTracker,
-                currentAvatarSource,
-                domainRegistrationSource,
-                dynamicCardsSource,
-                quickStartCardSource,
-                scanAndBackupSource,
-                selectedSiteSource,
-                cardsSource,
-                siteIconProgressSource,
-                bloggingPromptCardSource,
-                selectedSiteRepository
+            quickStartTracker,
+            currentAvatarSource,
+            domainRegistrationSource,
+            dynamicCardsSource,
+            quickStartCardSource,
+            scanAndBackupSource,
+            selectedSiteSource,
+            cardsSource,
+            siteIconProgressSource,
+            bloggingPromptCardSource,
+            selectedSiteRepository
         )
 
         allRefreshedMySiteSources = listOf(
-                selectedSiteSource,
-                siteIconProgressSource,
-                quickStartCardSource,
-                currentAvatarSource,
-                domainRegistrationSource,
-                scanAndBackupSource,
-                dynamicCardsSource,
-                cardsSource
+            selectedSiteSource,
+            siteIconProgressSource,
+            quickStartCardSource,
+            currentAvatarSource,
+            domainRegistrationSource,
+            scanAndBackupSource,
+            dynamicCardsSource,
+            cardsSource
         )
 
         allRefreshedMySiteSourcesExceptCardsSource = listOf(
-                selectedSiteSource,
-                siteIconProgressSource,
-                quickStartCardSource,
-                currentAvatarSource,
-                domainRegistrationSource,
-                scanAndBackupSource,
-                dynamicCardsSource
+            selectedSiteSource,
+            siteIconProgressSource,
+            quickStartCardSource,
+            currentAvatarSource,
+            domainRegistrationSource,
+            scanAndBackupSource,
+            dynamicCardsSource
         )
 
         siteIndependentMySiteSources = listOf(
-                currentAvatarSource
+            currentAvatarSource
         )
 
         selectRefreshedMySiteSources = listOf(
-                quickStartCardSource,
-                currentAvatarSource
+            quickStartCardSource,
+            currentAvatarSource
         )
 
         siteDependentMySiteSources = allRefreshedMySiteSources.filterNot(SiteIndependentSource::class.java::isInstance)

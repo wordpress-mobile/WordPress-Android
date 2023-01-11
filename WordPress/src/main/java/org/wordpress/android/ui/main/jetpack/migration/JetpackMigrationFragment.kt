@@ -42,7 +42,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class JetpackMigrationFragment : Fragment() {
-    @Inject lateinit var dispatcher: Dispatcher
+    @Inject
+    lateinit var dispatcher: Dispatcher
 
     private val viewModel: JetpackMigrationViewModel by viewModels()
 
@@ -88,34 +89,34 @@ class JetpackMigrationFragment : Fragment() {
 
     private fun launchHelpScreen() {
         ActivityLauncher.viewHelpAndSupport(
-                requireContext(),
-                JETPACK_MIGRATION_HELP,
-                null,
-                null
+            requireContext(),
+            JETPACK_MIGRATION_HELP,
+            null,
+            null
         )
     }
 
     private fun initBackPressHandler(showDeleteWpState: Boolean) {
         if (showDeleteWpState) return
         requireActivity().onBackPressedDispatcher.addCallback(
-                viewLifecycleOwner,
-                object : OnBackPressedCallback(
-                        true
-                ) {
-                    override fun handleOnBackPressed() {
-                        viewModel.logoutAndFallbackToLogin()
-                    }
-                })
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(
+                true
+            ) {
+                override fun handleOnBackPressed() {
+                    viewModel.logoutAndFallbackToLogin()
+                }
+            })
     }
 
     companion object {
         private const val KEY_SHOW_DELETE_WP_STATE = "KEY_SHOW_DELETE_WP_STATE"
         fun newInstance(showDeleteWpState: Boolean = false): JetpackMigrationFragment =
-                JetpackMigrationFragment().apply {
-                    arguments = Bundle().apply {
-                        putBoolean(KEY_SHOW_DELETE_WP_STATE, showDeleteWpState)
-                    }
+            JetpackMigrationFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(KEY_SHOW_DELETE_WP_STATE, showDeleteWpState)
                 }
+            }
     }
 }
 

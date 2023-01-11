@@ -7,8 +7,8 @@ import javax.inject.Inject
 @FeatureInDevelopment
 class BloggingPromptsListFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
-        appConfig,
-        BuildConfig.BLOGGING_PROMPTS_LIST
+    appConfig,
+    BuildConfig.BLOGGING_PROMPTS_LIST
 ) {
     override fun isEnabled(): Boolean {
         return super.isEnabled() && BuildConfig.IS_JETPACK_APP

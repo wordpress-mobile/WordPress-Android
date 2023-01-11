@@ -20,18 +20,24 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @ExperimentalCoroutinesApi
 class PostDismissBackupDownloadUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: PostDismissBackupDownloadUseCase
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var activityLogStore: ActivityLogStore
-    @Mock lateinit var siteModel: SiteModel
+
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var activityLogStore: ActivityLogStore
+
+    @Mock
+    lateinit var siteModel: SiteModel
 
     private val downloadId = 100L
 
     @Before
     fun setup() = test {
         useCase = PostDismissBackupDownloadUseCase(
-                networkUtilsWrapper,
-                activityLogStore,
-                testDispatcher()
+            networkUtilsWrapper,
+            activityLogStore,
+            testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
@@ -48,10 +54,10 @@ class PostDismissBackupDownloadUseCaseTest : BaseUnitTest() {
     @Test
     fun `given invalid response, when dismiss is triggered, then false is returned`() = test {
         whenever(activityLogStore.dismissBackupDownload(any())).thenReturn(
-                OnDismissBackupDownload(
-                        downloadId, DismissBackupDownloadError(INVALID_RESPONSE),
-                        DISMISS_BACKUP_DOWNLOAD
-                )
+            OnDismissBackupDownload(
+                downloadId, DismissBackupDownloadError(INVALID_RESPONSE),
+                DISMISS_BACKUP_DOWNLOAD
+            )
         )
 
         val result = useCase.dismissBackupDownload(downloadId, siteModel)
@@ -62,12 +68,12 @@ class PostDismissBackupDownloadUseCaseTest : BaseUnitTest() {
     @Test
     fun `given generic error response, when dismiss download is triggered, then false is returned`() = test {
         whenever(activityLogStore.dismissBackupDownload(any()))
-                .thenReturn(
-                        OnDismissBackupDownload(
-                                downloadId, DismissBackupDownloadError(GENERIC_ERROR),
-                                DISMISS_BACKUP_DOWNLOAD
-                        )
+            .thenReturn(
+                OnDismissBackupDownload(
+                    downloadId, DismissBackupDownloadError(GENERIC_ERROR),
+                    DISMISS_BACKUP_DOWNLOAD
                 )
+            )
 
         val result = useCase.dismissBackupDownload(downloadId, siteModel)
 
@@ -77,11 +83,11 @@ class PostDismissBackupDownloadUseCaseTest : BaseUnitTest() {
     @Test
     fun `when dismiss download is triggered successfully, then true is returned`() = test {
         whenever(activityLogStore.dismissBackupDownload(any())).thenReturn(
-                OnDismissBackupDownload(
-                        downloadId = downloadId,
-                        isDismissed = true,
-                        causeOfChange = DISMISS_BACKUP_DOWNLOAD
-                )
+            OnDismissBackupDownload(
+                downloadId = downloadId,
+                isDismissed = true,
+                causeOfChange = DISMISS_BACKUP_DOWNLOAD
+            )
         )
 
         val result = useCase.dismissBackupDownload(downloadId, siteModel)

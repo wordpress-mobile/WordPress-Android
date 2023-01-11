@@ -22,7 +22,7 @@ class MediaPickerAdapter internal constructor(
 
     fun loadData(result: List<MediaPickerUiItem>) {
         val diffResult = DiffUtil.calculateDiff(
-                MediaPickerAdapterDiffCallback(mediaList, result)
+            MediaPickerAdapterDiffCallback(mediaList, result)
         )
         mediaList = result
         diffResult.dispatchUpdatesTo(this)

@@ -23,7 +23,7 @@ class ResolverUtilityTest : BaseUnitTest() {
     private val sqliteDatabase: SQLiteDatabase = mock()
     private val sqliteStatement: SQLiteStatement = mock()
     private val resolverUtility = ResolverUtility(
-            dbWrapper = dbWrapper
+        dbWrapper = dbWrapper
     )
 
     @Before
@@ -52,41 +52,45 @@ class ResolverUtilityTest : BaseUnitTest() {
 
     @Test
     fun `SiteModel table is deleted`() {
-        resolverUtility.copySitesWithIndexes(sites = listOf(
+        resolverUtility.copySitesWithIndexes(
+            sites = listOf(
                 SiteModel(),
                 SiteModel(),
                 SiteModel()
-        ))
+            )
+        )
         verify(sqliteDatabase, times(1)).delete(
-                "SiteModel", null, null
+            "SiteModel", null, null
         )
     }
 
     @Test
     fun `SiteModel index is deleted`() {
-        resolverUtility.copySitesWithIndexes(sites = listOf(
+        resolverUtility.copySitesWithIndexes(
+            sites = listOf(
                 SiteModel(),
                 SiteModel(),
                 SiteModel()
-        ))
+            )
+        )
         verify(sqliteDatabase, times(1)).delete(
-                "sqlite_sequence", "name='SiteModel'", null
+            "sqlite_sequence", "name='SiteModel'", null
         )
     }
 
     @Test
     fun `Autoincrement sequence is inserted once and then updated`() {
         resolverUtility.copySitesWithIndexes(sites = listOf(
-                SiteModel().apply { id = 10 },
-                SiteModel().apply { id = 8 },
-                SiteModel().apply { id = 20 }
+            SiteModel().apply { id = 10 },
+            SiteModel().apply { id = 8 },
+            SiteModel().apply { id = 20 }
         ))
 
         verify(sqliteDatabase, times(1)).compileStatement(
-                "INSERT INTO SQLITE_SEQUENCE (name,seq) VALUES ('SiteModel', ?)"
+            "INSERT INTO SQLITE_SEQUENCE (name,seq) VALUES ('SiteModel', ?)"
         )
         verify(sqliteDatabase, times(2)).compileStatement(
-                "UPDATE SQLITE_SEQUENCE SET seq=? WHERE name='SiteModel'"
+            "UPDATE SQLITE_SEQUENCE SET seq=? WHERE name='SiteModel'"
         )
     }
 

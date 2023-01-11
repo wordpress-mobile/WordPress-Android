@@ -29,8 +29,8 @@ object ColorUtils {
     fun setImageResourceWithTint(imageView: ImageView, @DrawableRes drawableResId: Int, @ColorRes colorResId: Int) {
         imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, drawableResId))
         ImageViewCompat.setImageTintList(
-                imageView,
-                AppCompatResources.getColorStateList(imageView.context, colorResId)
+            imageView,
+            AppCompatResources.getColorStateList(imageView.context, colorResId)
         )
     }
 

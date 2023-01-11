@@ -9,15 +9,15 @@ import org.wordpress.android.ui.reader.discover.ReaderRecommendedBlogsAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.addItemDivider
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.extensions.viewBinding
+import org.wordpress.android.util.image.ImageManager
 
 class ReaderRecommendedBlogsCardViewHolder(
     parentView: ViewGroup,
     imageManager: ImageManager,
     uiHelpers: UiHelpers
 ) : ReaderViewHolder<ReaderRecommendedBlogsCardBinding>(
-        parentView.viewBinding(ReaderRecommendedBlogsCardBinding::inflate)
+    parentView.viewBinding(ReaderRecommendedBlogsCardBinding::inflate)
 ) {
     private val recommendedBlogsAdapter = ReaderRecommendedBlogsAdapter(imageManager, uiHelpers)
 

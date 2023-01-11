@@ -76,7 +76,7 @@ class QuickStartCardBuilderTest : BaseUnitTest() {
         val quickStartCard = buildQuickStartCard()
 
         assertThat(getQuickStartTaskTypeItem(quickStartCard, QuickStartTaskType.CUSTOMIZE).title)
-                .isEqualTo(UiStringRes(R.string.quick_start_sites_type_customize))
+            .isEqualTo(UiStringRes(R.string.quick_start_sites_type_customize))
     }
 
     @Test
@@ -84,7 +84,7 @@ class QuickStartCardBuilderTest : BaseUnitTest() {
         val quickStartCard = buildQuickStartCard()
 
         assertThat(getQuickStartTaskTypeItem(quickStartCard, QuickStartTaskType.GROW).title)
-                .isEqualTo(UiStringRes(R.string.quick_start_sites_type_grow))
+            .isEqualTo(UiStringRes(R.string.quick_start_sites_type_grow))
     }
 
     @Test
@@ -108,15 +108,15 @@ class QuickStartCardBuilderTest : BaseUnitTest() {
         val quickStartCard = buildQuickStartCard()
 
         assertThat(getQuickStartTaskTypeItem(quickStartCard).subtitle)
-                .isEqualTo(
-                        UiStringResWithParams(
-                                R.string.quick_start_sites_type_tasks_completed,
-                                listOf(
-                                        UiStringText("${completedTasks.size}"),
-                                        UiStringText("${completedTasks.size + uncompletedTasks.size}")
-                                )
-                        )
+            .isEqualTo(
+                UiStringResWithParams(
+                    R.string.quick_start_sites_type_tasks_completed,
+                    listOf(
+                        UiStringText("${completedTasks.size}"),
+                        UiStringText("${completedTasks.size + uncompletedTasks.size}")
+                    )
                 )
+            )
     }
 
     /* TASK TYPE ITEM PROGRESS BAR */
@@ -151,7 +151,7 @@ class QuickStartCardBuilderTest : BaseUnitTest() {
 
         val taskTypeItem = getQuickStartTaskTypeItem(quickStartCard)
         assertThat(taskTypeItem.onClick)
-                .isEqualTo(ListItemInteraction.create(taskTypeItem.quickStartTaskType, onItemClick))
+            .isEqualTo(ListItemInteraction.create(taskTypeItem.quickStartTaskType, onItemClick))
     }
 
     /* MORE MENU */
@@ -179,11 +179,11 @@ class QuickStartCardBuilderTest : BaseUnitTest() {
         val customizeCategory = buildQuickStartCategory(QuickStartTaskType.CUSTOMIZE, completedTasks, uncompletedTasks)
         val growCategory = buildQuickStartCategory(QuickStartTaskType.GROW, completedTasks, uncompletedTasks)
         return builder.build(
-                QuickStartCardBuilderParams(
-                        listOf(customizeCategory, growCategory),
-                        onRemoveMenuItemClick,
-                        onItemClick
-                )
+            QuickStartCardBuilderParams(
+                listOf(customizeCategory, growCategory),
+                onRemoveMenuItemClick,
+                onItemClick
+            )
         )
     }
 
@@ -193,9 +193,9 @@ class QuickStartCardBuilderTest : BaseUnitTest() {
         uncompletedTasks: List<QuickStartTaskDetails>?
     ): QuickStartCategory {
         return QuickStartCategory(
-                taskType = taskType,
-                completedTasks = completedTasks ?: this.completedTasks,
-                uncompletedTasks = uncompletedTasks ?: this.uncompletedTasks
+            taskType = taskType,
+            completedTasks = completedTasks ?: this.completedTasks,
+            uncompletedTasks = uncompletedTasks ?: this.uncompletedTasks
         )
     }
 

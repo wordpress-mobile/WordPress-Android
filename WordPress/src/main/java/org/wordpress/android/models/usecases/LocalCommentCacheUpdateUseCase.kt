@@ -14,8 +14,8 @@ import javax.inject.Inject
 
 class LocalCommentCacheUpdateUseCase @Inject constructor() : FlowFSMUseCase<Any, PropagateCommentsUpdateAction,
         Any, CommentsUseCaseType, CommentError>(
-        initialState = Idle,
-        DoNotCare
+    initialState = Idle,
+    DoNotCare
 ) {
     sealed class CommentsUpdateState : StateInterface<Any, PropagateCommentsUpdateAction, Any, CommentsUseCaseType,
             CommentError> {

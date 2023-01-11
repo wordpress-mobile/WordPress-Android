@@ -65,16 +65,16 @@ fun View.focusAndShowKeyboard() {
     } else {
         // We need to wait until the window gets focus.
         viewTreeObserver.addOnWindowFocusChangeListener(
-                object : ViewTreeObserver.OnWindowFocusChangeListener {
-                    override fun onWindowFocusChanged(hasFocus: Boolean) {
-                        // This notification will arrive just before the InputMethodManager gets set up.
-                        if (hasFocus) {
-                            this@focusAndShowKeyboard.showTheKeyboardNow()
-                            // It’s very important to remove this listener once we are done.
-                            viewTreeObserver.removeOnWindowFocusChangeListener(this)
-                        }
+            object : ViewTreeObserver.OnWindowFocusChangeListener {
+                override fun onWindowFocusChanged(hasFocus: Boolean) {
+                    // This notification will arrive just before the InputMethodManager gets set up.
+                    if (hasFocus) {
+                        this@focusAndShowKeyboard.showTheKeyboardNow()
+                        // It’s very important to remove this listener once we are done.
+                        viewTreeObserver.removeOnWindowFocusChangeListener(this)
                     }
-                })
+                }
+            })
     }
 }
 

@@ -10,14 +10,14 @@ import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 
 class FourColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_four_columns_item
+    parent,
+    R.layout.stats_block_four_columns_item
 ) {
     private val columnLayouts = listOf<LinearLayout>(
-            itemView.findViewById(R.id.column1),
-            itemView.findViewById(R.id.column2),
-            itemView.findViewById(R.id.column3),
-            itemView.findViewById(R.id.column4)
+        itemView.findViewById(R.id.column1),
+        itemView.findViewById(R.id.column2),
+        itemView.findViewById(R.id.column3),
+        itemView.findViewById(R.id.column4)
     )
 
     fun bind(
@@ -52,11 +52,13 @@ class FourColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             }
         }
     }
+
     private fun LinearLayout.setSelection(isSelected: Boolean) {
         key().isSelected = isSelected
         value().isSelected = isSelected
         selector().visibility = if (isSelected) View.VISIBLE else View.GONE
     }
+
     private fun LinearLayout.key(): TextView = this.findViewById(R.id.key)
     private fun LinearLayout.value(): TextView = this.findViewById(R.id.value)
     private fun LinearLayout.selector(): View = this.findViewById(R.id.selector)

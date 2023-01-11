@@ -11,8 +11,8 @@ class ThreatDetailHeaderViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : JetpackViewHolder<ThreatDetailsListHeaderBinding>(
-        parent,
-        ThreatDetailsListHeaderBinding::inflate
+    parent,
+    ThreatDetailsListHeaderBinding::inflate
 ) {
     override fun onBind(itemUiState: JetpackListItemState) = with(binding) {
         val state = itemUiState as ThreatDetailHeaderState

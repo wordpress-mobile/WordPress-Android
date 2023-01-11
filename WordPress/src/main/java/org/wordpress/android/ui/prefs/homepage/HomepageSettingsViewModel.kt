@@ -3,9 +3,7 @@ package org.wordpress.android.ui.prefs.homepage
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -73,12 +71,12 @@ class HomepageSettingsViewModel
     ) {
         updateUiStateFromMainThread { pagesUiState ->
             pagesUiState.copy(
-                    pageOnFrontState = pagesUiState.pageOnFrontState?.copy(
-                            isExpanded = pageOnFrontDialogOpened
-                    ),
-                    pageForPostsState = pagesUiState.pageForPostsState?.copy(
-                            isExpanded = pageForPostsDialogOpened
-                    )
+                pageOnFrontState = pagesUiState.pageOnFrontState?.copy(
+                    isExpanded = pageOnFrontDialogOpened
+                ),
+                pageForPostsState = pagesUiState.pageForPostsState?.copy(
+                    isExpanded = pageForPostsDialogOpened
+                )
             )
         }
     }
@@ -110,8 +108,8 @@ class HomepageSettingsViewModel
                 }
 
                 SiteHomepageSettings.StaticPage(
-                        pageForPostsId = pageForPostsModel.getSelectedItemRemoteId() ?: 0,
-                        pageOnFrontId = pageOnFrontModel.getSelectedItemRemoteId() ?: 0
+                    pageForPostsId = pageForPostsModel.getSelectedItemRemoteId() ?: 0,
+                    pageOnFrontId = pageOnFrontModel.getSelectedItemRemoteId() ?: 0
                 )
             }
             val updateResult = siteOptionsStore.updateHomepage(currentUiState.siteModel, siteHomepageSettings)
@@ -145,27 +143,27 @@ class HomepageSettingsViewModel
         dispatcher.register(this)
         launch {
             val siteModel = siteStore.getSiteByLocalId(siteId)
-                    ?: throw IllegalStateException("SiteModel has to be present")
+                ?: throw IllegalStateException("SiteModel has to be present")
             val isClassicBlog = savedClassicBlogValue ?: siteModel.showOnFront == ShowOnFront.POSTS.value
             _uiState.value = HomepageSettingsUiState(
-                    isClassicBlogState = isClassicBlog,
-                    siteModel = siteModel
+                isClassicBlogState = isClassicBlog,
+                siteModel = siteModel
             )
             val pageOnFrontId = savedPageOnFrontId ?: siteModel.pageOnFront
             val pageForPostsId = savedPageForPostsId ?: siteModel.pageForPosts
             val loadPagesFlow = homepageSettingsDataLoader.loadPages(
-                    siteModel
+                siteModel
             )
 
             withContext(bgDispatcher) {
                 loadPagesFlow.filter { loadingResult ->
                     loadingResult !is Data || loadingResult.pages.isValid(pageOnFrontId, pageForPostsId)
                 }
-                        .collect { loadingResult ->
-                            updateUiState { currentValue ->
-                                currentValue.updateWithLoadingResult(loadingResult, pageForPostsId, pageOnFrontId)
-                            }
+                    .collect { loadingResult ->
+                        updateUiState { currentValue ->
+                            currentValue.updateWithLoadingResult(loadingResult, pageForPostsId, pageOnFrontId)
                         }
+                    }
             }
         }
     }
@@ -193,10 +191,11 @@ class HomepageSettingsViewModel
         if (!event.isError && currentUiState != null) {
             val siteModel = currentUiState.siteModel
             val updatedSite = siteStore.getSiteByLocalId(siteModel.id)
-                    ?: throw IllegalStateException("SiteModel has to be present")
+                ?: throw IllegalStateException("SiteModel has to be present")
             if (updatedSite.showOnFront != siteModel.showOnFront ||
-                    updatedSite.pageOnFront != siteModel.pageOnFront ||
-                    updatedSite.pageForPosts != siteModel.pageForPosts) {
+                updatedSite.pageOnFront != siteModel.pageOnFront ||
+                updatedSite.pageForPosts != siteModel.pageForPosts
+            ) {
                 updateUiStateFromMainThread { it.copy(siteModel = updatedSite) }
             }
         }

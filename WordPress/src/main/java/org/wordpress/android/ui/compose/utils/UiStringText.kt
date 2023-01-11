@@ -15,3 +15,14 @@ import org.wordpress.android.ui.utils.UiString
 @Composable
 @ReadOnlyComposable
 fun uiStringText(uiString: UiString) = UiHelpers().getTextOfUiString(LocalContext.current, uiString).toString()
+
+/**
+ * Loads the text from a UiString.
+ *
+ * @return the string data loaded from the UiString.
+ *
+ * @see [uiStringText]
+ */
+@Composable
+@ReadOnlyComposable
+fun UiString.asString() = uiStringText(this)

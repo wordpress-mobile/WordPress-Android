@@ -16,11 +16,11 @@ fun Subtitle(
     modifier: Modifier = Modifier,
 ) {
     Text(
-            text = text,
-            fontSize = 17.sp,
-            style = TextStyle(letterSpacing = (-0.01).sp),
-            modifier = modifier
-                    .padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
-                    .padding(top = 20.dp)
+        text = text,
+        fontSize = 17.sp,
+        style = TextStyle(letterSpacing = (-0.01).sp),
+        modifier = modifier
+            .padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
+            .padding(top = 20.dp)
     )
 }

@@ -12,10 +12,10 @@ class ManageCategoriesFeatureConfig
 @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.MANAGE_CATEGORIES,
-        MANAGE_CATEGORIES_REMOTE_FIELD
-){
+    appConfig,
+    BuildConfig.MANAGE_CATEGORIES,
+    MANAGE_CATEGORIES_REMOTE_FIELD
+) {
     companion object {
         const val MANAGE_CATEGORIES_REMOTE_FIELD = "manage_categories"
     }

@@ -15,43 +15,60 @@ import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
 class DeepLinkHandlersTest : BaseUnitTest() {
-    @Mock lateinit var editorLinkHandler: EditorLinkHandler
-    @Mock lateinit var statsLinkHandler: StatsLinkHandler
-    @Mock lateinit var startLinkHandler: StartLinkHandler
-    @Mock lateinit var readerLinkHandler: ReaderLinkHandler
-    @Mock lateinit var pagesLinkHandler: PagesLinkHandler
-    @Mock lateinit var notificationsLinkHandler: NotificationsLinkHandler
-    @Mock lateinit var qrCodeAuthLinkHandler: QRCodeAuthLinkHandler
-    @Mock lateinit var homeLinkHandler: HomeLinkHandler
-    @Mock lateinit var uri: UriWrapper
+    @Mock
+    lateinit var editorLinkHandler: EditorLinkHandler
+
+    @Mock
+    lateinit var statsLinkHandler: StatsLinkHandler
+
+    @Mock
+    lateinit var startLinkHandler: StartLinkHandler
+
+    @Mock
+    lateinit var readerLinkHandler: ReaderLinkHandler
+
+    @Mock
+    lateinit var pagesLinkHandler: PagesLinkHandler
+
+    @Mock
+    lateinit var notificationsLinkHandler: NotificationsLinkHandler
+
+    @Mock
+    lateinit var qrCodeAuthLinkHandler: QRCodeAuthLinkHandler
+
+    @Mock
+    lateinit var homeLinkHandler: HomeLinkHandler
+
+    @Mock
+    lateinit var uri: UriWrapper
     private lateinit var deepLinkHandlers: DeepLinkHandlers
     private lateinit var handlers: List<DeepLinkHandler>
 
     @Before
     fun setUp() {
         handlers = listOf(
-                editorLinkHandler,
-                statsLinkHandler,
-                startLinkHandler,
-                readerLinkHandler,
-                pagesLinkHandler,
-                notificationsLinkHandler,
-                qrCodeAuthLinkHandler,
-                homeLinkHandler
+            editorLinkHandler,
+            statsLinkHandler,
+            startLinkHandler,
+            readerLinkHandler,
+            pagesLinkHandler,
+            notificationsLinkHandler,
+            qrCodeAuthLinkHandler,
+            homeLinkHandler
         )
         initDeepLinkHandlers()
     }
 
     private fun initDeepLinkHandlers() {
         deepLinkHandlers = DeepLinkHandlers(
-                editorLinkHandler,
-                statsLinkHandler,
-                startLinkHandler,
-                readerLinkHandler,
-                pagesLinkHandler,
-                notificationsLinkHandler,
-                qrCodeAuthLinkHandler,
-                homeLinkHandler
+            editorLinkHandler,
+            statsLinkHandler,
+            startLinkHandler,
+            readerLinkHandler,
+            pagesLinkHandler,
+            notificationsLinkHandler,
+            qrCodeAuthLinkHandler,
+            homeLinkHandler
         )
     }
 

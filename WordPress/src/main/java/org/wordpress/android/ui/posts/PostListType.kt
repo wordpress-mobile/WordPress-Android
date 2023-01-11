@@ -9,13 +9,15 @@ enum class PostListType(val postStatuses: List<PostStatus>) {
     DRAFTS(listOf(PostStatus.DRAFT, PostStatus.PENDING)),
     SCHEDULED(listOf(PostStatus.SCHEDULED)),
     TRASHED(listOf(PostStatus.TRASHED)),
-    SEARCH(listOf(
+    SEARCH(
+        listOf(
             PostStatus.DRAFT,
             PostStatus.PENDING,
             PostStatus.PUBLISHED,
             PRIVATE,
             PostStatus.SCHEDULED,
-            PostStatus.TRASHED)
+            PostStatus.TRASHED
+        )
     );
 
     val titleResId: Int

@@ -22,7 +22,7 @@ class PreviewModeSelectorPopup(val context: Context, val button: View) : ListPop
         verticalOffset = popupOffset
         isModal = true
         val popupBackgroundColor = ElevationOverlayProvider(context).compositeOverlayWithThemeSurfaceColorIfNeeded(
-                resources.getDimension(dimen.popup_over_toolbar_elevation)
+            resources.getDimension(dimen.popup_over_toolbar_elevation)
         )
         setBackgroundDrawable(ColorDrawable(popupBackgroundColor))
     }

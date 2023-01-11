@@ -1,4 +1,0 @@
-21.3:
-- No processo de leitura de código QR, o texto é traduzido para o idioma do aplicativo.
-- A opção Configurações de notificação desativa o resumo semanal, o lembrete de publicação e as notificações do site.
-- Corrigimos um bug em Meu site > Comentários que travava o aplicativo para sites auto-hospedados com determinados plugins.

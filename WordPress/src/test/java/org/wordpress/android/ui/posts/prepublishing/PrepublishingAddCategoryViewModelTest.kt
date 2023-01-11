@@ -30,22 +30,30 @@ import org.wordpress.android.viewmodel.ResourceProvider
 @RunWith(MockitoJUnitRunner::class)
 class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingAddCategoryViewModel
-    @Mock lateinit var getCategoriesUseCase: GetCategoriesUseCase
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var siteModel: SiteModel
+
+    @Mock
+    lateinit var getCategoriesUseCase: GetCategoriesUseCase
+
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var siteModel: SiteModel
 
     @Before
     fun setup() = test {
         viewModel = PrepublishingAddCategoryViewModel(
-                getCategoriesUseCase,
-                networkUtilsWrapper,
-                resourceProvider,
-                testDispatcher()
+            getCategoriesUseCase,
+            networkUtilsWrapper,
+            resourceProvider,
+            testDispatcher()
         )
 
         whenever(getCategoriesUseCase.getSiteCategories(any()))
-                .thenReturn(siteCategoriesList())
+            .thenReturn(siteCategoriesList())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
 
@@ -57,7 +65,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
         val title: UiStringRes? = toolbarTitleUiState[0] as UiStringRes
 
         assertThat(title?.stringRes)
-                .isEqualTo(R.string.prepublishing_nudges_toolbar_title_add_categories)
+            .isEqualTo(R.string.prepublishing_nudges_toolbar_title_add_categories)
     }
 
     @Test
@@ -142,14 +150,14 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
 
     private fun siteCategoriesList(): ArrayList<CategoryNode> {
         return arrayListOf(
-                CategoryNode(1, 0, "Animals"),
-                CategoryNode(2, 0, "Colors"),
-                CategoryNode(3, 0, "Flavors"),
-                CategoryNode(4, 0, "Articles"),
-                CategoryNode(14, 4, "New"),
-                CategoryNode(5, 0, "Fruit"),
-                CategoryNode(6, 0, "Recipes"),
-                CategoryNode(16, 6, "New")
+            CategoryNode(1, 0, "Animals"),
+            CategoryNode(2, 0, "Colors"),
+            CategoryNode(3, 0, "Flavors"),
+            CategoryNode(4, 0, "Articles"),
+            CategoryNode(14, 4, "New"),
+            CategoryNode(5, 0, "Fruit"),
+            CategoryNode(6, 0, "Recipes"),
+            CategoryNode(16, 6, "New")
         )
     }
 
@@ -170,11 +178,11 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
         viewModel.snackbarEvents.observeForever { msgs.add(it) }
 
         return Observers(
-                uiStates,
-                navigateBack,
-                dismissKeyboard,
-                toolbarTitleUiState,
-                msgs
+            uiStates,
+            navigateBack,
+            dismissKeyboard,
+            toolbarTitleUiState,
+            msgs
         )
     }
 

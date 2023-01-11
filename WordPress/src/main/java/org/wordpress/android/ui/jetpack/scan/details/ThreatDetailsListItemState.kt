@@ -9,7 +9,7 @@ import org.wordpress.android.ui.utils.UiString
 
 sealed class ThreatDetailsListItemState(override val type: ViewType) : JetpackListItemState(type) {
     data class ThreatContextLinesItemState(val lines: List<ThreatContextLineItemState>) : ThreatDetailsListItemState(
-            ViewType.THREAT_CONTEXT_LINES
+        ViewType.THREAT_CONTEXT_LINES
     ) {
         data class ThreatContextLineItemState(
             val line: ContextLine,

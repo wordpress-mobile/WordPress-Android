@@ -18,33 +18,33 @@ import javax.inject.Singleton
 class JetpackAvailableItemsProvider @Inject constructor() {
     fun getAvailableItems(): List<JetpackAvailableItem> {
         return listOf(
-                JetpackAvailableItem(
-                        THEMES,
-                        R.string.backup_item_themes
-                ),
-                JetpackAvailableItem(
-                        PLUGINS,
-                        R.string.backup_item_plugins
-                ),
-                JetpackAvailableItem(
-                        MEDIA_UPLOADS,
-                        R.string.backup_item_media_uploads
-                ),
-                JetpackAvailableItem(
-                        SQLS,
-                        R.string.backup_item_sqls,
-                        R.string.backup_item_sqls_hint
-                ),
-                JetpackAvailableItem(
-                        ROOTS,
-                        R.string.backup_item_roots,
-                        R.string.backup_item_roots_hint
-                ),
-                JetpackAvailableItem(
-                        CONTENTS,
-                        R.string.backup_item_contents,
-                        R.string.backup_item_content_hint
-                )
+            JetpackAvailableItem(
+                THEMES,
+                R.string.backup_item_themes
+            ),
+            JetpackAvailableItem(
+                PLUGINS,
+                R.string.backup_item_plugins
+            ),
+            JetpackAvailableItem(
+                MEDIA_UPLOADS,
+                R.string.backup_item_media_uploads
+            ),
+            JetpackAvailableItem(
+                SQLS,
+                R.string.backup_item_sqls,
+                R.string.backup_item_sqls_hint
+            ),
+            JetpackAvailableItem(
+                ROOTS,
+                R.string.backup_item_roots,
+                R.string.backup_item_roots_hint
+            ),
+            JetpackAvailableItem(
+                CONTENTS,
+                R.string.backup_item_contents,
+                R.string.backup_item_content_hint
+            )
         )
     }
 

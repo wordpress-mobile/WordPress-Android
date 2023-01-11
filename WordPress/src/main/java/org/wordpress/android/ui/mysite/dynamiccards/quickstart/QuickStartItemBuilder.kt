@@ -37,21 +37,21 @@ class QuickStartItemBuilder
         tasks.addAll(quickStartCategory.uncompletedTasks.map { it.toUiItem(false, accentColor, onQuickStartTaskClick) })
         val completedTasks = quickStartCategory.completedTasks.map {
             it.toUiItem(
-                    true,
-                    accentColor,
-                    onQuickStartTaskClick
+                true,
+                accentColor,
+                onQuickStartTaskClick
             )
         }
         tasks.addAll(completedTasks)
         val dynamicCardType = quickStartCategory.taskType.toDynamicCardType()
         val isPinned = pinnedDynamicCardType == dynamicCardType
         return QuickStartDynamicCard(
-                dynamicCardType,
-                UiStringRes(getTitle(quickStartCategory.taskType)),
-                tasks,
-                accentColor,
-                getProgress(tasks, completedTasks),
-                ListItemInteraction.create(DynamicCardMenuModel(dynamicCardType, isPinned), onQuickStartCardMoreClick)
+            dynamicCardType,
+            UiStringRes(getTitle(quickStartCategory.taskType)),
+            tasks,
+            accentColor,
+            getProgress(tasks, completedTasks),
+            ListItemInteraction.create(DynamicCardMenuModel(dynamicCardType, isPinned), onQuickStartCardMoreClick)
         )
     }
 
@@ -94,13 +94,13 @@ class QuickStartItemBuilder
     ): QuickStartTaskCard {
         val task = quickStartRepository.quickStartType.getTaskFromString(this.taskString)
         return QuickStartTaskCard(
-                task,
-                UiStringRes(this.titleResId),
-                UiStringRes(this.subtitleResId),
-                getIllustration(task),
-                accentColor,
-                done,
-                ListItemInteraction.create(task, onQuickStartTaskClick)
+            task,
+            UiStringRes(this.titleResId),
+            UiStringRes(this.subtitleResId),
+            getIllustration(task),
+            accentColor,
+            done,
+            ListItemInteraction.create(task, onQuickStartTaskClick)
         )
     }
 

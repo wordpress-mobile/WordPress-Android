@@ -46,8 +46,8 @@ import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 @Deprecated(
-        "This code is a temporary code until all the comments parts are ported to room " +
-                "trying to minimize the changes to existing code not yet ported"
+    "This code is a temporary code until all the comments parts are ported to room " +
+            "trying to minimize the changes to existing code not yet ported"
 )
 @Singleton
 class CommentsStoreAdapter @Inject constructor(
@@ -69,31 +69,31 @@ class CommentsStoreAdapter @Inject constructor(
         vararg statuses: CommentStatus
     ): List<CommentModel> {
         return runBlocking {
-                withContext(bgDispatcher) {
-                    unifiedStore.getCommentsForSite(site, orderByDateAscending, limit, *statuses).map {
-                        commentsMapper.commentEntityToLegacyModel(it)
-                    }
+            withContext(bgDispatcher) {
+                unifiedStore.getCommentsForSite(site, orderByDateAscending, limit, *statuses).map {
+                    commentsMapper.commentEntityToLegacyModel(it)
                 }
+            }
         }
     }
 
     fun getCommentByLocalId(localId: Int): CommentModel? {
         return runBlocking {
-                withContext(bgDispatcher) {
-                    unifiedStore.getCommentByLocalId(localId.toLong()).firstOrNull()?.let {
-                        commentsMapper.commentEntityToLegacyModel(it)
-                    }
+            withContext(bgDispatcher) {
+                unifiedStore.getCommentByLocalId(localId.toLong()).firstOrNull()?.let {
+                    commentsMapper.commentEntityToLegacyModel(it)
                 }
+            }
         }
     }
 
     fun getCommentBySiteAndRemoteId(site: SiteModel, remoteCommentId: Long): CommentModel? {
         return runBlocking {
-                withContext(bgDispatcher) {
-                    unifiedStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()?.let {
-                        commentsMapper.commentEntityToLegacyModel(it)
-                    }
+            withContext(bgDispatcher) {
+                unifiedStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()?.let {
+                    commentsMapper.commentEntityToLegacyModel(it)
                 }
+            }
         }
     }
 
@@ -114,29 +114,29 @@ class CommentsStoreAdapter @Inject constructor(
         }
 
         val actionToDispatch = when (action.type as CommentAction) {
-                FETCH_COMMENTS -> CommentsActionBuilder.newFetchCommentsAction(action.payload as FetchCommentsPayload)
-                FETCH_COMMENT -> CommentsActionBuilder.newFetchCommentAction(action.payload as RemoteCommentPayload)
-                CREATE_NEW_COMMENT -> CommentsActionBuilder.newCreateNewCommentAction(
-                        action.payload as RemoteCreateCommentPayload
-                )
-                PUSH_COMMENT -> CommentsActionBuilder.newPushCommentAction(action.payload as RemoteCommentPayload)
-                DELETE_COMMENT -> CommentsActionBuilder.newDeleteCommentAction(action.payload as RemoteCommentPayload)
-                LIKE_COMMENT -> CommentsActionBuilder.newLikeCommentAction(action.payload as RemoteCommentPayload)
-                UPDATE_COMMENT -> CommentsActionBuilder.newUpdateCommentAction(action.payload as CommentModel)
-                FETCH_COMMENT_LIKES,
-                FETCHED_COMMENTS,
-                FETCHED_COMMENT,
-                CREATED_NEW_COMMENT,
-                PUSHED_COMMENT,
-                DELETED_COMMENT,
-                LIKED_COMMENT,
-                FETCHED_COMMENT_LIKES,
-                REMOVE_COMMENTS,
-                REMOVE_COMMENT,
-                REMOVE_ALL_COMMENTS -> {
-                    logOrCrash("CommentsStoreAdapter->dispatch: action received ${action.type} was not expected")
-                    null
-                }
+            FETCH_COMMENTS -> CommentsActionBuilder.newFetchCommentsAction(action.payload as FetchCommentsPayload)
+            FETCH_COMMENT -> CommentsActionBuilder.newFetchCommentAction(action.payload as RemoteCommentPayload)
+            CREATE_NEW_COMMENT -> CommentsActionBuilder.newCreateNewCommentAction(
+                action.payload as RemoteCreateCommentPayload
+            )
+            PUSH_COMMENT -> CommentsActionBuilder.newPushCommentAction(action.payload as RemoteCommentPayload)
+            DELETE_COMMENT -> CommentsActionBuilder.newDeleteCommentAction(action.payload as RemoteCommentPayload)
+            LIKE_COMMENT -> CommentsActionBuilder.newLikeCommentAction(action.payload as RemoteCommentPayload)
+            UPDATE_COMMENT -> CommentsActionBuilder.newUpdateCommentAction(action.payload as CommentModel)
+            FETCH_COMMENT_LIKES,
+            FETCHED_COMMENTS,
+            FETCHED_COMMENT,
+            CREATED_NEW_COMMENT,
+            PUSHED_COMMENT,
+            DELETED_COMMENT,
+            LIKED_COMMENT,
+            FETCHED_COMMENT_LIKES,
+            REMOVE_COMMENTS,
+            REMOVE_COMMENT,
+            REMOVE_ALL_COMMENTS -> {
+                logOrCrash("CommentsStoreAdapter->dispatch: action received ${action.type} was not expected")
+                null
+            }
         }
 
         actionToDispatch?.let {

@@ -11,7 +11,7 @@ class PostEditorAnalyticsSessionWrapper @Inject constructor() {
         site: SiteModel?,
         isNewPost: Boolean
     ): PostEditorAnalyticsSession = PostEditorAnalyticsSession.getNewPostEditorAnalyticsSession(
-            editor,
-            post, site, isNewPost
+        editor,
+        post, site, isNewPost
     )
 }

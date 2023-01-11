@@ -8,49 +8,49 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentLeveler
 
 class UnifiedCommentLevelerTest {
     private val firstTopLevelComment = generateDummyComment(
-            id = 1,
-            remoteCommentId = 1,
-            parentId = 0,
-            hasParent = false
+        id = 1,
+        remoteCommentId = 1,
+        parentId = 0,
+        hasParent = false
     )
 
     private val firstSecondLevelComment = generateDummyComment(
-            id = 2,
-            remoteCommentId = 2,
-            parentId = 1,
-            hasParent = true
+        id = 2,
+        remoteCommentId = 2,
+        parentId = 1,
+        hasParent = true
     )
 
     private val secondSecondLevelComment = generateDummyComment(
-            id = 3,
-            remoteCommentId = 3,
-            parentId = 1,
-            hasParent = true
+        id = 3,
+        remoteCommentId = 3,
+        parentId = 1,
+        hasParent = true
     )
 
     private val firstThirdLevelComment = generateDummyComment(
-            id = 4,
-            remoteCommentId = 4,
-            parentId = 2,
-            hasParent = true
+        id = 4,
+        remoteCommentId = 4,
+        parentId = 2,
+        hasParent = true
     )
 
     private val firstFourthLevelComment = generateDummyComment(
-            id = 5,
-            remoteCommentId = 5,
-            parentId = 4,
-            hasParent = true
+        id = 5,
+        remoteCommentId = 5,
+        parentId = 4,
+        hasParent = true
     )
 
     private val orphanedComment = generateDummyComment(id = 6, remoteCommentId = 6, parentId = 99, hasParent = true)
 
     private val listOfComments = listOf(
-            firstTopLevelComment,
-            firstSecondLevelComment,
-            secondSecondLevelComment,
-            firstThirdLevelComment,
-            firstFourthLevelComment,
-            orphanedComment
+        firstTopLevelComment,
+        firstSecondLevelComment,
+        secondSecondLevelComment,
+        firstThirdLevelComment,
+        firstFourthLevelComment,
+        orphanedComment
     )
 
     private lateinit var commentLeveler: UnifiedCommentLeveler
@@ -90,25 +90,25 @@ class UnifiedCommentLevelerTest {
     }
 
     private fun generateDummyComment(id: Long, remoteCommentId: Long, parentId: Long, hasParent: Boolean) =
-            CommentEntity(
-                    id = id,
-                    remoteCommentId = remoteCommentId,
-                    parentId = parentId,
-                    hasParent = hasParent,
-                    authorEmail = "",
-                    authorName = "",
-                    authorProfileImageUrl = "",
-                    authorUrl = "",
-                    content = "",
-                    datePublished = "",
-                    iLike = false,
-                    localSiteId = 0,
-                    postTitle = "",
-                    publishedTimestamp = 0L,
-                    authorId = 0,
-                    remotePostId = 0L,
-                    remoteSiteId = 0L,
-                    status = "",
-                    url = ""
-            )
+        CommentEntity(
+            id = id,
+            remoteCommentId = remoteCommentId,
+            parentId = parentId,
+            hasParent = hasParent,
+            authorEmail = "",
+            authorName = "",
+            authorProfileImageUrl = "",
+            authorUrl = "",
+            content = "",
+            datePublished = "",
+            iLike = false,
+            localSiteId = 0,
+            postTitle = "",
+            publishedTimestamp = 0L,
+            authorId = 0,
+            remotePostId = 0L,
+            remoteSiteId = 0L,
+            status = "",
+            url = ""
+        )
 }

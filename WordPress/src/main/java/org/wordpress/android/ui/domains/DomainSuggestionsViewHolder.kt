@@ -16,7 +16,7 @@ class DomainSuggestionsViewHolder(
     parent: ViewGroup,
     private val itemSelectionListener: (DomainSuggestionItem?) -> Unit
 ) : RecyclerView.ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.domain_suggestion_list_item, parent, false)
+    LayoutInflater.from(parent.context).inflate(R.layout.domain_suggestion_list_item, parent, false)
 ) {
     private val domainName: TextView = itemView.findViewById(R.id.domain_name)
     private val domainCost: TextView = itemView.findViewById(R.id.domain_cost)
@@ -53,30 +53,30 @@ class DomainSuggestionsViewHolder(
         suggestion.isFree -> suggestion.cost
         suggestion.isOnSale -> {
             HtmlCompat.fromHtml(
-                    String.format(
-                            container.context.getString(R.string.domain_suggestions_list_item_cost_on_sale),
-                            suggestion.saleCost,
-                            suggestion.cost
-                    ),
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
+                String.format(
+                    container.context.getString(R.string.domain_suggestions_list_item_cost_on_sale),
+                    suggestion.saleCost,
+                    suggestion.cost
+                ),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
             )
         }
         suggestion.isFreeWithCredits -> {
             HtmlCompat.fromHtml(
-                    String.format(
-                            container.context.getString(R.string.domain_suggestions_list_item_cost_free),
-                            suggestion.cost
-                    ),
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
+                String.format(
+                    container.context.getString(R.string.domain_suggestions_list_item_cost_free),
+                    suggestion.cost
+                ),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
             )
         }
         else -> { // on free plan
             HtmlCompat.fromHtml(
-                    String.format(
-                            container.context.getString(R.string.domain_suggestions_list_item_cost),
-                            suggestion.cost
-                    ),
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
+                String.format(
+                    container.context.getString(R.string.domain_suggestions_list_item_cost),
+                    suggestion.cost
+                ),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
             )
         }
     }

@@ -10,9 +10,9 @@ class JetpackProviderSyncFeatureConfig
 @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.JETPACK_PROVIDER_SYNC,
-        JETPACK_PROVIDER_SYNC_REMOTE_FIELD
+    appConfig,
+    BuildConfig.JETPACK_PROVIDER_SYNC,
+    JETPACK_PROVIDER_SYNC_REMOTE_FIELD
 ) {
     companion object {
         const val JETPACK_PROVIDER_SYNC_REMOTE_FIELD = "provider_sync_remote_field"

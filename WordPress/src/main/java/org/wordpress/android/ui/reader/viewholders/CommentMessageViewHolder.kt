@@ -10,8 +10,8 @@ class CommentMessageViewHolder(
     parent: ViewGroup,
     val uiHelpers: UiHelpers
 ) : CommentsSnippetViewHolder<ReaderListitemCommentMessageBinding>(
-        parent,
-        ReaderListitemCommentMessageBinding::inflate
+    parent,
+    ReaderListitemCommentMessageBinding::inflate
 ) {
     override fun onBind(itemUiState: CommentSnippetItemState) = with(binding) {
         val state = itemUiState as TextMessage

@@ -95,12 +95,12 @@ class PostListItemUiStateHelper @Inject constructor(
             onAction.invoke(post, buttonType, POST_LIST_BUTTON_PRESSED)
         }
         val buttonTypes = createButtonTypes(
-                postStatus = postStatus,
-                isLocalDraft = post.isLocalDraft,
-                isLocallyChanged = post.isLocallyChanged,
-                uploadUiState = uploadUiState,
-                siteHasCapabilitiesToPublish = capabilitiesToPublish,
-                statsSupported = statsSupported
+            postStatus = postStatus,
+            isLocalDraft = post.isLocalDraft,
+            isLocallyChanged = post.isLocallyChanged,
+            uploadUiState = uploadUiState,
+            siteHasCapabilitiesToPublish = capabilitiesToPublish,
+            statsSupported = statsSupported
         )
         val defaultActions = createDefaultViewActions(buttonTypes, onButtonClicked)
         val compactActions = createCompactViewActions(buttonTypes, onButtonClicked)
@@ -109,18 +109,18 @@ class PostListItemUiStateHelper @Inject constructor(
         val localPostId = LocalPostId(LocalId(post.id))
         val title = getTitle(post = post)
         val postInfo = getPostInfoLabels(
-                postStatus,
-                formattedDate,
-                post.authorDisplayName,
-                authorFilterSelection,
-                isSearch
+            postStatus,
+            formattedDate,
+            post.authorDisplayName,
+            authorFilterSelection,
+            isSearch
         )
         val statuses = getStatuses(
-                postStatus = postStatus,
-                post = post,
-                uploadUiState = uploadUiState,
-                hasUnhandledConflicts = unhandledConflicts,
-                hasAutoSave = hasAutoSave
+            postStatus = postStatus,
+            post = post,
+            uploadUiState = uploadUiState,
+            hasUnhandledConflicts = unhandledConflicts,
+            hasAutoSave = hasAutoSave
         )
         val statusesColor = labelColorUseCase.getLabelsColor(post, uploadUiState, unhandledConflicts, hasAutoSave)
         val statusesDelimiter = UiStringRes(R.string.multiple_status_label_delimiter)
@@ -128,44 +128,44 @@ class PostListItemUiStateHelper @Inject constructor(
             when (postStatus) {
                 TRASHED -> {
                     onAction.invoke(
-                            post,
-                            BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG,
-                            POST_LIST_ITEM_SELECTED
+                        post,
+                        BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG,
+                        POST_LIST_ITEM_SELECTED
                     )
                 }
                 UNKNOWN, PUBLISHED, DRAFT, PRIVATE, PENDING, SCHEDULED -> onAction.invoke(
-                        post,
-                        BUTTON_EDIT,
-                        POST_LIST_ITEM_SELECTED
+                    post,
+                    BUTTON_EDIT,
+                    POST_LIST_ITEM_SELECTED
                 )
             }
         }
         val itemUiData = PostListItemUiStateData(
-                remotePostId = remotePostId,
-                localPostId = localPostId,
-                title = title,
-                excerpt = getExcerpt(post = post),
-                imageUrl = featuredImageUrl,
-                postInfo = postInfo,
-                statuses = statuses,
-                statusesColor = statusesColor,
-                statusesDelimiter = statusesDelimiter,
-                progressBarUiState = getProgressBarState(
-                        uploadUiState = uploadUiState,
-                        performingCriticalAction = performingCriticalAction
-                ),
-                showOverlay = shouldShowOverlay(
-                        uploadUiState = uploadUiState,
-                        performingCriticalAction = performingCriticalAction
-                ),
-                disableRippleEffect = postStatus == TRASHED
+            remotePostId = remotePostId,
+            localPostId = localPostId,
+            title = title,
+            excerpt = getExcerpt(post = post),
+            imageUrl = featuredImageUrl,
+            postInfo = postInfo,
+            statuses = statuses,
+            statusesColor = statusesColor,
+            statusesDelimiter = statusesDelimiter,
+            progressBarUiState = getProgressBarState(
+                uploadUiState = uploadUiState,
+                performingCriticalAction = performingCriticalAction
+            ),
+            showOverlay = shouldShowOverlay(
+                uploadUiState = uploadUiState,
+                performingCriticalAction = performingCriticalAction
+            ),
+            disableRippleEffect = postStatus == TRASHED
         )
 
         return PostListItemUiState(
-                data = itemUiData,
-                actions = defaultActions,
-                compactActions = compactActions,
-                onSelected = onSelected
+            data = itemUiData,
+            actions = defaultActions,
+            compactActions = compactActions,
+            onSelected = onSelected
         )
     }
 
@@ -207,11 +207,11 @@ class PostListItemUiStateHelper @Inject constructor(
     }
 
     private fun getExcerpt(post: PostModel): UiString? =
-            PostUtils.getPostListExcerptFromPost(post)
-                    .takeIf { !it.isNullOrBlank() }
-                    ?.let { StringEscapeUtils.unescapeHtml4(it) }
-                    ?.let { PostUtils.collapseShortcodes(it) }
-                    ?.let { UiStringText(it) }
+        PostUtils.getPostListExcerptFromPost(post)
+            .takeIf { !it.isNullOrBlank() }
+            ?.let { StringEscapeUtils.unescapeHtml4(it) }
+            ?.let { PostUtils.collapseShortcodes(it) }
+            ?.let { UiStringText(it) }
 
     private fun getProgressBarState(
         uploadUiState: PostUploadUiState,
@@ -271,9 +271,9 @@ class PostListItemUiStateHelper @Inject constructor(
             DRAFT -> (UiStringRes(R.string.post_waiting_for_connection_draft))
             TRASHED -> {
                 AppLog.e(
-                        POSTS,
-                        "Developer error: This state shouldn't happen. Trashed post is in " +
-                                "UploadWaitingForConnection state."
+                    POSTS,
+                    "Developer error: This state shouldn't happen. Trashed post is in " +
+                            "UploadWaitingForConnection state."
                 )
                 return null
             }
@@ -288,10 +288,10 @@ class PostListItemUiStateHelper @Inject constructor(
         hasAutoSave: Boolean
     ): List<UiString> {
         val labels = getErrorAndProgressStatuses(
-                uploadUiState,
-                postStatus,
-                hasUnhandledConflicts,
-                hasAutoSave
+            uploadUiState,
+            postStatus,
+            hasUnhandledConflicts,
+            hasAutoSave
         )
 
         // we want to show either single error/progress label or 0-n info labels.
@@ -318,10 +318,10 @@ class PostListItemUiStateHelper @Inject constructor(
         return when {
             uploadUiState.error.mediaError != null -> getMediaUploadErrorMessage(uploadUiState, postStatus)
             uploadUiState.error.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
-                    postStatus,
-                    false,
-                    uploadUiState.error.postError,
-                    uploadUiState.isEligibleForAutoUpload
+                postStatus,
+                false,
+                uploadUiState.error.postError,
+                uploadUiState.isEligibleForAutoUpload
             )
             else -> {
                 val errorMsg = "MediaError and postError are both null."
@@ -398,12 +398,12 @@ class PostListItemUiStateHelper @Inject constructor(
 
         if (canShowPublishButton) {
             buttonTypes.add(
-                    when {
-                        canRetryUpload -> BUTTON_RETRY
-                        !siteHasCapabilitiesToPublish -> BUTTON_SUBMIT
-                        postStatus == SCHEDULED && isLocallyChanged -> BUTTON_SYNC
-                        else -> BUTTON_PUBLISH
-                    }
+                when {
+                    canRetryUpload -> BUTTON_RETRY
+                    !siteHasCapabilitiesToPublish -> BUTTON_SUBMIT
+                    postStatus == SCHEDULED && isLocallyChanged -> BUTTON_SYNC
+                    else -> BUTTON_PUBLISH
+                }
             )
         }
 
@@ -462,12 +462,12 @@ class PostListItemUiStateHelper @Inject constructor(
         }
         return if (buttonTypes.size > MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD) {
             val visibleItems = buttonTypes.take(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1)
-                    .map(createSinglePostListItem)
+                .map(createSinglePostListItem)
             val itemsUnderMore = buttonTypes.subList(
-                    kotlin.math.max(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1, 0),
-                    buttonTypes.size
+                kotlin.math.max(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1, 0),
+                buttonTypes.size
             )
-                    .map(createSinglePostListItem)
+                .map(createSinglePostListItem)
 
             visibleItems.plus(PostListItemAction.MoreItem(itemsUnderMore, onButtonClicked))
         } else {

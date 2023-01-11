@@ -34,12 +34,12 @@ class ReminderNotifierTest {
     @Before
     fun setUp() {
         reminderNotifier = ReminderNotifier(
-                contextProvider,
-                resourceProvider,
-                siteStore,
-                accountStore,
-                notificationManager,
-                analyticsTracker
+            contextProvider,
+            resourceProvider,
+            siteStore,
+            accountStore,
+            notificationManager,
+            analyticsTracker
         )
     }
 

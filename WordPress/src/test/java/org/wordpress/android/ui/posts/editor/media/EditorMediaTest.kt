@@ -44,10 +44,10 @@ class EditorMediaTest : BaseUnitTest() {
 
         // Act
         createEditorMedia(
-                editorMediaListener = editorMediaListener,
-                mediaUtilsWrapper = mediaUtilsWrapper
+            editorMediaListener = editorMediaListener,
+            mediaUtilsWrapper = mediaUtilsWrapper
         )
-                .advertiseImageOptimisationAndAddMedia(mock())
+            .advertiseImageOptimisationAndAddMedia(mock())
         // Assert
         verify(editorMediaListener).advertiseImageOptimization(anyOrNull())
     }
@@ -60,10 +60,10 @@ class EditorMediaTest : BaseUnitTest() {
 
         // Act
         createEditorMedia(
-                editorMediaListener = editorMediaListener,
-                mediaUtilsWrapper = mediaUtilsWrapper
+            editorMediaListener = editorMediaListener,
+            mediaUtilsWrapper = mediaUtilsWrapper
         )
-                .advertiseImageOptimisationAndAddMedia(mock())
+            .advertiseImageOptimisationAndAddMedia(mock())
         // Assert
         verify(editorMediaListener, never()).advertiseImageOptimization(anyOrNull())
     }
@@ -89,7 +89,7 @@ class EditorMediaTest : BaseUnitTest() {
     fun `addNewMediaItemsToEditorAsync shows snackbar when a media fails`() = test {
         // Arrange
         val addLocalMediaToPostUseCase = createAddLocalMediaToPostUseCase(
-                resultForAddNewMediaToEditorAsync = false
+            resultForAddNewMediaToEditorAsync = false
         )
         val editorMedia = createEditorMedia(addLocalMediaToPostUseCase = addLocalMediaToPostUseCase)
 
@@ -109,7 +109,7 @@ class EditorMediaTest : BaseUnitTest() {
     fun `addNewMediaItemsToEditorAsync does NOT show snackbar when all media succeed`() = test {
         // Arrange
         val addLocalMediaToPostUseCase = createAddLocalMediaToPostUseCase(
-                resultForAddNewMediaToEditorAsync = true
+            resultForAddNewMediaToEditorAsync = true
         )
         val editorMedia = createEditorMedia(addLocalMediaToPostUseCase = addLocalMediaToPostUseCase)
 
@@ -131,158 +131,158 @@ class EditorMediaTest : BaseUnitTest() {
 
         // Act
         createEditorMedia(
-                addLocalMediaToPostUseCase = addLocalMediaToPostUseCase
+            addLocalMediaToPostUseCase = addLocalMediaToPostUseCase
         )
-                .addGifMediaToPostAsync(localIdArray)
+            .addGifMediaToPostAsync(localIdArray)
         // Assert
         verify(addLocalMediaToPostUseCase).addLocalMediaToEditorAsync(
-                eq(localIdArray.toList()),
-                anyOrNull(),
-                anyBoolean()
+            eq(localIdArray.toList()),
+            anyOrNull(),
+            anyBoolean()
         )
     }
 
     @Test
     fun `addFreshlyTakenVideoToEditor invokes addNewMediaToEditorAsync with last recorded video`() =
-            test {
-                // Arrange
-                val lastRecoredVideoUri = mock<Uri>()
-                val mediaUtilsWrapper = createMediaUtilsWrapper(lastRecordedVideoUri = lastRecoredVideoUri)
-                val addLocalMediaToPostUseCase = createAddLocalMediaToPostUseCase()
+        test {
+            // Arrange
+            val lastRecoredVideoUri = mock<Uri>()
+            val mediaUtilsWrapper = createMediaUtilsWrapper(lastRecordedVideoUri = lastRecoredVideoUri)
+            val addLocalMediaToPostUseCase = createAddLocalMediaToPostUseCase()
 
-                // Act
-                createEditorMedia(
-                        mediaUtilsWrapper = mediaUtilsWrapper,
-                        addLocalMediaToPostUseCase = addLocalMediaToPostUseCase
-                )
-                        .addFreshlyTakenVideoToEditor()
-                // Assert
-                verify(addLocalMediaToPostUseCase).addNewMediaToEditorAsync(
-                        eq(listOf(lastRecoredVideoUri)),
-                        anyOrNull(), anyBoolean(), anyOrNull(), anyBoolean(), anyBoolean()
-                )
-            }
+            // Act
+            createEditorMedia(
+                mediaUtilsWrapper = mediaUtilsWrapper,
+                addLocalMediaToPostUseCase = addLocalMediaToPostUseCase
+            )
+                .addFreshlyTakenVideoToEditor()
+            // Assert
+            verify(addLocalMediaToPostUseCase).addNewMediaToEditorAsync(
+                eq(listOf(lastRecoredVideoUri)),
+                anyOrNull(), anyBoolean(), anyOrNull(), anyBoolean(), anyBoolean()
+            )
+        }
 
     @Test
     fun `addFreshlyTakenVideoToEditor does NOT show AdvertiseImageOptimization dialog`() =
-            test {
-                // Arrange
-                val lastRecoredVideoUri = mock<Uri>()
-                val mediaUtilsWrapper = createMediaUtilsWrapper(lastRecordedVideoUri = lastRecoredVideoUri)
-                val editorMediaListener = mock<EditorMediaListener>()
+        test {
+            // Arrange
+            val lastRecoredVideoUri = mock<Uri>()
+            val mediaUtilsWrapper = createMediaUtilsWrapper(lastRecordedVideoUri = lastRecoredVideoUri)
+            val editorMediaListener = mock<EditorMediaListener>()
 
-                // Act
-                createEditorMedia(
-                        mediaUtilsWrapper = mediaUtilsWrapper,
-                        editorMediaListener = editorMediaListener
-                )
-                        .addFreshlyTakenVideoToEditor()
-                // Assert
-                verify(editorMediaListener, never()).advertiseImageOptimization(anyOrNull())
-                verify(mediaUtilsWrapper, never()).shouldAdvertiseImageOptimization()
-            }
+            // Act
+            createEditorMedia(
+                mediaUtilsWrapper = mediaUtilsWrapper,
+                editorMediaListener = editorMediaListener
+            )
+                .addFreshlyTakenVideoToEditor()
+            // Assert
+            verify(editorMediaListener, never()).advertiseImageOptimization(anyOrNull())
+            verify(mediaUtilsWrapper, never()).shouldAdvertiseImageOptimization()
+        }
 
     @Test
     fun `onPhotoPickerMediaChosen does NOT invoke shouldAdvertiseImageOptimization when only video files`() =
-            test {
-                // Arrange
-                val uris = listOf(VIDEO_URI, VIDEO_URI, VIDEO_URI, VIDEO_URI)
-                val editorMediaListener = mock<EditorMediaListener>()
+        test {
+            // Arrange
+            val uris = listOf(VIDEO_URI, VIDEO_URI, VIDEO_URI, VIDEO_URI)
+            val editorMediaListener = mock<EditorMediaListener>()
 
-                val mediaUtilsWrapper = createMediaUtilsWrapper()
+            val mediaUtilsWrapper = createMediaUtilsWrapper()
 
-                // Act
-                createEditorMedia(
-                        mediaUtilsWrapper = mediaUtilsWrapper,
-                        editorMediaListener = editorMediaListener
-                )
-                        .onPhotoPickerMediaChosen(uris)
-                // Assert
-                verify(editorMediaListener, never()).advertiseImageOptimization(anyOrNull())
-                verify(mediaUtilsWrapper, never()).shouldAdvertiseImageOptimization()
-            }
+            // Act
+            createEditorMedia(
+                mediaUtilsWrapper = mediaUtilsWrapper,
+                editorMediaListener = editorMediaListener
+            )
+                .onPhotoPickerMediaChosen(uris)
+            // Assert
+            verify(editorMediaListener, never()).advertiseImageOptimization(anyOrNull())
+            verify(mediaUtilsWrapper, never()).shouldAdvertiseImageOptimization()
+        }
 
     @Test
     fun `onPhotoPickerMediaChosen invokes shouldAdvertiseImageOptimization when at least 1 image file`() =
-            test {
-                // Arrange
-                val uris = listOf(VIDEO_URI, VIDEO_URI, IMAGE_URI, VIDEO_URI)
-                val editorMediaListener = mock<EditorMediaListener>()
+        test {
+            // Arrange
+            val uris = listOf(VIDEO_URI, VIDEO_URI, IMAGE_URI, VIDEO_URI)
+            val editorMediaListener = mock<EditorMediaListener>()
 
-                val mediaUtilsWrapper = createMediaUtilsWrapper()
+            val mediaUtilsWrapper = createMediaUtilsWrapper()
 
-                // Act
-                createEditorMedia(
-                        mediaUtilsWrapper = mediaUtilsWrapper,
-                        editorMediaListener = editorMediaListener
-                )
-                        .onPhotoPickerMediaChosen(uris)
-                // Assert
-                verify(mediaUtilsWrapper).shouldAdvertiseImageOptimization()
-            }
+            // Act
+            createEditorMedia(
+                mediaUtilsWrapper = mediaUtilsWrapper,
+                editorMediaListener = editorMediaListener
+            )
+                .onPhotoPickerMediaChosen(uris)
+            // Assert
+            verify(mediaUtilsWrapper).shouldAdvertiseImageOptimization()
+        }
 
     @Test
     fun `addExistingMediaToEditorAsync passes mediaId to addExistingMediaToPostUseCase`() =
-            test {
-                // Arrange
-                val mediaModels = listOf(createMediaModel(mediaId = MEDIA_MODEL_REMOTE_ID))
-                val addExistingMediaModelUseCase = mock<AddExistingMediaToPostUseCase>()
-                // Act
-                createEditorMedia(
-                        addExistingMediaToPostUseCase = addExistingMediaModelUseCase
+        test {
+            // Arrange
+            val mediaModels = listOf(createMediaModel(mediaId = MEDIA_MODEL_REMOTE_ID))
+            val addExistingMediaModelUseCase = mock<AddExistingMediaToPostUseCase>()
+            // Act
+            createEditorMedia(
+                addExistingMediaToPostUseCase = addExistingMediaModelUseCase
+            )
+                .addExistingMediaToEditorAsync(mediaModels, mock())
+            // Assert
+            verify(addExistingMediaModelUseCase)
+                .addMediaExistingInRemoteToEditorAsync(
+                    anyOrNull(),
+                    anyOrNull(),
+                    eq(listOf(MEDIA_MODEL_REMOTE_ID)),
+                    anyOrNull()
                 )
-                        .addExistingMediaToEditorAsync(mediaModels, mock())
-                // Assert
-                verify(addExistingMediaModelUseCase)
-                        .addMediaExistingInRemoteToEditorAsync(
-                                anyOrNull(),
-                                anyOrNull(),
-                                eq(listOf(MEDIA_MODEL_REMOTE_ID)),
-                                anyOrNull()
-                        )
-            }
+        }
 
     @Test
     fun `addExistingMediaToEditorAsync converts array to list and invokes addExistingMediaToPostUseCase`() =
-            test {
-                // Arrange
-                val ids = listOf(MEDIA_MODEL_REMOTE_ID).toLongArray()
-                val addExistingMediaModelUseCase = mock<AddExistingMediaToPostUseCase>()
-                // Act
-                createEditorMedia(
-                        addExistingMediaToPostUseCase = addExistingMediaModelUseCase
+        test {
+            // Arrange
+            val ids = listOf(MEDIA_MODEL_REMOTE_ID).toLongArray()
+            val addExistingMediaModelUseCase = mock<AddExistingMediaToPostUseCase>()
+            // Act
+            createEditorMedia(
+                addExistingMediaToPostUseCase = addExistingMediaModelUseCase
+            )
+                .addExistingMediaToEditorAsync(mock(), ids)
+            // Assert
+            verify(addExistingMediaModelUseCase)
+                .addMediaExistingInRemoteToEditorAsync(
+                    anyOrNull(),
+                    anyOrNull(),
+                    eq(listOf(MEDIA_MODEL_REMOTE_ID)),
+                    anyOrNull()
                 )
-                        .addExistingMediaToEditorAsync(mock(), ids)
-                // Assert
-                verify(addExistingMediaModelUseCase)
-                        .addMediaExistingInRemoteToEditorAsync(
-                                anyOrNull(),
-                                anyOrNull(),
-                                eq(listOf(MEDIA_MODEL_REMOTE_ID)),
-                                anyOrNull()
-                        )
-            }
+        }
 
     @Test
     fun `cancelMediaUploadAsync dispatches newCancelMediaUploadAction`() =
-            test {
-                // Arrange
-                val expectedId = MEDIA_MODEL_LOCAL_ID
-                val expectedDeletedFlag = true
-                val getMediaModelUseCase = createGetMediaModelUseCase()
-                val dispatcher = mock<Dispatcher>()
-                val captor = argumentCaptor<Action<CancelMediaPayload>>()
-                // Act
-                createEditorMedia(
-                        getMediaModelUseCase = getMediaModelUseCase,
-                        dispatcher = dispatcher
-                )
-                        .cancelMediaUploadAsync(expectedId, expectedDeletedFlag)
-                // Assert
-                verify(dispatcher).dispatch(captor.capture())
-                assertThat(captor.firstValue.payload.media.id).isEqualTo(expectedId)
-                assertThat(captor.firstValue.payload.delete).isEqualTo(expectedDeletedFlag)
-            }
+        test {
+            // Arrange
+            val expectedId = MEDIA_MODEL_LOCAL_ID
+            val expectedDeletedFlag = true
+            val getMediaModelUseCase = createGetMediaModelUseCase()
+            val dispatcher = mock<Dispatcher>()
+            val captor = argumentCaptor<Action<CancelMediaPayload>>()
+            // Act
+            createEditorMedia(
+                getMediaModelUseCase = getMediaModelUseCase,
+                dispatcher = dispatcher
+            )
+                .cancelMediaUploadAsync(expectedId, expectedDeletedFlag)
+            // Assert
+            verify(dispatcher).dispatch(captor.capture())
+            assertThat(captor.firstValue.payload.media.id).isEqualTo(expectedId)
+            assertThat(captor.firstValue.payload.delete).isEqualTo(expectedDeletedFlag)
+        }
 
     @Test
     fun `refreshBlogMedia dispatches newFetchMediaListAction when online`() {
@@ -291,10 +291,10 @@ class EditorMediaTest : BaseUnitTest() {
         val dispatcher = mock<Dispatcher>()
         // Act
         createEditorMedia(
-                networkUtilsWrapper = networkUtilsWrapper,
-                dispatcher = dispatcher
+            networkUtilsWrapper = networkUtilsWrapper,
+            dispatcher = dispatcher
         )
-                .refreshBlogMedia()
+            .refreshBlogMedia()
         // Assert
         verify(dispatcher).dispatch(any<Action<FetchMediaListPayload>>())
     }
@@ -306,10 +306,10 @@ class EditorMediaTest : BaseUnitTest() {
         val dispatcher = mock<Dispatcher>()
         // Act
         createEditorMedia(
-                networkUtilsWrapper = networkUtilsWrapper,
-                dispatcher = dispatcher
+            networkUtilsWrapper = networkUtilsWrapper,
+            dispatcher = dispatcher
         )
-                .refreshBlogMedia()
+            .refreshBlogMedia()
         // Assert
         verify(dispatcher, never()).dispatch(any<Action<FetchMediaListPayload>>())
     }
@@ -321,8 +321,8 @@ class EditorMediaTest : BaseUnitTest() {
         val dispatcher = mock<Dispatcher>()
 
         val editorMedia = createEditorMedia(
-                networkUtilsWrapper = networkUtilsWrapper,
-                dispatcher = dispatcher
+            networkUtilsWrapper = networkUtilsWrapper,
+            dispatcher = dispatcher
         )
         val captor = argumentCaptor<Event<ToastMessageHolder>>()
         val observer: Observer<Event<ToastMessageHolder>> = mock()
@@ -333,7 +333,7 @@ class EditorMediaTest : BaseUnitTest() {
         // Assert
         verify(observer, times(1)).onChanged(captor.capture())
         assertThat(captor.firstValue.getContentIfNotHandled()?.messageRes)
-                .isEqualTo(R.string.error_media_refresh_no_connection)
+            .isEqualTo(R.string.error_media_refresh_no_connection)
     }
 
     @Test
@@ -343,7 +343,7 @@ class EditorMediaTest : BaseUnitTest() {
         val retryFailedMediaUploadUseCase = mock<RetryFailedMediaUploadUseCase>()
         // Act
         createEditorMedia(retryFailedMediaUploadUseCase = retryFailedMediaUploadUseCase)
-                .retryFailedMediaAsync(expectedIds)
+            .retryFailedMediaAsync(expectedIds)
 
         // Assert
         verify(retryFailedMediaUploadUseCase).retryFailedMediaAsync(anyOrNull(), eq(expectedIds))
@@ -355,7 +355,7 @@ class EditorMediaTest : BaseUnitTest() {
         val reattachUploadingMediaUseCase = mock<ReattachUploadingMediaUseCase>()
         // Act
         createEditorMedia(reattachUploadingMediaUseCase = reattachUploadingMediaUseCase)
-                .reattachUploadingMediaForAztec(mock(), true, mock())
+            .reattachUploadingMediaForAztec(mock(), true, mock())
         // Assert
         verify(reattachUploadingMediaUseCase).reattachUploadingMediaForAztec(anyOrNull(), anyOrNull())
     }
@@ -366,7 +366,7 @@ class EditorMediaTest : BaseUnitTest() {
         val reattachUploadingMediaUseCase = mock<ReattachUploadingMediaUseCase>()
         // Act
         createEditorMedia(reattachUploadingMediaUseCase = reattachUploadingMediaUseCase)
-                .reattachUploadingMediaForAztec(mock(), false, mock())
+            .reattachUploadingMediaForAztec(mock(), false, mock())
         // Assert
         verify(reattachUploadingMediaUseCase, never()).reattachUploadingMediaForAztec(anyOrNull(), anyOrNull())
     }
@@ -395,21 +395,21 @@ class EditorMediaTest : BaseUnitTest() {
             analyticsUtilsWrapper: AnalyticsUtilsWrapper = mock()
         ): EditorMedia {
             val editorMedia = EditorMedia(
-                    updateMediaModelUseCase,
-                    getMediaModelUseCase,
-                    dispatcher,
-                    mediaUtilsWrapper,
-                    networkUtilsWrapper,
-                    addLocalMediaToPostUseCase,
-                    addExistingMediaToPostUseCase,
-                    retryFailedMediaUploadUseCase,
-                    cleanUpMediaToPostAssociationUseCase,
-                    removeMediaUseCase,
-                    reattachUploadingMediaUseCase,
-                    analyticsUtilsWrapper,
-                    analyticsTrackerWrapper,
-                    UnconfinedTestDispatcher(),
-                    UnconfinedTestDispatcher()
+                updateMediaModelUseCase,
+                getMediaModelUseCase,
+                dispatcher,
+                mediaUtilsWrapper,
+                networkUtilsWrapper,
+                addLocalMediaToPostUseCase,
+                addExistingMediaToPostUseCase,
+                retryFailedMediaUploadUseCase,
+                cleanUpMediaToPostAssociationUseCase,
+                removeMediaUseCase,
+                reattachUploadingMediaUseCase,
+                analyticsUtilsWrapper,
+                analyticsTrackerWrapper,
+                UnconfinedTestDispatcher(),
+                UnconfinedTestDispatcher()
             )
             editorMedia.start(siteModel, editorMediaListener)
             return editorMedia
@@ -419,39 +419,39 @@ class EditorMediaTest : BaseUnitTest() {
             shouldAdvertiseImageOptimization: Boolean = false,
             lastRecordedVideoUri: Uri = mock()
         ) =
-                mock<MediaUtilsWrapper> {
-                    on { shouldAdvertiseImageOptimization() }
-                            .thenReturn(shouldAdvertiseImageOptimization)
-                    on { getLastRecordedVideoUri() }.thenReturn(lastRecordedVideoUri)
-                    on { isVideo(VIDEO_URI.toString()) }.thenReturn(true)
-                    on { isVideo(IMAGE_URI.toString()) }.thenReturn(false)
-                }
+            mock<MediaUtilsWrapper> {
+                on { shouldAdvertiseImageOptimization() }
+                    .thenReturn(shouldAdvertiseImageOptimization)
+                on { getLastRecordedVideoUri() }.thenReturn(lastRecordedVideoUri)
+                on { isVideo(VIDEO_URI.toString()) }.thenReturn(true)
+                on { isVideo(IMAGE_URI.toString()) }.thenReturn(false)
+            }
 
         fun createAddLocalMediaToPostUseCase(resultForAddNewMediaToEditorAsync: Boolean = true) =
-                mock<AddLocalMediaToPostUseCase> {
-                    onBlocking {
-                        addNewMediaToEditorAsync(
-                                anyOrNull(),
-                                anyOrNull(),
-                                anyBoolean(),
-                                anyOrNull(),
-                                anyBoolean(),
-                                anyBoolean()
-                        )
-                    }.thenReturn(resultForAddNewMediaToEditorAsync)
-                }
+            mock<AddLocalMediaToPostUseCase> {
+                onBlocking {
+                    addNewMediaToEditorAsync(
+                        anyOrNull(),
+                        anyOrNull(),
+                        anyBoolean(),
+                        anyOrNull(),
+                        anyBoolean(),
+                        anyBoolean()
+                    )
+                }.thenReturn(resultForAddNewMediaToEditorAsync)
+            }
 
         fun createGetMediaModelUseCase(remoteMediaId: Long = MEDIA_MODEL_REMOTE_ID) =
-                mock<GetMediaModelUseCase> {
-                    onBlocking { loadMediaByLocalId(anyOrNull()) } doAnswer { invocation ->
-                        // Creates dummy media models from provided model ids
-                        (invocation.getArgument(0) as Iterable<Int>)
-                                .map {
-                                    createMediaModel(it, remoteMediaId)
-                                }
-                                .toList()
-                    }
+            mock<GetMediaModelUseCase> {
+                onBlocking { loadMediaByLocalId(anyOrNull()) } doAnswer { invocation ->
+                    // Creates dummy media models from provided model ids
+                    (invocation.getArgument(0) as Iterable<Int>)
+                        .map {
+                            createMediaModel(it, remoteMediaId)
+                        }
+                        .toList()
                 }
+            }
 
         fun createNetworkUtilsWrapper(isOnline: Boolean = true) = mock<NetworkUtilsWrapper> {
             on { isNetworkAvailable() }.thenReturn(isOnline)

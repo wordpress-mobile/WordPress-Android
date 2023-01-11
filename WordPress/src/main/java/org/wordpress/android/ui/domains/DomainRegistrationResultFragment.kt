@@ -17,7 +17,8 @@ import org.wordpress.android.util.extensions.setLightStatusBar
 import javax.inject.Inject
 
 class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_result_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var mainViewModel: DomainRegistrationMainViewModel
 
     companion object {
@@ -38,7 +39,7 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
         (requireActivity().application as WordPress).component().inject(this)
 
         mainViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(DomainRegistrationMainViewModel::class.java)
+            .get(DomainRegistrationMainViewModel::class.java)
 
         val domainName = requireArguments().getString(EXTRA_REGISTERED_DOMAIN_NAME).orEmpty()
         val email = requireArguments().getString(EXTRA_REGISTERED_DOMAIN_EMAIL).orEmpty()
@@ -72,8 +73,8 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
         }
 
         domainRegistrationResultMessage.text = getString(
-                R.string.domain_registration_result_description,
-                domainName
+            R.string.domain_registration_result_description,
+            domainName
         ).parseAsHtml(FROM_HTML_MODE_COMPACT)
     }
 

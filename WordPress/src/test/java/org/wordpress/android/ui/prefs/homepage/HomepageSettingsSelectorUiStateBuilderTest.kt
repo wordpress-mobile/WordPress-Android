@@ -25,8 +25,8 @@ class HomepageSettingsSelectorUiStateBuilderTest {
         val uiState = HomepageSettingsSelectorUiState.Builder.build(listOf(pageA, pageB), null)
 
         assertThat(uiState.data).containsOnly(
-                PageUiModel(pageA.pageId, pageA.remoteId, pageA.title),
-                PageUiModel(pageB.pageId, pageB.remoteId, pageB.title)
+            PageUiModel(pageA.pageId, pageA.remoteId, pageA.title),
+            PageUiModel(pageB.pageId, pageB.remoteId, pageB.title)
         )
         assertThat(uiState.isExpanded).isFalse()
         assertThat(uiState.isHighlighted).isFalse()
@@ -39,8 +39,8 @@ class HomepageSettingsSelectorUiStateBuilderTest {
         val uiState = HomepageSettingsSelectorUiState.Builder.build(listOf(pageA, pageB), pageA.remoteId)
 
         assertThat(uiState.data).containsOnly(
-                PageUiModel(pageA.pageId, pageA.remoteId, pageA.title),
-                PageUiModel(pageB.pageId, pageB.remoteId, pageB.title)
+            PageUiModel(pageA.pageId, pageA.remoteId, pageA.title),
+            PageUiModel(pageB.pageId, pageB.remoteId, pageB.title)
         )
         assertThat(uiState.isExpanded).isFalse()
         assertThat(uiState.isHighlighted).isTrue()
@@ -49,16 +49,16 @@ class HomepageSettingsSelectorUiStateBuilderTest {
     }
 
     private fun buildPage(localId: Int, remoteId: Long, title: String) =
-            PageModel(
-                    mock(),
-                    site,
-                    localId,
-                    title,
-                    PUBLISHED,
-                    Date(),
-                    false,
-                    remoteId,
-                    null,
-                    -1
-            )
+        PageModel(
+            mock(),
+            site,
+            localId,
+            title,
+            PUBLISHED,
+            Date(),
+            false,
+            remoteId,
+            null,
+            -1
+        )
 }

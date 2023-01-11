@@ -21,22 +21,22 @@ class BloggingPromptsOnboardingNotificationHandler @Inject constructor(
 
     override fun buildFirstActionPendingIntent(context: Context, notificationId: Int): PendingIntent {
         val intent = ActivityLauncher.createMainActivityAndShowBloggingPromptsOnboardingActivityIntent(
-                context, BLOGGING_PROMPTS_ONBOARDING, notificationId
+            context, BLOGGING_PROMPTS_ONBOARDING, notificationId
         )
         return PendingIntent.getActivity(
-                context,
-                notificationId + 1,
-                intent,
-                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            context,
+            notificationId + 1,
+            intent,
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
 
     override fun buildSecondActionPendingIntent(context: Context, notificationId: Int): PendingIntent? {
         return PendingIntent.getBroadcast(
-                context,
-                notificationId + 2,
-                DismissNotificationReceiver.newIntent(context, notificationId),
-                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            context,
+            notificationId + 2,
+            DismissNotificationReceiver.newIntent(context, notificationId),
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
 

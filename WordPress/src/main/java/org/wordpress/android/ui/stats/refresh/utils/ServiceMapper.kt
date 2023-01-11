@@ -36,17 +36,17 @@ class ServiceMapper
             val mappedService = getService(service.name)
             val text = if (mappedService?.nameResource == null) service.name else null
             val contentDescription = contentDescriptionHelper.buildContentDescription(
-                    header,
-                    text ?: "",
-                    service.followers
+                header,
+                text ?: "",
+                service.followers
             )
             ListItemWithIcon(
-                    iconUrl = mappedService?.iconUrl?.let { it + dimension },
-                    text = text,
-                    textResource = mappedService?.nameResource,
-                    value = statsUtils.toFormattedString(service.followers),
-                    showDivider = index < services.size - 1,
-                    contentDescription = contentDescription
+                iconUrl = mappedService?.iconUrl?.let { it + dimension },
+                text = text,
+                textResource = mappedService?.nameResource,
+                value = statsUtils.toFormattedString(service.followers),
+                showDivider = index < services.size - 1,
+                contentDescription = contentDescription
             )
         }
     }

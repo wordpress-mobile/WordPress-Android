@@ -7,8 +7,8 @@ import org.wordpress.android.R.id
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.DialogButtons
 
 class DialogButtonsViewHolder(val parent: ViewGroup) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_dialog_buttons_item
+    parent,
+    R.layout.stats_block_dialog_buttons_item
 ) {
     private val positiveButton = itemView.findViewById<Button>(id.button_positive)
     private val negativeButton = itemView.findViewById<Button>(id.button_negative)

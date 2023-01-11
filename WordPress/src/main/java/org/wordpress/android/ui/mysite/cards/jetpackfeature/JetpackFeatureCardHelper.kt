@@ -7,6 +7,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
 import java.util.Date
 import javax.inject.Inject
 
@@ -15,9 +16,10 @@ class JetpackFeatureCardHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
+    private val phaseThreeBlogPostLinkConfig: PhaseThreeBlogPostLinkConfig
 ) {
-    fun shouldShowJetpackFeatureCard() : Boolean{
+    fun shouldShowJetpackFeatureCard(): Boolean {
         val isWordPressApp = !buildConfigWrapper.isJetpackApp
         val isPhase3 = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == JetpackFeatureRemovalPhase.PhaseThree
         val shouldHideJetpackFeatureCard = appPrefsWrapper.getShouldHideJetpackFeatureCard()
@@ -27,9 +29,21 @@ class JetpackFeatureCardHelper @Inject constructor(
 
     fun track(stat: Stat) {
         analyticsTrackerWrapper.track(
-                stat,
-                mapOf(PHASE to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName)
+            stat,
+            mapOf(PHASE to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName)
         )
+    }
+
+    fun getLearnMoreUrl(): String {
+        val url = phaseThreeBlogPostLinkConfig.getValue<String>()
+
+        if (url.isEmpty())
+            return url
+
+        return if (!url.contains(HOST)) {
+            "$HOST$url"
+        } else
+            url
     }
 
     private fun exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded(): Boolean {
@@ -38,8 +52,8 @@ class JetpackFeatureCardHelper @Inject constructor(
 
         val lastShownDate = Date(lastShownTimestamp)
         val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
-                lastShownDate,
-                Date(System.currentTimeMillis())
+            lastShownDate,
+            Date(System.currentTimeMillis())
         )
 
         val exceedsFrequency = daysPastOverlayShown >= FREQUENCY_IN_DAYS
@@ -53,5 +67,6 @@ class JetpackFeatureCardHelper @Inject constructor(
         const val PHASE = "phase"
         const val FREQUENCY_IN_DAYS = 4
         const val DEFAULT_LAST_SHOWN_TIMESTAMP = 0L
+        const val HOST = "https://"
     }
 }

@@ -55,18 +55,18 @@ class TotalLikesUseCase @Inject constructor(
     override suspend fun loadCachedData(): VisitsAndViewsModel? {
         statsWidgetUpdaters.updateViewsWidget(statsSiteProvider.siteModel.siteId)
         return visitsAndViewsStore.getVisits(
-                statsSiteProvider.siteModel,
-                DAYS,
-                All
+            statsSiteProvider.siteModel,
+            DAYS,
+            All
         )
     }
 
     override suspend fun fetchRemoteData(forced: Boolean): State<VisitsAndViewsModel> {
         val response = visitsAndViewsStore.fetchVisits(
-                statsSiteProvider.siteModel,
-                DAYS,
-                LimitMode.Top(TOTAL_LIKES_ITEMS_TO_LOAD),
-                forced
+            statsSiteProvider.siteModel,
+            DAYS,
+            LimitMode.Top(TOTAL_LIKES_ITEMS_TO_LOAD),
+            forced
         )
         val model = response.model
         val error = response.error
@@ -96,8 +96,8 @@ class TotalLikesUseCase @Inject constructor(
     }
 
     private fun buildTitle() = TitleWithMore(
-            string.stats_view_total_likes,
-            navigationAction = ListItemInteraction.create(this::onViewMoreClick)
+        string.stats_view_total_likes,
+        navigationAction = ListItemInteraction.create(this::onViewMoreClick)
     )
 
     private fun buildLatestPostGuideCard(
@@ -109,26 +109,28 @@ class TotalLikesUseCase @Inject constructor(
             if (it.postTitle.isNotBlank() && it.postLikeCount > 0) {
                 val htmlTitle = HtmlCompat.fromHtml(it.postTitle, HtmlCompat.FROM_HTML_MODE_LEGACY)
                 items.add(
-                        ListItemGuideCard(
-                                text = resourceProvider.getString(
-                                        if (it.postLikeCount <= 1) {
-                                            string.stats_insights_like_guide_card
-                                        } else {
-                                            string.stats_insights_likes_guide_card
-                                        },
-                                        htmlTitle,
-                                        it.postLikeCount
-                                ),
-                                links = listOf(Clickable(
-                                                link = htmlTitle.toString(),
-                                                navigationAction = ListItemInteraction.create(
-                                                        data = LinkClickParams(it.postId, it.postURL),
-                                                        action = navigationAction
-                                                )
-                                        )
-                                ),
-                                bolds = listOf(it.postLikeCount.toString())
-                        ))
+                    ListItemGuideCard(
+                        text = resourceProvider.getString(
+                            if (it.postLikeCount <= 1) {
+                                string.stats_insights_like_guide_card
+                            } else {
+                                string.stats_insights_likes_guide_card
+                            },
+                            htmlTitle,
+                            it.postLikeCount
+                        ),
+                        links = listOf(
+                            Clickable(
+                                link = htmlTitle.toString(),
+                                navigationAction = ListItemInteraction.create(
+                                    data = LinkClickParams(it.postId, it.postURL),
+                                    action = navigationAction
+                                )
+                            )
+                        ),
+                        bolds = listOf(it.postLikeCount.toString())
+                    )
+                )
             }
         }
     }
@@ -141,12 +143,12 @@ class TotalLikesUseCase @Inject constructor(
     private fun onViewMoreClick() {
         analyticsTracker.trackWithType(AnalyticsTracker.Stat.STATS_INSIGHTS_VIEW_MORE, TOTAL_LIKES)
         navigateTo(
-                ViewInsightDetails(
-                        StatsSection.TOTAL_LIKES_DETAIL,
-                        StatsViewType.TOTAL_LIKES,
-                        null,
-                        null
-                )
+            ViewInsightDetails(
+                StatsSection.TOTAL_LIKES_DETAIL,
+                StatsViewType.TOTAL_LIKES,
+                null,
+                null
+            )
         )
     }
 
@@ -167,16 +169,16 @@ class TotalLikesUseCase @Inject constructor(
         private val statsWidgetUpdaters: StatsWidgetUpdaters
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
-                TotalLikesUseCase(
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        visitsAndViewsStore,
-                        latestPostStore,
-                        statsSiteProvider,
-                        resourceProvider,
-                        totalStatsMapper,
-                        analyticsTracker,
-                        statsWidgetUpdaters
-                )
+            TotalLikesUseCase(
+                mainDispatcher,
+                backgroundDispatcher,
+                visitsAndViewsStore,
+                latestPostStore,
+                statsSiteProvider,
+                resourceProvider,
+                totalStatsMapper,
+                analyticsTracker,
+                statsWidgetUpdaters
+            )
     }
 }

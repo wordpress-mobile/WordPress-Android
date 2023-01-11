@@ -34,17 +34,22 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class CardsBuilderTest : BaseUnitTest() {
-    @Mock lateinit var todaysStatsCardBuilder: TodaysStatsCardBuilder
-    @Mock lateinit var postCardBuilder: PostCardBuilder
-    @Mock lateinit var bloggingPromptCardsBuilder: BloggingPromptCardBuilder
+    @Mock
+    lateinit var todaysStatsCardBuilder: TodaysStatsCardBuilder
+
+    @Mock
+    lateinit var postCardBuilder: PostCardBuilder
+
+    @Mock
+    lateinit var bloggingPromptCardsBuilder: BloggingPromptCardBuilder
     private lateinit var cardsBuilder: CardsBuilder
 
     @Before
     fun setUp() {
         cardsBuilder = CardsBuilder(
-                todaysStatsCardBuilder,
-                postCardBuilder,
-                bloggingPromptCardsBuilder
+            todaysStatsCardBuilder,
+            postCardBuilder,
+            bloggingPromptCardsBuilder
         )
     }
 
@@ -148,16 +153,16 @@ class CardsBuilderTest : BaseUnitTest() {
     }
 
     private fun DashboardCards.findTodaysStatsCard() =
-            this.cards.find { it is TodaysStatsCardWithData } as? TodaysStatsCardWithData
+        this.cards.find { it is TodaysStatsCardWithData } as? TodaysStatsCardWithData
 
     private fun DashboardCards.findPostCardWithPosts() =
-            this.cards.find { it is PostCardWithPostItems } as? PostCardWithPostItems
+        this.cards.find { it is PostCardWithPostItems } as? PostCardWithPostItems
 
     private fun DashboardCards.findNextPostCard() =
-            this.cards.find { it is PostCardWithoutPostItems } as? PostCardWithoutPostItems
+        this.cards.find { it is PostCardWithoutPostItems } as? PostCardWithoutPostItems
 
     private fun DashboardCards.findBloggingPromptCard() =
-            this.cards.find { it is BloggingPromptCard } as? BloggingPromptCard
+        this.cards.find { it is BloggingPromptCard } as? BloggingPromptCard
 
     private fun DashboardCards.findErrorCard() = this.cards.find { it is ErrorCard } as? ErrorCard
 
@@ -166,23 +171,23 @@ class CardsBuilderTest : BaseUnitTest() {
     private val blogingPromptCard = mock<BloggingPromptCardWithData>()
 
     private fun createPostCards() = listOf(
-            PostCardWithPostItems(
-                    postCardType = DRAFT,
-                    title = UiStringText(""),
-                    postItems = emptyList(),
-                    footerLink = FooterLink(UiStringText(""), onClick = mock())
-            )
+        PostCardWithPostItems(
+            postCardType = DRAFT,
+            title = UiStringText(""),
+            postItems = emptyList(),
+            footerLink = FooterLink(UiStringText(""), onClick = mock())
+        )
     )
 
     private fun createPostPromptCards() = listOf(
-            PostCardWithoutPostItems(
-                    postCardType = CREATE_FIRST,
-                    title = UiStringText(""),
-                    excerpt = UiStringText(""),
-                    imageRes = 0,
-                    footerLink = FooterLink(UiStringText(""), onClick = mock()),
-                    onClick = mock()
-            )
+        PostCardWithoutPostItems(
+            postCardType = CREATE_FIRST,
+            title = UiStringText(""),
+            excerpt = UiStringText(""),
+            imageRes = 0,
+            footerLink = FooterLink(UiStringText(""), onClick = mock()),
+            onClick = mock()
+        )
     )
 
     private fun buildDashboardCards(
@@ -193,18 +198,18 @@ class CardsBuilderTest : BaseUnitTest() {
     ): DashboardCards {
         doAnswer { if (hasTodaysStats) todaysStatsCard else null }.whenever(todaysStatsCardBuilder).build(any())
         doAnswer { if (hasPostsForPostCard) createPostCards() else createPostPromptCards() }.whenever(postCardBuilder)
-                .build(any())
+            .build(any())
         doAnswer { if (hasBlogginPrompt) blogingPromptCard else null }.whenever(bloggingPromptCardsBuilder).build(any())
         return cardsBuilder.build(
-                dashboardCardsBuilderParams = DashboardCardsBuilderParams(
-                        showErrorCard = showErrorCard,
-                        onErrorRetryClick = { },
-                        todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
-                        postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
-                        bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
-                                mock(), false, mock(), mock(), mock(), mock()
-                        )
+            dashboardCardsBuilderParams = DashboardCardsBuilderParams(
+                showErrorCard = showErrorCard,
+                onErrorRetryClick = { },
+                todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
+                postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
+                bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
+                    mock(), false, mock(), mock(), mock(), mock()
                 )
+            )
         )
     }
 }

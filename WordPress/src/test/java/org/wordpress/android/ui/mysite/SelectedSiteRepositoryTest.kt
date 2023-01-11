@@ -23,10 +23,17 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 
 @ExperimentalCoroutinesApi
 class SelectedSiteRepositoryTest : BaseUnitTest() {
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory
-    @Mock lateinit var siteSettingsInterfaceWrapper: SiteSettingsInterfaceWrapper
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock
+    lateinit var dispatcher: Dispatcher
+
+    @Mock
+    lateinit var siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory
+
+    @Mock
+    lateinit var siteSettingsInterfaceWrapper: SiteSettingsInterfaceWrapper
+
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var siteModel: SiteModel
     private var siteIconProgressBarVisible: Boolean = false
     private var selectedSite: SiteModel? = null

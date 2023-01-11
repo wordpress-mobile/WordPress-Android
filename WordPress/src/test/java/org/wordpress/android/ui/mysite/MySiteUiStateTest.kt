@@ -16,7 +16,8 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpda
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class MySiteUiStateTest : BaseUnitTest() {
-    @Mock lateinit var postsCardModel: PostsCardModel
+    @Mock
+    lateinit var postsCardModel: PostsCardModel
     private lateinit var mySiteUiState: MySiteUiState
 
     @Before

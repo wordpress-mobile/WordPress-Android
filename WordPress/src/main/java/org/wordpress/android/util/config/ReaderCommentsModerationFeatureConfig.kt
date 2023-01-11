@@ -13,9 +13,9 @@ class ReaderCommentsModerationFeatureConfig
 @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.READER_COMMENTS_MODERATION,
-        READER_COMMENTS_MODERATION_REMOTE_FIELD
+    appConfig,
+    BuildConfig.READER_COMMENTS_MODERATION,
+    READER_COMMENTS_MODERATION_REMOTE_FIELD
 ) {
     companion object {
         const val READER_COMMENTS_MODERATION_REMOTE_FIELD = "reader_comments_moderation_field"
