@@ -33,10 +33,10 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
     fun shouldShowMigrationFlow() = buildConfigWrapper.isJetpackApp
             && jetpackMigrationFlowFeatureConfig.isEnabled()
             && appPrefsWrapper.isJetpackMigrationEligible()
-            && isMigrationEligible()
             && !appPrefsWrapper.isJetpackMigrationCompleted()
             && isWordPressInstalled()
             && isWordPressCompatible()
+            && isMigrationEligible()
             && (!accountStore.hasAccessToken()
             || appPrefsWrapper.isJetpackMigrationInProgress())
 
