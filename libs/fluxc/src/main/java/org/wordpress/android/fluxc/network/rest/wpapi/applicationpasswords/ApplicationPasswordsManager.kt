@@ -25,10 +25,11 @@ internal class ApplicationPasswordsManager @Inject constructor(
     private val applicationPasswordsStore: ApplicationPasswordsStore,
     private val jetpackApplicationPasswordsRestClient: JetpackApplicationPasswordsRestClient,
     private val wpApiApplicationPasswordsRestClient: WPApiApplicationPasswordsRestClient,
+    private val configuration: ApplicationPasswordsConfiguration,
     private val appLogWrapper: AppLogWrapper
 ) {
     private val applicationName
-        get() = applicationPasswordsStore.applicationName
+        get() = configuration.applicationName
 
     @Suppress("ReturnCount")
     suspend fun getApplicationCredentials(
