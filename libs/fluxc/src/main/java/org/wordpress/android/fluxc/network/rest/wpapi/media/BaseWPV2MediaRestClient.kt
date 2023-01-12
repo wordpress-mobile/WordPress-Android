@@ -57,7 +57,7 @@ abstract class BaseWPV2MediaRestClient constructor(
 
     protected abstract suspend fun getAuthorizationHeader(site: SiteModel): String
 
-    protected abstract suspend fun <T:Any> executeGetGsonRequest(
+    protected abstract suspend fun <T : Any> executeGetGsonRequest(
         site: SiteModel,
         endpoint: WPAPIEndpoint,
         params: Map<String, String>,
@@ -67,15 +67,15 @@ abstract class BaseWPV2MediaRestClient constructor(
     fun uploadMedia(site: SiteModel, media: MediaModel) {
         coroutineEngine.launch(MEDIA, this, "Upload Media using WPCom's v2 API") {
             syncUploadMedia(site, media)
-                    .onStart {
-                        currentUploads[media.id] = this@launch
-                    }
-                    .onCompletion {
-                        currentUploads.remove(media.id)
-                    }
-                    .collect { payload ->
-                        dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
-                    }
+                .onStart {
+                    currentUploads[media.id] = this@launch
+                }
+                .onCompletion {
+                    currentUploads.remove(media.id)
+                }
+                .collect { payload ->
+                    dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
+                }
         }
     }
 
@@ -121,10 +121,10 @@ abstract class BaseWPV2MediaRestClient constructor(
             }
 
             val request = Request.Builder()
-                    .url(url)
-                    .post(body = body)
-                    .header(WPComGsonRequest.REST_AUTHORIZATION_HEADER, getAuthorizationHeader(site))
-                    .build()
+                .url(url)
+                .post(body = body)
+                .header(WPComGsonRequest.REST_AUTHORIZATION_HEADER, getAuthorizationHeader(site))
+                .build()
 
             val call = okHttpClient.newCall(request)
 
@@ -182,7 +182,7 @@ abstract class BaseWPV2MediaRestClient constructor(
         mimeType: MimeType.Type?
     ): FetchMediaListResponsePayload {
         val params = mutableMapOf(
-                "per_page" to perPage.toString()
+            "per_page" to perPage.toString()
         )
         if (offset > 0) {
             params["offset"] = offset.toString()
@@ -191,10 +191,10 @@ abstract class BaseWPV2MediaRestClient constructor(
             params["mime_type"] = mimeType.value
         }
         val response = executeGetGsonRequest(
-                site,
-                WPAPI.media,
-                params,
-                Array<MediaWPRESTResponse>::class.java
+            site,
+            WPAPI.media,
+            params,
+            Array<MediaWPRESTResponse>::class.java
         )
 
         return when (response) {
