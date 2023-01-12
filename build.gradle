@@ -25,7 +25,7 @@ ext {
     wordPressFluxCVersion = 'trunk-c07d7723b2d4716bf0ceef506dada9b41f81be81'
     wordPressLoginVersion = '1.0.0'
     wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressUtilsVersion = '3.1.0'
+    wordPressUtilsVersion = '119-4fff88990c768cb510c0a1e7ac1b6d1535348e67'
 
     // debug
     stethoVersion = '1.6.0'

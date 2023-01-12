@@ -10,6 +10,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker.ErrorType.LocalDraftContent
 import org.wordpress.android.localcontentmigration.EligibilityHelper
@@ -59,6 +60,7 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
     private val sitesMigrationHelper: SitesMigrationHelper = mock()
     private val localPostsHelper: LocalPostsHelper = mock()
     private val eligibilityHelper: EligibilityHelper = mock()
+    private val appLogWrapper: AppLogWrapper = mock()
     private val classToTest = LocalMigrationOrchestrator(
         sharedLoginAnalyticsTracker,
         migrationAnalyticsTracker,
@@ -68,6 +70,7 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
         sitesMigrationHelper,
         localPostsHelper,
         eligibilityHelper,
+        appLogWrapper,
     )
     private val avatarUrl = "avatarUrl"
     private val sites = listOf(SiteModel(), SiteModel())
