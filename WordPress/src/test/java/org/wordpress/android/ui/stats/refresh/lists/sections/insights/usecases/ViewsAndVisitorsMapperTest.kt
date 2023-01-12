@@ -31,24 +31,37 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
     lateinit var statsUtils: StatsUtils
 
     @Mock
+    lateinit var totalStatsMapper: TotalStatsMapper
+
+    @Mock
     lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var mapper: ViewsAndVisitorsMapper
     private val thisWeekViews: Long = 543
     private val prevWeekViews: Long = 323
     private val thisWeekVisitors: Long = 174
     private val prevWeekVisitors: Long = 133
-    private val selectedItem = PeriodData("2022-04-18", 78, 28, 3, 0, 13, 2)
+    private val selectedItem = PeriodData("2022-04-19", 79, 29, 4, 0, 14, 3)
     private val viewsTitle = "Views"
     private val visitorsTitle = "Visitors"
-    private val printedDate = "18. 04. 2022"
+    private val printedDate = "19. 04. 2022"
 
     @Before
     fun setUp() {
-        mapper = ViewsAndVisitorsMapper(statsDateFormatter, resourceProvider, statsUtils, contentDescriptionHelper)
+        mapper = ViewsAndVisitorsMapper(
+            statsDateFormatter,
+            resourceProvider,
+            statsUtils,
+            contentDescriptionHelper,
+            totalStatsMapper
+        )
         whenever(resourceProvider.getString(string.stats_views)).thenReturn(viewsTitle)
         whenever(resourceProvider.getString(string.stats_visitors)).thenReturn(visitorsTitle)
         whenever(statsDateFormatter.printGranularDate(any<String>(), any())).thenReturn(printedDate)
         whenever(statsUtils.toFormattedString(any<Long>(), any())).then { (it.arguments[0] as Long).toString() }
+        whenever(totalStatsMapper.getCurrentWeekDays(buildPeriodData(), TotalStatsMapper.TotalStatsType.VIEWS)).thenReturn(listOf(thisWeekViews))
+        whenever(totalStatsMapper.getPreviousWeekDays(buildPeriodData(), TotalStatsMapper.TotalStatsType.VIEWS)).thenReturn(listOf(prevWeekViews))
+        whenever(totalStatsMapper.getCurrentWeekDays(buildPeriodData(), TotalStatsMapper.TotalStatsType.VISITORS)).thenReturn(listOf(thisWeekVisitors))
+        whenever(totalStatsMapper.getPreviousWeekDays(buildPeriodData(), TotalStatsMapper.TotalStatsType.VISITORS)).thenReturn(listOf(prevWeekVisitors))
     }
 
     @Test
@@ -137,7 +150,8 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
             PeriodData("2022-04-15", 99, 35, 21, 0, 23, 1),
             PeriodData("2022-04-16", 8, 5, 1, 0, 0, 0),
             PeriodData("2022-04-17", 7, 4, 0, 0, 0, 0),
-            PeriodData("2022-04-18", 78, 28, 3, 0, 13, 2)
+            PeriodData("2022-04-18", 78, 28, 3, 0, 13, 2),
+            PeriodData("2022-04-19", 79, 29, 4, 0, 14, 3)
         )
     }
 }
