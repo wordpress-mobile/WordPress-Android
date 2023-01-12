@@ -60,13 +60,13 @@ class ViewsAndVisitorsMapper
     }
 
     fun buildChartLegendsBlue() = ChartLegendsBlue(
-        string.stats_timeframe_this_week,
-        string.stats_timeframe_previous_week
+        string.stats_timeframe_last_seven_days,
+        string.stats_timeframe_previous_seven_days
     )
 
     fun buildChartLegendsPurple() = ChartLegendsPurple(
-        string.stats_timeframe_this_week,
-        string.stats_timeframe_previous_week
+        string.stats_timeframe_last_seven_days,
+        string.stats_timeframe_previous_seven_days
     )
 
     fun buildTitle(
@@ -180,17 +180,17 @@ class ViewsAndVisitorsMapper
         val stringRes = when (SelectedType.valueOf(selectedPosition)) {
             Views -> {
                 when {
-                    positive -> string.stats_insights_views_and_visitors_views_positive
-                    else -> string.stats_insights_views_and_visitors_views_negative
+                    positive -> string.stats_insights_views_and_visitors_seven_days_views_positive
+                    else -> string.stats_insights_views_and_visitors_seven_days_views_negative
                 }
             }
             Visitors -> {
                 when {
-                    positive -> string.stats_insights_views_and_visitors_visitors_positive
-                    else -> string.stats_insights_views_and_visitors_visitors_negative
+                    positive -> string.stats_insights_views_and_visitors_seven_days_visitors_positive
+                    else -> string.stats_insights_views_and_visitors_seven_days_visitors_negative
                 }
             }
-            else -> string.stats_insights_views_and_visitors_views_positive
+            else -> string.stats_insights_views_and_visitors_seven_days_views_positive
         }
 
         return Text(
