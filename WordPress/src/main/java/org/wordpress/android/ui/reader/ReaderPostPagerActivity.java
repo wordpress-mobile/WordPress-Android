@@ -48,6 +48,8 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFr
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -163,6 +165,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
     private JetpackFeatureFullScreenOverlayViewModel mJetpackFullScreenViewModel;
     @Inject AccountStore mAccountStore;
+    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -283,8 +286,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             host = uri.getHost();
         }
 
-
-        if (uri == null) {
+        if (uri == null || mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
             mReaderTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action, host, uri);
             // invalid uri so, just show the entry screen
             Intent intent = new Intent(this, WPLaunchActivity.class);
