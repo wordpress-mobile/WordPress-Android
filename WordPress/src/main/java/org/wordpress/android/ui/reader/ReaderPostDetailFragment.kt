@@ -31,6 +31,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
+import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -54,7 +55,6 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
@@ -149,8 +149,10 @@ import java.util.EnumSet
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@Suppress("LargeClass")
 class ReaderPostDetailFragment : ViewPagerFragment(),
     WPMainActivity.OnActivityBackPressedListener,
+    MenuProvider,
     ScrollDirectionListener,
     ReaderCustomViewListener,
     ReaderWebViewPageFinishedListener,
@@ -326,6 +328,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    @Suppress("RedundantNullableReturnType")
     override fun getScrollableViewForUniqueIdProvision(): View? {
         return scrollView
     }
@@ -482,13 +485,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
         val binding = ReaderFragmentPostDetailBinding.bind(view)
 
         initLikeFacesRecycler(savedInstanceState)
         initCommentSnippetRecycler(savedInstanceState)
         initViewModel(binding, savedInstanceState)
         restoreState(savedInstanceState)
-        setHasOptionsMenu(true)
 
         showPost()
     }
@@ -496,7 +499,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun initLikeFacesRecycler(savedInstanceState: Bundle?) {
         if (!likesEnhancementsFeatureConfig.isEnabled()) return
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        savedInstanceState?.getParcelable<Parcelable>(ReaderPostDetailFragment.KEY_LIKERS_LIST_STATE)?.let {
+        savedInstanceState?.getParcelable<Parcelable>(KEY_LIKERS_LIST_STATE)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 
@@ -515,7 +518,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (!commentsSnippetFeatureConfig.isEnabled()) return
         val layoutManager = LinearLayoutManager(activity)
 
-        savedInstanceState?.getParcelable<Parcelable>(ReaderPostDetailFragment.KEY_COMMENTS_SNIPPET_LIST_STATE)?.let {
+        savedInstanceState?.getParcelable<Parcelable>(KEY_COMMENTS_SNIPPET_LIST_STATE)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 
@@ -541,7 +544,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     @Suppress("LongMethod")
     private fun initObservers(binding: ReaderFragmentPostDetailBinding) {
-        viewModel.uiState.observe(viewLifecycleOwner, {
+        viewModel.uiState.observe(viewLifecycleOwner) {
             uiHelpers.updateVisibility(binding.textError, it.errorVisible)
             uiHelpers.updateVisibility(binding.progressLoading, it.loadingVisible)
             when (it) {
@@ -553,22 +556,24 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     showError(message?.toString())
                 }
             }
-        })
-
-        if (likesEnhancementsFeatureConfig.isEnabled()) {
-            viewModel.likesUiState.observe(viewLifecycleOwner, { state ->
-                manageLikesUiState(state)
-            })
         }
 
-        viewModel.refreshPost.observeEvent(viewLifecycleOwner, {} /* Do nothing */)
+        if (likesEnhancementsFeatureConfig.isEnabled()) {
+            viewModel.likesUiState.observe(viewLifecycleOwner) { state ->
+                manageLikesUiState(state)
+            }
+        }
 
-        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar(binding) })
+        viewModel.refreshPost.observeEvent(viewLifecycleOwner) {
+            // Do nothing
+        }
 
-        viewModel.navigationEvents.observeEvent(viewLifecycleOwner, { it.handleNavigationEvent() })
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { it.showSnackbar(binding) }
+
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner) { it.handleNavigationEvent() }
 
         if (commentsSnippetFeatureConfig.isEnabled()) {
-            conversationViewModel.snackbarEvents.observe(viewLifecycleOwner, { event ->
+            conversationViewModel.snackbarEvents.observe(viewLifecycleOwner) { event ->
                 if (!isAdded) return@observe
 
                 val fm: FragmentManager = childFragmentManager
@@ -578,9 +583,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 event.applyIfNotHandled {
                     this.showSnackbar(binding)
                 }
-            })
+            }
 
-            conversationViewModel.showBottomSheetEvent.observeEvent(viewLifecycleOwner, { showBottomSheetData ->
+            conversationViewModel.showBottomSheetEvent.observeEvent(viewLifecycleOwner) { showBottomSheetData ->
                 if (!isAdded) return@observeEvent
 
                 val fm: FragmentManager = childFragmentManager
@@ -595,15 +600,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 } else if (!showBottomSheetData.show && bottomSheet != null) {
                     bottomSheet.dismiss()
                 }
-            })
+            }
 
-            conversationViewModel.updateFollowUiState.observe(viewLifecycleOwner, { uiState ->
+            conversationViewModel.updateFollowUiState.observe(viewLifecycleOwner) { uiState ->
                 manageFollowConversationUiState(uiState, binding)
-            })
+            }
 
-            viewModel.commentSnippetState.observe(viewLifecycleOwner, { state ->
+            viewModel.commentSnippetState.observe(viewLifecycleOwner) { state ->
                 manageCommentSnippetUiState(state)
-            })
+            }
         }
 
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
@@ -982,15 +987,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         moreMenuPopup?.dismiss()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menu.clear()
-        inflater.inflate(R.menu.reader_detail, menu)
+        menuInflater.inflate(R.menu.reader_detail, menu)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-
+    override fun onPrepareMenu(menu: Menu) {
         // browse & share require the post to have a URL (some feed-based posts don't have one)
         val postHasUrl = viewModel.post?.hasUrl() == true
         val mnuBrowse = menu.findItem(R.id.menu_browse)
@@ -1003,30 +1005,28 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_browse -> {
-                if (viewModel.hasPost) {
-                    readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
-                    ReaderActivityLauncher.openPost(context, viewModel.post)
-                } else if (viewModel.interceptedUri != null) {
-                    readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, viewModel.interceptedUri!!)
-                    ReaderActivityLauncher.openUrl(activity, viewModel.interceptedUri, OpenUrlType.EXTERNAL)
-                    requireActivity().finish()
-                }
-                return true
+    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+        R.id.menu_browse -> {
+            if (viewModel.hasPost) {
+                readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
+                ReaderActivityLauncher.openPost(context, viewModel.post)
+            } else if (viewModel.interceptedUri != null) {
+                readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, viewModel.interceptedUri!!)
+                ReaderActivityLauncher.openUrl(activity, viewModel.interceptedUri, OpenUrlType.EXTERNAL)
+                requireActivity().finish()
             }
-            R.id.menu_share -> {
-                readerTracker.track(AnalyticsTracker.Stat.SHARED_ITEM)
-                ReaderActivityLauncher.sharePost(context, viewModel.post)
-                return true
-            }
-            R.id.menu_more -> {
-                viewModel.onMoreButtonClicked()
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
+            true
         }
+        R.id.menu_share -> {
+            readerTracker.track(AnalyticsTracker.Stat.SHARED_ITEM)
+            ReaderActivityLauncher.sharePost(context, viewModel.post)
+            true
+        }
+        R.id.menu_more -> {
+            viewModel.onMoreButtonClicked()
+            true
+        }
+        else -> false
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -1272,6 +1272,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel.post?.let { ReaderPostActions.updatePost(it, resultListener) }
     }
 
+    @Suppress("ReturnCount")
     private fun doLikePost() {
         if (!isAdded) {
             return
@@ -1324,6 +1325,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    @Suppress("ReturnCount")
     private fun showPhotoViewer(
         imageUrl: String,
         sourceView: View,
@@ -1551,7 +1553,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     }
                     viewModel.onRelatedPostsRequested(it)
                 }
-            }, 300)
+            }, ON_PAGE_FINISHED_DELAY_MILLIS)
         } else {
             url?.let { AppLog.w(T.READER, "reader post detail > page finished - $it") }
         }
@@ -1581,13 +1583,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onCustomViewShown() {
         // full screen video has just been shown so hide the AppBar
-        readerTracker.track(Stat.READER_ARTICLE_CUSTOM_VIEW_SHOWN)
+        readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_CUSTOM_VIEW_SHOWN)
         onShowHideToolbar(false)
     }
 
     override fun onCustomViewHidden() {
         // user returned from full screen video so re-display the AppBar
-        readerTracker.track(Stat.READER_ARTICLE_CUSTOM_VIEW_HIDDEN)
+        readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_CUSTOM_VIEW_HIDDEN)
         onShowHideToolbar(true)
     }
 
@@ -1598,7 +1600,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onUrlClick(url: String): Boolean {
-        readerTracker.track(Stat.READER_ARTICLE_LINK_TAPPED)
+        readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_LINK_TAPPED)
         // if this is a "wordpress://blogpreview?" link, show blog preview for the blog - this is
         // used for Discover posts that highlight a blog
         if (ReaderUtils.isBlogPreviewUrl(url)) {
@@ -1625,7 +1627,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onPageJumpClick(pageJump: String?): Boolean {
-        readerTracker.track(Stat.READER_ARTICLE_PAGE_JUMP_TAPPED)
+        readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_PAGE_JUMP_TAPPED)
         val wasJsEnabled = readerWebView.settings.javaScriptEnabled
 
         readerWebView.settings.javaScriptEnabled = true
@@ -1674,12 +1676,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onImageUrlClick(imageUrl: String, view: View, x: Int, y: Int): Boolean {
-        readerTracker.track(Stat.READER_ARTICLE_IMAGE_TAPPED)
+        readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_IMAGE_TAPPED)
         return showPhotoViewer(imageUrl, view, x, y)
     }
 
     override fun onFileDownloadClick(fileUrl: String?): Boolean {
-        readerTracker.track(Stat.READER_ARTICLE_FILE_DOWNLOAD_TAPPED)
+        readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_FILE_DOWNLOAD_TAPPED)
         return if (activity != null &&
             fileUrl != null &&
             PermissionUtils.checkAndRequestStoragePermission(
@@ -1695,7 +1697,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
+    @Suppress("OVERRIDE_DEPRECATION", "ComplexCondition")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -1734,9 +1736,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onScrollUp(distanceY: Float) {
+        // Do nothing
     }
 
     override fun onScrollDown(distanceY: Float) {
+        // Do nothing
     }
 
     override fun onScrollCompleted() {
@@ -1754,6 +1758,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     companion object {
+        private const val ON_PAGE_FINISHED_DELAY_MILLIS = 300L
+
         private const val KEY_LIKERS_LIST_STATE = "likers_list_state"
         private const val KEY_COMMENTS_SNIPPET_LIST_STATE = "comments_snippet_list_state"
         private const val NOTIFICATIONS_BOTTOM_SHEET_TAG = "NOTIFICATIONS_BOTTOM_SHEET_TAG"

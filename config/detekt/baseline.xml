@@ -6,7 +6,6 @@
     <ID>ComplexCondition:FollowersUseCase.kt$FollowersUseCase$wpComModel.followers.size >= VIEW_ALL_PAGE_SIZE &amp;&amp; uiState.selectedTab == 0 || emailModel.followers.size >= VIEW_ALL_PAGE_SIZE &amp;&amp; uiState.selectedTab == 1</ID>
     <ID>ComplexCondition:FollowersUseCase.kt$FollowersUseCase$wpComModel.hasMore &amp;&amp; uiState.selectedTab == 0 || emailModel.hasMore &amp;&amp; uiState.selectedTab == 1</ID>
     <ID>ComplexCondition:MinifiedWidgetUpdater.kt$MinifiedWidgetUpdater$networkAvailable &amp;&amp; hasAccessToken &amp;&amp; siteModel != null &amp;&amp; dataType != null</ID>
-    <ID>ComplexCondition:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$activity != null &amp;&amp; requestCode == READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE &amp;&amp; grantResults.isNotEmpty() &amp;&amp; grantResults[0] == PackageManager.PERMISSION_GRANTED</ID>
     <ID>ComplexCondition:TodayStatsUseCase.kt$TodayStatsUseCase$!hasViews &amp;&amp; !hasVisitors &amp;&amp; !hasLikes &amp;&amp; !hasComments</ID>
     <ID>ComplexMethod:BarChartViewHolder.kt$BarChartViewHolder$private fun BarChart.draw( item: BarChartItem, labelStart: TextView, labelEnd: TextView ): BarCount</ID>
     <ID>ComplexMethod:BlockDiffCallback.kt$BlockDiffCallback$override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any?</ID>
@@ -20,7 +19,6 @@
     <ID>ComplexMethod:NoticonUtils.kt$NoticonUtils$fun noticonToGridicon(noticon: String): Int</ID>
     <ID>ComplexMethod:PostActionHandler.kt$PostActionHandler$fun handlePostButton(buttonType: PostListButtonType, post: PostModel, hasAutoSave: Boolean)</ID>
     <ID>ComplexMethod:PostListActionTracker.kt$fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postData: PostModel, statsEvent: Stat)</ID>
-    <ID>ComplexMethod:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun ReaderNavigationEvents.handleNavigationEvent()</ID>
     <ID>ComplexMethod:ReferrersUseCase.kt$ReferrersUseCase$override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List&lt;BlockListItem></ID>
     <ID>ComplexMethod:SystemNotificationsTracker.kt$SystemNotificationsTracker$private fun NotificationType.toTypeValue(): String</ID>
     <ID>ComplexMethod:UiModelMapper.kt$UiModelMapper$fun mapInsights( useCaseModels: List&lt;UseCaseModel>, showError: (Int) -> Unit ): UiModel</ID>
@@ -43,12 +41,9 @@
     <ID>EmptyFunctionBlock:PrepublishingAddCategoryFragment.kt$PrepublishingAddCategoryFragment.&lt;no name provided>${ }</ID>
     <ID>EmptyFunctionBlock:QuickStartFocusPoint.kt$QuickStartFocusPoint.&lt;no name provided>${}</ID>
     <ID>EmptyFunctionBlock:ReaderDiscoverDataProvider.kt$ReaderDiscoverDataProvider${ }</ID>
-    <ID>EmptyFunctionBlock:ReaderPostDetailFragment.kt$ReaderPostDetailFragment${ }</ID>
-    <ID>EmptyFunctionBlock:ScanHistoryFragment.kt$ScanHistoryFragment.&lt;no name provided>${ }</ID>
     <ID>EmptyFunctionBlock:SearchInputWithHeader.kt$SearchInputWithHeader.&lt;no name provided>${}</ID>
     <ID>EmptyFunctionBlock:SettingsUsernameChangerFragment.kt$SettingsUsernameChangerFragment.&lt;no name provided>${ }</ID>
     <ID>EmptyFunctionBlock:SiteCreationService.kt$SiteCreationService${ }</ID>
-    <ID>EmptyFunctionBlock:StatsFragment.kt$SelectedTabListener${ }</ID>
     <ID>EmptyFunctionBlock:StatsViewAllFragment.kt$StatsViewAllFragment.&lt;no name provided>${ }</ID>
     <ID>EmptyFunctionBlock:StoryTitleHeaderView.kt$StoryTitleHeaderView.&lt;no name provided>${}</ID>
     <ID>EmptyFunctionBlock:SuggestionActivity.kt$SuggestionActivity.&lt;no name provided>${}</ID>
@@ -64,7 +59,6 @@
     <ID>EmptySecondaryConstructor:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined.SavedState${}</ID>
     <ID>FunctionParameterNaming:WizardManager.kt$WizardManager$T: WizardStep</ID>
     <ID>LargeClass:PagesViewModel.kt$PagesViewModel : ScopedViewModel</ID>
-    <ID>LargeClass:ReaderPostDetailFragment.kt$ReaderPostDetailFragment : ViewPagerFragmentOnActivityBackPressedListenerScrollDirectionListenerReaderCustomViewListenerReaderWebViewPageFinishedListenerReaderWebViewUrlClickListenerPrivateAtCookieProgressDialogOnDismissListenerAutoHideToolbarListener</ID>
     <ID>LongMethod:AuthorsUseCase.kt$AuthorsUseCase$override fun buildUiModel(domainModel: AuthorsModel, uiState: SelectedAuthor): List&lt;BlockListItem></ID>
     <ID>LongMethod:BarChartViewHolder.kt$BarChartViewHolder$private fun BarChart.draw( item: BarChartItem, labelStart: TextView, labelEnd: TextView ): BarCount</ID>
     <ID>LongMethod:ClicksUseCase.kt$ClicksUseCase$override fun buildUiModel(domainModel: ClicksModel, uiState: SelectedClicksGroup): List&lt;BlockListItem></ID>
@@ -109,7 +103,6 @@
     <ID>MagicNumber:OverviewUseCase.kt$OverviewUseCase$86400000.0</ID>
     <ID>MagicNumber:PageItemViewHolder.kt$PageItemViewHolder.PageViewHolder$16</ID>
     <ID>MagicNumber:PageParentAdapter.kt$PageParentAdapter$200</ID>
-    <ID>MagicNumber:PageParentFragment.kt$PageParentFragment$8</ID>
     <ID>MagicNumber:PageParentSearchAdapter.kt$PageParentSearchAdapter$200</ID>
     <ID>MagicNumber:PagesFragment.kt$PagesFragment$8</ID>
     <ID>MagicNumber:PluginBrowserViewModel.kt$PluginBrowserViewModel$250</ID>
@@ -123,7 +116,6 @@
     <ID>MagicNumber:PublishSettingsViewModel.kt$PublishSettingsViewModel$6000</ID>
     <ID>MagicNumber:QuickStartItemBuilder.kt$QuickStartItemBuilder$100</ID>
     <ID>MagicNumber:ReaderCommentListViewModel.kt$ReaderCommentListViewModel$300</ID>
-    <ID>MagicNumber:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$300</ID>
     <ID>MagicNumber:ReaderTagRepository.kt$ReaderTagRepository$5</ID>
     <ID>MagicNumber:RequestThrottler.kt$RequestThrottler$1000L</ID>
     <ID>MagicNumber:RequestThrottler.kt$RequestThrottler$60</ID>
@@ -132,8 +124,6 @@
     <ID>MagicNumber:StatsDateFormatter.kt$StatsDateFormatter$31</ID>
     <ID>MagicNumber:StatsDateFormatter.kt$StatsDateFormatter$6</ID>
     <ID>MagicNumber:StatsDateFormatter.kt$StatsDateFormatter$60</ID>
-    <ID>MagicNumber:StatsFragment.kt$StatsFragment$3</ID>
-    <ID>MagicNumber:StatsFragment.kt$StatsFragment$4</ID>
     <ID>MagicNumber:StatsSiteProvider.kt$StatsSiteProvider$3</ID>
     <ID>MagicNumber:StatsUtils.kt$100</ID>
     <ID>MagicNumber:StatsUtils.kt$StatsUtils$10</ID>
@@ -189,10 +179,6 @@
     <ID>ReturnCount:PostListFeaturedImageTracker.kt$PostListFeaturedImageTracker$fun getFeaturedImageUrl(site: SiteModel, featuredImageId: Long): String?</ID>
     <ID>ReturnCount:PostsListActivity.kt$PostsListActivity$override fun onOptionsItemSelected(item: MenuItem): Boolean</ID>
     <ID>ReturnCount:PublishNotificationReceiverViewModel.kt$PublishNotificationReceiverViewModel$fun loadNotification(notificationId: Int): NotificationUiModel?</ID>
-    <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$/* * returns True if the passed URL should be opened in the external browser app */ private fun shouldOpenExternal(url: String): Boolean</ID>
-    <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$override fun onOptionsItemSelected(item: MenuItem): Boolean</ID>
-    <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun doLikePost()</ID>
-    <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun showPhotoViewer( imageUrl: String, sourceView: View, startX: Int, startY: Int ): Boolean</ID>
     <ID>ReturnCount:ReaderSiteNotificationsUseCase.kt$ReaderSiteNotificationsUseCase$suspend fun toggleNotification( blogId: Long, feedId: Long ): SiteNotificationState</ID>
     <ID>ReturnCount:RemotePreviewLogicHelper.kt$RemotePreviewLogicHelper$fun runPostPreviewLogic( activity: Activity, site: SiteModel, post: PostImmutableModel, helperFunctions: RemotePreviewHelperFunctions ): PreviewLogicOperationResult</ID>
     <ID>ReturnCount:StoriesMediaPickerResultHandler.kt$StoriesMediaPickerResultHandler$@Deprecated("Use rather the other handle method and the live data navigation.") fun handleMediaPickerResultForStories( data: Intent, activity: Activity?, selectedSite: SiteModel?, source: PagePostCreationSourcesDetail ): Boolean</ID>

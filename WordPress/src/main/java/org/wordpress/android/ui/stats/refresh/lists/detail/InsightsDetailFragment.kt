@@ -21,11 +21,6 @@ class InsightsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
 
     private val viewModel: InsightsDetailViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
