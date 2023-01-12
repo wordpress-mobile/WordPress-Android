@@ -1341,12 +1341,15 @@ open class SiteStore @Inject constructor(
     }
 
     suspend fun fetchSite(site: SiteModel): OnSiteChanged {
-        val updatedSite = if (site.isUsingWpComRestApi) {
-            siteRestClient.fetchSite(site)
-        } else {
-            siteXMLRPCClient.fetchSite(site)
+        return coroutineEngine.withDefaultContext(T.API, this, "Fetch site") {
+            val updatedSite = if (site.isUsingWpComRestApi) {
+                siteRestClient.fetchSite(site)
+            } else {
+                siteXMLRPCClient.fetchSite(site)
+            }
+
+            updateSite(updatedSite)
         }
-        return updateSite(updatedSite)
     }
 
     suspend fun fetchSites(payload: FetchSitesPayload): OnSiteChanged {
@@ -1357,7 +1360,9 @@ open class SiteStore @Inject constructor(
     }
 
     suspend fun fetchSitesXmlRpc(payload: RefreshSitesXMLRPCPayload): OnSiteChanged {
-        return updateSites(siteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password))
+        return coroutineEngine.withDefaultContext(T.API, this, "Fetch sites") {
+            updateSites(siteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password))
+        }
     }
 
     @Suppress("ForbiddenComment", "SwallowedException")
