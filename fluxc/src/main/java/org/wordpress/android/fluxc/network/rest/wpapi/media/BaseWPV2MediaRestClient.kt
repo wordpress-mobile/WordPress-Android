@@ -55,7 +55,7 @@ abstract class BaseWPV2MediaRestClient constructor(
 
     protected abstract fun WPAPIEndpoint.getFullUrl(site: SiteModel): String
 
-    protected abstract fun getAuthorizationHeader(site: SiteModel): String
+    protected abstract suspend fun getAuthorizationHeader(site: SiteModel): String
 
     protected abstract suspend fun <T:Any> executeGetGsonRequest(
         site: SiteModel,
