@@ -21,6 +21,8 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsConfiguration;
+import org.wordpress.android.fluxc.network.rest.wpapi.media.ApplicationPasswordsMediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.wpv2.WPComV2MediaRestClient;
@@ -469,6 +471,10 @@ public class MediaStore extends Store {
     private final MediaRestClient mMediaRestClient;
     private final MediaXMLRPCClient mMediaXmlrpcClient;
     private final WPComV2MediaRestClient mWPComV2MediaRestClient;
+    private final ApplicationPasswordsMediaRestClient mApplicationPasswordsMediaRestClient;
+
+    private final ApplicationPasswordsConfiguration mApplicationPasswordsConfiguration;
+
     // Ensures that the UploadStore is initialized whenever the MediaStore is,
     // to ensure actions are shadowed and repeated by the UploadStore
     @SuppressWarnings("unused")
@@ -478,11 +484,15 @@ public class MediaStore extends Store {
             Dispatcher dispatcher,
             MediaRestClient restClient,
             MediaXMLRPCClient xmlrpcClient,
-            WPComV2MediaRestClient wpv2MediaRestClient) {
+            WPComV2MediaRestClient wpv2MediaRestClient,
+            ApplicationPasswordsMediaRestClient applicationPasswordsMediaRestClient,
+            ApplicationPasswordsConfiguration applicationPasswordsConfiguration) {
         super(dispatcher);
         mMediaRestClient = restClient;
         mMediaXmlrpcClient = xmlrpcClient;
         mWPComV2MediaRestClient = wpv2MediaRestClient;
+        mApplicationPasswordsMediaRestClient = applicationPasswordsMediaRestClient;
+        mApplicationPasswordsConfiguration = applicationPasswordsConfiguration;
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -798,6 +808,8 @@ public class MediaStore extends Store {
             mMediaRestClient.uploadMedia(payload.site, payload.media);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.uploadMedia(payload.site, payload.media);
+        } else if (mApplicationPasswordsConfiguration.isEnabled()) {
+            mApplicationPasswordsMediaRestClient.uploadMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.uploadMedia(payload.site, payload.media);
         }
@@ -819,6 +831,8 @@ public class MediaStore extends Store {
             mMediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
+        } else if (mApplicationPasswordsConfiguration.isEnabled()) {
+            mApplicationPasswordsMediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
         } else {
             mMediaXmlrpcClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
         }
@@ -868,6 +882,8 @@ public class MediaStore extends Store {
             mMediaRestClient.cancelUpload(media);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.cancelUpload(media);
+        } else if (mApplicationPasswordsConfiguration.isEnabled()) {
+            mApplicationPasswordsMediaRestClient.cancelUpload(media);
         } else {
             mMediaXmlrpcClient.cancelUpload(media);
         }
