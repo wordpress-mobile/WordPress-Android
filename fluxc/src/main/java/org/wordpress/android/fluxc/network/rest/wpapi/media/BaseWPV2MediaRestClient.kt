@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.media.wpv2
+package org.wordpress.android.fluxc.network.rest.wpapi.media
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
