@@ -64,6 +64,8 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
+import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils;
+import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -161,6 +163,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Inject DeepLinkTrackingUtils mDeepLinkTrackingUtils;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
+    @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
     private JetpackFeatureFullScreenOverlayViewModel mJetpackFullScreenViewModel;
     @Inject AccountStore mAccountStore;
 
@@ -171,6 +174,17 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
 
         setContentView(R.layout.reader_activity_post_pager);
+
+        // Start migration flow passing deep link data if requirements are met
+        if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
+            PreMigrationDeepLinkData deepLinkData = new PreMigrationDeepLinkData(
+                    getIntent().getAction(),
+                    getIntent().getData()
+            );
+            mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow(deepLinkData);
+            finish();
+            return;
+        }
 
         mViewPager = findViewById(R.id.viewpager);
         mProgress = findViewById(R.id.progress_loading);

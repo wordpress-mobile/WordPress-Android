@@ -48,7 +48,6 @@ import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListA
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
-import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.domains.DomainsDashboardActivity;
@@ -1789,10 +1788,11 @@ public class ActivityLauncher {
     }
 
     public static void openDeepLinkAfterJPMigration(@NonNull Context context, String action, Uri uri) {
-        Intent intent = new Intent(context, DeepLinkingIntentReceiverActivity.class);
-        intent.setAction(action);
-        intent.setData(uri);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent()
+                .setPackage(context.getPackageName())
+                .setAction(action)
+                .setData(uri)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
