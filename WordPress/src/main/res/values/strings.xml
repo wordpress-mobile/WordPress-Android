@@ -2,7 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name" translatable="false">WordPress</string>
-    <string name="widgets_enabled" translatable="false">true</string>
 
     <!-- account setup -->
     <string name="xmlrpc_missing_method_error" tools:ignore="UnusedResources" a8c-src-lib="login">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
@@ -4335,4 +4334,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jetpack_feature_card_learn_more" translatable="false">@string/learn_more</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
+    <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Featured</string>
 </resources>
