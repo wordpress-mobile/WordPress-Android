@@ -1338,8 +1338,8 @@
     <string name="stats_insights_total_comments">Total comments</string>
     <string name="stats_insights_average_comments">Avg comments/post</string>
     <string name="stats_insights_total_likes">Total likes</string>
-    <string name="stats_insights_total_stats_positive">%1$s higher than the previous week</string>
-    <string name="stats_insights_total_stats_negative">%1$s lower than the previous week</string>
+    <string name="stats_insights_total_stats_seven_days_positive">%1$s higher than the previous 7-days</string>
+    <string name="stats_insights_total_stats_seven_days_negative">%1$s lower than the previous 7-days</string>
     <string name="stats_insights_average_likes">Avg likes/post</string>
     <string name="stats_insights_total_words">Total words</string>
     <string name="stats_insights_average_words">Avg words/post</string>

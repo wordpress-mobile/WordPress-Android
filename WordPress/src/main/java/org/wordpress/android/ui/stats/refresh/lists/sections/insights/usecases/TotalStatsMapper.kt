@@ -75,9 +75,9 @@ class TotalStatsMapper @Inject constructor(
         val positive = value >= previousValue
         val change = statsUtils.buildChange(previousValue, value, positive, true).toString()
         val stringRes = if (positive) {
-            R.string.stats_insights_total_stats_positive
+            R.string.stats_insights_total_stats_seven_days_positive
         } else {
-            R.string.stats_insights_total_stats_negative
+            R.string.stats_insights_total_stats_seven_days_negative
         }
 
         return Text(
