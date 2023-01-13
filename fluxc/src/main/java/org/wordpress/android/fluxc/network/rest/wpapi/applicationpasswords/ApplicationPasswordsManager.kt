@@ -137,42 +137,54 @@ internal class ApplicationPasswordsManager @Inject constructor(
     suspend fun deleteApplicationCredentials(
         site: SiteModel
     ): ApplicationPasswordDeletionResult {
-        val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
-            jetpackApplicationPasswordsRestClient.deleteApplicationPassword(
-                site = site,
-                applicationName = applicationName
+        val uuid = applicationPasswordsStore.getUuid(site.domainName)
+
+        if (uuid == null) {
+            appLogWrapper.w(AppLog.T.MAIN, "Application password deletion failed, no UUID found")
+            return ApplicationPasswordDeletionResult.Failure(
+                BaseNetworkError(
+                    GenericErrorType.UNKNOWN,
+                    "UUID required for deletion is not found"
+                )
             )
         } else {
-            wpApiApplicationPasswordsRestClient.deleteApplicationPassword(
-                site = site,
-                applicationName = applicationName
-            )
-        }
-
-        return when {
-            !payload.isError -> {
-                if (payload.isDeleted) {
-                    appLogWrapper.d(AppLog.T.MAIN, "Application password deleted")
-                    deleteLocalApplicationPassword(site)
-                    ApplicationPasswordDeletionResult.Success
-                } else {
-                    appLogWrapper.w(AppLog.T.MAIN, "Application password deletion failed")
-                    ApplicationPasswordDeletionResult.Failure(
-                        BaseNetworkError(
-                            GenericErrorType.UNKNOWN,
-                            "Deletion not confirmed by API"
-                        )
-                    )
-                }
-            }
-            else -> {
-                val error = payload.error
-                appLogWrapper.w(
-                    AppLog.T.MAIN, "Application password deletion failed, error: " +
-                    "${error.type} ${error.message}\n" +
-                    "${error.volleyError?.toString()}"
+            val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
+                jetpackApplicationPasswordsRestClient.deleteApplicationPassword(
+                    site = site,
+                    uuid = uuid
                 )
-                ApplicationPasswordDeletionResult.Failure(error)
+            } else {
+                wpApiApplicationPasswordsRestClient.deleteApplicationPassword(
+                    site = site,
+                    uuid = uuid
+                )
+            }
+
+            return when {
+                !payload.isError -> {
+                    if (payload.isDeleted) {
+                        appLogWrapper.d(AppLog.T.MAIN, "Application password deleted")
+                        deleteLocalApplicationPassword(site)
+                        ApplicationPasswordDeletionResult.Success
+                    } else {
+                        appLogWrapper.w(AppLog.T.MAIN, "Application password deletion failed")
+                        ApplicationPasswordDeletionResult.Failure(
+                            BaseNetworkError(
+                                GenericErrorType.UNKNOWN,
+                                "Deletion not confirmed by API"
+                            )
+                        )
+                    }
+                }
+                else -> {
+                    val error = payload.error
+                    appLogWrapper.w(
+                        AppLog.T.MAIN, "Application password deletion failed, error: " +
+                        "${error.type} ${error.message}\n" +
+                        "${error.volleyError?.toString()}"
+                    )
+                    ApplicationPasswordDeletionResult.Failure(error)
+                }
             }
         }
     }

@@ -62,7 +62,7 @@ internal class JetpackApplicationPasswordsRestClient @Inject constructor(
 
     suspend fun deleteApplicationPassword(
         site: SiteModel,
-        applicationName: String
+        uuid: String
     ): ApplicationPasswordDeletionPayload {
         AppLog.d(T.MAIN, "Delete application password using Jetpack Tunnel")
 
@@ -71,7 +71,7 @@ internal class JetpackApplicationPasswordsRestClient @Inject constructor(
             restClient = this,
             site = site,
             url = url,
-            params = mapOf("name" to applicationName),
+            params = mapOf("uuid" to uuid),
             clazz = ApplicationPasswordDeleteResponse::class.java
         )
 

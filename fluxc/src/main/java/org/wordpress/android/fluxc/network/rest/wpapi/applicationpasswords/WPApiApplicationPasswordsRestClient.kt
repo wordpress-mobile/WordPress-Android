@@ -63,7 +63,7 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
 
     suspend fun deleteApplicationPassword(
         site: SiteModel,
-        applicationName: String
+        uuid: String
     ): ApplicationPasswordDeletionPayload {
         AppLog.d(T.MAIN, "Delete application password using Cookie Authentication")
 
@@ -73,7 +73,7 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
                 wpApiGsonRequestBuilder.syncDeleteRequest(
                     restClient = this,
                     url = site.buildUrl(path),
-                    body = mapOf("name" to applicationName),
+                    body = mapOf("uuid" to uuid),
                     clazz = ApplicationPasswordDeleteResponse::class.java,
                     nonce = nonce?.value
                 )
