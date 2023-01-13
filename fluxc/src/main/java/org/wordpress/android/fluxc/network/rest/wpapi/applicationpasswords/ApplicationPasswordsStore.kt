@@ -18,6 +18,7 @@ internal class ApplicationPasswordsStore @Inject constructor(
     companion object {
         private const val USERNAME_PREFERENCE_KEY_PREFIX = "username_"
         private const val PASSWORD_PREFERENCE_KEY_PREFIX = "app_password_"
+        private const val UUID_PREFERENCE_KEY_PREFIX = "app_password_uuid_"
     }
 
     val applicationName: String
@@ -36,9 +37,14 @@ internal class ApplicationPasswordsStore @Inject constructor(
     fun getCredentials(host: String): ApplicationPasswordCredentials? {
         val username = encryptedPreferences.getString(host.usernamePrefKey, null)
         val password = encryptedPreferences.getString(host.passwordPrefKey, null)
+        val uuid = encryptedPreferences.getString(host.uuidPrefKey, null)
 
-        return if (username != null && password != null) {
-            ApplicationPasswordCredentials(username, password)
+        return if (username != null && password != null && uuid != null) {
+            ApplicationPasswordCredentials(
+                userName = username,
+                password = password,
+                uuid = uuid
+            )
         } else {
             null
         }
@@ -48,6 +54,7 @@ internal class ApplicationPasswordsStore @Inject constructor(
         encryptedPreferences.edit()
             .putString(host.usernamePrefKey, credentials.userName)
             .putString(host.passwordPrefKey, credentials.password)
+            .putString(host.uuidPrefKey, credentials.uuid)
             .apply()
     }
 
@@ -55,6 +62,7 @@ internal class ApplicationPasswordsStore @Inject constructor(
         encryptedPreferences.edit()
             .remove(host.usernamePrefKey)
             .remove(host.passwordPrefKey)
+            .remove(host.uuidPrefKey)
             .apply()
     }
 
@@ -94,4 +102,7 @@ internal class ApplicationPasswordsStore @Inject constructor(
 
     private val String.passwordPrefKey
         get() = "$PASSWORD_PREFERENCE_KEY_PREFIX$this"
+
+    private val String.uuidPrefKey
+        get() = "$UUID_PREFERENCE_KEY_PREFIX$this"
 }

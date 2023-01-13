@@ -88,7 +88,11 @@ internal class ApplicationPasswordsManager @Inject constructor(
 
         return when {
             !payload.isError -> ApplicationPasswordCreationResult.Created(
-                ApplicationPasswordCredentials(userName = username, password = payload.password)
+                ApplicationPasswordCredentials(
+                    userName = username,
+                    password = payload.password,
+                    uuid = payload.uuid
+                )
             )
             else -> {
                 val statusCode = payload.error.volleyError?.networkResponse?.statusCode
