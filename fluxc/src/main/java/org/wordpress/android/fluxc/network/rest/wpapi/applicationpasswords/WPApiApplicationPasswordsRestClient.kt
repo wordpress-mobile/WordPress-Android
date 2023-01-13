@@ -67,13 +67,12 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
     ): ApplicationPasswordDeletionPayload {
         AppLog.d(T.MAIN, "Delete application password using Cookie Authentication")
 
-        val path = WPAPI.users.me.application_passwords.urlV2
+        val path = WPAPI.users.me.application_passwords.uuid(uuid).urlV2
         val payload = wpApiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
             APIResponseWrapper(
                 wpApiGsonRequestBuilder.syncDeleteRequest(
                     restClient = this,
                     url = site.buildUrl(path),
-                    body = mapOf("uuid" to uuid),
                     clazz = ApplicationPasswordDeleteResponse::class.java,
                     nonce = nonce?.value
                 )

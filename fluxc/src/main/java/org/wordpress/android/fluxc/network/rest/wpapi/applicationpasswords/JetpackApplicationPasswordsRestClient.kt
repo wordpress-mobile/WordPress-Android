@@ -66,12 +66,11 @@ internal class JetpackApplicationPasswordsRestClient @Inject constructor(
     ): ApplicationPasswordDeletionPayload {
         AppLog.d(T.MAIN, "Delete application password using Jetpack Tunnel")
 
-        val url = WPAPI.users.me.application_passwords.urlV2
+        val url = WPAPI.users.me.application_passwords.uuid(uuid).urlV2
         val response = jetpackTunnelGsonRequestBuilder.syncDeleteRequest(
             restClient = this,
             site = site,
             url = url,
-            params = mapOf("uuid" to uuid),
             clazz = ApplicationPasswordDeleteResponse::class.java
         )
 
