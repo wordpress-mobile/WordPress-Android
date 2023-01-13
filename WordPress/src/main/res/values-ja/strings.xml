@@ -307,7 +307,6 @@ Language: ja_JP
     <string name="new_site_creation_intents_title">サイトのテーマ</string>
     <string name="quick_start_site_menu_tab_message_short">&lt;b&gt;%1$s&lt;/b&gt; をタップして続行します。</string>
     <string name="my_site_blogging_prompt_card_menu_remove">ダッシュボードから削除</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">このプロンプトをスキップ</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">プロンプトをさらに表示</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d件の回答</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">ブログ作成のプロンプトを共有</string>
