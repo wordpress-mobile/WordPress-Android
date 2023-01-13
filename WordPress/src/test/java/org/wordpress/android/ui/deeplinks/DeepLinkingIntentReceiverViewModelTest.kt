@@ -21,6 +21,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenI
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
 import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.ui.deeplinks.handlers.ServerTrackingHandler
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
@@ -53,6 +54,10 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
+
+    @Mock
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
     private lateinit var viewModel: DeepLinkingIntentReceiverViewModel
     private var isFinished = false
     private lateinit var navigateActions: MutableList<NavigateAction>
@@ -67,7 +72,8 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
             serverTrackingHandler,
             deepLinkTrackingUtils,
             analyticsUtilsWrapper,
-            openWebLinksWithJetpackHelper
+            openWebLinksWithJetpackHelper,
+            jetpackFeatureRemovalPhaseHelper
         )
         isFinished = false
         viewModel.finish.observeForever {
