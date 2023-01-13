@@ -33,7 +33,7 @@ ext {
     // main
     androidInstallReferrerVersion = '2.2'
     androidVolleyVersion = '1.1.1'
-    androidxAppcompatVersion = '1.1.0'
+    androidxAppcompatVersion = '1.4.2'
     androidxArchCoreVersion = '2.1.0'
     androidxComposeVersion = '1.1.1'
     androidxComposeCompilerVersion = '1.1.1'
