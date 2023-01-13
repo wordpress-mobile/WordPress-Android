@@ -47,7 +47,7 @@ internal class JetpackApplicationPasswordsRestClient @Inject constructor(
         return when (response) {
             is JetpackSuccess<ApplicationPasswordCreationResponse> -> {
                 response.data?.let {
-                    ApplicationPasswordCreationPayload(it.password)
+                    ApplicationPasswordCreationPayload(it.password, it.uuid)
                 } ?: ApplicationPasswordCreationPayload(
                     BaseNetworkError(
                         GenericErrorType.UNKNOWN,
