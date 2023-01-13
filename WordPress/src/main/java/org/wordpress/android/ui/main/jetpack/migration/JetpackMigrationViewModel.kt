@@ -52,12 +52,15 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.AppLanguageUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.PreventDuplicateNotifsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 @HiltViewModel
@@ -71,12 +74,17 @@ class JetpackMigrationViewModel @Inject constructor(
     private val migrationEmailHelper: MigrationEmailHelper,
     private val migrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
     private val accountStore: AccountStore,
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val appLanguageUtils: AppLanguageUtils,
 ) : ViewModel() {
     private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
     private val _refreshAppTheme = MutableLiveData<Unit>()
     val refreshAppTheme: LiveData<Unit> = _refreshAppTheme
+
+    private val _refreshAppLanguage = SingleLiveEvent<Boolean>()
+    val refreshAppLanguage: LiveData<Boolean> = _refreshAppLanguage
 
     private var isStarted = false
     private val migrationStateFlow = MutableStateFlow<LocalMigrationState>(Initial)
@@ -134,6 +142,11 @@ class JetpackMigrationViewModel @Inject constructor(
             migrationAnalyticsTracker.trackWelcomeScreenShown()
         }
 
+        if (data.flags.isNotEmpty()) {
+            changeLanguageIfNeeded(data.flags)
+            _refreshAppTheme.value = Unit
+        }
+
         return Welcome(
             userAvatarUrl = resizeAvatarUrl(data.avatarUrl),
             isProcessing = isContinueClicked,
@@ -144,6 +157,19 @@ class JetpackMigrationViewModel @Inject constructor(
                 onHelpClicked(source = HelpButtonSource.Welcome)
             },
         )
+    }
+
+    private fun changeLanguageIfNeeded(userPrefs: Map<String, Any?>) {
+        val languageKey = localeManagerWrapper.getLocalePrefKeyString()
+        val languageCode = userPrefs[languageKey] as? String ?: return
+
+        if (languageCode.isNotEmpty()) {
+            val shouldChangeLanguage = !localeManagerWrapper.isSameLanguage(languageCode)
+            if (shouldChangeLanguage) {
+                appLanguageUtils.changeAppLanguage(languageCode)
+                _refreshAppLanguage.value = true
+            }
+        }
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)

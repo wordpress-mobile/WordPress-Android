@@ -3,13 +3,15 @@ package org.wordpress.android.ui.main.jetpack.migration
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Handler
+import android.os.Looper
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ActivityJetpackMigrationBinding
+import org.wordpress.android.ui.LocaleAwareActivity
 
 @AndroidEntryPoint
-class JetpackMigrationActivity : AppCompatActivity() {
+class JetpackMigrationActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -22,6 +24,11 @@ class JetpackMigrationActivity : AppCompatActivity() {
                     .commit()
             }
         }
+    }
+
+    fun refreshLanguage() {
+        // Recreate this activity (much like a configuration change)
+        Handler(Looper.getMainLooper()).post(this::recreate)
     }
 
     companion object {
