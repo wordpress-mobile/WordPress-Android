@@ -21,12 +21,14 @@ import kotlin.test.assertEquals
 class ApplicationPasswordManagerTests {
     private val applicationName = "name"
     private val siteDomain = "test-site.com"
+    private val uuid = "uuid"
     private val testSite = SiteModel().apply {
         url = "http://$siteDomain"
     }
     private val testCredentials = ApplicationPasswordCredentials(
         userName = "username",
-        password = "password"
+        password = "password",
+        uuid = "uuid"
     )
     private val applicationPasswordsStore: ApplicationPasswordsStore = mock() {
         on { applicationName } doReturn applicationName
@@ -49,7 +51,6 @@ class ApplicationPasswordManagerTests {
     @Test
     fun `given a local password exists, when we ask for a password, then return it`() = runBlockingTest {
         whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(testCredentials)
-
         val result = mApplicationPasswordsManager.getApplicationCredentials(
             testSite
         )
@@ -67,8 +68,18 @@ class ApplicationPasswordManagerTests {
             whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(null)
             whenever(mJetpackApplicationPasswordsRestClient.fetchWPAdminUsername(site))
                 .thenReturn(UsernameFetchPayload(testCredentials.userName))
-            whenever(mJetpackApplicationPasswordsRestClient.createApplicationPassword(site, applicationName))
-                .thenReturn(ApplicationPasswordCreationPayload(testCredentials.password))
+            whenever(
+                mJetpackApplicationPasswordsRestClient.createApplicationPassword(
+                    site,
+                    applicationName
+                )
+            )
+                .thenReturn(
+                    ApplicationPasswordCreationPayload(
+                        testCredentials.password,
+                        testCredentials.uuid
+                    )
+                )
 
             val result = mApplicationPasswordsManager.getApplicationCredentials(
                 testSite
@@ -87,8 +98,18 @@ class ApplicationPasswordManagerTests {
             }
 
             whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(null)
-            whenever(mWpApiApplicationPasswordsRestClient.createApplicationPassword(site, applicationName))
-                .thenReturn(ApplicationPasswordCreationPayload(testCredentials.password))
+            whenever(
+                mWpApiApplicationPasswordsRestClient.createApplicationPassword(
+                    site,
+                    applicationName
+                )
+            )
+                .thenReturn(
+                    ApplicationPasswordCreationPayload(
+                        testCredentials.password,
+                        testCredentials.uuid
+                    )
+                )
 
             val result = mApplicationPasswordsManager.getApplicationCredentials(
                 testSite
@@ -190,7 +211,8 @@ class ApplicationPasswordManagerTests {
                 origin = SiteModel.ORIGIN_WPCOM_REST
             }
 
-            whenever(mJetpackApplicationPasswordsRestClient.deleteApplicationPassword(site, applicationName))
+            whenever(applicationPasswordsStore.getUuid(siteDomain)).thenReturn(uuid)
+            whenever(mJetpackApplicationPasswordsRestClient.deleteApplicationPassword(site, uuid))
                 .thenReturn(ApplicationPasswordDeletionPayload(isDeleted = true))
 
             val result = mApplicationPasswordsManager.deleteApplicationCredentials(
@@ -208,7 +230,8 @@ class ApplicationPasswordManagerTests {
                 username = testCredentials.userName
             }
 
-            whenever(mWpApiApplicationPasswordsRestClient.deleteApplicationPassword(site, applicationName))
+            whenever(applicationPasswordsStore.getUuid(siteDomain)).thenReturn(uuid)
+            whenever(mWpApiApplicationPasswordsRestClient.deleteApplicationPassword(site, uuid))
                 .thenReturn(ApplicationPasswordDeletionPayload(isDeleted = true))
 
             val result = mApplicationPasswordsManager.deleteApplicationCredentials(

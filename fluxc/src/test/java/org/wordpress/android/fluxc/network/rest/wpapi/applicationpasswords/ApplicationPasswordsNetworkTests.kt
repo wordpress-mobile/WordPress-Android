@@ -34,7 +34,8 @@ class ApplicationPasswordsNetworkTests {
     }
     private val testCredentials = ApplicationPasswordCredentials(
         userName = "username",
-        password = "password"
+        password = "password",
+        uuid = "uuid"
     )
 
     private val requestQueue: RequestQueue = mock()
