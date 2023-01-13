@@ -40,6 +40,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
 import org.wordpress.android.ui.posts.EditPostActivity
@@ -108,6 +109,9 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
     @Inject
     lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+
+    @Inject
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Suppress("DEPRECATION")
     private var progressDialog: ProgressDialog? = null
@@ -371,7 +375,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         })
 
         viewModel.createNewPage.observe(viewLifecycleOwner, {
-            if (mlpViewModel.canShowModalLayoutPicker()) {
+            if (mlpViewModel.canShowModalLayoutPicker()
+                && !jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
                 mlpViewModel.createPageFlowTriggered()
             } else {
                 createNewPage()
