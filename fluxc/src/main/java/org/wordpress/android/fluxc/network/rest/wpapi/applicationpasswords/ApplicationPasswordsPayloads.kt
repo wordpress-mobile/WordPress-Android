@@ -4,9 +4,10 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 
 internal data class ApplicationPasswordCreationPayload(
-    val password: String
+    val password: String,
+    val uuid: String
 ) : Payload<BaseNetworkError>() {
-    constructor(error: BaseNetworkError) : this("") {
+    constructor(error: BaseNetworkError) : this("", "") {
         this.error = error
     }
 }
