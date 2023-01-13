@@ -16,8 +16,10 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsConfiguration;
+import org.wordpress.android.fluxc.network.rest.wpapi.media.ApplicationPasswordsMediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.media.wpv2.WPV2MediaRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.media.wpv2.WPComV2MediaRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
@@ -44,7 +46,9 @@ public class MediaStoreTest {
     private MediaStore mMediaStore = new MediaStore(new Dispatcher(),
             Mockito.mock(MediaRestClient.class),
             Mockito.mock(MediaXMLRPCClient.class),
-            Mockito.mock(WPV2MediaRestClient.class));
+            Mockito.mock(WPComV2MediaRestClient.class),
+            Mockito.mock(ApplicationPasswordsMediaRestClient.class),
+            Mockito.mock(ApplicationPasswordsConfiguration.class));
 
     @Before
     public void setUp() {

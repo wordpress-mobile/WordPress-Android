@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.media.wpv2
 
-import com.android.volley.RequestQueue
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaType
@@ -25,7 +24,7 @@ import org.wordpress.android.fluxc.action.UploadAction.UPLOADED_MEDIA
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.media.MediaTestUtils
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComNetwork
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
@@ -33,28 +32,25 @@ import java.io.File
 import java.util.concurrent.CountDownLatch
 
 @RunWith(RobolectricTestRunner::class)
-class WPV2MediaRestClientTest {
+class WPComV2MediaRestClientTest {
     private val accessToken: AccessToken = mock()
-    private val requestQueue: RequestQueue = mock()
     private val okHttpClient: OkHttpClient = mock()
     private val dispatcher: Dispatcher = mock()
-    private val userAgent: UserAgent = mock()
+    private val wpComNetwork: WPComNetwork = mock()
     private val mockedCall: Call = mock()
     private lateinit var countDownLatch: CountDownLatch
-    private lateinit var restClient: WPV2MediaRestClient
+    private lateinit var restClient: WPComV2MediaRestClient
 
     private lateinit var dispatchedPayload: ProgressPayload
 
     @Before
     fun setup() {
-        restClient = WPV2MediaRestClient(
+        restClient = WPComV2MediaRestClient(
                 dispatcher = dispatcher,
-                appContext = null,
                 coroutineEngine = initCoroutineEngine(),
                 okHttpClient = okHttpClient,
-                requestQueue = requestQueue,
                 accessToken = accessToken,
-                userAgent = userAgent
+                wpComNetwork = wpComNetwork
         )
         EventBus.getDefault().register(this)
     }
