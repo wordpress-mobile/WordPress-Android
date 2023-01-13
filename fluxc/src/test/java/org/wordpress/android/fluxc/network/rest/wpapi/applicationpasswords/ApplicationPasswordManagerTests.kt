@@ -7,7 +7,6 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -15,6 +14,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
+import java.util.Optional
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
@@ -28,11 +28,11 @@ class ApplicationPasswordManagerTests {
         userName = "username",
         password = "password"
     )
-    private val applicationPasswordsStore: ApplicationPasswordsStore = mock() {
-        on { applicationName } doReturn applicationName
-    }
+    private val applicationPasswordsStore: ApplicationPasswordsStore = mock()
     private val mJetpackApplicationPasswordsRestClient: JetpackApplicationPasswordsRestClient = mock()
     private val mWpApiApplicationPasswordsRestClient: WPApiApplicationPasswordsRestClient = mock()
+
+    private val applicationPasswordsConfiguration = ApplicationPasswordsConfiguration(Optional.of(applicationName))
 
     private lateinit var mApplicationPasswordsManager: ApplicationPasswordsManager
 
@@ -42,6 +42,7 @@ class ApplicationPasswordManagerTests {
             applicationPasswordsStore = applicationPasswordsStore,
             jetpackApplicationPasswordsRestClient = mJetpackApplicationPasswordsRestClient,
             wpApiApplicationPasswordsRestClient = mWpApiApplicationPasswordsRestClient,
+            configuration = applicationPasswordsConfiguration,
             appLogWrapper = mock()
         )
     }
