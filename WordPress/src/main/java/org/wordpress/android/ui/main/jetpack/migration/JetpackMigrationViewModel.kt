@@ -83,8 +83,8 @@ class JetpackMigrationViewModel @Inject constructor(
     private val _refreshAppTheme = MutableLiveData<Unit>()
     val refreshAppTheme: LiveData<Unit> = _refreshAppTheme
 
-    private val _refreshAppLanguage = SingleLiveEvent<Boolean>()
-    val refreshAppLanguage: LiveData<Boolean> = _refreshAppLanguage
+    private val _refreshAppLanguage = SingleLiveEvent<Unit>()
+    val refreshAppLanguage: LiveData<Unit> = _refreshAppLanguage
 
     private var isStarted = false
     private val migrationStateFlow = MutableStateFlow<LocalMigrationState>(Initial)
@@ -167,7 +167,7 @@ class JetpackMigrationViewModel @Inject constructor(
             val shouldChangeLanguage = !localeManagerWrapper.isSameLanguage(languageCode)
             if (shouldChangeLanguage) {
                 appLanguageUtils.changeAppLanguage(languageCode)
-                _refreshAppLanguage.value = true
+                _refreshAppLanguage.value = Unit
             }
         }
     }
