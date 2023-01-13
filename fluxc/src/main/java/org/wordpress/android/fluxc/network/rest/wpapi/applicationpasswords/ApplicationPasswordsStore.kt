@@ -97,6 +97,10 @@ internal class ApplicationPasswordsStore @Inject constructor(
         }
     }
 
+    fun getUuid(host: String): String? {
+        return encryptedPreferences.getString(host.uuidPrefKey, null)
+    }
+
     private val String.usernamePrefKey
         get() = "$USERNAME_PREFERENCE_KEY_PREFIX$this"
 
