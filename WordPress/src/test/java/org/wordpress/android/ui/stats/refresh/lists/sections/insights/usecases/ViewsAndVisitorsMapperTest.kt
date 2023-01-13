@@ -58,13 +58,13 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
         whenever(resourceProvider.getString(string.stats_visitors)).thenReturn(visitorsTitle)
         whenever(statsDateFormatter.printGranularDate(any<String>(), any())).thenReturn(printedDate)
         whenever(statsUtils.toFormattedString(any<Long>(), any())).then { (it.arguments[0] as Long).toString() }
-        whenever(totalStatsMapper.getCurrentWeekDays(buildPeriodData(), TotalStatsMapper.TotalStatsType.VIEWS))
+        whenever(totalStatsMapper.getCurrentSevenDays(buildPeriodData(), TotalStatsMapper.TotalStatsType.VIEWS))
             .thenReturn(listOf(thisWeekViews))
-        whenever(totalStatsMapper.getPreviousWeekDays(buildPeriodData(), TotalStatsMapper.TotalStatsType.VIEWS))
+        whenever(totalStatsMapper.getPreviousSevenDays(buildPeriodData(), TotalStatsMapper.TotalStatsType.VIEWS))
             .thenReturn(listOf(prevWeekViews))
-        whenever(totalStatsMapper.getCurrentWeekDays(buildPeriodData(), TotalStatsMapper.TotalStatsType.VISITORS))
+        whenever(totalStatsMapper.getCurrentSevenDays(buildPeriodData(), TotalStatsMapper.TotalStatsType.VISITORS))
             .thenReturn(listOf(thisWeekVisitors))
-        whenever(totalStatsMapper.getPreviousWeekDays(buildPeriodData(), TotalStatsMapper.TotalStatsType.VISITORS))
+        whenever(totalStatsMapper.getPreviousSevenDays(buildPeriodData(), TotalStatsMapper.TotalStatsType.VISITORS))
             .thenReturn(listOf(prevWeekVisitors))
     }
 

@@ -8,6 +8,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalStatsMapper.TotalStatsType.LIKES
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -16,10 +17,10 @@ class TotalStatsMapper @Inject constructor(
     private val statsUtils: StatsUtils
 ) {
     fun buildTotalLikesValue(dates: List<PeriodData>): ValueWithChartItem {
-        val currentWeekLikes = getCurrentWeekDays(dates, LIKES)
+        val currentWeekLikes = getCurrentSevenDays(dates, LIKES)
         val currentWeekSumFormatted = sum(currentWeekLikes)
 
-        val previousWeekLikes = getPreviousWeekDays(dates, LIKES)
+        val previousWeekLikes = getPreviousSevenDays(dates, LIKES)
         val positive = currentWeekLikes.sum() >= previousWeekLikes.sum()
 
         return ValueWithChartItem(
@@ -32,10 +33,10 @@ class TotalStatsMapper @Inject constructor(
     }
 
     fun buildTotalCommentsValue(dates: List<PeriodData>): ValueWithChartItem {
-        val currentWeekComments = getCurrentWeekDays(dates, COMMENTS)
+        val currentWeekComments = getCurrentSevenDays(dates, COMMENTS)
         val currentWeekSumFormatted = sum(currentWeekComments)
 
-        val previousWeekComments = getPreviousWeekDays(dates, LIKES)
+        val previousWeekComments = getPreviousSevenDays(dates, LIKES)
         val positive = currentWeekComments.sum() >= previousWeekComments.sum()
 
         return ValueWithChartItem(
@@ -51,7 +52,7 @@ class TotalStatsMapper @Inject constructor(
         currentWeekSum != 0L || previousWeekSum != 0L
 
     fun shouldShowCommentsGuideCard(dates: List<PeriodData>): Boolean {
-        return getCurrentWeekDays(dates, COMMENTS).sum() > 0
+        return getCurrentSevenDays(dates, COMMENTS).sum() > 0
     }
 
     fun shouldShowFollowersGuideCard(domainModel: Int): Boolean {
@@ -59,7 +60,7 @@ class TotalStatsMapper @Inject constructor(
     }
 
     fun shouldShowLikesGuideCard(dates: List<PeriodData>): Boolean {
-        return getCurrentWeekDays(dates, LIKES).sum() > 0
+        return getCurrentSevenDays(dates, LIKES).sum() > 0
     }
 
     fun buildTotalLikesInformation(dates: List<PeriodData>) = buildTotalInformation(dates, LIKES)
@@ -67,8 +68,8 @@ class TotalStatsMapper @Inject constructor(
     fun buildTotalCommentsInformation(dates: List<PeriodData>) = buildTotalInformation(dates, COMMENTS)
 
     private fun buildTotalInformation(dates: List<PeriodData>, type: TotalStatsType): Text? {
-        val value = getCurrentWeekDays(dates, type).sum()
-        val previousValue = getPreviousWeekDays(dates, type).sum()
+        val value = getCurrentSevenDays(dates, type).sum()
+        val previousValue = getPreviousSevenDays(dates, type).sum()
         if (!shouldShowTotalInformation(value, previousValue)) {
             return null
         }
@@ -97,9 +98,30 @@ class TotalStatsMapper @Inject constructor(
     /**
      * Gives list of data with StatsType for the current week.
      */
+    fun getCurrentSevenDays(dates: List<PeriodData>, type: TotalStatsType): List<Long> {
+        // taking data for last 14 days excluding today
+        AppLog.d(AppLog.T.STATS, dates.toString())
+        return mapToStatsType(dates.dropLast(1).takeLast(DAY_COUNT_FOR_CURRENT_WEEK), type)
+    }
+
+    /**
+     * Gives list of data with StatsType for previous week.
+     */
+    fun getPreviousSevenDays(dates: List<PeriodData>, type: TotalStatsType): List<Long> {
+        return if (dates.size < DAY_COUNT_TOTAL) {
+            emptyList()
+        } else {
+            mapToStatsType(dates.take(DAY_COUNT_FOR_PREVIOUS_WEEK), type)
+        }
+    }
+
+    /**
+     * Gives list of data with StatsType for the current week.
+     */
     fun getCurrentWeekDays(dates: List<PeriodData>, type: TotalStatsType): List<Long> {
         // taking data for last 14 days excluding today
-        return mapToStatsType(dates.dropLast(1).takeLast(DAY_COUNT_FOR_CURRENT_WEEK), type)
+        AppLog.d(AppLog.T.STATS, dates.toString())
+        return mapToStatsType(dates.takeLast(DAY_COUNT_FOR_CURRENT_WEEK), type)
     }
 
     /**
@@ -109,7 +131,7 @@ class TotalStatsMapper @Inject constructor(
         return if (dates.size < DAY_COUNT_TOTAL) {
             emptyList()
         } else {
-            mapToStatsType(dates.take(DAY_COUNT_FOR_PREVIOUS_WEEK), type)
+            mapToStatsType(dates.drop(1).take(DAY_COUNT_FOR_PREVIOUS_WEEK), type)
         }
     }
 
