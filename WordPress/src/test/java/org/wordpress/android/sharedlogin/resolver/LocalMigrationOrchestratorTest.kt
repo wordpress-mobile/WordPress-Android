@@ -48,6 +48,7 @@ import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsHelper
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType.WPNotLoggedInError
 import org.wordpress.android.userflags.resolver.UserFlagsHelper
+import org.wordpress.android.util.AppLog
 import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
@@ -148,6 +149,16 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
         mockHappyPath()
         whenever(sitesMigrationHelper.migrateSites()).thenReturn(Failure(error))
         assertFailure(error)
+    }
+
+    @Test
+    fun `Should log Failure if sitesMigrationHelper migrateSites fails`() {
+        val error = NullCursor(Sites)
+        mockHappyPath()
+        whenever(sitesMigrationHelper.migrateSites()).thenReturn(Failure(error))
+        val mutableStateFlow: MutableStateFlow<LocalMigrationState> = MutableStateFlow(Initial)
+        classToTest.tryLocalMigration(mutableStateFlow)
+        verify(appLogWrapper).e(AppLog.T.JETPACK_MIGRATION, "$error")
     }
 
     @Test

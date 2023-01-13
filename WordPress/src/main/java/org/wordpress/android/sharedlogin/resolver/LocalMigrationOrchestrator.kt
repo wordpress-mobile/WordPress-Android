@@ -74,7 +74,7 @@ class LocalMigrationOrchestrator @Inject constructor(
     @Suppress("ForbiddenComment")
     // TODO: Handle the errors appropriately
     private fun handleErrors(error: LocalMigrationError) {
-        appLogWrapper.e(AppLog.T.JETPACK_MIGRATION, error.toString())
+        appLogWrapper.e(AppLog.T.JETPACK_MIGRATION, "$error")
         when (error) {
             is ProviderError -> Unit
             is Ineligibility -> when (error.reason) {
