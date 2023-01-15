@@ -1264,9 +1264,8 @@
     <string name="stats_timeframe_weeks">Weeks</string>
     <string name="stats_timeframe_months">Months</string>
     <string name="stats_timeframe_years">Years</string>
-    <string name="stats_timeframe_this_week">This Week</string>
-    <string name="stats_timeframe_previous_week">Previous Week</string>
-
+    <string name="stats_timeframe_last_seven_days">Last 7-days</string>
+    <string name="stats_timeframe_previous_seven_days">Previous 7-days</string>
     <string name="stats_views">Views</string>
     <string name="stats_visitors">Visitors</string>
     <string name="stats_likes">Likes</string>
@@ -1322,10 +1321,10 @@
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
     <string name="stats_insights_views_and_visitors">Views &amp; Visitors</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Your views this week are %1$s higher than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Your views this week are %1$s lower than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Your visitors this week are %1$s higher than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Your visitors this week are %1$s lower than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Your views in the last 7-days are %1$s higher than the previous 7-days.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Your views in the last 7-days are %1$s lower than the previous 7-days.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Your visitors in the last 7-days are %1$s higher than the previous 7-days.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Your visitors in the last 7-days are %1$s lower than the previous 7-days.</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Check out our top tips to increase your views and traffic %1$s</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
@@ -1338,8 +1337,8 @@
     <string name="stats_insights_total_comments">Total comments</string>
     <string name="stats_insights_average_comments">Avg comments/post</string>
     <string name="stats_insights_total_likes">Total likes</string>
-    <string name="stats_insights_total_stats_positive">%1$s higher than the previous week</string>
-    <string name="stats_insights_total_stats_negative">%1$s lower than the previous week</string>
+    <string name="stats_insights_total_stats_seven_days_positive">%1$s higher than the previous 7-days</string>
+    <string name="stats_insights_total_stats_seven_days_negative">%1$s lower than the previous 7-days</string>
     <string name="stats_insights_average_likes">Avg likes/post</string>
     <string name="stats_insights_total_words">Total words</string>
     <string name="stats_insights_average_words">Avg words/post</string>
