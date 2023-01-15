@@ -13,5 +13,5 @@ class LocaleManagerWrapper
     fun getCurrentCalendar(): Calendar = Calendar.getInstance(getLocale())
     fun getLanguage(): String = LocaleManager.getLanguage(context)
     fun getLocalePrefKeyString(): String = LocaleManager.getLocalePrefKeyString()
-    fun isSameLanguage(string: String): Boolean = LocaleManager.isSameLanguage(string)
+    fun isSameLanguage(language: String): Boolean = LocaleManager.isSameLanguage(language)
 }
