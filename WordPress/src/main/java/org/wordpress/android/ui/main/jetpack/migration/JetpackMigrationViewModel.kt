@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
+import android.content.Context
 import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.annotation.VisibleForTesting
@@ -59,8 +60,8 @@ import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.PreventDuplicateNotifsFeatureConfig
+import org.wordpress.android.util.extensions.primaryLocale
 import org.wordpress.android.viewmodel.ContextProvider
-import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 @HiltViewModel
@@ -83,8 +84,8 @@ class JetpackMigrationViewModel @Inject constructor(
     private val _refreshAppTheme = MutableLiveData<Unit>()
     val refreshAppTheme: LiveData<Unit> = _refreshAppTheme
 
-    private val _refreshAppLanguage = SingleLiveEvent<Unit>()
-    val refreshAppLanguage: LiveData<Unit> = _refreshAppLanguage
+    private val _refreshAppLanguage = MutableLiveData<String>()
+    val refreshAppLanguage: LiveData<String> = _refreshAppLanguage
 
     private var isStarted = false
     private val migrationStateFlow = MutableStateFlow<LocalMigrationState>(Initial)
@@ -143,7 +144,7 @@ class JetpackMigrationViewModel @Inject constructor(
         }
 
         if (data.flags.isNotEmpty()) {
-            changeLanguageIfNeeded(data.flags)
+            emitLanguageRefreshIfNeeded(data.flags)
             _refreshAppTheme.value = Unit
         }
 
@@ -159,17 +160,23 @@ class JetpackMigrationViewModel @Inject constructor(
         )
     }
 
-    private fun changeLanguageIfNeeded(userPrefs: Map<String, Any?>) {
+    private fun emitLanguageRefreshIfNeeded(userPrefs: Map<String, Any?>) {
         val languageKey = localeManagerWrapper.getLocalePrefKeyString()
         val languageCode = userPrefs[languageKey] as? String ?: return
 
         if (languageCode.isNotEmpty()) {
             val shouldChangeLanguage = !localeManagerWrapper.isSameLanguage(languageCode)
             if (shouldChangeLanguage) {
-                appLanguageUtils.changeAppLanguage(languageCode)
-                _refreshAppLanguage.value = Unit
+                _refreshAppLanguage.value = languageCode
             }
         }
+    }
+
+    fun applyLanguage(context: Context, languageCode: String): Context {
+        if (languageCode.isEmpty()) return context
+        if (context.primaryLocale == localeManagerWrapper.getLocaleFromLanguage(languageCode)) return context
+        appLanguageUtils.changeAppLanguage(languageCode)
+        return localeManagerWrapper.setLocale(context)
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)

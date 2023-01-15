@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +9,15 @@ import androidx.activity.OnBackPressedCallback
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -54,7 +61,25 @@ class JetpackMigrationFragment : Fragment() {
     ): View = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
-                JetpackMigrationScreen()
+                val userLanguage by viewModel.refreshAppLanguage.observeAsState("")
+
+                CompositionLocalProvider(LocalMutableContext provides mutableStateOf(context)) {
+                    val mutableContext = LocalMutableContext.current
+
+                    fun refreshLanguage(userLanguage: String) {
+                        mutableContext.value = viewModel.applyLanguage(context, userLanguage)
+                    }
+
+                    CompositionLocalProvider(
+                        UserLanguage provides userLanguage,
+                        LocalContext provides LocalMutableContext.current.value,
+                    ) {
+                        JetpackMigrationScreen(
+                            userLanguage = userLanguage,
+                            onUserLanguageMigrated = ::refreshLanguage
+                        )
+                    }
+                }
             }
         }
     }
@@ -63,7 +88,6 @@ class JetpackMigrationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeViewModelEvents()
         observeRefreshAppThemeEvents()
-        observeRefreshAppLanguageEvents()
         val showDeleteWpState = arguments?.getBoolean(KEY_SHOW_DELETE_WP_STATE, false) ?: false
         initBackPressHandler(showDeleteWpState)
         viewModel.start(showDeleteWpState, requireActivity().application as WordPress)
@@ -76,12 +100,6 @@ class JetpackMigrationFragment : Fragment() {
     private fun observeRefreshAppThemeEvents() {
         viewModel.refreshAppTheme.observe(viewLifecycleOwner) {
             AppThemeUtils.setAppTheme(requireActivity())
-        }
-    }
-
-    private fun observeRefreshAppLanguageEvents() {
-        viewModel.refreshAppLanguage.observe(viewLifecycleOwner) {
-            (requireActivity() as? JetpackMigrationActivity)?.refreshLanguage()
         }
     }
 
@@ -128,10 +146,18 @@ class JetpackMigrationFragment : Fragment() {
 }
 
 @Composable
-private fun JetpackMigrationScreen(viewModel: JetpackMigrationViewModel = viewModel()) {
-    Box {
-        val uiState by viewModel.uiState.collectAsState(Loading)
+private fun JetpackMigrationScreen(
+    userLanguage: String,
+    onUserLanguageMigrated: (String) -> Unit,
+    viewModel: JetpackMigrationViewModel = viewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsState(Loading)
 
+    if (userLanguage.isNotEmpty()) {
+        onUserLanguageMigrated(userLanguage)
+    }
+
+    Box {
         Crossfade(targetState = uiState) { state ->
             when (state) {
                 is Content.Welcome -> WelcomeStep(state)
@@ -144,3 +170,9 @@ private fun JetpackMigrationScreen(viewModel: JetpackMigrationViewModel = viewMo
         }
     }
 }
+
+val LocalMutableContext = compositionLocalOf<MutableState<Context>> {
+    error("LocalMutableContext not provided")
+}
+
+val UserLanguage = compositionLocalOf { "" }

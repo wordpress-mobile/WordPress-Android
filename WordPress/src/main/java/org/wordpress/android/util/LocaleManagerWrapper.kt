@@ -14,4 +14,6 @@ class LocaleManagerWrapper
     fun getLanguage(): String = LocaleManager.getLanguage(context)
     fun getLocalePrefKeyString(): String = LocaleManager.getLocalePrefKeyString()
     fun isSameLanguage(language: String): Boolean = LocaleManager.isSameLanguage(language)
+    fun getLocaleFromLanguage(language: String): Locale = LocaleManager.languageLocale(language)
+    fun setLocale(context: Context): Context = LocaleManager.setLocale(context)
 }
