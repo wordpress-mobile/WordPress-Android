@@ -105,9 +105,6 @@ class StatsViewModel
     private val _statsModuleUiModel = MediatorLiveData<Event<StatsModuleUiModel>>()
     val statsModuleUiModel: LiveData<Event<StatsModuleUiModel>> = _statsModuleUiModel
 
-    private val _showUpgradeAlert = MutableLiveData<Event<Boolean>>()
-    val showUpgradeAlert: LiveData<Event<Boolean>> = _showUpgradeAlert
-
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
@@ -204,7 +201,9 @@ class StatsViewModel
             }
         }
 
-        if (statsSectionManager.getSelectedSection() == StatsSection.INSIGHTS) showInsightsUpdateAlert()
+        if (BuildConfig.IS_JETPACK_APP && statsSectionManager.getSelectedSection() == StatsSection.INSIGHTS) {
+            updateRevampedInsights()
+        }
 
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
 
@@ -220,30 +219,19 @@ class StatsViewModel
 //        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
-    private fun showInsightsUpdateAlert() {
-        if (BuildConfig.IS_JETPACK_APP) {
-            launch {
-                val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)
-                if (insightTypes.containsAll(DEFAULT_INSIGHTS)) { // means not upgraded to new insights
-                    _showUpgradeAlert.value = Event(true)
-                    updateRevampedInsights()
-                }
-            }
-        }
-    }
-
     private fun updateRevampedInsights() {
         val insightsUseCase = listUseCases[StatsSection.INSIGHTS]
         insightsUseCase?.launch(defaultDispatcher) {
             val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)
-
-            // The new set of default cards is added at the top of their list and preserve their additions
-            val addedInsightTypes = insightTypes - DEFAULT_INSIGHTS.toSet()
-            val updateInsightTypes: MutableSet<InsightType> = mutableSetOf()
-            updateInsightTypes.addAll(JETPACK_DEFAULT_INSIGHTS)
-            updateInsightTypes.addAll(addedInsightTypes)
-            statsStore.updateTypes(statsSiteProvider.siteModel, updateInsightTypes.toList())
-            insightsUseCase.loadData()
+            if (insightTypes.containsAll(DEFAULT_INSIGHTS)) { // means not upgraded to new insights
+                // The new set of default cards is added at the top of their list and preserve their additions
+                val addedInsightTypes = insightTypes - DEFAULT_INSIGHTS.toSet()
+                val updateInsightTypes: MutableSet<InsightType> = mutableSetOf()
+                updateInsightTypes.addAll(JETPACK_DEFAULT_INSIGHTS)
+                updateInsightTypes.addAll(addedInsightTypes)
+                statsStore.updateTypes(statsSiteProvider.siteModel, updateInsightTypes.toList())
+                insightsUseCase.loadData()
+            }
         }
     }
 
@@ -292,7 +280,7 @@ class StatsViewModel
 
         listUseCases[statsSection]?.onListSelected()
 
-        if (statsSection == StatsSection.INSIGHTS) showInsightsUpdateAlert()
+        if (BuildConfig.IS_JETPACK_APP) updateRevampedInsights()
 
         trackSectionSelected(statsSection)
     }
