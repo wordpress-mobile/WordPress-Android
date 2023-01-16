@@ -37,7 +37,7 @@ import java.time.DayOfWeek
 // TODO: adapt these tests to the unified provider / orchestrator approach
 @Ignore("Disabled for now: will refactor in another PR after unification.")
 @ExperimentalCoroutinesApi
-class BloggingRemindersResolverTest : BaseUnitTest() {
+class BloggingRemindersHelperTest : BaseUnitTest() {
     private val jetpackBloggingRemindersSyncFlag: JetpackBloggingRemindersSyncFlag = mock()
     private val contextProvider: ContextProvider = mock()
     private val wordPressPublicData: WordPressPublicData = mock()
@@ -49,7 +49,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     private val reminderScheduler: ReminderScheduler = mock()
     private val bloggingRemindersModelMapper: BloggingRemindersModelMapper = mock()
     private val localMigrationContentResolver: LocalMigrationContentResolver = mock()
-    private val classToTest = BloggingRemindersResolver(
+    private val classToTest = BloggingRemindersHelper(
         jetpackBloggingRemindersSyncFlag,
         appPrefsWrapper,
         bloggingRemindersSyncAnalyticsTracker,

@@ -22,7 +22,7 @@ import org.wordpress.android.workers.reminder.ReminderScheduler
 import javax.inject.Inject
 import javax.inject.Named
 
-class BloggingRemindersResolver @Inject constructor(
+class BloggingRemindersHelper @Inject constructor(
     private val jetpackBloggingRemindersSyncFlag: JetpackBloggingRemindersSyncFlag,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingRemindersSyncAnalyticsTracker: BloggingRemindersSyncAnalyticsTracker,

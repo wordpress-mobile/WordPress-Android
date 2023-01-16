@@ -36,7 +36,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.bloggingreminders.resolver.BloggingRemindersResolver;
+import org.wordpress.android.bloggingreminders.resolver.BloggingRemindersHelper;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -264,7 +264,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
     @Inject QuickStartTracker mQuickStartTracker;
-    @Inject BloggingRemindersResolver mBloggingRemindersResolver;
+    @Inject BloggingRemindersHelper mBloggingRemindersHelper;
     @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
     @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
@@ -1657,7 +1657,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 mSelectedSiteRepository.updateSite(site);
             }
         }
-        mBloggingRemindersResolver.trySyncBloggingReminders(
+        mBloggingRemindersHelper.trySyncBloggingReminders(
                 () -> Unit.INSTANCE, () -> Unit.INSTANCE
         );
     }
