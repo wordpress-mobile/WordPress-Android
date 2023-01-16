@@ -282,6 +282,10 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var jetpackFeatureCardHelper: JetpackFeatureCardHelper
+
+    @Mock
+    lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>

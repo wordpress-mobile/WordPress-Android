@@ -274,8 +274,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
-    private Boolean showJetpackFeatures = false;
-
     /*
      * fragments implement this if their contents can be scrolled, called when user
      * requests to scroll to the top
@@ -312,7 +310,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         setContentView(R.layout.main_activity);
 
 
-        if (showJetpackFeatures) {
+        if (!mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
             mBottomNav = findViewById(R.id.bottom_navigation);
             mBottomNav.init(getSupportFragmentManager(), this);
         } else {
@@ -1015,8 +1013,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel.onResume(
                 getSelectedSite(),
-                mSelectedSiteRepository.hasSelectedSite() && mBottomNav != null &&
-                mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
+                mSelectedSiteRepository.hasSelectedSite() && mBottomNav != null
+                && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
         );
 
         mFirstResume = false;
