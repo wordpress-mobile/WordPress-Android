@@ -197,7 +197,7 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
         mockHappyPath()
         val mutableStateFlow: MutableStateFlow<LocalMigrationState> = MutableStateFlow(Initial)
         classToTest.tryLocalMigration(mutableStateFlow)
-        val expected = Successful(WelcomeScreenData(avatarUrl, sites))
+        val expected = Successful(WelcomeScreenData(avatarUrl, sites, true))
         val actual = mutableStateFlow.value
         assertTrue(actual is Successful)
         assertEquals(expected.data, actual.data)

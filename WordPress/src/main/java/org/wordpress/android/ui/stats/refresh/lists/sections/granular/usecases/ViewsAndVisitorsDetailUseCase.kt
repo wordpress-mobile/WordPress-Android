@@ -87,6 +87,7 @@ class ViewsAndVisitorsDetailUseCase constructor(
         site: SiteModel,
         forced: Boolean
     ): State<VisitsAndViewsModel> {
+        AppLog.d(T.STATS, selectedDate.toString() )
         val response = visitsAndViewsStore.fetchVisits(
             site,
             DAYS,
@@ -147,7 +148,7 @@ class ViewsAndVisitorsDetailUseCase constructor(
             val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
 
             items.add(
-                viewsAndVisitorsMapper.buildTitle(
+                viewsAndVisitorsMapper.buildWeekTitle(
                     domainModel.dates,
                     DAYS,
                     selectedItem,
@@ -165,7 +166,7 @@ class ViewsAndVisitorsDetailUseCase constructor(
                 )
             )
             items.add(
-                viewsAndVisitorsMapper.buildInformation(
+                viewsAndVisitorsMapper.buildWeeksDetailInformation(
                     domainModel.dates,
                     uiState.selectedPosition,
                     this::onTopTipsLinkClick

@@ -1,2 +1,7 @@
-* [*] [internal] Editor: Only register core blocks when `onlyCoreBlocks` capability is enabled [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5293]
+We’ve been hard at work on extra-technical, behind-the-scenes fixes and updates to keep the Jetpack app running smoothly.
 
+- Posticulating features
+- Rearchitecting interfaces
+- Reticulating splines
+- Codifying similitude
+- Rebuilding the gigaverse

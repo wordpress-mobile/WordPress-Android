@@ -18,6 +18,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenL
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.ui.deeplinks.handlers.ServerTrackingHandler
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
@@ -36,7 +37,8 @@ class DeepLinkingIntentReceiverViewModel
     private val serverTrackingHandler: ServerTrackingHandler,
     private val deepLinkTrackingUtils: DeepLinkTrackingUtils,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
-    private val openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
+    private val openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) : ScopedViewModel(uiDispatcher) {
     private val _navigateAction = MutableLiveData<Event<NavigateAction>>()
     val navigateAction = _navigateAction as LiveData<Event<NavigateAction>>
@@ -109,7 +111,7 @@ class DeepLinkingIntentReceiverViewModel
      * and builds the navigation action based on them
      */
     private fun handleUrl(uriWrapper: UriWrapper, action: String? = null): Boolean {
-        return buildNavigateAction(uriWrapper)?.also {
+        return interceptNavigationActionIfNeeded(buildNavigateAction(uriWrapper))?.also {
             if (action != null) {
                 deepLinkTrackingUtils.track(action, it, uriWrapper)
             }
@@ -119,6 +121,24 @@ class DeepLinkingIntentReceiverViewModel
                 _navigateAction.value = Event(LoginForResult)
             }
         } != null
+    }
+
+    @Suppress("ComplexMethod")
+    private fun interceptNavigationActionIfNeeded(navigationAction: NavigateAction?): NavigateAction?{
+        if (!jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures())
+            return navigationAction
+
+        return when (navigationAction) {
+           NavigateAction.OpenStats,
+           is NavigateAction.OpenStatsForTimeframe,
+           is NavigateAction.OpenStatsForSite,
+           is NavigateAction.OpenStatsForSiteAndTimeframe,
+           NavigateAction.OpenReader,
+           is NavigateAction.OpenInReader,
+           is NavigateAction.ViewPostInReader,
+           NavigateAction.OpenNotifications -> null
+           else -> navigationAction
+       }
     }
 
     private fun loginIsUnnecessary(action: NavigateAction): Boolean {
