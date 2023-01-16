@@ -194,12 +194,4 @@ public class StatsPage {
 
         scrollIntoView(R.id.statsPager, card, (float) 0.5);
     }
-
-    public StatsPage dismissUpdateAlertDialogFragmentIfDisplayed() {
-        if (dialogExistsWithTitle(R.string.stats_revamp_v2_intro_header_title)) {
-            tapButtonInDialogWithTitle(R.string.ok);
-        }
-
-        return this;
-    }
 }
