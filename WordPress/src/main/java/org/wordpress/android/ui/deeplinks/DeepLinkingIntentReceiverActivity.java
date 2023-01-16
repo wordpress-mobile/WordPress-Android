@@ -55,7 +55,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
 
         String action = getIntent().getAction();
         Uri data = getIntent().getData();
-        Boolean shouldBypassMigration = getIntent().getBooleanExtra(ARG_BYPASS_MIGRATION, false);
+        boolean shouldBypassMigration = getIntent().getBooleanExtra(ARG_BYPASS_MIGRATION, false);
 
         // Start migration flow passing deep link data if requirements are met
         if (!shouldBypassMigration && mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
