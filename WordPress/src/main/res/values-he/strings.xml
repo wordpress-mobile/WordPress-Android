@@ -307,7 +307,6 @@ Language: he_IL
     <string name="new_site_creation_intents_title">נושא האתר</string>
     <string name="quick_start_site_menu_tab_message_short">יש להקיש &lt;b&gt;%1$s&lt;/b&gt; להמשך.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">להסיר מלוח הבקרה</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">לדלג על הצעה זו</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">להציג הצעות נוספות</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d תשובות</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">לשתף הצעה לפרסום בבלוג</string>

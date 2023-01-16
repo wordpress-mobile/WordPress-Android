@@ -307,7 +307,6 @@ Language: it
     <string name="new_site_creation_intents_title">Tema del sito</string>
     <string name="quick_start_site_menu_tab_message_short">Tocca &lt;b&gt;%1$s&lt;/b&gt; per continuare.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Rimuovi dalla bacheca</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Ignora questa richiesta</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Visualizza altre richieste</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d risposte</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Condividi la richiesta di blogging</string>

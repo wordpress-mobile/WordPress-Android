@@ -33,7 +33,8 @@ class ViewsAndVisitorsMapper
     private val statsDateFormatter: StatsDateFormatter,
     private val resourceProvider: ResourceProvider,
     private val statsUtils: StatsUtils,
-    private val contentDescriptionHelper: ContentDescriptionHelper
+    private val contentDescriptionHelper: ContentDescriptionHelper,
+    private val totalStatsMapper: TotalStatsMapper
 ) {
     private val units = listOf(
         string.stats_views,
@@ -59,13 +60,13 @@ class ViewsAndVisitorsMapper
     }
 
     fun buildChartLegendsBlue() = ChartLegendsBlue(
-        string.stats_timeframe_this_week,
-        string.stats_timeframe_previous_week
+        string.stats_timeframe_last_seven_days,
+        string.stats_timeframe_previous_seven_days
     )
 
     fun buildChartLegendsPurple() = ChartLegendsPurple(
-        string.stats_timeframe_this_week,
-        string.stats_timeframe_previous_week
+        string.stats_timeframe_last_seven_days,
+        string.stats_timeframe_previous_seven_days
     )
 
     fun buildTitle(
@@ -76,6 +77,38 @@ class ViewsAndVisitorsMapper
         startValue: Int = MILLION
     ): ValuesItem {
         val (thisWeekCount, prevWeekCount) = mapDatesToWeeks(dates, selectedPosition)
+
+        return ValuesItem(
+            selectedItem = selectedPosition,
+            value1 = statsUtils.toFormattedString(thisWeekCount, startValue),
+            unit1 = units[selectedPosition],
+            contentDescription1 = resourceProvider.getString(
+                string.stats_overview_content_description,
+                thisWeekCount,
+                resourceProvider.getString(units[selectedPosition]),
+                statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
+                ""
+            ),
+            value2 = statsUtils.toFormattedString(prevWeekCount, startValue),
+            unit2 = units[selectedPosition],
+            contentDescription2 = resourceProvider.getString(
+                string.stats_overview_content_description,
+                prevWeekCount,
+                resourceProvider.getString(units[selectedPosition]),
+                statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
+                ""
+            )
+        )
+    }
+
+    fun buildWeekTitle(
+        dates: List<PeriodData>,
+        statsGranularity: StatsGranularity = DAYS,
+        selectedItem: PeriodData,
+        selectedPosition: Int,
+        startValue: Int = MILLION
+    ): ValuesItem {
+        val (thisWeekCount, prevWeekCount) = mapDatesToWeeksDetail(dates, selectedPosition)
 
         return ValuesItem(
             selectedItem = selectedPosition,
@@ -179,17 +212,68 @@ class ViewsAndVisitorsMapper
         val stringRes = when (SelectedType.valueOf(selectedPosition)) {
             Views -> {
                 when {
-                    positive -> string.stats_insights_views_and_visitors_views_positive
-                    else -> string.stats_insights_views_and_visitors_views_negative
+                    positive -> string.stats_insights_views_and_visitors_seven_days_views_positive
+                    else -> string.stats_insights_views_and_visitors_seven_days_views_negative
                 }
             }
             Visitors -> {
                 when {
-                    positive -> string.stats_insights_views_and_visitors_visitors_positive
-                    else -> string.stats_insights_views_and_visitors_visitors_negative
+                    positive -> string.stats_insights_views_and_visitors_seven_days_visitors_positive
+                    else -> string.stats_insights_views_and_visitors_seven_days_visitors_negative
                 }
             }
-            else -> string.stats_insights_views_and_visitors_views_positive
+            else -> string.stats_insights_views_and_visitors_seven_days_views_positive
+        }
+
+        return Text(
+            text = resourceProvider.getString(stringRes, change),
+            color = when {
+                positive -> mapOf(color.stats_color_positive to change)
+                else -> mapOf(color.stats_color_negative to change)
+            }
+        )
+    }
+
+    fun buildWeeksDetailInformation(
+        dates: List<PeriodData>,
+        selectedPosition: Int,
+        navigationAction: (() -> Unit?)? = null
+    ): Text {
+        val (thisWeekCount, prevWeekCount) = mapDatesToWeeksDetail(dates, selectedPosition)
+
+        if (thisWeekCount <= 0 || prevWeekCount <= 0) {
+            return Text(
+                text = resourceProvider.getString(
+                    string.stats_insights_views_and_visitors_visitors_empty_state,
+                    EXTERNAL_LINK_ICON_TOKEN
+                ),
+                links = listOf(
+                    Clickable(
+                        icon = R.drawable.ic_external_white_24dp,
+                        navigationAction = ListItemInteraction.create(
+                            action = { navigationAction?.invoke() }
+                        )
+                    )
+                )
+            )
+        }
+
+        val positive = thisWeekCount >= prevWeekCount
+        val change = statsUtils.buildChange(prevWeekCount, thisWeekCount, positive, true).toString()
+        val stringRes = when (SelectedType.valueOf(selectedPosition)) {
+            Views -> {
+                when {
+                    positive -> string.stats_insights_views_and_visitors_seven_days_views_positive
+                    else -> string.stats_insights_views_and_visitors_seven_days_views_negative
+                }
+            }
+            Visitors -> {
+                when {
+                    positive -> string.stats_insights_views_and_visitors_seven_days_visitors_positive
+                    else -> string.stats_insights_views_and_visitors_seven_days_visitors_negative
+                }
+            }
+            else -> string.stats_insights_views_and_visitors_seven_days_views_positive
         }
 
         return Text(
@@ -228,20 +312,21 @@ class ViewsAndVisitorsMapper
     }
 
     private fun mapDatesToWeeks(dates: List<PeriodData>, selectedPosition: Int): Pair<Long, Long> {
-        val values = dates.map {
-            val value = it.getValue(selectedPosition)
-            value.toInt()
-        }
+        val statsType = TotalStatsMapper.TotalStatsType.values()[selectedPosition]
 
-        val hasData = values.isNotEmpty() && values.size >= 7
+        val prevWeekData = totalStatsMapper.getPreviousSevenDays(dates, statsType)
+        val thisWeekData = totalStatsMapper.getCurrentSevenDays(dates, statsType)
 
-        val prevWeekData = if (hasData) values.subList(0, 7) else values.subList(0, values.size)
-        val thisWeekData = if (hasData) values.subList(7, values.size) else emptyList()
+        return Pair(thisWeekData.sum(), prevWeekData.sum())
+    }
 
-        val prevWeekCount = prevWeekData.fold(0L) { acc, next -> acc + next }
-        val thisWeekCount = thisWeekData.fold(0L) { acc, next -> acc + next }
+    private fun mapDatesToWeeksDetail(dates: List<PeriodData>, selectedPosition: Int): Pair<Long, Long> {
+        val statsType = TotalStatsMapper.TotalStatsType.values()[selectedPosition]
 
-        return Pair(thisWeekCount, prevWeekCount)
+        val prevWeekData = totalStatsMapper.getPreviousWeekDays(dates, statsType)
+        val thisWeekData = totalStatsMapper.getCurrentWeekDays(dates, statsType)
+
+        return Pair(thisWeekData.sum(), prevWeekData.sum())
     }
 
     companion object {
