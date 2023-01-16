@@ -26,7 +26,6 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
     private val appStatus: AppStatus,
     private val wordPressPublicData: WordPressPublicData,
     private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
-    private val eligibilityHelper: EligibilityHelper,
 ) {
     private val minimumSupportedVersion = "21.3" // non semantic minimum supported version
 
@@ -36,18 +35,12 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
             && !appPrefsWrapper.isJetpackMigrationCompleted()
             && isWordPressInstalled()
             && isWordPressCompatible()
-            && isMigrationEligible()
             && (!accountStore.hasAccessToken()
             || appPrefsWrapper.isJetpackMigrationInProgress())
 
     @JvmOverloads
     fun startJetpackMigrationFlow(deepLinkData: PreMigrationDeepLinkData? = null) {
         ActivityLauncher.startJetpackMigrationFlow(contextProvider.getContext(), deepLinkData)
-    }
-
-    private fun isMigrationEligible() = when (eligibilityHelper.validate()) {
-        is Success -> true
-        else -> false
     }
 
     private fun isWordPressInstalled() = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
