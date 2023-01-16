@@ -131,12 +131,10 @@ class JetpackMigrationFragment : Fragment() {
 }
 
 @Composable
-private fun JetpackMigrationScreen(
-    viewModel: JetpackMigrationViewModel = viewModel(),
-) {
-    val uiState by viewModel.uiState.collectAsState(Loading)
-
+private fun JetpackMigrationScreen(viewModel: JetpackMigrationViewModel = viewModel()) {
     Box {
+        val uiState by viewModel.uiState.collectAsState(Loading)
+
         Crossfade(targetState = uiState) { state ->
             when (state) {
                 is Content.Welcome -> WelcomeStep(state)
