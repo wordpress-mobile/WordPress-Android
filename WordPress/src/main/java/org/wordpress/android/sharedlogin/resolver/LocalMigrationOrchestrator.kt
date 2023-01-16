@@ -47,7 +47,7 @@ class LocalMigrationOrchestrator @Inject constructor(
         eligibilityHelper.validate()
             .then(sharedLoginHelper::login).emitTo(migrationStateFlow)
             .then(sitesMigrationHelper::migrateSites).emitTo(migrationStateFlow)
-            .then(userFlagsHelper::migrateUserFlags)
+            .then(userFlagsHelper::migrateUserFlags).emitTo(migrationStateFlow)
             .then(readerSavedPostsHelper::migrateReaderSavedPosts)
             .then(localPostsHelper::migratePosts)
             .orElse { error ->
