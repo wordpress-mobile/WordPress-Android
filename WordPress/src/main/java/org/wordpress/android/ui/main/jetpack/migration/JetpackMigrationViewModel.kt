@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
-import android.content.Context
 import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.annotation.VisibleForTesting
@@ -60,8 +59,8 @@ import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.PreventDuplicateNotifsFeatureConfig
-import org.wordpress.android.util.extensions.primaryLocale
 import org.wordpress.android.viewmodel.ContextProvider
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -172,11 +171,9 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }
 
-    fun applyLanguage(context: Context, languageCode: String): Context {
-        if (languageCode.isEmpty()) return context
-        if (context.primaryLocale == localeManagerWrapper.getLocaleFromLanguage(languageCode)) return context
-        appLanguageUtils.changeAppLanguage(languageCode)
-        return localeManagerWrapper.setLocale(context)
+    fun changeAppLanguageIfNeeded(locale: Locale) {
+        if (localeManagerWrapper.isSameLanguage(locale.language)) return
+        appLanguageUtils.changeAppLanguage(locale.language)
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
