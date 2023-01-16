@@ -4,7 +4,7 @@ import org.wordpress.android.fluxc.module.ApplicationPasswordsClientId
 import java.util.Optional
 import javax.inject.Inject
 
-data class ApplicationPasswordsConfiguration @Inject constructor(
+internal data class ApplicationPasswordsConfiguration @Inject constructor(
     @ApplicationPasswordsClientId private val applicationNameOptional: Optional<String>
 ) {
     val isEnabled: Boolean
