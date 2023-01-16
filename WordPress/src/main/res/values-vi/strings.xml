@@ -198,7 +198,6 @@ Language: vi_VN
     <string name="new_site_creation_intents_title">Chủ đề blog</string>
     <string name="quick_start_site_menu_tab_message_short">Nhấn &lt;b&gt;%1$s&lt;/b&gt; để tiếp tục.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Xóa khỏi trang tổng quan</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Bỏ qua nhắc nhở</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Xem nhiều nhắc nhở hơn</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Chia sẻ nhắc viết bài</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Đã trả lời</string>

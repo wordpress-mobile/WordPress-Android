@@ -316,7 +316,6 @@ Language: sv_SE
     <string name="new_site_creation_intents_title">Webbplatsämne</string>
     <string name="quick_start_site_menu_tab_message_short">Tryck &lt;b&gt;%1$s&lt;/b&gt; för att fortsätta.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Ta bort från adminpanelen</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Hoppa över detta förslag</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Visa fler förslag</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d svar</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Dela bloggningsförslag</string>

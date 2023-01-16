@@ -306,7 +306,6 @@ Language: zh_TW
     <string name="new_site_creation_intents_title">網站主題</string>
     <string name="quick_start_site_menu_tab_message_short">點選「&lt;b&gt;%1$s&lt;/b&gt;」以繼續。</string>
     <string name="my_site_blogging_prompt_card_menu_remove">從儀表板移除</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">略過此提示</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">檢視更多提示</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d 個答案</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">分享網誌提示</string>

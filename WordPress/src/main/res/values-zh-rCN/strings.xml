@@ -307,7 +307,6 @@ Language: zh_CN
     <string name="new_site_creation_intents_title">站点主题</string>
     <string name="quick_start_site_menu_tab_message_short">轻点“&lt;b&gt;%1$s&lt;/b&gt;”继续。</string>
     <string name="my_site_blogging_prompt_card_menu_remove">从仪表盘中移除</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">跳过此提示</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">查看更多提示</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d 条回复</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">共享博客提示</string>
