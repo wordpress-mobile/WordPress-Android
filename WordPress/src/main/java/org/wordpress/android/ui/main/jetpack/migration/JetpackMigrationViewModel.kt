@@ -52,7 +52,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.AppLanguageUtils
+import org.wordpress.android.util.JetpackMigrationLanguageUtil
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.GravatarUtilsWrapper
@@ -75,7 +75,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val migrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
     private val accountStore: AccountStore,
     private val localeManagerWrapper: LocaleManagerWrapper,
-    private val appLanguageUtils: AppLanguageUtils,
+    private val jetpackMigrationLanguageUtil: JetpackMigrationLanguageUtil,
 ) : ViewModel() {
     private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
@@ -171,9 +171,8 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }
 
-    fun changeAppLanguageIfNeeded(locale: Locale) {
-        if (localeManagerWrapper.isSameLanguage(locale.language)) return
-        appLanguageUtils.changeAppLanguage(locale.language)
+    fun setAppLanguage(locale: Locale) {
+        jetpackMigrationLanguageUtil.applyLanguage(locale.language)
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)

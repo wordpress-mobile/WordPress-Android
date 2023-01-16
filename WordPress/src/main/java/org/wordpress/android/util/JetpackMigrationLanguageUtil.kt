@@ -4,10 +4,10 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
-class AppLanguageUtils @Inject constructor(
+class JetpackMigrationLanguageUtil @Inject constructor(
     private val contextProvider: ContextProvider,
 ) {
-    fun changeAppLanguage(languageCode: String) {
+    fun applyLanguage(languageCode: String) {
         if (languageCode.isEmpty()) return
 
         LocaleManager.setNewLocale(WordPress.getContext(), languageCode)

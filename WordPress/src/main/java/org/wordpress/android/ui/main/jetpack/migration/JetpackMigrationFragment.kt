@@ -61,7 +61,7 @@ class JetpackMigrationFragment : Fragment() {
 
                 LocaleAwareComposable(
                     locale = LocaleManager.languageLocale(userLanguage),
-                    onLocaleChange = viewModel::changeAppLanguageIfNeeded
+                    onLocaleChange = viewModel::setAppLanguage
                 ) {
                     JetpackMigrationScreen()
                 }
