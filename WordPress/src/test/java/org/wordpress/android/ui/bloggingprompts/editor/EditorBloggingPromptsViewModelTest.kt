@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
 import org.wordpress.android.ui.posts.BLOGGING_PROMPT_TAG
+import org.wordpress.android.ui.posts.BloggingPromptsEditorBlockMapper
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel.EditorLoadedPrompt
 import java.util.Date
@@ -46,12 +47,16 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     private val bloggingPromptsStore: BloggingPromptsStore = mock {
         onBlocking { getPromptById(any(), any()) } doReturn flowOf(bloggingPrompt)
     }
+    private val bloggingPromptsEditorBlockMapper: BloggingPromptsEditorBlockMapper = mock {
+        on { it.map(any()) } doReturn (bloggingPrompt.model?.content ?: "")
+    }
 
     @Before
     fun setUp() {
         viewModel = EditorBloggingPromptsViewModel(
             bloggingPromptsStore,
-            testDispatcher()
+            testDispatcher(),
+            bloggingPromptsEditorBlockMapper
         )
 
         viewModel.onBloggingPromptLoaded.observeForever {
