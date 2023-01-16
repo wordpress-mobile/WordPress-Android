@@ -106,19 +106,36 @@ class SiteItemsBuilder @Inject constructor(
     private fun getConfigurationSiteItems(
         params: SiteItemsBuilderParams,
     ): List<MySiteCardAndItem> {
-        val showEnablePostSharingFocusPoint = params.activeTask == QuickStartNewSiteTask.ENABLE_POST_SHARING
+        val header = siteCategoryItemBuilder.buildConfigurationHeaderIfAvailable(params.site)
+        val jetpackConfigurationItems = buildJetpackDependantConfigurationItemsIfNeeded(params)
+        val nonJetpackConfigurationItems = buildNonJetpackDependantConfigurationItemsIfNeeded(params)
+
+        return listOfNotNull(header) + jetpackConfigurationItems + nonJetpackConfigurationItems
+    }
+
+    private fun buildNonJetpackDependantConfigurationItemsIfNeeded(params: SiteItemsBuilderParams):
+            List<MySiteCardAndItem> {
         return listOfNotNull(
-                siteCategoryItemBuilder.buildConfigurationHeaderIfAvailable(params.site),
-                siteListItemBuilder.buildPeopleItemIfAvailable(params.site, params.onClick),
-                siteListItemBuilder.buildPluginItemIfAvailable(params.site, params.onClick),
-                siteListItemBuilder.buildShareItemIfAvailable(
-                        params.site,
-                        params.onClick,
-                        showEnablePostSharingFocusPoint
-                ),
                 siteListItemBuilder.buildDomainsItemIfAvailable(params.site, params.onClick),
                 siteListItemBuilder.buildSiteSettingsItemIfAvailable(params.site, params.onClick)
         )
+    }
+
+    private fun buildJetpackDependantConfigurationItemsIfNeeded(params: SiteItemsBuilderParams):
+            List<MySiteCardAndItem> {
+        val showEnablePostSharingFocusPoint = params.activeTask == QuickStartNewSiteTask.ENABLE_POST_SHARING
+
+        return if (!jetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
+            listOfNotNull(
+                    siteListItemBuilder.buildPeopleItemIfAvailable(params.site, params.onClick),
+                    siteListItemBuilder.buildPluginItemIfAvailable(params.site, params.onClick),
+                    siteListItemBuilder.buildShareItemIfAvailable(
+                            params.site,
+                            params.onClick,
+                            showEnablePostSharingFocusPoint
+                    )
+            )
+        } else emptyList()
     }
 
     private fun getExternalSiteItems(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
