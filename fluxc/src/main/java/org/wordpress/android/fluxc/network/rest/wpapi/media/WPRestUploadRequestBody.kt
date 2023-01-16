@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.media.wpv2
+package org.wordpress.android.fluxc.network.rest.wpapi.media
 
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
