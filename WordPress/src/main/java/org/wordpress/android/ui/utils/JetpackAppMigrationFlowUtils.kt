@@ -5,8 +5,6 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
-import org.wordpress.android.localcontentmigration.EligibilityHelper
-import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
