@@ -118,6 +118,22 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         verify(jetpackMigrationLanguageUtil).applyLanguage(locale.language)
     }
 
+    @Test
+    fun `Should emit refresh app theme when when welcome screen is shown with user flags`() {
+        classToTest.initWelcomeScreenUi(WelcomeScreenData(flags = mapOf("theme" to "dark")), false)
+
+        verify(refreshAppThemeObserver).onChanged(Unit)
+    }
+
+    @Test
+    fun `Should emit refresh app theme when finish button is tapped on success screen`() {
+        val successScreen = classToTest.initSuccessScreenUi()
+
+        successScreen.primaryActionButton.onClick.invoke()
+
+        verify(refreshAppThemeObserver).onChanged(Unit)
+    }
+
     // endregion
 
     // region Analytics Tracking
