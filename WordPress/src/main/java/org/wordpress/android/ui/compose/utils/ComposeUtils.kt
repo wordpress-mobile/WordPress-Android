@@ -6,6 +6,9 @@ import androidx.compose.material.LocalContentAlpha
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
+import org.wordpress.android.util.extensions.isRtl
 import org.wordpress.android.util.extensions.primaryLocale
 import java.util.Locale
 
@@ -43,17 +46,21 @@ fun LocaleAwareComposable(
 
     val currentLocale = context.primaryLocale
     if (currentLocale != locale) {
-        val newContext = context.createConfigurationContext(
-            Configuration(configuration).apply {
-                setLocale(locale)
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
-                    configuration.locale = locale
-                    resources.updateConfiguration(configuration, resources.displayMetrics)
-                }
+        val newConfiguration = Configuration(configuration).apply {
+            setLocale(locale)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
+                configuration.locale = locale
+                resources.updateConfiguration(configuration, resources.displayMetrics)
             }
-        )
+        }
+
+        val newContext = context.createConfigurationContext(newConfiguration)
+        val newLayoutDirection = if (newConfiguration.isRtl()) LayoutDirection.Rtl else LayoutDirection.Ltr
         onLocaleChange(locale)
-        CompositionLocalProvider(LocalContext provides newContext) {
+        CompositionLocalProvider(
+            LocalContext provides newContext,
+            LocalLayoutDirection provides newLayoutDirection,
+        ) {
             content()
         }
     } else {
