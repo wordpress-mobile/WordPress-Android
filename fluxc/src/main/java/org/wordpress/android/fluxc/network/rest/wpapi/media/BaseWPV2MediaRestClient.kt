@@ -1,7 +1,5 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.media.wpv2
+package org.wordpress.android.fluxc.network.rest.wpapi.media
 
-import android.content.Context
-import com.android.volley.RequestQueue
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.CancellationException
@@ -23,19 +21,15 @@ import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.annotations.endpoint.WPAPIEndpoint
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.UploadActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.WPAPI
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.FAILED
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.UserAgent
-import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
@@ -48,36 +42,40 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
-import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Singleton
 
-@Singleton
-class WPV2MediaRestClient @Inject constructor(
-    dispatcher: Dispatcher,
+abstract class BaseWPV2MediaRestClient constructor(
+    private val dispatcher: Dispatcher,
     private val coroutineEngine: CoroutineEngine,
-    @Named("regular") private val okHttpClient: OkHttpClient,
-    appContext: Context?,
-    @Named("regular") requestQueue: RequestQueue,
-    accessToken: AccessToken,
-    userAgent: UserAgent
-) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
+    @Named("regular") private val okHttpClient: OkHttpClient
+) {
     private val gson: Gson by lazy { Gson() }
 
     private val currentUploads = ConcurrentHashMap<Int, CoroutineScope>()
 
+    protected abstract fun WPAPIEndpoint.getFullUrl(site: SiteModel): String
+
+    protected abstract suspend fun getAuthorizationHeader(site: SiteModel): String
+
+    protected abstract suspend fun <T : Any> executeGetGsonRequest(
+        site: SiteModel,
+        endpoint: WPAPIEndpoint,
+        params: Map<String, String>,
+        clazz: Class<T>
+    ): WPAPIResponse<T>
+
     fun uploadMedia(site: SiteModel, media: MediaModel) {
         coroutineEngine.launch(MEDIA, this, "Upload Media using WPCom's v2 API") {
             syncUploadMedia(site, media)
-                    .onStart {
-                        currentUploads[media.id] = this@launch
-                    }
-                    .onCompletion {
-                        currentUploads.remove(media.id)
-                    }
-                    .collect { payload ->
-                        mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
-                    }
+                .onStart {
+                    currentUploads[media.id] = this@launch
+                }
+                .onCompletion {
+                    currentUploads.remove(media.id)
+                }
+                .collect { payload ->
+                    dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
+                }
         }
     }
 
@@ -85,14 +83,14 @@ class WPV2MediaRestClient @Inject constructor(
         currentUploads[media.id]?.let { scope ->
             scope.cancel()
             val payload = ProgressPayload(media, 0f, false, true)
-            mDispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload))
+            dispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload))
         }
     }
 
     fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
         coroutineEngine.launch(MEDIA, this, "Fetching Media using WPCom's v2 API") {
             val payload = syncFetchMediaList(site, number, offset, mimeType)
-            mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload))
+            dispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload))
         }
     }
 
@@ -110,7 +108,7 @@ class WPV2MediaRestClient @Inject constructor(
         }
 
         return callbackFlow {
-            val url = WPAPI.media.getWPComUrl(site.siteId)
+            val url = WPAPI.media.getFullUrl(site)
             val body = WPRestUploadRequestBody(media) { media, progress ->
                 if (!isClosedForSend) {
                     val payload = ProgressPayload(media, progress, false, null)
@@ -123,10 +121,10 @@ class WPV2MediaRestClient @Inject constructor(
             }
 
             val request = Request.Builder()
-                    .url(url)
-                    .post(body = body)
-                    .header(WPComGsonRequest.REST_AUTHORIZATION_HEADER, "Bearer ${accessToken.get()}")
-                    .build()
+                .url(url)
+                .post(body = body)
+                .header(WPComGsonRequest.REST_AUTHORIZATION_HEADER, getAuthorizationHeader(site))
+                .build()
 
             val call = okHttpClient.newCall(request)
 
@@ -183,9 +181,8 @@ class WPV2MediaRestClient @Inject constructor(
         offset: Int,
         mimeType: MimeType.Type?
     ): FetchMediaListResponsePayload {
-        val url = WPAPI.media.getWPComUrl(site.siteId)
         val params = mutableMapOf(
-                "per_page" to perPage.toString()
+            "per_page" to perPage.toString()
         )
         if (offset > 0) {
             params["offset"] = offset.toString()
@@ -193,23 +190,23 @@ class WPV2MediaRestClient @Inject constructor(
         if (mimeType != null) {
             params["mime_type"] = mimeType.value
         }
-        val response = WPComGsonRequestBuilder().syncGetRequest(
-                this,
-                url,
-                params,
-                Array<MediaWPRESTResponse>::class.java
+        val response = executeGetGsonRequest(
+            site,
+            WPAPI.media,
+            params,
+            Array<MediaWPRESTResponse>::class.java
         )
 
         return when (response) {
-            is Error -> {
+            is WPAPIResponse.Error -> {
                 val errorMessage = "could not parse Fetch all media response: $response"
                 AppLog.w(MEDIA, errorMessage)
                 val error = MediaError(PARSE_ERROR)
                 error.logMessage = errorMessage
                 FetchMediaListResponsePayload(site, error, mimeType)
             }
-            is Success -> {
-                val mediaList = response.data.map { it.toMediaModel(site.id) }
+            is WPAPIResponse.Success -> {
+                val mediaList = response.data.orEmpty().map { it.toMediaModel(site.id) }
                 AppLog.v(MEDIA, "Fetched media list for site with size: " + mediaList.size)
                 val canLoadMore = mediaList.size == perPage
                 FetchMediaListResponsePayload(site, mediaList, offset > 0, canLoadMore, mimeType)
