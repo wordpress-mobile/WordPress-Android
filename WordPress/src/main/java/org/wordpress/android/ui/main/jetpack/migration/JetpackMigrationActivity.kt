@@ -3,8 +3,6 @@ package org.wordpress.android.ui.main.jetpack.migration
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ActivityJetpackMigrationBinding
@@ -24,11 +22,6 @@ class JetpackMigrationActivity : LocaleAwareActivity() {
                     .commit()
             }
         }
-    }
-
-    fun refreshLanguage() {
-        // Recreate this activity (much like a configuration change)
-        Handler(Looper.getMainLooper()).post(this::recreate)
     }
 
     companion object {
