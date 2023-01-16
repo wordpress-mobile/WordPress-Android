@@ -19,17 +19,21 @@ import java.util.Locale
 @ExperimentalCoroutinesApi
 class PrepublishingPublishSettingsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingPublishSettingsViewModel
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
 
     @Before
     fun setup() {
         viewModel = PrepublishingPublishSettingsViewModel(
-                resourceProvider,
-                mock(),
-                localeManagerWrapper,
-                mock(),
-                mock()
+            resourceProvider,
+            mock(),
+            localeManagerWrapper,
+            mock(),
+            mock()
         )
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(Calendar.getInstance(Locale.US))
         whenever(resourceProvider.getString(R.string.immediately)).thenReturn("")

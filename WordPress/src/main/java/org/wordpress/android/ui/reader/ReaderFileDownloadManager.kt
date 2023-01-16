@@ -17,7 +17,7 @@ class ReaderFileDownloadManager
     override fun onReceive(context: Context, intent: Intent) {
         if (DownloadManager.ACTION_DOWNLOAD_COMPLETE == intent.action) {
             val downloadId = intent.getLongExtra(
-                    DownloadManager.EXTRA_DOWNLOAD_ID, 0
+                DownloadManager.EXTRA_DOWNLOAD_ID, 0
             )
             openDownloadedAttachment(context, downloadId)
         }

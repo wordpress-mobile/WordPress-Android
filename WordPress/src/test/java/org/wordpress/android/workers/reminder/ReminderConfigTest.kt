@@ -91,10 +91,10 @@ class ReminderConfigTest {
     fun `fromMap with weekly type and null days defaults to daily reminder`() {
         val expected = DailyReminder
         val actual = ReminderConfig.fromMap(
-                mapOf(
-                        REMINDER_TYPE to WEEKLY,
-                        REMINDER_DAYS to null
-                )
+            mapOf(
+                REMINDER_TYPE to WEEKLY,
+                REMINDER_DAYS to null
+            )
         )
 
         assertThat(actual).isEqualTo(expected)
@@ -104,10 +104,10 @@ class ReminderConfigTest {
     fun `fromMap with weekly type and empty days defaults to daily reminder`() {
         val expected = DailyReminder
         val actual = ReminderConfig.fromMap(
-                mapOf(
-                        REMINDER_TYPE to WEEKLY,
-                        REMINDER_DAYS to ""
-                )
+            mapOf(
+                REMINDER_TYPE to WEEKLY,
+                REMINDER_DAYS to ""
+            )
         )
 
         assertThat(actual).isEqualTo(expected)
@@ -117,10 +117,10 @@ class ReminderConfigTest {
     fun `fromMap with weekly type ignores invalid days`() {
         val expected = WeeklyReminder(setOf(MONDAY, WEDNESDAY))
         val actual = ReminderConfig.fromMap(
-                mapOf(
-                        REMINDER_TYPE to WEEKLY,
-                        REMINDER_DAYS to "MONDAY,some_unknown_day,WEDNESDAY"
-                )
+            mapOf(
+                REMINDER_TYPE to WEEKLY,
+                REMINDER_DAYS to "MONDAY,some_unknown_day,WEDNESDAY"
+            )
         )
 
         assertThat(actual).isEqualTo(expected)
@@ -161,13 +161,13 @@ class ReminderConfigTest {
         private const val MON_WED_FRI = "MONDAY,WEDNESDAY,FRIDAY"
 
         private val dailyMap: Map<String, Any?> = mapOf(
-                REMINDER_TYPE to DAILY,
-                REMINDER_DAYS to null
+            REMINDER_TYPE to DAILY,
+            REMINDER_DAYS to null
         )
 
         private val monWedFriMap: Map<String, Any?> = mapOf(
-                REMINDER_TYPE to WEEKLY,
-                REMINDER_DAYS to MON_WED_FRI
+            REMINDER_TYPE to WEEKLY,
+            REMINDER_DAYS to MON_WED_FRI
         )
 
         private val monWedFriSet = setOf(MONDAY, WEDNESDAY, FRIDAY)

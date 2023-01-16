@@ -27,9 +27,14 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 class SiteCreationSiteNameFragment : Fragment() {
-    @Inject internal lateinit var uiHelper: UiHelpers
-    @Inject internal lateinit var displayUtils: DisplayUtilsWrapper
-    @Inject internal lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Inject
+    internal lateinit var uiHelper: UiHelpers
+
+    @Inject
+    internal lateinit var displayUtils: DisplayUtilsWrapper
+
+    @Inject
+    internal lateinit var htmlMessageUtils: HtmlMessageUtils
 
     private val viewModel: SiteCreationSiteNameViewModel by activityViewModels()
     private var binding: SiteCreationSiteNameFragmentBinding? = null
@@ -61,8 +66,8 @@ class SiteCreationSiteNameFragment : Fragment() {
         get() {
             val blueColorHexCode = HtmlUtils.colorResToHtmlColor(requireContext(), color.blue)
             return htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                    string.new_site_creation_site_name_header_title,
-                    siteIntent?.let { "<span style='color:$blueColorHexCode;'>$it</span>" }.orEmpty()
+                string.new_site_creation_site_name_header_title,
+                siteIntent?.let { "<span style='color:$blueColorHexCode;'>$it</span>" }.orEmpty()
             )
         }
 
@@ -77,8 +82,10 @@ class SiteCreationSiteNameFragment : Fragment() {
 
     private fun SiteCreationSiteNameFragmentBinding.setupViewModel() {
         viewModel.uiState.observe(viewLifecycleOwner) { updateUiState(it) }
-        viewModel.onSiteNameEntered.observe(viewLifecycleOwner, (requireActivity() as
-                SiteNameScreenListener)::onSiteNameEntered)
+        viewModel.onSiteNameEntered.observe(
+            viewLifecycleOwner, (requireActivity() as
+                    SiteNameScreenListener)::onSiteNameEntered
+        )
         viewModel.start()
     }
 

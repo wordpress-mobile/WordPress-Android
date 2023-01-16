@@ -26,10 +26,17 @@ import org.wordpress.android.util.SiteUtilsWrapper
 
 @ExperimentalCoroutinesApi
 class DomainRegistrationSourceTest : BaseUnitTest() {
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock lateinit var appLogWrapper: AppLogWrapper
-    @Mock lateinit var siteUtils: SiteUtilsWrapper
+    @Mock
+    lateinit var dispatcher: Dispatcher
+
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Mock
+    lateinit var appLogWrapper: AppLogWrapper
+
+    @Mock
+    lateinit var siteUtils: SiteUtilsWrapper
     private val siteLocalId = 1
     private val site = SiteModel()
     private lateinit var result: MutableList<DomainCreditAvailable>
@@ -41,11 +48,11 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
         site.id = siteLocalId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         source = DomainRegistrationSource(
-                testDispatcher(),
-                dispatcher,
-                selectedSiteRepository,
-                appLogWrapper,
-                siteUtils
+            testDispatcher(),
+            dispatcher,
+            selectedSiteRepository,
+            appLogWrapper,
+            siteUtils
         )
         result = mutableListOf()
         isRefreshing = mutableListOf()
@@ -151,10 +158,10 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
     }
 
     private fun buildPlan(hasDomainCredit: Boolean) = PlanModel(
-            productId = PREMIUM_PLAN_ID.toInt(),
-            productSlug = null,
-            productName = null,
-            isCurrentPlan = true,
-            hasDomainCredit = hasDomainCredit
+        productId = PREMIUM_PLAN_ID.toInt(),
+        productSlug = null,
+        productName = null,
+        isCurrentPlan = true,
+        hasDomainCredit = hasDomainCredit
     )
 }

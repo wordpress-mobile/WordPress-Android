@@ -93,9 +93,9 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
 
     private fun PreviewImageFragmentBinding.initializeViewPager() {
         val previewImageAdapter = PreviewImageAdapter(
-                loadIntoImageViewWithResultListener = { imageData, imageView, position ->
-                    loadIntoImageViewWithResultListener(imageData, imageView, position)
-                }
+            loadIntoImageViewWithResultListener = { imageData, imageView, position ->
+                loadIntoImageViewWithResultListener(imageData, imageView, position)
+            }
         )
         previewImageAdapter.setHasStableIds(true)
         previewImageViewPager.adapter = previewImageAdapter
@@ -111,7 +111,7 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
         val tabConfigurationStrategy = TabLayoutMediator.TabConfigurationStrategy { tab, position ->
             if (tab.customView == null) {
                 val customView = LayoutInflater.from(context)
-                        .inflate(R.layout.preview_image_thumbnail, thumbnailsTabLayout, false)
+                    .inflate(R.layout.preview_image_thumbnail, thumbnailsTabLayout, false)
                 tab.customView = customView
             }
             val imageView = (tab.customView as FrameLayout).findViewById<ImageView>(R.id.thumbnailImageView)
@@ -119,17 +119,17 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
         }
 
         tabLayoutMediator = TabLayoutMediator(
-                thumbnailsTabLayout,
-                previewImageViewPager,
-                false,
-                tabConfigurationStrategy
+            thumbnailsTabLayout,
+            previewImageViewPager,
+            false,
+            tabConfigurationStrategy
         )
         tabLayoutMediator.attach()
 
         pagerAdapterObserver = PagerAdapterObserver(
-                thumbnailsTabLayout,
-                previewImageViewPager,
-                tabConfigurationStrategy
+            thumbnailsTabLayout,
+            previewImageViewPager,
+            tabConfigurationStrategy
         )
         previewImageAdapter.registerAdapterDataObserver(pagerAdapterObserver as PagerAdapterObserver)
 
@@ -221,34 +221,34 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
 
     private fun loadIntoImageViewWithResultListener(imageData: ImageData, imageView: ImageView, position: Int) {
         ImageEditor.instance.loadIntoImageViewWithResultListener(
-                imageData.highResImageUrl,
-                imageView,
-                CENTER,
-                imageData.lowResImageUrl,
-                object : RequestListener<Drawable> {
-                    override fun onResourceReady(resource: Drawable, url: String) {
-                        viewModel.onLoadIntoImageViewSuccess(url, position)
-                    }
-
-                    override fun onLoadFailed(e: Exception?, url: String) {
-                        viewModel.onLoadIntoImageViewFailed(url, position)
-                    }
+            imageData.highResImageUrl,
+            imageView,
+            CENTER,
+            imageData.lowResImageUrl,
+            object : RequestListener<Drawable> {
+                override fun onResourceReady(resource: Drawable, url: String) {
+                    viewModel.onLoadIntoImageViewSuccess(url, position)
                 }
+
+                override fun onLoadFailed(e: Exception?, url: String) {
+                    viewModel.onLoadIntoImageViewFailed(url, position)
+                }
+            }
         )
     }
 
     private fun loadIntoFile(url: String, position: Int) {
         ImageEditor.instance.loadIntoFileWithResultListener(
-                Uri.parse(url),
-                object : RequestListener<File> {
-                    override fun onResourceReady(resource: File, url: String) {
-                        viewModel.onLoadIntoFileSuccess(resource.path, position)
-                    }
-
-                    override fun onLoadFailed(e: Exception?, url: String) {
-                        viewModel.onLoadIntoFileFailed(e)
-                    }
+            Uri.parse(url),
+            object : RequestListener<File> {
+                override fun onResourceReady(resource: File, url: String) {
+                    viewModel.onLoadIntoFileSuccess(resource.path, position)
                 }
+
+                override fun onLoadFailed(e: Exception?, url: String) {
+                    viewModel.onLoadIntoFileFailed(e)
+                }
+            }
         )
     }
 
@@ -273,12 +273,12 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
         // https://stackoverflow.com/q/51060762/193545
         if (navController.currentDestination?.id == R.id.preview_dest) {
             navController.navigate(
-                    PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(
-                            inputFilePath,
-                            outputFileExtension,
-                            shouldReturnToPreviewScreen
-                    ),
-                    navOptions
+                PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(
+                    inputFilePath,
+                    outputFileExtension,
+                    shouldReturnToPreviewScreen
+                ),
+                navOptions
             )
         }
     }

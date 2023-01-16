@@ -58,50 +58,50 @@ class UploadStarterTest : BaseUnitTest() {
 
     private val sites = listOf(createSiteModel(), createSiteModel())
     private val sitesAndDraftPosts: Map<SiteModel, List<PostModel>> = mapOf(
-            sites[0] to listOf(
-                    createLocallyChangedPostModel(DRAFT),
-                    createLocallyChangedPostModel(PUBLISHED),
-                    createLocallyChangedPostModel(SCHEDULED),
-                    createLocallyChangedPostModel(SCHEDULED),
-                    createLocallyChangedPostModel(PENDING),
-                    createLocallyChangedPostModel(PRIVATE),
-                    createLocallyChangedPostModel(PUBLISHED),
-                    createLocallyChangedPostModel(UNKNOWN)
-            ),
-            sites[1] to listOf(
-                    createLocallyChangedPostModel(DRAFT),
-                    createLocallyChangedPostModel(DRAFT),
-                    createLocallyChangedPostModel(PUBLISHED),
-                    createLocallyChangedPostModel(SCHEDULED),
-                    createLocallyChangedPostModel(PENDING),
-                    createLocallyChangedPostModel(PRIVATE),
-                    createLocallyChangedPostModel(PRIVATE),
-                    createLocallyChangedPostModel(UNKNOWN)
-            )
+        sites[0] to listOf(
+            createLocallyChangedPostModel(DRAFT),
+            createLocallyChangedPostModel(PUBLISHED),
+            createLocallyChangedPostModel(SCHEDULED),
+            createLocallyChangedPostModel(SCHEDULED),
+            createLocallyChangedPostModel(PENDING),
+            createLocallyChangedPostModel(PRIVATE),
+            createLocallyChangedPostModel(PUBLISHED),
+            createLocallyChangedPostModel(UNKNOWN)
+        ),
+        sites[1] to listOf(
+            createLocallyChangedPostModel(DRAFT),
+            createLocallyChangedPostModel(DRAFT),
+            createLocallyChangedPostModel(PUBLISHED),
+            createLocallyChangedPostModel(SCHEDULED),
+            createLocallyChangedPostModel(PENDING),
+            createLocallyChangedPostModel(PRIVATE),
+            createLocallyChangedPostModel(PRIVATE),
+            createLocallyChangedPostModel(UNKNOWN)
+        )
     )
     private val draftPosts = sitesAndDraftPosts.values.flatten()
 
     private val sitesAndDraftPages: Map<SiteModel, List<PostModel>> = mapOf(
-            sites[0] to listOf(
-                    createLocallyChangedPostModel(DRAFT, page = true),
-                    createLocallyChangedPostModel(DRAFT, page = true),
-                    createLocallyChangedPostModel(PUBLISHED, page = true),
-                    createLocallyChangedPostModel(SCHEDULED, page = true),
-                    createLocallyChangedPostModel(PENDING, page = true),
-                    createLocallyChangedPostModel(PENDING, page = true),
-                    createLocallyChangedPostModel(PRIVATE, page = true),
-                    createLocallyChangedPostModel(UNKNOWN, page = true)
-            ),
-            sites[1] to listOf(
-                    createLocallyChangedPostModel(DRAFT, page = true),
-                    createLocallyChangedPostModel(PUBLISHED, page = true),
-                    createLocallyChangedPostModel(PUBLISHED, page = true),
-                    createLocallyChangedPostModel(SCHEDULED, page = true),
-                    createLocallyChangedPostModel(PENDING, page = true),
-                    createLocallyChangedPostModel(PRIVATE, page = true),
-                    createLocallyChangedPostModel(PRIVATE, page = true),
-                    createLocallyChangedPostModel(UNKNOWN, page = true)
-            )
+        sites[0] to listOf(
+            createLocallyChangedPostModel(DRAFT, page = true),
+            createLocallyChangedPostModel(DRAFT, page = true),
+            createLocallyChangedPostModel(PUBLISHED, page = true),
+            createLocallyChangedPostModel(SCHEDULED, page = true),
+            createLocallyChangedPostModel(PENDING, page = true),
+            createLocallyChangedPostModel(PENDING, page = true),
+            createLocallyChangedPostModel(PRIVATE, page = true),
+            createLocallyChangedPostModel(UNKNOWN, page = true)
+        ),
+        sites[1] to listOf(
+            createLocallyChangedPostModel(DRAFT, page = true),
+            createLocallyChangedPostModel(PUBLISHED, page = true),
+            createLocallyChangedPostModel(PUBLISHED, page = true),
+            createLocallyChangedPostModel(SCHEDULED, page = true),
+            createLocallyChangedPostModel(PENDING, page = true),
+            createLocallyChangedPostModel(PRIVATE, page = true),
+            createLocallyChangedPostModel(PRIVATE, page = true),
+            createLocallyChangedPostModel(UNKNOWN, page = true)
+        )
     )
     private val draftPages = sitesAndDraftPages.values.flatten()
 
@@ -141,9 +141,9 @@ class UploadStarterTest : BaseUnitTest() {
 
         // Then
         verify(uploadServiceFacade, times(draftPosts.size + draftPages.size)).uploadPost(
-                context = any(),
-                post = any(),
-                trackAnalytics = any()
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
         )
     }
 
@@ -164,9 +164,9 @@ class UploadStarterTest : BaseUnitTest() {
 
         // Then
         verify(uploadServiceFacade, times(0)).uploadPost(
-                context = any(),
-                post = any(),
-                trackAnalytics = any()
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
         )
     }
 
@@ -186,9 +186,9 @@ class UploadStarterTest : BaseUnitTest() {
 
         // Then
         verify(uploadServiceFacade, times(draftPosts.size + draftPages.size)).uploadPost(
-                context = any(),
-                post = any(),
-                trackAnalytics = any()
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
         )
     }
 
@@ -207,11 +207,11 @@ class UploadStarterTest : BaseUnitTest() {
 
         // Then
         val expectedUploadPostExecutions = sitesAndDraftPosts.getValue(site).size + sitesAndDraftPages
-                .getValue(site).size
+            .getValue(site).size
         verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
-                context = any(),
-                post = any(),
-                trackAnalytics = any()
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
         )
     }
 
@@ -237,11 +237,11 @@ class UploadStarterTest : BaseUnitTest() {
         // Then
         // subtract - 1 as we've returned isPublishable = false for the first post of the site
         val expectedUploadPostExecutions = sitesAndDraftPosts.getValue(site).size + sitesAndDraftPages
-                .getValue(site).size - 1
+            .getValue(site).size - 1
         verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
-                context = any(),
-                post = any(),
-                trackAnalytics = any()
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
         )
     }
 
@@ -252,15 +252,15 @@ class UploadStarterTest : BaseUnitTest() {
         val (expectedQueuedPosts, expectedUploadedPosts) = sitesAndDraftPosts.getValue(site).let { posts ->
             // Split into halves of already queued and what should be uploaded
             return@let Pair(
-                    posts.subList(0, posts.size / 2),
-                    posts.subList(posts.size / 2, posts.size)
+                posts.subList(0, posts.size / 2),
+                posts.subList(posts.size / 2, posts.size)
             )
         }
         val (expectedQueuedPages, expectedUploadedPages) = sitesAndDraftPages.getValue(site).let { pages ->
             // Split into halves of already queued and what should be uploaded
             return@let Pair(
-                    pages.subList(0, pages.size / 2),
-                    pages.subList(pages.size / 2, pages.size)
+                pages.subList(0, pages.size / 2),
+                pages.subList(pages.size / 2, pages.size)
             )
         }
         val expectedQueuedPostsAndPages = expectedQueuedPosts + expectedQueuedPages
@@ -281,13 +281,13 @@ class UploadStarterTest : BaseUnitTest() {
 
         // Then
         verify(uploadServiceFacade, times(expectedUploadPostsAndPages.size)).uploadPost(
-                context = any(),
-                post = argWhere { expectedUploadPostsAndPages.contains(it) },
-                trackAnalytics = any()
+            context = any(),
+            post = argWhere { expectedUploadPostsAndPages.contains(it) },
+            trackAnalytics = any()
         )
         verify(
-                uploadServiceFacade,
-                times(sitesAndDraftPosts.getValue(site).size + sitesAndDraftPages.getValue(site).size)
+            uploadServiceFacade,
+            times(sitesAndDraftPosts.getValue(site).size + sitesAndDraftPages.getValue(site).size)
         ).isPostUploadingOrQueued(any())
         verifyNoMoreInteractions(uploadServiceFacade)
     }
@@ -303,8 +303,8 @@ class UploadStarterTest : BaseUnitTest() {
         // This UploadStore.getNumberOfAutoUploadAttempts mocked method will always return that
         // any post was cancelled 1000 times. The auto upload should not be started.
         val starter = createUploadStarter(
-                connectionStatus, uploadServiceFacade,
-                uploadStore = createMockedUploadStore(1000)
+            connectionStatus, uploadServiceFacade,
+            uploadStore = createMockedUploadStore(1000)
         )
 
         // When
@@ -313,9 +313,9 @@ class UploadStarterTest : BaseUnitTest() {
         // Then
         // Make sure the uploadPost method is never called
         verify(uploadServiceFacade, never()).uploadPost(
-                context = any(),
-                post = any(),
-                trackAnalytics = any()
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
         )
     }
 
@@ -331,9 +331,9 @@ class UploadStarterTest : BaseUnitTest() {
 
         // Then
         verify(uploadServiceFacade, never()).uploadPost(
-                context = any(),
-                post = any(),
-                trackAnalytics = any()
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
         )
     }
 
@@ -349,9 +349,9 @@ class UploadStarterTest : BaseUnitTest() {
 
         // Then
         verify(uploadServiceFacade, times(1)).uploadPost(
-                context = any(),
-                post = any(),
-                trackAnalytics = any()
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
         )
     }
 
@@ -371,9 +371,9 @@ class UploadStarterTest : BaseUnitTest() {
 
         // Then
         verify(uploadServiceFacade, never()).uploadPost(
-                context = any(),
-                post = any(),
-                trackAnalytics = any()
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
         )
     }
 
@@ -393,9 +393,9 @@ class UploadStarterTest : BaseUnitTest() {
 
         // Then
         verify(uploadServiceFacade, times(1)).uploadPost(
-                context = any(),
-                post = any(),
-                trackAnalytics = any()
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
         )
     }
 
@@ -414,9 +414,9 @@ class UploadStarterTest : BaseUnitTest() {
 
         // Then
         verify(uploadServiceFacade, never()).uploadPost(
-                context = any(),
-                post = any(),
-                trackAnalytics = any()
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
         )
     }
 
@@ -434,9 +434,9 @@ class UploadStarterTest : BaseUnitTest() {
 
         // Then
         verify(uploadServiceFacade, never()).uploadPost(
-                context = any(),
-                post = any(),
-                trackAnalytics = any()
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
         )
     }
 
@@ -449,11 +449,11 @@ class UploadStarterTest : BaseUnitTest() {
 
         // Set autosaveModified to a newer date than dateLocallyChanged to indicate the changes were remotely-auto-saved
         postModel.setAutoSaveModified(
-                DateTimeUtils.iso8601FromTimestamp(
-                        DateTimeUtils.timestampFromIso8601(
-                                postModel.dateLocallyChanged
-                        ) + 99
-                )
+            DateTimeUtils.iso8601FromTimestamp(
+                DateTimeUtils.timestampFromIso8601(
+                    postModel.dateLocallyChanged
+                ) + 99
+            )
         )
 
         // When
@@ -461,9 +461,9 @@ class UploadStarterTest : BaseUnitTest() {
 
         // Then
         verify(uploadServiceFacade, never()).uploadPost(
-                context = any(),
-                post = any(),
-                trackAnalytics = any()
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
         )
     }
 
@@ -498,18 +498,18 @@ class UploadStarterTest : BaseUnitTest() {
         uploadStore: UploadStore = createMockedUploadStore(0),
         dispatcher: Dispatcher = mock()
     ) = UploadStarter(
-            context = mock(),
-            postStore = postStore,
-            pageStore = pageStore,
-            siteStore = siteStore,
-            bgDispatcher = testDispatcher(),
-            ioDispatcher = testDispatcher(),
-            networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
-            connectionStatus = connectionStatus,
-            uploadServiceFacade = uploadServiceFacade,
-            uploadActionUseCase = UploadActionUseCase(uploadStore, postUtilsWrapper, uploadServiceFacade),
-            tracker = mock(),
-            dispatcher = dispatcher
+        context = mock(),
+        postStore = postStore,
+        pageStore = pageStore,
+        siteStore = siteStore,
+        bgDispatcher = testDispatcher(),
+        ioDispatcher = testDispatcher(),
+        networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
+        connectionStatus = connectionStatus,
+        uploadServiceFacade = uploadServiceFacade,
+        uploadActionUseCase = UploadActionUseCase(uploadStore, postUtilsWrapper, uploadServiceFacade),
+        tracker = mock(),
+        dispatcher = dispatcher
     )
 
     private companion object Fixtures {

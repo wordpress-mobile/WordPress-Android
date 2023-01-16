@@ -52,10 +52,10 @@ class AppConfigParametrizedTest(
         whenever(featureConfig.remoteField).thenReturn(params.remoteField)
         whenever(featureFlagConfig.isEnabled(REMOTE_FIELD)).thenReturn(params.remoteConfigValue)
         whenever(
-                featureFlagConfig.getFeatureState(
-                        REMOTE_FIELD,
-                        featureConfig.buildConfigValue
-                )
+            featureFlagConfig.getFeatureState(
+                REMOTE_FIELD,
+                featureConfig.buildConfigValue
+            )
         ).thenReturn(params.remoteFeatureState)
     }
 
@@ -64,82 +64,82 @@ class AppConfigParametrizedTest(
         @Parameterized.Parameters
         @Suppress("LongMethod")
         fun parameters() = listOf(
-                // Manual override shows the flag as enabled
-                arrayOf(
-                        Params(
-                                hasManualSetup = true,
-                                isManuallyEnabled = true,
-                                result = ManuallyOverriden(true)
-                        )
-                ),
-                // Manual override shows the flag as disabled
-                arrayOf(
-                        Params(
-                                hasManualSetup = true,
-                                isManuallyEnabled = false,
-                                result = ManuallyOverriden(false)
-                        )
-                ),
-                // Returns build config value true when remote field is missing
-                arrayOf(
-                        Params(
-                                remoteField = null,
-                                buildConfigValue = true,
-                                result = BuildConfigValue(true)
-                        )
-                ),
-                // Returns build config value false when remote field is missing
-                arrayOf(
-                        Params(
-                                remoteField = null,
-                                buildConfigValue = false,
-                                result = BuildConfigValue(false)
-                        )
-                ),
-                // Returns build config value true if remote field set
-                arrayOf(
-                        Params(
-                                remoteField = REMOTE_FIELD,
-                                buildConfigValue = true,
-                                result = BuildConfigValue(true)
-                        )
-                ),
-                // Returns remote value == true and source STATIC from remote field
-                arrayOf(
-                        Params(
-                                remoteFeatureState = StaticValue(true),
-                                remoteField = REMOTE_FIELD,
-                                remoteConfigValue = true,
-                                result = StaticValue(true)
-                        )
-                ),
-                // Returns remote value == false and source STATIC from remote field
-                arrayOf(
-                        Params(
-                                remoteFeatureState = StaticValue(false),
-                                remoteField = REMOTE_FIELD,
-                                remoteConfigValue = false,
-                                result = StaticValue(false)
-                        )
-                ),
-                // Returns remote value == true from remote field and source REMOTE
-                arrayOf(
-                        Params(
-                                remoteFeatureState = RemoteValue(true),
-                                remoteField = REMOTE_FIELD,
-                                remoteConfigValue = true,
-                                result = RemoteValue(true)
-                        )
-                ),
-                // Returns default remote value == true from remote field and source Default
-                arrayOf(
-                        Params(
-                                remoteFeatureState = DefaultValue(true),
-                                remoteField = REMOTE_FIELD,
-                                remoteConfigValue = true,
-                                result = DefaultValue(true)
-                        )
+            // Manual override shows the flag as enabled
+            arrayOf(
+                Params(
+                    hasManualSetup = true,
+                    isManuallyEnabled = true,
+                    result = ManuallyOverriden(true)
                 )
+            ),
+            // Manual override shows the flag as disabled
+            arrayOf(
+                Params(
+                    hasManualSetup = true,
+                    isManuallyEnabled = false,
+                    result = ManuallyOverriden(false)
+                )
+            ),
+            // Returns build config value true when remote field is missing
+            arrayOf(
+                Params(
+                    remoteField = null,
+                    buildConfigValue = true,
+                    result = BuildConfigValue(true)
+                )
+            ),
+            // Returns build config value false when remote field is missing
+            arrayOf(
+                Params(
+                    remoteField = null,
+                    buildConfigValue = false,
+                    result = BuildConfigValue(false)
+                )
+            ),
+            // Returns build config value true if remote field set
+            arrayOf(
+                Params(
+                    remoteField = REMOTE_FIELD,
+                    buildConfigValue = true,
+                    result = BuildConfigValue(true)
+                )
+            ),
+            // Returns remote value == true and source STATIC from remote field
+            arrayOf(
+                Params(
+                    remoteFeatureState = StaticValue(true),
+                    remoteField = REMOTE_FIELD,
+                    remoteConfigValue = true,
+                    result = StaticValue(true)
+                )
+            ),
+            // Returns remote value == false and source STATIC from remote field
+            arrayOf(
+                Params(
+                    remoteFeatureState = StaticValue(false),
+                    remoteField = REMOTE_FIELD,
+                    remoteConfigValue = false,
+                    result = StaticValue(false)
+                )
+            ),
+            // Returns remote value == true from remote field and source REMOTE
+            arrayOf(
+                Params(
+                    remoteFeatureState = RemoteValue(true),
+                    remoteField = REMOTE_FIELD,
+                    remoteConfigValue = true,
+                    result = RemoteValue(true)
+                )
+            ),
+            // Returns default remote value == true from remote field and source Default
+            arrayOf(
+                Params(
+                    remoteFeatureState = DefaultValue(true),
+                    remoteField = REMOTE_FIELD,
+                    remoteConfigValue = true,
+                    result = DefaultValue(true)
+                )
+            )
         )
 
         private const val REMOTE_FIELD = "remote_field"

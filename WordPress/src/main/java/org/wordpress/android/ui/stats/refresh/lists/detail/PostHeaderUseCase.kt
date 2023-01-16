@@ -11,9 +11,9 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAttachment
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.utils.ListItemInteraction.Companion
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ReferredItem
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
+import org.wordpress.android.ui.utils.ListItemInteraction.Companion
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -25,10 +25,10 @@ class PostHeaderUseCase
     private val statsPostProvider: StatsPostProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<String>(
-        PostDetailType.POST_HEADER,
-        mainDispatcher,
-        backgroundDispatcher,
-        listOf()
+    PostDetailType.POST_HEADER,
+    mainDispatcher,
+    backgroundDispatcher,
+    listOf()
 ) {
     override suspend fun loadCachedData(): String? {
         return statsPostProvider.postTitle

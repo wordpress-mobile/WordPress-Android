@@ -30,11 +30,13 @@ class RemotePreviewLogicHelperTest {
 
     @Mock
     private lateinit var site: SiteModel
+
     @Mock
     private lateinit var post: PostModel
 
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     @Mock
     private lateinit var activityLauncherWrapper: ActivityLauncherWrapper
 
@@ -51,10 +53,10 @@ class RemotePreviewLogicHelperTest {
     @Before
     fun setup() {
         remotePreviewLogicHelper = RemotePreviewLogicHelper(
-                networkUtilsWrapper,
-                activityLauncherWrapper,
-                postUtilsWrapper,
-                uploadActionUseCase
+            networkUtilsWrapper,
+            activityLauncherWrapper,
+            postUtilsWrapper,
+            uploadActionUseCase
         )
 
         doReturn(true).whenever(site).isUsingWpComRestApi
@@ -99,9 +101,9 @@ class RemotePreviewLogicHelperTest {
         // Then
         assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE)
         verify(activityLauncherWrapper, times(1)).showActionableEmptyView(
-                activity,
-                WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
-                post.title
+            activity,
+            WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
+            post.title
         )
     }
 
@@ -117,9 +119,9 @@ class RemotePreviewLogicHelperTest {
         // Then
         assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE)
         verify(activityLauncherWrapper, times(1)).showActionableEmptyView(
-                activity,
-                WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
-                post.title
+            activity,
+            WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
+            post.title
         )
     }
 
@@ -134,9 +136,9 @@ class RemotePreviewLogicHelperTest {
         // Then
         assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.NETWORK_NOT_AVAILABLE)
         verify(activityLauncherWrapper, times(1)).showActionableEmptyView(
-                activity,
-                WPWebViewUsageCategory.REMOTE_PREVIEW_NO_NETWORK,
-                post.title
+            activity,
+            WPWebViewUsageCategory.REMOTE_PREVIEW_NO_NETWORK,
+            post.title
         )
     }
 
@@ -177,7 +179,7 @@ class RemotePreviewLogicHelperTest {
 
         // Then
         assertThat(result)
-                .isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST)
+            .isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST)
         verify(helperFunctions, times(1)).notifyEmptyPost()
     }
 
@@ -204,7 +206,7 @@ class RemotePreviewLogicHelperTest {
 
         // Then
         assertThat(result).isEqualTo(
-                RemotePreviewLogicHelper.PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
+            RemotePreviewLogicHelper.PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
         )
         verify(helperFunctions, times(1)).notifyEmptyPost()
     }
@@ -233,10 +235,10 @@ class RemotePreviewLogicHelperTest {
         assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.OPENING_PREVIEW)
         verify(helperFunctions, never()).startUploading(any(), any())
         verify(activityLauncherWrapper, times(1)).previewPostOrPageForResult(
-                activity,
-                site,
-                post,
-                RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
+            activity,
+            site,
+            post,
+            RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
         )
     }
 

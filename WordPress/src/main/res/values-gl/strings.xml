@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-26 00:59:28+0000
+Translation-Revision-Date: 2023-01-02 17:26:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: gl_ES
 -->
 <resources>
+    <string name="reader_toast_user_blocked">As entradas deste usuario non se volverán a mostrar</string>
+    <string name="reader_menu_block_user">Bloquear usuario</string>
+    <string name="reader_menu_report_user">Informar deste usuario</string>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">Abrir ligazóns en WordPress</string>
+    <string name="wp_jetpack_deep_link_overlay_description">Parece que tes a aplicación de Jetpack instalada.\n\nQuixeras abrir as ligazóns na aplicación Jetpack a partir de agora?\n\nSempre podes modificar este comportamento en Configuración &gt; Abrir ligazóns en Jetpack</string>
+    <string name="wp_jetpack_deep_link_overlay_title">Abrir ligazóns en Jetpack?</string>
+    <string name="wp_jetpack_continue_without_jetpack">Continuar sen Jetpack</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">O Jetpack fornece estatísticas, notificacións e moito máis para axudarche a crear e desenvolver o sitio WordPress dos teus soños.\n\nA aplicación WordPress xa non é compatíbel coa creación de sitios novos.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack fornece estatísticas, notificacións e moito máis para axudarche a crear e desenvolver o sitio WordPress dos teus soños.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Crear un novo sitio WordPress coa aplicación Jetpack</string>
+    <string name="deep_linking_weblinks_alias_label">weblinks</string>
+    <string name="deep_linking_urilinks_alias_label">urilinks</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Muda para a aplicación Jetpack para continuar a recibir notificacións en tempo real no seu dispositivo.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Muda para a aplicación Jetpack para encontrar, seguir e gustar todas as túas publicacións e sitios favoritos co Lector.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Muda para a aplicación Jetpack para observar o crecemento do tráfico do teu sitio con estatísticas e outros detalles.</string>
     <string name="jp_migration_help_button">Necesitas axuda?</string>
     <string name="jp_migration_continue_button">Continuar</string>
     <string name="jp_migration_welcome_site_found_message">Encontramos o teu sitio. Continúa para transferir todos os teus datos e acceder a Jetpack automaticamente.</string>

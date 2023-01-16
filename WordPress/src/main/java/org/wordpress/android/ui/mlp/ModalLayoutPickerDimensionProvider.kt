@@ -6,7 +6,7 @@ import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
 class ModalLayoutPickerDimensionProvider @Inject constructor(private val contextProvider: ContextProvider) :
-        ThumbDimensionProvider {
+    ThumbDimensionProvider {
     override val previewWidth: Int
         get() = contextProvider.getContext().resources.getDimensionPixelSize(dimen.mlp_layout_card_width)
 

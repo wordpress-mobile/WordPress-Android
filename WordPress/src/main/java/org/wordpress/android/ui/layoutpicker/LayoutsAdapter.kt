@@ -15,7 +15,8 @@ class LayoutsAdapter(
     context: Context,
     private val thumbDimensionProvider: ThumbDimensionProvider
 ) : RecyclerView.Adapter<LayoutViewHolder>() {
-    @Inject lateinit var imageManager: ImageManager
+    @Inject
+    lateinit var imageManager: ImageManager
 
     private var layouts: List<LayoutListItemUiState> = listOf()
 
@@ -30,7 +31,7 @@ class LayoutsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            LayoutViewHolder.from(parent, thumbDimensionProvider)
+        LayoutViewHolder.from(parent, thumbDimensionProvider)
 
     override fun getItemCount(): Int = layouts.size
 

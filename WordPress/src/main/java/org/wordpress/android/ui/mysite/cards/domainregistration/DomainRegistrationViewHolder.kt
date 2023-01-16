@@ -9,7 +9,7 @@ import org.wordpress.android.util.extensions.viewBinding
 class DomainRegistrationViewHolder(
     parent: ViewGroup
 ) : MySiteCardAndItemViewHolder<DomainRegistrationCardBinding>(
-        parent.viewBinding(DomainRegistrationCardBinding::inflate)
+    parent.viewBinding(DomainRegistrationCardBinding::inflate)
 ) {
     fun bind(card: DomainRegistrationCard) = with(binding) {
         mySiteRegisterDomainCta.setOnClickListener { card.onClick.click() }

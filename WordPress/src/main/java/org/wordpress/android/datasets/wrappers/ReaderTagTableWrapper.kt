@@ -9,7 +9,7 @@ import javax.inject.Inject
 @Reusable
 class ReaderTagTableWrapper @Inject constructor() {
     fun shouldAutoUpdateTag(readerTag: ReaderTag): Boolean =
-            ReaderTagTable.shouldAutoUpdateTag(readerTag)
+        ReaderTagTable.shouldAutoUpdateTag(readerTag)
 
     fun setTagLastUpdated(tag: ReaderTag) = ReaderTagTable.setTagLastUpdated(tag)
 

@@ -14,7 +14,7 @@ import javax.inject.Inject
 class LocalEligibilityStatusProviderHelper @Inject constructor(
     private val dbWrapper: DbWrapper,
     private val localMigrationSiteProviderHelper: LocalSiteProviderHelper,
-): LocalDataProviderHelper {
+) : LocalDataProviderHelper {
     @Suppress("ForbiddenComment")
     // TODO: check for eligibility of media? - I guess this might be covered by posts and pages - except for
     // media that is not part of a post or page ??
@@ -38,13 +38,13 @@ class LocalEligibilityStatusProviderHelper @Inject constructor(
         with(dbWrapper.giveMeReadableDb()) {
             val ids = mutableListOf<Int>()
             query(
-                    "PostModel",
-                    arrayOf(PostModelTable.ID),
-                    "${PostModelTable.IS_LOCAL_DRAFT}=1",
-                    null,
-                    null,
-                    null,
-                    "${PostModelTable.ID} ASC",
+                "PostModel",
+                arrayOf(PostModelTable.ID),
+                "${PostModelTable.IS_LOCAL_DRAFT}=1",
+                null,
+                null,
+                null,
+                "${PostModelTable.ID} ASC",
             ).apply {
                 runCatching {
                     while (moveToNext()) {
@@ -59,7 +59,7 @@ class LocalEligibilityStatusProviderHelper @Inject constructor(
     } ?: emptyList()
 }
 
-fun <E: LocalMigrationError> LocalMigrationResult<EligibilityStatusData, E>.validate() = when (this) {
+fun <E : LocalMigrationError> LocalMigrationResult<EligibilityStatusData, E>.validate() = when (this) {
     is Success -> if (this.value.isEligible) {
         this
     } else {

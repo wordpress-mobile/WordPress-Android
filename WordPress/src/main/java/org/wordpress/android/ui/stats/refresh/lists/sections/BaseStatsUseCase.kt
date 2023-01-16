@@ -174,10 +174,10 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
 
     protected open fun buildErrorItem(): List<BlockListItem> {
         return buildLoadingItem() + listOf(
-                BlockListItem.Text(
-                        textResource = R.string.stats_loading_block_error,
-                        isLast = true
-                )
+            BlockListItem.Text(
+                textResource = R.string.stats_loading_block_error,
+                isLast = true
+            )
         )
     }
 
@@ -200,10 +200,10 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
                 when (domainState) {
                     LOADING -> {
                         UseCaseModel(
-                                type,
-                                data = currentData,
-                                stateData = buildLoadingItem(),
-                                state = LOADING
+                            type,
+                            data = currentData,
+                            stateData = buildLoadingItem(),
+                            state = LOADING
                         )
                     }
                     ERROR -> {
@@ -252,11 +252,11 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         backgroundDispatcher: CoroutineDispatcher,
         inputParams: List<UseCaseParam> = listOf()
     ) : BaseStatsUseCase<DOMAIN_MODEL, NotUsedUiState>(
-            type,
-            mainDispatcher,
-            backgroundDispatcher,
-            NotUsedUiState,
-            inputParams
+        type,
+        mainDispatcher,
+        backgroundDispatcher,
+        NotUsedUiState,
+        inputParams
     ) {
         /**
          * Transforms given domain model into the UI model

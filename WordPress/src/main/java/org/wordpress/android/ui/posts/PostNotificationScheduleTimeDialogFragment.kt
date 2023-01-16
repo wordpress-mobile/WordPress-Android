@@ -18,19 +18,20 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettings
 import javax.inject.Inject
 
 class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PublishSettingsViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val publishSettingsFragmentType = arguments?.getParcelable<PublishSettingsFragmentType>(
-                ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE
+            ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE
         )
 
         viewModel = when (publishSettingsFragmentType) {
             PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(requireActivity(), viewModelFactory)
-                        .get(EditPostPublishSettingsViewModel::class.java)
+                .get(EditPostPublishSettingsViewModel::class.java)
             PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(requireActivity(), viewModelFactory)
-                        .get(PrepublishingPublishSettingsViewModel::class.java)
+                .get(PrepublishingPublishSettingsViewModel::class.java)
             null -> error("PublishSettingsViewModel not initialized")
         }
 
@@ -40,7 +41,7 @@ class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
         alertDialogBuilder.setView(view)
         val notificationTime = arguments?.getString(ARG_NOTIFICATION_SCHEDULE_TIME)?.let {
             SchedulingReminderModel.Period.valueOf(
-                    it
+                it
             )
         } ?: OFF
         view.check(notificationTime.toViewId())
@@ -89,8 +90,8 @@ class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
             val fragment = PostNotificationScheduleTimeDialogFragment()
             val args = Bundle()
             args.putParcelable(
-                    ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE,
-                    publishSettingsFragmentType
+                ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE,
+                publishSettingsFragmentType
             )
             period?.let {
                 args.putString(ARG_NOTIFICATION_SCHEDULE_TIME, period.name)

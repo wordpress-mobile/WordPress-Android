@@ -11,8 +11,8 @@ import org.wordpress.android.ui.stats.refresh.utils.WrappingLinearLayoutManager
 import org.wordpress.android.util.image.ImageManager
 
 open class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BaseStatsViewHolder(
-        parent,
-        R.layout.stats_list_block
+    parent,
+    R.layout.stats_list_block
 ) {
     private val list: RecyclerView = itemView.findViewById(R.id.stats_block_list)
     override fun bind(statsType: StatsType?, items: List<BlockListItem>) {
@@ -21,9 +21,9 @@ open class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager
         if (list.adapter == null) {
             val blockListAdapter = BlockListAdapter(imageManager)
             val layoutManager = WrappingLinearLayoutManager(
-                    list.context,
-                    LinearLayoutManager.VERTICAL,
-                    false
+                list.context,
+                LinearLayoutManager.VERTICAL,
+                false
             )
             list.adapter = blockListAdapter
             list.layoutManager = layoutManager

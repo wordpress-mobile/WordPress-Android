@@ -22,7 +22,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
-import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
@@ -31,6 +30,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 import javax.inject.Inject
@@ -49,12 +49,12 @@ class VideoPlaysUseCase constructor(
     private val statsUtils: StatsUtils,
     private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<VideoPlaysModel>(
-        VIDEOS,
-        mainDispatcher,
-        backgroundDispatcher,
-        selectedDateProvider,
-        statsSiteProvider,
-        statsGranularity
+    VIDEOS,
+    mainDispatcher,
+    backgroundDispatcher,
+    selectedDateProvider,
+    statsSiteProvider,
+    statsGranularity
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
@@ -62,20 +62,20 @@ class VideoPlaysUseCase constructor(
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): VideoPlaysModel? {
         return store.getVideoPlays(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate
         )
     }
 
     override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<VideoPlaysModel> {
         val response = store.fetchVideoPlays(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate,
-                forced
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate,
+            forced
         )
         val model = response.model
         val error = response.error
@@ -101,24 +101,24 @@ class VideoPlaysUseCase constructor(
             items.add(header)
             items.addAll(domainModel.plays.mapIndexed { index, videoPlays ->
                 ListItemWithIcon(
-                        text = videoPlays.title,
-                        value = statsUtils.toFormattedString(videoPlays.plays),
-                        showDivider = index < domainModel.plays.size - 1,
-                        navigationAction = videoPlays.url?.let { ListItemInteraction.create(it, this::onItemClick) },
-                        contentDescription = contentDescriptionHelper.buildContentDescription(
-                                header,
-                                videoPlays.title,
-                                videoPlays.plays
-                        )
+                    text = videoPlays.title,
+                    value = statsUtils.toFormattedString(videoPlays.plays),
+                    showDivider = index < domainModel.plays.size - 1,
+                    navigationAction = videoPlays.url?.let { ListItemInteraction.create(it, this::onItemClick) },
+                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
+                        videoPlays.title,
+                        videoPlays.plays
+                    )
                 )
             })
 
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
-                        Link(
-                                text = R.string.stats_insights_view_more,
-                                navigateAction = ListItemInteraction.create(statsGranularity, this::onViewMoreClick)
-                        )
+                    Link(
+                        text = R.string.stats_insights_view_more,
+                        navigateAction = ListItemInteraction.create(statsGranularity, this::onViewMoreClick)
+                    )
                 )
             }
         }
@@ -128,10 +128,10 @@ class VideoPlaysUseCase constructor(
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_VIDEO_PLAYS_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(
-                ViewVideoPlays(
-                        statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
-                )
+            ViewVideoPlays(
+                statsGranularity,
+                selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+            )
         )
     }
 
@@ -152,17 +152,17 @@ class VideoPlaysUseCase constructor(
         private val contentDescriptionHelper: ContentDescriptionHelper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
-                VideoPlaysUseCase(
-                        granularity,
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        store,
-                        statsSiteProvider,
-                        selectedDateProvider,
-                        analyticsTracker,
-                        contentDescriptionHelper,
-                        statsUtils,
-                        useCaseMode
-                )
+            VideoPlaysUseCase(
+                granularity,
+                mainDispatcher,
+                backgroundDispatcher,
+                store,
+                statsSiteProvider,
+                selectedDateProvider,
+                analyticsTracker,
+                contentDescriptionHelper,
+                statsUtils,
+                useCaseMode
+            )
     }
 }

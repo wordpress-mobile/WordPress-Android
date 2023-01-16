@@ -34,11 +34,11 @@ class SitePickerViewModel @Inject constructor() : ViewModel() {
 
     sealed class Action(val actionType: ActionType) {
         data class NavigateToState(val navigateState: NavigateState, val siteForReblog: SiteRecord? = null) : Action(
-                NAVIGATE_TO_STATE
+            NAVIGATE_TO_STATE
         )
 
         data class ContinueReblogTo(val siteForReblog: SiteRecord?) : Action(
-                CONTINUE_REBLOG_TO
+            CONTINUE_REBLOG_TO
         )
 
         object AskForSiteSelection : Action(ASK_FOR_SITE_SELECTION)
@@ -50,10 +50,10 @@ class SitePickerViewModel @Inject constructor() : ViewModel() {
 
     fun onContinueFlowSelected() {
         _onActionTriggered.value = Event(
-                if (siteForReblog != null)
-                    ContinueReblogTo(siteForReblog)
-                else
-                    AskForSiteSelection
+            if (siteForReblog != null)
+                ContinueReblogTo(siteForReblog)
+            else
+                AskForSiteSelection
         )
     }
 

@@ -14,11 +14,14 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class TotalStatsMapperTest : BaseUnitTest() {
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var statsUtils: StatsUtils
     private lateinit var mapper: TotalStatsMapper
     private val previousWeekData = listOf(5L, 10, 15, 20, 25, 30, 35)
-    private val currentWeekData = listOf(40L, 45, 50, 55, 60, 65, 70)
+    private val currentWeekData = listOf(40L, 45, 50, 55, 60, 65, 70, 20)
     private val dates = (previousWeekData + currentWeekData).map {
         PeriodData("", 0, 0, it, 0, it, 0)
     }
@@ -31,7 +34,7 @@ class TotalStatsMapperTest : BaseUnitTest() {
 
     @Test
     fun `builds value`() {
-        val totalLikes = currentWeekData.sum()
+        val totalLikes = currentWeekData.dropLast(1).sum()
 
         val totalLikesResult = mapper.buildTotalLikesValue(dates)
         assertThat(totalLikesResult.value).isEqualTo(totalLikes.toString())

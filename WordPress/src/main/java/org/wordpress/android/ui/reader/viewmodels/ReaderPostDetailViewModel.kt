@@ -203,9 +203,11 @@ class ReaderPostDetailViewModel @Inject constructor(
         data class Empty(
             val message: UiString
         ) : CommentSnippetState()
+
         data class Failure(
             val message: UiString
         ) : CommentSnippetState()
+
         data class CommentSnippetData(
             val comments: ReaderCommentList
         ) : CommentSnippetState()
@@ -245,8 +247,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                     post.isFollowedByCurrentUser = data.following
                     updateFollowButtonUiState(
-                            currentUiState = currentUiState,
-                            isFollowed = post.isFollowedByCurrentUser
+                        currentUiState = currentUiState,
+                        isFollowed = post.isFollowedByCurrentUser
                     )
                 }
             }
@@ -258,8 +260,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                     if (likesEnhancementsFeatureConfig.isEnabled()) {
                         onRefreshLikersData(
-                                post,
-                                true
+                            post,
+                            true
                         )
                     }
                     if (commentsSnippetFeatureConfig.isEnabled()) {
@@ -306,17 +308,17 @@ class ReaderPostDetailViewModel @Inject constructor(
         post?.let {
             if (!post.isExternal) {
                 val isRepliesDataChanged = lastRenderedRepliesData?.isMatchingPostCommentsStatus(
-                        it.blogId,
-                        it.postId,
-                        it.numReplies
+                    it.blogId,
+                    it.postId,
+                    it.numReplies
                 ) ?: true
 
                 if (!isRepliesDataChanged) return
 
                 readerCommentServiceStarterWrapper.startServiceForCommentSnippet(
-                        contextProvider.getContext(),
-                        blogId,
-                        postId
+                    contextProvider.getContext(),
+                    blogId,
+                    postId
                 )
             }
         }
@@ -324,8 +326,8 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     fun onRefreshLikersData(post: ReaderPost, isLikingAction: Boolean = false) {
         if (
-                !likesEnhancementsFeatureConfig.isEnabled() ||
-                readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId)
+            !likesEnhancementsFeatureConfig.isEnabled() ||
+            readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId)
         ) {
             return
         }
@@ -335,10 +337,10 @@ class ReaderPostDetailViewModel @Inject constructor(
         if (!isLikeDataChanged) return
 
         lastRenderedLikesData = RenderedLikesData(
-                post.blogId,
-                post.postId,
-                post.numLikes,
-                post.isLikedByCurrentUser
+            post.blogId,
+            post.postId,
+            post.numLikes,
+            post.isLikedByCurrentUser
         )
 
         if (isLikingAction) {
@@ -347,12 +349,12 @@ class ReaderPostDetailViewModel @Inject constructor(
             state?.let {
                 when (it) {
                     is Failure -> _updateLikesState.value = it.copy(
-                            iLike = post.isLikedByCurrentUser,
-                            expectedNumLikes = post.numLikes
+                        iLike = post.isLikedByCurrentUser,
+                        expectedNumLikes = post.numLikes
                     )
                     is LikesData -> _updateLikesState.value = it.copy(
-                            iLike = post.isLikedByCurrentUser,
-                            expectedNumLikes = post.numLikes
+                        iLike = post.isLikedByCurrentUser,
+                        expectedNumLikes = post.numLikes
                     )
                     Loading -> {}
                 }
@@ -361,13 +363,13 @@ class ReaderPostDetailViewModel @Inject constructor(
             getLikesJob?.cancel()
             getLikesJob = launch(bgDispatcher) {
                 getLikesHandler.handleGetLikesForPost(
-                        LikeGroupFingerPrint(
-                                post.blogId,
-                                post.postId,
-                                post.numLikes
-                        ),
-                        requestNextPage = false,
-                        pageLength = MAX_NUM_LIKES_FACES_WITH_SELF
+                    LikeGroupFingerPrint(
+                        post.blogId,
+                        post.postId,
+                        post.numLikes
+                    ),
+                    requestNextPage = false,
+                    pageLength = MAX_NUM_LIKES_FACES_WITH_SELF
                 )
             }
         }
@@ -440,7 +442,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             findPost(it.postId, it.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
                     readerPostMoreButtonUiStateBuilder.buildMoreMenuItemsBlocking(
-                            post, this@ReaderPostDetailViewModel::onButtonClicked
+                        post, this@ReaderPostDetailViewModel::onButtonClicked
                     )
                 } else {
                     null
@@ -455,17 +457,17 @@ class ReaderPostDetailViewModel @Inject constructor(
         readerTracker.track(Stat.READER_ARTICLE_FEATURED_IMAGE_TAPPED)
         val site = siteStore.getSiteBySiteId(blogId)
         _navigationEvents.value = Event(
-                ReaderNavigationEvents.ShowMediaPreview(site = site, featuredImage = featuredImageUrl)
+            ReaderNavigationEvents.ShowMediaPreview(site = site, featuredImage = featuredImageUrl)
         )
     }
 
     fun onCommentSnippetClicked(postId: Long, blogId: Long) {
         if (!commentsSnippetFeatureConfig.isEnabled()) return
         onActionClicked(
-                postId,
-                blogId,
-                ReaderPostCardActionType.COMMENTS,
-                ReaderTracker.SOURCE_POST_DETAIL_COMMENT_SNIPPET
+            postId,
+            blogId,
+            ReaderPostCardActionType.COMMENTS,
+            ReaderTracker.SOURCE_POST_DETAIL_COMMENT_SNIPPET
         )
     }
 
@@ -477,10 +479,10 @@ class ReaderPostDetailViewModel @Inject constructor(
         launch {
             findPost(postId, blogId)?.let {
                 readerPostCardActionsHandler.onAction(
-                        it,
-                        type,
-                        isBookmarkList = false,
-                        source = source
+                    it,
+                    type,
+                    isBookmarkList = false,
+                    source = source
                 )
             }
         }
@@ -514,9 +516,9 @@ class ReaderPostDetailViewModel @Inject constructor(
         launch {
             findPost(postId, blogId)?.let {
                 readerPostCardActionsHandler.handleHeaderClicked(
-                        blogId,
-                        it.feedId,
-                        it.isFollowedByCurrentUser
+                    blogId,
+                    it.feedId,
+                    it.isFollowedByCurrentUser
                 )
             }
         }
@@ -560,9 +562,9 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun findPost(postId: Long, blogId: Long): ReaderPost? {
         return readerPostTableWrapper.getBlogPost(
-                blogId,
-                postId,
-                true
+            blogId,
+            postId,
+            true
         )
     }
 
@@ -570,11 +572,11 @@ class ReaderPostDetailViewModel @Inject constructor(
         post: ReaderPost
     ): ReaderPostDetailsUiState {
         return postDetailUiStateBuilder.mapPostToUiState(
-                post = post,
-                onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked,
-                onBlogSectionClicked = this@ReaderPostDetailViewModel::onBlogSectionClicked,
-                onFollowClicked = { onButtonClicked(post.postId, post.blogId, FOLLOW) },
-                onTagItemClicked = this@ReaderPostDetailViewModel::onTagItemClicked
+            post = post,
+            onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked,
+            onBlogSectionClicked = this@ReaderPostDetailViewModel::onBlogSectionClicked,
+            onFollowClicked = { onButtonClicked(post.postId, post.blogId, FOLLOW) },
+            onTagItemClicked = this@ReaderPostDetailViewModel::onTagItemClicked
         )
     }
 
@@ -583,10 +585,10 @@ class ReaderPostDetailViewModel @Inject constructor(
         relatedPosts: ReaderSimplePostList,
         isGlobal: Boolean
     ) = postDetailUiStateBuilder.mapRelatedPostsToUiState(
-            sourcePost = sourcePost,
-            relatedPosts = relatedPosts,
-            isGlobal = isGlobal,
-            onItemClicked = this@ReaderPostDetailViewModel::onRelatedPostItemClicked
+        sourcePost = sourcePost,
+        relatedPosts = relatedPosts,
+        isGlobal = isGlobal,
+        onItemClicked = this@ReaderPostDetailViewModel::onRelatedPostItemClicked
     )
 
     private fun updatePostDetailsUi() {
@@ -602,13 +604,13 @@ class ReaderPostDetailViewModel @Inject constructor(
         isFollowed: Boolean
     ) {
         val updatedFollowButtonUiState = currentUiState
-                .headerUiState
-                .followButtonUiState
-                .copy(isFollowed = isFollowed)
+            .headerUiState
+            .followButtonUiState
+            .copy(isFollowed = isFollowed)
 
         val updatedHeaderUiState = currentUiState
-                .headerUiState
-                .copy(followButtonUiState = updatedFollowButtonUiState)
+            .headerUiState
+            .copy(followButtonUiState = updatedFollowButtonUiState)
 
         _uiState.value = currentUiState.copy(headerUiState = updatedHeaderUiState)
     }
@@ -616,10 +618,10 @@ class ReaderPostDetailViewModel @Inject constructor(
     private fun updatePostActions(post: ReaderPost) {
         (_uiState.value as? ReaderPostDetailsUiState)?.let {
             _uiState.value = it.copy(
-                    actions = postDetailUiStateBuilder.buildPostActions(
-                            post,
-                            this@ReaderPostDetailViewModel::onButtonClicked
-                    )
+                actions = postDetailUiStateBuilder.buildPostActions(
+                    post,
+                    this@ReaderPostDetailViewModel::onButtonClicked
+                )
             )
         }
     }
@@ -627,16 +629,16 @@ class ReaderPostDetailViewModel @Inject constructor(
     private fun updateRelatedPostsUiState(sourcePost: ReaderPost, state: FetchRelatedPostsState.Success) {
         (_uiState.value as? ReaderPostDetailsUiState)?.let {
             _uiState.value = it.copy(
-                    localRelatedPosts = convertRelatedPostsToUiState(
-                            sourcePost = sourcePost,
-                            relatedPosts = state.localRelatedPosts,
-                            isGlobal = false
-                    ),
-                    globalRelatedPosts = convertRelatedPostsToUiState(
-                            sourcePost = sourcePost,
-                            relatedPosts = state.globalRelatedPosts,
-                            isGlobal = true
-                    )
+                localRelatedPosts = convertRelatedPostsToUiState(
+                    sourcePost = sourcePost,
+                    relatedPosts = state.localRelatedPosts,
+                    isGlobal = false
+                ),
+                globalRelatedPosts = convertRelatedPostsToUiState(
+                    sourcePost = sourcePost,
+                    relatedPosts = state.globalRelatedPosts,
+                    isGlobal = true
+                )
             )
         }
     }
@@ -645,8 +647,8 @@ class ReaderPostDetailViewModel @Inject constructor(
         trackNotAuthorisedState()
 
         _uiState.value = ErrorUiState(
-                message = UiStringRes(getNotAuthorisedErrorMessageRes()),
-                signInButtonVisibility = shouldOfferSignIn
+            message = UiStringRes(getNotAuthorisedErrorMessageRes()),
+            signInButtonVisibility = shouldOfferSignIn
         )
     }
 
@@ -700,13 +702,13 @@ class ReaderPostDetailViewModel @Inject constructor(
         val contentDescription = getContentDescription(goingToShowFaces, engageItemsList)
 
         return TrainOfFacesUiState(
-                showLikeFacesTrainContainer = showLikeFacesTrainContainer,
-                showLoading = showLoading,
-                engageItemsList = engageItemsList,
-                showEmptyState = showEmptyState,
-                emptyStateTitle = emptyStateTitle,
-                contentDescription = contentDescription,
-                goingToShowFaces = goingToShowFaces
+            showLikeFacesTrainContainer = showLikeFacesTrainContainer,
+            showLoading = showLoading,
+            engageItemsList = engageItemsList,
+            showEmptyState = showEmptyState,
+            emptyStateTitle = emptyStateTitle,
+            contentDescription = contentDescription,
+            goingToShowFaces = goingToShowFaces
         )
     }
 
@@ -731,52 +733,52 @@ class ReaderPostDetailViewModel @Inject constructor(
             }
             numLikes == 1 && iLiked -> {
                 TrailingLabelTextItem(
-                        UiStringText(
-                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(R.string.like_faces_you_like_text)
-                        ),
-                        labelColor
+                    UiStringText(
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(R.string.like_faces_you_like_text)
+                    ),
+                    labelColor
                 ).toList()
             }
             numLikes == 2 && iLiked -> {
                 TrailingLabelTextItem(
-                        UiStringText(
-                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                        R.string.like_faces_you_plus_one_like_text
-                                )
-                        ),
-                        labelColor
+                    UiStringText(
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                            R.string.like_faces_you_plus_one_like_text
+                        )
+                    ),
+                    labelColor
                 ).toList()
             }
             numLikes > 2 && iLiked -> {
                 TrailingLabelTextItem(
-                        UiStringText(
-                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                        R.string.like_faces_you_plus_others_like_text,
-                                        numLikes - 1
-                                )
-                        ),
-                        labelColor
+                    UiStringText(
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                            R.string.like_faces_you_plus_others_like_text,
+                            numLikes - 1
+                        )
+                    ),
+                    labelColor
                 ).toList()
             }
             numLikes == 1 && !iLiked -> {
                 TrailingLabelTextItem(
-                        UiStringText(
-                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                        R.string.like_faces_one_blogger_likes_text
-                                )
-                        ),
-                        labelColor
+                    UiStringText(
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                            R.string.like_faces_one_blogger_likes_text
+                        )
+                    ),
+                    labelColor
                 ).toList()
             }
             numLikes > 1 && !iLiked -> {
                 TrailingLabelTextItem(
-                        UiStringText(
-                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                        R.string.like_faces_others_like_text,
-                                        numLikes
-                                )
-                        ),
-                        labelColor
+                    UiStringText(
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                            R.string.like_faces_others_like_text,
+                            numLikes
+                        )
+                    ),
+                    labelColor
                 ).toList()
             }
             else -> {
@@ -792,17 +794,17 @@ class ReaderPostDetailViewModel @Inject constructor(
             is LikesData -> {
                 val liked = isLikedByCurrentUser(updateLikesState.iLike)
                 Triple(
-                        engagementUtils.likesToTrainOfFaces(updateLikesState.likes.manageSelfLike(liked)),
-                        updateLikesState.expectedNumLikes,
-                        liked
+                    engagementUtils.likesToTrainOfFaces(updateLikesState.likes.manageSelfLike(liked)),
+                    updateLikesState.expectedNumLikes,
+                    liked
                 )
             }
             is Failure -> {
                 val liked = isLikedByCurrentUser(updateLikesState.iLike)
                 Triple(
-                        engagementUtils.likesToTrainOfFaces(updateLikesState.cachedLikes.manageSelfLike(liked)),
-                        updateLikesState.expectedNumLikes,
-                        liked
+                    engagementUtils.likesToTrainOfFaces(updateLikesState.cachedLikes.manageSelfLike(liked)),
+                    updateLikesState.expectedNumLikes,
+                    liked
                 )
             }
             Loading, null -> Triple(listOf(), 0, false)
@@ -831,19 +833,19 @@ class ReaderPostDetailViewModel @Inject constructor(
     fun onLikeFacesClicked() {
         post?.let { readerPost ->
             _navigationEvents.value = Event(
-                    ShowEngagedPeopleList(
-                            readerPost.blogId,
-                            readerPost.postId,
-                            HeaderData(
-                                    AuthorNameString(readerPost.authorName),
-                                    readerPost.title,
-                                    readerPost.postAvatar,
-                                    readerPost.authorId,
-                                    readerPost.authorBlogId,
-                                    readerPost.authorBlogUrl,
-                                    lastRenderedLikesData?.numLikes ?: readerPost.numLikes
-                            )
+                ShowEngagedPeopleList(
+                    readerPost.blogId,
+                    readerPost.postId,
+                    HeaderData(
+                        AuthorNameString(readerPost.authorName),
+                        readerPost.title,
+                        readerPost.postAvatar,
+                        readerPost.authorId,
+                        readerPost.authorBlogId,
+                        readerPost.authorBlogUrl,
+                        lastRenderedLikesData?.numLikes ?: readerPost.numLikes
                     )
+                )
             )
         }
     }
@@ -915,8 +917,8 @@ class ReaderPostDetailViewModel @Inject constructor(
             val comments: ReaderCommentList? = post?.let {
                 withContext(bgDispatcher) {
                     readerCommentTableWrapper.getCommentsForPostSnippet(
-                            it,
-                            READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
+                        it,
+                        READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
                     ) ?: ReaderCommentList()
                 }
             }
@@ -942,8 +944,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                     val comments: ReaderCommentList? = post?.let {
                         withContext(bgDispatcher) {
                             readerCommentTableWrapper.getCommentsForPostSnippet(
-                                    it,
-                                    READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
+                                it,
+                                READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
                             ) ?: ReaderCommentList()
                         }
                     }
@@ -962,21 +964,23 @@ class ReaderPostDetailViewModel @Inject constructor(
             when (result) {
                 HAS_NEW, CHANGED, UNCHANGED -> {
                     lastRenderedRepliesData = RenderedRepliesData(
-                            blogId = post?.blogId,
-                            postId = post?.postId,
-                            numReplies = post?.numReplies
+                        blogId = post?.blogId,
+                        postId = post?.postId,
+                        numReplies = post?.numReplies
                     )
 
                     if (comments.isNotEmpty()) {
                         CommentSnippetData(comments = comments)
                     } else {
-                        CommentSnippetState.Empty(UiStringRes(
+                        CommentSnippetState.Empty(
+                            UiStringRes(
                                 if (post?.isCommentsOpen != false) {
                                     R.string.reader_empty_comments
                                 } else {
                                     R.string.reader_label_comments_closed
                                 }
-                        ))
+                            )
+                        )
                     }
                 }
                 FAILED -> {
@@ -1005,6 +1009,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     companion object {
         @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
         const val MAX_NUM_LIKES_FACES_WITH_SELF = 6
+
         @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
         const val MAX_NUM_LIKES_FACES_WITHOUT_SELF = 5
     }

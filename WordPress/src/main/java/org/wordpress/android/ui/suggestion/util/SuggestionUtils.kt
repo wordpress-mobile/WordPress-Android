@@ -15,10 +15,10 @@ object SuggestionUtils {
         context: Context,
         connectionManager: SuggestionServiceConnectionManager
     ): SuggestionAdapter = setupUserSuggestions(
-            site.siteId,
-            context,
-            connectionManager,
-            SiteUtils.isAccessedViaWPComRest(site)
+        site.siteId,
+        context,
+        connectionManager,
+        SiteUtils.isAccessedViaWPComRest(site)
     )
 
     @JvmStatic

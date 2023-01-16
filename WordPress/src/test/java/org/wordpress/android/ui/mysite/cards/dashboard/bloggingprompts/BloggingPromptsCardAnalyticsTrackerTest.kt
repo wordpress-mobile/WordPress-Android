@@ -14,8 +14,8 @@ class BloggingPromptsCardAnalyticsTrackerTest {
     fun `Should track my site card answer prompt clicked`() {
         classToTest.trackMySiteCardAnswerPromptClicked()
         verify(analyticsTracker).track(
-                Stat.BLOGGING_PROMPTS_MY_SITE_CARD_ANSWER_PROMPT_CLICKED,
-                emptyMap()
+            Stat.BLOGGING_PROMPTS_MY_SITE_CARD_ANSWER_PROMPT_CLICKED,
+            emptyMap()
         )
     }
 
@@ -23,8 +23,8 @@ class BloggingPromptsCardAnalyticsTrackerTest {
     fun `Should track my site card share button clicked`() {
         classToTest.trackMySiteCardShareClicked()
         verify(analyticsTracker).track(
-                Stat.BLOGGING_PROMPTS_MY_SITE_CARD_SHARE_CLICKED,
-                emptyMap()
+            Stat.BLOGGING_PROMPTS_MY_SITE_CARD_SHARE_CLICKED,
+            emptyMap()
         )
     }
 
@@ -32,8 +32,8 @@ class BloggingPromptsCardAnalyticsTrackerTest {
     fun `Should track my site card menu clicked`() {
         classToTest.trackMySiteCardMenuClicked()
         verify(analyticsTracker).track(
-                Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_CLICKED,
-                emptyMap()
+            Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_CLICKED,
+            emptyMap()
         )
     }
 
@@ -41,8 +41,8 @@ class BloggingPromptsCardAnalyticsTrackerTest {
     fun `Should track my site card menu view more prompts clicked`() {
         classToTest.trackMySiteCardMenuViewMorePromptsClicked()
         verify(analyticsTracker).track(
-                Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_VIEW_MORE_PROMPTS_CLICKED,
-                emptyMap()
+            Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_VIEW_MORE_PROMPTS_CLICKED,
+            emptyMap()
         )
     }
 
@@ -50,8 +50,8 @@ class BloggingPromptsCardAnalyticsTrackerTest {
     fun `Should track my site card menu skip this prompt clicked`() {
         classToTest.trackMySiteCardMenuSkipThisPromptClicked()
         verify(analyticsTracker).track(
-                Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_SKIP_THIS_PROMPT_CLICKED,
-                emptyMap()
+            Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_SKIP_THIS_PROMPT_CLICKED,
+            emptyMap()
         )
     }
 
@@ -59,8 +59,8 @@ class BloggingPromptsCardAnalyticsTrackerTest {
     fun `Should track my site card menu remove from dashboard clicked`() {
         classToTest.trackMySiteCardMenuRemoveFromDashboardClicked()
         verify(analyticsTracker).track(
-                Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_REMOVE_FROM_DASHBOARD_CLICKED,
-                emptyMap()
+            Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_REMOVE_FROM_DASHBOARD_CLICKED,
+            emptyMap()
         )
     }
 
@@ -68,8 +68,8 @@ class BloggingPromptsCardAnalyticsTrackerTest {
     fun `Should track my site card menu learn more clicked`() {
         classToTest.trackMySiteCardMenuLearnMoreClicked()
         verify(analyticsTracker).track(
-                Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_LEARN_MORE_CLICKED,
-                emptyMap()
+            Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_LEARN_MORE_CLICKED,
+            emptyMap()
         )
     }
 
@@ -77,8 +77,8 @@ class BloggingPromptsCardAnalyticsTrackerTest {
     fun `Should track my site card skip this prompt undo clicked`() {
         classToTest.trackMySiteCardSkipThisPromptUndoClicked()
         verify(analyticsTracker).track(
-                Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_SKIP_THIS_PROMPT_UNDO_CLICKED,
-                emptyMap()
+            Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_SKIP_THIS_PROMPT_UNDO_CLICKED,
+            emptyMap()
         )
     }
 
@@ -86,8 +86,8 @@ class BloggingPromptsCardAnalyticsTrackerTest {
     fun `Should track my site card remove from dashboard undo clicked`() {
         classToTest.trackMySiteCardRemoveFromDashboardUndoClicked()
         verify(analyticsTracker).track(
-                Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_REMOVE_FROM_DASHBOARD_UNDO_CLICKED,
-                emptyMap()
+            Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_REMOVE_FROM_DASHBOARD_UNDO_CLICKED,
+            emptyMap()
         )
     }
 }

@@ -79,14 +79,14 @@ object QuickStartUtils {
         formattedMessage = formattedMessage.replaceFirst("  ", " ")
 
         val mutableSpannedMessage = SpannableStringBuilder(
-                HtmlCompat.fromHtml(formattedMessage, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            HtmlCompat.fromHtml(formattedMessage, HtmlCompat.FROM_HTML_MODE_COMPACT)
         )
         // nothing to highlight
         if (startOfHighlight != -1 && endOfHighlight != -1) {
             val highlightColor = activityContext.getColorFromAttribute(R.attr.colorSurface)
             mutableSpannedMessage.setSpan(
-                    ForegroundColorSpan(highlightColor),
-                    startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                ForegroundColorSpan(highlightColor),
+                startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
             val icon: Drawable? = try {
@@ -98,7 +98,7 @@ object QuickStartUtils {
 
             if (icon != null) {
                 val iconSize = activityContext.resources
-                        .getDimensionPixelOffset(R.dimen.dialog_snackbar_max_icons_size)
+                    .getDimensionPixelOffset(R.dimen.dialog_snackbar_max_icons_size)
                 icon.setBounds(0, 0, iconSize, iconSize)
 
                 DrawableCompat.setTint(icon, highlightColor)
@@ -109,8 +109,8 @@ object QuickStartUtils {
                 }
 
                 mutableSpannedMessage.setSpan(
-                        ImageSpan(icon), startOfHighlight, startOfHighlight + 1,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    ImageSpan(icon), startOfHighlight, startOfHighlight + 1,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             }
         }
@@ -138,9 +138,9 @@ object QuickStartUtils {
     ) {
         topLevelParent.post {
             val quickStartFocusPointView = LayoutInflater.from(topLevelParent.context)
-                    .inflate(R.layout.quick_start_focus_point_view, topLevelParent, false)
+                .inflate(R.layout.quick_start_focus_point_view, topLevelParent, false)
             val focusPointSize =
-                    topLevelParent.context.resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
+                topLevelParent.context.resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
 
             val topLevelParentViewLocation = IntArray(2)
             topLevelParent.getLocationOnScreen(topLevelParentViewLocation)
@@ -264,14 +264,14 @@ object QuickStartUtils {
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent = PendingIntent.getBroadcast(
-                context,
-                RequestCodes.QUICK_START_REMINDER_RECEIVER,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            context,
+            RequestCodes.QUICK_START_REMINDER_RECEIVER,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         alarmManager.set(
-                AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + QUICK_START_REMINDER_INTERVAL,
-                pendingIntent
+            AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + QUICK_START_REMINDER_INTERVAL,
+            pendingIntent
         )
     }
 
@@ -280,10 +280,10 @@ object QuickStartUtils {
         val intent = Intent(context, QuickStartReminderReceiver::class.java)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent = PendingIntent.getBroadcast(
-                context,
-                RequestCodes.QUICK_START_REMINDER_RECEIVER,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            context,
+            RequestCodes.QUICK_START_REMINDER_RECEIVER,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         alarmManager.cancel(pendingIntent)
     }
@@ -305,7 +305,7 @@ object QuickStartUtils {
 
         if (uncompletedTasksOfPreferredType.isEmpty()) {
             val otherQuickStartTaskTypes = quickStartType.taskTypes
-                    .filter { it != taskType && it != UNKNOWN }
+                .filter { it != taskType && it != UNKNOWN }
 
             otherQuickStartTaskTypes.forEach {
                 val otherUncompletedTasks = quickStartStore.getUncompletedTasksByType(siteLocalId, it)
@@ -352,7 +352,7 @@ object QuickStartUtils {
 
         // if we have not skipped a task yet, return the first available task from the list
         val lastSkippedTask = AppPrefs.getLastSkippedQuickStartTask(quickStartType)
-                ?: return uncompletedTasks.first()
+            ?: return uncompletedTasks.first()
 
         // look for a task that follows the one we skipped
         val taskThatFollowsSkippedOne = uncompletedTasks.firstOrNull {

@@ -13,7 +13,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
@@ -90,11 +89,11 @@ class PostListViewModel @Inject constructor(
 
     private val dataSource: PostListItemDataSource by lazy {
         PostListItemDataSource(
-                dispatcher = dispatcher,
-                postStore = postStore,
-                postFetcher = connector.postFetcher,
-                transform = this::transformPostModelToPostListItemUiState,
-                postListType = connector.postListType
+            dispatcher = dispatcher,
+            postStore = postStore,
+            postFetcher = connector.postFetcher,
+            transform = this::transformPostModelToPostListItemUiState,
+            postListType = connector.postListType
         )
     }
 
@@ -104,10 +103,10 @@ class PostListViewModel @Inject constructor(
     val pagedListData: LiveData<PagedPostList> = _pagedListData
 
     private val _emptyViewState = ThrottleLiveData<PostListEmptyUiState>(
-            offset = EMPTY_VIEW_THROTTLE,
-            coroutineScope = viewModelScope,
-            mainDispatcher = uiDispatcher,
-            backgroundDispatcher = bgDispatcher
+        offset = EMPTY_VIEW_THROTTLE,
+        coroutineScope = viewModelScope,
+        mainDispatcher = uiDispatcher,
+        backgroundDispatcher = bgDispatcher
     )
     val emptyViewState: LiveData<PostListEmptyUiState> = _emptyViewState
 
@@ -219,18 +218,18 @@ class PostListViewModel @Inject constructor(
             }
 
             PostListDescriptorForRestSite(
-                    site = connector.site,
-                    statusList = connector.postListType.postStatuses,
-                    author = author,
-                    searchQuery = searchQuery,
-                    order = if(connector.postListType == SCHEDULED) ListOrder.ASC else ListOrder.DESC
+                site = connector.site,
+                statusList = connector.postListType.postStatuses,
+                author = author,
+                searchQuery = searchQuery,
+                order = if (connector.postListType == SCHEDULED) ListOrder.ASC else ListOrder.DESC
             )
         } else {
             PostListDescriptorForXmlRpcSite(
-                    site = connector.site,
-                    statusList = connector.postListType.postStatuses,
-                    searchQuery = searchQuery,
-                    order = if(connector.postListType == SCHEDULED) ListOrder.ASC else ListOrder.DESC
+                site = connector.site,
+                statusList = connector.postListType.postStatuses,
+                searchQuery = searchQuery,
+                order = if (connector.postListType == SCHEDULED) ListOrder.ASC else ListOrder.DESC
             )
         }
     }
@@ -238,15 +237,15 @@ class PostListViewModel @Inject constructor(
     private fun listenToEmptyViewStateLiveData(pagedListWrapper: PagedListWrapper<PostListItemType>) {
         val update = {
             createEmptyUiState(
-                    postListType = connector.postListType,
-                    isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
-                    isLoadingData = pagedListWrapper.isFetchingFirstPage.value ?: false ||
-                            pagedListWrapper.data.value == null,
-                    isListEmpty = pagedListWrapper.isEmpty.value ?: true,
-                    isSearchPromptRequired = isEmptySearch(),
-                    error = pagedListWrapper.listError.value,
-                    fetchFirstPage = this::fetchFirstPage,
-                    newPost = connector.postActionHandler::newPost
+                postListType = connector.postListType,
+                isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
+                isLoadingData = pagedListWrapper.isFetchingFirstPage.value ?: false ||
+                        pagedListWrapper.data.value == null,
+                isListEmpty = pagedListWrapper.isEmpty.value ?: true,
+                isSearchPromptRequired = isEmptySearch(),
+                error = pagedListWrapper.listError.value,
+                fetchFirstPage = this::fetchFirstPage,
+                newPost = connector.postActionHandler::newPost
             )
         }
 
@@ -299,14 +298,14 @@ class PostListViewModel @Inject constructor(
 
     private fun showEmptySearchPrompt() {
         _emptyViewState.value = createEmptyUiState(
-                postListType = SEARCH,
-                isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
-                isLoadingData = false,
-                isListEmpty = true,
-                isSearchPromptRequired = true,
-                error = null,
-                fetchFirstPage = this@PostListViewModel::fetchFirstPage,
-                newPost = connector.postActionHandler::newPost
+            postListType = SEARCH,
+            isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
+            isLoadingData = false,
+            isListEmpty = true,
+            isSearchPromptRequired = true,
+            error = null,
+            fetchFirstPage = this@PostListViewModel::fetchFirstPage,
+            newPost = connector.postActionHandler::newPost
         )
     }
 
@@ -366,23 +365,23 @@ class PostListViewModel @Inject constructor(
     private fun transformPostModelToPostListItemUiState(post: PostModel): PostListItemUiState {
         val hasAutoSave = connector.hasAutoSave(post)
         return listItemUiStateHelper.createPostListItemUiState(
-                authorFilterSelection,
-                post = post,
-                site = connector.site,
-                unhandledConflicts = connector.doesPostHaveUnhandledConflict(post),
-                hasAutoSave = hasAutoSave,
-                capabilitiesToPublish = uploadUtilsWrapper.userCanPublish(connector.site),
-                statsSupported = isStatsSupported,
-                featuredImageUrl =
-                convertToPhotonUrlIfPossible(connector.getFeaturedImageUrl(post.featuredImageId)),
-                formattedDate = PostUtils.getFormattedDate(post),
-                performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id)),
-                onAction = { postModel, buttonType, statEvent ->
-                    trackPostListAction(connector.site, buttonType, postModel, statEvent)
-                    connector.postActionHandler.handlePostButton(buttonType, postModel, hasAutoSave)
-                },
-                uploadStatusTracker = connector.uploadStatusTracker,
-                isSearch = connector.postListType == SEARCH
+            authorFilterSelection,
+            post = post,
+            site = connector.site,
+            unhandledConflicts = connector.doesPostHaveUnhandledConflict(post),
+            hasAutoSave = hasAutoSave,
+            capabilitiesToPublish = uploadUtilsWrapper.userCanPublish(connector.site),
+            statsSupported = isStatsSupported,
+            featuredImageUrl =
+            convertToPhotonUrlIfPossible(connector.getFeaturedImageUrl(post.featuredImageId)),
+            formattedDate = PostUtils.getFormattedDate(post),
+            performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id)),
+            onAction = { postModel, buttonType, statEvent ->
+                trackPostListAction(connector.site, buttonType, postModel, statEvent)
+                connector.postActionHandler.handlePostButton(buttonType, postModel, hasAutoSave)
+            },
+            uploadStatusTracker = connector.uploadStatusTracker,
+            isSearch = connector.postListType == SEARCH
         )
     }
 
@@ -396,12 +395,12 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun convertToPhotonUrlIfPossible(featuredImageUrl: String?): String? =
-            readerUtilsWrapper.getResizedImageUrl(
-                    featuredImageUrl,
-                    photonWidth,
-                    photonHeight,
-                    SiteUtils.getAccessibilityInfoFromSite(connector.site)
-            )
+        readerUtilsWrapper.getResizedImageUrl(
+            featuredImageUrl,
+            photonWidth,
+            photonHeight,
+            SiteUtils.getAccessibilityInfoFromSite(connector.site)
+        )
 
     fun updateAuthorFilterIfNotSearch(authorFilterSelection: AuthorFilterSelection): Boolean {
         if (connector.postListType != SEARCH && this.authorFilterSelection != authorFilterSelection) {

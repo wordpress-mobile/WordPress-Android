@@ -31,8 +31,12 @@ import javax.inject.Named
 
 @AndroidEntryPoint
 class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarListener {
-    @Inject lateinit var updateNotificationSettingsUseCase: UpdateNotificationSettingsUseCase
-    @Inject @Named(APPLICATION_SCOPE) lateinit var applicationScope: CoroutineScope
+    @Inject
+    lateinit var updateNotificationSettingsUseCase: UpdateNotificationSettingsUseCase
+
+    @Inject
+    @Named(APPLICATION_SCOPE)
+    lateinit var applicationScope: CoroutineScope
 
     private lateinit var messageTextView: TextView
     private lateinit var messageContainer: View
@@ -51,8 +55,8 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
         if (savedInstanceState == null) {
             @Suppress("DEPRECATION")
             fragmentManager.beginTransaction()
-                    .add(id.fragment_container, NotificationsSettingsFragment())
-                    .commit()
+                .add(id.fragment_container, NotificationsSettingsFragment())
+                .commit()
         }
 
         messageContainer = findViewById(id.notifications_settings_message_container)
@@ -98,9 +102,8 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
         toolbar?.let { setSupportActionBar(it) }
 
         supportActionBar?.apply {
-            setTitle(string.notification_settings)
             setDisplayHomeAsUpEnabled(true)
-            setDisplayShowTitleEnabled(true)
+            setDisplayShowTitleEnabled(false)
         }
     }
 

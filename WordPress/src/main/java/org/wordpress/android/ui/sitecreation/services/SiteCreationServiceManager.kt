@@ -92,8 +92,9 @@ class SiteCreationServiceManager @Inject constructor(
             }
             FAILURE -> {
                 val currentState = serviceListener.getCurrentState()
-                AppLog.e(T.SITE_CREATION,
-                        "SiteCreationService entered state FAILURE while on step: ${currentState?.step?.name}"
+                AppLog.e(
+                    T.SITE_CREATION,
+                    "SiteCreationService entered state FAILURE while on step: ${currentState?.step?.name}"
                 )
                 updateServiceState(FAILURE, currentState)
             }
@@ -103,8 +104,8 @@ class SiteCreationServiceManager @Inject constructor(
     private fun createSite() {
         launch {
             AppLog.i(
-                    T.SITE_CREATION,
-                    "Dispatching Create Site Action, SiteName: ${siteData.domain}"
+                T.SITE_CREATION,
+                "Dispatching Create Site Action, SiteName: ${siteData.domain}"
             )
             val createSiteEvent: OnNewSiteCreated
             try {
@@ -122,8 +123,9 @@ class SiteCreationServiceManager @Inject constructor(
                 if (createSiteEvent.error.type == SiteStore.NewSiteErrorType.SITE_NAME_EXISTS) {
                     if (isRetry) {
                         // Move to the next step. The site was already created on the server by our previous attempt.
-                        AppLog.w(T.SITE_CREATION,
-                                "WPCOM site already created but we are in retrying mode so, just move on."
+                        AppLog.w(
+                            T.SITE_CREATION,
+                            "WPCOM site already created but we are in retrying mode so, just move on."
                         )
                         executePhase(SUCCESS)
                     } else {

@@ -43,15 +43,15 @@ class MeGravatarLoader @Inject constructor(
             imageManager.load(imageView, bitmap)
         } else {
             imageManager.loadIntoCircle(
-                    imageView,
-                    imageType,
-                    if (newAvatarUploaded && injectFilePath != null) {
-                        injectFilePath
-                    } else {
-                        avatarUrl
-                    },
-                    listener,
-                    appPrefsWrapper.avatarVersion
+                imageView,
+                imageType,
+                if (newAvatarUploaded && injectFilePath != null) {
+                    injectFilePath
+                } else {
+                    avatarUrl
+                },
+                listener,
+                appPrefsWrapper.avatarVersion
             )
         }
     }

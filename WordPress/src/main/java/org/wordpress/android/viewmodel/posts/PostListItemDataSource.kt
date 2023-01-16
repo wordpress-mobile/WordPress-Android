@@ -106,20 +106,20 @@ class PostListItemDataSource(
         remotePostMap: Map<RemoteId, PostModel>
     ) {
         val remoteIdsToFetch: List<RemoteId> = localOrRemoteIds.mapNotNull { it as? RemoteId }
-                .filter { !remotePostMap.containsKey(it) }
+            .filter { !remotePostMap.containsKey(it) }
         postFetcher.fetchPosts(site, remoteIdsToFetch)
     }
 
     private fun transformToPostListItemType(localOrRemoteId: LocalOrRemoteId, post: PostModel?): PostListItemType =
-            if (post == null) {
-                // If the post is not in cache, that means we'll be loading it
-                val options = if (postListType == TRASHED) {
-                    LoadingItemTrashedPost
-                } else {
-                    LoadingItemDefaultPost
-                }
-                LoadingItem(localOrRemoteId, options)
+        if (post == null) {
+            // If the post is not in cache, that means we'll be loading it
+            val options = if (postListType == TRASHED) {
+                LoadingItemTrashedPost
             } else {
-                transform(post)
+                LoadingItemDefaultPost
             }
+            LoadingItem(localOrRemoteId, options)
+        } else {
+            transform(post)
+        }
 }

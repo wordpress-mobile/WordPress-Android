@@ -13,7 +13,8 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconPr
 
 @ExperimentalCoroutinesApi
 class SiteIconProgressSourceTest : BaseUnitTest() {
-    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
     private lateinit var source: SiteIconProgressSource
     private val siteLocalId = 1
     private val site = SiteModel()

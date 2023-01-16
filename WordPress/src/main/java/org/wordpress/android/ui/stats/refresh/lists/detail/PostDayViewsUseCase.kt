@@ -35,17 +35,17 @@ class PostDayViewsUseCase
     private val postDetailStore: PostDetailStore,
     private val resourceProvider: ResourceProvider
 ) : BaseStatsUseCase<PostDetailStatsModel, UiState>(
-        PostDetailType.POST_OVERVIEW,
-        mainDispatcher,
-        backgroundDispatcher,
-        UiState(),
-        uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(DETAIL))
+    PostDetailType.POST_OVERVIEW,
+    mainDispatcher,
+    backgroundDispatcher,
+    UiState(),
+    uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(DETAIL))
 ) {
     override suspend fun loadCachedData(): PostDetailStatsModel? {
         return statsPostProvider.postId?.let { postId ->
             postDetailStore.getPostDetail(
-                    statsSiteProvider.siteModel,
-                    postId
+                statsSiteProvider.siteModel,
+                postId
             )
         }
     }
@@ -92,19 +92,19 @@ class PostDayViewsUseCase
             val previousItem = domainModel.dayViews.getOrNull(domainModel.dayViews.indexOf(selectedItem) - 1)
 
             items.add(
-                    postDayViewsMapper.buildTitle(
-                            selectedItem,
-                            previousItem,
-                            isLast = selectedItem == domainModel.dayViews.last()
-                    )
+                postDayViewsMapper.buildTitle(
+                    selectedItem,
+                    previousItem,
+                    isLast = selectedItem == domainModel.dayViews.last()
+                )
             )
             items.addAll(
-                    postDayViewsMapper.buildChart(
-                            domainModel.dayViews,
-                            selectedItem.period,
-                            this::onBarSelected,
-                            this::onBarChartDrawn
-                    )
+                postDayViewsMapper.buildChart(
+                    domainModel.dayViews,
+                    selectedItem.period,
+                    this::onBarSelected,
+                    this::onBarChartDrawn
+                )
             )
         } else {
             selectedDateProvider.onDateLoadingFailed(DETAIL)
@@ -115,12 +115,12 @@ class PostDayViewsUseCase
 
     override fun buildLoadingItem(): List<BlockListItem> {
         return listOf(
-                ValueItem(
-                        value = "0",
-                        unit = R.string.stats_views,
-                        isFirst = true,
-                        contentDescription = resourceProvider.getString(R.string.stats_loading_card)
-                )
+            ValueItem(
+                value = "0",
+                unit = R.string.stats_views,
+                isFirst = true,
+                contentDescription = resourceProvider.getString(R.string.stats_loading_card)
+            )
         )
     }
 
@@ -128,8 +128,8 @@ class PostDayViewsUseCase
         if (period != null && period != "empty") {
             val selectedDate = statsDateFormatter.parseStatsDate(DAYS, period)
             selectedDateProvider.selectDate(
-                    selectedDate,
-                    DETAIL
+                selectedDate,
+                DETAIL
             )
         }
     }

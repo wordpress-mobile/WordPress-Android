@@ -47,6 +47,8 @@ import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -162,6 +164,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
     private JetpackFeatureFullScreenOverlayViewModel mJetpackFullScreenViewModel;
     @Inject AccountStore mAccountStore;
+    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -282,8 +285,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             host = uri.getHost();
         }
 
-
-        if (uri == null) {
+        if (uri == null || mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
             mReaderTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action, host, uri);
             // invalid uri so, just show the entry screen
             Intent intent = new Intent(this, WPLaunchActivity.class);
@@ -480,7 +482,13 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
 
         mDeepLinkOpenWebLinksWithJetpackHelper.onOverlayShown();
         JetpackFeatureFullScreenOverlayFragment
-                .newInstance(null, false, true, SiteCreationSource.UNSPECIFIED)
+                .newInstance(
+                        null,
+                        false,
+                        true,
+                        SiteCreationSource.UNSPECIFIED,
+                        false,
+                        JetpackFeatureCollectionOverlaySource.UNSPECIFIED)
                 .show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
         return true;
     }

@@ -82,6 +82,7 @@ import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalWidgetHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
@@ -131,46 +132,101 @@ class AppInitializer @Inject constructor(
     wellSqlInitializer: WellSqlInitializer,
     private val application: Application
 ) : DefaultLifecycleObserver {
-    @Inject lateinit var dispatcher: Dispatcher
-    @Inject lateinit var accountStore: AccountStore
-    @Inject lateinit var siteStore: SiteStore
-    @Inject lateinit var mediaStore: MediaStore
-    @Inject lateinit var zendeskHelper: ZendeskHelper
-    @Inject lateinit var uploadStarter: UploadStarter
-    @Inject lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
-    @Inject lateinit var statsStore: StatsStore
-    @Inject lateinit var systemNotificationsTracker: SystemNotificationsTracker
-    @Inject lateinit var readerTracker: ReaderTracker
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var privateAtomicCookie: PrivateAtomicCookie
-    @Inject lateinit var imageEditorTracker: ImageEditorTracker
-    @Inject lateinit var storyMediaSaveUploadBridge: StoryMediaSaveUploadBridge
-    @Inject lateinit var crashLogging: CrashLogging
-    @Inject lateinit var encryptedLogging: EncryptedLogging
-    @Inject lateinit var appConfig: AppConfig
-    @Inject lateinit var imageEditorFileUtils: ImageEditorFileUtils
-    @Inject lateinit var exPlat: ExPlat
-    @Inject lateinit var wordPressWorkerFactory: WordPressWorkersFactory
-    @Inject lateinit var debugCookieManager: DebugCookieManager
-    @Inject @Named(APPLICATION_SCOPE) lateinit var appScope: CoroutineScope
-    @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Inject
+    lateinit var dispatcher: Dispatcher
+
+    @Inject
+    lateinit var accountStore: AccountStore
+
+    @Inject
+    lateinit var siteStore: SiteStore
+
+    @Inject
+    lateinit var mediaStore: MediaStore
+
+    @Inject
+    lateinit var zendeskHelper: ZendeskHelper
+
+    @Inject
+    lateinit var uploadStarter: UploadStarter
+
+    @Inject
+    lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+
+    @Inject
+    lateinit var statsStore: StatsStore
+
+    @Inject
+    lateinit var systemNotificationsTracker: SystemNotificationsTracker
+
+    @Inject
+    lateinit var readerTracker: ReaderTracker
+
+    @Inject
+    lateinit var imageManager: ImageManager
+
+    @Inject
+    lateinit var privateAtomicCookie: PrivateAtomicCookie
+
+    @Inject
+    lateinit var imageEditorTracker: ImageEditorTracker
+
+    @Inject
+    lateinit var storyMediaSaveUploadBridge: StoryMediaSaveUploadBridge
+
+    @Inject
+    lateinit var crashLogging: CrashLogging
+
+    @Inject
+    lateinit var encryptedLogging: EncryptedLogging
+
+    @Inject
+    lateinit var appConfig: AppConfig
+
+    @Inject
+    lateinit var imageEditorFileUtils: ImageEditorFileUtils
+
+    @Inject
+    lateinit var exPlat: ExPlat
+
+    @Inject
+    lateinit var wordPressWorkerFactory: WordPressWorkersFactory
+
+    @Inject
+    lateinit var debugCookieManager: DebugCookieManager
+
+    @Inject
+    @Named(APPLICATION_SCOPE)
+    lateinit var appScope: CoroutineScope
+
+    @Inject
+    lateinit var selectedSiteRepository: SelectedSiteRepository
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
-    @Inject lateinit var tracker: Tracker
+    @Inject
+    lateinit var tracker: Tracker
 
-    @Inject @Named("custom-ssl") lateinit var requestQueue: RequestQueue
-    @Inject lateinit var imageLoader: FluxCImageLoader
-    @Inject lateinit var oAuthAuthenticator: OAuthAuthenticator
+    @Inject
+    @Named("custom-ssl")
+    lateinit var requestQueue: RequestQueue
+
+    @Inject
+    lateinit var imageLoader: FluxCImageLoader
+
+    @Inject
+    lateinit var oAuthAuthenticator: OAuthAuthenticator
 
     // For jetpack focus
     @Inject lateinit var openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig
     @Inject lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
+    @Inject lateinit var jetpackFeatureRemovalWidgetHelper: JetpackFeatureRemovalWidgetHelper
 
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
     lateinit var storyNotificationTrackerProvider: StoryNotificationTrackerProvider
         private set
 
-    @Suppress("DEPRECATION") private lateinit var credentialsClient: GoogleApiClient
+    @Suppress("DEPRECATION")
+    private lateinit var credentialsClient: GoogleApiClient
 
     private var startDate: Long
 
@@ -245,20 +301,20 @@ class AppInitializer @Inject constructor(
             // EventBus setup
             EventBus.TAG = "WordPress-EVENT"
             EventBus.builder()
-                    .logNoSubscriberMessages(false)
-                    .sendNoSubscriberEvent(false)
-                    .throwSubscriberException(true)
-                    .installDefaultEventBus()
+                .logNoSubscriberMessages(false)
+                .sendNoSubscriberEvent(false)
+                .throwSubscriberException(true)
+                .installDefaultEventBus()
         }
 
         RestClientUtils.setUserAgent(userAgent)
 
         if (!initialized) {
             zendeskHelper.setupZendesk(
-                    application,
-                    BuildConfig.ZENDESK_DOMAIN,
-                    BuildConfig.ZENDESK_APP_ID,
-                    BuildConfig.ZENDESK_OAUTH_CLIENT_ID
+                application,
+                BuildConfig.ZENDESK_DOMAIN,
+                BuildConfig.ZENDESK_APP_ID,
+                BuildConfig.ZENDESK_OAUTH_CLIENT_ID
             )
         }
 
@@ -328,12 +384,12 @@ class AppInitializer @Inject constructor(
         AppLog.addListener { tag, logLevel, message ->
             val sb = StringBuffer()
             sb.append(logLevel.toString())
-                    .append("/")
-                    .append(AppLog.TAG)
-                    .append("-")
-                    .append(tag.toString())
-                    .append(": ")
-                    .append(message)
+                .append("/")
+                .append(AppLog.TAG)
+                .append("-")
+                .append(tag.toString())
+                .append(": ")
+                .append(message)
             crashLogging.recordEvent(sb.toString(), null)
         }
     }
@@ -351,17 +407,17 @@ class AppInitializer @Inject constructor(
     @Suppress("DEPRECATION")
     private fun setupCredentialsClient() {
         credentialsClient = GoogleApiClient.Builder(application)
-                .addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
-                    override fun onConnected(bundle: Bundle?) {
-                        // Do nothing
-                    }
+            .addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
+                override fun onConnected(bundle: Bundle?) {
+                    // Do nothing
+                }
 
-                    override fun onConnectionSuspended(i: Int) {
-                        // Do nothing
-                    }
-                })
-                .addApi(Auth.CREDENTIALS_API)
-                .build()
+                override fun onConnectionSuspended(i: Int) {
+                    // Do nothing
+                }
+            })
+            .addApi(Auth.CREDENTIALS_API)
+            .build()
         credentialsClient.connect()
     }
 
@@ -370,22 +426,22 @@ class AppInitializer @Inject constructor(
         if (Build.VERSION.SDK_INT >= VERSION_CODES.O) {
             // Create the NORMAL channel (used for likes, comments, replies, etc.)
             val normalChannel = NotificationChannel(
-                    application.getString(R.string.notification_channel_normal_id),
-                    application.getString(R.string.notification_channel_general_title),
-                    NotificationManager.IMPORTANCE_DEFAULT
+                application.getString(R.string.notification_channel_normal_id),
+                application.getString(R.string.notification_channel_general_title),
+                NotificationManager.IMPORTANCE_DEFAULT
             )
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             val notificationManager = application.getSystemService(
-                    Context.NOTIFICATION_SERVICE
+                Context.NOTIFICATION_SERVICE
             ) as NotificationManager
             notificationManager.createNotificationChannel(normalChannel)
 
             // Create the IMPORTANT channel (used for 2fa auth, for example)
             val importantChannel = NotificationChannel(
-                    application.getString(R.string.notification_channel_important_id),
-                    application.getString(R.string.notification_channel_important_title),
-                    NotificationManager.IMPORTANCE_HIGH
+                application.getString(R.string.notification_channel_important_id),
+                application.getString(R.string.notification_channel_important_title),
+                NotificationManager.IMPORTANCE_HIGH
             )
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
@@ -393,9 +449,9 @@ class AppInitializer @Inject constructor(
 
             // Create the REMINDER channel (used for various reminders, like Quick Start, etc.)
             val reminderChannel = NotificationChannel(
-                    application.getString(R.string.notification_channel_reminder_id),
-                    application.getString(R.string.notification_channel_reminder_title),
-                    NotificationManager.IMPORTANCE_LOW
+                application.getString(R.string.notification_channel_reminder_id),
+                application.getString(R.string.notification_channel_reminder_title),
+                NotificationManager.IMPORTANCE_LOW
             )
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
@@ -404,9 +460,9 @@ class AppInitializer @Inject constructor(
             // Create the TRANSIENT channel (used for short-lived notifications such as processing a Like/Approve,
             // or media upload)
             val transientChannel = NotificationChannel(
-                    application.getString(R.string.notification_channel_transient_id),
-                    application.getString(R.string.notification_channel_transient_title),
-                    NotificationManager.IMPORTANCE_DEFAULT
+                application.getString(R.string.notification_channel_transient_id),
+                application.getString(R.string.notification_channel_transient_title),
+                NotificationManager.IMPORTANCE_DEFAULT
             )
             transientChannel.setSound(null, null)
             transientChannel.enableVibration(false)
@@ -417,9 +473,9 @@ class AppInitializer @Inject constructor(
 
             // Create the WEEKLY ROUNDUP channel (used for weekly roundup notification containing weekly stats)
             val weeklyRoundupChannel = NotificationChannel(
-                    application.getString(R.string.notification_channel_weekly_roundup_id),
-                    application.getString(R.string.notification_channel_weekly_roundup_title),
-                    NotificationManager.IMPORTANCE_LOW
+                application.getString(R.string.notification_channel_weekly_roundup_id),
+                application.getString(R.string.notification_channel_weekly_roundup_title),
+                NotificationManager.IMPORTANCE_LOW
             )
             // Register the channel with the system; you can't change the importance or other notification behaviors
             // after this
@@ -548,8 +604,8 @@ class AppInitializer @Inject constructor(
         if (accountStore.hasAccessToken()) {
             // Make sure the Push Notification token is sent to our servers after a successful login
             GCMRegistrationIntentService.enqueueWork(
-                    application,
-                    Intent(application, GCMRegistrationIntentService::class.java)
+                application,
+                Intent(application, GCMRegistrationIntentService::class.java)
             )
 
             // Force a refresh if user has logged in. This can be removed once we start using an anonymous ID.
@@ -670,6 +726,10 @@ class AppInitializer @Inject constructor(
         }
     }
 
+    private fun disableWidgetReceiversIfNeeded() {
+        jetpackFeatureRemovalWidgetHelper.disableWidgetReceiversIfNeeded()
+    }
+
     private fun flushHttpCache() {
         val cache = HttpResponseCache.getInstalled()
         cache?.flush()
@@ -678,10 +738,10 @@ class AppInitializer @Inject constructor(
     private fun initEmojiCompat() {
         // Use a downloadable font for EmojiCompat
         val fontRequest = FontRequest(
-                "com.google.android.gms.fonts",
-                "com.google.android.gms",
-                "Noto Color Emoji Compat",
-                R.array.com_google_android_gms_fonts_certs
+            "com.google.android.gms.fonts",
+            "com.google.android.gms",
+            "Noto Color Emoji Compat",
+            R.array.com_google_android_gms_fonts_certs
         )
         val config = FontRequestEmojiCompatConfig(application, fontRequest)
         config.setReplaceAll(true)
@@ -738,8 +798,8 @@ class AppInitializer @Inject constructor(
             if (isPushNotificationPingNeeded && accountStore.hasAccessToken()) {
                 // Register for Cloud messaging
                 GCMRegistrationIntentService.enqueueWork(
-                        context,
-                        Intent(context, GCMRegistrationIntentService::class.java)
+                    context,
+                    Intent(context, GCMRegistrationIntentService::class.java)
                 )
             }
         }
@@ -780,6 +840,9 @@ class AppInitializer @Inject constructor(
                     AppLog.e(MAIN, "ConnectionChangeReceiver was already unregistered")
                 }
             }
+
+            // Disable the widgets if needed
+            disableWidgetReceiversIfNeeded()
         }
 
         /**
@@ -803,8 +866,8 @@ class AppInitializer @Inject constructor(
             if (!connectionReceiverRegistered) {
                 connectionReceiverRegistered = true
                 application.registerReceiver(
-                        ConnectionChangeReceiver.getInstance(),
-                        IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+                    ConnectionChangeReceiver.getInstance(),
+                    IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
                 )
             }
             AnalyticsUtils.refreshMetadata(accountStore, siteStore)
@@ -842,6 +905,9 @@ class AppInitializer @Inject constructor(
                 deferredInit()
             }
             firstActivityResumed = false
+
+            // Disable the widgets if needed
+            disableWidgetReceiversIfNeeded()
         }
     }
 
@@ -908,7 +974,8 @@ class AppInitializer @Inject constructor(
         private const val MEMORY_CACHE_RATIO = 0.25 // Use 1/4th of the available memory for memory cache.
         private const val DEFAULT_TIMEOUT = 2 * 60 // 2 minutes
 
-        @SuppressLint("StaticFieldLeak") var context: Context? = null
+        @SuppressLint("StaticFieldLeak")
+        var context: Context? = null
             private set
 
         // This is for UI testing. AppInitializer is being created more than once for only UI tests. initialized
@@ -920,60 +987,60 @@ class AppInitializer @Inject constructor(
 
         val restClientUtils: RestClientUtils by lazy {
             RestClientUtils(
-                    context,
-                    WordPress.requestQueue,
-                    sOAuthAuthenticator,
-                    null
+                context,
+                WordPress.requestQueue,
+                sOAuthAuthenticator,
+                null
             )
         }
 
         val restClientUtilsV1_1: RestClientUtils by lazy {
             RestClientUtils(
-                    context,
-                    WordPress.requestQueue,
-                    sOAuthAuthenticator,
-                    null,
-                    RestClient.REST_CLIENT_VERSIONS.V1_1
+                context,
+                WordPress.requestQueue,
+                sOAuthAuthenticator,
+                null,
+                RestClient.REST_CLIENT_VERSIONS.V1_1
             )
         }
 
         val restClientUtilsV1_2: RestClientUtils by lazy {
             RestClientUtils(
-                    context,
-                    WordPress.requestQueue,
-                    sOAuthAuthenticator,
-                    null,
-                    RestClient.REST_CLIENT_VERSIONS.V1_2
+                context,
+                WordPress.requestQueue,
+                sOAuthAuthenticator,
+                null,
+                RestClient.REST_CLIENT_VERSIONS.V1_2
             )
         }
 
         val restClientUtilsV1_3: RestClientUtils by lazy {
             RestClientUtils(
-                    context,
-                    WordPress.requestQueue,
-                    sOAuthAuthenticator,
-                    null,
-                    RestClient.REST_CLIENT_VERSIONS.V1_3
+                context,
+                WordPress.requestQueue,
+                sOAuthAuthenticator,
+                null,
+                RestClient.REST_CLIENT_VERSIONS.V1_3
             )
         }
 
         val restClientUtilsV2: RestClientUtils by lazy {
             RestClientUtils(
-                    context,
-                    WordPress.requestQueue,
-                    sOAuthAuthenticator,
-                    null,
-                    RestClient.REST_CLIENT_VERSIONS.V2
+                context,
+                WordPress.requestQueue,
+                sOAuthAuthenticator,
+                null,
+                RestClient.REST_CLIENT_VERSIONS.V2
             )
         }
 
         val restClientUtilsV0: RestClientUtils by lazy {
             RestClientUtils(
-                    context,
-                    WordPress.requestQueue,
-                    sOAuthAuthenticator,
-                    null,
-                    RestClient.REST_CLIENT_VERSIONS.V0
+                context,
+                WordPress.requestQueue,
+                sOAuthAuthenticator,
+                null,
+                RestClient.REST_CLIENT_VERSIONS.V0
             )
         }
 
@@ -984,7 +1051,8 @@ class AppInitializer @Inject constructor(
          * AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
          * Safari/537.36"
          */
-        @Suppress("SwallowedException") val defaultUserAgent: String by lazy {
+        @Suppress("SwallowedException")
+        val defaultUserAgent: String by lazy {
             try {
                 WebSettings.getDefaultUserAgent(context)
             } catch (e: AndroidRuntimeException) {
@@ -1046,7 +1114,7 @@ class AppInitializer @Inject constructor(
          */
         fun updateContextLocale(appContext: Context? = null) {
             val context = appContext ?: run {
-                check (context != null) { "Context must be initialized before calling updateContextLocale" }
+                check(context != null) { "Context must be initialized before calling updateContextLocale" }
                 return@run context
             }
             this.context = LocaleManager.setLocale(context)

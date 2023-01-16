@@ -43,52 +43,52 @@ class UnifiedAboutViewModel @Inject constructor(
     val onNavigation: LiveData<Event<UnifiedAboutNavigationAction>> = _onNavigation
 
     fun getAboutConfig() = AboutConfig(
-            headerConfig = HeaderConfig.fromContext(contextProvider.getContext()),
-            shareConfigFactory = ::createShareConfig,
-            rateUsConfig = RateUsConfig.fromContext(contextProvider.getContext()),
-            socialsConfig = SocialsConfig(
-                    twitterUsername = if (buildConfig.isJetpackApp) JP_SOCIAL_HANDLE else WP_SOCIAL_HANDLE
-            ),
-            customItems = listOf(
-                    ItemConfig(
-                            name = BLOG_ITEM_NAME,
-                            title = blogTitle(),
-                            onClick = ::onBlogClick
-                    )
-            ),
-            legalConfig = LegalConfig(
-                    tosUrl = wpUrlUtils.buildTermsOfServiceUrl(contextProvider.getContext()),
-                    privacyPolicyUrl = Constants.URL_PRIVACY_POLICY,
-                    acknowledgementsUrl = LICENSES_FILE_URL
-            ),
-            automatticConfig = AutomatticConfig(isVisible = buildConfig.isJetpackApp),
-            workWithUsConfig = WorkWithUsConfig(
-                    title =  workWithUsTitle(),
-                    subtitle = workWithUsSubTitle(),
-                    url = if (buildConfig.isJetpackApp) JP_WORK_WITH_US_URL else WP_CONTRIBUTE_URL
-            ),
-            aboutFooterConfig = AboutFooterConfig(isVisible = buildConfig.isJetpackApp),
-            analyticsConfig = AnalyticsConfig(
-                    trackScreenShown = unifiedAboutTracker::trackScreenShown,
-                    trackScreenDismissed = unifiedAboutTracker::trackScreenDismissed,
-                    trackButtonTapped = unifiedAboutTracker::trackButtonTapped
-            ),
-            onDismiss = ::onDismiss
+        headerConfig = HeaderConfig.fromContext(contextProvider.getContext()),
+        shareConfigFactory = ::createShareConfig,
+        rateUsConfig = RateUsConfig.fromContext(contextProvider.getContext()),
+        socialsConfig = SocialsConfig(
+            twitterUsername = if (buildConfig.isJetpackApp) JP_SOCIAL_HANDLE else WP_SOCIAL_HANDLE
+        ),
+        customItems = listOf(
+            ItemConfig(
+                name = BLOG_ITEM_NAME,
+                title = blogTitle(),
+                onClick = ::onBlogClick
+            )
+        ),
+        legalConfig = LegalConfig(
+            tosUrl = wpUrlUtils.buildTermsOfServiceUrl(contextProvider.getContext()),
+            privacyPolicyUrl = Constants.URL_PRIVACY_POLICY,
+            acknowledgementsUrl = LICENSES_FILE_URL
+        ),
+        automatticConfig = AutomatticConfig(isVisible = buildConfig.isJetpackApp),
+        workWithUsConfig = WorkWithUsConfig(
+            title = workWithUsTitle(),
+            subtitle = workWithUsSubTitle(),
+            url = if (buildConfig.isJetpackApp) JP_WORK_WITH_US_URL else WP_CONTRIBUTE_URL
+        ),
+        aboutFooterConfig = AboutFooterConfig(isVisible = buildConfig.isJetpackApp),
+        analyticsConfig = AnalyticsConfig(
+            trackScreenShown = unifiedAboutTracker::trackScreenShown,
+            trackScreenDismissed = unifiedAboutTracker::trackScreenDismissed,
+            trackButtonTapped = unifiedAboutTracker::trackButtonTapped
+        ),
+        onDismiss = ::onDismiss
     )
 
     private suspend fun createShareConfig(): ShareConfig {
         val app = if (buildConfig.isJetpackApp) Jetpack else WordPress
         val result = recommendApiCallsProvider.getRecommendTemplate(app.appName, ABOUT)
         return ShareConfig(
-                subject = contextProvider.getContext().getString(R.string.recommend_app_subject),
-                message = when (result) {
-                    is Failure -> {
-                        AppLog.e(T.MAIN, "Couldn't fetch recommend app template: ${result.error}")
-                        // Returning generic message containing only the apps page URL
-                        if (buildConfig.isJetpackApp) JP_APPS_URL else WP_APPS_URL
-                    }
-                    is Success -> "${result.templateData.message}\n${result.templateData.link}"
+            subject = contextProvider.getContext().getString(R.string.recommend_app_subject),
+            message = when (result) {
+                is Failure -> {
+                    AppLog.e(T.MAIN, "Couldn't fetch recommend app template: ${result.error}")
+                    // Returning generic message containing only the apps page URL
+                    if (buildConfig.isJetpackApp) JP_APPS_URL else WP_APPS_URL
                 }
+                is Success -> "${result.templateData.message}\n${result.templateData.link}"
+            }
         )
     }
 

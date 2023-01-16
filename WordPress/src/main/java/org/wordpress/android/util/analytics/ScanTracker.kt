@@ -22,11 +22,11 @@ class ScanTracker @Inject constructor(
 
     fun trackOnScanHistoryTabSelected(tab: ScanHistoryViewModel.ScanHistoryTabType) {
         val props = mapOf(
-                "filter" to when (tab) {
-                    ScanHistoryViewModel.ScanHistoryTabType.ALL -> ""
-                    ScanHistoryViewModel.ScanHistoryTabType.FIXED -> "fixed"
-                    ScanHistoryViewModel.ScanHistoryTabType.IGNORED -> "ignored"
-                }
+            "filter" to when (tab) {
+                ScanHistoryViewModel.ScanHistoryTabType.ALL -> ""
+                ScanHistoryViewModel.ScanHistoryTabType.FIXED -> "fixed"
+                ScanHistoryViewModel.ScanHistoryTabType.IGNORED -> "ignored"
+            }
         )
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_HISTORY_FILTER, props)
     }
@@ -35,8 +35,8 @@ class ScanTracker @Inject constructor(
         withContext(bgDispatcher) {
             scanStore.getThreatModelByThreatId(threatId)?.let {
                 val props = mapOf(
-                        "section" to source.section,
-                        "threat_signature" to it.baseThreatModel.signature
+                    "section" to source.section,
+                    "threat_signature" to it.baseThreatModel.signature
                 )
                 analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_THREAT_LIST_ITEM_TAPPED, props)
             }
@@ -49,29 +49,29 @@ class ScanTracker @Inject constructor(
 
     fun trackOnIgnoreThreatButtonClicked(signature: String) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_SCAN_IGNORE_THREAT_DIALOG_OPEN,
-                mapOf("threat_signature" to signature)
+            AnalyticsTracker.Stat.JETPACK_SCAN_IGNORE_THREAT_DIALOG_OPEN,
+            mapOf("threat_signature" to signature)
         )
     }
 
     fun trackOnIgnoreThreatConfirmed(signature: String) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_SCAN_THREAT_IGNORE_TAPPED,
-                mapOf("threat_signature" to signature)
+            AnalyticsTracker.Stat.JETPACK_SCAN_THREAT_IGNORE_TAPPED,
+            mapOf("threat_signature" to signature)
         )
     }
 
     fun trackOnFixThreatButtonClicked(signature: String) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_SCAN_FIX_THREAT_DIALOG_OPEN,
-                mapOf("threat_signature" to signature)
+            AnalyticsTracker.Stat.JETPACK_SCAN_FIX_THREAT_DIALOG_OPEN,
+            mapOf("threat_signature" to signature)
         )
     }
 
     fun trackOnFixThreatConfirmed(signature: String) {
         analyticsTrackerWrapper.track(
-                AnalyticsTracker.Stat.JETPACK_SCAN_THREAT_FIX_TAPPED,
-                mapOf("threat_signature" to signature)
+            AnalyticsTracker.Stat.JETPACK_SCAN_THREAT_FIX_TAPPED,
+            mapOf("threat_signature" to signature)
         )
     }
 

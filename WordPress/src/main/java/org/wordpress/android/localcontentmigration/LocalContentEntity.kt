@@ -23,7 +23,7 @@ enum class LocalContentEntity(private val isIdentifiable: Boolean = false) {
     }
 
     open fun getPathForContent(localEntityId: Int?) = when (this.isIdentifiable) {
-        true -> "${name}${ localEntityId?.let { "/${it}" } ?: "" }"
+        true -> "${name}${localEntityId?.let { "/${it}" } ?: ""}"
         false -> name
     }
 }
@@ -32,19 +32,21 @@ sealed class LocalContentEntityData {
     data class EligibilityStatusData(
         val isEligible: Boolean,
         val reason: IneligibleReason? = null
-    ): LocalContentEntityData()
-    data class AccessTokenData(val token: String, val avatarUrl: String): LocalContentEntityData()
+    ) : LocalContentEntityData()
+
+    data class AccessTokenData(val token: String, val avatarUrl: String) : LocalContentEntityData()
     data class UserFlagsData(
         val flags: Map<String, Any?>,
         val quickStartTaskList: List<QuickStartTaskModel>,
         val quickStartStatusList: List<QuickStartStatusModel>,
-    ): LocalContentEntityData()
-    data class ReaderPostsData(val posts: ReaderPostList): LocalContentEntityData()
-    data class BloggingRemindersData(val reminders: List<BloggingRemindersModel>): LocalContentEntityData()
-    data class SitesData(val sites: List<SiteModel>): LocalContentEntityData()
-    data class PostsData(val localIds: List<Int>): LocalContentEntityData()
+    ) : LocalContentEntityData()
+
+    data class ReaderPostsData(val posts: ReaderPostList) : LocalContentEntityData()
+    data class BloggingRemindersData(val reminders: List<BloggingRemindersModel>) : LocalContentEntityData()
+    data class SitesData(val sites: List<SiteModel>) : LocalContentEntityData()
+    data class PostsData(val localIds: List<Int>) : LocalContentEntityData()
     data class PostData(val post: PostModel) : LocalContentEntityData()
-    object EmptyData: LocalContentEntityData()
+    object EmptyData : LocalContentEntityData()
     companion object {
         enum class IneligibleReason {
             WPNotLoggedIn,

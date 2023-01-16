@@ -133,4 +133,8 @@
 
     <!-- Jetpack Migration -->
     <color name="bg_jp_migration_buttons_panel">@color/white_translucent_80</color>
+
+    <!-- Jetpack feture removal overlay secondary button color -->
+    <color name="jp_feature_removal_overlay_secondary_button_color">@color/jetpack_green_50</color>
+
 </resources>

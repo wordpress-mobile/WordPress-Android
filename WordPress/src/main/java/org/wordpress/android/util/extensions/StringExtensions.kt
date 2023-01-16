@@ -30,10 +30,10 @@ fun String.capitalizeWithLocaleWithoutLint(locale: Locale): String {
  */
 fun CharSequence.enforceWesternArabicNumerals(): CharSequence {
     val textWithArabicNumerals = this
-            // Replace Eastern Arabic numerals
-            .replace(Regex("[٠-٩]")) { match -> (match.value.single() - '٠').toString() }
-            // Replace Persian/Urdu numerals
-            .replace(Regex("[۰-۹]")) { match -> (match.value.single() - '۰').toString() }
+        // Replace Eastern Arabic numerals
+        .replace(Regex("[٠-٩]")) { match -> (match.value.single() - '٠').toString() }
+        // Replace Persian/Urdu numerals
+        .replace(Regex("[۰-۹]")) { match -> (match.value.single() - '۰').toString() }
 
     // Restore spans if text is an instance of Spanned
     if (this is Spanned) {

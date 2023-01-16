@@ -23,28 +23,38 @@ import java.math.RoundingMode.HALF_UP
 
 @ExperimentalCoroutinesApi
 class PostDayViewsMapperTest : BaseUnitTest() {
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var statsUtils: StatsUtils
-    @Mock private lateinit var percentFormatter: PercentFormatter
+    @Mock
+    lateinit var statsDateFormatter: StatsDateFormatter
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var statsUtils: StatsUtils
+
+    @Mock
+    private lateinit var percentFormatter: PercentFormatter
     private lateinit var mapper: PostDayViewsMapper
     private val count = 20
     private val selectedItem = PostDetailStatsModel.Day("2010-10-10", count)
     private val views = "Views"
     private val date = "10. 10. 2010"
     private val contentDescription = "Content description"
+
     @Before
     fun setUp() {
         mapper = PostDayViewsMapper(resourceProvider, statsUtils, statsDateFormatter, percentFormatter)
         whenever(resourceProvider.getString(R.string.stats_views)).thenReturn(views)
         whenever(statsDateFormatter.printDate(any())).thenReturn(date)
-        whenever(resourceProvider.getString(
+        whenever(
+            resourceProvider.getString(
                 eq(R.string.stats_overview_content_description),
                 eq(count),
                 eq(views),
                 eq(date),
                 any()
-        )).thenReturn(contentDescription)
+            )
+        ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
@@ -66,7 +76,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
         val previousItem = selectedItem.copy(count = previousCount)
         val positiveLabel = "+15 (300%)"
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("15"), eq("300")))
-                .thenReturn(positiveLabel)
+            .thenReturn(positiveLabel)
 
         val title = mapper.buildTitle(selectedItem, previousItem, false)
 
@@ -83,7 +93,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
         val previousItem = selectedItem.copy(count = previousCount)
         val positiveLabel = "+20 (∞%)"
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("20"), eq("∞")))
-                .thenReturn(positiveLabel)
+            .thenReturn(positiveLabel)
 
         val title = mapper.buildTitle(selectedItem, previousItem, false)
 
@@ -101,7 +111,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
         val previousItem = selectedItem.copy(count = previousCount)
         val negativeLabel = "-10 (-33%)"
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-10"), eq("-33")))
-                .thenReturn(negativeLabel)
+            .thenReturn(negativeLabel)
 
         val title = mapper.buildTitle(selectedItem, previousItem, false)
 
@@ -118,14 +128,16 @@ class PostDayViewsMapperTest : BaseUnitTest() {
         val newItem = selectedItem.copy(count = newCount)
         val negativeLabel = "-20 (-100%)"
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-20"), eq("-100")))
-                .thenReturn(negativeLabel)
-        whenever(resourceProvider.getString(
+            .thenReturn(negativeLabel)
+        whenever(
+            resourceProvider.getString(
                 eq(R.string.stats_overview_content_description),
                 eq(newCount),
                 eq(views),
                 eq(date),
                 any()
-        )).thenReturn(contentDescription)
+            )
+        ).thenReturn(contentDescription)
 
         val title = mapper.buildTitle(newItem, selectedItem, false)
 
@@ -142,7 +154,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
         val previousItem = selectedItem.copy(count = previousCount)
         val positiveLabel = "+0 (0%)"
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("0"), eq("0")))
-                .thenReturn(positiveLabel)
+            .thenReturn(positiveLabel)
 
         val title = mapper.buildTitle(selectedItem, previousItem, false)
 
@@ -159,7 +171,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
         val previousItem = selectedItem.copy(count = previousCount)
         val negativeLabel = "-10 (-33%)"
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-10"), eq("-33")))
-                .thenReturn(negativeLabel)
+            .thenReturn(negativeLabel)
 
         val title = mapper.buildTitle(selectedItem, previousItem, true)
 

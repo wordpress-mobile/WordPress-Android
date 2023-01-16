@@ -18,11 +18,11 @@ class UpdateStoryPostTitleUseCaseTest : BaseUnitTest() {
     fun setup() {
         updateStoryTitleUseCase = UpdateStoryPostTitleUseCase()
         editPostRepository = EditPostRepository(
-                mock(),
-                mock(),
-                mock(),
-                testDispatcher(),
-                testDispatcher()
+            mock(),
+            mock(),
+            mock(),
+            testDispatcher(),
+            testDispatcher()
         )
         editPostRepository.set { PostModel() }
     }

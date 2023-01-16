@@ -27,5 +27,6 @@ interface LocalNotificationHandler {
     fun buildSecondActionPendingIntent(context: Context, notificationId: Int): PendingIntent? {
         return null
     }
+
     fun onNotificationShown()
 }

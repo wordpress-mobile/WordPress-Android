@@ -12,8 +12,8 @@ import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiDimen.UIDimenDPInt
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AniUtils
@@ -24,35 +24,35 @@ import javax.inject.Inject
 
 class UiHelpers @Inject constructor() {
     fun getPxOfUiDimen(context: Context, uiDimen: UiDimen): Int =
-            when (uiDimen) {
-                is UIDimenRes -> context.resources.getDimensionPixelSize(uiDimen.dimenRes)
-                is UIDimenDPInt -> DisplayUtils.dpToPx(context, uiDimen.dimensionDP)
-            }
+        when (uiDimen) {
+            is UIDimenRes -> context.resources.getDimensionPixelSize(uiDimen.dimenRes)
+            is UIDimenDPInt -> DisplayUtils.dpToPx(context, uiDimen.dimensionDP)
+        }
 
     fun getTextOfUiString(context: Context, uiString: UiString): CharSequence =
-            when (uiString) {
-                is UiStringRes -> context.getString(uiString.stringRes)
-                is UiStringText -> uiString.text
-                is UiStringResWithParams -> context.getString(
-                        uiString.stringRes,
-                        *uiString.params.map { value ->
-                            getTextOfUiString(
-                                    context,
-                                    value
-                            )
-                        }.toTypedArray()
-                )
-                // Current localization process does not support <plurals> resource strings,
-                // so we need to use multiple string resources. Switch to @PluralRes in UiStringPluralRes and
-                // use context.resources.getQuantityString here when <plurals> is supported by localization process.
-                is UiStringPluralRes -> StringUtils.getQuantityString(
+        when (uiString) {
+            is UiStringRes -> context.getString(uiString.stringRes)
+            is UiStringText -> uiString.text
+            is UiStringResWithParams -> context.getString(
+                uiString.stringRes,
+                *uiString.params.map { value ->
+                    getTextOfUiString(
                         context,
-                        uiString.zeroRes,
-                        uiString.oneRes,
-                        uiString.otherRes,
-                        uiString.count
-                )
-            }
+                        value
+                    )
+                }.toTypedArray()
+            )
+            // Current localization process does not support <plurals> resource strings,
+            // so we need to use multiple string resources. Switch to @PluralRes in UiStringPluralRes and
+            // use context.resources.getQuantityString here when <plurals> is supported by localization process.
+            is UiStringPluralRes -> StringUtils.getQuantityString(
+                context,
+                uiString.zeroRes,
+                uiString.oneRes,
+                uiString.otherRes,
+                uiString.count
+            )
+        }
 
     fun updateVisibility(view: View, visible: Boolean) {
         view.visibility = if (visible) View.VISIBLE else View.GONE

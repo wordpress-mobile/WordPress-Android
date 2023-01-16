@@ -26,7 +26,7 @@ class TaskViewHolder(
     fun bind(taskCard: QuickStartTaskCard) {
         val isEnabled = !taskCard.isCompleted
         val quickStartTaskDetails = QuickStartTaskDetails.getDetailsForTask(taskCard.task)
-                ?: throw IllegalStateException("$taskCard task is not recognized in adapter.")
+            ?: throw IllegalStateException("$taskCard task is not recognized in adapter.")
         with(binding) {
             updateIcon(isEnabled, quickStartTaskDetails.iconResId, quickStartTaskDetails.iconBackgroundColorResId)
             updateTitle(isEnabled, quickStartTaskDetails.titleResId)

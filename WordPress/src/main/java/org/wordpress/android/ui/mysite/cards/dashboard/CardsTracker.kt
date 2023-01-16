@@ -71,11 +71,11 @@ class CardsTracker @Inject constructor(
 
     private fun trackCardFooterLinkClicked(type: String, subtype: String) {
         analyticsTrackerWrapper.track(
-                Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
-                mapOf(
-                        TYPE to type,
-                        SUBTYPE to subtype
-                )
+            Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
+            mapOf(
+                TYPE to type,
+                SUBTYPE to subtype
+            )
         )
     }
 

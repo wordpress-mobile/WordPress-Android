@@ -32,8 +32,11 @@ class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
         }
     }
 
-    @Inject lateinit var meGravatarLoader: MeGravatarLoader
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var meGravatarLoader: MeGravatarLoader
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
     private var loginListener: LoginListener? = null
     private val viewModel: LoginNoSitesViewModel by viewModels()
 
@@ -61,8 +64,8 @@ class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
         initObservers()
 
         viewModel.start(
-                application = requireActivity().application as WordPress,
-                savedInstanceState = savedInstanceState
+            application = requireActivity().application as WordPress,
+            savedInstanceState = savedInstanceState
         )
     }
 
@@ -93,21 +96,21 @@ class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
 
     private fun JetpackLoginEmptyViewBinding.loadGravatar(avatarUrl: String) {
         AvatarHelper.loadAvatarFromUrl(
-                this@LoginNoSitesFragment,
-                meGravatarLoader.constructGravatarUrl(avatarUrl),
-                userContainer.imageAvatar,
-                object : AvatarRequestListener {
-                    override fun onRequestFinished() {
-                        // no op
-                    }
-                })
+            this@LoginNoSitesFragment,
+            meGravatarLoader.constructGravatarUrl(avatarUrl),
+            userContainer.imageAvatar,
+            object : AvatarRequestListener {
+                override fun onRequestFinished() {
+                    // no op
+                }
+            })
     }
 
     private fun JetpackLoginEmptyViewBinding.setUserName(value: String) =
-            uiHelpers.setTextOrHide(userContainer.textUsername, value)
+        uiHelpers.setTextOrHide(userContainer.textUsername, value)
 
     private fun JetpackLoginEmptyViewBinding.setDisplayName(value: String) =
-            uiHelpers.setTextOrHide(userContainer.textDisplayName, value)
+        uiHelpers.setTextOrHide(userContainer.textDisplayName, value)
 
     private fun showSignInForResultJetpackOnly() {
         ActivityLauncher.showSignInForResultJetpackOnly(requireActivity())
@@ -141,13 +144,13 @@ class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
 
     private fun initBackPressHandler() {
         requireActivity().onBackPressedDispatcher.addCallback(
-                viewLifecycleOwner,
-                object : OnBackPressedCallback(
-                        true
-                ) {
-                    override fun handleOnBackPressed() {
-                        viewModel.onBackPressed()
-                    }
-                })
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(
+                true
+            ) {
+                override fun handleOnBackPressed() {
+                    viewModel.onBackPressed()
+                }
+            })
     }
 }

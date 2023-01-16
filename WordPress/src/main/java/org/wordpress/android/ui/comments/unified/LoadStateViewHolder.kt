@@ -7,7 +7,7 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.NextPage
 import org.wordpress.android.util.extensions.viewBinding
 
 class LoadStateViewHolder(parent: ViewGroup) : UnifiedCommentListViewHolder<LoadOrActionItemBinding>(
-        parent.viewBinding(LoadOrActionItemBinding::inflate)
+    parent.viewBinding(LoadOrActionItemBinding::inflate)
 ) {
     fun bind(item: NextPageLoader) = with(binding) {
         if (!item.isLoading) {

@@ -24,7 +24,7 @@ sealed class PostCardViewHolder<T : ViewBinding>(
         private val imageManager: ImageManager,
         private val uiHelpers: UiHelpers
     ) : PostCardViewHolder<MySitePostCardWithoutPostItemsBinding>(
-            parent.viewBinding(MySitePostCardWithoutPostItemsBinding::inflate)
+        parent.viewBinding(MySitePostCardWithoutPostItemsBinding::inflate)
     ) {
         override fun bind(card: PostCard) = with(binding) {
             val postCard = card as PostCardWithoutPostItems
@@ -44,7 +44,7 @@ sealed class PostCardViewHolder<T : ViewBinding>(
         imageManager: ImageManager,
         private val uiHelpers: UiHelpers
     ) : PostCardViewHolder<MySitePostCardWithPostItemsBinding>(
-            parent.viewBinding(MySitePostCardWithPostItemsBinding::inflate)
+        parent.viewBinding(MySitePostCardWithPostItemsBinding::inflate)
     ) {
         init {
             binding.postItems.adapter = PostItemsAdapter(imageManager, uiHelpers)

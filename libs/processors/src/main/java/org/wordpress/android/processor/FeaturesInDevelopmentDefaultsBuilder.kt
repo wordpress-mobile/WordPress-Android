@@ -5,12 +5,11 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
-import java.lang.StringBuilder
 
 class FeaturesInDevelopmentDefaultsBuilder(private val featuresInDevelopment: List<String>) {
     fun getContent(): FileSpec {
         val map = List::class.asClassName()
-                .parameterizedBy(String::class.asClassName())
+            .parameterizedBy(String::class.asClassName())
         val stringBuilder = StringBuilder()
         featuresInDevelopment.forEachIndexed { index, className ->
             stringBuilder.append("\n")
@@ -21,16 +20,16 @@ class FeaturesInDevelopmentDefaultsBuilder(private val featuresInDevelopment: Li
         }
         stringBuilder.append("\n")
         val remoteConfigDefaults = TypeSpec.objectBuilder("FeaturesInDevelopment")
-                .addProperty(
-                        PropertySpec.builder("featuresInDevelopment", map)
-                                .initializer("listOf($stringBuilder)")
-                                .build()
-                )
-                .build()
+            .addProperty(
+                PropertySpec.builder("featuresInDevelopment", map)
+                    .initializer("listOf($stringBuilder)")
+                    .build()
+            )
+            .build()
         return FileSpec.builder("org.wordpress.android.util.config", "FeaturesInDevelopment")
-                .addType(remoteConfigDefaults)
-                .addComment("Automatically generated file. DO NOT MODIFY")
-                .indent("    ")
-                .build()
+            .addType(remoteConfigDefaults)
+            .addComment("Automatically generated file. DO NOT MODIFY")
+            .indent("    ")
+            .build()
     }
 }

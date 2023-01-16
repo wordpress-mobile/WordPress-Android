@@ -16,10 +16,10 @@ class AppThemeUtils {
             val themeName = if (TextUtils.isEmpty(newTheme)) {
                 val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
                 sharedPreferences
-                        .getString(
-                                context.getString(R.string.pref_key_app_theme),
-                                context.getString(R.string.app_theme_entry_value_default)
-                        )
+                    .getString(
+                        context.getString(R.string.pref_key_app_theme),
+                        context.getString(R.string.app_theme_entry_value_default)
+                    )
             } else {
                 newTheme
             }
@@ -33,7 +33,7 @@ class AppThemeUtils {
                 }
                 context.getString(R.string.app_theme_entry_value_default) -> {
                     AppCompatDelegate.setDefaultNightMode(
-                            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                        AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
                     )
                 }
                 else -> AppLog.w(AppLog.T.UTILS, "Theme key $themeName is not recognized.")

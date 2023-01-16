@@ -22,59 +22,59 @@ class DomainPhoneNumberUtilsTest {
     @Test
     fun `getPhoneNumberPrefix returns correct country code`() {
         Assertions.assertThat(DomainPhoneNumberUtils.getPhoneNumberPrefix(US_COUNTRY_CODE))
-                .isEqualTo(US_PHONE_NUMBER_PREFIX)
+            .isEqualTo(US_PHONE_NUMBER_PREFIX)
         Assertions.assertThat(DomainPhoneNumberUtils.getPhoneNumberPrefix(GB_COUNTRY_CODE))
-                .isEqualTo(GB_PHONE_NUMBER_PREFIX)
+            .isEqualTo(GB_PHONE_NUMBER_PREFIX)
         Assertions.assertThat(DomainPhoneNumberUtils.getPhoneNumberPrefix(NON_EXISTENT_COUNTRY_CODE)).isNull()
     }
 
     @Test
     fun `getPhoneNumberPrefixFromFullPhoneNumber returns correct country code from phone number`() {
         Assertions.assertThat(DomainPhoneNumberUtils.getPhoneNumberPrefixFromFullPhoneNumber(US_PHONE_NUMBER))
-                .isEqualTo(US_PHONE_NUMBER_PREFIX)
+            .isEqualTo(US_PHONE_NUMBER_PREFIX)
         Assertions.assertThat(DomainPhoneNumberUtils.getPhoneNumberPrefixFromFullPhoneNumber(GB_PHONE_NUMBER))
-                .isEqualTo(GB_PHONE_NUMBER_PREFIX)
+            .isEqualTo(GB_PHONE_NUMBER_PREFIX)
         Assertions.assertThat(DomainPhoneNumberUtils.getPhoneNumberPrefixFromFullPhoneNumber(NO_PREFIX_US_PHONE_NUMBER))
-                .isNull()
+            .isNull()
         Assertions.assertThat(
-                DomainPhoneNumberUtils.getPhoneNumberPrefixFromFullPhoneNumber(ONLY_US_COUNTRY_CODE_PREFIX_PHONE_NUMBER)
+            DomainPhoneNumberUtils.getPhoneNumberPrefixFromFullPhoneNumber(ONLY_US_COUNTRY_CODE_PREFIX_PHONE_NUMBER)
         ).isEqualTo(US_PHONE_NUMBER_PREFIX)
         Assertions.assertThat(DomainPhoneNumberUtils.getPhoneNumberPrefixFromFullPhoneNumber(MALFORMED_PHONE_NUMBER))
-                .isNull()
+            .isNull()
         Assertions.assertThat(DomainPhoneNumberUtils.getPhoneNumberPrefixFromFullPhoneNumber(""))
-                .isNull()
+            .isNull()
     }
 
     @Test
     fun `formatPhoneNumberandPrefix returns correct phone number`() {
         Assertions.assertThat(
-                DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
-                        US_PHONE_NUMBER_PREFIX,
-                        NO_PREFIX_US_PHONE_NUMBER
-                )
+            DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
+                US_PHONE_NUMBER_PREFIX,
+                NO_PREFIX_US_PHONE_NUMBER
+            )
         )
-                .isEqualTo(US_PHONE_NUMBER)
+            .isEqualTo(US_PHONE_NUMBER)
         Assertions.assertThat(
-                DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
-                        GB_PHONE_NUMBER_PREFIX,
-                        NO_PREFIX_GB_PHONE_NUMBER
-                )
+            DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
+                GB_PHONE_NUMBER_PREFIX,
+                NO_PREFIX_GB_PHONE_NUMBER
+            )
         )
-                .isEqualTo(GB_PHONE_NUMBER)
+            .isEqualTo(GB_PHONE_NUMBER)
 
         Assertions.assertThat(
-                DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
-                        null,
-                        NO_PREFIX_US_PHONE_NUMBER
-                )
+            DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
+                null,
+                NO_PREFIX_US_PHONE_NUMBER
+            )
         )
-                .isEqualTo("+.$NO_PREFIX_US_PHONE_NUMBER")
+            .isEqualTo("+.$NO_PREFIX_US_PHONE_NUMBER")
 
         Assertions.assertThat(
-                DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
-                        US_PHONE_NUMBER_PREFIX, null
-                )
+            DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
+                US_PHONE_NUMBER_PREFIX, null
+            )
         )
-                .isEqualTo("+$US_PHONE_NUMBER_PREFIX.")
+            .isEqualTo("+$US_PHONE_NUMBER_PREFIX.")
     }
 }

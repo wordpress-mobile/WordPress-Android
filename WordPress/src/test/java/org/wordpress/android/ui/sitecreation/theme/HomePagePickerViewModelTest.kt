@@ -44,15 +44,32 @@ private const val MOCKED_DESIGN_DEMO_URL = "mockedDemoUrl"
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class HomePagePickerViewModelTest : BaseUnitTest() {
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var networkUtils: NetworkUtilsWrapper
-    @Mock lateinit var fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
-    @Mock lateinit var uiStateObserver: Observer<LayoutPickerUiState>
-    @Mock lateinit var onDesignActionObserver: Observer<DesignSelectionAction>
-    @Mock lateinit var onPreviewActionObserver: Observer<DesignPreviewAction>
-    @Mock lateinit var previewModeObserver: Observer<PreviewMode>
-    @Mock lateinit var analyticsTracker: SiteCreationTracker
-    @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var dispatcher: Dispatcher
+
+    @Mock
+    lateinit var networkUtils: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
+
+    @Mock
+    lateinit var uiStateObserver: Observer<LayoutPickerUiState>
+
+    @Mock
+    lateinit var onDesignActionObserver: Observer<DesignSelectionAction>
+
+    @Mock
+    lateinit var onPreviewActionObserver: Observer<DesignPreviewAction>
+
+    @Mock
+    lateinit var previewModeObserver: Observer<PreviewMode>
+
+    @Mock
+    lateinit var analyticsTracker: SiteCreationTracker
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
 
     private lateinit var recommendationProvider: SiteDesignRecommendationProvider
     private lateinit var viewModel: HomePagePickerViewModel
@@ -61,23 +78,23 @@ class HomePagePickerViewModelTest : BaseUnitTest() {
     private val verticalArray = arrayOf("Art", "Food", "Beauty")
 
     private val mockCategory = StarterDesignCategory(
-            slug = "blog",
-            title = "Blog",
-            description = "Blogging designs",
-            emoji = "👋"
+        slug = "blog",
+        title = "Blog",
+        description = "Blogging designs",
+        emoji = "👋"
     )
 
     @Before
     fun setUp() {
         recommendationProvider = SiteDesignRecommendationProvider(resourceProvider)
         viewModel = HomePagePickerViewModel(
-                networkUtils,
-                dispatcher,
-                fetchHomePageLayoutsUseCase,
-                analyticsTracker,
-                NoDelayCoroutineDispatcher(),
-                NoDelayCoroutineDispatcher(),
-                recommendationProvider
+            networkUtils,
+            dispatcher,
+            fetchHomePageLayoutsUseCase,
+            analyticsTracker,
+            NoDelayCoroutineDispatcher(),
+            NoDelayCoroutineDispatcher(),
+            recommendationProvider
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.onDesignActionPressed.observeForever(onDesignActionObserver)
@@ -87,27 +104,27 @@ class HomePagePickerViewModelTest : BaseUnitTest() {
 
     private fun <T> mockResponse(isError: Boolean = false, block: suspend CoroutineScope.() -> T) = test {
         val response = if (isError) OnStarterDesignsFetched(
-                emptyList(),
-                emptyList(),
-                ThemesError(ThemeErrorType.GENERIC_ERROR)
+            emptyList(),
+            emptyList(),
+            ThemesError(ThemeErrorType.GENERIC_ERROR)
         )
         else OnStarterDesignsFetched(
-                listOf(
-                        StarterDesign(
-                                MOCKED_DESIGN_SLUG,
-                                "title",
-                                MOCKED_DESIGN_SEGMENT_ID,
-                                listOf(mockCategory),
-                                MOCKED_DESIGN_DEMO_URL,
-                                "theme",
-                                listOf("stable", "blog"),
-                                "desktopThumbnail",
-                                "tabletThumbnail",
-                                "mobileThumbnail"
-                        )
-                ),
-                listOf(mockCategory),
-                null
+            listOf(
+                StarterDesign(
+                    MOCKED_DESIGN_SLUG,
+                    "title",
+                    MOCKED_DESIGN_SEGMENT_ID,
+                    listOf(mockCategory),
+                    MOCKED_DESIGN_DEMO_URL,
+                    "theme",
+                    listOf("stable", "blog"),
+                    "desktopThumbnail",
+                    "tabletThumbnail",
+                    "mobileThumbnail"
+                )
+            ),
+            listOf(mockCategory),
+            null
         )
         whenever(fetchHomePageLayoutsUseCase.fetchStarterDesigns()).thenReturn(response)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)

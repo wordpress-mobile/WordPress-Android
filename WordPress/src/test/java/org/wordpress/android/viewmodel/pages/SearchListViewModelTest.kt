@@ -35,13 +35,26 @@ import java.util.SortedMap
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SearchListViewModelTest : BaseUnitTest() {
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var pagesViewModel: PagesViewModel
-    @Mock lateinit var createPageListItemLabelsUseCase: CreatePageListItemLabelsUseCase
-    @Mock lateinit var pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
-    @Mock lateinit var pageListItemActionsUseCase: CreatePageListItemActionsUseCase
-    @Mock lateinit var createUploadStateUseCase: PostModelUploadUiStateUseCase
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var site: SiteModel
+
+    @Mock
+    lateinit var pagesViewModel: PagesViewModel
+
+    @Mock
+    lateinit var createPageListItemLabelsUseCase: CreatePageListItemLabelsUseCase
+
+    @Mock
+    lateinit var pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase
+
+    @Mock
+    lateinit var pageListItemActionsUseCase: CreatePageListItemActionsUseCase
+
+    @Mock
+    lateinit var createUploadStateUseCase: PostModelUploadUiStateUseCase
 
     private lateinit var searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>>
     private lateinit var viewModel: SearchListViewModel
@@ -52,31 +65,31 @@ class SearchListViewModelTest : BaseUnitTest() {
     fun setUp() {
         page = PageModel(PostModel(), site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
         viewModel = SearchListViewModel(
-                createPageListItemLabelsUseCase,
-                createUploadStateUseCase,
-                pageListItemActionsUseCase,
-                pageItemProgressUiStateUseCase,
-                resourceProvider,
-                testDispatcher()
+            createPageListItemLabelsUseCase,
+            createUploadStateUseCase,
+            pageListItemActionsUseCase,
+            pageItemProgressUiStateUseCase,
+            resourceProvider,
+            testDispatcher()
         )
         searchPages = MutableLiveData()
 
         whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(
-                Pair(
-                        ProgressBarUiState.Hidden,
-                        false
-                )
+            Pair(
+                ProgressBarUiState.Hidden,
+                false
+            )
         )
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)
         whenever(pagesViewModel.site).thenReturn(site)
         whenever(pagesViewModel.uploadStatusTracker).thenReturn(mock())
         whenever(createPageListItemLabelsUseCase.createLabels(any(), any())).thenReturn(
-                Pair(
-                        mock(), 0
-                )
+            Pair(
+                mock(), 0
+            )
         )
         whenever(createUploadStateUseCase.createUploadUiState(any(), any(), any())).thenReturn(
-                PostUploadUiState.NothingToUpload
+            PostUploadUiState.NothingToUpload
         )
         viewModel.start(pagesViewModel)
     }
@@ -142,18 +155,18 @@ class SearchListViewModelTest : BaseUnitTest() {
     @Test
     fun `passes action to page view model on menu action`() {
         val clickedPage = PageItem.PublishedPage(
-                remoteId = 1,
-                localId = 1,
-                title = "title",
-                date = Date(),
-                labels = listOf(),
-                labelsColor = 0,
-                indent = 0,
-                imageUrl = null,
-                actions = mock(),
-                actionsEnabled = false,
-                progressBarUiState = ProgressBarUiState.Hidden,
-                showOverlay = false
+            remoteId = 1,
+            localId = 1,
+            title = "title",
+            date = Date(),
+            labels = listOf(),
+            labelsColor = 0,
+            indent = 0,
+            imageUrl = null,
+            actions = mock(),
+            actionsEnabled = false,
+            progressBarUiState = ProgressBarUiState.Hidden,
+            showOverlay = false
         )
         val action = VIEW_PAGE
 
@@ -165,18 +178,18 @@ class SearchListViewModelTest : BaseUnitTest() {
     @Test
     fun `passes page to page view model on item tapped`() {
         val clickedPage = PageItem.PublishedPage(
-                remoteId = 1,
-                localId = 1,
-                title = "title",
-                date = Date(),
-                labels = listOf(),
-                labelsColor = 0,
-                indent = 0,
-                imageUrl = null,
-                actions = mock(),
-                actionsEnabled = false,
-                progressBarUiState = ProgressBarUiState.Hidden,
-                showOverlay = false
+            remoteId = 1,
+            localId = 1,
+            title = "title",
+            date = Date(),
+            labels = listOf(),
+            labelsColor = 0,
+            indent = 0,
+            imageUrl = null,
+            actions = mock(),
+            actionsEnabled = false,
+            progressBarUiState = ProgressBarUiState.Hidden,
+            showOverlay = false
         )
 
         viewModel.onItemTapped(clickedPage)

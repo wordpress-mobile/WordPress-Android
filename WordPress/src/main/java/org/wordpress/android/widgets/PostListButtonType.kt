@@ -25,16 +25,16 @@ enum class PostListButtonType constructor(
     BUTTON_RETRY(11, R.string.button_retry, R.drawable.ic_refresh_white_24dp, R.attr.colorError),
     BUTTON_MOVE_TO_DRAFT(12, R.string.button_move_to_draft, R.drawable.ic_refresh_white_24dp, R.attr.colorOnSurface),
     BUTTON_DELETE_PERMANENTLY(
-            13,
-            R.string.button_delete_permanently,
-            R.drawable.ic_trash_white_24dp,
-            R.attr.colorOnSurface
+        13,
+        R.string.button_delete_permanently,
+        R.drawable.ic_trash_white_24dp,
+        R.attr.colorOnSurface
     ),
     BUTTON_CANCEL_PENDING_AUTO_UPLOAD(
-            14,
-            R.string.pages_and_posts_cancel_auto_upload,
-            R.drawable.ic_undo_white_24dp,
-            R.attr.wpColorWarningDark
+        14,
+        R.string.pages_and_posts_cancel_auto_upload,
+        R.drawable.ic_undo_white_24dp,
+        R.attr.wpColorWarningDark
     ),
     BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG(15, 0, 0, 0),
     BUTTON_COPY(16, R.string.button_copy, R.drawable.ic_copy_white_24dp, R.attr.colorOnSurface),

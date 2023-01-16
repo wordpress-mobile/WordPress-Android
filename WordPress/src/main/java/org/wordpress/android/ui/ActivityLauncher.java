@@ -162,7 +162,12 @@ public class ActivityLauncher {
     public static final String CATEGORY_DETAIL_ID = "category_detail_key";
 
     public static void showMainActivity(Context context) {
+        showMainActivity(context, false);
+    }
+
+    public static void showMainActivity(Context context, boolean bypassMigration) {
         Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_BYPASS_MIGRATION, bypassMigration);
         context.startActivity(intent);
     }
 

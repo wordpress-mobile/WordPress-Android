@@ -18,20 +18,20 @@ class PermissionsHandler
 
     fun hasWriteStoragePermission(): Boolean {
         return ContextCompat.checkSelfPermission(
-                context, permission.WRITE_EXTERNAL_STORAGE
+            context, permission.WRITE_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun hasReadStoragePermission(): Boolean {
         return ContextCompat.checkSelfPermission(
-                context, permission.READ_EXTERNAL_STORAGE
+            context, permission.READ_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun hasCameraPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
-                context,
-                permission.CAMERA
+            context,
+            permission.CAMERA
         ) == PackageManager.PERMISSION_GRANTED
     }
 }

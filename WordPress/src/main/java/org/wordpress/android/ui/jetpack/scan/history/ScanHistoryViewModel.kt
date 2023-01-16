@@ -6,9 +6,9 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.parcelize.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
+import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
@@ -82,9 +82,9 @@ class ScanHistoryViewModel @Inject constructor(
     sealed class UiState(val contentVisible: Boolean = false, val errorVisible: Boolean = false) {
         object ContentUiState : UiState(contentVisible = true) {
             val tabs = listOf(
-                    TabUiState(UiStringRes(R.string.scan_history_all_threats_tab), ALL),
-                    TabUiState(UiStringRes(R.string.scan_history_fixed_threats_tab), FIXED),
-                    TabUiState(UiStringRes(R.string.scan_history_ignored_threats_tab), IGNORED)
+                TabUiState(UiStringRes(R.string.scan_history_all_threats_tab), ALL),
+                TabUiState(UiStringRes(R.string.scan_history_fixed_threats_tab), FIXED),
+                TabUiState(UiStringRes(R.string.scan_history_ignored_threats_tab), IGNORED)
             )
         }
 
@@ -95,12 +95,16 @@ class ScanHistoryViewModel @Inject constructor(
 
             data class NoConnection(override val retry: () -> Unit) : ErrorUiState() {
                 override val title: UiString = UiStringRes(R.string.scan_history_no_connection)
-                @DrawableRes override val img: Int = R.drawable.img_illustration_cloud_off_152dp
+
+                @DrawableRes
+                override val img: Int = R.drawable.img_illustration_cloud_off_152dp
             }
 
             data class RequestFailed(override val retry: () -> Unit) : ErrorUiState() {
                 override val title: UiString = UiStringRes(R.string.scan_history_request_failed)
-                @DrawableRes override val img: Int = R.drawable.img_illustration_cloud_off_152dp
+
+                @DrawableRes
+                override val img: Int = R.drawable.img_illustration_cloud_off_152dp
             }
         }
     }

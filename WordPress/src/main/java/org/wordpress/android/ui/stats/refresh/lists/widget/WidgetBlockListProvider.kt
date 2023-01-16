@@ -16,7 +16,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsCo
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
 
 class WidgetBlockListProvider(val context: Context, val viewModel: WidgetBlockListViewModel, intent: Intent) :
-        RemoteViewsFactory {
+    RemoteViewsFactory {
     private val colorMode: Color = intent.getColorMode()
     private val siteId: Int = intent.getIntExtra(SITE_ID_KEY, -1)
     private val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)

@@ -6,8 +6,8 @@ enum class CommentSource {
     NOTIFICATION, SITE_COMMENTS;
 
     fun toAnalyticsCommentActionSource(): AnalyticsCommentActionSource =
-            when (this) {
-                NOTIFICATION -> AnalyticsCommentActionSource.NOTIFICATIONS
-                SITE_COMMENTS -> AnalyticsCommentActionSource.SITE_COMMENTS
-            }
+        when (this) {
+            NOTIFICATION -> AnalyticsCommentActionSource.NOTIFICATIONS
+            SITE_COMMENTS -> AnalyticsCommentActionSource.SITE_COMMENTS
+        }
 }

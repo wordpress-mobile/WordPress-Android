@@ -71,8 +71,8 @@ sealed class DebugSettingsItemViewHolder(
     }
 
     class RemoteFieldConfigViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(
-            parent,
-            R.layout.debug_settings_remote_field
+        parent,
+        R.layout.debug_settings_remote_field
     ) {
         fun bind(item: UiItem.Field) = with(DebugSettingsRemoteFieldBinding.bind(itemView)) {
             remoteFieldKey.setText(item.remoteFieldKey)

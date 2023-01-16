@@ -18,8 +18,8 @@ class JetpackMigrationActivity : AppCompatActivity() {
             val showDeleteWpState = intent.getBooleanExtra(KEY_SHOW_DELETE_WP_STATE, false)
             if (savedInstanceState == null) {
                 supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, JetpackMigrationFragment.newInstance(showDeleteWpState))
-                        .commit()
+                    .replace(R.id.fragment_container, JetpackMigrationFragment.newInstance(showDeleteWpState))
+                    .commit()
             }
         }
     }
@@ -27,8 +27,8 @@ class JetpackMigrationActivity : AppCompatActivity() {
     companion object {
         private const val KEY_SHOW_DELETE_WP_STATE = "KEY_SHOW_DELETE_WP_STATE"
         fun createIntent(context: Context, showDeleteWpState: Boolean = false): Intent =
-                Intent(context, JetpackMigrationActivity::class.java).apply {
-                    putExtra(KEY_SHOW_DELETE_WP_STATE, showDeleteWpState)
-                }
+            Intent(context, JetpackMigrationActivity::class.java).apply {
+                putExtra(KEY_SHOW_DELETE_WP_STATE, showDeleteWpState)
+            }
     }
 }

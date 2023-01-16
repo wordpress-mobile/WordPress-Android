@@ -15,7 +15,7 @@ class GetActivityLogItemUseCase @Inject constructor(
     suspend fun get(
         activityId: String
     ): ActivityLogModel? =
-            withContext(ioDispatcher) {
-                activityLogStore.getActivityLogItemByActivityId(activityId)
-            }
+        withContext(ioDispatcher) {
+            activityLogStore.getActivityLogItemByActivityId(activityId)
+        }
 }

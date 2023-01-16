@@ -40,10 +40,10 @@ class CategoriesListViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = CategoriesListViewModel(
-                getCategoriesUseCase,
-                networkUtilsWrapper,
-                testDispatcher(),
-                dispatcher
+            getCategoriesUseCase,
+            networkUtilsWrapper,
+            testDispatcher(),
+            dispatcher
         )
         viewModel.uiState.observeForever { if (it != null) uiStates += it }
     }

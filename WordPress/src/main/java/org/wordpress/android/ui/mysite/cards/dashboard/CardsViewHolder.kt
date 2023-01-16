@@ -19,16 +19,16 @@ class CardsViewHolder(
     htmlCompatWrapper: HtmlCompatWrapper,
     learnMoreClicked: () -> Unit
 ) : MySiteCardAndItemViewHolder<MySiteDashboardCardsBinding>(
-        parentView.viewBinding(MySiteDashboardCardsBinding::inflate)
+    parentView.viewBinding(MySiteDashboardCardsBinding::inflate)
 ) {
     init {
         with(binding.dashboardCards) {
             adapter = CardsAdapter(
-                    imageManager,
-                    uiHelpers,
-                    bloggingPromptsCardAnalyticsTracker,
-                    htmlCompatWrapper,
-                    learnMoreClicked
+                imageManager,
+                uiHelpers,
+                bloggingPromptsCardAnalyticsTracker,
+                htmlCompatWrapper,
+                learnMoreClicked
             )
             addItemDecoration(CardsDecoration(resources.getDimensionPixelSize(dimen.margin_extra_large)))
         }

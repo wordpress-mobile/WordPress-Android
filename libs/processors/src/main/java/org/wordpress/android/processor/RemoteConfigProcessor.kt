@@ -20,10 +20,10 @@ import javax.tools.Diagnostic.Kind
 @AutoService(Processor::class) // For registering the service
 @SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
 @SupportedAnnotationTypes(
-        "org.wordpress.android.annotation.Experiment",
-        "org.wordpress.android.annotation.Feature",
-        "org.wordpress.android.annotation.FeatureInDevelopment",
-        "org.wordpress.android.annotation.RemoteFieldDefaultGenerater"
+    "org.wordpress.android.annotation.Experiment",
+    "org.wordpress.android.annotation.Feature",
+    "org.wordpress.android.annotation.FeatureInDevelopment",
+    "org.wordpress.android.annotation.RemoteFieldDefaultGenerater"
 )
 class RemoteConfigProcessor : AbstractProcessor() {
     @Suppress("DEPRECATION")
@@ -39,14 +39,14 @@ class RemoteConfigProcessor : AbstractProcessor() {
             annotation.remoteField to annotation.defaultValue.toString()
         } ?: listOf()
         val remoteFields = roundEnvironment?.getElementsAnnotatedWith(RemoteFieldDefaultGenerater::class.java)
-                ?.map { element ->
-                    val annotation = element.getAnnotation(RemoteFieldDefaultGenerater::class.java)
-                    annotation.remoteField to annotation.defaultValue
-                } ?: listOf()
+            ?.map { element ->
+                val annotation = element.getAnnotation(RemoteFieldDefaultGenerater::class.java)
+                annotation.remoteField to annotation.defaultValue
+            } ?: listOf()
         val featuresInDevelopment = roundEnvironment?.getElementsAnnotatedWith(FeatureInDevelopment::class.java)
-                ?.map { element ->
-                    element.asType().toString()
-                } ?: listOf()
+            ?.map { element ->
+                element.asType().toString()
+            } ?: listOf()
         return if (experiments.isNotEmpty() || features.isNotEmpty()) {
             generateRemoteFieldConfigDefaults(remoteFields.toMap())
             generateRemoteFeatureConfigDefaults((experiments + features).toMap())
@@ -97,8 +97,8 @@ class RemoteConfigProcessor : AbstractProcessor() {
             fileContent.writeTo(File(kaptKotlinGeneratedDir))
         } catch (e: Exception) {
             processingEnv.messager.printMessage(
-                    Kind.ERROR,
-                    "Failed to generate remote feature config check: $e"
+                Kind.ERROR,
+                "Failed to generate remote feature config check: $e"
             )
         }
     }
@@ -114,8 +114,8 @@ class RemoteConfigProcessor : AbstractProcessor() {
             fileContent.writeTo(File(kaptKotlinGeneratedDir))
         } catch (e: Exception) {
             processingEnv.messager.printMessage(
-                    Kind.ERROR,
-                    "Failed to generate remote config check: $e"
+                Kind.ERROR,
+                "Failed to generate remote config check: $e"
             )
         }
     }

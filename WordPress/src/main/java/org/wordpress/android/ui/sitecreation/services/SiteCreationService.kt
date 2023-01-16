@@ -23,12 +23,18 @@ private val INITIAL_STATE = IDLE
 
 @AndroidEntryPoint
 class SiteCreationService : AutoForeground<SiteCreationServiceState>(SiteCreationServiceState(INITIAL_STATE)),
-        SiteCreationServiceManagerListener {
-    @Inject lateinit var manager: SiteCreationServiceManager
+    SiteCreationServiceManagerListener {
+    @Inject
+    lateinit var manager: SiteCreationServiceManager
 
-    @Inject lateinit var dispatcher: Dispatcher
-    @Inject lateinit var tracker: SiteCreationTracker
-    @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Inject
+    lateinit var dispatcher: Dispatcher
+
+    @Inject
+    lateinit var tracker: SiteCreationTracker
+
+    @Inject
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
 
     override fun onCreate() {
         super.onCreate()
@@ -43,11 +49,11 @@ class SiteCreationService : AutoForeground<SiteCreationServiceState>(SiteCreatio
 
         val data = intent.getParcelableExtra<SiteCreationServiceData>(ARG_DATA)!!
         manager.onStart(
-                LocaleManager.getLanguageWordPressId(this),
-                localeManagerWrapper.getTimeZone().id,
-                intent.getStringExtra(ARG_RESUME_PHASE),
-                data,
-                serviceListener = this
+            LocaleManager.getLanguageWordPressId(this),
+            localeManagerWrapper.getTimeZone().id,
+            intent.getStringExtra(ARG_RESUME_PHASE),
+            data,
+            serviceListener = this
         )
 
         return Service.START_NOT_STICKY
@@ -75,7 +81,7 @@ class SiteCreationService : AutoForeground<SiteCreationServiceState>(SiteCreatio
     }
 
     override fun getCurrentState(): SiteCreationServiceState? =
-            getState(SiteCreationServiceState::class.java)
+        getState(SiteCreationServiceState::class.java)
 
     override fun updateState(state: SiteCreationServiceState) {
         setState(state)

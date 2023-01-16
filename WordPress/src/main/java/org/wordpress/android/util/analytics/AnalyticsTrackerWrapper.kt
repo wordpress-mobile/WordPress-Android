@@ -18,11 +18,11 @@ class AnalyticsTrackerWrapper
 
     fun track(stat: Stat, remoteField: String, featureState: FeatureState) {
         AnalyticsTracker.track(
-                stat,
-                mapOf(
-                        remoteField to featureState.isEnabled,
-                        "${remoteField}_state" to featureState.name
-                )
+            stat,
+            mapOf(
+                remoteField to featureState.isEnabled,
+                "${remoteField}_state" to featureState.name
+            )
         )
     }
 

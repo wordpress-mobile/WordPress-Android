@@ -23,8 +23,11 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fragment) {
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var imageManager: ImageManager
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
 
     private val viewModel: ScanHistoryListViewModel by viewModels()
     private val parentViewModel: ScanHistoryViewModel by activityViewModels()

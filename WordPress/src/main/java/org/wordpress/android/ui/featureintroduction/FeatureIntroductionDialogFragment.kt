@@ -17,8 +17,11 @@ import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 import javax.inject.Inject
 
 abstract class FeatureIntroductionDialogFragment : DialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: FeatureIntroductionViewModel
     private var _binding: FeatureIntroductionDialogFragmentBinding? = null
     private val binding get() = _binding ?: throw NullPointerException("_binding cannot be null")
@@ -28,14 +31,14 @@ abstract class FeatureIntroductionDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-            object : Dialog(requireContext(), theme) {
-                override fun onBackPressed() {
-                    viewModel.onBackButtonClick()
-                    super.onBackPressed()
-                }
-            }.apply {
-                setStatusBarAsSurfaceColor()
+        object : Dialog(requireContext(), theme) {
+            override fun onBackPressed() {
+                viewModel.onBackButtonClick()
+                super.onBackPressed()
             }
+        }.apply {
+            setStatusBarAsSurfaceColor()
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -7,16 +7,16 @@ import javax.inject.Inject
 class ManualFeatureConfig
 @Inject constructor(private val appPrefsWrapper: AppPrefsWrapper, private val buildConfigWrapper: BuildConfigWrapper) {
     fun hasManualSetup(feature: FeatureConfig): Boolean =
-            isConfigEnabled() && hasManualSetup(feature.toFeatureKey())
+        isConfigEnabled() && hasManualSetup(feature.toFeatureKey())
 
     fun hasManualSetup(featureKey: String): Boolean =
-            isConfigEnabled() && appPrefsWrapper.hasManualFeatureConfig(featureKey)
+        isConfigEnabled() && appPrefsWrapper.hasManualFeatureConfig(featureKey)
 
     fun isManuallyEnabled(feature: FeatureConfig): Boolean =
-            isConfigEnabled() && isManuallyEnabled(feature.toFeatureKey())
+        isConfigEnabled() && isManuallyEnabled(feature.toFeatureKey())
 
     fun isManuallyEnabled(featureKey: String): Boolean =
-            isConfigEnabled() && appPrefsWrapper.getManualFeatureConfig(featureKey)
+        isConfigEnabled() && appPrefsWrapper.getManualFeatureConfig(featureKey)
 
     fun setManuallyEnabled(featureKey: String, enabled: Boolean) {
         if (isConfigEnabled()) {

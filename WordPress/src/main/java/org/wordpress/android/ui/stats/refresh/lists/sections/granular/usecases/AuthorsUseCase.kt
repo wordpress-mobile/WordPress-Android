@@ -58,13 +58,13 @@ class AuthorsUseCase constructor(
     private val statsUtils: StatsUtils,
     private val useCaseMode: UseCaseMode
 ) : GranularStatefulUseCase<AuthorsModel, SelectedAuthor>(
-        AUTHORS,
-        mainDispatcher,
-        backgroundDispatcher,
-        statsSiteProvider,
-        selectedDateProvider,
-        statsGranularity,
-        SelectedAuthor()
+    AUTHORS,
+    mainDispatcher,
+    backgroundDispatcher,
+    statsSiteProvider,
+    selectedDateProvider,
+    statsGranularity,
+    SelectedAuthor()
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
@@ -72,20 +72,20 @@ class AuthorsUseCase constructor(
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): AuthorsModel? {
         return authorsStore.getAuthors(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate
         )
     }
 
     override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<AuthorsModel> {
         val response = authorsStore.fetchAuthors(
-                site,
-                statsGranularity,
-                LimitMode.Top(itemsToLoad),
-                selectedDate,
-                forced
+            site,
+            statsGranularity,
+            LimitMode.Top(itemsToLoad),
+            selectedDate,
+            forced
         )
         val model = response.model
         val error = response.error
@@ -112,17 +112,17 @@ class AuthorsUseCase constructor(
             val maxViews = domainModel.authors.maxByOrNull { it.views }?.views ?: 0
             domainModel.authors.forEachIndexed { index, author ->
                 val headerItem = ListItemWithIcon(
-                        iconUrl = author.avatarUrl,
-                        iconStyle = AVATAR,
-                        text = author.name,
-                        barWidth = getBarWidth(author.views, maxViews),
-                        value = statsUtils.toFormattedString(author.views),
-                        showDivider = index < domainModel.authors.size - 1,
-                        contentDescription = contentDescriptionHelper.buildContentDescription(
-                                header,
-                                author.name,
-                                author.views
-                        )
+                    iconUrl = author.avatarUrl,
+                    iconStyle = AVATAR,
+                    text = author.name,
+                    barWidth = getBarWidth(author.views, maxViews),
+                    value = statsUtils.toFormattedString(author.views),
+                    showDivider = index < domainModel.authors.size - 1,
+                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
+                        author.name,
+                        author.views
+                    )
                 )
                 if (author.posts.isEmpty()) {
                     items.add(headerItem)
@@ -134,21 +134,21 @@ class AuthorsUseCase constructor(
                     if (isExpanded) {
                         items.addAll(author.posts.map { post ->
                             ListItemWithIcon(
-                                    text = post.title,
-                                    value = statsUtils.toFormattedString(post.views),
-                                    iconStyle = if (author.avatarUrl != null) EMPTY_SPACE else NORMAL,
-                                    textStyle = LIGHT,
-                                    showDivider = false,
-                                    navigationAction = create(
-                                            PostClickParams(post.id, post.url, post.title),
-                                            this::onPostClicked
-                                    ),
-                                    contentDescription = contentDescriptionHelper.buildContentDescription(
-                                            R.string.stats_post_label,
-                                            post.title,
-                                            R.string.stats_post_views_label,
-                                            post.views
-                                    )
+                                text = post.title,
+                                value = statsUtils.toFormattedString(post.views),
+                                iconStyle = if (author.avatarUrl != null) EMPTY_SPACE else NORMAL,
+                                textStyle = LIGHT,
+                                showDivider = false,
+                                navigationAction = create(
+                                    PostClickParams(post.id, post.url, post.title),
+                                    this::onPostClicked
+                                ),
+                                contentDescription = contentDescriptionHelper.buildContentDescription(
+                                    R.string.stats_post_label,
+                                    post.title,
+                                    R.string.stats_post_views_label,
+                                    post.views
+                                )
                             )
                         })
                         items.add(Divider)
@@ -158,10 +158,10 @@ class AuthorsUseCase constructor(
 
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
-                        Link(
-                                text = R.string.stats_insights_view_more,
-                                navigateAction = create(statsGranularity, this::onViewMoreClicked)
-                        )
+                    Link(
+                        text = R.string.stats_insights_view_more,
+                        navigateAction = create(statsGranularity, this::onViewMoreClicked)
+                    )
                 )
             }
         }
@@ -171,22 +171,22 @@ class AuthorsUseCase constructor(
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_AUTHORS_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(
-                ViewAuthors(
-                        statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
-                )
+            ViewAuthors(
+                statsGranularity,
+                selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+            )
         )
     }
 
     private fun onPostClicked(params: PostClickParams) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_AUTHORS_VIEW_POST_TAPPED, statsGranularity)
         navigateTo(
-                ViewPostDetailStats(
-                        postId = params.postId.toLong(),
-                        postTitle = params.postTitle,
-                        postUrl = params.postUrl,
-                        postType = StatsConstants.ITEM_TYPE_POST
-                )
+            ViewPostDetailStats(
+                postId = params.postId.toLong(),
+                postTitle = params.postTitle,
+                postUrl = params.postUrl,
+                postType = StatsConstants.ITEM_TYPE_POST
+            )
         )
     }
 
@@ -210,17 +210,17 @@ class AuthorsUseCase constructor(
         private val contentDescriptionHelper: ContentDescriptionHelper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
-                AuthorsUseCase(
-                        granularity,
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        authorsStore,
-                        statsSiteProvider,
-                        selectedDateProvider,
-                        analyticsTracker,
-                        contentDescriptionHelper,
-                        statsUtils,
-                        useCaseMode
-                )
+            AuthorsUseCase(
+                granularity,
+                mainDispatcher,
+                backgroundDispatcher,
+                authorsStore,
+                statsSiteProvider,
+                selectedDateProvider,
+                analyticsTracker,
+                contentDescriptionHelper,
+                statsUtils,
+                useCaseMode
+            )
     }
 }

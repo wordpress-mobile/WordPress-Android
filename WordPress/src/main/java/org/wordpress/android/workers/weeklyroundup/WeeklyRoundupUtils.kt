@@ -21,6 +21,6 @@ object WeeklyRoundupUtils {
         date: String,
         formatter: DateTimeFormatter
     ) = runCatching { LocalDate.parse(date, formatter) }
-            .onFailure { AppLog.e(T.NOTIFS, "Weekly Roundup – Couldn't parse date: $date", it) }
-            .getOrNull()
+        .onFailure { AppLog.e(T.NOTIFS, "Weekly Roundup – Couldn't parse date: $date", it) }
+        .getOrNull()
 }

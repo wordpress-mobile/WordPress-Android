@@ -109,17 +109,19 @@ class EngagedPeopleListViewModel @Inject constructor(
         val commentId = if (listScenarioType == LOAD_COMMENT_LIKES) postOrCommentId else 0L
 
         if (!readerUtilsWrapper.postExists(
-                        siteId,
-                        postId
-                )) {
+                siteId,
+                postId
+            )
+        ) {
             _onServiceRequestEvent.value = Event(RequestBlogPost(siteId, postId))
         }
 
         if (listScenarioType == LOAD_COMMENT_LIKES && !readerUtilsWrapper.commentExists(
-                        siteId,
-                        postId,
-                        commentId
-                )) {
+                siteId,
+                postId,
+                commentId
+            )
+        ) {
             _onServiceRequestEvent.value = Event(RequestComment(siteId, postId, commentId))
         }
     }
@@ -134,10 +136,10 @@ class EngagedPeopleListViewModel @Inject constructor(
 
         if (requestPostOrComment) {
             requestPostOrCommentIfNeeded(
-                    listScenario.type,
-                    listScenario.siteId,
-                    listScenario.postOrCommentId,
-                    listScenario.commentPostId
+                listScenario.type,
+                listScenario.siteId,
+                listScenario.postOrCommentId,
+                listScenario.commentPostId
             )
         }
 
@@ -149,20 +151,20 @@ class EngagedPeopleListViewModel @Inject constructor(
             // Keeping the logic for now, but remove empty listOf and relevant logic when API will sort likes
             when (listScenario.type) {
                 LOAD_POST_LIKES -> getLikesHandler.handleGetLikesForPost(
-                        LikeGroupFingerPrint(
-                                listScenario.siteId,
-                                listScenario.postOrCommentId,
-                                listScenario.headerData.numLikes
-                        ),
-                        requestNextPage
+                    LikeGroupFingerPrint(
+                        listScenario.siteId,
+                        listScenario.postOrCommentId,
+                        listScenario.headerData.numLikes
+                    ),
+                    requestNextPage
                 )
                 LOAD_COMMENT_LIKES -> getLikesHandler.handleGetLikesForComment(
-                        LikeGroupFingerPrint(
-                                listScenario.siteId,
-                                listScenario.postOrCommentId,
-                                listScenario.headerData.numLikes
-                        ),
-                        requestNextPage
+                    LikeGroupFingerPrint(
+                        listScenario.siteId,
+                        listScenario.postOrCommentId,
+                        listScenario.headerData.numLikes
+                    ),
+                    requestNextPage
                 )
             }
         }
@@ -170,39 +172,41 @@ class EngagedPeopleListViewModel @Inject constructor(
 
     private fun buildUiState(updateLikesState: GetLikesState?, listScenario: ListScenario?): EngagedPeopleListUiState {
         val likedItem = listScenario?.headerData?.let {
-            listOf(LikedItem(
-                            author = it.authorName,
-                            postOrCommentText = it.snippetText,
-                            authorAvatarUrl = it.authorAvatarUrl,
-                            likedItemId = listScenario.postOrCommentId,
-                            likedItemSiteId = listScenario.siteId,
-                            likedItemSiteUrl = listScenario.commentSiteUrl,
-                            likedItemPostId = listScenario.commentPostId,
-                            authorUserId = it.authorUserId,
-                            authorPreferredSiteId = it.authorPreferredSiteId,
-                            authorPreferredSiteUrl = it.authorPreferredSiteUrl,
-                            onGravatarClick = ::onSiteLinkHolderClicked,
-                            blogPreviewSource = when (listScenario.source) {
-                                LIKE_NOTIFICATION_LIST -> ReaderTracker.SOURCE_NOTIFICATION
-                                LIKE_READER_LIST -> ReaderTracker.SOURCE_READER_LIKE_LIST
-                            },
-                            onHeaderClicked = ::onHeaderClicked
-            ))
+            listOf(
+                LikedItem(
+                    author = it.authorName,
+                    postOrCommentText = it.snippetText,
+                    authorAvatarUrl = it.authorAvatarUrl,
+                    likedItemId = listScenario.postOrCommentId,
+                    likedItemSiteId = listScenario.siteId,
+                    likedItemSiteUrl = listScenario.commentSiteUrl,
+                    likedItemPostId = listScenario.commentPostId,
+                    authorUserId = it.authorUserId,
+                    authorPreferredSiteId = it.authorPreferredSiteId,
+                    authorPreferredSiteUrl = it.authorPreferredSiteUrl,
+                    onGravatarClick = ::onSiteLinkHolderClicked,
+                    blogPreviewSource = when (listScenario.source) {
+                        LIKE_NOTIFICATION_LIST -> ReaderTracker.SOURCE_NOTIFICATION
+                        LIKE_READER_LIST -> ReaderTracker.SOURCE_READER_LIKE_LIST
+                    },
+                    onHeaderClicked = ::onHeaderClicked
+                )
+            )
         } ?: listOf()
 
         val likers = when (updateLikesState) {
             is LikesData -> {
                 engagementUtils.likesToEngagedPeople(
-                        updateLikesState.likes,
-                        ::onUserProfileHolderClicked,
-                        listScenario?.source
+                    updateLikesState.likes,
+                    ::onUserProfileHolderClicked,
+                    listScenario?.source
                 ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, true, updateLikesState.pageInfo)
             }
             is Failure -> {
                 engagementUtils.likesToEngagedPeople(
-                        updateLikesState.cachedLikes,
-                        ::onUserProfileHolderClicked,
-                        listScenario?.source
+                    updateLikesState.cachedLikes,
+                    ::onUserProfileHolderClicked,
+                    listScenario?.source
                 ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, false, updateLikesState.pageInfo)
             }
             Loading, null -> listOf()
@@ -221,12 +225,12 @@ class EngagedPeopleListViewModel @Inject constructor(
         }
 
         return EngagedPeopleListUiState(
-                showLoading = updateLikesState is Loading,
-                engageItemsList = likedItem + likers,
-                showEmptyState = showEmptyState,
-                emptyStateTitle = emptyStateTitle,
-                emptyStateAction = emptyStateAction,
-                emptyStateButtonText = emptyStateAction?.let { UiStringRes(string.retry) }
+            showLoading = updateLikesState is Loading,
+            engageItemsList = likedItem + likers,
+            showEmptyState = showEmptyState,
+            emptyStateTitle = emptyStateTitle,
+            emptyStateAction = emptyStateAction,
+            emptyStateButtonText = emptyStateAction?.let { UiStringRes(string.retry) }
         )
     }
 
@@ -238,12 +242,12 @@ class EngagedPeopleListViewModel @Inject constructor(
         return if (hasMore) {
             listOf(NextLikesPageLoader(isLoading) {
                 loadRequest(listScenario, requestPostOrComment = false, requestNextPage = true)
-                    analyticsUtilsWrapper.trackLikeListFetchedMore(
-                            EngagementNavigationSource.getSourceDescription(listScenario?.source),
-                            ListScenarioType.getSourceDescription(listScenario?.type),
-                            pageInfo.page + 1,
-                            pageInfo.pageLength
-                    )
+                analyticsUtilsWrapper.trackLikeListFetchedMore(
+                    EngagementNavigationSource.getSourceDescription(listScenario?.source),
+                    ListScenarioType.getSourceDescription(listScenario?.type),
+                    pageInfo.page + 1,
+                    pageInfo.pageLength
+                )
             })
         } else {
             listOf()
@@ -252,11 +256,11 @@ class EngagedPeopleListViewModel @Inject constructor(
 
     private fun onUserProfileHolderClicked(userProfile: UserProfile, source: EngagementNavigationSource?) {
         _onNavigationEvent.value = Event(
-                OpenUserProfileBottomSheet(
-                        userProfile,
-                        ::onSiteLinkHolderClicked,
-                        source
-                )
+            OpenUserProfileBottomSheet(
+                userProfile,
+                ::onSiteLinkHolderClicked,
+                source
+            )
         )
     }
 
@@ -274,15 +278,15 @@ class EngagedPeopleListViewModel @Inject constructor(
 
     private fun onHeaderClicked(siteId: Long, siteUrl: String, postOrCommentId: Long, commentPostId: Long) {
         _onNavigationEvent.value = Event(
-                if (commentPostId > 0) {
-                    if (readerUtilsWrapper.postAndCommentExists(siteId, commentPostId, postOrCommentId)) {
-                        PreviewCommentInReader(siteId, commentPostId, postOrCommentId, COMMENT_LIKE_NOTIFICATION)
-                    } else {
-                        PreviewSiteByUrl(siteUrl, LIKED_COMMENT_USER_HEADER.sourceDescription)
-                    }
+            if (commentPostId > 0) {
+                if (readerUtilsWrapper.postAndCommentExists(siteId, commentPostId, postOrCommentId)) {
+                    PreviewCommentInReader(siteId, commentPostId, postOrCommentId, COMMENT_LIKE_NOTIFICATION)
                 } else {
-                    PreviewPostInReader(siteId, postOrCommentId)
+                    PreviewSiteByUrl(siteUrl, LIKED_COMMENT_USER_HEADER.sourceDescription)
                 }
+            } else {
+                PreviewPostInReader(siteId, postOrCommentId)
+            }
         )
     }
 

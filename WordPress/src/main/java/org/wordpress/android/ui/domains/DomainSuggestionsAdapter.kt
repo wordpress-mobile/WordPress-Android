@@ -8,7 +8,7 @@ class DomainSuggestionsAdapter(
     private val itemSelectionListener: (DomainSuggestionItem?) -> Unit
 ) : ListAdapter<DomainSuggestionItem, DomainSuggestionsViewHolder>(DomainSuggestionItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            DomainSuggestionsViewHolder(parent, itemSelectionListener)
+        DomainSuggestionsViewHolder(parent, itemSelectionListener)
 
     override fun onBindViewHolder(holder: DomainSuggestionsViewHolder, position: Int) {
         holder.bind(getItem(position))
@@ -16,7 +16,7 @@ class DomainSuggestionsAdapter(
 
     private class DomainSuggestionItemDiffCallback : DiffUtil.ItemCallback<DomainSuggestionItem>() {
         override fun areItemsTheSame(old: DomainSuggestionItem, new: DomainSuggestionItem) =
-                old.domainName == new.domainName
+            old.domainName == new.domainName
 
         override fun areContentsTheSame(old: DomainSuggestionItem, new: DomainSuggestionItem) = old == new
     }

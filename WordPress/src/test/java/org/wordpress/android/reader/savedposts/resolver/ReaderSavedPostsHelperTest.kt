@@ -32,19 +32,19 @@ class ReaderSavedPostsHelperTest {
     private val wordPressPublicData: WordPressPublicData = mock()
     private val queryResult: QueryResult = mock()
     private val localMigrationContentResolver = LocalMigrationContentResolver(
-            contextProvider,
-            wordPressPublicData,
-            queryResult,
+        contextProvider,
+        wordPressPublicData,
+        queryResult,
     )
     private val classToTest = ReaderSavedPostsHelper(
-            jetpackReaderSavedPostsFlag,
-            contextProvider,
-            readerSavedPostsAnalyticsTracker,
-            appPrefsWrapper,
-            readerPostTableWrapper,
-            readerTagTableWrapper,
-            readerDatabaseWrapper,
-            localMigrationContentResolver,
+        jetpackReaderSavedPostsFlag,
+        contextProvider,
+        readerSavedPostsAnalyticsTracker,
+        appPrefsWrapper,
+        readerPostTableWrapper,
+        readerTagTableWrapper,
+        readerDatabaseWrapper,
+        localMigrationContentResolver,
     )
 
     @Test

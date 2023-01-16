@@ -22,8 +22,11 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: DomainsDashboardViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,14 +63,14 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
 
     private fun handleNavigationAction(action: DomainsDashboardNavigationAction) = when (action) {
         is GetDomain -> ActivityLauncher.viewDomainRegistrationActivityForResult(
-                this,
-                action.site,
-                DOMAIN_PURCHASE
+            this,
+            action.site,
+            DOMAIN_PURCHASE
         )
         is ClaimDomain -> ActivityLauncher.viewDomainRegistrationActivityForResult(
-                this,
-                action.site,
-                CTA_DOMAIN_CREDIT_REDEMPTION
+            this,
+            action.site,
+            CTA_DOMAIN_CREDIT_REDEMPTION
         )
     }
 
@@ -81,6 +84,8 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
 
     companion object {
         const val TAG = "DOMAINS_DASHBOARD_FRAGMENT"
-        @JvmStatic fun newInstance() = DomainsDashboardFragment()
+
+        @JvmStatic
+        fun newInstance() = DomainsDashboardFragment()
     }
 }

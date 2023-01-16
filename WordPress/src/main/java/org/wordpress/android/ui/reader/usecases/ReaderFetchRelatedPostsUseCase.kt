@@ -44,8 +44,8 @@ class ReaderFetchRelatedPostsUseCase @Inject constructor(
     fun onRelatedPostUpdated(event: RelatedPostsUpdated) {
         val result = if (event.didSucceed()) {
             Success(
-                    localRelatedPosts = event.localRelatedPosts,
-                    globalRelatedPosts = event.globalRelatedPosts
+                localRelatedPosts = event.localRelatedPosts,
+                globalRelatedPosts = event.globalRelatedPosts
             )
         } else {
             RequestFailed

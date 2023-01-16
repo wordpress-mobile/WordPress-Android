@@ -15,14 +15,14 @@ fun Title(
     modifier: Modifier = Modifier
 ) {
     Text(
-            text = text,
-            textAlign = TextAlign.Center,
-            fontSize = FontSize.DoubleExtraLarge.value,
-            modifier = modifier
-                    .wrapContentSize()
-                    .padding(
-                            horizontal = Margin.ExtraExtraMediumLarge.value,
-                            vertical = Margin.Medium.value
-                    )
+        text = text,
+        textAlign = TextAlign.Center,
+        fontSize = FontSize.DoubleExtraLarge.value,
+        modifier = modifier
+            .wrapContentSize()
+            .padding(
+                horizontal = Margin.ExtraExtraMediumLarge.value,
+                vertical = Margin.Medium.value
+            )
     )
 }

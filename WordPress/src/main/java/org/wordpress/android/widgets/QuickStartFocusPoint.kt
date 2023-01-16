@@ -51,9 +51,9 @@ class QuickStartFocusPoint : FrameLayout {
 
     private fun readSize(attrs: AttributeSet): Int {
         val a = context.theme.obtainStyledAttributes(
-                attrs,
-                styleable.QuickStartFocusPoint,
-                0, 0
+            attrs,
+            styleable.QuickStartFocusPoint,
+            0, 0
         )
         try {
             return a.getInteger(styleable.QuickStartFocusPoint_size, SIZE_NORMAL)
@@ -76,19 +76,19 @@ class QuickStartFocusPoint : FrameLayout {
         val innerCircle = findViewById<View>(R.id.quick_start_focus_inner_circle)
 
         val outerCircleInitialAnimation =
-                AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_initial_animation)
+            AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_initial_animation)
         val innerCircleInitialAnimation =
-                AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_initial_animation)
+            AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_initial_animation)
 
         val outerCircleCollapseAnimation =
-                AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_collapse_animation)
+            AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_collapse_animation)
         val innerCircleCollapseAnimation =
-                AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_collapse_animation)
+            AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_collapse_animation)
 
         val innerCircleExpanAnimation =
-                AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_expand_animation)
+            AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_expand_animation)
         val outerCircleExpanAnimation =
-                AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_expand_animation)
+            AnimationUtils.loadAnimation(context, R.anim.quick_start_circle_expand_animation)
 
         innerCircleInitialAnimation.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation) {}

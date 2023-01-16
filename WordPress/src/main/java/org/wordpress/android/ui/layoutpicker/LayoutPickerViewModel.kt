@@ -112,14 +112,14 @@ abstract class LayoutPickerViewModel(
         (uiState.value as? Content)?.let { state ->
             if (state.selectedCategoriesSlugs.contains(categorySlug)) { // deselect
                 updateUiState(
-                        state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply {
-                            remove(categorySlug)
-                        })
+                    state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply {
+                        remove(categorySlug)
+                    })
                 )
                 layoutPickerTracker.filterDeselected(categorySlug, state.selectedCategoriesSlugs)
             } else {
                 updateUiState(
-                        state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { add(categorySlug) })
+                    state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { add(categorySlug) })
                 )
                 layoutPickerTracker.filterSelected(categorySlug, state.selectedCategoriesSlugs)
             }
@@ -133,10 +133,10 @@ abstract class LayoutPickerViewModel(
         launch(bgDispatcher) {
             val listItems: List<CategoryListItemUiState> = categories.map {
                 CategoryListItemUiState(
-                        it.slug,
-                        it.title,
-                        it.emoji,
-                        state.selectedCategoriesSlugs.contains(it.slug)
+                    it.slug,
+                    it.title,
+                    it.emoji,
+                    state.selectedCategoriesSlugs.contains(it.slug)
                 ) { onCategoryTapped(it.slug) }
             }
             withContext(mainDispatcher) {
@@ -175,24 +175,24 @@ abstract class LayoutPickerViewModel(
                     }
                     val thumbnailPreview = if (shouldUseMobileThumbnail) layout.previewMobile else preview
                     LayoutListItemUiState(
-                            slug = layout.slug,
-                            title = layout.title,
-                            preview = preview,
-                            mShotPreview = thumbnailPreview,
-                            selected = layout.slug == state.selectedLayoutSlug,
-                            tapOpensPreview = thumbnailTapOpensPreview,
-                            onItemTapped = { onLayoutTapped(layoutSlug = layout.slug, category.isRecommended) },
-                            onThumbnailReady = { onThumbnailReady(layoutSlug = layout.slug) }
+                        slug = layout.slug,
+                        title = layout.title,
+                        preview = preview,
+                        mShotPreview = thumbnailPreview,
+                        selected = layout.slug == state.selectedLayoutSlug,
+                        tapOpensPreview = thumbnailTapOpensPreview,
+                        onItemTapped = { onLayoutTapped(layoutSlug = layout.slug, category.isRecommended) },
+                        onThumbnailReady = { onThumbnailReady(layoutSlug = layout.slug) }
                     )
                 }
                 listItems.add(
-                        LayoutCategoryUiState(
-                                category.slug,
-                                category.title,
-                                category.description,
-                                layouts,
-                                category.isRecommended
-                        )
+                    LayoutCategoryUiState(
+                        category.slug,
+                        category.title,
+                        category.description,
+                        layouts,
+                        category.isRecommended
+                    )
                 )
             }
             withContext(mainDispatcher) {
@@ -311,7 +311,7 @@ abstract class LayoutPickerViewModel(
         val categories = savedInstanceState.getParcelableArrayList<LayoutCategoryModel>(FETCHED_CATEGORIES)
         val selected = savedInstanceState.getString(SELECTED_LAYOUT)
         val selectedCategories = (savedInstanceState.getSerializable(SELECTED_CATEGORIES) as? List<*>)
-                ?.filterIsInstance<String>() ?: listOf()
+            ?.filterIsInstance<String>() ?: listOf()
         val previewMode = savedInstanceState.getString(PREVIEW_MODE, MOBILE.name)
         resetState(selected, ArrayList(selectedCategories.toMutableList()), previewMode)
         if (layouts == null || categories == null || layouts.isEmpty()) {
@@ -325,10 +325,10 @@ abstract class LayoutPickerViewModel(
         if (isLoading) return
         val state = uiState.value as? Content ?: Content()
         updateUiState(
-                state.copy(
-                        selectedLayoutSlug = selected,
-                        selectedCategoriesSlugs = selectedCategories
-                )
+            state.copy(
+                selectedLayoutSlug = selected,
+                selectedCategoriesSlugs = selectedCategories
+            )
         )
         _previewMode.value = valueOf(previewMode)
         updateButtonsUiState()

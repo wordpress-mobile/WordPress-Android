@@ -190,16 +190,16 @@ class PageListViewModel @Inject constructor(
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
         val pageItems = pages
-                .sortedBy { it.title.lowercase(localeManagerWrapper.getLocale()) }
-                .filter { listType.pageStatuses.contains(it.status) }
-                .let {
-                    when (listType) {
-                        PUBLISHED -> preparePublishedPages(it, pagesViewModel.arePageActionsEnabled)
-                        SCHEDULED -> prepareScheduledPages(it, pagesViewModel.arePageActionsEnabled)
-                        DRAFTS -> prepareDraftPages(it, pagesViewModel.arePageActionsEnabled)
-                        TRASHED -> prepareTrashedPages(it, pagesViewModel.arePageActionsEnabled)
-                    }
+            .sortedBy { it.title.lowercase(localeManagerWrapper.getLocale()) }
+            .filter { listType.pageStatuses.contains(it.status) }
+            .let {
+                when (listType) {
+                    PUBLISHED -> preparePublishedPages(it, pagesViewModel.arePageActionsEnabled)
+                    SCHEDULED -> prepareScheduledPages(it, pagesViewModel.arePageActionsEnabled)
+                    DRAFTS -> prepareDraftPages(it, pagesViewModel.arePageActionsEnabled)
+                    TRASHED -> prepareTrashedPages(it, pagesViewModel.arePageActionsEnabled)
                 }
+            }
 
         displayListItems(pageItems)
     }
@@ -208,13 +208,13 @@ class PageListViewModel @Inject constructor(
         if (newPages.isEmpty()) {
             if (pagesViewModel.listState.value == FETCHING || pagesViewModel.listState.value == null) {
                 _pages.postValue(
-                        listOf(
-                                Empty(
-                                        R.string.pages_fetching,
-                                        isButtonVisible = false,
-                                        isImageVisible = false
-                                )
+                    listOf(
+                        Empty(
+                            R.string.pages_fetching,
+                            isButtonVisible = false,
+                            isImageVisible = false
                         )
+                    )
                 )
             } else {
                 when (listType) {
@@ -276,37 +276,37 @@ class PageListViewModel @Inject constructor(
         })
 
         return sortedPages
-                .map {
-                    val pageItemIndent = if (shouldSortTopologically) {
-                        getPageItemIndent(it)
-                    } else {
-                        DEFAULT_INDENT
-                    }
-                    val itemUiStateData = createItemUiStateData(it)
-                    val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                        null
-                    } else {
-                        it.post.authorDisplayName
-                    }
-                    PublishedPage(
-                            remoteId = it.remoteId,
-                            localId = it.pageId,
-                            title = it.title,
-                            subtitle = itemUiStateData.subtitle,
-                            icon = itemUiStateData.icon,
-                            date = it.date,
-                            labels = itemUiStateData.labels,
-                            labelsColor = itemUiStateData.labelsColor,
-                            indent = pageItemIndent,
-                            imageUrl = getFeaturedImageUrl(it.featuredImageId),
-                            actions = itemUiStateData.actions,
-                            actionsEnabled = actionsEnabled,
-                            progressBarUiState = itemUiStateData.progressBarUiState,
-                            showOverlay = itemUiStateData.showOverlay,
-                            author = author,
-                            showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
-                    )
+            .map {
+                val pageItemIndent = if (shouldSortTopologically) {
+                    getPageItemIndent(it)
+                } else {
+                    DEFAULT_INDENT
                 }
+                val itemUiStateData = createItemUiStateData(it)
+                val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
+                    null
+                } else {
+                    it.post.authorDisplayName
+                }
+                PublishedPage(
+                    remoteId = it.remoteId,
+                    localId = it.pageId,
+                    title = it.title,
+                    subtitle = itemUiStateData.subtitle,
+                    icon = itemUiStateData.icon,
+                    date = it.date,
+                    labels = itemUiStateData.labels,
+                    labelsColor = itemUiStateData.labelsColor,
+                    indent = pageItemIndent,
+                    imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                    actions = itemUiStateData.actions,
+                    actionsEnabled = actionsEnabled,
+                    progressBarUiState = itemUiStateData.progressBarUiState,
+                    showOverlay = itemUiStateData.showOverlay,
+                    author = author,
+                    showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
+                )
+            }
     }
 
     private fun prepareScheduledPages(
@@ -320,37 +320,37 @@ class PageListViewModel @Inject constructor(
         }
 
         return filteredPages.groupBy { it.date.toFormattedDateString() }
-                .map { (date, results) ->
-                    listOf(Divider(date)) +
-                            results.map {
-                                val itemUiStateData = createItemUiStateData(it)
+            .map { (date, results) ->
+                listOf(Divider(date)) +
+                        results.map {
+                            val itemUiStateData = createItemUiStateData(it)
 
-                                val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                                    null
-                                } else {
-                                    it.post.authorDisplayName
-                                }
-                                ScheduledPage(
-                                        remoteId = it.remoteId,
-                                        localId = it.pageId,
-                                        title = it.title,
-                                        date = it.date,
-                                        labels = itemUiStateData.labels,
-                                        labelsColor = itemUiStateData.labelsColor,
-                                        imageUrl = getFeaturedImageUrl(it.featuredImageId),
-                                        actions = itemUiStateData.actions,
-                                        actionsEnabled = actionsEnabled,
-                                        progressBarUiState = itemUiStateData.progressBarUiState,
-                                        showOverlay = itemUiStateData.showOverlay,
-                                        author = author,
-                                        showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
-                                )
+                            val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
+                                null
+                            } else {
+                                it.post.authorDisplayName
                             }
-                }
-                .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
-                    acc.addAll(list)
-                    return@fold acc
-                }
+                            ScheduledPage(
+                                remoteId = it.remoteId,
+                                localId = it.pageId,
+                                title = it.title,
+                                date = it.date,
+                                labels = itemUiStateData.labels,
+                                labelsColor = itemUiStateData.labelsColor,
+                                imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                                actions = itemUiStateData.actions,
+                                actionsEnabled = actionsEnabled,
+                                progressBarUiState = itemUiStateData.progressBarUiState,
+                                showOverlay = itemUiStateData.showOverlay,
+                                author = author,
+                                showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
+                            )
+                        }
+            }
+            .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
+                acc.addAll(list)
+                return@fold acc
+            }
     }
 
     private fun prepareDraftPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
@@ -361,28 +361,28 @@ class PageListViewModel @Inject constructor(
         }
 
         return filteredPages
-                .map {
-                    val itemUiStateData = createItemUiStateData(it)
-                    DraftPage(
-                            remoteId = it.remoteId,
-                            localId = it.pageId,
-                            title = it.title,
-                            date = it.date,
-                            labels = itemUiStateData.labels,
-                            labelsColor = itemUiStateData.labelsColor,
-                            imageUrl = getFeaturedImageUrl(it.featuredImageId),
-                            actions = itemUiStateData.actions,
-                            actionsEnabled = actionsEnabled,
-                            progressBarUiState = itemUiStateData.progressBarUiState,
-                            showOverlay = itemUiStateData.showOverlay,
-                            author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                                null
-                            } else {
-                                it.post.authorDisplayName
-                            },
-                            showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
-                    )
-                }
+            .map {
+                val itemUiStateData = createItemUiStateData(it)
+                DraftPage(
+                    remoteId = it.remoteId,
+                    localId = it.pageId,
+                    title = it.title,
+                    date = it.date,
+                    labels = itemUiStateData.labels,
+                    labelsColor = itemUiStateData.labelsColor,
+                    imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                    actions = itemUiStateData.actions,
+                    actionsEnabled = actionsEnabled,
+                    progressBarUiState = itemUiStateData.progressBarUiState,
+                    showOverlay = itemUiStateData.showOverlay,
+                    author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
+                        null
+                    } else {
+                        it.post.authorDisplayName
+                    },
+                    showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
+                )
+            }
     }
 
     private fun prepareTrashedPages(
@@ -396,29 +396,29 @@ class PageListViewModel @Inject constructor(
         }
 
         return filteredPages
-                .map {
-                    val itemUiStateData = createItemUiStateData(it)
-                    val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                        null
-                    } else {
-                        it.post.authorDisplayName
-                    }
-                    TrashedPage(
-                            remoteId = it.remoteId,
-                            localId = it.pageId,
-                            title = it.title,
-                            date = it.date,
-                            labels = itemUiStateData.labels,
-                            labelsColor = itemUiStateData.labelsColor,
-                            imageUrl = getFeaturedImageUrl(it.featuredImageId),
-                            actions = itemUiStateData.actions,
-                            actionsEnabled = actionsEnabled,
-                            progressBarUiState = itemUiStateData.progressBarUiState,
-                            showOverlay = itemUiStateData.showOverlay,
-                            author = author,
-                            showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
-                    )
+            .map {
+                val itemUiStateData = createItemUiStateData(it)
+                val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
+                    null
+                } else {
+                    it.post.authorDisplayName
                 }
+                TrashedPage(
+                    remoteId = it.remoteId,
+                    localId = it.pageId,
+                    title = it.title,
+                    date = it.date,
+                    labels = itemUiStateData.labels,
+                    labelsColor = itemUiStateData.labelsColor,
+                    imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                    actions = itemUiStateData.actions,
+                    actionsEnabled = actionsEnabled,
+                    progressBarUiState = itemUiStateData.progressBarUiState,
+                    showOverlay = itemUiStateData.showOverlay,
+                    author = author,
+                    showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
+                )
+            }
     }
 
     private fun topologicalSort(
@@ -460,18 +460,18 @@ class PageListViewModel @Inject constructor(
 
     private fun createItemUiStateData(pageModel: PageModel): ItemUiStateData {
         val uploadUiState = postModelUploadUiStateUseCase.createUploadUiState(
-                pageModel.post,
-                pagesViewModel.site,
-                pagesViewModel.uploadStatusTracker
+            pageModel.post,
+            pagesViewModel.site,
+            pagesViewModel.uploadStatusTracker
         )
         val (labels, labelColor) = createPageListItemLabelsUseCase.createLabels(pageModel.post, uploadUiState)
 
         val (progressBarUiState, showOverlay) = pageItemProgressUiStateUseCase.getProgressStateForPage(uploadUiState)
         val actions = pageListItemActionsUseCase.setupPageActions(
-                listType,
-                uploadUiState,
-                pagesViewModel.site,
-                pageModel.remoteId
+            listType,
+            uploadUiState,
+            pagesViewModel.site,
+            pageModel.remoteId
         )
         val subtitle = when {
             pageModel.isHomepage -> R.string.site_settings_homepage
@@ -484,13 +484,13 @@ class PageListViewModel @Inject constructor(
             else -> null
         }
         return ItemUiStateData(
-                labels,
-                labelColor,
-                progressBarUiState,
-                showOverlay,
-                actions,
-                subtitle,
-                icon
+            labels,
+            labelColor,
+            progressBarUiState,
+            showOverlay,
+            actions,
+            subtitle,
+            icon
         )
     }
 

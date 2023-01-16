@@ -31,14 +31,28 @@ import org.wordpress.android.viewmodel.ResourceProvider
 @ExperimentalCoroutinesApi
 class AccountSettingsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: AccountSettingsViewModel
-    @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock private lateinit var fetchAccountSettingsUseCase: FetchAccountSettingsUseCase
-    @Mock private lateinit var pushAccountSettingsUseCase: PushAccountSettingsUseCase
-    @Mock private lateinit var getSitesUseCase: GetSitesUseCase
-    @Mock private lateinit var getAccountUseCase: GetAccountUseCase
+
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    private lateinit var fetchAccountSettingsUseCase: FetchAccountSettingsUseCase
+
+    @Mock
+    private lateinit var pushAccountSettingsUseCase: PushAccountSettingsUseCase
+
+    @Mock
+    private lateinit var getSitesUseCase: GetSitesUseCase
+
+    @Mock
+    private lateinit var getAccountUseCase: GetAccountUseCase
     private val optimisticUpdateHandler = AccountSettingsOptimisticUpdateHandler()
-    @Mock private lateinit var account: AccountModel
+
+    @Mock
+    private lateinit var account: AccountModel
 
     private val siteViewModels = mutableListOf<SiteUiModel>().apply {
         add(SiteUiModel("HappyDay", 1L, "http://happyday.wordpress.com"))
@@ -75,323 +89,323 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
     @Test
     fun `The initial username is shown from cached account settings`() = test {
         assertThat(uiState.userNameSettingsUiState.userName)
-                .isEqualTo(getAccountUseCase.account.userName)
+            .isEqualTo(getAccountUseCase.account.userName)
     }
 
     @Test
     fun `The username is allowed to change based on the cached account settings`() = test {
         assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged)
-                .isEqualTo(getAccountUseCase.account.usernameCanBeChanged)
+            .isEqualTo(getAccountUseCase.account.usernameCanBeChanged)
     }
 
     @Test
     fun `The username confirmed snackbar is not be shown by default`() = test {
         assertThat(uiState.userNameSettingsUiState.showUserNameConfirmedSnackBar)
-                .isEqualTo(false)
+            .isEqualTo(false)
     }
 
     @Test
     fun `The initial emailaddress is shown from cached account settings`() = test {
         assertThat(uiState.emailSettingsUiState.email)
-                .isEqualTo(getAccountUseCase.account.email)
+            .isEqualTo(getAccountUseCase.account.email)
     }
 
     @Test
     fun `The pending emailaddress change snackbar is shown based on cached account settings`() = test {
         assertThat(uiState.emailSettingsUiState.hasPendingEmailChange)
-                .isEqualTo(getAccountUseCase.account.pendingEmailChange)
+            .isEqualTo(getAccountUseCase.account.pendingEmailChange)
     }
 
     @Test
     fun `The initial webAddress is shown from cached account settings`() = test {
         assertThat(uiState.webAddressSettingsUiState.webAddress)
-                .isEqualTo(getAccountUseCase.account.webAddress)
+            .isEqualTo(getAccountUseCase.account.webAddress)
     }
 
     @Test
     fun `When the username change is confirmed from the server, then new username is updated`() =
-            test {
-                viewModel.onUsernameChangeConfirmedFromServer("new_wordpressuser_username")
-                assertThat(uiState.userNameSettingsUiState.userName)
-                        .isEqualTo("new_wordpressuser_username")
-            }
+        test {
+            viewModel.onUsernameChangeConfirmedFromServer("new_wordpressuser_username")
+            assertThat(uiState.userNameSettingsUiState.userName)
+                .isEqualTo("new_wordpressuser_username")
+        }
 
     @Test
     fun `When the username change is confirmed from the server, then the snackbar is shown`() =
-            test {
-                viewModel.onUsernameChangeConfirmedFromServer("new_wordpressuser_username")
-                assertThat(uiState.userNameSettingsUiState.showUserNameConfirmedSnackBar)
-                        .isEqualTo(true)
-            }
+        test {
+            viewModel.onUsernameChangeConfirmedFromServer("new_wordpressuser_username")
+            assertThat(uiState.userNameSettingsUiState.showUserNameConfirmedSnackBar)
+                .isEqualTo(true)
+        }
 
     @Test
     fun `The username confirmed snackbar message is Your new username is new_wordpressuser_username'`() =
-            test {
-                viewModel.onUsernameChangeConfirmedFromServer("new_wordpressuser_username")
-                assertThat(uiState.userNameSettingsUiState.newUserChangeConfirmedSnackBarMessageHolder.message)
-                        .isEqualTo(
-                                UiStringResWithParams(
-                                        string.settings_username_changer_toast_content,
-                                        listOf(UiStringText("new_wordpressuser_username"))
-                                )
-                        )
-            }
+        test {
+            viewModel.onUsernameChangeConfirmedFromServer("new_wordpressuser_username")
+            assertThat(uiState.userNameSettingsUiState.newUserChangeConfirmedSnackBarMessageHolder.message)
+                .isEqualTo(
+                    UiStringResWithParams(
+                        string.settings_username_changer_toast_content,
+                        listOf(UiStringText("new_wordpressuser_username"))
+                    )
+                )
+        }
 
     @Test
     fun `When the server return 'canUserNameBeChanged' as true, then the username is allowed to change`() =
-            test {
-                whenever(getAccountUseCase.account.usernameCanBeChanged).thenReturn(true)
-                initialiseViewModel()
-                assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged).isEqualTo(true)
-            }
+        test {
+            whenever(getAccountUseCase.account.usernameCanBeChanged).thenReturn(true)
+            initialiseViewModel()
+            assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged).isEqualTo(true)
+        }
 
     @Test
     fun `When the server return 'canUserNameBeChanged' as false, then the username is not allowed to change`() =
-            test {
-                whenever(getAccountUseCase.account.usernameCanBeChanged).thenReturn(false)
-                initialiseViewModel()
-                assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged).isEqualTo(false)
-            }
+        test {
+            whenever(getAccountUseCase.account.usernameCanBeChanged).thenReturn(false)
+            initialiseViewModel()
+            assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged).isEqualTo(false)
+        }
 
     @Test
     fun `When there is a pending emailaddress change, then the snackbar is shown`() =
-            test {
-                whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
-                whenever(getAccountUseCase.account.newEmail).thenReturn("new_wordpressuser_username")
-                initialiseViewModel()
-                assertThat(uiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
-            }
+        test {
+            whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
+            whenever(getAccountUseCase.account.newEmail).thenReturn("new_wordpressuser_username")
+            initialiseViewModel()
+            assertThat(uiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
+        }
 
     @Test
     fun `The pending emailaddress snackbar message is Click the verification link in the email`() =
-            test {
-                assertThat(uiState.emailSettingsUiState.emailVerificationMsgSnackBarMessageHolder.message)
-                        .isEqualTo(
-                                UiStringResWithParams(
-                                        string.pending_email_change_snackbar,
-                                        listOf(UiStringText(getAccountUseCase.account.newEmail))
-                                )
-                        )
-            }
+        test {
+            assertThat(uiState.emailSettingsUiState.emailVerificationMsgSnackBarMessageHolder.message)
+                .isEqualTo(
+                    UiStringResWithParams(
+                        string.pending_email_change_snackbar,
+                        listOf(UiStringText(getAccountUseCase.account.newEmail))
+                    )
+                )
+        }
 
     @Test
     fun `When there is no pending emailaddress change, then the snackbar is not shown`() =
-            test {
-                whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
-                initialiseViewModel()
-                assertThat(uiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
-            }
+        test {
+            whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
+            initialiseViewModel()
+            assertThat(uiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
+        }
 
     @Test
     fun `When a new emailaddress is entered, then the snackbar is shown optimistically`() =
-            testUiStateChanges {
-                // Given
-                whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
-                // When
-                whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com"))
-                        .thenReturn(mockErrorResponse())
-                whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
-                whenever(getAccountUseCase.account.newEmail).thenReturn("")
-                viewModel.onEmailChanged("new_wordpressuser@gmail.com")
-                // Then
-                assertThat(uiStateChanges[uiStateChanges.lastIndex - 1].emailSettingsUiState.hasPendingEmailChange)
-                        .isEqualTo(true)
-                assertThat(uiStateChanges[uiStateChanges.lastIndex - 1].emailSettingsUiState.newEmail)
-                        .isEqualTo("new_wordpressuser@gmail.com")
-            }
+        testUiStateChanges {
+            // Given
+            whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
+            // When
+            whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com"))
+                .thenReturn(mockErrorResponse())
+            whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
+            whenever(getAccountUseCase.account.newEmail).thenReturn("")
+            viewModel.onEmailChanged("new_wordpressuser@gmail.com")
+            // Then
+            assertThat(uiStateChanges[uiStateChanges.lastIndex - 1].emailSettingsUiState.hasPendingEmailChange)
+                .isEqualTo(true)
+            assertThat(uiStateChanges[uiStateChanges.lastIndex - 1].emailSettingsUiState.newEmail)
+                .isEqualTo("new_wordpressuser@gmail.com")
+        }
 
     @Test
     fun `When a new emailaddress change fails in the server, then the snackbar is dismissed`() =
-            testUiStateChanges {
-                // Given
-                whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
-                // When
-                whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com"))
-                        .thenReturn(mockErrorResponse())
-                whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
-                whenever(getAccountUseCase.account.newEmail).thenReturn("")
-                viewModel.onEmailChanged("new_wordpressuser@gmail.com")
-                // Then
-                assertThat(uiStateChanges.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
-                assertThat(uiStateChanges.last().emailSettingsUiState.newEmail).isEqualTo("")
-            }
+        testUiStateChanges {
+            // Given
+            whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
+            // When
+            whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com"))
+                .thenReturn(mockErrorResponse())
+            whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
+            whenever(getAccountUseCase.account.newEmail).thenReturn("")
+            viewModel.onEmailChanged("new_wordpressuser@gmail.com")
+            // Then
+            assertThat(uiStateChanges.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
+            assertThat(uiStateChanges.last().emailSettingsUiState.newEmail).isEqualTo("")
+        }
 
     @Test
     fun `When a new emailaddress change is updated in the server, then the snackbar continues to show`() =
-            testUiStateChanges {
-                // Given
-                whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
-                // When
-                whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com"))
-                        .thenReturn(mockSuccessResponse())
-                whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
-                whenever(getAccountUseCase.account.newEmail).thenReturn("new_wordpressuser@gmail.com")
-                viewModel.onEmailChanged("new_wordpressuser@gmail.com")
-                // Then
-                assertThat(uiStateChanges.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
-                assertThat(uiStateChanges.last().emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
-            }
+        testUiStateChanges {
+            // Given
+            whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
+            // When
+            whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com"))
+                .thenReturn(mockSuccessResponse())
+            whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
+            whenever(getAccountUseCase.account.newEmail).thenReturn("new_wordpressuser@gmail.com")
+            viewModel.onEmailChanged("new_wordpressuser@gmail.com")
+            // Then
+            assertThat(uiStateChanges.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
+            assertThat(uiStateChanges.last().emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
+        }
 
     @Test
     fun `When cancelling of a pending emailaddress change fails, then the snackbar continues to show`() =
-            testUiStateChanges {
-                // Given
-                whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
-                whenever(getAccountUseCase.account.newEmail).thenReturn("new_wordpressuser@gmail.com")
-                // When
-                whenever(pushAccountSettingsUseCase.cancelPendingEmailChange()).thenReturn(mockErrorResponse())
-                uiState.emailSettingsUiState.onCancelEmailChange.invoke()
-                // Then
-                assertThat(uiStateChanges.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
-                assertThat(uiStateChanges.last().emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
-            }
+        testUiStateChanges {
+            // Given
+            whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
+            whenever(getAccountUseCase.account.newEmail).thenReturn("new_wordpressuser@gmail.com")
+            // When
+            whenever(pushAccountSettingsUseCase.cancelPendingEmailChange()).thenReturn(mockErrorResponse())
+            uiState.emailSettingsUiState.onCancelEmailChange.invoke()
+            // Then
+            assertThat(uiStateChanges.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
+            assertThat(uiStateChanges.last().emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
+        }
 
     @Test
     fun `When a pending emailaddress change is cancelled, then the snackbar is dismissed`() =
-            testUiStateChanges {
-                // Given
-                whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
-                // When
-                whenever(pushAccountSettingsUseCase.cancelPendingEmailChange()).thenReturn(mockSuccessResponse())
-                whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
-                whenever(getAccountUseCase.account.newEmail).thenReturn("")
-                uiState.emailSettingsUiState.onCancelEmailChange.invoke()
-                // Then
-                assertThat(uiStateChanges.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
-                assertThat(uiStateChanges.last().emailSettingsUiState.newEmail).isEqualTo("")
-            }
+        testUiStateChanges {
+            // Given
+            whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
+            // When
+            whenever(pushAccountSettingsUseCase.cancelPendingEmailChange()).thenReturn(mockSuccessResponse())
+            whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
+            whenever(getAccountUseCase.account.newEmail).thenReturn("")
+            uiState.emailSettingsUiState.onCancelEmailChange.invoke()
+            // Then
+            assertThat(uiStateChanges.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
+            assertThat(uiStateChanges.last().emailSettingsUiState.newEmail).isEqualTo("")
+        }
 
     @Test
     fun `When a new primarysite is entered, then the primary site is shown optimistically`() =
-            testUiStateChanges {
-                // Given
-                whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
-                // When
-                whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString()))
-                        .thenReturn(mockErrorResponse())
-                whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
-                viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
-                // Then
-                assertThat(uiStateChanges[uiStateChanges.lastIndex - 1].primarySiteSettingsUiState.primarySite?.siteId)
-                        .isEqualTo(siteViewModels.first().siteId)
-            }
+        testUiStateChanges {
+            // Given
+            whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
+            // When
+            whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString()))
+                .thenReturn(mockErrorResponse())
+            whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
+            viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
+            // Then
+            assertThat(uiStateChanges[uiStateChanges.lastIndex - 1].primarySiteSettingsUiState.primarySite?.siteId)
+                .isEqualTo(siteViewModels.first().siteId)
+        }
 
     @Test
     fun `When a new primarysite change fails in the server, then the old primarysite is reverted back`() =
-            testUiStateChanges {
-                // Given
-                whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
-                // When
-                whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString()))
-                        .thenReturn(mockErrorResponse())
-                whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
-                viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
-                // Then
-                assertThat(uiStateChanges.last().primarySiteSettingsUiState.primarySite?.siteId)
-                        .isEqualTo(siteViewModels.last().siteId)
-            }
+        testUiStateChanges {
+            // Given
+            whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
+            // When
+            whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString()))
+                .thenReturn(mockErrorResponse())
+            whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
+            viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
+            // Then
+            assertThat(uiStateChanges.last().primarySiteSettingsUiState.primarySite?.siteId)
+                .isEqualTo(siteViewModels.last().siteId)
+        }
 
     @Test
     fun `When a new primarysite change is updated in the server, then new primarysite continues to show`() =
-            testUiStateChanges {
-                // Given
-                whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
-                // When
-                whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString()))
-                        .thenReturn(mockSuccessResponse())
-                whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.first().siteId)
-                viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
-                // Then
+        testUiStateChanges {
+            // Given
+            whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
+            // When
+            whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString()))
+                .thenReturn(mockSuccessResponse())
+            whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.first().siteId)
+            viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
+            // Then
 
-                assertThat(uiStateChanges.last().primarySiteSettingsUiState.primarySite?.siteId)
-                        .isEqualTo(siteViewModels.first().siteId)
-            }
+            assertThat(uiStateChanges.last().primarySiteSettingsUiState.primarySite?.siteId)
+                .isEqualTo(siteViewModels.first().siteId)
+        }
 
     @Test
     fun `when there are multiple sites, the user should be shown sites to choose primary site when requested`() =
-            testUiStateChanges {
-                val mUiState = viewModel.accountSettingsUiState.value
-                mUiState.primarySiteSettingsUiState.canShowChoosePrimarySiteDialog.let {
-                    assertThat(it).isEqualTo(true)
-                }
+        testUiStateChanges {
+            val mUiState = viewModel.accountSettingsUiState.value
+            mUiState.primarySiteSettingsUiState.canShowChoosePrimarySiteDialog.let {
+                assertThat(it).isEqualTo(true)
             }
+        }
 
     @Test
     fun `when there are one or no sites, the user should not be shown empty dialog or dialog with one site`() =
-            testUiStateChanges {
-                mockSites(emptyList())
-                initialiseViewModel()
-                val mUiState = viewModel.accountSettingsUiState.value
-                mUiState.primarySiteSettingsUiState.canShowChoosePrimarySiteDialog.let {
-                    assertThat(it).isEqualTo(false)
-                }
+        testUiStateChanges {
+            mockSites(emptyList())
+            initialiseViewModel()
+            val mUiState = viewModel.accountSettingsUiState.value
+            mUiState.primarySiteSettingsUiState.canShowChoosePrimarySiteDialog.let {
+                assertThat(it).isEqualTo(false)
             }
+        }
 
     // Web Address default
     @Test
     fun `If Web Address is available, Should show webaddress from the account information`() =
-            testUiStateChanges {
-                val mUiState = viewModel.accountSettingsUiState.value
-                assertThat(mUiState.webAddressSettingsUiState.webAddress).isEqualTo("http://old_wordpressuser.com")
-            }
+        testUiStateChanges {
+            val mUiState = viewModel.accountSettingsUiState.value
+            assertThat(mUiState.webAddressSettingsUiState.webAddress).isEqualTo("http://old_wordpressuser.com")
+        }
 
     @Test
     fun `When a new webaddress is entered, then new webaddress is shown optimistically`() =
-            testUiStateChanges {
-                // Given
-                whenever(getAccountUseCase.account.webAddress).thenReturn("http://old_wordpressuser.com")
-                // When
-                whenever(pushAccountSettingsUseCase.updateWebAddress("new_webaddress"))
-                        .thenReturn(mockErrorResponse())
-                whenever(getAccountUseCase.account.webAddress).thenReturn("http://old_wordpressuser.com")
-                viewModel.onWebAddressChanged("new_webaddress")
-                // Then
-                assertThat(uiStateChanges[uiStateChanges.lastIndex - 1].webAddressSettingsUiState.webAddress)
-                        .isEqualTo("new_webaddress")
-            }
+        testUiStateChanges {
+            // Given
+            whenever(getAccountUseCase.account.webAddress).thenReturn("http://old_wordpressuser.com")
+            // When
+            whenever(pushAccountSettingsUseCase.updateWebAddress("new_webaddress"))
+                .thenReturn(mockErrorResponse())
+            whenever(getAccountUseCase.account.webAddress).thenReturn("http://old_wordpressuser.com")
+            viewModel.onWebAddressChanged("new_webaddress")
+            // Then
+            assertThat(uiStateChanges[uiStateChanges.lastIndex - 1].webAddressSettingsUiState.webAddress)
+                .isEqualTo("new_webaddress")
+        }
 
     @Test
     fun `When a new webaddress is updated in the server, then new webaddress continues to show`() =
-            testUiStateChanges {
-                // Given
-                whenever(getAccountUseCase.account.webAddress).thenReturn("old_webaddress")
-                // When
-                whenever(pushAccountSettingsUseCase.updateWebAddress("new_webaddress"))
-                        .thenReturn(mockSuccessResponse())
-                whenever(getAccountUseCase.account.webAddress).thenReturn("new_webaddress")
-                viewModel.onWebAddressChanged("new_webaddress")
-                // Then
-                assertThat(uiStateChanges.last().webAddressSettingsUiState.webAddress).isEqualTo("new_webaddress")
-            }
+        testUiStateChanges {
+            // Given
+            whenever(getAccountUseCase.account.webAddress).thenReturn("old_webaddress")
+            // When
+            whenever(pushAccountSettingsUseCase.updateWebAddress("new_webaddress"))
+                .thenReturn(mockSuccessResponse())
+            whenever(getAccountUseCase.account.webAddress).thenReturn("new_webaddress")
+            viewModel.onWebAddressChanged("new_webaddress")
+            // Then
+            assertThat(uiStateChanges.last().webAddressSettingsUiState.webAddress).isEqualTo("new_webaddress")
+        }
 
     @Test
     fun `When a new password is entered, then the changing password progress dialog is shown`() =
-            testUiStateChanges {
-                // Given
-                whenever(pushAccountSettingsUseCase.updatePassword("new_password"))
-                        .thenReturn(mockSuccessResponse())
-                // When
-                viewModel.onPasswordChanged("new_password")
-                // Then
-                assertThat(
-                        uiStateChanges[uiStateChanges.lastIndex - 1]
-                                .changePasswordSettingsUiState.showChangePasswordProgressDialog
-                )
-                        .isEqualTo(true)
-            }
+        testUiStateChanges {
+            // Given
+            whenever(pushAccountSettingsUseCase.updatePassword("new_password"))
+                .thenReturn(mockSuccessResponse())
+            // When
+            viewModel.onPasswordChanged("new_password")
+            // Then
+            assertThat(
+                uiStateChanges[uiStateChanges.lastIndex - 1]
+                    .changePasswordSettingsUiState.showChangePasswordProgressDialog
+            )
+                .isEqualTo(true)
+        }
 
     @Test
     fun `When a new password is updated in the server, then the changing password progress dialog is dismissed`() =
-            testUiStateChanges {
-                // Given
-                whenever(pushAccountSettingsUseCase.updatePassword("new_password"))
-                        .thenReturn(mockSuccessResponse())
-                // When
-                viewModel.onPasswordChanged("new_password")
-                // Then
-                assertThat(uiStateChanges.last().changePasswordSettingsUiState.showChangePasswordProgressDialog)
-                        .isEqualTo(false)
-            }
+        testUiStateChanges {
+            // Given
+            whenever(pushAccountSettingsUseCase.updatePassword("new_password"))
+                .thenReturn(mockSuccessResponse())
+            // When
+            viewModel.onPasswordChanged("new_password")
+            // Then
+            assertThat(uiStateChanges.last().changePasswordSettingsUiState.showChangePasswordProgressDialog)
+                .isEqualTo(false)
+        }
 
     // Helper Methods
     private fun <T> testUiStateChanges(
@@ -420,14 +434,14 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
 
     private fun initialiseViewModel() {
         viewModel = AccountSettingsViewModel(
-                resourceProvider,
-                networkUtilsWrapper,
-                testDispatcher(),
-                fetchAccountSettingsUseCase,
-                pushAccountSettingsUseCase,
-                getAccountUseCase,
-                getSitesUseCase,
-                optimisticUpdateHandler
+            resourceProvider,
+            networkUtilsWrapper,
+            testDispatcher(),
+            fetchAccountSettingsUseCase,
+            pushAccountSettingsUseCase,
+            getAccountUseCase,
+            getSitesUseCase,
+            optimisticUpdateHandler
         )
     }
 

@@ -34,10 +34,10 @@ class SubfilterListAdapter(
 
     fun update(newItems: List<SubfilterListItem>) {
         val diffResult = DiffUtil.calculateDiff(
-                SubFilterDiffCallback(
-                        items,
-                        newItems
-                )
+            SubFilterDiffCallback(
+                items,
+                newItems
+            )
         )
         items = newItems
         diffResult.dispatchUpdatesTo(this)
@@ -50,10 +50,10 @@ class SubfilterListAdapter(
         when (holder) {
             is SectionTitleViewHolder -> holder.bind(item as SectionTitle, uiHelpers)
             is SiteViewHolder -> holder.bind(
-                    item as Site,
-                    uiHelpers,
-                    statsUtils,
-                    seenUnseenWithCounterFeatureConfig.isEnabled()
+                item as Site,
+                uiHelpers,
+                statsUtils,
+                seenUnseenWithCounterFeatureConfig.isEnabled()
             )
             is SiteAllViewHolder -> holder.bind(item as SiteAll, uiHelpers)
             is TagViewHolder -> holder.bind(item as Tag, uiHelpers)

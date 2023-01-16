@@ -108,8 +108,7 @@ class PluginBrowserViewModel @Inject constructor(
 
     lateinit var site: SiteModel
 
-    var searchQuery: String by Delegates.observable("") {
-        _, oldValue, newValue ->
+    var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
             submitSearch(newValue, true)
         }
@@ -265,8 +264,10 @@ class PluginBrowserViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPluginDirectoryFetched(event: OnPluginDirectoryFetched) {
         if (event.isError) {
-            AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": " +
-                    event.error.type)
+            AppLog.e(
+                T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": " +
+                        event.error.type
+            )
             updateListStateToError(event.type, event.error.message)
         } else {
             updateListStateToSuccess(event.type, event.canLoadMore)

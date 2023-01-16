@@ -25,7 +25,7 @@ class ActivityViewHolder(
     parent: ViewGroup,
     val binding: StatsBlockActivityItemBinding = parent.viewBinding(StatsBlockActivityItemBinding::inflate)
 ) : BlockListItemViewHolder(
-        binding.root
+    binding.root
 ) {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -63,10 +63,10 @@ class ActivityViewHolder(
 
             val announcer = ContentDescriptionListAnnouncer()
             announcer.setupAnnouncer(
-                    R.string.stats_posting_activity_empty_description,
-                    R.string.stats_posting_activity_end_description,
-                    R.string.stats_posting_activity_action,
-                    requireNotNull(item.blocks[index].activityContentDescriptions), block.root
+                R.string.stats_posting_activity_empty_description,
+                R.string.stats_posting_activity_end_description,
+                R.string.stats_posting_activity_action,
+                requireNotNull(item.blocks[index].activityContentDescriptions), block.root
             )
         }
     }
@@ -95,26 +95,26 @@ class ActivityViewHolder(
         }
         if (recyclerView.layoutManager == null) {
             recyclerView.layoutManager = GridLayoutManager(
-                    recyclerView.context,
-                    SPAN_COUNT,
-                    GridLayoutManager.HORIZONTAL,
-                    false
+                recyclerView.context,
+                SPAN_COUNT,
+                GridLayoutManager.HORIZONTAL,
+                false
             )
         }
         if (recyclerView.itemDecorationCount == 0) {
             val offsets = recyclerView.resources.getDimensionPixelSize(R.dimen.stats_activity_spacing)
             recyclerView.addItemDecoration(
-                    object : RecyclerView.ItemDecoration() {
-                        override fun getItemOffsets(
-                            outRect: Rect,
-                            view: View,
-                            parent: RecyclerView,
-                            state: RecyclerView.State
-                        ) {
-                            super.getItemOffsets(outRect, view, parent, state)
-                            outRect.set(offsets, offsets, offsets, offsets)
-                        }
+                object : RecyclerView.ItemDecoration() {
+                    override fun getItemOffsets(
+                        outRect: Rect,
+                        view: View,
+                        parent: RecyclerView,
+                        state: RecyclerView.State
+                    ) {
+                        super.getItemOffsets(outRect, view, parent, state)
+                        outRect.set(offsets, offsets, offsets, offsets)
                     }
+                }
             )
         }
         (recyclerView.adapter as MonthActivityAdapter).update(boxes)

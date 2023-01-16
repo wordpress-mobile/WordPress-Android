@@ -52,8 +52,8 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
 
     fun trackSiteCreationAccessed(siteCreationSource: SiteCreationSource) {
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ACCESSED,
-                mapOf(SITE_CREATION_SOURCE to siteCreationSource.label)
+            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ACCESSED,
+            mapOf(SITE_CREATION_SOURCE to siteCreationSource.label)
         )
     }
 
@@ -63,11 +63,11 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
 
     fun trackSegmentSelected(segmentName: String, segmentId: Long) {
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SEGMENTS_SELECTED,
-                mapOf(
-                        SEGMENT_NAME.key to segmentName,
-                        SEGMENT_ID.key to segmentId
-                )
+            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SEGMENTS_SELECTED,
+            mapOf(
+                SEGMENT_NAME.key to segmentName,
+                SEGMENT_ID.key to segmentId
+            )
         )
     }
 
@@ -77,11 +77,11 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
 
     fun trackDomainSelected(chosenDomain: String, searchTerm: String) {
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_SELECTED,
-                mapOf(
-                        CHOSEN_DOMAIN.key to chosenDomain,
-                        SEARCH_TERM.key to searchTerm
-                )
+            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_SELECTED,
+            mapOf(
+                CHOSEN_DOMAIN.key to chosenDomain,
+                SEARCH_TERM.key to searchTerm
+            )
         )
     }
 
@@ -90,8 +90,8 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
             tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING)
         } else {
             tracker.track(
-                    AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING,
-                    mapOf(TEMPLATE.key to template)
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING,
+                mapOf(TEMPLATE.key to template)
             )
         }
     }
@@ -101,8 +101,8 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
             tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED)
         } else {
             tracker.track(
-                    AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED,
-                    mapOf(TEMPLATE.key to template)
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED,
+                mapOf(TEMPLATE.key to template)
             )
         }
     }
@@ -112,8 +112,8 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
             tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED)
         } else {
             tracker.track(
-                    AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED,
-                    mapOf(TEMPLATE.key to template)
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED,
+                mapOf(TEMPLATE.key to template)
             )
         }
     }
@@ -131,8 +131,8 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
             tracker.track(AnalyticsTracker.Stat.SITE_CREATED)
         } else {
             tracker.track(
-                    AnalyticsTracker.Stat.SITE_CREATED,
-                    mapOf(TEMPLATE.key to template)
+                AnalyticsTracker.Stat.SITE_CREATED,
+                mapOf(TEMPLATE.key to template)
             )
         }
     }
@@ -147,10 +147,10 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
 
     fun trackErrorShown(errorContext: String, errorType: String, errorDescription: String? = null) {
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ERROR_SHOWN,
-                errorContext,
-                errorType.lowercase(),
-                errorDescription ?: ""
+            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ERROR_SHOWN,
+            errorContext,
+            errorType.lowercase(),
+            errorDescription ?: ""
         )
     }
 
@@ -160,8 +160,8 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
 
     fun trackSiteDesignViewed(previewMode: String) {
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_VIEWED,
-                mapOf(THUMBNAIL_MODE.key to previewMode)
+            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_VIEWED,
+            mapOf(THUMBNAIL_MODE.key to previewMode)
         )
     }
 
@@ -173,70 +173,70 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
     fun trackSiteDesignSelected(template: String, recommended: Boolean) {
         designSelectionSkipped = false
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SELECTED,
-                mapOf(TEMPLATE.key to template, RECOMMENDED.key to recommended)
+            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SELECTED,
+            mapOf(TEMPLATE.key to template, RECOMMENDED.key to recommended)
         )
     }
 
     override fun trackPreviewViewed(template: String, mode: String) {
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_VIEWED,
-                mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to mode)
+            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_VIEWED,
+            mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to mode)
         )
     }
 
     override fun trackPreviewLoading(template: String, mode: String) {
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADING,
-                mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to mode)
+            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADING,
+            mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to mode)
         )
     }
 
     override fun trackPreviewLoaded(template: String, mode: String) {
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED,
-                mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to mode)
+            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED,
+            mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to mode)
         )
     }
 
     override fun trackPreviewModeTapped(mode: String) {
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_BUTTON_TAPPED,
-                mapOf(PREVIEW_MODE.key to mode)
+            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_BUTTON_TAPPED,
+            mapOf(PREVIEW_MODE.key to mode)
         )
     }
 
     override fun trackPreviewModeChanged(mode: String) {
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_CHANGED,
-                mapOf(PREVIEW_MODE.key to mode)
+            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_CHANGED,
+            mapOf(PREVIEW_MODE.key to mode)
         )
     }
 
     override fun trackNoNetworkErrorShown(message: String) =
-            trackErrorShown(DESIGN_ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, message)
+        trackErrorShown(DESIGN_ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, message)
 
     override fun trackErrorShown(message: String) = trackErrorShown(DESIGN_ERROR_CONTEXT, UNKNOWN, message)
 
     override fun filterSelected(filter: String, selectedFilters: List<String>) {
         tracker.track(
-                AnalyticsTracker.Stat.CATEGORY_FILTER_SELECTED,
-                mapOf(
-                        LOCATION.key to SITE_CREATION_LOCATION,
-                        FILTER.key to filter,
-                        SELECTED_FILTERS.key to selectedFilters.joinToString()
-                )
+            AnalyticsTracker.Stat.CATEGORY_FILTER_SELECTED,
+            mapOf(
+                LOCATION.key to SITE_CREATION_LOCATION,
+                FILTER.key to filter,
+                SELECTED_FILTERS.key to selectedFilters.joinToString()
+            )
         )
     }
 
     override fun filterDeselected(filter: String, selectedFilters: List<String>) {
         tracker.track(
-                AnalyticsTracker.Stat.CATEGORY_FILTER_DESELECTED,
-                mapOf(
-                        LOCATION.key to SITE_CREATION_LOCATION,
-                        FILTER.key to filter,
-                        SELECTED_FILTERS.key to selectedFilters.joinToString()
-                )
+            AnalyticsTracker.Stat.CATEGORY_FILTER_DESELECTED,
+            mapOf(
+                LOCATION.key to SITE_CREATION_LOCATION,
+                FILTER.key to filter,
+                SELECTED_FILTERS.key to selectedFilters.joinToString()
+            )
         )
     }
 
@@ -258,15 +258,15 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
 
     fun trackSiteIntentQuestionCustomVerticalSelected(searchInput: String) {
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_CUSTOM_VERTICAL_SELECTED,
-                mapOf(SEARCH_TERM.key to searchInput)
+            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_CUSTOM_VERTICAL_SELECTED,
+            mapOf(SEARCH_TERM.key to searchInput)
         )
     }
 
     fun trackSiteIntentQuestionVerticalSelected(verticalSlug: String) {
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_VERTICAL_SELECTED,
-                mapOf(VERTICAL_SLUG.key to verticalSlug)
+            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_VERTICAL_SELECTED,
+            mapOf(VERTICAL_SLUG.key to verticalSlug)
         )
     }
 

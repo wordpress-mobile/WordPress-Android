@@ -48,8 +48,8 @@ class CommentsUseCase
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
             model != null && (model.authors.isNotEmpty() || model.posts.isNotEmpty()) -> State.Data(
-                    model,
-                    cached = response.cached
+                model,
+                cached = response.cached
             )
             else -> State.Empty()
         }
@@ -71,10 +71,10 @@ class CommentsUseCase
         items.add(buildTitle())
         if (domainModel.authors.isNotEmpty() || domainModel.posts.isNotEmpty()) {
             items.add(
-                    TabsItem(
-                            listOf(R.string.stats_comments_authors, R.string.stats_comments_posts_and_pages),
-                            uiState
-                    ) { selectedTabPosition -> onUiState(selectedTabPosition) }
+                TabsItem(
+                    listOf(R.string.stats_comments_authors, R.string.stats_comments_posts_and_pages),
+                    uiState
+                ) { selectedTabPosition -> onUiState(selectedTabPosition) }
             )
 
             if (uiState == 0) {
@@ -97,16 +97,16 @@ class CommentsUseCase
             mutableItems.add(header)
             mutableItems.addAll(authors.mapIndexed { index, author ->
                 ListItemWithIcon(
-                        iconUrl = author.gravatar,
-                        iconStyle = AVATAR,
-                        text = author.name,
-                        value = statsUtils.toFormattedString(author.comments),
-                        showDivider = index < authors.size - 1,
-                        contentDescription = contentDescriptionHelper.buildContentDescription(
-                                header,
-                                author.name,
-                                author.comments
-                        )
+                    iconUrl = author.gravatar,
+                    iconStyle = AVATAR,
+                    text = author.name,
+                    value = statsUtils.toFormattedString(author.comments),
+                    showDivider = index < authors.size - 1,
+                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
+                        author.name,
+                        author.comments
+                    )
                 )
             })
         } else {
@@ -122,14 +122,14 @@ class CommentsUseCase
             mutableItems.add(header)
             mutableItems.addAll(posts.mapIndexed { index, post ->
                 ListItem(
+                    post.name,
+                    statsUtils.toFormattedString(post.comments),
+                    index < posts.size - 1,
+                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
                         post.name,
-                        statsUtils.toFormattedString(post.comments),
-                        index < posts.size - 1,
-                        contentDescription = contentDescriptionHelper.buildContentDescription(
-                                header,
-                                post.name,
-                                post.comments
-                        )
+                        post.comments
+                    )
                 )
             })
         } else {

@@ -7,8 +7,8 @@ import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState
 class CommentsLoadingViewHolder(
     parent: ViewGroup
 ) : CommentsSnippetViewHolder<ReaderListitemCommentLoadingBinding>(
-        parent,
-        ReaderListitemCommentLoadingBinding::inflate
+    parent,
+    ReaderListitemCommentLoadingBinding::inflate
 ) {
     override fun onBind(itemUiState: CommentSnippetItemState) = with(binding) {
         // nothing to do actually

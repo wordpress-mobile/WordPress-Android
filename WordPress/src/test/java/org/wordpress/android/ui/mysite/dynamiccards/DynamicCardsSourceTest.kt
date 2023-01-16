@@ -19,9 +19,14 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 
 @ExperimentalCoroutinesApi
 class DynamicCardsSourceTest : BaseUnitTest() {
-    @Mock lateinit var dynamicCardStore: DynamicCardStore
-    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock lateinit var siteModel: SiteModel
+    @Mock
+    lateinit var dynamicCardStore: DynamicCardStore
+
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Mock
+    lateinit var siteModel: SiteModel
     private lateinit var dynamicCardsSource: DynamicCardsSource
     private val siteLocalId: Int = 1
     private lateinit var isRefreshing: MutableList<Boolean>
@@ -140,10 +145,10 @@ class DynamicCardsSourceTest : BaseUnitTest() {
             val pinnedItem = GROW_QUICK_START
             val dynamicCardTypes = listOf(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
             whenever(dynamicCardStore.getCards(siteLocalId)).thenReturn(
-                    DynamicCardsModel(
-                            pinnedItem,
-                            dynamicCardTypes
-                    )
+                DynamicCardsModel(
+                    pinnedItem,
+                    dynamicCardTypes
+                )
             )
         }
         dynamicCardsSource = DynamicCardsSource(dynamicCardStore, selectedSiteRepository)

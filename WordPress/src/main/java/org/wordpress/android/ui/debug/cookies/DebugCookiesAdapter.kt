@@ -12,7 +12,7 @@ import org.wordpress.android.util.extensions.viewBinding
 
 class DebugCookiesAdapter : ListAdapter<DebugCookieItem, DebugCookieItemViewHolder>(DebugCookiesDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            DebugCookieItemViewHolder(parent.viewBinding(DebugCookieItemBinding::inflate))
+        DebugCookieItemViewHolder(parent.viewBinding(DebugCookieItemBinding::inflate))
 
     override fun onBindViewHolder(holder: DebugCookieItemViewHolder, position: Int) {
         holder.onBind(getItem(position))

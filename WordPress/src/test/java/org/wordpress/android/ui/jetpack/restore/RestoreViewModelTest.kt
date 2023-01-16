@@ -69,20 +69,37 @@ import java.util.Date
 private const val TEST_SITE_ID = 1L
 private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID"
 private const val SERVER_CREDS_MSG_WITH_CLICKABLE_LINK =
-        "<a href=\"$SERVER_CREDS_LINK\">Enter your server credentials&lt</a> " +
-                "to enable one click site restores from backups."
+    "<a href=\"$SERVER_CREDS_LINK\">Enter your server credentials&lt</a> " +
+            "to enable one click site restores from backups."
 
 @ExperimentalCoroutinesApi
 class RestoreViewModelTest : BaseUnitTest() {
-    @Mock lateinit var wizardManager: WizardManager<RestoreStep>
-    @Mock lateinit var savedInstanceState: Bundle
-    @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var getActivityLogItemUseCase: GetActivityLogItemUseCase
-    @Mock private lateinit var restoreStatusUseCase: GetRestoreStatusUseCase
-    @Mock private lateinit var postRestoreUseCase: PostRestoreUseCase
-    @Mock private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
-    @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
-    @Mock private lateinit var percentFormatter: PercentFormatter
+    @Mock
+    lateinit var wizardManager: WizardManager<RestoreStep>
+
+    @Mock
+    lateinit var savedInstanceState: Bundle
+
+    @Mock
+    private lateinit var site: SiteModel
+
+    @Mock
+    private lateinit var getActivityLogItemUseCase: GetActivityLogItemUseCase
+
+    @Mock
+    private lateinit var restoreStatusUseCase: GetRestoreStatusUseCase
+
+    @Mock
+    private lateinit var postRestoreUseCase: PostRestoreUseCase
+
+    @Mock
+    private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
+
+    @Mock
+    private lateinit var htmlMessageUtils: HtmlMessageUtils
+
+    @Mock
+    private lateinit var percentFormatter: PercentFormatter
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider
     private lateinit var stateListItemBuilder: RestoreStateListItemBuilder
 
@@ -92,18 +109,18 @@ class RestoreViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: RestoreViewModel
 
     private val restoreState = RestoreState(
-            rewindId = "rewindId",
-            restoreId = 100L,
-            optionsSelected = listOf(
-                    Pair(THEMES.id, true),
-                    Pair(PLUGINS.id, true),
-                    Pair(MEDIA_UPLOADS.id, true),
-                    Pair(SQLS.id, true),
-                    Pair(ROOTS.id, true),
-                    Pair(CONTENTS.id, true)
-            ),
-            published = Date(1609690147756),
-            shouldInitProgress = true
+        rewindId = "rewindId",
+        restoreId = 100L,
+        optionsSelected = listOf(
+            Pair(THEMES.id, true),
+            Pair(PLUGINS.id, true),
+            Pair(MEDIA_UPLOADS.id, true),
+            Pair(SQLS.id, true),
+            Pair(ROOTS.id, true),
+            Pair(CONTENTS.id, true)
+        ),
+        published = Date(1609690147756),
+        shouldInitProgress = true
     )
 
     @Before
@@ -113,40 +130,40 @@ class RestoreViewModelTest : BaseUnitTest() {
         availableItemsProvider = JetpackAvailableItemsProvider()
         stateListItemBuilder = RestoreStateListItemBuilder(checkboxSpannableLabel, htmlMessageUtils, percentFormatter)
         viewModel = RestoreViewModel(
-                wizardManager,
-                availableItemsProvider,
-                getActivityLogItemUseCase,
-                stateListItemBuilder,
-                postRestoreUseCase,
-                restoreStatusUseCase,
-                testDispatcher(),
-                percentFormatter
+            wizardManager,
+            availableItemsProvider,
+            getActivityLogItemUseCase,
+            stateListItemBuilder,
+            postRestoreUseCase,
+            restoreStatusUseCase,
+            testDispatcher(),
+            percentFormatter
         )
         whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(fakeActivityLogModel)
         whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_themes, null))
-                .thenReturn("themes")
+            .thenReturn("themes")
         whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_plugins, null))
-                .thenReturn("plugins")
+            .thenReturn("plugins")
         whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_media_uploads, null))
-                .thenReturn("uploads")
+            .thenReturn("uploads")
         whenever(
-                checkboxSpannableLabel.buildSpannableLabel(
-                        R.string.backup_item_roots,
-                        R.string.backup_item_roots_hint
-                )
+            checkboxSpannableLabel.buildSpannableLabel(
+                R.string.backup_item_roots,
+                R.string.backup_item_roots_hint
+            )
         )
-                .thenReturn("roots")
+            .thenReturn("roots")
         whenever(
-                checkboxSpannableLabel.buildSpannableLabel(
-                        R.string.backup_item_contents,
-                        R.string.backup_item_content_hint
-                )
+            checkboxSpannableLabel.buildSpannableLabel(
+                R.string.backup_item_contents,
+                R.string.backup_item_content_hint
+            )
         )
-                .thenReturn("contents")
+            .thenReturn("contents")
         whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_sqls, R.string.backup_item_sqls_hint))
-                .thenReturn("sqls")
+            .thenReturn("sqls")
         whenever(restoreStatusUseCase.getRestoreStatus(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(flowOf(AwaitingCredentials(false)))
+            .thenReturn(flowOf(AwaitingCredentials(false)))
     }
 
     @Test
@@ -180,16 +197,16 @@ class RestoreViewModelTest : BaseUnitTest() {
             Unit
         }
         whenever(restoreStatusUseCase.getRestoreStatus(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(flowOf(AwaitingCredentials(true)))
+            .thenReturn(flowOf(AwaitingCredentials(true)))
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any()))
-                .thenReturn(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK)
+            .thenReturn(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK)
 
         startViewModel()
         (observers.uiStates.last() as DetailsState).items
-                .filterIsInstance(FootnoteState::class.java)
-                .firstOrNull { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) }
-                ?.onIconClick
-                ?.invoke()
+            .filterIsInstance(FootnoteState::class.java)
+            .firstOrNull { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) }
+            ?.onIconClick
+            ?.invoke()
 
         assertThat(observers.navigationEvents.last()).isEqualTo(ShowJetpackSettings(SERVER_CREDS_LINK))
     }
@@ -210,7 +227,7 @@ class RestoreViewModelTest : BaseUnitTest() {
         ((uiStates.last().items).first { it is CheckboxState } as CheckboxState).onClick.invoke()
 
         assertThat((((uiStates.last()).items)
-                .first { it is CheckboxState } as CheckboxState).checked).isFalse
+            .first { it is CheckboxState } as CheckboxState).checked).isFalse
     }
 
     @Test
@@ -287,7 +304,7 @@ class RestoreViewModelTest : BaseUnitTest() {
         viewModel.writeToBundle(savedInstanceState)
 
         verify(savedInstanceState)
-                .putParcelable(any(), argThat { this is RestoreState })
+            .putParcelable(any(), argThat { this is RestoreState })
     }
 
     @Test
@@ -319,9 +336,9 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         whenever(percentFormatter.format(0)).thenReturn("0%")
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(postSuccess)
+            .thenReturn(postSuccess)
         whenever(restoreStatusUseCase.getRestoreStatus(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(flowOf(Complete("Id", 100L, Date(1609690147756))))
+            .thenReturn(flowOf(Complete("Id", 100L, Date(1609690147756))))
 
         startViewModelForStep(PROGRESS)
 
@@ -334,7 +351,7 @@ class RestoreViewModelTest : BaseUnitTest() {
     @Test
     fun `given showStep for progress is invoked, then call PercentFormatter`() = test {
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(postSuccess)
+            .thenReturn(postSuccess)
         whenever(percentFormatter.format(0)).thenReturn("0%")
 
         startViewModelForStep(PROGRESS)
@@ -377,9 +394,9 @@ class RestoreViewModelTest : BaseUnitTest() {
         viewModel.showStep(WizardNavigationTarget(COMPLETE, restoreState))
 
         (uiStates.last().items)
-                .filterIsInstance<ActionButtonState>()
-                .last()
-                .onClick.invoke()
+            .filterIsInstance<ActionButtonState>()
+            .last()
+            .onClick.invoke()
 
         assertThat(navigationEvents.last()).isInstanceOf(VisitSite::class.java)
     }
@@ -388,7 +405,7 @@ class RestoreViewModelTest : BaseUnitTest() {
     fun `given progress step, when no network connection, then a snackbar message is shown`() = test {
         whenever(percentFormatter.format(0)).thenReturn("0%")
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(postRestoreNetworkError)
+            .thenReturn(postRestoreNetworkError)
 
         val uiStates = initObservers().uiStates
         val msgs = initObservers().snackbarMessages
@@ -405,7 +422,7 @@ class RestoreViewModelTest : BaseUnitTest() {
     fun `given progress step, when remote request fails, then a snackbar message is shown`() = test {
         whenever(percentFormatter.format(0)).thenReturn("0%")
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(postRestoreRemoteRequestError)
+            .thenReturn(postRestoreRemoteRequestError)
 
         val uiStates = initObservers().uiStates
         val msgs = initObservers().snackbarMessages
@@ -422,7 +439,7 @@ class RestoreViewModelTest : BaseUnitTest() {
     fun `given progress step, when another request is running, then a snackbar message is shown`() = test {
         whenever(percentFormatter.format(0)).thenReturn("0%")
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(otherRequestRunningError)
+            .thenReturn(otherRequestRunningError)
 
         val uiStates = initObservers().uiStates
         val msgs = initObservers().snackbarMessages
@@ -441,9 +458,9 @@ class RestoreViewModelTest : BaseUnitTest() {
 
     private fun startViewModelForStep(step: RestoreStep, restoreState: RestoreState? = null) {
         whenever(savedInstanceState.getInt(KEY_RESTORE_CURRENT_STEP))
-                .thenReturn(step.id)
+            .thenReturn(step.id)
         whenever(savedInstanceState.getParcelable<RestoreState>(KEY_RESTORE_STATE))
-                .thenReturn(restoreState ?: this.restoreState)
+            .thenReturn(restoreState ?: this.restoreState)
         startViewModel(savedInstanceState)
     }
 
@@ -461,10 +478,10 @@ class RestoreViewModelTest : BaseUnitTest() {
         viewModel.uiState.observeForever { uiStates.add(it) }
 
         return Observers(
-                wizardFinishedObserver,
-                snackbarMsgs,
-                navigationEvents,
-                uiStates
+            wizardFinishedObserver,
+            snackbarMsgs,
+            navigationEvents,
+            uiStates
         )
     }
 
@@ -476,16 +493,16 @@ class RestoreViewModelTest : BaseUnitTest() {
     )
 
     private val fakeActivityLogModel: ActivityLogModel = ActivityLogModel(
-            activityID = "1",
-            summary = "summary",
-            content = null,
-            name = null,
-            type = null,
-            gridicon = null,
-            status = null,
-            rewindable = null,
-            rewindID = "rewindId",
-            published = Date()
+        activityID = "1",
+        summary = "summary",
+        content = null,
+        name = null,
+        type = null,
+        gridicon = null,
+        status = null,
+        rewindable = null,
+        rewindID = "rewindId",
+        published = Date()
     )
 
     private val postRestoreNetworkError = RestoreRequestState.Failure.NetworkUnavailable

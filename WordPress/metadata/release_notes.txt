@@ -1,2 +1,7 @@
-- You can now migrate your site content to the Jetpack app without a hitch.
-- The Notification Settings switch disables weekly roundup, blogging reminder, and site notifications.
+We’ve been hard at work on extra-technical, behind-the-scenes fixes and updates to keep the WordPress app running smoothly.
+
+- Posticulating features
+- Rearchitecting interfaces
+- Reticulating splines
+- Codifying similitude
+- Rebuilding the gigaverse

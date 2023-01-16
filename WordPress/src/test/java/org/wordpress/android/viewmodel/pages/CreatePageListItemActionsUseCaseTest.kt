@@ -67,12 +67,12 @@ class CreatePageListItemActionsUseCaseTest {
     fun `verify PUBLISHED actions`() {
         // Arrange
         val expectedActions = setOf(
-                VIEW_PAGE,
-                SET_PARENT,
-                MOVE_TO_DRAFT,
-                MOVE_TO_TRASH,
-                COPY,
-                COPY_LINK
+            VIEW_PAGE,
+            SET_PARENT,
+            MOVE_TO_DRAFT,
+            MOVE_TO_TRASH,
+            COPY,
+            COPY_LINK
         )
 
         // Act
@@ -86,14 +86,14 @@ class CreatePageListItemActionsUseCaseTest {
     fun `verify PUBLISHED actions contain HOMEPAGE settings when site has static homepage and is WPCom`() {
         // Arrange
         val expectedActions = setOf(
-                VIEW_PAGE,
-                SET_PARENT,
-                SET_AS_HOMEPAGE,
-                SET_AS_POSTS_PAGE,
-                MOVE_TO_DRAFT,
-                MOVE_TO_TRASH,
-                COPY,
-                COPY_LINK
+            VIEW_PAGE,
+            SET_PARENT,
+            SET_AS_HOMEPAGE,
+            SET_AS_POSTS_PAGE,
+            MOVE_TO_DRAFT,
+            MOVE_TO_TRASH,
+            COPY,
+            COPY_LINK
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.setIsWPCom(true)
@@ -109,14 +109,14 @@ class CreatePageListItemActionsUseCaseTest {
     fun `verify PUBLISHED actions contain HOMEPAGE settings when site has static homepage and is Jetpack`() {
         // Arrange
         val expectedActions = setOf(
-                VIEW_PAGE,
-                SET_PARENT,
-                SET_AS_HOMEPAGE,
-                SET_AS_POSTS_PAGE,
-                MOVE_TO_DRAFT,
-                MOVE_TO_TRASH,
-                COPY,
-                COPY_LINK
+            VIEW_PAGE,
+            SET_PARENT,
+            SET_AS_HOMEPAGE,
+            SET_AS_POSTS_PAGE,
+            MOVE_TO_DRAFT,
+            MOVE_TO_TRASH,
+            COPY,
+            COPY_LINK
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.setIsJetpackConnected(true)
@@ -133,11 +133,11 @@ class CreatePageListItemActionsUseCaseTest {
     fun `verify PUBLISHED actions cannot set page as homepage when it is already set`() {
         // Arrange
         val expectedActions = setOf(
-                VIEW_PAGE,
-                SET_PARENT,
-                SET_AS_POSTS_PAGE,
-                COPY,
-                COPY_LINK
+            VIEW_PAGE,
+            SET_PARENT,
+            SET_AS_POSTS_PAGE,
+            COPY,
+            COPY_LINK
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.pageOnFront = defaultRemoteId
@@ -154,13 +154,13 @@ class CreatePageListItemActionsUseCaseTest {
     fun `verify PUBLISHED actions cannot set page for posts when it is already set`() {
         // Arrange
         val expectedActions = setOf(
-                VIEW_PAGE,
-                SET_PARENT,
-                SET_AS_HOMEPAGE,
-                MOVE_TO_DRAFT,
-                MOVE_TO_TRASH,
-                COPY,
-                COPY_LINK
+            VIEW_PAGE,
+            SET_PARENT,
+            SET_AS_HOMEPAGE,
+            MOVE_TO_DRAFT,
+            MOVE_TO_TRASH,
+            COPY,
+            COPY_LINK
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.pageForPosts = defaultRemoteId
@@ -177,10 +177,10 @@ class CreatePageListItemActionsUseCaseTest {
     fun `verify PUBLISHED actions does not contant HOMEPAGE settings when site has no remote id`() {
         // Arrange
         val expectedActions = setOf(
-                VIEW_PAGE,
-                SET_PARENT,
-                COPY,
-                COPY_LINK
+            VIEW_PAGE,
+            SET_PARENT,
+            COPY,
+            COPY_LINK
         )
         site.showOnFront = ShowOnFront.PAGE.value
         val remoteId = -1L
@@ -196,12 +196,12 @@ class CreatePageListItemActionsUseCaseTest {
     fun `verify PUBLISHED actions does not contant HOMEPAGE settings when site is self hosted`() {
         // Arrange
         val expectedActions = setOf(
-                VIEW_PAGE,
-                SET_PARENT,
-                MOVE_TO_DRAFT,
-                MOVE_TO_TRASH,
-                COPY,
-                COPY_LINK
+            VIEW_PAGE,
+            SET_PARENT,
+            MOVE_TO_DRAFT,
+            MOVE_TO_TRASH,
+            COPY,
+            COPY_LINK
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.setIsWPCom(false)
@@ -218,11 +218,11 @@ class CreatePageListItemActionsUseCaseTest {
     fun `verify SCHEDULED actions`() {
         // Arrange
         val expectedActions = setOf(
-                VIEW_PAGE,
-                SET_PARENT,
-                MOVE_TO_DRAFT,
-                MOVE_TO_TRASH,
-                COPY_LINK
+            VIEW_PAGE,
+            SET_PARENT,
+            MOVE_TO_DRAFT,
+            MOVE_TO_TRASH,
+            COPY_LINK
         )
 
         // Act

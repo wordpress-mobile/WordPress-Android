@@ -10,7 +10,8 @@ import org.mockito.kotlin.whenever
 
 @RunWith(MockitoJUnitRunner::class)
 class FeatureConfigTest {
-    @Mock lateinit var appConfig: AppConfig
+    @Mock
+    lateinit var appConfig: AppConfig
     private lateinit var featureConfig: FeatureConfig
 
     @Before

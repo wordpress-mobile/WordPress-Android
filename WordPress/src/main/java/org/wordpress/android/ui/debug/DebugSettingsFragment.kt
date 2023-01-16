@@ -17,7 +17,8 @@ import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 class DebugSettingsFragment : DaggerFragment(R.layout.debug_settings_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DebugSettingsViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,7 +35,7 @@ class DebugSettingsFragment : DaggerFragment(R.layout.debug_settings_fragment) {
             recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
 
             viewModel = ViewModelProvider(this@DebugSettingsFragment, viewModelFactory)
-                    .get(DebugSettingsViewModel::class.java)
+                .get(DebugSettingsViewModel::class.java)
             viewModel.uiState.observe(viewLifecycleOwner, {
                 it?.let { uiState ->
                     val adapter: DebugSettingsAdapter

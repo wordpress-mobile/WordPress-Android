@@ -22,11 +22,11 @@ import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.expandTouchTargetArea
 import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
+import org.wordpress.android.util.extensions.viewBinding
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.util.image.ImageType.PHOTO_ROUNDED_CORNERS
 import org.wordpress.android.util.image.ImageType.VIDEO
-import org.wordpress.android.util.extensions.viewBinding
 
 class ReaderPostViewHolder(
     private val uiHelpers: UiHelpers,
@@ -73,11 +73,11 @@ class ReaderPostViewHolder(
         uiHelpers.setTextOrHide(textExcerpt, state.excerpt)
         postContainer.setOnClickListener {
             readerTracker.trackBlog(
-                    AnalyticsTracker.Stat.READER_POST_CARD_TAPPED,
-                    state.blogId,
-                    state.feedId,
-                    state.isFollowed,
-                    state.source
+                AnalyticsTracker.Stat.READER_POST_CARD_TAPPED,
+                state.blogId,
+                state.feedId,
+                state.isFollowed,
+                state.source
             )
             state.onItemClicked(uiState.postId, uiState.blogId)
         }
@@ -106,9 +106,9 @@ class ReaderPostViewHolder(
         uiHelpers.setTextOrHide(textDateline, state.blogSection.dateLine)
 
         root.setBackgroundResource(
-                root.context.getDrawableResIdFromAttribute(
-                        state.blogSection.blogSectionClickData?.background ?: 0
-                )
+            root.context.getDrawableResIdFromAttribute(
+                state.blogSection.blogSectionClickData?.background ?: 0
+            )
         )
         state.blogSection.blogSectionClickData?.onBlogSectionClicked?.let {
             root.setOnClickListener {
@@ -126,10 +126,10 @@ class ReaderPostViewHolder(
             imageManager.cancelRequestAndClearImageView(imageFeatured)
         } else {
             imageManager.loadImageWithCorners(
-                    imageFeatured,
-                    PHOTO_ROUNDED_CORNERS,
-                    state.featuredImageUrl,
-                    uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
+                imageFeatured,
+                PHOTO_ROUNDED_CORNERS,
+                state.featuredImageUrl,
+                uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
             )
         }
     }
@@ -140,8 +140,8 @@ class ReaderPostViewHolder(
             imageManager.cancelRequestAndClearImageView(imageAvatarOrBlavatar)
         } else {
             imageManager.loadIntoCircle(
-                    imageAvatarOrBlavatar,
-                    state.blogSection.blavatarType, state.blogSection.avatarOrBlavatarUrl
+                imageAvatarOrBlavatar,
+                state.blogSection.blavatarType, state.blogSection.avatarOrBlavatarUrl
             )
         }
 
@@ -164,9 +164,9 @@ class ReaderPostViewHolder(
         } else {
             // TODO do we need to use `imagemanager.load` for blavatar?
             imageManager.loadIntoCircle(
-                    imageDiscoverAvatar,
-                    state.discoverSection.imageType,
-                    state.discoverSection.discoverAvatarUrl
+                imageDiscoverAvatar,
+                state.discoverSection.imageType,
+                state.discoverSection.discoverAvatarUrl
             )
         }
         layoutDiscover.setOnClickListener {
@@ -191,10 +191,10 @@ class ReaderPostViewHolder(
             ReaderVideoUtils.retrieveVideoThumbnailUrl(videoUrl, object : VideoThumbnailUrlListener {
                 override fun showThumbnail(thumbnailUrl: String) {
                     imageManager.loadImageWithCorners(
-                            imageFeatured,
-                            PHOTO_ROUNDED_CORNERS,
-                            thumbnailUrl,
-                            uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
+                        imageFeatured,
+                        PHOTO_ROUNDED_CORNERS,
+                        thumbnailUrl,
+                        uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
                     )
                 }
 

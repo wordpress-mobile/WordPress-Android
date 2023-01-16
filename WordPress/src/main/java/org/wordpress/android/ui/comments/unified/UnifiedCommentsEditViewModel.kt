@@ -155,21 +155,21 @@ class UnifiedCommentsEditViewModel @Inject constructor(
 
     private suspend fun setLoadingState(state: ProgressState) {
         val uiState = _uiState.value ?: EditCommentUiState(
-                canSaveChanges = false,
-                shouldInitComment = false,
-                shouldInitWatchers = false,
-                showProgress = LOADING.show,
-                progressText = LOADING.progressText,
-                originalComment = CommentEssentials(),
-                editedComment = CommentEssentials(),
-                editErrorStrings = EditErrorStrings(),
-                inputSettings = mapInputSettings(CommentEssentials())
+            canSaveChanges = false,
+            shouldInitComment = false,
+            shouldInitWatchers = false,
+            showProgress = LOADING.show,
+            progressText = LOADING.progressText,
+            originalComment = CommentEssentials(),
+            editedComment = CommentEssentials(),
+            editErrorStrings = EditErrorStrings(),
+            inputSettings = mapInputSettings(CommentEssentials())
         )
 
         withContext(mainDispatcher) {
             _uiState.value = uiState.copy(
-                    showProgress = state.show,
-                    progressText = state.progressText
+                showProgress = state.show,
+                progressText = state.progressText
             )
         }
     }
@@ -211,21 +211,21 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             }
             if (commentEssentials.isValid()) {
                 _uiState.value =
-                        EditCommentUiState(
-                                canSaveChanges = false,
-                                shouldInitComment = true,
-                                shouldInitWatchers = true,
-                                showProgress = LOADING.show,
-                                progressText = LOADING.progressText,
-                                originalComment = commentEssentials,
-                                editedComment = commentEssentials,
-                                editErrorStrings = EditErrorStrings(),
-                                inputSettings = mapInputSettings(commentEssentials)
-                        )
+                    EditCommentUiState(
+                        canSaveChanges = false,
+                        shouldInitComment = true,
+                        shouldInitWatchers = true,
+                        showProgress = LOADING.show,
+                        progressText = LOADING.progressText,
+                        originalComment = commentEssentials,
+                        editedComment = commentEssentials,
+                        editErrorStrings = EditErrorStrings(),
+                        inputSettings = mapInputSettings(commentEssentials)
+                    )
             } else {
                 _onSnackbarMessage.value = Event(SnackbarMessageHolder(
-                        message = UiStringRes(R.string.error_load_comment),
-                        onDismissAction = { _uiActionEvent.value = Event(CLOSE) }
+                    message = UiStringRes(R.string.error_load_comment),
+                    onDismissAction = { _uiActionEvent.value = Event(CLOSE) }
                 ))
             }
             delay(LOADING_DELAY_MS)
@@ -237,12 +237,12 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         val commentEntity = getCommentUseCase.execute(site, commentIdentifier.remoteCommentId)
         return if (commentEntity != null) {
             CommentEssentials(
-                    commentId = commentEntity.id,
-                    userName = commentEntity.authorName ?: "",
-                    commentText = commentEntity.content ?: "",
-                    userUrl = commentEntity.authorUrl ?: "",
-                    userEmail = commentEntity.authorEmail ?: "",
-                    isFromRegisteredUser = commentEntity.authorId > 0
+                commentId = commentEntity.id,
+                userName = commentEntity.authorName ?: "",
+                commentText = commentEntity.content ?: "",
+                userUrl = commentEntity.authorUrl ?: "",
+                userEmail = commentEntity.authorEmail ?: "",
+                isFromRegisteredUser = commentEntity.authorId > 0
             )
         } else {
             CommentEssentials()
@@ -251,14 +251,14 @@ class UnifiedCommentsEditViewModel @Inject constructor(
 
     private suspend fun updateComment(editedCommentEssentials: CommentEssentials) {
         val commentEntity =
-                commentsStore.getCommentByLocalSiteAndRemoteId(site.id, commentIdentifier.remoteCommentId).firstOrNull()
+            commentsStore.getCommentByLocalSiteAndRemoteId(site.id, commentIdentifier.remoteCommentId).firstOrNull()
         commentEntity?.run {
             val isCommentEntityUpdated = updateCommentEntity(this, editedCommentEssentials)
             if (isCommentEntityUpdated) {
                 analyticsUtilsWrapper.trackCommentActionWithSiteDetails(
-                        COMMENT_EDITED,
-                        commentIdentifier.toCommentActionSource(),
-                        site
+                    COMMENT_EDITED,
+                    commentIdentifier.toCommentActionSource(),
+                    site
                 )
                 when (commentIdentifier) {
                     is NotificationCommentIdentifier -> {
@@ -283,10 +283,10 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         editedCommentEssentials: CommentEssentials
     ): Boolean {
         val updatedComment = comment.copy(
-                authorUrl = editedCommentEssentials.userUrl,
-                authorName = editedCommentEssentials.userName,
-                authorEmail = editedCommentEssentials.userEmail,
-                content = editedCommentEssentials.commentText
+            authorUrl = editedCommentEssentials.userUrl,
+            authorName = editedCommentEssentials.userName,
+            authorEmail = editedCommentEssentials.userEmail,
+            content = editedCommentEssentials.commentText
         )
 
         val result = commentsStore.updateEditComment(site, updatedComment)
@@ -309,9 +309,9 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         val readerCommentIdentifier = commentIdentifier as ReaderCommentIdentifier
 
         val readerComment = readerCommentTableWrapper.getComment(
-                site.siteId,
-                readerCommentIdentifier.postId,
-                readerCommentIdentifier.remoteCommentId
+            site.siteId,
+            readerCommentIdentifier.postId,
+            readerCommentIdentifier.remoteCommentId
         )
 
         readerComment?.apply {
@@ -328,14 +328,14 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     private suspend fun showUpdateCommentError() {
         setLoadingState(NOT_VISIBLE)
         _onSnackbarMessage.postValue(
-                Event(SnackbarMessageHolder(UiStringRes(R.string.error_edit_comment)))
+            Event(SnackbarMessageHolder(UiStringRes(R.string.error_edit_comment)))
         )
     }
 
     private suspend fun showUpdateNotificationError() {
         setLoadingState(NOT_VISIBLE)
         _onSnackbarMessage.postValue(
-                Event(SnackbarMessageHolder(UiStringRes(R.string.error_edit_notification)))
+            Event(SnackbarMessageHolder(UiStringRes(R.string.error_edit_notification)))
         )
     }
 
@@ -351,42 +351,42 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             val previousErrors = it.editErrorStrings
 
             val editedComment = previousComment.copy(
-                    userName = if (fieldType.matches(USER_NAME)) field else previousComment.userName,
-                    commentText = if (fieldType.matches(COMMENT)) field else previousComment.commentText,
-                    userUrl = if (fieldType.matches(WEB_ADDRESS)) field else previousComment.userUrl,
-                    userEmail = if (fieldType.matches(USER_EMAIL)) field else previousComment.userEmail
+                userName = if (fieldType.matches(USER_NAME)) field else previousComment.userName,
+                commentText = if (fieldType.matches(COMMENT)) field else previousComment.commentText,
+                userUrl = if (fieldType.matches(WEB_ADDRESS)) field else previousComment.userUrl,
+                userEmail = if (fieldType.matches(USER_EMAIL)) field else previousComment.userEmail
             )
 
             val errors = previousErrors.copy(
-                    userNameError = if (fieldType.matches(USER_NAME)) fieldError else previousErrors.userNameError,
-                    commentTextError = if (fieldType.matches(COMMENT)) fieldError else previousErrors.commentTextError,
-                    userUrlError = if (fieldType.matches(WEB_ADDRESS)) fieldError else previousErrors.userUrlError,
-                    userEmailError = if (fieldType.matches(USER_EMAIL)) fieldError else previousErrors.userEmailError
+                userNameError = if (fieldType.matches(USER_NAME)) fieldError else previousErrors.userNameError,
+                commentTextError = if (fieldType.matches(COMMENT)) fieldError else previousErrors.commentTextError,
+                userUrlError = if (fieldType.matches(WEB_ADDRESS)) fieldError else previousErrors.userUrlError,
+                userEmailError = if (fieldType.matches(USER_EMAIL)) fieldError else previousErrors.userEmailError
             )
 
             _uiState.value = it.copy(
-                    canSaveChanges = editedComment.isNotEqualTo(it.originalComment) && !errors.hasError(),
-                    shouldInitComment = false,
-                    shouldInitWatchers = false,
-                    editedComment = editedComment,
-                    editErrorStrings = errors
+                canSaveChanges = editedComment.isNotEqualTo(it.originalComment) && !errors.hasError(),
+                shouldInitComment = false,
+                shouldInitWatchers = false,
+                editedComment = editedComment,
+                editErrorStrings = errors
             )
         }
     }
 
     private fun mapInputSettings(commentEssentials: CommentEssentials) = InputSettings(
-            enableEditName = !commentEssentials.isFromRegisteredUser,
-            enableEditUrl = !commentEssentials.isFromRegisteredUser,
-            enableEditEmail = !commentEssentials.isFromRegisteredUser,
-            enableEditComment = true
+        enableEditName = !commentEssentials.isFromRegisteredUser,
+        enableEditUrl = !commentEssentials.isFromRegisteredUser,
+        enableEditEmail = !commentEssentials.isFromRegisteredUser,
+        enableEditComment = true
     )
 
     private fun EditErrorStrings.hasError(): Boolean {
         return listOf(
-                this.commentTextError,
-                this.userEmailError,
-                this.userNameError,
-                this.userUrlError
+            this.commentTextError,
+            this.userEmailError,
+            this.userNameError,
+            this.userUrlError
         ).any { !it.isNullOrEmpty() }
     }
 

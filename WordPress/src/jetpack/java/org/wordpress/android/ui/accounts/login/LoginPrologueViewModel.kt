@@ -47,15 +47,15 @@ class LoginPrologueViewModel @Inject constructor(
         unifiedLoginTracker.track(flow = Flow.PROLOGUE, step = PROLOGUE)
 
         _uiState.value = UiState(
-                enterYourSiteAddressButtonState = EnterYourSiteAddressButtonState(::onEnterYourSiteAddressButtonClick),
-                continueWithWpcomButtonState = ContinueWithWpcomButtonState(
-                        title = if (buildConfigWrapper.isSignupEnabled) {
-                            R.string.continue_with_wpcom
-                        } else {
-                            R.string.continue_with_wpcom_no_signup
-                        },
-                        onClick = ::onContinueWithWpcomButtonClick
-                )
+            enterYourSiteAddressButtonState = EnterYourSiteAddressButtonState(::onEnterYourSiteAddressButtonClick),
+            continueWithWpcomButtonState = ContinueWithWpcomButtonState(
+                title = if (buildConfigWrapper.isSignupEnabled) {
+                    R.string.continue_with_wpcom
+                } else {
+                    R.string.continue_with_wpcom_no_signup
+                },
+                onClick = ::onContinueWithWpcomButtonClick
+            )
         )
     }
 

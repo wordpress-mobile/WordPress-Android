@@ -1,3 +1,0 @@
-21.3:
-- Ahora puedes migrar el contenido de tu sitio a la aplicación de Jetpack sin problemas.
-- El conmutador Ajustes de notificaciones desactiva los resúmenes semanales, el recordatorio de blogueo y las notificaciones del sitio.

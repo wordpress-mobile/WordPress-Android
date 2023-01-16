@@ -42,8 +42,8 @@ class PostsCommentsUseCase @Inject constructor(
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
             model != null && (model.posts.isNotEmpty()) -> State.Data(
-                    model,
-                    cached = response.cached
+                model,
+                cached = response.cached
             )
             else -> State.Empty()
         }
@@ -65,21 +65,21 @@ class PostsCommentsUseCase @Inject constructor(
 
         if (domainModel.posts.isNotEmpty()) {
             val header = Header(
-                    R.string.posts,
-                    R.string.stats_comments_label,
-                    listOf(resourceProvider.getString(string.posts))
+                R.string.posts,
+                R.string.stats_comments_label,
+                listOf(resourceProvider.getString(string.posts))
             )
             items.add(header)
             items.addAll(domainModel.posts.mapIndexed { index, post ->
                 ListItem(
+                    post.name,
+                    statsUtils.toFormattedString(post.comments),
+                    index < domainModel.posts.size - 1,
+                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
                         post.name,
-                        statsUtils.toFormattedString(post.comments),
-                        index < domainModel.posts.size - 1,
-                        contentDescription = contentDescriptionHelper.buildContentDescription(
-                                header,
-                                post.name,
-                                post.comments
-                        )
+                        post.comments
+                    )
                 )
             })
         } else {

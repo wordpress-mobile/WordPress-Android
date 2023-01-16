@@ -23,23 +23,24 @@ import java.util.Date
 
 @ExperimentalCoroutinesApi
 class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
-    @Mock lateinit var siteModel: SiteModel
+    @Mock
+    lateinit var siteModel: SiteModel
 
     private lateinit var viewModel: EditorBloggingPromptsViewModel
     private var loadedPrompt: EditorLoadedPrompt? = null
 
     private val bloggingPrompt = BloggingPromptsResult(
-            model = BloggingPromptModel(
-                    id = 123,
-                    text = "title",
-                    title = "",
-                    content = "content",
-                    date = Date(),
-                    isAnswered = false,
-                    attribution = "",
-                    respondentsCount = 5,
-                    respondentsAvatarUrls = listOf()
-            )
+        model = BloggingPromptModel(
+            id = 123,
+            text = "title",
+            title = "",
+            content = "content",
+            date = Date(),
+            isAnswered = false,
+            attribution = "",
+            respondentsCount = 5,
+            respondentsAvatarUrls = listOf()
+        )
     )
 
     private val bloggingPromptsStore: BloggingPromptsStore = mock {
@@ -49,8 +50,8 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = EditorBloggingPromptsViewModel(
-                bloggingPromptsStore,
-                testDispatcher()
+            bloggingPromptsStore,
+            testDispatcher()
         )
 
         viewModel.onBloggingPromptLoaded.observeForever {

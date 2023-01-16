@@ -23,8 +23,8 @@ class InitializationRule : TestRule {
 
                 val application = instrumentation.targetContext.applicationContext as WordPressTest_Application
                 val appInitializer = EntryPoints.get(
-                        application,
-                        AppInitializerEntryPoint::class.java
+                    application,
+                    AppInitializerEntryPoint::class.java
                 ).appInitializer()
                 instrumentation.runOnMainSync { appInitializer.init() }
 

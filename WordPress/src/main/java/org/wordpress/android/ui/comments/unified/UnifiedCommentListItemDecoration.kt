@@ -33,8 +33,8 @@ class UnifiedCommentListItemDecoration(val context: Context) : ItemDecoration() 
             left = parent.paddingStart
             right = parent.width - parent.paddingEnd
             canvas.clipRect(
-                    left, parent.paddingTop, right,
-                    parent.height - parent.paddingBottom
+                left, parent.paddingTop, right,
+                parent.height - parent.paddingBottom
             )
         } else {
             left = 0

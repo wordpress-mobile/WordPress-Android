@@ -102,4 +102,7 @@
 
     <!-- Jetpack Migration -->
     <color name="bg_jp_migration_buttons_panel">#E6121212</color>
+
+    <!-- Jetpack feture removal overlay secondary button color -->
+    <color name="jp_feature_removal_overlay_secondary_button_color">@color/white</color>
 </resources>

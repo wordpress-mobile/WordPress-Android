@@ -75,23 +75,23 @@ class SiteItemsBuilder @Inject constructor(
 
         return listOfNotNull(
                 CategoryHeaderItem(UiStringRes(string.my_site_header_publish)),
-                ListItem(
-                        drawable.ic_posts_white_24dp,
-                        UiStringRes(string.my_site_btn_blog_posts),
-                        onClick = ListItemInteraction.create(POSTS, params.onClick)
-                ),
-                ListItem(
-                        drawable.ic_media_white_24dp,
-                        UiStringRes(string.media),
-                        onClick = ListItemInteraction.create(MEDIA, params.onClick),
-                        showFocusPoint = showMediaFocusPoint
-                ),
-                siteListItemBuilder.buildPagesItemIfAvailable(params.site, params.onClick, showPagesFocusPoint),
-                ListItem(
-                        drawable.ic_comment_white_24dp,
-                        UiStringRes(string.my_site_btn_comments),
-                        onClick = ListItemInteraction.create(COMMENTS, params.onClick)
-                )
+            ListItem(
+                drawable.ic_posts_white_24dp,
+                UiStringRes(string.my_site_btn_blog_posts),
+                onClick = ListItemInteraction.create(POSTS, params.onClick)
+            ),
+            ListItem(
+                drawable.ic_media_white_24dp,
+                UiStringRes(string.media),
+                onClick = ListItemInteraction.create(MEDIA, params.onClick),
+                showFocusPoint = showMediaFocusPoint
+            ),
+            siteListItemBuilder.buildPagesItemIfAvailable(params.site, params.onClick, showPagesFocusPoint),
+            ListItem(
+                drawable.ic_comment_white_24dp,
+                UiStringRes(string.my_site_btn_comments),
+                onClick = ListItemInteraction.create(COMMENTS, params.onClick)
+            )
         )
     }
 
@@ -117,7 +117,7 @@ class SiteItemsBuilder @Inject constructor(
             List<MySiteCardAndItem> {
         return listOfNotNull(
                 siteListItemBuilder.buildDomainsItemIfAvailable(params.site, params.onClick),
-                siteListItemBuilder.buildSiteSettingsItemIfAvailable(params.site, params.onClick)
+            siteListItemBuilder.buildSiteSettingsItemIfAvailable(params.site, params.onClick)
         )
     }
 
@@ -140,14 +140,14 @@ class SiteItemsBuilder @Inject constructor(
 
     private fun getExternalSiteItems(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
         return listOfNotNull(
-                CategoryHeaderItem(UiStringRes(R.string.my_site_header_external)),
-                ListItem(
-                        R.drawable.ic_globe_white_24dp,
-                        UiStringRes(R.string.my_site_btn_view_site),
-                        secondaryIcon = R.drawable.ic_external_white_24dp,
-                        onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, params.onClick)
-                ),
-                siteListItemBuilder.buildAdminItemIfAvailable(params.site, params.onClick)
+            CategoryHeaderItem(UiStringRes(R.string.my_site_header_external)),
+            ListItem(
+                R.drawable.ic_globe_white_24dp,
+                UiStringRes(R.string.my_site_btn_view_site),
+                secondaryIcon = R.drawable.ic_external_white_24dp,
+                onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, params.onClick)
+            ),
+            siteListItemBuilder.buildAdminItemIfAvailable(params.site, params.onClick)
         )
     }
 }

@@ -10,6 +10,7 @@ import org.wordpress.android.viewmodel.Event
 @ExperimentalCoroutinesApi
 class CommentFullScreenDialogViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: CommentFullScreenDialogViewModel
+
     @Before
     fun setUp() {
         viewModel = CommentFullScreenDialogViewModel()

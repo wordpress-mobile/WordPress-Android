@@ -8,13 +8,13 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentListItemUiState
 
 class SiteCreationIntentViewHolder(internal val parent: ViewGroup) :
-        RecyclerView.ViewHolder(
-                LayoutInflater.from(parent.context).inflate(
-                        R.layout.site_creation_intents_item,
-                        parent,
-                        false
-                )
-        ) {
+    RecyclerView.ViewHolder(
+        LayoutInflater.from(parent.context).inflate(
+            R.layout.site_creation_intents_item,
+            parent,
+            false
+        )
+    ) {
     private val container = itemView.findViewById<ViewGroup>(R.id.container)
     private val verticalText = itemView.findViewById<TextView>(R.id.vertical_text)
     private val emoji = itemView.findViewById<TextView>(R.id.vertical_emoji)

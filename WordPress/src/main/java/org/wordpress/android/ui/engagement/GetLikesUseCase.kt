@@ -110,8 +110,8 @@ class GetLikesUseCase @Inject constructor(
             }
 
             val pageInfo = PagingInfo(
-                    pageLength = paginationParams.pageLength,
-                    page = if (likes.isNotEmpty()) ((likes.size - 1) / paginationParams.pageLength) + 1 else 1
+                pageLength = paginationParams.pageLength,
+                page = if (likes.isNotEmpty()) ((likes.size - 1) / paginationParams.pageLength) + 1 else 1
             )
             flow.emit(
                 if (result.isError) {
@@ -133,19 +133,19 @@ class GetLikesUseCase @Inject constructor(
             when (category) {
                 POST_LIKE -> {
                     val payload = FetchPostLikesPayload(
-                            fingerPrint.siteId,
-                            fingerPrint.postOrCommentId,
-                            paginationParams.requestNextPage,
-                            paginationParams.pageLength
+                        fingerPrint.siteId,
+                        fingerPrint.postOrCommentId,
+                        paginationParams.requestNextPage,
+                        paginationParams.pageLength
                     )
                     dispatcher.dispatch(PostActionBuilder.newFetchPostLikesAction(payload))
                 }
                 COMMENT_LIKE -> {
                     val payload = FetchCommentLikesPayload(
-                            fingerPrint.siteId,
-                            fingerPrint.postOrCommentId,
-                            paginationParams.requestNextPage,
-                            paginationParams.pageLength
+                        fingerPrint.siteId,
+                        fingerPrint.postOrCommentId,
+                        paginationParams.requestNextPage,
+                        paginationParams.pageLength
                     )
                     dispatcher.dispatch(CommentActionBuilder.newFetchCommentLikesAction(payload))
                 }
@@ -162,33 +162,33 @@ class GetLikesUseCase @Inject constructor(
     ): Failure {
         return if (noNetworkDetected) {
             Failure(
-                    NO_NETWORK,
-                    UiStringRes(R.string.get_likes_no_network_error),
-                    orderedLikes,
-                    EmptyStateData(
-                            orderedLikes.isEmpty(),
-                            UiStringRes(R.string.no_network_title)
-                    ),
-                    expectedNumLikes,
-                    orderedLikes.isNotEmpty(),
-                    pageInfo
+                NO_NETWORK,
+                UiStringRes(R.string.get_likes_no_network_error),
+                orderedLikes,
+                EmptyStateData(
+                    orderedLikes.isEmpty(),
+                    UiStringRes(R.string.no_network_title)
+                ),
+                expectedNumLikes,
+                orderedLikes.isNotEmpty(),
+                pageInfo
             )
         } else {
             Failure(
-                    GENERIC,
-                    if (errorMessage.isNullOrEmpty()) {
-                        UiStringRes(R.string.get_likes_unknown_error)
-                    } else {
-                        UiStringText(errorMessage)
-                    },
-                    orderedLikes,
-                    EmptyStateData(
-                            orderedLikes.isEmpty(),
-                            UiStringRes(R.string.get_likes_empty_state_title)
-                    ),
-                    expectedNumLikes,
-                    orderedLikes.isNotEmpty(),
-                    pageInfo
+                GENERIC,
+                if (errorMessage.isNullOrEmpty()) {
+                    UiStringRes(R.string.get_likes_unknown_error)
+                } else {
+                    UiStringText(errorMessage)
+                },
+                orderedLikes,
+                EmptyStateData(
+                    orderedLikes.isEmpty(),
+                    UiStringRes(R.string.get_likes_empty_state_title)
+                ),
+                expectedNumLikes,
+                orderedLikes.isNotEmpty(),
+                pageInfo
             )
         }
     }

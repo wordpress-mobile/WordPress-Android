@@ -88,13 +88,13 @@ class ExPlat
     }
 
     private suspend fun fetchAssignments() =
-            experimentStore.fetchAssignments(platform, experimentNames, analyticsTracker.getAnonID()).also {
-        if (it.isError) {
-            appLog.d(T.API, "ExPlat: fetching assignments failed with result: ${it.error}")
-        } else {
-            appLog.d(T.API, "ExPlat: fetching assignments successful with result: ${it.assignments}")
+        experimentStore.fetchAssignments(platform, experimentNames, analyticsTracker.getAnonID()).also {
+            if (it.isError) {
+                appLog.d(T.API, "ExPlat: fetching assignments failed with result: ${it.error}")
+            } else {
+                appLog.d(T.API, "ExPlat: fetching assignments successful with result: ${it.assignments}")
+            }
         }
-    }
 
     private enum class RefreshStrategy { ALWAYS, IF_STALE, NEVER }
 }

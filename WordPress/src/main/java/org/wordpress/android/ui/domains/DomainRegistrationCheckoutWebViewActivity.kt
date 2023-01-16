@@ -31,13 +31,13 @@ class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity(), DomainReg
 
     class OpenCheckout : ActivityResultContract<CheckoutDetails, DomainRegistrationCompletedEvent?>() {
         override fun createIntent(context: Context, input: CheckoutDetails) =
-                Intent(context, DomainRegistrationCheckoutWebViewActivity::class.java).apply {
-                    putExtra(USE_GLOBAL_WPCOM_USER, true)
-                    putExtra(URL_TO_LOAD, getCheckoutUrl(input.site))
-                    putExtra(AUTHENTICATION_URL, WPCOM_LOGIN_URL)
-                    putExtra(REGISTRATION_DOMAIN_NAME, input.domainName)
-                    putExtra(REGISTRATION_EMAIL, input.site.email)
-                }
+            Intent(context, DomainRegistrationCheckoutWebViewActivity::class.java).apply {
+                putExtra(USE_GLOBAL_WPCOM_USER, true)
+                putExtra(URL_TO_LOAD, getCheckoutUrl(input.site))
+                putExtra(AUTHENTICATION_URL, WPCOM_LOGIN_URL)
+                putExtra(REGISTRATION_DOMAIN_NAME, input.domainName)
+                putExtra(REGISTRATION_EMAIL, input.site.email)
+            }
 
         override fun parseResult(resultCode: Int, intent: Intent?): DomainRegistrationCompletedEvent? {
             val data = intent?.takeIf { it.hasExtra(REGISTRATION_DOMAIN_NAME) && it.hasExtra(REGISTRATION_EMAIL) }
@@ -52,7 +52,7 @@ class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity(), DomainReg
         data class CheckoutDetails(val site: SiteModel, val domainName: String)
 
         private fun getCheckoutUrl(site: SiteModel) =
-                "https://wordpress.com/checkout/${SiteUtils.getHomeURLOrHostName(site)}"
+            "https://wordpress.com/checkout/${SiteUtils.getHomeURLOrHostName(site)}"
 
         companion object {
             const val REGISTRATION_DOMAIN_NAME = "REGISTRATION_DOMAIN_NAME"

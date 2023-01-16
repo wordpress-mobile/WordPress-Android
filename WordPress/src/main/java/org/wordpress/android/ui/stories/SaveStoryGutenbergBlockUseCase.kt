@@ -51,25 +51,25 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
 
     private fun buildMediaFileData(mediaFile: MediaFile): StoryMediaFileData {
         return StoryMediaFileData(
-                alt = mediaFile.alt,
-                id = mediaFile.id.toString(),
-                link = StringUtils.notNullStr(mediaFile.fileURL),
-                type = if (mediaFile.isVideo) "video" else "image",
-                mime = StringUtils.notNullStr(mediaFile.mimeType),
-                caption = "",
-                url = StringUtils.notNullStr(mediaFile.fileURL)
+            alt = mediaFile.alt,
+            id = mediaFile.id.toString(),
+            link = StringUtils.notNullStr(mediaFile.fileURL),
+            type = if (mediaFile.isVideo) "video" else "image",
+            mime = StringUtils.notNullStr(mediaFile.mimeType),
+            caption = "",
+            url = StringUtils.notNullStr(mediaFile.fileURL)
         )
     }
 
     fun buildMediaFileDataWithTemporaryId(mediaFile: MediaFile, temporaryId: String): StoryMediaFileData {
         return StoryMediaFileData(
-                alt = mediaFile.alt,
-                id = temporaryId, // mediaFile.id,
-                link = StringUtils.notNullStr(mediaFile.fileURL),
-                type = if (mediaFile.isVideo) "video" else "image",
-                mime = StringUtils.notNullStr(mediaFile.mimeType),
-                caption = "",
-                url = StringUtils.notNullStr(mediaFile.fileURL)
+            alt = mediaFile.alt,
+            id = temporaryId, // mediaFile.id,
+            link = StringUtils.notNullStr(mediaFile.fileURL),
+            type = if (mediaFile.isVideo) "video" else "image",
+            mime = StringUtils.notNullStr(mediaFile.mimeType),
+            caption = "",
+            url = StringUtils.notNullStr(mediaFile.fileURL)
         )
     }
 
@@ -79,13 +79,13 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         isVideo: Boolean
     ): StoryMediaFileData {
         return StoryMediaFileData(
-                alt = "",
-                id = temporaryId, // mediaFile.id,
-                link = url,
-                type = if (isVideo) "video" else "image",
-                mime = "",
-                caption = "",
-                url = url
+            alt = "",
+            id = temporaryId, // mediaFile.id,
+            link = url,
+            type = if (isVideo) "video" else "image",
+            mime = "",
+            caption = "",
+            url = url
         )
     }
 
@@ -118,8 +118,8 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
                 }
                 try {
                     val jsonString: String = content.substring(
-                            mediaFilesStartIndex,
-                            storyBlockEndIndex
+                        mediaFilesStartIndex,
+                        storyBlockEndIndex
                     )
                     content = listener.doWithMediaFilesJson(content, jsonString)
                     storyBlockStartIndex += HEADING_START.length
@@ -159,38 +159,38 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         }
         val gson = Gson()
         findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
-                postModel,
-                siteModel,
-                object : DoWithMediaFilesListener {
-                    override fun doWithMediaFilesJson(content: String, mediaFilesJsonString: String): String {
-                        var processedContent = content
-                        val storyBlockData: StoryBlockData? =
-                                gson.fromJson(mediaFilesJsonString, StoryBlockData::class.java)
-                        storyBlockData?.let { storyBlockDataNonNull ->
-                            val localMediaId = mediaFile.id.toString()
-                            // now replace matching localMediaId with remoteMediaId in the mediaFileObjects,
-                            // obtain the URLs and replace
-                            val mediaFiles = storyBlockDataNonNull.mediaFiles.filter { it.id == localMediaId }
-                            if (mediaFiles.isNotEmpty()) {
-                                mediaFiles[0].apply {
-                                    id = mediaFile.mediaId
-                                    link = mediaFile.fileURL
-                                    url = mediaFile.fileURL
+            postModel,
+            siteModel,
+            object : DoWithMediaFilesListener {
+                override fun doWithMediaFilesJson(content: String, mediaFilesJsonString: String): String {
+                    var processedContent = content
+                    val storyBlockData: StoryBlockData? =
+                        gson.fromJson(mediaFilesJsonString, StoryBlockData::class.java)
+                    storyBlockData?.let { storyBlockDataNonNull ->
+                        val localMediaId = mediaFile.id.toString()
+                        // now replace matching localMediaId with remoteMediaId in the mediaFileObjects,
+                        // obtain the URLs and replace
+                        val mediaFiles = storyBlockDataNonNull.mediaFiles.filter { it.id == localMediaId }
+                        if (mediaFiles.isNotEmpty()) {
+                            mediaFiles[0].apply {
+                                id = mediaFile.mediaId
+                                link = mediaFile.fileURL
+                                url = mediaFile.fileURL
 
-                                    // look for the slide saved with the local id key (mediaFile.id), and re-convert to
-                                    // mediaId.
-                                    storiesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
-                                            mediaFile.id,
-                                            mediaFile.mediaId.toLong(),
-                                            postModel.localSiteId.toLong()
-                                    )
-                                }
+                                // look for the slide saved with the local id key (mediaFile.id), and re-convert to
+                                // mediaId.
+                                storiesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
+                                    mediaFile.id,
+                                    mediaFile.mediaId.toLong(),
+                                    postModel.localSiteId.toLong()
+                                )
                             }
-                            processedContent = content.replace(mediaFilesJsonString, gson.toJson(storyBlockDataNonNull))
                         }
-                        return processedContent
+                        processedContent = content.replace(mediaFilesJsonString, gson.toJson(storyBlockDataNonNull))
                     }
+                    return processedContent
                 }
+            }
         )
     }
 
@@ -202,16 +202,16 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         for ((frameIndex, frame) in frames.withIndex()) {
             if (frame.id == null) {
                 val assignedTempId = getTempIdForStoryFrame(
-                        storiesPrefs.getNewIncrementalTempId(),
-                        storyIndex,
-                        frameIndex
+                    storiesPrefs.getNewIncrementalTempId(),
+                    storyIndex,
+                    frameIndex
                 )
                 frame.id = assignedTempId
             }
             storiesPrefs.saveSlideWithTempId(
-                    site.id.toLong(),
-                    TempId(requireNotNull(frame.id)), // should not be null at this point
-                    frame
+                site.id.toLong(),
+                TempId(requireNotNull(frame.id)), // should not be null at this point
+                frame
             )
         }
     }

@@ -14,7 +14,6 @@ import org.wordpress.android.ui.history.HistoryListItem.ViewType.REVISION
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.extensions.toFormattedDateString
 import org.wordpress.android.util.extensions.toFormattedTimeString
-import java.util.ArrayList
 import java.util.Date
 
 sealed class HistoryListItem(val type: ViewType) {
@@ -44,24 +43,32 @@ sealed class HistoryListItem(val type: ViewType) {
         var authorAvatarURL: String? = null
     ) : HistoryListItem(REVISION), Parcelable {
         // Replace space with T since API returns yyyy-MM-dd hh:mm:ssZ and ISO 8601 format is yyyy-MM-ddThh:mm:ssZ.
-        @IgnoredOnParcel private val postDate: Date = DateTimeUtils.dateUTCFromIso8601(postDateGmt?.replace(" ", "T"))
-        @IgnoredOnParcel val timeSpan: String = DateTimeUtils.javaDateToTimeSpan(postDate, WordPress.getContext())
-        @IgnoredOnParcel val formattedDate: String = postDate.toFormattedDateString()
-        @IgnoredOnParcel val formattedTime: String = postDate.toFormattedTimeString()
+        @IgnoredOnParcel
+        private val postDate: Date = DateTimeUtils.dateUTCFromIso8601(postDateGmt?.replace(" ", "T"))
+
+        @IgnoredOnParcel
+        val timeSpan: String = DateTimeUtils.javaDateToTimeSpan(postDate, WordPress.getContext())
+
+        @IgnoredOnParcel
+        val formattedDate: String = postDate.toFormattedDateString()
+
+        @IgnoredOnParcel
+        val formattedTime: String = postDate.toFormattedTimeString()
 
         constructor(model: RevisionModel) : this(
-                model.revisionId,
-                model.diffFromVersion,
-                model.totalAdditions,
-                model.totalDeletions,
-                model.postContent ?: "",
-                model.postExcerpt ?: "",
-                model.postTitle ?: "",
-                model.postDateGmt ?: "",
-                model.postModifiedGmt ?: "",
-                model.postAuthorId ?: "",
-                model.titleDiffs,
-                model.contentDiffs)
+            model.revisionId,
+            model.diffFromVersion,
+            model.totalAdditions,
+            model.totalDeletions,
+            model.postContent ?: "",
+            model.postExcerpt ?: "",
+            model.postTitle ?: "",
+            model.postDateGmt ?: "",
+            model.postModifiedGmt ?: "",
+            model.postAuthorId ?: "",
+            model.titleDiffs,
+            model.contentDiffs
+        )
 
         override fun longId(): Long = revisionId.hashCode().toLong()
     }

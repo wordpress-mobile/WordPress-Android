@@ -52,14 +52,14 @@ class AllTimeStatsUseCase
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
             model != null && model.hasData() -> State.Data(
-                    model
+                model
             )
             else -> State.Empty()
         }
     }
 
     private fun InsightsAllTimeModel.hasData() =
-            this.posts > 0 || this.views > 0 || this.visitors > 0 || this.viewsBestDayTotal > 0
+        this.posts > 0 || this.views > 0 || this.visitors > 0 || this.viewsBestDayTotal > 0
 
     override fun buildUiModel(domainModel: InsightsAllTimeModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
@@ -73,10 +73,10 @@ class AllTimeStatsUseCase
             items.add(Empty())
         } else {
             items.add(
-                    QuickScanItem(
-                            Column(R.string.stats_views, statsUtils.toFormattedString(domainModel.views)),
-                            Column(R.string.stats_visitors, statsUtils.toFormattedString(domainModel.visitors))
-                    )
+                QuickScanItem(
+                    Column(R.string.stats_views, statsUtils.toFormattedString(domainModel.views)),
+                    Column(R.string.stats_visitors, statsUtils.toFormattedString(domainModel.visitors))
+                )
             )
             val tooltip = if (domainModel.viewsBestDay.isNotEmpty()) {
                 statsDateFormatter.printDate(domainModel.viewsBestDay)
@@ -84,14 +84,14 @@ class AllTimeStatsUseCase
                 null
             }
             items.add(
-                    QuickScanItem(
-                            Column(R.string.posts, statsUtils.toFormattedString(domainModel.posts)),
-                            Column(
-                                    R.string.stats_insights_best_ever,
-                                    statsUtils.toFormattedString(domainModel.viewsBestDayTotal),
-                                    tooltip
-                            )
+                QuickScanItem(
+                    Column(R.string.posts, statsUtils.toFormattedString(domainModel.posts)),
+                    Column(
+                        R.string.stats_insights_best_ever,
+                        statsUtils.toFormattedString(domainModel.viewsBestDayTotal),
+                        tooltip
                     )
+                )
             )
         }
         return items

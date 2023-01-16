@@ -17,12 +17,12 @@ fun requestEmailValidation(context: Context, email: String?) {
     }
 
     ToastUtils.showToast(
-            context,
-            message,
-            Duration.LONG,
-            Gravity.BOTTOM,
-            0,
-            context.resources.getDimensionPixelOffset(R.dimen.smart_toast_offset_y)
+        context,
+        message,
+        Duration.LONG,
+        Gravity.BOTTOM,
+        0,
+        context.resources.getDimensionPixelOffset(R.dimen.smart_toast_offset_y)
     )
 }
 

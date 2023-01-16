@@ -15,7 +15,8 @@ import org.wordpress.android.ui.deeplinks.buildUri
 
 @RunWith(MockitoJUnitRunner::class)
 class HomeLinkHandlerTest {
-    @Mock lateinit var accountStore: AccountStore
+    @Mock
+    lateinit var accountStore: AccountStore
     private lateinit var homeLinkHandler: HomeLinkHandler
 
     @Before

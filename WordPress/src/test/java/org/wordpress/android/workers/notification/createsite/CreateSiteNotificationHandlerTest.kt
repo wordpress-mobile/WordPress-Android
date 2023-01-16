@@ -31,21 +31,21 @@ class CreateSiteNotificationHandlerTest {
         val notificationsMainKey = "wp_pref_notifications_master"
         whenever(resourceProvider.getString(R.string.wp_pref_notifications_main)).thenReturn(notificationsMainKey)
         createSiteNotificationHandler = CreateSiteNotificationHandler(
-                sharedPrefs,
-                resourceProvider,
-                accountStore,
-                siteStore,
-                notificationsTracker
+            sharedPrefs,
+            resourceProvider,
+            accountStore,
+            siteStore,
+            notificationsTracker
         )
     }
 
     @Test
     fun `should not show notification when the notification settings is disabled`() {
         whenever(
-                sharedPrefs.getBoolean(
-                        resourceProvider.getString(R.string.wp_pref_notifications_main),
-                        true
-                )
+            sharedPrefs.getBoolean(
+                resourceProvider.getString(R.string.wp_pref_notifications_main),
+                true
+            )
         ).thenReturn(false)
 
         assertThat(createSiteNotificationHandler.shouldShowNotification()).isFalse
@@ -54,10 +54,10 @@ class CreateSiteNotificationHandlerTest {
     @Test
     fun `should not show notification when the user is logged out`() {
         whenever(
-                sharedPrefs.getBoolean(
-                        resourceProvider.getString(R.string.wp_pref_notifications_main),
-                        true
-                )
+            sharedPrefs.getBoolean(
+                resourceProvider.getString(R.string.wp_pref_notifications_main),
+                true
+            )
         ).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
 
@@ -69,10 +69,10 @@ class CreateSiteNotificationHandlerTest {
         val notificationsMainKey = "wp_pref_notifications_master"
         whenever(resourceProvider.getString(R.string.wp_pref_notifications_main)).thenReturn(notificationsMainKey)
         whenever(
-                sharedPrefs.getBoolean(
-                        resourceProvider.getString(R.string.wp_pref_notifications_main),
-                        true
-                )
+            sharedPrefs.getBoolean(
+                resourceProvider.getString(R.string.wp_pref_notifications_main),
+                true
+            )
         ).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(siteStore.hasSite()).thenReturn(true)
@@ -83,10 +83,10 @@ class CreateSiteNotificationHandlerTest {
     @Test
     fun `should show notification when the notification settings is enabled`() {
         whenever(
-                sharedPrefs.getBoolean(
-                        resourceProvider.getString(R.string.wp_pref_notifications_main),
-                        true
-                )
+            sharedPrefs.getBoolean(
+                resourceProvider.getString(R.string.wp_pref_notifications_main),
+                true
+            )
         ).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
 
@@ -96,10 +96,10 @@ class CreateSiteNotificationHandlerTest {
     @Test
     fun `should show notification when the user is logged in and has no sites`() {
         whenever(
-                sharedPrefs.getBoolean(
-                        resourceProvider.getString(R.string.wp_pref_notifications_main),
-                        true
-                )
+            sharedPrefs.getBoolean(
+                resourceProvider.getString(R.string.wp_pref_notifications_main),
+                true
+            )
         ).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(siteStore.hasSite()).thenReturn(false)

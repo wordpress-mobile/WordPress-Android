@@ -35,8 +35,8 @@ class QuickStartTracker @Inject constructor(
     fun trackShown(itemType: MySiteCardAndItem.Type, tabType: MySiteTabType) {
         if (itemType == QUICK_START_CARD) {
             val props = mapOf(
-                    TAB to tabType.trackingLabel,
-                    SITE_TYPE to getLastSelectedQuickStartType().trackingLabel
+                TAB to tabType.trackingLabel,
+                SITE_TYPE to getLastSelectedQuickStartType().trackingLabel
             )
             val cardsShownTrackedPair = Pair(itemType, props)
             if (!cardsShownTracked.contains(cardsShownTrackedPair)) {

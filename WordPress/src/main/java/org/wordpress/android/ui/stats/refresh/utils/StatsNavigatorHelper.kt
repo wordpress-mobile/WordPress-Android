@@ -51,10 +51,10 @@ object StatsNavigatorHelper {
     ) {
         val post = ReaderPostTable.getBlogPost(remoteBlogId, remoteItemId, true)
         ReaderActivityLauncher.showReaderBlogPreview(
-                context,
-                post,
-                ReaderTracker.SOURCE_STATS,
-                readerTracker
+            context,
+            post,
+            ReaderTracker.SOURCE_STATS,
+            readerTracker
         )
     }
 

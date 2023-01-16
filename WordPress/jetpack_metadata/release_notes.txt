@@ -1,3 +1,7 @@
-- Text in the QR code scanning process is translated into your app’s language.
-- The Notification Settings switch disables weekly roundup, blogging reminder, and site notifications.
-- We fixed a bug in My Site > Comments that crashed the app for self-hosted sites with certain plugins.
+We’ve been hard at work on extra-technical, behind-the-scenes fixes and updates to keep the Jetpack app running smoothly.
+
+- Posticulating features
+- Rearchitecting interfaces
+- Reticulating splines
+- Codifying similitude
+- Rebuilding the gigaverse

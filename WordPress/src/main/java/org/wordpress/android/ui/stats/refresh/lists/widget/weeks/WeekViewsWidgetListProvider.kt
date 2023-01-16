@@ -16,8 +16,11 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
 import javax.inject.Inject
 
 class WeekViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
-    @Inject lateinit var viewModel: WeekViewsWidgetListViewModel
-    @Inject lateinit var widgetUpdater: WeekViewsWidgetUpdater
+    @Inject
+    lateinit var viewModel: WeekViewsWidgetListViewModel
+
+    @Inject
+    lateinit var widgetUpdater: WeekViewsWidgetUpdater
     private val colorMode: Color = intent.getColorMode()
     private val siteId: Int = intent.getIntExtra(SITE_ID_KEY, 0)
     private val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
@@ -35,8 +38,8 @@ class WeekViewsWidgetListProvider(val context: Context, intent: Intent) : Remote
     override fun onDataSetChanged() {
         viewModel.onDataSetChanged { appWidgetId ->
             widgetUpdater.updateAppWidget(
-                    context,
-                    appWidgetId = appWidgetId
+                context,
+                appWidgetId = appWidgetId
             )
         }
     }

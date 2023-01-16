@@ -49,7 +49,7 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     }
 
     @Suppress("SwallowedException")
-    fun handleOpenLinksInJetpackIfPossible() : Boolean {
+    fun handleOpenLinksInJetpackIfPossible(): Boolean {
         try {
             disableDeepLinks()
             appPrefsWrapper.setIsOpenWebLinksWithJetpack(true)
@@ -60,7 +60,7 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
         return false
     }
 
-    private fun showOverlay() : Boolean {
+    private fun showOverlay(): Boolean {
         return openWebLinksWithJetpackFlowFeatureConfig.isEnabled()
                 && isJetpackInstalled()
                 && !isOpenWebLinksWithJetpack()
@@ -69,27 +69,28 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
 
     private fun isJetpackInstalled() = packageManagerWrapper.isPackageInstalled(getPackageName())
 
-    private fun isValidOverlayFrequency() : Boolean {
+    private fun isValidOverlayFrequency(): Boolean {
         if (!hasOverlayBeenShown()) return true // short circuit if the overlay has never been shown
 
         return hasExceededOverlayFrequency()
     }
 
-    private fun hasExceededOverlayFrequency() : Boolean {
+    private fun hasExceededOverlayFrequency(): Boolean {
         val frequency = firebaseRemoteConfigWrapper.getOpenWebLinksWithJetpackFlowFrequency()
         if (frequency == 0L) return false // Only show the overlay 1X and it's already been shown do not show again
 
         val lastShownDate = Date(getOpenWebLinksWithJetpackOverlayLastShownTimestamp())
         val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
-                lastShownDate,
-                getTodaysDate())
+            lastShownDate,
+            getTodaysDate()
+        )
         return daysPastOverlayShown >= frequency
     }
 
     private fun hasOverlayBeenShown() = getOpenWebLinksWithJetpackOverlayLastShownTimestamp() > 0L
 
     private fun getOpenWebLinksWithJetpackOverlayLastShownTimestamp() =
-            appPrefsWrapper.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
+        appPrefsWrapper.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
 
     private fun isOpenWebLinksWithJetpack() = appPrefsWrapper.getIsOpenWebLinksWithJetpack()
 
@@ -106,12 +107,12 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     }
 
     fun onOverlayShown() =
-            appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(System.currentTimeMillis())
+        appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(System.currentTimeMillis())
 
 
     companion object {
         const val JETPACK_PACKAGE_NAME = "com.jetpack.android"
         const val WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS =
-                "org.wordpress.android.WebLinksDeepLinkingIntentReceiverActivity"
+            "org.wordpress.android.WebLinksDeepLinkingIntentReceiverActivity"
     }
 }

@@ -23,9 +23,9 @@ enum class BackupDownloadStep(val id: Int) : WizardStep {
 @Singleton
 class BackupDownloadStepsProvider @Inject constructor() {
     fun getSteps() = listOf(
-            BackupDownloadStep.fromString("backup_download_details"),
-            BackupDownloadStep.fromString("backup_download_progress"),
-            BackupDownloadStep.fromString("backup_download_complete"),
-            BackupDownloadStep.fromString("backup_download_error")
+        BackupDownloadStep.fromString("backup_download_details"),
+        BackupDownloadStep.fromString("backup_download_progress"),
+        BackupDownloadStep.fromString("backup_download_complete"),
+        BackupDownloadStep.fromString("backup_download_error")
     )
 }

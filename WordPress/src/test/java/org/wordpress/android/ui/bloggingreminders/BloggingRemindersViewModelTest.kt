@@ -47,15 +47,32 @@ import java.time.DayOfWeek
 
 @ExperimentalCoroutinesApi
 class BloggingRemindersViewModelTest : BaseUnitTest() {
-    @Mock lateinit var bloggingRemindersManager: BloggingRemindersManager
-    @Mock lateinit var bloggingRemindersStore: BloggingRemindersStore
-    @Mock lateinit var prologueBuilder: PrologueBuilder
-    @Mock lateinit var epilogueBuilder: EpilogueBuilder
-    @Mock lateinit var daySelectionBuilder: DaySelectionBuilder
-    @Mock lateinit var dayLabelUtils: DayLabelUtils
-    @Mock lateinit var analyticsTracker: BloggingRemindersAnalyticsTracker
-    @Mock lateinit var reminderScheduler: ReminderScheduler
-    @Mock lateinit var siteStore: SiteStore
+    @Mock
+    lateinit var bloggingRemindersManager: BloggingRemindersManager
+
+    @Mock
+    lateinit var bloggingRemindersStore: BloggingRemindersStore
+
+    @Mock
+    lateinit var prologueBuilder: PrologueBuilder
+
+    @Mock
+    lateinit var epilogueBuilder: EpilogueBuilder
+
+    @Mock
+    lateinit var daySelectionBuilder: DaySelectionBuilder
+
+    @Mock
+    lateinit var dayLabelUtils: DayLabelUtils
+
+    @Mock
+    lateinit var analyticsTracker: BloggingRemindersAnalyticsTracker
+
+    @Mock
+    lateinit var reminderScheduler: ReminderScheduler
+
+    @Mock
+    lateinit var siteStore: SiteStore
     private lateinit var viewModel: BloggingRemindersViewModel
     private val siteId = 123
     private val hour = 10
@@ -66,17 +83,17 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = BloggingRemindersViewModel(
-                testDispatcher(),
-                bloggingRemindersManager,
-                bloggingRemindersStore,
-                prologueBuilder,
-                daySelectionBuilder,
-                epilogueBuilder,
-                dayLabelUtils,
-                analyticsTracker,
-                reminderScheduler,
-                BloggingRemindersModelMapper(),
-                siteStore
+            testDispatcher(),
+            bloggingRemindersManager,
+            bloggingRemindersStore,
+            prologueBuilder,
+            daySelectionBuilder,
+            epilogueBuilder,
+            dayLabelUtils,
+            analyticsTracker,
+            reminderScheduler,
+            BloggingRemindersModelMapper(),
+            siteStore
         )
         events = mutableListOf()
         events = viewModel.isBottomSheetShowing.eventToList()
@@ -142,7 +159,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         val model = initEmptyStore()
         val daySelectionScreen = listOf<BloggingRemindersItem>()
         whenever(daySelectionBuilder.buildSelection(eq(model), any(), any(), any(), any())).thenReturn(
-                daySelectionScreen
+            daySelectionScreen
         )
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
 
@@ -154,25 +171,25 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Test
     fun `inits blogging reminders state`() {
         val model = BloggingRemindersModel(
-                siteId,
-                setOf(MONDAY, SUNDAY)
+            siteId,
+            setOf(MONDAY, SUNDAY)
         )
         whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(
-                flowOf(
-                        model
-                )
+            flowOf(
+                model
+            )
         )
         val dayLabel = UiStringText("Blogging reminders 2 times a week at 10:00 am")
         whenever(
-                dayLabelUtils.buildSiteSettingsLabel(
-                        BloggingRemindersUiModel(
-                                siteId,
-                                setOf(DayOfWeek.MONDAY, DayOfWeek.SUNDAY),
-                                hour,
-                                minute,
-                                false
-                        )
+            dayLabelUtils.buildSiteSettingsLabel(
+                BloggingRemindersUiModel(
+                    siteId,
+                    setOf(DayOfWeek.MONDAY, DayOfWeek.SUNDAY),
+                    hour,
+                    minute,
+                    false
                 )
+            )
         ).thenReturn(dayLabel)
         var uiState: UiString? = null
 
@@ -201,13 +218,13 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     private suspend fun openEpilogue() {
         val model = BloggingRemindersModel(
-                siteId,
-                setOf(MONDAY)
+            siteId,
+            setOf(MONDAY)
         )
         whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(
-                flowOf(
-                        model
-                )
+            flowOf(
+                model
+            )
         )
 
         initDaySelectionBuilder()
@@ -345,10 +362,10 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         clickPrimaryButton()
 
         verify(reminderScheduler).schedule(
-                siteId,
-                hour,
-                minute,
-                WeeklyReminder(setOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY))
+            siteId,
+            hour,
+            minute,
+            WeeklyReminder(setOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY))
         )
     }
 
@@ -433,8 +450,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     private fun assertDaySelection(isFirstTime: Boolean = false) {
         val state = uiState.last()
         assertPrimaryButton(
-                state.primaryButton!!,
-                if (isFirstTime) R.string.blogging_reminders_notify_me else R.string.blogging_reminders_update
+            state.primaryButton!!,
+            if (isFirstTime) R.string.blogging_reminders_notify_me else R.string.blogging_reminders_update
         )
     }
 
@@ -461,15 +478,15 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
             val model = it.getArgument<BloggingRemindersUiModel>(0)
             val onDaySelected: (DayOfWeek) -> Unit = it.getArgument(1)
             listOf(
-                    DayButtons(
-                            DayOfWeek.values()
-                                    .map { day ->
-                                        DayItem(
-                                                UiStringText(day.name),
-                                                model?.enabledDays?.contains(day) == true,
-                                                Companion.create { onDaySelected.invoke(day) })
-                                    }
-                    )
+                DayButtons(
+                    DayOfWeek.values()
+                        .map { day ->
+                            DayItem(
+                                UiStringText(day.name),
+                                model?.enabledDays?.contains(day) == true,
+                                Companion.create { onDaySelected.invoke(day) })
+                        }
+                )
             )
         }.whenever(daySelectionBuilder).buildSelection(any(), any(), any(), any(), any())
 
@@ -483,9 +500,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                 R.string.blogging_reminders_update
             }
             return@doAnswer PrimaryButton(
-                    UiStringRes(buttonLabel),
-                    !isFirstTimeFlow || model.enabledDays.isNotEmpty(),
-                    ListItemInteraction.create { onConfirm.invoke(model) })
+                UiStringRes(buttonLabel),
+                !isFirstTimeFlow || model.enabledDays.isNotEmpty(),
+                ListItemInteraction.create { onConfirm.invoke(model) })
         }.whenever(daySelectionBuilder).buildPrimaryButton(any(), any(), any())
     }
 
@@ -496,9 +513,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
             val isFirstTimeFlow = it.getArgument<Boolean>(0)
             val onConfirm: (Boolean) -> Unit = it.getArgument(1)
             PrimaryButton(
-                    UiStringRes(R.string.set_your_blogging_reminders_button),
-                    true,
-                    ListItemInteraction.create { onConfirm.invoke(isFirstTimeFlow) })
+                UiStringRes(R.string.set_your_blogging_reminders_button),
+                true,
+                ListItemInteraction.create { onConfirm.invoke(isFirstTimeFlow) })
         }.whenever(prologueBuilder).buildPrimaryButton(any(), any())
         return uiItems
     }
@@ -508,9 +525,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         doAnswer {
             val onConfirm: () -> Unit = it.getArgument(0)
             PrimaryButton(
-                    UiStringRes(string.blogging_reminders_done),
-                    true,
-                    ListItemInteraction.create { onConfirm.invoke() })
+                UiStringRes(string.blogging_reminders_done),
+                true,
+                ListItemInteraction.create { onConfirm.invoke() })
         }.whenever(epilogueBuilder).buildPrimaryButton(any())
         return uiItems
     }
@@ -522,9 +539,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
             val isFirstTimeFlow = it.getArgument<Boolean>(0)
             val onConfirm: (Boolean) -> Unit = it.getArgument(1)
             PrimaryButton(
-                    UiStringRes(R.string.set_your_blogging_reminders_button),
-                    true,
-                    ListItemInteraction.create { onConfirm.invoke(isFirstTimeFlow) })
+                UiStringRes(R.string.set_your_blogging_reminders_button),
+                true,
+                ListItemInteraction.create { onConfirm.invoke(isFirstTimeFlow) })
         }.whenever(prologueBuilder).buildPrimaryButton(any(), any())
         return uiItems
     }

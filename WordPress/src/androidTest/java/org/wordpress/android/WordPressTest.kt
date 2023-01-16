@@ -22,8 +22,8 @@ open class BaseWordPressTest : WordPress(), HasAndroidInjector {
     lateinit var initializer: AppInitializer
 
     override fun androidInjector(): AndroidInjector<Any> = EntryPoints.get(
-            applicationContext,
-            AndroidInjectorEntryPoint::class.java
+        applicationContext,
+        AndroidInjectorEntryPoint::class.java
     ).injector()
 
     override fun initializer() = initializer

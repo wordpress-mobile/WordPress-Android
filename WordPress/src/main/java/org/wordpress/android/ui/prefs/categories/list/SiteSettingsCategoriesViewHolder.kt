@@ -26,11 +26,11 @@ class SiteSettingsCategoriesViewHolder(
 
     private fun setPaddingForCategoryName(categoryLevel: Int) {
         ViewCompat.setPaddingRelative(
-                categoryBinding.siteSettingsCategoryText,
-                horizontalPadding * categoryLevel,
-                verticalPadding,
-                horizontalPadding,
-                verticalPadding
+            categoryBinding.siteSettingsCategoryText,
+            horizontalPadding * categoryLevel,
+            verticalPadding,
+            horizontalPadding,
+            verticalPadding
         )
     }
 

@@ -51,13 +51,26 @@ private val selectedDate = Date(0)
 
 @ExperimentalCoroutinesApi
 class ClicksUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var store: ClicksStore
-    @Mock lateinit var statsSiteProvider: StatsSiteProvider
-    @Mock lateinit var site: SiteModel
-    @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
-    @Mock lateinit var statsUtils: StatsUtils
+    @Mock
+    lateinit var store: ClicksStore
+
+    @Mock
+    lateinit var statsSiteProvider: StatsSiteProvider
+
+    @Mock
+    lateinit var site: SiteModel
+
+    @Mock
+    lateinit var selectedDateProvider: SelectedDateProvider
+
+    @Mock
+    lateinit var tracker: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
+    @Mock
+    lateinit var statsUtils: StatsUtils
     private lateinit var useCase: ClicksUseCase
     private val firstGroupViews = 50
     private val secondGroupViews = 30
@@ -69,30 +82,32 @@ class ClicksUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = ClicksUseCase(
-                statsGranularity,
-                testDispatcher(),
-                testDispatcher(),
-                store,
-                statsSiteProvider,
-                selectedDateProvider,
-                tracker,
-                contentDescriptionHelper,
-                statsUtils,
-                BLOCK
+            statsGranularity,
+            testDispatcher(),
+            testDispatcher(),
+            store,
+            statsSiteProvider,
+            selectedDateProvider,
+            tracker,
+            contentDescriptionHelper,
+            statsUtils,
+            BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
-                SelectedDate(
-                        selectedDate,
-                        listOf(selectedDate)
-                )
+            SelectedDate(
+                selectedDate,
+                listOf(selectedDate)
+            )
         )
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
-        whenever(contentDescriptionHelper.buildContentDescription(
+        whenever(
+            contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<String>(),
                 any()
-        )).thenReturn(contentDescription)
+            )
+        ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(anyNullable<Int>(), any())).then { (it.arguments[0] as? Int)?.toString() }
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as? Int)?.toString() }
     }
@@ -102,17 +117,17 @@ class ClicksUseCaseTest : BaseUnitTest() {
         val forced = false
         val model = ClicksModel(10, 15, listOf(singleClick, group), false)
         whenever(
-                store.getClicks(
-                        site,
-                        statsGranularity,
-                        limitMode,
-                        selectedDate
-                )
+            store.getClicks(
+                site,
+                statsGranularity,
+                limitMode,
+                selectedDate
+            )
         ).thenReturn(model)
         whenever(store.fetchClicks(site, statsGranularity, limitMode, selectedDate, forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
 
         val result = loadData(true, forced)
@@ -132,9 +147,9 @@ class ClicksUseCaseTest : BaseUnitTest() {
         assertTitle(this[0])
         assertHeader(this[1])
         assertSingleItem(
-                this[2],
-                singleClick.name!!,
-                singleClick.views
+            this[2],
+            singleClick.name!!,
+            singleClick.views
         )
         return assertExpandableItem(this[3], group.name!!, group.views!!)
     }
@@ -144,9 +159,9 @@ class ClicksUseCaseTest : BaseUnitTest() {
         assertTitle(this[0])
         assertHeader(this[1])
         assertSingleItem(
-                this[2],
-                singleClick.name!!,
-                singleClick.views
+            this[2],
+            singleClick.name!!,
+            singleClick.views
         )
         val expandableItem = assertExpandableItem(this[3], group.name!!, group.views!!)
         assertSingleItem(this[4], click.name, click.views)
@@ -159,19 +174,19 @@ class ClicksUseCaseTest : BaseUnitTest() {
         val forced = false
         val model = ClicksModel(10, 15, listOf(singleClick), true)
         whenever(
-                store.getClicks(
-                        site,
-                        statsGranularity,
-                        limitMode,
-                        selectedDate
-                )
+            store.getClicks(
+                site,
+                statsGranularity,
+                limitMode,
+                selectedDate
+            )
         ).thenReturn(model)
         whenever(
-                store.fetchClicks(site, statsGranularity, limitMode, selectedDate, forced)
+            store.fetchClicks(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
-                OnStatsFetched(
-                        model
-                )
+            OnStatsFetched(
+                model
+            )
         )
         val result = loadData(true, forced)
 
@@ -182,9 +197,9 @@ class ClicksUseCaseTest : BaseUnitTest() {
             assertTitle(this[0])
             assertHeader(this[1])
             assertSingleItem(
-                    this[2],
-                    singleClick.name!!,
-                    singleClick.views
+                this[2],
+                singleClick.name!!,
+                singleClick.views
             )
             assertLink(this[3])
         }
@@ -194,9 +209,9 @@ class ClicksUseCaseTest : BaseUnitTest() {
     fun `maps empty clicks to UI model`() = test {
         val forced = false
         whenever(
-                store.fetchClicks(site, statsGranularity, limitMode, selectedDate, forced)
+            store.fetchClicks(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
-                OnStatsFetched(ClicksModel(0, 0, listOf(), false))
+            OnStatsFetched(ClicksModel(0, 0, listOf(), false))
         )
 
         val result = loadData(true, forced)
@@ -214,11 +229,11 @@ class ClicksUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(
-                store.fetchClicks(site, statsGranularity, limitMode, selectedDate, forced)
+            store.fetchClicks(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
-                OnStatsFetched(
-                        StatsError(GENERIC_ERROR, message)
-                )
+            OnStatsFetched(
+                StatsError(GENERIC_ERROR, message)
+            )
         )
 
         val result = loadData(true, forced)

@@ -54,10 +54,10 @@ class UpdateNotificationSettingsUseCase @Inject constructor(
             if (daysCount > 0) {
                 val enabledDaysOfWeek = bloggingRemindersModel.enabledDays.map { DayOfWeek.valueOf(it.name) }
                 reminderScheduler.schedule(
-                        bloggingRemindersModel.siteId,
-                        bloggingRemindersModel.hour,
-                        bloggingRemindersModel.minute,
-                        WeeklyReminder(enabledDaysOfWeek.toSet())
+                    bloggingRemindersModel.siteId,
+                    bloggingRemindersModel.hour,
+                    bloggingRemindersModel.minute,
+                    WeeklyReminder(enabledDaysOfWeek.toSet())
                 )
             }
         }

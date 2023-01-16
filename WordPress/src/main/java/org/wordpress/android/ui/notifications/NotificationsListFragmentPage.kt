@@ -58,16 +58,19 @@ import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 
 class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_list_fragment_page),
-        OnScrollToTopListener,
-        DataLoadedListener {
+    OnScrollToTopListener,
+    DataLoadedListener {
     private var notesAdapter: NotesAdapter? = null
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var isAnimatingOutNewNotificationsBar = false
     private var shouldRefreshNotifications = false
     private var tabPosition = 0
 
-    @Inject lateinit var accountStore: AccountStore
-    @Inject lateinit var gcmMessageHandler: GCMMessageHandler
+    @Inject
+    lateinit var accountStore: AccountStore
+
+    @Inject
+    lateinit var gcmMessageHandler: GCMMessageHandler
 
     private val showNewUnseenNotificationsRunnable = Runnable {
         if (isAdded) {
@@ -140,8 +143,10 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
 
     override fun onDataLoaded(itemsCount: Int) {
         if (!isAdded) {
-            AppLog.d(T.NOTIFS,
-                    "NotificationsListFragmentPage.onDataLoaded occurred when fragment is not attached.")
+            AppLog.d(
+                T.NOTIFS,
+                "NotificationsListFragmentPage.onDataLoaded occurred when fragment is not attached."
+            )
         }
         binding?.apply {
             if (itemsCount > 0) {
@@ -403,16 +408,16 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     @Subscribe(sticky = true, threadMode = MAIN)
     fun onEventMainThread(event: NoteLikeOrModerationStatusChanged) {
         NotificationsActions.downloadNoteAndUpdateDB(
-                event.noteId,
-                {
-                    EventBus.getDefault()
-                            .removeStickyEvent(
-                                    NoteLikeOrModerationStatusChanged::class.java
-                            )
-                }
+            event.noteId,
+            {
+                EventBus.getDefault()
+                    .removeStickyEvent(
+                        NoteLikeOrModerationStatusChanged::class.java
+                    )
+            }
         ) {
             EventBus.getDefault().removeStickyEvent(
-                    NoteLikeOrModerationStatusChanged::class.java
+                NoteLikeOrModerationStatusChanged::class.java
             )
         }
     }
@@ -494,8 +499,8 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             }
             detailIntent.putExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA, filter)
             detailIntent.putExtra(
-                    NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION,
-                    isTappedFromPushNotification
+                NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION,
+                isTappedFromPushNotification
             )
             openNoteForReplyWithParams(detailIntent, activity)
         }

@@ -27,26 +27,26 @@ fun SecondaryButton(
     enabled: Boolean = true
 ) {
     Button(
-            onClick = onClick,
-            enabled = enabled,
-            elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp,
-            ),
-            colors = ButtonDefaults.buttonColors(
-                    contentColor = MaterialTheme.colors.onSurface,
-                    backgroundColor = Color.Transparent
-            ),
-            modifier = modifier
-                    .fillMaxWidth()
-                    .padding(
-                            vertical = Margin.Small.value,
-                            horizontal = dimensionResource(dimen.login_prologue_revamped_buttons_padding),
-                    )
+        onClick = onClick,
+        enabled = enabled,
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 0.dp,
+        ),
+        colors = ButtonDefaults.buttonColors(
+            contentColor = MaterialTheme.colors.onSurface,
+            backgroundColor = Color.Transparent
+        ),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(
+                vertical = Margin.Small.value,
+                horizontal = dimensionResource(dimen.login_prologue_revamped_buttons_padding),
+            )
     ) {
         Text(
-                text = text,
-                style = TextStyle(letterSpacing = (-0.25).sp),
+            text = text,
+            style = TextStyle(letterSpacing = (-0.25).sp),
         )
     }
 }

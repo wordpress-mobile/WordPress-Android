@@ -27,8 +27,8 @@ class UserFlagsAnalyticsTrackerTest {
     fun `Should track failed with NoUserFlagsFoundError correctly`() {
         classToTest.trackFailed(ErrorType.NoUserFlagsFoundError)
         verify(analyticsTrackerWrapper).track(
-                Stat.USER_FLAGS_FAILED,
-                mapOf("error_type" to "no_user_flags_found_error")
+            Stat.USER_FLAGS_FAILED,
+            mapOf("error_type" to "no_user_flags_found_error")
         )
     }
 
@@ -36,8 +36,8 @@ class UserFlagsAnalyticsTrackerTest {
     fun `Should track failed with QueryUserFlagsError correctly`() {
         classToTest.trackFailed(ErrorType.QueryUserFlagsError)
         verify(analyticsTrackerWrapper).track(
-                Stat.USER_FLAGS_FAILED,
-                mapOf("error_type" to "query_user_flags_error")
+            Stat.USER_FLAGS_FAILED,
+            mapOf("error_type" to "query_user_flags_error")
         )
     }
 
@@ -45,8 +45,8 @@ class UserFlagsAnalyticsTrackerTest {
     fun `Should track failed with UpdateUserFlagsError correctly`() {
         classToTest.trackFailed(ErrorType.UpdateUserFlagsError)
         verify(analyticsTrackerWrapper).track(
-                Stat.USER_FLAGS_FAILED,
-                mapOf("error_type" to "update_user_flags_error")
+            Stat.USER_FLAGS_FAILED,
+            mapOf("error_type" to "update_user_flags_error")
         )
     }
 }
