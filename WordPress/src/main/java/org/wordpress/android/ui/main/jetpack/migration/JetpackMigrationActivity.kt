@@ -3,13 +3,13 @@ package org.wordpress.android.ui.main.jetpack.migration
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ActivityJetpackMigrationBinding
-import org.wordpress.android.ui.LocaleAwareActivity
 
 @AndroidEntryPoint
-class JetpackMigrationActivity : LocaleAwareActivity() {
+class JetpackMigrationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
