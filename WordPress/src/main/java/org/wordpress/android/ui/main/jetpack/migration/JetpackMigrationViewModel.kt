@@ -143,7 +143,7 @@ class JetpackMigrationViewModel @Inject constructor(
         }
 
         if (data.flags.isNotEmpty()) {
-            emitLanguageRefreshIfNeeded(data.flags)
+            emitLanguageRefreshIfNeeded(extractLanguageFromFlagsMap(data.flags))
             _refreshAppTheme.value = Unit
         }
 
@@ -159,13 +159,15 @@ class JetpackMigrationViewModel @Inject constructor(
         )
     }
 
-    private fun emitLanguageRefreshIfNeeded(userPrefs: Map<String, Any?>) {
+    private fun extractLanguageFromFlagsMap(userPrefs: Map<String, Any?>): String {
         val languageKey = localeManagerWrapper.getLocalePrefKeyString()
-        val languageCode = userPrefs[languageKey] as? String ?: return
+        return userPrefs[languageKey] as? String ?: ""
+    }
 
+    private fun emitLanguageRefreshIfNeeded(languageCode: String) {
         if (languageCode.isNotEmpty()) {
-            val shouldChangeLanguage = !localeManagerWrapper.isSameLanguage(languageCode)
-            if (shouldChangeLanguage) {
+            val shouldEmitLanguageRefresh = !localeManagerWrapper.isSameLanguage(languageCode)
+            if (shouldEmitLanguageRefresh) {
                 _refreshAppLanguage.value = languageCode
             }
         }
@@ -196,6 +198,11 @@ class JetpackMigrationViewModel @Inject constructor(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun initPleaseDeleteWordPressAppScreenUi(): Delete {
         migrationAnalyticsTracker.trackPleaseDeleteWordPressScreenShown()
+
+        // We need to manually apply the app language for the Compose UI since the host JetpackMigrationActivity
+        // does not inherit from LocaleAwareActivity on purpose, in order to avoid possible issues
+        // when the Ui mode (dark/light) and the language are manually set by the user.
+        emitLanguageRefreshIfNeeded(localeManagerWrapper.getLanguage())
 
         return Delete(
             primaryActionButton = DeletePrimaryButton(::onGotItClicked),
