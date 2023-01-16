@@ -11,6 +11,7 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.posts.BLOGGING_PROMPT_TAG
 import org.wordpress.android.ui.posts.BloggingPromptsEditorBlockMapper
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel.EditorLoadedPrompt
+import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -50,13 +52,15 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     private val bloggingPromptsEditorBlockMapper: BloggingPromptsEditorBlockMapper = mock {
         on { it.map(any()) } doReturn (bloggingPrompt.model?.content ?: "")
     }
+    private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig = mock()
 
     @Before
     fun setUp() {
         viewModel = EditorBloggingPromptsViewModel(
             bloggingPromptsStore,
             testDispatcher(),
-            bloggingPromptsEditorBlockMapper
+            bloggingPromptsEditorBlockMapper,
+            bloggingPromptsEnhancementsFeatureConfig,
         )
 
         viewModel.onBloggingPromptLoaded.observeForever {
@@ -81,5 +85,19 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     fun `should NOT execute start method if prompt ID is less than 0`() = test {
         viewModel.start(siteModel, -1)
         verify(bloggingPromptsStore, times(0)).getPromptById(any(), any())
+    }
+
+    @Test
+    fun `should NOT CALL block mapper if enhancements feature flag is DISABLED`() {
+        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(false)
+        viewModel.start(siteModel, 123)
+        verify(bloggingPromptsEditorBlockMapper, times(0)).map(any())
+    }
+
+    @Test
+    fun `should CALL block mapper if enhancements feature flag is ENABLED`() {
+        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
+        viewModel.start(siteModel, 123)
+        verify(bloggingPromptsEditorBlockMapper, times(1)).map(any())
     }
 }
