@@ -7,7 +7,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.ST
 import javax.inject.Inject
 
 class JetpackFeatureOverlayShownTracker @Inject constructor(private val sharedPrefs: SharedPreferences) {
-    fun getEarliestOverlayShownTime(phase: JetpackFeatureRemovalOverlayPhase): Long? {
+    fun getTheLastShownOverlayTimeStamp(phase: JetpackFeatureRemovalOverlayPhase): Long? {
         val overlayShownTimeStampList: ArrayList<Long> = arrayListOf()
         getFeatureOverlayShownTimeStamp(STATS, phase)?.let { overlayShownTimeStampList.add(it) }
         getFeatureOverlayShownTimeStamp(NOTIFICATIONS, phase)?.let { overlayShownTimeStampList.add(it) }
