@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.JetpackBrandingUtils;
@@ -64,6 +65,7 @@ public class PersonDetailFragment extends Fragment {
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
+    @Inject UiHelpers mUiHelpers;
 
     public static PersonDetailFragment newInstance(long currentUserId, long personId, int localTableBlogId,
                                                    Person.PersonType personType) {
@@ -144,10 +146,17 @@ public class PersonDetailFragment extends Fragment {
         if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
             final Screen screen = Screen.PERSON.INSTANCE;
             View jetpackBadgeContainer = rootView.findViewById(R.id.jetpack_badge);
+            TextView jetpackBadge = jetpackBadgeContainer.findViewById(R.id.jetpack_powered_badge);
+            jetpackBadge.setText(
+                    mUiHelpers.getTextOfUiString(
+                            requireContext(),
+                            mJetpackBrandingUtils.getBrandingTextForScreen(screen))
+            );
+
             jetpackBadgeContainer.setVisibility(View.VISIBLE);
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                View jetpackBadge = jetpackBadgeContainer.findViewById(R.id.jetpack_powered_badge);
+
                 jetpackBadge.setOnClickListener(v -> {
                     mJetpackBrandingUtils.trackBadgeTapped(screen);
                     new JetpackPoweredBottomSheetFragment()
