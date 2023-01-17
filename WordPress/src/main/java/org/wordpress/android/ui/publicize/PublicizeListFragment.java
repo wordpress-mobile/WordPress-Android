@@ -29,6 +29,7 @@ import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.JetpackBrandingUtils.Screen;
@@ -64,6 +65,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject SnackbarSequencer mSnackbarSequencer;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
+    @Inject UiHelpers mUiHelpers;
 
     public static PublicizeListFragment newInstance(@NonNull SiteModel site) {
         Bundle args = new Bundle();
@@ -136,8 +138,14 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             final Screen screen = Screen.SHARE.INSTANCE;
-            View jetpackBadge = rootView.findViewById(R.id.jetpack_powered_badge);
+            TextView jetpackBadge = rootView.findViewById(R.id.jetpack_powered_badge);
             jetpackBadge.setVisibility(View.VISIBLE);
+            jetpackBadge.setText(
+                    mUiHelpers.getTextOfUiString(
+                            requireContext(),
+                            mJetpackBrandingUtils.getBrandingTextForScreen(screen)
+                    )
+            );
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 jetpackBadge.setOnClickListener(v -> {
