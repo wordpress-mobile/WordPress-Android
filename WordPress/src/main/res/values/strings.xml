@@ -1378,10 +1378,6 @@
     <string name="stats_insights_comments_guide_card">💡Tap \'VIEW MORE\' to see your top commenters.</string>
     <string name="stats_insights_followers_guide_card">💡Commenting on other blogs is a great way to build attention and followers for your new site.</string>
 
-    <!-- Stats Revamp v2 Feature Introduction -->
-    <string name="stats_revamp_v2_intro_header_title">Insights update</string>
-    <string name="stats_revamp_v2_update_alert_message">Updated to New Insights to help you understand how your content is performing and what\'s resonating with your audience.</string>
-
     <!-- Stats refreshed widgets -->
     <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
     <string name="stats_widget_log_in_to_add_message">Please log in to the Jetpack app to add a widget.</string>
