@@ -1,8 +1,7 @@
 package org.wordpress.android.bloggingreminders.resolver
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.wordpress.android.bloggingreminders.BloggingRemindersSyncAnalyticsTracker
 import org.wordpress.android.bloggingreminders.BloggingRemindersSyncAnalyticsTracker.ErrorType
 import org.wordpress.android.bloggingreminders.JetpackBloggingRemindersSyncFlag
@@ -12,15 +11,17 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.LocalContentEntity.BloggingReminders
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.BloggingRemindersData
 import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
-import org.wordpress.android.localcontentmigration.LocalMigrationResult.Companion.EmptyResult
-import org.wordpress.android.localcontentmigration.otherwise
+import org.wordpress.android.localcontentmigration.LocalMigrationError.FeatureDisabled.BloggingRemindersSyncDisabled
+import org.wordpress.android.localcontentmigration.LocalMigrationError.MigrationAlreadyAttempted.BloggingRemindersSyncAlreadyAttempted
+import org.wordpress.android.localcontentmigration.LocalMigrationError.PersistenceError.FailedToSaveBloggingRemindersWithException
+import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
+import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
+import org.wordpress.android.localcontentmigration.orElse
 import org.wordpress.android.localcontentmigration.thenWith
-import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersModelMapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import javax.inject.Inject
-import javax.inject.Named
 
 class BloggingRemindersHelper @Inject constructor(
     private val jetpackBloggingRemindersSyncFlag: JetpackBloggingRemindersSyncFlag,
@@ -28,68 +29,49 @@ class BloggingRemindersHelper @Inject constructor(
     private val bloggingRemindersSyncAnalyticsTracker: BloggingRemindersSyncAnalyticsTracker,
     private val siteStore: SiteStore,
     private val bloggingRemindersStore: BloggingRemindersStore,
-    @Named(APPLICATION_SCOPE) private val coroutineScope: CoroutineScope,
     private val reminderScheduler: ReminderScheduler,
     private val bloggingRemindersModelMapper: BloggingRemindersModelMapper,
     private val localMigrationContentResolver: LocalMigrationContentResolver,
 ) {
-    fun trySyncBloggingReminders(onSuccess: () -> Unit, onFailure: () -> Unit) {
-        if (!shouldTrySyncBloggingReminders()) {
-            onFailure()
-            return
-        }
-        localMigrationContentResolver.getResultForEntityType<BloggingRemindersData>(BloggingReminders)
-            .thenWith { (reminders) ->
-                if (reminders.isNotEmpty()) {
-                    val success = setBloggingReminders(reminders)
-                    if (success) onSuccess() else onFailure()
-                } else {
-                    bloggingRemindersSyncAnalyticsTracker.trackSuccess(0)
-                    onSuccess()
-                }
-                EmptyResult
-            }.otherwise { onFailure() }
-    }
-
-    @Suppress("ReturnCount")
-    private fun shouldTrySyncBloggingReminders(): Boolean {
-        val isFeatureFlagEnabled = jetpackBloggingRemindersSyncFlag.isEnabled()
-        if (!isFeatureFlagEnabled) {
-            return false
-        }
-        val isFirstTry = appPrefsWrapper.getIsFirstTryBloggingRemindersSyncJetpack()
-        if (!isFirstTry) {
-            return false
-        }
+    fun migrateBloggingReminders() = if (!jetpackBloggingRemindersSyncFlag.isEnabled()) {
+        Failure(BloggingRemindersSyncDisabled)
+    } else if (!appPrefsWrapper.getIsFirstTryBloggingRemindersSyncJetpack()) {
+        Failure(BloggingRemindersSyncAlreadyAttempted)
+    } else {
         bloggingRemindersSyncAnalyticsTracker.trackStart()
         appPrefsWrapper.saveIsFirstTryBloggingRemindersSyncJetpack(false)
-        return true
-    }
-
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
-    private fun setBloggingReminders(reminders: List<BloggingRemindersModel>): Boolean {
-        try {
-            coroutineScope.launch {
-                var syncCount = 0
-                for (bloggingReminder in reminders) {
-                    val site = siteStore.getSiteByLocalId(bloggingReminder.siteId)
-                    if (site != null && !isBloggingReminderAlreadySet(bloggingReminder.siteId)) {
-                        bloggingRemindersStore.updateBloggingReminders(bloggingReminder)
-                        setLocalReminderNotification(bloggingReminder)
-                        syncCount = syncCount.inc()
-                    }
-                }
-                bloggingRemindersSyncAnalyticsTracker.trackSuccess(syncCount)
+        localMigrationContentResolver.getResultForEntityType<BloggingRemindersData>(BloggingReminders)
+            .orElse {
+                bloggingRemindersSyncAnalyticsTracker.trackFailed(ErrorType.QueryBloggingRemindersError)
+                Failure(it)
             }
-            return true
-        } catch (exception: Exception) {
-            bloggingRemindersSyncAnalyticsTracker.trackFailed(ErrorType.UpdateBloggingRemindersError)
-            return false
-        }
+    }.thenWith(::setBloggingReminders)
+
+    private fun setBloggingReminders(bloggingRemindersData: BloggingRemindersData) = runCatching {
+        bloggingRemindersData.reminders.count { bloggingReminder ->
+            siteStore.getSiteByLocalId(bloggingReminder.siteId)?.let { _ ->
+                if (!isBloggingReminderAlreadySet(bloggingReminder.siteId)) {
+                    updateBloggingReminders(bloggingReminder)
+                    setLocalReminderNotification(bloggingReminder)
+                    true
+                } else {
+                    false
+                }
+            } ?: false
+        }.let { bloggingRemindersSyncAnalyticsTracker.trackSuccess(it) }
+        Success(bloggingRemindersData)
+    }.getOrElse { throwable ->
+        bloggingRemindersSyncAnalyticsTracker.trackFailed(ErrorType.UpdateBloggingRemindersError)
+        Failure(FailedToSaveBloggingRemindersWithException(throwable))
     }
 
-    private suspend fun isBloggingReminderAlreadySet(siteLocalId: Int) =
+    private fun isBloggingReminderAlreadySet(siteLocalId: Int) = runBlocking {
         bloggingRemindersStore.bloggingRemindersModel(siteLocalId).first().enabledDays.isNotEmpty()
+    }
+
+    private fun updateBloggingReminders(bloggingReminder: BloggingRemindersModel) = runBlocking {
+        bloggingRemindersStore.updateBloggingReminders(bloggingReminder)
+    }
 
     private fun setLocalReminderNotification(bloggingRemindersModel: BloggingRemindersModel) {
         val bloggingRemindersUiModel = bloggingRemindersModelMapper.toUiModel(bloggingRemindersModel)

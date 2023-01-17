@@ -1,6 +1,7 @@
 package org.wordpress.android.sharedlogin.resolver
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.wordpress.android.bloggingreminders.resolver.BloggingRemindersHelper
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker.ErrorType.LocalDraftContent
 import org.wordpress.android.localcontentmigration.EligibilityHelper
@@ -42,6 +43,7 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val sitesMigrationHelper: SitesMigrationHelper,
     private val localPostsHelper: LocalPostsHelper,
     private val eligibilityHelper: EligibilityHelper,
+    private val bloggingRemindersHelper: BloggingRemindersHelper,
 ) {
     fun tryLocalMigration(migrationStateFlow: MutableStateFlow<LocalMigrationState>) {
         eligibilityHelper.validate()
@@ -50,6 +52,7 @@ class LocalMigrationOrchestrator @Inject constructor(
             .then(userFlagsHelper::migrateUserFlags)
             .then(readerSavedPostsHelper::migrateReaderSavedPosts)
             .then(localPostsHelper::migratePosts)
+            .then(bloggingRemindersHelper::migrateBloggingReminders)
             .orElse { error ->
                 migrationStateFlow.value = when (error) {
                     is Ineligibility -> Ineligible

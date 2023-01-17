@@ -264,7 +264,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
     @Inject QuickStartTracker mQuickStartTracker;
-    @Inject BloggingRemindersHelper mBloggingRemindersHelper;
     @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
     @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
@@ -1657,9 +1656,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 mSelectedSiteRepository.updateSite(site);
             }
         }
-        mBloggingRemindersHelper.trySyncBloggingReminders(
-                () -> Unit.INSTANCE, () -> Unit.INSTANCE
-        );
     }
 
     @SuppressWarnings("unused")
