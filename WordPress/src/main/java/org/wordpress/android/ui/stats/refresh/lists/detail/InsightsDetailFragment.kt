@@ -19,7 +19,9 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 class InsightsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
-    private val viewModel: InsightsDetailViewModel by viewModels()
+    private lateinit var viewModel: InsightsDetailViewModel
+    private val viewsVisitorsDetailViewModel: ViewsVisitorsDetailViewModel by viewModels()
+    private val totalFollowersDetailViewModel: TotalFollowersDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +55,14 @@ class InsightsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
 
     private fun initializeViewModels(activity: FragmentActivity) {
         val siteId = activity.intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0
+        val listType = activity.intent.extras?.get(StatsListFragment.LIST_TYPE)
+
+        viewModel = when (listType) {
+            StatsSection.INSIGHT_DETAIL -> viewsVisitorsDetailViewModel
+            StatsSection.TOTAL_FOLLOWERS_DETAIL -> totalFollowersDetailViewModel
+            else -> viewsVisitorsDetailViewModel
+        }
+
         viewModel.init(siteId)
         setupObservers(viewModel)
     }
