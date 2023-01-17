@@ -58,17 +58,9 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         screen: ScreenWithDynamicBranding,
         jpDeadlineDate: String?,
     ): UiString {
-        val deadlineDate = jpDeadlineDate?.takeIf(String::isNotEmpty)?.let { dateString ->
-            dateTimeUtilsWrapper.convertDateFormat(
-                dateString,
-                JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT,
-                JETPACK_OVERLAY_TARGET_DATE_FORMAT
-            )
-        }
-
-        return when (deadlineDate.isNullOrEmpty()) {
+        return when (jpDeadlineDate.isNullOrEmpty()) {
             true -> getPhaseThreeBrandingTextWithoutDeadline(screen)
-            else -> getPhaseThreeBrandingTextWithDeadline(screen, deadlineDate)
+            else -> getPhaseThreeBrandingTextWithDeadline(screen, countDaysUntilDeadlineDefaultingToZero(jpDeadlineDate))
         }
     }
 
@@ -81,9 +73,8 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
 
     private fun getPhaseThreeBrandingTextWithDeadline(
         screen: ScreenWithDynamicBranding,
-        deadlineDate: String,
+        daysUntilDeadline: Int,
     ): UiString {
-        val daysUntilDeadline = countDaysUntilDeadline(deadlineDate)
         return when {
             // Deadline is more than one month away
             daysUntilDeadline > 30 -> {
@@ -115,10 +106,10 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun countDaysUntilDeadline(deadlineDate: String): Int {
-        return dateTimeUtilsWrapper.daysBetween(
-            dateTimeUtilsWrapper.dateFromIso8601(deadlineDate),
-            dateTimeUtilsWrapper.getTodaysDate()
-        )
+    private fun countDaysUntilDeadlineDefaultingToZero(jpDeadlineDate: String): Int {
+        val startDate = dateTimeUtilsWrapper.getTodaysDate()
+        val endDate = dateTimeUtilsWrapper.dateFromPattern(jpDeadlineDate, JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
+            ?: return 0
+        return dateTimeUtilsWrapper.daysBetween(startDate, endDate)
     }
 }
