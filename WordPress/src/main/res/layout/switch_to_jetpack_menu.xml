@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?><!--Publish-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/my_site_switch_to_jetpack_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/switch_to_jetpack_jetpack_icon"
+        style="@style/UpdatedMySiteListRowIcon"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/my_site_list_row_icon_margin_right"
+        android:layout_marginTop="@dimen/margin_large"
+        android:importantForAccessibility="no"
+        app:icon="@drawable/ic_jetpack_logo_green_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/switch_to_jetpack_text"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/switch_to_app_more_icon"
+        style="@style/MySiteListRowSecondaryIcon"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:importantForAccessibility="no"
+        app:icon="@drawable/ic_more_horiz_white_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/switch_to_jetpack_text"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/wpColorOnSurfaceMedium" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/switch_to_jetpack_text"
+        style="@style/UpdatedMySiteListRowTextView"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_large"
+        android:textColor="@color/jetpack_green_50"
+        android:text="@string/wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/switch_to_app_more_icon"
+        app:layout_constraintStart_toEndOf="@+id/switch_to_jetpack_jetpack_icon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
