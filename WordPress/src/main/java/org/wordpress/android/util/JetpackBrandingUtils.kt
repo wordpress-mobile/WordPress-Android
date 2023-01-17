@@ -107,9 +107,7 @@ class JetpackBrandingUtils @Inject constructor(
     )
 
     @Suppress("ClassName")
-    sealed class Screen(
-        open val trackingName: String
-    ) {
+    sealed class Screen(open val trackingName: String) {
 
         sealed class ScreenWithDynamicBranding(
             override val trackingName: String,
@@ -131,6 +129,10 @@ class JetpackBrandingUtils @Inject constructor(
         }
 
         object APP_SETTINGS : Screen(trackingName = "app_settings")
+        object HOME : Screen(trackingName = "home")
+        object ME : Screen(trackingName = "me")
+        object PEOPLE : Screen(trackingName = "people")
+        object PERSON : Screen(trackingName = "person")
 
         object ACTIVITY_LOG : ScreenWithDynamicBranding(
             trackingName = "activity_log",
@@ -150,10 +152,6 @@ class JetpackBrandingUtils @Inject constructor(
             isFeatureNameSingular = true,
         )
 
-        object HOME : Screen(trackingName = "home")
-
-        object ME : Screen(trackingName = "me")
-
         object NOTIFICATIONS : ScreenWithDynamicBranding(
             trackingName = "notifications",
             featureName = UiStringRes(R.string.notifications_screen_title),
@@ -165,10 +163,6 @@ class JetpackBrandingUtils @Inject constructor(
             featureName = UiStringRes(R.string.notification_settings),
             isFeatureNameSingular = false,
         )
-
-        object PEOPLE : Screen(trackingName = "people")
-
-        object PERSON : Screen(trackingName = "person")
 
         object READER : ScreenWithDynamicBranding(
             "reader",
