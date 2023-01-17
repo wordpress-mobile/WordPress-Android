@@ -10,6 +10,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackSwitchMenu
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationViewHolder
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardViewHolder
+import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackSwitchMenuCardViewHolder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsViewHolder
 import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonViewHolder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
@@ -69,6 +71,7 @@ class MySiteAdapter(
             MySiteCardAndItem.Type.JETPACK_BADGE.ordinal -> MySiteJetpackBadgeViewHolder(parent)
             MySiteCardAndItem.Type.SINGLE_ACTION_CARD.ordinal -> SingleActionCardViewHolder(parent)
             MySiteCardAndItem.Type.JETPACK_FEATURE_CARD.ordinal -> JetpackFeatureCardViewHolder(parent, uiHelpers)
+            MySiteCardAndItem.Type.JETPACK_SWITCH_CARD.ordinal -> JetpackSwitchMenuCardViewHolder(parent, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -87,6 +90,7 @@ class MySiteAdapter(
             is CardsViewHolder -> holder.bind(getItem(position) as DashboardCards)
             is SingleActionCardViewHolder -> holder.bind(getItem(position) as SingleActionCard)
             is JetpackFeatureCardViewHolder -> holder.bind(getItem(position) as JetpackFeatureCard)
+            is JetpackSwitchMenuCardViewHolder -> holder.bind(getItem(position) as JetpackSwitchMenu)
         }
     }
 
