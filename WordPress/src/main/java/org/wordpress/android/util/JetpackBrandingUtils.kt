@@ -193,6 +193,19 @@ class JetpackBrandingUtils @Inject constructor(
             featureName = UiStringRes(R.string.themes),
             isFeatureNameSingular = false,
         );
+
+        val featureVerb
+            get() = when (isFeatureNameSingular) {
+                true -> UiStringRes(R.string.wp_jetpack_powered_phase_3_feature_verb_singular_is)
+                else -> UiStringRes(R.string.wp_jetpack_powered_phase_3_feature_verb_plural_are)
+            }
+
+        fun getBrandingTextParams(timeUntilDeadline: Int? = null) = listOfNotNull(
+            featureName,
+            featureVerb,
+            timeUntilDeadline?.let { UiStringText("$it") },
+        )
+
     }
 
     companion object {
