@@ -40,6 +40,7 @@ import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.JetpackBrandingUtils;
@@ -66,6 +67,7 @@ public class PeopleListFragment extends Fragment {
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
+    @Inject UiHelpers mUiHelpers;
 
     public static PeopleListFragment newInstance(SiteModel site) {
         PeopleListFragment peopleListFragment = new PeopleListFragment();
@@ -237,6 +239,12 @@ public class PeopleListFragment extends Fragment {
         if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
             final Screen screen = Screen.PEOPLE.INSTANCE;
             View jetpackBannerView = rootView.findViewById(R.id.jetpack_banner);
+            TextView jetpackBannerTextView = jetpackBannerView.findViewById(R.id.jetpack_banner_text);
+            jetpackBannerTextView.setText(
+                    mUiHelpers.getTextOfUiString(
+                            requireContext(),
+                            mJetpackBrandingUtils.getBrandingTextForScreen(screen))
+            );
             RecyclerView scrollableView = mFilteredRecyclerView.getInternalRecyclerView();
 
             mJetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView);
