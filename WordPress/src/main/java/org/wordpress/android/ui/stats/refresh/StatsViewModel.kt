@@ -201,7 +201,7 @@ class StatsViewModel
             }
         }
 
-        if (BuildConfig.IS_JETPACK_APP && statsSectionManager.getSelectedSection() == StatsSection.INSIGHTS) {
+        if (BuildConfig.IS_JETPACK_APP) {
             updateRevampedInsights()
         }
 
@@ -279,8 +279,6 @@ class StatsViewModel
         statsSectionManager.setSelectedSection(statsSection)
 
         listUseCases[statsSection]?.onListSelected()
-
-        if (BuildConfig.IS_JETPACK_APP) updateRevampedInsights()
 
         trackSectionSelected(statsSection)
     }
