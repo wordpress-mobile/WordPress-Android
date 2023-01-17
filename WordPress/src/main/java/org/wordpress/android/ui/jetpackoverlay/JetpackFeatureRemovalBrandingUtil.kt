@@ -99,7 +99,10 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
                 )
             }
             // Deadline is one day away
-            daysUntilDeadline == 1 -> UiStringRes(R.string.wp_jetpack_powered_phase_3_with_deadline_day_away)
+            daysUntilDeadline == 1 -> UiString.UiStringResWithParams(
+                stringRes = R.string.wp_jetpack_powered_phase_3_with_deadline_day_away,
+                screen.getBrandingTextParams()
+            )
             // Deadline is today or has passed
             else -> UiStringRes(R.string.wp_jetpack_powered)
         }

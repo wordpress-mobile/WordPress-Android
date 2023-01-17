@@ -4233,10 +4233,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- translators: Jetpack branding text. %1$s: Feature name, eg: Stats, Reader, %2$s: "verb depending of plurality of feature name, either 'is' or 'are'. Examples: "Reader is moving soon", "Stats are moving soon" -->
     <string name="wp_jetpack_powered_phase_3_without_deadline">%1$s %2$s moving soon</string>
     <string name="wp_jetpack_powered_phase_3_with_deadline_months_away" translatable="false">@string/wp_jetpack_powered_phase_3_without_deadline</string>
-    <!-- translators: Jetpack branding text. %1$s: Feature Name, eg: Stats, Reader, %2$s: " either 'is' or 'are' verb, %3$d number of weeks" -->
-    <string name="wp_jetpack_powered_phase_3_with_deadline_weeks_away">%1$s %2$s moving in %3$d weeks</string>
-    <!-- translators: Jetpack branding text. %1$s: Feature Name, eg: Stats, Reader, %2$s: " either 'is' or 'are' verb, %3$d number of days" -->
-    <string name="wp_jetpack_powered_phase_3_with_deadline_days_away">%1$s %2$s moving in %3$d days</string>
+    <!-- translators: Jetpack branding text. %1$s: Feature Name, eg: Stats, Reader, %2$s: " either 'is' or 'are' verb, %3$s number of weeks" -->
+    <string name="wp_jetpack_powered_phase_3_with_deadline_weeks_away">%1$s %2$s moving in %3$s weeks</string>
+    <!-- translators: Jetpack branding text. %1$s: Feature Name, eg: Stats, Reader, %2$s: " either 'is' or 'are' verb, %3$s number of days" -->
+    <string name="wp_jetpack_powered_phase_3_with_deadline_days_away">%1$s %2$s moving in %3$s days</string>
     <string name="wp_jetpack_powered_phase_3_with_deadline_day_away">%1$s %2$s moving in one day</string>
     <string name="wp_jetpack_powered_phase_3_feature_verb_singular_is">is</string>
     <string name="wp_jetpack_powered_phase_3_feature_verb_plural_are">are</string>
