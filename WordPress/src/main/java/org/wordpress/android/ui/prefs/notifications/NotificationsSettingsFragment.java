@@ -179,7 +179,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     private void removeFollowedBlogsPreferenceForIfDisabled() {
         if (!mBuildConfigWrapper.isFollowedSitesSettingsEnabled()) {
             PreferenceScreen preferenceScreen =
-                (PreferenceScreen) findPreference(getActivity().getString(R.string.wp_pref_notifications_root));
+                    (PreferenceScreen) findPreference(getActivity().getString(R.string.wp_pref_notifications_root));
 
             PreferenceCategory categoryFollowedBlogs = (PreferenceCategory) preferenceScreen
                     .findPreference(getActivity().getString(R.string.pref_notification_blogs_followed));
@@ -228,8 +228,15 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     private void addJetpackBadgeAsFooterIfEnabled(ListView listView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             final Screen screen = Screen.NOTIFICATIONS_SETTINGS.INSTANCE;
-            LayoutInflater inflater = LayoutInflater.from(getContext());
+            final Context context = getContext();
+            final LayoutInflater inflater = LayoutInflater.from(context);
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
+            binding.footerJetpackBadge.jetpackPoweredBadge.setText(
+                    mUiHelpers.getTextOfUiString(
+                            context,
+                            mJetpackBrandingUtils.getBrandingTextForScreen(screen)
+                    )
+            );
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
                     mJetpackBrandingUtils.trackBadgeTapped(screen);
