@@ -90,6 +90,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.writeToBundle(outState)
     }
 
+    @Suppress("LongMethod")
     private fun observeVMState() {
         mainViewModel.navigationTargetObservable
                 .observe(this, Observer { target -> target?.let { showStep(target) } })
