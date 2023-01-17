@@ -487,7 +487,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             wordPressPublicData,
             jetpackFeatureCardShownTracker,
             jetpackFeatureRemovalOverlayUtil,
-                jetpackFeatureCardHelper
+            jetpackFeatureCardHelper
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
