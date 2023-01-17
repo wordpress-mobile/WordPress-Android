@@ -554,7 +554,8 @@ class MySiteViewModel @Inject constructor(
         )
 
         val jetpackBadge = JetpackBadge(
-            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+            text = jetpackBrandingUtils.getBrandingTextForScreen(HOME),
+            onClick = if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 ListItemInteraction.create(this::onJetpackBadgeClick)
             } else {
                 null
