@@ -37,14 +37,14 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
     }
 
     @Suppress("unused")
-    fun getBadgeTextByPhase(screen: JetpackBrandingUtils.Screen): UiString? {
+    fun getBrandingTextByPhase(screen: JetpackBrandingUtils.Screen): UiString {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
             null,
             PhaseOne -> UiStringRes(R.string.wp_jetpack_powered)
             PhaseTwo -> UiStringRes(R.string.wp_jetpack_powered_phase_2)
             PhaseThree -> getBrandingTextForPhaseThreeBasedOnDeadline(screen, jpDeadlineConfig.getValue())
             PhaseFour -> UiStringRes(R.string.wp_jetpack_powered)
-            else -> null
+            else -> UiStringRes(R.string.wp_jetpack_powered)
         }
     }
 

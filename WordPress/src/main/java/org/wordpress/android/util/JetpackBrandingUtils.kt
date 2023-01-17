@@ -56,6 +56,8 @@ class JetpackBrandingUtils @Inject constructor(
         }
     }
 
+    fun getBrandingTextForScreen(screen: Screen) = jetpackFeatureRemovalBrandingUtil.getBrandingTextByPhase(screen)
+
     fun initJetpackBannerAnimation(banner: View, scrollableView: RecyclerView) {
         scrollableView.setOnScrollChangeListener(object : OnScrollChangeListener {
             private var isScrollAtTop = true
