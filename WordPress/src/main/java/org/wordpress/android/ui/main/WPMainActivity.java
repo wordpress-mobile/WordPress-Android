@@ -312,6 +312,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         if (!mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
             mBottomNav = findViewById(R.id.bottom_navigation);
+            mBottomNav.setVisibility(View.VISIBLE);
             mBottomNav.init(getSupportFragmentManager(), this);
         } else {
             showMySiteFragment();
