@@ -8,6 +8,9 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.JetpackPoweredBottomSheetFeatureConfig
 import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
@@ -100,24 +103,96 @@ class JetpackBrandingUtils @Inject constructor(
         Stat.JETPACK_POWERED_BOTTOM_SHEET_CONTINUE_TAPPED
     )
 
-    enum class Screen(val trackingName: String) {
-        APP_SETTINGS("app_settings"),
-        ACTIVITY_LOG("activity_log"),
-        ACTIVITY_LOG_DETAIL("activity_log_detail"),
-        BACKUP("backup"),
-        HOME("home"),
-        ME("me"),
-        NOTIFICATIONS("notifications"),
-        NOTIFICATIONS_SETTINGS("notifications_settings"),
-        PEOPLE("people"),
-        PERSON("person"),
-        READER("reader"),
-        READER_POST_DETAIL("reader_post_detail"),
-        READER_SEARCH("reader_search"),
-        SHARE("share"),
-        STATS("stats"),
-        SCAN("scan"),
-        THEMES("themes")
+    enum class Screen(
+        val trackingName: String,
+        val featureName: UiString = UiStringText(""),
+        val isFeatureNameSingular: Boolean,
+    ) {
+        APP_SETTINGS(
+            trackingName = "app_settings",
+            featureName = UiStringRes(R.string.me_btn_app_settings),
+            isFeatureNameSingular = false,
+        ),
+        ACTIVITY_LOG(
+            "activity_log",
+            featureName = UiStringRes(R.string.activity_log),
+            isFeatureNameSingular = true,
+        ),
+        ACTIVITY_LOG_DETAIL(
+            "activity_log_detail",
+            featureName = UiStringRes(R.string.activity_log),
+            isFeatureNameSingular = true,
+        ),
+        BACKUP(
+            "backup",
+            featureName = UiStringRes(R.string.backup),
+            isFeatureNameSingular = true,
+        ),
+        HOME(
+            "home",
+            featureName = UiStringRes(R.string.my_site_dashboard_tab_title),
+            isFeatureNameSingular = true,
+        ),
+        ME(
+            "me",
+            featureName = UiStringRes(R.string.me_section_screen_title),
+            isFeatureNameSingular = true,
+        ),
+        NOTIFICATIONS(
+            "notifications",
+            featureName = UiStringRes(R.string.notifications_screen_title),
+            isFeatureNameSingular = false,
+        ),
+        NOTIFICATIONS_SETTINGS(
+            "notifications_settings",
+            featureName = UiStringRes(R.string.notification_settings),
+            isFeatureNameSingular = false,
+        ),
+        PEOPLE(
+            "people",
+            featureName = UiStringRes(R.string.people),
+            isFeatureNameSingular = false,
+        ),
+        PERSON(
+            "person",
+            featureName = UiStringRes(R.string.person_detail_screen_title),
+            isFeatureNameSingular = true,
+        ),
+        READER(
+            "reader",
+            featureName = UiStringRes(R.string.reader_screen_title),
+            isFeatureNameSingular = true,
+        ),
+        READER_POST_DETAIL(
+            "reader_post_detail",
+            featureName = UiStringRes(R.string.reader_screen_title),
+            isFeatureNameSingular = true,
+        ),
+        READER_SEARCH(
+            "reader_search",
+            featureName = UiStringRes(R.string.reader_screen_title),
+            isFeatureNameSingular = true,
+        ),
+        SHARE(
+            "share",
+            featureName = UiStringRes(R.string.my_site_btn_sharing),
+            isFeatureNameSingular = true,
+        ),
+        STATS(
+            "stats",
+            featureName = UiStringRes(R.string.stats),
+            isFeatureNameSingular = false,
+        ),
+        SCAN(
+            "scan",
+            featureName = UiStringRes(R.string.scan),
+            isFeatureNameSingular = true,
+        ),
+        THEMES(
+            "themes",
+            featureName = UiStringRes(R.string.themes),
+            isFeatureNameSingular = false,
+        );
     }
 
     companion object {
