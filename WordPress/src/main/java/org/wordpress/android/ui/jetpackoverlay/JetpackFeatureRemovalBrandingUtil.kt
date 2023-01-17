@@ -60,7 +60,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
     ): UiString {
         return when (jpDeadlineDate.isNullOrEmpty()) {
             true -> getPhaseThreeBrandingTextWithoutDeadline(screen)
-            else -> getPhaseThreeBrandingTextWithDeadline(screen, countDaysUntilDeadlineDefaultingToZero(jpDeadlineDate))
+            else -> getPhaseThreeBrandingTextWithDeadline(screen, countDaysUntilDeadlineOrZero(jpDeadlineDate))
         }
     }
 
@@ -106,7 +106,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun countDaysUntilDeadlineDefaultingToZero(jpDeadlineDate: String): Int {
+    private fun countDaysUntilDeadlineOrZero(jpDeadlineDate: String): Int {
         val startDate = dateTimeUtilsWrapper.getTodaysDate()
         val endDate = dateTimeUtilsWrapper.dateFromPattern(jpDeadlineDate, JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
             ?: return 0
