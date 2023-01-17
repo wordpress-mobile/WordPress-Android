@@ -4229,6 +4229,15 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Jetpack awareness in WordPress App -->
     <string name="wp_jetpack_powered">Jetpack powered</string>
+    <string name="wp_jetpack_powered_phase_2">Get the Jetpack app</string>
+    <!-- translators: %1$s: "feature name, eg: Stats, App Settings, Reader", %2$s "verb, 'is' if feature name is singular, 'are' if plural" in the Jetpack branding component. -->
+    <string name="wp_jetpack_powered_phase_3_without_deadline">Feature %1$s %2$s moving soon</string>
+    <string name="wp_jetpack_powered_phase_3_with_deadline_months_away">Feature %1$s %2$s moving soon</string>
+    <string name="wp_jetpack_powered_phase_3_with_deadline_weeks_away">Feature %1$s %2$s moving in %2$d weeks</string>
+    <string name="wp_jetpack_powered_phase_3_with_deadline_days_away">Feature %1$s %2$s moving in %2$d days</string>
+    <string name="wp_jetpack_powered_phase_3_with_deadline_day_away">Feature %1$s %2$s moving in one day</string>
+    <string name="wp_jetpack_powered_phase_3_feature_verb_singular_is">is</string>
+    <string name="wp_jetpack_powered_phase_3_feature_verb_plural_are">are</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress is better with Jetpack</string>
     <string name="wp_jetpack_powered_features">The new Jetpack app has Stats, Reader, Notifications, and more that make your WordPress better.</string>
     <string name="wp_jetpack_powered_reader_powered_by_jetpack">Reader is powered by Jetpack</string>
