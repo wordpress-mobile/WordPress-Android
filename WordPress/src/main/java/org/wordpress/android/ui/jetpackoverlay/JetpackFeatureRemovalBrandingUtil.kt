@@ -9,6 +9,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.ScreenWithDynamicBranding
 import org.wordpress.android.util.config.JPDeadlineConfig
 import javax.inject.Inject
 
@@ -42,14 +43,19 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
             null,
             PhaseOne -> UiStringRes(R.string.wp_jetpack_powered)
             PhaseTwo -> UiStringRes(R.string.wp_jetpack_powered_phase_2)
-            PhaseThree -> getBrandingTextForPhaseThreeBasedOnDeadline(screen, jpDeadlineConfig.getValue())
+            PhaseThree -> when (screen) {
+                is ScreenWithDynamicBranding -> {
+                    getBrandingTextForPhaseThreeBasedOnDeadline(screen, jpDeadlineConfig.getValue())
+                }
+                else -> UiStringRes(R.string.wp_jetpack_powered)
+            }
             PhaseFour -> UiStringRes(R.string.wp_jetpack_powered)
             else -> UiStringRes(R.string.wp_jetpack_powered)
         }
     }
 
     private fun getBrandingTextForPhaseThreeBasedOnDeadline(
-        screen: JetpackBrandingUtils.Screen,
+        screen: ScreenWithDynamicBranding,
         jpDeadlineDate: String?,
     ): UiString {
         val deadlineDate = jpDeadlineDate?.takeIf(String::isNotEmpty)?.let { dateString ->
@@ -66,7 +72,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         }
     }
 
-    private fun getPhaseThreeBrandingTextWithoutDeadline(screen: JetpackBrandingUtils.Screen): UiString {
+    private fun getPhaseThreeBrandingTextWithoutDeadline(screen: ScreenWithDynamicBranding): UiString {
         return UiString.UiStringResWithParams(
             stringRes = R.string.wp_jetpack_powered_phase_3_without_deadline,
             params = screen.getBrandingTextParams()
@@ -74,7 +80,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
     }
 
     private fun getPhaseThreeBrandingTextWithDeadline(
-        screen: JetpackBrandingUtils.Screen,
+        screen: ScreenWithDynamicBranding,
         deadlineDate: String,
     ): UiString {
         val daysUntilDeadline = countDaysUntilDeadline(deadlineDate)
