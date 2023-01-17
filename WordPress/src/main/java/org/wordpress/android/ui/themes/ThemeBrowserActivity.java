@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnScrollChangeListener;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -39,6 +40,7 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JetpackBrandingUtils;
@@ -71,6 +73,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     @Inject ThemeStore mThemeStore;
     @Inject Dispatcher mDispatcher;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
+    @Inject UiHelpers mUiHelpers;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -197,6 +200,13 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
             final Screen screen = Screen.THEMES.INSTANCE;
             findViewById(R.id.root_view).post(() -> {
                 View jetpackBannerView = findViewById(R.id.jetpack_banner);
+                TextView jetpackBannerTextView = jetpackBannerView.findViewById(R.id.jetpack_banner_text);
+                jetpackBannerTextView.setText(
+                        mUiHelpers.getTextOfUiString(
+                                this,
+                                mJetpackBrandingUtils.getBrandingTextForScreen(screen))
+                );
+
                 HeaderGridView scrollableView = findViewById(containerId);
 
                 showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView);
