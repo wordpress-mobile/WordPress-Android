@@ -14,7 +14,7 @@ class JetpackFeatureOverlayShownTracker @Inject constructor(private val sharedPr
         getFeatureOverlayShownTimeStamp(READER, phase)?.let { overlayShownTimeStampList.add(it) }
         // No jetpack connected feature is accessed yet
         if (overlayShownTimeStampList.isEmpty()) return null
-        return overlayShownTimeStampList.minOf { it }
+        return overlayShownTimeStampList.maxOf { it }
     }
 
     fun getFeatureOverlayShownTimeStamp(
