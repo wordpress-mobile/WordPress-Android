@@ -150,11 +150,7 @@ class JetpackBrandingUtils @Inject constructor(
             isFeatureNameSingular = true,
         )
 
-        object HOME : ScreenWithDynamicBranding(
-            trackingName = "home",
-            featureName = UiStringRes(R.string.my_site_dashboard_tab_title),
-            isFeatureNameSingular = true,
-        )
+        object HOME : Screen(trackingName = "home")
 
         object ME : Screen(trackingName = "me")
 
