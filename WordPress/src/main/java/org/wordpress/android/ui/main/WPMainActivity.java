@@ -488,20 +488,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void setUpMainView() {
         if (!mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
             mBottomNav.setVisibility(View.VISIBLE);
-            clearFragmentBackStack();
             mBottomNav.init(getSupportFragmentManager(), this);
         } else {
             mBottomNav.setVisibility(View.GONE);
             mBottomNav.clear();
             showMySiteFragment();
-        }
-    }
-
-    private void clearFragmentBackStack() {
-        FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            FragmentManager.BackStackEntry first = fm.getBackStackEntryAt(0);
-            fm.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
     }
 
