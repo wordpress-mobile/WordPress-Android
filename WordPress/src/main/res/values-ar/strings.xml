@@ -136,7 +136,6 @@ Language: ar
     <string name="hpp_title">اختيار قالب</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">مطالبة التدوين اليوم التي تم تخطيها</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">معرفة المزيد</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">من </string>
     <string name="stats_follower_types_pie_chart_total_label">الإجماليات</string>
     <string name="stats_referrers_pie_chart_others">الأخرى</string>
     <string name="stats_referrers_pie_chart_search">البحث</string>
