@@ -219,11 +219,11 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         ).thenReturn(noOfDaysPastFeatureAccessed.toInt())
     }
 
-    private fun setUpMockForEarliestAccessedFeature(noOfDaysPastFeatureAccessed:Long) {
+    private fun setUpMockForEarliestAccessedFeature(noOfDaysPastFeatureAccessed: Long) {
         val featureAccessedMockedTimeinMillis = (System.currentTimeMillis() -
                 (noOfDaysPastFeatureAccessed * ONE_DAY_TIME_IN_MILLIS))
 
-        whenever(jetpackFeatureOverlayShownTracker.getEarliestOverlayShownTime(PHASE_ONE))
+        whenever(jetpackFeatureOverlayShownTracker.getTheLastShownOverlayTimeStamp(PHASE_ONE))
                 .thenReturn(featureAccessedMockedTimeinMillis)
 
         setupMockForFeatureAccessed(noOfDaysPastFeatureAccessed)

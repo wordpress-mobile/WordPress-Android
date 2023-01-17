@@ -96,10 +96,10 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
 
     private fun hasExceededGlobalOverlayFrequency(phase: JetpackFeatureRemovalOverlayPhase): Boolean {
         // Overlay is never shown
-        val overlayShownDate = jetpackFeatureOverlayShownTracker.getEarliestOverlayShownTime(phase)
+        val lastOverlayShownDate = jetpackFeatureOverlayShownTracker.getTheLastShownOverlayTimeStamp(phase)
                 ?.let { Date(it) } ?: return true
         val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
-                overlayShownDate,
+                lastOverlayShownDate,
                 dateTimeUtilsWrapper.getTodaysDate()
         )
         return daysPastOverlayShown >= PhaseOne.globalOverlayFrequency
