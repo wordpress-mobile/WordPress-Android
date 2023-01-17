@@ -51,6 +51,7 @@ import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet.LocalePickerCallback;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider;
 import org.wordpress.android.util.AppLog;
@@ -108,6 +109,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject LocaleProvider mLocaleProvider;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mOpenWebLinksWithJetpackHelper;
+    @Inject UiHelpers mUiHelpers;
 
     private static final String TRACK_STYLE = "style";
     private static final String TRACK_ENABLED = "enabled";
@@ -252,6 +254,13 @@ public class AppSettingsFragment extends PreferenceFragment
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             final Screen screen = Screen.APP_SETTINGS.INSTANCE;
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
+            binding.footerJetpackBadge.jetpackPoweredBadge.setText(
+                    mUiHelpers.getTextOfUiString(
+                            getContext(),
+                            mJetpackBrandingUtils.getBrandingTextForScreen(screen)
+                    )
+            );
+
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
                     mJetpackBrandingUtils.trackBadgeTapped(screen);
