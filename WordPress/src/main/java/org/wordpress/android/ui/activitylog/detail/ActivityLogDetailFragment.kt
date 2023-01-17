@@ -15,6 +15,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ActivityLogItemDetailBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityLauncher.BACKUP_TRACK_EVENT_PROPERTY_VALUE
 import org.wordpress.android.ui.ActivityLauncher.SOURCE_TRACK_EVENT_PROPERTY_KEY
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowBackupDownload
@@ -27,7 +28,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandingUtils.Screen.ACTIVITY_LOG_DETAIL
+import org.wordpress.android.util.JetpackBrandingUtils.Screen
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY
@@ -59,6 +60,10 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
 
     private val viewModel: ActivityLogDetailViewModel by viewModels()
 
+    private val trackingSource by lazy {
+        requireActivity().intent?.extras?.getString(SOURCE_TRACK_EVENT_PROPERTY_KEY)
+    }
+
     companion object {
         fun newInstance(): ActivityLogDetailFragment {
             return ActivityLogDetailFragment()
@@ -83,10 +88,20 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
         }
 
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            val screen = trackingSource
+                ?.takeIf { it == BACKUP_TRACK_EVENT_PROPERTY_VALUE }
+                ?.let { Screen.BACKUP }
+                ?: Screen.ACTIVITY_LOG_DETAIL
+
             jetpackBadge.root.isVisible = true
+            jetpackBadge.jetpackPoweredBadge.text = uiHelpers.getTextOfUiString(
+                requireContext(),
+                jetpackBrandingUtils.getBrandingTextForScreen(screen)
+            )
+
             if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 jetpackBadge.jetpackPoweredBadge.setOnClickListener {
-                    jetpackBrandingUtils.trackBadgeTapped(ACTIVITY_LOG_DETAIL)
+                    jetpackBrandingUtils.trackBadgeTapped(screen)
                     viewModel.showJetpackPoweredBottomSheet()
                 }
             }
@@ -265,8 +280,7 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
         }
     }
 
-    private fun buildTrackingSource() = requireActivity().intent?.extras?.let {
-        val source = it.getString(SOURCE_TRACK_EVENT_PROPERTY_KEY)
+    private fun buildTrackingSource() = trackingSource.let { source ->
         when {
             source != null -> source + FORWARD_SLASH + DETAIL_TRACKING_SOURCE
             else -> DETAIL_TRACKING_SOURCE
