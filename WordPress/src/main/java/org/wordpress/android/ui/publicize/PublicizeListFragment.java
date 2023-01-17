@@ -135,12 +135,13 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         }
 
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            final Screen screen = Screen.SHARE.INSTANCE;
             View jetpackBadge = rootView.findViewById(R.id.jetpack_powered_badge);
             jetpackBadge.setVisibility(View.VISIBLE);
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 jetpackBadge.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBadgeTapped(Screen.SHARE);
+                    mJetpackBrandingUtils.trackBadgeTapped(screen);
                     new JetpackPoweredBottomSheetFragment()
                             .show(requireActivity().getSupportFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
                 });

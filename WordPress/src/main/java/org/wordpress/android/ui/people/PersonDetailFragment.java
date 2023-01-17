@@ -142,13 +142,14 @@ public class PersonDetailFragment extends Fragment {
         }
 
         if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
+            final Screen screen = Screen.PERSON.INSTANCE;
             View jetpackBadgeContainer = rootView.findViewById(R.id.jetpack_badge);
             jetpackBadgeContainer.setVisibility(View.VISIBLE);
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 View jetpackBadge = jetpackBadgeContainer.findViewById(R.id.jetpack_powered_badge);
                 jetpackBadge.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBadgeTapped(Screen.PERSON);
+                    mJetpackBrandingUtils.trackBadgeTapped(screen);
                     new JetpackPoweredBottomSheetFragment()
                             .show(requireActivity().getSupportFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
                 });

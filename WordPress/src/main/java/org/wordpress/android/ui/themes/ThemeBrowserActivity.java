@@ -194,6 +194,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     @Override
     public void onScrollableViewInitialized(int containerId) {
         if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
+            final Screen screen = Screen.THEMES.INSTANCE;
             findViewById(R.id.root_view).post(() -> {
                 View jetpackBannerView = findViewById(R.id.jetpack_banner);
                 HeaderGridView scrollableView = findViewById(containerId);
@@ -203,7 +204,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
 
                 if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                     jetpackBannerView.setOnClickListener(v -> {
-                        mJetpackBrandingUtils.trackBannerTapped(Screen.THEMES);
+                        mJetpackBrandingUtils.trackBannerTapped(screen);
                         new JetpackPoweredBottomSheetFragment()
                                 .show(getSupportFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
                     });

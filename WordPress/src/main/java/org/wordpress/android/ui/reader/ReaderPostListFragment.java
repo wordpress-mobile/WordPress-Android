@@ -1155,11 +1155,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         mJetpackBanner = rootView.findViewById(R.id.jetpack_banner);
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            final Screen screen = Screen.READER_SEARCH.INSTANCE;
             mJetpackBrandingUtils.initJetpackBannerAnimation(mJetpackBanner, mRecyclerView.getInternalRecyclerView());
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 mJetpackBanner.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBannerTapped(Screen.READER_SEARCH);
+                    mJetpackBrandingUtils.trackBannerTapped(screen);
                     new JetpackPoweredBottomSheetFragment()
                             .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
                 });

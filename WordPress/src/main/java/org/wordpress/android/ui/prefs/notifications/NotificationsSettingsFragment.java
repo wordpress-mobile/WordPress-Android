@@ -227,11 +227,12 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
     private void addJetpackBadgeAsFooterIfEnabled(ListView listView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            final Screen screen = Screen.NOTIFICATIONS_SETTINGS.INSTANCE;
             LayoutInflater inflater = LayoutInflater.from(getContext());
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBadgeTapped(Screen.NOTIFICATIONS_SETTINGS);
+                    mJetpackBrandingUtils.trackBadgeTapped(screen);
                     new JetpackPoweredBottomSheetFragment().show(
                             ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
                             JetpackPoweredBottomSheetFragment.TAG);

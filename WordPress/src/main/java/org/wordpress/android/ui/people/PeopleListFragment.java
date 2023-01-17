@@ -235,6 +235,7 @@ public class PeopleListFragment extends Fragment {
 
     private void showJetpackBannerIfNeeded(final View rootView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
+            final Screen screen = Screen.PEOPLE.INSTANCE;
             View jetpackBannerView = rootView.findViewById(R.id.jetpack_banner);
             RecyclerView scrollableView = mFilteredRecyclerView.getInternalRecyclerView();
 
@@ -243,7 +244,7 @@ public class PeopleListFragment extends Fragment {
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 jetpackBannerView.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBannerTapped(Screen.PEOPLE);
+                    mJetpackBrandingUtils.trackBannerTapped(screen);
                     new JetpackPoweredBottomSheetFragment()
                             .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
                 });

@@ -105,96 +105,114 @@ class JetpackBrandingUtils @Inject constructor(
         Stat.JETPACK_POWERED_BOTTOM_SHEET_CONTINUE_TAPPED
     )
 
-    enum class Screen(
+    @Suppress("ClassName")
+    sealed class Screen(
         val trackingName: String,
-        val featureName: UiString = UiStringText(""),
+        val featureName: UiString? = null,
         val isFeatureNameSingular: Boolean,
     ) {
-        APP_SETTINGS(
+
+        object APP_SETTINGS : Screen(
             trackingName = "app_settings",
             featureName = UiStringRes(R.string.me_btn_app_settings),
             isFeatureNameSingular = false,
-        ),
-        ACTIVITY_LOG(
+        )
+
+        object ACTIVITY_LOG : Screen(
             "activity_log",
             featureName = UiStringRes(R.string.activity_log),
             isFeatureNameSingular = true,
-        ),
-        ACTIVITY_LOG_DETAIL(
+        )
+
+        object ACTIVITY_LOG_DETAIL : Screen(
             "activity_log_detail",
             featureName = UiStringRes(R.string.activity_log),
             isFeatureNameSingular = true,
-        ),
-        BACKUP(
+        )
+
+        object BACKUP : Screen(
             "backup",
             featureName = UiStringRes(R.string.backup),
             isFeatureNameSingular = true,
-        ),
-        HOME(
+        )
+
+        object HOME : Screen(
             "home",
             featureName = UiStringRes(R.string.my_site_dashboard_tab_title),
             isFeatureNameSingular = true,
-        ),
-        ME(
+        )
+
+        object ME : Screen(
             "me",
             featureName = UiStringRes(R.string.me_section_screen_title),
             isFeatureNameSingular = true,
-        ),
-        NOTIFICATIONS(
+        )
+
+        object NOTIFICATIONS : Screen(
             "notifications",
             featureName = UiStringRes(R.string.notifications_screen_title),
             isFeatureNameSingular = false,
-        ),
-        NOTIFICATIONS_SETTINGS(
+        )
+
+        object NOTIFICATIONS_SETTINGS : Screen(
             "notifications_settings",
             featureName = UiStringRes(R.string.notification_settings),
             isFeatureNameSingular = false,
-        ),
-        PEOPLE(
+        )
+
+        object PEOPLE : Screen(
             "people",
             featureName = UiStringRes(R.string.people),
             isFeatureNameSingular = false,
-        ),
-        PERSON(
+        )
+
+        object PERSON : Screen(
             "person",
             featureName = UiStringRes(R.string.person_detail_screen_title),
             isFeatureNameSingular = true,
-        ),
-        READER(
+        )
+
+        object READER : Screen(
             "reader",
             featureName = UiStringRes(R.string.reader_screen_title),
             isFeatureNameSingular = true,
-        ),
-        READER_POST_DETAIL(
+        )
+
+        object READER_POST_DETAIL : Screen(
             "reader_post_detail",
             featureName = UiStringRes(R.string.reader_screen_title),
             isFeatureNameSingular = true,
-        ),
-        READER_SEARCH(
+        )
+
+        object READER_SEARCH : Screen(
             "reader_search",
             featureName = UiStringRes(R.string.reader_screen_title),
             isFeatureNameSingular = true,
-        ),
-        SHARE(
+        )
+
+        object SHARE : Screen(
             "share",
             featureName = UiStringRes(R.string.my_site_btn_sharing),
             isFeatureNameSingular = true,
-        ),
-        STATS(
+        )
+
+        object STATS : Screen(
             "stats",
             featureName = UiStringRes(R.string.stats),
             isFeatureNameSingular = false,
-        ),
-        SCAN(
+        )
+
+        object SCAN : Screen(
             "scan",
             featureName = UiStringRes(R.string.scan),
             isFeatureNameSingular = true,
-        ),
-        THEMES(
+        )
+
+        object THEMES : Screen(
             "themes",
             featureName = UiStringRes(R.string.themes),
             isFeatureNameSingular = false,
-        );
+        )
 
         val featureVerb
             get() = when (isFeatureNameSingular) {
@@ -212,5 +230,6 @@ class JetpackBrandingUtils @Inject constructor(
 
     companion object {
         private const val SCREEN_KEY = "screen"
+
     }
 }
