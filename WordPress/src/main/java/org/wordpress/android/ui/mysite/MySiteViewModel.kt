@@ -463,7 +463,7 @@ class MySiteViewModel @Inject constructor(
             onRemindMeLaterItemClick = ListItemInteraction.create(this::onSwitchToJetpackMenuCardRemindMeLaterClick),
             onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick)
         ).takeIf {
-            jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()
+            jetpackFeatureRemovalUtils.shouldShowSwitchToJetpackMenuCard()
         }
 
 
@@ -1351,6 +1351,12 @@ class MySiteViewModel @Inject constructor(
     private fun onJetpackFeatureCardRemindMeLaterClick() {
         jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED)
         appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(System.currentTimeMillis())
+        refresh()
+    }
+
+    private fun onSwitchToJetpackMenuCardRemindMeLaterClick() {
+        jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED)
+        appPrefsWrapper.setSwitchToJetpackMenuCardLastShownTimestamp(System.currentTimeMillis())
         refresh()
     }
 
