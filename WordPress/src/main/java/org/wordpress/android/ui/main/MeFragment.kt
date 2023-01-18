@@ -163,20 +163,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = Screen.ME
-            jetpackBadge.isVisible = true
-            jetpackBadge.text = uiHelpers.getTextOfUiString(
-                requireContext(),
-                jetpackBrandingUtils.getBrandingTextForScreen(screen)
-            )
-            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBadge.setOnClickListener {
-                    jetpackBrandingUtils.trackBadgeTapped(screen)
-                    viewModel.showJetpackPoweredBottomSheet()
-                }
-            }
-        }
+        addJetpackBadgeIfNeeded()
 
         val showPickerListener = OnClickListener {
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
@@ -221,6 +208,23 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                     ActivityLauncher.showSignInForResultJetpackOnly(activity)
                 } else {
                     ActivityLauncher.showSignInForResultWpComOnly(activity)
+                }
+            }
+        }
+    }
+
+    private fun MeFragmentBinding.addJetpackBadgeIfNeeded() {
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            val screen = Screen.ME
+            jetpackBadge.isVisible = true
+            jetpackBadge.text = uiHelpers.getTextOfUiString(
+                requireContext(),
+                jetpackBrandingUtils.getBrandingTextForScreen(screen)
+            )
+            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                jetpackBadge.setOnClickListener {
+                    jetpackBrandingUtils.trackBadgeTapped(screen)
+                    viewModel.showJetpackPoweredBottomSheet()
                 }
             }
         }
