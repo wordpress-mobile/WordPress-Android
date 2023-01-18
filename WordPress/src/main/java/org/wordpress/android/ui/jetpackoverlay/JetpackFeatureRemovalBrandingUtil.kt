@@ -84,6 +84,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
                 )
             }
             // Deadline is more than one week away
+            // TODO: Fix "1 weeks"
             daysUntilDeadline > 7 -> {
                 val weeksUntilDeadline = daysUntilDeadline / 7
                 UiString.UiStringResWithParams(
@@ -110,6 +111,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
 
     @Suppress("UNUSED_PARAMETER")
     private fun countDaysUntilDeadlineOrZero(jpDeadlineDate: String): Int {
+        // TODO: verify logic is correct, otherwise use Calendar
         val startDate = dateTimeUtilsWrapper.getTodaysDate()
         val endDate = dateTimeUtilsWrapper.dateFromPattern(jpDeadlineDate, JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
             ?: return 0
