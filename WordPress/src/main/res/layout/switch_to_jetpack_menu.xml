@@ -29,7 +29,7 @@
         style="@style/UpdatedMySiteListRowTextView"
         android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_large"
-        android:text="@string/wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app"
+        android:text="@string/wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title"
         android:textColor="@color/jetpack_green_50"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/switch_to_app_more_icon"
