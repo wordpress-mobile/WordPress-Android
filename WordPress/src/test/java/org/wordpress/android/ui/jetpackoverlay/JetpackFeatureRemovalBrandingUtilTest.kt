@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpackoverlay
 
+import androidx.annotation.StringRes
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertFalse
@@ -13,9 +14,9 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.models.JetpackPoweredScreen
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.config.JPDeadlineConfig
@@ -92,11 +93,11 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
     @Test
     fun `given phase one not started, all banners and badges should read Jetpack powered`() {
-        givenPhase()
+        givenPhase(null)
 
         val allBannersAndBadges = getAllBannersAndBadgesText()
 
-        assertThat(allBannersAndBadges).allMatch { it == UiString.UiStringRes(R.string.wp_jetpack_powered) }
+        allBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
     }
 
     @Test
@@ -105,7 +106,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
         val allBannersAndBadges = getAllBannersAndBadgesText()
 
-        assertThat(allBannersAndBadges).allMatch { it == UiString.UiStringRes(R.string.wp_jetpack_powered) }
+        allBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
     }
 
     @Test
@@ -114,7 +115,17 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
         val allBannersAndBadges = getAllBannersAndBadgesText()
 
-        assertThat(allBannersAndBadges).allMatch { it == UiString.UiStringRes(R.string.wp_jetpack_powered_phase_2) }
+        allBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered_phase_2)
+    }
+
+    @Suppress("MaxLineLength")
+    @Test
+    fun `given phase three started, all banners and badges on screens without dynamic text should read Jetpack powered`() {
+        givenPhase(PhaseFour)
+
+        val bannersAndBadgesOnScreensWithStaticText = getBrandingOnScreensWithStaticText()
+
+        bannersAndBadgesOnScreensWithStaticText.assertAllMatch(R.string.wp_jetpack_powered)
     }
 
     @Test
@@ -123,7 +134,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
         val allBannersAndBadges = getAllBannersAndBadgesText()
 
-        assertThat(allBannersAndBadges).allMatch { it == UiString.UiStringRes(R.string.wp_jetpack_powered) }
+        allBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
     }
 
     // endregion
@@ -133,13 +144,16 @@ class JetpackFeatureRemovalBrandingUtilTest {
     private fun getBrandingOnScreensWithStaticText() = screensWithStaticText.map(classToTest::getBrandingTextByPhase)
     private fun getBrandingOnScreensWithDynamicText() = screensWithDynamicText.map(classToTest::getBrandingTextByPhase)
 
-
-    private fun givenPhase(phase: JetpackFeatureRemovalPhase? = null) {
+    private fun givenPhase(phase: JetpackFeatureRemovalPhase?) {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(phase)
     }
 
     private fun getAllBannersAndBadgesText(): List<UiString> {
         return getBrandingOnScreensWithStaticText() + getBrandingOnScreensWithDynamicText()
+    }
+
+    private fun List<UiString>.assertAllMatch(@StringRes expected: Int) {
+        assertThat(this).allMatch { it == UiString.UiStringRes(expected) }
     }
 
     // endregion

@@ -2,7 +2,7 @@ package org.wordpress.android.models
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.*
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 sealed interface JetpackPoweredScreen {
     val trackingName: String
