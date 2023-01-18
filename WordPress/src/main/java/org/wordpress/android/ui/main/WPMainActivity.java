@@ -310,13 +310,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         setContentView(R.layout.main_activity);
 
 
-        if (!mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
-            mBottomNav = findViewById(R.id.bottom_navigation);
-            mBottomNav.init(getSupportFragmentManager(), this);
-        } else {
-            showMySiteFragment();
-        }
-
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(v -> {
             // slide out the bar on click, then re-check connection after a brief delay
@@ -489,6 +482,20 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         displayJetpackFeatureCollectionOverlayIfNeeded();
+    }
+
+    private void setUpMainView() {
+        if (!mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
+            mBottomNav = findViewById(R.id.bottom_navigation);
+            mBottomNav.setVisibility(View.VISIBLE);
+            mBottomNav.init(getSupportFragmentManager(), this);
+        } else {
+            if (mBottomNav != null) {
+                mBottomNav.setVisibility(View.GONE);
+                mBottomNav.clear();
+            }
+            showMySiteFragment();
+        }
     }
 
     private void showMySiteFragment() {
@@ -971,6 +978,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+
+        setUpMainView();
 
         // Load selected site
         initSelectedSite();

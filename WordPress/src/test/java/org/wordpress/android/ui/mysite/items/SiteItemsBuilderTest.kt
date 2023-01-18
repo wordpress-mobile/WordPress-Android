@@ -35,7 +35,10 @@ class SiteItemsBuilderTest {
 
     @Mock
     lateinit var quickStartType: QuickStartType
-    @Mock lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+
+    @Mock
+    lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+
     private lateinit var siteItemsBuilder: SiteItemsBuilder
 
     @Before
@@ -47,7 +50,7 @@ class SiteItemsBuilderTest {
             siteCategoryItemBuilder,
             siteListItemBuilder,
             quickStartRepository,
-                jetpackFeatureRemovalOverlayUtil
+            jetpackFeatureRemovalOverlayUtil
         )
     }
 

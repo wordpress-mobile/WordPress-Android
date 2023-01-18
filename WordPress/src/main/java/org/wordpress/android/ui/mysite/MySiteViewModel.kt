@@ -1245,7 +1245,9 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun showQuickStartDialog(siteModel: SiteModel?) {
-        if (siteModel != null && quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteModel)) {
+        if (siteModel != null && quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteModel) &&
+            !jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()
+        ) {
             _onNavigation.postValue(
                 Event(
                     SiteNavigationAction.ShowQuickStartDialog(
