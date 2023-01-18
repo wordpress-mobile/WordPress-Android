@@ -26,6 +26,7 @@ internal class ApplicationPasswordsStore @Inject constructor(
         initEncryptedPrefs()
     }
 
+    @Synchronized
     fun getCredentials(host: String): ApplicationPasswordCredentials? {
         val username = encryptedPreferences.getString(host.usernamePrefKey, null)
         val password = encryptedPreferences.getString(host.passwordPrefKey, null)
@@ -42,6 +43,7 @@ internal class ApplicationPasswordsStore @Inject constructor(
         }
     }
 
+    @Synchronized
     fun saveCredentials(host: String, credentials: ApplicationPasswordCredentials) {
         encryptedPreferences.edit()
             .putString(host.usernamePrefKey, credentials.userName)
@@ -50,6 +52,7 @@ internal class ApplicationPasswordsStore @Inject constructor(
             .apply()
     }
 
+    @Synchronized
     fun deleteCredentials(host: String) {
         encryptedPreferences.edit()
             .remove(host.usernamePrefKey)
