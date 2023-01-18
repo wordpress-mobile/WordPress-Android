@@ -71,6 +71,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         )
     }
 
+    @Suppress("MagicNumber", "ForbiddenComment")
     private fun getPhaseThreeBrandingTextWithDeadline(
         screen: ScreenWithDynamicBranding,
         daysUntilDeadline: Int,
@@ -109,7 +110,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
+    @Suppress("UNUSED_PARAMETER", "ForbiddenComment")
     private fun countDaysUntilDeadlineOrZero(jpDeadlineDate: String): Int {
         // TODO: verify logic is correct, otherwise use Calendar
         val startDate = dateTimeUtilsWrapper.getTodaysDate()
