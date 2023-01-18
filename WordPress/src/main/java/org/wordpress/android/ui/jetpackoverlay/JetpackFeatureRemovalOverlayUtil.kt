@@ -44,6 +44,10 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         )
     }
 
+    fun shouldHideJetpackFeatures(): Boolean {
+        return jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == PhaseFour
+    }
+
     fun shouldShowSiteCreationOverlay(): Boolean {
         return !buildConfigWrapper.isJetpackApp && isInSiteCreationPhase()
     }
