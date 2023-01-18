@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpackoverlay
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -10,8 +11,11 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.wordpress.android.R
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.config.JPDeadlineConfig
 
@@ -28,6 +32,9 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
     private lateinit var classToTest: JetpackFeatureRemovalBrandingUtil
 
+    private val screensWithStaticText = JetpackPoweredScreen.WithStaticText.values()
+    private val screensWithDynamicText = JetpackPoweredScreen.WithDynamicText.values()
+
     @Before
     fun setup() {
         classToTest = JetpackFeatureRemovalBrandingUtil(
@@ -40,7 +47,8 @@ class JetpackFeatureRemovalBrandingUtilTest {
     // region Branding Visibility
     @Test
     fun `given phase one started, when phase one branding is checked, should return true`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseOne)
+        givenPhase(PhaseOne)
+
         val shouldShowBranding = classToTest.shouldShowPhaseOneBranding()
 
         assertTrue(shouldShowBranding)
@@ -48,7 +56,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
     @Test
     fun `given phase one not started, when phase one branding is checked, should return false`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(null)
+        givenPhase(null)
         val shouldShowBranding = classToTest.shouldShowPhaseOneBranding()
 
         assertFalse(shouldShowBranding)
@@ -56,7 +64,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
     @Test
     fun `given phase one not started, when phase two branding is checked, should return false`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(null)
+        givenPhase(null)
         val shouldShowBranding = classToTest.shouldShowPhaseTwoBranding()
 
         assertFalse(shouldShowBranding)
@@ -77,5 +85,52 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
         assertTrue(shouldShowBranding)
     }
+    // endregion
+
+    // region Branding Text
+
+    @Test
+    fun `given phase one not started, all banners and badges should read 'Jetpack powered'`() {
+        givenPhase()
+
+        val allBannersAndBadges = getAllBannersAndBadgesText()
+
+        assertThat(allBannersAndBadges).allMatch { it == UiString.UiStringRes(R.string.wp_jetpack_powered) }
+    }
+
+    @Test
+    fun `given phase one started, all banners and badges should read 'Jetpack powered'`() {
+        givenPhase(PhaseOne)
+
+        val allBannersAndBadges = getAllBannersAndBadgesText()
+
+        assertThat(allBannersAndBadges).allMatch { it == UiString.UiStringRes(R.string.wp_jetpack_powered) }
+    }
+
+    @Test
+    fun `given phase two started, all banners and badges should read 'Get the Jetpack app'`() {
+        givenPhase(PhaseTwo)
+
+        val allBannersAndBadges = getAllBannersAndBadgesText()
+
+        assertThat(allBannersAndBadges).allMatch { it == UiString.UiStringRes(R.string.wp_jetpack_powered_phase_2) }
+    }
+
+    // endregion
+
+    // region Test Helpers
+
+    private fun getBrandingOnScreensWithStaticText() = screensWithStaticText.map(classToTest::getBrandingTextByPhase)
+    private fun getBrandingOnScreensWithDynamicText() = screensWithDynamicText.map(classToTest::getBrandingTextByPhase)
+
+
+    private fun givenPhase(phase: JetpackFeatureRemovalPhase? = null) {
+        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(phase)
+    }
+
+    private fun getAllBannersAndBadgesText(): List<UiString> {
+        return getBrandingOnScreensWithStaticText() + getBrandingOnScreensWithDynamicText()
+    }
+
     // endregion
 }
