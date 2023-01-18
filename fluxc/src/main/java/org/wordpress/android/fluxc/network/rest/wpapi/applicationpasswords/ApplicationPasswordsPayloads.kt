@@ -12,6 +12,14 @@ internal data class ApplicationPasswordCreationPayload(
     }
 }
 
+internal data class ApplicationPasswordUUIDFetchPayload(
+    val uuid: ApplicationPasswordUUID
+) : Payload<BaseNetworkError>() {
+    constructor(error: BaseNetworkError) : this("") {
+        this.error = error
+    }
+}
+
 internal data class ApplicationPasswordDeletionPayload(
     val isDeleted: Boolean
 ) : Payload<BaseNetworkError>() {
