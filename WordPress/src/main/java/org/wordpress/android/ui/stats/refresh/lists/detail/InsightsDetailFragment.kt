@@ -17,12 +17,13 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 
 @AndroidEntryPoint
 class InsightsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
-    private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
-
-    private lateinit var viewModel: InsightsDetailViewModel
     private val viewsVisitorsDetailViewModel: ViewsVisitorsDetailViewModel by viewModels()
     private val totalLikesDetailViewModel: TotalLikesDetailViewModel by viewModels()
+    private val totalCommentsDetailViewModel: TotalCommentsDetailViewModel by viewModels()
     private val totalFollowersDetailViewModel: TotalFollowersDetailViewModel by viewModels()
+
+    private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
+    private lateinit var viewModel: InsightsDetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +62,7 @@ class InsightsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
         viewModel = when (listType) {
             StatsSection.INSIGHT_DETAIL -> viewsVisitorsDetailViewModel
             StatsSection.TOTAL_LIKES_DETAIL -> totalLikesDetailViewModel
+            StatsSection.TOTAL_COMMENTS_DETAIL -> totalCommentsDetailViewModel
             StatsSection.TOTAL_FOLLOWERS_DETAIL -> totalFollowersDetailViewModel
             else -> viewsVisitorsDetailViewModel
         }

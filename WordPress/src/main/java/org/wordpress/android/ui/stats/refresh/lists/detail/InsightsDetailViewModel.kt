@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.stats.refresh.TOTAL_COMMENTS_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.TOTAL_FOLLOWERS_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.TOTAL_LIKES_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.VIEWS_AND_VISITORS_USE_CASE
@@ -68,7 +69,7 @@ abstract class InsightsDetailViewModel (
 @HiltViewModel
 class ViewsVisitorsDetailViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Named(VIEWS_AND_VISITORS_USE_CASE) private val detailUseCase: BaseListUseCase,
+    @Named(VIEWS_AND_VISITORS_USE_CASE) detailUseCase: BaseListUseCase,
     statsSiteProvider: StatsSiteProvider,
     networkUtilsWrapper: NetworkUtilsWrapper
 ) : InsightsDetailViewModel(mainDispatcher, detailUseCase, statsSiteProvider, networkUtilsWrapper)
@@ -77,6 +78,14 @@ class ViewsVisitorsDetailViewModel @Inject constructor(
 class TotalLikesDetailViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(TOTAL_LIKES_DETAIL_USE_CASE) detailUseCase: BaseListUseCase,
+    statsSiteProvider: StatsSiteProvider,
+    networkUtilsWrapper: NetworkUtilsWrapper
+) : InsightsDetailViewModel(mainDispatcher, detailUseCase, statsSiteProvider, networkUtilsWrapper)
+
+@HiltViewModel
+class TotalCommentsDetailViewModel @Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(TOTAL_COMMENTS_DETAIL_USE_CASE) detailUseCase: BaseListUseCase,
     statsSiteProvider: StatsSiteProvider,
     networkUtilsWrapper: NetworkUtilsWrapper
 ) : InsightsDetailViewModel(mainDispatcher, detailUseCase, statsSiteProvider, networkUtilsWrapper)
