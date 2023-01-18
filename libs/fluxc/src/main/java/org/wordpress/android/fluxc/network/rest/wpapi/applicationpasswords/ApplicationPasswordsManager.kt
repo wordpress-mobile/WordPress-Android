@@ -95,6 +95,7 @@ internal class ApplicationPasswordsManager @Inject constructor(
                     uuid = payload.uuid
                 )
             )
+
             else -> {
                 val statusCode = payload.error.volleyError?.networkResponse?.statusCode
                 val errorCode = payload.error.let {
@@ -110,10 +111,12 @@ internal class ApplicationPasswordsManager @Inject constructor(
                         when (val deletionResult = deleteApplicationCredentials(site)) {
                             ApplicationPasswordDeletionResult.Success ->
                                 createApplicationPassword(site, username)
+
                             is ApplicationPasswordDeletionResult.Failure ->
                                 ApplicationPasswordCreationResult.Failure(deletionResult.error)
                         }
                     }
+
                     statusCode == NOT_FOUND ||
                         errorCode == APPLICATION_PASSWORDS_DISABLED_ERROR_CODE -> {
                         appLogWrapper.w(
@@ -123,6 +126,7 @@ internal class ApplicationPasswordsManager @Inject constructor(
                         )
                         ApplicationPasswordCreationResult.NotSupported(payload.error)
                     }
+
                     else -> {
                         appLogWrapper.w(
                             AppLog.T.MAIN,
@@ -138,16 +142,9 @@ internal class ApplicationPasswordsManager @Inject constructor(
     suspend fun deleteApplicationCredentials(
         site: SiteModel
     ): ApplicationPasswordDeletionResult {
-        val uuid = applicationPasswordsStore.getUuid(site.domainName)
-
-        if (uuid == null) {
-            appLogWrapper.w(AppLog.T.MAIN, "Application password deletion failed, no UUID found")
-            return ApplicationPasswordDeletionResult.Failure(
-                BaseNetworkError(
-                    GenericErrorType.UNKNOWN,
-                    "UUID required for deletion is not found"
-                )
-            )
+        val uuid = applicationPasswordsStore.getUuid(site.domainName) ?: fetchApplicationPasswordUUID(site).let {
+            if (it.isError) return ApplicationPasswordDeletionResult.Failure(it.error)
+            it.uuid
         }
 
         val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
@@ -178,15 +175,26 @@ internal class ApplicationPasswordsManager @Inject constructor(
                     )
                 }
             }
+
             else -> {
                 val error = payload.error
                 appLogWrapper.w(
                     AppLog.T.MAIN, "Application password deletion failed, error: " +
-                    "${error.type} ${error.message}\n" +
-                    "${error.volleyError?.toString()}"
+                        "${error.type} ${error.message}\n" +
+                        "${error.volleyError?.toString()}"
                 )
                 ApplicationPasswordDeletionResult.Failure(error)
             }
+        }
+    }
+
+    private suspend fun fetchApplicationPasswordUUID(
+        site: SiteModel
+    ): ApplicationPasswordUUIDFetchPayload {
+        return if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
+            jetpackApplicationPasswordsRestClient.fetchApplicationPasswordUUID(site, applicationName)
+        } else {
+            wpApiApplicationPasswordsRestClient.fetchApplicationPasswordUUID(site, applicationName)
         }
     }
 
