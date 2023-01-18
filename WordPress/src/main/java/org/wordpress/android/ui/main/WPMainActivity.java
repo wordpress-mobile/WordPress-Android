@@ -309,7 +309,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        mBottomNav = findViewById(R.id.bottom_navigation);
 
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(v -> {
@@ -487,11 +486,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void setUpMainView() {
         if (!mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
+            mBottomNav = findViewById(R.id.bottom_navigation);
             mBottomNav.setVisibility(View.VISIBLE);
             mBottomNav.init(getSupportFragmentManager(), this);
         } else {
-            mBottomNav.setVisibility(View.GONE);
-            mBottomNav.clear();
+            if (mBottomNav != null) {
+                mBottomNav.setVisibility(View.GONE);
+                mBottomNav.clear();
+            }
             showMySiteFragment();
         }
     }
