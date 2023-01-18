@@ -4300,6 +4300,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader is moving to the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Notifications are moving to Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Jetpack features are moving soon.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack features have moved.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Stats, Reader, Notifications and other Jetpack powered features have been removed from the WordPress app.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app on %s.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app soon.</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
@@ -4307,6 +4309,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Switch to the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_continue_without_jetpack" translatable="false">@string/wp_jetpack_continue_without_jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_three_all_features_description" translatable="false">@string/wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Switch to Jetpack </string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Do this later</string>
 
     <!-- Deep Linking Activity Aliases -->
     <string name="deep_linking_urilinks_alias_label">urilinks</string>

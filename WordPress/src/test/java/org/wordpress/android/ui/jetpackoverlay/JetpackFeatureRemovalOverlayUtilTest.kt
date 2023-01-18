@@ -18,6 +18,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseO
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
@@ -50,6 +51,9 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     @Mock
     private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
+
     private lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
     private val currentMockedDate = Date(System.currentTimeMillis())
@@ -63,7 +67,8 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
             siteUtilsWrapper,
             buildConfigWrapper,
             dateTimeUtilsWrapper,
-            analyticsTrackerWrapper
+            analyticsTrackerWrapper,
+            appPrefsWrapper
         )
     }
 

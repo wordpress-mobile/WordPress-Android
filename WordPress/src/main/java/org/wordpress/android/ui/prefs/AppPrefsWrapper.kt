@@ -284,6 +284,12 @@ class AppPrefsWrapper @Inject constructor() {
         AppPrefs.setJetpackFeatureCardLastShownTimestamp(lastShownTimestamp)
     }
 
+    fun getSwitchToJetpackMenuCardLastShownTimestamp(): Long = AppPrefs.getSwitchToJetpackMenuCardLastShownTimestamp()
+
+    fun setSwitchToJetpackMenuCardLastShownTimestamp(lastShownTimestamp: Long) {
+        AppPrefs.setSwitchToJetpackMenuCardLastShownTimestamp(lastShownTimestamp)
+    }
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {
