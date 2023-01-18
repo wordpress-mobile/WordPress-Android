@@ -16,6 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -121,7 +122,18 @@ class JetpackFeatureRemovalBrandingUtilTest {
     @Suppress("MaxLineLength")
     @Test
     fun `given phase three started, all banners and badges on screens without dynamic text should read Jetpack powered`() {
-        givenPhase(PhaseFour)
+        givenPhase(PhaseThree)
+
+        val bannersAndBadgesOnScreensWithStaticText = getBrandingOnScreensWithStaticText()
+
+        bannersAndBadgesOnScreensWithStaticText.assertAllMatch(R.string.wp_jetpack_powered)
+    }
+
+    @Suppress("MaxLineLength")
+    @Test
+    fun `given phase three started, when deadline is unknown, all other banners and badges should read {Feature} {is,are} moving soon`() {
+        givenPhase(PhaseThree)
+        whenJpDeadlineIs("")
 
         val bannersAndBadgesOnScreensWithStaticText = getBrandingOnScreensWithStaticText()
 
@@ -141,12 +153,18 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
     // region Test Helpers
 
-    private fun getBrandingOnScreensWithStaticText() = screensWithStaticText.map(classToTest::getBrandingTextByPhase)
-    private fun getBrandingOnScreensWithDynamicText() = screensWithDynamicText.map(classToTest::getBrandingTextByPhase)
-
     private fun givenPhase(phase: JetpackFeatureRemovalPhase?) {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(phase)
     }
+
+    private fun whenJpDeadlineIs(date: String?) {
+        date?.takeIf(String::isNotEmpty)?.let {
+            whenever(jpDeadlineConfig.getValue<String>()).thenReturn(it)
+        }
+    }
+
+    private fun getBrandingOnScreensWithStaticText() = screensWithStaticText.map(classToTest::getBrandingTextByPhase)
+    private fun getBrandingOnScreensWithDynamicText() = screensWithDynamicText.map(classToTest::getBrandingTextByPhase)
 
     private fun getAllBannersAndBadgesText(): List<UiString> {
         return getBrandingOnScreensWithStaticText() + getBrandingOnScreensWithDynamicText()
