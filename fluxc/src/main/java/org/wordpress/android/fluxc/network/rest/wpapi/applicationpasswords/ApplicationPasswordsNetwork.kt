@@ -35,7 +35,7 @@ class ApplicationPasswordsNetwork @Inject constructor(
     // We can't use construction injection for this variable, as its class is internal
     @Inject internal lateinit var mApplicationPasswordsManager: ApplicationPasswordsManager
 
-    @Suppress("ReturnCount")
+    @Suppress("ReturnCount", "ComplexMethod")
     suspend fun <T> executeGsonRequest(
         site: SiteModel,
         method: HttpMethod,
