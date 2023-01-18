@@ -7,34 +7,40 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
+import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.config.JPDeadlineConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class JetpackFeatureRemovalBrandingUtilTest {
-    @Mock
-    private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper = mock()
+    private val jpDeadlineConfig: JPDeadlineConfig = mock()
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper = mock()
 
     @Rule
     @JvmField
     val rule = InstantTaskExecutorRule()
 
-    private lateinit var jetpackFeatureRemovalBrandingUtil: JetpackFeatureRemovalBrandingUtil
+    private lateinit var classToTest: JetpackFeatureRemovalBrandingUtil
 
     @Before
     fun setup() {
-        jetpackFeatureRemovalBrandingUtil = JetpackFeatureRemovalBrandingUtil(
+        classToTest = JetpackFeatureRemovalBrandingUtil(
             jetpackFeatureRemovalPhaseHelper,
+            jpDeadlineConfig,
+            dateTimeUtilsWrapper,
         )
     }
 
     @Test
     fun `given phase one started, when phase one branding is checked, should return true`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseOne)
-        val shouldShowBranding = jetpackFeatureRemovalBrandingUtil.shouldShowPhaseOneBranding()
+        val shouldShowBranding = classToTest.shouldShowPhaseOneBranding()
 
         assertTrue(shouldShowBranding)
     }
@@ -42,7 +48,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     @Test
     fun `given phase one not started, when phase one branding is checked, should return false`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(null)
-        val shouldShowBranding = jetpackFeatureRemovalBrandingUtil.shouldShowPhaseOneBranding()
+        val shouldShowBranding = classToTest.shouldShowPhaseOneBranding()
 
         assertFalse(shouldShowBranding)
     }
@@ -50,7 +56,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     @Test
     fun `given phase one not started, when phase two branding is checked, should return false`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(null)
-        val shouldShowBranding = jetpackFeatureRemovalBrandingUtil.shouldShowPhaseTwoBranding()
+        val shouldShowBranding = classToTest.shouldShowPhaseTwoBranding()
 
         assertFalse(shouldShowBranding)
     }
@@ -58,7 +64,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     @Test
     fun `given phase one started, when phase two branding is checked, should return false`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseOne)
-        val shouldShowBranding = jetpackFeatureRemovalBrandingUtil.shouldShowPhaseTwoBranding()
+        val shouldShowBranding = classToTest.shouldShowPhaseTwoBranding()
 
         assertFalse(shouldShowBranding)
     }
@@ -66,7 +72,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     @Test
     fun `given phase two started, when phase two branding is checked, should return true`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseTwo)
-        val shouldShowBranding = jetpackFeatureRemovalBrandingUtil.shouldShowPhaseTwoBranding()
+        val shouldShowBranding = classToTest.shouldShowPhaseTwoBranding()
 
         assertTrue(shouldShowBranding)
     }
