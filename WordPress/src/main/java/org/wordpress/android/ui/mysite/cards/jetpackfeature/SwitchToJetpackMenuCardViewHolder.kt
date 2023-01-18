@@ -19,7 +19,6 @@ class SwitchToJetpackMenuCardViewHolder(
         mySiteSwitchToJetpackCard.setOnClickListener { card.onClick.click() }
         switchToAppMoreIcon.setOnClickListener {
             showMoreMenu(
-                card.onHideMenuItemClick,
                 card.onRemindMeLaterItemClick,
                 card.onMoreMenuClick,
                 switchToAppMoreIcon,
@@ -28,7 +27,6 @@ class SwitchToJetpackMenuCardViewHolder(
     }
 
     private fun showMoreMenu(
-        onHideMenuItemClick: ListItemInteraction,
         onRemindMeLaterClick: ListItemInteraction,
         onMoreMenuClick: ListItemInteraction,
         anchor: View
@@ -41,14 +39,10 @@ class SwitchToJetpackMenuCardViewHolder(
                     onRemindMeLaterClick.click()
                     return@setOnMenuItemClickListener true
                 }
-                R.id.jetpack_card_menu_item_hide_this -> {
-                    onHideMenuItemClick.click()
-                    return@setOnMenuItemClickListener true
-                }
                 else -> return@setOnMenuItemClickListener true
             }
         }
-        popupMenu.inflate(R.menu.jetpack_feature_card_menu)
+        popupMenu.inflate(R.menu.switch_to_jetpack_card_menu)
         popupMenu.show()
     }
 }
