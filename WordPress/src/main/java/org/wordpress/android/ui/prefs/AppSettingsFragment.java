@@ -58,7 +58,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.util.JetpackBrandingUtils.Screen;
+import org.wordpress.android.util.JetpackBrandedScreenData;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.LocaleProvider;
 import org.wordpress.android.util.NetworkUtils;
@@ -252,7 +252,7 @@ public class AppSettingsFragment extends PreferenceFragment
 
     private void addJetpackBadgeAsFooterIfEnabled(LayoutInflater inflater, ListView listView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            final Screen screen = Screen.APP_SETTINGS.INSTANCE;
+            final JetpackBrandedScreenData screen = JetpackBrandedScreenData.APP_SETTINGS.INSTANCE;
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
             binding.footerJetpackBadge.jetpackPoweredBadge.setText(
                     mUiHelpers.getTextOfUiString(

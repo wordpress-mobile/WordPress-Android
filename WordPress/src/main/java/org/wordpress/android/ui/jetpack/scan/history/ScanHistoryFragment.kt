@@ -24,7 +24,7 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiStat
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandingUtils.Screen
+import org.wordpress.android.util.JetpackBrandedScreenData
 import org.wordpress.android.util.LocaleManagerWrapper
 import javax.inject.Inject
 
@@ -152,7 +152,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
 
     private fun initJetpackBanner(scrollableContainerId: Int) {
         if (jetpackBrandingUtils.shouldShowJetpackBrandingForPhaseOne()) {
-            val screen = Screen.SCAN
+            val screen = JetpackBrandedScreenData.SCAN
             binding?.root?.post {
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
                 val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView

@@ -120,7 +120,7 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandingUtils.Screen
+import org.wordpress.android.util.JetpackBrandedScreenData
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.RtlUtils
@@ -747,7 +747,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         onPostExecuteShowPost()
 
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = Screen.READER_POST_DETAIL
+            val screen = JetpackBrandedScreenData.READER_POST_DETAIL
             binding.jetpackBadge.root.isVisible = true
             binding.jetpackBadge.jetpackPoweredBadge.text = uiHelpers.getTextOfUiString(
                 requireContext(),

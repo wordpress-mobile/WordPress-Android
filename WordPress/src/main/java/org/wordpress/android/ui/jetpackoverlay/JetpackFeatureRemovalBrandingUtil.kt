@@ -8,8 +8,8 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseT
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandingUtils.Screen.ScreenWithDynamicBranding
+import org.wordpress.android.util.JetpackBrandedScreenData
+import org.wordpress.android.util.JetpackBrandedScreenData.ScreenWithDynamicBranding
 import org.wordpress.android.util.config.JPDeadlineConfig
 import javax.inject.Inject
 
@@ -37,8 +37,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         }
     }
 
-    @Suppress("unused")
-    fun getBrandingTextByPhase(screen: JetpackBrandingUtils.Screen): UiString {
+    fun getBrandingTextByPhase(screen: JetpackBrandedScreenData): UiString {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
             null,
             PhaseOne -> UiStringRes(R.string.wp_jetpack_powered)

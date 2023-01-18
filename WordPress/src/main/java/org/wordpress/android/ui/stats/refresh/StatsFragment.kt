@@ -42,7 +42,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandingUtils.Screen
+import org.wordpress.android.util.JetpackBrandedScreenData
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.observeEvent
@@ -272,7 +272,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
     private fun initJetpackBanner(scrollableContainerId: Int) {
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = Screen.STATS
+            val screen = JetpackBrandedScreenData.STATS
             binding?.root?.post {
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
                 val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView

@@ -44,7 +44,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandingUtils.Screen
+import org.wordpress.android.util.JetpackBrandedScreenData
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
@@ -346,7 +346,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appBar?.liftOnScrollTargetViewId = containerId
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = Screen.READER
+            val screen = JetpackBrandedScreenData.READER
             binding?.root?.post {
                 // post is used to create a minimal delay here. containerId changes just before
                 // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.

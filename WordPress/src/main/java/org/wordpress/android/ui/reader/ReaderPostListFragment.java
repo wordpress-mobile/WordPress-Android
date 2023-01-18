@@ -126,7 +126,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.DisplayUtilsWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.util.JetpackBrandingUtils.Screen;
+import org.wordpress.android.util.JetpackBrandedScreenData;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SnackbarItem;
@@ -1155,7 +1155,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         mJetpackBanner = rootView.findViewById(R.id.jetpack_banner);
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            final Screen screen = Screen.READER_SEARCH.INSTANCE;
+            final JetpackBrandedScreenData screen = JetpackBrandedScreenData.READER_SEARCH.INSTANCE;
             mJetpackBrandingUtils.initJetpackBannerAnimation(mJetpackBanner, mRecyclerView.getInternalRecyclerView());
             TextView jetpackBannerTextView = mJetpackBanner.findViewById(R.id.jetpack_banner_text);
             jetpackBannerTextView.setText(

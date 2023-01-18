@@ -76,7 +76,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.util.JetpackBrandingUtils.Screen;
+import org.wordpress.android.util.JetpackBrandedScreenData;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -227,7 +227,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
     private void addJetpackBadgeAsFooterIfEnabled(ListView listView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            final Screen screen = Screen.NOTIFICATIONS_SETTINGS.INSTANCE;
+            final JetpackBrandedScreenData screen = JetpackBrandedScreenData.NOTIFICATIONS_SETTINGS.INSTANCE;
             final Context context = getContext();
             final LayoutInflater inflater = LayoutInflater.from(context);
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);

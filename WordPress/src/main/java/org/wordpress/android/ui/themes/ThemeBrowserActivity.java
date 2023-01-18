@@ -44,7 +44,7 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.util.JetpackBrandingUtils.Screen;
+import org.wordpress.android.util.JetpackBrandedScreenData;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.widgets.HeaderGridView;
@@ -197,7 +197,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     @Override
     public void onScrollableViewInitialized(int containerId) {
         if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
-            final Screen screen = Screen.THEMES.INSTANCE;
+            final JetpackBrandedScreenData screen = JetpackBrandedScreenData.THEMES.INSTANCE;
             findViewById(R.id.root_view).post(() -> {
                 View jetpackBannerView = findViewById(R.id.jetpack_banner);
                 TextView jetpackBannerTextView = jetpackBannerView.findViewById(R.id.jetpack_banner_text);
