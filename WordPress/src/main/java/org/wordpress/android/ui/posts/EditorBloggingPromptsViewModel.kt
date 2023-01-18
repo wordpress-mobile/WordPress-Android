@@ -16,8 +16,9 @@ import javax.inject.Named
 class EditorBloggingPromptsViewModel
 @Inject constructor(
     private val bloggingPromptsStore: BloggingPromptsStore,
+    private val bloggingPromptsEditorBlockMapper: BloggingPromptsEditorBlockMapper,
     private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private val _onBloggingPromptLoaded = MutableLiveData<Event<EditorLoadedPrompt>>()
     val onBloggingPromptLoaded: LiveData<Event<EditorLoadedPrompt>> = _onBloggingPromptLoaded
@@ -38,11 +39,16 @@ class EditorBloggingPromptsViewModel
     private fun loadPrompt(site: SiteModel, promptId: Int) = launch {
         val prompt = bloggingPromptsStore.getPromptById(site, promptId).first().model
         prompt?.let {
+            val content = if (bloggingPromptsEnhancementsFeatureConfig.isEnabled()) {
+                bloggingPromptsEditorBlockMapper.map(it)
+            } else {
+                it.content
+            }
             _onBloggingPromptLoaded.postValue(
                 Event(
                     EditorLoadedPrompt(
                         promptId,
-                        it.content,
+                        content,
                         createPromptTags(promptId)
                     )
                 )
