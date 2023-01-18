@@ -33,8 +33,8 @@ fun <T : LocalContentEntityData> LocalMigrationResult<LocalContentEntityData, Lo
     is Failure -> this
 }
 
-fun <E : LocalMigrationError> LocalMigrationResult<LocalContentEntityData, E>.orElse(
-    handleError: (E) -> LocalMigrationResult<LocalContentEntityData, LocalMigrationError>
+fun <T : LocalContentEntityData, E : LocalMigrationError> LocalMigrationResult<T, E>.orElse(
+    handleError: (E) -> LocalMigrationResult<T, LocalMigrationError>
 ) = when (this) {
     is Success -> this
     is Failure -> handleError(this.error)

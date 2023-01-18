@@ -18,12 +18,14 @@ sealed class LocalMigrationError {
         object SharedLoginDisabled : FeatureDisabled()
         object UserFlagsDisabled : FeatureDisabled()
         object ReaderSavedPostsDisabled : FeatureDisabled()
+        object BloggingRemindersSyncDisabled : FeatureDisabled()
     }
 
     sealed class MigrationAlreadyAttempted : LocalMigrationError() {
         object SharedLoginAlreadyAttempted : MigrationAlreadyAttempted()
         object UserFlagsAlreadyAttempted : MigrationAlreadyAttempted()
         object ReaderSavedPostsAlreadyAttempted : MigrationAlreadyAttempted()
+        object BloggingRemindersSyncAlreadyAttempted : MigrationAlreadyAttempted()
     }
 
     sealed class PersistenceError : LocalMigrationError() {
@@ -31,6 +33,7 @@ sealed class LocalMigrationError {
         object FailedToSaveUserFlags : PersistenceError()
         data class FailedToSaveUserFlagsWithException(val throwable: Throwable) : PersistenceError()
         object FailedToSaveReaderSavedPosts : PersistenceError()
+        data class FailedToSaveBloggingRemindersWithException(val throwable: Throwable) : PersistenceError()
         sealed class LocalPostsPersistenceError : PersistenceError() {
             data class FailedToResetSequenceForPosts(val throwable: Throwable) : LocalPostsPersistenceError()
             data class FailedToInsertLocalPost(val post: PostModel) : LocalPostsPersistenceError()

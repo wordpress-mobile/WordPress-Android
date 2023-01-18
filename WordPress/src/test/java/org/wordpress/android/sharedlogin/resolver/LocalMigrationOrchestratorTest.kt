@@ -8,6 +8,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.bloggingreminders.resolver.BloggingRemindersHelper
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
@@ -19,6 +20,7 @@ import org.wordpress.android.localcontentmigration.LocalContentEntity.ReaderPost
 import org.wordpress.android.localcontentmigration.LocalContentEntity.Sites
 import org.wordpress.android.localcontentmigration.LocalContentEntity.UserFlags
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.AccessTokenData
+import org.wordpress.android.localcontentmigration.LocalContentEntityData.BloggingRemindersData
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.LocalDraftContentIsPresent
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.WPNotLoggedIn
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.EligibilityStatusData
@@ -59,6 +61,7 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
     private val sitesMigrationHelper: SitesMigrationHelper = mock()
     private val localPostsHelper: LocalPostsHelper = mock()
     private val eligibilityHelper: EligibilityHelper = mock()
+    private val bloggingRemindersHelper: BloggingRemindersHelper = mock()
     private val classToTest = LocalMigrationOrchestrator(
         sharedLoginAnalyticsTracker,
         migrationAnalyticsTracker,
@@ -68,6 +71,7 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
         sitesMigrationHelper,
         localPostsHelper,
         eligibilityHelper,
+        bloggingRemindersHelper,
     )
     private val avatarUrl = "avatarUrl"
     private val sites = listOf(SiteModel(), SiteModel())
@@ -211,6 +215,8 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
         whenever(readerSavedPostsHelper.migrateReaderSavedPosts())
             .thenReturn(Success(ReaderPostsData(ReaderPostList())))
         whenever(localPostsHelper.migratePosts()).thenReturn(Success(PostData(PostModel())))
+        whenever(bloggingRemindersHelper.migrateBloggingReminders())
+            .thenReturn(Success(BloggingRemindersData(listOf())))
     }
 
     private fun assertFailure(error: ProviderError) {
