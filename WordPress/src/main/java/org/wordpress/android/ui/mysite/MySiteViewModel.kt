@@ -460,8 +460,7 @@ class MySiteViewModel @Inject constructor(
 
         val jetpackSwitchMenu = MySiteCardAndItem.Card.JetpackSwitchMenu(
             onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
-            onHideMenuItemClick = ListItemInteraction.create(this::onJetpackFeatureCardHideMenuItemClick),
-            onRemindMeLaterItemClick = ListItemInteraction.create(this::onJetpackFeatureCardRemindMeLaterClick),
+            onRemindMeLaterItemClick = ListItemInteraction.create(this::onSwitchToJetpackMenuCardRemindMeLaterClick),
             onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick)
         ).takeIf {
             jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()
