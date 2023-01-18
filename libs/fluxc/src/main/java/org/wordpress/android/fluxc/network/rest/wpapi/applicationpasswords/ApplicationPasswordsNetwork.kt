@@ -35,7 +35,7 @@ class ApplicationPasswordsNetwork @Inject constructor(
     // We can't use construction injection for this variable, as its class is internal
     @Inject internal lateinit var mApplicationPasswordsManager: ApplicationPasswordsManager
 
-    @Suppress("ReturnCount")
+    @Suppress("ReturnCount", "ComplexMethod")
     suspend fun <T> executeGsonRequest(
         site: SiteModel,
         method: HttpMethod,
@@ -47,7 +47,8 @@ class ApplicationPasswordsNetwork @Inject constructor(
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
         forced: Boolean = false,
         requestTimeout: Int = BaseRequest.DEFAULT_REQUEST_TIMEOUT,
-        retries: Int = BaseRequest.DEFAULT_MAX_RETRIES
+        retries: Int = BaseRequest.DEFAULT_MAX_RETRIES,
+        isRegeneratingApplicationPassword: Boolean = false
     ): WPAPIResponse<T> {
         fun buildRequest(
             continuation: Continuation<WPAPIResponse<T>>,
@@ -87,12 +88,16 @@ class ApplicationPasswordsNetwork @Inject constructor(
             is ApplicationPasswordCreationResult.Existing -> credentialsResult.credentials
             is ApplicationPasswordCreationResult.Created -> {
                 if (listener.isPresent) {
-                    listener.get().onNewPasswordCreated()
+                    listener.get().onNewPasswordCreated(isRegeneratingApplicationPassword)
                 }
                 credentialsResult.credentials
             }
-            is ApplicationPasswordCreationResult.Failure ->
+            is ApplicationPasswordCreationResult.Failure -> {
+                if (listener.isPresent) {
+                    listener.get().onPasswordGenerationFailed(credentialsResult.error.toWPAPINetworkError())
+                }
                 return WPAPIResponse.Error(credentialsResult.error.toWPAPINetworkError())
+            }
             is ApplicationPasswordCreationResult.NotSupported -> {
                 val networkError = credentialsResult.originalError.toWPAPINetworkError()
                 if (listener.isPresent) {
@@ -123,7 +128,7 @@ class ApplicationPasswordsNetwork @Inject constructor(
                     " Delete the saved one then retry"
             )
             mApplicationPasswordsManager.deleteLocalApplicationPassword(site)
-            executeGsonRequest(site, method, path, clazz, params, body)
+            executeGsonRequest(site, method, path, clazz, params, body, isRegeneratingApplicationPassword = true)
         } else {
             response
         }

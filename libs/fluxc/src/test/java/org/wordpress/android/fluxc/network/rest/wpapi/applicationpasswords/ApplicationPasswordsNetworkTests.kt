@@ -127,7 +127,21 @@ class ApplicationPasswordsNetworkTests {
 
             network.executeGsonRequest(testSite, HttpMethod.GET, "path", TestResponse::class.java)
 
-            verify(listener).onNewPasswordCreated()
+            verify(listener).onNewPasswordCreated(isPasswordRegenerated = false)
+        }
+
+    @Test
+    fun `given a revoked local password, when a new password is created, then notify listener`() =
+        runBlockingTest {
+            whenever(mApplicationPasswordsManager.getApplicationCredentials(testSite))
+                .thenReturn(ApplicationPasswordCreationResult.Existing(testCredentials))
+                .thenReturn(ApplicationPasswordCreationResult.Created(testCredentials))
+            val networkError = VolleyError(NetworkResponse(401, byteArrayOf(), true, 0, emptyList()))
+            givenErrorResponse(networkError)
+
+            network.executeGsonRequest(testSite, HttpMethod.GET, "path", TestResponse::class.java)
+
+            verify(listener).onNewPasswordCreated(isPasswordRegenerated = true)
         }
 
     @Suppress("UNCHECKED_CAST")
