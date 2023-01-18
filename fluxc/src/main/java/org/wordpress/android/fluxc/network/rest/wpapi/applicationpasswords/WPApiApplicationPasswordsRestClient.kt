@@ -56,8 +56,42 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
                     )
                 )
             }
+
             is WPAPIResponse.Error<ApplicationPasswordCreationResponse> ->
                 ApplicationPasswordCreationPayload(response.error)
+        }
+    }
+
+    suspend fun fetchApplicationPasswordUUID(
+        site: SiteModel,
+        applicationName: String
+    ): ApplicationPasswordUUIDFetchPayload {
+        AppLog.d(T.MAIN, "Fetch application password UUID using Cookie authentication")
+        val path = WPAPI.users.me.application_passwords.urlV2
+        val payload = wpApiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+            APIResponseWrapper(
+                wpApiGsonRequestBuilder.syncGetRequest(
+                    restClient = this,
+                    url = site.buildUrl(path),
+                    clazz = Array<ApplicationPasswordsFetchResponse>::class.java,
+                    nonce = nonce?.value
+                )
+            )
+        }
+
+        return when (val response = payload.response) {
+            is WPAPIResponse.Success -> {
+                response.data?.firstOrNull { it.name == applicationName }?.let {
+                    ApplicationPasswordUUIDFetchPayload(it.uuid)
+                } ?: ApplicationPasswordUUIDFetchPayload(
+                    BaseNetworkError(
+                        GenericErrorType.UNKNOWN,
+                        "UUID for application password $applicationName was not found"
+                    )
+                )
+            }
+
+            is WPAPIResponse.Error -> ApplicationPasswordUUIDFetchPayload(response.error)
         }
     }
 
@@ -90,6 +124,7 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
                     )
                 )
             }
+
             is WPAPIResponse.Error<ApplicationPasswordDeleteResponse> -> {
                 ApplicationPasswordDeletionPayload(response.error)
             }

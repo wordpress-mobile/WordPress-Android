@@ -60,6 +60,35 @@ internal class JetpackApplicationPasswordsRestClient @Inject constructor(
         }
     }
 
+    suspend fun fetchApplicationPasswordUUID(
+        site: SiteModel,
+        applicationName: String
+    ) : ApplicationPasswordUUIDFetchPayload {
+        AppLog.d(T.MAIN, "Fetch application password UUID using Jetpack Tunnel")
+        val url = WPAPI.users.me.application_passwords.urlV2
+        val response = jetpackTunnelGsonRequestBuilder.syncGetRequest(
+            restClient = this,
+            site = site,
+            url = url,
+            params = emptyMap(),
+            clazz = Array<ApplicationPasswordCreationResponse>::class.java
+        )
+
+        return when (response) {
+            is JetpackSuccess -> {
+                response.data?.firstOrNull { it.name == applicationName }?.let {
+                    ApplicationPasswordUUIDFetchPayload(it.uuid)
+                } ?: ApplicationPasswordUUIDFetchPayload(
+                    BaseNetworkError(
+                        GenericErrorType.UNKNOWN,
+                        "UUID for application password $applicationName was not found"
+                    )
+                )
+            }
+            is JetpackError -> ApplicationPasswordUUIDFetchPayload(response.error)
+        }
+    }
+
     suspend fun deleteApplicationPassword(
         site: SiteModel,
         uuid: ApplicationPasswordUUID
