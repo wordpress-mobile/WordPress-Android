@@ -11,14 +11,17 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
 import org.wordpress.android.ui.posts.BLOGGING_PROMPT_TAG
+import org.wordpress.android.ui.posts.BloggingPromptsEditorBlockMapper
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel.EditorLoadedPrompt
+import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -42,16 +45,22 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
             respondentsAvatarUrls = listOf()
         )
     )
-
     private val bloggingPromptsStore: BloggingPromptsStore = mock {
         onBlocking { getPromptById(any(), any()) } doReturn flowOf(bloggingPrompt)
     }
+    private val bloggingPromptsBlock = "blogging_prompts_block"
+    private val bloggingPromptsEditorBlockMapper: BloggingPromptsEditorBlockMapper = mock {
+        on { it.map(any()) } doReturn bloggingPromptsBlock
+    }
+    private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig = mock()
 
     @Before
     fun setUp() {
         viewModel = EditorBloggingPromptsViewModel(
             bloggingPromptsStore,
-            testDispatcher()
+            bloggingPromptsEditorBlockMapper,
+            bloggingPromptsEnhancementsFeatureConfig,
+            testDispatcher(),
         )
 
         viewModel.onBloggingPromptLoaded.observeForever {
@@ -65,7 +74,6 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     fun `starting VM fetches a prompt and posts it to onBloggingPromptLoaded`() = test {
         viewModel.start(siteModel, 123)
 
-        assertThat(loadedPrompt?.content).isEqualTo(bloggingPrompt.model?.content)
         assertThat(loadedPrompt?.promptId).isEqualTo(bloggingPrompt.model?.id)
         assertThat(loadedPrompt?.tag).isEqualTo(BLOGGING_PROMPT_TAG)
 
@@ -76,5 +84,19 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     fun `should NOT execute start method if prompt ID is less than 0`() = test {
         viewModel.start(siteModel, -1)
         verify(bloggingPromptsStore, times(0)).getPromptById(any(), any())
+    }
+
+    @Test
+    fun `should load blogging prompt content if enhancements feature flag is DISABLED`() {
+        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(false)
+        viewModel.start(siteModel, 123)
+        assertThat(loadedPrompt?.content).isEqualTo(bloggingPrompt.model?.content)
+    }
+
+    @Test
+    fun `should load blogging prompt mapped block if enhancements feature flag is ENABLED`() {
+        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
+        viewModel.start(siteModel, 123)
+        assertThat(loadedPrompt?.content).isEqualTo(bloggingPromptsBlock)
     }
 }
