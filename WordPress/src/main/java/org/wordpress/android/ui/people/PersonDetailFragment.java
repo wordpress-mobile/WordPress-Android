@@ -156,7 +156,6 @@ public class PersonDetailFragment extends Fragment {
             jetpackBadgeContainer.setVisibility(View.VISIBLE);
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-
                 jetpackBadge.setOnClickListener(v -> {
                     mJetpackBrandingUtils.trackBadgeTapped(screen);
                     new JetpackPoweredBottomSheetFragment()

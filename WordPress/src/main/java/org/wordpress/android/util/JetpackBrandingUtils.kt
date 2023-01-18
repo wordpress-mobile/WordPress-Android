@@ -108,13 +108,11 @@ class JetpackBrandingUtils @Inject constructor(
 
     @Suppress("ClassName")
     sealed class Screen(open val trackingName: String) {
-
         sealed class ScreenWithDynamicBranding(
             override val trackingName: String,
             val featureName: UiString? = null,
             val isFeatureNameSingular: Boolean,
         ) : Screen(trackingName) {
-
             val featureVerb
                 get() = when (isFeatureNameSingular) {
                     true -> UiStringRes(R.string.wp_jetpack_powered_phase_3_feature_verb_singular_is)
@@ -209,6 +207,5 @@ class JetpackBrandingUtils @Inject constructor(
 
     companion object {
         private const val SCREEN_KEY = "screen"
-
     }
 }
