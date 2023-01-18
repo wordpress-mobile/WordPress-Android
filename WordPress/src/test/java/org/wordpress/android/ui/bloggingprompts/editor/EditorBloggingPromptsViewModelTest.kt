@@ -45,12 +45,12 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
             respondentsAvatarUrls = listOf()
         )
     )
-
     private val bloggingPromptsStore: BloggingPromptsStore = mock {
         onBlocking { getPromptById(any(), any()) } doReturn flowOf(bloggingPrompt)
     }
+    private val bloggingPromptsBlock = "blogging_prompts_block"
     private val bloggingPromptsEditorBlockMapper: BloggingPromptsEditorBlockMapper = mock {
-        on { it.map(any()) } doReturn (bloggingPrompt.model?.content ?: "")
+        on { it.map(any()) } doReturn bloggingPromptsBlock
     }
     private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig = mock()
 
@@ -58,9 +58,9 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     fun setUp() {
         viewModel = EditorBloggingPromptsViewModel(
             bloggingPromptsStore,
-            testDispatcher(),
             bloggingPromptsEditorBlockMapper,
             bloggingPromptsEnhancementsFeatureConfig,
+            testDispatcher(),
         )
 
         viewModel.onBloggingPromptLoaded.observeForever {
@@ -74,7 +74,6 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     fun `starting VM fetches a prompt and posts it to onBloggingPromptLoaded`() = test {
         viewModel.start(siteModel, 123)
 
-        assertThat(loadedPrompt?.content).isEqualTo(bloggingPrompt.model?.content)
         assertThat(loadedPrompt?.promptId).isEqualTo(bloggingPrompt.model?.id)
         assertThat(loadedPrompt?.tag).isEqualTo(BLOGGING_PROMPT_TAG)
 
@@ -88,16 +87,16 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `should NOT CALL block mapper if enhancements feature flag is DISABLED`() {
+    fun `should load blogging prompt content if enhancements feature flag is DISABLED`() {
         whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(false)
         viewModel.start(siteModel, 123)
-        verify(bloggingPromptsEditorBlockMapper, times(0)).map(any())
+        assertThat(loadedPrompt?.content).isEqualTo(bloggingPrompt.model?.content)
     }
 
     @Test
-    fun `should CALL block mapper if enhancements feature flag is ENABLED`() {
+    fun `should load blogging prompt mapped block if enhancements feature flag is ENABLED`() {
         whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
         viewModel.start(siteModel, 123)
-        verify(bloggingPromptsEditorBlockMapper, times(1)).map(any())
+        assertThat(loadedPrompt?.content).isEqualTo(bloggingPromptsBlock)
     }
 }
