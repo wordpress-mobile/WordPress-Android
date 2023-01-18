@@ -2,14 +2,17 @@ package org.wordpress.android.ui.bloggingprompts.promptslist
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.bloggingprompts.promptslist.mapper.BloggingPromptsListItemModelMapper
 import org.wordpress.android.ui.bloggingprompts.promptslist.model.BloggingPromptsListItemModel
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -21,9 +24,13 @@ class BloggingPromptsListViewModel @Inject constructor(
     private val tracker: BloggingPromptsListAnalyticsTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow = MutableStateFlow<UiState>(UiState.None)
     val uiStateFlow = _uiStateFlow.asStateFlow()
+
+    private val _actionEvents = Channel<ActionEvent>(Channel.BUFFERED)
+    val actionEvents = _actionEvents.receiveAsFlow()
 
     fun start() {
         tracker.trackScreenShown()
@@ -49,11 +56,21 @@ class BloggingPromptsListViewModel @Inject constructor(
         }
     }
 
+    fun onPromptListItemClicked(itemModel: BloggingPromptsListItemModel) {
+        if (bloggingPromptsEnhancementsFeatureConfig.isEnabled()) {
+            _actionEvents.trySend(ActionEvent.OpenEditor(itemModel.id))
+        }
+    }
+
     sealed interface UiState {
         object None : UiState
         object Loading : UiState
         data class Content(val content: List<BloggingPromptsListItemModel>) : UiState
         object FetchError : UiState
         object NetworkError : UiState
+    }
+
+    sealed interface ActionEvent {
+        data class OpenEditor(val bloggingPromptId: Int) : ActionEvent
     }
 }

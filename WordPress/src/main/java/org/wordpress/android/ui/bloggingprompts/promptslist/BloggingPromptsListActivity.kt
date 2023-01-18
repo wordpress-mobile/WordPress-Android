@@ -8,10 +8,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.bloggingprompts.promptslist.compose.BloggingPromptsListScreen
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.posts.PostUtils
 
 @AndroidEntryPoint
 class BloggingPromptsListActivity : LocaleAwareActivity() {
@@ -22,16 +27,33 @@ class BloggingPromptsListActivity : LocaleAwareActivity() {
         setContent {
             AppTheme {
                 val uiState by viewModel.uiStateFlow.collectAsState()
-                BloggingPromptsListScreen(uiState, ::onBackPressed)
+                BloggingPromptsListScreen(uiState, ::onBackPressed) { item -> viewModel.onPromptListItemClicked(item) }
             }
         }
         viewModel.start()
+        observeActions()
     }
 
     // TODO it might be safer bringing in the androidx.activity:activity-compose lib
     private fun setContent(content: @Composable () -> Unit) {
         val composeView = ComposeView(this).apply { setContent(content) }
         setContentView(composeView)
+    }
+
+    private fun observeActions() {
+        viewModel.actionEvents.onEach(this::handleActionEvents).launchIn(lifecycleScope)
+    }
+
+    private fun handleActionEvents(actionEvent: BloggingPromptsListViewModel.ActionEvent) {
+        when (actionEvent) {
+            is BloggingPromptsListViewModel.ActionEvent.OpenEditor -> {
+                startActivity(
+                    ActivityLauncher.createOpenEditorWithBloggingPromptIntent(
+                        this, actionEvent.bloggingPromptId, PostUtils.EntryPoint.BLOGGING_PROMPTS_LIST
+                    )
+                )
+            }
+        }
     }
 
     companion object {

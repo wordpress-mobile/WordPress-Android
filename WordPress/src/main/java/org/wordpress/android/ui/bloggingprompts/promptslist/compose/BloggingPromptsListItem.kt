@@ -2,6 +2,7 @@ package org.wordpress.android.ui.bloggingprompts.promptslist.compose
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,12 +45,14 @@ private val ItemSubtitleTextStyle
 fun BloggingPromptsListItem(
     model: BloggingPromptsListItemModel,
     modifier: Modifier = Modifier,
+    onClick: (BloggingPromptsListItemModel) -> Unit,
 ) {
     Column(
         modifier = modifier
             .semantics(mergeDescendants = true) { }
             .background(MaterialTheme.colors.surface)
-            .padding(Margin.ExtraLarge.value),
+            .padding(Margin.ExtraLarge.value)
+            .clickable { onClick(model) },
         verticalArrangement = Arrangement.spacedBy(Margin.Small.value),
     ) {
         Text(
@@ -106,6 +109,6 @@ fun BloggingPromptsListItemPreview(
     @PreviewParameter(BloggingPromptsListItemPreviewProvider::class) model: BloggingPromptsListItemModel
 ) {
     AppTheme {
-        BloggingPromptsListItem(model)
+        BloggingPromptsListItem(model, Modifier) {}
     }
 }
