@@ -36,11 +36,25 @@ class EditorBloggingPromptsViewModel
     private fun loadPrompt(site: SiteModel, promptId: Int) = launch {
         val prompt = bloggingPromptsStore.getPromptById(site, promptId).first().model
         prompt?.let {
-            _onBloggingPromptLoaded.postValue(Event(EditorLoadedPrompt(promptId, it.content, BLOGGING_PROMPT_TAG)))
+            _onBloggingPromptLoaded.postValue(
+                Event(
+                    EditorLoadedPrompt(
+                        promptId,
+                        it.content,
+                        createPromptTags(promptId)
+                    )
+                )
+            )
         }
     }
 
-    data class EditorLoadedPrompt(val promptId: Int, val content: String, val tag: String)
+    private fun createPromptTags(promptId: Int): List<String> = listOf(
+        BLOGGING_PROMPT_TAG,
+        BLOGGING_PROMPT_SPECIFIC_TAG_TEMPLATE.format(promptId)
+    )
+
+    data class EditorLoadedPrompt(val promptId: Int, val content: String, val tags: List<String>)
 }
 
 internal const val BLOGGING_PROMPT_TAG = "dailyprompt"
+internal const val BLOGGING_PROMPT_SPECIFIC_TAG_TEMPLATE = "dailyprompt-%s"
