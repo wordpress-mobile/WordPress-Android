@@ -37,6 +37,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
         )
     }
 
+    // region Branding Visibility
     @Test
     fun `given phase one started, when phase one branding is checked, should return true`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseOne)
@@ -76,4 +77,5 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
         assertTrue(shouldShowBranding)
     }
+    // endregion
 }
