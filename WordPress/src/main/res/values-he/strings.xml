@@ -137,7 +137,6 @@ Language: he_IL
     <string name="hpp_title">לבחור ערכת עיצוב</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">דילגת על ההצעה של היום לפרסום בבלוג</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">למידע נוסף</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">מאת </string>
     <string name="stats_follower_types_pie_chart_total_label">סך הכול</string>
     <string name="stats_referrers_pie_chart_others">אחרים</string>
     <string name="stats_referrers_pie_chart_search">לחפש</string>

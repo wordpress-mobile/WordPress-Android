@@ -29,7 +29,6 @@ Language: vi_VN
     <string name="hpp_title">Chọn một chủ đề</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Bỏ qua nhắc nhở hôm nay</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Tìm hiểu thêm</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Từ</string>
     <string name="stats_follower_types_pie_chart_total_label">Tổng cộng</string>
     <string name="stats_referrers_pie_chart_others">Khác</string>
     <string name="stats_referrers_pie_chart_search">Tìm kiếm</string>

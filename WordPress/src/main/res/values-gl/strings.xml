@@ -108,7 +108,6 @@ Language: gl_ES
     <string name="hpp_title">Elixe un tema</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Salteime o estímulo para bloguear de hoxe</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Máis información</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Desde </string>
     <string name="stats_follower_types_pie_chart_total_label">Totais</string>
     <string name="stats_referrers_pie_chart_others">Outros</string>
     <string name="stats_referrers_pie_chart_search">Buscar</string>

@@ -135,7 +135,6 @@ Language: sq_AL
     <string name="hpp_title">Zgjidhni një temë</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">U anashkalua cytja e sotme për blogim</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Mësoni më tepër</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Nga</string>
     <string name="stats_follower_types_pie_chart_total_label">Gjithsej</string>
     <string name="stats_referrers_pie_chart_others">Të tjera</string>
     <string name="stats_referrers_pie_chart_search">Kërkim</string>

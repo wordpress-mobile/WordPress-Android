@@ -134,7 +134,6 @@ Language: fr
     <string name="hpp_recommended_title">Idéal pour %s</string>
     <string name="hpp_preview_tapped_theme">Prévisualiser le thème %s</string>
     <string name="hpp_title">Choisir un thème</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">De </string>
     <string name="stats_follower_types_pie_chart_total_label">Totaux</string>
     <string name="stats_referrers_pie_chart_others">Autres</string>
     <string name="stats_referrers_pie_chart_search">Rechercher</string>

@@ -151,7 +151,6 @@ Language: ro
     <string name="stats_follower_types_pie_chart_total_label">Total</string>
     <string name="stats_referrers_pie_chart_others">Altele</string>
     <string name="stats_referrers_pie_chart_search">Caută</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Din</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Azi am omis îndemnul pentru publicare</string>
     <string name="stats_action_card_schedule_post_title">Îți programezi articolele</string>
     <string name="stats_action_card_blogging_reminders_button_label">Setează reamintirile</string>

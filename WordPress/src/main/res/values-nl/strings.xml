@@ -127,7 +127,6 @@ Language: nl
     <string name="hpp_title">Kies een thema</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Heeft de blogmelding van vandaag overgeslagen</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Meer informatie</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Van </string>
     <string name="stats_follower_types_pie_chart_total_label">Totalen</string>
     <string name="stats_referrers_pie_chart_others">Anderen</string>
     <string name="stats_referrers_pie_chart_search">Zoeken</string>

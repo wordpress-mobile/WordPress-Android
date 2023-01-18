@@ -137,7 +137,6 @@ Language: zh_CN
     <string name="hpp_title">选择主题</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">跳过今日的博客提示</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">了解更多</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">来源 </string>
     <string name="stats_follower_types_pie_chart_total_label">共计</string>
     <string name="stats_referrers_pie_chart_others">其他</string>
     <string name="stats_referrers_pie_chart_search">搜索</string>

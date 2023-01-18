@@ -70,7 +70,6 @@ Language: es_VE
     <string name="hpp_title">Elige un tema</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Me he saltado el estímulo para bloguear de hoy</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Más información</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Desde </string>
     <string name="stats_follower_types_pie_chart_total_label">Totales</string>
     <string name="stats_referrers_pie_chart_others">Otros</string>
     <string name="stats_referrers_pie_chart_search">Buscar</string>

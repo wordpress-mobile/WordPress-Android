@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main
 
 import android.view.ViewGroup
+import org.wordpress.android.R
 import org.wordpress.android.databinding.BloggingPromptCardCompactBinding
 import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution.DAY_ONE
@@ -21,6 +22,10 @@ class CompactBloggingPromptCardViewHolder(
         )
         uiHelpers.setTextOrHide(promptContent, cardPrompt)
         uiHelpers.updateVisibility(attributionContainer, action.attribution == DAY_ONE)
+
+        attributionContent.text = htmlCompatWrapper.fromHtml(
+            attributionContent.context.getString(R.string.my_site_blogging_prompt_card_attribution_dayone)
+        )
 
         answerButton.setOnClickListener {
             action.onClickAction?.invoke(action.promptId)
