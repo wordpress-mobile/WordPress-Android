@@ -89,7 +89,7 @@ internal class ApplicationPasswordsStore @Inject constructor(
         }
     }
 
-    fun getUuid(host: String): String? {
+    fun getUuid(host: String): ApplicationPasswordUUID? {
         return encryptedPreferences.getString(host.uuidPrefKey, null)
     }
 
