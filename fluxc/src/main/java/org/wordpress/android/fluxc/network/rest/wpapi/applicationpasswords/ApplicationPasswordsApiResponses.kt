@@ -8,6 +8,11 @@ internal data class ApplicationPasswordCreationResponse(
     @SerializedName("password") val password: String
 )
 
+internal data class ApplicationPasswordsFetchResponse(
+    @SerializedName("uuid") val uuid: ApplicationPasswordUUID,
+    @SerializedName("name") val name: String
+)
+
 internal data class ApplicationPasswordDeleteResponse(
     @SerializedName("deleted") val deleted: Boolean
 )
