@@ -21,6 +21,7 @@ class InsightsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
 
     private lateinit var viewModel: InsightsDetailViewModel
     private val viewsVisitorsDetailViewModel: ViewsVisitorsDetailViewModel by viewModels()
+    private val totalLikesDetailViewModel: TotalLikesDetailViewModel by viewModels()
     private val totalFollowersDetailViewModel: TotalFollowersDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +60,7 @@ class InsightsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
 
         viewModel = when (listType) {
             StatsSection.INSIGHT_DETAIL -> viewsVisitorsDetailViewModel
+            StatsSection.TOTAL_LIKES_DETAIL -> totalLikesDetailViewModel
             StatsSection.TOTAL_FOLLOWERS_DETAIL -> totalFollowersDetailViewModel
             else -> viewsVisitorsDetailViewModel
         }

@@ -9,6 +9,7 @@ import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.TOTAL_FOLLOWERS_DETAIL_USE_CASE
+import org.wordpress.android.ui.stats.refresh.TOTAL_LIKES_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.VIEWS_AND_VISITORS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -68,6 +69,14 @@ abstract class InsightsDetailViewModel (
 class ViewsVisitorsDetailViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(VIEWS_AND_VISITORS_USE_CASE) private val detailUseCase: BaseListUseCase,
+    statsSiteProvider: StatsSiteProvider,
+    networkUtilsWrapper: NetworkUtilsWrapper
+) : InsightsDetailViewModel(mainDispatcher, detailUseCase, statsSiteProvider, networkUtilsWrapper)
+
+@HiltViewModel
+class TotalLikesDetailViewModel @Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(TOTAL_LIKES_DETAIL_USE_CASE) detailUseCase: BaseListUseCase,
     statsSiteProvider: StatsSiteProvider,
     networkUtilsWrapper: NetworkUtilsWrapper
 ) : InsightsDetailViewModel(mainDispatcher, detailUseCase, statsSiteProvider, networkUtilsWrapper)
