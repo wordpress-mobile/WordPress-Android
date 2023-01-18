@@ -21,8 +21,7 @@ sealed class JetpackFeatureOverlayComponentVisibility(
         override val migrationInfoText: Boolean = true,
         override val closeButton: Boolean = false,
         override val migrationText: Boolean = true
-    ) :
-        JetpackFeatureOverlayComponentVisibility()
+    ) : JetpackFeatureOverlayComponentVisibility()
 
     sealed class SiteCreationPhase : JetpackFeatureOverlayComponentVisibility() {
         class PhaseOne : SiteCreationPhase()
