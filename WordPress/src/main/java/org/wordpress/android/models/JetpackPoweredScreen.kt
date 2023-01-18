@@ -42,6 +42,11 @@ sealed interface JetpackPoweredScreen {
             featureName = UiStringRes(R.string.backup),
             isFeatureNameSingular = true,
         ),
+        BACKUP_DETAIL(
+            trackingName = "backup_detail",
+            featureName = UiStringRes(R.string.backup),
+            isFeatureNameSingular = true,
+        ),
         NOTIFICATIONS(
             trackingName = "notifications",
             featureName = UiStringRes(R.string.notifications_screen_title),

@@ -90,7 +90,7 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             val screen = trackingSource
                 ?.takeIf { it == BACKUP_TRACK_EVENT_PROPERTY_VALUE }
-                ?.let { JetpackPoweredScreen.WithDynamicText.BACKUP }
+                ?.let { JetpackPoweredScreen.WithDynamicText.BACKUP_DETAIL }
                 ?: JetpackPoweredScreen.WithDynamicText.ACTIVITY_LOG_DETAIL
 
             jetpackBadge.root.isVisible = true
