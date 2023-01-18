@@ -43,6 +43,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
+import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.ui.debug.DebugSettingsActivity;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
@@ -58,7 +59,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.util.JetpackBrandedScreenData;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.LocaleProvider;
 import org.wordpress.android.util.NetworkUtils;
@@ -252,7 +252,7 @@ public class AppSettingsFragment extends PreferenceFragment
 
     private void addJetpackBadgeAsFooterIfEnabled(LayoutInflater inflater, ListView listView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            final JetpackBrandedScreenData screen = JetpackBrandedScreenData.APP_SETTINGS.INSTANCE;
+            final JetpackPoweredScreen screen = JetpackPoweredScreen.WithStaticText.APP_SETTINGS;
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
             binding.footerJetpackBadge.jetpackPoweredBadge.setText(
                     mUiHelpers.getTextOfUiString(

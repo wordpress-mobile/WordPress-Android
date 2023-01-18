@@ -66,7 +66,7 @@ import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandedScreenData
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.SnackbarItem
@@ -215,7 +215,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     private fun MeFragmentBinding.addJetpackBadgeIfNeeded() {
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = JetpackBrandedScreenData.ME
+            val screen = JetpackPoweredScreen.WithStaticText.ME
             jetpackBadge.isVisible = true
             jetpackBadge.text = uiHelpers.getTextOfUiString(
                 requireContext(),

@@ -32,7 +32,7 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.util.JetpackBrandedScreenData;
+import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
@@ -137,7 +137,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         }
 
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            final JetpackBrandedScreenData screen = JetpackBrandedScreenData.SHARE.INSTANCE;
+            final JetpackPoweredScreen screen = JetpackPoweredScreen.WithDynamicText.SHARE;
             TextView jetpackBadge = rootView.findViewById(R.id.jetpack_powered_badge);
             jetpackBadge.setVisibility(View.VISIBLE);
             jetpackBadge.setText(

@@ -28,7 +28,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandedScreenData
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY
@@ -90,8 +90,8 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             val screen = trackingSource
                 ?.takeIf { it == BACKUP_TRACK_EVENT_PROPERTY_VALUE }
-                ?.let { JetpackBrandedScreenData.BACKUP }
-                ?: JetpackBrandedScreenData.ACTIVITY_LOG_DETAIL
+                ?.let { JetpackPoweredScreen.WithDynamicText.BACKUP }
+                ?: JetpackPoweredScreen.WithDynamicText.ACTIVITY_LOG_DETAIL
 
             jetpackBadge.root.isVisible = true
             jetpackBadge.jetpackPoweredBadge.text = uiHelpers.getTextOfUiString(

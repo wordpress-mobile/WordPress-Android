@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpackoverlay
 
 import org.wordpress.android.R
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
@@ -8,8 +9,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseT
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.JetpackBrandedScreenData
-import org.wordpress.android.util.JetpackBrandedScreenData.ScreenWithDynamicBranding
 import org.wordpress.android.util.config.JPDeadlineConfig
 import javax.inject.Inject
 
@@ -37,13 +36,13 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         }
     }
 
-    fun getBrandingTextByPhase(screen: JetpackBrandedScreenData): UiString {
+    fun getBrandingTextByPhase(screen: JetpackPoweredScreen): UiString {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
             null,
             PhaseOne -> UiStringRes(R.string.wp_jetpack_powered)
             PhaseTwo -> UiStringRes(R.string.wp_jetpack_powered_phase_2)
             PhaseThree -> when (screen) {
-                is ScreenWithDynamicBranding -> {
+                is JetpackPoweredScreen.WithDynamicText -> {
                     getBrandingTextForPhaseThreeBasedOnDeadline(screen, jpDeadlineConfig.getValue())
                 }
                 else -> UiStringRes(R.string.wp_jetpack_powered)
@@ -54,7 +53,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
     }
 
     private fun getBrandingTextForPhaseThreeBasedOnDeadline(
-        screen: ScreenWithDynamicBranding,
+        screen: JetpackPoweredScreen.WithDynamicText,
         jpDeadlineDate: String?,
     ): UiString {
         return when (jpDeadlineDate.isNullOrEmpty()) {
@@ -63,7 +62,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         }
     }
 
-    private fun getPhaseThreeBrandingTextWithoutDeadline(screen: ScreenWithDynamicBranding): UiString {
+    private fun getPhaseThreeBrandingTextWithoutDeadline(screen: JetpackPoweredScreen.WithDynamicText): UiString {
         return UiString.UiStringResWithParams(
             stringRes = R.string.wp_jetpack_powered_phase_3_without_deadline,
             params = screen.getBrandingTextParams()
@@ -72,7 +71,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
 
     @Suppress("MagicNumber", "ForbiddenComment")
     private fun getPhaseThreeBrandingTextWithDeadline(
-        screen: ScreenWithDynamicBranding,
+        screen: JetpackPoweredScreen.WithDynamicText,
         daysUntilDeadline: Int,
     ): UiString {
         return when {
@@ -117,4 +116,20 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
             ?: return 0
         return dateTimeUtilsWrapper.daysBetween(startDate, endDate)
     }
+
+    private fun JetpackPoweredScreen.WithDynamicText.getBrandingTextParams(timeUntilDeadline: Int? = null) =
+        listOfNotNull(
+            featureName,
+            featureVerb,
+            timeUntilDeadline?.let { UiString.UiStringText("$it") },
+        )
+
+    private val JetpackPoweredScreen.WithDynamicText.featureVerb
+        get() = UiStringRes(
+            when (isFeatureNameSingular) {
+                true -> R.string.wp_jetpack_powered_phase_3_feature_verb_singular_is
+                else -> R.string.wp_jetpack_powered_phase_3_feature_verb_plural_are
+            }
+        )
+
 }

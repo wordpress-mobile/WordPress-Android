@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.ThemeStore.OnThemeActivated;
 import org.wordpress.android.fluxc.store.ThemeStore.OnThemeInstalled;
 import org.wordpress.android.fluxc.store.ThemeStore.OnWpComThemesChanged;
 import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
+import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
@@ -44,7 +45,6 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.util.JetpackBrandedScreenData;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.widgets.HeaderGridView;
@@ -197,7 +197,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     @Override
     public void onScrollableViewInitialized(int containerId) {
         if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
-            final JetpackBrandedScreenData screen = JetpackBrandedScreenData.THEMES.INSTANCE;
+            final JetpackPoweredScreen screen = JetpackPoweredScreen.WithDynamicText.THEMES;
             findViewById(R.id.root_view).post(() -> {
                 View jetpackBannerView = findViewById(R.id.jetpack_banner);
                 TextView jetpackBannerTextView = jetpackBannerView.findViewById(R.id.jetpack_banner_text);

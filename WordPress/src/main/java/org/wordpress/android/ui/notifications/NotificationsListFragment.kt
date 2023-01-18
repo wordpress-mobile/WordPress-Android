@@ -54,7 +54,7 @@ import org.wordpress.android.ui.notifications.services.NotificationsUpdateServic
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandedScreenData
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
@@ -300,7 +300,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appBar?.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = JetpackBrandedScreenData.NOTIFICATIONS
+            val screen = JetpackPoweredScreen.WithDynamicText.NOTIFICATIONS
             binding?.root?.post {
                 // post is used to create a minimal delay here. containerId changes just before
                 // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.

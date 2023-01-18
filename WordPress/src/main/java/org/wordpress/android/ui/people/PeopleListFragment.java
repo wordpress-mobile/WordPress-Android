@@ -44,7 +44,7 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.util.JetpackBrandedScreenData;
+import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -237,7 +237,7 @@ public class PeopleListFragment extends Fragment {
 
     private void showJetpackBannerIfNeeded(final View rootView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
-            final JetpackBrandedScreenData screen = JetpackBrandedScreenData.PEOPLE.INSTANCE;
+            final JetpackPoweredScreen screen = JetpackPoweredScreen.WithStaticText.PERSON;
             View jetpackBannerView = rootView.findViewById(R.id.jetpack_banner);
             TextView jetpackBannerTextView = jetpackBannerView.findViewById(R.id.jetpack_banner_text);
             jetpackBannerTextView.setText(

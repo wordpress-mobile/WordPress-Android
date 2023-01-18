@@ -31,7 +31,7 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.util.JetpackBrandedScreenData;
+import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -144,7 +144,7 @@ public class PersonDetailFragment extends Fragment {
         }
 
         if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
-            final JetpackBrandedScreenData screen = JetpackBrandedScreenData.PERSON.INSTANCE;
+            final JetpackPoweredScreen screen = JetpackPoweredScreen.WithStaticText.PERSON;
             View jetpackBadgeContainer = rootView.findViewById(R.id.jetpack_badge);
             TextView jetpackBadge = jetpackBadgeContainer.findViewById(R.id.jetpack_powered_badge);
             jetpackBadge.setText(

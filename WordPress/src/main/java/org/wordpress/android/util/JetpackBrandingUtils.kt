@@ -6,8 +6,10 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.JetpackPoweredBottomSheetFeatureConfig
 import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
@@ -54,7 +56,9 @@ class JetpackBrandingUtils @Inject constructor(
     }
 
     @Suppress("unused")
-    fun getBrandingTextForScreen(screen: JetpackBrandedScreenData) = jetpackFeatureRemovalBrandingUtil.getBrandingTextByPhase(screen)
+    fun getBrandingTextForScreen(screen: JetpackPoweredScreen): UiString {
+        return jetpackFeatureRemovalBrandingUtil.getBrandingTextByPhase(screen)
+    }
 
     fun initJetpackBannerAnimation(banner: View, scrollableView: RecyclerView) {
         scrollableView.setOnScrollChangeListener(object : OnScrollChangeListener {
@@ -85,12 +89,12 @@ class JetpackBrandingUtils @Inject constructor(
     /**
      * Tracks
      */
-    fun trackBadgeTapped(screen: JetpackBrandedScreenData) = analyticsTrackerWrapper.track(
+    fun trackBadgeTapped(screen: JetpackPoweredScreen) = analyticsTrackerWrapper.track(
         Stat.JETPACK_POWERED_BADGE_TAPPED,
         mapOf(SCREEN_KEY to screen.trackingName)
     )
 
-    fun trackBannerTapped(screen: JetpackBrandedScreenData) = analyticsTrackerWrapper.track(
+    fun trackBannerTapped(screen: JetpackPoweredScreen) = analyticsTrackerWrapper.track(
         Stat.JETPACK_POWERED_BANNER_TAPPED,
         mapOf(SCREEN_KEY to screen.trackingName)
     )

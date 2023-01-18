@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ActivityLogListActivityBinding
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
@@ -21,7 +22,6 @@ import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_REWIND_ID
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandedScreenData
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
 import javax.inject.Inject
 
@@ -60,7 +60,10 @@ class ActivityLogListActivity : LocaleAwareActivity(), ScrollableViewInitialized
 
     private fun initJetpackBanner(scrollableContainerId: Int) {
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = if (isRewindableOnlyFromExtras) JetpackBrandedScreenData.BACKUP else JetpackBrandedScreenData.ACTIVITY_LOG
+            val screen = when (isRewindableOnlyFromExtras) {
+                true -> JetpackPoweredScreen.WithDynamicText.BACKUP
+                else -> JetpackPoweredScreen.WithDynamicText.ACTIVITY_LOG
+            }
 
             binding?.root?.post {
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
