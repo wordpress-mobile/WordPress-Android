@@ -63,7 +63,7 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
 
     suspend fun deleteApplicationPassword(
         site: SiteModel,
-        uuid: String
+        uuid: ApplicationPasswordUUID
     ): ApplicationPasswordDeletionPayload {
         AppLog.d(T.MAIN, "Delete application password using Cookie Authentication")
 
