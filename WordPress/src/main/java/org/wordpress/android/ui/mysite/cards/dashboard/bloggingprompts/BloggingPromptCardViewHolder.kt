@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.text.HtmlCompat
 import androidx.core.view.MenuCompat
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
