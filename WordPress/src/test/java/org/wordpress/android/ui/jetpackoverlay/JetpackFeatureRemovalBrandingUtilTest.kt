@@ -15,6 +15,7 @@ import org.wordpress.android.R
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.config.JPDeadlineConfig
@@ -90,7 +91,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     // region Branding Text
 
     @Test
-    fun `given phase one not started, all banners and badges should read 'Jetpack powered'`() {
+    fun `given phase one not started, all banners and badges should read Jetpack powered`() {
         givenPhase()
 
         val allBannersAndBadges = getAllBannersAndBadgesText()
@@ -99,7 +100,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     }
 
     @Test
-    fun `given phase one started, all banners and badges should read 'Jetpack powered'`() {
+    fun `given phase one started, all banners and badges should read Jetpack powered`() {
         givenPhase(PhaseOne)
 
         val allBannersAndBadges = getAllBannersAndBadgesText()
@@ -108,12 +109,21 @@ class JetpackFeatureRemovalBrandingUtilTest {
     }
 
     @Test
-    fun `given phase two started, all banners and badges should read 'Get the Jetpack app'`() {
+    fun `given phase two started, all banners and badges should read Get the Jetpack app`() {
         givenPhase(PhaseTwo)
 
         val allBannersAndBadges = getAllBannersAndBadgesText()
 
         assertThat(allBannersAndBadges).allMatch { it == UiString.UiStringRes(R.string.wp_jetpack_powered_phase_2) }
+    }
+
+    @Test
+    fun `given phase four started, all banners and badges should read Jetpack powered`() {
+        givenPhase(PhaseFour)
+
+        val allBannersAndBadges = getAllBannersAndBadgesText()
+
+        assertThat(allBannersAndBadges).allMatch { it == UiString.UiStringRes(R.string.wp_jetpack_powered) }
     }
 
     // endregion
