@@ -23,8 +23,8 @@ class BloggingPromptsListViewModel @Inject constructor(
     private val itemModelMapper: BloggingPromptsListItemModelMapper,
     private val tracker: BloggingPromptsListAnalyticsTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow = MutableStateFlow<UiState>(UiState.None)
     val uiStateFlow = _uiStateFlow.asStateFlow()
