@@ -10,6 +10,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
@@ -20,13 +21,13 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseT
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.config.JPDeadlineConfig
+import org.wordpress.android.util.config.JPDeadlineConfigStub
 
 @RunWith(MockitoJUnitRunner::class)
 class JetpackFeatureRemovalBrandingUtilTest {
 
+    private val jpDeadlineConfig = JPDeadlineConfigStub()
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper = mock()
-    private val jpDeadlineConfig: JPDeadlineConfig = mock()
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper = mock()
 
     @Rule
@@ -42,7 +43,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     fun setup() {
         classToTest = JetpackFeatureRemovalBrandingUtil(
             jetpackFeatureRemovalPhaseHelper,
-            jpDeadlineConfig,
+            jpDeadlineConfig.instance,
             dateTimeUtilsWrapper,
         )
     }
@@ -121,7 +122,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
     @Suppress("MaxLineLength")
     @Test
-    fun `given phase three started, all banners and badges on screens without dynamic text should read Jetpack powered`() {
+    fun `given phase three started, when on screens without dynamic text, banners and badges should read Jetpack powered`() {
         givenPhase(PhaseThree)
 
         val bannersAndBadgesOnScreensWithStaticText = getBrandingOnScreensWithStaticText()
@@ -133,7 +134,18 @@ class JetpackFeatureRemovalBrandingUtilTest {
     @Test
     fun `given phase three started, when deadline is unknown, all other banners and badges should read {Feature} {is,are} moving soon`() {
         givenPhase(PhaseThree)
-        whenJpDeadlineIs("")
+        whenJpDeadlineIs("test")
+
+        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
+
+        allOtherBannersAndBadges.verifyBannersAndBadgesTextIsMovingSoon()
+    }
+
+    @Suppress("MaxLineLength")
+    @Test
+    fun `given phase three started, when deadline is more than 1 month away on screens without dynamic text, banners and badges should read {Feature} {is,are} moving soon`() {
+        givenPhase(PhaseThree)
+        whenJpDeadlineIs("01-01-9999")
 
         val bannersAndBadgesOnScreensWithStaticText = getBrandingOnScreensWithStaticText()
 
@@ -158,9 +170,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     }
 
     private fun whenJpDeadlineIs(date: String?) {
-        date?.takeIf(String::isNotEmpty)?.let {
-            whenever(jpDeadlineConfig.getValue<String>()).thenReturn(it)
-        }
+        whenever(jpDeadlineConfig.appConfig.getRemoteFieldConfigValue(any())).thenReturn(date)
     }
 
     private fun getBrandingOnScreensWithStaticText() = screensWithStaticText.map(classToTest::getBrandingTextByPhase)
@@ -172,6 +182,22 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
     private fun List<UiString>.assertAllMatch(@StringRes expected: Int) {
         assertThat(this).allMatch { it == UiString.UiStringRes(expected) }
+    }
+
+    private fun List<UiString>.verifyBannersAndBadgesTextIsMovingSoon() {
+        screensWithDynamicText.forEach { screen ->
+            assertThat(this).matches { texts ->
+                texts.any {
+                    it == UiString.UiStringResWithParams(
+                        when (screen.isFeatureNameSingular) {
+                            true -> R.string.wp_jetpack_powered_phase_3_is_moving_soon
+                            else -> R.string.wp_jetpack_powered_phase_3_are_moving_soon
+                        },
+                        screen.featureName
+                    )
+                }
+            }
+        }
     }
 
     // endregion
