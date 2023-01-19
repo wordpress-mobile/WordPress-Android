@@ -44,11 +44,27 @@ class EditorBloggingPromptsViewModel
             } else {
                 it.content
             }
-            _onBloggingPromptLoaded.postValue(Event(EditorLoadedPrompt(promptId, content, BLOGGING_PROMPT_TAG)))
+            _onBloggingPromptLoaded.postValue(
+                Event(
+                    EditorLoadedPrompt(
+                        promptId,
+                        content,
+                        createPromptTags(promptId)
+                    )
+                )
+            )
         }
     }
 
-    data class EditorLoadedPrompt(val promptId: Int, val content: String, val tag: String)
+    private fun createPromptTags(promptId: Int): List<String> = mutableListOf<String>().apply {
+        add(BLOGGING_PROMPT_TAG)
+        if (bloggingPromptsEnhancementsFeatureConfig.isEnabled()) {
+            add(BLOGGING_PROMPT_ID_TAG.format(promptId))
+        }
+    }
+
+    data class EditorLoadedPrompt(val promptId: Int, val content: String, val tags: List<String>)
 }
 
 internal const val BLOGGING_PROMPT_TAG = "dailyprompt"
+internal const val BLOGGING_PROMPT_ID_TAG = "dailyprompt-%s"
