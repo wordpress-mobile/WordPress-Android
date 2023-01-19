@@ -11,7 +11,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.models.JetpackPoweredScreen
@@ -134,35 +138,39 @@ class JetpackFeatureRemovalBrandingUtilTest {
     @Test
     fun `given phase three started, when deadline is unknown, all other banners and badges should read {Feature} {is,are} moving soon`() {
         givenPhase(PhaseThree)
-        whenJpDeadlineIs("test")
-
-        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
-
-        allOtherBannersAndBadges.verifyAllBannersAndBadgesTextMatchesEither(
-            R.string.wp_jetpack_powered_phase_3_is_moving_soon,
-            R.string.wp_jetpack_powered_phase_3_are_moving_soon,
-        )
-    }
-
-    @Suppress("MaxLineLength")
-    @Test
-    fun `given phase three started, when deadline is null, all other banners and badges should read {Feature} {is,are} moving soon`() {
-        givenPhase(PhaseThree)
         whenJpDeadlineIs(null)
 
         val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
 
-        allOtherBannersAndBadges.verifyAllBannersAndBadgesTextMatchesEither(
+        allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
             R.string.wp_jetpack_powered_phase_3_is_moving_soon,
             R.string.wp_jetpack_powered_phase_3_are_moving_soon,
         )
+        verifyNoInteractions(dateTimeUtilsWrapper)
+    }
+
+    @Suppress("MaxLineLength")
+    @Test
+    fun `given phase three started, when deadline is more than one month away, all other banners and badges should read {Feature} {is,are} moving soon`() {
+        givenPhase(PhaseThree)
+        whenJpDeadlineIs(31)
+
+        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
+
+        allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
+            R.string.wp_jetpack_powered_phase_3_is_moving_soon,
+            R.string.wp_jetpack_powered_phase_3_are_moving_soon,
+        )
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(any(), eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT))
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
     }
 
     @Suppress("MaxLineLength")
     @Test
     fun `given phase three started, when deadline is more than 1 month away on screens without dynamic text, banners and badges should read {Feature} {is,are} moving soon`() {
         givenPhase(PhaseThree)
-        whenJpDeadlineIs("01-01-9999")
+        whenJpDeadlineIs(28)
 
         val bannersAndBadgesOnScreensWithStaticText = getBrandingOnScreensWithStaticText()
 
@@ -186,8 +194,13 @@ class JetpackFeatureRemovalBrandingUtilTest {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(phase)
     }
 
-    private fun whenJpDeadlineIs(date: String?) {
-        whenever(jpDeadlineConfig.appConfig.getRemoteFieldConfigValue(any())).thenReturn(date)
+    private fun whenJpDeadlineIs(daysAway: Int?) {
+        whenever(jpDeadlineConfig.appConfig.getRemoteFieldConfigValue(any())).thenReturn(daysAway?.toString())
+        daysAway?.let {
+            whenever(dateTimeUtilsWrapper.getTodaysDate()).thenReturn(mock())
+            whenever(dateTimeUtilsWrapper.dateFromPattern(any(), any())).thenReturn(mock())
+            whenever(dateTimeUtilsWrapper.daysBetween(any(), any())).thenReturn(it)
+        }
     }
 
     private fun getBrandingOnScreensWithStaticText() = screensWithStaticText.map(classToTest::getBrandingTextByPhase)
@@ -201,7 +214,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
         assertThat(this).allMatch { it == UiString.UiStringRes(expected) }
     }
 
-    private fun List<UiString>.verifyAllBannersAndBadgesTextMatchesEither(
+    private fun List<UiString>.assertAtLeastOneMatchesEither(
         @StringRes expectedPlural: Int,
         @StringRes expectedSingular: Int,
     ) {
