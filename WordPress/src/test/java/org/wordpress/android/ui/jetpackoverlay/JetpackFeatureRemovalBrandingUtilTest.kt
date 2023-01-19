@@ -215,15 +215,14 @@ class JetpackFeatureRemovalBrandingUtilTest {
     @Test
     fun `given phase three started, when deadline is more than 1 day away, all other banners and badges should read {Feature} {is,are} moving in n days`() {
         givenPhase(PhaseThree)
-        val daysAway = 6
-        whenJpDeadlineIs(daysAway)
+        whenJpDeadlineIs(6)
 
         val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
 
         allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
             R.string.wp_jetpack_powered_phase_3_with_deadline_is_n_days_away,
             R.string.wp_jetpack_powered_phase_3_with_deadline_are_n_days_away,
-            withExpectedNumber = daysAway
+            withExpectedNumber = 6
         )
         verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
         verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
