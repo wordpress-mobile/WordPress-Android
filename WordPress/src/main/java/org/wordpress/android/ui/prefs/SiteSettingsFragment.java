@@ -1030,6 +1030,16 @@ public class SiteSettingsFragment extends PreferenceFragment
             removeNonWPComPreferences();
         }
 
+
+        if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing,
+                    R.string.pref_key_site_related_posts);
+            WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_settings,
+                    R.string.pref_key_jetpack_security_screen);
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                    R.string.pref_key_jetpack_settings);
+        }
+
         if (!mSite.isUsingWpComRestApi()) {
             WPPrefUtils.removePreference(this, R.string.pref_key_homepage, R.string.pref_key_homepage_settings);
         }
