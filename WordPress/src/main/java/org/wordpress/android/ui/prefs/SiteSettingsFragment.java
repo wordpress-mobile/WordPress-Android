@@ -1030,16 +1030,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             removeNonWPComPreferences();
         }
 
-
-        if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
-            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing,
-                    R.string.pref_key_site_related_posts);
-            WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_settings,
-                    R.string.pref_key_jetpack_security_screen);
-            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
-                    R.string.pref_key_jetpack_settings);
-        }
-
         if (!mSite.isUsingWpComRestApi()) {
             WPPrefUtils.removePreference(this, R.string.pref_key_homepage, R.string.pref_key_homepage_settings);
         }
@@ -1069,6 +1059,18 @@ public class SiteSettingsFragment extends PreferenceFragment
         // Hide "Manage" Categories if feature is not enabled
         if (!mManageCategoriesFeatureConfig.isEnabled()) {
             removeCategoriesPreference();
+        }
+        if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing,
+                    R.string.pref_key_site_related_posts);
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                    R.string.pref_key_jetpack_settings);
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                    R.string.pref_key_jetpack_performance_settings);
+            WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_performance_settings,
+                    R.string.pref_key_ad_free_video_hosting);
+            WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_performance_more_settings,
+                    R.string.pref_key_jetpack_performance_media_settings);
         }
     }
 
