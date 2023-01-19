@@ -25,7 +25,6 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin.JETPACK_MIGRATION_H
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlowWithDeepLink
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.Logout
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
@@ -40,6 +39,7 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.state.Notificatio
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.WelcomeStep
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.util.AppThemeUtils
+import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -87,11 +87,18 @@ class JetpackMigrationFragment : Fragment() {
 
     private fun handleActionEvents(actionEvent: JetpackMigrationActionEvent) {
         when (actionEvent) {
-            is CompleteFlow -> ActivityLauncher.showMainActivity(requireContext())
-            is CompleteFlowWithDeepLink -> {
-                ActivityLauncher.openDeepLinkAfterJPMigration(requireContext(), actionEvent.action, actionEvent.uri)
+            is CompleteFlow -> {
+                actionEvent.deepLinkData?.also {
+                    ActivityLauncher.openDeepLinkAfterJPMigration(requireContext(), it.action, it.uri)
+                } ?: ActivityLauncher.showMainActivity(requireContext())
             }
-            is FallbackToLogin -> ActivityLauncher.showMainActivity(requireContext(), true)
+            is FallbackToLogin -> {
+                actionEvent.deepLinkData?.let { (action, uri) ->
+                    uri?.also {
+                        ActivityLauncher.openJetpackForDeeplink(requireContext(), action, UriWrapper(it), true)
+                    }
+                } ?: ActivityLauncher.showMainActivity(requireContext(), true)
+            }
             is Logout -> (requireActivity().application as? WordPress)?.let { viewModel.signOutWordPress(it) }
             is ShowHelp -> launchHelpScreen()
         }
