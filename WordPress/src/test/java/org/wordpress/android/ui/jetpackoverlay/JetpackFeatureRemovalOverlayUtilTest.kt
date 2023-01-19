@@ -8,6 +8,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
@@ -112,6 +113,11 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
                         PHASE_THREE
                 )
         ).thenReturn(null)
+        whenever(
+                jetpackFeatureOverlayShownTracker.getTheLastShownOverlayTimeStamp(
+                        PHASE_THREE
+                )
+        ).thenReturn(null)
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
                 .shouldShowFeatureSpecificJetpackOverlay(STATS)
@@ -124,7 +130,7 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     fun `given feature is accessed after feature specific frequency, when shouldShowFeatureSpecificJetpackOverlay invoked, then return true`() {
         setupMockForWpComSite()
         // The passed number should exceed the feature specific overlay frequency
-        setupMockForFeatureAccessed(8)
+        setUpMockForEarliestAccessedFeature(8)
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
                 .shouldShowFeatureSpecificJetpackOverlay(STATS)
@@ -213,8 +219,7 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         whenever(dateTimeUtilsWrapper.getTodaysDate()).thenReturn(currentMockedDate)
         whenever(
                 dateTimeUtilsWrapper.daysBetween(
-                        Date(featureAccessedMockedTimeinMillis),
-                        currentMockedDate
+                        any(), any()
                 )
         ).thenReturn(noOfDaysPastFeatureAccessed.toInt())
     }
