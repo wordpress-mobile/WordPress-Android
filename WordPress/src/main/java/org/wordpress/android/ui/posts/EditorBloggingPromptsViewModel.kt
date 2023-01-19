@@ -59,7 +59,7 @@ class EditorBloggingPromptsViewModel
     private fun createPromptTags(promptId: Int): List<String> = mutableListOf<String>().apply {
         add(BLOGGING_PROMPT_TAG)
         if (bloggingPromptsEnhancementsFeatureConfig.isEnabled()) {
-            add(BLOGGING_PROMPT_SPECIFIC_TAG_TEMPLATE.format(promptId))
+            add(BLOGGING_PROMPT_ID_TAG.format(promptId))
         }
     }
 
@@ -67,4 +67,4 @@ class EditorBloggingPromptsViewModel
 }
 
 internal const val BLOGGING_PROMPT_TAG = "dailyprompt"
-internal const val BLOGGING_PROMPT_SPECIFIC_TAG_TEMPLATE = "dailyprompt-%s"
+internal const val BLOGGING_PROMPT_ID_TAG = "dailyprompt-%s"
