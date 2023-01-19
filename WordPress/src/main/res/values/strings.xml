@@ -4232,14 +4232,14 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_powered_phase_2">Get the Jetpack app</string>
     <string name="wp_jetpack_powered_phase_3_is_moving_soon">%1$s is moving soon</string>
     <string name="wp_jetpack_powered_phase_3_are_moving_soon">%1$s are moving soon</string>
-    <string name="wp_jetpack_powered_phase_3_with_deadline_is_one_week_away">%s is moving in one week</string>
-    <string name="wp_jetpack_powered_phase_3_with_deadline_are_one_week_away">%s are moving in one week</string>
+    <string name="wp_jetpack_powered_phase_3_with_deadline_is_one_week_away">%s is moving in 1 week</string>
+    <string name="wp_jetpack_powered_phase_3_with_deadline_are_one_week_away">%s are moving in 1 week</string>
     <!-- translators: Jetpack branding text. %1$s: Feature, E.g.: Backup, Reader; %2$s Number of weeks greater than 1, E.g: 2,3,4." -->
     <string name="wp_jetpack_powered_phase_3_with_deadline_is_n_weeks_away">%1$s is moving in %2$s weeks</string>
     <!-- translators: Jetpack branding text. %1$s: Features, E.g.: Stats, Themes; %2$s Number of weeks greater than 1, E.g: 2,3,4." -->
     <string name="wp_jetpack_powered_phase_3_with_deadline_are_n_weeks_away">%1$s are moving in %2$s weeks</string>
-    <string name="wp_jetpack_powered_phase_3_with_deadline_is_one_day_away">%1$s is moving in one day</string>
-    <string name="wp_jetpack_powered_phase_3_with_deadline_are_one_day_away">%1$s are moving in one day</string>
+    <string name="wp_jetpack_powered_phase_3_with_deadline_is_one_day_away">%1$s is moving in 1 day</string>
+    <string name="wp_jetpack_powered_phase_3_with_deadline_are_one_day_away">%1$s are moving in 1 day</string>
     <!-- translators: Jetpack branding text. %1$s: Feature, E.g.: Backup, Reader; %2$s Number of days greater than 1, E.g: 2,3,4." -->
     <string name="wp_jetpack_powered_phase_3_with_deadline_is_n_days_away">%1$s is moving in %2$s days</string>
     <!-- translators: Jetpack branding text. %1$s: Features, E.g.: Stats, Themes; %2$s Number of days greater than 1, E.g: 2,3,4." -->
