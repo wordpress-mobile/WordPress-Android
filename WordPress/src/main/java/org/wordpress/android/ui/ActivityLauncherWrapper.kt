@@ -1,10 +1,13 @@
 package org.wordpress.android.ui
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import dagger.Reusable
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
@@ -32,6 +35,7 @@ class ActivityLauncherWrapper @Inject constructor() {
         remotePreviewType: RemotePreviewType
     ) = ActivityLauncher.previewPostOrPageForResult(activity, site, post, remotePreviewType)
 
+    @Suppress("SwallowedException")
     fun openPlayStoreLink(context: Context, packageName: String) {
         var intent: Intent? = context.packageManager.getLaunchIntentForPackage(packageName)
 
@@ -42,7 +46,16 @@ class ActivityLauncherWrapper @Inject constructor() {
                 setPackage("com.android.vending")
             }
         }
-        context.startActivity(intent)
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            // No Google Play Store installed
+            Toast.makeText(
+                    context,
+                    R.string.install_play_store_to_get_jetpack,
+                    Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     companion object {
