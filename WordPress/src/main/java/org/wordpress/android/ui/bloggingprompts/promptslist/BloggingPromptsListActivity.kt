@@ -27,7 +27,7 @@ class BloggingPromptsListActivity : LocaleAwareActivity() {
         setContent {
             AppTheme {
                 val uiState by viewModel.uiStateFlow.collectAsState()
-                BloggingPromptsListScreen(uiState, ::onBackPressed) { item -> viewModel.onPromptListItemClicked(item) }
+                BloggingPromptsListScreen(uiState, ::onBackPressed, viewModel::onPromptListItemClicked)
             }
         }
         viewModel.start()
