@@ -181,7 +181,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
         allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
             R.string.wp_jetpack_powered_phase_3_with_deadline_is_n_weeks_away,
             R.string.wp_jetpack_powered_phase_3_with_deadline_are_n_weeks_away,
-            withNumberOfWeeksOrDaysAway = expectedNumberOfWeeks
+            withExpectedNumber = expectedNumberOfWeeks
         )
         verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
         verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
@@ -202,6 +202,48 @@ class JetpackFeatureRemovalBrandingUtilTest {
         allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
             R.string.wp_jetpack_powered_phase_3_with_deadline_is_one_week_away,
             R.string.wp_jetpack_powered_phase_3_with_deadline_are_one_week_away,
+        )
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
+            any(),
+            eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
+        )
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
+    }
+
+    @Suppress("MaxLineLength")
+    @Test
+    fun `given phase three started, when deadline is more than 1 day away, all other banners and badges should read {Feature} {is,are} moving in n days`() {
+        givenPhase(PhaseThree)
+        val daysAway = 6
+        whenJpDeadlineIs(daysAway)
+
+        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
+
+        allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
+            R.string.wp_jetpack_powered_phase_3_with_deadline_is_n_days_away,
+            R.string.wp_jetpack_powered_phase_3_with_deadline_are_n_days_away,
+            withExpectedNumber = daysAway
+        )
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
+            any(),
+            eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
+        )
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
+    }
+
+    @Suppress("MaxLineLength")
+    @Test
+    fun `given phase three started, when deadline is 1 day away, all other banners and badges should read {Feature} {is,are} moving in one day`() {
+        givenPhase(PhaseThree)
+        whenJpDeadlineIs(1)
+
+        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
+
+        allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
+            R.string.wp_jetpack_powered_phase_3_with_deadline_is_one_day_away,
+            R.string.wp_jetpack_powered_phase_3_with_deadline_are_one_day_away,
         )
         verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
         verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
@@ -251,7 +293,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     private fun List<UiString>.assertAtLeastOneMatchesEither(
         @StringRes expectedPlural: Int,
         @StringRes expectedSingular: Int,
-        withNumberOfWeeksOrDaysAway: Int? = null,
+        withExpectedNumber: Int? = null,
     ) {
         screensWithDynamicText.forEach { screen ->
             assertThat(this).matches { texts ->
@@ -263,7 +305,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
                         },
                         listOfNotNull(
                             screen.featureName,
-                            withNumberOfWeeksOrDaysAway?.let { num -> UiString.UiStringText("$num") }
+                            withExpectedNumber?.let { num -> UiString.UiStringText("$num") }
                         )
                     )
                 }
