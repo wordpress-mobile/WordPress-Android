@@ -40,6 +40,10 @@ class BloggingPromptCardViewHolder(
 
         uiHelpers.updateVisibility(attributionContainer, card.attribution == DAY_ONE)
 
+        attributionContent.text = htmlCompatWrapper.fromHtml(
+            attributionContent.context.getString(R.string.my_site_blogging_prompt_card_attribution_dayone)
+        )
+
         bloggingPromptCardMenu.setOnClickListener {
             bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuClicked()
             showCardMenu(card)

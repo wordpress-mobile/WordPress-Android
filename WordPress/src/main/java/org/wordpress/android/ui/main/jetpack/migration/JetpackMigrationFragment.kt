@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -23,6 +24,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.JETPACK_MIGRATION_HELP
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
@@ -38,6 +40,7 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingStat
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.NotificationsStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.WelcomeStep
 import org.wordpress.android.util.AppThemeUtils
+import org.wordpress.android.util.LocaleManager
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -54,7 +57,14 @@ class JetpackMigrationFragment : Fragment() {
     ): View = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
-                JetpackMigrationScreen()
+                val userLanguage by viewModel.refreshAppLanguage.observeAsState("")
+
+                LocaleAwareComposable(
+                    locale = LocaleManager.languageLocale(userLanguage),
+                    onLocaleChange = viewModel::setAppLanguage
+                ) {
+                    JetpackMigrationScreen()
+                }
             }
         }
     }

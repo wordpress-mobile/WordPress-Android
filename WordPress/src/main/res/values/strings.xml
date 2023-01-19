@@ -2,7 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name" translatable="false">WordPress</string>
-    <string name="widgets_enabled" translatable="false">true</string>
 
     <!-- account setup -->
     <string name="xmlrpc_missing_method_error" tools:ignore="UnusedResources" a8c-src-lib="login">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
@@ -1265,9 +1264,8 @@
     <string name="stats_timeframe_weeks">Weeks</string>
     <string name="stats_timeframe_months">Months</string>
     <string name="stats_timeframe_years">Years</string>
-    <string name="stats_timeframe_this_week">This Week</string>
-    <string name="stats_timeframe_previous_week">Previous Week</string>
-
+    <string name="stats_timeframe_last_seven_days">Last 7-days</string>
+    <string name="stats_timeframe_previous_seven_days">Previous 7-days</string>
     <string name="stats_views">Views</string>
     <string name="stats_visitors">Visitors</string>
     <string name="stats_likes">Likes</string>
@@ -1323,10 +1321,10 @@
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
     <string name="stats_insights_views_and_visitors">Views &amp; Visitors</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Your views this week are %1$s higher than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Your views this week are %1$s lower than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Your visitors this week are %1$s higher than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Your visitors this week are %1$s lower than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Your views in the last 7-days are %1$s higher than the previous 7-days.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Your views in the last 7-days are %1$s lower than the previous 7-days.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Your visitors in the last 7-days are %1$s higher than the previous 7-days.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Your visitors in the last 7-days are %1$s lower than the previous 7-days.</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Check out our top tips to increase your views and traffic %1$s</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
@@ -1339,8 +1337,8 @@
     <string name="stats_insights_total_comments">Total comments</string>
     <string name="stats_insights_average_comments">Avg comments/post</string>
     <string name="stats_insights_total_likes">Total likes</string>
-    <string name="stats_insights_total_stats_positive">%1$s higher than the previous week</string>
-    <string name="stats_insights_total_stats_negative">%1$s lower than the previous week</string>
+    <string name="stats_insights_total_stats_seven_days_positive">%1$s higher than the previous 7-days</string>
+    <string name="stats_insights_total_stats_seven_days_negative">%1$s lower than the previous 7-days</string>
     <string name="stats_insights_average_likes">Avg likes/post</string>
     <string name="stats_insights_total_words">Total words</string>
     <string name="stats_insights_average_words">Avg words/post</string>
@@ -1379,10 +1377,6 @@
     <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
     <string name="stats_insights_comments_guide_card">💡Tap \'VIEW MORE\' to see your top commenters.</string>
     <string name="stats_insights_followers_guide_card">💡Commenting on other blogs is a great way to build attention and followers for your new site.</string>
-
-    <!-- Stats Revamp v2 Feature Introduction -->
-    <string name="stats_revamp_v2_intro_header_title">Insights update</string>
-    <string name="stats_revamp_v2_update_alert_message">Updated to New Insights to help you understand how your content is performing and what\'s resonating with your audience.</string>
 
     <!-- Stats refreshed widgets -->
     <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
@@ -2325,9 +2319,9 @@
     <string name="my_site_blogging_prompt_card_share" translatable="false">@string/share_action</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Share blogging prompt</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">View more prompts</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Skip this prompt</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Skip for today</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Remove from dashboard</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">From <b>DayOne</b></string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">From &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Learn more</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Skipped today\'s blogging prompt</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 answer</string>
@@ -4306,6 +4300,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader is moving to the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Notifications are moving to Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Jetpack features are moving soon.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack features have moved.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Stats, Reader, Notifications and other Jetpack powered features have been removed from the WordPress app.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app on %s.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app soon.</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
@@ -4313,6 +4309,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Switch to the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_continue_without_jetpack" translatable="false">@string/wp_jetpack_continue_without_jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_three_all_features_description" translatable="false">@string/wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Switch to Jetpack </string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Do this later</string>
 
     <!-- Deep Linking Activity Aliases -->
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
@@ -4335,4 +4333,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jetpack_feature_card_learn_more" translatable="false">@string/learn_more</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
+    <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Featured</string>
 </resources>

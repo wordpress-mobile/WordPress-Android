@@ -135,7 +135,6 @@ Language: sq_AL
     <string name="hpp_title">Zgjidhni një temë</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">U anashkalua cytja e sotme për blogim</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Mësoni më tepër</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Nga</string>
     <string name="stats_follower_types_pie_chart_total_label">Gjithsej</string>
     <string name="stats_referrers_pie_chart_others">Të tjera</string>
     <string name="stats_referrers_pie_chart_search">Kërkim</string>
@@ -303,7 +302,6 @@ Language: sq_AL
     <string name="new_site_creation_intents_title">Temë sajti</string>
     <string name="quick_start_site_menu_tab_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të vazhdohet.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Hiqe nga pulti</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Anashkaloje këtë cytje</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Shihni më tepër cytje</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d përgjigje</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Ndani me të tjerë cytje blogimi</string>

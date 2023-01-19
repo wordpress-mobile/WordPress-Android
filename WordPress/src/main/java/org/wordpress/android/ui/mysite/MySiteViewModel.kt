@@ -38,6 +38,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.FEATURE_CARD
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
@@ -177,6 +178,7 @@ class MySiteViewModel @Inject constructor(
     private val appStatus: AppStatus,
     private val wordPressPublicData: WordPressPublicData,
     private val jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker,
+    private val jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil,
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
@@ -217,6 +219,7 @@ class MySiteViewModel @Inject constructor(
     val isMySiteTabsEnabled: Boolean
         get() = isMySiteDashboardTabsFeatureConfigEnabled &&
                 buildConfigWrapper.isMySiteTabsEnabled &&
+                !jetpackFeatureRemovalUtils.shouldHideJetpackFeatures() &&
                 selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi ?: true
 
     val orderedTabTypes: List<MySiteTabType>
@@ -455,6 +458,15 @@ class MySiteViewModel @Inject constructor(
             jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()
         }
 
+        val jetpackSwitchMenu = MySiteCardAndItem.Card.JetpackSwitchMenu(
+            onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
+            onRemindMeLaterItemClick = ListItemInteraction.create(this::onSwitchToJetpackMenuCardRemindMeLaterClick),
+            onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick)
+        ).takeIf {
+            jetpackFeatureRemovalUtils.shouldShowSwitchToJetpackMenuCard()
+        }
+
+
         val migrationSuccessCard = SingleActionCard(
             textResource = R.string.jp_migration_success_card_message,
             imageResource = R.drawable.ic_wordpress_blue_32dp,
@@ -465,7 +477,8 @@ class MySiteViewModel @Inject constructor(
             val isWordPressInstalled = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
             isJetpackApp && isMigrationCompleted && isWordPressInstalled
         }
-        val cardsResult = cardsBuilder.build(
+        val cardsResult = if (jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()) emptyList<MySiteCardAndItem>()
+        else cardsBuilder.build(
             QuickActionsCardBuilderParams(
                 siteModel = site,
                 onQuickActionStatsClick = this::quickActionStatsClick,
@@ -546,7 +559,10 @@ class MySiteViewModel @Inject constructor(
             } else {
                 null
             }
-        ).takeIf { jetpackBrandingUtils.shouldShowJetpackBranding() }
+        ).takeIf {
+            jetpackBrandingUtils.shouldShowJetpackBranding() &&
+                    !jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()
+        }
 
         return mapOf(
             MySiteTabType.ALL to orderForDisplay(
@@ -556,7 +572,8 @@ class MySiteViewModel @Inject constructor(
                 dynamicCards = dynamicCards,
                 siteItems = siteItems,
                 jetpackBadge = jetpackBadge,
-                jetpackFeatureCard = jetpackFeatureCard
+                jetpackFeatureCard = jetpackFeatureCard,
+                jetpackSwitchMenu = jetpackSwitchMenu
             ),
             MySiteTabType.SITE_MENU to orderForDisplay(
                 infoItem = infoItem,
@@ -571,6 +588,7 @@ class MySiteViewModel @Inject constructor(
                 },
                 siteItems = siteItems,
                 jetpackFeatureCard = jetpackFeatureCard,
+                jetpackSwitchMenu = jetpackSwitchMenu
             ),
             MySiteTabType.DASHBOARD to orderForDisplay(
                 infoItem = infoItem,
@@ -584,7 +602,8 @@ class MySiteViewModel @Inject constructor(
                     listOf()
                 },
                 siteItems = listOf(),
-                jetpackBadge = jetpackBadge
+                jetpackBadge = jetpackBadge,
+                jetpackSwitchMenu = jetpackSwitchMenu
             )
         )
     }
@@ -674,7 +693,8 @@ class MySiteViewModel @Inject constructor(
         dynamicCards: List<MySiteCardAndItem>,
         siteItems: List<MySiteCardAndItem>,
         jetpackBadge: JetpackBadge? = null,
-        jetpackFeatureCard: JetpackFeatureCard? = null
+        jetpackFeatureCard: JetpackFeatureCard? = null,
+        jetpackSwitchMenu: MySiteCardAndItem.Card.JetpackSwitchMenu? = null
     ): List<MySiteCardAndItem> {
         val indexOfDashboardCards = cards.indexOfFirst { it is DashboardCards }
         return mutableListOf<MySiteCardAndItem>().apply {
@@ -689,6 +709,7 @@ class MySiteViewModel @Inject constructor(
             }
             addAll(siteItems)
             jetpackBadge?.let { add(jetpackBadge) }
+            jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
         }.toList()
     }
 
@@ -1223,7 +1244,9 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun showQuickStartDialog(siteModel: SiteModel?) {
-        if (siteModel != null && quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteModel)) {
+        if (siteModel != null && quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteModel) &&
+            !jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()
+        ) {
             _onNavigation.postValue(
                 Event(
                     SiteNavigationAction.ShowQuickStartDialog(
@@ -1328,6 +1351,12 @@ class MySiteViewModel @Inject constructor(
     private fun onJetpackFeatureCardRemindMeLaterClick() {
         jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED)
         appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(System.currentTimeMillis())
+        refresh()
+    }
+
+    private fun onSwitchToJetpackMenuCardRemindMeLaterClick() {
+        jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED)
+        appPrefsWrapper.setSwitchToJetpackMenuCardLastShownTimestamp(System.currentTimeMillis())
         refresh()
     }
 

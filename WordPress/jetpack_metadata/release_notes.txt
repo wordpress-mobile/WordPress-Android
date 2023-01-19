@@ -1,3 +1,7 @@
-- You can now add, edit, and delete categories within your site settings.
-- We fixed a few comment-related translation errors caused by changing your language in App Settings.
-- You won’t see the Scan Login QR code if your account uses two-factor authentication.
+We’ve been hard at work on extra-technical, behind-the-scenes fixes and updates to keep the Jetpack app running smoothly.
+
+- Posticulating features
+- Rearchitecting interfaces
+- Reticulating splines
+- Codifying similitude
+- Rebuilding the gigaverse

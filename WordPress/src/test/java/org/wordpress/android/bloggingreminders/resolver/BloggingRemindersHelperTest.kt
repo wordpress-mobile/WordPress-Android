@@ -37,7 +37,7 @@ import java.time.DayOfWeek
 // TODO: adapt these tests to the unified provider / orchestrator approach
 @Ignore("Disabled for now: will refactor in another PR after unification.")
 @ExperimentalCoroutinesApi
-class BloggingRemindersResolverTest : BaseUnitTest() {
+class BloggingRemindersHelperTest : BaseUnitTest() {
     private val jetpackBloggingRemindersSyncFlag: JetpackBloggingRemindersSyncFlag = mock()
     private val contextProvider: ContextProvider = mock()
     private val wordPressPublicData: WordPressPublicData = mock()
@@ -49,13 +49,12 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     private val reminderScheduler: ReminderScheduler = mock()
     private val bloggingRemindersModelMapper: BloggingRemindersModelMapper = mock()
     private val localMigrationContentResolver: LocalMigrationContentResolver = mock()
-    private val classToTest = BloggingRemindersResolver(
+    private val classToTest = BloggingRemindersHelper(
         jetpackBloggingRemindersSyncFlag,
         appPrefsWrapper,
         bloggingRemindersSyncAnalyticsTracker,
         siteStore,
         bloggingRemindersStore,
-        testScope(),
         reminderScheduler,
         bloggingRemindersModelMapper,
         localMigrationContentResolver,
@@ -85,7 +84,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     @Test
     fun `Should track start if feature flag is ENABLED and IS first try`() {
         featureEnabled()
-        classToTest.trySyncBloggingReminders({}, {})
+        classToTest.migrateBloggingReminders()
         verify(bloggingRemindersSyncAnalyticsTracker).trackStart()
     }
 
@@ -93,7 +92,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     fun `Should trigger failure callback if feature flag is DISABLED`() {
         whenever(jetpackBloggingRemindersSyncFlag.isEnabled()).thenReturn(false)
         val onFailure: () -> Unit = mock()
-        classToTest.trySyncBloggingReminders({}, onFailure)
+        classToTest.migrateBloggingReminders()
         verify(onFailure).invoke()
     }
 
@@ -102,21 +101,21 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getIsFirstTryBloggingRemindersSyncJetpack()).thenReturn(false)
         whenever(jetpackBloggingRemindersSyncFlag.isEnabled()).thenReturn(true)
         val onFailure: () -> Unit = mock()
-        classToTest.trySyncBloggingReminders({}, onFailure)
+        classToTest.migrateBloggingReminders()
         verify(onFailure).invoke()
     }
 
     @Test
     fun `Should save IS NOT first try sync blogging reminders as FALSE if feature flag is ENABLED and IS first try`() {
         featureEnabled()
-        classToTest.trySyncBloggingReminders({}, {})
+        classToTest.migrateBloggingReminders()
         verify(appPrefsWrapper).saveIsFirstTryBloggingRemindersSyncJetpack(false)
     }
 
     @Test
     fun `Should NOT query ContentResolver if feature flag is DISABLED`() {
         whenever(jetpackBloggingRemindersSyncFlag.isEnabled()).thenReturn(false)
-        classToTest.trySyncBloggingReminders({}, {})
+        classToTest.migrateBloggingReminders()
         verify(contentResolverWrapper, never()).queryUri(any(), any())
     }
 
@@ -124,14 +123,14 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     fun `Should NOT query ContentResolver if IS NOT the first try`() {
         whenever(appPrefsWrapper.getIsFirstTryBloggingRemindersSyncJetpack()).thenReturn(false)
         whenever(jetpackBloggingRemindersSyncFlag.isEnabled()).thenReturn(true)
-        classToTest.trySyncBloggingReminders({}, {})
+        classToTest.migrateBloggingReminders()
         verify(contentResolverWrapper, never()).queryUri(any(), any())
     }
 
     @Test
     fun `Should query ContentResolver if feature flag is ENABLED and IS first try`() {
         featureEnabled()
-        classToTest.trySyncBloggingReminders({}, {})
+        classToTest.migrateBloggingReminders()
 //        verify(contentResolverWrapper).queryUri(contentResolver, uriValue)
     }
 
@@ -139,7 +138,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     fun `Should track failed with error QueryBloggingRemindersError if cursor is null`() {
         featureEnabled()
 //        whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(null)
-        classToTest.trySyncBloggingReminders({}, {})
+        classToTest.migrateBloggingReminders()
         verify(bloggingRemindersSyncAnalyticsTracker).trackFailed(QueryBloggingRemindersError)
     }
 
@@ -148,14 +147,14 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
         featureEnabled()
 //        whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(null)
         val onFailure: () -> Unit = mock()
-        classToTest.trySyncBloggingReminders({}, onFailure)
+        classToTest.migrateBloggingReminders()
         verify(onFailure).invoke()
     }
 
     @Test
     fun `Should track success with reminders synced count 0 if result map is empty`() {
         featureEnabled()
-        classToTest.trySyncBloggingReminders({}, {})
+        classToTest.migrateBloggingReminders()
         verify(bloggingRemindersSyncAnalyticsTracker).trackSuccess(0)
     }
 
@@ -163,7 +162,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     fun `Should trigger failure callback if result map is empty`() {
         featureEnabled()
         val onSuccess: () -> Unit = mock()
-        classToTest.trySyncBloggingReminders(onSuccess) {}
+        classToTest.migrateBloggingReminders()
         verify(onSuccess).invoke()
     }
 
@@ -177,7 +176,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
             "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
                     ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
         )
-        classToTest.trySyncBloggingReminders({}, {})
+        classToTest.migrateBloggingReminders()
         verify(bloggingRemindersSyncAnalyticsTracker).trackSuccess(1)
     }
 
@@ -191,7 +190,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
                     ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
         )
         val onSuccess: () -> Unit = mock()
-        classToTest.trySyncBloggingReminders(onSuccess) {}
+        classToTest.migrateBloggingReminders()
         verify(onSuccess).invoke()
     }
 
@@ -205,7 +204,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
             "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
                     ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
         )
-        classToTest.trySyncBloggingReminders({}, {})
+        classToTest.migrateBloggingReminders()
         verify(bloggingRemindersStore, times(1)).updateBloggingReminders(
             BloggingRemindersModel(
                 siteId = validLocalId,
@@ -227,7 +226,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
             "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
                     ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
         )
-        classToTest.trySyncBloggingReminders({}, {})
+        classToTest.migrateBloggingReminders()
         verify(bloggingRemindersModelMapper).toUiModel(userSetBloggingRemindersModel)
     }
 
@@ -241,7 +240,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
             "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
                     ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
         )
-        classToTest.trySyncBloggingReminders({}, {})
+        classToTest.migrateBloggingReminders()
         verify(reminderScheduler).schedule(
             validLocalId,
             bloggingRemindersUiModel.hour,
@@ -258,7 +257,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
             "[{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
                     ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":$invalidLocalId}}]"
         )
-        classToTest.trySyncBloggingReminders({}, {})
+        classToTest.migrateBloggingReminders()
         verify(bloggingRemindersStore, times(0)).updateBloggingReminders(any())
     }
 
@@ -271,7 +270,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
             "[{\"enabledDays\":[],\"hour\":5" +
                     ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}]"
         )
-        classToTest.trySyncBloggingReminders({}, {})
+        classToTest.migrateBloggingReminders()
         verify(bloggingRemindersStore, times(0)).updateBloggingReminders(any())
     }
 

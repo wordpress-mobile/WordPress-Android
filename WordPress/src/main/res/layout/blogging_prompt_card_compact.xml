@@ -81,11 +81,12 @@
                 android:src="@drawable/ic_dayone_24dp" />
 
             <TextView
+                android:id="@+id/attribution_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_small"
-                android:text="@string/my_site_blogging_prompt_card_attribution_dayone"
-                android:textAppearance="?attr/textAppearanceCaption" />
+                android:textAppearance="?attr/textAppearanceCaption"
+                tools:text="@string/my_site_blogging_prompt_card_attribution_dayone" />
 
         </LinearLayout>
 
