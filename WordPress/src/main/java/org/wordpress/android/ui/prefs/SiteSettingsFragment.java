@@ -77,6 +77,7 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
@@ -188,6 +189,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
+
+    @Inject JetpackFeatureRemovalPhaseHelper jetpackFeatureRemovalPhaseHelper;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
@@ -1038,8 +1041,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // hide site accelerator jetpack settings if plugin version < 5.8
-        if (!supportsJetpackSiteAcceleratorSettings(mSite)
-            && mSite.getPlanId() != PlansConstants.BUSINESS_PLAN_ID) {
+        if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() || (
+                !supportsJetpackSiteAcceleratorSettings(mSite)
+                && mSite.getPlanId() != PlansConstants.BUSINESS_PLAN_ID)) {
             removeJetpackSiteAcceleratorSettings();
         }
         if (!mSite.isJetpackConnected() || (mSite.getPlanId() != PlansConstants.JETPACK_BUSINESS_PLAN_ID
