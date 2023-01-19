@@ -20,8 +20,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
     private val jpDeadlineDate: String? by lazy {
-        jpDeadlineConfig.getValue<String?>()
-        "2023-01-24"
+        jpDeadlineConfig.getValue()
     }
 
     fun shouldShowPhaseOneBranding(): Boolean {
