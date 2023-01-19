@@ -89,11 +89,12 @@
 
         </LinearLayout>
 
-        <FrameLayout
+        <org.wordpress.android.ui.InterceptingFrameLayout
             android:id="@+id/answered_users_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
+            android:focusable="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/attribution_container" >
@@ -103,11 +104,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:importantForAccessibility="no"
                 app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
                 tools:itemCount="3"
                 tools:listitem="@layout/avatar_item" />
 
-        </FrameLayout>
+        </org.wordpress.android.ui.InterceptingFrameLayout>
 
 
         <com.google.android.material.textview.MaterialTextView

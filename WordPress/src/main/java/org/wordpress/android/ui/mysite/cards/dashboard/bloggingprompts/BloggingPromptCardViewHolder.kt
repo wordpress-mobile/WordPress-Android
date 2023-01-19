@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
 import android.annotation.SuppressLint
-import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.MenuCompat
@@ -14,6 +13,7 @@ import org.wordpress.android.databinding.MySiteBloggingPromptCardBinding
 import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution.DAY_ONE
@@ -91,9 +91,12 @@ class BloggingPromptCardViewHolder(
 
             adapter.loadData(card.respondents)
 
-            // intercept touches in recycler view and pass it to its parent instead of using it for scrolling
-            answeredUsersRecycler.setOnTouchListener { v, event -> (v.parent as View).onTouchEvent(event) }
             answeredUsersContainer.setOnClickListener { card.onViewAnswersClick(card.promptId) }
+            answeredUsersContainer.contentDescription = card.respondents
+                .filterIsInstance<TrainOfAvatarsItem.TrailingLabelTextItem>()
+                .firstOrNull()
+                ?.text
+                ?.let { uiHelpers.getTextOfUiString(answeredUsersContainer.context, it) }
         } else {
             uiHelpers.updateVisibility(answeredUsersContainer, false)
         }
