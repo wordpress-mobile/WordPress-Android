@@ -136,7 +136,6 @@ Language: ar
     <string name="hpp_title">اختيار قالب</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">مطالبة التدوين اليوم التي تم تخطيها</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">معرفة المزيد</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">من </string>
     <string name="stats_follower_types_pie_chart_total_label">الإجماليات</string>
     <string name="stats_referrers_pie_chart_others">الأخرى</string>
     <string name="stats_referrers_pie_chart_search">البحث</string>
@@ -306,7 +305,6 @@ Language: ar
     <string name="new_site_creation_intents_title">موضوع الموقع</string>
     <string name="quick_start_site_menu_tab_message_short">انقر على &lt;b&gt;%1$s&lt;/b&gt; للمتابعة.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">إزالة من لوحة التحكم</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">تخطي هذه المطالبة</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">عرض مزيد من المطالبات</string>
     <string name="new_site_creation_intents_input_hint">على سبيل المثال الموضة والشعر والسياسة</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d من الإجابات</string>

@@ -2,6 +2,7 @@
 
 21.6
 -----
+* [*] [internal] [Jetpack-only] Adds additional logging for Jetpack migration errors [https://github.com/wordpress-mobile/WordPress-Android/pull/17748]
 
 
 21.5

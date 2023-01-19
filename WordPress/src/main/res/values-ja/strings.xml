@@ -137,7 +137,6 @@ Language: ja_JP
     <string name="hpp_title">テーマを選択</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">今日のブログ作成のプロンプトをスキップしました</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">さらに詳しく</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">から </string>
     <string name="stats_follower_types_pie_chart_total_label">合計</string>
     <string name="stats_referrers_pie_chart_others">その他</string>
     <string name="stats_referrers_pie_chart_search">検索</string>
@@ -307,7 +306,6 @@ Language: ja_JP
     <string name="new_site_creation_intents_title">サイトのテーマ</string>
     <string name="quick_start_site_menu_tab_message_short">&lt;b&gt;%1$s&lt;/b&gt; をタップして続行します。</string>
     <string name="my_site_blogging_prompt_card_menu_remove">ダッシュボードから削除</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">このプロンプトをスキップ</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">プロンプトをさらに表示</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d件の回答</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">ブログ作成のプロンプトを共有</string>

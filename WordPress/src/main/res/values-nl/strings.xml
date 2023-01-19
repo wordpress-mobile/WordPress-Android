@@ -127,7 +127,6 @@ Language: nl
     <string name="hpp_title">Kies een thema</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Heeft de blogmelding van vandaag overgeslagen</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Meer informatie</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Van </string>
     <string name="stats_follower_types_pie_chart_total_label">Totalen</string>
     <string name="stats_referrers_pie_chart_others">Anderen</string>
     <string name="stats_referrers_pie_chart_search">Zoeken</string>
@@ -297,7 +296,6 @@ Language: nl
     <string name="new_site_creation_intents_title">Onderwerp van de site</string>
     <string name="quick_start_site_menu_tab_message_short">Tik op &lt;b&gt;%1$s&lt;/b&gt; om door te gaan.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Uit dashboard verwijderen</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Sla deze prompt over</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Bekijk meer prompts</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d antwoorden</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Blog-opdracht delen</string>

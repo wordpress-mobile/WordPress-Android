@@ -137,7 +137,6 @@ Language: en_GB
     <string name="hpp_title">Choose a theme</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Skipped today\'s blogging prompt</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Learn more</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">From </string>
     <string name="stats_follower_types_pie_chart_total_label">Totals</string>
     <string name="stats_referrers_pie_chart_others">Others</string>
     <string name="stats_referrers_pie_chart_search">Search</string>
@@ -303,7 +302,6 @@ Language: en_GB
     <string name="new_site_creation_intents_title">Site topic</string>
     <string name="quick_start_site_menu_tab_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to continue.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Remove from dashboard</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Skip this prompt</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">View more prompts</string>
     <string name="site_creation_intent_business">Business</string>
     <string name="site_creation_intent_books">Books</string>

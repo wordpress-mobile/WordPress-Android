@@ -228,7 +228,6 @@ public class JPScreenshotTest extends BaseTest {
 
         // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Stats"
         clickOn(R.id.nav_sites);
-        (new MySitesPage()).goToStats().dismissUpdateAlertDialogFragmentIfDisplayed();
 
         UiTestingUtils.swipeToAvoidGrayOverlayIgnoringFailures(R.id.statsPager);
 

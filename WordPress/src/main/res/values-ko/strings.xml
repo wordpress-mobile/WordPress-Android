@@ -137,7 +137,6 @@ Language: ko_KR
     <string name="hpp_title">테마 선택</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">건너뛴 오늘의 블로깅 프롬프트</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">더 알아보기</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">시작 </string>
     <string name="stats_follower_types_pie_chart_total_label">합계</string>
     <string name="stats_referrers_pie_chart_others">기타</string>
     <string name="stats_referrers_pie_chart_search">검색</string>
@@ -307,7 +306,6 @@ Language: ko_KR
     <string name="new_site_creation_intents_title">사이트 주제</string>
     <string name="quick_start_site_menu_tab_message_short">계속하려면 &lt;b&gt;%1$s&lt;/b&gt;을(를) 누르세요.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">알림판에서 제거</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">이 프롬프트 건너뛰기</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">더 많은 프롬프트 보기</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d개 답변</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">블로깅 프롬프트 공유</string>

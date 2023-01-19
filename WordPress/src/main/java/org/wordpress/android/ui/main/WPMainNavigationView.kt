@@ -46,7 +46,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 ) : BottomNavigationView(context, attrs, defStyleAttr),
     OnItemSelectedListener, OnItemReselectedListener {
     private lateinit var navAdapter: NavAdapter
-    private lateinit var fragmentManager: FragmentManager
+    private var fragmentManager: FragmentManager? = null
     private lateinit var pageListener: OnPageListener
     private var prevPosition = -1
     private val unselectedButtonAlpha = ResourcesCompat.getFloat(
@@ -103,6 +103,16 @@ class WPMainNavigationView @JvmOverloads constructor(
         }
 
         currentPosition = AppPrefs.getMainPageIndex(numPages() - 1)
+    }
+
+    fun clear() {
+        assignNavigationListeners(false)
+        fragmentManager?.apply {
+            for (fragment in fragments) {
+                beginTransaction().remove(fragment).commit()
+            }
+            popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
     }
 
     private fun hideReaderTab() {
@@ -178,9 +188,9 @@ class WPMainNavigationView @JvmOverloads constructor(
         val previousFragment = navAdapter.getFragment(prevPosition)
         if (fragment != null) {
             if (previousFragment != null) {
-                fragmentManager.beginTransaction().detach(previousFragment).attach(fragment).commit()
+                fragmentManager?.beginTransaction()?.detach(previousFragment)?.attach(fragment)?.commit()
             } else {
-                fragmentManager.beginTransaction().attach(fragment).commit()
+                fragmentManager?.beginTransaction()?.attach(fragment)?.commit()
             }
         }
         prevPosition = position
@@ -297,21 +307,21 @@ class WPMainNavigationView @JvmOverloads constructor(
                 READER -> ReaderFragment()
                 NOTIFS -> NotificationsListFragment.newInstance()
             }
-            fragmentManager.beginTransaction()
-                .add(R.id.fragment_container, fragment, getTagForPageType(pageType))
-                .commitNow()
+            fragmentManager?.beginTransaction()
+                ?.add(R.id.fragment_container, fragment, getTagForPageType(pageType))
+                ?.commitNow()
             return fragment
         }
 
         internal fun getFragment(position: Int): Fragment? {
             return pages().getOrNull(position)?.let { pageType ->
-                fragmentManager.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(pageType)
+                fragmentManager?.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(pageType)
             }
         }
 
         internal fun getFragmentIfExists(position: Int): Fragment? {
             return pages().getOrNull(position)?.let { pageType ->
-                fragmentManager.findFragmentByTag(getTagForPageType(pageType))
+                fragmentManager?.findFragmentByTag(getTagForPageType(pageType))
             }
         }
     }
