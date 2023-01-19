@@ -138,7 +138,24 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
         val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
 
-        allOtherBannersAndBadges.verifyBannersAndBadgesTextIsMovingSoon()
+        allOtherBannersAndBadges.verifyAllBannersAndBadgesTextMatchesEither(
+            R.string.wp_jetpack_powered_phase_3_is_moving_soon,
+            R.string.wp_jetpack_powered_phase_3_are_moving_soon,
+        )
+    }
+
+    @Suppress("MaxLineLength")
+    @Test
+    fun `given phase three started, when deadline is null, all other banners and badges should read {Feature} {is,are} moving soon`() {
+        givenPhase(PhaseThree)
+        whenJpDeadlineIs(null)
+
+        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
+
+        allOtherBannersAndBadges.verifyAllBannersAndBadgesTextMatchesEither(
+            R.string.wp_jetpack_powered_phase_3_is_moving_soon,
+            R.string.wp_jetpack_powered_phase_3_are_moving_soon,
+        )
     }
 
     @Suppress("MaxLineLength")
@@ -184,14 +201,17 @@ class JetpackFeatureRemovalBrandingUtilTest {
         assertThat(this).allMatch { it == UiString.UiStringRes(expected) }
     }
 
-    private fun List<UiString>.verifyBannersAndBadgesTextIsMovingSoon() {
+    private fun List<UiString>.verifyAllBannersAndBadgesTextMatchesEither(
+        @StringRes expectedPlural: Int,
+        @StringRes expectedSingular: Int,
+    ) {
         screensWithDynamicText.forEach { screen ->
             assertThat(this).matches { texts ->
                 texts.any {
                     it == UiString.UiStringResWithParams(
                         when (screen.isFeatureNameSingular) {
-                            true -> R.string.wp_jetpack_powered_phase_3_is_moving_soon
-                            else -> R.string.wp_jetpack_powered_phase_3_are_moving_soon
+                            true -> expectedPlural
+                            else -> expectedSingular
                         },
                         screen.featureName
                     )
