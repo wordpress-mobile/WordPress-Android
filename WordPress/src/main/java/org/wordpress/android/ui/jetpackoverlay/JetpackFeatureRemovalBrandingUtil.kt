@@ -85,7 +85,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
                     weeksUntilDeadline > 1 -> UiStringResWithParams(
                         screen.getWeeksAwayText(),
                         screen.featureName,
-                        UiStringText(weeksUntilDeadline),
+                        UiStringText("$weeksUntilDeadline"),
                     )
                     else -> UiStringResWithParams(screen.getWeekAwayText(), screen.featureName)
                 }
@@ -93,7 +93,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
             daysUntilDeadline > 1 -> UiStringResWithParams(
                 screen.getDaysAwayText(),
                 screen.featureName,
-                UiStringText(daysUntilDeadline),
+                UiStringText("$daysUntilDeadline"),
             )
             daysUntilDeadline == 1 -> UiStringResWithParams(
                 stringRes = screen.getDayAwayText(),
