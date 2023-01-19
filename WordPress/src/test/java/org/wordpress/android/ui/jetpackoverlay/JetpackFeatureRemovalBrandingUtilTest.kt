@@ -42,6 +42,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
     private val screensWithStaticText = JetpackPoweredScreen.WithStaticText.values()
     private val screensWithDynamicText = JetpackPoweredScreen.WithDynamicText.values()
+    private val allJpScreens: List<JetpackPoweredScreen> = screensWithStaticText.map { it } + screensWithDynamicText
 
     @Before
     fun setup() {
@@ -101,7 +102,9 @@ class JetpackFeatureRemovalBrandingUtilTest {
     fun `given phase one not started, all banners and badges should read Jetpack powered`() {
         givenPhase(null)
 
-        val allBannersAndBadges = getAllBannersAndBadgesText()
+        val allBannersAndBadges = allJpScreens.map {
+            classToTest.getBrandingTextByPhase(it)
+        }
 
         allBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
     }
@@ -110,7 +113,9 @@ class JetpackFeatureRemovalBrandingUtilTest {
     fun `given phase one started, all banners and badges should read Jetpack powered`() {
         givenPhase(PhaseOne)
 
-        val allBannersAndBadges = getAllBannersAndBadgesText()
+        val allBannersAndBadges = allJpScreens.map {
+            classToTest.getBrandingTextByPhase(it)
+        }
 
         allBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
     }
@@ -119,7 +124,9 @@ class JetpackFeatureRemovalBrandingUtilTest {
     fun `given phase two started, all banners and badges should read Get the Jetpack app`() {
         givenPhase(PhaseTwo)
 
-        val allBannersAndBadges = getAllBannersAndBadgesText()
+        val allBannersAndBadges = allJpScreens.map {
+            classToTest.getBrandingTextByPhase(it)
+        }
 
         allBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered_phase_2)
     }
@@ -129,9 +136,11 @@ class JetpackFeatureRemovalBrandingUtilTest {
     fun `given phase three started, when on screens without dynamic text, banners and badges should read Jetpack powered`() {
         givenPhase(PhaseThree)
 
-        val bannersAndBadgesOnScreensWithStaticText = getBrandingOnScreensWithStaticText()
+        val staticBannersAndBadges = screensWithStaticText.map {
+            classToTest.getBrandingTextByPhase(it)
+        }
 
-        bannersAndBadgesOnScreensWithStaticText.assertAllMatch(R.string.wp_jetpack_powered)
+        staticBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
     }
 
     @Suppress("MaxLineLength")
@@ -140,7 +149,9 @@ class JetpackFeatureRemovalBrandingUtilTest {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(null)
 
-        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
+        val allOtherBannersAndBadges = screensWithDynamicText.map {
+            classToTest.getBrandingTextByPhase(it)
+        }
 
         allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
             R.string.wp_jetpack_powered_phase_3_is_moving_soon,
@@ -155,7 +166,9 @@ class JetpackFeatureRemovalBrandingUtilTest {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(31)
 
-        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
+        val allOtherBannersAndBadges = screensWithDynamicText.map {
+            classToTest.getBrandingTextByPhase(it)
+        }
 
         allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
             R.string.wp_jetpack_powered_phase_3_is_moving_soon,
@@ -171,7 +184,9 @@ class JetpackFeatureRemovalBrandingUtilTest {
         whenJpDeadlineIs(28)
         val expectedNumberOfWeeks = 4
 
-        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
+        val allOtherBannersAndBadges = screensWithDynamicText.map {
+            classToTest.getBrandingTextByPhase(it)
+        }
 
         allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
             R.string.wp_jetpack_powered_phase_3_with_deadline_is_n_weeks_away,
@@ -187,7 +202,9 @@ class JetpackFeatureRemovalBrandingUtilTest {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(13)
 
-        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
+        val allOtherBannersAndBadges = screensWithDynamicText.map {
+            classToTest.getBrandingTextByPhase(it)
+        }
 
         allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
             R.string.wp_jetpack_powered_phase_3_with_deadline_is_one_week_away,
@@ -202,7 +219,9 @@ class JetpackFeatureRemovalBrandingUtilTest {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(6)
 
-        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
+        val allOtherBannersAndBadges = screensWithDynamicText.map {
+            classToTest.getBrandingTextByPhase(it)
+        }
 
         allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
             R.string.wp_jetpack_powered_phase_3_with_deadline_is_n_days_away,
@@ -218,7 +237,9 @@ class JetpackFeatureRemovalBrandingUtilTest {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(1)
 
-        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
+        val allOtherBannersAndBadges = screensWithDynamicText.map {
+            classToTest.getBrandingTextByPhase(it)
+        }
 
         allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
             R.string.wp_jetpack_powered_phase_3_with_deadline_is_one_day_away,
@@ -233,7 +254,9 @@ class JetpackFeatureRemovalBrandingUtilTest {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(0)
 
-        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
+        val allOtherBannersAndBadges = screensWithDynamicText.map {
+            classToTest.getBrandingTextByPhase(it)
+        }
 
         allOtherBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
         verifyDaysUntilDeadlineCounted()
@@ -245,7 +268,9 @@ class JetpackFeatureRemovalBrandingUtilTest {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(-15)
 
-        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
+        val allOtherBannersAndBadges = screensWithDynamicText.map {
+            classToTest.getBrandingTextByPhase(it)
+        }
 
         allOtherBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
         verifyDaysUntilDeadlineCounted()
@@ -255,7 +280,9 @@ class JetpackFeatureRemovalBrandingUtilTest {
     fun `given phase four started, all banners and badges should read Jetpack powered`() {
         givenPhase(PhaseFour)
 
-        val allBannersAndBadges = getAllBannersAndBadgesText()
+        val allBannersAndBadges = allJpScreens.map {
+            classToTest.getBrandingTextByPhase(it)
+        }
 
         allBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
     }
@@ -275,13 +302,6 @@ class JetpackFeatureRemovalBrandingUtilTest {
             whenever(dateTimeUtilsWrapper.dateFromPattern(any(), any())).thenReturn(mock())
             whenever(dateTimeUtilsWrapper.daysBetween(any(), any())).thenReturn(it)
         }
-    }
-
-    private fun getBrandingOnScreensWithStaticText() = screensWithStaticText.map(classToTest::getBrandingTextByPhase)
-    private fun getBrandingOnScreensWithDynamicText() = screensWithDynamicText.map(classToTest::getBrandingTextByPhase)
-
-    private fun getAllBannersAndBadgesText(): List<UiString> {
-        return getBrandingOnScreensWithStaticText() + getBrandingOnScreensWithDynamicText()
     }
 
     private fun List<UiString>.assertAllMatch(@StringRes expected: Int) {
