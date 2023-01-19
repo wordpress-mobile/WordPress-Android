@@ -109,6 +109,6 @@ fun BloggingPromptsListItemPreview(
     @PreviewParameter(BloggingPromptsListItemPreviewProvider::class) model: BloggingPromptsListItemModel
 ) {
     AppTheme {
-        BloggingPromptsListItem(model, Modifier) {}
+        BloggingPromptsListItem(model, onClick = {})
     }
 }
