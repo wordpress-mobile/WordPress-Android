@@ -4227,19 +4227,25 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">NEW</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can also rearrange blocks by tapping a block and then tapping the up and down arrows that appear on the bottom left side of the block to move it up or down.</string>
 
-    <!-- Jetpack awareness in WordPress App -->
+    <!-- Jetpack Powered Banners and Badges -->
     <string name="wp_jetpack_powered">Jetpack powered</string>
     <string name="wp_jetpack_powered_phase_2">Get the Jetpack app</string>
-    <!-- translators: Jetpack branding text. %1$s: Feature name, eg: Stats, Reader, %2$s: "verb depending of plurality of feature name, either 'is' or 'are'. Examples: "Reader is moving soon", "Stats are moving soon" -->
-    <string name="wp_jetpack_powered_phase_3_moving_soon">%1$s %2$s moving soon</string>
-    <!-- translators: Jetpack branding text. %1$s: Feature Name, eg: Stats, Reader, %2$s: " either 'is' or 'are' verb, %3$s number of weeks" -->
-    <string name="wp_jetpack_powered_phase_3_with_deadline_n_weeks_away">%1$s %2$s moving in %3$s weeks</string>
-    <!-- translators: Jetpack branding text. %1$s: Feature Name, eg: Stats, Reader, %2$s: " either 'is' or 'are' verb" -->
-    <string name="wp_jetpack_powered_phase_3_with_deadline_one_week_away">%1$s %2$s moving in one week</string>
-    <string name="wp_jetpack_powered_phase_3_with_deadline_n_days_away">%1$s %2$s moving in %3$s days</string>
-    <string name="wp_jetpack_powered_phase_3_with_deadline_one_day_away">%1$s %2$s moving in one day</string>
-    <string name="wp_jetpack_powered_phase_3_feature_verb_singular_is">is</string>
-    <string name="wp_jetpack_powered_phase_3_feature_verb_plural_are">are</string>
+    <string name="wp_jetpack_powered_phase_3_is_moving_soon">%1$s is moving soon</string>
+    <string name="wp_jetpack_powered_phase_3_are_moving_soon">%1$s are moving soon</string>
+    <string name="wp_jetpack_powered_phase_3_with_deadline_is_one_week_away">%s is moving in one week</string>
+    <string name="wp_jetpack_powered_phase_3_with_deadline_are_one_week_away">%s are moving in one week</string>
+    <!-- translators: Jetpack branding text. %1$s: Feature, E.g.: Backup, Reader; %2$s Number of weeks greater than 1, E.g: 2,3,4." -->
+    <string name="wp_jetpack_powered_phase_3_with_deadline_is_n_weeks_away">%1$s is moving in %2$s weeks</string>
+    <!-- translators: Jetpack branding text. %1$s: Features, E.g.: Stats, Themes; %2$s Number of weeks greater than 1, E.g: 2,3,4." -->
+    <string name="wp_jetpack_powered_phase_3_with_deadline_are_n_weeks_away">%1$s are moving in %2$s weeks</string>
+    <string name="wp_jetpack_powered_phase_3_with_deadline_is_one_day_away">%1$s is moving in one day</string>
+    <string name="wp_jetpack_powered_phase_3_with_deadline_are_one_day_away">%1$s are moving in one day</string>
+    <!-- translators: Jetpack branding text. %1$s: Feature, E.g.: Backup, Reader; %2$s Number of days greater than 1, E.g: 2,3,4." -->
+    <string name="wp_jetpack_powered_phase_3_with_deadline_is_n_days_away">%1$s is moving in %2$s days</string>
+    <!-- translators: Jetpack branding text. %1$s: Features, E.g.: Stats, Themes; %2$s Number of days greater than 1, E.g: 2,3,4." -->
+    <string name="wp_jetpack_powered_phase_3_with_deadline_are_n_days_away">%1$s are moving in %2$s days</string>
+
+    <!-- Jetpack awareness in WordPress App -->
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress is better with Jetpack</string>
     <string name="wp_jetpack_powered_features">The new Jetpack app has Stats, Reader, Notifications, and more that make your WordPress better.</string>
     <string name="wp_jetpack_powered_reader_powered_by_jetpack">Reader is powered by Jetpack</string>
