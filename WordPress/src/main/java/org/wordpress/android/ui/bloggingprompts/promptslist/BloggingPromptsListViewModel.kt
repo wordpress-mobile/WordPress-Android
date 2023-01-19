@@ -58,6 +58,7 @@ class BloggingPromptsListViewModel @Inject constructor(
     }
 
     fun onPromptListItemClicked(itemModel: BloggingPromptsListItemModel) {
+        tracker.trackItemClicked()
         if (bloggingPromptsEnhancementsFeatureConfig.isEnabled()) {
             launch {
                 _actionEvents.emit(ActionEvent.OpenEditor(itemModel.id))

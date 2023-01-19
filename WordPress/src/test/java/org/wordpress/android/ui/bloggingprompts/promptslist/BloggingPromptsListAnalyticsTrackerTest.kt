@@ -18,4 +18,13 @@ class BloggingPromptsListAnalyticsTrackerTest {
             emptyMap()
         )
     }
+
+    @Test
+    fun `Should track list item clicked`() {
+        tracker.trackItemClicked()
+        verify(analyticsTracker).track(
+            Stat.BLOGGING_PROMPTS_LIST_ITEM_TAPPED,
+            emptyMap()
+        )
+    }
 }
