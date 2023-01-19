@@ -2,10 +2,10 @@ package org.wordpress.android.ui.bloggingprompts.promptslist
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.bloggingprompts.promptslist.mapper.BloggingPromptsListItemModelMapper
@@ -29,8 +29,9 @@ class BloggingPromptsListViewModel @Inject constructor(
     private val _uiStateFlow = MutableStateFlow<UiState>(UiState.None)
     val uiStateFlow = _uiStateFlow.asStateFlow()
 
-    private val _actionEvents = Channel<ActionEvent>(Channel.BUFFERED)
-    val actionEvents = _actionEvents.receiveAsFlow()
+    private val _actionEvents =
+        MutableSharedFlow<ActionEvent>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val actionEvents = _actionEvents
 
     fun start() {
         tracker.trackScreenShown()
@@ -58,7 +59,9 @@ class BloggingPromptsListViewModel @Inject constructor(
 
     fun onPromptListItemClicked(itemModel: BloggingPromptsListItemModel) {
         if (bloggingPromptsEnhancementsFeatureConfig.isEnabled()) {
-            _actionEvents.trySend(ActionEvent.OpenEditor(itemModel.id))
+            launch {
+                _actionEvents.emit(ActionEvent.OpenEditor(itemModel.id))
+            }
         }
     }
 
