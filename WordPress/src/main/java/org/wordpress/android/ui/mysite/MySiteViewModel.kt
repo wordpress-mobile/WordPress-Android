@@ -35,12 +35,12 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.FEATURE_CARD
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.FEATURE_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
@@ -93,7 +93,6 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
-import org.wordpress.android.ui.posts.BLOGGING_PROMPT_TAG
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
@@ -1338,16 +1337,9 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-     // TODO thomashorta use the correct PROMPT_TAG (move it to BloggingPromptsPostTagProvider)
     @Suppress("UnusedPrivateMember", "UNUSED_PARAMETER")
     private fun onBloggingPromptViewAnswersClick(promptId: Int) {
-        val tag =  ReaderTag(
-            BLOGGING_PROMPT_TAG,
-            BLOGGING_PROMPT_TAG,
-            BLOGGING_PROMPT_TAG,
-            "",
-            ReaderTagType.SEARCH,
-        )
+        val tag = BloggingPromptsPostTagProvider.promptIdSearchReaderTag(promptId)
         _onBloggingPromptsViewAnswers.postValue(Event(tag))
     }
 
