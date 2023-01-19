@@ -522,8 +522,9 @@ class MySiteViewModel @Inject constructor(
                     showViewMoreAction = isBloggingPromptsListFeatureConfigEnabled,
                     onShareClick = this::onBloggingPromptShareClick,
                     onAnswerClick = this::onBloggingPromptAnswerClick,
-                    onSkipClick = this::onBloggingPromptSkipClicked,
-                    onViewMoreClick = this::onBloggingPromptViewMoreClicked
+                    onSkipClick = this::onBloggingPromptSkipClick,
+                    onViewMoreClick = this::onBloggingPromptViewMoreClick,
+                    onViewAnswersClick = this::onBloggingPromptViewAnswersClick
                 )
             ),
             QuickLinkRibbonBuilderParams(
@@ -1316,7 +1317,7 @@ class MySiteViewModel @Inject constructor(
         _onAnswerBloggingPrompt.value = Event(Pair(selectedSite, promptId))
     }
 
-    private fun onBloggingPromptSkipClicked() {
+    private fun onBloggingPromptSkipClick() {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             val siteId = site.localId().value
 
@@ -1337,7 +1338,9 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun onBloggingPromptViewAnswersClick() {
+     // TODO thomashorta use the correct PROMPT_TAG (move it to BloggingPromptsPostTagProvider)
+    @Suppress("UnusedPrivateMember", "UNUSED_PARAMETER")
+    private fun onBloggingPromptViewAnswersClick(promptId: Int) {
         val tag =  ReaderTag(
             BLOGGING_PROMPT_TAG,
             BLOGGING_PROMPT_TAG,
@@ -1380,7 +1383,7 @@ class MySiteViewModel @Inject constructor(
         jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_MENU_ACCESSED)
     }
 
-    private fun onBloggingPromptViewMoreClicked() {
+    private fun onBloggingPromptViewMoreClick() {
         _onBloggingPromptsViewMore.value = Event(Unit)
     }
 

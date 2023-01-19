@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
+import android.annotation.SuppressLint
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.MenuCompat
@@ -31,6 +33,7 @@ class BloggingPromptCardViewHolder(
 ) : CardViewHolder<MySiteBloggingPromptCardBinding>(
     parent.viewBinding(MySiteBloggingPromptCardBinding::inflate)
 ) {
+    @SuppressLint("ClickableViewAccessibility")
     fun bind(card: BloggingPromptCardWithData) = with(binding) {
         val cardPrompt = htmlCompatWrapper.fromHtml(
             uiHelpers.getTextOfUiString(promptContent.context, card.prompt).toString()
@@ -70,7 +73,7 @@ class BloggingPromptCardViewHolder(
         ).apply { justifyContent = JustifyContent.CENTER }
 
         if (card.numberOfAnswers > 0) {
-            uiHelpers.updateVisibility(answeredUsersRecycler, true)
+            uiHelpers.updateVisibility(answeredUsersContainer, true)
             answeredUsersRecycler.addItemDecoration(
                 AvatarItemDecorator(
                     RtlUtils.isRtl(answeredUsersRecycler.context),
@@ -87,8 +90,12 @@ class BloggingPromptCardViewHolder(
             answeredUsersRecycler.adapter = adapter
 
             adapter.loadData(card.respondents)
+
+            // intercept touches in recycler view and pass it to its parent instead of using it for scrolling
+            answeredUsersRecycler.setOnTouchListener { v, event -> (v.parent as View).onTouchEvent(event) }
+            answeredUsersContainer.setOnClickListener { card.onViewAnswersClick(card.promptId) }
         } else {
-            uiHelpers.updateVisibility(answeredUsersRecycler, false)
+            uiHelpers.updateVisibility(answeredUsersContainer, false)
         }
     }
 

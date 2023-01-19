@@ -104,7 +104,8 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
             onShareClick,
             onAnswerClick,
             onSkipClick,
-            onViewMoreClick
+            onViewMoreClick,
+            onViewAnswersClick,
         )
     )
 
@@ -112,6 +113,7 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private val onAnswerClick: (promptId: Int) -> Unit = { }
     private val onSkipClick: () -> Unit = { }
     private val onViewMoreClick: () -> Unit = { }
+    private val onViewAnswersClick: (promptId: Int) -> Unit = { }
 
     private fun bloggingPromptCard(showViewMoreAction: Boolean = false) = BloggingPromptCardWithData(
         prompt = UiStringText(PROMPT_TITLE),
@@ -125,5 +127,6 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
         onAnswerClick = onAnswerClick,
         onSkipClick = onSkipClick,
         onViewMoreClick = onViewMoreClick,
+        onViewAnswersClick = onViewAnswersClick,
     )
 }

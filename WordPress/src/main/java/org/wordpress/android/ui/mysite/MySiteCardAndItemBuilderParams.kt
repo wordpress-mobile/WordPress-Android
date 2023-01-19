@@ -99,7 +99,8 @@ sealed class MySiteCardAndItemBuilderParams {
         val onShareClick: (message: String) -> Unit,
         val onAnswerClick: (promptId: Int) -> Unit,
         val onSkipClick: () -> Unit,
-        val onViewMoreClick: () -> Unit
+        val onViewMoreClick: () -> Unit,
+        val onViewAnswersClick: (promptId: Int) -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
     data class SingleActionCardParams(

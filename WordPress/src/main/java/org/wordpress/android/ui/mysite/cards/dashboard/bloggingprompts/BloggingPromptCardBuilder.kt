@@ -35,6 +35,7 @@ class BloggingPromptCardBuilder @Inject constructor() {
             onAnswerClick = params.onAnswerClick,
             onSkipClick = params.onSkipClick,
             onViewMoreClick = params.onViewMoreClick,
+            onViewAnswersClick = params.onViewAnswersClick,
         )
     }
 }
