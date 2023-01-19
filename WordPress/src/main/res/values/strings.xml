@@ -4337,5 +4337,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
     <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Featured</string>
 
-    <string name="install_play_store_to_get_jetpack">Please install google play store to get the Jetpack app</string>
+    <string name="install_play_store_to_get_jetpack">Please install Google Play Store to get the Jetpack app</string>
 </resources>
