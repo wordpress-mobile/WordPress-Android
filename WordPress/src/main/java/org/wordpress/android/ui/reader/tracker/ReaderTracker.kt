@@ -405,6 +405,7 @@ class ReaderTracker @Inject constructor(
         private const val SOURCE_KEY = "source"
         const val SOURCE_FOLLOWING = "following"
         const val SOURCE_DISCOVER = "discover"
+        const val SOURCE_BLOGGING_PROMPTS = "blogging_prompts" // TODO bring this up with team + Riccardo
         const val SOURCE_LIKED = "liked"
         const val SOURCE_SAVED = "saved"
         const val SOURCE_CUSTOM = "custom"
