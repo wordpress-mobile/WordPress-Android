@@ -11,6 +11,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.bloggingreminders.resolver.BloggingRemindersHelper
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker.ErrorType.LocalDraftContent
 import org.wordpress.android.localcontentmigration.EligibilityHelper
@@ -49,6 +50,7 @@ import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsHelper
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType.WPNotLoggedInError
 import org.wordpress.android.userflags.resolver.UserFlagsHelper
+import org.wordpress.android.util.AppLog
 import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
@@ -62,6 +64,7 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
     private val localPostsHelper: LocalPostsHelper = mock()
     private val eligibilityHelper: EligibilityHelper = mock()
     private val bloggingRemindersHelper: BloggingRemindersHelper = mock()
+    private val appLogWrapper: AppLogWrapper = mock()
     private val classToTest = LocalMigrationOrchestrator(
         sharedLoginAnalyticsTracker,
         migrationAnalyticsTracker,
@@ -72,6 +75,7 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
         localPostsHelper,
         eligibilityHelper,
         bloggingRemindersHelper,
+        appLogWrapper,
     )
     private val avatarUrl = "avatarUrl"
     private val sites = listOf(SiteModel(), SiteModel())
@@ -149,6 +153,16 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
         mockHappyPath()
         whenever(sitesMigrationHelper.migrateSites()).thenReturn(Failure(error))
         assertFailure(error)
+    }
+
+    @Test
+    fun `Should log Failure if sitesMigrationHelper migrateSites fails`() {
+        val error = NullCursor(Sites)
+        mockHappyPath()
+        whenever(sitesMigrationHelper.migrateSites()).thenReturn(Failure(error))
+        val mutableStateFlow: MutableStateFlow<LocalMigrationState> = MutableStateFlow(Initial)
+        classToTest.tryLocalMigration(mutableStateFlow)
+        verify(appLogWrapper).e(AppLog.T.JETPACK_MIGRATION, "$error")
     }
 
     @Test

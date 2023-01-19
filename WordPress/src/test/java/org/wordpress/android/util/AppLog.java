@@ -44,6 +44,7 @@ public class AppLog {
         JETPACK_BACKUP,
         JETPACK_REWIND,
         JETPACK_SCAN,
+        JETPACK_MIGRATION,
     }
 
     public static final String TAG = "WordPress";

@@ -1,6 +1,7 @@
 package org.wordpress.android.sharedlogin.resolver
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.bloggingreminders.resolver.BloggingRemindersHelper
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker.ErrorType.LocalDraftContent
@@ -32,6 +33,7 @@ import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsHelper
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType.WPNotLoggedInError
 import org.wordpress.android.userflags.resolver.UserFlagsHelper
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 class LocalMigrationOrchestrator @Inject constructor(
@@ -44,6 +46,7 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val localPostsHelper: LocalPostsHelper,
     private val eligibilityHelper: EligibilityHelper,
     private val bloggingRemindersHelper: BloggingRemindersHelper,
+    private val appLogWrapper: AppLogWrapper,
 ) {
     fun tryLocalMigration(migrationStateFlow: MutableStateFlow<LocalMigrationState>) {
         eligibilityHelper.validate()
@@ -74,6 +77,7 @@ class LocalMigrationOrchestrator @Inject constructor(
     @Suppress("ForbiddenComment")
     // TODO: Handle the errors appropriately
     private fun handleErrors(error: LocalMigrationError) {
+        appLogWrapper.e(AppLog.T.JETPACK_MIGRATION, "$error")
         when (error) {
             is ProviderError -> Unit
             is Ineligibility -> when (error.reason) {
