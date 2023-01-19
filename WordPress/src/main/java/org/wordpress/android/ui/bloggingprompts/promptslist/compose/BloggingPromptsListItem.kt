@@ -51,8 +51,8 @@ fun BloggingPromptsListItem(
         modifier = modifier
             .semantics(mergeDescendants = true) { }
             .background(MaterialTheme.colors.surface)
-            .padding(Margin.ExtraLarge.value)
-            .clickable { onClick(model) },
+            .clickable { onClick(model) }
+            .padding(Margin.ExtraLarge.value),
         verticalArrangement = Arrangement.spacedBy(Margin.Small.value),
     ) {
         Text(
