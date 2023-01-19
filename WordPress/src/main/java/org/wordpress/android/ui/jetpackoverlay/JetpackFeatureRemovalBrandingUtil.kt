@@ -8,6 +8,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseT
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.config.JPDeadlineConfig
 import javax.inject.Inject
@@ -56,15 +57,16 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         screen: JetpackPoweredScreen.WithDynamicText,
         jpDeadlineDate: String?,
     ): UiString {
-        return when (jpDeadlineDate.isNullOrEmpty()) {
+        val daysUntilDeadline = jpDeadlineDate?.let(::countDaysUntilDeadlineOrNull)
+        return when (daysUntilDeadline == null) {
             true -> getPhaseThreeBrandingTextWithoutDeadline(screen)
-            else -> getPhaseThreeBrandingTextWithDeadline(screen, countDaysUntilDeadlineOrZero(jpDeadlineDate))
+            else -> getPhaseThreeBrandingTextWithDeadline(screen, daysUntilDeadline)
         }
     }
 
     private fun getPhaseThreeBrandingTextWithoutDeadline(screen: JetpackPoweredScreen.WithDynamicText): UiString {
-        return UiString.UiStringResWithParams(
-            stringRes = R.string.wp_jetpack_powered_phase_3_without_deadline,
+        return UiStringResWithParams(
+            stringRes = R.string.wp_jetpack_powered_phase_3_moving_soon,
             params = screen.getBrandingTextParams()
         )
     }
@@ -75,46 +77,44 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         daysUntilDeadline: Int,
     ): UiString {
         return when {
-            // Deadline is more than one month away
-            daysUntilDeadline > 30 -> {
-                UiString.UiStringResWithParams(
-                    stringRes = R.string.wp_jetpack_powered_phase_3_with_deadline_months_away,
-                    params = screen.getBrandingTextParams()
-                )
-            }
-            // Deadline is more than one week away
-            // TODO: Fix "1 weeks"
-            daysUntilDeadline > 7 -> {
-                val weeksUntilDeadline = daysUntilDeadline / 7
-                UiString.UiStringResWithParams(
-                    stringRes = R.string.wp_jetpack_powered_phase_3_with_deadline_weeks_away,
-                    params = screen.getBrandingTextParams(weeksUntilDeadline)
-                )
-            }
-            // Deadline is more than one day away
-            daysUntilDeadline > 1 -> {
-                UiString.UiStringResWithParams(
-                    stringRes = R.string.wp_jetpack_powered_phase_3_with_deadline_days_away,
-                    params = screen.getBrandingTextParams(daysUntilDeadline)
-                )
-            }
-            // Deadline is one day away
-            daysUntilDeadline == 1 -> UiString.UiStringResWithParams(
-                stringRes = R.string.wp_jetpack_powered_phase_3_with_deadline_day_away,
-                screen.getBrandingTextParams()
+            daysUntilDeadline > 30 -> UiStringResWithParams(
+                stringRes = R.string.wp_jetpack_powered_phase_3_moving_soon,
+                params = screen.getBrandingTextParams()
             )
-            // Deadline is today or has passed
-            else -> UiStringRes(R.string.wp_jetpack_powered)
+            daysUntilDeadline > 7 -> {
+                return when (val weeksUntilDeadline = daysUntilDeadline / 7) {
+                    1 -> UiStringResWithParams(
+                        stringRes = R.string.wp_jetpack_powered_phase_3_with_deadline_one_week_away,
+                        params = screen.getBrandingTextParams()
+                    )
+                    else -> UiStringResWithParams(
+                        stringRes = R.string.wp_jetpack_powered_phase_3_with_deadline_n_weeks_away,
+                        params = screen.getBrandingTextParams(weeksUntilDeadline)
+                    )
+                }
+            }
+            daysUntilDeadline > 1 -> UiStringResWithParams(
+                stringRes = R.string.wp_jetpack_powered_phase_3_with_deadline_n_days_away,
+                params = screen.getBrandingTextParams(daysUntilDeadline)
+            )
+            daysUntilDeadline == 1 -> UiStringResWithParams(
+                stringRes = R.string.wp_jetpack_powered_phase_3_with_deadline_one_day_away,
+                params = screen.getBrandingTextParams()
+            )
+            else -> UiStringRes(
+                stringRes = R.string.wp_jetpack_powered
+            )
         }
     }
 
-    @Suppress("UNUSED_PARAMETER", "ForbiddenComment")
-    private fun countDaysUntilDeadlineOrZero(jpDeadlineDate: String): Int {
-        // TODO: verify logic is correct, otherwise use Calendar
-        val startDate = dateTimeUtilsWrapper.getTodaysDate()
-        val endDate = dateTimeUtilsWrapper.dateFromPattern(jpDeadlineDate, JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
-            ?: return 0
-        return dateTimeUtilsWrapper.daysBetween(startDate, endDate)
+    private fun countDaysUntilDeadlineOrNull(jpDeadlineDate: String): Int? {
+        return with(dateTimeUtilsWrapper) {
+            getTodaysDate().let { startDate ->
+                dateFromPattern(jpDeadlineDate, JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)?.let { endDate ->
+                    daysBetween(startDate, endDate)
+                }
+            }
+        }
     }
 
     private fun JetpackPoweredScreen.WithDynamicText.getBrandingTextParams(timeUntilDeadline: Int? = null) =
