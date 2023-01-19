@@ -161,12 +161,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             R.string.wp_jetpack_powered_phase_3_is_moving_soon,
             R.string.wp_jetpack_powered_phase_3_are_moving_soon,
         )
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
-            any(),
-            eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
-        )
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
+        verifyDaysUntilDeadlineCounted()
     }
 
     @Suppress("MaxLineLength")
@@ -183,12 +178,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             R.string.wp_jetpack_powered_phase_3_with_deadline_are_n_weeks_away,
             withExpectedNumber = expectedNumberOfWeeks
         )
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
-            any(),
-            eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
-        )
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
+        verifyDaysUntilDeadlineCounted()
     }
 
     @Suppress("MaxLineLength")
@@ -203,12 +193,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             R.string.wp_jetpack_powered_phase_3_with_deadline_is_one_week_away,
             R.string.wp_jetpack_powered_phase_3_with_deadline_are_one_week_away,
         )
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
-            any(),
-            eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
-        )
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
+        verifyDaysUntilDeadlineCounted()
     }
 
     @Suppress("MaxLineLength")
@@ -224,12 +209,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             R.string.wp_jetpack_powered_phase_3_with_deadline_are_n_days_away,
             withExpectedNumber = 6
         )
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
-            any(),
-            eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
-        )
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
+        verifyDaysUntilDeadlineCounted()
     }
 
     @Suppress("MaxLineLength")
@@ -244,12 +224,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             R.string.wp_jetpack_powered_phase_3_with_deadline_is_one_day_away,
             R.string.wp_jetpack_powered_phase_3_with_deadline_are_one_day_away,
         )
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
-            any(),
-            eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
-        )
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
+        verifyDaysUntilDeadlineCounted()
     }
 
     @Suppress("MaxLineLength")
@@ -261,12 +236,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
         val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
 
         allOtherBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
-            any(),
-            eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
-        )
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
+        verifyDaysUntilDeadlineCounted()
     }
 
     @Suppress("MaxLineLength")
@@ -278,12 +248,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
         val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
 
         allOtherBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
-            any(),
-            eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
-        )
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
+        verifyDaysUntilDeadlineCounted()
     }
 
     @Test
@@ -346,5 +311,13 @@ class JetpackFeatureRemovalBrandingUtilTest {
         }
     }
 
+    private fun verifyDaysUntilDeadlineCounted() {
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
+            any(),
+            eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
+        )
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
+    }
     // endregion
 }
