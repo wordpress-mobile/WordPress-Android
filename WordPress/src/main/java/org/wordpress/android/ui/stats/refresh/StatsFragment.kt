@@ -39,8 +39,6 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.UpdateAlertDialogFragment
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.UpdateAlertDialogFragment.Companion.UPDATE_ALERT_DIALOG_TAG
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
@@ -194,10 +192,6 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         viewModel.statsModuleUiModel.observeEvent(viewLifecycleOwner, { event ->
             updateUi(event)
         })
-
-        viewModel.showUpgradeAlert.observeEvent(viewLifecycleOwner) {
-            UpdateAlertDialogFragment.newInstance().show(childFragmentManager, UPDATE_ALERT_DIALOG_TAG)
-        }
     }
 
     private fun StatsFragmentBinding.updateUi(statsModuleUiModel: StatsModuleUiModel) {

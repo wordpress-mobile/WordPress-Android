@@ -137,7 +137,6 @@ Language: pt_BR
     <string name="hpp_title">Escolha um tema</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Sugestão de publicação do dia ignorada</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Saiba mais</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">De </string>
     <string name="stats_follower_types_pie_chart_total_label">Totais</string>
     <string name="stats_referrers_pie_chart_others">Outros</string>
     <string name="stats_referrers_pie_chart_search">Pesquisa</string>

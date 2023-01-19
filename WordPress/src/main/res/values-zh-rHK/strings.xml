@@ -136,7 +136,6 @@ Language: zh_TW
     <string name="hpp_title">選擇佈景主題</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">已略過今天的網誌提示</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">瞭解更多</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">來自 </string>
     <string name="stats_follower_types_pie_chart_total_label">總計</string>
     <string name="stats_referrers_pie_chart_others">其他</string>
     <string name="stats_referrers_pie_chart_search">搜尋</string>

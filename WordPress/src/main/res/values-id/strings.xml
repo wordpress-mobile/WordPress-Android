@@ -137,7 +137,6 @@ Language: id
     <string name="hpp_title">Pilih tema</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Prompt blogging hari ini yang dilewati</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Pelajari selengkapnya</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Dari </string>
     <string name="stats_follower_types_pie_chart_total_label">Total</string>
     <string name="stats_referrers_pie_chart_others">Lainnya</string>
     <string name="stats_referrers_pie_chart_search">Cari</string>

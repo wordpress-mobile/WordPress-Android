@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -34,6 +35,10 @@ class SiteItemsBuilderTest {
 
     @Mock
     lateinit var quickStartType: QuickStartType
+
+    @Mock
+    lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+
     private lateinit var siteItemsBuilder: SiteItemsBuilder
 
     @Before
@@ -44,7 +49,8 @@ class SiteItemsBuilderTest {
         siteItemsBuilder = SiteItemsBuilder(
             siteCategoryItemBuilder,
             siteListItemBuilder,
-            quickStartRepository
+            quickStartRepository,
+            jetpackFeatureRemovalOverlayUtil
         )
     }
 

@@ -137,7 +137,6 @@ Language: ko_KR
     <string name="hpp_title">테마 선택</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">건너뛴 오늘의 블로깅 프롬프트</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">더 알아보기</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">시작 </string>
     <string name="stats_follower_types_pie_chart_total_label">합계</string>
     <string name="stats_referrers_pie_chart_others">기타</string>
     <string name="stats_referrers_pie_chart_search">검색</string>

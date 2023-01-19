@@ -8,8 +8,10 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.bloggingreminders.resolver.BloggingRemindersHelper
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker.ErrorType.LocalDraftContent
 import org.wordpress.android.localcontentmigration.EligibilityHelper
@@ -19,6 +21,7 @@ import org.wordpress.android.localcontentmigration.LocalContentEntity.ReaderPost
 import org.wordpress.android.localcontentmigration.LocalContentEntity.Sites
 import org.wordpress.android.localcontentmigration.LocalContentEntity.UserFlags
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.AccessTokenData
+import org.wordpress.android.localcontentmigration.LocalContentEntityData.BloggingRemindersData
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.LocalDraftContentIsPresent
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.WPNotLoggedIn
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.EligibilityStatusData
@@ -47,6 +50,7 @@ import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsHelper
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType.WPNotLoggedInError
 import org.wordpress.android.userflags.resolver.UserFlagsHelper
+import org.wordpress.android.util.AppLog
 import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
@@ -59,6 +63,8 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
     private val sitesMigrationHelper: SitesMigrationHelper = mock()
     private val localPostsHelper: LocalPostsHelper = mock()
     private val eligibilityHelper: EligibilityHelper = mock()
+    private val bloggingRemindersHelper: BloggingRemindersHelper = mock()
+    private val appLogWrapper: AppLogWrapper = mock()
     private val classToTest = LocalMigrationOrchestrator(
         sharedLoginAnalyticsTracker,
         migrationAnalyticsTracker,
@@ -68,6 +74,8 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
         sitesMigrationHelper,
         localPostsHelper,
         eligibilityHelper,
+        bloggingRemindersHelper,
+        appLogWrapper,
     )
     private val avatarUrl = "avatarUrl"
     private val sites = listOf(SiteModel(), SiteModel())
@@ -148,6 +156,16 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
     }
 
     @Test
+    fun `Should log Failure if sitesMigrationHelper migrateSites fails`() {
+        val error = NullCursor(Sites)
+        mockHappyPath()
+        whenever(sitesMigrationHelper.migrateSites()).thenReturn(Failure(error))
+        val mutableStateFlow: MutableStateFlow<LocalMigrationState> = MutableStateFlow(Initial)
+        classToTest.tryLocalMigration(mutableStateFlow)
+        verify(appLogWrapper).e(AppLog.T.JETPACK_MIGRATION, "$error")
+    }
+
+    @Test
     fun `Should call userFlagsHelper migrateUserFlags when tryLocalMigration is called (happy path)`() {
         mockHappyPath()
         classToTest.tryLocalMigration(MutableStateFlow(Initial))
@@ -197,7 +215,7 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
         mockHappyPath()
         val mutableStateFlow: MutableStateFlow<LocalMigrationState> = MutableStateFlow(Initial)
         classToTest.tryLocalMigration(mutableStateFlow)
-        val expected = Successful(WelcomeScreenData(avatarUrl, sites, true))
+        val expected = Successful(WelcomeScreenData(avatarUrl, sites))
         val actual = mutableStateFlow.value
         assertTrue(actual is Successful)
         assertEquals(expected.data, actual.data)
@@ -211,6 +229,8 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
         whenever(readerSavedPostsHelper.migrateReaderSavedPosts())
             .thenReturn(Success(ReaderPostsData(ReaderPostList())))
         whenever(localPostsHelper.migratePosts()).thenReturn(Success(PostData(PostModel())))
+        whenever(bloggingRemindersHelper.migrateBloggingReminders())
+            .thenReturn(Success(BloggingRemindersData(listOf())))
     }
 
     private fun assertFailure(error: ProviderError) {

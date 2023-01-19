@@ -62,6 +62,9 @@ fun Context.getDrawableFromAttribute(attributeId: Int): Drawable? {
     return styledDrawable
 }
 
+val Context.primaryLocale: Locale
+    get() = this.resources.configuration.locales[0]
+
 /**
  * Reads an asset file as string
  * @param assetFilename the asset filename

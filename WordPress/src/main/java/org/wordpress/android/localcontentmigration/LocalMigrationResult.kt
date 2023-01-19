@@ -33,8 +33,8 @@ fun <T : LocalContentEntityData> LocalMigrationResult<LocalContentEntityData, Lo
     is Failure -> this
 }
 
-fun <E : LocalMigrationError> LocalMigrationResult<LocalContentEntityData, E>.orElse(
-    handleError: (E) -> LocalMigrationResult<LocalContentEntityData, LocalMigrationError>
+fun <T : LocalContentEntityData, E : LocalMigrationError> LocalMigrationResult<T, E>.orElse(
+    handleError: (E) -> LocalMigrationResult<T, LocalMigrationError>
 ) = when (this) {
     is Success -> this
     is Failure -> handleError(this.error)
@@ -75,20 +75,22 @@ fun LocalMigrationResult<LocalContentEntityData, LocalMigrationError>.emitTo(
 
 private fun emitDataToFlow(data: LocalContentEntityData, flow: MutableStateFlow<LocalMigrationState>) {
     when (flow.value) {
-        Initial ->
+        is Initial -> {
             when (data) {
                 is AccessTokenData -> flow.value = Migrating(WelcomeScreenData(avatarUrl = data.avatarUrl))
                 is SitesData -> flow.value = Migrating(WelcomeScreenData(sites = data.sites))
-                is UserFlagsData -> flow.value = Migrating(WelcomeScreenData(prefsMigrated = true))
+                is UserFlagsData -> flow.value = Migrating(WelcomeScreenData(flags = data.flags))
                 else -> Unit
             }
-        is Migrating ->
+        }
+        is Migrating -> {
             when (data) {
                 is AccessTokenData -> flow.value = Migrating(flow.value.data.copy(avatarUrl = data.avatarUrl))
                 is SitesData -> flow.value = Migrating(flow.value.data.copy(sites = data.sites))
-                is UserFlagsData -> flow.value = Migrating(flow.value.data.copy(prefsMigrated = true))
+                is UserFlagsData -> flow.value = Migrating(flow.value.data.copy(flags = data.flags))
                 else -> Unit
             }
+        }
         else -> Unit
     }
 }
@@ -96,7 +98,7 @@ private fun emitDataToFlow(data: LocalContentEntityData, flow: MutableStateFlow<
 data class WelcomeScreenData(
     val avatarUrl: String = "",
     val sites: List<SiteModel> = emptyList(),
-    val prefsMigrated: Boolean = false,
+    val flags: Map<String, Any?> = emptyMap(),
 )
 
 sealed class LocalMigrationState(val data: WelcomeScreenData = WelcomeScreenData()) {

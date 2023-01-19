@@ -137,7 +137,6 @@ Language: ja_JP
     <string name="hpp_title">テーマを選択</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">今日のブログ作成のプロンプトをスキップしました</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">さらに詳しく</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">から </string>
     <string name="stats_follower_types_pie_chart_total_label">合計</string>
     <string name="stats_referrers_pie_chart_others">その他</string>
     <string name="stats_referrers_pie_chart_search">検索</string>

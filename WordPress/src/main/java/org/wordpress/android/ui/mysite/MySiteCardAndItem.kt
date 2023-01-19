@@ -41,7 +41,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         DASHBOARD_CARDS,
         JETPACK_BADGE,
         SINGLE_ACTION_CARD,
-        JETPACK_FEATURE_CARD
+        JETPACK_FEATURE_CARD,
+        JETPACK_SWITCH_CARD
     }
 
     enum class DashboardCardType {
@@ -135,6 +136,12 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onMoreMenuClick: ListItemInteraction,
             val learnMoreUrl: String?,
         ) : Card(JETPACK_FEATURE_CARD)
+
+        data class JetpackSwitchMenu(
+            val onClick: ListItemInteraction,
+            val onRemindMeLaterItemClick: ListItemInteraction,
+            val onMoreMenuClick: ListItemInteraction
+        ) : Card(Type.JETPACK_SWITCH_CARD)
 
         data class DashboardCards(
             val cards: List<DashboardCard>
