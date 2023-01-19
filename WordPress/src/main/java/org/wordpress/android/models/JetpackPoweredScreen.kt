@@ -9,7 +9,7 @@ sealed interface JetpackPoweredScreen {
 
     sealed interface JetpackPoweredScreenWithDynamicText : JetpackPoweredScreen {
         val featureName: UiString
-        val isFeatureNameSingular: Boolean
+        val isPlural: Boolean
     }
 
     enum class WithStaticText(
@@ -25,72 +25,72 @@ sealed interface JetpackPoweredScreen {
     enum class WithDynamicText(
         override val trackingName: String,
         override val featureName: UiString,
-        override val isFeatureNameSingular: Boolean,
+        override val isPlural: Boolean,
     ): JetpackPoweredScreenWithDynamicText {
         ACTIVITY_LOG(
             trackingName = "activity_log",
             featureName = UiStringRes(R.string.activity_log),
-            isFeatureNameSingular = true,
+            isPlural = false,
         ),
         ACTIVITY_LOG_DETAIL(
             trackingName = "activity_log_detail",
             featureName = UiStringRes(R.string.activity_log),
-            isFeatureNameSingular = true,
+            isPlural = false,
         ),
         BACKUP(
             trackingName = "backup",
             featureName = UiStringRes(R.string.backup),
-            isFeatureNameSingular = true,
+            isPlural = false,
         ),
         BACKUP_DETAIL(
             trackingName = "backup_detail",
             featureName = UiStringRes(R.string.backup),
-            isFeatureNameSingular = true,
+            isPlural = false,
         ),
         NOTIFICATIONS(
             trackingName = "notifications",
             featureName = UiStringRes(R.string.notifications_screen_title),
-            isFeatureNameSingular = false,
+            isPlural = true,
         ),
         NOTIFICATIONS_SETTINGS(
             trackingName = "notifications_settings",
             featureName = UiStringRes(R.string.notification_settings),
-            isFeatureNameSingular = false,
+            isPlural = true,
         ),
         READER(
             "reader",
             featureName = UiStringRes(R.string.reader_screen_title),
-            isFeatureNameSingular = true,
+            isPlural = false,
         ),
         READER_POST_DETAIL(
             "reader_post_detail",
             featureName = UiStringRes(R.string.reader_screen_title),
-            isFeatureNameSingular = true,
+            isPlural = false,
         ),
         READER_SEARCH(
             "reader_search",
             featureName = UiStringRes(R.string.reader_screen_title),
-            isFeatureNameSingular = true,
+            isPlural = false,
         ),
         SHARE(
             "share",
             featureName = UiStringRes(R.string.my_site_btn_sharing),
-            isFeatureNameSingular = true,
+            isPlural = false,
         ),
         STATS(
             "stats",
             featureName = UiStringRes(R.string.stats),
-            isFeatureNameSingular = false,
+            isPlural = true,
         ),
         SCAN(
             "scan",
             featureName = UiStringRes(R.string.scan),
-            isFeatureNameSingular = true,
+            isPlural = false,
         ),
         THEMES(
             "themes",
             featureName = UiStringRes(R.string.themes),
-            isFeatureNameSingular = false,
+            isPlural = true,
         );
     }
 }

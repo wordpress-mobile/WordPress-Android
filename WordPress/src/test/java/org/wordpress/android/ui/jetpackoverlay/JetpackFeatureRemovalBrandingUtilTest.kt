@@ -29,7 +29,6 @@ import org.wordpress.android.util.config.JPDeadlineConfigStub
 
 @RunWith(MockitoJUnitRunner::class)
 class JetpackFeatureRemovalBrandingUtilTest {
-
     private val jpDeadlineConfig = JPDeadlineConfigStub()
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper = mock()
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper = mock()
@@ -309,15 +308,15 @@ class JetpackFeatureRemovalBrandingUtilTest {
     }
 
     private fun List<UiString>.assertAtLeastOneMatchesEither(
-        @StringRes expectedPlural: Int,
         @StringRes expectedSingular: Int,
+        @StringRes expectedPlural: Int,
         withExpectedNumber: Int? = null,
     ) {
         screensWithDynamicText.forEach { screen ->
             assertThat(this).matches { texts ->
                 texts.any {
                     it == UiString.UiStringResWithParams(
-                        when (screen.isFeatureNameSingular) {
+                        when (screen.isPlural) {
                             true -> expectedPlural
                             else -> expectedSingular
                         },

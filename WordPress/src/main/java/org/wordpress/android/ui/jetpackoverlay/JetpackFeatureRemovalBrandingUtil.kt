@@ -23,6 +23,8 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         jpDeadlineConfig.getValue()
     }
 
+    private val jetpackPoweredUiString by lazy { UiStringRes(R.string.wp_jetpack_powered) }
+
     fun shouldShowPhaseOneBranding(): Boolean {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
             PhaseOne,
@@ -44,17 +46,13 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
 
     fun getBrandingTextByPhase(screen: JetpackPoweredScreen): UiString {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
-            null,
-            PhaseOne -> UiStringRes(R.string.wp_jetpack_powered)
             PhaseTwo -> UiStringRes(R.string.wp_jetpack_powered_phase_2)
             PhaseThree -> when (screen) {
-                is JetpackPoweredScreen.WithDynamicText -> {
+                is JetpackPoweredScreen.WithDynamicText ->
                     getBrandingTextForPhaseThreeBasedOnDeadline(screen, jpDeadlineDate)
-                }
-                else -> UiStringRes(R.string.wp_jetpack_powered)
+                else -> jetpackPoweredUiString
             }
-            PhaseFour -> UiStringRes(R.string.wp_jetpack_powered)
-            else -> UiStringRes(R.string.wp_jetpack_powered)
+            else -> jetpackPoweredUiString
         }
     }
 
@@ -64,38 +62,34 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
     ): UiString {
         val daysUntilDeadline = jpDeadlineDate?.let(::countDaysUntilDeadlineOrNull)
         return when (daysUntilDeadline == null) {
-            true -> getPhaseThreeBrandingTextWithoutDeadline(screen)
-            else -> getPhaseThreeBrandingTextWithDeadline(screen, daysUntilDeadline)
+            true -> UiStringResWithParams(screen.getMovingSoonString(), screen.featureName)
+            else -> getPhaseThreeTextForDeadline(screen, daysUntilDeadline)
         }
     }
 
-    private fun getPhaseThreeBrandingTextWithoutDeadline(screen: JetpackPoweredScreen.WithDynamicText): UiString {
-        return UiStringResWithParams(screen.getMovingSoonText(), screen.featureName)
-    }
-
-    private fun getPhaseThreeBrandingTextWithDeadline(
+    private fun getPhaseThreeTextForDeadline(
         screen: JetpackPoweredScreen.WithDynamicText,
         daysUntilDeadline: Int,
     ): UiString {
         return when {
-            daysUntilDeadline > 30 -> UiStringResWithParams(screen.getMovingSoonText(), screen.featureName)
+            daysUntilDeadline > 30 -> UiStringResWithParams(screen.getMovingSoonString(), screen.featureName)
             daysUntilDeadline > 7 -> (daysUntilDeadline / 7).let { weeksUntilDeadline ->
                 return when {
                     weeksUntilDeadline > 1 -> UiStringResWithParams(
-                        screen.getWeeksAwayText(),
+                        screen.getManyWeeksAwayString(),
                         screen.featureName,
                         UiStringText("$weeksUntilDeadline"),
                     )
-                    else -> UiStringResWithParams(screen.getWeekAwayText(), screen.featureName)
+                    else -> UiStringResWithParams(screen.getSingleWeekAwayString(), screen.featureName)
                 }
             }
             daysUntilDeadline > 1 -> UiStringResWithParams(
-                screen.getDaysAwayText(),
+                screen.getManyDaysAwayString(),
                 screen.featureName,
                 UiStringText("$daysUntilDeadline"),
             )
             daysUntilDeadline == 1 -> UiStringResWithParams(
-                stringRes = screen.getDayAwayText(),
+                screen.getSingleDayAwayTextString(),
                 screen.featureName
             )
             else -> UiStringRes(R.string.wp_jetpack_powered)
@@ -112,28 +106,28 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         }
     }
 
-    private fun JetpackPoweredScreen.WithDynamicText.getMovingSoonText() = when (isFeatureNameSingular) {
-        true -> R.string.wp_jetpack_powered_phase_3_is_moving_soon
-        else -> R.string.wp_jetpack_powered_phase_3_are_moving_soon
+    private fun JetpackPoweredScreen.WithDynamicText.getMovingSoonString() = when (isPlural) {
+        true -> R.string.wp_jetpack_powered_phase_3_are_moving_soon
+        else -> R.string.wp_jetpack_powered_phase_3_is_moving_soon
     }
 
-    private fun JetpackPoweredScreen.WithDynamicText.getWeekAwayText() = when (isFeatureNameSingular) {
-        true -> R.string.wp_jetpack_powered_phase_3_with_deadline_is_one_week_away
-        else -> R.string.wp_jetpack_powered_phase_3_with_deadline_are_one_week_away
+    private fun JetpackPoweredScreen.WithDynamicText.getSingleWeekAwayString() = when (isPlural) {
+        true -> R.string.wp_jetpack_powered_phase_3_with_deadline_are_one_week_away
+        else -> R.string.wp_jetpack_powered_phase_3_with_deadline_is_one_week_away
     }
 
-    private fun JetpackPoweredScreen.WithDynamicText.getWeeksAwayText() = when (isFeatureNameSingular) {
-        true -> R.string.wp_jetpack_powered_phase_3_with_deadline_is_n_weeks_away
-        else -> R.string.wp_jetpack_powered_phase_3_with_deadline_are_n_weeks_away
+    private fun JetpackPoweredScreen.WithDynamicText.getManyWeeksAwayString() = when (isPlural) {
+        true -> R.string.wp_jetpack_powered_phase_3_with_deadline_are_n_weeks_away
+        else -> R.string.wp_jetpack_powered_phase_3_with_deadline_is_n_weeks_away
     }
 
-    private fun JetpackPoweredScreen.WithDynamicText.getDayAwayText() = when (isFeatureNameSingular) {
-        true -> R.string.wp_jetpack_powered_phase_3_with_deadline_is_one_day_away
-        else -> R.string.wp_jetpack_powered_phase_3_with_deadline_are_one_day_away
+    private fun JetpackPoweredScreen.WithDynamicText.getSingleDayAwayTextString() = when (isPlural) {
+        true -> R.string.wp_jetpack_powered_phase_3_with_deadline_are_one_day_away
+        else -> R.string.wp_jetpack_powered_phase_3_with_deadline_is_one_day_away
     }
 
-    private fun JetpackPoweredScreen.WithDynamicText.getDaysAwayText() = when (isFeatureNameSingular) {
-        true -> R.string.wp_jetpack_powered_phase_3_with_deadline_is_n_days_away
-        else -> R.string.wp_jetpack_powered_phase_3_with_deadline_are_n_days_away
+    private fun JetpackPoweredScreen.WithDynamicText.getManyDaysAwayString() = when (isPlural) {
+        true -> R.string.wp_jetpack_powered_phase_3_with_deadline_are_n_days_away
+        else -> R.string.wp_jetpack_powered_phase_3_with_deadline_is_n_days_away
     }
 }
