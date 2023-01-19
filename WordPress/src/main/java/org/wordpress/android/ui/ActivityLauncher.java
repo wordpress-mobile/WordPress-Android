@@ -146,6 +146,7 @@ import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
+import static org.wordpress.android.ui.main.WPMainActivity.ARG_BYPASS_MIGRATION;
 import static org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity.KEY_DEEP_LINK_DATA;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
@@ -169,7 +170,7 @@ public class ActivityLauncher {
 
     public static void showMainActivity(Context context, boolean bypassMigration) {
         Intent intent = getMainActivityInNewStack(context);
-        intent.putExtra(WPMainActivity.ARG_BYPASS_MIGRATION, bypassMigration);
+        intent.putExtra(ARG_BYPASS_MIGRATION, bypassMigration);
         context.startActivity(intent);
     }
 
@@ -1797,9 +1798,15 @@ public class ActivityLauncher {
     }
 
     public static void openJetpackForDeeplink(@NonNull Context context, String action, UriWrapper uri) {
+        openJetpackForDeeplink(context, action, uri, false);
+    }
+
+    public static void openJetpackForDeeplink(@NonNull Context context, String action, UriWrapper uri,
+                                              Boolean bypassMigration) {
         Intent intent = new Intent();
         intent.setAction(action);
         intent.setData(uri.getUri());
+        intent.putExtra(ARG_BYPASS_MIGRATION, bypassMigration);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
