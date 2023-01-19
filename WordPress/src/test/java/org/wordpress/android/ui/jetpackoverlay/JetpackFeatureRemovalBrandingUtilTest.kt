@@ -252,6 +252,23 @@ class JetpackFeatureRemovalBrandingUtilTest {
         verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
     }
 
+    @Suppress("MaxLineLength")
+    @Test
+    fun `given phase three started, when deadline is 0 days away, all other banners and badges should read Jetpack powered`() {
+        givenPhase(PhaseThree)
+        whenJpDeadlineIs(0)
+
+        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
+
+        allOtherBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
+            any(),
+            eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
+        )
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
+    }
+
     @Test
     fun `given phase four started, all banners and badges should read Jetpack powered`() {
         givenPhase(PhaseFour)
