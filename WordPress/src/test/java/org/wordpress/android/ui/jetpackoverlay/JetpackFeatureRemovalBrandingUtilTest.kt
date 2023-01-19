@@ -151,7 +151,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
     @Suppress("MaxLineLength")
     @Test
-    fun `given phase three started, when deadline is more than one month away, all other banners and badges should read {Feature} {is,are} moving soon`() {
+    fun `given phase three started, when deadline is more than 1 month away, all other banners and badges should read {Feature} {is,are} moving soon`() {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(31)
 
@@ -162,19 +162,33 @@ class JetpackFeatureRemovalBrandingUtilTest {
             R.string.wp_jetpack_powered_phase_3_are_moving_soon,
         )
         verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(any(), eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT))
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
+            any(),
+            eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
+        )
         verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
     }
 
     @Suppress("MaxLineLength")
     @Test
-    fun `given phase three started, when deadline is more than 1 month away on screens without dynamic text, banners and badges should read {Feature} {is,are} moving soon`() {
+    fun `given phase three started, when deadline is more than 1 week away, all other banners and badges should read {Feature} {is,are} moving in {n} weeks`() {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(28)
+        val expectedNumberOfWeeks = 4
 
-        val bannersAndBadgesOnScreensWithStaticText = getBrandingOnScreensWithStaticText()
+        val allOtherBannersAndBadges = getBrandingOnScreensWithDynamicText()
 
-        bannersAndBadgesOnScreensWithStaticText.assertAllMatch(R.string.wp_jetpack_powered)
+        allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
+            R.string.wp_jetpack_powered_phase_3_with_deadline_is_n_weeks_away,
+            R.string.wp_jetpack_powered_phase_3_with_deadline_are_n_weeks_away,
+            withNumberOfWeeksOrDaysAway = expectedNumberOfWeeks
+        )
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
+            any(),
+            eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
+        )
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
     }
 
     @Test
@@ -217,6 +231,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     private fun List<UiString>.assertAtLeastOneMatchesEither(
         @StringRes expectedPlural: Int,
         @StringRes expectedSingular: Int,
+        withNumberOfWeeksOrDaysAway: Int? = null,
     ) {
         screensWithDynamicText.forEach { screen ->
             assertThat(this).matches { texts ->
@@ -226,7 +241,10 @@ class JetpackFeatureRemovalBrandingUtilTest {
                             true -> expectedPlural
                             else -> expectedSingular
                         },
-                        screen.featureName
+                        listOfNotNull(
+                            screen.featureName,
+                            withNumberOfWeeksOrDaysAway?.let { num -> UiString.UiStringText("$num") }
+                        )
                     )
                 }
             }
