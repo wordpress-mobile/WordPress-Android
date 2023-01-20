@@ -2125,6 +2125,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "my_site_create_sheet_action_tapped";
             case MY_SITE_CREATE_SHEET_PROMPT_HELP_TAPPED:
                 return "my_site_create_sheet_prompt_help_tapped";
+            case BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED:
+                return "blogging_prompts_create_sheet_card_viewed";
             case MY_SITE_NO_SITES_VIEW_DISPLAYED:
                 return "my_site_no_sites_view_displayed";
             case MY_SITE_NO_SITES_VIEW_ACTION_TAPPED:
