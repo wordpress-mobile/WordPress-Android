@@ -309,7 +309,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     }
 
     @Test
-    fun `given phase three started, when deadline has passed, all other branding should be Jetpack powered`() {
+    fun `given phase 3 started, when deadline has passed, all other branding should be Jetpack powered`() {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(-15)
 
@@ -322,7 +322,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     }
 
     @Test
-    fun `given phase four started, all banners and badges should read Jetpack powered`() {
+    fun `given phase 4 started, all banners and badges should be Jetpack powered`() {
         givenPhase(PhaseFour)
 
         val allBannersAndBadges = allJpScreens.map {
