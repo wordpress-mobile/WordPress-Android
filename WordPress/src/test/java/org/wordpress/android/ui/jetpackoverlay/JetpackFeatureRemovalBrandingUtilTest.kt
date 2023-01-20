@@ -15,18 +15,29 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.models.JetpackPoweredScreen
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil.Interval
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil.Interval.Days
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil.Interval.Indeterminate
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil.Interval.Pluralisable
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil.Interval.Soon
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil.Interval.Unknown
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil.Interval.Weeks
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.config.JPDeadlineConfigStub
+import java.time.ZoneId
+import java.util.Date
 
+@Suppress("UNUSED_VARIABLE")
 @RunWith(MockitoJUnitRunner::class)
 class JetpackFeatureRemovalBrandingUtilTest {
     private val jpDeadlineConfig = JPDeadlineConfigStub()
@@ -149,29 +160,34 @@ class JetpackFeatureRemovalBrandingUtilTest {
         whenJpDeadlineIs(null)
 
         val allOtherBannersAndBadges = screensWithDynamicText.map {
-            classToTest.getBrandingTextByPhase(it)
+            classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
-            R.string.wp_jetpack_powered_phase_3_is_moving_soon,
-            R.string.wp_jetpack_powered_phase_3_are_moving_soon,
+        val actual = allOtherBannersAndBadges.match(expectedInterval = Unknown)
+        assertProperties(
+            expected = allOtherBannersAndBadges,
+            actual = actual,
+            expectedPlural = Soon.RES_ARE_MOVING_SOON,
+            expectedSingular = Soon.RES_IS_MOVING_SOON,
         )
-        verifyNoInteractions(dateTimeUtilsWrapper)
     }
 
     @Suppress("MaxLineLength")
     @Test
     fun `given phase three started, when deadline is more than 1 month away, all other banners and badges should read {Feature} {is,are} moving soon`() {
         givenPhase(PhaseThree)
-        whenJpDeadlineIs(31)
+        whenJpDeadlineIs(32)
 
         val allOtherBannersAndBadges = screensWithDynamicText.map {
-            classToTest.getBrandingTextByPhase(it)
+            classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
-            R.string.wp_jetpack_powered_phase_3_is_moving_soon,
-            R.string.wp_jetpack_powered_phase_3_are_moving_soon,
+        val actual = allOtherBannersAndBadges.match(expectedInterval = Soon)
+        assertProperties(
+            expected = allOtherBannersAndBadges,
+            actual = actual,
+            expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
+            expectedSingular = Pluralisable.RES_IS_MOVING_IN,
         )
         verifyDaysUntilDeadlineCounted()
     }
@@ -180,34 +196,42 @@ class JetpackFeatureRemovalBrandingUtilTest {
     @Test
     fun `given phase three started, when deadline is more than 1 week away, all other banners and badges should read {Feature} {is,are} moving in {n} weeks`() {
         givenPhase(PhaseThree)
-        whenJpDeadlineIs(28)
-        val expectedNumberOfWeeks = 4
+        whenJpDeadlineIs(29)
 
         val allOtherBannersAndBadges = screensWithDynamicText.map {
-            classToTest.getBrandingTextByPhase(it)
+            classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
-            R.string.wp_jetpack_powered_phase_3_with_deadline_is_n_weeks_away,
-            R.string.wp_jetpack_powered_phase_3_with_deadline_are_n_weeks_away,
-            withExpectedNumber = expectedNumberOfWeeks
+        val actual = allOtherBannersAndBadges.match(expectedInterval = Weeks(4))
+        assertProperties(
+            expected = allOtherBannersAndBadges,
+            actual = actual,
+            expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
+            expectedSingular = Pluralisable.RES_IS_MOVING_IN,
+            expectedParams = 2,
         )
         verifyDaysUntilDeadlineCounted()
     }
 
     @Suppress("MaxLineLength")
     @Test
-    fun `given phase three started, when deadline is 1 week away, all other banners and badges should read {Feature} {is,are} moving in one week`() {
+    fun `given phase three started, when deadline is 1 week away, all other banners and badges should read {Feature} {is,are} moving in 1 week`() {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(13)
 
         val allOtherBannersAndBadges = screensWithDynamicText.map {
-            classToTest.getBrandingTextByPhase(it)
+            classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
-            R.string.wp_jetpack_powered_phase_3_with_deadline_is_one_week_away,
-            R.string.wp_jetpack_powered_phase_3_with_deadline_are_one_week_away,
+        val actual = allOtherBannersAndBadges.match(
+            expectedInterval = Weeks(1)
+        )
+        assertProperties(
+            expected = allOtherBannersAndBadges,
+            actual = actual,
+            expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
+            expectedSingular = Pluralisable.RES_IS_MOVING_IN,
+            expectedParams = 2,
         )
         verifyDaysUntilDeadlineCounted()
     }
@@ -216,48 +240,65 @@ class JetpackFeatureRemovalBrandingUtilTest {
     @Test
     fun `given phase three started, when deadline is more than 1 day away, all other banners and badges should read {Feature} {is,are} moving in n days`() {
         givenPhase(PhaseThree)
-        whenJpDeadlineIs(6)
+        val expectedInterval = Days(6)
+        whenJpDeadlineIs(expectedInterval.number.toInt())
 
         val allOtherBannersAndBadges = screensWithDynamicText.map {
-            classToTest.getBrandingTextByPhase(it)
+            classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
-            R.string.wp_jetpack_powered_phase_3_with_deadline_is_n_days_away,
-            R.string.wp_jetpack_powered_phase_3_with_deadline_are_n_days_away,
-            withExpectedNumber = 6
+        val actual = allOtherBannersAndBadges.match(expectedInterval)
+        assertProperties(
+            expected = allOtherBannersAndBadges,
+            actual = actual,
+            expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
+            expectedSingular = Pluralisable.RES_IS_MOVING_IN,
+            expectedParams = 2,
         )
         verifyDaysUntilDeadlineCounted()
     }
 
     @Suppress("MaxLineLength")
     @Test
-    fun `given phase three started, when deadline is 1 day away, all other banners and badges should read {Feature} {is,are} moving in one day`() {
+    fun `given phase three started, when deadline is 1 day away, all other banners and badges should read {Feature} {is,are} moving in 1 day`() {
         givenPhase(PhaseThree)
-        whenJpDeadlineIs(1)
+        val expectedInterval = Days(1)
+        whenJpDeadlineIs(expectedInterval.number.toInt())
 
         val allOtherBannersAndBadges = screensWithDynamicText.map {
-            classToTest.getBrandingTextByPhase(it)
+            classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        allOtherBannersAndBadges.assertAtLeastOneMatchesEither(
-            R.string.wp_jetpack_powered_phase_3_with_deadline_is_one_day_away,
-            R.string.wp_jetpack_powered_phase_3_with_deadline_are_one_day_away,
+        val actual = allOtherBannersAndBadges.match(expectedInterval)
+        assertProperties(
+            expected = allOtherBannersAndBadges,
+            actual = actual,
+            expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
+            expectedSingular = Pluralisable.RES_IS_MOVING_IN,
+            expectedParams = 2,
         )
         verifyDaysUntilDeadlineCounted()
     }
 
     @Suppress("MaxLineLength")
     @Test
-    fun `given phase three started, when deadline is 0 days away, all other banners and badges should read Jetpack powered`() {
+    fun `given phase three started, when deadline is 0 days away, all other banners and badges should read {Feature} {is,are} moving in 1 day`() {
         givenPhase(PhaseThree)
-        whenJpDeadlineIs(0)
+        val expectedInterval = Days(0)
+        whenJpDeadlineIs(expectedInterval.number.toInt())
 
         val allOtherBannersAndBadges = screensWithDynamicText.map {
-            classToTest.getBrandingTextByPhase(it)
+            classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        allOtherBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
+        val actual = allOtherBannersAndBadges.match(expectedInterval.copy(number = 1))
+        assertProperties(
+            expected = allOtherBannersAndBadges,
+            actual = actual,
+            expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
+            expectedSingular = Pluralisable.RES_IS_MOVING_IN,
+            expectedParams = 2,
+        )
         verifyDaysUntilDeadlineCounted()
     }
 
@@ -296,38 +337,84 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
     private fun whenJpDeadlineIs(daysAway: Int?) {
         whenever(jpDeadlineConfig.appConfig.getRemoteFieldConfigValue(any())).thenReturn(daysAway?.toString())
-        daysAway?.let {
-            whenever(dateTimeUtilsWrapper.getTodaysDate()).thenReturn(mock())
-            whenever(dateTimeUtilsWrapper.dateFromPattern(any(), any())).thenReturn(mock())
-            whenever(dateTimeUtilsWrapper.daysBetween(any(), any())).thenReturn(it)
+        daysAway?.toLong()?.let {
+            val today = Date(System.currentTimeMillis())
+            val deadline = Date.from(today.toInstant().atZone(ZoneId.systemDefault()).plusDays(it).toInstant())
+            whenever(dateTimeUtilsWrapper.getTodaysDate()).thenReturn(today)
+            whenever(dateTimeUtilsWrapper.dateFromPattern(any(), any())).thenReturn(deadline)
         }
     }
 
     private fun List<UiString>.assertAllMatch(@StringRes expected: Int) {
-        assertThat(this).allMatch { it == UiString.UiStringRes(expected) }
+        assertThat(this).allMatch { it == UiStringRes(expected) }
     }
 
-    private fun List<UiString>.assertAtLeastOneMatchesEither(
-        @StringRes expectedSingular: Int,
-        @StringRes expectedPlural: Int,
-        withExpectedNumber: Int? = null,
-    ) {
+    private fun List<UiStringResWithParams>.match(expectedInterval: Interval): List<UiStringResWithParams> {
+        val matches = mutableListOf<UiStringResWithParams>()
+
         screensWithDynamicText.forEach { screen ->
-            assertThat(this).matches { texts ->
-                texts.any {
-                    it == UiString.UiStringResWithParams(
-                        when (screen.isPlural) {
-                            true -> expectedPlural
-                            else -> expectedSingular
-                        },
-                        listOfNotNull(
-                            screen.featureName,
-                            withExpectedNumber?.let { num -> UiString.UiStringText("$num") }
-                        )
-                    )
+            matches += filter { actual ->
+                val stringRes = when (screen.isPlural) {
+                    true -> when (expectedInterval) {
+                        is Indeterminate -> Soon.RES_ARE_MOVING_SOON
+                        is Pluralisable -> Pluralisable.RES_ARE_MOVING_IN
+                        else -> error("Unexpected interval: $expectedInterval")
+                    }
+                    false -> when (expectedInterval) {
+                        is Indeterminate -> Soon.RES_IS_MOVING_SOON
+                        is Pluralisable -> Pluralisable.RES_IS_MOVING_IN
+                        else -> error("Unexpected interval: $expectedInterval")
+                    }
                 }
+                val quantityUiString = (expectedInterval as? Pluralisable)?.let { mapToExpectedPluralRes(expectedInterval) }
+                val expected = UiStringResWithParams(
+                    stringRes,
+                    listOfNotNull(
+                        screen.featureName,
+                        quantityUiString
+                    )
+                )
+
+                actual == expected
             }
         }
+        return matches
+    }
+
+    private fun mapToExpectedPluralRes(interval: Pluralisable) = UiString.UiStringPluralRes(
+        zeroRes = 0,
+        oneRes = interval.oneRes,
+        otherRes = interval.otherRes,
+        count = interval.number.toInt()
+    )
+
+    private fun assertProperties(
+        expected: List<UiStringResWithParams>,
+        actual: List<UiStringResWithParams>,
+        expectedPlural: Int,
+        expectedSingular: Int,
+        expectedParams: Int = 1,
+    ) {
+        assertThat(expected).containsAll(actual)
+
+        // Assert feature name is added as param
+        val params = actual.map { it.params }
+        assertThat(params.flatten()).containsAll(expected.map { it.params[0] })
+        assertThat(params.count { it.size == expectedParams }).isEqualTo(params.size)
+
+        // Assert main stringRes of plurals
+        val plurals = expected.map { it.stringRes }
+            .filter { it == expectedPlural }
+        assertThat(actual.map { it.stringRes })
+            .filteredOn { it == expectedPlural }
+            .hasSameElementsAs(plurals)
+
+        // Assert main stringRes for singulars
+        val singulars = expected.map { it.stringRes }
+            .filter { it == expectedSingular }
+        assertThat(actual.map { it.stringRes })
+            .filteredOn { it == expectedSingular }
+            .hasSameElementsAs(singulars)
     }
 
     private fun verifyDaysUntilDeadlineCounted() {
@@ -336,7 +423,6 @@ class JetpackFeatureRemovalBrandingUtilTest {
             any(),
             eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
         )
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).daysBetween(any(), any())
     }
     // endregion
 }
