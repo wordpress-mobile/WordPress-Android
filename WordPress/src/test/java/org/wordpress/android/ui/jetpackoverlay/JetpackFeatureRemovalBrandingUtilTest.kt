@@ -30,6 +30,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseO
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -181,7 +182,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        val actual = allOtherBannersAndBadges.match(expectedInterval = Soon)
+        val actual = allOtherBannersAndBadges.match(Soon)
         assertProperties(
             expected = allOtherBannersAndBadges,
             actual = actual,
@@ -195,19 +196,21 @@ class JetpackFeatureRemovalBrandingUtilTest {
     @Test
     fun `given phase three started, when deadline is more than 1 week away, all other banners and badges should read {Feature} {is,are} moving in {n} weeks`() {
         givenPhase(PhaseThree)
+        val expectedInterval = Weeks(4)
         whenJpDeadlineIs(29)
 
         val allOtherBannersAndBadges = screensWithDynamicText.map {
             classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        val actual = allOtherBannersAndBadges.match(expectedInterval = Weeks(4))
+        val actual = allOtherBannersAndBadges.match(expectedInterval)
         assertProperties(
             expected = allOtherBannersAndBadges,
             actual = actual,
             expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
             expectedSingular = Pluralisable.RES_IS_MOVING_IN,
             expectedParams = 2,
+            expectedInterval = expectedInterval,
         )
         verifyDaysUntilDeadlineCounted()
     }
@@ -216,21 +219,21 @@ class JetpackFeatureRemovalBrandingUtilTest {
     @Test
     fun `given phase three started, when deadline is 1 week away, all other banners and badges should read {Feature} {is,are} moving in 1 week`() {
         givenPhase(PhaseThree)
+        val expectedInterval = Weeks(1)
         whenJpDeadlineIs(13)
 
         val allOtherBannersAndBadges = screensWithDynamicText.map {
             classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        val actual = allOtherBannersAndBadges.match(
-            expectedInterval = Weeks(1)
-        )
+        val actual = allOtherBannersAndBadges.match(expectedInterval)
         assertProperties(
             expected = allOtherBannersAndBadges,
             actual = actual,
             expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
             expectedSingular = Pluralisable.RES_IS_MOVING_IN,
             expectedParams = 2,
+            expectedInterval = expectedInterval,
         )
         verifyDaysUntilDeadlineCounted()
     }
@@ -253,6 +256,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
             expectedSingular = Pluralisable.RES_IS_MOVING_IN,
             expectedParams = 2,
+            expectedInterval = expectedInterval,
         )
         verifyDaysUntilDeadlineCounted()
     }
@@ -275,6 +279,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
             expectedSingular = Pluralisable.RES_IS_MOVING_IN,
             expectedParams = 2,
+            expectedInterval = expectedInterval,
         )
         verifyDaysUntilDeadlineCounted()
     }
@@ -283,20 +288,21 @@ class JetpackFeatureRemovalBrandingUtilTest {
     @Test
     fun `given phase three started, when deadline is 0 days away, all other banners and badges should read {Feature} {is,are} moving in 1 day`() {
         givenPhase(PhaseThree)
-        val expectedInterval = Days(0)
-        whenJpDeadlineIs(expectedInterval.number.toInt())
+        val expectedInterval = Days(1)
+        whenJpDeadlineIs(0)
 
         val allOtherBannersAndBadges = screensWithDynamicText.map {
             classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        val actual = allOtherBannersAndBadges.match(expectedInterval.copy(number = 1))
+        val actual = allOtherBannersAndBadges.match(expectedInterval)
         assertProperties(
             expected = allOtherBannersAndBadges,
             actual = actual,
             expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
             expectedSingular = Pluralisable.RES_IS_MOVING_IN,
             expectedParams = 2,
+            expectedInterval = expectedInterval,
         )
         verifyDaysUntilDeadlineCounted()
     }
@@ -365,8 +371,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
                         else -> error("Unexpected interval: $expectedInterval")
                     }
                 }
-                val quantityUiString =
-                    (expectedInterval as? Pluralisable)?.let { mapToExpectedPluralRes(expectedInterval) }
+                val quantityUiString = (expectedInterval as? Pluralisable)?.let { mapToExpectedPluralRes(expectedInterval) }
                 val expected = UiStringResWithParams(
                     stringRes,
                     listOfNotNull(
@@ -381,7 +386,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
         return matches
     }
 
-    private fun mapToExpectedPluralRes(interval: Pluralisable) = UiString.UiStringPluralRes(
+    private fun mapToExpectedPluralRes(interval: Pluralisable) = UiStringPluralRes(
         zeroRes = 0,
         oneRes = interval.oneRes,
         otherRes = interval.otherRes,
@@ -394,11 +399,15 @@ class JetpackFeatureRemovalBrandingUtilTest {
         expectedPlural: Int,
         expectedSingular: Int,
         expectedParams: Int = 1,
+        expectedInterval: Pluralisable? = null,
     ) {
         assertThat(expected).containsAll(actual)
 
         // Assert feature name is added as param
         val params = actual.map { it.params }
+        assertThat(params.flatten()).containsAll(expected.map { it.params[0] })
+        assertThat(params.count { it.size == expectedParams }).isEqualTo(params.size)
+
         assertThat(params.flatten()).containsAll(expected.map { it.params[0] })
         assertThat(params.count { it.size == expectedParams }).isEqualTo(params.size)
 
@@ -415,6 +424,17 @@ class JetpackFeatureRemovalBrandingUtilTest {
         assertThat(actual.map { it.stringRes })
             .filteredOn { it == expectedSingular }
             .hasSameElementsAs(singulars)
+
+        // Assert quantity for determinate intervals
+        if (expectedParams == 2) {
+            check(expectedInterval != null) { "expectedInterval should be provided for determinate intervals" }
+
+            val quantityTexts = params.flatten().filterIsInstance<UiStringPluralRes>()
+            assertThat(quantityTexts.map { it.zeroRes }).containsOnly(expectedInterval.otherRes)
+            assertThat(quantityTexts.map { it.oneRes }).containsOnly(expectedInterval.oneRes)
+            assertThat(quantityTexts.map { it.otherRes }).containsOnly(expectedInterval.otherRes)
+            assertThat(quantityTexts.map { it.count }).containsOnly(expectedInterval.number.toInt())
+        }
     }
 
     private fun verifyDaysUntilDeadlineCounted() {
