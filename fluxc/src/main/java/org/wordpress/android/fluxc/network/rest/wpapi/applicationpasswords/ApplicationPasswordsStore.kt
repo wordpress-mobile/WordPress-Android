@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import org.wordpress.android.util.AppLog
+import java.security.KeyStore
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,6 +27,7 @@ internal class ApplicationPasswordsStore @Inject constructor(
         initEncryptedPrefs()
     }
 
+    @Synchronized
     fun getCredentials(host: String): ApplicationPasswordCredentials? {
         val username = encryptedPreferences.getString(host.usernamePrefKey, null)
         val password = encryptedPreferences.getString(host.passwordPrefKey, null)
@@ -42,6 +44,7 @@ internal class ApplicationPasswordsStore @Inject constructor(
         }
     }
 
+    @Synchronized
     fun saveCredentials(host: String, credentials: ApplicationPasswordCredentials) {
         encryptedPreferences.edit()
             .putString(host.usernamePrefKey, credentials.userName)
@@ -50,6 +53,7 @@ internal class ApplicationPasswordsStore @Inject constructor(
             .apply()
     }
 
+    @Synchronized
     fun deleteCredentials(host: String) {
         encryptedPreferences.edit()
             .remove(host.usernamePrefKey)
@@ -59,16 +63,29 @@ internal class ApplicationPasswordsStore @Inject constructor(
     }
 
     private fun initEncryptedPrefs(): SharedPreferences {
-        val masterKey = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+        val keySpec = MasterKeys.AES256_GCM_SPEC
         val filename = "$applicationName-encrypted-prefs"
 
-        fun createPrefs() = EncryptedSharedPreferences.create(
-            filename,
-            masterKey,
-            context,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+        fun createPrefs(): SharedPreferences {
+            val masterKey = MasterKeys.getOrCreate(keySpec)
+            return EncryptedSharedPreferences.create(
+                filename,
+                masterKey,
+                context,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        }
+
+        fun deletePrefs() {
+            context.deleteSharedPreferences(filename)
+            with(KeyStore.getInstance("AndroidKeyStore")) {
+                load(null)
+                if (containsAlias(keySpec.keystoreAlias)) {
+                    deleteEntry(keySpec.keystoreAlias)
+                }
+            }
+        }
 
         // The documentation recommends excluding the file from auto backup, but since the file
         // is defined in an internal library, adding to the backup rules and maintaining them won't
@@ -84,7 +101,7 @@ internal class ApplicationPasswordsStore @Inject constructor(
                 AppLog.T.MAIN,
                 "Can't decrypt encrypted preferences, delete it and create new one"
             )
-            context.deleteSharedPreferences(filename)
+            deletePrefs()
             createPrefs()
         }
     }
