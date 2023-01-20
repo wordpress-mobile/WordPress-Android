@@ -37,7 +37,6 @@ import org.wordpress.android.util.config.JPDeadlineConfigStub
 import java.time.ZoneId
 import java.util.Date
 
-@Suppress("UNUSED_VARIABLE")
 @RunWith(MockitoJUnitRunner::class)
 class JetpackFeatureRemovalBrandingUtilTest {
     private val jpDeadlineConfig = JPDeadlineConfigStub()
@@ -366,7 +365,8 @@ class JetpackFeatureRemovalBrandingUtilTest {
                         else -> error("Unexpected interval: $expectedInterval")
                     }
                 }
-                val quantityUiString = (expectedInterval as? Pluralisable)?.let { mapToExpectedPluralRes(expectedInterval) }
+                val quantityUiString =
+                    (expectedInterval as? Pluralisable)?.let { mapToExpectedPluralRes(expectedInterval) }
                 val expected = UiStringResWithParams(
                     stringRes,
                     listOfNotNull(

@@ -57,15 +57,14 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
     fun getBrandingTextByPhase(screen: JetpackPoweredScreen): UiString {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
             PhaseTwo -> UiStringRes(R.string.wp_jetpack_powered_phase_2)
-            PhaseThree -> when (screen) {
-                is JetpackPoweredScreen.WithDynamicText -> getBrandingTextForPhaseThreeBasedOnDeadline(screen)
-                else -> UiStringRes(Interval.RES_JP_POWERED)
-            }
+            PhaseThree -> (screen as? JetpackPoweredScreen.WithDynamicText)?.let { screenWithDynamicText ->
+                getDynamicBrandingForScreen(screenWithDynamicText)
+            } ?: UiStringRes(Interval.RES_JP_POWERED)
             else -> UiStringRes(Interval.RES_JP_POWERED)
         }
     }
 
-    private fun getBrandingTextForPhaseThreeBasedOnDeadline(screen: JetpackPoweredScreen.WithDynamicText): UiString {
+    private fun getDynamicBrandingForScreen(screen: JetpackPoweredScreen.WithDynamicText): UiString {
         val deadline = retrieveDeadline()
 
         return when (deadline == null) {
@@ -81,8 +80,8 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         val today = dateTimeUtilsWrapper.getTodaysDate().toLocalDate()
         return when (val interval = Interval.between(today, deadline)) {
             is Indeterminate -> getPhaseThreeMovingSoonBranding(screen)
-            is Weeks -> getMovingInText(screen, getQuantityUiStringOf(interval))
-            is Days -> getMovingInText(screen, getQuantityUiStringOf(interval))
+            is Weeks -> getMovingInUiString(screen, getQuantityUiString(interval))
+            is Days -> getMovingInUiString(screen, getQuantityUiString(interval))
             is Passed -> UiStringRes(Interval.RES_JP_POWERED)
         }
     }
@@ -94,14 +93,14 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
     private fun Date.toLocalDate() = toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
 
     private fun getPhaseThreeMovingSoonBranding(screen: JetpackPoweredScreen.WithDynamicText) = UiStringResWithParams(
-            stringRes = when (screen.isPlural) {
-                true -> Soon.RES_ARE_MOVING_SOON
-                false -> Soon.RES_IS_MOVING_SOON
-            },
-            screen.featureName
-        )
+        stringRes = when (screen.isPlural) {
+            true -> Soon.RES_ARE_MOVING_SOON
+            false -> Soon.RES_IS_MOVING_SOON
+        },
+        screen.featureName
+    )
 
-    private fun getMovingInText(
+    private fun getMovingInUiString(
         screen: JetpackPoweredScreen.WithDynamicText,
         quantityUiString: UiStringPluralRes
     ) = UiStringResWithParams(
@@ -113,7 +112,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
         quantityUiString
     )
 
-    private fun getQuantityUiStringOf(interval: Pluralisable) = UiStringPluralRes(
+    private fun getQuantityUiString(interval: Pluralisable) = UiStringPluralRes(
         zeroRes = 0,
         oneRes = interval.oneRes,
         otherRes = interval.otherRes,
