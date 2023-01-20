@@ -90,10 +90,4 @@ class BloggingPromptsCardAnalyticsTrackerTest {
                 emptyMap()
         )
     }
-
-    @Test
-    fun `Should track my site card viewed`() {
-        classToTest.trackMySiteCardViewed()
-        verify(analyticsTracker).track(Stat.BLOGGING_PROMPTS_MY_SITE_CARD_VIEWED, emptyMap())
-    }
 }

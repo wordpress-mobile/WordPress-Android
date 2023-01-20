@@ -38,7 +38,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
@@ -1400,18 +1399,6 @@ class MySiteViewModel @Inject constructor(
                 .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
     }
 
-    private fun trackBloggingPromptCardShown() {
-        val siteSelected = uiModel.value?.state as? SiteSelected
-        siteSelected?.let { site ->
-            val hasBloggingPromptCard =
-                    (site.dashboardCardsAndItems.firstOrNull { it is DashboardCards } as DashboardCards)
-                            .cards.filterIsInstance<BloggingPromptCard>().isNotEmpty()
-            if (hasBloggingPromptCard) {
-                bloggingPromptsCardAnalyticsTracker.trackMySiteCardViewed()
-            }
-        }
-    }
-
     private fun resetShownTrackers() {
         domainRegistrationCardShownTracker.resetShown()
         cardsTracker.resetShown()
@@ -1432,7 +1419,6 @@ class MySiteViewModel @Inject constructor(
                     mapOf(MY_SITE_TAB to MySiteTabType.DASHBOARD.trackingLabel)
             )
             analyticsTrackerWrapper.track(Stat.MY_SITE_DASHBOARD_SHOWN)
-            trackBloggingPromptCardShown()
         }
     }
 

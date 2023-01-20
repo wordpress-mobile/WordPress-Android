@@ -51,9 +51,4 @@ class BloggingPromptsCardAnalyticsTracker @Inject constructor(
             Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_LEARN_MORE_CLICKED,
             emptyMap()
     )
-
-    fun trackMySiteCardViewed() = analyticsTracker.track(
-            Stat.BLOGGING_PROMPTS_MY_SITE_CARD_VIEWED,
-            emptyMap()
-    )
 }
