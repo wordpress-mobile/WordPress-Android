@@ -2,7 +2,6 @@ package org.wordpress.android.ui.bloggingprompts.promptslist
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,7 +29,7 @@ class BloggingPromptsListViewModel @Inject constructor(
     val uiStateFlow = _uiStateFlow.asStateFlow()
 
     private val _actionEvents =
-        MutableSharedFlow<ActionEvent>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+        MutableSharedFlow<ActionEvent>()
     val actionEvents = _actionEvents
 
     fun start() {
