@@ -31,6 +31,9 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
     private val jpDeadlineDate: String? by lazy {
         jpDeadlineConfig.getValue()
     }
+    val jpFeaturesRemoved by lazy {
+        jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
+    }
 
     fun shouldShowPhaseOneBranding(): Boolean {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
