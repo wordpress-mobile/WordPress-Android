@@ -132,5 +132,4 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
             } ?: error("Pluralisable interval should be of type Days")
         }
     }
-
 }
