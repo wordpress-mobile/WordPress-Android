@@ -82,15 +82,16 @@ class MobilePayRestClient @Inject constructor(
         GENERIC_ERROR,
         INVALID_RESPONSE,
         TIMEOUT,
+        NETWORK_ERROR
     }
 
     private fun WPComGsonRequest.WPComGsonNetworkError.toCreateOrderError() =
         when (type) {
             BaseRequest.GenericErrorType.TIMEOUT -> CreateOrderErrorType.TIMEOUT
             BaseRequest.GenericErrorType.NO_CONNECTION,
-            BaseRequest.GenericErrorType.SERVER_ERROR,
             BaseRequest.GenericErrorType.INVALID_SSL_CERTIFICATE,
-            BaseRequest.GenericErrorType.NETWORK_ERROR -> CreateOrderErrorType.API_ERROR
+            BaseRequest.GenericErrorType.NETWORK_ERROR -> CreateOrderErrorType.NETWORK_ERROR
+            BaseRequest.GenericErrorType.SERVER_ERROR -> CreateOrderErrorType.API_ERROR
             BaseRequest.GenericErrorType.PARSE_ERROR,
             BaseRequest.GenericErrorType.NOT_FOUND,
             BaseRequest.GenericErrorType.CENSORED,
