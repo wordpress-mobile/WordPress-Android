@@ -163,7 +163,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        val actual = allOtherBannersAndBadges.match(expectedInterval = Unknown)
+        val actual = allOtherBannersAndBadges.match(Unknown)
         assertProperties(
             expected = allOtherBannersAndBadges,
             actual = actual,
@@ -211,6 +211,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             expectedSingular = Pluralisable.RES_IS_MOVING_IN,
             expectedParams = 2,
             expectedInterval = expectedInterval,
+            assertOnQuantity = ::assertQuantity,
         )
         verifyDaysUntilDeadlineCounted()
     }
@@ -234,7 +235,8 @@ class JetpackFeatureRemovalBrandingUtilTest {
             expectedSingular = Pluralisable.RES_IS_MOVING_IN,
             expectedParams = 2,
             expectedInterval = expectedInterval,
-        )
+            assertOnQuantity = ::assertQuantity,
+            )
         verifyDaysUntilDeadlineCounted()
     }
 
@@ -257,7 +259,8 @@ class JetpackFeatureRemovalBrandingUtilTest {
             expectedSingular = Pluralisable.RES_IS_MOVING_IN,
             expectedParams = 2,
             expectedInterval = expectedInterval,
-        )
+            assertOnQuantity = ::assertQuantity,
+            )
         verifyDaysUntilDeadlineCounted()
     }
 
@@ -280,7 +283,8 @@ class JetpackFeatureRemovalBrandingUtilTest {
             expectedSingular = Pluralisable.RES_IS_MOVING_IN,
             expectedParams = 2,
             expectedInterval = expectedInterval,
-        )
+            assertOnQuantity = ::assertQuantity,
+            )
         verifyDaysUntilDeadlineCounted()
     }
 
@@ -303,6 +307,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             expectedSingular = Pluralisable.RES_IS_MOVING_IN,
             expectedParams = 2,
             expectedInterval = expectedInterval,
+            assertOnQuantity = ::assertQuantity,
         )
         verifyDaysUntilDeadlineCounted()
     }
@@ -334,7 +339,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
     // endregion
 
-    // region Test Helpers
+    // region Helpers
 
     private fun givenPhase(phase: JetpackFeatureRemovalPhase?) {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(phase)
@@ -371,7 +376,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
                         else -> error("Unexpected interval: $expectedInterval")
                     }
                 }
-                val quantityUiString = (expectedInterval as? Pluralisable)?.let { mapToExpectedPluralRes(expectedInterval) }
+                val quantityUiString = (expectedInterval as? Pluralisable)?.expectAsQuantityUiString()
                 val expected = UiStringResWithParams(
                     stringRes,
                     listOfNotNull(
@@ -386,11 +391,11 @@ class JetpackFeatureRemovalBrandingUtilTest {
         return matches
     }
 
-    private fun mapToExpectedPluralRes(interval: Pluralisable) = UiStringPluralRes(
-        zeroRes = 0,
-        oneRes = interval.oneRes,
-        otherRes = interval.otherRes,
-        count = interval.number.toInt()
+    private fun Pluralisable.expectAsQuantityUiString() = UiStringPluralRes(
+        zeroRes = otherRes,
+        oneRes = oneRes,
+        otherRes =otherRes,
+        count = number.toInt()
     )
 
     private fun assertProperties(
@@ -400,6 +405,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
         expectedSingular: Int,
         expectedParams: Int = 1,
         expectedInterval: Pluralisable? = null,
+        assertOnQuantity: ((Pluralisable, List<UiStringPluralRes>) -> Unit)? = null,
     ) {
         assertThat(expected).containsAll(actual)
 
@@ -427,14 +433,22 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
         // Assert quantity for determinate intervals
         if (expectedParams == 2) {
-            check(expectedInterval != null) { "expectedInterval should be provided for determinate intervals" }
+            check(expectedInterval != null && assertOnQuantity != null) {
+                "Pluralisation should be verified on plurals"
+            }
 
             val quantityTexts = params.flatten().filterIsInstance<UiStringPluralRes>()
-            assertThat(quantityTexts.map { it.zeroRes }).containsOnly(expectedInterval.otherRes)
-            assertThat(quantityTexts.map { it.oneRes }).containsOnly(expectedInterval.oneRes)
-            assertThat(quantityTexts.map { it.otherRes }).containsOnly(expectedInterval.otherRes)
-            assertThat(quantityTexts.map { it.count }).containsOnly(expectedInterval.number.toInt())
-        }
+            assertOnQuantity(expectedInterval, quantityTexts) }
+    }
+
+    private fun assertQuantity(
+        expectedInterval: Pluralisable,
+        actualQuantity: List<UiStringPluralRes>
+    ) {
+        assertThat(actualQuantity.map { it.zeroRes }).containsOnly(expectedInterval.otherRes)
+        assertThat(actualQuantity.map { it.oneRes }).containsOnly(expectedInterval.oneRes)
+        assertThat(actualQuantity.map { it.otherRes }).containsOnly(expectedInterval.otherRes)
+        assertThat(actualQuantity.map { it.count }).containsOnly(expectedInterval.number.toInt())
     }
 
     private fun verifyDaysUntilDeadlineCounted() {
