@@ -28,8 +28,7 @@ class BloggingPromptsListViewModel @Inject constructor(
     private val _uiStateFlow = MutableStateFlow<UiState>(UiState.None)
     val uiStateFlow = _uiStateFlow.asStateFlow()
 
-    private val _actionEvents =
-        MutableSharedFlow<ActionEvent>()
+    private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents = _actionEvents
 
     fun start() {
