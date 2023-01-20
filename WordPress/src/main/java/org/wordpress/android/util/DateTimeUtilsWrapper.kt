@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 class DateTimeUtilsWrapper @Inject constructor(
@@ -26,7 +27,7 @@ class DateTimeUtilsWrapper @Inject constructor(
     fun getTodaysDate() = Date(System.currentTimeMillis())
 
     fun dateFromPattern(dateString: String, pattern: String): Date? {
-        return runCatching { SimpleDateFormat(pattern).parse(dateString) }
+        return runCatching { SimpleDateFormat(pattern, Locale.ROOT).parse(dateString) }
             .onFailure { AppLog.e(T.UTILS, "Error parsing date: $dateString", it) }
             .getOrNull()
     }
