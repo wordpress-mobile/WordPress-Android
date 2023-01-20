@@ -138,8 +138,6 @@ class WPMainActivityViewModel @Inject constructor(
     val isSignedInWPComOrHasWPOrgSite: Boolean
         get() = FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)
 
-    private var hasLoadedMainActions = false
-
     fun start(site: SiteModel?) {
         if (isStarted) return
         isStarted = true
@@ -152,7 +150,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     @Suppress("LongMethod")
-    private fun loadMainActions(site: SiteModel?) = launch {
+    private fun loadMainActions(site: SiteModel?, onFabClicked: Boolean = false) = launch {
         val actionsList = ArrayList<MainActionListItem>()
         if (bloggingPromptsFeatureConfig.isEnabled()) {
             val prompt = site?.let {
@@ -216,10 +214,7 @@ class WPMainActivityViewModel @Inject constructor(
         }
 
         _mainActions.postValue(actionsList)
-        if (hasLoadedMainActions && actionsList.any { it is AnswerBloggingPromptAction }) {
-            analyticsTracker.track(Stat.BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED)
-        }
-        hasLoadedMainActions = true
+        if (onFabClicked) trackCreateActionsSheetCard(actionsList)
     }
 
     private fun onCreateActionClicked(actionType: ActionType) {
@@ -260,6 +255,12 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
+    private fun trackCreateActionsSheetCard(actions: List<MainActionListItem>) {
+        if (actions.any { it is AnswerBloggingPromptAction }) {
+            analyticsTracker.track(Stat.BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED)
+        }
+    }
+
     fun onFabClicked(site: SiteModel?) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true, site)
@@ -273,7 +274,7 @@ class WPMainActivityViewModel @Inject constructor(
 
             // Reload main actions, since the first time this is initialized the SiteModel may not contain the
             // latest info.
-            loadMainActions(site)
+            loadMainActions(site, onFabClicked = true)
 
             analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_SHOWN)
             _isBottomSheetShowing.value = Event(true)
