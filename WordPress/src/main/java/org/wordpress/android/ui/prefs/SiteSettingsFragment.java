@@ -189,8 +189,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
-
-    @Inject JetpackFeatureRemovalPhaseHelper jetpackFeatureRemovalPhaseHelper;
+    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
@@ -1041,7 +1040,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // hide site accelerator jetpack settings if plugin version < 5.8
-        if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() || (
+        if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() || (
                 !supportsJetpackSiteAcceleratorSettings(mSite)
                 && mSite.getPlanId() != PlansConstants.BUSINESS_PLAN_ID)) {
             removeJetpackSiteAcceleratorSettings();
@@ -1060,7 +1059,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (!mManageCategoriesFeatureConfig.isEnabled()) {
             removeCategoriesPreference();
         }
-        if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+        if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
             WPPrefUtils.removePreference(this, R.string.pref_key_site_writing,
                     R.string.pref_key_site_related_posts);
             WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
