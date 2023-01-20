@@ -152,7 +152,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     }
 
     @Test
-    fun `given phase 3 started, when deadline is unknown, all other branding should be {Feature} {is,are} moving soon`() {
+    fun `given phase 3 started, when deadline unknown, all other branding should be {Feature} {is,are} moving soon`() {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(null)
 
@@ -169,9 +169,8 @@ class JetpackFeatureRemovalBrandingUtilTest {
         )
     }
 
-    @Suppress("MaxLineLength")
     @Test
-    fun `given phase 3 started, when deadline is 1 month, all other branding should be {Feature} {is,are} moving soon`() {
+    fun `given phase 3 started, when deadline 32 days, all other branding should be {Feature} {is,are} moving soon`() {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(32)
 
@@ -190,7 +189,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     }
 
     @Test
-    fun `given phase 3, when deadline is in 4 weeks, all other branding should be {Feature} {is,are} moving in {n} weeks`() {
+    fun `given phase 3, when deadline in 29 days, other branding should be {Feature} {is,are} moving in {n} weeks`() {
         givenPhase(PhaseThree)
         val expectedInterval = Weeks(4)
         whenJpDeadlineIs(29)
