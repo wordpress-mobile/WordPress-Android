@@ -108,7 +108,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     // region Branding Text
 
     @Test
-    fun `given phase one not started, all banners and badges should read Jetpack powered`() {
+    fun `given phase 1 not started, all banners and badges should be Jetpack powered`() {
         givenPhase(null)
 
         val allBannersAndBadges = allJpScreens.map {
@@ -119,7 +119,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     }
 
     @Test
-    fun `given phase one started, all banners and badges should read Jetpack powered`() {
+    fun `given phase 1 started, all banners and badges should be Jetpack powered`() {
         givenPhase(PhaseOne)
 
         val allBannersAndBadges = allJpScreens.map {
@@ -130,7 +130,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     }
 
     @Test
-    fun `given phase two started, all banners and badges should read Get the Jetpack app`() {
+    fun `given phase 2 started, all banners and badges should be Get the Jetpack app`() {
         givenPhase(PhaseTwo)
 
         val allBannersAndBadges = allJpScreens.map {
@@ -140,9 +140,8 @@ class JetpackFeatureRemovalBrandingUtilTest {
         allBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered_phase_2)
     }
 
-    @Suppress("MaxLineLength")
     @Test
-    fun `given phase three started, when on screens without dynamic text, banners and badges should read Jetpack powered`() {
+    fun `given phase 3 started, on screens without dynamic branding, banners and badges should be Jetpack powered`() {
         givenPhase(PhaseThree)
 
         val staticBannersAndBadges = screensWithStaticText.map {
@@ -152,9 +151,8 @@ class JetpackFeatureRemovalBrandingUtilTest {
         staticBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
     }
 
-    @Suppress("MaxLineLength")
     @Test
-    fun `given phase three started, when deadline is unknown, all other banners and badges should read {Feature} {is,are} moving soon`() {
+    fun `given phase 3 started, when deadline is unknown, all other branding should be {Feature} {is,are} moving soon`() {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(null)
 
@@ -173,7 +171,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
     @Suppress("MaxLineLength")
     @Test
-    fun `given phase three started, when deadline is more than 1 month away, all other banners and badges should read {Feature} {is,are} moving soon`() {
+    fun `given phase 3 started, when deadline is 1 month, all other branding should be {Feature} {is,are} moving soon`() {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(32)
 
@@ -191,9 +189,8 @@ class JetpackFeatureRemovalBrandingUtilTest {
         verifyDaysUntilDeadlineCounted()
     }
 
-    @Suppress("MaxLineLength")
     @Test
-    fun `given phase three started, when deadline is more than 1 week away, all other banners and badges should read {Feature} {is,are} moving in {n} weeks`() {
+    fun `given phase 3, when deadline is in 4 weeks, all other branding should be {Feature} {is,are} moving in {n} weeks`() {
         givenPhase(PhaseThree)
         val expectedInterval = Weeks(4)
         whenJpDeadlineIs(29)
@@ -217,7 +214,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
     @Suppress("MaxLineLength")
     @Test
-    fun `given phase three started, when deadline is 1 week away, all other banners and badges should read {Feature} {is,are} moving in 1 week`() {
+    fun `given phase 3 started, when deadline is in 1 week, all other branding should be {Feature} {is,are} moving in 1 week`() {
         givenPhase(PhaseThree)
         val expectedInterval = Weeks(1)
         whenJpDeadlineIs(13)
@@ -235,13 +232,13 @@ class JetpackFeatureRemovalBrandingUtilTest {
             expectedParams = 2,
             expectedInterval = expectedInterval,
             assertOnQuantity = ::assertQuantity,
-            )
+        )
         verifyDaysUntilDeadlineCounted()
     }
 
     @Suppress("MaxLineLength")
     @Test
-    fun `given phase three started, when deadline is more than 1 day away, all other banners and badges should read {Feature} {is,are} moving in n days`() {
+    fun `given phase 3 started, when deadline is in 6 days, all other branding should be {Feature} {is,are} moving in n days`() {
         givenPhase(PhaseThree)
         val expectedInterval = Days(6)
         whenJpDeadlineIs(expectedInterval.number.toInt())
@@ -259,13 +256,13 @@ class JetpackFeatureRemovalBrandingUtilTest {
             expectedParams = 2,
             expectedInterval = expectedInterval,
             assertOnQuantity = ::assertQuantity,
-            )
+        )
         verifyDaysUntilDeadlineCounted()
     }
 
     @Suppress("MaxLineLength")
     @Test
-    fun `given phase three started, when deadline is 1 day away, all other banners and badges should read {Feature} {is,are} moving in 1 day`() {
+    fun `given phase 3 started, when deadline is in 1 day, all other branding should be {Feature} {is,are} moving in 1 day`() {
         givenPhase(PhaseThree)
         val expectedInterval = Days(1)
         whenJpDeadlineIs(expectedInterval.number.toInt())
@@ -283,13 +280,13 @@ class JetpackFeatureRemovalBrandingUtilTest {
             expectedParams = 2,
             expectedInterval = expectedInterval,
             assertOnQuantity = ::assertQuantity,
-            )
+        )
         verifyDaysUntilDeadlineCounted()
     }
 
     @Suppress("MaxLineLength")
     @Test
-    fun `given phase three started, when deadline is 0 days away, all other banners and badges should read {Feature} {is,are} moving in 1 day`() {
+    fun `given phase 3 started, when deadline is in 0 days, all other branding should be {Feature} {is,are} moving in 1 day`() {
         givenPhase(PhaseThree)
         val expectedInterval = Days(1)
         whenJpDeadlineIs(0)
@@ -311,9 +308,8 @@ class JetpackFeatureRemovalBrandingUtilTest {
         verifyDaysUntilDeadlineCounted()
     }
 
-    @Suppress("MaxLineLength")
     @Test
-    fun `given phase three started, when deadline has passed, all other banners and badges should read Jetpack powered`() {
+    fun `given phase three started, when deadline has passed, all other branding should be Jetpack powered`() {
         givenPhase(PhaseThree)
         whenJpDeadlineIs(-15)
 
@@ -393,7 +389,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     private fun Pluralisable.expectAsQuantityUiString() = UiStringPluralRes(
         zeroRes = otherRes,
         oneRes = oneRes,
-        otherRes =otherRes,
+        otherRes = otherRes,
         count = number.toInt()
     )
 
@@ -437,7 +433,8 @@ class JetpackFeatureRemovalBrandingUtilTest {
             }
 
             val quantityTexts = params.flatten().filterIsInstance<UiStringPluralRes>()
-            assertOnQuantity(expectedInterval, quantityTexts) }
+            assertOnQuantity(expectedInterval, quantityTexts)
+        }
     }
 
     private fun assertQuantity(

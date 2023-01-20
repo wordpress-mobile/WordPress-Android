@@ -5,7 +5,6 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 sealed class JetpackBrandingUiState {
-
     sealed interface Indeterminate
     sealed interface Pluralisable {
         val number: Long
