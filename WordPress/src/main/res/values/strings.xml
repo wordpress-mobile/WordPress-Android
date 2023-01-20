@@ -598,7 +598,7 @@
     <string name="days_quantity_one">1 day</string>
     <string name="days_quantity_other">%d days</string>
     <string name="weeks_quantity_one">1 week</string>
-    <string name="weeks_quantity_other">%d days</string>
+    <string name="weeks_quantity_other">%d weeks</string>
 
     <!-- PreferenceCategory Headers -->
     <string name="site_settings_general_header">General</string>
