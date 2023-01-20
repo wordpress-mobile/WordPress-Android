@@ -18,13 +18,12 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.models.JetpackPoweredScreen
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil.Interval
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil.Interval.Days
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil.Interval.Indeterminate
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil.Interval.Pluralisable
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil.Interval.Soon
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil.Interval.Unknown
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil.Interval.Weeks
+import org.wordpress.android.ui.jetpackoverlay.JetpackBrandingUiState.Days
+import org.wordpress.android.ui.jetpackoverlay.JetpackBrandingUiState.Indeterminate
+import org.wordpress.android.ui.jetpackoverlay.JetpackBrandingUiState.Pluralisable
+import org.wordpress.android.ui.jetpackoverlay.JetpackBrandingUiState.Soon
+import org.wordpress.android.ui.jetpackoverlay.JetpackBrandingUiState.Unknown
+import org.wordpress.android.ui.jetpackoverlay.JetpackBrandingUiState.Weeks
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
@@ -359,24 +358,24 @@ class JetpackFeatureRemovalBrandingUtilTest {
         assertThat(this).allMatch { it == UiStringRes(expected) }
     }
 
-    private fun List<UiStringResWithParams>.match(expectedInterval: Interval): List<UiStringResWithParams> {
+    private fun List<UiStringResWithParams>.match(uiState: JetpackBrandingUiState): List<UiStringResWithParams> {
         val matches = mutableListOf<UiStringResWithParams>()
 
         screensWithDynamicText.forEach { screen ->
             matches += filter { actual ->
                 val stringRes = when (screen.isPlural) {
-                    true -> when (expectedInterval) {
+                    true -> when (uiState) {
                         is Indeterminate -> Soon.RES_ARE_MOVING_SOON
                         is Pluralisable -> Pluralisable.RES_ARE_MOVING_IN
-                        else -> error("Unexpected interval: $expectedInterval")
+                        else -> error("Unexpected interval: $uiState")
                     }
-                    false -> when (expectedInterval) {
+                    false -> when (uiState) {
                         is Indeterminate -> Soon.RES_IS_MOVING_SOON
                         is Pluralisable -> Pluralisable.RES_IS_MOVING_IN
-                        else -> error("Unexpected interval: $expectedInterval")
+                        else -> error("Unexpected interval: $uiState")
                     }
                 }
-                val quantityUiString = (expectedInterval as? Pluralisable)?.expectAsQuantityUiString()
+                val quantityUiString = (uiState as? Pluralisable)?.expectAsQuantityUiString()
                 val expected = UiStringResWithParams(
                     stringRes,
                     listOfNotNull(
