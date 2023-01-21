@@ -31,9 +31,8 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
     private val jpDeadlineDate: String? by lazy {
         jpDeadlineConfig.getValue()
     }
-    val jpFeaturesRemoved by lazy {
-        jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
-    }
+
+    fun isInRemovalPhase() = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
 
     fun shouldShowPhaseOneBranding(): Boolean {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
@@ -56,10 +55,10 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
 
     fun getBrandingTextByPhase(screen: JetpackPoweredScreen): UiString {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
-            PhaseTwo -> UiStringRes(R.string.wp_jetpack_powered_phase_2)
             PhaseThree -> (screen as? JetpackPoweredScreen.WithDynamicText)?.let { screenWithDynamicText ->
                 getDynamicBrandingForScreen(screenWithDynamicText)
             } ?: UiStringRes(JetpackBrandingUiState.RES_JP_POWERED)
+            PhaseTwo -> UiStringRes(R.string.wp_jetpack_powered_phase_2)
             else -> UiStringRes(JetpackBrandingUiState.RES_JP_POWERED)
         }
     }

@@ -26,7 +26,7 @@ class JetpackBrandingUtils @Inject constructor(
 ) {
     fun shouldShowJetpackBranding(): Boolean {
         return isWpComSite() && jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
-                && !jetpackFeatureRemovalBrandingUtil.jpFeaturesRemoved
+                && !jetpackFeatureRemovalBrandingUtil.isInRemovalPhase()
     }
 
     fun shouldShowJetpackBrandingForPhaseOne(): Boolean {
@@ -39,6 +39,10 @@ class JetpackBrandingUtils @Inject constructor(
 
     fun shouldShowJetpackPoweredBottomSheet(): Boolean {
         return isWpComSite() && jetpackPoweredBottomSheetFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
+    }
+
+    fun getBrandingTextForScreen(screen: JetpackPoweredScreen): UiString {
+        return jetpackFeatureRemovalBrandingUtil.getBrandingTextByPhase(screen)
     }
 
     fun showJetpackBannerIfScrolledToTop(banner: View, scrollableView: RecyclerView) {
@@ -54,11 +58,6 @@ class JetpackBrandingUtils @Inject constructor(
             // Hide by moving down
             banner.resources.getDimension(R.dimen.jetpack_banner_height)
         }
-    }
-
-    @Suppress("unused")
-    fun getBrandingTextForScreen(screen: JetpackPoweredScreen): UiString {
-        return jetpackFeatureRemovalBrandingUtil.getBrandingTextByPhase(screen)
     }
 
     fun initJetpackBannerAnimation(banner: View, scrollableView: RecyclerView) {

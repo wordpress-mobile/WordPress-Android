@@ -141,7 +141,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     }
 
     @Test
-    fun `given phase 3 started, on screens without dynamic branding, banners and badges should be Jetpack powered`() {
+    fun `given phase 3 started, on screens without dynamic branding, some branding should be Jetpack powered`() {
         givenPhase(PhaseThree)
 
         val staticBannersAndBadges = screensWithStaticText.map {
