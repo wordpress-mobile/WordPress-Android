@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-12-20 13:54:10+0000
+Translation-Revision-Date: 2023-01-18 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: he_IL
 -->
 <resources>
+    <string name="jetpack_feature_card_menu_item_hide_this">להסתיר את המידע</string>
+    <string name="jetpack_feature_card_menu_item_remind_me_later">הזכירו לי מאוחר יותר</string>
+    <string name="jetpack_feature_card_content">האפשרויות של נתונים סטטיסטיים, Reader, הודעות ואפשרויות אחרות יועברו בקרוב אל האפליקציה של Jetpack לנייד.</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">החלפה לאפליקציה של Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">מידע נוסף באתר Jetpack.com</string>
+    <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">ההחלפה היא חינמית ואורכת דקה בלבד.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">נתונים סטטיסטיים, Reader, הודעות וכלים אחרים שמופעלים על ידי Jetpack יוסרו מאפליקציית WordPress בקרוב.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">נתונים סטטיסטיים, Reader, הודעות וכלים אחרים שמופעלים על ידי Jetpack יוסרו מאפליקציית WordPress בתאריך %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">האפשרויות של Jetpack יועברו בקרוב.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">ההודעות עוברות ל-Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">הכלי Reader עובר לאפליקציה של Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">הנתונים הסטטיסטיים שלך עוברים לאפליקציה של Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">לעבור לאפליקציה החדשה של Jetpack</string>
+    <string name="blogging_prompts_list_error_network_subtitle">יש לבדוק את החיבור לרשת ולנסות שוב.</string>
+    <string name="blogging_prompts_list_error_network_title">אין אפשרות לטעון את התוכן כרגע</string>
+    <string name="blogging_prompts_list_error_fetch_subtitle">אירעה שגיאה בטעינת ההצעות.</string>
+    <string name="blogging_prompts_list_error_fetch_title">אופס</string>
+    <string name="blogging_prompts_list_no_prompts">עדיין אין הצעות</string>
+    <string name="blogging_prompts_list_number_of_answers_other">%d תשובות</string>
+    <string name="blogging_prompts_list_number_of_answers_one">תשובה אחת</string>
+    <string name="blogging_prompts_list_number_of_answers_zero">אין תשובות</string>
+    <string name="blogging_prompts_list_answered_prompt">✓ תשובה התקבלה</string>
+    <string name="blogging_prompts_list_title">הצעות</string>
+    <string name="close_desc">לסגור</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">לחלופין, ניתן לנתק ולערוך את הבלוק הזה בנפרד על ידי הקשה על \'המרה לבלוק רגיל\'.</string>
+    <string name="dlg_confirm_delete_category">למחוק לצמיתות את הקטגוריה \'%s\'?</string>
+    <string name="deleting_cat_success">מחקת את הקטגוריה בהצלחה</string>
+    <string name="deleting_cat_failed">מחיקת הקטגוריה נכשלה</string>
+    <string name="deleting_cat">מוחקים את הקטגוריה</string>
+    <string name="updating_cat">מעדכנים את הקטגוריה</string>
+    <string name="update_category">עדכון קטגוריה</string>
     <string name="reader_toast_user_blocked">פוסטים מהמשתמש הזה לא יוצגו עוד</string>
     <string name="reader_menu_block_user">חסימת משתמש</string>
     <string name="reader_menu_report_user">לדווח על המשתמש הזה</string>
@@ -29,6 +60,7 @@ Language: he_IL
     <string name="preference_open_links_in_jetpack">לפתוח את הקישורים ב-Jetpack</string>
     <string name="jp_migration_need_help_button">נדרשת לך עזרה?</string>
     <string name="jp_migration_got_it_button">הבנתי</string>
+    <string name="jp_migration_delete_message">יש &lt;b&gt;למחוק את האפליקציה של WordPress&lt;/b&gt; כדי להימנע מהתנגשויות נתונים.</string>
     <string name="jp_migration_delete_subtitle">נראה שהאפליקציה של WordPress עדיין מותקנת אצלך. אנחנו ממליצים למחוק את האפליקציה של WordPress כדי להימנע מהתנגשויות נתונים.</string>
     <string name="jp_migration_delete_title">כבר אין לך צורך באפליקציה של WordPress</string>
     <string name="jp_migration_network_error_message">אין לנו אפשרות להעביר את הנתונים וההגדרות שלך ללא חיבור לרשת.</string>
@@ -40,6 +72,7 @@ Language: he_IL
     <string name="jp_migration_try_again_button">לנסות שוב</string>
     <string name="jp_migration_finish_button">סיום</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">סמל של \'להסיר את האפליקציה של WordPress\'</string>
+    <string name="jp_migration_done_delete_wp_message">יש &lt;b&gt;למחוק את האפליקציה של WordPress&lt;/b&gt; כדי להימנע מהתנגשויות נתונים.</string>
     <string name="jp_migration_done_subtitle">העברנו את כל הנתונים וההגדרות שלך. השארנו הכול במקום.</string>
     <string name="jp_migration_done_title">תודה שעברת אל Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">אנחנו נשבית את קבלת ההודעות מהאפליקציה של WordPress.</string>
@@ -137,7 +170,6 @@ Language: he_IL
     <string name="hpp_title">לבחור ערכת עיצוב</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">דילגת על ההצעה של היום לפרסום בבלוג</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">למידע נוסף</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">מאת </string>
     <string name="stats_follower_types_pie_chart_total_label">סך הכול</string>
     <string name="stats_referrers_pie_chart_others">אחרים</string>
     <string name="stats_referrers_pie_chart_search">לחפש</string>
@@ -307,7 +339,6 @@ Language: he_IL
     <string name="new_site_creation_intents_title">נושא האתר</string>
     <string name="quick_start_site_menu_tab_message_short">יש להקיש &lt;b&gt;%1$s&lt;/b&gt; להמשך.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">להסיר מלוח הבקרה</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">לדלג על הצעה זו</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">להציג הצעות נוספות</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d תשובות</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">לשתף הצעה לפרסום בבלוג</string>
@@ -602,6 +633,7 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">יש להקיש פעמיים כדי לפתוח את גיליון הפעולות ולהוסיף תמונה או סרטון</string>
     <string name="gutenberg_native_current_unit_is_s">היחידה הנוכחית היא %s</string>
     <string name="gutenberg_native_crosspost">במספר פוסטים</string>
+    <string name="gutenberg_native_s_converted_to_regular_block">התוכן של %s הומר לבלוק רגיל</string>
     <string name="gutenberg_native_columns_settings">הגדרות טורים</string>
     <string name="gutenberg_native_add_link_to_s">להוסיף קישור אל %s</string>
     <string name="gutenberg_native_add_link_text">להוסיף טקסט לקישור</string>
@@ -642,6 +674,7 @@ Language: he_IL
     <string name="gutenberg_native_text_color">צבע טקסט</string>
     <string name="gutenberg_native_padding">מרווחים</string>
     <string name="gutenberg_native_four">4</string>
+    <string name="gutenberg_native_featured">מרכזיים</string>
     <string name="gutenberg_native_custom_url">כתובת URL מותאמת</string>
     <string name="gutenberg_native_create_embed">ליצור תוכן מוטמע</string>
     <string name="gutenberg_native_column_d">טור %d</string>
@@ -2229,7 +2262,6 @@ Language: he_IL
     <string name="my_site_section_screen_title">האתר שלי</string>
     <string name="notif_settings_screen_title">הגדרות הודעה</string>
     <string name="help_screen_title">עזרה ותמיכה</string>
-    <string name="license_screen_title">רישיון</string>
     <string name="release_notes_screen_title">הערות לשחרור גרסה</string>
     <string name="signup_epilogue_error_avatar_view">תמונת הפרופיל שלך הועלתה ותהיה זמינה בקרוב.</string>
     <string name="permissions_denied_message">נראה שהשבתת את פעילות ההרשאות שנדרשות לתכונה זו.&lt;br/&gt;&lt;br/&gt;כדי לשנות זאת, יש לערוך את ההרשאות שלך ולוודא שהפעלת את &lt;strong&gt;%s&lt;/strong&gt;.</string>
@@ -2238,8 +2270,6 @@ Language: he_IL
     <string name="sharing_disabled_description">אין לך גישה להגדרות השיתוף מכיוון שמודול השיתוף של Jetpack מושבת.</string>
     <string name="sharing_disabled">מודול השיתוף מושבת</string>
     <string name="version_with_name_param">גרסה %s</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="publisher_with_company_param">פורסם על ידי: %s</string>
     <string name="notification_sound_has_invalid_path">הנתיב של הצליל שנבחר לא חוקי. יש לבחור נתיב אחר.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">נותרו עוד %1$d עמודים / פוסטים</string>
@@ -3125,7 +3155,6 @@ Language: he_IL
     <string name="verification_code">קוד אימות</string>
     <string name="language">שפה</string>
     <string name="reader_empty_posts_request_failed">לא הצלחנו לאחזר פוסטים</string>
-    <string name="publisher">Publisher:</string>
     <string name="error_notification_open">לא הצלחנו לפתוח את ההתראה</string>
     <string name="stats_search_terms_unknown_search_terms">מונחי חיפוש לא ידועים</string>
     <string name="stats_view_search_terms">מונחי חיפוש</string>
@@ -3231,13 +3260,11 @@ Language: he_IL
     <string name="wordpress_blog">אתר ב-WordPress</string>
     <string name="image_settings">הגדרות תמונה</string>
     <string name="local_changes">שינויים מקומיים</string>
-    <string name="privacy_policy">מדיניות פרטיות</string>
     <string name="new_media">מדיה חדשה</string>
     <string name="new_post">רשומה חדשה</string>
     <string name="notifications_empty_all">אין התראות… עדיין.</string>
     <string name="http_authorization_required">דרושה הרשאה</string>
     <string name="invalid_site_url_message">יש לוודא שכתובת ה-URL של האתר שהוזנה תקפה</string>
-    <string name="open_source_licenses">רישיונות קוד פתוח</string>
     <string name="file_error_create">יצירת קובץ temp להעלאת קבצים לא הצליחה. וודא שיש מספיק מקום פנוי במכשיר.</string>
     <string name="category_name">שם קטגוריה</string>
     <string name="add_new_category">הוסף קטגוריה חדשה</string>
@@ -3354,9 +3381,6 @@ Language: he_IL
     <string name="ok">אוקיי</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">מעלה…</string>
-    <string name="tos">תנאי שימוש</string>
-    <string name="version">גרסה</string>
-    <string name="app_title">וורדפרס עבור אנדרואיד</string>
     <string name="image_alignment">יישור</string>
     <string name="refresh">רענון</string>
     <string name="untitled">ללא כותרת</string>
@@ -3371,8 +3395,10 @@ Language: he_IL
     <string name="categories">קטגוריות</string>
     <string name="sdcard_title">דרוש כרטיס SD</string>
     <string name="media">מדיה</string>
+    <string name="updating_cat_success">הקטגוריה עודכנה בהצלחה</string>
     <string name="approve">אשר</string>
     <string name="delete">מחק</string>
+    <string name="updating_cat_failed">עדכון הקטגוריה נכשל</string>
     <string name="none">ללא</string>
     <string name="publish_now">לפרסם כעת</string>
     <string name="reply">תגובה</string>

@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-12-17 15:04:56+0000
+Translation-Revision-Date: 2023-01-17 10:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: id
 -->
 <resources>
+    <string name="jetpack_feature_card_menu_item_hide_this">Tutup</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Ganti ke aplikasi Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Bergantilah ke aplikasi—gratis dan prosesnya cepat!</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Statistik, Reader, Pemberitahuan, dan beragam fitur lain berbasis Jetpack akan segera dihapus dari aplikasi WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statistik, Reader, Pemberitahuan, dan beragam fitur lain berbasis Jetpack akan dihapus dari aplikasi WordPress pada %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Pemberitahuan akan berpindah ke Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader akan berpindah ke aplikasi Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statistik Anda akan berpindah ke aplikasi Jetpack</string>
+    <string name="blogging_prompts_list_error_network_subtitle">Periksa koneksi internet Anda dan coba lagi.</string>
+    <string name="blogging_prompts_list_error_network_title">Tidak dapat memuat konten ini sekarang</string>
+    <string name="blogging_prompts_list_error_fetch_title">Waduh</string>
+    <string name="blogging_prompts_list_no_prompts">Belum ada prompt</string>
+    <string name="blogging_prompts_list_title">Prompt</string>
+    <string name="close_desc">tutup</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Selain itu, blok ini bisa dilepas lalu disunting secara terpisah dengan mengetuk \"Ubah ke blok reguler.\"</string>
+    <string name="dlg_confirm_delete_category">Hapus Kategori \'%s\' secara permanen?</string>
+    <string name="deleting_cat_success">Kategori berhasil dihapus</string>
+    <string name="deleting_cat_failed">Gagal menghapus kategori</string>
+    <string name="deleting_cat">Menghapus kategori</string>
+    <string name="updating_cat">Memperbarui kategori</string>
+    <string name="update_category">Perbarui kategori</string>
     <string name="reader_toast_user_blocked">Pos dari pengguna ini tidak akan ditampilkan lagi</string>
     <string name="reader_menu_block_user">Blokir pengguna</string>
     <string name="reader_menu_report_user">Laporkan pengguna ini</string>
@@ -29,6 +50,7 @@ Language: id
     <string name="preference_open_links_in_jetpack">Buka tautan di Jetpack</string>
     <string name="jp_migration_need_help_button">Butuh bantuan?</string>
     <string name="jp_migration_got_it_button">Saya mengerti</string>
+    <string name="jp_migration_delete_message">Harap &lt;b&gt;hapus aplikasi WordPress&lt;/b&gt; untuk mencegah terjadinya konflik data.</string>
     <string name="jp_migration_delete_subtitle">Aplikasi WordPress sepertinya masih terinstal. Kami sarankan untuk menghapus aplikasi WordPress guna mencegah terjadinya konflik data.</string>
     <string name="jp_migration_delete_title">Anda tidak lagi membutuhkan aplikasi WordPress</string>
     <string name="jp_migration_network_error_message">Tanpa koneksi internet, kami tidak dapat mentransfer data dan pengaturan.</string>
@@ -40,6 +62,7 @@ Language: id
     <string name="jp_migration_try_again_button">Coba lagi</string>
     <string name="jp_migration_finish_button">Selesai</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Hapus ikon Aplikasi WordPress</string>
+    <string name="jp_migration_done_delete_wp_message">Harap &lt;b&gt;hapus aplikasi WordPress&lt;/b&gt; untuk mencegah terjadinya konflik data.</string>
     <string name="jp_migration_done_subtitle">Kami telah mentransfer semua data dan pengaturan Anda. Semua percis seperti terakhir Anda tinggalkan.</string>
     <string name="jp_migration_done_title">Terima kasih telah beralih ke Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Kami akan menonaktifkan pemberitahuan dari aplikasi WordPress.</string>
@@ -137,7 +160,6 @@ Language: id
     <string name="hpp_title">Pilih tema</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Prompt blogging hari ini yang dilewati</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Pelajari selengkapnya</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Dari </string>
     <string name="stats_follower_types_pie_chart_total_label">Total</string>
     <string name="stats_referrers_pie_chart_others">Lainnya</string>
     <string name="stats_referrers_pie_chart_search">Cari</string>
@@ -307,7 +329,6 @@ Language: id
     <string name="new_site_creation_intents_title">Topik situs</string>
     <string name="quick_start_site_menu_tab_message_short">Ketuk untuk melanjutkan.&lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Hapus dari dasbor</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Lewati prompt ini</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Lihat lebih banyak prompt</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d jawaban</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Bagikan prompt blogging</string>
@@ -602,6 +623,7 @@ Language: id
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Ketuk dua kali guna membuka Lembar Tindakan untuk menambahkan gambar atau video</string>
     <string name="gutenberg_native_current_unit_is_s">Unit saat ini adalah %s</string>
     <string name="gutenberg_native_crosspost">Lintas pos</string>
+    <string name="gutenberg_native_s_converted_to_regular_block">%s diubah ke blok reguler</string>
     <string name="gutenberg_native_columns_settings">Pengaturan Kolom</string>
     <string name="gutenberg_native_add_link_to_s">Tambahkan tautan ke %s</string>
     <string name="gutenberg_native_add_link_text">Tambahkan teks tautan</string>
@@ -642,6 +664,7 @@ Language: id
     <string name="gutenberg_native_text_color">Warna teks</string>
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_four">Empat.</string>
+    <string name="gutenberg_native_featured">Andalan</string>
     <string name="gutenberg_native_custom_url">URL Tersuai</string>
     <string name="gutenberg_native_create_embed">Buat sematan</string>
     <string name="gutenberg_native_column_d">Kolom %d</string>
@@ -2229,7 +2252,6 @@ Language: id
     <string name="my_site_section_screen_title">Situs Saya</string>
     <string name="notif_settings_screen_title">Pengaturan pemberitahuan</string>
     <string name="help_screen_title">Bantuan dan Dukungan</string>
-    <string name="license_screen_title">Lisensi</string>
     <string name="release_notes_screen_title">Catatan rilis</string>
     <string name="signup_epilogue_error_avatar_view">Avatar Anda telah diunggah dan akan tersedia sesaat lagi.</string>
     <string name="permissions_denied_message">Tampaknya Anda mematikan izin wajib untuk fitur ini.&lt;br/&gt;&lt;br/&gt;Untuk mengubahnya, edit izin Anda dan pastikan &lt;strong&gt;%s&lt;/strong&gt; telah aktif.</string>
@@ -2238,8 +2260,6 @@ Language: id
     <string name="sharing_disabled_description">Anda tidak dapat mengakses pengaturan berbagi karena modul Berbagi Jetpack tidak aktif.</string>
     <string name="sharing_disabled">Modul berbagi tidak aktif</string>
     <string name="version_with_name_param">Versi %s</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="publisher_with_company_param">Penerbit: %s</string>
     <string name="notification_sound_has_invalid_path">Suara yang dipilih memiliki jalur yang tidak valid. Pilih yang lainnya.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d halaman/pos tersisa</string>
@@ -3125,7 +3145,6 @@ Language: id
     <string name="verification_code">Kode verifikasi</string>
     <string name="language">Bahasa</string>
     <string name="reader_empty_posts_request_failed">Gagal memuat pos-pos</string>
-    <string name="publisher">Penerbit:</string>
     <string name="error_notification_open">Gagal membuka notifikasi</string>
     <string name="stats_search_terms_unknown_search_terms">Terma Pencarian Tak Dikenal</string>
     <string name="stats_view_search_terms">Terma-terma Pencarian</string>
@@ -3231,13 +3250,11 @@ Language: id
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="image_settings">Pengaturan gambar</string>
     <string name="local_changes">Perubahan lokal</string>
-    <string name="privacy_policy">Kebijakan privasi</string>
     <string name="new_media">Media baru</string>
     <string name="new_post">Pos baru</string>
     <string name="notifications_empty_all">Belum ada pemberitahuan…sampai sekarang.</string>
     <string name="http_authorization_required">Otorisasi diwajibkan</string>
     <string name="invalid_site_url_message">Pastikan URL situs yang dimasukkan sudah valid</string>
-    <string name="open_source_licenses">Lisensi sumber terbuka</string>
     <string name="file_error_create">Tidak bisa membuat berkas temporer untuk pengunggahan media. Pastikan masih cukup ruang di perangkat Anda.</string>
     <string name="category_name">Nama kategori</string>
     <string name="add_new_category">Tambahkan kategori baru</string>
@@ -3354,9 +3371,6 @@ Language: id
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Mengunggah…</string>
-    <string name="tos">Syarat Layanan</string>
-    <string name="version">Versi</string>
-    <string name="app_title">WordPress untuk Android</string>
     <string name="image_alignment">Penjajaran</string>
     <string name="refresh">Segarkan</string>
     <string name="untitled">Tanpa judul</string>
@@ -3371,8 +3385,10 @@ Language: id
     <string name="categories">Kategori</string>
     <string name="sdcard_title">Dibutuhkan SD Card</string>
     <string name="media">Media</string>
+    <string name="updating_cat_success">Kategori berhasil diperbarui</string>
     <string name="approve">Setujui</string>
     <string name="delete">Hapus</string>
+    <string name="updating_cat_failed">Gagal memperbarui kategori</string>
     <string name="none">Tiada</string>
     <string name="publish_now">Publikasikan Sekarang</string>
     <string name="reply">Balasan</string>

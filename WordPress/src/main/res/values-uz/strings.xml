@@ -76,9 +76,6 @@ Language: uz
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Yuklanmoqda</string>
-    <string name="version">Versiya</string>
-    <string name="tos">Xizmat shartlari</string>
-    <string name="app_title">WordPress for Android</string>
     <string name="image_alignment">Tekislash</string>
     <string name="refresh">Yangila</string>
     <string name="untitled">Nomsiz</string>

@@ -53,7 +53,6 @@ Language: az
     <string name="verification_code">Təsdiqləmə kodu</string>
     <string name="invalid_verification_code">Keçərsiz təsdiqləmə kodu</string>
     <string name="reader_empty_posts_request_failed">Yazılar geri alına bilmir</string>
-    <string name="publisher">Naşir:</string>
     <string name="error_notification_open">Bildiriş açılmadı</string>
     <string name="stats_search_terms_unknown_search_terms">Bilinməyən Axtarış Kriteriyaları</string>
     <string name="stats_view_authors">Müəlliflər</string>
@@ -138,7 +137,6 @@ Language: az
     <string name="new_post">Yeni yazı</string>
     <string name="new_media">Yeni media</string>
     <string name="reader_title_applog">Proqram jurnalı</string>
-    <string name="privacy_policy">Gizlilik siyasəti</string>
     <string name="local_changes">Yerli dəyişikliklər</string>
     <string name="image_settings">Təsvir parametrləri</string>
     <string name="wordpress_blog">WordPress bloqu</string>
@@ -149,7 +147,6 @@ Language: az
     <string name="add_new_category">Yeni kateqoriya əlavə et</string>
     <string name="category_name">Kateqoriya adı</string>
     <string name="file_error_create">Müvəqqəti media faylı yaradıla bilmir. Cihazınızda yetərli böş sahə olduğundan əmin olun.</string>
-    <string name="open_source_licenses">Açıq mənbə lisenziyaları</string>
     <string name="saving_changes">Dəyişikliklər qeyd edilir</string>
     <string name="sure_to_cancel_edit_comment">Şərhin redaktəsi ləğv edilsinmi?</string>
     <string name="content_required">Şərh vacibdir</string>
@@ -246,9 +243,6 @@ Language: az
     <string name="featured_in_post">Təsviri yazı mətninə əlavə et</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="version">Versiya</string>
-    <string name="app_title">Android üçün WordPress</string>
-    <string name="tos">Xidmət Şərtləri</string>
     <string name="image_alignment">Mövqeləndirmə</string>
     <string name="refresh">Təzələ</string>
     <string name="untitled">Başlıqsız</string>

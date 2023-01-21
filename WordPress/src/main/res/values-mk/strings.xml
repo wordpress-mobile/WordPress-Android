@@ -105,7 +105,6 @@ Language: mk
     <string name="trash">Отпадок</string>
     <string name="view_in_browser">Види во прелистувач</string>
     <string name="local_changes">Локални промени</string>
-    <string name="privacy_policy">Полиса за приватност</string>
     <string name="media_error_no_permission">Немате достап за да ја видете медиа библиотеката</string>
     <string name="cannot_delete_multi_media_items">Некои медиа арихи неможат да бидат избришани во моментот. Обидете се покасно.</string>
     <string name="media_gallery_type_thumbnail_grid">Мини-мрежа</string>
@@ -117,7 +116,6 @@ Language: mk
     <string name="local_draft">Локални нацрти</string>
     <string name="link_enter_url_text">Сврзи текст (опционален)</string>
     <string name="mnu_comment_unapprove">Не одобрувај</string>
-    <string name="open_source_licenses">Отворен код лиценци</string>
     <string name="file_error_create">Неможе да се созададе темп архива за медиа испраќање. Ве волиме да обезбедите доволоно простор на вашиот уред</string>
     <string name="new_post">Нов напис</string>
     <string name="share_link">Сподели врска</string>
@@ -184,9 +182,6 @@ Language: mk
     <string name="featured">Користи како избрана слика</string>
     <string name="ok">Добро</string>
     <string name="link_enter_url">URL</string>
-    <string name="tos">Услови за користење</string>
-    <string name="version">Верзија</string>
-    <string name="app_title">WordPress за Андроид</string>
     <string name="image_alignment">Усогласување</string>
     <string name="refresh">Освежи</string>
     <string name="untitled">Без наслов</string>

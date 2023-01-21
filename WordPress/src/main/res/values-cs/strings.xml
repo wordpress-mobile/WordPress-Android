@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-12-26 16:48:34+0000
+Translation-Revision-Date: 2023-01-19 07:35:00+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: cs_CZ
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Od &lt;b&gt;prvního dne&lt;/b&gt;</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">Skrýt toto</string>
+    <string name="jetpack_feature_card_menu_item_remind_me_later">Připomenout později</string>
+    <string name="jetpack_feature_card_content">Statistiky, čtečka, upozornění a další funkce se brzy přesunou do mobilní aplikace Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Přepněte do aplikace Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Více se dozvíte na jetpack.com</string>
+    <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Přepínání je zdarma a trvá jen minutu.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Statistiky, čtečka, upozornění a další funkce poháněné Jetpack budou z aplikace WordPress brzy odstraněny.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statistiky, čtečka, upozornění a další funkce poháněné Jetpack budou z aplikace WordPress odstraněny na %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Funkce Jetpacku se brzy přesunou.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Oznámení se přesouvají do Jetpacku</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Čtečka se přesouvá do aplikace Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Vaše statistiky se přesouvají do aplikace Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Přepněte na novou aplikaci Jetpack</string>
+    <string name="blogging_prompts_list_error_network_subtitle">Zkontrolujte připojení k síti a zkuste to znovu.</string>
+    <string name="blogging_prompts_list_error_network_title">Momentálně tento obsah nelze načíst</string>
+    <string name="blogging_prompts_list_error_fetch_subtitle">Došlo k chybě při načítání to se mi líbí</string>
+    <string name="blogging_prompts_list_error_fetch_title">Jejda</string>
+    <string name="blogging_prompts_list_no_prompts">Zatím žádné výzvy</string>
+    <string name="blogging_prompts_list_number_of_answers_other">%d odpovědí</string>
+    <string name="blogging_prompts_list_number_of_answers_one">1 odpověď</string>
+    <string name="blogging_prompts_list_number_of_answers_zero">0 odpovědí</string>
+    <string name="blogging_prompts_list_answered_prompt">✓ Odpovězeno</string>
+    <string name="blogging_prompts_list_title">Výzvy</string>
+    <string name="close_desc">zavřít</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Případně můžete tento blok odpojit a upravit samostatně klepnutím na „Převést na běžný blok“.</string>
+    <string name="dlg_confirm_delete_category">Trvale smazat rubriku \'%s\'?</string>
+    <string name="deleting_cat_success">Rubrika byla úspěšně odstraněna</string>
+    <string name="deleting_cat_failed">Mazání rubriky se nepodařilo.</string>
+    <string name="deleting_cat">Mazání rubrik</string>
+    <string name="updating_cat">Aktualizace rubriky</string>
+    <string name="update_category">Aktualizovat rubriku</string>
     <string name="reader_toast_user_blocked">Příspěvky od tohoto uživatele se již nebudou zobrazovat</string>
     <string name="reader_menu_block_user">Zablokovat uživatele</string>
     <string name="reader_menu_report_user">Oznámit tohoto uživatele</string>
@@ -29,6 +61,7 @@ Language: cs_CZ
     <string name="preference_open_links_in_jetpack">Otevřít odkazy v Jetpacku</string>
     <string name="jp_migration_need_help_button">Potřebujete pomoci?</string>
     <string name="jp_migration_got_it_button">Mám to</string>
+    <string name="jp_migration_delete_message">&lt;b&gt;Smažte aplikaci WordPress&lt;/b&gt;, abyste předešli konfliktům dat.</string>
     <string name="jp_migration_delete_title">Už nepotřebujete WordPress aplikaci</string>
     <string name="jp_migration_delete_subtitle">Vypadá to, že máte stále nainstalovanou aplikaci WordPress. Doporučujeme smazat WordPress aplikaci, abyste předešli konfliktům dat.</string>
     <string name="jp_migration_network_error_message">Bez připojení k síti nemůžeme přenést vaše data a nastavení.</string>
@@ -40,6 +73,7 @@ Language: cs_CZ
     <string name="jp_migration_try_again_button">Zkuste to znovu</string>
     <string name="jp_migration_finish_button">Dokončit</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Odstranit ikonu aplikace WordPress</string>
+    <string name="jp_migration_done_delete_wp_message">&lt;b&gt;Smažte aplikaci WordPress&lt;/b&gt;, abyste předešli konfliktům dat.</string>
     <string name="jp_migration_done_subtitle">Přenesli jsme všechna vaše data a nastavení. Všechno je tam, kde jsi to nechal.</string>
     <string name="jp_migration_done_title">Děkujeme, že jste přešli na Jetpack!</string>
     <string name="jp_migration_notifications_subtitle">Budete dostávat všechna stejná oznámení, ale nyní budou pocházet z aplikace Jetpack.</string>
@@ -137,7 +171,6 @@ Language: cs_CZ
     <string name="hpp_title">Zvolit šablonu</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Dnešní výzva k blogování byla přeskočena</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Zjistit více</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Od </string>
     <string name="stats_follower_types_pie_chart_total_label">Celkem</string>
     <string name="stats_referrers_pie_chart_others">Ostatní</string>
     <string name="stats_referrers_pie_chart_search">Hledat</string>
@@ -307,7 +340,6 @@ Language: cs_CZ
     <string name="new_site_creation_intents_title">Téma webu</string>
     <string name="quick_start_site_menu_tab_message_short">Pokračujte klepnutím na &lt;b&gt;%1$s&lt;/b&gt;.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Odebrat z nástěnky</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Přeskočte tuto výzvu</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Zobrazit další výzvy</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Sdílejte výzvu k blogování</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Odpovězeno</string>
@@ -603,6 +635,7 @@ Language: cs_CZ
     <string name="gutenberg_native_current_unit_is_s">Aktuální jednotka je %s</string>
     <string name="gutenberg_native_crosspost">Crosspost</string>
     <string name="gutenberg_native_columns_settings">Nastavení sloupců</string>
+    <string name="gutenberg_native_s_converted_to_regular_block">%s převedeno na běžný blok</string>
     <string name="gutenberg_native_add_link_to_s">Přídat odkaz na %s</string>
     <string name="gutenberg_native_add_link_text">Přidat text odkazu</string>
     <string name="gutenberg_native_add_image_or_video_b7b3d22b">Přidat obrázek nebo video</string>
@@ -641,6 +674,7 @@ Language: cs_CZ
     <string name="gutenberg_native_no_preview_available">Náhled není k dispozici.</string>
     <string name="gutenberg_native_text_color">Barva textu</string>
     <string name="gutenberg_native_padding">Odsazení</string>
+    <string name="gutenberg_native_featured">Doporučené</string>
     <string name="gutenberg_native_four">Čtyři</string>
     <string name="gutenberg_native_custom_url">Vlastní URL</string>
     <string name="gutenberg_native_create_embed">Vytvořit vložení</string>
@@ -2222,7 +2256,6 @@ Language: cs_CZ
     <string name="my_site_section_screen_title">Mé stránky</string>
     <string name="notif_settings_screen_title">Nastavení upozornění</string>
     <string name="help_screen_title">Podpora a pomoc</string>
-    <string name="license_screen_title">Licence</string>
     <string name="release_notes_screen_title">Poznámky k vydání</string>
     <string name="login_epilogue_screen_title">Přihlášen jako</string>
     <string name="person_detail_screen_title">Osobní profil</string>
@@ -2235,11 +2268,9 @@ Language: cs_CZ
     <string name="version_with_name_param">Verze %s</string>
     <string name="plugin_caption_featured">Doporučené</string>
     <string name="permissions_denied_title">Oprávnění</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="permissions_denied_message">Vypadá to že jste si deaktivoval práva pro tuto funkci. &lt;br/&gt;&lt;br/&gt;Pokud to chcete změnit, ověřte si že máte povolená práva na funkci &lt;strong&gt;%s&lt;/strong&gt;.</string>
     <string name="sharing_disabled_description">Nemůžete se dostat do nastavení sdílení, protože váš Jetpack modul Sdílení je vypnutý.</string>
     <string name="sharing_disabled">Modul Sdílení je vypnutý</string>
-    <string name="publisher_with_company_param">Autor: %s</string>
     <string name="notification_sound_has_invalid_path">Zvolený zvuk má neplatnou cestu. Prosím zvolte jiný.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d stránek / příspěvků zbývá</string>
@@ -3130,7 +3161,6 @@ Language: cs_CZ
     <string name="reader_empty_posts_request_failed">Nedaří se načíst příspěvky</string>
     <string name="stats_view_search_terms">Hledané výrazy</string>
     <string name="stats_view_authors">Autoři</string>
-    <string name="publisher">Vydavatel:</string>
     <string name="stats_search_terms_unknown_search_terms">Neznámé hledané výrazy</string>
     <string name="error_notification_open">Oznámení se nepodařilo otevřít</string>
     <string name="reader_label_new_posts">Nové příspěvky</string>
@@ -3260,9 +3290,7 @@ Language: cs_CZ
     <string name="fatal_db_error">Vyskytla se chyba při vytváření databáze aplikace. Zkuste přeinstalovat tuto aplikaci.</string>
     <string name="reader_toast_err_add_tag">Nelze přidat tento štítek</string>
     <string name="reader_toast_err_remove_tag">Nelze odstranit tento štítek</string>
-    <string name="open_source_licenses">Licence Open source</string>
     <string name="local_changes">Místní změny</string>
-    <string name="privacy_policy">Zásady ochrany osobních údajů</string>
     <string name="reader_title_applog">Protokol aplikace</string>
     <string name="post_settings">Nastavení příspěvku</string>
     <string name="http_authorization_required">Je vyžadována autorizace</string>
@@ -3354,9 +3382,6 @@ Language: cs_CZ
     <string name="done">hotovo</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Nahrávám…</string>
-    <string name="app_title">WordPress pro Android</string>
-    <string name="version">Verze</string>
-    <string name="tos">Podmínky služby</string>
     <string name="image_alignment">Zarovnání</string>
     <string name="refresh">Obnovit</string>
     <string name="untitled">Bez názvu</string>
@@ -3371,9 +3396,11 @@ Language: cs_CZ
     <string name="tags_separate_with_commas">Štítky (oddělte štítky čárkami)</string>
     <string name="sdcard_title">Vyžadována SD karta</string>
     <string name="media">Média</string>
+    <string name="updating_cat_success">Rubrika úspěšně přidána.</string>
     <string name="delete">Vymazat</string>
     <string name="approve">Schválit</string>
     <string name="none">Žádný</string>
+    <string name="updating_cat_failed">Přidání rubriky se nepodařilo.</string>
     <string name="reply">Odpovědět</string>
     <string name="preview">Náhled</string>
     <string name="on">na</string>

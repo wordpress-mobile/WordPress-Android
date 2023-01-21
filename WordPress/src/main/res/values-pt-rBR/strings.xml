@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-12-17 10:56:13+0000
+Translation-Revision-Date: 2023-01-09 20:01:50+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: pt_BR
 -->
 <resources>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Como alternativa, você pode desanexar e editar este bloco separadamente tocando em “Converter em bloco normal”.</string>
+    <string name="dlg_confirm_delete_category">Excluir permanentemente a categoria \'%s\'?</string>
+    <string name="deleting_cat_success">Categoria excluída com sucesso</string>
+    <string name="deleting_cat_failed">Falha ao excluir categoria</string>
+    <string name="deleting_cat">Excluindo categoria</string>
+    <string name="updating_cat">Atualizando categoria</string>
+    <string name="update_category">Atualizar categoria</string>
     <string name="reader_toast_user_blocked">Os posts deste usuário não serão mais exibidos</string>
     <string name="reader_menu_block_user">Bloquear usuário</string>
     <string name="reader_menu_report_user">Denunciar este usuário</string>
@@ -29,6 +36,7 @@ Language: pt_BR
     <string name="preference_open_links_in_jetpack">Abrir links no Jetpack</string>
     <string name="jp_migration_need_help_button">Precisa de ajuda?</string>
     <string name="jp_migration_got_it_button">Entendi</string>
+    <string name="jp_migration_delete_message">&lt;b&gt;Exclua o aplicativo WordPress&lt;/b&gt; para evitar conflitos de dados.</string>
     <string name="jp_migration_delete_subtitle">Você ainda tem o aplicativo WordPress instalado. Exclua o aplicativo para evitar conflitos de dados.</string>
     <string name="jp_migration_delete_title">O aplicativo WordPress não é mais necessário</string>
     <string name="jp_migration_network_error_message">Não é possível transferir seus dados e configurações sem uma conexão de rede.</string>
@@ -40,6 +48,7 @@ Language: pt_BR
     <string name="jp_migration_try_again_button">Tente novamente</string>
     <string name="jp_migration_finish_button">Concluir</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Remover ícone do aplicativo WordPress</string>
+    <string name="jp_migration_done_delete_wp_message">&lt;b&gt;Exclua o aplicativo WordPress&lt;/b&gt; para evitar conflitos de dados.</string>
     <string name="jp_migration_done_subtitle">Transferimos todos os seus dados e configurações. Está tudo certinho.</string>
     <string name="jp_migration_done_title">Agradecemos por mudar para o Jetpack.</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Vamos desativar as notificações do aplicativo WordPress.</string>
@@ -137,7 +146,6 @@ Language: pt_BR
     <string name="hpp_title">Escolha um tema</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Sugestão de publicação do dia ignorada</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Saiba mais</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">De </string>
     <string name="stats_follower_types_pie_chart_total_label">Totais</string>
     <string name="stats_referrers_pie_chart_others">Outros</string>
     <string name="stats_referrers_pie_chart_search">Pesquisa</string>
@@ -307,7 +315,6 @@ Language: pt_BR
     <string name="new_site_creation_intents_title">Assunto do site</string>
     <string name="quick_start_site_menu_tab_message_short">Toque em &lt;b&gt;%1$s&lt;/b&gt; para continuar.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Remover do painel</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Ignorar esta sugestão</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Visualizar mais sugestões</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d respostas</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Compartilhar sugestão de publicação</string>
@@ -602,6 +609,7 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Toque duas vezes para abrir a janela de ações para adicionar uma imagem ou vídeo</string>
     <string name="gutenberg_native_current_unit_is_s">A unidade atual é %s</string>
     <string name="gutenberg_native_crosspost">Post cruzado</string>
+    <string name="gutenberg_native_s_converted_to_regular_block">%s convertido em bloco normal</string>
     <string name="gutenberg_native_columns_settings">Configurações de colunas</string>
     <string name="gutenberg_native_add_link_to_s">Adicionar link para %s</string>
     <string name="gutenberg_native_add_link_text">Adicionar texto do link</string>
@@ -642,6 +650,7 @@ Language: pt_BR
     <string name="gutenberg_native_text_color">Cor do texto</string>
     <string name="gutenberg_native_padding">Recuo</string>
     <string name="gutenberg_native_four">Quatro</string>
+    <string name="gutenberg_native_featured">Em destaque</string>
     <string name="gutenberg_native_custom_url">URL personalizado</string>
     <string name="gutenberg_native_create_embed">Criar mídia incorporada</string>
     <string name="gutenberg_native_column_d">Coluna %d</string>
@@ -2229,7 +2238,6 @@ Language: pt_BR
     <string name="my_site_section_screen_title">Meu site</string>
     <string name="notif_settings_screen_title">Configurações de notificações</string>
     <string name="help_screen_title">Ajuda e suporte</string>
-    <string name="license_screen_title">Licença</string>
     <string name="release_notes_screen_title">Notas da versão</string>
     <string name="signup_epilogue_error_avatar_view">Seu avatar foi enviado e estará disponível em breve.</string>
     <string name="permissions_denied_message">Parece que você desabilitou permissões necessárias para este recurso.&lt;br/&gt;&lt;br/&gt;Para alterar isso, edite suas permissões e tenha certeza de que &lt;strong&gt;%s&lt;/strong&gt; está habilitado.</string>
@@ -2238,8 +2246,6 @@ Language: pt_BR
     <string name="sharing_disabled_description">Não é possível acessar suas configurações de compartilhamento porque o seu módulo de compartilhamento do Jetpack está desabilitado.</string>
     <string name="sharing_disabled">Módulo de compartilhamento desabilitado</string>
     <string name="version_with_name_param">Versão %s</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="publisher_with_company_param">Editor(a): %s</string>
     <string name="notification_sound_has_invalid_path">O som escolhido não tem um caminho válido. Escolha outro.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d páginas / posts restantes</string>
@@ -3125,7 +3131,6 @@ Language: pt_BR
     <string name="verification_code">Código de verificação</string>
     <string name="language">Idioma</string>
     <string name="reader_empty_posts_request_failed">Não foi possível recuperar os posts</string>
-    <string name="publisher">Editor:</string>
     <string name="error_notification_open">Não foi possível abrir a notificação</string>
     <string name="stats_search_terms_unknown_search_terms">Termos de busca desconhecidos</string>
     <string name="stats_view_search_terms">Termos de busca</string>
@@ -3231,13 +3236,11 @@ Language: pt_BR
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="image_settings">Configurações de imagem</string>
     <string name="local_changes">Alterações locais</string>
-    <string name="privacy_policy">Política de privacidade</string>
     <string name="new_media">Nova mídia</string>
     <string name="new_post">Novo post</string>
     <string name="notifications_empty_all">Nenhuma notificação… ainda.</string>
     <string name="http_authorization_required">Autorização obrigatória</string>
     <string name="invalid_site_url_message">Verifique se a URL do site inserida é válida</string>
-    <string name="open_source_licenses">Abrir licenças dos arquivos fonte</string>
     <string name="file_error_create">Não foi possível criar um arquivo temporário para carregar a mídia. Certifique-se de que há espaço livro suficiente em seu dispositivo.</string>
     <string name="category_name">Nome da categoria</string>
     <string name="add_new_category">Adicionar nova categoria</string>
@@ -3354,9 +3357,6 @@ Language: pt_BR
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Enviando…</string>
-    <string name="tos">Termos de Serviço</string>
-    <string name="version">Versão</string>
-    <string name="app_title">WordPress para Android</string>
     <string name="image_alignment">Alinhamento</string>
     <string name="refresh">Atualizar</string>
     <string name="untitled">Sem Título</string>
@@ -3371,8 +3371,10 @@ Language: pt_BR
     <string name="categories">Categorias</string>
     <string name="sdcard_title">Cartão SD necessário</string>
     <string name="media">Mídia</string>
+    <string name="updating_cat_success">Categoria atualizada com sucesso</string>
     <string name="approve">Aprovar</string>
     <string name="delete">Excluir</string>
+    <string name="updating_cat_failed">Falha ao atualizar categoria</string>
     <string name="none">Nenhum</string>
     <string name="publish_now">Publicar agora</string>
     <string name="reply">Responder</string>

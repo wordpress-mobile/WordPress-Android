@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-12-20 15:54:26+0000
+Translation-Revision-Date: 2023-01-18 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: it
 -->
 <resources>
+    <string name="jetpack_feature_card_menu_item_hide_this">Nascondi</string>
+    <string name="jetpack_feature_card_menu_item_remind_me_later">Ricordamelo più tardi</string>
+    <string name="jetpack_feature_card_content">Statistiche, Reader, Notifiche e altre funzionalità passeranno presto all\'app mobile Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Passa all\'app Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Maggiori informazioni su jetpack.com</string>
+    <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Il passaggio è gratuito e richiede solo un minuto.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Statistiche, Reader, Notifiche e altre funzionalità basate su Jetpack saranno rimosse presto dall\'app WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statistiche, Reader, Notifiche e altre funzionalità basate su Jetpack saranno rimosse dall\'app WordPress il %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Le funzionalità di Jetpack si trasferiranno presto.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Le notifiche si stanno spostando su Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Le notifiche si stanno spostando sull\'app Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Le tue statistiche si stanno spostando sull\'app Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Passa alla nuova app Jetpack</string>
+    <string name="blogging_prompts_list_error_network_subtitle">Controlla la connessione di rete e riprova.</string>
+    <string name="blogging_prompts_list_error_network_title">Impossibile caricare questo contenuto al momento</string>
+    <string name="blogging_prompts_list_error_fetch_subtitle">Si è verificato un errore durante il caricamento delle richieste.</string>
+    <string name="blogging_prompts_list_error_fetch_title">Ops</string>
+    <string name="blogging_prompts_list_no_prompts">Ancora nessuna richiesta</string>
+    <string name="blogging_prompts_list_number_of_answers_other">%d risposte</string>
+    <string name="blogging_prompts_list_number_of_answers_one">1 risposta</string>
+    <string name="blogging_prompts_list_number_of_answers_zero">0 risposte</string>
+    <string name="blogging_prompts_list_answered_prompt">✓ Risposta</string>
+    <string name="blogging_prompts_list_title">Richieste</string>
+    <string name="close_desc">chiudi</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">In alternativa, puoi staccare e modificare questo blocco separatamente toccando “Converti in blocco regolare”.</string>
+    <string name="dlg_confirm_delete_category">Eliminare definitivamente la Categoria \'%s\'?</string>
+    <string name="deleting_cat_success">Categoria eliminata correttamente</string>
+    <string name="deleting_cat_failed">Impossibile eliminare la categoria</string>
+    <string name="deleting_cat">Eliminazione della categoria</string>
+    <string name="updating_cat">Aggiornamento della categoria</string>
+    <string name="update_category">Aggiorna categoria</string>
     <string name="reader_toast_user_blocked">Gli articoli di questo utente non verranno più mostrati</string>
     <string name="reader_menu_block_user">Blocca utente</string>
     <string name="reader_menu_report_user">Segnala questo utente</string>
@@ -29,6 +60,7 @@ Language: it
     <string name="preference_open_links_in_jetpack">Apri i collegamenti in Jetpack</string>
     <string name="jp_migration_need_help_button">Hai bisogno di aiuto?</string>
     <string name="jp_migration_got_it_button">OK</string>
+    <string name="jp_migration_delete_message">Elimina &lt;b&gt;l\'app WordPress&lt;/b&gt; per evitare conflitti di dati.</string>
     <string name="jp_migration_delete_subtitle">Sembra che tu abbia ancora l\'app WordPress installata. Ti consigliamo di eliminare l\'app WordPress per evitare conflitti di dati.</string>
     <string name="jp_migration_delete_title">Non hai più bisogno dell\'app WordPress</string>
     <string name="jp_migration_network_error_message">Non siamo in grado di trasferire i dati e le impostazioni senza una connessione di rete.</string>
@@ -40,6 +72,7 @@ Language: it
     <string name="jp_migration_try_again_button">Riprova</string>
     <string name="jp_migration_finish_button">Finito</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Rimuovi l\'icona dell\'app WordPress</string>
+    <string name="jp_migration_done_delete_wp_message">Elimina &lt;b&gt;l\'app WordPress&lt;/b&gt; per evitare conflitti di dati.</string>
     <string name="jp_migration_done_subtitle">Abbiamo trasferito tutti i tuoi dati e le impostazioni. Tutto è dove lo hai lasciato.</string>
     <string name="jp_migration_done_title">Grazie per aver scelto di passare a Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Disattiveremo le notifiche dall\'app WordPress.</string>
@@ -137,7 +170,6 @@ Language: it
     <string name="hpp_title">Scegli un tema</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Richiesta di blogging ignorata oggi</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Scopri di più</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Da </string>
     <string name="stats_follower_types_pie_chart_total_label">Totale</string>
     <string name="stats_referrers_pie_chart_others">Altro</string>
     <string name="stats_referrers_pie_chart_search">Cerca</string>
@@ -307,7 +339,6 @@ Language: it
     <string name="new_site_creation_intents_title">Tema del sito</string>
     <string name="quick_start_site_menu_tab_message_short">Tocca &lt;b&gt;%1$s&lt;/b&gt; per continuare.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Rimuovi dalla bacheca</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Ignora questa richiesta</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Visualizza altre richieste</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d risposte</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Condividi la richiesta di blogging</string>
@@ -602,6 +633,7 @@ Language: it
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Tocca due volte per aprire il foglio delle azioni per aggiungere l\'immagine o il video</string>
     <string name="gutenberg_native_current_unit_is_s">L\'unità corrente è %s</string>
     <string name="gutenberg_native_crosspost">Pubblicazione incrociata</string>
+    <string name="gutenberg_native_s_converted_to_regular_block">%s convertito in blocco regolare</string>
     <string name="gutenberg_native_columns_settings">Impostazioni delle colonne</string>
     <string name="gutenberg_native_add_link_to_s">Aggiungi il link a %s</string>
     <string name="gutenberg_native_add_link_text">Aggiungi testo del link</string>
@@ -642,6 +674,7 @@ Language: it
     <string name="gutenberg_native_text_color">Colore del testo</string>
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_four">Quattro</string>
+    <string name="gutenberg_native_featured">In evidenza</string>
     <string name="gutenberg_native_custom_url">URL personalizzata</string>
     <string name="gutenberg_native_create_embed">Crea l\'incorporamento</string>
     <string name="gutenberg_native_column_d">Colonna %d</string>
@@ -2229,7 +2262,6 @@ Language: it
     <string name="my_site_section_screen_title">Il mio sito</string>
     <string name="notif_settings_screen_title">Impostazioni di notifica</string>
     <string name="help_screen_title">Guida e Assistenza</string>
-    <string name="license_screen_title">Licenza</string>
     <string name="release_notes_screen_title">Note di rilascio</string>
     <string name="signup_epilogue_error_avatar_view">Il tuo avatar è stato caricato e sarà disponibile a breve.</string>
     <string name="permissions_denied_message">Sembra che tu abbia disattivato le autorizzazioni necessarie per questa funzionalità.&lt;br/&gt;&lt;br/&gt;Per cambiare, modifica le tue autorizzazioni e assicurati che sia attivo &lt;strong&gt;%s&lt;/strong&gt;.</string>
@@ -2238,8 +2270,6 @@ Language: it
     <string name="sharing_disabled_description">Non puoi accedere alle impostazioni di condivisione poiché il modulo Condivisione Jetpack è disabilitato.</string>
     <string name="sharing_disabled">Modulo di condivisione disabilitato</string>
     <string name="version_with_name_param">Versione %s</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="publisher_with_company_param">Editore: %s</string>
     <string name="notification_sound_has_invalid_path">Il suono scelto ha un percorso non valido. Scegline un altro.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d pagine/post rimanenti</string>
@@ -3125,7 +3155,6 @@ Language: it
     <string name="verification_code">Codice di verifica</string>
     <string name="language">Lingua</string>
     <string name="reader_empty_posts_request_failed">Impossibile recuperare gli articoli</string>
-    <string name="publisher">Editore:</string>
     <string name="error_notification_open">Impossibile aprire la notifica</string>
     <string name="stats_search_terms_unknown_search_terms">Termini di ricerca sconosciuti</string>
     <string name="stats_view_search_terms">Termini di ricerca</string>
@@ -3231,13 +3260,11 @@ Language: it
     <string name="wordpress_blog">Blog di WordPress</string>
     <string name="image_settings">Impostazioni immagini</string>
     <string name="local_changes">Modifiche locali</string>
-    <string name="privacy_policy">Privacy policy</string>
     <string name="new_media">Nuovo supporto</string>
     <string name="new_post">Nuovo articolo</string>
     <string name="notifications_empty_all">Nessuna notifica… per ora.</string>
     <string name="http_authorization_required">Autorizzazione richiesta</string>
     <string name="invalid_site_url_message">Controlla che l\'URL del sito sia valido</string>
-    <string name="open_source_licenses">Licenze Open Source</string>
     <string name="file_error_create">Impossibile creare un file temporaneo per il caricamento. Assicurati che vi sia spazio libero sufficiente sul dispositivo.</string>
     <string name="category_name">Nome categoria</string>
     <string name="add_new_category">Aggiungi nuova categoria</string>
@@ -3354,9 +3381,6 @@ Language: it
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Caricamento…</string>
-    <string name="tos">Condizioni del servizio</string>
-    <string name="version">Versione</string>
-    <string name="app_title">WordPress per Android</string>
     <string name="image_alignment">Allineamento</string>
     <string name="refresh">Aggiorna</string>
     <string name="untitled">Senza titolo</string>
@@ -3371,8 +3395,10 @@ Language: it
     <string name="categories">Categorie</string>
     <string name="sdcard_title">Scheda SD necessaria</string>
     <string name="media">Media</string>
+    <string name="updating_cat_success">Categoria aggiornata correttamente</string>
     <string name="approve">Approva</string>
     <string name="delete">Elimina</string>
+    <string name="updating_cat_failed">Aggiornamento della categoria non riuscito</string>
     <string name="none">Nessuna</string>
     <string name="publish_now">Pubblica ora</string>
     <string name="reply">Rispondi</string>

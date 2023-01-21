@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-05 22:34:33+0000
+Translation-Revision-Date: 2023-01-18 20:55:19+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ru
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">От &lt;b&gt;В Первый День&lt;/b&gt;</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">Скрыть это</string>
+    <string name="jetpack_feature_card_menu_item_remind_me_later">Напомнить мне позже</string>
+    <string name="jetpack_feature_card_content">Статистика, Чтиво, Уведомления и другие функции скоро переедут в мобильное приложение Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Перейти в новое приложение Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Узнайте больше на Jetpack.com</string>
+    <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Переход бесплатен и займет всего минуту.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Статистика, Чтиво, Уведомления и другие функции Jetpack скоро будут удалены из приложения WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Статистика, Чтиво, Уведомления и другие функции Jetpack скоро будут удалены из приложения WordPress %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Возможности Jetpack скоро переедут.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Уведомления переезжают в Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Чтиво переезжает в приложение Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Статистика переезжает в приложение Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Перейти в новое приложение Jetpack</string>
+    <string name="blogging_prompts_list_error_network_subtitle">Проверьте ваше подключение к сети и попробуйте снова.</string>
+    <string name="blogging_prompts_list_error_network_title">Сейчас невозможно загрузить это содержимое</string>
+    <string name="blogging_prompts_list_error_fetch_subtitle">При загрузке подсказок возникла ошибка.</string>
+    <string name="blogging_prompts_list_error_fetch_title">Ой!</string>
+    <string name="blogging_prompts_list_no_prompts">Пока нет подсказок</string>
+    <string name="blogging_prompts_list_number_of_answers_other">Ответы: %d</string>
+    <string name="blogging_prompts_list_number_of_answers_one">1 ответ</string>
+    <string name="blogging_prompts_list_number_of_answers_zero">Нет ответов</string>
+    <string name="blogging_prompts_list_answered_prompt">✓ Ответ дан</string>
+    <string name="blogging_prompts_list_title">Подсказки</string>
+    <string name="close_desc">закрыть</string>
     <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Альтернативным вариантом вы можете рассоединить и отредактировать эти блоки по отдельности, нажав на \"преобразовать в обычные блоки\".</string>
     <string name="dlg_confirm_delete_category">Навсегда удалить рубрику \'%s\'?</string>
     <string name="deleting_cat_success">Рубрика удалена</string>
@@ -146,7 +171,6 @@ Language: ru
     <string name="hpp_title">Выберите тему</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Пропущенная подсказка по ведению блога</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Узнать больше</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">От </string>
     <string name="stats_follower_types_pie_chart_total_label">Всего</string>
     <string name="stats_referrers_pie_chart_others">Другие</string>
     <string name="stats_referrers_pie_chart_search">Поиск</string>
@@ -316,7 +340,6 @@ Language: ru
     <string name="new_site_creation_intents_title">Тема сайта</string>
     <string name="quick_start_site_menu_tab_message_short">Нажмите &lt;b&gt;%1$s&lt;/b&gt;, чтобы продолжить.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Удалить с консоли</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Пропустить эту подсказку</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Смотреть другие подсказки</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">Ответы: %d</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Поделиться подсказкой о ведении блога</string>
@@ -652,6 +675,7 @@ Language: ru
     <string name="gutenberg_native_text_color">Цвет текста</string>
     <string name="gutenberg_native_padding">Отступ</string>
     <string name="gutenberg_native_four">Четыре</string>
+    <string name="gutenberg_native_featured">Избранное</string>
     <string name="gutenberg_native_custom_url">Произвольный URL</string>
     <string name="gutenberg_native_create_embed">Создать встроенный объект</string>
     <string name="gutenberg_native_column_d">Столбец %d</string>
@@ -2239,7 +2263,6 @@ Language: ru
     <string name="my_site_section_screen_title">Мой сайт</string>
     <string name="notif_settings_screen_title">Настройки уведомления</string>
     <string name="help_screen_title">Помощь и поддержка</string>
-    <string name="license_screen_title">Лицензия</string>
     <string name="release_notes_screen_title">Заметки о выпуске</string>
     <string name="signup_epilogue_error_avatar_view">Ваш аватар загружен и скоро станет доступен.</string>
     <string name="permissions_denied_message">Похоже что были отключены разрешения, требуемые данной возможостью.&lt;br/&gt;&lt;br/&gt;Отредактируйте разрешения и убедитесь что &lt;strong&gt;%s&lt;/strong&gt; включено.</string>
@@ -2248,8 +2271,6 @@ Language: ru
     <string name="sharing_disabled_description">Нет доступа к настройкам \"поделиться\" , так как соответствующий модуль отключен в Jetpack.</string>
     <string name="sharing_disabled">Модуль \"поделиться\" отключен</string>
     <string name="version_with_name_param">Версия %s</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="publisher_with_company_param">Издатель: %s</string>
     <string name="notification_sound_has_invalid_path">Выбранный звук имеет неверный путь. Выберите другой.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">осталось %1$d  страниц / записей</string>
@@ -3135,7 +3156,6 @@ Language: ru
     <string name="verification_code">Код подтверждения</string>
     <string name="language">Язык</string>
     <string name="reader_empty_posts_request_failed">Не удалось загрузить записи.</string>
-    <string name="publisher">Автор:</string>
     <string name="error_notification_open">Не удалось открыть уведомление.</string>
     <string name="stats_search_terms_unknown_search_terms">Неизвестные поисковые запросы</string>
     <string name="stats_view_search_terms">Поисковые запросы</string>
@@ -3241,13 +3261,11 @@ Language: ru
     <string name="wordpress_blog">Блог WordPress</string>
     <string name="image_settings">Настройки изображений</string>
     <string name="local_changes">Локальные изменения</string>
-    <string name="privacy_policy">Политика конфиденциальности</string>
     <string name="new_media">Новое медиа</string>
     <string name="new_post">Новая запись</string>
     <string name="notifications_empty_all">Уведомлений пока нет.</string>
     <string name="http_authorization_required">Требуется авторизация</string>
     <string name="invalid_site_url_message">Убедитесь, что введен допустимый URL-адрес сайта</string>
-    <string name="open_source_licenses">Лицензия Open Source</string>
     <string name="file_error_create">Не удалось создать временный файл для выгрузки медиа. Убедитесь, что имеется достаточно свободного места на вашем устройстве.</string>
     <string name="category_name">Имя категории</string>
     <string name="add_new_category">Добавить категорию</string>
@@ -3364,9 +3382,6 @@ Language: ru
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Загрузка</string>
-    <string name="tos">Условия сервиса</string>
-    <string name="version">Версия</string>
-    <string name="app_title">WordPress для Android</string>
     <string name="image_alignment">Выравнивание</string>
     <string name="refresh">Обновить</string>
     <string name="untitled">Без заголовка</string>

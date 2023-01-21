@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-02 17:26:05+0000
+Translation-Revision-Date: 2023-01-09 15:18:14+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: gl_ES
 -->
 <resources>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativamente, podes separar e editar este bloque por separado tocando en «Converter en bloque normal».</string>
+    <string name="dlg_confirm_delete_category">Borrar permanentemente a categoría «%s»?</string>
+    <string name="deleting_cat_success">Categoría borrada correctamente</string>
+    <string name="deleting_cat_failed">Borrando a categoría que fallou</string>
+    <string name="deleting_cat">Borrando a categoría</string>
+    <string name="updating_cat">Actualizando a categoría</string>
+    <string name="update_category">Actualizar categoría</string>
     <string name="reader_toast_user_blocked">As entradas deste usuario non se volverán a mostrar</string>
     <string name="reader_menu_block_user">Bloquear usuario</string>
     <string name="reader_menu_report_user">Informar deste usuario</string>
@@ -21,6 +28,37 @@ Language: gl_ES
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Muda para a aplicación Jetpack para continuar a recibir notificacións en tempo real no seu dispositivo.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Muda para a aplicación Jetpack para encontrar, seguir e gustar todas as túas publicacións e sitios favoritos co Lector.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Muda para a aplicación Jetpack para observar o crecemento do tráfico do teu sitio con estatísticas e outros detalles.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Recibe as túas notificacións coa aplicación de Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Segue calquera sitio coa aplicación de Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Obtén as túas estatísticas coa nova aplicación de Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Non se pode desactivar abrir as ligazóns en Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Non se pode activar abrir as ligazóns en Jetpack</string>
+    <string name="preference_open_links_in_jetpack">Abrir ligazóns en Jetpack</string>
+    <string name="jp_migration_need_help_button">Necesitas axuda?</string>
+    <string name="jp_migration_got_it_button">De acordo</string>
+    <string name="jp_migration_delete_message">Por favor, &lt;b&gt;borra a aplicación de WordPress&lt;/b&gt; para evitar conflitos de datos.</string>
+    <string name="jp_migration_delete_subtitle">Parece que tes instalada a aplicación de WordPress. Recomendámosche que elimines a aplicación de WordPress para evitar conflitos de datos.</string>
+    <string name="jp_migration_delete_title">Xa non necesitas a aplicación de WordPress</string>
+    <string name="jp_migration_network_error_message">Non podemos transferir os teus datos e axustes sen unha conexión de rede.</string>
+    <string name="jp_migration_network_error_subtitle">Comproba a túa conexión de rede para asegurarte de que funcione e volve a intentalo.</string>
+    <string name="jp_migration_network_error_title">Non se puido conectar a Internet.</string>
+    <string name="jp_migration_generic_error_message">Contacta co equipo de soporte ou inténtao de novo máis tarde.</string>
+    <string name="jp_migration_generic_error_subtitle">Algo non foi como estaba previsto. Os teus datos están protexidos, pero non podemos transferilos neste momento.</string>
+    <string name="jp_migration_generic_error_title">Vaia, produciuse un erro.</string>
+    <string name="jp_migration_try_again_button">Volver a intentalo</string>
+    <string name="jp_migration_finish_button">Terminar</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">Icona para quitar a aplicación de WordPress</string>
+    <string name="jp_migration_done_delete_wp_message">Por favor, &lt;b&gt;borra a aplicación de WordPress&lt;/b&gt; para evitar conflitos de datos.</string>
+    <string name="jp_migration_done_subtitle">Transferimos todos os teus datos e axustes. Todo está tal e como o deixaches.</string>
+    <string name="jp_migration_done_title">Grazas por cambiar a Jetpack!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">Desactivaremos as notificacións da aplicación de WordPress.</string>
+    <string name="jp_migration_notifications_subtitle">Recibirás as mesmas notificacións, pero a partir de agora desde a aplicación de Jetpack.</string>
+    <string name="jp_migration_notifications_title">Agora as notificacións chegan de Jetpack</string>
+    <string name="jp_migration_success_card_message">Elimina a aplicación de WordPress</string>
+    <string name="wordpress_help_center_button">Centro de axuda de WordPress</string>
+    <string name="support_title">Soporte</string>
+    <string name="notification_disable_broadcast_permission_desc">Permite que a aplicación desactive as notificacións de WordPress.</string>
+    <string name="notification_disable_broadcast_permission_label">desactivar notificacións de WordPress</string>
     <string name="jp_migration_help_button">Necesitas axuda?</string>
     <string name="jp_migration_continue_button">Continuar</string>
     <string name="jp_migration_welcome_site_found_message">Encontramos o teu sitio. Continúa para transferir todos os teus datos e acceder a Jetpack automaticamente.</string>
@@ -108,7 +146,6 @@ Language: gl_ES
     <string name="hpp_title">Elixe un tema</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Salteime o estímulo para bloguear de hoxe</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Máis información</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Desde </string>
     <string name="stats_follower_types_pie_chart_total_label">Totais</string>
     <string name="stats_referrers_pie_chart_others">Outros</string>
     <string name="stats_referrers_pie_chart_search">Buscar</string>
@@ -278,7 +315,6 @@ Language: gl_ES
     <string name="new_site_creation_intents_title">Temática do sitio</string>
     <string name="quick_start_site_menu_tab_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para continuar.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Quitar do escritorio</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Omitir este estímulo</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Ver máis estímulos</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d respostas</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Comparte o estímulo de bloguear</string>
@@ -573,6 +609,7 @@ Language: gl_ES
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Toca dúas veces para abrir a folla de acción para engadir imaxe ou vídeo</string>
     <string name="gutenberg_native_current_unit_is_s">A unidade actual é %s</string>
     <string name="gutenberg_native_crosspost">Entrada cruzada</string>
+    <string name="gutenberg_native_s_converted_to_regular_block">%s convertido a bloque normal</string>
     <string name="gutenberg_native_columns_settings">Axustes de columnas</string>
     <string name="gutenberg_native_add_link_to_s">Engadir enlace a %s</string>
     <string name="gutenberg_native_add_link_text">Engadir texto do enlace</string>
@@ -613,6 +650,7 @@ Language: gl_ES
     <string name="gutenberg_native_text_color">Cor do texto</string>
     <string name="gutenberg_native_padding">Recheo</string>
     <string name="gutenberg_native_four">Catro</string>
+    <string name="gutenberg_native_featured">Destacado</string>
     <string name="gutenberg_native_custom_url">URL personalizada</string>
     <string name="gutenberg_native_create_embed">Crear uhna incrustación</string>
     <string name="gutenberg_native_column_d">Columna %d</string>
@@ -2200,7 +2238,6 @@ Language: gl_ES
     <string name="my_site_section_screen_title">O meu sitio</string>
     <string name="notif_settings_screen_title">Axustes de avisos</string>
     <string name="help_screen_title">Axuda e soporte</string>
-    <string name="license_screen_title">Licencia</string>
     <string name="release_notes_screen_title">Notas da versión</string>
     <string name="signup_epilogue_error_avatar_view">O teu avatar subiuse e estará dispoñible en breve.</string>
     <string name="permissions_denied_message">Parece que desactivaches os permisos necesarios para esta característica.&lt;br/&gt;&lt;br/&gt;Para cambialo, edita os teus permisos e asegúrate de que &lt;strong&gt;%s&lt;/strong&gt; estea activado.</string>
@@ -2209,8 +2246,6 @@ Language: gl_ES
     <string name="sharing_disabled_description">Non podes acceder aos teus axustes para compartir porque o teu módulo de compartir de Jetpack está desactivado.</string>
     <string name="sharing_disabled">Módulo para compartir desactivado.</string>
     <string name="version_with_name_param">Version %s</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="publisher_with_company_param">Editor: %s</string>
     <string name="notification_sound_has_invalid_path">O son escollido ten unha ruta incorrecta. Por favor, elixe un distinto.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">quedan %1$d páxinas / entradas</string>
@@ -3096,7 +3131,6 @@ Language: gl_ES
     <string name="verification_code">Código de verificación</string>
     <string name="language">Idioma</string>
     <string name="reader_empty_posts_request_failed">Fallou a procura de artigos</string>
-    <string name="publisher">Editor:</string>
     <string name="error_notification_open">Non foi posible abrir a notificación</string>
     <string name="stats_search_terms_unknown_search_terms">Termos de busca descoñecidos</string>
     <string name="stats_view_search_terms">Termos de busca</string>
@@ -3202,13 +3236,11 @@ Language: gl_ES
     <string name="wordpress_blog">Blogue feito con WordPress</string>
     <string name="image_settings">Configuración da imaxe</string>
     <string name="local_changes">Cambios locais</string>
-    <string name="privacy_policy">Política de privacidade</string>
     <string name="new_media">Ficheiro novo</string>
     <string name="new_post">Artigo novo</string>
     <string name="notifications_empty_all">Sen notificacións … de momento.</string>
     <string name="http_authorization_required">Necesítase autorización</string>
     <string name="invalid_site_url_message">Comproba se a URL introducida é válida</string>
-    <string name="open_source_licenses">Licenzas de Código Aberto</string>
     <string name="file_error_create">Non foi posible crear o ficheiro temporal para a carga. Asegúrate de que haxa espazo libre suficiente no dispositivo.</string>
     <string name="category_name">Nome da categoría</string>
     <string name="add_new_category">Engadir categoría nova</string>
@@ -3325,9 +3357,6 @@ Language: gl_ES
     <string name="ok">Vale</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Cargando…</string>
-    <string name="tos">Termos de servizo</string>
-    <string name="version">Versión</string>
-    <string name="app_title">WordPress para Android</string>
     <string name="image_alignment">Aliñación</string>
     <string name="refresh">Actualizar</string>
     <string name="untitled">Sen título</string>
@@ -3342,8 +3371,10 @@ Language: gl_ES
     <string name="categories">Categorías</string>
     <string name="sdcard_title">Tarxeta SD requirida</string>
     <string name="media">Multimedia</string>
+    <string name="updating_cat_success">Categoría actualizada correctamente.</string>
     <string name="approve">Aprobar</string>
     <string name="delete">Borrar</string>
+    <string name="updating_cat_failed">Actualizando a categoría que fallou</string>
     <string name="none">Ningún</string>
     <string name="publish_now">Publicar agora</string>
     <string name="reply">Responder</string>

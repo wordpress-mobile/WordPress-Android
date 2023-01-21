@@ -1448,15 +1448,12 @@ Language: nb_NO
     <string name="my_site_section_screen_title">Mitt nettsted</string>
     <string name="notif_settings_screen_title">Innstillinger for varsler</string>
     <string name="help_screen_title">Hjelp og brukerstøtte</string>
-    <string name="license_screen_title">Lisens</string>
     <string name="release_notes_screen_title">Utgivelsesnotater</string>
     <string name="signup_epilogue_error_avatar_view">Ditt profilbilde er lastet opp og vil bli synlig om kort tid.</string>
     <string name="permissions_denied_title">Tillatelser</string>
     <string name="plugin_caption_featured">Fremhevet</string>
     <string name="sharing_disabled">Delingsmodulen er deaktivert</string>
     <string name="version_with_name_param">Versjn %s</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="publisher_with_company_param">Utgiver: %s</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d sider / innlegg gjenstår</string>
     <string name="uploading_subtitle_pages_only_one">1 side gjenstår</string>
@@ -2331,7 +2328,6 @@ Language: nb_NO
     <string name="verification_code">Verifikasjonskode</string>
     <string name="language">Språk</string>
     <string name="reader_empty_posts_request_failed">Ute av stand til å hente innlegg</string>
-    <string name="publisher">Skrevet av:</string>
     <string name="error_notification_open">Kunne ikke åpne varsling</string>
     <string name="stats_search_terms_unknown_search_terms">Ukjente Søkeord</string>
     <string name="stats_view_search_terms">Søkeord</string>
@@ -2437,13 +2433,11 @@ Language: nb_NO
     <string name="wordpress_blog">WordPress-blogg</string>
     <string name="image_settings">Bildeinnstillinger</string>
     <string name="local_changes">Lokale endringer</string>
-    <string name="privacy_policy">Retningslinjer for personvern</string>
     <string name="new_media">Nytt medie</string>
     <string name="new_post">Nytt innlegg</string>
     <string name="notifications_empty_all">Ingen notifikasjoner … ennå.</string>
     <string name="http_authorization_required">Autorisasjon påkrevd</string>
     <string name="invalid_site_url_message">Sjekk at nettadressen som du skrev inn for nettstedet, er gyldig</string>
-    <string name="open_source_licenses">Åpen-kildede lisenser</string>
     <string name="file_error_create">Klarte ikke å lage en midlertidig fil for medieopplastning. Vennligst sørg for at det er nok ledig lagring på enheten din.</string>
     <string name="category_name">Kategorinavn</string>
     <string name="add_new_category">Legg til ny kategori</string>
@@ -2559,9 +2553,6 @@ Language: nb_NO
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Laster opp …</string>
-    <string name="tos">Lisens</string>
-    <string name="version">Versjon</string>
-    <string name="app_title">WordPress for Android</string>
     <string name="image_alignment">Justering</string>
     <string name="refresh">Oppdater</string>
     <string name="untitled">Uten tittel</string>

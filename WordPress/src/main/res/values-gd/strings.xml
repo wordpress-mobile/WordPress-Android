@@ -69,7 +69,6 @@ Language: gd_GB
     <string name="verification_code">Còd dearbhaidh</string>
     <string name="invalid_verification_code">Còd dearbhadh mì-dhligheach</string>
     <string name="reader_empty_posts_request_failed">Chan urrainn dhuinn na puist fhaighinn</string>
-    <string name="publisher">Foillsichear:</string>
     <string name="error_notification_open">Cha b’ urrainn dhuinn am brath fhosgladh</string>
     <string name="stats_search_terms_unknown_search_terms">Faclan-luirg nach aithnichear</string>
     <string name="stats_view_authors">Ùghdaran</string>
@@ -182,11 +181,9 @@ Language: gd_GB
     <string name="add_new_category">Cuir roinn-seòrsa ùr ris</string>
     <string name="category_name">Ainm na roinne-seòrsa</string>
     <string name="file_error_create">Cha b’ urrainn dhuinn am faidhle sealach a chruthachadh gus meadhan a luchdadh suas. Dèan cinnteach gu bheil rum gu leòr air an uidheam agad.</string>
-    <string name="open_source_licenses">Ceadachasan Open Source</string>
     <string name="http_authorization_required">Tha feum air ùghdarrasadh</string>
     <string name="new_post">Post ùr</string>
     <string name="new_media">Meadhan ùr</string>
-    <string name="privacy_policy">Am poileasaidh prìobhaideachd</string>
     <string name="local_changes">Atharraichean ionadail</string>
     <string name="image_settings">Roghainnean an deilbh</string>
     <string name="wordpress_blog">Bloga WordPress</string>
@@ -266,9 +263,6 @@ Language: gd_GB
     <string name="ok">Ceart ma-thà</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">’Ga luchdadh suas…</string>
-    <string name="version">Tionndadh</string>
-    <string name="tos">Teirmichean na seirbheise</string>
-    <string name="app_title">WordPress airson Android</string>
     <string name="image_alignment">Co-thaobhadh</string>
     <string name="refresh">Ath-nuadhaich</string>
     <string name="untitled">Gun tiotal</string>
