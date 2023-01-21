@@ -111,44 +111,36 @@ class JetpackFeatureRemovalBrandingUtilTest {
     fun `given phase 1 not started, all banners and badges should be Jetpack powered`() {
         givenPhase(null)
 
-        val allBannersAndBadges = allJpScreens.map {
-            classToTest.getBrandingTextByPhase(it)
-        }
+        val actual = allJpScreens.map(classToTest::getBrandingTextByPhase)
 
-        allBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
+        actual.assertAllMatch(R.string.wp_jetpack_powered)
     }
 
     @Test
     fun `given phase 1 started, all banners and badges should be Jetpack powered`() {
         givenPhase(PhaseOne)
 
-        val allBannersAndBadges = allJpScreens.map {
-            classToTest.getBrandingTextByPhase(it)
-        }
+        val actual = allJpScreens.map(classToTest::getBrandingTextByPhase)
 
-        allBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
+        actual.assertAllMatch(R.string.wp_jetpack_powered)
     }
 
     @Test
     fun `given phase 2 started, all banners and badges should be Get the Jetpack app`() {
         givenPhase(PhaseTwo)
 
-        val allBannersAndBadges = allJpScreens.map {
-            classToTest.getBrandingTextByPhase(it)
-        }
+        val actual = allJpScreens.map(classToTest::getBrandingTextByPhase)
 
-        allBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered_phase_2)
+        actual.assertAllMatch(R.string.wp_jetpack_powered_phase_2)
     }
 
     @Test
     fun `given phase 3 started, on screens without dynamic branding, some branding should be Jetpack powered`() {
         givenPhase(PhaseThree)
 
-        val staticBannersAndBadges = screensWithStaticText.map {
-            classToTest.getBrandingTextByPhase(it)
-        }
+        val actual = screensWithStaticText.map(classToTest::getBrandingTextByPhase)
 
-        staticBannersAndBadges.assertAllMatch(R.string.wp_jetpack_powered)
+        actual.assertAllMatch(R.string.wp_jetpack_powered)
     }
 
     @Test
