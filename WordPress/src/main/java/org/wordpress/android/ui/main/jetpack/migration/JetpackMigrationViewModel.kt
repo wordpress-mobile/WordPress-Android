@@ -53,10 +53,10 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.JetpackMigrationLanguageUtil
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.JetpackMigrationLanguageUtil
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.PreventDuplicateNotifsFeatureConfig
@@ -141,6 +141,7 @@ class JetpackMigrationViewModel @Inject constructor(
             appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(true)
             appPrefsWrapper.saveIsFirstTryUserFlagsJetpack(true)
             appPrefsWrapper.saveIsFirstTryReaderSavedPostsJetpack(true)
+            appPrefsWrapper.saveIsFirstTryBloggingRemindersSyncJetpack(true)
         }
     }
 

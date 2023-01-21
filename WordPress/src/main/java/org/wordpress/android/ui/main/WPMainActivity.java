@@ -399,6 +399,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                             AppPrefs.saveIsFirstTrySharedLoginJetpack(true);
                             AppPrefs.saveIsFirstTryUserFlagsJetpack(true);
                             AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(true);
+                            AppPrefs.saveIsFirstTryBloggingRemindersSyncJetpack(true);
                         }
                         showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
                     }
