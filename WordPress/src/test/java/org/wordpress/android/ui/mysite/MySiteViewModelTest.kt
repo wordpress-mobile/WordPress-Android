@@ -1363,6 +1363,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(mySiteSourceManager).refreshQuickStart()
     }
 
+    @Test
     fun `given no selected site, when check and start QS is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
