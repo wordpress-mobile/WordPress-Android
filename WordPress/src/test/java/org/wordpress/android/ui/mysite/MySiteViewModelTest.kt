@@ -444,6 +444,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL))
             .thenReturn(QuickStartNewSiteTask.VIEW_SITE)
+        whenever(jetpackBrandingUtils.getBrandingTextForScreen(any())).thenReturn(mock())
         viewModel = MySiteViewModel(
             networkUtilsWrapper,
             testDispatcher(),
