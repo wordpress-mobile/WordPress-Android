@@ -49,9 +49,9 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
     private lateinit var classToTest: JetpackFeatureRemovalBrandingUtil
 
-    private val screensWithStaticText = JetpackPoweredScreen.WithStaticText.values()
-    private val screensWithDynamicText = JetpackPoweredScreen.WithDynamicText.values()
-    private val allJpScreens: List<JetpackPoweredScreen> = screensWithStaticText.map { it } + screensWithDynamicText
+    private val screensWithStaticText = JetpackPoweredScreen.WithStaticText.values().toList()
+    private val screensWithDynamicText = JetpackPoweredScreen.WithDynamicText.values().toList()
+    private val allJpScreens: List<JetpackPoweredScreen> = screensWithStaticText + screensWithDynamicText
 
     @Before
     fun setup() {
@@ -160,7 +160,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        val actual = allOtherBannersAndBadges.match(Unknown)
+        val actual = buildExpectedDynamicTexts(Unknown)
         assertProperties(
             expected = allOtherBannersAndBadges,
             actual = actual,
@@ -178,7 +178,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        val actual = allOtherBannersAndBadges.match(Soon)
+        val actual = buildExpectedDynamicTexts(Soon)
         assertProperties(
             expected = allOtherBannersAndBadges,
             actual = actual,
@@ -198,7 +198,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        val actual = allOtherBannersAndBadges.match(expectedInterval)
+        val actual = buildExpectedDynamicTexts(expectedInterval)
         assertProperties(
             expected = allOtherBannersAndBadges,
             actual = actual,
@@ -222,7 +222,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        val actual = allOtherBannersAndBadges.match(expectedInterval)
+        val actual = buildExpectedDynamicTexts(expectedInterval)
         assertProperties(
             expected = allOtherBannersAndBadges,
             actual = actual,
@@ -246,7 +246,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        val actual = allOtherBannersAndBadges.match(expectedInterval)
+        val actual = buildExpectedDynamicTexts(expectedInterval)
         assertProperties(
             expected = allOtherBannersAndBadges,
             actual = actual,
@@ -270,7 +270,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        val actual = allOtherBannersAndBadges.match(expectedInterval)
+        val actual = buildExpectedDynamicTexts(expectedInterval)
         assertProperties(
             expected = allOtherBannersAndBadges,
             actual = actual,
@@ -294,7 +294,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             classToTest.getBrandingTextByPhase(it) as UiStringResWithParams
         }
 
-        val actual = allOtherBannersAndBadges.match(expectedInterval)
+        val actual = buildExpectedDynamicTexts(expectedInterval)
         assertProperties(
             expected = allOtherBannersAndBadges,
             actual = actual,
@@ -353,44 +353,42 @@ class JetpackFeatureRemovalBrandingUtilTest {
         assertThat(this).allMatch { it == UiStringRes(expected) }
     }
 
-    private fun List<UiStringResWithParams>.match(uiState: JetpackBrandingUiState): List<UiStringResWithParams> {
-        val matches = mutableListOf<UiStringResWithParams>()
-
-        screensWithDynamicText.forEach { screen ->
-            matches += filter { actual ->
-                val stringRes = when (screen.isPlural) {
-                    true -> when (uiState) {
-                        is Indeterminate -> Soon.RES_ARE_MOVING_SOON
-                        is Pluralisable -> Pluralisable.RES_ARE_MOVING_IN
-                        else -> error("Unexpected interval: $uiState")
-                    }
-                    false -> when (uiState) {
-                        is Indeterminate -> Soon.RES_IS_MOVING_SOON
-                        is Pluralisable -> Pluralisable.RES_IS_MOVING_IN
-                        else -> error("Unexpected interval: $uiState")
-                    }
+    private fun buildExpectedDynamicTexts(uiState: JetpackBrandingUiState): List<UiStringResWithParams> {
+        return screensWithDynamicText.map { screen ->
+            val stringRes = when (screen.isPlural) {
+                true -> when (uiState) {
+                    is Indeterminate -> Soon.RES_ARE_MOVING_SOON
+                    is Pluralisable -> Pluralisable.RES_ARE_MOVING_IN
+                    else -> error("Unexpected interval: $uiState")
                 }
-                val quantityUiString = (uiState as? Pluralisable)?.expectAsQuantityUiString()
-                val expected = UiStringResWithParams(
-                    stringRes,
-                    listOfNotNull(
-                        screen.featureName,
-                        quantityUiString
-                    )
-                )
-
-                actual == expected
+                false -> when (uiState) {
+                    is Indeterminate -> Soon.RES_IS_MOVING_SOON
+                    is Pluralisable -> Pluralisable.RES_IS_MOVING_IN
+                    else -> error("Unexpected interval: $uiState")
+                }
             }
+            val quantityUiString = buildExpectedQuantityText(uiState as? Pluralisable)
+
+            return@map UiStringResWithParams(
+                stringRes,
+                listOfNotNull(
+                    screen.featureName,
+                    quantityUiString
+                )
+            )
         }
-        return matches
     }
 
-    private fun Pluralisable.expectAsQuantityUiString() = UiStringPluralRes(
-        zeroRes = otherRes,
-        oneRes = oneRes,
-        otherRes = otherRes,
-        count = number.toInt()
-    )
+    private fun buildExpectedQuantityText(uiState: Pluralisable?): UiStringPluralRes? {
+        return uiState?.run {
+            UiStringPluralRes(
+                zeroRes = otherRes,
+                oneRes = oneRes,
+                otherRes = otherRes,
+                count = number.toInt()
+            )
+        }
+    }
 
     private fun assertProperties(
         expected: List<UiStringResWithParams>,
