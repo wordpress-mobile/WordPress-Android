@@ -345,7 +345,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
             val today = Date(System.currentTimeMillis())
             val deadline = Date.from(today.toInstant().atZone(ZoneId.systemDefault()).plusDays(it).toInstant())
             whenever(dateTimeUtilsWrapper.getTodaysDate()).thenReturn(today)
-            whenever(dateTimeUtilsWrapper.dateFromPattern(any(), any())).thenReturn(deadline)
+            whenever(dateTimeUtilsWrapper.parseDateString(any(), any())).thenReturn(deadline)
         }
     }
 
@@ -448,7 +448,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
     private fun verifyDaysUntilDeadlineCounted() {
         verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).getTodaysDate()
-        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).dateFromPattern(
+        verify(dateTimeUtilsWrapper, times(screensWithDynamicText.size)).parseDateString(
             any(),
             eq(JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)
         )

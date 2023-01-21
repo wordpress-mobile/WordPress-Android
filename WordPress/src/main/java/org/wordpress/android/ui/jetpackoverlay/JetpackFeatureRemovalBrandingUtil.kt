@@ -86,7 +86,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
     }
 
     private fun retrieveDeadline(): LocalDate? = jpDeadlineDate?.let {
-        dateTimeUtilsWrapper.dateFromPattern(it, JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)?.toLocalDate()
+        dateTimeUtilsWrapper.parseDateString(it, JETPACK_OVERLAY_ORIGINAL_DATE_FORMAT)?.toLocalDate()
     }
 
     private fun Date.toLocalDate() = toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
