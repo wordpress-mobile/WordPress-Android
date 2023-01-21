@@ -154,12 +154,14 @@ class JetpackFeatureRemovalBrandingUtilTest {
         }
 
         val expected = buildExpectedDynamicTexts(Unknown)
-        assertProperties(
+        assertDynamicTexts(
             actual = actual,
             expected = expected,
-            expectedPlural = Soon.RES_ARE_MOVING_SOON,
-            expectedSingular = Soon.RES_IS_MOVING_SOON,
+            expectedPluralRes = Soon.RES_ARE_MOVING_SOON,
+            expectedSingularRes = Soon.RES_IS_MOVING_SOON,
+            expectedToHaveQuantity = false,
         )
+        verifyNoInteractions(dateTimeUtilsWrapper)
     }
 
     @Test
@@ -172,11 +174,12 @@ class JetpackFeatureRemovalBrandingUtilTest {
         }
 
         val expected = buildExpectedDynamicTexts(Soon)
-        assertProperties(
+        assertDynamicTexts(
             actual = actual,
             expected = expected,
-            expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
-            expectedSingular = Pluralisable.RES_IS_MOVING_IN,
+            expectedPluralRes = Soon.RES_ARE_MOVING_SOON,
+            expectedSingularRes = Soon.RES_ARE_MOVING_SOON,
+            expectedToHaveQuantity = false,
         )
         verifyDaysUntilDeadlineCounted()
     }
@@ -192,14 +195,16 @@ class JetpackFeatureRemovalBrandingUtilTest {
         }
 
         val expected = buildExpectedDynamicTexts(expectedInterval)
-        assertProperties(
+        assertDynamicTexts(
             actual = actual,
             expected = expected,
-            expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
-            expectedSingular = Pluralisable.RES_IS_MOVING_IN,
-            expectedParamsSize = 2,
-            expectedInterval = expectedInterval,
-            assertOnQuantity = ::assertQuantity,
+            expectedPluralRes = Pluralisable.RES_ARE_MOVING_IN,
+            expectedSingularRes = Pluralisable.RES_IS_MOVING_IN,
+            expectedToHaveQuantity = true,
+        )
+        assertQuantityTexts(
+            expected = expectedInterval,
+            actual = actual,
         )
         verifyDaysUntilDeadlineCounted()
     }
@@ -216,14 +221,16 @@ class JetpackFeatureRemovalBrandingUtilTest {
         }
 
         val expected = buildExpectedDynamicTexts(expectedInterval)
-        assertProperties(
+        assertDynamicTexts(
             actual = actual,
             expected = expected,
-            expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
-            expectedSingular = Pluralisable.RES_IS_MOVING_IN,
-            expectedParamsSize = 2,
-            expectedInterval = expectedInterval,
-            assertOnQuantity = ::assertQuantity,
+            expectedPluralRes = Pluralisable.RES_ARE_MOVING_IN,
+            expectedSingularRes = Pluralisable.RES_IS_MOVING_IN,
+            expectedToHaveQuantity = true,
+        )
+        assertQuantityTexts(
+            expected = expectedInterval,
+            actual = actual,
         )
         verifyDaysUntilDeadlineCounted()
     }
@@ -240,14 +247,16 @@ class JetpackFeatureRemovalBrandingUtilTest {
         }
 
         val expected = buildExpectedDynamicTexts(expectedInterval)
-        assertProperties(
+        assertDynamicTexts(
             actual = actual,
             expected = expected,
-            expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
-            expectedSingular = Pluralisable.RES_IS_MOVING_IN,
-            expectedParamsSize = 2,
-            expectedInterval = expectedInterval,
-            assertOnQuantity = ::assertQuantity,
+            expectedPluralRes = Pluralisable.RES_ARE_MOVING_IN,
+            expectedSingularRes = Pluralisable.RES_IS_MOVING_IN,
+            expectedToHaveQuantity = true,
+        )
+        assertQuantityTexts(
+            expected = expectedInterval,
+            actual = actual,
         )
         verifyDaysUntilDeadlineCounted()
     }
@@ -264,14 +273,16 @@ class JetpackFeatureRemovalBrandingUtilTest {
         }
 
         val expected = buildExpectedDynamicTexts(expectedInterval)
-        assertProperties(
+        assertDynamicTexts(
             actual = actual,
             expected = expected,
-            expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
-            expectedSingular = Pluralisable.RES_IS_MOVING_IN,
-            expectedParamsSize = 2,
-            expectedInterval = expectedInterval,
-            assertOnQuantity = ::assertQuantity,
+            expectedPluralRes = Pluralisable.RES_ARE_MOVING_IN,
+            expectedSingularRes = Pluralisable.RES_IS_MOVING_IN,
+            expectedToHaveQuantity = true,
+        )
+        assertQuantityTexts(
+            expected = expectedInterval,
+            actual = actual,
         )
         verifyDaysUntilDeadlineCounted()
     }
@@ -288,14 +299,16 @@ class JetpackFeatureRemovalBrandingUtilTest {
         }
 
         val expected = buildExpectedDynamicTexts(expectedInterval)
-        assertProperties(
+        assertDynamicTexts(
             actual = actual,
             expected = expected,
-            expectedPlural = Pluralisable.RES_ARE_MOVING_IN,
-            expectedSingular = Pluralisable.RES_IS_MOVING_IN,
-            expectedParamsSize = 2,
-            expectedInterval = expectedInterval,
-            assertOnQuantity = ::assertQuantity,
+            expectedPluralRes = Pluralisable.RES_ARE_MOVING_IN,
+            expectedSingularRes = Pluralisable.RES_IS_MOVING_IN,
+            expectedToHaveQuantity = true,
+        )
+        assertQuantityTexts(
+            expected = expectedInterval,
+            actual = actual,
         )
         verifyDaysUntilDeadlineCounted()
     }
@@ -380,14 +393,12 @@ class JetpackFeatureRemovalBrandingUtilTest {
         }
     }
 
-    private fun assertProperties(
+    private fun assertDynamicTexts(
         actual: List<UiStringResWithParams>,
         expected: List<UiStringResWithParams>,
-        expectedPlural: Int,
-        expectedSingular: Int,
-        expectedParamsSize: Int = 1,
-        expectedInterval: Pluralisable? = null,
-        assertOnQuantity: ((Pluralisable, List<UiStringPluralRes>) -> Unit)? = null,
+        @StringRes expectedPluralRes: Int,
+        @StringRes expectedSingularRes: Int,
+        expectedToHaveQuantity: Boolean,
     ) {
         assertThat(actual).isEqualTo(expected)
 
@@ -402,38 +413,29 @@ class JetpackFeatureRemovalBrandingUtilTest {
         assertThat(actualStringRes).isEqualTo(expectedStringRes)
 
         // Assert plurals stringRes
-        val actualPlurals = actualStringRes.filter { it == expectedPlural }
-        val expectedPlurals = expectedStringRes.filter { it == expectedPlural }
+        val actualPlurals = actualStringRes.filter { it == expectedPluralRes }
+        val expectedPlurals = expectedStringRes.filter { it == expectedPluralRes }
         assertThat(actualPlurals).isEqualTo(expectedPlurals)
 
         // Assert singulars stringRes
-        val actualSingulars = actualStringRes.filter { it == expectedSingular }
-        val expectedSingulars = expectedStringRes.filter { it == expectedSingular }
+        val actualSingulars = actualStringRes.filter { it == expectedSingularRes }
+        val expectedSingulars = expectedStringRes.filter { it == expectedSingularRes }
         assertThat(actualSingulars).isEqualTo(expectedSingulars)
 
         // Assert params
         val actualParams = actual.map { it.params }
-        assertThat(actualParams).allMatch { it.size == expectedParamsSize }
-
-        // Assert quantity for determinate intervals
-        if (expectedParamsSize == 2) {
-            check(expectedInterval != null && assertOnQuantity != null) {
-                "Pluralisation should be verified on plurals"
-            }
-
-            val quantityTexts = actual.map { it.params[1] as UiStringPluralRes }
-            assertOnQuantity(expectedInterval, quantityTexts )
-        }
+        assertThat(actualParams).allMatch { it.size == if (expectedToHaveQuantity) 2 else 1 }
     }
 
-    private fun assertQuantity(
-        expectedInterval: Pluralisable,
-        actualQuantity: List<UiStringPluralRes>
+    private fun assertQuantityTexts(
+        actual: List<UiStringResWithParams>,
+        expected: Pluralisable,
     ) {
-        assertThat(actualQuantity.map { it.zeroRes }).containsOnly(expectedInterval.otherRes)
-        assertThat(actualQuantity.map { it.oneRes }).containsOnly(expectedInterval.oneRes)
-        assertThat(actualQuantity.map { it.otherRes }).containsOnly(expectedInterval.otherRes)
-        assertThat(actualQuantity.map { it.count }).containsOnly(expectedInterval.number.toInt())
+        val actualQuantity = actual.map { it.params[1] as UiStringPluralRes }
+        assertThat(actualQuantity.map { it.zeroRes }).containsOnly(expected.otherRes)
+        assertThat(actualQuantity.map { it.oneRes }).containsOnly(expected.oneRes)
+        assertThat(actualQuantity.map { it.otherRes }).containsOnly(expected.otherRes)
+        assertThat(actualQuantity.map { it.count }).containsOnly(expected.number.toInt())
     }
 
     private fun verifyDaysUntilDeadlineCounted() {
