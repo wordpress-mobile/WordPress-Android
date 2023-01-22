@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-12 10:39:32+0000
+Translation-Revision-Date: 2023-01-21 18:23:21+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ro
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">De la &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statisticile, cititorul, notificările și alte funcționalități propulsate de Jetpack vor fi înlăturate din aplicația WordPress pe %s.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">În curând, statisticile, cititorul, notificările și alte funcționalități propulsate de Jetpack vor fi înlăturate din aplicația WordPress.</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Comutarea este gratuită și durează numai un minut.</string>
