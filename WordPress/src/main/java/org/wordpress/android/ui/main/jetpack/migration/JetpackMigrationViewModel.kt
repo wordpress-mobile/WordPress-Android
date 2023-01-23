@@ -50,14 +50,18 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Generic
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.JetpackMigrationLanguageUtil
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.PreventDuplicateNotifsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -71,6 +75,8 @@ class JetpackMigrationViewModel @Inject constructor(
     private val migrationEmailHelper: MigrationEmailHelper,
     private val migrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
     private val accountStore: AccountStore,
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val jetpackMigrationLanguageUtil: JetpackMigrationLanguageUtil,
 ) : ViewModel() {
     private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
@@ -78,11 +84,15 @@ class JetpackMigrationViewModel @Inject constructor(
     private val _refreshAppTheme = MutableLiveData<Unit>()
     val refreshAppTheme: LiveData<Unit> = _refreshAppTheme
 
+    private val _refreshAppLanguage = MutableLiveData<String>()
+    val refreshAppLanguage: LiveData<String> = _refreshAppLanguage
+
     private var isStarted = false
     private val migrationStateFlow = MutableStateFlow<LocalMigrationState>(Initial)
     private val continueClickedFlow = MutableStateFlow(false)
     private val notificationContinueClickedFlow = MutableStateFlow(false)
     private var showDeleteState: Boolean = false
+    private var deepLinkData: PreMigrationDeepLinkData? = null
 
     val uiState = combineTransform(
         migrationStateFlow,
@@ -110,12 +120,18 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, Loading)
 
-    fun start(showDeleteState: Boolean, application: WordPress) {
+    fun start(
+        showDeleteState: Boolean,
+        application: WordPress,
+        deepLinkData: PreMigrationDeepLinkData?
+    ) {
         if (isStarted) return
         isStarted = true
 
         this.showDeleteState = showDeleteState
         if (showDeleteState) return
+
+        this.deepLinkData = deepLinkData
         tryMigration(application)
     }
 
@@ -125,6 +141,7 @@ class JetpackMigrationViewModel @Inject constructor(
             appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(true)
             appPrefsWrapper.saveIsFirstTryUserFlagsJetpack(true)
             appPrefsWrapper.saveIsFirstTryReaderSavedPostsJetpack(true)
+            appPrefsWrapper.saveIsFirstTryBloggingRemindersSyncJetpack(true)
         }
     }
 
@@ -132,6 +149,11 @@ class JetpackMigrationViewModel @Inject constructor(
     fun initWelcomeScreenUi(data: WelcomeScreenData, isContinueClicked: Boolean): Welcome {
         if (uiState.value !is Welcome) {
             migrationAnalyticsTracker.trackWelcomeScreenShown()
+        }
+
+        if (data.flags.isNotEmpty()) {
+            emitLanguageRefreshIfNeeded(extractLanguageFromFlagsMap(data.flags))
+            _refreshAppTheme.value = Unit
         }
 
         return Welcome(
@@ -144,6 +166,24 @@ class JetpackMigrationViewModel @Inject constructor(
                 onHelpClicked(source = HelpButtonSource.Welcome)
             },
         )
+    }
+
+    private fun extractLanguageFromFlagsMap(userPrefs: Map<String, Any?>): String {
+        val languageKey = localeManagerWrapper.getLocalePrefKeyString()
+        return userPrefs[languageKey] as? String ?: ""
+    }
+
+    private fun emitLanguageRefreshIfNeeded(languageCode: String) {
+        if (languageCode.isNotEmpty()) {
+            val shouldEmitLanguageRefresh = !localeManagerWrapper.isSameLanguage(languageCode)
+            if (shouldEmitLanguageRefresh) {
+                _refreshAppLanguage.value = languageCode
+            }
+        }
+    }
+
+    fun setAppLanguage(locale: Locale) {
+        jetpackMigrationLanguageUtil.applyLanguage(locale.language)
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -167,6 +207,11 @@ class JetpackMigrationViewModel @Inject constructor(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun initPleaseDeleteWordPressAppScreenUi(): Delete {
         migrationAnalyticsTracker.trackPleaseDeleteWordPressScreenShown()
+
+        // We need to manually apply the app language for the Compose UI since the host JetpackMigrationActivity
+        // does not inherit from LocaleAwareActivity on purpose, in order to avoid possible issues
+        // when the Ui mode (dark/light) and the language are manually set by the user.
+        emitLanguageRefreshIfNeeded(localeManagerWrapper.getLanguage())
 
         return Delete(
             primaryActionButton = DeletePrimaryButton(::onGotItClicked),
@@ -192,7 +237,7 @@ class JetpackMigrationViewModel @Inject constructor(
     fun signOutWordPress(application: WordPress) {
         viewModelScope.launch(Dispatchers.IO) {
             application.wordPressComSignOut()
-            postActionEvent(FallbackToLogin)
+            postActionEvent(FallbackToLogin(deepLinkData))
         }
     }
 
@@ -220,7 +265,7 @@ class JetpackMigrationViewModel @Inject constructor(
         if (accountStore.hasAccessToken()) {
             postActionEvent(Logout)
         } else {
-            postActionEvent(FallbackToLogin)
+            postActionEvent(FallbackToLogin(deepLinkData))
         }
     }
 
@@ -255,7 +300,7 @@ class JetpackMigrationViewModel @Inject constructor(
         migrationEmailHelper.notifyMigrationComplete()
         appPrefsWrapper.setJetpackMigrationCompleted(true)
         appPrefsWrapper.setJetpackMigrationInProgress(false)
-        postActionEvent(CompleteFlow)
+        postActionEvent(CompleteFlow(deepLinkData))
     }
 
     private fun onHelpClicked(source: HelpButtonSource) {
@@ -270,7 +315,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun onGotItClicked() {
         migrationAnalyticsTracker.trackPleaseDeleteWordPressGotItTapped()
-        postActionEvent(CompleteFlow)
+        postActionEvent(CompleteFlow())
     }
 
     private fun resizeAvatarUrl(avatarUrl: String) = gravatarUtilsWrapper.fixGravatarUrlWithResource(
@@ -459,8 +504,15 @@ class JetpackMigrationViewModel @Inject constructor(
 
     sealed class JetpackMigrationActionEvent {
         object ShowHelp : JetpackMigrationActionEvent()
-        object CompleteFlow : JetpackMigrationActionEvent()
-        object FallbackToLogin : JetpackMigrationActionEvent()
+
+        data class CompleteFlow(
+            val deepLinkData: PreMigrationDeepLinkData? = null,
+        ) : JetpackMigrationActionEvent()
+
+        data class FallbackToLogin(
+            val deepLinkData: PreMigrationDeepLinkData? = null,
+        ) : JetpackMigrationActionEvent()
+
         object Logout : JetpackMigrationActionEvent()
     }
 }

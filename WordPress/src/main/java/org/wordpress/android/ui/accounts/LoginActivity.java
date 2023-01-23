@@ -313,6 +313,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
+        AppPrefs.setIsJetpackMigrationEligible(false);
+        AppPrefs.setIsJetpackMigrationInProgress(false);
         switch (getLoginMode()) {
             case FULL:
             case WPCOM_LOGIN_ONLY:

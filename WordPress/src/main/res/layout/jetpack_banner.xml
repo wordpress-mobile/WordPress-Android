@@ -18,6 +18,7 @@
         android:background="@color/jetpack_banner_divider" />
 
     <TextView
+        android:id="@+id/jetpack_banner_text"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"

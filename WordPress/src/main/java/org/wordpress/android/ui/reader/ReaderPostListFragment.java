@@ -126,7 +126,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.DisplayUtilsWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.util.JetpackBrandingUtils.Screen;
+import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SnackbarItem;
@@ -1155,11 +1155,19 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         mJetpackBanner = rootView.findViewById(R.id.jetpack_banner);
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            final JetpackPoweredScreen screen = JetpackPoweredScreen.WithDynamicText.READER_SEARCH;
             mJetpackBrandingUtils.initJetpackBannerAnimation(mJetpackBanner, mRecyclerView.getInternalRecyclerView());
+            TextView jetpackBannerTextView = mJetpackBanner.findViewById(R.id.jetpack_banner_text);
+            jetpackBannerTextView.setText(
+                    mUiHelpers.getTextOfUiString(
+                            requireContext(),
+                            mJetpackBrandingUtils.getBrandingTextForScreen(screen)
+                    )
+            );
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 mJetpackBanner.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBannerTapped(Screen.READER_SEARCH);
+                    mJetpackBrandingUtils.trackBannerTapped(screen);
                     new JetpackPoweredBottomSheetFragment()
                             .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
                 });

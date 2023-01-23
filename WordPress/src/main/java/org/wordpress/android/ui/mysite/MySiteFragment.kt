@@ -365,6 +365,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     companion object {
+        @JvmField var TAG: String = MySiteFragment::class.java.simpleName
         private const val PASS_TO_TAB_FRAGMENT_DELAY = 300L
         private const val MAX_PERCENT = 100
         fun newInstance(): MySiteFragment {

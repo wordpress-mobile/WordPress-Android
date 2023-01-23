@@ -17,7 +17,6 @@ Language: ku_TR
     <string name="post_settings_author">Nivîskar</string>
     <string name="app_rating_title">%s ket serê te?</string>
     <string name="stats_referrers_pie_chart_total_label">Dîtin</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Ji</string>
     <string name="stats_referrers_pie_chart_search">Lê bigere</string>
     <string name="stats_referrers_pie_chart_others">Yên din</string>
     <string name="stats_follower_types_pie_chart_total_label">Giştî</string>

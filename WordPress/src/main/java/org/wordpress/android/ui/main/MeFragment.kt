@@ -59,13 +59,14 @@ import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandingUtils.Screen.ME
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.SnackbarItem
@@ -129,6 +130,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     @Inject
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
     private val viewModel: MeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -158,15 +163,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            jetpackBadge.isVisible = true
-            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBadge.setOnClickListener {
-                    jetpackBrandingUtils.trackBadgeTapped(ME)
-                    viewModel.showJetpackPoweredBottomSheet()
-                }
-            }
-        }
+        addJetpackBadgeIfNeeded()
 
         val showPickerListener = OnClickListener {
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
@@ -211,6 +208,23 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                     ActivityLauncher.showSignInForResultJetpackOnly(activity)
                 } else {
                     ActivityLauncher.showSignInForResultWpComOnly(activity)
+                }
+            }
+        }
+    }
+
+    private fun MeFragmentBinding.addJetpackBadgeIfNeeded() {
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            val screen = JetpackPoweredScreen.WithStaticText.ME
+            jetpackBadge.isVisible = true
+            jetpackBadge.text = uiHelpers.getTextOfUiString(
+                requireContext(),
+                jetpackBrandingUtils.getBrandingTextForScreen(screen)
+            )
+            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                jetpackBadge.setOnClickListener {
+                    jetpackBrandingUtils.trackBadgeTapped(screen)
+                    viewModel.showJetpackPoweredBottomSheet()
                 }
             }
         }

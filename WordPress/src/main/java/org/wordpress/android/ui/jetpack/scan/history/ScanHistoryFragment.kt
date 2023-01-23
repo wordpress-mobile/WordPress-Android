@@ -27,7 +27,7 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiStat
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandingUtils.Screen.SCAN
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.LocaleManagerWrapper
 import javax.inject.Inject
 
@@ -161,6 +161,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvid
 
     private fun initJetpackBanner(scrollableContainerId: Int) {
         if (jetpackBrandingUtils.shouldShowJetpackBrandingForPhaseOne()) {
+            val screen = JetpackPoweredScreen.WithDynamicText.SCAN
             binding?.root?.post {
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
                 val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
@@ -168,10 +169,14 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvid
 
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+                binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
+                    requireContext(),
+                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                )
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                     binding?.jetpackBanner?.root?.setOnClickListener {
-                        jetpackBrandingUtils.trackBannerTapped(SCAN)
+                        jetpackBrandingUtils.trackBannerTapped(screen)
                         JetpackPoweredBottomSheetFragment
                             .newInstance()
                             .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)

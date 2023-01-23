@@ -137,7 +137,6 @@ Language: cs_CZ
     <string name="hpp_title">Zvolit šablonu</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Dnešní výzva k blogování byla přeskočena</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Zjistit více</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Od </string>
     <string name="stats_follower_types_pie_chart_total_label">Celkem</string>
     <string name="stats_referrers_pie_chart_others">Ostatní</string>
     <string name="stats_referrers_pie_chart_search">Hledat</string>
@@ -307,7 +306,6 @@ Language: cs_CZ
     <string name="new_site_creation_intents_title">Téma webu</string>
     <string name="quick_start_site_menu_tab_message_short">Pokračujte klepnutím na &lt;b&gt;%1$s&lt;/b&gt;.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Odebrat z nástěnky</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Přeskočte tuto výzvu</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Zobrazit další výzvy</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Sdílejte výzvu k blogování</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Odpovězeno</string>

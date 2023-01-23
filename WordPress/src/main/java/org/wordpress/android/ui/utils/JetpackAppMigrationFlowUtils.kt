@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.utils
 
+import android.net.Uri
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.ui.ActivityLauncher
@@ -33,8 +36,9 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
             && (!accountStore.hasAccessToken()
             || appPrefsWrapper.isJetpackMigrationInProgress())
 
-    fun startJetpackMigrationFlow() {
-        ActivityLauncher.startJetpackMigrationFlow(contextProvider.getContext())
+    @JvmOverloads
+    fun startJetpackMigrationFlow(deepLinkData: PreMigrationDeepLinkData? = null) {
+        ActivityLauncher.startJetpackMigrationFlow(contextProvider.getContext(), deepLinkData)
     }
 
     private fun isWordPressInstalled() = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
@@ -46,3 +50,9 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
         return isCompatible
     }
 }
+
+@Parcelize
+data class PreMigrationDeepLinkData(
+    val action: String? = null,
+    val uri: Uri? = null,
+) : Parcelable

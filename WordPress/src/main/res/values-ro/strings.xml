@@ -151,7 +151,6 @@ Language: ro
     <string name="stats_follower_types_pie_chart_total_label">Total</string>
     <string name="stats_referrers_pie_chart_others">Altele</string>
     <string name="stats_referrers_pie_chart_search">Caută</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Din</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Azi am omis îndemnul pentru publicare</string>
     <string name="stats_action_card_schedule_post_title">Îți programezi articolele</string>
     <string name="stats_action_card_blogging_reminders_button_label">Setează reamintirile</string>
@@ -314,7 +313,6 @@ Language: ro
     <string name="site_creation_intent_art">Artă</string>
     <string name="new_site_creation_intents_title">Subiect site</string>
     <string name="quick_start_site_menu_tab_message_short">Atinge &lt;b&gt;%1$s&lt;/b&gt; pentru a continua.</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Sari peste acest îndemn</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Vezi mai multe îndemnuri</string>
     <string name="new_site_creation_intents_input_hint">De exemplu: modă, poezie, politică</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Înlătură din panoul de control</string>

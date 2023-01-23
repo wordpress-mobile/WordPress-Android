@@ -6,8 +6,10 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.JetpackPoweredBottomSheetFeatureConfig
 import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
@@ -24,6 +26,7 @@ class JetpackBrandingUtils @Inject constructor(
 ) {
     fun shouldShowJetpackBranding(): Boolean {
         return isWpComSite() && jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
+                && !jetpackFeatureRemovalBrandingUtil.isInRemovalPhase()
     }
 
     fun shouldShowJetpackBrandingForPhaseOne(): Boolean {
@@ -36,6 +39,10 @@ class JetpackBrandingUtils @Inject constructor(
 
     fun shouldShowJetpackPoweredBottomSheet(): Boolean {
         return isWpComSite() && jetpackPoweredBottomSheetFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
+    }
+
+    fun getBrandingTextForScreen(screen: JetpackPoweredScreen): UiString {
+        return jetpackFeatureRemovalBrandingUtil.getBrandingTextByPhase(screen)
     }
 
     fun showJetpackBannerIfScrolledToTop(banner: View, scrollableView: RecyclerView) {
@@ -82,12 +89,12 @@ class JetpackBrandingUtils @Inject constructor(
     /**
      * Tracks
      */
-    fun trackBadgeTapped(screen: Screen) = analyticsTrackerWrapper.track(
+    fun trackBadgeTapped(screen: JetpackPoweredScreen) = analyticsTrackerWrapper.track(
         Stat.JETPACK_POWERED_BADGE_TAPPED,
         mapOf(SCREEN_KEY to screen.trackingName)
     )
 
-    fun trackBannerTapped(screen: Screen) = analyticsTrackerWrapper.track(
+    fun trackBannerTapped(screen: JetpackPoweredScreen) = analyticsTrackerWrapper.track(
         Stat.JETPACK_POWERED_BANNER_TAPPED,
         mapOf(SCREEN_KEY to screen.trackingName)
     )
@@ -99,26 +106,6 @@ class JetpackBrandingUtils @Inject constructor(
     fun trackDismissTapped() = analyticsTrackerWrapper.track(
         Stat.JETPACK_POWERED_BOTTOM_SHEET_CONTINUE_TAPPED
     )
-
-    enum class Screen(val trackingName: String) {
-        APP_SETTINGS("app_settings"),
-        ACTIVITY_LOG("activity_log"),
-        ACTIVITY_LOG_DETAIL("activity_log_detail"),
-        BACKUP("backup"),
-        HOME("home"),
-        ME("me"),
-        NOTIFICATIONS("notifications"),
-        NOTIFICATIONS_SETTINGS("notifications_settings"),
-        PEOPLE("people"),
-        PERSON("person"),
-        READER("reader"),
-        READER_POST_DETAIL("reader_post_detail"),
-        READER_SEARCH("reader_search"),
-        SHARE("share"),
-        STATS("stats"),
-        SCAN("scan"),
-        THEMES("themes")
-    }
 
     companion object {
         private const val SCREEN_KEY = "screen"
