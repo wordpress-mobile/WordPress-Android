@@ -14,6 +14,7 @@ import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -39,12 +40,16 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.config.WordPressSupportForumFeatureConfig
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HelpActivity : LocaleAwareActivity() {
+    @Inject
+    lateinit var wpSupportForumFeatureConfig: WordPressSupportForumFeatureConfig
+
     @Inject
     lateinit var accountStore: AccountStore
 
@@ -94,7 +99,13 @@ class HelpActivity : LocaleAwareActivity() {
                 actionBar.elevation = 0f // remove shadow
             }
 
-            contactUsButton.setOnClickListener { createNewZendeskTicket() }
+            contactUsButton.setOnClickListener {
+                if (wpSupportForumFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+                    openWpSupportForum()
+                } else {
+                    createNewZendeskTicket()
+                }
+            }
             faqButton.setOnClickListener { showFaq() }
             myTicketsButton.setOnClickListener { showZendeskTickets() }
             applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
@@ -169,6 +180,11 @@ class HelpActivity : LocaleAwareActivity() {
             selectedSiteFromExtras,
             extraTagsFromExtras
         )
+    }
+
+    private fun openWpSupportForum() {
+        // TODO: Enhance this as project evolves
+        ActivityLauncher.openUrlExternal(this, "https://wordpress.org/support/forum/mobile/")
     }
 
     private fun showZendeskTickets() {
