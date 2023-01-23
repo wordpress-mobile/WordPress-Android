@@ -8,13 +8,13 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
-import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import java.util.Date
 
@@ -26,12 +26,25 @@ private val RESPONDENTS_IN_CARD = listOf(
     AvatarItem("http://avatar2.url"),
     AvatarItem("http://avatar3.url"),
     TrailingLabelTextItem(
-        UiStringPluralRes(
+        UiString.UiStringPluralRes(
             0,
             R.string.my_site_blogging_prompt_card_number_of_answers_one,
             R.string.my_site_blogging_prompt_card_number_of_answers_other,
             NUMBER_OF_RESPONDENTS
-        ), attr.colorOnSurface
+        ),
+        R.attr.colorOnSurface
+    )
+)
+
+private val RESPONDENTS_IN_CARD_ENHANCEMENTS = listOf(
+    AvatarItem("http://avatar1.url"),
+    AvatarItem("http://avatar2.url"),
+    AvatarItem("http://avatar3.url"),
+    TrailingLabelTextItem(
+        UiStringRes(
+            R.string.my_site_blogging_prompt_card_view_answers
+        ),
+        R.attr.colorOnSurface
     )
 )
 
@@ -88,6 +101,20 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given blogging prompt, when card is built with prompt enhancements, then return matching card`() {
+        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, enhancementsEnabled = true)
+
+        assertThat(statCard).isEqualTo(bloggingPromptCard(enhancementsEnabled = true))
+    }
+
+    @Test
+    fun `given blogging prompt, when card is built without prompt enhancements, then return matching card`() {
+        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, enhancementsEnabled = false)
+
+        assertThat(statCard).isEqualTo(bloggingPromptCard(enhancementsEnabled = false))
+    }
+
+    @Test
     fun `given no blogging prompt, when card is built, then return null`() {
         val statCard = buildBloggingPromptCardBuilderParams(null)
 
@@ -96,11 +123,13 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
 
     private fun buildBloggingPromptCardBuilderParams(
         bloggingPrompt: BloggingPromptModel?,
-        showViewMoreAction: Boolean = false
+        showViewMoreAction: Boolean = false,
+        enhancementsEnabled: Boolean = false,
     ) = builder.build(
         BloggingPromptCardBuilderParams(
             bloggingPrompt,
             showViewMoreAction,
+            enhancementsEnabled,
             onShareClick,
             onAnswerClick,
             onSkipClick,
@@ -115,9 +144,12 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private val onViewMoreClick: () -> Unit = { }
     private val onViewAnswersClick: (promptId: Int) -> Unit = { }
 
-    private fun bloggingPromptCard(showViewMoreAction: Boolean = false) = BloggingPromptCardWithData(
+    private fun bloggingPromptCard(
+        showViewMoreAction: Boolean = false,
+        enhancementsEnabled: Boolean = false,
+    ) = BloggingPromptCardWithData(
         prompt = UiStringText(PROMPT_TITLE),
-        respondents = RESPONDENTS_IN_CARD,
+        respondents = if (enhancementsEnabled) RESPONDENTS_IN_CARD_ENHANCEMENTS else RESPONDENTS_IN_CARD,
         numberOfAnswers = NUMBER_OF_RESPONDENTS,
         false,
         promptId = 123,
@@ -127,6 +159,6 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
         onAnswerClick = onAnswerClick,
         onSkipClick = onSkipClick,
         onViewMoreClick = onViewMoreClick,
-        onViewAnswersClick = onViewAnswersClick,
+        onViewAnswersClick = if (enhancementsEnabled) onViewAnswersClick else null,
     )
 }
