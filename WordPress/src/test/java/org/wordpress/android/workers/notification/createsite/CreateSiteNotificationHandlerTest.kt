@@ -122,9 +122,9 @@ class CreateSiteNotificationHandlerTest {
         ).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(siteStore.hasSite()).thenReturn(true)
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(false)
 
-        assertThat(createSiteNotificationHandler.shouldShowNotification()).isFalse()
+
+        assertThat(createSiteNotificationHandler.shouldShowNotification()).isFalse
     }
 
 

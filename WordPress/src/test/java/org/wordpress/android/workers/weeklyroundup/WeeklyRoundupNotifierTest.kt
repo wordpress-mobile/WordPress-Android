@@ -90,7 +90,7 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
     fun `should show notification when the user is logged in and has sites`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(siteStore.hasSitesAccessedViaWPComRest()).thenReturn(true)
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(false)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(true)
 
         assertThat(weeklyRoundupNotifier.shouldShowNotifications()).isTrue
     }
