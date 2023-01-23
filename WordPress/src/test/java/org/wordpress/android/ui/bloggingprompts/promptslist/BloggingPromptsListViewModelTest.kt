@@ -59,7 +59,7 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when start, then track screen seen event`() = test {
-        viewModel.start()
+        viewModel.onScreenShown()
         verify(tracker).trackScreenShown()
     }
 
@@ -73,7 +73,7 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.uiStateFlow.value).isEqualTo(UiState.None)
 
-        viewModel.start()
+        viewModel.onScreenShown()
 
         assertThat(viewModel.uiStateFlow.value).isEqualTo(UiState.Loading)
 
@@ -95,7 +95,7 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.uiStateFlow.value).isEqualTo(UiState.None)
 
-        viewModel.start()
+        viewModel.onScreenShown()
 
         assertThat(viewModel.uiStateFlow.value).isEqualTo(UiState.Loading)
 
@@ -111,7 +111,7 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.uiStateFlow.value).isEqualTo(UiState.None)
 
-        viewModel.start()
+        viewModel.onScreenShown()
 
         assertThat(viewModel.uiStateFlow.value).isEqualTo(UiState.NetworkError)
     }

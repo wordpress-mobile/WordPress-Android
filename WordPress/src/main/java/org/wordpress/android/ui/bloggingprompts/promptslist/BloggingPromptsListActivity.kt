@@ -30,8 +30,18 @@ class BloggingPromptsListActivity : LocaleAwareActivity() {
                 BloggingPromptsListScreen(uiState, ::onBackPressed, viewModel::onPromptListItemClicked)
             }
         }
-        viewModel.start()
         observeActions()
+    }
+
+    /**
+     * Since we're declaring that this Activity handles orientation changes by itself in the
+     * AndroidManifest.xml (android:configChanges="orientation|screenSize") Activity#onResume will not be called
+     * when the screen orientation changes. This was done on purpose to avoid loading the list of prompts again
+     * unnecessarily and also to avoid tracking of the screen shown analytics event again while in the same screen.
+     */
+    override fun onResume() {
+        super.onResume()
+        viewModel.onScreenShown()
     }
 
     // TODO it might be safer bringing in the androidx.activity:activity-compose lib

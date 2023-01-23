@@ -31,7 +31,7 @@ class BloggingPromptsListViewModel @Inject constructor(
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents = _actionEvents
 
-    fun start() {
+    fun onScreenShown() {
         tracker.trackScreenShown()
         fetchPrompts()
     }
