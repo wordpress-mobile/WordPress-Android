@@ -13,6 +13,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationType.CREATE_SITE
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -25,6 +26,7 @@ class CreateSiteNotificationHandlerTest {
     private val accountStore: AccountStore = mock()
     private val siteStore: SiteStore = mock()
     private val notificationsTracker: SystemNotificationsTracker = mock()
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper = mock()
 
     @Before
     fun setUp() {
@@ -35,7 +37,8 @@ class CreateSiteNotificationHandlerTest {
             resourceProvider,
             accountStore,
             siteStore,
-            notificationsTracker
+            notificationsTracker,
+            jetpackFeatureRemovalPhaseHelper
         )
     }
 

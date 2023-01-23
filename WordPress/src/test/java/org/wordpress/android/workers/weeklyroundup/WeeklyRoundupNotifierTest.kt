@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationPushIds.WEEKLY_ROUNDUP_NOTIFICATION_ID
 import org.wordpress.android.push.NotificationType.WEEKLY_ROUNDUP
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
@@ -51,6 +52,8 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
     }
     private val statsUtils: StatsUtils = mock()
 
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper = mock()
+
     @Before
     fun setUp() {
         weeklyRoundupNotifier = WeeklyRoundupNotifier(
@@ -63,7 +66,8 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
             siteUtils,
             weeklyRoundupRepository,
             appPrefs,
-            statsUtils
+            statsUtils,
+            jetpackFeatureRemovalPhaseHelper
         )
     }
 
