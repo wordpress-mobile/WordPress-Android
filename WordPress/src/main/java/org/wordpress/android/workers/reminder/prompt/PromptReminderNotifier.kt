@@ -172,11 +172,11 @@ class PromptReminderNotifier @Inject constructor(
         val bloggingRemindersModel = bloggingRemindersStore.bloggingRemindersModel(siteId).first()
         val hasOptedInBloggingPromptsReminders = siteModel != null && bloggingRemindersModel.isPromptIncluded
         // In Jetpack feature removal phase 4, all notifications are disabled.
-        val isNotJetpackRemovalPhase4 = !jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
+        val shouldShowNotificationsInJetpackRemovalPhase = jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()
         return hasAccessToken &&
                 isBloggingPromptsEnabled &&
                 hasOptedInBloggingPromptsReminders &&
-                isNotJetpackRemovalPhase4
+                shouldShowNotificationsInJetpackRemovalPhase
     }
 
     companion object {

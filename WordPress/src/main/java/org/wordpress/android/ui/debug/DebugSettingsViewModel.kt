@@ -95,7 +95,7 @@ class DebugSettingsViewModel
     }
 
     private fun onForceShowWeeklyRoundupClick() = launch(bgDispatcher) {
-        if(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures())
+        if(!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications())
             return@launch
         weeklyRoundupNotifier.buildNotifications().forEach {
             notificationManager.notify(it.id, it.asNotificationCompatBuilder(contextProvider.getContext()).build())

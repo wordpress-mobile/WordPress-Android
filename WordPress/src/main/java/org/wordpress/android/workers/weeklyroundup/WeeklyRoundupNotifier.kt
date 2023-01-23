@@ -36,7 +36,7 @@ class WeeklyRoundupNotifier @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
     fun shouldShowNotifications() = accountStore.hasAccessToken() &&
-            siteStore.hasSitesAccessedViaWPComRest() && !jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
+            siteStore.hasSitesAccessedViaWPComRest() && jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()
 
     suspend fun buildNotifications(): List<WeeklyRoundupNotification> = coroutineScope {
         siteStore.sitesAccessedViaWPComRest
