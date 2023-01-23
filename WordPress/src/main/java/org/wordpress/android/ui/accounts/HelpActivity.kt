@@ -183,7 +183,7 @@ class HelpActivity : LocaleAwareActivity() {
     }
 
     private fun openWpSupportForum() {
-        // TODO: Enhance this as project evolves
+        // Enhance this as project evolves
         ActivityLauncher.openUrlExternal(this, "https://wordpress.org/support/forum/mobile/")
     }
 
