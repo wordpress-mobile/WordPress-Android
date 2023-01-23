@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.DismissNotificationReceiver
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 import org.wordpress.android.util.HtmlCompatWrapper
@@ -45,7 +46,8 @@ class PromptReminderNotifier @Inject constructor(
     val bloggingPromptsStore: BloggingPromptsStore,
     val bloggingRemindersAnalyticsTracker: BloggingRemindersAnalyticsTracker,
     val htmlCompatWrapper: HtmlCompatWrapper,
-    private val bloggingRemindersStore: BloggingRemindersStore
+    private val bloggingRemindersStore: BloggingRemindersStore,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
     @Suppress("MagicNumber")
     suspend fun notify(siteId: Int) {
@@ -169,7 +171,12 @@ class PromptReminderNotifier @Inject constructor(
         val siteModel = siteStore.getSiteByLocalId(siteId)
         val bloggingRemindersModel = bloggingRemindersStore.bloggingRemindersModel(siteId).first()
         val hasOptedInBloggingPromptsReminders = siteModel != null && bloggingRemindersModel.isPromptIncluded
-        return hasAccessToken && isBloggingPromptsEnabled && hasOptedInBloggingPromptsReminders
+        // In Jetpack feature removal phase 4, all notifications are disabled.
+        val isNotJetpackRemovalPhase4 = !jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
+        return hasAccessToken &&
+                isBloggingPromptsEnabled &&
+                hasOptedInBloggingPromptsReminders &&
+                isNotJetpackRemovalPhase4
     }
 
     companion object {
