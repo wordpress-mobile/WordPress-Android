@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.push.NotificationPushIds;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
@@ -40,11 +41,17 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject QuickStartTracker mQuickStartTracker;
 
+    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         String notificationSettingsPrefKey = context.getString(R.string.wp_pref_notifications_main);
         boolean isNotificationSettingsEnabled = mSharedPreferences.getBoolean(notificationSettingsPrefKey, true);
         if (!isNotificationSettingsEnabled) {
+            return;
+        }
+
+        if (!mJetpackFeatureRemovalPhaseHelper.shouldShowNotifications()) {
             return;
         }
 

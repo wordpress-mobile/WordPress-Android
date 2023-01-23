@@ -19,6 +19,7 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Field
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiState
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.util.config.FeatureFlagConfig
@@ -49,6 +50,10 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var remoteFieldConfigRepository: RemoteFieldConfigRepository
+
+    @Mock
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
     private lateinit var viewModel: DebugSettingsViewModel
     private val uiStates = mutableListOf<UiState>()
 
@@ -63,7 +68,8 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
             debugUtils,
             weeklyRoundupNotifier,
             notificationManager,
-            contextProvider
+            contextProvider,
+            jetpackFeatureRemovalPhaseHelper
         )
     }
 

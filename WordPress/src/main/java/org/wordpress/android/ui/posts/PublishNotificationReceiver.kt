@@ -9,6 +9,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import javax.inject.Inject
 
@@ -18,8 +19,14 @@ class PublishNotificationReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var systemNotificationsTracker: SystemNotificationsTracker
+
+    @Inject
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
     override fun onReceive(context: Context, intent: Intent) {
         (context.applicationContext as WordPress).component().inject(this)
+        if(!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications())
+            return
         val notificationId = intent.getIntExtra(NOTIFICATION_ID, 0)
         val uiModel = publishNotificationReceiverViewModel.loadNotification(notificationId)
         if (uiModel != null) {
