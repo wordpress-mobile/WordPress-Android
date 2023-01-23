@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.MenuCompat
@@ -91,15 +92,27 @@ class BloggingPromptCardViewHolder(
 
             adapter.loadData(card.respondents)
 
-            answeredUsersContainer.setOnClickListener { card.onViewAnswersClick(card.promptId) }
-            answeredUsersContainer.contentDescription = card.respondents
-                .filterIsInstance<TrainOfAvatarsItem.TrailingLabelTextItem>()
-                .firstOrNull()
-                ?.text
-                ?.let { uiHelpers.getTextOfUiString(answeredUsersContainer.context, it) }
+            card.onViewAnswersClick?.let { onClick ->
+                answeredUsersContainer.setOnClickListener { onClick(card.promptId) }
+            }
+            answeredUsersContainer.contentDescription = createViewAnswersContentDescription(
+                answeredUsersContainer.context,
+                card.respondents
+            )
         } else {
             uiHelpers.updateVisibility(answeredUsersContainer, false)
         }
+    }
+
+    private fun createViewAnswersContentDescription(
+        context: Context,
+        respondents: List<TrainOfAvatarsItem>,
+    ): CharSequence? {
+        return respondents
+            .filterIsInstance<TrainOfAvatarsItem.TrailingLabelTextItem>()
+            .firstOrNull()
+            ?.text
+            ?.let { uiHelpers.getTextOfUiString(context, it) }
     }
 
     private fun MySiteBloggingPromptCardBinding.showCardMenu(card: BloggingPromptCardWithData) {

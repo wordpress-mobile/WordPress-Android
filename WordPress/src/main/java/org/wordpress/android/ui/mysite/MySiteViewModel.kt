@@ -117,6 +117,7 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsListFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
@@ -171,6 +172,7 @@ class MySiteViewModel @Inject constructor(
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     bloggingPromptsListFeatureConfig: BloggingPromptsListFeatureConfig,
+    bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
@@ -215,12 +217,13 @@ class MySiteViewModel @Inject constructor(
        as they're already built on site select. */
     private var isSiteSelected = false
 
-    private val isMySiteDashboardTabsFeatureConfigEnabled by lazy { mySiteDashboardTabsFeatureConfig.isEnabled() }
-    private val isBloggingPromptsFeatureConfigEnabled by lazy { bloggingPromptsFeatureConfig.isEnabled() }
-    private val isBloggingPromptsListFeatureConfigEnabled by lazy { bloggingPromptsListFeatureConfig.isEnabled() }
+    private val isMySiteDashboardTabsEnabled by lazy { mySiteDashboardTabsFeatureConfig.isEnabled() }
+    private val isBloggingPromptsEnabled by lazy { bloggingPromptsFeatureConfig.isEnabled() }
+    private val isBloggingPromptsListEnabled by lazy { bloggingPromptsListFeatureConfig.isEnabled() }
+    private val isBloggingPromptsEnhancementsEnabled by lazy { bloggingPromptsEnhancementsFeatureConfig.isEnabled() }
 
     val isMySiteTabsEnabled: Boolean
-        get() = isMySiteDashboardTabsFeatureConfigEnabled &&
+        get() = isMySiteDashboardTabsEnabled &&
                 buildConfigWrapper.isMySiteTabsEnabled &&
                 !jetpackFeatureRemovalUtils.shouldHideJetpackFeatures() &&
                 selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi ?: true
@@ -515,10 +518,11 @@ class MySiteViewModel @Inject constructor(
                     onFooterLinkClick = this::onPostCardFooterLinkClick
                 ),
                 bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
-                    bloggingPrompt = if (isBloggingPromptsFeatureConfigEnabled) {
+                    bloggingPrompt = if (isBloggingPromptsEnabled) {
                         bloggingPromptUpdate?.promptModel
                     } else null,
-                    showViewMoreAction = isBloggingPromptsListFeatureConfigEnabled,
+                    showViewMoreAction = isBloggingPromptsListEnabled,
+                    enhancementsEnabled = isBloggingPromptsEnhancementsEnabled,
                     onShareClick = this::onBloggingPromptShareClick,
                     onAnswerClick = this::onBloggingPromptAnswerClick,
                     onSkipClick = this::onBloggingPromptSkipClick,
@@ -1339,6 +1343,7 @@ class MySiteViewModel @Inject constructor(
 
     @Suppress("UnusedPrivateMember", "UNUSED_PARAMETER")
     private fun onBloggingPromptViewAnswersClick(promptId: Int) {
+        // TODO thomashorta track event like iOS: blogging_prompts_other_answers_tapped
         val tag = BloggingPromptsPostTagProvider.promptIdSearchReaderTag(promptId)
         _onBloggingPromptsViewAnswers.postValue(Event(tag))
     }
@@ -1408,7 +1413,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun trackWithTabSourceIfNeeded(stat: Stat, properties: HashMap<String, *>? = null) {
-        if (isMySiteDashboardTabsFeatureConfigEnabled) {
+        if (isMySiteDashboardTabsEnabled) {
             _onTrackWithTabSource.postValue(Event(MySiteTrackWithTabSource(stat, properties)))
         } else {
             analyticsTrackerWrapper.track(stat, properties ?: emptyMap())
