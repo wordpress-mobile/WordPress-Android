@@ -98,7 +98,7 @@ class JetpackMigrationFragment : Fragment() {
     private fun handleActionEvents(actionEvent: JetpackMigrationActionEvent) {
         when (actionEvent) {
             is CompleteFlow -> {
-                actionEvent.deepLinkData?.let {
+                actionEvent.deepLinkData?.also {
                     ActivityLauncher.openDeepLinkAfterJPMigration(requireContext(), it.action, it.uri)
                 } ?: ActivityLauncher.showMainActivity(requireContext())
             }
