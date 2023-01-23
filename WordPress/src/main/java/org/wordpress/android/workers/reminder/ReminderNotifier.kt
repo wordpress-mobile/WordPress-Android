@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
 import org.wordpress.android.push.NotificationType.BLOGGING_REMINDERS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostsListActivity
 import org.wordpress.android.util.SiteUtils
@@ -23,7 +24,8 @@ class ReminderNotifier @Inject constructor(
     val siteStore: SiteStore,
     val accountStore: AccountStore,
     val reminderNotificationManager: ReminderNotificationManager,
-    val analyticsTracker: BloggingRemindersAnalyticsTracker
+    val analyticsTracker: BloggingRemindersAnalyticsTracker,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
     fun notify(siteId: Int) {
         val context = contextProvider.getContext()
@@ -67,7 +69,8 @@ class ReminderNotifier @Inject constructor(
     }
 
     fun shouldNotify(siteId: Int) =
-        siteId != NO_SITE_ID && siteStore.getSiteByLocalId(siteId) != null && accountStore.hasAccessToken()
+        siteId != NO_SITE_ID && siteStore.getSiteByLocalId(siteId) != null && accountStore.hasAccessToken() &&
+                !jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
 
     companion object {
         const val NO_SITE_ID = -1
