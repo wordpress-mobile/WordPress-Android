@@ -69,7 +69,7 @@ class MySiteAdapter(
                 htmlCompatWrapper,
                 learnMoreClicked
             )
-            MySiteCardAndItem.Type.JETPACK_BADGE.ordinal -> MySiteJetpackBadgeViewHolder(parent)
+            MySiteCardAndItem.Type.JETPACK_BADGE.ordinal -> MySiteJetpackBadgeViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.SINGLE_ACTION_CARD.ordinal -> SingleActionCardViewHolder(parent)
             MySiteCardAndItem.Type.JETPACK_FEATURE_CARD.ordinal -> JetpackFeatureCardViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.JETPACK_SWITCH_CARD.ordinal -> SwitchToJetpackMenuCardViewHolder(parent)

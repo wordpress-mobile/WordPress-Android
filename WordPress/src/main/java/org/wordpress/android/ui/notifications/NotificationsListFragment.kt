@@ -52,8 +52,9 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILT
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandingUtils.Screen
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
@@ -67,6 +68,9 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
 
     private val viewModel: NotificationsListViewModel by viewModels()
 
@@ -296,6 +300,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appBar?.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            val screen = JetpackPoweredScreen.WithDynamicText.NOTIFICATIONS
             binding?.root?.post {
                 // post is used to create a minimal delay here. containerId changes just before
                 // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.
@@ -303,10 +308,14 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 val scrollableView = binding?.root?.findViewById<View>(containerId) as? RecyclerView ?: return@post
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+                binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
+                    requireContext(),
+                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                )
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                     jetpackBannerView.setOnClickListener {
-                        jetpackBrandingUtils.trackBannerTapped(Screen.NOTIFICATIONS)
+                        jetpackBrandingUtils.trackBannerTapped(screen)
                         JetpackPoweredBottomSheetFragment
                             .newInstance()
                             .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)

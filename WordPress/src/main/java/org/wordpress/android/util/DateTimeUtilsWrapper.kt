@@ -2,9 +2,11 @@ package org.wordpress.android.util
 
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.ContextProvider
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 class DateTimeUtilsWrapper @Inject constructor(
@@ -23,6 +25,12 @@ class DateTimeUtilsWrapper @Inject constructor(
     fun dateFromTimestamp(timestamp: Long) = DateTimeUtils.dateFromTimestamp(timestamp)
 
     fun getTodaysDate() = Date(System.currentTimeMillis())
+
+    fun parseDateString(dateString: String, pattern: String): Date? {
+        return runCatching { SimpleDateFormat(pattern, Locale.ROOT).parse(dateString) }
+            .onFailure { AppLog.e(T.UTILS, "Error parsing date: $dateString", it) }
+            .getOrNull()
+    }
 
     fun convertDateFormat(date: String, originalFormatPattern: String, targetDateFormatPattern: String): String? {
         // Format 2020-12-22
