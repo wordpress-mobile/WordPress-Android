@@ -70,7 +70,7 @@ class ReminderNotifier @Inject constructor(
 
     fun shouldNotify(siteId: Int) =
         siteId != NO_SITE_ID && siteStore.getSiteByLocalId(siteId) != null && accountStore.hasAccessToken() &&
-                !jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
+                jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()
 
     companion object {
         const val NO_SITE_ID = -1
