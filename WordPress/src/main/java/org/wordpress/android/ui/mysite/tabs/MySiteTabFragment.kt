@@ -296,11 +296,10 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             )
         }
         viewModel.onBloggingPromptsViewAnswers.observeEvent(viewLifecycleOwner) { tag ->
-            // TODO do we need to actually track it with readertracker or should I create another showReaderTagPreview
             ReaderActivityLauncher.showReaderTagPreview(
                 activity,
                 tag,
-                ReaderTracker.SOURCE_BLOGGING_PROMPTS,
+                ReaderTracker.SOURCE_BLOGGING_PROMPTS_VIEW_ANSWERS,
                 readerTracker,
             )
         }

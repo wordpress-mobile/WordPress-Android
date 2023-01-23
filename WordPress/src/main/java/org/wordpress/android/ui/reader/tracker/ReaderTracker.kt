@@ -405,7 +405,6 @@ class ReaderTracker @Inject constructor(
         private const val SOURCE_KEY = "source"
         const val SOURCE_FOLLOWING = "following"
         const val SOURCE_DISCOVER = "discover"
-        const val SOURCE_BLOGGING_PROMPTS = "blogging_prompts" // TODO thomashorta update the event spreadsheet
         const val SOURCE_LIKED = "liked"
         const val SOURCE_SAVED = "saved"
         const val SOURCE_CUSTOM = "custom"
@@ -426,6 +425,7 @@ class ReaderTracker @Inject constructor(
         const val SOURCE_NOTIF_LIKE_LIST_USER_PROFILE = "notif_like_list_user_profile"
         const val SOURCE_USER_PROFILE_UNKNOWN = "user_profile_source_unknown"
         const val SOURCE_ACTIVITY_LOG_DETAIL = "activity_log_detail"
+        const val SOURCE_BLOGGING_PROMPTS_VIEW_ANSWERS = "blogging_prompts_my_site_card_view_answers"
 
         const val SOURCE_POST_LIST_SAVED_POST_NOTICE = "post_list_saved_post_notice"
 

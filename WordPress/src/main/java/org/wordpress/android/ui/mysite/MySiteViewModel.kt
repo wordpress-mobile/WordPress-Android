@@ -1341,9 +1341,8 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    @Suppress("UnusedPrivateMember", "UNUSED_PARAMETER")
     private fun onBloggingPromptViewAnswersClick(promptId: Int) {
-        // TODO thomashorta track event like iOS: blogging_prompts_other_answers_tapped
+        bloggingPromptsCardAnalyticsTracker.trackMySiteCardViewAnswersClicked()
         val tag = BloggingPromptsPostTagProvider.promptIdSearchReaderTag(promptId)
         _onBloggingPromptsViewAnswers.postValue(Event(tag))
     }

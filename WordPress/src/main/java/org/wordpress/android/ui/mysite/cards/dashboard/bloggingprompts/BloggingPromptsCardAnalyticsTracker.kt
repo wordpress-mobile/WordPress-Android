@@ -17,6 +17,11 @@ class BloggingPromptsCardAnalyticsTracker @Inject constructor(
         emptyMap()
     )
 
+    fun trackMySiteCardViewAnswersClicked() = analyticsTracker.track(
+        Stat.BLOGGING_PROMPTS_MY_SITE_CARD_VIEW_ANSWERS_CLICKED,
+        emptyMap()
+    )
+
     fun trackMySiteCardMenuClicked() = analyticsTracker.track(
         Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_CLICKED,
         emptyMap()

@@ -1845,6 +1845,15 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given blogging prompt card, when view answers is clicked, the action is tracked`() = test {
+        initSelectedSite()
+
+        requireNotNull(onBloggingPromptViewAnswersClicked).invoke(123)
+
+        verify(bloggingPromptsCardAnalyticsTracker).trackMySiteCardViewAnswersClicked()
+    }
+
+    @Test
     fun `given blogging prompt card, when skip button is clicked, prompt is skipped and undo snackbar displayed`() =
         test {
             initSelectedSite()
