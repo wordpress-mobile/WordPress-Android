@@ -12,6 +12,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.support.ZendeskHelper;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -37,6 +38,7 @@ public class GCMMessageService extends FirebaseMessagingService {
     @Inject ZendeskHelper mZendeskHelper;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
+    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
 
     private void synchronizedHandleDefaultPush(@NonNull Map<String, String> data) {
         // ACTIVE_NOTIFICATIONS_MAP being static, we can't just synchronize the method
@@ -68,6 +70,10 @@ public class GCMMessageService extends FirebaseMessagingService {
         }
 
         if (!mAccountStore.hasAccessToken()) {
+            return;
+        }
+
+        if (!mJetpackFeatureRemovalPhaseHelper.shouldShowNotifications()) {
             return;
         }
 
