@@ -121,7 +121,6 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
                 is OpenPlayStore -> {
                     dismiss()
                     activity?.let {
-                        it.finishAffinity()
                         activityLauncherWrapper.openPlayStoreLink(it, JETPACK_PACKAGE_NAME)
                     }
                 }

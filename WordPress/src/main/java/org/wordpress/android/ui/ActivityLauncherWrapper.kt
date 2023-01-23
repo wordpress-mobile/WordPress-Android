@@ -32,8 +32,9 @@ class ActivityLauncherWrapper @Inject constructor() {
         remotePreviewType: RemotePreviewType
     ) = ActivityLauncher.previewPostOrPageForResult(activity, site, post, remotePreviewType)
 
-    fun openPlayStoreLink(context: Context, packageName: String) {
-        var intent: Intent? = context.packageManager.getLaunchIntentForPackage(packageName)
+    fun openPlayStoreLink(activity: Activity, packageName: String) {
+        var intent: Intent? = activity.packageManager.getLaunchIntentForPackage(packageName)
+        val isAppAlreadyInstalled = intent != null
 
         if (intent == null) {
             intent = Intent(Intent.ACTION_VIEW).apply {
@@ -42,7 +43,15 @@ class ActivityLauncherWrapper @Inject constructor() {
                 setPackage("com.android.vending")
             }
         }
-        context.startActivity(intent)
+        activity.startActivity(intent)
+
+        preventBackNavigation(activity, isAppAlreadyInstalled)
+    }
+
+    private fun preventBackNavigation(activity: Activity, shouldPrevent: Boolean) {
+        if (shouldPrevent) {
+            activity.finishAffinity()
+        }
     }
 
     companion object {
