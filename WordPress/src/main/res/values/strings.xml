@@ -597,6 +597,8 @@
     <string name="newest_first">Newest first</string>
     <string name="days_quantity_one">1 day</string>
     <string name="days_quantity_other">%d days</string>
+    <string name="weeks_quantity_one">1 week</string>
+    <string name="weeks_quantity_other">%d weeks</string>
 
     <!-- PreferenceCategory Headers -->
     <string name="site_settings_general_header">General</string>
@@ -4228,8 +4230,19 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">NEW</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can also rearrange blocks by tapping a block and then tapping the up and down arrows that appear on the bottom left side of the block to move it up or down.</string>
 
-    <!-- Jetpack awareness in WordPress App -->
+    <!-- Jetpack Powered Banners and Badges -->
     <string name="wp_jetpack_powered">Jetpack powered</string>
+    <string name="wp_jetpack_powered_phase_2">Get the Jetpack app</string>
+    <!-- translators: Jetpack branding text. %1$s: Feature Name, E.g.: Backup, Reader -->
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s is moving soon</string>
+    <!-- translators: Jetpack branding text. %1$s: Plural Feature Name, E.g.: Stats, Themes -->
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s are moving soon</string>
+    <!-- translators: Jetpack branding text. %1$s: Feature Name, E.g.: Backup, Reader; %2$s: "in n day(s) / week(s)"; Displayed as E.g.: "Reader is moving in 3 weeks" -->
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s is moving in %2$s</string>
+    <!-- translators: Jetpack branding text. %1$s: Plural Feature Name, E.g.: Stats, Themes; %2$s: "in n day(s) / week(s)"; Displayed as E.g.: "Stats are moving in 1 day" -->
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s are moving in %2$s</string>
+
+    <!-- Jetpack awareness in WordPress App -->
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress is better with Jetpack</string>
     <string name="wp_jetpack_powered_features">The new Jetpack app has Stats, Reader, Notifications, and more that make your WordPress better.</string>
     <string name="wp_jetpack_powered_reader_powered_by_jetpack">Reader is powered by Jetpack</string>

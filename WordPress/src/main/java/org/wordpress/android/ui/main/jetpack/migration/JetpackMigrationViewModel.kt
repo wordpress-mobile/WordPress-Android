@@ -50,12 +50,13 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Generic
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.JetpackMigrationLanguageUtil
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.JetpackMigrationLanguageUtil
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.PreventDuplicateNotifsFeatureConfig
@@ -91,6 +92,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val continueClickedFlow = MutableStateFlow(false)
     private val notificationContinueClickedFlow = MutableStateFlow(false)
     private var showDeleteState: Boolean = false
+    private var deepLinkData: PreMigrationDeepLinkData? = null
 
     val uiState = combineTransform(
         migrationStateFlow,
@@ -118,12 +120,18 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, Loading)
 
-    fun start(showDeleteState: Boolean, application: WordPress) {
+    fun start(
+        showDeleteState: Boolean,
+        application: WordPress,
+        deepLinkData: PreMigrationDeepLinkData?
+    ) {
         if (isStarted) return
         isStarted = true
 
         this.showDeleteState = showDeleteState
         if (showDeleteState) return
+
+        this.deepLinkData = deepLinkData
         tryMigration(application)
     }
 
@@ -133,6 +141,7 @@ class JetpackMigrationViewModel @Inject constructor(
             appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(true)
             appPrefsWrapper.saveIsFirstTryUserFlagsJetpack(true)
             appPrefsWrapper.saveIsFirstTryReaderSavedPostsJetpack(true)
+            appPrefsWrapper.saveIsFirstTryBloggingRemindersSyncJetpack(true)
         }
     }
 
@@ -228,7 +237,7 @@ class JetpackMigrationViewModel @Inject constructor(
     fun signOutWordPress(application: WordPress) {
         viewModelScope.launch(Dispatchers.IO) {
             application.wordPressComSignOut()
-            postActionEvent(FallbackToLogin)
+            postActionEvent(FallbackToLogin(deepLinkData))
         }
     }
 
@@ -256,7 +265,7 @@ class JetpackMigrationViewModel @Inject constructor(
         if (accountStore.hasAccessToken()) {
             postActionEvent(Logout)
         } else {
-            postActionEvent(FallbackToLogin)
+            postActionEvent(FallbackToLogin(deepLinkData))
         }
     }
 
@@ -291,7 +300,7 @@ class JetpackMigrationViewModel @Inject constructor(
         migrationEmailHelper.notifyMigrationComplete()
         appPrefsWrapper.setJetpackMigrationCompleted(true)
         appPrefsWrapper.setJetpackMigrationInProgress(false)
-        postActionEvent(CompleteFlow)
+        postActionEvent(CompleteFlow(deepLinkData))
     }
 
     private fun onHelpClicked(source: HelpButtonSource) {
@@ -306,7 +315,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun onGotItClicked() {
         migrationAnalyticsTracker.trackPleaseDeleteWordPressGotItTapped()
-        postActionEvent(CompleteFlow)
+        postActionEvent(CompleteFlow())
     }
 
     private fun resizeAvatarUrl(avatarUrl: String) = gravatarUtilsWrapper.fixGravatarUrlWithResource(
@@ -495,8 +504,15 @@ class JetpackMigrationViewModel @Inject constructor(
 
     sealed class JetpackMigrationActionEvent {
         object ShowHelp : JetpackMigrationActionEvent()
-        object CompleteFlow : JetpackMigrationActionEvent()
-        object FallbackToLogin : JetpackMigrationActionEvent()
+
+        data class CompleteFlow(
+            val deepLinkData: PreMigrationDeepLinkData? = null,
+        ) : JetpackMigrationActionEvent()
+
+        data class FallbackToLogin(
+            val deepLinkData: PreMigrationDeepLinkData? = null,
+        ) : JetpackMigrationActionEvent()
+
         object Logout : JetpackMigrationActionEvent()
     }
 }

@@ -850,6 +850,15 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         verify(openBloggingPromptsOnboardingObserver).onChanged(anyOrNull())
     }
 
+    @Test
+    @Suppress("MaxLineLength")
+    fun `Should track BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED when onFabClicked is called and actions contains AnswerBloggingPromptAction`() {
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+        startViewModelWithDefaultParameters()
+        viewModel.onFabClicked(initSite())
+        verify(analyticsTrackerWrapper).track(Stat.BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED)
+    }
+
     private fun startViewModelWithDefaultParameters(
         isWhatsNewFeatureEnabled: Boolean = true,
         isCreateFabEnabled: Boolean = true,

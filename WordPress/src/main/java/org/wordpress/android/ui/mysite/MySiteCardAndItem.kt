@@ -306,6 +306,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
     }
 
     data class JetpackBadge(
-        val onClick: ListItemInteraction? = null
+        val text: UiString,
+        val onClick: ListItemInteraction? = null,
     ) : MySiteCardAndItem(JETPACK_BADGE)
 }

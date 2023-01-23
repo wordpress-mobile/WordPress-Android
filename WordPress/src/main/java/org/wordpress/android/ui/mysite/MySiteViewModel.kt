@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -108,7 +109,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandingUtils.Screen.HOME
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
@@ -562,16 +562,7 @@ class MySiteViewModel @Inject constructor(
             )
         )
 
-        val jetpackBadge = JetpackBadge(
-            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                ListItemInteraction.create(this::onJetpackBadgeClick)
-            } else {
-                null
-            }
-        ).takeIf {
-            jetpackBrandingUtils.shouldShowJetpackBranding() &&
-                    !jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()
-        }
+        val jetpackBadge = buildJetpackBadgeIfEnabled()
 
         return mapOf(
             MySiteTabType.ALL to orderForDisplay(
@@ -617,13 +608,28 @@ class MySiteViewModel @Inject constructor(
         )
     }
 
+    private fun buildJetpackBadgeIfEnabled(): JetpackBadge? {
+        val screen = JetpackPoweredScreen.WithStaticText.HOME
+        return JetpackBadge(
+            text = jetpackBrandingUtils.getBrandingTextForScreen(screen),
+            onClick = if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                ListItemInteraction.create(screen, this::onJetpackBadgeClick)
+            } else {
+                null
+            }
+        ).takeIf {
+            jetpackBrandingUtils.shouldShowJetpackBranding() &&
+                    !jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()
+        }
+    }
+
     private fun onPleaseDeleteWordPressAppCardClick() {
         contentMigrationAnalyticsTracker.trackPleaseDeleteWordPressCardTapped()
         _onNavigation.value = Event(SiteNavigationAction.OpenJetpackMigrationDeleteWP)
     }
 
-    private fun onJetpackBadgeClick() {
-        jetpackBrandingUtils.trackBadgeTapped(HOME)
+    private fun onJetpackBadgeClick(screen: JetpackPoweredScreen) {
+        jetpackBrandingUtils.trackBadgeTapped(screen)
         _onNavigation.value = Event(SiteNavigationAction.OpenJetpackPoweredBottomSheet)
     }
 

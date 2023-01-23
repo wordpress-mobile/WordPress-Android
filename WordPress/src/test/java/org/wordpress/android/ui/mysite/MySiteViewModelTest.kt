@@ -452,6 +452,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL))
             .thenReturn(QuickStartNewSiteTask.VIEW_SITE)
+        whenever(jetpackBrandingUtils.getBrandingTextForScreen(any())).thenReturn(mock())
         viewModel = MySiteViewModel(
             networkUtilsWrapper,
             testDispatcher(),
@@ -1378,6 +1379,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(mySiteSourceManager).refreshQuickStart()
     }
 
+    @Test
     fun `given no selected site, when check and start QS is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)

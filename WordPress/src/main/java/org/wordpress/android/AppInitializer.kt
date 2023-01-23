@@ -82,6 +82,7 @@ import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalWidgetHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
@@ -217,9 +218,17 @@ class AppInitializer @Inject constructor(
     lateinit var oAuthAuthenticator: OAuthAuthenticator
 
     // For jetpack focus
-    @Inject lateinit var openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig
-    @Inject lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
-    @Inject lateinit var jetpackFeatureRemovalWidgetHelper: JetpackFeatureRemovalWidgetHelper
+    @Inject
+    lateinit var openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig
+
+    @Inject
+    lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
+
+    @Inject
+    lateinit var jetpackFeatureRemovalWidgetHelper: JetpackFeatureRemovalWidgetHelper
+
+    @Inject
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
     lateinit var storyNotificationTrackerProvider: StoryNotificationTrackerProvider
@@ -330,8 +339,7 @@ class AppInitializer @Inject constructor(
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate)
 
-        createNotificationChannelsOnSdk26()
-
+        updateNotificationSettings()
         // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues with
         // memory usage and the use of Configuration). More information: http://bit.ly/2H1KTQo
         // Note: if removed, this will cause crashes on Android < 21
@@ -963,6 +971,13 @@ class AppInitializer @Inject constructor(
         override fun trackDismissedNotification(storyNotificationType: StoryNotificationType) {
             systemNotificationsTracker.trackDismissedNotification(translateNotificationTypes(storyNotificationType))
         }
+    }
+
+    private fun updateNotificationSettings() {
+        if(!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications())
+            NotificationsUtils.cancelAllNotifications(application)
+        else
+            createNotificationChannelsOnSdk26()
     }
 
     companion object {

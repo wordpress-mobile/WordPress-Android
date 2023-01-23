@@ -77,6 +77,7 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
@@ -188,6 +189,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
+    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
@@ -1038,8 +1040,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // hide site accelerator jetpack settings if plugin version < 5.8
-        if (!supportsJetpackSiteAcceleratorSettings(mSite)
-            && mSite.getPlanId() != PlansConstants.BUSINESS_PLAN_ID) {
+        if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() || (
+                !supportsJetpackSiteAcceleratorSettings(mSite)
+                && mSite.getPlanId() != PlansConstants.BUSINESS_PLAN_ID)) {
             removeJetpackSiteAcceleratorSettings();
         }
         if (!mSite.isJetpackConnected() || (mSite.getPlanId() != PlansConstants.JETPACK_BUSINESS_PLAN_ID
@@ -1055,6 +1058,18 @@ public class SiteSettingsFragment extends PreferenceFragment
         // Hide "Manage" Categories if feature is not enabled
         if (!mManageCategoriesFeatureConfig.isEnabled()) {
             removeCategoriesPreference();
+        }
+        if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_writing,
+                    R.string.pref_key_site_related_posts);
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                    R.string.pref_key_jetpack_settings);
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                    R.string.pref_key_jetpack_performance_settings);
+            WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_performance_settings,
+                    R.string.pref_key_ad_free_video_hosting);
+            WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_performance_more_settings,
+                    R.string.pref_key_jetpack_performance_media_settings);
         }
     }
 

@@ -7,18 +7,30 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.push.NotificationType.BLOGGING_PROMPTS_ONBOARDING
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 
 class BloggingPromptsOnboardingNotificationHandlerTest {
     private val accountStore: AccountStore = mock()
+
     private val systemNotificationsTracker: SystemNotificationsTracker = mock()
-    private val classToTest = BloggingPromptsOnboardingNotificationHandler(accountStore, systemNotificationsTracker)
+
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper = mock()
+
+    private val classToTest = BloggingPromptsOnboardingNotificationHandler(
+        accountStore,
+        systemNotificationsTracker,
+        jetpackFeatureRemovalPhaseHelper
+    )
 
     @Test
     fun `Should show notification if user has access token`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(true)
+
         val actual = classToTest.shouldShowNotification()
         val expected = true
+
         assertThat(actual).isEqualTo(expected)
     }
 

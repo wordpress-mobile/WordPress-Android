@@ -399,6 +399,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                             AppPrefs.saveIsFirstTrySharedLoginJetpack(true);
                             AppPrefs.saveIsFirstTryUserFlagsJetpack(true);
                             AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(true);
+                            AppPrefs.saveIsFirstTryBloggingRemindersSyncJetpack(true);
                         }
                         showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
                     }
@@ -783,9 +784,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
                     break;
                 case ARG_NOTIFICATIONS:
+                    setUpMainView();
                     if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.NOTIFS);
                     break;
                 case ARG_READER:
+                    setUpMainView();
                     if (intent.getBooleanExtra(ARG_READER_BOOKMARK_TAB, false) && mBottomNav != null && mBottomNav
                             .getActiveFragment() instanceof ReaderFragment) {
                         ((ReaderFragment) mBottomNav.getActiveFragment()).requestBookmarkTab();

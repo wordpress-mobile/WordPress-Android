@@ -12,6 +12,7 @@ import org.wordpress.android.push.NotificationPushIds.WEEKLY_ROUNDUP_NOTIFICATIO
 import org.wordpress.android.push.NotificationType.WEEKLY_ROUNDUP
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.Organization
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
@@ -31,9 +32,11 @@ class WeeklyRoundupNotifier @Inject constructor(
     private val siteUtils: SiteUtilsWrapper,
     private val weeklyRoundupRepository: WeeklyRoundupRepository,
     private val appPrefs: AppPrefsWrapper,
-    private val statsUtils: StatsUtils
+    private val statsUtils: StatsUtils,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
-    fun shouldShowNotifications() = accountStore.hasAccessToken() && siteStore.hasSitesAccessedViaWPComRest()
+    fun shouldShowNotifications() = accountStore.hasAccessToken() &&
+            siteStore.hasSitesAccessedViaWPComRest() && jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()
 
     suspend fun buildNotifications(): List<WeeklyRoundupNotification> = coroutineScope {
         siteStore.sitesAccessedViaWPComRest
