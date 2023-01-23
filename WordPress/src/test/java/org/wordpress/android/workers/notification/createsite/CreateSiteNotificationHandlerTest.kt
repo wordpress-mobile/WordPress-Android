@@ -92,6 +92,7 @@ class CreateSiteNotificationHandlerTest {
             )
         ).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(true)
 
         assertThat(createSiteNotificationHandler.shouldShowNotification()).isTrue
     }
@@ -106,9 +107,26 @@ class CreateSiteNotificationHandlerTest {
         ).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(siteStore.hasSite()).thenReturn(false)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(true)
 
         assertThat(createSiteNotificationHandler.shouldShowNotification()).isTrue
     }
+
+    @Test
+    fun `should not show notification when in jetpack removal phase 4`() {
+        whenever(
+            sharedPrefs.getBoolean(
+                resourceProvider.getString(R.string.wp_pref_notifications_main),
+                true
+            )
+        ).thenReturn(true)
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(siteStore.hasSite()).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(false)
+
+        assertThat(createSiteNotificationHandler.shouldShowNotification()).isFalse()
+    }
+
 
     @Test
     fun `should track notification shown`() {

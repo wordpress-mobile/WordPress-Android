@@ -95,6 +95,15 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
     }
 
     @Test
+    fun `should not show notification when the user is in jetpack feature removal phase`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(siteStore.hasSitesAccessedViaWPComRest()).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(false)
+
+        assertThat(weeklyRoundupNotifier.shouldShowNotifications()).isTrue
+    }
+
+    @Test
     fun `should track notification shown once for each notification`() {
         val numberOfNotifications = 5
 

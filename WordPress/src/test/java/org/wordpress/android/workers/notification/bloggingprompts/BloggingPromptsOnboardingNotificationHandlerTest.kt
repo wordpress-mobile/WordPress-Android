@@ -26,8 +26,11 @@ class BloggingPromptsOnboardingNotificationHandlerTest {
     @Test
     fun `Should show notification if user has access token`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(true)
+
         val actual = classToTest.shouldShowNotification()
         val expected = true
+
         assertThat(actual).isEqualTo(expected)
     }
 
