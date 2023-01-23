@@ -15,13 +15,13 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.utils.UiHelpers
 
 sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
-        RecyclerView.ViewHolder(
-                LayoutInflater.from(parent.context).inflate(
-                        layout,
-                        parent,
-                        false
-                )
-        ) {
+    RecyclerView.ViewHolder(
+        LayoutInflater.from(parent.context).inflate(
+            layout,
+            parent,
+            false
+        )
+    ) {
     abstract fun onBind(uiState: DomainsListItemUiState)
 
     class DomainSuggestionItemViewHolder(
@@ -37,8 +37,8 @@ sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @Layou
 
         init {
             suggestionRadioButton.buttonTintList = ContextCompat.getColorStateList(
-                    parentView.context,
-                    R.color.neutral_10_primary_40_selector
+                parentView.context,
+                R.color.neutral_10_primary_40_selector
             )
             container.setOnClickListener {
                 onDomainSelected?.invoke()

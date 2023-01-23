@@ -32,9 +32,9 @@ class JetpackIconViewHolder(
             imageManager.load(icon, iconState.icon)
         } else {
             ColorUtils.setImageResourceWithTint(
-                    icon,
-                    iconState.icon,
-                    iconState.colorResId
+                icon,
+                iconState.icon,
+                iconState.colorResId
             )
         }
     }

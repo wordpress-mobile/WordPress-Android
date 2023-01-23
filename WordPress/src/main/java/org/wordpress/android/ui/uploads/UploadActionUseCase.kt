@@ -56,7 +56,8 @@ class UploadActionUseCase @Inject constructor(
         val action = getUploadAction(post)
         // Don't remoteAutoSave changes which were already remoteAutoSaved or when on a self-hosted site
         if (action == REMOTE_AUTO_SAVE &&
-                (UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(post) || !site.isUsingWpComRestApi)) {
+            (UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(post) || !site.isUsingWpComRestApi)
+        ) {
             return DO_NOTHING
         }
 
@@ -91,5 +92,5 @@ class UploadActionUseCase @Inject constructor(
     }
 
     fun uploadWillPushChanges(post: PostImmutableModel) =
-            post.changesConfirmedContentHashcode == post.contentHashcode()
+        post.changesConfirmedContentHashcode == post.contentHashcode()
 }

@@ -15,16 +15,22 @@ import org.wordpress.android.fluxc.tools.FormattableRange
 class FormattableContentUtilsTest {
     @Mock
     lateinit var content: FormattableContent
+
     @Mock
     lateinit var range: FormattableRange
+
     @Mock
     lateinit var media: FormattableMedia
+
     @Mock
     lateinit var titles: FormattableMeta.Titles
+
     @Mock
     lateinit var links: FormattableMeta.Links
+
     @Mock
     lateinit var ids: FormattableMeta.Ids
+
     @Mock
     lateinit var meta: FormattableMeta
 
@@ -207,6 +213,7 @@ class FormattableContentUtilsTest {
         whenever(content.meta).thenReturn(null)
         assertEquals("", content.getMetaTitlesHomeOrEmpty())
     }
+
     @Test
     fun verifyMetaTitlesHomeOrEmptyReturnsEmptyWhenHomeNull() {
         whenever(content.meta).thenReturn(meta)
@@ -235,6 +242,7 @@ class FormattableContentUtilsTest {
         whenever(content.meta).thenReturn(null)
         assertEquals("", content.getMetaLinksHomeOrEmpty())
     }
+
     @Test
     fun verifyMetaLinksHomeOrEmptyReturnsEmptyWhenHomeNull() {
         whenever(content.meta).thenReturn(meta)
@@ -263,6 +271,7 @@ class FormattableContentUtilsTest {
         whenever(content.meta).thenReturn(null)
         assertEquals("", content.getMetaTitlesTaglineOrEmpty())
     }
+
     @Test
     fun verifyMetaTitlesTaglineOrEmptyReturnsEmptyWhenTaglineNull() {
         whenever(content.meta).thenReturn(meta)

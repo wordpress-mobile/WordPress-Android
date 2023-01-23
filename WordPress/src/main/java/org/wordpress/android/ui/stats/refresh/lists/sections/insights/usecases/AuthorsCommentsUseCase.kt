@@ -38,8 +38,8 @@ class AuthorsCommentsUseCase @Inject constructor(
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
             model != null && (model.authors.isNotEmpty()) -> State.Data(
-                    model,
-                    cached = response.cached
+                model,
+                cached = response.cached
             )
             else -> State.Empty()
         }
@@ -63,15 +63,15 @@ class AuthorsCommentsUseCase @Inject constructor(
             val header = Header(string.stats_comments_author_label, string.stats_comments_label)
             items.addAll(domainModel.authors.mapIndexed { index, author ->
                 ListItemWithIcon(
-                        iconUrl = author.gravatar,
-                        iconStyle = AVATAR,
-                        text = author.name,
-                        showDivider = index < domainModel.authors.size - 1,
-                        contentDescription = contentDescriptionHelper.buildContentDescription(
-                                header,
-                                author.name,
-                                author.comments
-                        )
+                    iconUrl = author.gravatar,
+                    iconStyle = AVATAR,
+                    text = author.name,
+                    showDivider = index < domainModel.authors.size - 1,
+                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
+                        author.name,
+                        author.comments
+                    )
                 )
             })
         } else {

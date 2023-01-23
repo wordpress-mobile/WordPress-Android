@@ -26,10 +26,10 @@ class PostPageListLabelColorUseCaseTest {
         val uploadState = failedUpload()
         // Act
         val labelsColor = useCase.getLabelsColor(
-                dummyPostModel(),
-                uploadState,
-                hasUnhandledConflicts = false,
-                hasUnhandledAutoSave = false
+            dummyPostModel(),
+            uploadState,
+            hasUnhandledConflicts = false,
+            hasUnhandledAutoSave = false
         )
         // Assert
         assertThat(labelsColor).isEqualTo(ERROR_COLOR)
@@ -41,10 +41,10 @@ class PostPageListLabelColorUseCaseTest {
         val uploadState = mediaUploadInProgress()
         // Act
         val labelsColor = useCase.getLabelsColor(
-                dummyPostModel(),
-                uploadState,
-                hasUnhandledConflicts = false,
-                hasUnhandledAutoSave = false
+            dummyPostModel(),
+            uploadState,
+            hasUnhandledConflicts = false,
+            hasUnhandledAutoSave = false
         )
         // Assert
         assertThat(labelsColor).isEqualTo(PROGRESS_INFO_COLOR)
@@ -56,10 +56,10 @@ class PostPageListLabelColorUseCaseTest {
         val uploadState = UploadQueued
         // Act
         val labelsColor = useCase.getLabelsColor(
-                dummyPostModel(),
-                uploadState,
-                hasUnhandledConflicts = false,
-                hasUnhandledAutoSave = false
+            dummyPostModel(),
+            uploadState,
+            hasUnhandledConflicts = false,
+            hasUnhandledAutoSave = false
         )
         // Assert
         assertThat(labelsColor).isEqualTo(PROGRESS_INFO_COLOR)
@@ -71,10 +71,10 @@ class PostPageListLabelColorUseCaseTest {
         val uploadState = UploadingPost(false)
         // Act
         val labelsColor = useCase.getLabelsColor(
-                dummyPostModel(),
-                uploadState,
-                hasUnhandledConflicts = false,
-                hasUnhandledAutoSave = false
+            dummyPostModel(),
+            uploadState,
+            hasUnhandledConflicts = false,
+            hasUnhandledAutoSave = false
         )
         // Assert
         assertThat(labelsColor).isEqualTo(PROGRESS_INFO_COLOR)
@@ -86,10 +86,10 @@ class PostPageListLabelColorUseCaseTest {
         val uploadState = failedUpload(isEligibleForAutoUpload = true)
         // Act
         val labelsColor = useCase.getLabelsColor(
-                dummyPostModel(),
-                uploadState,
-                hasUnhandledConflicts = false,
-                hasUnhandledAutoSave = false
+            dummyPostModel(),
+            uploadState,
+            hasUnhandledConflicts = false,
+            hasUnhandledAutoSave = false
         )
         // Assert
         assertThat(labelsColor).isEqualTo(STATE_INFO_COLOR)
@@ -101,10 +101,10 @@ class PostPageListLabelColorUseCaseTest {
         val uploadState = failedUpload(isEligibleForAutoUpload = false)
         // Act
         val labelsColor = useCase.getLabelsColor(
-                dummyPostModel(),
-                uploadState,
-                hasUnhandledConflicts = false,
-                hasUnhandledAutoSave = false
+            dummyPostModel(),
+            uploadState,
+            hasUnhandledConflicts = false,
+            hasUnhandledAutoSave = false
         )
         // Assert
         assertThat(labelsColor).isEqualTo(ERROR_COLOR)
@@ -116,10 +116,10 @@ class PostPageListLabelColorUseCaseTest {
         val hasUnhandledAutoSave = true
         // Act
         val labelsColor = useCase.getLabelsColor(
-                dummyPostModel(),
-                mock(),
-                hasUnhandledConflicts = false,
-                hasUnhandledAutoSave = hasUnhandledAutoSave
+            dummyPostModel(),
+            mock(),
+            hasUnhandledConflicts = false,
+            hasUnhandledAutoSave = hasUnhandledAutoSave
         )
         // Assert
         assertThat(labelsColor).isEqualTo(STATE_INFO_COLOR)
@@ -131,10 +131,10 @@ class PostPageListLabelColorUseCaseTest {
         val hasUnhandledConflicts = true
         // Act
         val labelsColor = useCase.getLabelsColor(
-                dummyPostModel(),
-                mock(),
-                hasUnhandledConflicts = hasUnhandledConflicts,
-                hasUnhandledAutoSave = false
+            dummyPostModel(),
+            mock(),
+            hasUnhandledConflicts = hasUnhandledConflicts,
+            hasUnhandledAutoSave = false
         )
         // Assert
         assertThat(labelsColor).isEqualTo(ERROR_COLOR)
@@ -147,10 +147,10 @@ class PostPageListLabelColorUseCaseTest {
 
         // Act
         val labelsColor = useCase.getLabelsColor(
-                stickyPost,
-                mock(),
-                hasUnhandledConflicts = false,
-                hasUnhandledAutoSave = false
+            stickyPost,
+            mock(),
+            hasUnhandledConflicts = false,
+            hasUnhandledAutoSave = false
         )
         // Assert
         assertThat(labelsColor).isEqualTo(STATE_INFO_COLOR)
@@ -165,10 +165,10 @@ class PostPageListLabelColorUseCaseTest {
 
         // Act
         val labelsColor = useCase.getLabelsColor(
-                stickyPost,
-                uploadState,
-                hasUnhandledConflicts = hasUnhandledConflicts,
-                hasUnhandledAutoSave = false
+            stickyPost,
+            uploadState,
+            hasUnhandledConflicts = hasUnhandledConflicts,
+            hasUnhandledAutoSave = false
         )
         // Assert
         assertThat(labelsColor).isEqualTo(ERROR_COLOR)
@@ -182,10 +182,10 @@ class PostPageListLabelColorUseCaseTest {
 
         // Act
         val labelsColor = useCase.getLabelsColor(
-                stickyPost,
-                uploadState,
-                hasUnhandledConflicts = false,
-                hasUnhandledAutoSave = false
+            stickyPost,
+            uploadState,
+            hasUnhandledConflicts = false,
+            hasUnhandledAutoSave = false
         )
         // Assert
         assertThat(labelsColor).isEqualTo(PROGRESS_INFO_COLOR)
@@ -199,7 +199,7 @@ class PostPageListLabelColorUseCaseTest {
     }
 
     private fun failedUpload(isEligibleForAutoUpload: Boolean = false) =
-            PostUploadUiState.UploadFailed(mock(), isEligibleForAutoUpload, false)
+        PostUploadUiState.UploadFailed(mock(), isEligibleForAutoUpload, false)
 
     private fun mediaUploadInProgress() = PostUploadUiState.UploadingMedia(0)
 }

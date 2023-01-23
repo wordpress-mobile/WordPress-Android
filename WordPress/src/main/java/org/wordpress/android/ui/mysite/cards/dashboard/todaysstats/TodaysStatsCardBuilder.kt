@@ -39,31 +39,31 @@ class TodaysStatsCardBuilder @Inject constructor(
     }
 
     private fun createTodaysStatsCardWithError() = TodaysStatsCard.Error(
-            title = UiStringRes(R.string.my_site_todays_stat_card_title)
+        title = UiStringRes(R.string.my_site_todays_stat_card_title)
     )
 
     private fun createTodaysStatsCardWithData(model: TodaysStatsCardModel, params: TodaysStatsCardBuilderParams) =
-            TodaysStatsCardWithData(
-                    views = statToUiString(model.views),
-                    visitors = statToUiString(model.visitors),
-                    likes = statToUiString(model.likes),
-                    onCardClick = params.onTodaysStatsCardClick,
-                    message = model.takeIf { it.isEmptyStats() }?.let {
-                        TextWithLinks(
-                                text = UiStringText(
-                                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                                R.string.my_site_todays_stats_get_more_views_message,
-                                                URL_GET_MORE_VIEWS_AND_TRAFFIC
-                                        )
-                                ),
-                                links = listOf(Clickable(ListItemInteraction.create(params.onGetMoreViewsClick)))
+        TodaysStatsCardWithData(
+            views = statToUiString(model.views),
+            visitors = statToUiString(model.visitors),
+            likes = statToUiString(model.likes),
+            onCardClick = params.onTodaysStatsCardClick,
+            message = model.takeIf { it.isEmptyStats() }?.let {
+                TextWithLinks(
+                    text = UiStringText(
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                            R.string.my_site_todays_stats_get_more_views_message,
+                            URL_GET_MORE_VIEWS_AND_TRAFFIC
                         )
-                    },
-                    footerLink = FooterLink(
-                            label = UiStringRes(R.string.my_site_todays_stats_card_footer_link_go_to_stats),
-                            onClick = params.onFooterLinkClick
-                    )
+                    ),
+                    links = listOf(Clickable(ListItemInteraction.create(params.onGetMoreViewsClick)))
+                )
+            },
+            footerLink = FooterLink(
+                label = UiStringRes(R.string.my_site_todays_stats_card_footer_link_go_to_stats),
+                onClick = params.onFooterLinkClick
             )
+        )
 
     private fun shouldShowError(error: TodaysStatsCardError) = error.type == TodaysStatsCardErrorType.GENERIC_ERROR
 

@@ -8,6 +8,6 @@ class BloggingPromptsListAnalyticsTracker @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) {
     fun trackScreenShown() = analyticsTracker.track(
-            Stat.BLOGGING_PROMPTS_LIST_SCREEN_VIEWED, emptyMap()
+        Stat.BLOGGING_PROMPTS_LIST_SCREEN_VIEWED, emptyMap()
     )
 }

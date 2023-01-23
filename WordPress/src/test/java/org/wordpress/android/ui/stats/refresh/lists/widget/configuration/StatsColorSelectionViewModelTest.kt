@@ -18,16 +18,19 @@ import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
 class StatsColorSelectionViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock private lateinit var accountStore: AccountStore
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    private lateinit var accountStore: AccountStore
     private lateinit var viewModel: StatsColorSelectionViewModel
 
     @Before
     fun setUp() {
         viewModel = StatsColorSelectionViewModel(
-                testDispatcher(),
-                accountStore,
-                appPrefsWrapper
+            testDispatcher(),
+            accountStore,
+            appPrefsWrapper
         )
     }
 

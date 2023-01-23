@@ -21,9 +21,14 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 
 @ExperimentalCoroutinesApi
 class QuickLinkRibbonBuilderTest : BaseUnitTest() {
-    @Mock lateinit var siteModel: SiteModel
-    @Mock lateinit var quickStartRepository: QuickStartRepository
-    @Mock lateinit var quickStartType: QuickStartType
+    @Mock
+    lateinit var siteModel: SiteModel
+
+    @Mock
+    lateinit var quickStartRepository: QuickStartRepository
+
+    @Mock
+    lateinit var quickStartType: QuickStartType
     private lateinit var builder: QuickLinkRibbonBuilder
 
     private val onStatsClick: () -> Unit = {}
@@ -106,18 +111,18 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
             QuickStartExistingSiteTask.CHECK_STATS
         }
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-                .thenReturn(checkStatsTask)
+            .thenReturn(checkStatsTask)
 
         return builder.build(
-                QuickLinkRibbonBuilderParams(
-                        siteModel,
-                        onPagesClick,
-                        onPostsClick,
-                        onMediaClick,
-                        onStatsClick,
-                        setActiveTask(showPagesFocusPoint, showStatsFocusPoint, checkStatsTask),
-                        enableFocusPoints = enableFocusPoints
-                )
+            QuickLinkRibbonBuilderParams(
+                siteModel,
+                onPagesClick,
+                onPostsClick,
+                onMediaClick,
+                onStatsClick,
+                setActiveTask(showPagesFocusPoint, showStatsFocusPoint, checkStatsTask),
+                enableFocusPoints = enableFocusPoints
+            )
         )
     }
 

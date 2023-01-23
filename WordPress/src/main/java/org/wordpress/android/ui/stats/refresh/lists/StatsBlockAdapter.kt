@@ -19,10 +19,10 @@ class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewH
 
     fun update(newItems: List<StatsBlock>) {
         val diffResult = DiffUtil.calculateDiff(
-                StatsBlockDiffCallback(
-                        items,
-                        newItems
-                )
+            StatsBlockDiffCallback(
+                items,
+                newItems
+            )
         )
         items = newItems
         diffResult.dispatchUpdatesTo(this)

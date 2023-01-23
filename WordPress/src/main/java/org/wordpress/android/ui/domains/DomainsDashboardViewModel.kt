@@ -132,40 +132,40 @@ class DomainsDashboardViewModel @Inject constructor(
         val listItems = mutableListOf<DomainsDashboardItem>()
         if (hasDomainCredit) {
             listItems += PurchaseDomain(
-                    null,
-                    UiStringRes(R.string.domains_paid_plan_claim_your_domain_title),
-                    UiStringRes(R.string.domains_paid_plan_claim_your_domain_caption),
-                    ListItemInteraction.create(this::onClaimDomainClick)
+                null,
+                UiStringRes(R.string.domains_paid_plan_claim_your_domain_title),
+                UiStringRes(R.string.domains_paid_plan_claim_your_domain_caption),
+                ListItemInteraction.create(this::onClaimDomainClick)
             )
         } else if (hasCustomDomains) {
             listItems += AddDomain(ListItemInteraction.create(hasDomainCredit, this::onAddDomainClick))
             if (!hasPaidPlan) {
                 listItems += DomainBlurb(
-                        UiStringResWithParams(
-                                R.string.domains_redirected_domains_blurb,
-                                listOf(UiStringText(freeDomainUrl))
-                        )
+                    UiStringResWithParams(
+                        R.string.domains_redirected_domains_blurb,
+                        listOf(UiStringText(freeDomainUrl))
+                    )
                 )
             }
         } else {
             listItems += if (hasPaidPlan) {
                 PurchaseDomain(
-                        R.drawable.img_illustration_domains_card_header,
-                        UiStringRes(R.string.domains_paid_plan_add_your_domain_title),
-                        UiStringRes(R.string.domains_paid_plan_add_your_domain_caption),
-                        ListItemInteraction.create(this::onGetDomainClick)
+                    R.drawable.img_illustration_domains_card_header,
+                    UiStringRes(R.string.domains_paid_plan_add_your_domain_title),
+                    UiStringRes(R.string.domains_paid_plan_add_your_domain_caption),
+                    ListItemInteraction.create(this::onGetDomainClick)
                 )
             } else {
                 PurchaseDomain(
-                        R.drawable.img_illustration_domains_card_header,
-                        UiStringRes(R.string.domains_free_plan_get_your_domain_title),
-                        UiStringText(
-                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                        R.string.domains_free_plan_get_your_domain_caption,
-                                        freeDomainUrl
-                                )
-                        ),
-                        ListItemInteraction.create(this::onGetDomainClick)
+                    R.drawable.img_illustration_domains_card_header,
+                    UiStringRes(R.string.domains_free_plan_get_your_domain_title),
+                    UiStringText(
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                            R.string.domains_free_plan_get_your_domain_caption,
+                            freeDomainUrl
+                        )
+                    ),
+                    ListItemInteraction.create(this::onGetDomainClick)
                 )
             }
         }
@@ -180,21 +180,21 @@ class DomainsDashboardViewModel @Inject constructor(
         if (hasCustomDomains) listItems += SiteDomainsHeader(UiStringRes(R.string.domains_site_domains))
         listItems += customDomains.map {
             SiteDomains(
-                    UiStringText(it.domain.orEmpty()),
-                    if (it.expirySoon) {
-                        UiStringText(
-                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                        R.string.domains_site_domain_expires_soon,
-                                        it.expiry.orEmpty()
-                                )
+                UiStringText(it.domain.orEmpty()),
+                if (it.expirySoon) {
+                    UiStringText(
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                            R.string.domains_site_domain_expires_soon,
+                            it.expiry.orEmpty()
                         )
-                    } else {
-                        UiStringResWithParams(
-                                R.string.domains_site_domain_expires,
-                                listOf(UiStringText(it.expiry.orEmpty()))
-                        )
-                    },
-                    it.primaryDomain
+                    )
+                } else {
+                    UiStringResWithParams(
+                        R.string.domains_site_domain_expires,
+                        listOf(UiStringText(it.expiry.orEmpty()))
+                    )
+                },
+                it.primaryDomain
             )
         }
         return listItems

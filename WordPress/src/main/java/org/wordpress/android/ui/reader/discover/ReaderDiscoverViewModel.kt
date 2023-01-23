@@ -129,10 +129,10 @@ class ReaderDiscoverViewModel @Inject constructor(
                 } else {
                     if (posts != null && posts.cards.isNotEmpty()) {
                         _uiState.value = DiscoverUiState.ContentUiState(
-                                convertCardsToUiStates(posts),
-                                reloadProgressVisibility = false,
-                                loadMoreProgressVisibility = false,
-                                scrollToTop = swipeToRefreshTriggered
+                            convertCardsToUiStates(posts),
+                            reloadProgressVisibility = false,
+                            loadMoreProgressVisibility = false,
+                            scrollToTop = swipeToRefreshTriggered
                         )
                         swipeToRefreshTriggered = false
                     } else {
@@ -168,36 +168,36 @@ class ReaderDiscoverViewModel @Inject constructor(
         return posts.cards.map { card ->
             when (card) {
                 is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(
-                        titleRes = R.string.reader_welcome_banner
+                    titleRes = R.string.reader_welcome_banner
                 )
                 is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
-                        source = ReaderTracker.SOURCE_DISCOVER,
-                        post = card.post,
-                        isDiscover = true,
-                        photonWidth = photonWidth,
-                        photonHeight = photonHeight,
-                        onButtonClicked = this@ReaderDiscoverViewModel::onButtonClicked,
-                        onItemClicked = this@ReaderDiscoverViewModel::onPostItemClicked,
-                        onItemRendered = this@ReaderDiscoverViewModel::onItemRendered,
-                        onDiscoverSectionClicked = this@ReaderDiscoverViewModel::onDiscoverClicked,
-                        onMoreButtonClicked = this@ReaderDiscoverViewModel::onMoreButtonClicked,
-                        onMoreDismissed = this@ReaderDiscoverViewModel::onMoreMenuDismissed,
-                        onVideoOverlayClicked = this@ReaderDiscoverViewModel::onVideoOverlayClicked,
-                        onPostHeaderViewClicked = this@ReaderDiscoverViewModel::onPostHeaderClicked,
-                        onTagItemClicked = this@ReaderDiscoverViewModel::onTagItemClicked,
-                        postListType = TAG_FOLLOWED
+                    source = ReaderTracker.SOURCE_DISCOVER,
+                    post = card.post,
+                    isDiscover = true,
+                    photonWidth = photonWidth,
+                    photonHeight = photonHeight,
+                    onButtonClicked = this@ReaderDiscoverViewModel::onButtonClicked,
+                    onItemClicked = this@ReaderDiscoverViewModel::onPostItemClicked,
+                    onItemRendered = this@ReaderDiscoverViewModel::onItemRendered,
+                    onDiscoverSectionClicked = this@ReaderDiscoverViewModel::onDiscoverClicked,
+                    onMoreButtonClicked = this@ReaderDiscoverViewModel::onMoreButtonClicked,
+                    onMoreDismissed = this@ReaderDiscoverViewModel::onMoreMenuDismissed,
+                    onVideoOverlayClicked = this@ReaderDiscoverViewModel::onVideoOverlayClicked,
+                    onPostHeaderViewClicked = this@ReaderDiscoverViewModel::onPostHeaderClicked,
+                    onTagItemClicked = this@ReaderDiscoverViewModel::onTagItemClicked,
+                    postListType = TAG_FOLLOWED
                 )
                 is InterestsYouMayLikeCard -> {
                     postUiStateBuilder.mapTagListToReaderInterestUiState(
-                            card.interests,
-                            this@ReaderDiscoverViewModel::onReaderTagClicked
+                        card.interests,
+                        this@ReaderDiscoverViewModel::onReaderTagClicked
                     )
                 }
                 is ReaderRecommendedBlogsCard -> {
                     postUiStateBuilder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
-                            recommendedBlogs = card.blogs,
-                            onItemClicked = this@ReaderDiscoverViewModel::onRecommendedSiteItemClicked,
-                            onFollowClicked = this@ReaderDiscoverViewModel::onFollowSiteClicked
+                        recommendedBlogs = card.blogs,
+                        onItemClicked = this@ReaderDiscoverViewModel::onRecommendedSiteItemClicked,
+                        onFollowClicked = this@ReaderDiscoverViewModel::onFollowSiteClicked
                     )
                 }
             }
@@ -242,16 +242,16 @@ class ReaderDiscoverViewModel @Inject constructor(
                 }
                 is DiscoverUiState.ContentUiState -> {
                     _uiState.value = uiState.copy(
-                            reloadProgressVisibility = false,
-                            loadMoreProgressVisibility = false
+                        reloadProgressVisibility = false,
+                        loadMoreProgressVisibility = false
                     )
                     // show snackbar
                     _snackbarEvents.postValue(
-                            Event(
-                                    SnackbarMessageHolder(
-                                            UiStringRes(R.string.reader_error_request_failed_title)
-                                    )
+                        Event(
+                            SnackbarMessageHolder(
+                                UiStringRes(R.string.reader_error_request_failed_title)
                             )
+                        )
                     )
                 }
                 is DiscoverUiState.EmptyUiState.RequestFailedUiState -> Unit // Do nothing
@@ -273,10 +273,10 @@ class ReaderDiscoverViewModel @Inject constructor(
         launch {
             findPost(postId, blogId)?.let {
                 readerPostCardActionsHandler.onAction(
-                        it,
-                        type,
-                        isBookmarkList = false,
-                        source = ReaderTracker.SOURCE_DISCOVER
+                    it,
+                    type,
+                    isBookmarkList = false,
+                    source = ReaderTracker.SOURCE_DISCOVER
                 )
             }
         }
@@ -294,9 +294,9 @@ class ReaderDiscoverViewModel @Inject constructor(
         launch {
             findPost(postId, blogId)?.let {
                 readerPostCardActionsHandler.handleHeaderClicked(
-                        it.blogId,
-                        it.feedId,
-                        it.isFollowedByCurrentUser
+                    it.blogId,
+                    it.feedId,
+                    it.isFollowedByCurrentUser
                 )
             }
         }
@@ -313,8 +313,8 @@ class ReaderDiscoverViewModel @Inject constructor(
         launch {
             findPost(postId, blogId)?.let {
                 readerPostCardActionsHandler.handleOnItemClicked(
-                        it,
-                        ReaderTracker.SOURCE_DISCOVER
+                    it,
+                    ReaderTracker.SOURCE_DISCOVER
                 )
             }
         }
@@ -322,9 +322,9 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private fun onRecommendedSiteItemClicked(blogId: Long, feedId: Long, isFollowed: Boolean) {
         readerTracker.trackBlog(
-                AnalyticsTracker.Stat.READER_SUGGESTED_SITE_VISITED,
-                blogId,
-                feedId
+            AnalyticsTracker.Stat.READER_SUGGESTED_SITE_VISITED,
+            blogId,
+            feedId
         )
         _navigationEvents.postValue(Event(ShowBlogPreview(blogId, feedId, isFollowed)))
     }
@@ -332,14 +332,14 @@ class ReaderDiscoverViewModel @Inject constructor(
     private fun onFollowSiteClicked(recommendedBlogUiState: ReaderRecommendedBlogUiState) {
         launch {
             readerTracker.trackBlog(
-                    AnalyticsTracker.Stat.READER_SUGGESTED_SITE_TOGGLE_FOLLOW,
-                    recommendedBlogUiState.blogId,
-                    recommendedBlogUiState.feedId,
-                    !recommendedBlogUiState.isFollowed
+                AnalyticsTracker.Stat.READER_SUGGESTED_SITE_TOGGLE_FOLLOW,
+                recommendedBlogUiState.blogId,
+                recommendedBlogUiState.feedId,
+                !recommendedBlogUiState.isFollowed
             )
             readerPostCardActionsHandler.handleFollowRecommendedSiteClicked(
-                    recommendedBlogUiState,
-                    ReaderTracker.SOURCE_DISCOVER
+                recommendedBlogUiState,
+                ReaderTracker.SOURCE_DISCOVER
             )
         }
     }
@@ -351,8 +351,8 @@ class ReaderDiscoverViewModel @Inject constructor(
     private fun findPost(postId: Long, blogId: Long): ReaderPost? {
         return readerDiscoverDataProvider.discoverFeed.value?.cards?.let {
             it.filterIsInstance<ReaderPostCard>()
-                    .find { card -> card.post.postId == postId && card.post.blogId == blogId }
-                    ?.post
+                .find { card -> card.post.postId == postId && card.post.blogId == blogId }
+                ?.post
         }
     }
 
@@ -387,7 +387,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
                     readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
-                            post, this@ReaderDiscoverViewModel::onButtonClicked
+                        post, this@ReaderDiscoverViewModel::onButtonClicked
                     )
                 } else {
                     null

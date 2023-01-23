@@ -16,8 +16,8 @@ class JetpackDescriptionViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : JetpackViewHolder<JetpackListDescriptionItemBinding>(
-        parent,
-        JetpackListDescriptionItemBinding::inflate
+    parent,
+    JetpackListDescriptionItemBinding::inflate
 ) {
     override fun onBind(itemUiState: JetpackListItemState) {
         val descriptionState = itemUiState as DescriptionState

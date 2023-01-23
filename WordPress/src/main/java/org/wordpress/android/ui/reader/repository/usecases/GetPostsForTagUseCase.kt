@@ -18,11 +18,11 @@ class GetPostsForTagUseCase @Inject constructor(
         maxRows: Int = 0,
         excludeTextColumns: Boolean = true
     ): ReaderPostList =
-            withContext(ioDispatcher) {
-                readerPostTableWrapper.getPostsWithTag(
-                        readerTag,
-                        maxRows,
-                        excludeTextColumns
-                )
-            }
+        withContext(ioDispatcher) {
+            readerPostTableWrapper.getPostsWithTag(
+                readerTag,
+                maxRows,
+                excludeTextColumns
+            )
+        }
 }

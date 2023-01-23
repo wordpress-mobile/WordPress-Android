@@ -19,9 +19,9 @@ import org.wordpress.android.util.extensions.setVisible
 sealed class LayoutsRowViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
 class LayoutsFooterViewHolder(parent: ViewGroup, footerLayoutResId: Int) :
-        LayoutsRowViewHolder(
-                LayoutInflater.from(parent.context).inflate(footerLayoutResId, parent, false)
-        )
+    LayoutsRowViewHolder(
+        LayoutInflater.from(parent.context).inflate(footerLayoutResId, parent, false)
+    )
 
 /**
  * Modal Layout Picker layouts view holder
@@ -35,9 +35,9 @@ class LayoutsItemViewHolder(
     private val thumbDimensionProvider: ThumbDimensionProvider,
     private val recommendedDimensionProvider: ThumbDimensionProvider?
 ) : LayoutsRowViewHolder(
-        LayoutInflater.from(
-                parent.context
-        ).inflate(R.layout.modal_layout_picker_layouts_row, parent, false)
+    LayoutInflater.from(
+        parent.context
+    ).inflate(R.layout.modal_layout_picker_layouts_row, parent, false)
 ) {
     private val rowDivider: View = itemView.findViewById(R.id.layouts_row_separator_line)
     private val title: TextView = itemView.findViewById(R.id.title)
@@ -55,9 +55,9 @@ class LayoutsItemViewHolder(
         }
         itemView.findViewById<RecyclerView>(R.id.layouts_recycler_view).apply {
             layoutManager = LinearLayoutManager(
-                    context,
-                    RecyclerView.HORIZONTAL,
-                    false
+                context,
+                RecyclerView.HORIZONTAL,
+                false
             ).apply { initialPrefetchItemCount = prefetchItemCount }
             adapter = LayoutsAdapter(parent.context, dimensionProvider)
 
@@ -78,10 +78,10 @@ class LayoutsItemViewHolder(
         title.text = category.description
 
         title.setTextSize(
-                TypedValue.COMPLEX_UNIT_PX,
-                title.resources.getDimensionPixelSize(
-                        if (useLargeCategoryHeading) dimen.text_sz_extra_large else dimen.text_sz_large
-                ).toFloat()
+            TypedValue.COMPLEX_UNIT_PX,
+            title.resources.getDimensionPixelSize(
+                if (useLargeCategoryHeading) dimen.text_sz_extra_large else dimen.text_sz_large
+            ).toFloat()
         )
 
         subtitle.setVisible(category.isRecommended)

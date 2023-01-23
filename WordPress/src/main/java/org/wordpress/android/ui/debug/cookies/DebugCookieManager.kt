@@ -30,16 +30,17 @@ class DebugCookieManager internal constructor(
     private val gson: Gson,
     private val buildConfig: BuildConfigWrapper
 ) {
-    @Inject constructor(
+    @Inject
+    constructor(
         context: Context,
         cookieManager: CookieManager,
         buildConfig: BuildConfigWrapper
     ) : this(
-            cookieManager,
-            android.webkit.CookieManager.getInstance(),
-            context.getSharedPreferences(DEBUG_COOKIE_PREFERENCES, MODE_PRIVATE),
-            GsonBuilder().serializeNulls().create(),
-            buildConfig
+        cookieManager,
+        android.webkit.CookieManager.getInstance(),
+        context.getSharedPreferences(DEBUG_COOKIE_PREFERENCES, MODE_PRIVATE),
+        GsonBuilder().serializeNulls().create(),
+        buildConfig
     )
 
     fun sync() {
@@ -70,10 +71,10 @@ class DebugCookieManager internal constructor(
     private fun CookieManager.remove(cookie: DebugCookie) = cookieStore.remove(cookie.toURI(), cookie.toHttpCookie())
 
     private fun android.webkit.CookieManager.remove(cookie: DebugCookie) =
-            setCookie(cookie.oldRfcDomain, cookie.copy(value = null).headerValue)
+        setCookie(cookie.oldRfcDomain, cookie.copy(value = null).headerValue)
 
     private fun android.webkit.CookieManager.add(cookie: DebugCookie) =
-            setCookie(cookie.oldRfcDomain, cookie.headerValue)
+        setCookie(cookie.oldRfcDomain, cookie.headerValue)
 
     private fun SharedPreferences.add(cookie: DebugCookie) = edit { putString(cookie.key, cookie.encode(gson)) }
 

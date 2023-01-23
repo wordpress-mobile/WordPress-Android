@@ -59,15 +59,18 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SiteCreationActivity : LocaleAwareActivity(),
-        IntentsScreenListener,
-        SiteNameScreenListener,
-        DomainsScreenListener,
-        SitePreviewScreenListener,
-        OnHelpClickedListener,
-        BasicDialogPositiveClickInterface,
-        BasicDialogNegativeClickInterface {
-    @Inject internal lateinit var uiHelpers: UiHelpers
-    @Inject internal lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
+    IntentsScreenListener,
+    SiteNameScreenListener,
+    DomainsScreenListener,
+    SitePreviewScreenListener,
+    OnHelpClickedListener,
+    BasicDialogPositiveClickInterface,
+    BasicDialogNegativeClickInterface {
+    @Inject
+    internal lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    internal lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
     private val mainViewModel: SiteCreationMainVM by viewModels()
     private val hppViewModel: HomePagePickerViewModel by viewModels()
     private val siteCreationIntentsViewModel: SiteCreationIntentsViewModel by viewModels()
@@ -93,7 +96,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     @Suppress("LongMethod")
     private fun observeVMState() {
         mainViewModel.navigationTargetObservable
-                .observe(this, Observer { target -> target?.let { showStep(target) } })
+            .observe(this, Observer { target -> target?.let { showStep(target) } })
         mainViewModel.wizardFinishedObservable.observe(this, Observer { createSiteState ->
             createSiteState?.let {
                 val intent = Intent()
@@ -229,7 +232,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
                 HomePagePickerFragment.newInstance(target.wizardState.siteIntent)
             }
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
-                    screenTitle
+                screenTitle
             )
             SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState)
         }
@@ -239,9 +242,9 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private fun getScreenTitle(step: SiteCreationStep): String {
         return when (val screenTitleData = mainViewModel.screenTitleForWizardStep(step)) {
             is ScreenTitleStepCount -> getString(
-                    screenTitleData.resId,
-                    screenTitleData.stepPosition,
-                    screenTitleData.stepsCount
+                screenTitleData.resId,
+                screenTitleData.stepPosition,
+                screenTitleData.stepsCount
             )
             is ScreenTitleGeneral -> getString(screenTitleData.resId)
             is ScreenTitleEmpty -> screenTitleData.screenTitle
@@ -253,8 +256,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
         if (supportFragmentManager.findFragmentById(R.id.fragment_container) != null) {
             // add to back stack and animate all screen except of the first one
             fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                    R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                    R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
+                R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
             )
         }
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag)

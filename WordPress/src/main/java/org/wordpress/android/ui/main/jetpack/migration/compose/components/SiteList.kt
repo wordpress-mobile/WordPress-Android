@@ -48,30 +48,30 @@ fun SiteList(
     blurModifier: Modifier = Modifier,
 ) {
     LazyColumn(
-            state = listState,
-            modifier = modifier
-                    .composed { if (userScrollEnabled) this else disableUserScroll() }
-                    .background(MaterialTheme.colors.background)
-                    .fillMaxHeight()
-                    .then(blurModifier),
+        state = listState,
+        modifier = modifier
+            .composed { if (userScrollEnabled) this else disableUserScroll() }
+            .background(MaterialTheme.colors.background)
+            .fillMaxHeight()
+            .then(blurModifier),
     ) {
         item {
             SiteListHeader(uiState)
         }
         items(
-                items = uiState.sites,
-                key = { it.id },
+            items = uiState.sites,
+            key = { it.id },
         ) { site ->
             SiteListItem(
-                    uiState = site,
-                    isDimmed = uiState.isProcessing,
+                uiState = site,
+                isDimmed = uiState.isProcessing,
             )
             Divider(
-                    color = colorResource(R.color.gray_10),
-                    thickness = 0.5.dp,
-                    modifier = Modifier
-                            .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
-                            .dimmed(uiState.isProcessing),
+                color = colorResource(R.color.gray_10),
+                thickness = 0.5.dp,
+                modifier = Modifier
+                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
+                    .dimmed(uiState.isProcessing),
             )
         }
         item {
@@ -84,10 +84,10 @@ fun SiteList(
 @Composable
 private fun SiteListItem(uiState: SiteListItemUiState, isDimmed: Boolean) = with(uiState) {
     Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
-                    .dimmed(isDimmed),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
+            .dimmed(isDimmed),
     ) {
         SiteIcon(iconUrl)
         Column {
@@ -100,8 +100,8 @@ private fun SiteListItem(uiState: SiteListItemUiState, isDimmed: Boolean) = with
 @Composable
 private fun SiteListHeader(uiState: UiState.Content.Welcome) = with(uiState) {
     Column(
-            modifier = Modifier
-                    .dimmed(uiState.isProcessing)
+        modifier = Modifier
+            .dimmed(uiState.isProcessing)
     ) {
         ScreenIcon(iconRes = screenIconRes)
         Title(text = uiStringText(title))
@@ -118,34 +118,34 @@ private fun SiteIcon(iconUrl: String) {
         crossfade(true)
     }
     Image(
-            painter = painter,
-            contentDescription = stringResource(R.string.blavatar_desc),
-            modifier = Modifier
-                    .padding(vertical = 15.dp)
-                    .padding(end = 20.dp)
-                    .size(dimensionResource(R.dimen.jp_migration_site_icon_size))
-                    .clip(RoundedCornerShape(3.dp))
+        painter = painter,
+        contentDescription = stringResource(R.string.blavatar_desc),
+        modifier = Modifier
+            .padding(vertical = 15.dp)
+            .padding(end = 20.dp)
+            .size(dimensionResource(R.dimen.jp_migration_site_icon_size))
+            .clip(RoundedCornerShape(3.dp))
     )
 }
 
 @Composable
 private fun SiteName(name: String) {
     Text(
-            text = name,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 17.sp,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+        text = name,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 17.sp,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
     )
 }
 
 @Composable
 private fun SiteAddress(url: String) {
     Text(
-            text = url,
-            fontSize = FontSize.Large.value,
-            color = colorResource(R.color.gray_40),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+        text = url,
+        fontSize = FontSize.Large.value,
+        color = colorResource(R.color.gray_40),
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
     )
 }

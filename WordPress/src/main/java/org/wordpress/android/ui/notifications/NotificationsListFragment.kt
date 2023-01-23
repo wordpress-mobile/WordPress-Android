@@ -52,8 +52,9 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILT
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandingUtils.Screen
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
@@ -62,8 +63,14 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment), ScrollableViewInitializedListener {
-    @Inject lateinit var accountStore: AccountStore
-    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Inject
+    lateinit var accountStore: AccountStore
+
+    @Inject
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
 
     private val viewModel: NotificationsListViewModel by viewModels()
 
@@ -94,9 +101,11 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabSelected(tab: Tab) {
                     val tabPosition = TabPosition.values().getOrNull(tab.position) ?: All
-                    AnalyticsTracker.track(NOTIFICATION_TAPPED_SEGMENTED_CONTROL, hashMapOf(
+                    AnalyticsTracker.track(
+                        NOTIFICATION_TAPPED_SEGMENTED_CONTROL, hashMapOf(
                             NOTIFICATIONS_SELECTED_FILTER to tabPosition.filter.toString()
-                    ))
+                        )
+                    )
                     lastTabPosition = tab.position
                 }
 
@@ -105,15 +114,15 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             })
             viewPager.adapter = NotificationsFragmentAdapter(this@NotificationsListFragment)
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                    tab.text =  TabPosition.values().getOrNull(position)?.let { getString(it.titleRes) } ?: ""
+                tab.text = TabPosition.values().getOrNull(position)?.let { getString(it.titleRes) } ?: ""
             }.attach()
             viewPager.setPageTransformer(
                 MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
             )
 
             jetpackTermsAndConditions.text = HtmlCompat.fromHtml(
-                    String.format(resources.getString(R.string.jetpack_connection_terms_and_conditions), "<u>", "</u>"),
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
+                String.format(resources.getString(R.string.jetpack_connection_terms_and_conditions), "<u>", "</u>"),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
             )
             jetpackTermsAndConditions.setOnClickListener {
                 WPWebViewActivity.openURL(requireContext(), WPUrlUtils.buildTermsOfServiceUrl(context))
@@ -125,15 +134,15 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
             JetpackPoweredBottomSheetFragment
-                    .newInstance(it, PageType.NOTIFS)
-                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                .newInstance(it, PageType.NOTIFS)
+                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
 
         viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
             if (savedInstanceState == null)
                 JetpackFeatureFullScreenOverlayFragment
-                        .newInstance(JetpackFeatureOverlayScreenType.NOTIFICATIONS)
-                        .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
+                    .newInstance(JetpackFeatureOverlayScreenType.NOTIFICATIONS)
+                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
         }
     }
 
@@ -237,6 +246,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         const val NOTE_MODERATE_ID_EXTRA = "moderateNoteId"
         const val NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus"
         const val NOTE_CURRENT_LIST_FILTER_EXTRA = "currentFilter"
+
         enum class TabPosition(@StringRes val titleRes: Int, val filter: FILTERS) {
             All(R.string.notifications_tab_title_all, FILTER_ALL),
             Unread(R.string.notifications_tab_title_unread_notifications, FILTER_UNREAD),
@@ -244,6 +254,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             Follow(R.string.notifications_tab_title_follows, FILTER_FOLLOW),
             Like(R.string.notifications_tab_title_likes, FILTER_LIKE);
         }
+
         private const val KEY_LAST_TAB_POSITION = "lastTabPosition"
         fun newInstance(): NotificationsListFragment {
             return NotificationsListFragment()
@@ -289,6 +300,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appBar?.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            val screen = JetpackPoweredScreen.WithDynamicText.NOTIFICATIONS
             binding?.root?.post {
                 // post is used to create a minimal delay here. containerId changes just before
                 // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.
@@ -296,13 +308,17 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 val scrollableView = binding?.root?.findViewById<View>(containerId) as? RecyclerView ?: return@post
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+                binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
+                    requireContext(),
+                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                )
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                     jetpackBannerView.setOnClickListener {
-                        jetpackBrandingUtils.trackBannerTapped(Screen.NOTIFICATIONS)
+                        jetpackBrandingUtils.trackBannerTapped(screen)
                         JetpackPoweredBottomSheetFragment
-                                .newInstance()
-                                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                            .newInstance()
+                            .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
                     }
                 }
             }

@@ -24,10 +24,10 @@ enum class RestoreStep(val id: Int) : WizardStep {
 @Singleton
 class RestoreStepsProvider @Inject constructor() {
     fun getSteps() = listOf(
-            RestoreStep.fromString("restore_details"),
-            RestoreStep.fromString("restore_warning"),
-            RestoreStep.fromString("restore_progress"),
-            RestoreStep.fromString("restore_complete"),
-            RestoreStep.fromString("restore_error")
+        RestoreStep.fromString("restore_details"),
+        RestoreStep.fromString("restore_warning"),
+        RestoreStep.fromString("restore_progress"),
+        RestoreStep.fromString("restore_complete"),
+        RestoreStep.fromString("restore_error")
     )
 }

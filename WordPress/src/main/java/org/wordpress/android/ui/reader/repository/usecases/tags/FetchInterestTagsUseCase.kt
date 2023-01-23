@@ -49,10 +49,10 @@ class FetchInterestTagsUseCase @Inject constructor(
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onInterestTagsFetchEnded(event: InterestTagsFetchEnded) {
         val result = if (event.didSucceed()) {
-                SuccessWithData(event.interestTags)
-            } else {
-                RemoteRequestFailure
-            }
+            SuccessWithData(event.interestTags)
+        } else {
+            RemoteRequestFailure
+        }
 
         continuation?.resume(result)
 

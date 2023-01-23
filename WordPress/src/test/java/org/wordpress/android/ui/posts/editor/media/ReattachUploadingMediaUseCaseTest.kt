@@ -32,9 +32,9 @@ class ReattachUploadingMediaUseCaseTest {
     fun `Media from both db and uploadHandler get reattached`() {
         // Arrange
         whenever(editPostRepository.getPendingMediaForPost())
-                .thenReturn(setOf(mediaModel1))
+            .thenReturn(setOf(mediaModel1))
         whenever(editPostRepository.getPendingOrInProgressMediaUploadsForPost())
-                .thenReturn(listOf(mediaModel2))
+            .thenReturn(listOf(mediaModel2))
 
         // Act
         useCase.reattachUploadingMediaForAztec(editPostRepository, editorMediaUploadListener)
@@ -48,9 +48,9 @@ class ReattachUploadingMediaUseCaseTest {
     fun `Media from db and uploadHandler are merged using union strategy`() {
         // Arrange
         whenever(editPostRepository.getPendingMediaForPost())
-                .thenReturn(setOf(mediaModel1))
+            .thenReturn(setOf(mediaModel1))
         whenever(editPostRepository.getPendingOrInProgressMediaUploadsForPost())
-                .thenReturn(listOf(mediaModel1, mediaModel2))
+            .thenReturn(listOf(mediaModel1, mediaModel2))
 
         // Act
         useCase.reattachUploadingMediaForAztec(editPostRepository, editorMediaUploadListener)
@@ -64,9 +64,9 @@ class ReattachUploadingMediaUseCaseTest {
     fun `Upload progress is propagated to EditorMediaUploadListener`() {
         // Arrange
         whenever(editPostRepository.getPendingMediaForPost())
-                .thenReturn(setOf(mediaModel1))
+            .thenReturn(setOf(mediaModel1))
         whenever(editPostRepository.getPendingOrInProgressMediaUploadsForPost())
-                .thenReturn(listOf())
+            .thenReturn(listOf())
 
         val progress = 15.4f
         whenever(uploadServiceFacade.getUploadProgressForMedia(mediaModel1)).thenReturn(progress)

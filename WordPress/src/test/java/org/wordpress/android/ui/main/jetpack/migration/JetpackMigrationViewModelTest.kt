@@ -34,14 +34,18 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.JetpackMigrationLanguageUtil
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.PreventDuplicateNotifsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
+import java.util.Locale
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class JetpackMigrationViewModelTest : BaseUnitTest() {
     private val refreshAppThemeObserver: Observer<Unit> = mock()
+    private val refreshAppLanguageObserver: Observer<String> = mock()
     private val siteUtilsWrapper: SiteUtilsWrapper = mock()
     private val gravatarUtilsWrapper: GravatarUtilsWrapper = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
@@ -51,24 +55,30 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()
     private val contextProvider: ContextProvider = mock()
     private val accountStore: AccountStore = mock()
+    private val localeManagerWrapper: LocaleManagerWrapper = mock()
+    private val jetpackMigrationLanguageUtil: JetpackMigrationLanguageUtil = mock()
 
     private lateinit var classToTest: JetpackMigrationViewModel
 
     @Before
     fun setUp() {
         whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(any(), any())).thenReturn("")
+        whenever(localeManagerWrapper.getLanguage()).thenReturn("")
         classToTest = JetpackMigrationViewModel(
-                siteUtilsWrapper = siteUtilsWrapper,
-                gravatarUtilsWrapper = gravatarUtilsWrapper,
-                contextProvider = contextProvider,
-                preventDuplicateNotifsFeatureConfig = preventDuplicateNotifsFeatureConfig,
-                appPrefsWrapper = appPrefsWrapper,
-                localMigrationOrchestrator = localMigrationOrchestrator,
-                migrationEmailHelper = migrationEmailHelper,
-                migrationAnalyticsTracker = contentMigrationAnalyticsTracker,
-                accountStore = accountStore,
+            siteUtilsWrapper = siteUtilsWrapper,
+            gravatarUtilsWrapper = gravatarUtilsWrapper,
+            contextProvider = contextProvider,
+            preventDuplicateNotifsFeatureConfig = preventDuplicateNotifsFeatureConfig,
+            appPrefsWrapper = appPrefsWrapper,
+            localMigrationOrchestrator = localMigrationOrchestrator,
+            migrationEmailHelper = migrationEmailHelper,
+            migrationAnalyticsTracker = contentMigrationAnalyticsTracker,
+            accountStore = accountStore,
+            localeManagerWrapper = localeManagerWrapper,
+            jetpackMigrationLanguageUtil = jetpackMigrationLanguageUtil,
         )
         classToTest.refreshAppTheme.observeForever(refreshAppThemeObserver)
+        classToTest.refreshAppLanguage.observeForever(refreshAppLanguageObserver)
     }
 
     // region ViewModel
@@ -76,10 +86,57 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     fun `Should init Loading UiState as default`() = test {
         assertThat(classToTest.uiState.first()).isInstanceOf(Loading::class.java)
     }
+
+    @Test
+    fun `Should emit event to refresh the language when welcome screen is shown with language data to apply`() {
+        val (languagePrefKey, languagePrefValue) = "it" to "language-pref"
+        val welcomeScreenData = WelcomeScreenData(flags = mapOf(languagePrefKey to languagePrefValue))
+        whenever(localeManagerWrapper.getLocalePrefKeyString()).thenReturn(languagePrefKey)
+        whenever(localeManagerWrapper.isSameLanguage(languagePrefValue)).thenReturn(false)
+
+        classToTest.initWelcomeScreenUi(welcomeScreenData, false)
+
+        verify(refreshAppLanguageObserver).onChanged(languagePrefValue)
+    }
+
+    @Test
+    fun `Should emit event to refresh the language when delete wp app screen is shown and language is not applied`() {
+        val language = "it"
+        whenever(localeManagerWrapper.getLanguage()).thenReturn(language)
+        whenever(localeManagerWrapper.isSameLanguage(language)).thenReturn(false)
+
+        classToTest.initPleaseDeleteWordPressAppScreenUi()
+
+        verify(refreshAppLanguageObserver).onChanged(language)
+    }
+
+    @Test
+    fun `Should delegate language change to util`() {
+        val locale = Locale.US
+        classToTest.setAppLanguage(locale)
+
+        verify(jetpackMigrationLanguageUtil).applyLanguage(locale.language)
+    }
+
+    @Test
+    fun `Should emit refresh app theme when when welcome screen is shown with user flags`() {
+        classToTest.initWelcomeScreenUi(WelcomeScreenData(flags = mapOf("theme" to "dark")), false)
+
+        verify(refreshAppThemeObserver).onChanged(Unit)
+    }
+
+    @Test
+    fun `Should emit refresh app theme when finish button is tapped on success screen`() {
+        val successScreen = classToTest.initSuccessScreenUi()
+
+        successScreen.primaryActionButton.onClick.invoke()
+
+        verify(refreshAppThemeObserver).onChanged(Unit)
+    }
+
     // endregion
 
     // region Analytics Tracking
-
     @Test
     fun `Should track when welcome screen is shown`() {
         classToTest.initWelcomeScreenUi(WelcomeScreenData(), false)
@@ -147,15 +204,6 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should emit refresh app theme when finish button is tapped on success screen`() {
-        val successScreen = classToTest.initSuccessScreenUi()
-
-        successScreen.primaryActionButton.onClick.invoke()
-
-        verify(refreshAppThemeObserver).onChanged(Unit)
-    }
-
-    @Test
     fun `Should track when delete wp app screen is shown`() {
         classToTest.initPleaseDeleteWordPressAppScreenUi()
 
@@ -210,10 +258,10 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct default userAvatarUrl for Welcome Content`() {
         val welcomeContent = Content.Welcome(
-                sites = emptyList(),
-                primaryActionButton = WelcomePrimaryButton {},
-                secondaryActionButton = WelcomeSecondaryButton {},
-                onAvatarClicked = {},
+            sites = emptyList(),
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+            onAvatarClicked = {},
         )
         val actual = welcomeContent.userAvatarUrl
         val expected = ""
@@ -223,10 +271,10 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct default isProcessing for Welcome Content`() {
         val welcomeContent = Content.Welcome(
-                sites = emptyList(),
-                primaryActionButton = WelcomePrimaryButton {},
-                secondaryActionButton = WelcomeSecondaryButton {},
-                onAvatarClicked = {},
+            sites = emptyList(),
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+            onAvatarClicked = {},
         )
         val actual = welcomeContent.isProcessing
         val expected = false
@@ -236,10 +284,10 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct screenIconRes for Welcome Content`() {
         val welcomeContent = Content.Welcome(
-                sites = emptyList(),
-                primaryActionButton = WelcomePrimaryButton {},
-                secondaryActionButton = WelcomeSecondaryButton {},
-                onAvatarClicked = {},
+            sites = emptyList(),
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+            onAvatarClicked = {},
         )
         val actual = welcomeContent.screenIconRes
         val expected = R.drawable.ic_wordpress_jetpack_logo
@@ -249,10 +297,10 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct title for Welcome Content`() {
         val welcomeContent = Content.Welcome(
-                sites = emptyList(),
-                primaryActionButton = WelcomePrimaryButton {},
-                secondaryActionButton = WelcomeSecondaryButton {},
-                onAvatarClicked = {},
+            sites = emptyList(),
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+            onAvatarClicked = {},
         )
         val actual = welcomeContent.title
         val expected = UiStringRes(R.string.jp_migration_welcome_title)
@@ -262,10 +310,10 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct subtitle for Welcome Content`() {
         val welcomeContent = Content.Welcome(
-                sites = emptyList(),
-                primaryActionButton = WelcomePrimaryButton {},
-                secondaryActionButton = WelcomeSecondaryButton {},
-                onAvatarClicked = {},
+            sites = emptyList(),
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+            onAvatarClicked = {},
         )
         val actual = welcomeContent.subtitle
         val expected = UiStringRes(R.string.jp_migration_welcome_subtitle)
@@ -275,13 +323,13 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct message for Welcome Content when sites size IS GREATER than 1`() {
         val welcomeContent = Content.Welcome(
-                sites = listOf(
-                        SiteListItemUiState(123, "name", "url", "iconUrl"),
-                        SiteListItemUiState(456, "name", "url", "iconUrl")
-                ),
-                primaryActionButton = WelcomePrimaryButton {},
-                secondaryActionButton = WelcomeSecondaryButton {},
-                onAvatarClicked = {},
+            sites = listOf(
+                SiteListItemUiState(123, "name", "url", "iconUrl"),
+                SiteListItemUiState(456, "name", "url", "iconUrl")
+            ),
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+            onAvatarClicked = {},
         )
         val actual = welcomeContent.message
         val expected = UiStringRes(R.string.jp_migration_welcome_sites_found_message)
@@ -291,10 +339,10 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct message for Welcome Content when sites size IS NOT GREATER than 1`() {
         val welcomeContent = Content.Welcome(
-                sites = listOf(SiteListItemUiState(123, "name", "url", "iconUrl")),
-                primaryActionButton = WelcomePrimaryButton {},
-                secondaryActionButton = WelcomeSecondaryButton {},
-                onAvatarClicked = {},
+            sites = listOf(SiteListItemUiState(123, "name", "url", "iconUrl")),
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+            onAvatarClicked = {},
         )
         val actual = welcomeContent.message
         val expected = UiStringRes(R.string.jp_migration_welcome_site_found_message)
@@ -418,9 +466,9 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct default isProcessing for Error UiState`() {
         val uiStateError = Error(
-                primaryActionButton = ErrorPrimaryButton {},
-                secondaryActionButton = ErrorSecondaryButton {},
-                type = Error.Networking,
+            primaryActionButton = ErrorPrimaryButton {},
+            secondaryActionButton = ErrorSecondaryButton {},
+            type = Error.Networking,
         )
         val actual = uiStateError.isProcessing
         val expected = false
@@ -430,9 +478,9 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should have correct screenIconRes for Error UiState`() {
         val uiStateError = Error(
-                primaryActionButton = ErrorPrimaryButton {},
-                secondaryActionButton = ErrorSecondaryButton {},
-                type = Error.Networking,
+            primaryActionButton = ErrorPrimaryButton {},
+            secondaryActionButton = ErrorSecondaryButton {},
+            type = Error.Networking,
         )
         val actual = uiStateError.screenIconRes
         val expected = R.drawable.ic_jetpack_migration_error

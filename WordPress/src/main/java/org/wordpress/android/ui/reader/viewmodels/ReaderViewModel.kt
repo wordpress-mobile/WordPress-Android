@@ -62,7 +62,7 @@ class ReaderViewModel @Inject constructor(
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val snackbarSequencer: SnackbarSequencer,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
-        // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
+    // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
     private var wasPaused: Boolean = false
@@ -120,15 +120,15 @@ class ReaderViewModel @Inject constructor(
             val tagList = loadReaderTabsUseCase.loadTabs()
             if (tagList.isNotEmpty()) {
                 _uiState.value = ContentUiState(
-                        tagList.map { TabUiState(label = UiStringText(it.label)) },
-                        tagList,
-                        shouldUpdateViewPager = currentContentUiState?.readerTagList?.equals(tagList) == false,
-                        searchMenuItemUiState = MenuItemUiState(isVisible = isSearchSupported()),
-                        settingsMenuItemUiState = MenuItemUiState(
-                                isVisible = isSettingsSupported(),
-                                showQuickStartFocusPoint =
-                                currentContentUiState?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
-                        )
+                    tagList.map { TabUiState(label = UiStringText(it.label)) },
+                    tagList,
+                    shouldUpdateViewPager = currentContentUiState?.readerTagList?.equals(tagList) == false,
+                    searchMenuItemUiState = MenuItemUiState(isVisible = isSearchSupported()),
+                    settingsMenuItemUiState = MenuItemUiState(
+                        isVisible = isSettingsSupported(),
+                        showQuickStartFocusPoint =
+                        currentContentUiState?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
+                    )
                 )
                 if (!initialized) {
                     initialized = true
@@ -183,10 +183,10 @@ class ReaderViewModel @Inject constructor(
             override val searchMenuItemUiState: MenuItemUiState,
             override val settingsMenuItemUiState: MenuItemUiState
         ) : ReaderUiState(
-                searchMenuItemUiState = searchMenuItemUiState,
-                settingsMenuItemUiState = settingsMenuItemUiState,
-                appBarExpanded = true,
-                tabLayoutVisible = true
+            searchMenuItemUiState = searchMenuItemUiState,
+            settingsMenuItemUiState = settingsMenuItemUiState,
+            appBarExpanded = true,
+            tabLayoutVisible = true
         ) {
             data class TabUiState(
                 val label: UiString
@@ -325,11 +325,11 @@ class ReaderViewModel @Inject constructor(
         }
         isQuickStartPromptShown = true
         _quickStartPromptEvent.value = Event(
-                QuickStartReaderPrompt(
-                        getFollowSiteTask(),
-                        shortMessagePrompt,
-                        R.drawable.ic_cog_white_24dp
-                )
+            QuickStartReaderPrompt(
+                getFollowSiteTask(),
+                shortMessagePrompt,
+                R.drawable.ic_cog_white_24dp
+            )
         )
         updateContentUiState(showQuickStartFocusPoint = isSettingsSupported())
     }
@@ -364,11 +364,11 @@ class ReaderViewModel @Inject constructor(
         val currentUiState = _uiState.value as? ContentUiState
         currentUiState?.let {
             _uiState.value = currentUiState.copy(
-                    settingsMenuItemUiState = it.settingsMenuItemUiState.copy(
-                            isVisible = isSettingsSupported(),
-                            showQuickStartFocusPoint = showQuickStartFocusPoint
-                    ),
-                    shouldUpdateViewPager = false
+                settingsMenuItemUiState = it.settingsMenuItemUiState.copy(
+                    isVisible = isSettingsSupported(),
+                    showQuickStartFocusPoint = showQuickStartFocusPoint
+                ),
+                shouldUpdateViewPager = false
             )
         }
     }

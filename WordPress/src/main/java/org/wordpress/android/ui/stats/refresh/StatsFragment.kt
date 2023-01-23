@@ -39,12 +39,10 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.UpdateAlertDialogFragment
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.UpdateAlertDialogFragment.Companion.UPDATE_ALERT_DIALOG_TAG
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandingUtils.Screen.STATS
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.observeEvent
@@ -55,8 +53,11 @@ private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
 @AndroidEntryPoint
 class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     private val viewModel: StatsViewModel by activityViewModels()
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var selectedTabListener: SelectedTabListener
@@ -98,7 +99,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         val adapter = StatsPagerAdapter(this@StatsFragment)
         statsPager.adapter = adapter
         statsPager.setPageTransformer(
-                MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
+            MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
         )
         statsPager.offscreenPageLimit = 2
         selectedTabListener = SelectedTabListener(viewModel)
@@ -142,16 +143,16 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
             if (isFirstStart) {
                 JetpackPoweredBottomSheetFragment
-                        .newInstance(it, MY_SITE)
-                        .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                    .newInstance(it, MY_SITE)
+                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
             }
         }
 
         viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
             if (isFirstStart) {
                 JetpackFeatureFullScreenOverlayFragment
-                        .newInstance(JetpackFeatureOverlayScreenType.STATS)
-                        .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
+                    .newInstance(JetpackFeatureOverlayScreenType.STATS)
+                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
             }
         }
     }
@@ -191,10 +192,6 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         viewModel.statsModuleUiModel.observeEvent(viewLifecycleOwner, { event ->
             updateUi(event)
         })
-
-        viewModel.showUpgradeAlert.observeEvent(viewLifecycleOwner) {
-            UpdateAlertDialogFragment.newInstance().show(childFragmentManager, UPDATE_ALERT_DIALOG_TAG)
-        }
     }
 
     private fun StatsFragmentBinding.updateUi(statsModuleUiModel: StatsModuleUiModel) {
@@ -250,15 +247,15 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         if (holder != null && parent != null) {
             if (holder.buttonTitle == null) {
                 WPSnackbar.make(
-                        parent,
-                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                        Snackbar.LENGTH_LONG
+                    parent,
+                    uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                    Snackbar.LENGTH_LONG
                 ).show()
             } else {
                 val snackbar = WPSnackbar.make(
-                        parent,
-                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                        Snackbar.LENGTH_LONG
+                    parent,
+                    uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                    Snackbar.LENGTH_LONG
                 )
                 snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)) {
                     holder.buttonAction()
@@ -275,20 +272,25 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
     private fun initJetpackBanner(scrollableContainerId: Int) {
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            val screen = JetpackPoweredScreen.WithDynamicText.STATS
             binding?.root?.post {
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
                 val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
-                        ?: return@post
+                    ?: return@post
 
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+                binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
+                    requireContext(),
+                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                )
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                     binding?.jetpackBanner?.root?.setOnClickListener {
-                        jetpackBrandingUtils.trackBannerTapped(STATS)
+                        jetpackBrandingUtils.trackBannerTapped(screen)
                         JetpackPoweredBottomSheetFragment
-                                .newInstance()
-                                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                            .newInstance()
+                            .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
                     }
                 }
             }

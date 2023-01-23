@@ -53,10 +53,10 @@ class TagsAndCategoriesUseCase
     private val contentDescriptionHelper: ContentDescriptionHelper,
     private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<TagsModel, TagsAndCategoriesUiState>(
-        TAGS_AND_CATEGORIES,
-        mainDispatcher,
-        backgroundDispatcher,
-        TagsAndCategoriesUiState(null)
+    TAGS_AND_CATEGORIES,
+    mainDispatcher,
+    backgroundDispatcher,
+    TagsAndCategoriesUiState(null)
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
@@ -93,11 +93,11 @@ class TagsAndCategoriesUseCase
             items.add(Empty())
         } else {
             val header = Header(
-                    R.string.stats_tags_and_categories_title_label,
-                    R.string.stats_tags_and_categories_views_label
+                R.string.stats_tags_and_categories_title_label,
+                R.string.stats_tags_and_categories_views_label
             )
             items.add(
-                    header
+                header
             )
             val tagsList = mutableListOf<BlockListItem>()
             val maxViews = domainModel.tags.maxByOrNull { it.views }?.views ?: 0
@@ -109,8 +109,8 @@ class TagsAndCategoriesUseCase
                     else -> {
                         val isExpanded = areTagsEqual(tag, uiState.expandedTag)
                         tagsList.add(ExpandableItem(
-                                mapCategory(tag, index, domainModel.tags.size, maxViews, header),
-                                isExpanded
+                            mapCategory(tag, index, domainModel.tags.size, maxViews, header),
+                            isExpanded
                         ) { changedExpandedState ->
                             onUiState(uiState.copy(expandedTag = if (changedExpandedState) tag else null))
                         })
@@ -125,10 +125,10 @@ class TagsAndCategoriesUseCase
             items.addAll(tagsList)
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
-                        Link(
-                                text = R.string.stats_insights_view_more,
-                                navigateAction = ListItemInteraction.create(this::onLinkClick)
-                        )
+                    Link(
+                        text = R.string.stats_insights_view_more,
+                        navigateAction = ListItemInteraction.create(this::onLinkClick)
+                    )
                 )
             }
         }
@@ -144,17 +144,17 @@ class TagsAndCategoriesUseCase
     private fun mapTag(tag: TagModel, index: Int, listSize: Int, maxViews: Long, header: Header): ListItemWithIcon {
         val item = tag.items.first()
         return ListItemWithIcon(
-                icon = getIcon(item.type),
-                text = item.name,
-                value = statsUtils.toFormattedString(tag.views),
-                barWidth = getBarWidth(tag.views, maxViews),
-                showDivider = index < listSize - 1,
-                navigationAction = ListItemInteraction.create(item.link, this::onTagClick),
-                contentDescription = contentDescriptionHelper.buildContentDescription(
-                        header,
-                        item.name,
-                        tag.views
-                )
+            icon = getIcon(item.type),
+            text = item.name,
+            value = statsUtils.toFormattedString(tag.views),
+            barWidth = getBarWidth(tag.views, maxViews),
+            showDivider = index < listSize - 1,
+            navigationAction = ListItemInteraction.create(item.link, this::onTagClick),
+            contentDescription = contentDescriptionHelper.buildContentDescription(
+                header,
+                item.name,
+                tag.views
+            )
         )
     }
 
@@ -172,35 +172,35 @@ class TagsAndCategoriesUseCase
             }
         }
         return ListItemWithIcon(
-                icon = R.drawable.ic_folder_multiple_white_24dp,
-                text = text,
-                value = statsUtils.toFormattedString(tag.views),
-                barWidth = getBarWidth(tag.views, maxViews),
-                showDivider = index < listSize - 1,
-                contentDescription = contentDescriptionHelper.buildContentDescription(
-                        header,
-                        text,
-                        tag.views
-                )
+            icon = R.drawable.ic_folder_multiple_white_24dp,
+            text = text,
+            value = statsUtils.toFormattedString(tag.views),
+            barWidth = getBarWidth(tag.views, maxViews),
+            showDivider = index < listSize - 1,
+            contentDescription = contentDescriptionHelper.buildContentDescription(
+                header,
+                text,
+                tag.views
+            )
         )
     }
 
     private fun mapItem(item: TagModel.Item, header: Header): ListItemWithIcon {
         return ListItemWithIcon(
-                icon = getIcon(item.type),
-                textStyle = LIGHT,
-                text = item.name,
-                showDivider = false,
-                navigationAction = ListItemInteraction.create(item.link, this::onTagClick),
-                contentDescription = contentDescriptionHelper.buildContentDescription(
-                        header.startLabel,
-                        item.name
-                )
+            icon = getIcon(item.type),
+            textStyle = LIGHT,
+            text = item.name,
+            showDivider = false,
+            navigationAction = ListItemInteraction.create(item.link, this::onTagClick),
+            contentDescription = contentDescriptionHelper.buildContentDescription(
+                header.startLabel,
+                item.name
+            )
         )
     }
 
     private fun getIcon(type: String) =
-            if (type == "tag") R.drawable.ic_tag_white_24dp else R.drawable.ic_folder_white_24dp
+        if (type == "tag") R.drawable.ic_tag_white_24dp else R.drawable.ic_folder_white_24dp
 
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED)
@@ -231,17 +231,17 @@ class TagsAndCategoriesUseCase
         private val popupMenuHandler: ItemPopupMenuHandler
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
-                TagsAndCategoriesUseCase(
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        tagsStore,
-                        statsSiteProvider,
-                        resourceProvider,
-                        statsUtils,
-                        analyticsTracker,
-                        popupMenuHandler,
-                        contentDescriptionHelper,
-                        useCaseMode
-                )
+            TagsAndCategoriesUseCase(
+                mainDispatcher,
+                backgroundDispatcher,
+                tagsStore,
+                statsSiteProvider,
+                resourceProvider,
+                statsUtils,
+                analyticsTracker,
+                popupMenuHandler,
+                contentDescriptionHelper,
+                useCaseMode
+            )
     }
 }

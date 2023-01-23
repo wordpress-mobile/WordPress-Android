@@ -20,8 +20,8 @@ abstract class StatsWidget : AppWidgetProvider() {
         val appWidgetId = intent?.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1) ?: -1
         if (appWidgetId > -1) {
             widgetUpdater.updateAppWidget(
-                    context,
-                    appWidgetId = appWidgetId
+                context,
+                appWidgetId = appWidgetId
             )
         }
     }
@@ -30,9 +30,9 @@ abstract class StatsWidget : AppWidgetProvider() {
         inject((context.applicationContext as WordPress).component())
         for (appWidgetId in appWidgetIds) {
             widgetUpdater.updateAppWidget(
-                    context,
-                    appWidgetId,
-                    appWidgetManager
+                context,
+                appWidgetId,
+                appWidgetManager
             )
         }
     }
@@ -53,9 +53,9 @@ abstract class StatsWidget : AppWidgetProvider() {
         if (context != null) {
             inject((context.applicationContext as WordPress).component())
             widgetUpdater.updateAppWidget(
-                    context,
-                    appWidgetId,
-                    appWidgetManager
+                context,
+                appWidgetId,
+                appWidgetManager
             )
         }
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)

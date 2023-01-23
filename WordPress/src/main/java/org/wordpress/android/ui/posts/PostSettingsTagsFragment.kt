@@ -32,7 +32,9 @@ class PostSettingsTagsFragment : TagsFragment() {
 
     companion object {
         const val TAG = "post_settings_tags_fragment_tag"
-        @JvmStatic fun newInstance(site: SiteModel, tags: String?): PostSettingsTagsFragment {
+
+        @JvmStatic
+        fun newInstance(site: SiteModel, tags: String?): PostSettingsTagsFragment {
             val bundle = Bundle().apply {
                 putSerializable(WordPress.SITE, site)
                 putString(PostSettingsTagsActivity.KEY_TAGS, tags)

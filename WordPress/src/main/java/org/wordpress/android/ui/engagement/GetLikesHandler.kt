@@ -3,14 +3,13 @@ package org.wordpress.android.ui.engagement
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.NO_NETWORK
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
-import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
 import org.wordpress.android.ui.engagement.GetLikesUseCase.PaginationParams
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -36,11 +35,11 @@ class GetLikesHandler @Inject constructor(
         // Safety net in case page length is computed rather than a constant in the future.
         require(pageLength != 0) { "The page length for likes cannot be 0." }
         getLikesUseCase.getLikesForPost(
-                fingerPrint,
-                PaginationParams(
-                        requestNextPage,
-                        pageLength
-                )
+            fingerPrint,
+            PaginationParams(
+                requestNextPage,
+                pageLength
+            )
         ).flowOn(bgDispatcher).collect { state ->
             manageState(state)
         }
@@ -54,11 +53,11 @@ class GetLikesHandler @Inject constructor(
         // Safety net in case page length is computed rather than a constant in the future.
         require(pageLength != 0) { "The page length for likes cannot be 0" }
         getLikesUseCase.getLikesForComment(
-                fingerPrint,
-                PaginationParams(
-                        requestNextPage,
-                        pageLength
-                )
+            fingerPrint,
+            PaginationParams(
+                requestNextPage,
+                pageLength
+            )
         ).flowOn(bgDispatcher).collect { state ->
             manageState(state)
         }

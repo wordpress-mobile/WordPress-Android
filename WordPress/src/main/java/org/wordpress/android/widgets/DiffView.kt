@@ -17,9 +17,9 @@ class DiffView : MaterialTextView {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
-            context,
-            attrs,
-            defStyleAttr
+        context,
+        attrs,
+        defStyleAttr
     )
 
     fun showDiffs(diffs: List<Diff>, trimNewline: Boolean = false) {
@@ -36,31 +36,31 @@ class DiffView : MaterialTextView {
 
             if (diff.operation == ADD) {
                 diffContent.setSpan(
-                        ColorUnderlineSpan(
-                                context.getColorFromAttribute(R.attr.colorPrimary)
-                        ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    ColorUnderlineSpan(
+                        context.getColorFromAttribute(R.attr.colorPrimary)
+                    ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
                 diffContent.setSpan(
-                        BackgroundColorSpan(
-                                context.getColorFromAttribute(R.attr.colorSurface)
-                        ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    BackgroundColorSpan(
+                        context.getColorFromAttribute(R.attr.colorSurface)
+                    ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             } else if (diff.operation == DELETE) {
                 diffContent.setSpan(
-                        StrikethroughSpan(),
-                        0,
-                        diffContent.length,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    StrikethroughSpan(),
+                    0,
+                    diffContent.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
                 diffContent.setSpan(
-                        ColorUnderlineSpan(
-                                context.getColorFromAttribute(R.attr.wpColorError)
-                        ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    ColorUnderlineSpan(
+                        context.getColorFromAttribute(R.attr.wpColorError)
+                    ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
                 diffContent.setSpan(
-                        BackgroundColorSpan(
-                                context.getColorFromAttribute(R.attr.colorSurface)
-                        ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    BackgroundColorSpan(
+                        context.getColorFromAttribute(R.attr.colorSurface)
+                    ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             }
 

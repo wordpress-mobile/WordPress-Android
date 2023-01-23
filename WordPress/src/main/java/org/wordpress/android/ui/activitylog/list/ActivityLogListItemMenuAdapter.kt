@@ -19,8 +19,8 @@ class ActivityLogListItemMenuAdapter(
 ) : BaseAdapter() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private val items: List<SecondaryAction> = SecondaryAction.values()
-            .toList()
-            .filter { !(it == SecondaryAction.RESTORE && isRestoreHidden) }
+        .toList()
+        .filter { !(it == SecondaryAction.RESTORE && isRestoreHidden) }
 
     override fun getCount(): Int {
         return items.size
@@ -61,15 +61,15 @@ class ActivityLogListItemMenuAdapter(
         }
         holder.text.setText(textRes)
         holder.text.setTextColor(
-                AppCompatResources.getColorStateList(
-                        view.context,
-                        colorRes
-                )
+            AppCompatResources.getColorStateList(
+                view.context,
+                colorRes
+            )
         )
         setImageResourceWithTint(
-                holder.icon,
-                iconRes,
-                colorRes
+            holder.icon,
+            iconRes,
+            colorRes
         )
         return view
     }

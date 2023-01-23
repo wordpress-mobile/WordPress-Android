@@ -22,9 +22,14 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdate
 
 @ExperimentalCoroutinesApi
 class StatsSiteProviderTest : BaseUnitTest() {
-    @Mock lateinit var siteStore: SiteStore
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock
+    lateinit var siteStore: SiteStore
+
+    @Mock
+    lateinit var dispatcher: Dispatcher
+
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
     private lateinit var statsSiteProvider: StatsSiteProvider
     private lateinit var dispatchCaptor: KArgumentCaptor<Action<SiteModel>>
     private lateinit var firstSite: SiteModel

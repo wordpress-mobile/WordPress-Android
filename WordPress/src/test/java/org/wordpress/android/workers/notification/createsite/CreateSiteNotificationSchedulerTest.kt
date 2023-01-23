@@ -32,10 +32,10 @@ class CreateSiteNotificationSchedulerTest {
     @Before
     fun setUp() {
         createSiteNotificationScheduler = CreateSiteNotificationScheduler(
-                localNotificationScheduler,
-                createSiteNotificationHandler,
-                appsPrefs,
-                analyticsTracker
+            localNotificationScheduler,
+            createSiteNotificationHandler,
+            appsPrefs,
+            analyticsTracker
         )
     }
 

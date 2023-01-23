@@ -26,70 +26,70 @@ const val TEST_CONTEXT_LINE_CONTENTS = "test contents"
 
 object ThreatTestData {
     val extension = Extension(
-            type = ExtensionType.PLUGIN,
-            slug = TEST_VULNERABLE_THREAT_SLUG,
-            name = "",
-            version = TEST_VULNERABLE_THREAT_VERSION,
-            isPremium = false
+        type = ExtensionType.PLUGIN,
+        slug = TEST_VULNERABLE_THREAT_SLUG,
+        name = "",
+        version = TEST_VULNERABLE_THREAT_VERSION,
+        isPremium = false
     )
     val rows = listOf(Row(id = 1, rowNumber = 1))
     val contextLine = ContextLine(
-            lineNumber = 1,
-            contents = TEST_CONTEXT_LINE_CONTENTS,
-            highlights = listOf(Pair(2, 5))
+        lineNumber = 1,
+        contents = TEST_CONTEXT_LINE_CONTENTS,
+        highlights = listOf(Pair(2, 5))
     )
 
     val baseThreatModel = BaseThreatModel(
-            id = 1L,
-            signature = TEST_SIGNATURE,
-            description = TEST_DESCRIPTION,
-            status = ThreatStatus.CURRENT,
-            firstDetected = Date(0),
-            fixedOn = Date(123)
+        id = 1L,
+        signature = TEST_SIGNATURE,
+        description = TEST_DESCRIPTION,
+        status = ThreatStatus.CURRENT,
+        firstDetected = Date(0),
+        fixedOn = Date(123)
     )
     val genericThreatModel = GenericThreatModel(
-            baseThreatModel = baseThreatModel
+        baseThreatModel = baseThreatModel
     )
     val coreFileModificationThreatModel = CoreFileModificationThreatModel(
-            baseThreatModel = baseThreatModel,
-            fileName = TEST_FILE_PATH,
-            diff = ""
+        baseThreatModel = baseThreatModel,
+        fileName = TEST_FILE_PATH,
+        diff = ""
     )
     val databaseThreatModel = DatabaseThreatModel(
-            baseThreatModel = baseThreatModel,
-            rows = rows
+        baseThreatModel = baseThreatModel,
+        rows = rows
     )
     val fileThreatModel = FileThreatModel(
-            baseThreatModel = baseThreatModel,
-            fileName = TEST_FILE_PATH,
-            context = ThreatContext(lines = listOf(contextLine))
+        baseThreatModel = baseThreatModel,
+        fileName = TEST_FILE_PATH,
+        context = ThreatContext(lines = listOf(contextLine))
     )
     val vulnerableExtensionThreatModel = VulnerableExtensionThreatModel(
-            baseThreatModel = baseThreatModel,
-            extension = extension
+        baseThreatModel = baseThreatModel,
+        extension = extension
     )
     val fixableThreatInCurrentStatus = GenericThreatModel(
-            baseThreatModel.copy(
-                    fixable = Fixable(file = null, fixer = FixType.EDIT, target = null),
-                    status = ThreatStatus.CURRENT
-            )
+        baseThreatModel.copy(
+            fixable = Fixable(file = null, fixer = FixType.EDIT, target = null),
+            status = ThreatStatus.CURRENT
+        )
     )
     val notFixableThreatInCurrentStatus = GenericThreatModel(
-            baseThreatModel.copy(
-                    fixable = null,
-                    status = ThreatStatus.CURRENT
-            )
+        baseThreatModel.copy(
+            fixable = null,
+            status = ThreatStatus.CURRENT
+        )
     )
     val fixableThreatInFixedStatus = GenericThreatModel(
-            baseThreatModel.copy(
-                    fixable = Fixable(file = null, fixer = FixType.EDIT, target = null),
-                    status = ThreatStatus.FIXED
-            )
+        baseThreatModel.copy(
+            fixable = Fixable(file = null, fixer = FixType.EDIT, target = null),
+            status = ThreatStatus.FIXED
+        )
     )
     val fixableThreatInIgnoredStatus = GenericThreatModel(
-            baseThreatModel.copy(
-                    fixable = Fixable(file = null, fixer = FixType.EDIT, target = null),
-                    status = ThreatStatus.IGNORED
-            )
+        baseThreatModel.copy(
+            fixable = Fixable(file = null, fixer = FixType.EDIT, target = null),
+            status = ThreatStatus.IGNORED
+        )
     )
 }

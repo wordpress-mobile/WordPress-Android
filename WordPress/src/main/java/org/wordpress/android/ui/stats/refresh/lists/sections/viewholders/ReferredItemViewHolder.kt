@@ -7,8 +7,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ReferredItem
 
 class ReferredItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
-        parent,
-        R.layout.stats_block_referred_item
+    parent,
+    R.layout.stats_block_referred_item
 ) {
     private val container = itemView.findViewById<LinearLayout>(R.id.container)
     private val label = itemView.findViewById<TextView>(R.id.label)

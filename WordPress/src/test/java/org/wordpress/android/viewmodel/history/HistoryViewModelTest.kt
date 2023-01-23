@@ -72,12 +72,12 @@ class HistoryViewModelTest : BaseUnitTest() {
     }
 
     private fun createHistoryVieWModel() = HistoryViewModel(
-            dispatcher = dispatcher,
-            resourceProvider = mock(),
-            networkUtils = mock(),
-            postStore = postStore,
-            uiDispatcher = testDispatcher(),
-            bgDispatcher = testDispatcher(),
-            connectionStatus = mock()
+        dispatcher = dispatcher,
+        resourceProvider = mock(),
+        networkUtils = mock(),
+        postStore = postStore,
+        uiDispatcher = testDispatcher(),
+        bgDispatcher = testDispatcher(),
+        connectionStatus = mock()
     )
 }

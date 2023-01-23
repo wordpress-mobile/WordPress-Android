@@ -14,7 +14,8 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class DomainRegistrationCardShownTrackerTest {
-    @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
     private lateinit var mDomainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
 
     @Before

@@ -99,19 +99,19 @@ class PageParentViewModel
         }
 
         val parents = mutableListOf<PageItem>(
-                ParentPage(
-                        0, resourceProvider.getString(R.string.top_level),
-                        page?.parent == null,
-                        TOP_LEVEL_PARENT
-                )
+            ParentPage(
+                0, resourceProvider.getString(R.string.top_level),
+                page?.parent == null,
+                TOP_LEVEL_PARENT
+            )
         )
 
         val choices = pageStore.getPagesFromDb(site)
-                .filter {
-                    // negative local page ID used as a temp remote post ID for local-only pages and can't be assigned
-                    // as parent to other pages properly, better to filter them out
-                    it.remoteId > 0 && it.remoteId != pageId && it.status == PUBLISHED
-                }
+            .filter {
+                // negative local page ID used as a temp remote post ID for local-only pages and can't be assigned
+                // as parent to other pages properly, better to filter them out
+                it.remoteId > 0 && it.remoteId != pageId && it.status == PUBLISHED
+            }
         val parentChoices = choices.filter { isNotChild(it, choices) }
         if (parentChoices.isNotEmpty()) {
             parents.add(Divider(resourceProvider.getString(R.string.pages)))
@@ -121,7 +121,7 @@ class PageParentViewModel
         }
 
         _currentParent = parents.firstOrNull { it is ParentPage && it.isSelected } as? ParentPage
-                ?: parents.first() as ParentPage
+            ?: parents.first() as ParentPage
 
         _initialParent = _currentParent
 
@@ -142,8 +142,8 @@ class PageParentViewModel
 
     private fun trackSaveEvent(page: PageModel) {
         val properties = mutableMapOf(
-                "page_id" to page.remoteId as Any,
-                "new_parent_id" to currentParent.id
+            "page_id" to page.remoteId as Any,
+            "new_parent_id" to currentParent.id
         )
         AnalyticsUtils.trackWithSiteDetails(PAGES_SET_PARENT_CHANGES_SAVED, site, properties)
     }
@@ -209,11 +209,11 @@ class PageParentViewModel
     ): List<PageItem> = withContext(defaultDispatcher) {
         _pages.value?.let {
             if (it.isNotEmpty()) return@withContext it
-                    .filterIsInstance(ParentPage::class.java)
-                    .filter { parentPage -> parentPage.id != 0L }
-                    .filter { parentPage ->
-                        parentPage.title.contains(searchQuery, true)
-                    }
+                .filterIsInstance(ParentPage::class.java)
+                .filter { parentPage -> parentPage.id != 0L }
+                .filter { parentPage ->
+                    parentPage.title.contains(searchQuery, true)
+                }
         }
         return@withContext mutableListOf<PageItem>()
     }

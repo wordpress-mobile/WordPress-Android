@@ -38,8 +38,8 @@ class TodayWidgetUpdater
     ) {
         val widgetManager = appWidgetManager ?: AppWidgetManager.getInstance(context)
         val isWideView = widgetUtils.isWidgetWiderThanLimit(
-                widgetManager,
-                appWidgetId
+            widgetManager,
+            appWidgetId
         )
         val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: Color.LIGHT
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
@@ -54,30 +54,30 @@ class TodayWidgetUpdater
             widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
             siteModel.let {
                 views.setOnClickPendingIntent(
-                        R.id.widget_title_container,
-                        widgetUtils.getPendingSelfIntent(context, siteModel.id, StatsTimeframe.INSIGHTS)
+                    R.id.widget_title_container,
+                    widgetUtils.getPendingSelfIntent(context, siteModel.id, StatsTimeframe.INSIGHTS)
                 )
             }
             widgetUtils.showList(
-                    widgetManager,
-                    views,
-                    context,
-                    appWidgetId,
-                    colorMode,
-                    siteModel.id,
-                    TODAY_VIEWS,
-                    isWideView
+                widgetManager,
+                views,
+                context,
+                appWidgetId,
+                colorMode,
+                siteModel.id,
+                TODAY_VIEWS,
+                isWideView
             )
         } else if (!widgetHasData || !hasAccessToken || siteModel == null) {
             widgetUtils.showError(
-                    widgetManager,
-                    views,
-                    appWidgetId,
-                    networkAvailable,
-                    hasAccessToken,
-                    resourceProvider,
-                    context,
-                    StatsTodayWidget::class.java
+                widgetManager,
+                views,
+                appWidgetId,
+                networkAvailable,
+                hasAccessToken,
+                resourceProvider,
+                context,
+                StatsTodayWidget::class.java
             )
         }
     }

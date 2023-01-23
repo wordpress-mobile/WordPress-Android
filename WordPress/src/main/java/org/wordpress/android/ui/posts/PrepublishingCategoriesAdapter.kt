@@ -9,7 +9,7 @@ import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel.Prepublis
 import org.wordpress.android.ui.utils.UiHelpers
 
 class PrepublishingCategoriesAdapter(private val uiHelpers: UiHelpers) :
-        RecyclerView.Adapter<PrepublishingCategoriesViewHolder<*>>() {
+    RecyclerView.Adapter<PrepublishingCategoriesViewHolder<*>>() {
     private val items = mutableListOf<PrepublishingCategoriesListItemUiState>()
 
     override fun onCreateViewHolder(
@@ -32,10 +32,10 @@ class PrepublishingCategoriesAdapter(private val uiHelpers: UiHelpers) :
     @MainThread
     fun update(newItems: List<PrepublishingCategoriesListItemUiState>) {
         val diffResult = DiffUtil.calculateDiff(
-                PrepublishingCategoriesDiffUtils(
-                        items.toList(),
-                        newItems
-                )
+            PrepublishingCategoriesDiffUtils(
+                items.toList(),
+                newItems
+            )
         )
         items.clear()
         items.addAll(newItems)

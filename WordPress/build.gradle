@@ -110,6 +110,7 @@ android {
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS_LIST", "false"
+        buildConfigField "boolean", "BLOGGING_PROMPTS_ENHANCEMENTS", "false"
         buildConfigField "boolean", "QUICK_START_EXISTING_USERS_V2", "false"
         buildConfigField "boolean", "QRCODE_AUTH_FLOW", "false"
         buildConfigField "boolean", "BETA_SITE_DESIGNS", "false"
@@ -128,6 +129,7 @@ android {
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_NEW_USERS", "false"
         buildConfigField "boolean", "PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD", "false"
         buildConfigField "boolean", "OPEN_WEB_LINKS_WITH_JETPACK_FLOW", "false"
+        buildConfigField "boolean", "ENABLE_WORDPRESS_SUPPORT_FORUM", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"

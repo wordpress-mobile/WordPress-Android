@@ -67,16 +67,16 @@ data class MySiteUiState(
             is ShowSiteIconProgressBar -> uiState.copy(showSiteIconProgressBar = partialState.showSiteIconProgressBar)
             is DomainCreditAvailable -> uiState.copy(isDomainCreditAvailable = partialState.isDomainCreditAvailable)
             is JetpackCapabilities -> uiState.copy(
-                    scanAvailable = partialState.scanAvailable,
-                    backupAvailable = partialState.backupAvailable
+                scanAvailable = partialState.scanAvailable,
+                backupAvailable = partialState.backupAvailable
             )
             is QuickStartUpdate -> uiState.copy(
-                    activeTask = partialState.activeTask,
-                    quickStartCategories = partialState.categories
+                activeTask = partialState.activeTask,
+                quickStartCategories = partialState.categories
             )
             is DynamicCardsUpdate -> uiState.copy(
-                    pinnedDynamicCard = partialState.pinnedDynamicCard,
-                    visibleDynamicCards = partialState.cards
+                pinnedDynamicCard = partialState.pinnedDynamicCard,
+                visibleDynamicCards = partialState.cards
             )
             is CardsUpdate -> uiState.copy(cardsUpdate = partialState)
             is BloggingPromptUpdate -> uiState.copy(bloggingPromptsUpdate = partialState)
@@ -84,7 +84,7 @@ data class MySiteUiState(
     }
 
     private fun updateSnackbarStatusToShowOnlyOnce(partialState: PartialState) =
-            if (partialState !is CardsUpdate) {
-                this.copy(cardsUpdate = this.cardsUpdate?.copy(showSnackbarError = false))
-            } else this
+        if (partialState !is CardsUpdate) {
+            this.copy(cardsUpdate = this.cardsUpdate?.copy(showSnackbarError = false))
+        } else this
 }

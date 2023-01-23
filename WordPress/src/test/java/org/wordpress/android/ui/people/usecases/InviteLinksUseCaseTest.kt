@@ -32,11 +32,20 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
 @ExperimentalCoroutinesApi
 class InviteLinksUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var inviteLinksApiCallsProvider: InviteLinksApiCallsProvider
-    @Mock lateinit var accountStore: AccountStore
-    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
-    @Mock lateinit var siteStore: SiteStore
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var inviteLinksApiCallsProvider: InviteLinksApiCallsProvider
+
+    @Mock
+    lateinit var accountStore: AccountStore
+
+    @Mock
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+
+    @Mock
+    lateinit var siteStore: SiteStore
 
     private lateinit var inviteLinksUseCase: InviteLinksUseCase
     private val blogId = 100L
@@ -47,11 +56,11 @@ class InviteLinksUseCaseTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         inviteLinksUseCase = InviteLinksUseCase(
-                networkUtilsWrapper,
-                inviteLinksApiCallsProvider,
-                accountStore,
-                analyticsUtilsWrapper,
-                siteStore
+            networkUtilsWrapper,
+            inviteLinksApiCallsProvider,
+            accountStore,
+            analyticsUtilsWrapper,
+            siteStore
         )
     }
 
@@ -71,10 +80,10 @@ class InviteLinksUseCaseTest : BaseUnitTest() {
         val flow = inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING)
 
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        InviteLinksLoading(INITIALIZING),
-                        InviteLinksError(INITIALIZING, UiStringRes(string.error_network_connection))
-                )
+            listOf(
+                InviteLinksLoading(INITIALIZING),
+                InviteLinksError(INITIALIZING, UiStringRes(string.error_network_connection))
+            )
         )
     }
 
@@ -87,10 +96,10 @@ class InviteLinksUseCaseTest : BaseUnitTest() {
         val flow = inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING)
 
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        InviteLinksLoading(INITIALIZING),
-                        InviteLinksData(INITIALIZING, inviteLinks)
-                )
+            listOf(
+                InviteLinksLoading(INITIALIZING),
+                InviteLinksData(INITIALIZING, inviteLinks)
+            )
         )
     }
 
@@ -103,10 +112,10 @@ class InviteLinksUseCaseTest : BaseUnitTest() {
         val flow = inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING)
 
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        InviteLinksLoading(INITIALIZING),
-                        InviteLinksError(INITIALIZING, UiStringText(error))
-                )
+            listOf(
+                InviteLinksLoading(INITIALIZING),
+                InviteLinksError(INITIALIZING, UiStringText(error))
+            )
         )
     }
 
@@ -120,10 +129,10 @@ class InviteLinksUseCaseTest : BaseUnitTest() {
         val flow = inviteLinksUseCase.generateLinks(blogId)
 
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        InviteLinksLoading(GENERATING_LINKS),
-                        InviteLinksData(GENERATING_LINKS, inviteLinks)
-                )
+            listOf(
+                InviteLinksLoading(GENERATING_LINKS),
+                InviteLinksData(GENERATING_LINKS, inviteLinks)
+            )
         )
     }
 
@@ -137,10 +146,10 @@ class InviteLinksUseCaseTest : BaseUnitTest() {
         val flow = inviteLinksUseCase.generateLinks(blogId)
 
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        InviteLinksLoading(GENERATING_LINKS),
-                        InviteLinksError(GENERATING_LINKS, UiStringText(error))
-                )
+            listOf(
+                InviteLinksLoading(GENERATING_LINKS),
+                InviteLinksError(GENERATING_LINKS, UiStringText(error))
+            )
         )
     }
 
@@ -154,9 +163,10 @@ class InviteLinksUseCaseTest : BaseUnitTest() {
         val flow = inviteLinksUseCase.generateLinks(blogId)
 
         assertThat(flow.toList()).isEqualTo(
-                listOf(InviteLinksLoading(GENERATING_LINKS),
-                        InviteLinksError(GENERATING_LINKS, UiStringText(error))
-                )
+            listOf(
+                InviteLinksLoading(GENERATING_LINKS),
+                InviteLinksError(GENERATING_LINKS, UiStringText(error))
+            )
         )
     }
 
@@ -167,10 +177,10 @@ class InviteLinksUseCaseTest : BaseUnitTest() {
         val flow = inviteLinksUseCase.disableLinks(blogId)
 
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        InviteLinksLoading(MANAGING_AVAILABLE_LINKS),
-                        InviteLinksData(MANAGING_AVAILABLE_LINKS, listOf())
-                )
+            listOf(
+                InviteLinksLoading(MANAGING_AVAILABLE_LINKS),
+                InviteLinksData(MANAGING_AVAILABLE_LINKS, listOf())
+            )
         )
     }
 
@@ -183,10 +193,10 @@ class InviteLinksUseCaseTest : BaseUnitTest() {
         val flow = inviteLinksUseCase.disableLinks(blogId)
 
         assertThat(flow.toList()).isEqualTo(
-                listOf(
-                        InviteLinksLoading(MANAGING_AVAILABLE_LINKS),
-                        InviteLinksError(MANAGING_AVAILABLE_LINKS, UiStringText(error))
-                )
+            listOf(
+                InviteLinksLoading(MANAGING_AVAILABLE_LINKS),
+                InviteLinksError(MANAGING_AVAILABLE_LINKS, UiStringText(error))
+            )
         )
     }
 }

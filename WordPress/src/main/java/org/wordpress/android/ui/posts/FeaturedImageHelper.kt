@@ -23,7 +23,6 @@ import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.util.ArrayList
 import javax.inject.Inject
 
 const val EMPTY_LOCAL_POST_ID = -1
@@ -86,7 +85,7 @@ class FeaturedImageHelper @Inject constructor(
         mimeType: String?
     ): EnqueueFeaturedImageResult {
         val media = fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
-                ?: return EnqueueFeaturedImageResult.FILE_NOT_FOUND
+            ?: return EnqueueFeaturedImageResult.FILE_NOT_FOUND
         if (localPostId != EMPTY_LOCAL_POST_ID) {
             media.localPostId = localPostId
         } else {
@@ -150,29 +149,29 @@ class FeaturedImageHelper @Inject constructor(
         }
 
         val media = mediaStore.getSiteMediaWithId(site, post.featuredImageId) ?: return FeaturedImageData(
-                FeaturedImageState.IMAGE_EMPTY,
-                null
+            FeaturedImageState.IMAGE_EMPTY,
+            null
         )
 
         // Get max width/height for photon thumbnail - we load a smaller image so it's loaded quickly
         val maxDimen = resourceProvider.getDimensionPixelSize(R.dimen.post_settings_featured_image_height_max)
 
         val mediaUri = StringUtils.notNullStr(
-                if (site.isSelfHostedAdmin || TextUtils.isEmpty(media.thumbnailUrl)) {
-                    media.url
-                } else {
-                    media.thumbnailUrl
-                }
+            if (site.isSelfHostedAdmin || TextUtils.isEmpty(media.thumbnailUrl)) {
+                media.url
+            } else {
+                media.thumbnailUrl
+            }
         )
 
         val photonUrl = if (site.isSelfHostedAdmin) {
             mediaUri
         } else {
             readerUtilsWrapper.getResizedImageUrl(
-                    mediaUri,
-                    maxDimen,
-                    maxDimen,
-                    siteUtilsWrapper.getAccessibilityInfoFromSite(site)
+                mediaUri,
+                maxDimen,
+                maxDimen,
+                siteUtilsWrapper.getAccessibilityInfoFromSite(site)
             )
         }
         return FeaturedImageData(FeaturedImageState.REMOTE_IMAGE_LOADING, photonUrl)

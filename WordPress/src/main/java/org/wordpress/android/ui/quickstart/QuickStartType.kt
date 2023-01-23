@@ -12,14 +12,15 @@ sealed class QuickStartType(
     val tasks: List<QuickStartTask>
 ) {
     object NewSiteQuickStartType : QuickStartType(
-            NEW_SITE,
-            NEW_SITE_TRACKING_LABEL,
-            QuickStartNewSiteTask.values().toList()
+        NEW_SITE,
+        NEW_SITE_TRACKING_LABEL,
+        QuickStartNewSiteTask.values().toList()
     )
+
     object ExistingSiteQuickStartType : QuickStartType(
-            EXISTING_SITE,
-            EXISTING_SITE_TRACKING_LABEL,
-            QuickStartExistingSiteTask.values().toList()
+        EXISTING_SITE,
+        EXISTING_SITE_TRACKING_LABEL,
+        QuickStartExistingSiteTask.values().toList()
     )
 
     val taskTypes = tasks.map { it.taskType }.distinct()
@@ -61,7 +62,7 @@ sealed class QuickStartType(
 
     fun isEveryQuickStartTaskDone(quickStartStore: QuickStartStore, siteLocalId: Long): Boolean {
         return quickStartStore.getDoneCount(siteLocalId) >= tasks
-                .filter { it.taskType != QuickStartTaskType.UNKNOWN }.size
+            .filter { it.taskType != QuickStartTaskType.UNKNOWN }.size
     }
 
     companion object {

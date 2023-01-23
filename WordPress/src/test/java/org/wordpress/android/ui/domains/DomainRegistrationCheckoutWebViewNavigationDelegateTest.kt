@@ -13,11 +13,11 @@ class DomainRegistrationCheckoutWebViewNavigationDelegateTest : BaseUnitTest() {
     @Test
     fun `checkout web view can navigate to checkout paths`() {
         assertThat(
-                buildUrls(
-                        "/checkout/",
-                        "/checkout/dummywpcomsite.wordpress.com",
-                        "/checkout/thank-you/"
-                )
+            buildUrls(
+                "/checkout/",
+                "/checkout/dummywpcomsite.wordpress.com",
+                "/checkout/thank-you/"
+            )
         ).allMatch {
             navigationDelegate.canNavigateTo(it)
         }
@@ -26,11 +26,11 @@ class DomainRegistrationCheckoutWebViewNavigationDelegateTest : BaseUnitTest() {
     @Test
     fun `checkout web view can navigate to TOS paths`() {
         assertThat(
-                buildUrls(
-                        "/tos/",
-                        "/en/tos/",
-                        "/pt-br/tos/"
-                )
+            buildUrls(
+                "/tos/",
+                "/en/tos/",
+                "/pt-br/tos/"
+            )
         ).allMatch {
             navigationDelegate.canNavigateTo(it)
         }
@@ -39,9 +39,9 @@ class DomainRegistrationCheckoutWebViewNavigationDelegateTest : BaseUnitTest() {
     @Test
     fun `checkout web view can navigate to registration agreement paths`() {
         assertThat(
-                buildUrls(
-                        "/automattic-domain-name-registration-agreement/"
-                )
+            buildUrls(
+                "/automattic-domain-name-registration-agreement/"
+            )
         ).allMatch {
             navigationDelegate.canNavigateTo(it)
         }
@@ -50,14 +50,14 @@ class DomainRegistrationCheckoutWebViewNavigationDelegateTest : BaseUnitTest() {
     @Test
     fun `checkout web view can navigate to support paths`() {
         assertThat(
-                buildUrls(
-                        "/support/",
-                        "/es/support/",
-                        "/pt-br/support/",
-                        "/support/payment/#using-a-payment-method-for-all-subscriptions",
-                        "/es/support/payment/#using-a-payment-method-for-all-subscriptions",
-                        "/pt-br/support/payment/#using-a-payment-method-for-all-subscriptions"
-                )
+            buildUrls(
+                "/support/",
+                "/es/support/",
+                "/pt-br/support/",
+                "/support/payment/#using-a-payment-method-for-all-subscriptions",
+                "/es/support/payment/#using-a-payment-method-for-all-subscriptions",
+                "/pt-br/support/payment/#using-a-payment-method-for-all-subscriptions"
+            )
         ).allMatch {
             navigationDelegate.canNavigateTo(it)
         }
@@ -66,12 +66,12 @@ class DomainRegistrationCheckoutWebViewNavigationDelegateTest : BaseUnitTest() {
     @Test
     fun `checkout web view cannot navigate to unallowed paths`() {
         assertThat(
-                buildUrls(
-                        "/blog/",
-                        "/plans/",
-                        "/themes/",
-                        "/invalid/support/"
-                )
+            buildUrls(
+                "/blog/",
+                "/plans/",
+                "/themes/",
+                "/invalid/support/"
+            )
         ).noneMatch {
             navigationDelegate.canNavigateTo(it)
         }

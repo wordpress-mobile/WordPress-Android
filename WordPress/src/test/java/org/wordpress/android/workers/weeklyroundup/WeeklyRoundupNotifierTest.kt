@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationPushIds.WEEKLY_ROUNDUP_NOTIFICATION_ID
 import org.wordpress.android.push.NotificationType.WEEKLY_ROUNDUP
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
@@ -51,19 +52,22 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
     }
     private val statsUtils: StatsUtils = mock()
 
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper = mock()
+
     @Before
     fun setUp() {
         weeklyRoundupNotifier = WeeklyRoundupNotifier(
-                accountStore,
-                siteStore,
-                contextProvider,
-                resourceProvider,
-                weeklyRoundupScheduler,
-                notificationsTracker,
-                siteUtils,
-                weeklyRoundupRepository,
-                appPrefs,
-                statsUtils
+            accountStore,
+            siteStore,
+            contextProvider,
+            resourceProvider,
+            weeklyRoundupScheduler,
+            notificationsTracker,
+            siteUtils,
+            weeklyRoundupRepository,
+            appPrefs,
+            statsUtils,
+            jetpackFeatureRemovalPhaseHelper
         )
     }
 
@@ -86,8 +90,18 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
     fun `should show notification when the user is logged in and has sites`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(siteStore.hasSitesAccessedViaWPComRest()).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(true)
 
         assertThat(weeklyRoundupNotifier.shouldShowNotifications()).isTrue
+    }
+
+    @Test
+    fun `should not show notification when the user is in jetpack feature removal phase`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(siteStore.hasSitesAccessedViaWPComRest()).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(false)
+
+        assertThat(weeklyRoundupNotifier.shouldShowNotifications()).isFalse()
     }
 
     @Test
@@ -167,10 +181,12 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(resourceProvider.getString(
+        assertThat(list.first().contentTitle).isEqualTo(
+            resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_views_only,
                 statsUtils.toFormattedString(data!!.views)
-        ))
+            )
+        )
     }
 
     @Test
@@ -183,11 +199,13 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(resourceProvider.getString(
+        assertThat(list.first().contentTitle).isEqualTo(
+            resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_views_and_comments,
                 statsUtils.toFormattedString(data!!.views),
                 statsUtils.toFormattedString(data.comments)
-        ))
+            )
+        )
     }
 
     @Test
@@ -200,11 +218,13 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(resourceProvider.getString(
+        assertThat(list.first().contentTitle).isEqualTo(
+            resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_views_and_likes,
                 statsUtils.toFormattedString(data!!.views),
                 statsUtils.toFormattedString(data.likes)
-        ))
+            )
+        )
     }
 
     @Test
@@ -217,12 +237,14 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(resourceProvider.getString(
+        assertThat(list.first().contentTitle).isEqualTo(
+            resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_all,
                 statsUtils.toFormattedString(data!!.views),
                 statsUtils.toFormattedString(data.likes),
                 statsUtils.toFormattedString(data.comments)
-        ))
+            )
+        )
     }
 
     private companion object {

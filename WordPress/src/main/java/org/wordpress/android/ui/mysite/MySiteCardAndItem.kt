@@ -10,7 +10,6 @@ import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DASHBOARD_CARDS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SINGLE_ACTION_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_BADGE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_FEATURE_CARD
@@ -19,6 +18,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_LINK_RIBBON
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SINGLE_ACTION_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
@@ -41,7 +41,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         DASHBOARD_CARDS,
         JETPACK_BADGE,
         SINGLE_ACTION_CARD,
-        JETPACK_FEATURE_CARD
+        JETPACK_FEATURE_CARD,
+        JETPACK_SWITCH_CARD
     }
 
     enum class DashboardCardType {
@@ -67,8 +68,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         val onUrlClick: ListItemInteraction,
         val onSwitchSiteClick: ListItemInteraction
     ) : MySiteCardAndItem(
-            SITE_INFO_CARD,
-            activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint || showSubtitleFocusPoint
+        SITE_INFO_CARD,
+        activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint || showSubtitleFocusPoint
     ) {
         sealed class IconState {
             object Progress : IconState()
@@ -95,8 +96,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val showStatsFocusPoint: Boolean = false,
             val showMediaFocusPoint: Boolean = false
         ) : Card(
-                QUICK_LINK_RIBBON,
-                activeQuickStartItem = showPagesFocusPoint || showStatsFocusPoint || showMediaFocusPoint
+            QUICK_LINK_RIBBON,
+            activeQuickStartItem = showPagesFocusPoint || showStatsFocusPoint || showMediaFocusPoint
         ) {
             data class QuickLinkRibbonItem(
                 @StringRes val label: Int,
@@ -135,6 +136,12 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onMoreMenuClick: ListItemInteraction,
             val learnMoreUrl: String?,
         ) : Card(JETPACK_FEATURE_CARD)
+
+        data class JetpackSwitchMenu(
+            val onClick: ListItemInteraction,
+            val onRemindMeLaterItemClick: ListItemInteraction,
+            val onMoreMenuClick: ListItemInteraction
+        ) : Card(Type.JETPACK_SWITCH_CARD)
 
         data class DashboardCards(
             val cards: List<DashboardCard>
@@ -195,8 +202,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         override val footerLink: FooterLink,
                         val onClick: ListItemInteraction
                     ) : PostCard(
-                            dashboardCardType = DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS,
-                            footerLink = footerLink
+                        dashboardCardType = DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS,
+                        footerLink = footerLink
                     )
 
                     data class PostCardWithPostItems(
@@ -205,8 +212,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val postItems: List<PostItem>,
                         override val footerLink: FooterLink
                     ) : PostCard(
-                            dashboardCardType = DashboardCardType.POST_CARD_WITH_POST_ITEMS,
-                            footerLink = footerLink
+                        dashboardCardType = DashboardCardType.POST_CARD_WITH_POST_ITEMS,
+                        footerLink = footerLink
                     ) {
                         data class PostItem(
                             val title: UiString,
@@ -250,8 +257,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         open val dynamicCardType: DynamicCardType,
         open val onMoreClick: ListItemInteraction
     ) : MySiteCardAndItem(
-            type,
-            activeQuickStartItem
+        type,
+        activeQuickStartItem
     ) {
         data class QuickStartDynamicCard(
             val id: DynamicCardType,
@@ -298,6 +305,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
     }
 
     data class JetpackBadge(
-        val onClick: ListItemInteraction? = null
+        val text: UiString,
+        val onClick: ListItemInteraction? = null,
     ) : MySiteCardAndItem(JETPACK_BADGE)
 }

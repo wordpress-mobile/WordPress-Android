@@ -36,7 +36,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.bloggingreminders.resolver.BloggingRemindersResolver;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -87,6 +86,10 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsRemind
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
@@ -168,7 +171,6 @@ import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTI
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import kotlin.Unit;
 
 /**
  * Main activity which hosts sites, reader, me and notifications pages
@@ -214,6 +216,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_STAT_TO_TRACK = "stat_to_track";
     public static final String ARG_EDITOR_ORIGIN = "editor_origin";
     public static final String ARG_CURRENT_FOCUS = "CURRENT_FOCUS";
+    public static final String ARG_BYPASS_MIGRATION = "bypass_migration";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -259,11 +262,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
     @Inject QuickStartTracker mQuickStartTracker;
-    @Inject BloggingRemindersResolver mBloggingRemindersResolver;
     @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
     @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
     @Inject QRCodeAuthFlowFeatureConfig mQrCodeAuthFlowFeatureConfig;
+    @Inject JetpackFeatureRemovalOverlayUtil mJetpackFeatureRemovalOverlayUtil;
+    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -302,9 +306,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        mBottomNav = findViewById(R.id.bottom_navigation);
-
-        mBottomNav.init(getSupportFragmentManager(), this);
 
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(v -> {
@@ -328,7 +329,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 InstallationReferrerServiceStarter.startService(this, null);
             }
 
-            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
+                && !AppPrefs.getIsJetpackMigrationInProgress()) {
                 NotificationType notificationType =
                         (NotificationType) getIntent().getSerializableExtra(ARG_NOTIFICATION_TYPE);
                 if (notificationType != null) {
@@ -364,7 +366,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     handleOpenPageIntent(getIntent());
                 } else if (isQuickStartRequestedFromPush) {
                     // when app is opened from Quick Start reminder switch to MySite fragment
-                    mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+                    if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
                     mQuickStartTracker.track(Stat.QUICK_START_NOTIFICATION_TAPPED);
                 } else {
                     if (mIsMagicLinkLogin) {
@@ -387,7 +389,20 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
-                    showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
+                    boolean shouldBypassMigration = (getIntent() != null && getIntent()
+                            .getBooleanExtra(ARG_BYPASS_MIGRATION, false));
+                    if (!shouldBypassMigration && mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
+                        mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
+                    } else {
+                        if (shouldBypassMigration) {
+                            AppPrefs.setIsJetpackMigrationInProgress(false);
+                            AppPrefs.saveIsFirstTrySharedLoginJetpack(true);
+                            AppPrefs.saveIsFirstTryUserFlagsJetpack(true);
+                            AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(true);
+                            AppPrefs.saveIsFirstTryBloggingRemindersSyncJetpack(true);
+                        }
+                        showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
+                    }
                     finish();
                 }
             }
@@ -464,9 +479,28 @@ public class WPMainActivity extends LocaleAwareActivity implements
             initSelectedSite();
         }
 
-        if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
-            mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
+        displayJetpackFeatureCollectionOverlayIfNeeded();
+    }
+
+    private void setUpMainView() {
+        if (!mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
+            mBottomNav = findViewById(R.id.bottom_navigation);
+            mBottomNav.setVisibility(View.VISIBLE);
+            mBottomNav.init(getSupportFragmentManager(), this);
+        } else {
+            if (mBottomNav != null) {
+                mBottomNav.setVisibility(View.GONE);
+                mBottomNav.clear();
+            }
+            showMySiteFragment();
         }
+    }
+
+    private void showMySiteFragment() {
+        MySiteFragment fragment = MySiteFragment.Companion.newInstance();
+        getSupportFragmentManager().beginTransaction()
+                                   .add(R.id.fragment_container, fragment, MySiteFragment.TAG)
+                                   .commitNow();
     }
 
     private void showBloggingPromptsOnboarding() {
@@ -499,6 +533,19 @@ public class WPMainActivity extends LocaleAwareActivity implements
             ActivityLauncher.showSignInForResultJetpackOnly(activity);
         } else {
             ActivityLauncher.showSignInForResult(activity, true);
+        }
+    }
+
+    private void displayJetpackFeatureCollectionOverlayIfNeeded() {
+        if (mJetpackFeatureRemovalOverlayUtil.shouldShowFeatureCollectionJetpackOverlay()) {
+            JetpackFeatureFullScreenOverlayFragment.newInstance(
+                    null,
+                    false,
+                    false,
+                    SiteCreationSource.UNSPECIFIED,
+                    true,
+                    JetpackFeatureCollectionOverlaySource.APP_OPEN
+            ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
         }
     }
 
@@ -580,7 +627,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, -1, null);
                     break;
                 case CREATE_NEW_PAGE:
-                    if (mMLPViewModel.canShowModalLayoutPicker()) {
+                    if (mMLPViewModel.canShowModalLayoutPicker()
+                        && !mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
                         mMLPViewModel.createPageFlowTriggered();
                     } else {
                         handleNewPageAction("", "", null,
@@ -733,17 +781,19 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (!TextUtils.isEmpty(pagePosition)) {
             switch (pagePosition) {
                 case ARG_MY_SITE:
-                    mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+                    if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
                     break;
                 case ARG_NOTIFICATIONS:
-                    mBottomNav.setCurrentSelectedPage(PageType.NOTIFS);
+                    setUpMainView();
+                    if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.NOTIFS);
                     break;
                 case ARG_READER:
-                    if (intent.getBooleanExtra(ARG_READER_BOOKMARK_TAB, false) && mBottomNav
+                    setUpMainView();
+                    if (intent.getBooleanExtra(ARG_READER_BOOKMARK_TAB, false) && mBottomNav != null && mBottomNav
                             .getActiveFragment() instanceof ReaderFragment) {
                         ((ReaderFragment) mBottomNav.getActiveFragment()).requestBookmarkTab();
                     } else {
-                        mBottomNav.setCurrentSelectedPage(PageType.READER);
+                        if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.READER);
                     }
                     break;
                 case ARG_EDITOR:
@@ -790,7 +840,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         // leave the Main activity showing the MY_SITE page, so when the user comes back from
         // Help&Support > HelpActivity the app is in the right section.
-        mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+        if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
 
         // init selected site, this is the same as in onResume
         initSelectedSite();
@@ -841,7 +891,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // Then hit the server
         NotificationsActions.updateNotesSeenTimestamp();
 
-        mBottomNav.setCurrentSelectedPage(PageType.NOTIFS);
+        if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.NOTIFS);
 
         // it could be that a notification has been tapped but has been removed by the time we reach
         // here. It's ok to compare to <=1 as it could be zero then.
@@ -929,6 +979,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     protected void onResume() {
         super.onResume();
 
+        setUpMainView();
+
         // Load selected site
         initSelectedSite();
 
@@ -938,16 +990,18 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
-        PageType currentPageType = mBottomNav.getCurrentSelectedPage();
-        trackLastVisiblePage(currentPageType, mFirstResume);
 
-        if (currentPageType == PageType.NOTIFS) {
-            // if we are presenting the notifications list, it's safe to clear any outstanding
-            // notifications
-            mGCMMessageHandler.removeAllNotifications(this);
+        if (mBottomNav != null) {
+            PageType currentPageType = mBottomNav.getCurrentSelectedPage();
+            trackLastVisiblePage(currentPageType, mFirstResume);
+
+            if (currentPageType == PageType.NOTIFS) {
+                // if we are presenting the notifications list, it's safe to clear any outstanding
+                // notifications
+                mGCMMessageHandler.removeAllNotifications(this);
+            }
+            announceTitleForAccessibility(currentPageType);
         }
-
-        announceTitleForAccessibility(currentPageType);
 
         checkConnection();
 
@@ -968,7 +1022,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel.onResume(
                 getSelectedSite(),
-                mSelectedSiteRepository.hasSelectedSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
+                mSelectedSiteRepository.hasSelectedSite() && mBottomNav != null
+                && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
         );
 
         mFirstResume = false;
@@ -1000,11 +1055,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override
     public void onBackPressed() {
         // let the fragment handle the back button if it implements our OnParentBackPressedListener
-        Fragment fragment = mBottomNav.getActiveFragment();
-        if (fragment instanceof OnActivityBackPressedListener) {
-            boolean handled = ((OnActivityBackPressedListener) fragment).onActivityBackPressed();
-            if (handled) {
-                return;
+        if (mBottomNav != null) {
+            Fragment fragment = mBottomNav.getActiveFragment();
+            if (fragment instanceof OnActivityBackPressedListener) {
+                boolean handled = ((OnActivityBackPressedListener) fragment).onActivityBackPressed();
+                if (handled) {
+                    return;
+                }
             }
         }
 
@@ -1326,9 +1383,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void passOnActivityResultToMySiteFragment(int requestCode, int resultCode, Intent data) {
-        Fragment fragment = mBottomNav.getFragment(PageType.MY_SITE);
-        if (fragment != null) {
-            fragment.onActivityResult(requestCode, resultCode, data);
+        if (mBottomNav != null) {
+            Fragment fragment = mBottomNav.getFragment(PageType.MY_SITE);
+            if (fragment != null) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 
@@ -1438,7 +1497,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public void onAccountChanged(OnAccountChanged event) {
         // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
-            mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+            if (mBottomNav != null) mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
             if (AppPrefs.getShouldTrackMagicLinkSignup()) {
                 trackMagicLinkSignupIfNeeded();
             }
@@ -1463,13 +1522,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
-        mBottomNav.showNoteBadge(event.hasUnseenNotes);
+        if (mBottomNav != null) mBottomNav.showNoteBadge(event.hasUnseenNotes);
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
-        mBottomNav.showNoteBadge(event.hasUnseenNotes);
+        if (mBottomNav != null) mBottomNav.showNoteBadge(event.hasUnseenNotes);
     }
 
     @SuppressWarnings("unused")
@@ -1625,9 +1684,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 mSelectedSiteRepository.updateSite(site);
             }
         }
-        mBloggingRemindersResolver.trySyncBloggingReminders(
-                () -> Unit.INSTANCE, () -> Unit.INSTANCE
-        );
     }
 
     @SuppressWarnings("unused")

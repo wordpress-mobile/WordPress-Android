@@ -34,7 +34,7 @@ private class PreviewImageDiffCallback : DiffUtil.ItemCallback<ImageUiState>() {
 
     override fun areContentsTheSame(oldItem: ImageUiState, newItem: ImageUiState): Boolean {
         return oldItem.data == newItem.data &&
-            oldItem.progressBarVisible == newItem.progressBarVisible &&
-            oldItem.retryLayoutVisible == newItem.retryLayoutVisible
+                oldItem.progressBarVisible == newItem.progressBarVisible &&
+                oldItem.retryLayoutVisible == newItem.retryLayoutVisible
     }
 }

@@ -36,7 +36,8 @@ class UploadWorkerTest {
     @get:Rule
     var initializationRule = InitializationRule()
 
-    @Inject lateinit var context: Context
+    @Inject
+    lateinit var context: Context
 
     private val uploadStarter = mock<UploadStarter>()
     private val siteStore = mock<SiteStore>()
@@ -46,11 +47,11 @@ class UploadWorkerTest {
         hiltRule.inject()
 
         val config = Configuration.Builder()
-                .setMinimumLoggingLevel(Log.DEBUG)
-                // Use a SynchronousExecutor here to make it easier to write tests
-                .setExecutor(SynchronousExecutor())
-                .setWorkerFactory(UploadWorker.Factory(uploadStarter, siteStore))
-                .build()
+            .setMinimumLoggingLevel(Log.DEBUG)
+            // Use a SynchronousExecutor here to make it easier to write tests
+            .setExecutor(SynchronousExecutor())
+            .setWorkerFactory(UploadWorker.Factory(uploadStarter, siteStore))
+            .build()
 
         // Initialize WorkManager for instrumentation tests.
         WorkManagerTestInitHelper.initializeTestWorkManager(context, config)

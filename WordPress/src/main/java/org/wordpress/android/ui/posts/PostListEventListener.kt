@@ -70,14 +70,14 @@ class PostListEventListener(
     private fun handleRemoteAutoSave(post: PostModel, isError: Boolean) {
         if (isError || hasRemoteAutoSavePreviewError.invoke()) {
             triggerPreviewStateUpdate(
-                    PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR,
-                    PostInfoType.PostNoInfo
+                PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR,
+                PostInfoType.PostNoInfo
             )
             triggerPostUploadAction.invoke(PostRemotePreviewSnackbarError(R.string.remote_preview_operation_error))
         } else {
             triggerPreviewStateUpdate(
-                    PostListRemotePreviewState.PREVIEWING,
-                    PostInfoType.PostInfo(post = post, hasError = isError)
+                PostListRemotePreviewState.PREVIEWING,
+                PostInfoType.PostInfo(post = post, hasError = isError)
             )
         }
         uploadStatusChanged(post.id)
@@ -112,14 +112,14 @@ class PostListEventListener(
                 is CauseOfOnPostChanged.UpdatePost -> {
                     if (event.isError) {
                         AppLog.e(
-                                T.POSTS,
-                                "Error updating the post with type: ${event.error.type} and" +
-                                        " message: ${event.error.message}"
+                            T.POSTS,
+                            "Error updating the post with type: ${event.error.type} and" +
+                                    " message: ${event.error.message}"
                         )
                     } else {
                         handlePostUpdatedWithoutError.invoke()
                         invalidateUploadStatus.invoke(
-                                listOf((event.causeOfChange as CauseOfOnPostChanged.UpdatePost).localPostId)
+                            listOf((event.causeOfChange as CauseOfOnPostChanged.UpdatePost).localPostId)
                         )
                     }
                 }
@@ -129,9 +129,9 @@ class PostListEventListener(
                     when (deletePostCauseOfChange.postDeleteActionType) {
                         TRASH -> postActionHandler.handlePostTrashed(localPostId = localPostId, isError = event.isError)
                         DELETE -> postActionHandler.handlePostDeletedOrRemoved(
-                                localPostId = localPostId,
-                                isRemoved = false,
-                                isError = event.isError
+                            localPostId = localPostId,
+                            isRemoved = false,
+                            isError = event.isError
                         )
                     }
                 }
@@ -142,20 +142,21 @@ class PostListEventListener(
                 is CauseOfOnPostChanged.RemovePost -> {
                     val localPostId = LocalId((event.causeOfChange as CauseOfOnPostChanged.RemovePost).localPostId)
                     postActionHandler.handlePostDeletedOrRemoved(
-                            localPostId = localPostId,
-                            isRemoved = true,
-                            isError = event.isError
+                        localPostId = localPostId,
+                        isRemoved = true,
+                        isError = event.isError
                     )
                 }
                 is CauseOfOnPostChanged.RemoteAutoSavePost -> {
                     val post = postStore.getPostByLocalPostId(
-                            (event.causeOfChange as CauseOfOnPostChanged.RemoteAutoSavePost).localPostId
+                        (event.causeOfChange as CauseOfOnPostChanged.RemoteAutoSavePost).localPostId
                     )
                     if (isRemotePreviewingFromPostsList.invoke()) {
                         if (event.isError) {
                             AppLog.d(
-                                    T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
-                                    event.error.type + " - " + event.error.message)
+                                T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
+                                        event.error.type + " - " + event.error.message
+                            )
                         }
                         handleRemoteAutoSave(post, event.isError)
                     } else {
@@ -185,14 +186,14 @@ class PostListEventListener(
         if (event.post != null && event.post.localSiteId == site.id) {
             if (!isRemotePreviewingFromPostsList.invoke() && !isRemotePreviewingFromEditor(event.post)) {
                 triggerPostUploadAction.invoke(
-                        PostUploadedSnackbar(
-                                dispatcher,
-                                site,
-                                event.post,
-                                event.isError,
-                                event.isFirstTimePublish,
-                                null
-                        )
+                    PostUploadedSnackbar(
+                        dispatcher,
+                        site,
+                        event.post,
+                        event.isError,
+                        event.isFirstTimePublish,
+                        null
+                    )
                 )
             }
 
@@ -229,14 +230,14 @@ class PostListEventListener(
         EventBus.getDefault().removeStickyEvent(event)
         if (event.post != null) {
             triggerPostUploadAction.invoke(
-                    PostUploadedSnackbar(
-                            dispatcher,
-                            site,
-                            event.post,
-                            true,
-                            false,
-                            event.errorMessage
-                    )
+                PostUploadedSnackbar(
+                    dispatcher,
+                    site,
+                    event.post,
+                    true,
+                    false,
+                    event.errorMessage
+                )
             )
         } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             triggerPostUploadAction.invoke(MediaUploadedSnackbar(site, event.mediaModelList, true, event.errorMessage))
@@ -249,7 +250,7 @@ class PostListEventListener(
         EventBus.getDefault().removeStickyEvent(event)
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             triggerPostUploadAction.invoke(
-                    MediaUploadedSnackbar(site, event.mediaModelList, false, event.successMessage)
+                MediaUploadedSnackbar(site, event.mediaModelList, false, event.successMessage)
             )
         }
     }
@@ -326,20 +327,21 @@ class PostListEventListener(
             hasRemoteAutoSavePreviewError: () -> Boolean
         ) {
             PostListEventListener(
-                    lifecycle = lifecycle,
-                    dispatcher = dispatcher,
-                    bgDispatcher = bgDispatcher,
-                    postStore = postStore,
-                    site = site,
-                    postActionHandler = postActionHandler,
-                    handlePostUpdatedWithoutError = handlePostUpdatedWithoutError,
-                    handlePostUploadedWithoutError = handlePostUploadedWithoutError,
-                    triggerPostUploadAction = triggerPostUploadAction,
-                    invalidateUploadStatus = invalidateUploadStatus,
-                    invalidateFeaturedMedia = invalidateFeaturedMedia,
-                    triggerPreviewStateUpdate = triggerPreviewStateUpdate,
-                    isRemotePreviewingFromPostsList = isRemotePreviewingFromPostsList,
-                    hasRemoteAutoSavePreviewError = hasRemoteAutoSavePreviewError)
+                lifecycle = lifecycle,
+                dispatcher = dispatcher,
+                bgDispatcher = bgDispatcher,
+                postStore = postStore,
+                site = site,
+                postActionHandler = postActionHandler,
+                handlePostUpdatedWithoutError = handlePostUpdatedWithoutError,
+                handlePostUploadedWithoutError = handlePostUploadedWithoutError,
+                triggerPostUploadAction = triggerPostUploadAction,
+                invalidateUploadStatus = invalidateUploadStatus,
+                invalidateFeaturedMedia = invalidateFeaturedMedia,
+                triggerPreviewStateUpdate = triggerPreviewStateUpdate,
+                isRemotePreviewingFromPostsList = isRemotePreviewingFromPostsList,
+                hasRemoteAutoSavePreviewError = hasRemoteAutoSavePreviewError
+            )
         }
     }
 }

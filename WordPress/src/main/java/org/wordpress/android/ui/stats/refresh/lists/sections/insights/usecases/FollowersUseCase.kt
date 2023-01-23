@@ -58,10 +58,10 @@ class FollowersUseCase(
     private val contentDescriptionHelper: ContentDescriptionHelper,
     private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<Pair<FollowersModel, FollowersModel>, FollowersUiState>(
-        FOLLOWERS,
-        mainDispatcher,
-        bgDispatcher,
-        FollowersUiState(isLoading = true)
+    FOLLOWERS,
+    mainDispatcher,
+    bgDispatcher,
+    FollowersUiState(isLoading = true)
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_PAGE_SIZE else BLOCK_ITEM_COUNT
 
@@ -90,16 +90,16 @@ class FollowersUseCase(
         }
         val deferredWpComResponse = async(bgDispatcher) {
             followersStore.fetchWpComFollowers(
-                    statsSiteProvider.siteModel,
-                    fetchMode,
-                    forced
+                statsSiteProvider.siteModel,
+                fetchMode,
+                forced
             )
         }
         val deferredEmailResponse = async(bgDispatcher) {
             followersStore.fetchEmailFollowers(
-                    statsSiteProvider.siteModel,
-                    fetchMode,
-                    forced
+                statsSiteProvider.siteModel,
+                fetchMode,
+                forced
             )
         }
 
@@ -115,8 +115,8 @@ class FollowersUseCase(
             error != null -> State.Error(error.message ?: error.type.name)
             wpComModel != null && emailModel != null &&
                     (wpComModel.followers.isNotEmpty() || emailModel.followers.isNotEmpty()) -> State.Data(
-                    wpComModel to emailModel,
-                    cached = wpComResponse.cached && emailResponse.cached
+                wpComModel to emailModel,
+                cached = wpComResponse.cached && emailResponse.cached
             )
             else -> State.Empty()
         }
@@ -142,15 +142,15 @@ class FollowersUseCase(
 
         if (domainModel.first.followers.isNotEmpty() || domainModel.second.followers.isNotEmpty()) {
             items.add(
-                    TabsItem(
-                            listOf(
-                                    R.string.stats_followers_wordpress_com,
-                                    R.string.stats_followers_email
-                            ),
-                            uiState.selectedTab
-                    ) { selectedTab ->
-                        updateUiState { it.copy(selectedTab = selectedTab) }
-                    }
+                TabsItem(
+                    listOf(
+                        R.string.stats_followers_wordpress_com,
+                        R.string.stats_followers_email
+                    ),
+                    uiState.selectedTab
+                ) { selectedTab ->
+                    updateUiState { it.copy(selectedTab = selectedTab) }
+                }
             )
             if (uiState.selectedTab == 0) {
                 items.addAll(buildTab(wpComModel, R.string.stats_followers_wordpress_com))
@@ -162,13 +162,14 @@ class FollowersUseCase(
                 if (useCaseMode != VIEW_ALL) {
                     val buttonText = R.string.stats_insights_view_more
                     items.add(
-                            Link(
-                                    text = buttonText,
-                                    navigateAction = ListItemInteraction.create(uiState.selectedTab, this::onLinkClick)
-                            )
+                        Link(
+                            text = buttonText,
+                            navigateAction = ListItemInteraction.create(uiState.selectedTab, this::onLinkClick)
+                        )
                     )
                 } else if (wpComModel.followers.size >= VIEW_ALL_PAGE_SIZE && uiState.selectedTab == 0 ||
-                        emailModel.followers.size >= VIEW_ALL_PAGE_SIZE && uiState.selectedTab == 1) {
+                    emailModel.followers.size >= VIEW_ALL_PAGE_SIZE && uiState.selectedTab == 1
+                ) {
                     items.add(LoadingItem(this::loadMore, isLoading = uiState.isLoading))
                 }
             }
@@ -195,18 +196,18 @@ class FollowersUseCase(
         val mutableItems = mutableListOf<BlockListItem>()
         if (model.followers.isNotEmpty()) {
             mutableItems.add(
-                    Information(
-                            resourceProvider.getString(
-                                    R.string.stats_followers_count_message,
-                                    resourceProvider.getString(label),
-                                    model.totalCount
-                            )
+                Information(
+                    resourceProvider.getString(
+                        R.string.stats_followers_count_message,
+                        resourceProvider.getString(label),
+                        model.totalCount
                     )
+                )
             )
             val header = Header(R.string.stats_follower_label, R.string.stats_follower_since_label)
             mutableItems.add(header)
             model.followers.toUserItems(header)
-                    .let { mutableItems.addAll(it) }
+                .let { mutableItems.addAll(it) }
         } else {
             mutableItems.add(Empty())
         }
@@ -217,16 +218,16 @@ class FollowersUseCase(
         return this.mapIndexed { index, follower ->
             val value = statsSinceLabelFormatter.getSinceLabelLowerCase(follower.dateSubscribed)
             ListItemWithIcon(
-                    iconUrl = follower.avatar,
-                    iconStyle = AVATAR,
-                    text = follower.label,
-                    value = value,
-                    showDivider = index < this.size - 1,
-                    contentDescription = contentDescriptionHelper.buildContentDescription(
-                            header,
-                            follower.label,
-                            value
-                    )
+                iconUrl = follower.avatar,
+                iconStyle = AVATAR,
+                text = follower.label,
+                value = value,
+                showDivider = index < this.size - 1,
+                contentDescription = contentDescriptionHelper.buildContentDescription(
+                    header,
+                    follower.label,
+                    value
+                )
             )
         }
     }
@@ -255,17 +256,17 @@ class FollowersUseCase(
         private val contentDescriptionHelper: ContentDescriptionHelper
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
-                FollowersUseCase(
-                        mainDispatcher,
-                        bgDispatcher,
-                        followersStore,
-                        statsSiteProvider,
-                        statsSinceLabelFormatter,
-                        resourceProvider,
-                        analyticsTracker,
-                        popupMenuHandler,
-                        contentDescriptionHelper,
-                        useCaseMode
-                )
+            FollowersUseCase(
+                mainDispatcher,
+                bgDispatcher,
+                followersStore,
+                statsSiteProvider,
+                statsSinceLabelFormatter,
+                resourceProvider,
+                analyticsTracker,
+                popupMenuHandler,
+                contentDescriptionHelper,
+                useCaseMode
+            )
     }
 }

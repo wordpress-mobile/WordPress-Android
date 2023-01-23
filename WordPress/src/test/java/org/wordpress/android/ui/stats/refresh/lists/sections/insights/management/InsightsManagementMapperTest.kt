@@ -31,7 +31,7 @@ class InsightsManagementMapperTest : BaseUnitTest() {
     @Before
     fun setUp() {
         insightsManagementMapper = InsightsManagementMapper(
-                testDispatcher()
+            testDispatcher()
         )
     }
 

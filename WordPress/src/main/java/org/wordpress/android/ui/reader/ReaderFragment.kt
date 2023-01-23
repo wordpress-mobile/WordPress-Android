@@ -44,7 +44,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandingUtils.Screen
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
@@ -57,11 +57,20 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableViewInitializedListener {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
-    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-    @Inject lateinit var snackbarSequencer: SnackbarSequencer
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+
+    @Inject
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
+    @Inject
+    lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: ReaderViewModel
 
     private var searchMenuItem: MenuItem? = null
@@ -120,7 +129,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
             settingsMenuItemFocusPoint = this.actionView.findViewById(R.id.menu_quick_start_focus_point)
             this.isVisible = viewModel.uiState.value?.settingsMenuItemUiState?.isVisible ?: false
             settingsMenuItemFocusPoint?.isVisible =
-                    viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
+                viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
             this.actionView.setOnClickListener { viewModel.onSettingsActionClicked() }
         }
     }
@@ -167,7 +176,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                 searchMenuItem?.isVisible = uiState.searchMenuItemUiState.isVisible
                 settingsMenuItem?.isVisible = uiState.settingsMenuItemUiState.isVisible
                 settingsMenuItemFocusPoint?.isVisible =
-                        viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
+                    viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
             }
         }
 
@@ -197,27 +206,27 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
         viewModel.quickStartPromptEvent.observeEvent(viewLifecycleOwner) { prompt ->
             val message = quickStartUtilsWrapper.stylizeQuickStartPrompt(
-                    requireActivity(),
-                    prompt.shortMessagePrompt,
-                    prompt.iconId
+                requireActivity(),
+                prompt.shortMessagePrompt,
+                prompt.iconId
             )
 
             showSnackbar(
-                    SnackbarMessageHolder(
-                            message = UiStringText(message),
-                            duration = prompt.duration,
-                            onDismissAction = {
-                                viewModel.onQuickStartPromptDismissed()
-                            },
-                            isImportant = false
-                    )
+                SnackbarMessageHolder(
+                    message = UiStringText(message),
+                    duration = prompt.duration,
+                    onDismissAction = {
+                        viewModel.onQuickStartPromptDismissed()
+                    },
+                    isImportant = false
+                )
             )
         }
 
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
             JetpackPoweredBottomSheetFragment
-                    .newInstance(it, READER)
-                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                .newInstance(it, READER)
+                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
 
         observeJetpackOverlayEvent(savedInstanceState)
@@ -229,28 +238,28 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         if (savedInstanceState == null)
             viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
                 JetpackFeatureFullScreenOverlayFragment
-                        .newInstance(JetpackFeatureOverlayScreenType.READER)
-                        .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
+                    .newInstance(JetpackFeatureOverlayScreenType.READER)
+                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
             }
     }
 
     private fun ReaderFragmentLayoutBinding.showSnackbar(holder: SnackbarMessageHolder) {
         if (!isAdded || view == null) return
         snackbarSequencer.enqueue(
-                SnackbarItem(
-                        info = Info(
-                                view = coordinatorLayout,
-                                textRes = holder.message,
-                                duration = holder.duration,
-                                isImportant = holder.isImportant
-                        ),
-                        action = holder.buttonTitle?.let {
-                            Action(
-                                    textRes = holder.buttonTitle,
-                                    clickListener = { holder.buttonAction() }
-                            )
-                        }
-                )
+            SnackbarItem(
+                info = Info(
+                    view = coordinatorLayout,
+                    textRes = holder.message,
+                    duration = holder.duration,
+                    isImportant = holder.isImportant
+                ),
+                action = holder.buttonTitle?.let {
+                    Action(
+                        textRes = holder.buttonTitle,
+                        clickListener = { holder.buttonAction() }
+                    )
+                }
+            )
         )
     }
 
@@ -287,7 +296,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     private fun ReaderFragmentLayoutBinding.createTabCustomView(tab: TabLayout.Tab): View {
         val customView = LayoutInflater.from(context)
-                .inflate(R.layout.tab_custom_view, tabLayout, false)
+            .inflate(R.layout.tab_custom_view, tabLayout, false)
         tab.customView = customView
         return customView
     }
@@ -304,9 +313,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                 ReaderDiscoverFragment()
             } else {
                 ReaderPostListFragment.newInstanceForTag(
-                        tags[position],
-                        ReaderPostListType.TAG_FOLLOWED,
-                        true
+                    tags[position],
+                    ReaderPostListType.TAG_FOLLOWED,
+                    true
                 )
             }
         }
@@ -316,12 +325,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
         if (readerInterestsFragment == null) {
             childFragmentManager.beginTransaction()
-                    .replace(
-                            R.id.interests_fragment_container,
-                            ReaderInterestsFragment(),
-                            ReaderInterestsFragment.TAG
-                    )
-                    .commitNow()
+                .replace(
+                    R.id.interests_fragment_container,
+                    ReaderInterestsFragment(),
+                    ReaderInterestsFragment.TAG
+                )
+                .commitNow()
         }
     }
 
@@ -329,14 +338,15 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
         if (readerInterestsFragment?.isAdded == true) {
             childFragmentManager.beginTransaction()
-                    .remove(readerInterestsFragment)
-                    .commitNow()
+                .remove(readerInterestsFragment)
+                .commitNow()
         }
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appBar?.liftOnScrollTargetViewId = containerId
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            val screen = JetpackPoweredScreen.WithDynamicText.READER
             binding?.root?.post {
                 // post is used to create a minimal delay here. containerId changes just before
                 // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.
@@ -344,13 +354,17 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                 val scrollableView = binding?.root?.findViewById<View>(containerId) as? RecyclerView ?: return@post
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+                binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
+                    requireContext(),
+                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                )
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                     jetpackBannerView.setOnClickListener {
-                        jetpackBrandingUtils.trackBannerTapped(Screen.READER)
+                        jetpackBrandingUtils.trackBannerTapped(screen)
                         JetpackPoweredBottomSheetFragment
-                                .newInstance()
-                                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                            .newInstance()
+                            .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
                     }
                 }
             }

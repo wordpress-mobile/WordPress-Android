@@ -24,10 +24,17 @@ import java.util.EnumSet
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class FetchFollowedTagsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var contextProvider: ContextProvider
-    @Mock lateinit var eventBusWrapper: EventBusWrapper
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var readerUpdateServiceStarterWrapper: ReaderUpdateServiceStarterWrapper
+    @Mock
+    lateinit var contextProvider: ContextProvider
+
+    @Mock
+    lateinit var eventBusWrapper: EventBusWrapper
+
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var readerUpdateServiceStarterWrapper: ReaderUpdateServiceStarterWrapper
 
     private lateinit var useCase: FetchFollowedTagsUseCase
 
@@ -74,7 +81,7 @@ class FetchFollowedTagsUseCaseTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         val event = FollowedTagsChanged(false)
         whenever(readerUpdateServiceStarterWrapper.startService(contextProvider.getContext(), EnumSet.of(TAGS)))
-                .then { useCase.onFollowedTagsChanged(event) }
+            .then { useCase.onFollowedTagsChanged(event) }
 
         // When
         val result = useCase.fetch()

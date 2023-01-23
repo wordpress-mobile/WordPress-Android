@@ -20,7 +20,8 @@ import org.wordpress.android.viewmodel.ResourceProvider
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SiteDesignRecommendationProviderTest : BaseUnitTest() {
-    @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
 
     private lateinit var recommendationProvider: SiteDesignRecommendationProvider
 
@@ -28,40 +29,40 @@ class SiteDesignRecommendationProviderTest : BaseUnitTest() {
     private val mockedVerticalTitle = "mockedVerticalTitle"
     private val recommendedDesignSlug = "recommendedDesignSlug"
     private val blogCategory = StarterDesignCategory(
-            slug = "blog",
-            title = "Blog",
-            description = "Blogging designs",
-            emoji = ""
+        slug = "blog",
+        title = "Blog",
+        description = "Blogging designs",
+        emoji = ""
     )
     private val anotherCategory = StarterDesignCategory(
-            slug = "another",
-            title = "Another",
-            description = "Random designs",
-            emoji = ""
+        slug = "another",
+        title = "Another",
+        description = "Random designs",
+        emoji = ""
     )
     private val blogDesign = StarterDesign(
-            "blog",
-            "title",
-            1L,
-            listOf(blogCategory),
-            "url",
-            "theme",
-            listOf("any"),
-            "desktopThumbnail",
-            "tabletThumbnail",
-            "mobileThumbnail"
+        "blog",
+        "title",
+        1L,
+        listOf(blogCategory),
+        "url",
+        "theme",
+        listOf("any"),
+        "desktopThumbnail",
+        "tabletThumbnail",
+        "mobileThumbnail"
     )
     private val anotherDesign = StarterDesign(
-            recommendedDesignSlug,
-            "title",
-            1L,
-            listOf(anotherCategory),
-            "url",
-            "theme",
-            listOf("any", mockedVerticalSlug),
-            "desktopThumbnail",
-            "tabletThumbnail",
-            "mobileThumbnail"
+        recommendedDesignSlug,
+        "title",
+        1L,
+        listOf(anotherCategory),
+        "url",
+        "theme",
+        listOf("any", mockedVerticalSlug),
+        "desktopThumbnail",
+        "tabletThumbnail",
+        "mobileThumbnail"
     )
     private val allDesigns = listOf(blogDesign, anotherDesign)
     private val allCategories = listOf(blogCategory, anotherCategory)

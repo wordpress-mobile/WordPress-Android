@@ -15,7 +15,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 @ExperimentalCoroutinesApi
 class QuickActionsCardBuilderTest : BaseUnitTest() {
-    @Mock lateinit var siteModel: SiteModel
+    @Mock
+    lateinit var siteModel: SiteModel
     private lateinit var builder: QuickActionsCardBuilder
 
     private val onStatsClick: () -> Unit = {}

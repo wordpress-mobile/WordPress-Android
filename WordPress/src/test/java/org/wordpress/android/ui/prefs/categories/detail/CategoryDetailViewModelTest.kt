@@ -54,15 +54,15 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     fun setUp() {
         setUpMockResponse()
         viewModel = CategoryDetailViewModel(
-                testDispatcher(),
-                networkUtilsWrapper,
-                getCategoriesUseCase,
-                addCategoryUseCase,
-                editCategoryUseCase,
-                deleteCategoryUseCase,
-                resourceProvider,
-                dispatcher,
-                selectedSiteRepository
+            testDispatcher(),
+            networkUtilsWrapper,
+            getCategoriesUseCase,
+            addCategoryUseCase,
+            editCategoryUseCase,
+            deleteCategoryUseCase,
+            resourceProvider,
+            dispatcher,
+            selectedSiteRepository
         )
         setUpUiStateObservers()
     }
@@ -121,7 +121,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.onSubmitButtonClick()
 
         assertThat(Failure(UiStringRes(R.string.no_network_message)))
-                .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
+            .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
     }
 
     @Test
@@ -143,7 +143,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.onTermUploaded(getTermUploadSuccess())
 
         assertThat(Success(UiStringRes(R.string.adding_cat_success)))
-                .isEqualTo(onCategoryPushStates[0].peekContent() as Success)
+            .isEqualTo(onCategoryPushStates[0].peekContent() as Success)
     }
 
     @Test
@@ -152,14 +152,14 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.onTermUploaded(getTermUploadError())
 
         assertThat(Failure(UiStringRes(R.string.adding_cat_failed)))
-                .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
+            .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
     }
 
     // Edit category tests
     @Test
     fun `when vm starts in edit mode, then parent category is selected`() {
         val siteCategories = getDummySiteCategories()
-        val siteCategoriesAsNode  = getCategoriesAsNode()
+        val siteCategoriesAsNode = getCategoriesAsNode()
         whenever(getCategoriesUseCase.getCategoriesForSite(siteModel)).thenReturn(siteCategories)
         whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategoriesAsNode)
 
@@ -209,13 +209,13 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.onSubmitButtonClick()
 
         assertThat(Failure(UiStringRes(R.string.no_network_message)))
-                .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
+            .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
     }
 
     @Test
     fun `given internet available while editing categories, when submit is invoked, then edit category is invoked`() {
         val siteCategories = getDummySiteCategories()
-        val siteCategoriesAsNode  = getCategoriesAsNode()
+        val siteCategoriesAsNode = getCategoriesAsNode()
         whenever(getCategoriesUseCase.getCategoriesForSite(siteModel)).thenReturn(siteCategories)
         whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategoriesAsNode)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
@@ -227,8 +227,8 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
 
         assertThat(InProgress(R.string.updating_cat)).isEqualTo(onCategoryPushStates[0].peekContent())
         verify(editCategoryUseCase).editCategory(
-                14L, "dog",
-                updatedCategoryName, 1, siteModel
+            14L, "dog",
+            updatedCategoryName, 1, siteModel
         )
     }
 
@@ -241,7 +241,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.onTermUploaded(getTermUploadSuccess())
 
         assertThat(Success(UiStringRes(R.string.updating_cat_success)))
-                .isEqualTo(onCategoryPushStates[0].peekContent() as Success)
+            .isEqualTo(onCategoryPushStates[0].peekContent() as Success)
     }
 
     @Test
@@ -253,7 +253,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.onTermUploaded(getTermUploadError())
 
         assertThat(Failure(UiStringRes(R.string.updating_cat_failed)))
-                .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
+            .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
     }
 
     // Delete category use case
@@ -266,13 +266,13 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.deleteCategory()
 
         assertThat(Failure(UiStringRes(R.string.no_network_message)))
-                .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
+            .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
     }
 
     @Test
     fun `given internet available while delete categories, when submit is invoked, then delete category is invoked`() {
         val siteCategories = getDummySiteCategories()
-        val siteCategoriesAsNode  = getCategoriesAsNode()
+        val siteCategoriesAsNode = getCategoriesAsNode()
         whenever(getCategoriesUseCase.getCategoriesForSite(siteModel)).thenReturn(siteCategories)
         whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategoriesAsNode)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
@@ -282,7 +282,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
 
         assertThat(InProgress(R.string.deleting_cat)).isEqualTo(onCategoryPushStates[0].peekContent())
         verify(deleteCategoryUseCase).deleteCategory(
-                siteCategories[1], siteModel
+            siteCategories[1], siteModel
         )
     }
 
@@ -295,7 +295,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.onTaxonomyChanged(getTaxonomyChangedCallback())
 
         assertThat(Success(UiStringRes(R.string.deleting_cat_success)))
-                .isEqualTo(onCategoryPushStates[0].peekContent() as Success)
+            .isEqualTo(onCategoryPushStates[0].peekContent() as Success)
     }
 
     @Test
@@ -307,7 +307,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.onTaxonomyChanged(getTaxonomyChangedErrorCallback())
 
         assertThat(Failure(UiStringRes(R.string.deleting_cat_failed)))
-                .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
+            .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
     }
 
 
@@ -320,8 +320,8 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
 
     private fun getCategoriesAsNode(): ArrayList<CategoryNode> {
         return arrayListOf(
-                CategoryNode(1, 0, "Animals"),
-                CategoryNode(14, 1, "Dog"),
+            CategoryNode(1, 0, "Animals"),
+            CategoryNode(14, 1, "Dog"),
         )
     }
 
@@ -349,6 +349,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         event.error = TaxonomyError(GENERIC_ERROR)
         return event
     }
+
     private fun getTaxonomyChangedCallback(): OnTaxonomyChanged {
         val taxonomyChanged = OnTaxonomyChanged(0)
         taxonomyChanged.causeOfChange = REMOVE_TERM

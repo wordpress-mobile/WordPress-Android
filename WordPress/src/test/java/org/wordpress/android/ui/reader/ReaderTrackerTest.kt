@@ -18,20 +18,27 @@ import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class ReaderTrackerTest {
-    @Mock lateinit var dateProvider: DateProvider
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock
+    lateinit var dateProvider: DateProvider
+
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     private lateinit var tracker: ReaderTracker
 
     @Before
     fun setup() {
         tracker = ReaderTracker(
-                dateProvider,
-                appPrefsWrapper,
-                analyticsTrackerWrapper,
-                analyticsUtilsWrapper
+            dateProvider,
+            appPrefsWrapper,
+            analyticsTrackerWrapper,
+            analyticsUtilsWrapper
         )
     }
 
@@ -39,10 +46,10 @@ class ReaderTrackerTest {
     fun `trackers are setup on setupTrackers`() {
         tracker.setupTrackers()
         val expected = mapOf(
-                "time_in_main_reader" to 0,
-                "time_in_reader_filtered_list" to 0,
-                "time_in_reader_paged_post" to 0,
-                "time_in_subfiltered_list" to 0
+            "time_in_main_reader" to 0,
+            "time_in_reader_filtered_list" to 0,
+            "time_in_reader_paged_post" to 0,
+            "time_in_subfiltered_list" to 0
         )
 
         assertThat(tracker.getAnalyticsData()).isEqualTo(expected)
@@ -73,10 +80,10 @@ class ReaderTrackerTest {
         tracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
 
         val expected = mapOf(
-                "time_in_main_reader" to Int.MAX_VALUE - 1,
-                "time_in_reader_filtered_list" to Int.MAX_VALUE - 2,
-                "time_in_reader_paged_post" to Int.MAX_VALUE - 3,
-                "time_in_subfiltered_list" to Int.MAX_VALUE - 4
+            "time_in_main_reader" to Int.MAX_VALUE - 1,
+            "time_in_reader_filtered_list" to Int.MAX_VALUE - 2,
+            "time_in_reader_paged_post" to Int.MAX_VALUE - 3,
+            "time_in_subfiltered_list" to Int.MAX_VALUE - 4
         )
         assertThat(tracker.getAnalyticsData()).isEqualTo(expected)
     }
@@ -111,10 +118,10 @@ class ReaderTrackerTest {
         }
 
         val expected = mapOf(
-                "time_in_main_reader" to (1 * numRep),
-                "time_in_reader_filtered_list" to (2 * numRep),
-                "time_in_reader_paged_post" to (3 * numRep),
-                "time_in_subfiltered_list" to (4 * numRep)
+            "time_in_main_reader" to (1 * numRep),
+            "time_in_reader_filtered_list" to (2 * numRep),
+            "time_in_reader_paged_post" to (3 * numRep),
+            "time_in_subfiltered_list" to (4 * numRep)
         )
         assertThat(tracker.getAnalyticsData()).isEqualTo(expected)
     }
@@ -149,18 +156,18 @@ class ReaderTrackerTest {
         }
 
         var expected = mapOf(
-                "time_in_main_reader" to (1 * numRep),
-                "time_in_reader_filtered_list" to (2 * numRep),
-                "time_in_reader_paged_post" to (3 * numRep),
-                "time_in_subfiltered_list" to (4 * numRep)
+            "time_in_main_reader" to (1 * numRep),
+            "time_in_reader_filtered_list" to (2 * numRep),
+            "time_in_reader_paged_post" to (3 * numRep),
+            "time_in_subfiltered_list" to (4 * numRep)
         )
         assertThat(tracker.getAnalyticsData()).isEqualTo(expected)
 
         expected = mapOf(
-                "time_in_main_reader" to 0,
-                "time_in_reader_filtered_list" to 0,
-                "time_in_reader_paged_post" to 0,
-                "time_in_subfiltered_list" to 0
+            "time_in_main_reader" to 0,
+            "time_in_reader_filtered_list" to 0,
+            "time_in_reader_paged_post" to 0,
+            "time_in_subfiltered_list" to 0
         )
 
         tracker.setupTrackers()

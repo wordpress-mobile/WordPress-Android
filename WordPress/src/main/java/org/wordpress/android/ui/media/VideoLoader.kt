@@ -58,12 +58,12 @@ class VideoLoader
     }
 
     private fun getSizeFromContentUri(contentUri: Uri) =
-            appContext.contentResolver.query(contentUri, null, null, null, null, null).use { cursor ->
-                cursor?.moveToFirst()?.takeIf { true }?.let {
-                    val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
-                    if (!cursor.isNull(sizeIndex)) cursor.getInt(sizeIndex) else null
-                } ?: 0
-            }
+        appContext.contentResolver.query(contentUri, null, null, null, null, null).use { cursor ->
+            cursor?.moveToFirst()?.takeIf { true }?.let {
+                val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+                if (!cursor.isNull(sizeIndex)) cursor.getInt(sizeIndex) else null
+            } ?: 0
+        }
 
     private fun getSizeFromURL(url: URL): Int {
         val urlConnection = url.openConnection()

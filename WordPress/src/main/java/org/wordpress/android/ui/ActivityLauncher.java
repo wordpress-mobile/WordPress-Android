@@ -115,6 +115,7 @@ import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
+import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
@@ -145,6 +146,8 @@ import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
+import static org.wordpress.android.ui.main.WPMainActivity.ARG_BYPASS_MIGRATION;
+import static org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity.KEY_DEEP_LINK_DATA;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_ALL_UNFLATTENED_LOADED_SLIDES;
@@ -162,7 +165,12 @@ public class ActivityLauncher {
     public static final String CATEGORY_DETAIL_ID = "category_detail_key";
 
     public static void showMainActivity(Context context) {
+        showMainActivity(context, false);
+    }
+
+    public static void showMainActivity(Context context, boolean bypassMigration) {
         Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(ARG_BYPASS_MIGRATION, bypassMigration);
         context.startActivity(intent);
     }
 
@@ -1770,16 +1778,35 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void startJetpackMigrationFlow(@NonNull Context context) {
+    public static void startJetpackMigrationFlow(@NonNull Context context,
+                                                 @Nullable PreMigrationDeepLinkData deepLinkData) {
         Intent intent = new Intent(context, JetpackMigrationActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (deepLinkData != null) {
+            intent.putExtra(KEY_DEEP_LINK_DATA, deepLinkData);
+        }
+        context.startActivity(intent);
+    }
+
+    public static void openDeepLinkAfterJPMigration(@NonNull Context context, String action, Uri uri) {
+        Intent intent = new Intent()
+                .setPackage(context.getPackageName())
+                .setAction(action)
+                .setData(uri)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
     public static void openJetpackForDeeplink(@NonNull Context context, String action, UriWrapper uri) {
+        openJetpackForDeeplink(context, action, uri, false);
+    }
+
+    public static void openJetpackForDeeplink(@NonNull Context context, String action, UriWrapper uri,
+                                              Boolean bypassMigration) {
         Intent intent = new Intent();
         intent.setAction(action);
         intent.setData(uri.getUri());
+        intent.putExtra(ARG_BYPASS_MIGRATION, bypassMigration);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }

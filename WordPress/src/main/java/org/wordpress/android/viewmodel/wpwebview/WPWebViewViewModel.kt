@@ -88,16 +88,16 @@ class WPWebViewViewModel
         isStarted = true
         wpWebViewUsageCategory = webViewUsageCategory
         _navbarUiState.value = NavBarUiState(
-                forwardNavigationEnabled = false,
-                backNavigationEnabled = false,
-                previewModeHintVisible = false,
-                reviewHintResId = getPreviewHintResId(defaultPreviewMode)
+            forwardNavigationEnabled = false,
+            backNavigationEnabled = false,
+            previewModeHintVisible = false,
+            reviewHintResId = getPreviewHintResId(defaultPreviewMode)
         )
         _previewMode.value = defaultPreviewMode
         _previewModeSelector.value = PreviewModeSelectorStatus(
-                isVisible = false,
-                isEnabled = false,
-                selectedPreviewMode = defaultPreviewMode
+            isVisible = false,
+            isEnabled = false,
+            selectedPreviewMode = defaultPreviewMode
         )
 
         if (WPWebViewUsageCategory.isActionableDirectUsage(wpWebViewUsageCategory)) {
@@ -148,7 +148,7 @@ class WPWebViewViewModel
         if (isActionableDirectUsage()) return
 
         if (uiState.value !is WebPreviewFullscreenProgressUiState &&
-                uiState.value !is WebPreviewContentUiState
+            uiState.value !is WebPreviewContentUiState
         ) {
             updateUiState(WebPreviewFullscreenProgressUiState)
             _loadNeeded.value = true
@@ -193,16 +193,16 @@ class WPWebViewViewModel
 
     fun selectPreviewMode(selectedPreviewMode: PreviewMode) {
         analyticsTrackerWrapper.track(
-                Stat.WEBVIEW_PREVIEW_DEVICE_CHANGED,
-                mapOf(TRACK_SELECTED_OPTION_NAME to selectedPreviewMode.name.lowercase())
+            Stat.WEBVIEW_PREVIEW_DEVICE_CHANGED,
+            mapOf(TRACK_SELECTED_OPTION_NAME to selectedPreviewMode.name.lowercase())
         )
         if (previewMode.value != selectedPreviewMode) {
             _previewMode.value = selectedPreviewMode
             _navbarUiState.value =
-                    navbarUiState.value!!.copy(
-                            previewModeHintVisible = selectedPreviewMode != MOBILE,
-                            reviewHintResId = getPreviewHintResId(selectedPreviewMode)
-                    )
+                navbarUiState.value!!.copy(
+                    previewModeHintVisible = selectedPreviewMode != MOBILE,
+                    reviewHintResId = getPreviewHintResId(selectedPreviewMode)
+                )
             updateUiState(WebPreviewFullscreenProgressUiState)
         }
     }
@@ -237,7 +237,7 @@ class WPWebViewViewModel
         object WebPreviewContentUiState : WebPreviewUiState()
 
         object WebPreviewFullscreenProgressUiState : WebPreviewUiState(
-                fullscreenProgressLayoutVisibility = true
+            fullscreenProgressLayoutVisibility = true
         )
 
         sealed class WebPreviewFullscreenUiState : WebPreviewUiState(actionableEmptyView = true) {

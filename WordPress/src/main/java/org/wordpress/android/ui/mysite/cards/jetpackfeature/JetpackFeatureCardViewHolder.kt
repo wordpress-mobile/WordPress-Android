@@ -15,17 +15,17 @@ class JetpackFeatureCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
 ) : MySiteCardAndItemViewHolder<JetpackFeatureCardBinding>(
-        parent.viewBinding(JetpackFeatureCardBinding::inflate)
+    parent.viewBinding(JetpackFeatureCardBinding::inflate)
 ) {
     fun bind(card: JetpackFeatureCard) = with(binding) {
         mySiteJetpackFeatureCardCta.setOnClickListener { card.onClick.click() }
         mySiteJetpackFeatureCardLearnMore.setOnClickListener { card.onLearnMoreClick.click() }
         mySiteJetpackFeatureCardMore.setOnClickListener {
             showMoreMenu(
-                    card.onHideMenuItemClick,
-                    card.onRemindMeLaterItemClick,
-                    card.onMoreMenuClick,
-                    mySiteJetpackFeatureCardMore,
+                card.onHideMenuItemClick,
+                card.onRemindMeLaterItemClick,
+                card.onMoreMenuClick,
+                mySiteJetpackFeatureCardMore,
             )
         }
         uiHelpers.updateVisibility(mySiteJetpackFeatureCardLearnMore, !card.learnMoreUrl.isNullOrEmpty())

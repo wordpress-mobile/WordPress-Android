@@ -52,9 +52,9 @@ class RecommendApiCallsProvider @Inject constructor(
             }
 
             restClientProvider.getRestClientUtilsV2().get(
-                    endPointPath,
-                    listener,
-                    errorListener
+                endPointPath,
+                listener,
+                errorListener
             )
         }
     }
@@ -78,9 +78,9 @@ class RecommendApiCallsProvider @Inject constructor(
                     val mapType = object : TypeToken<RecommendTemplateData>() {}.type
                     val template = gson.fromJson<RecommendTemplateData>(json.toString(), mapType)
                     AppLog.d(
-                            T.API,
-                            "getTemplateFromJson > name[${template.name}], " +
-                                    "link[${template.link}], message[${template.message}]"
+                        T.API,
+                        "getTemplateFromJson > name[${template.name}], " +
+                                "link[${template.link}], message[${template.message}]"
                     )
                     Success(template)
                 } catch (jsonEx: JsonParseException) {
@@ -88,8 +88,8 @@ class RecommendApiCallsProvider @Inject constructor(
                             " response: error[{${jsonEx.message}} json[$json]]"
                     logErrorAndTrack(source, logMessage)
                     Failure(
-                            contextProvider.getContext()
-                                    .getString((R.string.recommend_app_bad_format_response))
+                        contextProvider.getContext()
+                            .getString((R.string.recommend_app_bad_format_response))
                     )
                 }
             } else {

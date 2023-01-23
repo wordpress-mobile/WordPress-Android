@@ -15,13 +15,19 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandingUtils.Screen.SCAN
+import org.wordpress.android.models.JetpackPoweredScreen
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class ScanActivity : AppCompatActivity(), ScrollableViewInitializedListener {
-    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Inject
+    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
     private var binding: ScanActivityBinding? = null
 
     override fun onNewIntent(intent: Intent?) {
@@ -50,20 +56,25 @@ class ScanActivity : AppCompatActivity(), ScrollableViewInitializedListener {
 
     private fun initJetpackBanner(scrollableContainerId: Int) {
         if (jetpackBrandingUtils.shouldShowJetpackBrandingForPhaseOne()) {
+            val screen = JetpackPoweredScreen.WithDynamicText.SCAN
             binding?.root?.post {
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
                 val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
-                        ?: return@post
+                    ?: return@post
 
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+                binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
+                    this,
+                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                )
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                     binding?.jetpackBanner?.root?.setOnClickListener {
-                        jetpackBrandingUtils.trackBannerTapped(SCAN)
+                        jetpackBrandingUtils.trackBannerTapped(screen)
                         JetpackPoweredBottomSheetFragment
-                                .newInstance()
-                                .show(supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                            .newInstance()
+                            .show(supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
                     }
                 }
             }

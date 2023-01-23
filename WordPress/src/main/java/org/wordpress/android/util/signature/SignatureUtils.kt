@@ -29,7 +29,7 @@ class SignatureUtils @Inject constructor(
         trustedSignatureHash: String
     ): Boolean = try {
         val signingInfo = contextProvider.getContext().packageManager.getPackageInfo(
-                trustedPackageId, PackageManager.GET_SIGNING_CERTIFICATES
+            trustedPackageId, PackageManager.GET_SIGNING_CERTIFICATES
         ).signingInfo
         if (signingInfo.hasMultipleSigners()) {
             throw SignatureNotFoundException()
@@ -51,7 +51,7 @@ class SignatureUtils @Inject constructor(
     ): Boolean {
         try {
             val signatures = contextProvider.getContext().packageManager
-                    .getPackageInfo(trustedPackageId, PackageManager.GET_SIGNATURES).signatures
+                .getPackageInfo(trustedPackageId, PackageManager.GET_SIGNATURES).signatures
             val allSignaturesMatch = signatures.all {
                 toHexStringWithColons(messageDigest.digest(it.toByteArray())) == trustedSignatureHash
             }

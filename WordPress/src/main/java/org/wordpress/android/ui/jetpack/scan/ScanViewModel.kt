@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -77,9 +76,9 @@ class ScanViewModel @Inject constructor(
 
     private val fixableThreatIds
         get() = scanStateModel?.threats
-                ?.filter { it.baseThreatModel.fixable != null }
-                ?.map { it.baseThreatModel.id }
-                ?: emptyList()
+            ?.filter { it.baseThreatModel.fixable != null }
+            ?.map { it.baseThreatModel.id }
+            ?: emptyList()
 
     private var scanStateModel: ScanStateModel? = null
     lateinit var site: SiteModel
@@ -112,63 +111,63 @@ class ScanViewModel @Inject constructor(
         if (isRetry) delay(RETRY_DELAY)
 
         fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = invokedByUser)
-                .collect { state ->
-                    when (state) {
-                        is FetchScanState.Success -> {
-                            scanStateModel = state.scanStateModel
-                            updateUiState(buildContentUiState(state.scanStateModel))
-                            if (state.scanStateModel.state in listOf(State.UNAVAILABLE, State.UNKNOWN)) {
-                                scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OTHER)
-                                updateUiState(ErrorUiState.ScanRequestFailed(::onContactSupportClicked))
-                            } else if (invokedByUser && state.scanStateModel.state == State.IDLE) {
-                                showScanFinishedMessage(state.scanStateModel)
-                            }
-                        }
-
-                        is FetchScanState.Failure.NetworkUnavailable -> {
-                            scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OFFLINE)
-                            scanStateModel?.takeIf { !isInvokedFromInit }
-                                    ?.let {
-                                        updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
-                                    }
-                                    ?: updateUiState(ErrorUiState.NoConnection(::onRetryClicked))
-                        }
-
-                        is FetchScanState.Failure.MultisiteNotSupported ->
-                            updateUiState(ErrorUiState.MultisiteNotSupported)
-
-                        is FetchScanState.Failure.VaultPressActiveOnSite ->
-                            updateUiState(ErrorUiState.VaultPressActiveOnSite(::onVisitVaultPressDashboardClicked))
-
-                        is FetchScanState.Failure.RemoteRequestFailure -> {
-                            scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.REMOTE)
-                            scanStateModel?.takeIf { !isInvokedFromInit }
-                                    ?.let {
-                                        updateSnackbarMessageEvent(UiStringRes(R.string.request_failed_message))
-                                    }
-                                    ?: updateUiState(ErrorUiState.GenericRequestFailed(::onContactSupportClicked))
+            .collect { state ->
+                when (state) {
+                    is FetchScanState.Success -> {
+                        scanStateModel = state.scanStateModel
+                        updateUiState(buildContentUiState(state.scanStateModel))
+                        if (state.scanStateModel.state in listOf(State.UNAVAILABLE, State.UNKNOWN)) {
+                            scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OTHER)
+                            updateUiState(ErrorUiState.ScanRequestFailed(::onContactSupportClicked))
+                        } else if (invokedByUser && state.scanStateModel.state == State.IDLE) {
+                            showScanFinishedMessage(state.scanStateModel)
                         }
                     }
+
+                    is FetchScanState.Failure.NetworkUnavailable -> {
+                        scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OFFLINE)
+                        scanStateModel?.takeIf { !isInvokedFromInit }
+                            ?.let {
+                                updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
+                            }
+                            ?: updateUiState(ErrorUiState.NoConnection(::onRetryClicked))
+                    }
+
+                    is FetchScanState.Failure.MultisiteNotSupported ->
+                        updateUiState(ErrorUiState.MultisiteNotSupported)
+
+                    is FetchScanState.Failure.VaultPressActiveOnSite ->
+                        updateUiState(ErrorUiState.VaultPressActiveOnSite(::onVisitVaultPressDashboardClicked))
+
+                    is FetchScanState.Failure.RemoteRequestFailure -> {
+                        scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.REMOTE)
+                        scanStateModel?.takeIf { !isInvokedFromInit }
+                            ?.let {
+                                updateSnackbarMessageEvent(UiStringRes(R.string.request_failed_message))
+                            }
+                            ?: updateUiState(ErrorUiState.GenericRequestFailed(::onContactSupportClicked))
+                    }
                 }
+            }
     }
 
     private fun showScanFinishedMessage(scanStateModel: ScanStateModel) {
         val threatsCount = scanStateModel.threats?.size ?: 0
         val message = UiStringText(
-                when (threatsCount) {
-                    0 -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            R.string.scan_finished_no_threats_found_message
-                    )
+            when (threatsCount) {
+                0 -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                    R.string.scan_finished_no_threats_found_message
+                )
 
-                    1 -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            R.string.scan_finished_potential_threats_found_message_singular
-                    )
+                1 -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                    R.string.scan_finished_potential_threats_found_message_singular
+                )
 
-                    else -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            R.string.scan_finished_potential_threats_found_message_plural,
-                            "$threatsCount"
-                    )
-                }
+                else -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                    R.string.scan_finished_potential_threats_found_message_plural,
+                    "$threatsCount"
+                )
+            }
         )
         updateSnackbarMessageEvent(message)
     }
@@ -176,24 +175,24 @@ class ScanViewModel @Inject constructor(
     private fun startScan() {
         launch {
             startScanUseCase.startScan(site)
-                    .collect { state ->
-                        when (state) {
-                            is StartScanState.ScanningStateUpdatedInDb ->
-                                updateUiState(buildContentUiState(state.model))
+                .collect { state ->
+                    when (state) {
+                        is StartScanState.ScanningStateUpdatedInDb ->
+                            updateUiState(buildContentUiState(state.model))
 
-                            is StartScanState.Success -> fetchScanState(invokedByUser = true)
+                        is StartScanState.Success -> fetchScanState(invokedByUser = true)
 
-                            is StartScanState.Failure.NetworkUnavailable -> {
-                                scanTracker.trackOnError(ErrorAction.SCAN, ErrorCause.OFFLINE)
-                                updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
-                            }
-                            is StartScanState.Failure.RemoteRequestFailure -> {
-                                scanTracker.trackOnError(ErrorAction.SCAN, ErrorCause.REMOTE)
-                                updateUiState(ContentUiState(emptyList()))
-                                updateUiState(ErrorUiState.ScanRequestFailed(::onContactSupportClicked))
-                            }
+                        is StartScanState.Failure.NetworkUnavailable -> {
+                            scanTracker.trackOnError(ErrorAction.SCAN, ErrorCause.OFFLINE)
+                            updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
+                        }
+                        is StartScanState.Failure.RemoteRequestFailure -> {
+                            scanTracker.trackOnError(ErrorAction.SCAN, ErrorCause.REMOTE)
+                            updateUiState(ContentUiState(emptyList()))
+                            updateUiState(ErrorUiState.ScanRequestFailed(::onContactSupportClicked))
                         }
                     }
+                }
         }
     }
 
@@ -222,8 +221,8 @@ class ScanViewModel @Inject constructor(
 
         @StringRes var messageRes: Int? = null
         fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(
-                remoteSiteId = site.siteId,
-                fixableThreatIds = fixableThreatIds
+            remoteSiteId = site.siteId,
+            fixableThreatIds = fixableThreatIds
         ).collect { status ->
             var fixingThreatIds = emptyList<Long>()
             when (status) {
@@ -263,7 +262,7 @@ class ScanViewModel @Inject constructor(
             val shouldUpdateUi = status is FetchFixThreatsState.InProgress || status is FetchFixThreatsState.Complete
             if (shouldUpdateUi) {
                 updateUiState(
-                        buildContentUiState(model = requireNotNull(scanStateModel), fixingThreatIds = fixingThreatIds)
+                    buildContentUiState(model = requireNotNull(scanStateModel), fixingThreatIds = fixingThreatIds)
                 )
             }
 
@@ -293,16 +292,16 @@ class ScanViewModel @Inject constructor(
     private fun onFixAllButtonClicked() {
         scanTracker.trackOnFixAllThreatsButtonClicked()
         updateNavigationEvent(
-                OpenFixThreatsConfirmationDialog(
-                        title = UiStringRes(R.string.threat_fix_all_warning_title),
-                        message = if (fixableThreatIds.size > 1) {
-                            UiStringResWithParams(
-                                    R.string.threat_fix_all_confirmation_message_plural,
-                                    listOf(UiStringText("${fixableThreatIds.size}"))
-                            )
-                        } else UiStringRes(R.string.threat_fix_all_confirmation_message_singular),
-                        okButtonAction = this@ScanViewModel::fixAllThreats
-                )
+            OpenFixThreatsConfirmationDialog(
+                title = UiStringRes(R.string.threat_fix_all_warning_title),
+                message = if (fixableThreatIds.size > 1) {
+                    UiStringResWithParams(
+                        R.string.threat_fix_all_confirmation_message_plural,
+                        listOf(UiStringText("${fixableThreatIds.size}"))
+                    )
+                } else UiStringRes(R.string.threat_fix_all_confirmation_message_singular),
+                okButtonAction = this@ScanViewModel::fixAllThreats
+            )
         )
     }
 
@@ -345,16 +344,16 @@ class ScanViewModel @Inject constructor(
         model: ScanStateModel,
         fixingThreatIds: List<Long> = emptyList()
     ) = ContentUiState(
-            scanStateListItemsBuilder.buildScanStateListItems(
-                    model = model,
-                    site = site,
-                    fixingThreatIds = fixingThreatIds,
-                    onScanButtonClicked = this@ScanViewModel::onScanButtonClicked,
-                    onFixAllButtonClicked = this@ScanViewModel::onFixAllButtonClicked,
-                    onThreatItemClicked = this@ScanViewModel::onThreatItemClicked,
-                    onHelpClicked = this@ScanViewModel::onContactSupportClicked,
-                    onEnterServerCredsIconClicked = this@ScanViewModel::onEnterServerCredsIconClicked
-            )
+        scanStateListItemsBuilder.buildScanStateListItems(
+            model = model,
+            site = site,
+            fixingThreatIds = fixingThreatIds,
+            onScanButtonClicked = this@ScanViewModel::onScanButtonClicked,
+            onFixAllButtonClicked = this@ScanViewModel::onFixAllButtonClicked,
+            onThreatItemClicked = this@ScanViewModel::onThreatItemClicked,
+            onHelpClicked = this@ScanViewModel::onContactSupportClicked,
+            onEnterServerCredsIconClicked = this@ScanViewModel::onEnterServerCredsIconClicked
+        )
     )
 
     sealed class UiState(
@@ -375,36 +374,45 @@ class ScanViewModel @Inject constructor(
             open val action: (() -> Unit)? = null
 
             data class NoConnection(override val action: () -> Unit) : ErrorUiState() {
-                @DrawableRes override val image = R.drawable.img_illustration_cloud_off_152dp
+                @DrawableRes
+                override val image = R.drawable.img_illustration_cloud_off_152dp
                 override val title = UiStringRes(R.string.scan_no_network_title)
                 override val subtitle = UiStringRes(R.string.scan_no_network_subtitle)
                 override val buttonText = UiStringRes(R.string.retry)
             }
 
             data class GenericRequestFailed(override val action: () -> Unit) : ErrorUiState() {
-                @DrawableRes override val image = R.drawable.img_illustration_cloud_off_152dp
+                @DrawableRes
+                override val image = R.drawable.img_illustration_cloud_off_152dp
                 override val title = UiStringRes(R.string.scan_request_failed_title)
                 override val subtitle = UiStringRes(R.string.scan_request_failed_subtitle)
                 override val buttonText = UiStringRes(R.string.contact_support)
             }
 
             data class ScanRequestFailed(override val action: () -> Unit) : ErrorUiState() {
-                @DrawableRes override val image = R.drawable.img_illustration_empty_results_216dp
+                @DrawableRes
+                override val image = R.drawable.img_illustration_empty_results_216dp
                 override val title = UiStringRes(R.string.scan_start_request_failed_title)
                 override val subtitle = UiStringRes(R.string.scan_start_request_failed_subtitle)
                 override val buttonText = UiStringRes(R.string.contact_support)
             }
 
             object MultisiteNotSupported : ErrorUiState() {
-                @DrawableRes override val image = R.drawable.ic_baseline_security_white_24dp
-                @ColorRes override val imageColorResId = R.color.gray
+                @DrawableRes
+                override val image = R.drawable.ic_baseline_security_white_24dp
+
+                @ColorRes
+                override val imageColorResId = R.color.gray
                 override val title = UiStringRes(R.string.scan_multisite_not_supported_title)
                 override val subtitle = UiStringRes(R.string.scan_multisite_not_supported_subtitle)
             }
 
             data class VaultPressActiveOnSite(override val action: () -> Unit) : ErrorUiState() {
-                @DrawableRes override val image = R.drawable.ic_shield_warning_white
-                @ColorRes override val imageColorResId = R.color.error_60
+                @DrawableRes
+                override val image = R.drawable.ic_shield_warning_white
+
+                @ColorRes
+                override val imageColorResId = R.color.error_60
                 override val title = UiStringRes(R.string.scan_vault_press_active_on_site_title)
                 override val subtitle = UiStringRes(R.string.scan_vault_press_active_on_site_subtitle)
                 override val buttonText = UiStringRes(R.string.scan_vault_press_active_on_site_button_text)

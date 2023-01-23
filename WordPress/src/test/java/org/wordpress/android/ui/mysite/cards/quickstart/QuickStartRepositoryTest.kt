@@ -46,23 +46,56 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class QuickStartRepositoryTest : BaseUnitTest() {
-    @Mock lateinit var quickStartStore: QuickStartStore
-    @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var eventBus: EventBusWrapper
-    @Mock lateinit var dynamicCardStore: DynamicCardStore
-    @Mock lateinit var htmlCompat: HtmlCompatWrapper
-    @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
-    @Mock lateinit var contextProvider: ContextProvider
-    @Mock lateinit var htmlMessageUtils: HtmlMessageUtils
-    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
-    @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
-    @Mock lateinit var quickStartExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
-    @Mock lateinit var quickStartType: QuickStartType
-    @Mock lateinit var quickStartTracker: QuickStartTracker
+    @Mock
+    lateinit var quickStartStore: QuickStartStore
+
+    @Mock
+    lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var dispatcher: Dispatcher
+
+    @Mock
+    lateinit var eventBus: EventBusWrapper
+
+    @Mock
+    lateinit var dynamicCardStore: DynamicCardStore
+
+    @Mock
+    lateinit var htmlCompat: HtmlCompatWrapper
+
+    @Mock
+    lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
+
+    @Mock
+    lateinit var contextProvider: ContextProvider
+
+    @Mock
+    lateinit var htmlMessageUtils: HtmlMessageUtils
+
+    @Mock
+    lateinit var buildConfigWrapper: BuildConfigWrapper
+
+    @Mock
+    lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+
+    @Mock
+    lateinit var quickStartExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
+
+    @Mock
+    lateinit var quickStartType: QuickStartType
+
+    @Mock
+    lateinit var quickStartTracker: QuickStartTracker
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -71,12 +104,12 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     private val siteLocalId = 1
 
     private val siteMenuTasks = listOf(
-            QuickStartNewSiteTask.ENABLE_POST_SHARING
+        QuickStartNewSiteTask.ENABLE_POST_SHARING
     )
 
     private val dashboardTasks = listOf(
-            QuickStartNewSiteTask.CHECK_STATS,
-            QuickStartNewSiteTask.REVIEW_PAGES
+        QuickStartNewSiteTask.CHECK_STATS,
+        QuickStartNewSiteTask.REVIEW_PAGES
     )
 
     private val nonSiteMenuTasks = QuickStartTask.getAllTasks().subtract(siteMenuTasks)
@@ -86,30 +119,30 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getLastSelectedQuickStartTypeForSite(any())).thenReturn(quickStartType)
         whenever(quickStartExistingUsersV2FeatureConfig.isEnabled()).thenReturn(false)
         quickStartRepository = QuickStartRepository(
-                testDispatcher(),
-                quickStartStore,
-                quickStartUtilsWrapper,
-                appPrefsWrapper,
-                selectedSiteRepository,
-                resourceProvider,
-                dispatcher,
-                eventBus,
-                dynamicCardStore,
-                htmlCompat,
-                quickStartDynamicCardsFeatureConfig,
-                contextProvider,
-                htmlMessageUtils,
-                quickStartTracker,
-                buildConfigWrapper,
-                mySiteDashboardTabsFeatureConfig,
-                quickStartExistingUsersV2FeatureConfig
+            testDispatcher(),
+            quickStartStore,
+            quickStartUtilsWrapper,
+            appPrefsWrapper,
+            selectedSiteRepository,
+            resourceProvider,
+            dispatcher,
+            eventBus,
+            dynamicCardStore,
+            htmlCompat,
+            quickStartDynamicCardsFeatureConfig,
+            contextProvider,
+            htmlMessageUtils,
+            quickStartTracker,
+            buildConfigWrapper,
+            mySiteDashboardTabsFeatureConfig,
+            quickStartExistingUsersV2FeatureConfig
         )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
         quickStartTabStep = mutableListOf()
         quickStartRepository.onSnackbar.observeForever { event ->
             event?.getContentIfNotHandled()
-                    ?.let { snackbars.add(it) }
+                ?.let { snackbars.add(it) }
         }
         quickStartRepository.onQuickStartMySitePrompts.observeForever { event ->
             event?.getContentIfNotHandled()?.let { quickStartPrompts.add(it) }
@@ -145,14 +178,14 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `when quick start is skipped, then quick start notifications for the selected site are marked received`() =
-            test {
-                whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-                initStore()
+        test {
+            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+            initStore()
 
-                quickStartRepository.skipQuickStart()
+            quickStartRepository.skipQuickStart()
 
-                verify(quickStartStore).setQuickStartNotificationReceived(siteLocalId.toLong(), true)
-            }
+            verify(quickStartStore).setQuickStartNotificationReceived(siteLocalId.toLong(), true)
+        }
 
     /* QUICK START COMPLETE TASK */
 
@@ -234,7 +267,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.currentTab = MySiteTabType.SITE_MENU
         quickStartRepository.quickStartTaskOriginTab = MySiteTabType.DASHBOARD
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-                .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
+            .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
         val task = dashboardTasks.random()
         initQuickStartInProgress()
 
@@ -248,7 +281,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.currentTab = MySiteTabType.SITE_MENU
         quickStartRepository.quickStartTaskOriginTab = MySiteTabType.DASHBOARD
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-                .thenReturn(QuickStartExistingSiteTask.CHECK_STATS)
+            .thenReturn(QuickStartExistingSiteTask.CHECK_STATS)
         val task = QuickStartExistingSiteTask.CHECK_STATS
         initQuickStartInProgress()
 
@@ -291,11 +324,11 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.completeTask(QuickStartNewSiteTask.PUBLISH_POST)
 
         verify(quickStartUtilsWrapper).completeTaskAndRemindNextOne(
-                QuickStartNewSiteTask.PUBLISH_POST,
-                site,
-                QuickStartEvent(QuickStartNewSiteTask.PUBLISH_POST),
-                contextProvider.getContext(),
-                quickStartType
+            QuickStartNewSiteTask.PUBLISH_POST,
+            site,
+            QuickStartEvent(QuickStartNewSiteTask.PUBLISH_POST),
+            contextProvider.getContext(),
+            quickStartType
         )
     }
 
@@ -312,13 +345,13 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `given uncompleted task not exists, when show quick start notice is triggered, then snackbar not shown`() =
-            test {
-                initStore(nextUncompletedTask = null)
+        test {
+            initStore(nextUncompletedTask = null)
 
-                quickStartRepository.checkAndShowQuickStartNotice()
+            quickStartRepository.checkAndShowQuickStartNotice()
 
-                assertThat(snackbars).isEmpty()
-            }
+            assertThat(snackbars).isEmpty()
+        }
 
     @Test
     fun `when show quick start notice dismissed using swipe-to-dismiss action, then the task is skipped`() = test {
@@ -332,14 +365,14 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `when show quick start notice dismissed using non swipe-to-dismiss action, then the task is not skipped`() =
-            test {
-                initStore(nextUncompletedTask = QuickStartNewSiteTask.PUBLISH_POST)
-                quickStartRepository.checkAndShowQuickStartNotice()
+        test {
+            initStore(nextUncompletedTask = QuickStartNewSiteTask.PUBLISH_POST)
+            quickStartRepository.checkAndShowQuickStartNotice()
 
-                snackbars.last().onDismissAction.invoke(Callback.DISMISS_EVENT_ACTION)
+            snackbars.last().onDismissAction.invoke(Callback.DISMISS_EVENT_ACTION)
 
-                verify(appPrefsWrapper, never()).setLastSkippedQuickStartTask(QuickStartNewSiteTask.PUBLISH_POST)
-            }
+            verify(appPrefsWrapper, never()).setLastSkippedQuickStartTask(QuickStartNewSiteTask.PUBLISH_POST)
+        }
 
     @Test
     fun `when all task are completed, then completed notice is triggered`() = test {
@@ -365,7 +398,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(quickStartType.isQuickStartInProgress(quickStartStore, siteLocalId.toLong())).thenReturn(true)
         whenever(appPrefsWrapper.isQuickStartNoticeRequired()).thenReturn(true)
         whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(quickStartType, siteLocalId.toLong()))
-                .thenReturn(nextUncompletedTask)
+            .thenReturn(nextUncompletedTask)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormat(anyOrNull())).thenReturn("")
         whenever(resourceProvider.getString(anyOrNull(), anyOrNull())).thenReturn("")
         whenever(htmlCompat.fromHtml(anyOrNull(), eq(HtmlCompat.FROM_HTML_MODE_COMPACT))).thenReturn("")

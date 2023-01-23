@@ -19,38 +19,57 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Field
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiState
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.util.DebugUtils
-import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.FeatureFlagConfig
+import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.RemoteFieldConfigRepository
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupNotifier
 
 @ExperimentalCoroutinesApi
 class DebugSettingsViewModelTest : BaseUnitTest() {
-    @Mock lateinit var manualFeatureConfig: ManualFeatureConfig
-    @Mock lateinit var featureFlagConfig: FeatureFlagConfig
-    @Mock lateinit var debugUtils: DebugUtils
-    @Mock lateinit var weeklyRoundupNotifier: WeeklyRoundupNotifier
-    @Mock lateinit var notificationManager: NotificationManagerWrapper
-    @Mock lateinit var contextProvider: ContextProvider
-    @Mock lateinit var remoteFieldConfigRepository: RemoteFieldConfigRepository
+    @Mock
+    lateinit var manualFeatureConfig: ManualFeatureConfig
+
+    @Mock
+    lateinit var featureFlagConfig: FeatureFlagConfig
+
+    @Mock
+    lateinit var debugUtils: DebugUtils
+
+    @Mock
+    lateinit var weeklyRoundupNotifier: WeeklyRoundupNotifier
+
+    @Mock
+    lateinit var notificationManager: NotificationManagerWrapper
+
+    @Mock
+    lateinit var contextProvider: ContextProvider
+
+    @Mock
+    lateinit var remoteFieldConfigRepository: RemoteFieldConfigRepository
+
+    @Mock
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
     private lateinit var viewModel: DebugSettingsViewModel
     private val uiStates = mutableListOf<UiState>()
 
     @Before
     fun setUp() {
         viewModel = DebugSettingsViewModel(
-                testDispatcher(),
-                testDispatcher(),
-                manualFeatureConfig,
-                featureFlagConfig,
-                remoteFieldConfigRepository,
-                debugUtils,
-                weeklyRoundupNotifier,
-                notificationManager,
-                contextProvider
+            testDispatcher(),
+            testDispatcher(),
+            manualFeatureConfig,
+            featureFlagConfig,
+            remoteFieldConfigRepository,
+            debugUtils,
+            weeklyRoundupNotifier,
+            notificationManager,
+            contextProvider,
+            jetpackFeatureRemovalPhaseHelper
         )
     }
 
@@ -166,9 +185,9 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
             assertThat(headers[2].header).isEqualTo(R.string.debug_settings_missing_developed_feature)
             assertThat(headers[3].header).isEqualTo(R.string.debug_settings_tools)
             remoteItems.filter { it.title != enabledFeature }
-                    .forEach { assertThat(it.state).isEqualTo(expectedState ?: DISABLED) }
+                .forEach { assertThat(it.state).isEqualTo(expectedState ?: DISABLED) }
             developedItems.filter { it.title != enabledFeature }
-                    .forEach { assertThat(it.state).isEqualTo(expectedState ?: UNKNOWN) }
+                .forEach { assertThat(it.state).isEqualTo(expectedState ?: UNKNOWN) }
             if (enabledFeature != null) {
                 assertThat(remoteItems.find { it.title == enabledFeature }!!.state).isEqualTo(ENABLED)
             }

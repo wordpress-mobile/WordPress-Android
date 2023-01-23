@@ -8,8 +8,10 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.bloggingreminders.resolver.BloggingRemindersHelper
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker.ErrorType.LocalDraftContent
 import org.wordpress.android.localcontentmigration.EligibilityHelper
@@ -19,6 +21,7 @@ import org.wordpress.android.localcontentmigration.LocalContentEntity.ReaderPost
 import org.wordpress.android.localcontentmigration.LocalContentEntity.Sites
 import org.wordpress.android.localcontentmigration.LocalContentEntity.UserFlags
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.AccessTokenData
+import org.wordpress.android.localcontentmigration.LocalContentEntityData.BloggingRemindersData
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.LocalDraftContentIsPresent
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.WPNotLoggedIn
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.EligibilityStatusData
@@ -47,6 +50,7 @@ import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsHelper
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType.WPNotLoggedInError
 import org.wordpress.android.userflags.resolver.UserFlagsHelper
+import org.wordpress.android.util.AppLog
 import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
@@ -59,15 +63,19 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
     private val sitesMigrationHelper: SitesMigrationHelper = mock()
     private val localPostsHelper: LocalPostsHelper = mock()
     private val eligibilityHelper: EligibilityHelper = mock()
+    private val bloggingRemindersHelper: BloggingRemindersHelper = mock()
+    private val appLogWrapper: AppLogWrapper = mock()
     private val classToTest = LocalMigrationOrchestrator(
-            sharedLoginAnalyticsTracker,
-            migrationAnalyticsTracker,
-            userFlagsHelper,
-            readerSavedPostsHelper,
-            sharedLoginHelper,
-            sitesMigrationHelper,
-            localPostsHelper,
-            eligibilityHelper,
+        sharedLoginAnalyticsTracker,
+        migrationAnalyticsTracker,
+        userFlagsHelper,
+        readerSavedPostsHelper,
+        sharedLoginHelper,
+        sitesMigrationHelper,
+        localPostsHelper,
+        eligibilityHelper,
+        bloggingRemindersHelper,
+        appLogWrapper,
     )
     private val avatarUrl = "avatarUrl"
     private val sites = listOf(SiteModel(), SiteModel())
@@ -100,7 +108,7 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
     @Test
     fun `Should emit Ineligible state when eligibilityHelper validate returns LocalDraftContentIsPresent`() {
         whenever(eligibilityHelper.validate())
-                .thenReturn(Failure(LocalMigrationError.Ineligibility(LocalDraftContentIsPresent)))
+            .thenReturn(Failure(LocalMigrationError.Ineligibility(LocalDraftContentIsPresent)))
         val mutableStateFlow: MutableStateFlow<LocalMigrationState> = MutableStateFlow(Initial)
         classToTest.tryLocalMigration(mutableStateFlow)
         val expected = Ineligible
@@ -111,7 +119,7 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
     @Test
     fun `Should trackContentMigrationFailed when eligibilityHelper validate returns LocalDraftContentIsPresent`() {
         whenever(eligibilityHelper.validate())
-                .thenReturn(Failure(LocalMigrationError.Ineligibility(LocalDraftContentIsPresent)))
+            .thenReturn(Failure(LocalMigrationError.Ineligibility(LocalDraftContentIsPresent)))
         val mutableStateFlow: MutableStateFlow<LocalMigrationState> = MutableStateFlow(Initial)
         classToTest.tryLocalMigration(mutableStateFlow)
         migrationAnalyticsTracker.trackContentMigrationFailed(LocalDraftContent)
@@ -145,6 +153,16 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
         mockHappyPath()
         whenever(sitesMigrationHelper.migrateSites()).thenReturn(Failure(error))
         assertFailure(error)
+    }
+
+    @Test
+    fun `Should log Failure if sitesMigrationHelper migrateSites fails`() {
+        val error = NullCursor(Sites)
+        mockHappyPath()
+        whenever(sitesMigrationHelper.migrateSites()).thenReturn(Failure(error))
+        val mutableStateFlow: MutableStateFlow<LocalMigrationState> = MutableStateFlow(Initial)
+        classToTest.tryLocalMigration(mutableStateFlow)
+        verify(appLogWrapper).e(AppLog.T.JETPACK_MIGRATION, "$error")
     }
 
     @Test
@@ -209,8 +227,10 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
         whenever(sitesMigrationHelper.migrateSites()).thenReturn(Success(SitesData(sites)))
         whenever(userFlagsHelper.migrateUserFlags()).thenReturn(Success(UserFlagsData(mapOf(), listOf(), listOf())))
         whenever(readerSavedPostsHelper.migrateReaderSavedPosts())
-                .thenReturn(Success(ReaderPostsData(ReaderPostList())))
+            .thenReturn(Success(ReaderPostsData(ReaderPostList())))
         whenever(localPostsHelper.migratePosts()).thenReturn(Success(PostData(PostModel())))
+        whenever(bloggingRemindersHelper.migrateBloggingReminders())
+            .thenReturn(Success(BloggingRemindersData(listOf())))
     }
 
     private fun assertFailure(error: ProviderError) {

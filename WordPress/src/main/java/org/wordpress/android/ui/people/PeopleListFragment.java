@@ -40,10 +40,11 @@ import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.util.JetpackBrandingUtils.Screen;
+import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -66,6 +67,7 @@ public class PeopleListFragment extends Fragment {
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
+    @Inject UiHelpers mUiHelpers;
 
     public static PeopleListFragment newInstance(SiteModel site) {
         PeopleListFragment peopleListFragment = new PeopleListFragment();
@@ -235,7 +237,14 @@ public class PeopleListFragment extends Fragment {
 
     private void showJetpackBannerIfNeeded(final View rootView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
+            final JetpackPoweredScreen screen = JetpackPoweredScreen.WithStaticText.PERSON;
             View jetpackBannerView = rootView.findViewById(R.id.jetpack_banner);
+            TextView jetpackBannerTextView = jetpackBannerView.findViewById(R.id.jetpack_banner_text);
+            jetpackBannerTextView.setText(
+                    mUiHelpers.getTextOfUiString(
+                            requireContext(),
+                            mJetpackBrandingUtils.getBrandingTextForScreen(screen))
+            );
             RecyclerView scrollableView = mFilteredRecyclerView.getInternalRecyclerView();
 
             mJetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView);
@@ -243,7 +252,7 @@ public class PeopleListFragment extends Fragment {
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 jetpackBannerView.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBannerTapped(Screen.PEOPLE);
+                    mJetpackBrandingUtils.trackBannerTapped(screen);
                     new JetpackPoweredBottomSheetFragment()
                             .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
                 });

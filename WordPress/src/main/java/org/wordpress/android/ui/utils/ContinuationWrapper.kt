@@ -42,6 +42,7 @@ interface ContinuationWrapper<T> {
     suspend fun suspendCoroutine(
         block: (CancellableContinuation<T>) -> Unit
     ): T
+
     fun continueWith(t: T)
     fun cancel()
 }

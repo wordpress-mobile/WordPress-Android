@@ -14,5 +14,5 @@ import javax.inject.Inject
 @Reusable
 class ReaderTagWrapper @Inject constructor() {
     fun createDiscoverPostCardsTag(): ReaderTag =
-            ReaderTag.createDiscoverPostCardsTag()
+        ReaderTag.createDiscoverPostCardsTag()
 }

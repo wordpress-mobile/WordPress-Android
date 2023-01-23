@@ -9,15 +9,15 @@ import javax.inject.Inject
  * Quick Start steps that are relevant to existing users.
  */
 @Feature(
-        remoteField = QuickStartExistingUsersV2FeatureConfig.QUICK_START_EXISTING_USERS_V2,
-        defaultValue = true
+    remoteField = QuickStartExistingUsersV2FeatureConfig.QUICK_START_EXISTING_USERS_V2,
+    defaultValue = true
 )
 class QuickStartExistingUsersV2FeatureConfig @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
-        appConfig,
-        BuildConfig.QUICK_START_EXISTING_USERS_V2,
-        QUICK_START_EXISTING_USERS_V2
+    appConfig,
+    BuildConfig.QUICK_START_EXISTING_USERS_V2,
+    QUICK_START_EXISTING_USERS_V2
 ) {
     companion object {
         const val QUICK_START_EXISTING_USERS_V2 = "quick_start_existing_users_v2"

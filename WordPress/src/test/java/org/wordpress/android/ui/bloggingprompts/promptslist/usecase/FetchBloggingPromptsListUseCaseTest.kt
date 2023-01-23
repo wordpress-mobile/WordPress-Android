@@ -21,15 +21,18 @@ import java.util.Date
 
 @ExperimentalCoroutinesApi
 class FetchBloggingPromptsListUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock lateinit var bloggingPromptsStore: BloggingPromptsStore
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Mock
+    lateinit var bloggingPromptsStore: BloggingPromptsStore
     lateinit var useCase: FetchBloggingPromptsListUseCase
 
     @Before
     fun setUp() {
         useCase = FetchBloggingPromptsListUseCase(
-                bloggingPromptsStore = bloggingPromptsStore,
-                selectedSiteRepository = selectedSiteRepository
+            bloggingPromptsStore = bloggingPromptsStore,
+            selectedSiteRepository = selectedSiteRepository
         )
     }
 
@@ -46,7 +49,7 @@ class FetchBloggingPromptsListUseCaseTest : BaseUnitTest() {
     fun `given fetching prompts fails, when execute is called, then return failure`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(SiteModel().apply { id = 1 })
         whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any()))
-                .thenReturn(BloggingPromptsResult(error = mock()))
+            .thenReturn(BloggingPromptsResult(error = mock()))
 
         val result = useCase.execute()
 
@@ -60,22 +63,22 @@ class FetchBloggingPromptsListUseCaseTest : BaseUnitTest() {
         var count: Int = 0
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(SiteModel().apply { id = 1 })
         whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any()))
-                .doSuspendableAnswer {
-                    count = it.getArgument(1)
-                    initialDate = it.getArgument(2)
-                    BloggingPromptsResult(
-                            model = BloggingPromptsListFixtures.domainModelListForNextDays(
-                                    initialDate = initialDate,
-                                    count = count,
-                            )
+            .doSuspendableAnswer {
+                count = it.getArgument(1)
+                initialDate = it.getArgument(2)
+                BloggingPromptsResult(
+                    model = BloggingPromptsListFixtures.domainModelListForNextDays(
+                        initialDate = initialDate,
+                        count = count,
                     )
-                }
+                )
+            }
 
         val result = useCase.execute()
 
         val expectedItems = BloggingPromptsListFixtures.domainModelListForNextDays(
-                initialDate = initialDate,
-                count = count, // just the right amount of items
+            initialDate = initialDate,
+            count = count, // just the right amount of items
         ).sortedByDescending { it.date }
 
         assertThat(count).isNotEqualTo(0)

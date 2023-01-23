@@ -157,24 +157,24 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
 
             if (event.contactModel != null && !TextUtils.isEmpty(countryCode)) {
                 _uiState.value =
-                        uiState.value?.copy(
-                                selectedCountry = supportedCountries?.firstOrNull {
-                                    it.code == event.contactModel?.countryCode
-                                },
-                                isStateProgressIndicatorVisible = true,
-                                isDomainRegistrationButtonEnabled = false
-                        )
+                    uiState.value?.copy(
+                        selectedCountry = supportedCountries?.firstOrNull {
+                            it.code == event.contactModel?.countryCode
+                        },
+                        isStateProgressIndicatorVisible = true,
+                        isDomainRegistrationButtonEnabled = false
+                    )
 
                 // if customer does not have a phone number we will try to prefill a country code
                 if (TextUtils.isEmpty(event.contactModel?.phone)) {
                     val countryCodePrefix = DomainPhoneNumberUtils.getPhoneNumberPrefix(countryCode!!)
                     _domainContactForm.value = _domainContactForm.value?.copy(
-                            phoneNumberPrefix = countryCodePrefix
+                        phoneNumberPrefix = countryCodePrefix
                     )
                 }
 
                 dispatcher.dispatch(
-                        SiteActionBuilder.newFetchDomainSupportedStatesAction(event.contactModel?.countryCode)
+                    SiteActionBuilder.newFetchDomainSupportedStatesAction(event.contactModel?.countryCode)
                 )
             }
         }
@@ -184,18 +184,18 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     fun onDomainSupportedStatesFetched(event: OnDomainSupportedStatesFetched) {
         if (event.isError) {
             _uiState.value =
-                    uiState.value?.copy(
-                            isStateProgressIndicatorVisible = false,
-                            isDomainRegistrationButtonEnabled = true
-                    )
+                uiState.value?.copy(
+                    isStateProgressIndicatorVisible = false,
+                    isDomainRegistrationButtonEnabled = true
+                )
             event.error?.message?.let { _showErrorMessage.value = it }
             AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching supported countries")
         } else {
             _uiState.value = uiState.value?.copy(
-                    selectedState = event.supportedStates?.firstOrNull { it.code == domainContactForm.value?.state },
-                    isStateProgressIndicatorVisible = false,
-                    isDomainRegistrationButtonEnabled = true,
-                    isStateInputEnabled = !event.supportedStates.isNullOrEmpty()
+                selectedState = event.supportedStates?.firstOrNull { it.code == domainContactForm.value?.state },
+                isStateProgressIndicatorVisible = false,
+                isDomainRegistrationButtonEnabled = true,
+                isStateInputEnabled = !event.supportedStates.isNullOrEmpty()
             )
             _supportedStates.value = event.supportedStates
         }
@@ -206,20 +206,20 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         if (event.isError) {
             _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
             AppLog.e(
-                    T.DOMAIN_REGISTRATION,
-                    "An error occurred while creating a shopping cart : " + event.error.message
+                T.DOMAIN_REGISTRATION,
+                "An error occurred while creating a shopping cart : " + event.error.message
             )
             _showErrorMessage.value = event.error.message
             return
         }
 
         dispatcher.dispatch(
-                TransactionActionBuilder.newRedeemCartWithCreditsAction(
-                        RedeemShoppingCartPayload(
-                                event.cartDetails!!,
-                                DomainContactFormModel.toDomainContactModel(domainContactForm.value)!!
-                        )
+            TransactionActionBuilder.newRedeemCartWithCreditsAction(
+                RedeemShoppingCartPayload(
+                    event.cartDetails!!,
+                    DomainContactFormModel.toDomainContactModel(domainContactForm.value)!!
                 )
+            )
         )
     }
 
@@ -231,9 +231,9 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
             _formError.value = event.error
             _showErrorMessage.value = event.error.message
             AppLog.e(
-                    T.DOMAIN_REGISTRATION,
-                    "An error occurred while redeeming a shopping cart : " + event.error.type +
-                            " " + event.error.message
+                T.DOMAIN_REGISTRATION,
+                "An error occurred while redeeming a shopping cart : " + event.error.type +
+                        " " + event.error.message
             )
             return
         }
@@ -242,12 +242,12 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         launch {
             delay(SITE_CHECK_DELAY_MS)
             dispatcher.dispatch(
-                    SiteActionBuilder.newDesignatePrimaryDomainAction(
-                            DesignatePrimaryDomainPayload(
-                                    site,
-                                    domainProductDetails.domainName
-                            )
+                SiteActionBuilder.newDesignatePrimaryDomainAction(
+                    DesignatePrimaryDomainPayload(
+                        site,
+                        domainProductDetails.domainName
                     )
+                )
             )
         }
     }
@@ -257,9 +257,9 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         if (event.isError) { // in case of error we notify used and proceed to next step
             event.error?.message?.let { _showErrorMessage.value = it }
             AppLog.e(
-                    T.DOMAIN_REGISTRATION,
-                    "An error occurred while redeeming a shopping cart : " + event.error.type +
-                            " " + event.error.message
+                T.DOMAIN_REGISTRATION,
+                "An error occurred while redeeming a shopping cart : " + event.error.type +
+                        " " + event.error.message
             )
         }
 
@@ -270,8 +270,8 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     fun onSiteChanged(event: OnSiteChanged) {
         if (event.isError) {
             AppLog.e(
-                    T.DOMAIN_REGISTRATION,
-                    "An error occurred while updating site details : " + event.error.message
+                T.DOMAIN_REGISTRATION,
+                "An error occurred while updating site details : " + event.error.message
             )
             event.error?.message?.let { _showErrorMessage.value = it }
             finishRegistration()
@@ -283,8 +283,8 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         // New domain is not is not reflected in SiteModel yet, try refreshing a site until we get it
         if (updatedSite?.url?.endsWith(".wordpress.com") == true && siteCheckTries < MAX_SITE_CHECK_TRIES) {
             AppLog.v(
-                    T.DOMAIN_REGISTRATION,
-                    "Newly registered domain is still not reflected in site model. Refreshing site model..."
+                T.DOMAIN_REGISTRATION,
+                "Newly registered domain is still not reflected in site model. Refreshing site model..."
             )
             launch {
                 delay(SITE_CHECK_DELAY_MS)
@@ -304,10 +304,10 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     private fun finishRegistration() {
         _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
         _handleCompletedDomainRegistration.postValue(
-                DomainRegistrationCompletedEvent(
-                        domainProductDetails.domainName,
-                        domainContactForm.value!!.email!!
-                )
+            DomainRegistrationCompletedEvent(
+                domainProductDetails.domainName,
+                domainContactForm.value!!.email!!
+            )
         )
     }
 
@@ -322,18 +322,18 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     fun onRegisterDomainButtonClicked() {
         _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = true)
         _domainContactForm.value = _domainContactForm.value?.copy(
-                countryCode = uiState.value?.selectedCountry?.code,
-                state = uiState.value?.selectedState?.code
+            countryCode = uiState.value?.selectedCountry?.code,
+            state = uiState.value?.selectedState?.code
         )
         dispatcher.dispatch(
-                TransactionActionBuilder.newCreateShoppingCartAction(
-                        CreateShoppingCartPayload(
-                                site,
-                                domainProductDetails.productId,
-                                domainProductDetails.domainName,
-                                uiState.value?.isPrivacyProtectionEnabled!!
-                        )
+            TransactionActionBuilder.newCreateShoppingCartAction(
+                CreateShoppingCartPayload(
+                    site,
+                    domainProductDetails.productId,
+                    domainProductDetails.domainName,
+                    uiState.value?.isPrivacyProtectionEnabled!!
                 )
+            )
         )
     }
 
@@ -341,18 +341,18 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         if (country != uiState.value?.selectedCountry) {
             _supportedStates.value = null
             _uiState.value =
-                    uiState.value?.copy(
-                            selectedCountry = country,
-                            selectedState = null,
-                            isStateProgressIndicatorVisible = true,
-                            isDomainRegistrationButtonEnabled = false,
-                            isStateInputEnabled = false
-                    )
+                uiState.value?.copy(
+                    selectedCountry = country,
+                    selectedState = null,
+                    isStateProgressIndicatorVisible = true,
+                    isDomainRegistrationButtonEnabled = false,
+                    isStateInputEnabled = false
+                )
 
             _domainContactForm.value = _domainContactForm.value?.copy(
-                    countryCode = country.code,
-                    state = null,
-                    phoneNumberPrefix = DomainPhoneNumberUtils.getPhoneNumberPrefix(country.code)
+                countryCode = country.code,
+                state = null,
+                phoneNumberPrefix = DomainPhoneNumberUtils.getPhoneNumberPrefix(country.code)
             )
             dispatcher.dispatch(SiteActionBuilder.newFetchDomainSupportedStatesAction(country.code))
         }
@@ -400,21 +400,21 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                 }
 
                 return DomainContactModel(
-                        firstName = domainContactFormModel.firstName,
-                        lastName = domainContactFormModel.lastName,
-                        organization = domainContactFormModel.organization,
-                        addressLine1 = domainContactFormModel.addressLine1,
-                        addressLine2 = domainContactFormModel.addressLine2,
-                        postalCode = domainContactFormModel.postalCode,
-                        city = domainContactFormModel.city,
-                        state = domainContactFormModel.state,
-                        countryCode = domainContactFormModel.countryCode,
-                        email = domainContactFormModel.email,
-                        phone = DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
-                                domainContactFormModel.phoneNumberPrefix,
-                                domainContactFormModel.phoneNumber
-                        ),
-                        fax = null
+                    firstName = domainContactFormModel.firstName,
+                    lastName = domainContactFormModel.lastName,
+                    organization = domainContactFormModel.organization,
+                    addressLine1 = domainContactFormModel.addressLine1,
+                    addressLine2 = domainContactFormModel.addressLine2,
+                    postalCode = domainContactFormModel.postalCode,
+                    city = domainContactFormModel.city,
+                    state = domainContactFormModel.state,
+                    countryCode = domainContactFormModel.countryCode,
+                    email = domainContactFormModel.email,
+                    phone = DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
+                        domainContactFormModel.phoneNumberPrefix,
+                        domainContactFormModel.phoneNumber
+                    ),
+                    fax = null
                 )
             }
 
@@ -424,20 +424,20 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                 }
 
                 return DomainContactFormModel(
-                        firstName = domainContactModel.firstName,
-                        lastName = domainContactModel.lastName,
-                        organization = domainContactModel.organization,
-                        addressLine1 = domainContactModel.addressLine1,
-                        addressLine2 = domainContactModel.addressLine2,
-                        postalCode = domainContactModel.postalCode,
-                        city = domainContactModel.city,
-                        state = domainContactModel.state,
-                        countryCode = domainContactModel.countryCode,
-                        email = domainContactModel.email,
-                        phoneNumberPrefix = DomainPhoneNumberUtils.getPhoneNumberPrefixFromFullPhoneNumber(
-                                domainContactModel.phone
-                        ),
-                        phoneNumber = DomainPhoneNumberUtils.getPhoneNumberWithoutPrefix(domainContactModel.phone)
+                    firstName = domainContactModel.firstName,
+                    lastName = domainContactModel.lastName,
+                    organization = domainContactModel.organization,
+                    addressLine1 = domainContactModel.addressLine1,
+                    addressLine2 = domainContactModel.addressLine2,
+                    postalCode = domainContactModel.postalCode,
+                    city = domainContactModel.city,
+                    state = domainContactModel.state,
+                    countryCode = domainContactModel.countryCode,
+                    email = domainContactModel.email,
+                    phoneNumberPrefix = DomainPhoneNumberUtils.getPhoneNumberPrefixFromFullPhoneNumber(
+                        domainContactModel.phone
+                    ),
+                    phoneNumber = DomainPhoneNumberUtils.getPhoneNumberWithoutPrefix(domainContactModel.phone)
                 )
             }
         }

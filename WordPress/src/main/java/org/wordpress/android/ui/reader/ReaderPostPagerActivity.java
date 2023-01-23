@@ -47,7 +47,8 @@ import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackAllFeaturesOverlaySource;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -64,6 +65,8 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
+import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils;
+import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -161,8 +164,10 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Inject DeepLinkTrackingUtils mDeepLinkTrackingUtils;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
+    @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
     private JetpackFeatureFullScreenOverlayViewModel mJetpackFullScreenViewModel;
     @Inject AccountStore mAccountStore;
+    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -171,6 +176,17 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
 
         setContentView(R.layout.reader_activity_post_pager);
+
+        // Start migration flow passing deep link data if requirements are met
+        if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
+            PreMigrationDeepLinkData deepLinkData = new PreMigrationDeepLinkData(
+                    getIntent().getAction(),
+                    getIntent().getData()
+            );
+            mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow(deepLinkData);
+            finish();
+            return;
+        }
 
         mViewPager = findViewById(R.id.viewpager);
         mProgress = findViewById(R.id.progress_loading);
@@ -283,8 +299,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             host = uri.getHost();
         }
 
-
-        if (uri == null) {
+        if (uri == null || mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
             mReaderTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action, host, uri);
             // invalid uri so, just show the entry screen
             Intent intent = new Intent(this, WPLaunchActivity.class);
@@ -487,7 +502,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                         true,
                         SiteCreationSource.UNSPECIFIED,
                         false,
-                        JetpackAllFeaturesOverlaySource.UNSPECIFIED)
+                        JetpackFeatureCollectionOverlaySource.UNSPECIFIED)
                 .show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
         return true;
     }

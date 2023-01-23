@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.jetpackoverlay
 
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.JetpackFeatureRemovalNewUsersConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseFourConfig
@@ -67,6 +67,14 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
             is PhaseOne, PhaseTwo, PhaseThree -> false
         }
     }
+
+    fun shouldShowNotifications(): Boolean {
+        val currentPhase = getCurrentPhase() ?: return true
+        return when (currentPhase) {
+            is PhaseFour, PhaseNewUsers -> false
+            is PhaseOne, PhaseTwo, PhaseThree -> true
+        }
+    }
 }
 // Global overlay frequency is the frequency at which the overlay is shown across the features
 // no matter which feature was accessed last time
@@ -79,25 +87,25 @@ sealed class JetpackFeatureRemovalPhase(
     val trackingName: String
 ) {
     object PhaseOne : JetpackFeatureRemovalPhase(
-            PHASE_ONE_GLOBAL_OVERLAY_FREQUENCY_IN_DAYS,
-            PHASE_ONE_FEATURE_OVERLAY_FREQUENCY_IN_DAYS,
-            "one"
+        PHASE_ONE_GLOBAL_OVERLAY_FREQUENCY_IN_DAYS,
+        PHASE_ONE_FEATURE_OVERLAY_FREQUENCY_IN_DAYS,
+        "one"
     )
 
     object PhaseTwo : JetpackFeatureRemovalPhase(
-            PHASE_TWO_GLOBAL_OVERLAY_FREQUENCY_IN_DAYS,
-            PHASE_TWO_FEATURE_OVERLAY_FREQUENCY_IN_DAYS,
-            "two"
+        PHASE_TWO_GLOBAL_OVERLAY_FREQUENCY_IN_DAYS,
+        PHASE_TWO_FEATURE_OVERLAY_FREQUENCY_IN_DAYS,
+        "two"
     )
 
     object PhaseThree : JetpackFeatureRemovalPhase(
-            PHASE_THREE_GLOBAL_OVERLAY_FREQUENCY_IN_DAYS,
-            PHASE_THREE_FEATURE_OVERLAY_FREQUENCY_IN_DAYS,
-            "three"
+        PHASE_THREE_GLOBAL_OVERLAY_FREQUENCY_IN_DAYS,
+        PHASE_THREE_FEATURE_OVERLAY_FREQUENCY_IN_DAYS,
+        "three"
     )
 
     object PhaseFour : JetpackFeatureRemovalPhase(trackingName = "four")
-    object PhaseNewUsers : JetpackFeatureRemovalPhase(trackingName ="new")
+    object PhaseNewUsers : JetpackFeatureRemovalPhase(trackingName = "new")
 }
 
 enum class JetpackFeatureRemovalSiteCreationPhase(val trackingName: String) {

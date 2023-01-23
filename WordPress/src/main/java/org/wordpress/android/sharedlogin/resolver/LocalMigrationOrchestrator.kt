@@ -1,6 +1,8 @@
 package org.wordpress.android.sharedlogin.resolver
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.bloggingreminders.resolver.BloggingRemindersHelper
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker.ErrorType.LocalDraftContent
 import org.wordpress.android.localcontentmigration.EligibilityHelper
@@ -31,6 +33,7 @@ import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsHelper
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType.WPNotLoggedInError
 import org.wordpress.android.userflags.resolver.UserFlagsHelper
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 class LocalMigrationOrchestrator @Inject constructor(
@@ -42,36 +45,40 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val sitesMigrationHelper: SitesMigrationHelper,
     private val localPostsHelper: LocalPostsHelper,
     private val eligibilityHelper: EligibilityHelper,
+    private val bloggingRemindersHelper: BloggingRemindersHelper,
+    private val appLogWrapper: AppLogWrapper,
 ) {
     fun tryLocalMigration(migrationStateFlow: MutableStateFlow<LocalMigrationState>) {
         eligibilityHelper.validate()
-                .then(sharedLoginHelper::login).emitTo(migrationStateFlow)
-                .then(sitesMigrationHelper::migrateSites).emitTo(migrationStateFlow)
-                .then(userFlagsHelper::migrateUserFlags)
-                .then(readerSavedPostsHelper::migrateReaderSavedPosts)
-                .then(localPostsHelper::migratePosts)
-                .orElse { error ->
-                    migrationStateFlow.value = when (error) {
-                        is Ineligibility -> Ineligible
-                        else -> Finished.Failure(error)
-                    }
-                    Failure(error)
+            .then(sharedLoginHelper::login).emitTo(migrationStateFlow)
+            .then(sitesMigrationHelper::migrateSites).emitTo(migrationStateFlow)
+            .then(userFlagsHelper::migrateUserFlags).emitTo(migrationStateFlow)
+            .then(readerSavedPostsHelper::migrateReaderSavedPosts)
+            .then(localPostsHelper::migratePosts)
+            .then(bloggingRemindersHelper::migrateBloggingReminders)
+            .orElse { error ->
+                migrationStateFlow.value = when (error) {
+                    is Ineligibility -> Ineligible
+                    else -> Finished.Failure(error)
                 }
-                .then {
-                    with (migrationStateFlow) {
-                        value = Finished.Successful(
-                                (value as? Migrating)?.data ?: WelcomeScreenData()
-                        )
-                    }
-                    EmptyResult
+                Failure(error)
+            }
+            .then {
+                with(migrationStateFlow) {
+                    value = Finished.Successful(
+                        (value as? Migrating)?.data ?: WelcomeScreenData()
+                    )
                 }
-                .otherwise(::handleErrors)
+                EmptyResult
+            }
+            .otherwise(::handleErrors)
     }
 
     @Suppress("ForbiddenComment")
     // TODO: Handle the errors appropriately
     private fun handleErrors(error: LocalMigrationError) {
-        when(error) {
+        appLogWrapper.e(AppLog.T.JETPACK_MIGRATION, "$error")
+        when (error) {
             is ProviderError -> Unit
             is Ineligibility -> when (error.reason) {
                 WPNotLoggedIn -> sharedLoginAnalyticsTracker.trackLoginFailed(WPNotLoggedInError)

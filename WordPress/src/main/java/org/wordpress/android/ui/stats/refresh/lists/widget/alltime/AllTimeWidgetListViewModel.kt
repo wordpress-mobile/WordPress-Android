@@ -66,30 +66,30 @@ class AllTimeWidgetListViewModel
             Color.LIGHT -> R.layout.stats_views_widget_item_light
         }
         return listOf(
-                AllTimeItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.stats_views),
-                        statsUtils.toFormattedString(domainModel.views, ONE_THOUSAND)
-                ),
-                AllTimeItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.stats_visitors),
-                        statsUtils.toFormattedString(domainModel.visitors, ONE_THOUSAND)
-                ),
-                AllTimeItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.posts),
-                        statsUtils.toFormattedString(domainModel.posts, ONE_THOUSAND)
-                ),
-                AllTimeItemUiModel(
-                        layout,
-                        localSiteId,
-                        resourceProvider.getString(R.string.stats_insights_best_ever),
-                        statsUtils.toFormattedString(domainModel.viewsBestDayTotal, ONE_THOUSAND)
-                )
+            AllTimeItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.stats_views),
+                statsUtils.toFormattedString(domainModel.views, ONE_THOUSAND)
+            ),
+            AllTimeItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.stats_visitors),
+                statsUtils.toFormattedString(domainModel.visitors, ONE_THOUSAND)
+            ),
+            AllTimeItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.posts),
+                statsUtils.toFormattedString(domainModel.posts, ONE_THOUSAND)
+            ),
+            AllTimeItemUiModel(
+                layout,
+                localSiteId,
+                resourceProvider.getString(R.string.stats_insights_best_ever),
+                statsUtils.toFormattedString(domainModel.viewsBestDayTotal, ONE_THOUSAND)
+            )
         )
     }
 

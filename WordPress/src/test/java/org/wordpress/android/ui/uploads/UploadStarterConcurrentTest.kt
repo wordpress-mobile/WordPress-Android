@@ -32,11 +32,11 @@ import java.util.Date
 class UploadStarterConcurrentTest : BaseUnitTest() {
     private val site = createSiteModel()
     private val draftPosts = listOf(
-            createLocallyChangedPostModel(),
-            createLocallyChangedPostModel(),
-            createLocallyChangedPostModel(),
-            createLocallyChangedPostModel(),
-            createLocallyChangedPostModel()
+        createLocallyChangedPostModel(),
+        createLocallyChangedPostModel(),
+        createLocallyChangedPostModel(),
+        createLocallyChangedPostModel(),
+        createLocallyChangedPostModel()
     )
 
     private val postStore = mock<PostStore> {
@@ -59,25 +59,25 @@ class UploadStarterConcurrentTest : BaseUnitTest() {
 
         // Then
         verify(uploadServiceFacade, times(draftPosts.size)).uploadPost(
-                context = any(),
-                post = any(),
-                trackAnalytics = any()
+            context = any(),
+            post = any(),
+            trackAnalytics = any()
         )
     }
 
     private fun createUploadStarter(uploadServiceFacade: UploadServiceFacade) = UploadStarter(
-            context = mock(),
-            postStore = postStore,
-            pageStore = pageStore,
-            siteStore = mock(),
-            bgDispatcher = testDispatcher(),
-            ioDispatcher = testDispatcher(),
-            networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
-            connectionStatus = mock(),
-            uploadServiceFacade = uploadServiceFacade,
-            uploadActionUseCase = UploadActionUseCase(mock(), createMockedPostUtilsWrapper(), uploadServiceFacade),
-            tracker = mock(),
-            dispatcher = mock()
+        context = mock(),
+        postStore = postStore,
+        pageStore = pageStore,
+        siteStore = mock(),
+        bgDispatcher = testDispatcher(),
+        ioDispatcher = testDispatcher(),
+        networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
+        connectionStatus = mock(),
+        uploadServiceFacade = uploadServiceFacade,
+        uploadActionUseCase = UploadActionUseCase(mock(), createMockedPostUtilsWrapper(), uploadServiceFacade),
+        tracker = mock(),
+        dispatcher = mock()
     )
 
     private companion object Fixtures {

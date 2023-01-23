@@ -14,7 +14,7 @@ private const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_T
 private const val CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG = "CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG"
 private const val CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG = "CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG"
 private const val CONFIRM_TRASH_POST_WITH_UNSAVED_CHANGES_DIALOG_TAG =
-        "CONFIRM_TRASH_POST_WITH_UNSAVED_CHANGES_DIALOG_TAG"
+    "CONFIRM_TRASH_POST_WITH_UNSAVED_CHANGES_DIALOG_TAG"
 private const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 private const val CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG"
 private const val CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG = "CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG"
@@ -42,11 +42,11 @@ class PostListDialogHelper(
 
     fun showMoveTrashedPostToDraftDialog(post: PostModel) {
         val dialogHolder = DialogHolder(
-                tag = CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG,
-                title = UiStringRes(R.string.post_list_move_trashed_post_to_draft_dialog_title),
-                message = UiStringRes(R.string.post_list_move_trashed_post_to_draft_dialog_message),
-                positiveButton = UiStringRes(R.string.post_list_move_trashed_post_to_draft_dialog_positive),
-                negativeButton = UiStringRes(R.string.post_list_move_trashed_post_to_draft_dialog_negative)
+            tag = CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG,
+            title = UiStringRes(R.string.post_list_move_trashed_post_to_draft_dialog_title),
+            message = UiStringRes(R.string.post_list_move_trashed_post_to_draft_dialog_message),
+            positiveButton = UiStringRes(R.string.post_list_move_trashed_post_to_draft_dialog_positive),
+            negativeButton = UiStringRes(R.string.post_list_move_trashed_post_to_draft_dialog_negative)
         )
         localPostIdForMoveTrashedPostToDraftDialog = post.id
         showDialog.invoke(dialogHolder)
@@ -58,11 +58,11 @@ class PostListDialogHelper(
             return
         }
         val dialogHolder = DialogHolder(
-                tag = CONFIRM_DELETE_POST_DIALOG_TAG,
-                title = UiStringRes(R.string.delete_post),
-                message = UiStringRes(R.string.dialog_confirm_delete_permanently_post),
-                positiveButton = UiStringRes(R.string.delete),
-                negativeButton = UiStringRes(R.string.cancel)
+            tag = CONFIRM_DELETE_POST_DIALOG_TAG,
+            title = UiStringRes(R.string.delete_post),
+            message = UiStringRes(R.string.dialog_confirm_delete_permanently_post),
+            positiveButton = UiStringRes(R.string.delete),
+            negativeButton = UiStringRes(R.string.cancel)
         )
         localPostIdForDeleteDialog = post.id
         showDialog.invoke(dialogHolder)
@@ -74,11 +74,11 @@ class PostListDialogHelper(
             return
         }
         val dialogHolder = DialogHolder(
-                tag = CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG,
-                title = UiStringRes(R.string.dialog_confirm_scheduled_post_sync_title),
-                message = UiStringRes(R.string.dialog_confirm_scheduled_post_sync_message),
-                positiveButton = UiStringRes(R.string.dialog_confirm_scheduled_post_sync_yes),
-                negativeButton = UiStringRes(R.string.cancel)
+            tag = CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG,
+            title = UiStringRes(R.string.dialog_confirm_scheduled_post_sync_title),
+            message = UiStringRes(R.string.dialog_confirm_scheduled_post_sync_message),
+            positiveButton = UiStringRes(R.string.dialog_confirm_scheduled_post_sync_yes),
+            negativeButton = UiStringRes(R.string.cancel)
         )
         localPostIdForScheduledPostSyncDialog = post.id
         showDialog.invoke(dialogHolder)
@@ -89,11 +89,11 @@ class PostListDialogHelper(
             return
         }
         val dialogHolder = DialogHolder(
-                tag = CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG,
-                title = UiStringRes(R.string.dialog_confirm_trash_losing_local_changes_title),
-                message = UiStringRes(R.string.dialog_confirm_trash_losing_local_changes_message),
-                positiveButton = UiStringRes(R.string.dialog_button_ok),
-                negativeButton = UiStringRes(R.string.dialog_button_cancel)
+            tag = CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG,
+            title = UiStringRes(R.string.dialog_confirm_trash_losing_local_changes_title),
+            message = UiStringRes(R.string.dialog_confirm_trash_losing_local_changes_message),
+            positiveButton = UiStringRes(R.string.dialog_button_ok),
+            negativeButton = UiStringRes(R.string.dialog_button_cancel)
         )
         localPostIdForTrashPostWithLocalChangesDialog = post.id
         showDialog.invoke(dialogHolder)
@@ -104,11 +104,11 @@ class PostListDialogHelper(
             return
         }
         val dialogHolder = DialogHolder(
-                tag = CONFIRM_TRASH_POST_WITH_UNSAVED_CHANGES_DIALOG_TAG,
-                title = UiStringRes(R.string.dialog_confirm_trash_losing_unsaved_changes_title),
-                message = UiStringRes(R.string.dialog_confirm_trash_losing_unsaved_changes_message),
-                positiveButton = UiStringRes(R.string.dialog_button_ok),
-                negativeButton = UiStringRes(R.string.dialog_button_cancel)
+            tag = CONFIRM_TRASH_POST_WITH_UNSAVED_CHANGES_DIALOG_TAG,
+            title = UiStringRes(R.string.dialog_confirm_trash_losing_unsaved_changes_title),
+            message = UiStringRes(R.string.dialog_confirm_trash_losing_unsaved_changes_message),
+            positiveButton = UiStringRes(R.string.dialog_button_ok),
+            negativeButton = UiStringRes(R.string.dialog_button_cancel)
         )
         localPostIdForTrashPostWithUnsavedChangesDialog = post.id
         showDialog.invoke(dialogHolder)
@@ -116,11 +116,11 @@ class PostListDialogHelper(
 
     fun showConflictedPostResolutionDialog(post: PostModel) {
         val dialogHolder = DialogHolder(
-                tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
-                title = UiStringRes(R.string.dialog_confirm_load_remote_post_title),
-                message = UiStringText(PostUtils.getConflictedPostCustomStringForDialog(post)),
-                positiveButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_local),
-                negativeButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_web)
+            tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
+            title = UiStringRes(R.string.dialog_confirm_load_remote_post_title),
+            message = UiStringText(PostUtils.getConflictedPostCustomStringForDialog(post)),
+            positiveButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_local),
+            negativeButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_web)
         )
         localPostIdForConflictResolutionDialog = post.id
         showDialog.invoke(dialogHolder)
@@ -129,11 +129,11 @@ class PostListDialogHelper(
     fun showAutoSaveRevisionDialog(post: PostModel) {
         analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN, mapOf(POST_TYPE to "post"))
         val dialogHolder = DialogHolder(
-                tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
-                title = UiStringRes(R.string.dialog_confirm_autosave_title),
-                message = PostUtils.getCustomStringForAutosaveRevisionDialog(post),
-                positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
-                negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
+            tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
+            title = UiStringRes(R.string.dialog_confirm_autosave_title),
+            message = PostUtils.getCustomStringForAutosaveRevisionDialog(post),
+            positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
+            negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
         )
         localPostIdForAutosaveRevisionResolutionDialog = post.id
         showDialog.invoke(dialogHolder)
@@ -141,11 +141,11 @@ class PostListDialogHelper(
 
     fun showCopyConflictDialog(post: PostModel) {
         val dialogHolder = DialogHolder(
-                tag = COPY_CONFLICT_DIALOG_TAG,
-                title = UiStringRes(R.string.dialog_confirm_copy_local_title),
-                message = UiStringRes(R.string.dialog_confirm_copy_local_message),
-                positiveButton = UiStringRes(R.string.dialog_confirm_copy_local_edit_button),
-                negativeButton = UiStringRes(R.string.dialog_confirm_copy_local_copy_button)
+            tag = COPY_CONFLICT_DIALOG_TAG,
+            title = UiStringRes(R.string.dialog_confirm_copy_local_title),
+            message = UiStringRes(R.string.dialog_confirm_copy_local_message),
+            positiveButton = UiStringRes(R.string.dialog_confirm_copy_local_edit_button),
+            negativeButton = UiStringRes(R.string.dialog_confirm_copy_local_copy_button)
         )
         localPostIdForCopyConflictDialog = post.id
         showDialog.invoke(dialogHolder)
@@ -194,8 +194,9 @@ class PostListDialogHelper(
                 localPostIdForAutosaveRevisionResolutionDialog = null
                 editRestoredAutoSavePost(it)
                 analyticsTracker.track(
-                        UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED,
-                        mapOf(POST_TYPE to "post"))
+                    UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED,
+                    mapOf(POST_TYPE to "post")
+                )
             }
             COPY_CONFLICT_DIALOG_TAG -> localPostIdForCopyConflictDialog?.let {
                 localPostIdForCopyConflictDialog = null
@@ -223,8 +224,8 @@ class PostListDialogHelper(
                 // open the editor with the local post (don't use the auto save version)
                 editLocalPost(it)
                 analyticsTracker.track(
-                        UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED,
-                        mapOf(POST_TYPE to "post")
+                    UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED,
+                    mapOf(POST_TYPE to "post")
                 )
             }
             CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG -> localPostIdForMoveTrashedPostToDraftDialog = null
@@ -245,12 +246,13 @@ class PostListDialogHelper(
         // Cancel and outside touch dismiss works the same way for all, except for conflict and autosave revision
         // dialogs, for which tapping outside and actively tapping the "edit local" have different meanings
         if (instanceTag != CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG &&
-                instanceTag != CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG) {
+            instanceTag != CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG
+        ) {
             onNegativeClickedForBasicDialog(
-                    instanceTag = instanceTag,
-                    updateConflictedPostWithLocalVersion = updateConflictedPostWithLocalVersion,
-                    editLocalPost = editLocalPost,
-                    copyLocalPost = copyLocalPost
+                instanceTag = instanceTag,
+                updateConflictedPostWithLocalVersion = updateConflictedPostWithLocalVersion,
+                editLocalPost = editLocalPost,
+                copyLocalPost = copyLocalPost
             )
         }
     }

@@ -150,9 +150,11 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
                 addTimezoneItems(jsonTimezonesByContinent.getJSONArray(it))
             }
 
-            timezonesList.add(TimezoneHeader(
+            timezonesList.add(
+                TimezoneHeader(
                     resourceProvider.getString(R.string.site_settings_timezones_manual_offsets)
-            ))
+                )
+            )
             for (i in 0 until jsonTimezonesManualOffsets.length()) {
                 val timezone = jsonTimezonesManualOffsets.getJSONObject(i)
                 timezonesList.add(TimezoneItem(timezone.getString("label"), timezone.getString("value")))

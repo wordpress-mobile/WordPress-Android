@@ -33,15 +33,19 @@ private const val REMOTE_SITE_ID = 0L
 @ExperimentalCoroutinesApi
 class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ActivityLogTypeFilterViewModel
-    @Mock private lateinit var parentViewModel: ActivityLogViewModel
-    @Mock private lateinit var activityLogStore: ActivityLogStore
+
+    @Mock
+    private lateinit var parentViewModel: ActivityLogViewModel
+
+    @Mock
+    private lateinit var activityLogStore: ActivityLogStore
 
     @Before
     fun setUp() {
         viewModel = ActivityLogTypeFilterViewModel(
-                activityLogStore,
-                testDispatcher(),
-                testDispatcher()
+            activityLogStore,
+            testDispatcher(),
+            testDispatcher()
         )
     }
 
@@ -70,7 +74,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         startVM()
 
         assertThat((viewModel.uiState.value as Content).items[0])
-                .isInstanceOf(ListItemUiState.SectionHeader::class.java)
+            .isInstanceOf(ListItemUiState.SectionHeader::class.java)
     }
 
     @Test
@@ -186,8 +190,8 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         (uiStates.last() as Content).secondaryAction.action.invoke()
 
         assertThat(
-                (uiStates.last() as Content).items.filterIsInstance(ActivityType::class.java)
-                        .filter { it.checked }
+            (uiStates.last() as Content).items.filterIsInstance(ActivityType::class.java)
+                .filter { it.checked }
         ).isEmpty()
     }
 
@@ -199,7 +203,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         startVM(initialSelection = initialSelection)
 
         assertThat((uiStates.last() as Content).items.filterIsInstance(ActivityType::class.java)
-                .filter { it.checked }.map { it.id }
+            .filter { it.checked }.map { it.id }
         ).containsExactlyElementsOf(initialSelection)
     }
 
@@ -228,22 +232,22 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         }
 
         whenever(activityLogStore.fetchActivityTypes(anyOrNull()))
-                .thenReturn(
-                        if (successResponse) {
-                            OnActivityTypesFetched(
-                                    FETCH_ACTIVITY_TYPES,
-                                    REMOTE_SITE_ID,
-                                    generateActivityTypes(activityTypeCount),
-                                    activityTypeCount
-                            )
-                        } else {
-                            OnActivityTypesFetched(
-                                    REMOTE_SITE_ID,
-                                    ActivityTypesError(GENERIC_ERROR),
-                                    FETCH_ACTIVITY_TYPES
-                            )
-                        }
-                )
+            .thenReturn(
+                if (successResponse) {
+                    OnActivityTypesFetched(
+                        FETCH_ACTIVITY_TYPES,
+                        REMOTE_SITE_ID,
+                        generateActivityTypes(activityTypeCount),
+                        activityTypeCount
+                    )
+                } else {
+                    OnActivityTypesFetched(
+                        REMOTE_SITE_ID,
+                        ActivityTypesError(GENERIC_ERROR),
+                        FETCH_ACTIVITY_TYPES
+                    )
+                }
+            )
         return Observers(uiStates, dismissDialogEvents)
     }
 

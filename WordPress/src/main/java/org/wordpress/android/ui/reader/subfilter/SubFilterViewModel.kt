@@ -106,9 +106,9 @@ class SubFilterViewModel @Inject constructor(
         tag?.let {
             val currentSubfilter = subfilterJson?.let { json ->
                 subfilterListItemMapper.fromJson(
-                        json = json,
-                        onClickAction = ::onSubfilterClicked,
-                        isSelected = true
+                    json = json,
+                    onClickAction = ::onSubfilterClicked,
+                    isSelected = true
                 )
             }
             updateSubfilter(currentSubfilter ?: getCurrentSubfilterValue())
@@ -148,11 +148,13 @@ class SubFilterViewModel @Inject constructor(
             val tags = ReaderTagTable.getFollowedTags()
 
             for (tag in tags) {
-                filterList.add(Tag(
+                filterList.add(
+                    Tag(
                         onClickAction = ::onSubfilterClicked,
                         tag = tag,
                         isSelected = false
-                ))
+                    )
+                )
             }
 
             withContext(mainDispatcher) {
@@ -183,8 +185,8 @@ class SubFilterViewModel @Inject constructor(
 
     fun getCurrentSubfilterValue(): SubfilterListItem {
         return _currentSubFilter.value ?: SiteAll(
-                onClickAction = ::onSubfilterClicked,
-                isSelected = true
+            onClickAction = ::onSubfilterClicked,
+            isSelected = true
         )
     }
 
@@ -194,31 +196,35 @@ class SubFilterViewModel @Inject constructor(
 
     fun setSubfilterFromTag(tag: ReaderTag) {
         updateSubfilter(
-                Tag(
-                        onClickAction = ::onSubfilterClicked,
-                        tag = tag,
-                        isSelected = true
-                ))
+            Tag(
+                onClickAction = ::onSubfilterClicked,
+                tag = tag,
+                isSelected = true
+            )
+        )
     }
 
     fun setDefaultSubfilter() {
         updateSubfilter(
-                SiteAll(
-                        onClickAction = ::onSubfilterClicked,
-                        isSelected = true
-                ))
+            SiteAll(
+                onClickAction = ::onSubfilterClicked,
+                isSelected = true
+            )
+        )
     }
 
     fun onSubFiltersListButtonClicked() {
-        _updateTagsAndSites.value = Event(EnumSet.of(
+        _updateTagsAndSites.value = Event(
+            EnumSet.of(
                 UpdateTask.TAGS,
                 UpdateTask.FOLLOWED_BLOGS
-        ))
+            )
+        )
         _bottomSheetUiState.value = Event(BottomSheetVisible(
-                mTagFragmentStartedWith?.let {
-                    UiStringText(it.label)
-                } ?: UiStringRes(R.string.reader_filter_main_title),
-                if (mTagFragmentStartedWith?.organization == NO_ORGANIZATION) listOf(SITES, TAGS) else listOf(SITES)
+            mTagFragmentStartedWith?.let {
+                UiStringText(it.label)
+            } ?: UiStringRes(R.string.reader_filter_main_title),
+            if (mTagFragmentStartedWith?.organization == NO_ORGANIZATION) listOf(SITES, TAGS) else listOf(SITES)
         ))
     }
 
@@ -238,14 +244,14 @@ class SubFilterViewModel @Inject constructor(
                 // nop
             }
             SubfilterListItem.ItemType.SITE_ALL -> _readerModeInfo.value = (ReaderModeInfo(
-                    streamTag ?: ReaderUtils.getDefaultTag(),
-                    ReaderPostListType.TAG_FOLLOWED,
-                    0,
-                    0,
-                    requestNewerPosts,
-                    subfilterListItem.label,
-                    isFirstLoad,
-                    false
+                streamTag ?: ReaderUtils.getDefaultTag(),
+                ReaderPostListType.TAG_FOLLOWED,
+                0,
+                0,
+                requestNewerPosts,
+                subfilterListItem.label,
+                isFirstLoad,
+                false
             ))
             SubfilterListItem.ItemType.SITE -> {
                 val currentFeedId = (subfilterListItem as Site).blog.feedId
@@ -256,25 +262,25 @@ class SubFilterViewModel @Inject constructor(
                 }
 
                 _readerModeInfo.value = (ReaderModeInfo(
-                        null,
-                        ReaderPostListType.BLOG_PREVIEW,
-                        currentBlogId,
-                        currentFeedId,
-                        requestNewerPosts,
-                        subfilterListItem.label,
-                        isFirstLoad,
-                        true
-                ))
-            }
-            SubfilterListItem.ItemType.TAG -> _readerModeInfo.value = (ReaderModeInfo(
-                    (subfilterListItem as Tag).tag,
-                    ReaderPostListType.TAG_FOLLOWED,
-                    0,
-                    0,
+                    null,
+                    ReaderPostListType.BLOG_PREVIEW,
+                    currentBlogId,
+                    currentFeedId,
                     requestNewerPosts,
                     subfilterListItem.label,
                     isFirstLoad,
                     true
+                ))
+            }
+            SubfilterListItem.ItemType.TAG -> _readerModeInfo.value = (ReaderModeInfo(
+                (subfilterListItem as Tag).tag,
+                ReaderPostListType.TAG_FOLLOWED,
+                0,
+                0,
+                requestNewerPosts,
+                subfilterListItem.label,
+                isFirstLoad,
+                true
             ))
         }
         isFirstLoad = false
@@ -335,10 +341,12 @@ class SubFilterViewModel @Inject constructor(
         }
 
         if (userIdChanged || accessTokenStatusChanged) {
-            _updateTagsAndSites.value = Event(EnumSet.of(
+            _updateTagsAndSites.value = Event(
+                EnumSet.of(
                     UpdateTask.TAGS,
                     UpdateTask.FOLLOWED_BLOGS
-            ))
+                )
+            )
 
             setDefaultSubfilter()
         }
@@ -350,7 +358,7 @@ class SubFilterViewModel @Inject constructor(
 
     fun onSaveInstanceState(outState: Bundle) {
         outState.putString(
-                ARG_CURRENT_SUBFILTER_JSON, getCurrentSubfilterJson()
+            ARG_CURRENT_SUBFILTER_JSON, getCurrentSubfilterJson()
         )
         outState.putBoolean(ARG_IS_FIRST_LOAD, isFirstLoad)
     }

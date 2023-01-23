@@ -20,13 +20,14 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.BUTTON
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.FEATURE
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.HEADER
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.ROW
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.util.DebugUtils
+import org.wordpress.android.util.config.FeatureFlagConfig
 import org.wordpress.android.util.config.FeaturesInDevelopment
 import org.wordpress.android.util.config.ManualFeatureConfig
-import org.wordpress.android.util.config.FeatureFlagConfig
 import org.wordpress.android.util.config.RemoteFeatureConfigDefaults
 import org.wordpress.android.util.config.RemoteFieldConfigDefaults
 import org.wordpress.android.util.config.RemoteFieldConfigRepository
@@ -47,7 +48,8 @@ class DebugSettingsViewModel
     private val debugUtils: DebugUtils,
     private val weeklyRoundupNotifier: WeeklyRoundupNotifier,
     private val notificationManager: NotificationManagerWrapper,
-    private val contextProvider: ContextProvider
+    private val contextProvider: ContextProvider,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
@@ -93,6 +95,8 @@ class DebugSettingsViewModel
     }
 
     private fun onForceShowWeeklyRoundupClick() = launch(bgDispatcher) {
+        if(!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications())
+            return@launch
         weeklyRoundupNotifier.buildNotifications().forEach {
             notificationManager.notify(it.id, it.asNotificationCompatBuilder(contextProvider.getContext()).build())
         }
@@ -151,20 +155,20 @@ class DebugSettingsViewModel
         data class Button(val text: Int, val clickAction: () -> Unit) : UiItem(BUTTON)
         data class Feature(val title: String, val state: State, val toggleAction: ToggleAction) : UiItem(FEATURE) {
             constructor(title: String, enabled: Boolean?, toggleAction: ToggleAction) : this(
-                    title,
-                    when (enabled) {
-                        true -> ENABLED
-                        false -> DISABLED
-                        null -> UNKNOWN
-                    },
-                    toggleAction
+                title,
+                when (enabled) {
+                    true -> ENABLED
+                    false -> DISABLED
+                    null -> UNKNOWN
+                },
+                toggleAction
             )
 
             enum class State { ENABLED, DISABLED, UNKNOWN }
         }
 
         data class Field(val remoteFieldKey: String, val remoteFieldValue: String, val remoteFieldSource: String) :
-                UiItem(Type.FIELD)
+            UiItem(Type.FIELD)
 
         data class Row(val title: Int, val onClick: ListItemInteraction) : UiItem(ROW)
 

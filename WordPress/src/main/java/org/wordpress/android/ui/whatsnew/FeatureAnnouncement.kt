@@ -36,8 +36,8 @@ data class FeatureAnnouncement(
                 }
                 else -> {
                     IntRange(
-                            minAppVersion,
-                            maxAppVersion
+                        minAppVersion,
+                        maxAppVersion
                     ).contains(integerRepresentationOfVersionName)
                 }
             }

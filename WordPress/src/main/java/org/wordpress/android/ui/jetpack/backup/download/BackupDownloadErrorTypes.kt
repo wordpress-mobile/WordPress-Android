@@ -5,7 +5,7 @@ enum class BackupDownloadErrorTypes constructor(val id: Int) {
 
     companion object {
         fun fromInt(value: Int): BackupDownloadErrorTypes =
-                values().firstOrNull { it.id == value }
-                        ?: throw IllegalArgumentException("BackupDownloadErrorTypes wrong value $value")
+            values().firstOrNull { it.id == value }
+                ?: throw IllegalArgumentException("BackupDownloadErrorTypes wrong value $value")
     }
 }

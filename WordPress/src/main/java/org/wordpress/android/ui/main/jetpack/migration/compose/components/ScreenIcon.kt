@@ -19,11 +19,11 @@ fun ScreenIcon(
     modifier: Modifier = Modifier,
 ) {
     Image(
-            painter = painterResource(iconRes),
-            contentDescription = stringResource(R.string.icon_desc),
-            modifier = modifier
-                    .padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
-                    .padding(top = 34.dp)
-                    .height(65.dp)
+        painter = painterResource(iconRes),
+        contentDescription = stringResource(R.string.icon_desc),
+        modifier = modifier
+            .padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
+            .padding(top = 34.dp)
+            .height(65.dp)
     )
 }

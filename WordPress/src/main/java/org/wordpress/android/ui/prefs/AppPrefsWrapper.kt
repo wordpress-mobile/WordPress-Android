@@ -150,7 +150,7 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getLastReaderKnownAccessTokenStatus() = AppPrefs.getLastReaderKnownAccessTokenStatus()
     fun setLastReaderKnownAccessTokenStatus(lastKnownAccessTokenStatus: Boolean) =
-            AppPrefs.setLastReaderKnownAccessTokenStatus(lastKnownAccessTokenStatus)
+        AppPrefs.setLastReaderKnownAccessTokenStatus(lastKnownAccessTokenStatus)
 
     fun getLastReaderKnownUserId() = AppPrefs.getLastReaderKnownUserId()
     fun setLastReaderKnownUserId(userId: Long) = AppPrefs.setLastReaderKnownUserId(userId)
@@ -198,10 +198,10 @@ class AppPrefsWrapper @Inject constructor() {
     }
 
     fun setSiteJetpackCapabilities(remoteSiteId: Long, capabilities: List<JetpackCapability>) =
-            AppPrefs.setSiteJetpackCapabilities(remoteSiteId, capabilities)
+        AppPrefs.setSiteJetpackCapabilities(remoteSiteId, capabilities)
 
     fun getSiteJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> =
-            AppPrefs.getSiteJetpackCapabilities(remoteSiteId)
+        AppPrefs.getSiteJetpackCapabilities(remoteSiteId)
 
     fun setMainPageIndex(index: Int) = AppPrefs.setMainPageIndex(index)
 
@@ -216,10 +216,10 @@ class AppPrefsWrapper @Inject constructor() {
     fun setLastSkippedQuickStartTask(task: QuickStartTask) = AppPrefs.setLastSkippedQuickStartTask(task)
 
     fun getLastSelectedQuickStartTypeForSite(siteLocalId: Long): QuickStartType =
-            AppPrefs.getLastSelectedQuickStartTypeForSite(siteLocalId)
+        AppPrefs.getLastSelectedQuickStartTypeForSite(siteLocalId)
 
     fun setLastSelectedQuickStartTypeForSite(quickStartType: QuickStartType, siteLocalId: Long) =
-            AppPrefs.setLastSelectedQuickStartTypeForSite(quickStartType, siteLocalId)
+        AppPrefs.setLastSelectedQuickStartTypeForSite(quickStartType, siteLocalId)
 
     fun getMySiteInitialScreen(isJetpackApp: Boolean): String = AppPrefs.getMySiteInitialScreen(isJetpackApp)
 
@@ -244,31 +244,35 @@ class AppPrefsWrapper @Inject constructor() {
     fun getIsFirstTryBloggingRemindersSyncJetpack(): Boolean = AppPrefs.getIsFirstTryBloggingRemindersSyncJetpack()
 
     fun saveIsFirstTryBloggingRemindersSyncJetpack(isFirstTry: Boolean) =
-            AppPrefs.saveIsFirstTryBloggingRemindersSyncJetpack(isFirstTry)
+        AppPrefs.saveIsFirstTryBloggingRemindersSyncJetpack(isFirstTry)
 
     fun getIsFirstTryReaderSavedPostsJetpack(): Boolean = AppPrefs.getIsFirstTryReaderSavedPostsJetpack()
 
     fun saveIsFirstTryReaderSavedPostsJetpack(isFirstTry: Boolean) =
-            AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(isFirstTry)
+        AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(isFirstTry)
 
     fun setJetpackMigrationCompleted(isCompleted: Boolean) = AppPrefs.setIsJetpackMigrationCompleted(isCompleted)
 
-    fun isJetpackMigrationCompleted(): Boolean = AppPrefs.getIsJetpackMigrationCompleted()
+    fun isJetpackMigrationCompleted() = AppPrefs.getIsJetpackMigrationCompleted()
+
+    fun setJetpackMigrationInProgress(isInProgress: Boolean) = AppPrefs.setIsJetpackMigrationInProgress(isInProgress)
+
+    fun isJetpackMigrationInProgress() = AppPrefs.getIsJetpackMigrationInProgress()
 
     fun setJetpackMigrationEligible(isEligible: Boolean) = AppPrefs.setIsJetpackMigrationEligible(isEligible)
 
     fun isJetpackMigrationEligible() = AppPrefs.getIsJetpackMigrationEligible()
 
     fun getOpenWebLinksWithJetpackOverlayLastShownTimestamp(): Long =
-            AppPrefs.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
+        AppPrefs.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
 
     fun setOpenWebLinksWithJetpackOverlayLastShownTimestamp(lastShown: Long) =
-            AppPrefs.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(lastShown)
+        AppPrefs.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(lastShown)
 
     fun getIsOpenWebLinksWithJetpack(): Boolean = AppPrefs.getIsOpenWebLinksWithJetpack()
 
     fun setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack: Boolean) =
-            AppPrefs.setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
+        AppPrefs.setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
 
     fun getShouldHideJetpackFeatureCard(): Boolean = AppPrefs.getShouldHideJetpackFeatureCard()
 
@@ -278,6 +282,12 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setJetpackFeatureCardLastShownTimestamp(lastShownTimestamp: Long) {
         AppPrefs.setJetpackFeatureCardLastShownTimestamp(lastShownTimestamp)
+    }
+
+    fun getSwitchToJetpackMenuCardLastShownTimestamp(): Long = AppPrefs.getSwitchToJetpackMenuCardLastShownTimestamp()
+
+    fun setSwitchToJetpackMenuCardLastShownTimestamp(lastShownTimestamp: Long) {
+        AppPrefs.setSwitchToJetpackMenuCardLastShownTimestamp(lastShownTimestamp)
     }
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()

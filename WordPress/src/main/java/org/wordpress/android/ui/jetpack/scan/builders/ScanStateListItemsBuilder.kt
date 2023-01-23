@@ -57,14 +57,14 @@ class ScanStateListItemsBuilder @Inject constructor(
             ScanStateModel.State.IDLE -> {
                 model.threats?.takeIf { threats -> threats.isNotEmpty() }?.let { threats ->
                     buildThreatsFoundStateItems(
-                            model,
-                            threats,
-                            site,
-                            onScanButtonClicked,
-                            onFixAllButtonClicked,
-                            onThreatItemClicked,
-                            onHelpClicked,
-                            onEnterServerCredsIconClicked
+                        model,
+                        threats,
+                        site,
+                        onScanButtonClicked,
+                        onFixAllButtonClicked,
+                        onThreatItemClicked,
+                        onHelpClicked,
+                        onEnterServerCredsIconClicked
                     )
                 } ?: buildThreatsNotFoundStateItems(model, onScanButtonClicked)
             }
@@ -95,17 +95,17 @@ class ScanStateListItemsBuilder @Inject constructor(
         items.add(ThreatsHeaderItemState(threatsCount = fixingThreatIds.size))
 
         items.addAll(
-                fixingThreatIds.mapNotNull { threatId ->
-                    scanStore.getThreatModelByThreatId(threatId)?.let { threatModel ->
-                        val threatItem = threatItemBuilder.buildThreatItem(threatModel).copy(
-                                isFixing = true,
-                                subHeader = threatDetailsListItemsBuilder.buildFixableThreatDescription(
-                                        requireNotNull(threatModel.baseThreatModel.fixable)
-                                ).text
-                        )
-                        threatItem
-                    }
+            fixingThreatIds.mapNotNull { threatId ->
+                scanStore.getThreatModelByThreatId(threatId)?.let { threatModel ->
+                    val threatItem = threatItemBuilder.buildThreatItem(threatModel).copy(
+                        isFixing = true,
+                        subHeader = threatDetailsListItemsBuilder.buildFixableThreatDescription(
+                            requireNotNull(threatModel.baseThreatModel.fixable)
+                        ).text
+                    )
+                    threatItem
                 }
+            }
         )
 
         return items
@@ -135,19 +135,19 @@ class ScanStateListItemsBuilder @Inject constructor(
 
         val fixableThreats = threats.filter { it.baseThreatModel.fixable != null }
         buildFixAllButtonAction(
-                onFixAllButtonClicked = onFixAllButtonClicked,
-                isEnabled = model.hasValidCredentials
+            onFixAllButtonClicked = onFixAllButtonClicked,
+            isEnabled = model.hasValidCredentials
         ).takeIf { fixableThreats.isNotEmpty() }?.let { items.add(it) }
 
         if (!model.hasValidCredentials && fixableThreats.isNotEmpty()) {
             items.add(
-                    buildEnterServerCredsMessageState(
-                            onEnterServerCredsIconClicked,
-                            iconResId = R.drawable.ic_plus_white_24dp,
-                            iconColorResId = R.color.colorPrimary,
-                            threatsCount = threats.size,
-                            siteId = site.siteId
-                    )
+                buildEnterServerCredsMessageState(
+                    onEnterServerCredsIconClicked,
+                    iconResId = R.drawable.ic_plus_white_24dp,
+                    iconColorResId = R.color.colorPrimary,
+                    threatsCount = threats.size,
+                    siteId = site.siteId
+                )
             )
         }
 
@@ -200,8 +200,8 @@ class ScanStateListItemsBuilder @Inject constructor(
         }
         val scanDescription = DescriptionState(UiStringRes(descriptionRes))
         val scanProgress = ProgressState(
-                progress = progress,
-                progressLabel = UiStringText(percentFormatter.format(progress))
+            progress = progress,
+            progressLabel = UiStringText(percentFormatter.format(progress))
         )
 
         items.add(scanIcon)
@@ -226,18 +226,18 @@ class ScanStateListItemsBuilder @Inject constructor(
     }
 
     private fun buildScanIcon(@DrawableRes icon: Int, @ColorRes color: Int?) = IconState(
-            icon = icon,
-            colorResId = color,
-            sizeResId = R.dimen.scan_icon_size,
-            marginResId = R.dimen.scan_icon_margin,
-            contentDescription = UiStringRes(R.string.scan_state_icon)
+        icon = icon,
+        colorResId = color,
+        sizeResId = R.dimen.scan_icon_size,
+        marginResId = R.dimen.scan_icon_margin,
+        contentDescription = UiStringRes(R.string.scan_state_icon)
     )
 
     private fun buildScanButtonAction(@StringRes titleRes: Int, onClick: () -> Unit) = ActionButtonState(
-            text = UiStringRes(titleRes),
-            onClick = onClick,
-            contentDescription = UiStringRes(titleRes),
-            isSecondary = true
+        text = UiStringRes(titleRes),
+        onClick = onClick,
+        contentDescription = UiStringRes(titleRes),
+        isSecondary = true
     )
 
     private fun buildFixAllButtonAction(
@@ -246,10 +246,10 @@ class ScanStateListItemsBuilder @Inject constructor(
     ): ActionButtonState {
         val title = UiStringRes(R.string.threats_fix_all)
         return ActionButtonState(
-                text = title,
-                onClick = onFixAllButtonClicked,
-                contentDescription = title,
-                isEnabled = isEnabled
+            text = title,
+            onClick = onFixAllButtonClicked,
+            contentDescription = title,
+            isEnabled = isEnabled
         )
     }
 
@@ -260,17 +260,17 @@ class ScanStateListItemsBuilder @Inject constructor(
         val displayDuration = when {
             hours > 0 -> UiStringResWithParams(R.string.scan_in_hours_ago, listOf(UiStringText("${hours.toInt()}")))
             minutes > 0 -> UiStringResWithParams(
-                    R.string.scan_in_minutes_ago,
-                    listOf(UiStringText("${minutes.toInt()}"))
+                R.string.scan_in_minutes_ago,
+                listOf(UiStringText("${minutes.toInt()}"))
             )
             else -> UiStringRes(R.string.scan_in_few_seconds)
         }
 
         return DescriptionState(
-                UiStringResWithParams(
-                        R.string.scan_idle_last_scan_description,
-                        listOf(displayDuration, UiStringRes(R.string.scan_idle_manual_scan_description))
-                )
+            UiStringResWithParams(
+                R.string.scan_idle_last_scan_description,
+                listOf(displayDuration, UiStringRes(R.string.scan_idle_manual_scan_description))
+            )
         )
     }
 
@@ -283,34 +283,34 @@ class ScanStateListItemsBuilder @Inject constructor(
 
         val descriptionText = if (threatsCount > 1) {
             htmlMessageUtils
-                    .getHtmlMessageFromStringFormatResId(
-                            R.string.scan_idle_threats_description_plural,
-                            "<b>$threatsCount</b>",
-                            "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
-                            clickableText
-                    )
+                .getHtmlMessageFromStringFormatResId(
+                    R.string.scan_idle_threats_description_plural,
+                    "<b>$threatsCount</b>",
+                    "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
+                    clickableText
+                )
         } else {
             htmlMessageUtils
-                    .getHtmlMessageFromStringFormatResId(
-                            R.string.scan_idle_threats_description_singular,
-                            "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
-                            clickableText
-                    )
+                .getHtmlMessageFromStringFormatResId(
+                    R.string.scan_idle_threats_description_singular,
+                    "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
+                    clickableText
+                )
         }
 
         val clickableTextStartIndex = descriptionText.indexOf(clickableText)
         val clickableTextEndIndex = clickableTextStartIndex + clickableText.length
         val clickableTextsInfo = listOf(
-                ClickableTextInfo(
-                        startIndex = clickableTextStartIndex,
-                        endIndex = clickableTextEndIndex,
-                        onClick = onHelpClicked
-                )
+            ClickableTextInfo(
+                startIndex = clickableTextStartIndex,
+                endIndex = clickableTextEndIndex,
+                onClick = onHelpClicked
+            )
         )
 
         return DescriptionState(
-                text = UiStringText(descriptionText),
-                clickableTextsInfo = clickableTextsInfo
+            text = UiStringText(descriptionText),
+            clickableTextsInfo = clickableTextsInfo
         )
     }
 
@@ -327,15 +327,15 @@ class ScanStateListItemsBuilder @Inject constructor(
             R.string.threat_fix_enter_server_creds_msg_singular
         }
         return FootnoteState(
-                iconResId = iconResId,
-                iconColorResId = iconColorResId,
-                text = UiStringText(
-                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                messageResId,
-                                "${Constants.URL_JETPACK_SETTINGS}/$siteId"
-                        )
-                ),
-                onIconClick = onEnterServerCredsIconClicked
+            iconResId = iconResId,
+            iconColorResId = iconColorResId,
+            text = UiStringText(
+                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                    messageResId,
+                    "${Constants.URL_JETPACK_SETTINGS}/$siteId"
+                )
+            ),
+            onIconClick = onEnterServerCredsIconClicked
         )
     }
 

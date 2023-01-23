@@ -24,6 +24,7 @@ class FetchHomePageLayoutsUseCase @Inject constructor(
         STABLE("stable"),
         BETA("beta")
     }
+
     private var continuation: Continuation<OnStarterDesignsFetched>? = null
 
     @Suppress("UseCheckOrError")
@@ -40,6 +41,7 @@ class FetchHomePageLayoutsUseCase @Inject constructor(
         val previewWidth = thumbDimensionProvider.previewWidth.toFloat() / previewScale
         val previewHeight = thumbDimensionProvider.previewHeight.toFloat() / previewScale
         val groups = if (betaSiteDesigns.isEnabled()) arrayOf(GROUP.STABLE.key, GROUP.BETA.key) else emptyArray()
+
         @Suppress("SpreadOperator")
         val payload = FetchStarterDesignsPayload(previewWidth, previewHeight, previewScale, *groups)
 

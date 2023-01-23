@@ -54,9 +54,9 @@ class ViewsWidgetListViewModel
                     visitsAndViewsStore.fetchVisits(site, DAYS, Top(OVERVIEW_ITEMS_TO_LOAD))
                 }
                 val visitsAndViewsModel = visitsAndViewsStore.getVisits(
-                        site,
-                        DAYS,
-                        LimitMode.All
+                    site,
+                    DAYS,
+                    LimitMode.All
                 )
                 val periods = visitsAndViewsModel?.dates?.asReversed() ?: listOf()
                 val uiModels = periods.mapIndexed { index, periodData ->
@@ -101,15 +101,15 @@ class ViewsWidgetListViewModel
         val isNegativeChangeVisible = uiModel.state == NEGATIVE && isWideView && !uiModel.change.isNullOrEmpty()
         val isNeutralChangeVisible = uiModel.state == NEUTRAL && isWideView && !uiModel.change.isNullOrEmpty()
         return ListItemUiModel(
-                layout,
-                key,
-                uiModel.value,
-                isPositiveChangeVisible,
-                isNegativeChangeVisible,
-                isNeutralChangeVisible,
-                uiModel.change,
-                selectedItem.period,
-                localSiteId
+            layout,
+            key,
+            uiModel.value,
+            isPositiveChangeVisible,
+            isNegativeChangeVisible,
+            isNeutralChangeVisible,
+            uiModel.change,
+            selectedItem.period,
+            localSiteId
         )
     }
 

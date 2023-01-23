@@ -63,18 +63,36 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
-    @Mock private lateinit var transactionsStore: TransactionsStore
-    @Mock private lateinit var siteStore: SiteStore
-    @Mock private lateinit var dispatcher: Dispatcher
-    @Mock private lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock
+    private lateinit var transactionsStore: TransactionsStore
+
+    @Mock
+    private lateinit var siteStore: SiteStore
+
+    @Mock
+    private lateinit var dispatcher: Dispatcher
+
+    @Mock
+    private lateinit var analyticsTracker: AnalyticsTrackerWrapper
     private var site: SiteModel = SiteModel()
 
-    @Mock private lateinit var domainContactDetailsObserver: Observer<DomainContactFormModel>
-    @Mock private lateinit var countryPickerDialogObserver: Observer<List<SupportedDomainCountry>>
-    @Mock private lateinit var statePickerDialogObserver: Observer<List<SupportedStateResponse>>
-    @Mock private lateinit var tosLinkObserver: Observer<Unit>
-    @Mock private lateinit var completedDomainRegistrationObserver: Observer<DomainRegistrationCompletedEvent>
-    @Mock private lateinit var errorMessageObserver: Observer<String>
+    @Mock
+    private lateinit var domainContactDetailsObserver: Observer<DomainContactFormModel>
+
+    @Mock
+    private lateinit var countryPickerDialogObserver: Observer<List<SupportedDomainCountry>>
+
+    @Mock
+    private lateinit var statePickerDialogObserver: Observer<List<SupportedStateResponse>>
+
+    @Mock
+    private lateinit var tosLinkObserver: Observer<Unit>
+
+    @Mock
+    private lateinit var completedDomainRegistrationObserver: Observer<DomainRegistrationCompletedEvent>
+
+    @Mock
+    private lateinit var errorMessageObserver: Observer<String>
 
     private val uiStateResults = mutableListOf<DomainRegistrationDetailsUiState>()
 
@@ -94,64 +112,64 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     private val cartId = "123"
 
     private val domainContactModel = DomainContactModel(
-            "John",
-            "Smith",
-            "",
-            "Street 1",
-            "Apt 1",
-            "10018",
-            "First City",
-            "CA",
-            "US",
-            "email@wordpress.org",
-            "+1.3124567890",
-            null
+        "John",
+        "Smith",
+        "",
+        "Street 1",
+        "Apt 1",
+        "10018",
+        "First City",
+        "CA",
+        "US",
+        "email@wordpress.org",
+        "+1.3124567890",
+        null
     )
 
     private val domainContactFormModel = DomainContactFormModel(
-            "John",
-            "Smith",
-            "",
-            "Street 1",
-            "Apt 1",
-            "10018",
-            "First City",
-            "CA",
-            "US",
-            "email@wordpress.org",
-            "1",
-            "3124567890"
+        "John",
+        "Smith",
+        "",
+        "Street 1",
+        "Apt 1",
+        "10018",
+        "First City",
+        "CA",
+        "US",
+        "email@wordpress.org",
+        "1",
+        "3124567890"
     )
 
     private val domainRegistrationCompletedEvent = DomainRegistrationCompletedEvent(
-            "testdomain.blog",
-            "email@wordpress.org"
+        "testdomain.blog",
+        "email@wordpress.org"
     )
 
     private val shoppingCartCreateError = CreateShoppingCartError(GENERIC_ERROR, "Error Creating Cart")
     private val shoppingCartRedeemError = RedeemShoppingCartError(PHONE, "Wrong phone number")
     private val siteChangedError = SiteError(SiteErrorType.GENERIC_ERROR, "Error fetching site")
     private val primaryDomainError = DesignatePrimaryDomainError(
-            DesignatePrimaryDomainErrorType.GENERIC_ERROR,
-            "Error designating primary domain"
+        DesignatePrimaryDomainErrorType.GENERIC_ERROR,
+        "Error designating primary domain"
     )
     private val domainContactInformationFetchError = DomainContactError(
-            DomainContactErrorType.GENERIC_ERROR,
-            "Error fetching domain contact information"
+        DomainContactErrorType.GENERIC_ERROR,
+        "Error fetching domain contact information"
     )
     private val domainSupportedStatesFetchError = DomainSupportedStatesError(
-            DomainSupportedStatesErrorType.GENERIC_ERROR,
-            "Error fetching domain supported states"
+        DomainSupportedStatesErrorType.GENERIC_ERROR,
+        "Error fetching domain supported states"
     )
     private val fetchSupportedCountriesError = FetchSupportedCountriesError(
-            FetchSupportedCountriesErrorType.GENERIC_ERROR,
-            "Error fetching countries"
+        FetchSupportedCountriesErrorType.GENERIC_ERROR,
+        "Error fetching countries"
     )
 
     private val createShoppingCartResponse = CreateShoppingCartResponse(
-            siteId.toInt(),
-            cartId,
-            listOf(Product(productId, testDomainName, Extra(privacy = true)))
+        siteId.toInt(),
+        cartId,
+        listOf(Product(productId, testDomainName, Extra(privacy = true)))
     )
 
     private val domainProductDetails = DomainProductDetails(productId, testDomainName)
@@ -164,11 +182,11 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         whenever(siteStore.getSiteByLocalId(any())).doReturn(site)
 
         viewModel = DomainRegistrationDetailsViewModel(
-                dispatcher,
-                transactionsStore,
-                siteStore,
-                analyticsTracker,
-                NoDelayCoroutineDispatcher()
+            dispatcher,
+            transactionsStore,
+            siteStore,
+            analyticsTracker,
+            NoDelayCoroutineDispatcher()
         )
         // Setting up chain of actions
         setupFetchSupportedCountriesDispatcher(false)

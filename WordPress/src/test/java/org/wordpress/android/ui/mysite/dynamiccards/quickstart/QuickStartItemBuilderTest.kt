@@ -29,7 +29,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 @RunWith(MockitoJUnitRunner::class)
 class QuickStartItemBuilderTest {
-    @Mock lateinit var quickStartRepository: QuickStartRepository
+    @Mock
+    lateinit var quickStartRepository: QuickStartRepository
     private lateinit var builder: QuickStartItemBuilder
     private val onQuickStartTaskCardClick: (QuickStartTask) -> Unit = {}
 
@@ -104,24 +105,24 @@ class QuickStartItemBuilderTest {
 
         assertThat(quickStartCard.progress).isEqualTo(50)
         assertThat(quickStartCard.taskCards).containsExactly(
-                QuickStartTaskCard(
-                        VIEW_SITE,
-                        UiStringRes(VIEW_SITE_TUTORIAL.titleResId),
-                        UiStringRes(VIEW_SITE_TUTORIAL.subtitleResId),
-                        R.drawable.img_illustration_quick_start_task_visit_your_site,
-                        R.color.green_20,
-                        false,
-                        ListItemInteraction.create(VIEW_SITE, onQuickStartTaskCardClick)
-                ),
-                QuickStartTaskCard(
-                        QuickStartNewSiteTask.UPDATE_SITE_TITLE,
-                        UiStringRes(UPDATE_SITE_TITLE.titleResId),
-                        UiStringRes(UPDATE_SITE_TITLE.subtitleResId),
-                        R.drawable.img_illustration_quick_start_task_set_site_title,
-                        R.color.green_20,
-                        true,
-                        ListItemInteraction.create(QuickStartNewSiteTask.UPDATE_SITE_TITLE, onQuickStartTaskCardClick)
-                )
+            QuickStartTaskCard(
+                VIEW_SITE,
+                UiStringRes(VIEW_SITE_TUTORIAL.titleResId),
+                UiStringRes(VIEW_SITE_TUTORIAL.subtitleResId),
+                R.drawable.img_illustration_quick_start_task_visit_your_site,
+                R.color.green_20,
+                false,
+                ListItemInteraction.create(VIEW_SITE, onQuickStartTaskCardClick)
+            ),
+            QuickStartTaskCard(
+                QuickStartNewSiteTask.UPDATE_SITE_TITLE,
+                UiStringRes(UPDATE_SITE_TITLE.titleResId),
+                UiStringRes(UPDATE_SITE_TITLE.subtitleResId),
+                R.drawable.img_illustration_quick_start_task_set_site_title,
+                R.color.green_20,
+                true,
+                ListItemInteraction.create(QuickStartNewSiteTask.UPDATE_SITE_TITLE, onQuickStartTaskCardClick)
+            )
         )
     }
 
@@ -133,15 +134,15 @@ class QuickStartItemBuilderTest {
 
         assertThat(quickStartCard.progress).isEqualTo(0)
         assertThat(quickStartCard.taskCards).containsExactly(
-                QuickStartTaskCard(
-                        PUBLISH_POST,
-                        UiStringRes(PUBLISH_POST_TUTORIAL.titleResId),
-                        UiStringRes(PUBLISH_POST_TUTORIAL.subtitleResId),
-                        R.drawable.img_illustration_quick_start_task_publish_post,
-                        R.color.orange_40,
-                        false,
-                        ListItemInteraction.create(PUBLISH_POST, onQuickStartTaskCardClick)
-                )
+            QuickStartTaskCard(
+                PUBLISH_POST,
+                UiStringRes(PUBLISH_POST_TUTORIAL.titleResId),
+                UiStringRes(PUBLISH_POST_TUTORIAL.subtitleResId),
+                R.drawable.img_illustration_quick_start_task_publish_post,
+                R.color.orange_40,
+                false,
+                ListItemInteraction.create(PUBLISH_POST, onQuickStartTaskCardClick)
+            )
         )
     }
 
@@ -153,15 +154,15 @@ class QuickStartItemBuilderTest {
 
         assertThat(quickStartCard.progress).isEqualTo(100)
         assertThat(quickStartCard.taskCards).containsExactly(
-                QuickStartTaskCard(
-                        QuickStartNewSiteTask.UPDATE_SITE_TITLE,
-                        UiStringRes(UPDATE_SITE_TITLE.titleResId),
-                        UiStringRes(UPDATE_SITE_TITLE.subtitleResId),
-                        R.drawable.img_illustration_quick_start_task_set_site_title,
-                        R.color.green_20,
-                        true,
-                        ListItemInteraction.create(QuickStartNewSiteTask.UPDATE_SITE_TITLE, onQuickStartTaskCardClick)
-                )
+            QuickStartTaskCard(
+                QuickStartNewSiteTask.UPDATE_SITE_TITLE,
+                UiStringRes(UPDATE_SITE_TITLE.titleResId),
+                UiStringRes(UPDATE_SITE_TITLE.subtitleResId),
+                R.drawable.img_illustration_quick_start_task_set_site_title,
+                R.color.green_20,
+                true,
+                ListItemInteraction.create(QuickStartNewSiteTask.UPDATE_SITE_TITLE, onQuickStartTaskCardClick)
+            )
         )
     }
 }

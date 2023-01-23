@@ -86,9 +86,9 @@ class StatsViewModel
     private var isInitialized = false
 
     private val _showSnackbarMessage = mergeNotNull(
-            listUseCases.values.map { it.snackbarMessage },
-            distinct = true,
-            singleEvent = true
+        listUseCases.values.map { it.snackbarMessage },
+        distinct = true,
+        singleEvent = true
     )
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
@@ -104,9 +104,6 @@ class StatsViewModel
 
     private val _statsModuleUiModel = MediatorLiveData<Event<StatsModuleUiModel>>()
     val statsModuleUiModel: LiveData<Event<StatsModuleUiModel>> = _statsModuleUiModel
-
-    private val _showUpgradeAlert = MutableLiveData<Event<Boolean>>()
-    val showUpgradeAlert: LiveData<Event<Boolean>> = _showUpgradeAlert
 
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
@@ -166,9 +163,9 @@ class StatsViewModel
 
             // Added today's stats feature config to check whether that card is enabled when stats screen is accessed
             analyticsTracker.track(
-                    stat = AnalyticsTracker.Stat.STATS_ACCESSED,
-                    site = statsSiteProvider.siteModel,
-                    feature = todaysStatsCardFeatureConfig
+                stat = AnalyticsTracker.Stat.STATS_ACCESSED,
+                site = statsSiteProvider.siteModel,
+                feature = todaysStatsCardFeatureConfig
             )
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
@@ -204,11 +201,13 @@ class StatsViewModel
             }
         }
 
-        if (statsSectionManager.getSelectedSection() == StatsSection.INSIGHTS) showInsightsUpdateAlert()
+        if (BuildConfig.IS_JETPACK_APP) {
+            updateRevampedInsights()
+        }
 
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
 
-        if(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(STATS))
+        if (jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(STATS))
             showJetpackOverlay()
     }
 
@@ -220,35 +219,24 @@ class StatsViewModel
 //        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
-    private fun showInsightsUpdateAlert() {
-        if (BuildConfig.IS_JETPACK_APP) {
-            launch {
-                val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)
-                if (insightTypes.containsAll(DEFAULT_INSIGHTS)) { // means not upgraded to new insights
-                    _showUpgradeAlert.value = Event(true)
-                    updateRevampedInsights()
-                }
-            }
-        }
-    }
-
     private fun updateRevampedInsights() {
         val insightsUseCase = listUseCases[StatsSection.INSIGHTS]
         insightsUseCase?.launch(defaultDispatcher) {
             val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)
-
-            // The new set of default cards is added at the top of their list and preserve their additions
-            val addedInsightTypes = insightTypes - DEFAULT_INSIGHTS.toSet()
-            val updateInsightTypes: MutableSet<InsightType> = mutableSetOf()
-            updateInsightTypes.addAll(JETPACK_DEFAULT_INSIGHTS)
-            updateInsightTypes.addAll(addedInsightTypes)
-            statsStore.updateTypes(statsSiteProvider.siteModel, updateInsightTypes.toList())
-            insightsUseCase.loadData()
+            if (insightTypes.containsAll(DEFAULT_INSIGHTS)) { // means not upgraded to new insights
+                // The new set of default cards is added at the top of their list and preserve their additions
+                val addedInsightTypes = insightTypes - DEFAULT_INSIGHTS.toSet()
+                val updateInsightTypes: MutableSet<InsightType> = mutableSetOf()
+                updateInsightTypes.addAll(JETPACK_DEFAULT_INSIGHTS)
+                updateInsightTypes.addAll(addedInsightTypes)
+                statsStore.updateTypes(statsSiteProvider.siteModel, updateInsightTypes.toList())
+                insightsUseCase.loadData()
+            }
         }
     }
 
     private fun isStatsModuleEnabled() =
-            statsSiteProvider.siteModel.isActiveModuleEnabled("stats") || statsSiteProvider.siteModel.isWPCom
+        statsSiteProvider.siteModel.isActiveModuleEnabled("stats") || statsSiteProvider.siteModel.isWPCom
 
     private fun loadData(executeLoading: suspend () -> Unit) = launch {
         _isRefreshing.value = true
@@ -292,8 +280,6 @@ class StatsViewModel
 
         listUseCases[statsSection]?.onListSelected()
 
-        if (statsSection == StatsSection.INSIGHTS) showInsightsUpdateAlert()
-
         trackSectionSelected(statsSection)
     }
 
@@ -330,7 +316,7 @@ class StatsViewModel
                 is RemoteRequestFailure -> {
                     _statsModuleUiModel.value = Event(buildShowStatsDisabledViewUiModel())
                     _showSnackbarMessage.value =
-                            SnackbarMessageHolder(UiStringRes(R.string.stats_disabled_enable_stats_error_message))
+                        SnackbarMessageHolder(UiStringRes(R.string.stats_disabled_enable_stats_error_message))
                 }
                 is Success -> {
                     _statsModuleUiModel.value = Event(buildShowStatsEnabledViewUiModel())
@@ -342,10 +328,10 @@ class StatsViewModel
     private fun buildShowStatsEnabledViewUiModel() = StatsModuleUiModel(disabledStatsViewVisible = false)
 
     private fun buildShowStatsDisabledViewUiModel() =
-            StatsModuleUiModel(disabledStatsViewVisible = true, disabledStatsProgressVisible = false)
+        StatsModuleUiModel(disabledStatsViewVisible = true, disabledStatsProgressVisible = false)
 
     private fun buildShowStatsActivatingViewUiModel() =
-            StatsModuleUiModel(disabledStatsViewVisible = true, disabledStatsProgressVisible = true)
+        StatsModuleUiModel(disabledStatsViewVisible = true, disabledStatsProgressVisible = true)
 
     data class DateSelectorUiModel(
         val isVisible: Boolean = false,

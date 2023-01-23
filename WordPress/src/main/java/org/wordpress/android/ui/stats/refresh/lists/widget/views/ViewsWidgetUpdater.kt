@@ -52,30 +52,30 @@ class ViewsWidgetUpdater
         if (networkAvailable && hasAccessToken && siteModel != null) {
             siteModel.let {
                 views.setOnClickPendingIntent(
-                        R.id.widget_title_container,
-                        widgetUtils.getPendingSelfIntent(context, siteModel.id, DAY)
+                    R.id.widget_title_container,
+                    widgetUtils.getPendingSelfIntent(context, siteModel.id, DAY)
                 )
             }
             widgetUtils.showList(
-                    widgetManager,
-                    views,
-                    context,
-                    appWidgetId,
-                    colorMode,
-                    siteModel.id,
-                    WEEK_VIEWS,
-                    isWideView
+                widgetManager,
+                views,
+                context,
+                appWidgetId,
+                colorMode,
+                siteModel.id,
+                WEEK_VIEWS,
+                isWideView
             )
         } else if (!widgetHasData || !hasAccessToken || siteModel == null) {
             widgetUtils.showError(
-                    widgetManager,
-                    views,
-                    appWidgetId,
-                    networkAvailable,
-                    hasAccessToken,
-                    resourceProvider,
-                    context,
-                    StatsViewsWidget::class.java
+                widgetManager,
+                views,
+                appWidgetId,
+                networkAvailable,
+                hasAccessToken,
+                resourceProvider,
+                context,
+                StatsViewsWidget::class.java
             )
         }
     }

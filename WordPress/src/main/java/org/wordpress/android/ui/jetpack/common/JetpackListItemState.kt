@@ -21,7 +21,7 @@ open class JetpackListItemState(open val type: ViewType) {
     ) : JetpackListItemState(ViewType.ICON)
 
     data class HeaderState(val text: UiString, @AttrRes val textColorRes: Int = R.attr.colorOnSurface) :
-            JetpackListItemState(ViewType.HEADER)
+        JetpackListItemState(ViewType.HEADER)
 
     data class DescriptionState(
         val text: UiString?,

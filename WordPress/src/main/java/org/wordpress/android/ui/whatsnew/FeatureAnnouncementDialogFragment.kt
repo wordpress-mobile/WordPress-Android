@@ -19,7 +19,8 @@ import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 import javax.inject.Inject
 
 class FeatureAnnouncementDialogFragment : DialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: FeatureAnnouncementViewModel
 
     companion object {
@@ -33,7 +34,7 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(FeatureAnnouncementViewModel::class.java)
+            .get(FeatureAnnouncementViewModel::class.java)
         dialog.setStatusBarAsSurfaceColor()
         return dialog
     }

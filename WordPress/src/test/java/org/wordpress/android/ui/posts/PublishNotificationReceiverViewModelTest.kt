@@ -21,9 +21,14 @@ import java.util.Calendar
 
 @RunWith(MockitoJUnitRunner::class)
 class PublishNotificationReceiverViewModelTest {
-    @Mock lateinit var postSchedulingNotificationStore: PostSchedulingNotificationStore
-    @Mock lateinit var postStore: PostStore
-    @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock
+    lateinit var postSchedulingNotificationStore: PostSchedulingNotificationStore
+
+    @Mock
+    lateinit var postStore: PostStore
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
     private lateinit var viewModel: PublishNotificationReceiverViewModel
     private val notificationId = 3
     private val postId = 5
@@ -36,7 +41,7 @@ class PublishNotificationReceiverViewModelTest {
     @Test
     fun `loadNotification returns correct data for ONE_HOUR when post is scheduled`() {
         whenever(postSchedulingNotificationStore.getSchedulingReminder(notificationId)).thenReturn(
-                SchedulingReminderModel(notificationId, postId, ONE_HOUR)
+            SchedulingReminderModel(notificationId, postId, ONE_HOUR)
         )
         val post = PostModel()
         post.setStatus(PostStatus.PUBLISHED.toString())
@@ -50,15 +55,15 @@ class PublishNotificationReceiverViewModelTest {
         val expectedTitle = "Notification title"
         val expectedMessage = "Notification message"
         whenever(resourceProvider.getString(R.string.notification_scheduled_post_one_hour_reminder)).thenReturn(
-                expectedTitle
+            expectedTitle
         )
         whenever(
-                resourceProvider.getString(
-                        R.string.notification_post_will_be_published_in_one_hour,
-                        postTitle
-                )
+            resourceProvider.getString(
+                R.string.notification_post_will_be_published_in_one_hour,
+                postTitle
+            )
         ).thenReturn(
-                expectedMessage
+            expectedMessage
         )
 
         val uiModel = viewModel.loadNotification(notificationId)
@@ -71,7 +76,7 @@ class PublishNotificationReceiverViewModelTest {
     @Test
     fun `loadNotification returns null for OFF type`() {
         whenever(postSchedulingNotificationStore.getSchedulingReminder(notificationId)).thenReturn(
-                SchedulingReminderModel(notificationId, postId, OFF)
+            SchedulingReminderModel(notificationId, postId, OFF)
         )
         val post = PostModel()
         post.setStatus(PostStatus.PUBLISHED.toString())
@@ -90,7 +95,7 @@ class PublishNotificationReceiverViewModelTest {
     @Test
     fun `loadNotification returns null when post is already published`() {
         whenever(postSchedulingNotificationStore.getSchedulingReminder(notificationId)).thenReturn(
-                SchedulingReminderModel(notificationId, postId, ONE_HOUR)
+            SchedulingReminderModel(notificationId, postId, ONE_HOUR)
         )
         val post = PostModel()
         post.setStatus(PostStatus.PUBLISHED.toString())

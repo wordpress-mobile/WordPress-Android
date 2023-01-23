@@ -16,7 +16,7 @@ class LoginSiteCheckErrorViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = LoginSiteCheckErrorViewModel(
-                testDispatcher()
+            testDispatcher()
         )
     }
 

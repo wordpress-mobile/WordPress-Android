@@ -45,8 +45,8 @@ class PercentFormatter @Inject constructor(
         maxFractionDigits: Int = MAXIMUM_FRACTION_DIGITS,
         rounding: RoundingMode = RoundingMode.DOWN
     ) = format(
-            value = value.toFloat() / FORMAT_DIVISOR,
-            maxFractionDigits,
-            rounding
+        value = value.toFloat() / FORMAT_DIVISOR,
+        maxFractionDigits,
+        rounding
     )
 }

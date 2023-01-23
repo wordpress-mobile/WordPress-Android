@@ -29,16 +29,20 @@ class BloggingPromptCardViewHolder(
     private val htmlCompatWrapper: HtmlCompatWrapper,
     private val learnMoreClicked: () -> Unit
 ) : CardViewHolder<MySiteBloggingPromptCardBinding>(
-        parent.viewBinding(MySiteBloggingPromptCardBinding::inflate)
+    parent.viewBinding(MySiteBloggingPromptCardBinding::inflate)
 ) {
     fun bind(card: BloggingPromptCardWithData) = with(binding) {
         val cardPrompt = htmlCompatWrapper.fromHtml(
-                uiHelpers.getTextOfUiString(promptContent.context, card.prompt).toString()
+            uiHelpers.getTextOfUiString(promptContent.context, card.prompt).toString()
         )
         uiHelpers.setTextOrHide(promptContent, cardPrompt)
         uiHelpers.updateVisibility(answerButton, !card.isAnswered)
 
         uiHelpers.updateVisibility(attributionContainer, card.attribution == DAY_ONE)
+
+        attributionContent.text = htmlCompatWrapper.fromHtml(
+            attributionContent.context.getString(R.string.my_site_blogging_prompt_card_attribution_dayone)
+        )
 
         bloggingPromptCardMenu.setOnClickListener {
             bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuClicked()
@@ -51,34 +55,34 @@ class BloggingPromptCardViewHolder(
         shareButton.setOnClickListener {
             bloggingPromptsCardAnalyticsTracker.trackMySiteCardShareClicked()
             card.onShareClick.invoke(
-                    uiHelpers.getTextOfUiString(
-                            shareButton.context,
-                            card.prompt
-                    ).toString()
+                uiHelpers.getTextOfUiString(
+                    shareButton.context,
+                    card.prompt
+                ).toString()
             )
         }
         uiHelpers.updateVisibility(answeredPromptControls, card.isAnswered)
 
         val layoutManager = FlexboxLayoutManager(
-                answeredUsersRecycler.context,
-                FlexDirection.ROW,
-                FlexWrap.NOWRAP
+            answeredUsersRecycler.context,
+            FlexDirection.ROW,
+            FlexWrap.NOWRAP
         ).apply { justifyContent = JustifyContent.CENTER }
 
         if (card.numberOfAnswers > 0) {
             uiHelpers.updateVisibility(answeredUsersRecycler, true)
             answeredUsersRecycler.addItemDecoration(
-                    AvatarItemDecorator(
-                            RtlUtils.isRtl(answeredUsersRecycler.context),
-                            answeredUsersRecycler.context,
-                            AVATAR_LEFT_OFFSET_DIMEN
-                    )
+                AvatarItemDecorator(
+                    RtlUtils.isRtl(answeredUsersRecycler.context),
+                    answeredUsersRecycler.context,
+                    AVATAR_LEFT_OFFSET_DIMEN
+                )
             )
             answeredUsersRecycler.layoutManager = layoutManager
 
             val adapter = TrainOfAvatarsAdapter(
-                    imageManager,
-                    uiHelpers
+                imageManager,
+                uiHelpers
             )
             answeredUsersRecycler.adapter = adapter
 

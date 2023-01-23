@@ -59,16 +59,16 @@ class LoginNoSitesViewModel @Inject constructor(
     }
 
     private fun buildStateFromSavedInstanceState(savedInstanceState: Bundle) =
-            savedInstanceState.getSerializable(KEY_STATE) as State
+        savedInstanceState.getSerializable(KEY_STATE) as State
 
     private fun buildStateFromAccountStore() =
-            accountStore.account?.let {
-                ShowUser(
-                        it.avatarUrl.orEmpty(),
-                        it.userName,
-                        it.displayName
-                )
-            } ?: NoUser
+        accountStore.account?.let {
+            ShowUser(
+                it.avatarUrl.orEmpty(),
+                it.userName,
+                it.displayName
+            )
+        } ?: NoUser
 
     private fun signOutWordPress(application: WordPress) {
         launch {

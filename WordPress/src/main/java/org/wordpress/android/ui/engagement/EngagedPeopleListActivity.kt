@@ -7,11 +7,11 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.EngagedPeopleListActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
-import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
 class EngagedPeopleListActivity : LocaleAwareActivity() {
-    @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Inject
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,13 +23,13 @@ class EngagedPeopleListActivity : LocaleAwareActivity() {
         }
 
         val listScenario = intent.getParcelableExtra<ListScenario>(KEY_LIST_SCENARIO)
-                ?: throw IllegalArgumentException(
-                        "List Scenario cannot be null. Make sure to pass a valid List Scenario in the intent"
-                )
+            ?: throw IllegalArgumentException(
+                "List Scenario cannot be null. Make sure to pass a valid List Scenario in the intent"
+            )
 
         analyticsUtilsWrapper.trackLikeListOpened(
-                EngagementNavigationSource.getSourceDescription(listScenario.source),
-                ListScenarioType.getSourceDescription(listScenario.type)
+            EngagementNavigationSource.getSourceDescription(listScenario.source),
+            ListScenarioType.getSourceDescription(listScenario.type)
         )
 
         supportActionBar?.let {
@@ -52,8 +52,8 @@ class EngagedPeopleListActivity : LocaleAwareActivity() {
         if (likeListFragment == null) {
             likeListFragment = EngagedPeopleListFragment.newInstance(listScenario)
             fm.beginTransaction()
-                    .add(R.id.fragment_container, likeListFragment, TAG_LIKE_LIST_FRAGMENT)
-                    .commit()
+                .add(R.id.fragment_container, likeListFragment, TAG_LIKE_LIST_FRAGMENT)
+                .commit()
         }
     }
 

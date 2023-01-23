@@ -13,38 +13,39 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettings
 import javax.inject.Inject
 
 class PostDatePickerDialogFragment : DialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PublishSettingsViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val publishSettingsFragmentType = arguments?.getParcelable<PublishSettingsFragmentType>(
-                ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE
+            ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE
         )
 
         viewModel = when (publishSettingsFragmentType) {
             PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(requireActivity(), viewModelFactory)
-                        .get(EditPostPublishSettingsViewModel::class.java)
+                .get(EditPostPublishSettingsViewModel::class.java)
             PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(requireActivity(), viewModelFactory)
-                        .get(PrepublishingPublishSettingsViewModel::class.java)
+                .get(PrepublishingPublishSettingsViewModel::class.java)
             null -> error("PublishSettingsViewModel not initialized")
         }
 
         val datePickerDialog = DatePickerDialog(
-                requireContext(),
-                R.style.PostSettingsCalendar,
-                null,
-                viewModel.year ?: 0,
-                viewModel.month ?: 0,
-                viewModel.day ?: 0
+            requireContext(),
+            R.style.PostSettingsCalendar,
+            null,
+            viewModel.year ?: 0,
+            viewModel.month ?: 0,
+            viewModel.day ?: 0
         )
         datePickerDialog.setButton(
-                DialogInterface.BUTTON_POSITIVE,
-                getString(android.R.string.ok)
+            DialogInterface.BUTTON_POSITIVE,
+            getString(android.R.string.ok)
         ) { _, _ ->
             viewModel.onDateSelected(
-                    datePickerDialog.datePicker.year,
-                    datePickerDialog.datePicker.month,
-                    datePickerDialog.datePicker.dayOfMonth
+                datePickerDialog.datePicker.year,
+                datePickerDialog.datePicker.month,
+                datePickerDialog.datePicker.dayOfMonth
             )
         }
         val neutralButtonTitle = if (viewModel.canPublishImmediately)
@@ -52,8 +53,8 @@ class PostDatePickerDialogFragment : DialogFragment() {
         else
             getString(R.string.now)
         datePickerDialog.setButton(
-                DialogInterface.BUTTON_NEUTRAL,
-                neutralButtonTitle
+            DialogInterface.BUTTON_NEUTRAL,
+            neutralButtonTitle
         ) { _, _ ->
             viewModel.publishNow()
         }
@@ -73,8 +74,8 @@ class PostDatePickerDialogFragment : DialogFragment() {
             return PostDatePickerDialogFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(
-                            ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE,
-                            publishSettingsFragmentType
+                        ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE,
+                        publishSettingsFragmentType
                     )
                 }
             }

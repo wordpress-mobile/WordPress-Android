@@ -150,7 +150,7 @@ class EditPostRepository
         if (lock && locked) {
             val message = "EditPostRepository: Transaction is writing on a locked thread ${
                 Arrays.toString(
-                        Thread.currentThread().stackTrace
+                    Thread.currentThread().stackTrace
                 )
             }"
             AppLog.e(T.EDITOR, message)
@@ -171,10 +171,10 @@ class EditPostRepository
     }
 
     fun getPendingMediaForPost(): Set<MediaModel> =
-            UploadService.getPendingMediaForPost(post)
+        UploadService.getPendingMediaForPost(post)
 
     fun getPendingOrInProgressMediaUploadsForPost(): List<MediaModel> =
-            UploadService.getPendingOrInProgressMediaUploadsForPost(post)
+        UploadService.getPendingOrInProgressMediaUploadsForPost(post)
 
     fun updatePublishDateIfShouldBePublishedImmediately(post: PostModel) {
         if (postUtils.shouldPublishImmediately(fromPost(post), post.dateCreated)) {
@@ -217,8 +217,8 @@ class EditPostRepository
     }
 
     fun postWasChangedInCurrentSession() = postUtils.postHasEdits(
-            postSnapshotWhenEditorOpened,
-            requireNotNull(post)
+        postSnapshotWhenEditorOpened,
+        requireNotNull(post)
     )
 
     fun loadPostByLocalPostId(postId: Int) {
@@ -240,8 +240,8 @@ class EditPostRepository
         if (parent?.remotePostId != post?.parentId) {
             runBlocking {
                 parent = post?.parentId
-                        ?.takeUnless { it == 0L }
-                        ?.let { postStore.getPostByRemotePostId(it, site) }
+                    ?.takeUnless { it == 0L }
+                    ?.let { postStore.getPostByRemotePostId(it, site) }
             }
         }
 

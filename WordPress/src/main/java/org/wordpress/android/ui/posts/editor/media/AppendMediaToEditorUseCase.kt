@@ -17,18 +17,20 @@ class AppendMediaToEditorUseCase @Inject constructor(private val fluxCUtilsWrapp
         mediaModels: List<MediaModel>
     ) {
         mediaModels
-                .mapNotNull { media ->
-                    media.urlToUse?.let { urlToUse ->
-                        val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(media)
-                        if (mediaFile == null) {
-                            AppLog.e(AppLog.T.MEDIA, "Media with remote id ${media.mediaId} not " +
-                                    "added to editor.")
-                        }
-                        mediaFile?.let { Pair(urlToUse, it) }
+            .mapNotNull { media ->
+                media.urlToUse?.let { urlToUse ->
+                    val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(media)
+                    if (mediaFile == null) {
+                        AppLog.e(
+                            AppLog.T.MEDIA, "Media with remote id ${media.mediaId} not " +
+                                    "added to editor."
+                        )
                     }
+                    mediaFile?.let { Pair(urlToUse, it) }
                 }
-                .toMap()
-                .let { mediaList -> editorMediaListener.appendMediaFiles(mediaList) }
+            }
+            .toMap()
+            .let { mediaList -> editorMediaListener.appendMediaFiles(mediaList) }
     }
 }
 

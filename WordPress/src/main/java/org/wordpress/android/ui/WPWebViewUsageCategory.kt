@@ -9,28 +9,34 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUi
  */
 enum class WPWebViewUsageCategory constructor(val value: Int, val menuUiState: WPWebViewMenuUiState) {
     WEBVIEW_STANDARD(0, WPWebViewMenuUiState()),
-    REMOTE_PREVIEW_NOT_AVAILABLE(1, WPWebViewMenuUiState(
+    REMOTE_PREVIEW_NOT_AVAILABLE(
+        1, WPWebViewMenuUiState(
             browserMenuVisible = false,
             shareMenuVisible = false,
             refreshMenuVisible = false
-    )),
-    REMOTE_PREVIEW_NO_NETWORK(2, WPWebViewMenuUiState(
+        )
+    ),
+    REMOTE_PREVIEW_NO_NETWORK(
+        2, WPWebViewMenuUiState(
             browserMenuVisible = false,
             shareMenuVisible = false,
             refreshMenuVisible = false
-    )),
-    REMOTE_PREVIEWING(3, WPWebViewMenuUiState(
+        )
+    ),
+    REMOTE_PREVIEWING(
+        3, WPWebViewMenuUiState(
             browserMenuVisible = false,
             shareMenuVisible = false,
             refreshMenuVisible = true,
             refreshMenuShowAsAction = true
-    ));
+        )
+    );
 
     companion object {
         @JvmStatic
         fun fromInt(value: Int): WPWebViewUsageCategory =
-                WPWebViewUsageCategory.values().firstOrNull { it.value == value }
-                        ?: throw IllegalArgumentException("WebViewUsageCategory wrong value $value")
+            WPWebViewUsageCategory.values().firstOrNull { it.value == value }
+                ?: throw IllegalArgumentException("WebViewUsageCategory wrong value $value")
 
         @JvmStatic
         fun isActionableDirectUsage(state: WPWebViewUsageCategory) =
@@ -44,7 +50,7 @@ enum class WPWebViewUsageCategory constructor(val value: Int, val menuUiState: W
             return when (state) {
                 REMOTE_PREVIEW_NOT_AVAILABLE -> WebPreviewFullscreenUiState.WebPreviewFullscreenNotAvailableUiState
                 REMOTE_PREVIEW_NO_NETWORK -> WebPreviewFullscreenUiState.WebPreviewFullscreenErrorUiState(
-                        buttonVisibility = false
+                    buttonVisibility = false
                 )
                 WEBVIEW_STANDARD, REMOTE_PREVIEWING ->
                     throw IllegalArgumentException("Mapping of $state to WebPreviewUiState not allowed.")

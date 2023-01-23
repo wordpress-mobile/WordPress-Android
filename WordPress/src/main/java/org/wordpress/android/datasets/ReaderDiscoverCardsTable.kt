@@ -10,10 +10,10 @@ object ReaderDiscoverCardsTable {
     private const val CARDS_JSON_COLUMN = "cards_json"
     fun createTable(db: SQLiteDatabase) {
         db.execSQL(
-                "CREATE TABLE IF NOT EXISTS $DISCOVER_CARDS_TABLE (" +
-                        "  _id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        " $CARDS_JSON_COLUMN TEXT" +
-                        ")"
+            "CREATE TABLE IF NOT EXISTS $DISCOVER_CARDS_TABLE (" +
+                    "  _id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    " $CARDS_JSON_COLUMN TEXT" +
+                    ")"
         )
     }
 
@@ -43,7 +43,7 @@ object ReaderDiscoverCardsTable {
 
     fun loadDiscoverCardsJsons(): List<String> {
         val c = getReadableDb()
-                .rawQuery("SELECT * FROM $DISCOVER_CARDS_TABLE ORDER BY _id ASC", null)
+            .rawQuery("SELECT * FROM $DISCOVER_CARDS_TABLE ORDER BY _id ASC", null)
         val cardJsonList = arrayListOf<String>()
         try {
             if (c.moveToFirst()) {

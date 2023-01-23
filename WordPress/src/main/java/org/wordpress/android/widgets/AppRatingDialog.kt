@@ -31,8 +31,10 @@ object AppRatingDialog {
 
     // app must have been installed this long before the rating dialog will appear
     private const val CRITERIA_INSTALL_DAYS: Int = 7
+
     // app must have been launched this many times before the rating dialog will appear
     private const val CRITERIA_LAUNCH_TIMES: Int = 10
+
     // user must have performed this many interactions before the rating dialog will appear
     private const val CRITERIA_INTERACTIONS: Int = 10
 
@@ -129,38 +131,38 @@ object AppRatingDialog {
             val appName = getString(R.string.app_name)
             val title = getString(R.string.app_rating_title, appName)
             builder.setTitle(title)
-                    .setMessage(R.string.app_rating_message)
-                    .setCancelable(true)
-                    .setPositiveButton(R.string.app_rating_rate_now) { _, _ ->
-                        val appPackage = activity.packageName
-                        val url = "market://details?id=$appPackage"
-                        try {
-                            activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                        } catch (e: ActivityNotFoundException) {
-                            // play store app isn't on this device so open app's page in browser instead
-                            activity.startActivity(
-                                    Intent(
-                                            Intent.ACTION_VIEW,
-                                            Uri.parse(
-                                                    "http://play.google.com/store/apps/details?id=" +
-                                                            activity.packageName
-                                            )
-                                    )
+                .setMessage(R.string.app_rating_message)
+                .setCancelable(true)
+                .setPositiveButton(R.string.app_rating_rate_now) { _, _ ->
+                    val appPackage = activity.packageName
+                    val url = "market://details?id=$appPackage"
+                    try {
+                        activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                    } catch (e: ActivityNotFoundException) {
+                        // play store app isn't on this device so open app's page in browser instead
+                        activity.startActivity(
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(
+                                    "http://play.google.com/store/apps/details?id=" +
+                                            activity.packageName
+                                )
                             )
-                        }
+                        )
+                    }
 
-                        setOptOut(true)
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_RATED_APP)
-                    }
-                    .setNeutralButton(R.string.app_rating_rate_later) { _, _ ->
-                        clearSharedPreferences()
-                        storeAskLaterDate()
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_DECIDED_TO_RATE_LATER)
-                    }
-                    .setNegativeButton(R.string.app_rating_rate_never) { _, _ ->
-                        setOptOut(true)
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_DECLINED_TO_RATE_APP)
-                    }
+                    setOptOut(true)
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_RATED_APP)
+                }
+                .setNeutralButton(R.string.app_rating_rate_later) { _, _ ->
+                    clearSharedPreferences()
+                    storeAskLaterDate()
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_DECIDED_TO_RATE_LATER)
+                }
+                .setNegativeButton(R.string.app_rating_rate_never) { _, _ ->
+                    setOptOut(true)
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_DECLINED_TO_RATE_APP)
+                }
             return builder.create()
         }
 

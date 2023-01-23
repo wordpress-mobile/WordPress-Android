@@ -67,9 +67,14 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = mainDispatcher + job
 
-    @Inject lateinit var editPostRepository: EditPostRepository
-    @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
-    @Inject lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
+    @Inject
+    lateinit var editPostRepository: EditPostRepository
+
+    @Inject
+    lateinit var storiesTrackerHelper: StoriesTrackerHelper
+
+    @Inject
+    lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
 
     override fun onCreate(owner: LifecycleOwner) {
         eventBusWrapper.register(this)
@@ -108,8 +113,8 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                     if (!isEditMode) {
                         saveStoryGutenbergBlockUseCase.assignAltOnEachMediaFile(frames, ArrayList(mediaFiles.values))
                         saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockInPost(
-                                editPostRepository,
-                                ArrayList(mediaFiles.values)
+                            editPostRepository,
+                            ArrayList(mediaFiles.values)
                         )
                     } else {
                         // no op: in edit mode, we're handling replacing of the block's mediaFiles in Gutenberg
@@ -153,15 +158,15 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                             // if prefs has this Slide with the temporary key, replace it
                             // if not, let's now save the new slide with the local key
                             storiesPrefs.replaceTempMediaIdKeyedSlideWithLocalMediaIdKeyedSlide(
-                                    TempId(oldTemporaryId),
-                                    LocalId(it.id),
-                                    it.localSiteId.toLong()
+                                TempId(oldTemporaryId),
+                                LocalId(it.id),
+                                it.localSiteId.toLong()
                             ) ?: storiesPrefs.saveSlideWithLocalId(
-                                    it.localSiteId.toLong(),
-                                    // use the local id to save the original, will be replaced later
-                                    // with mediaModel.mediaId after uploading to the remote site
-                                    LocalId(it.id),
-                                    frame
+                                it.localSiteId.toLong(),
+                                // use the local id to save the original, will be replaced later
+                                // with mediaModel.mediaId after uploading to the remote site
+                                LocalId(it.id),
+                                frame
                             )
 
                             // for editMode, we'll need to tell the Gutenberg Editor to replace their mediaFiles
@@ -169,12 +174,12 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                             if (isEditMode) {
                                 // finally send the event that this frameId has changed
                                 eventBusWrapper.postSticky(
-                                        StoryFrameMediaModelCreatedEvent(
-                                                oldTemporaryId,
-                                                it.id,
-                                                oldUri.toString(),
-                                                frame
-                                        )
+                                    StoryFrameMediaModelCreatedEvent(
+                                        oldTemporaryId,
+                                        it.id,
+                                        oldUri.toString(),
+                                        frame
+                                    )
                                 )
                             }
                         }
@@ -183,20 +188,20 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
                 override fun showVideoDurationLimitWarning(fileName: String) {
                     ToastUtils.showToast(
-                            appContext,
-                            string.error_media_video_duration_exceeds_limit,
-                            LONG
+                        appContext,
+                        string.error_media_video_duration_exceeds_limit,
+                        LONG
                     )
                 }
             }
 
             addLocalMediaToPostUseCase.addNewMediaToEditorAsync(
-                    uriList,
-                    site,
-                    freshlyTaken = false, // we don't care about this
-                    editorMediaListener = localEditorMediaListener,
-                    doUploadAfterAdding = true,
-                    trackEvent = false // Already tracked event when media were first added to the story
+                uriList,
+                site,
+                freshlyTaken = false, // we don't care about this
+                editorMediaListener = localEditorMediaListener,
+                doUploadAfterAdding = true,
+                trackEvent = false // Already tracked event when media were first added to the story
             )
 
             // only save this post if we're not currently in edit mode
@@ -207,8 +212,8 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
                 if (networkUtils.isNetworkAvailable()) {
                     postUtils.trackSavePostAnalytics(
-                            editPostRepository.getPost(),
-                            site
+                        editPostRepository.getPost(),
+                        site
                     )
                     uploadService.uploadPost(appContext, editPostRepository.id, true)
                     // SAVED_ONLINE
@@ -237,9 +242,9 @@ class StoryMediaSaveUploadBridge @Inject constructor(
             val site = it.getSerializable(WordPress.SITE) as SiteModel
             val story = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)
             saveStoryGutenbergBlockUseCase.saveNewLocalFilesToStoriesPrefsTempSlides(
-                    site,
-                    event.storyIndex,
-                    story.frames
+                site,
+                event.storyIndex,
+                story.frames
             )
 
             // only trigger the bridge preparation and the UploadService if the Story is now complete

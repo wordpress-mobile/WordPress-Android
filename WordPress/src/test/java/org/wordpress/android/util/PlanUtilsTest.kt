@@ -12,20 +12,20 @@ class PlanUtilsTest {
     @Test
     fun `getCurrentPlan returns the current plan`() {
         val plans = listOf(
-                PlanModel(
-                        1,
-                        "product-1",
-                        "Product 1",
-                        isCurrentPlan = false,
-                        hasDomainCredit = false
-                ),
-                PlanModel(
-                        2,
-                        "product-2",
-                        "Product 2",
-                        isCurrentPlan = true,
-                        hasDomainCredit = false
-                )
+            PlanModel(
+                1,
+                "product-1",
+                "Product 1",
+                isCurrentPlan = false,
+                hasDomainCredit = false
+            ),
+            PlanModel(
+                2,
+                "product-2",
+                "Product 2",
+                isCurrentPlan = true,
+                hasDomainCredit = false
+            )
         )
 
         assertEquals(2, getCurrentPlan(plans)?.productId)
@@ -34,20 +34,20 @@ class PlanUtilsTest {
     @Test
     fun `getCurrentPlan returns null when there are no current plans`() {
         val plans = listOf(
-                PlanModel(
-                        1,
-                        "product-1",
-                        "Product 1",
-                        isCurrentPlan = false,
-                        hasDomainCredit = false
-                ),
-                PlanModel(
-                        2,
-                        "product-2",
-                        "Product 2",
-                        isCurrentPlan = false,
-                        hasDomainCredit = false
-                )
+            PlanModel(
+                1,
+                "product-1",
+                "Product 1",
+                isCurrentPlan = false,
+                hasDomainCredit = false
+            ),
+            PlanModel(
+                2,
+                "product-2",
+                "Product 2",
+                isCurrentPlan = false,
+                hasDomainCredit = false
+            )
         )
 
         assertNull(getCurrentPlan(plans))
@@ -66,20 +66,20 @@ class PlanUtilsTest {
     @Test
     fun `isDomainCreditAvailable returns true when there is a current plan with domain credit available`() {
         val plans = listOf(
-                PlanModel(
-                        1,
-                        "product-1",
-                        "Product 1",
-                        isCurrentPlan = false,
-                        hasDomainCredit = false
-                ),
-                PlanModel(
-                        2,
-                        "product-2",
-                        "Product 2",
-                        isCurrentPlan = true,
-                        hasDomainCredit = true
-                )
+            PlanModel(
+                1,
+                "product-1",
+                "Product 1",
+                isCurrentPlan = false,
+                hasDomainCredit = false
+            ),
+            PlanModel(
+                2,
+                "product-2",
+                "Product 2",
+                isCurrentPlan = true,
+                hasDomainCredit = true
+            )
         )
 
         assert(isDomainCreditAvailable(plans))
@@ -88,20 +88,20 @@ class PlanUtilsTest {
     @Test
     fun `isDomainCreditAvailable return false when current plan has no domain credit`() {
         val plans = listOf(
-                PlanModel(
-                        1,
-                        "product-1",
-                        "Product 1",
-                        isCurrentPlan = false,
-                        hasDomainCredit = false
-                ),
-                PlanModel(
-                        2,
-                        "product-2",
-                        "Product 2",
-                        isCurrentPlan = true,
-                        hasDomainCredit = false
-                )
+            PlanModel(
+                1,
+                "product-1",
+                "Product 1",
+                isCurrentPlan = false,
+                hasDomainCredit = false
+            ),
+            PlanModel(
+                2,
+                "product-2",
+                "Product 2",
+                isCurrentPlan = true,
+                hasDomainCredit = false
+            )
         )
 
         assertFalse(isDomainCreditAvailable(plans))
@@ -110,20 +110,20 @@ class PlanUtilsTest {
     @Test
     fun `isDomainCreditAvailable returns false when there are no current plans`() {
         val plans = listOf(
-                PlanModel(
-                        1,
-                        "product-1",
-                        "Product 1",
-                        isCurrentPlan = false,
-                        hasDomainCredit = false
-                ),
-                PlanModel(
-                        2,
-                        "product-2",
-                        "Product 2",
-                        isCurrentPlan = false,
-                        hasDomainCredit = true
-                )
+            PlanModel(
+                1,
+                "product-1",
+                "Product 1",
+                isCurrentPlan = false,
+                hasDomainCredit = false
+            ),
+            PlanModel(
+                2,
+                "product-2",
+                "Product 2",
+                isCurrentPlan = false,
+                hasDomainCredit = true
+            )
         )
 
         assertFalse(isDomainCreditAvailable(plans))

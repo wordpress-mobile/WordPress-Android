@@ -69,8 +69,8 @@ class FetchFixThreatsStatusUseCase @Inject constructor(
             else -> {
                 if (errors.isNotEmpty()) AppLog.e(T.JETPACK_SCAN, models.filter { it.error != null }.toString())
                 Failure.FixFailure(
-                        containsOnlyErrors = errors.size == fixableThreatIds.size,
-                        mightBeMissingCredentials = mightBeMissingCredentials
+                    containsOnlyErrors = errors.size == fixableThreatIds.size,
+                    mightBeMissingCredentials = mightBeMissingCredentials
                 )
             }
         }

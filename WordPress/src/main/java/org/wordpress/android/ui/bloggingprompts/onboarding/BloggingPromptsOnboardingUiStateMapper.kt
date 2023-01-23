@@ -21,21 +21,21 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
         val dummyRespondent = ""
 
         val dummyRespondents = listOf(
-                dummyRespondent,
-                dummyRespondent,
-                dummyRespondent
+            dummyRespondent,
+            dummyRespondent,
+            dummyRespondent
         )
 
         val trailingLabel = UiStringPluralRes(
-                0,
-                R.string.my_site_blogging_prompt_card_number_of_answers_one,
-                R.string.my_site_blogging_prompt_card_number_of_answers_other,
-                dummyRespondents.size
+            0,
+            R.string.my_site_blogging_prompt_card_number_of_answers_one,
+            R.string.my_site_blogging_prompt_card_number_of_answers_other,
+            dummyRespondents.size
         )
 
         val avatarsTrain = dummyRespondents.take(3).map { respondent -> AvatarItem(respondent) }
-                .toMutableList<TrainOfAvatarsItem>()
-                .also { list -> list.add(TrailingLabelTextItem(trailingLabel, R.attr.colorOnSurface)) }
+            .toMutableList<TrainOfAvatarsItem>()
+            .also { list -> list.add(TrailingLabelTextItem(trailingLabel, R.attr.colorOnSurface)) }
 
         val primaryButtonLabel = when (dialogType) {
             ONBOARDING -> R.string.blogging_prompts_onboarding_try_it_now
@@ -43,18 +43,18 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
         }
 
         return Ready(
-                promptRes = R.string.blogging_prompts_onboarding_card_prompt,
-                respondents = avatarsTrain,
-                contentTopRes = R.string.blogging_prompts_onboarding_content_top,
-                contentBottomRes = R.string.blogging_prompts_onboarding_content_bottom,
-                contentNoteTitle = R.string.blogging_prompts_onboarding_content_note_title,
-                contentNoteContent = R.string.blogging_prompts_onboarding_content_note_content,
-                primaryButtonLabel = primaryButtonLabel,
-                isPrimaryButtonVisible = true,
-                onPrimaryButtonClick = onPrimaryButtonClick,
-                secondaryButtonLabel = R.string.blogging_prompts_onboarding_remind_me,
-                isSecondaryButtonVisible = dialogType == ONBOARDING,
-                onSecondaryButtonClick = onSecondaryButtonClick
+            promptRes = R.string.blogging_prompts_onboarding_card_prompt,
+            respondents = avatarsTrain,
+            contentTopRes = R.string.blogging_prompts_onboarding_content_top,
+            contentBottomRes = R.string.blogging_prompts_onboarding_content_bottom,
+            contentNoteTitle = R.string.blogging_prompts_onboarding_content_note_title,
+            contentNoteContent = R.string.blogging_prompts_onboarding_content_note_content,
+            primaryButtonLabel = primaryButtonLabel,
+            isPrimaryButtonVisible = true,
+            onPrimaryButtonClick = onPrimaryButtonClick,
+            secondaryButtonLabel = R.string.blogging_prompts_onboarding_remind_me,
+            isSecondaryButtonVisible = dialogType == ONBOARDING,
+            onSecondaryButtonClick = onSecondaryButtonClick
         )
     }
 }
