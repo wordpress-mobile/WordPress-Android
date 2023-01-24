@@ -7,6 +7,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -39,13 +40,13 @@ class BloggingPromptsCardTrackHelper(
 
     @OptIn(FlowPreview::class)
     private val onBloggingPromptsCardVisible: Flow<Boolean> = dashboardCardsFlow
-            .map {
-                it.firstOrNull()
-                        ?.cards
-                        ?.any { card -> card is BloggingPromptCard }
-                        ?: false
-            }
-            .debounce(PROMPT_CARD_VISIBLE_DEBOUNCE) // this flows emits several times so add some debounce to it
+        .map {
+            it.firstOrNull()
+                ?.cards
+                ?.any { card -> card is BloggingPromptCard }
+                ?: false
+        }
+        .debounce(PROMPT_CARD_VISIBLE_DEBOUNCE) // this flows emits several times so add some debounce to it
 
     init {
         trackBloggingPromptCardShownFlow
@@ -56,13 +57,14 @@ class BloggingPromptsCardTrackHelper(
             val currentSite = AtomicReference<Int?>(null)
 
             siteIdFlow
-                    .onEach { siteId ->
-                        if (currentSite.getAndSet(siteId) != siteId) {
-                            latestPromptCardVisible.set(null)
-                            onDashboardRefreshed.emit(Unit)
-                        }
+                .distinctUntilChanged()
+                .onEach { siteId ->
+                    if (currentSite.getAndSet(siteId) != siteId) {
+                        latestPromptCardVisible.set(null)
+                        onDashboardRefreshed.emit(Unit)
                     }
-                    .launchIn(this)
+                }
+                .launchIn(this)
         }
 
         scope.launch {
