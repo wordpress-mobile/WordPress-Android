@@ -229,16 +229,16 @@ class HelpActivity : LocaleAwareActivity() {
                 loadAccountDataForJetpackMigrationHelp(defaultAccount)
             }
         }
+        logOutButtonContainer.isVisible = true
+        logOutButton.setOnClickListener { logOut() }
+        observeViewModelEvents()
     }
 
     private fun HelpActivityBinding.loadAccountDataForJetpackMigrationHelp(account: AccountModel) {
-        logOutButtonContainer.isVisible = true
         userDetailsContainer.isVisible = true
         loadAvatar(account.avatarUrl.orEmpty())
         userDisplayName.text = account.displayName.ifEmpty { account.userName }
         userName.text = getString(R.string.at_username, account.userName)
-        logOutButton.setOnClickListener { logOut() }
-        observeViewModelEvents()
     }
 
     @Subscribe(threadMode = MAIN)
