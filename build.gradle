@@ -52,7 +52,6 @@ ext {
     androidxRecyclerviewVersion = '1.0.0'
     androidxRoomVersion = '2.3.0'
     androidxSwipeToRefreshVersion = '1.1.0'
-    androidxVectordrawableAnimatedVersion = '1.0.0'
     androidxViewpager2Version = '1.0.0'
     androidxWorkVersion = "2.7.0"
     apacheCommonsTextVersion = '1.10.0'
