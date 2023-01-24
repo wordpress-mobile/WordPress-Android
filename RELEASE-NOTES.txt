@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+21.7
+-----
+
+
 21.6
 -----
 * [*] [internal] [Jetpack-only] Adds additional logging for Jetpack migration errors [https://github.com/wordpress-mobile/WordPress-Android/pull/17748]
