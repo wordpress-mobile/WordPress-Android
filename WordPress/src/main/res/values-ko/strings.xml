@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-12-20 09:54:10+0000
+Translation-Revision-Date: 2023-01-16 14:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ko_KR
 -->
 <resources>
+    <string name="jetpack_feature_card_menu_item_hide_this">숨기기</string>
+    <string name="jetpack_feature_card_menu_item_remind_me_later">나중에 다시 알림</string>
+    <string name="jetpack_feature_card_content">곧 통계, 리더, 알림 및 기타 기능이 젯팩 모바일 앱으로 이동됩니다.</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">젯팩 앱으로 전환</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">jetpack.com에서 더 알아보기</string>
+    <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">전환은 무료이며 1분밖에 걸리지 않습니다.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">통계, 리더, 알림 및 기타 젯팩에서 제공되는 기능이 조만간 워드프레스 앱에서 제거됩니다.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">통계, 리더, 알림 및 기타 젯팩에서 제공되는 기능이 %s에 워드프레스 앱에서 제거됩니다.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">젯팩 기능이 곧 이동합니다.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">젯팩으로 알림 이동 중</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">젯팩 앱으로 리더 이동 중</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">젯팩 앱으로 통계 이동 중</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">새 젯팩 앱으로 전환</string>
+    <string name="blogging_prompts_list_error_network_subtitle">네트워크 연결을 확인하고 다시 시도하세요.</string>
+    <string name="blogging_prompts_list_error_network_title">지금 이 콘텐츠를 로드할 수 없습니다.</string>
+    <string name="blogging_prompts_list_error_fetch_subtitle">프롬프트 로드 중 오류가 발생했습니다.</string>
+    <string name="blogging_prompts_list_error_fetch_title">죄송합니다.</string>
+    <string name="blogging_prompts_list_no_prompts">아직 프롬프트 없음</string>
+    <string name="blogging_prompts_list_number_of_answers_other">답변 %d개</string>
+    <string name="blogging_prompts_list_number_of_answers_one">답변 1개</string>
+    <string name="blogging_prompts_list_number_of_answers_zero">답변 0개</string>
+    <string name="blogging_prompts_list_answered_prompt">✓ 답변됨</string>
+    <string name="blogging_prompts_list_title">프롬프트</string>
+    <string name="close_desc">닫기</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">또는 \"일반 블록으로 변환\"을 눌러 이 블록을 분리하고 따로 편집할 수 있습니다.</string>
+    <string name="dlg_confirm_delete_category">\'%s\'을(를) 영구적으로 삭제하시겠어요?</string>
+    <string name="deleting_cat_success">카테고리 삭제 성공</string>
+    <string name="deleting_cat_failed">카테고리 삭제 실패</string>
+    <string name="deleting_cat">카테고리 삭제하기</string>
+    <string name="updating_cat">카테고리 업데이트하기</string>
+    <string name="update_category">카테고리 업데이트</string>
     <string name="reader_toast_user_blocked">이 사용자의 글이 더는 표시되지 않음</string>
     <string name="reader_menu_block_user">사용자 차단</string>
     <string name="reader_menu_report_user">이 사용자 신고</string>
@@ -29,6 +60,7 @@ Language: ko_KR
     <string name="preference_open_links_in_jetpack">젯팩에서 링크 열기</string>
     <string name="jp_migration_need_help_button">도움말이 필요하신가요?</string>
     <string name="jp_migration_got_it_button">알겠습니다.</string>
+    <string name="jp_migration_delete_message">데이터가 충돌하지 않도록 &lt;b&gt;워드프레스 앱&lt;/b&gt;을 삭제하세요.</string>
     <string name="jp_migration_delete_subtitle">아직 워드프레스 앱이 설치되어 있는 것 같습니다. 데이터가 충돌하지 않도록 워드프레스 앱을 삭제하는 것이 좋습니다.</string>
     <string name="jp_migration_delete_title">더는 워드프레스 앱 필요 없음</string>
     <string name="jp_migration_network_error_message">네트워크 연결 없이 데이터와 설정을 이전할 수 없습니다.</string>
@@ -40,6 +72,7 @@ Language: ko_KR
     <string name="jp_migration_try_again_button">다시 시도</string>
     <string name="jp_migration_finish_button">마침</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">워드프레스 앱 아이콘 제거</string>
+    <string name="jp_migration_done_delete_wp_message">데이터가 충돌하지 않도록 &lt;b&gt;워드프레스 앱&lt;/b&gt;을 삭제하세요.</string>
     <string name="jp_migration_done_subtitle">모든 데이터와 설정을 이전했습니다. 모든 것이 그대로 다 남아 있습니다.</string>
     <string name="jp_migration_done_title">젯팩으로 전환해 주셔서 감사합니다!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">워드프레스 앱의 알림을 해제하겠습니다.</string>
@@ -600,6 +633,7 @@ Language: ko_KR
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">두 번 눌러 이미지 또는 비디오를 추가할 작업 시트 열기</string>
     <string name="gutenberg_native_current_unit_is_s">현재 단위는 %s입니다.</string>
     <string name="gutenberg_native_crosspost">교차 글</string>
+    <string name="gutenberg_native_s_converted_to_regular_block">일반 블록으로 %s 변환됨</string>
     <string name="gutenberg_native_columns_settings">열 설정</string>
     <string name="gutenberg_native_add_link_to_s">%s에 링크 추가</string>
     <string name="gutenberg_native_add_link_text">링크 텍스트 추가</string>
@@ -640,6 +674,7 @@ Language: ko_KR
     <string name="gutenberg_native_text_color">텍스트 색상</string>
     <string name="gutenberg_native_padding">안쪽 여백</string>
     <string name="gutenberg_native_four">4</string>
+    <string name="gutenberg_native_featured">추천</string>
     <string name="gutenberg_native_custom_url">사용자 정의 URL</string>
     <string name="gutenberg_native_create_embed">임베드 생성</string>
     <string name="gutenberg_native_column_d">열 %d</string>
@@ -2227,7 +2262,6 @@ Language: ko_KR
     <string name="my_site_section_screen_title">내 사이트</string>
     <string name="notif_settings_screen_title">알림 설정</string>
     <string name="help_screen_title">도움말 및 지원</string>
-    <string name="license_screen_title">라이선스</string>
     <string name="release_notes_screen_title">릴리스 노트</string>
     <string name="signup_epilogue_error_avatar_view">고객님의 아바타가 업로드되었으며 곧 사용할 수 있습니다.</string>
     <string name="permissions_denied_message">이 기능에 대한 필수 권한이 해제되어 있는 것 같습니다.&lt;br/&gt;&lt;br/&gt;변경하려면 권한을 편집하고 &lt;strong&gt;%s&lt;/strong&gt;이(가) 활성화되어 있는지 확인하세요.</string>
@@ -2236,8 +2270,6 @@ Language: ko_KR
     <string name="sharing_disabled_description">공유 젯팩 모듈이 비활성화되었기 때문에 공유 설정에 액세스할 수 없습니다.</string>
     <string name="sharing_disabled">공유 모듈이 비활성화됨</string>
     <string name="version_with_name_param">%s 버전</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="publisher_with_company_param">발행인: %s</string>
     <string name="notification_sound_has_invalid_path">선택한 사운드의 경로가 잘못되었습니다. 다른 항목을 선택하세요.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d개의 페이지/글 남음</string>
@@ -3123,7 +3155,6 @@ Language: ko_KR
     <string name="verification_code">확인 코드</string>
     <string name="language">언어</string>
     <string name="reader_empty_posts_request_failed">글을 가져올 수 없음</string>
-    <string name="publisher">게시자:</string>
     <string name="error_notification_open">알림을 열 수 없음</string>
     <string name="stats_search_terms_unknown_search_terms">알 수 없는 검색어</string>
     <string name="stats_view_search_terms">검색어</string>
@@ -3229,13 +3260,11 @@ Language: ko_KR
     <string name="wordpress_blog">WordPress 블로그</string>
     <string name="image_settings">이미지 설정</string>
     <string name="local_changes">로컬 변경</string>
-    <string name="privacy_policy">개인 정보 보호 정책</string>
     <string name="new_media">새 미디어</string>
     <string name="new_post">새 게시물</string>
     <string name="notifications_empty_all">알림이 없습니다.</string>
     <string name="http_authorization_required">인증이 필요합니다</string>
     <string name="invalid_site_url_message">입력한 사이트 URL이 올바른지 확인합니다.</string>
-    <string name="open_source_licenses">오픈 소스 라이센스</string>
     <string name="file_error_create">미디어 업로드시에 임시 파일을 만들 수 없습니다 . 장치에 여유 공간이 있는지 확인 하십시오.</string>
     <string name="category_name">카테고리 이름</string>
     <string name="add_new_category">새로운 카테고리를 추가</string>
@@ -3352,9 +3381,6 @@ Language: ko_KR
     <string name="ok">확인</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">업로드 중…</string>
-    <string name="tos">이용 약관</string>
-    <string name="version">버전</string>
-    <string name="app_title">WordPress for Android</string>
     <string name="image_alignment">배치</string>
     <string name="refresh">다시 로드</string>
     <string name="untitled">제목 미설정</string>
@@ -3369,8 +3395,10 @@ Language: ko_KR
     <string name="categories">카테고리</string>
     <string name="sdcard_title">SD카드가 필요합니다</string>
     <string name="media">미디어</string>
+    <string name="updating_cat_success">카테고리 업데이트 성공</string>
     <string name="approve">승인</string>
     <string name="delete">제거</string>
+    <string name="updating_cat_failed">카테고리 업데이트 실패</string>
     <string name="none">없음</string>
     <string name="publish_now">지금 공개</string>
     <string name="reply">회신</string>

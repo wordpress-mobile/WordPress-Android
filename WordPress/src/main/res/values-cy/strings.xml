@@ -401,7 +401,6 @@ Language: cy_GB
     <string name="invalid_verification_code">Cod dilysu annilys</string>
     <string name="auth_required">Mewngofnodwch eto i barhau.</string>
     <string name="reader_empty_posts_request_failed">Methu adfer cofnodion</string>
-    <string name="publisher">Cyhoeddwr:</string>
     <string name="error_notification_open">Methu agor hysbysiadau</string>
     <string name="stats_search_terms_unknown_search_terms">Termau Chwilio Anhysbys</string>
     <string name="stats_view_authors">Awduron</string>
@@ -515,11 +514,9 @@ Language: cy_GB
     <string name="add_new_category">Ychwanegu categori newydd</string>
     <string name="category_name">Enw categori</string>
     <string name="file_error_create">Methwyd creu ffeil dros dro ar gyfer llwytho cyfryngau. Gwnewch yn siwr bod digon o le rhydd ar eich dyfais.</string>
-    <string name="open_source_licenses">Trwyddedau cod agored</string>
     <string name="http_authorization_required">Mae angen awdurdodi</string>
     <string name="new_post">Cofnod newydd</string>
     <string name="new_media">Cyfryngau newydd</string>
-    <string name="privacy_policy">Polisi preifatrwydd</string>
     <string name="local_changes">Newidiadau lleol</string>
     <string name="image_settings">Gosodiadau delweddau</string>
     <string name="wordpress_blog">Blog WordPress</string>
@@ -598,9 +595,6 @@ Language: cy_GB
     <string name="ok">Iawn</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Llwytho…</string>
-    <string name="version">Fersiwn</string>
-    <string name="tos">Amodau Gwasanaeth</string>
-    <string name="app_title">WordPress ar gyfer Android</string>
     <string name="image_alignment">Alinio</string>
     <string name="refresh">Adnewyddu</string>
     <string name="untitled">Dideitl</string>

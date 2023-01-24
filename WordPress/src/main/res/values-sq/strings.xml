@@ -633,6 +633,7 @@ Language: sq_AL
     <string name="gutenberg_native_text_color">Ngjyrë teksti</string>
     <string name="gutenberg_native_padding">Mbushje</string>
     <string name="gutenberg_native_four">Katër</string>
+    <string name="gutenberg_native_featured">Të zgjedhura</string>
     <string name="gutenberg_native_custom_url">URL Vetjake</string>
     <string name="gutenberg_native_create_embed">Krijo trupëzim</string>
     <string name="gutenberg_native_column_d">Shtylla %d</string>
@@ -2219,7 +2220,6 @@ Language: sq_AL
     <string name="my_site_section_screen_title">Sajti Im</string>
     <string name="notif_settings_screen_title">Rregullime njoftimesh</string>
     <string name="help_screen_title">Ndihmë dhe Asistencë</string>
-    <string name="license_screen_title">Licencë</string>
     <string name="release_notes_screen_title">Shënime hedhjeje në qarkullim</string>
     <string name="signup_epilogue_error_avatar_view">Avatari juaj u ngarkua dhe do të jetë gati për përdorim pas pak.</string>
     <string name="permissions_denied_message">Duket se i keni çaktivizuar lejet e domosdoshme për funksionimin e kësaj veçorie.&lt;br/&gt;&lt;br/&gt;Për ta ndryshuar këtë, përpunoni lejet tuaja dhe sigurohuni që &lt;strong&gt;%s&lt;/strong&gt; është e aktivizuar.</string>
@@ -2228,8 +2228,6 @@ Language: sq_AL
     <string name="sharing_disabled_description">S’mund të hyni te rregullimet tuaja mbi ndarjen me të tjerë, ngaqë moduli juaj Sharing Jetpack është i çaktivizuar.</string>
     <string name="sharing_disabled">Moduli i ndarjeve është i çaktivizuar</string>
     <string name="version_with_name_param">Version %s</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="publisher_with_company_param">Botues: %s</string>
     <string name="notification_sound_has_invalid_path">Tingulli i zgjedhur ka një shteg të pavlefshëm. Ju lutemi, zgjidhni një tjetër.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">Ende %1$d faqe / postime</string>
@@ -3115,7 +3113,6 @@ Language: sq_AL
     <string name="verification_code">Kod verifikimi</string>
     <string name="language">Gjuhë</string>
     <string name="reader_empty_posts_request_failed">S’arrin të marrë dot postimet</string>
-    <string name="publisher">Botues:</string>
     <string name="error_notification_open">S’u hap dot njoftimi</string>
     <string name="stats_search_terms_unknown_search_terms">Terma të Panjohur Kërkimesh</string>
     <string name="stats_view_search_terms">Terma Kërkimesh</string>
@@ -3221,13 +3218,11 @@ Language: sq_AL
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="image_settings">Rregullime figurash</string>
     <string name="local_changes">Ndryshime vendore</string>
-    <string name="privacy_policy">Rregulla privatësie</string>
     <string name="new_media">Media e re</string>
     <string name="new_post">Postim i ri</string>
     <string name="notifications_empty_all">Ende pa njoftime.</string>
     <string name="http_authorization_required">Lypset autorizim</string>
     <string name="invalid_site_url_message">Kontrolloni nëse URL-ja e sajtit të dhënë është e vlefshme</string>
-    <string name="open_source_licenses">Licenca burimi të hapur</string>
     <string name="file_error_create">S’u krijua dot kartelë e përkohshme për ngarkim medie. Sigurohuni që në pajisjen tuaj ka hapësirë të lirë të mjaftueshme.</string>
     <string name="category_name">Emër kategorie</string>
     <string name="add_new_category">Shtoni kategori të re</string>
@@ -3344,9 +3339,6 @@ Language: sq_AL
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Po ngarkohet…</string>
-    <string name="tos">Kushte Shërbimi</string>
-    <string name="version">Version</string>
-    <string name="app_title">WordPress për Android</string>
     <string name="image_alignment">Drejtim</string>
     <string name="refresh">Rifresko</string>
     <string name="untitled">Pa titull</string>

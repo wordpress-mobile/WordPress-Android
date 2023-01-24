@@ -470,7 +470,6 @@ Language: hr
     <string name="verification_code">Kod za provjeru</string>
     <string name="invalid_verification_code">Neispravan verifikacijski kod</string>
     <string name="auth_required">Ponovno se prijavite za nastavak.</string>
-    <string name="publisher">Izdavač:</string>
     <string name="error_notification_open">Ne mogu otvoriti obavjesti</string>
     <string name="pages_fetching">Dohvaćanje stranica…</string>
     <string name="posts_fetching">Dohvaćanje objava…</string>
@@ -576,8 +575,6 @@ Language: hr
     <string name="create_a_link">Kreiraj poveznicu</string>
     <string name="reader_title_applog">Aplikacijski zapisnik</string>
     <string name="notifications_empty_all">Nema obavijesti… još.</string>
-    <string name="privacy_policy">Pravila privatnosti</string>
-    <string name="open_source_licenses">Licence otvorenog softvera</string>
     <string name="post_settings">Postavke objave</string>
     <string name="select_categories">Odaberite kateogrije</string>
     <string name="connection_error">Greška spajanja</string>
@@ -698,9 +695,6 @@ Language: hr
     <string name="done">Gotovo</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Prijenos…</string>
-    <string name="version">Inačica</string>
-    <string name="tos">Uvjeti Korištenja</string>
-    <string name="app_title">WordPress za Android</string>
     <string name="image_alignment">Poravnanje</string>
     <string name="refresh">Osvježi</string>
     <string name="untitled">Nenaslovljeno</string>

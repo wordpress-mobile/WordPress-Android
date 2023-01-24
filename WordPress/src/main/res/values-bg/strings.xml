@@ -630,7 +630,6 @@ Language: bg
     <string name="verification_code">Верификационен код</string>
     <string name="auth_required">За да продължите, влезте отново.</string>
     <string name="stats_view_authors">Автори</string>
-    <string name="publisher">Издател:</string>
     <string name="media_fetching">Извличане на файлове…</string>
     <string name="pages_fetching">Извличане на страници…</string>
     <string name="reader_empty_posts_request_failed">Възникна грешка при извличане на публикациите</string>
@@ -737,7 +736,6 @@ Language: bg
     <string name="sure_to_cancel_edit_comment">Преустановяване редактирането на този коментар?</string>
     <string name="post_not_found">Възникна грешка при зареждане на тази плубликация. Опреснете Вашите публикации и опитайте отново.</string>
     <string name="trash">Кошче</string>
-    <string name="open_source_licenses">Лиценз с отворен код</string>
     <string name="media_gallery_type_thumbnail_grid">Решетка с малки изображения</string>
     <string name="cancel_edit">Отказване</string>
     <string name="learn_more">Още</string>
@@ -754,7 +752,6 @@ Language: bg
     <string name="add_new_category">Добавяне на нова категория</string>
     <string name="file_error_create">Грешка при създаване на временния файл. Уверете се че има достатъчно свободно място на вашето устройство.</string>
     <string name="http_authorization_required">Нужна е оторизация</string>
-    <string name="privacy_policy">Политика за поверителност</string>
     <string name="wordpress_blog">Блог от вида WordPress</string>
     <string name="reader_title_applog">Дневник на приложението</string>
     <string name="notifications_empty_all">Все още няма известявания.</string>
@@ -831,9 +828,6 @@ Language: bg
     <string name="ok">ОК</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Качва се…</string>
-    <string name="version">Версия</string>
-    <string name="tos">Условия за ползване</string>
-    <string name="app_title">WordPress за Android</string>
     <string name="image_alignment">Подравняване</string>
     <string name="refresh">Презареждане</string>
     <string name="untitled">Неозаглавен</string>

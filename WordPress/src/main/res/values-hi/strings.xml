@@ -167,7 +167,6 @@ Language: hi_IN
     <string name="language">भाषा</string>
     <string name="verification_code">सत्यापन कोड</string>
     <string name="pages_fetching">पृष्ठ ला रहे है…</string>
-    <string name="publisher">प्रकाशक:</string>
     <string name="stats_view_authors">लेखक</string>
     <string name="stats_search_terms_unknown_search_terms">अज्ञात खोज शब्द</string>
     <string name="stats_view_videos">वीडियो</string>
@@ -230,11 +229,9 @@ Language: hi_IN
     <string name="link_enter_url_text">कड़ी शब्द (वैकल्पिक)</string>
     <string name="new_media">नया मीडिया</string>
     <string name="new_post">नया पोस्ट</string>
-    <string name="open_source_licenses">मुक्त स्रोत लाइसेंस</string>
     <string name="page_settings">पृष्ठ सेटिंग्स</string>
     <string name="comment_status_unapproved">विचाराधीन</string>
     <string name="post_settings">पोस्ट सेटिंग्स</string>
-    <string name="privacy_policy">गोपनीयता नीति</string>
     <string name="comment_status_spam">स्पैम</string>
     <string name="mnu_comment_spam">स्पैम</string>
     <string name="wordpress_blog">वर्डप्रेस ब्लॉग</string>
@@ -333,9 +330,6 @@ Language: hi_IN
     <string name="ok">ओके</string>
     <string name="link_enter_url">यूआरएल</string>
     <string name="uploading">अपलोड किया जा रहा</string>
-    <string name="version">संस्करण</string>
-    <string name="tos">सेवा की शर्तें</string>
-    <string name="app_title">एंड्राइड के लिए वर्डप्रेस</string>
     <string name="image_alignment">संरेखण</string>
     <string name="refresh">रिफ्रेश</string>
     <string name="untitled">बिना शीर्षक का</string>

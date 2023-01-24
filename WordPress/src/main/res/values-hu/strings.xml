@@ -10,7 +10,6 @@ Language: hu
     <string name="role_follower">Követő</string>
     <string name="language">Nyelv</string>
     <string name="auth_required">A folytatáshoz lépjünk be újra.</string>
-    <string name="publisher">Közzétevő:</string>
     <string name="stats_view_authors">Szerzők</string>
     <string name="pages_fetching">Oldalak betöltése…</string>
     <string name="media_fetching">Média betöltése…</string>
@@ -106,9 +105,6 @@ Language: hu
     <string name="done">kész</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Feltöltés…</string>
-    <string name="tos">Szolgáltatási feltételek</string>
-    <string name="version">verzió</string>
-    <string name="app_title">WordPress for Android</string>
     <string name="image_alignment">Kép igazítás</string>
     <string name="refresh">Frissítés</string>
     <string name="untitled">Cím nélküli</string>

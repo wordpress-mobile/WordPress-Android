@@ -441,7 +441,6 @@ Language: is
     <string name="media_fetching">Sæki skrá…</string>
     <string name="pages_fetching">Sæki síður…</string>
     <string name="posts_fetching">Sæki færslur…</string>
-    <string name="publisher">Útgefandi:</string>
     <string name="reader_empty_posts_request_failed">Gat ekki sótt færslur</string>
     <string name="logs_copied_to_clipboard">Atburðarskrá forritsins hefur verið afrituð í klemmuspjaldið</string>
     <string name="error_copy_to_clipboard">Villa kom upp við að afrita texta í klemmuspjaldið</string>
@@ -547,12 +546,10 @@ Language: is
     <string name="local_draft">Staðvær drög</string>
     <string name="new_media">Ný skrá</string>
     <string name="new_post">Ný færsla</string>
-    <string name="privacy_policy">Persónuverndarstefna</string>
     <string name="remove_account">Fjarlægja vef</string>
     <string name="saving_changes">Vista breytingar</string>
     <string name="select_categories">Veldu flokk</string>
     <string name="notifications_empty_all">Engar tilkynningar…enn.</string>
-    <string name="open_source_licenses">Opin hugbúnaðarleyfi</string>
     <string name="link_enter_url_text">Texti tengils (valkvæmt)</string>
     <string name="local_changes">Staðværar breytingar</string>
     <string name="post_settings">Stillingar færslu</string>
@@ -632,9 +629,6 @@ Language: is
     <string name="ok">Í lagi</string>
     <string name="link_enter_url">Slóð</string>
     <string name="uploading">Hleð upp…</string>
-    <string name="version">Útgáfa</string>
-    <string name="tos">Notendaskilmálar</string>
-    <string name="app_title">WordPress fyrir Android</string>
     <string name="image_alignment">Jöfnun</string>
     <string name="refresh">Endurhlaða</string>
     <string name="untitled">Án titils</string>
