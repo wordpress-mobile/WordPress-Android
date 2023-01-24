@@ -393,7 +393,6 @@ Language: sk
     <string name="my_site_section_screen_title">Moja webová stránka</string>
     <string name="notif_settings_screen_title">Nastavenia upozornení</string>
     <string name="help_screen_title">Pomoc a podpora</string>
-    <string name="license_screen_title">Licencia</string>
     <string name="release_notes_screen_title">Poznámky k verzii</string>
     <string name="signup_epilogue_error_avatar_view">Váš avatar bol nahraný a zakrátko bude dostupný.</string>
     <string name="version_with_name_param">Verzia %s</string>
@@ -402,8 +401,6 @@ Language: sk
     <string name="plugin_caption_featured">Odporúčaný</string>
     <string name="sharing_disabled_description">Nemáte prístup k nastaveniam zdieľania, pretože Jetpack modul Zdieľanie je zakázaný.</string>
     <string name="sharing_disabled">Modul zdieľania zakázaný</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="publisher_with_company_param">Vydavateľ: %s</string>
     <string name="notification_sound_has_invalid_path">Zvolený zvuk má neplatnú cestu. Vyberte iný.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d zostávajúcich stránok / príspevkov</string>
@@ -1291,7 +1288,6 @@ Language: sk
     <string name="reader_empty_posts_request_failed">Nie je možné obnoviť príspevky</string>
     <string name="posts_fetching">Načítavajú sa príspevky…</string>
     <string name="pages_fetching">Načítavajú sa stránky…</string>
-    <string name="publisher">Vydavateľ:</string>
     <string name="media_fetching">Načítavajú sa súbory…</string>
     <string name="error_copy_to_clipboard">Pri kopírovaní textu do schránky nastala chyba </string>
     <string name="reader_label_new_posts">Nové príspevky</string>
@@ -1412,10 +1408,8 @@ Language: sk
     <string name="http_authorization_required">Požaduje sa autorizácia</string>
     <string name="image_settings">Nastavenie obrázka</string>
     <string name="trash">Kôš</string>
-    <string name="open_source_licenses">Open source licencie</string>
     <string name="link_enter_url_text">Text odkazu (voliteľný)</string>
     <string name="local_changes">Miestne zmeny</string>
-    <string name="privacy_policy">Ochrana osobných údajov</string>
     <string name="fatal_db_error">Počas vytvárania databázy sa vyskytla chyba. Preinštalujte aplikáciu.</string>
     <string name="media_error_no_permission">Nemáte práva na zobrazenie knižnice súborov</string>
     <string name="new_media">Nový súbor</string>
@@ -1510,9 +1504,6 @@ Language: sk
     <string name="ok">OK</string>
     <string name="link_enter_url">URL adresa</string>
     <string name="uploading">Nahrávanie…</string>
-    <string name="version">Verzia</string>
-    <string name="app_title">WordPress pre Android</string>
-    <string name="tos">Zmluvné podmienky</string>
     <string name="image_alignment">Zarovnanie</string>
     <string name="refresh">Obnoviť</string>
     <string name="untitled">Bez názvu</string>

@@ -20,6 +20,7 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.BUTTON
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.FEATURE
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.HEADER
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.ROW
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
@@ -47,7 +48,8 @@ class DebugSettingsViewModel
     private val debugUtils: DebugUtils,
     private val weeklyRoundupNotifier: WeeklyRoundupNotifier,
     private val notificationManager: NotificationManagerWrapper,
-    private val contextProvider: ContextProvider
+    private val contextProvider: ContextProvider,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
@@ -93,6 +95,8 @@ class DebugSettingsViewModel
     }
 
     private fun onForceShowWeeklyRoundupClick() = launch(bgDispatcher) {
+        if(!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications())
+            return@launch
         weeklyRoundupNotifier.buildNotifications().forEach {
             notificationManager.notify(it.id, it.asNotificationCompatBuilder(contextProvider.getContext()).build())
         }

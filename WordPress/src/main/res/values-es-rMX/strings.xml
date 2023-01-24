@@ -1331,7 +1331,6 @@ Language: es_MX
     <string name="me_section_screen_title">Yo</string>
     <string name="notif_settings_screen_title">Ajustes de avisos</string>
     <string name="help_screen_title">Ayuda y soporte</string>
-    <string name="license_screen_title">Licencia</string>
     <string name="release_notes_screen_title">Notas de la versión</string>
     <string name="my_site_section_screen_title">Mi sitio</string>
     <string name="signup_epilogue_error_avatar_view">Tu avatar se ha subido y estará disponible en breve.</string>
@@ -1341,8 +1340,6 @@ Language: es_MX
     <string name="sharing_disabled_description">No puedes acceder a los ajustes compartidos porque el módulo Compartir de Jetpack está deshabilitado.</string>
     <string name="sharing_disabled">Módulo Compartir deshabilitado.</string>
     <string name="version_with_name_param">Versión %s</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="publisher_with_company_param">Editor: %s</string>
     <string name="notification_sound_has_invalid_path">El sonido escogido tiene una ruta incorrecta. Por favor, elige uno distinto.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">quedan %1$d páginas / entradas</string>
@@ -2222,7 +2219,6 @@ Language: es_MX
     <string name="invalid_verification_code">Código de verificación no válido</string>
     <string name="stats_view_authors">Autores</string>
     <string name="error_notification_open">No se pudo abrir la notificación</string>
-    <string name="publisher">Autor:</string>
     <string name="media_fetching">Recuperando medios…</string>
     <string name="posts_fetching">Recuperando entradas…</string>
     <string name="pages_fetching">Recuperando páginas…</string>
@@ -2334,7 +2330,6 @@ Language: es_MX
     <string name="local_changes">Cambios locales</string>
     <string name="local_draft">Borrador local</string>
     <string name="comment_status_unapproved">Pendiente</string>
-    <string name="privacy_policy">Política de privacidad</string>
     <string name="remove_account">Eliminar sitio</string>
     <string name="saving_changes">Guardando cambios</string>
     <string name="select_categories">Seleccionar categorías</string>
@@ -2352,7 +2347,6 @@ Language: es_MX
     <string name="new_post">Nueva entrada</string>
     <string name="notifications_empty_all">No hay notificaciones… aún.</string>
     <string name="invalid_site_url_message">Comprueba que la URL del sitio introducida es válida</string>
-    <string name="open_source_licenses">Licencias Open source</string>
     <string name="file_error_create">No se pudo crear un archivo temporal para subir el archivo multimedia. Asegúrate que haya suficiente espacio libre en tu dispositivo.</string>
     <string name="view_in_browser">Ver en el navegador</string>
     <string name="content_required">Comentario obligatorio</string>
@@ -2448,9 +2442,6 @@ Language: es_MX
     <string name="done">hecho</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Subiendo…</string>
-    <string name="version">Versión</string>
-    <string name="app_title">WordPress para Android</string>
-    <string name="tos">Términos del servicio</string>
     <string name="image_alignment">Alineamiento</string>
     <string name="refresh">Refrescar</string>
     <string name="untitled">Sin Título</string>

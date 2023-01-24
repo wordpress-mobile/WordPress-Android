@@ -11,10 +11,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityLauncherWrapper
+import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayViewModel
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.DismissDialog
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenPlayStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
@@ -48,6 +52,7 @@ import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewMo
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.config.SiteNameFeatureConfig
+import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -71,9 +76,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private val siteCreationIntentsViewModel: SiteCreationIntentsViewModel by viewModels()
     private val siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel by viewModels()
     private val jetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel by viewModels()
-
-    @Inject
-    internal lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+    @Inject internal lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+    @Inject internal lateinit var activityLauncherWrapper: ActivityLauncherWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,6 +93,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.writeToBundle(outState)
     }
 
+    @Suppress("LongMethod")
     private fun observeVMState() {
         mainViewModel.navigationTargetObservable
             .observe(this, Observer { target -> target?.let { showStep(target) } })
@@ -104,8 +109,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
                         intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
                         Triple(true, null, createSiteState.isSiteTitleTaskComplete)
                     }
-                    is SiteCreationCompleted ->
-                        Triple(true, createSiteState.localSiteId, createSiteState.isSiteTitleTaskComplete)
+                    is SiteCreationCompleted -> Triple(
+                            true, createSiteState.localSiteId,
+                            createSiteState.isSiteTitleTaskComplete
+                    )
                 }
                 intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, localSiteId)
                 intent.putExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, titleTaskComplete)
@@ -154,16 +161,27 @@ class SiteCreationActivity : LocaleAwareActivity(),
     }
 
     private fun observeOverlayEvents() {
-        jetpackFullScreenViewModel.action.observe(this) { _ ->
+        val fragment = JetpackFeatureFullScreenOverlayFragment
+                .newInstance(
+                        isSiteCreationOverlay = true,
+                        siteCreationSource = getSiteCreationSource()
+                )
+
+        jetpackFullScreenViewModel.action.observe(this) { action ->
             if (mainViewModel.siteCreationDisabled) finish()
+            when (action) {
+                is OpenPlayStore -> {
+                    fragment.dismiss()
+                    activityLauncherWrapper.openPlayStoreLink(this, JETPACK_PACKAGE_NAME)
+                }
+                is DismissDialog -> {
+                    fragment.dismiss()
+                }
+                else -> fragment.dismiss()
+            }.exhaustive
         }
 
         mainViewModel.showJetpackOverlay.observeEvent(this) {
-            val fragment = JetpackFeatureFullScreenOverlayFragment
-                .newInstance(
-                    isSiteCreationOverlay = true,
-                    siteCreationSource = getSiteCreationSource()
-                )
             if (mainViewModel.siteCreationDisabled)
                 slideInFragment(fragment, JetpackFeatureFullScreenOverlayFragment.TAG)
             else fragment.show(supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)

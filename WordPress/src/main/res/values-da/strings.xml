@@ -106,7 +106,6 @@ Language: da_DK
     <string name="auth_required">Log ind igen for at fortsætte.</string>
     <string name="verification_code">Godkendelseskode</string>
     <string name="invalid_verification_code">Ugyldig godkendelseskode</string>
-    <string name="publisher">Udgiver:</string>
     <string name="reader_empty_posts_request_failed">Kunne ikke hente indlæg</string>
     <string name="stats_view_authors">Forfattere</string>
     <string name="stats_view_search_terms">Søgeord</string>
@@ -222,13 +221,11 @@ Language: da_DK
     <string name="category_name">Kategorinavn</string>
     <string name="new_post">Nyt indlæg</string>
     <string name="new_media">Nyt medie</string>
-    <string name="privacy_policy">Privatlivspolitik</string>
     <string name="wordpress_blog">WordPress-blog</string>
     <string name="image_settings">Billedeindstillinger</string>
     <string name="content_required">Kommentar er påkrævet</string>
     <string name="toast_comment_unedited">Kommentar er ikke ændret</string>
     <string name="local_draft">Lokal kladde</string>
-    <string name="open_source_licenses">Open source-licenser</string>
     <string name="cancel_edit">Fortryd redigering</string>
     <string name="reader_title_applog">Applikationslog</string>
     <string name="horizontal_alignment">Vandret justering</string>
@@ -313,9 +310,6 @@ Language: da_DK
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Uploader</string>
-    <string name="version">Version</string>
-    <string name="app_title">WordPress til Android</string>
-    <string name="tos">Brugskrav</string>
     <string name="image_alignment">Justering</string>
     <string name="refresh">Genindlæs</string>
     <string name="untitled">Ikke-navngivet</string>

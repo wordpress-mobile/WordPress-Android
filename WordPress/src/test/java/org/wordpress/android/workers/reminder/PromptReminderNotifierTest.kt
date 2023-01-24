@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
@@ -36,6 +37,8 @@ class PromptReminderNotifierTest : BaseUnitTest() {
     private val bloggingRemindersStore: BloggingRemindersStore = mock()
     private val bloggingReminder: BloggingRemindersModel = mock()
     private val htmlCompatWrapper: HtmlCompatWrapper = mock()
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper = mock()
+
 
     private val classToTest = PromptReminderNotifier(
         contextProvider = contextProvider,
@@ -47,7 +50,8 @@ class PromptReminderNotifierTest : BaseUnitTest() {
         bloggingPromptsStore = bloggingPromptsStore,
         bloggingRemindersAnalyticsTracker = bloggingRemindersAnalyticsTracker,
         htmlCompatWrapper = htmlCompatWrapper,
-        bloggingRemindersStore = bloggingRemindersStore
+        bloggingRemindersStore = bloggingRemindersStore,
+        jetpackFeatureRemovalPhaseHelper = jetpackFeatureRemovalPhaseHelper
     )
 
     @Before
@@ -91,6 +95,24 @@ class PromptReminderNotifierTest : BaseUnitTest() {
     }
 
     @Test
+    fun `Should NOT notify if the the user in Jetpack feature removal phase 4`() = test {
+        val siteId = 123
+        val siteModel: SiteModel = mock()
+        val enabledPromptBloggingReminderModel = BloggingRemindersModel(
+            siteId = siteId,
+            isPromptIncluded = true
+        )
+        whenever(bloggingRemindersStore.bloggingRemindersModel(any())).thenReturn(
+            flowOf(enabledPromptBloggingReminderModel)
+        )
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(false)
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(siteModel)
+        assertFalse(classToTest.shouldNotify(123))
+    }
+
+    @Test
     fun `Should notify if has access token, flag enabled and user opted in to include prompts in reminders`() = test {
         val siteId = 123
         val siteModel: SiteModel = mock()
@@ -103,6 +125,7 @@ class PromptReminderNotifierTest : BaseUnitTest() {
         )
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(true)
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(siteModel)
         assertTrue(classToTest.shouldNotify(siteId))
     }

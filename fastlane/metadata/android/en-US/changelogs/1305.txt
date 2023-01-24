@@ -1,2 +1,0 @@
-- You can now add, edit, and delete categories within your site settings.
-- We fixed a few comment-related translation errors caused by changing your language in App Settings.
