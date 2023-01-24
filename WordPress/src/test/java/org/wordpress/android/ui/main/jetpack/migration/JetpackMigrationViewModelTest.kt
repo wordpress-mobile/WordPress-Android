@@ -9,11 +9,15 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.MigrationEmailHelper
@@ -57,6 +61,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     private val accountStore: AccountStore = mock()
     private val localeManagerWrapper: LocaleManagerWrapper = mock()
     private val jetpackMigrationLanguageUtil: JetpackMigrationLanguageUtil = mock()
+    private val dispatcher: Dispatcher = mock()
 
     private lateinit var classToTest: JetpackMigrationViewModel
 
@@ -76,6 +81,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
             accountStore = accountStore,
             localeManagerWrapper = localeManagerWrapper,
             jetpackMigrationLanguageUtil = jetpackMigrationLanguageUtil,
+            dispatcher = dispatcher,
         )
         classToTest.refreshAppTheme.observeForever(refreshAppThemeObserver)
         classToTest.refreshAppLanguage.observeForever(refreshAppLanguageObserver)
@@ -132,6 +138,26 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         successScreen.primaryActionButton.onClick.invoke()
 
         verify(refreshAppThemeObserver).onChanged(Unit)
+    }
+
+    @Test
+    fun `Should dispatch fetch account action when finish button is tapped on success screen if needed`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(accountStore.account).thenReturn(mock())
+        val successScreen = classToTest.initSuccessScreenUi()
+
+        successScreen.primaryActionButton.onClick.invoke()
+
+        verify(dispatcher).dispatch(argThat { type == AccountAction.FETCH_ACCOUNT })
+    }
+
+    @Test
+    fun `Should not dispatch any action when finish button is tapped on success screen if not needed`() {
+        val successScreen = classToTest.initSuccessScreenUi()
+
+        successScreen.primaryActionButton.onClick.invoke()
+
+        verifyNoInteractions(dispatcher)
     }
 
     // endregion
