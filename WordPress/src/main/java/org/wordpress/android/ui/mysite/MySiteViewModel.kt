@@ -1347,8 +1347,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onJetpackFeatureCardHideMenuItemClick() {
-        jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_HIDE_TAPPED)
-        appPrefsWrapper.setShouldHideJetpackFeatureCard(true)
+        jetpackFeatureCardHelper.hideJetpackFeatureCard()
         refresh()
     }
 

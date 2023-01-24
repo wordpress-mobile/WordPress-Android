@@ -3,6 +3,7 @@ package org.wordpress.android.ui.prefs
 import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.prefs.AppPrefs.PrefKey
@@ -274,9 +275,11 @@ class AppPrefsWrapper @Inject constructor() {
     fun setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack: Boolean) =
         AppPrefs.setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
 
-    fun getShouldHideJetpackFeatureCard(): Boolean = AppPrefs.getShouldHideJetpackFeatureCard()
+    fun getShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase): Boolean =
+        AppPrefs.getShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase)
 
-    fun setShouldHideJetpackFeatureCard(isHidden: Boolean) = AppPrefs.setShouldHideJetpackFeatureCard(isHidden)
+    fun setShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase, isHidden: Boolean) =
+        AppPrefs.setShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase, isHidden)
 
     fun getJetpackFeatureCardLastShownTimestamp(): Long = AppPrefs.getJetpackFeatureCardLastShownTimestamp()
 

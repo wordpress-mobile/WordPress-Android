@@ -27,12 +27,19 @@ class JetpackFeatureCardHelper @Inject constructor(
 ) {
     fun shouldShowJetpackFeatureCard(): Boolean {
         val isWordPressApp = !buildConfigWrapper.isJetpackApp
-        val shouldShowCardInCurrentPhase = shouldShowJetpackFeatureCardInCurrentPhase()
-        val shouldHideJetpackFeatureCard = appPrefsWrapper.getShouldHideJetpackFeatureCard()
         val exceedsShowFrequency = exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded()
-        return isWordPressApp && shouldShowCardInCurrentPhase &&
-                !shouldHideJetpackFeatureCard && exceedsShowFrequency
+        return isWordPressApp && shouldShowJetpackFeatureCardInCurrentPhase() &&
+                !isJetpackCardHiddenByUser() && exceedsShowFrequency
     }
+
+    private fun isJetpackCardHiddenByUser(): Boolean {
+        return jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.run {
+            appPrefsWrapper.getShouldHideJetpackFeatureCard(
+                this
+            )
+        } ?: false
+    }
+
     fun shouldShowFeatureCardAtTop(): Boolean {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
             is PhaseThree, PhaseSelfHostedUsers -> true
@@ -104,6 +111,7 @@ class JetpackFeatureCardHelper @Inject constructor(
             else -> false
         }
     }
+
     private fun exceedsShowFrequencyAndResetSwitchToJetpackMenuLastShownTimestampIfNeeded(): Boolean {
         val lastShownTimestamp = appPrefsWrapper.getSwitchToJetpackMenuCardLastShownTimestamp()
         if (lastShownTimestamp == DEFAULT_LAST_SHOWN_TIMESTAMP) return true
@@ -119,6 +127,13 @@ class JetpackFeatureCardHelper @Inject constructor(
             appPrefsWrapper.setSwitchToJetpackMenuCardLastShownTimestamp(DEFAULT_LAST_SHOWN_TIMESTAMP)
         }
         return exceedsFrequency
+    }
+
+    fun hideJetpackFeatureCard() {
+        track(Stat.REMOVE_FEATURE_CARD_HIDE_TAPPED)
+        jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.let {
+            appPrefsWrapper.setShouldHideJetpackFeatureCard(it, true)
+        }
     }
 
     companion object {

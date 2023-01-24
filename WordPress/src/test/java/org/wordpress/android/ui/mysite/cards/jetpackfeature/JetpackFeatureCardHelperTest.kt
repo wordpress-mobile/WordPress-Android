@@ -114,7 +114,7 @@ class JetpackFeatureCardHelperTest {
     ) {
         setPhase(phase)
         setIsJetpackApp(isJetpackApp)
-        setIsCardHiddenByUser(isCardHiddenByUser)
+        setIsCardHiddenByUser(phase, isCardHiddenByUser)
         setLastShownTimestamp(lastShownTimestamp)
         setDaysBetween(lastShownTimestamp)
     }
@@ -128,8 +128,8 @@ class JetpackFeatureCardHelperTest {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(value)
     }
 
-    private fun setIsCardHiddenByUser(value: Boolean) {
-        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(value)
+    private fun setIsCardHiddenByUser(phase: JetpackFeatureRemovalPhase, value: Boolean) {
+        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard(phase)).thenReturn(value)
     }
 
     private fun setLastShownTimestamp(value: Long) {
