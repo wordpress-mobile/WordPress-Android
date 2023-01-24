@@ -9,9 +9,13 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.ONBOARDING
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
 import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import javax.inject.Inject
 
-class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
+class BloggingPromptsOnboardingUiStateMapper @Inject constructor(
+    private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig
+) {
     @Suppress("MagicNumber")
     fun mapReady(
         dialogType: DialogType,
@@ -26,12 +30,18 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
             dummyRespondent
         )
 
-        val trailingLabel = UiStringPluralRes(
-            0,
-            R.string.my_site_blogging_prompt_card_number_of_answers_one,
-            R.string.my_site_blogging_prompt_card_number_of_answers_other,
-            dummyRespondents.size
-        )
+        val trailingLabel = if (bloggingPromptsEnhancementsFeatureConfig.isEnabled()) {
+            UiStringRes(
+                R.string.my_site_blogging_prompt_card_view_answers
+            )
+        } else {
+            UiStringPluralRes(
+                0,
+                R.string.my_site_blogging_prompt_card_number_of_answers_one,
+                R.string.my_site_blogging_prompt_card_number_of_answers_other,
+                dummyRespondents.size
+            )
+        }
 
         val avatarsTrain = dummyRespondents.take(3).map { respondent -> AvatarItem(respondent) }
             .toMutableList<TrainOfAvatarsItem>()

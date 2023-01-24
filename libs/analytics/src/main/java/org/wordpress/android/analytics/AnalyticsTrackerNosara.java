@@ -2333,6 +2333,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blogging_prompts_my_site_card_answer_prompt_tapped";
             case BLOGGING_PROMPTS_MY_SITE_CARD_SHARE_CLICKED:
                 return "blogging_prompts_my_site_card_share_tapped";
+            case BLOGGING_PROMPTS_MY_SITE_CARD_VIEW_ANSWERS_CLICKED:
+                return "blogging_prompts_my_site_card_view_answers_tapped";
             case BLOGGING_PROMPTS_MY_SITE_CARD_MENU_CLICKED:
                 return "blogging_prompts_my_site_card_menu_tapped";
             case BLOGGING_PROMPTS_MY_SITE_CARD_MENU_VIEW_MORE_PROMPTS_CLICKED:

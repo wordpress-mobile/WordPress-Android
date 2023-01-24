@@ -2328,6 +2328,7 @@
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Skipped today\'s blogging prompt</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 answer</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d answers</string>
+    <string name="my_site_blogging_prompt_card_view_answers">View all responses</string>
 
     <!-- My Site - Jetpack migration success card -->
     <string name="jp_migration_success_card_message">Please delete the WordPress app</string>

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.views
+package org.wordpress.android.ui
 
 import android.content.Context
 import android.util.AttributeSet
