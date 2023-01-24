@@ -822,6 +822,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* ON RESUME */
     @Test
     fun `given not first resume, when on resume is triggered, then mySiteSourceManager onResume is invoked`() {
+        whenever(quickStartRepository.currentTab).thenReturn(mock())
+
         viewModel.onResume() // first call
 
         viewModel.onResume() // second call
@@ -831,6 +833,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given first resume, when on resume is triggered, then mySiteSourceManager onResume is invoked`() {
+        whenever(quickStartRepository.currentTab).thenReturn(mock())
+
         viewModel.onResume()
 
         verify(mySiteSourceManager).onResume(true)
@@ -838,6 +842,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when first onResume is triggered, then checkAndShowQuickStartNotice is invoked`() {
+        whenever(quickStartRepository.currentTab).thenReturn(mock())
+
         viewModel.onResume()
 
         verify(quickStartRepository).checkAndShowQuickStartNotice()
@@ -1899,6 +1905,51 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onPostUploaded(postUploadedEvent)
 
         verify(mySiteSourceManager, never()).refreshBloggingPrompts(true)
+    }
+
+    @Test
+    fun `given blogging prompt card, when resuming dashboard, then track card viewed`() = test {
+        initSelectedSite(
+            isMySiteDashboardTabsEnabled = true,
+            isBloggingPromptsEnabled = true,
+        )
+
+        whenever(quickStartRepository.currentTab).thenReturn(MySiteTabType.DASHBOARD)
+        viewModel.onResume()
+
+        advanceUntilIdle()
+
+        verify(bloggingPromptsCardAnalyticsTracker).trackMySiteCardViewed()
+    }
+
+    @Test
+    fun `given no blogging prompt card, when resuming dashboard, then don't track card viewed`() = test {
+        initSelectedSite(
+            isMySiteDashboardTabsEnabled = true,
+            isBloggingPromptsEnabled = false,
+        )
+
+        whenever(quickStartRepository.currentTab).thenReturn(MySiteTabType.DASHBOARD)
+        viewModel.onResume()
+
+        advanceUntilIdle()
+
+        verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed()
+    }
+
+    @Test
+    fun `given blogging prompt card, when resuming menu, then don't track card viewed`() = test {
+        initSelectedSite(
+            isMySiteDashboardTabsEnabled = true,
+            isBloggingPromptsEnabled = true,
+        )
+
+        whenever(quickStartRepository.currentTab).thenReturn(MySiteTabType.SITE_MENU)
+        viewModel.onResume()
+
+        advanceUntilIdle()
+
+        verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed()
     }
 
     /* DASHBOARD ERROR SNACKBAR */
@@ -3269,7 +3320,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 } else {
                     add(initPostCard(mockInvocation))
                     add(initTodaysStatsCard(mockInvocation))
-                    add(initBloggingPromptCard(mockInvocation))
+                    if (bloggingPromptsFeatureConfig.isEnabled()) add(initBloggingPromptCard(mockInvocation))
                 }
             }
         )
