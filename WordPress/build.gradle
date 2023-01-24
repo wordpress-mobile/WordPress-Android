@@ -79,7 +79,6 @@ android {
 
         multiDexEnabled true
 
-        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"

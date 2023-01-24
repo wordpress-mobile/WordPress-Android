@@ -13,8 +13,6 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        vectorDrawables.useSupportLibrary = true
     }
 
     sourceSets {
