@@ -52,8 +52,8 @@ class BloggingPromptsListViewModelTest : BaseUnitTest() {
             itemMapper,
             tracker,
             networkUtilsWrapper,
-            testDispatcher(),
             bloggingPromptsEnhancementsFeatureConfig,
+            testDispatcher(),
         )
     }
 
