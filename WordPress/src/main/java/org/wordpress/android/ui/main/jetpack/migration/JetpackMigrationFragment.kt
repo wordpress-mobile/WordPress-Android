@@ -28,6 +28,7 @@ import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FinishActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.Logout
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
@@ -111,6 +112,7 @@ class JetpackMigrationFragment : Fragment() {
             }
             is Logout -> (requireActivity().application as? WordPress)?.let { viewModel.signOutWordPress(it) }
             is ShowHelp -> launchHelpScreen()
+            is FinishActivity -> requireActivity().finish()
         }
     }
 
@@ -147,9 +149,9 @@ class JetpackMigrationFragment : Fragment() {
             JetpackMigrationFragment().apply {
                 arguments = Bundle().apply {
                     putBoolean(KEY_SHOW_DELETE_WP_STATE, showDeleteWpState)
-                        if (deepLinkData != null) {
-                            putParcelable(KEY_DEEP_LINK_DATA, deepLinkData)
-                        }
+                    if (deepLinkData != null) {
+                        putParcelable(KEY_DEEP_LINK_DATA, deepLinkData)
+                    }
                 }
             }
     }

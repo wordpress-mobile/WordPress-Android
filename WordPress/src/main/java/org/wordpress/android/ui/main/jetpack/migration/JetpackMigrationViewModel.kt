@@ -42,6 +42,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.NotificationsPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FinishActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.Logout
@@ -328,7 +329,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun onGotItClicked() {
         migrationAnalyticsTracker.trackPleaseDeleteWordPressGotItTapped()
-        postActionEvent(CompleteFlow())
+        postActionEvent(FinishActivity)
     }
 
     private fun resizeAvatarUrl(avatarUrl: String) = gravatarUtilsWrapper.fixGravatarUrlWithResource(
@@ -526,6 +527,7 @@ class JetpackMigrationViewModel @Inject constructor(
             val deepLinkData: PreMigrationDeepLinkData? = null,
         ) : JetpackMigrationActionEvent()
 
+        object FinishActivity : JetpackMigrationActionEvent()
         object Logout : JetpackMigrationActionEvent()
     }
 }
