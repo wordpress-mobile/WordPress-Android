@@ -2234,6 +2234,8 @@
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
     <string name="contact_fragment_title" translatable="false" tools:ignore="UnusedResources">@string/contact_support</string>
+    <string name="support_forum_title">Community forums</string>
+    <string name="support_forum_caption">Get help from our group of volunteers</string>
 
     <!-- Contact us -->
     <string name="support_ticket_subject">WordPress for Android Support</string>

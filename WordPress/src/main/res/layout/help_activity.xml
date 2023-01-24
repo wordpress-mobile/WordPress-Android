@@ -102,6 +102,37 @@
                     style="@style/HelpActivitySingleText"
                     android:text="@string/my_tickets" />
 
+                <LinearLayout
+                    android:id="@+id/forumContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="vertical"
+                    android:padding="@dimen/margin_extra_large"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/support_forum_title"
+                        android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/support_forum_caption"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/forumContainerBottomDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_size"
+                    android:background="?android:attr/listDivider"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/application_log_button"
                     style="@style/HelpActivitySingleText"
@@ -114,6 +145,7 @@
                     tools:text="Version NN.1" />
 
                 <View
+                    android:id="@+id/emailContainerTopDivider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_size"
                     android:background="?android:attr/listDivider" />
@@ -141,6 +173,7 @@
                 </LinearLayout>
 
                 <View
+                    android:id="@+id/emailContainerBottomDivider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_size"
                     android:background="?android:attr/listDivider" />
