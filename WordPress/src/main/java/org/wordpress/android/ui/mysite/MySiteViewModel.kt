@@ -706,7 +706,6 @@ class MySiteViewModel @Inject constructor(
         val indexOfDashboardCards = cards.indexOfFirst { it is DashboardCards }
         return mutableListOf<MySiteCardAndItem>().apply {
             infoItem?.let { add(infoItem) }
-            jetpackFeatureCard?.let { add(jetpackFeatureCard) }
             migrationSuccessCard?.let { add(migrationSuccessCard) }
             addAll(cards)
             if (indexOfDashboardCards == -1) {
@@ -717,6 +716,9 @@ class MySiteViewModel @Inject constructor(
             addAll(siteItems)
             jetpackBadge?.let { add(jetpackBadge) }
             jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
+            if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
+                jetpackFeatureCard?.let { add(0, jetpackFeatureCard) }
+            else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
         }.toList()
     }
 

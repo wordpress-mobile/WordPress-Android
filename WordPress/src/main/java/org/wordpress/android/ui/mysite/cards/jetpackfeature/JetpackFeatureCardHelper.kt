@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.jetpackfeature
 
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
@@ -15,6 +16,7 @@ import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
 import java.util.Date
 import javax.inject.Inject
 
+
 class JetpackFeatureCardHelper @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
@@ -25,11 +27,17 @@ class JetpackFeatureCardHelper @Inject constructor(
 ) {
     fun shouldShowJetpackFeatureCard(): Boolean {
         val isWordPressApp = !buildConfigWrapper.isJetpackApp
-        val shouldShowCardIntheCurrentPhase = shouldShowJetpackFeatureCardInCurrentPhase()
+        val shouldShowCardInCurrentPhase = shouldShowJetpackFeatureCardInCurrentPhase()
         val shouldHideJetpackFeatureCard = appPrefsWrapper.getShouldHideJetpackFeatureCard()
         val exceedsShowFrequency = exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded()
-        return isWordPressApp && shouldShowCardIntheCurrentPhase &&
+        return isWordPressApp && shouldShowCardInCurrentPhase &&
                 !shouldHideJetpackFeatureCard && exceedsShowFrequency
+    }
+    fun shouldShowFeatureCardAtTop(): Boolean {
+        return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
+            is PhaseThree, PhaseSelfHostedUsers -> true
+            else -> false
+        }
     }
 
     private fun shouldShowJetpackFeatureCardInCurrentPhase(): Boolean {
