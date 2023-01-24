@@ -67,8 +67,8 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
     fun shouldRemoveJetpackFeatures(): Boolean {
         val currentPhase = getCurrentPhase() ?: return false
         return when (currentPhase) {
-            is PhaseFour, PhaseNewUsers -> true
-            is PhaseOne, PhaseTwo, PhaseThree, PhaseSelfHostedUsers -> false
+            is PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers-> true
+            is PhaseOne, PhaseTwo, PhaseThree -> false
         }
     }
 
