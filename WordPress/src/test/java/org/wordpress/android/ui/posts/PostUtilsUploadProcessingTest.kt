@@ -32,7 +32,6 @@ class PostUtilsUploadProcessingTest {
     }
 
     @Test
-    @Suppress("MaxLineLength")
     fun `replaceMediaFileWithUrlInGutenbergPost replaces temporary local id and url for image block with colliding prefixes`() {
         val oldContent = TestContent.oldImageBlock + TestContent.imageBlockWithPrefixCollision
         val newContent = TestContent.newImageBlock + TestContent.imageBlockWithPrefixCollision

@@ -213,7 +213,6 @@ class ExPlatTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("MaxLineLength")
     fun `refreshIfNeeded does not interact with store if the user is not authorised and there is no anonymous id`() =
         test {
             setupExperiments(setOf(dummyExperiment))
@@ -226,7 +225,6 @@ class ExPlatTest : BaseUnitTest() {
         }
 
     @Test
-    @Suppress("MaxLineLength")
     fun `forceRefresh does not interact with store if the user is not authorised and there is no anonymous id`() =
         test {
             setupExperiments(setOf(dummyExperiment))

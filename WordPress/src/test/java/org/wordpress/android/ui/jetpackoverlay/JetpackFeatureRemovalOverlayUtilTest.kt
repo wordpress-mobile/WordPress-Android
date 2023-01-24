@@ -4,6 +4,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -97,7 +98,6 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("MaxLineLength")
     fun `given feature removal not started, when shouldShowFeatureSpecificJetpackOverlay invoked, then return false`() {
         setupMockForWpComSite()
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(null)
@@ -109,7 +109,6 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("MaxLineLength")
     fun `given feature removal in phase four, when shouldShowFeatureSpecificJetpackOverlay invoked, then return false`() {
         setupMockForWpComSite()
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseFour)
@@ -121,7 +120,6 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("MaxLineLength")
     fun `given feature is never accessed, when shouldShowFeatureSpecificJetpackOverlay invoked, then return true`() {
         setupMockForWpComSite()
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseThree)
@@ -144,7 +142,6 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("MaxLineLength")
     fun `given feature is accessed after feature specific frequency, when shouldShowFeatureSpecificJetpackOverlay invoked, then return true`() {
         setupMockForWpComSite()
         // The passed number should exceed the feature specific overlay frequency
@@ -156,8 +153,8 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         assertTrue(shouldShowOverlay)
     }
 
-    // @Test
-    @Suppress("MaxLineLength")
+    @Ignore("Test originally ignored in commit a6c3a093e6b64d1dfb34954dd6da6b6012613aef without Ignore annotation")
+    @Test
     fun `given feature is accessed after globalOverlayFrequency, when shouldShowFeatureSpecificJetpackOverlay invoked, then return true`() {
         setupMockForWpComSite()
         // The feature was accessed 3 days ago and the globalOverlayFrequency for phase one is 2
@@ -182,7 +179,6 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("MaxLineLength")
     fun `given feature removal not started, when shouldShowSiteCreationOverlay invoked, then return false`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()).thenReturn(null)
 
@@ -193,7 +189,6 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("MaxLineLength")
     fun `given feature removal in phase one, when shouldShowSiteCreationOverlay invoked, then return false`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase())
             .thenReturn(JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE)
@@ -205,7 +200,6 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("MaxLineLength")
     fun `given feature removal in phase four, when shouldShowSiteCreationOverlay invoked, then return false`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase())
             .thenReturn(JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO)

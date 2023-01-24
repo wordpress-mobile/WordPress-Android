@@ -42,3 +42,6 @@ style:
   WildcardImport:
     active: true
     excludeImports: []
+  MaxLineLength:
+    active: true
+    ignoreAnnotated: [ 'Test' ]

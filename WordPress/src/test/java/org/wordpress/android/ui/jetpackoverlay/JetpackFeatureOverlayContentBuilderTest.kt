@@ -57,7 +57,6 @@ class JetpackFeatureOverlayContentBuilderTest {
         assertEquals(phaseOneStats.overlayContent, getPhaseOneStats())
     }
 
-    @Suppress("MaxLineLength")
     @Test
     fun `given phase two without remote field post link, when content is built, should return phase two overlay content`() {
         val phaseTwoStats = jetpackFeatureOverlayContentBuilder.build(
@@ -71,7 +70,6 @@ class JetpackFeatureOverlayContentBuilderTest {
         assertEquals(phaseTwoStats.overlayContent, getPhaseTwoStatsWithoutMigrationInfo())
     }
 
-    @Suppress("MaxLineLength")
     @Test
     fun `given phase two with remote field post link, when content is built, should return phase two overlay content`() {
         val phaseTwoStats = jetpackFeatureOverlayContentBuilder.build(
@@ -90,7 +88,6 @@ class JetpackFeatureOverlayContentBuilderTest {
         assertEquals(phaseTwoStats.overlayContent, actual)
     }
 
-    @Suppress("MaxLineLength")
     @Test
     fun `given phase two with deadline, when content is built, should return phase two overlay content`() {
         val jpDeadlineDateFromRemoteConfig = "2020-01-01"

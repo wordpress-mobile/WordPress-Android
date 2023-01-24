@@ -90,7 +90,6 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("MaxLineLength")
     fun `given flow enabled, JP install, isOpenWebLinks disabled, when overlay never been shown, then show overlay is true`() {
         setTest(
             isFeatureFlagEnabled = true,
@@ -105,7 +104,6 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("MaxLineLength")
     fun `given flow enabled, JP install, isOpenWebLinks disabled, overlay shown before, when frequency is only once, then show overlay is false`() {
         setTest(
             isFeatureFlagEnabled = true,

@@ -195,7 +195,6 @@ class JetpackFeatureRemovalBrandingUtilTest {
         verifyDaysUntilDeadlineCounted()
     }
 
-    @Suppress("MaxLineLength")
     @Test
     fun `given phase 3 started, when deadline is in 1 week, all other branding should be {Feature} {is,are} moving in 1 week`() {
         givenPhase(PhaseThree)
@@ -215,7 +214,6 @@ class JetpackFeatureRemovalBrandingUtilTest {
         verifyDaysUntilDeadlineCounted()
     }
 
-    @Suppress("MaxLineLength")
     @Test
     fun `given phase 3 started, when deadline is in 6 days, all other branding should be {Feature} {is,are} moving in n days`() {
         givenPhase(PhaseThree)
@@ -235,7 +233,6 @@ class JetpackFeatureRemovalBrandingUtilTest {
         verifyDaysUntilDeadlineCounted()
     }
 
-    @Suppress("MaxLineLength")
     @Test
     fun `given phase 3 started, when deadline is in 1 day, all other branding should be {Feature} {is,are} moving in 1 day`() {
         givenPhase(PhaseThree)
@@ -255,7 +252,6 @@ class JetpackFeatureRemovalBrandingUtilTest {
         verifyDaysUntilDeadlineCounted()
     }
 
-    @Suppress("MaxLineLength")
     @Test
     fun `given phase 3 started, when deadline is in 0 days, all other branding should be {Feature} {is,are} moving in 1 day`() {
         givenPhase(PhaseThree)
