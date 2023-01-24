@@ -445,6 +445,7 @@ class MySiteViewModel @Inject constructor(
             )
         )
         val jetpackFeatureCard = JetpackFeatureCard(
+            content = jetpackFeatureCardHelper.getCardContent(),
             onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
             onHideMenuItemClick = ListItemInteraction.create(this::onJetpackFeatureCardHideMenuItemClick),
             onLearnMoreClick = ListItemInteraction.create(

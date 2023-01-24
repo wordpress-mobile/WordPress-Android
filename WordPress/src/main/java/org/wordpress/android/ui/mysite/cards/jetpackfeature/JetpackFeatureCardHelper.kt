@@ -1,9 +1,13 @@
 package org.wordpress.android.ui.mysite.cards.jetpackfeature
 
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -21,10 +25,28 @@ class JetpackFeatureCardHelper @Inject constructor(
 ) {
     fun shouldShowJetpackFeatureCard(): Boolean {
         val isWordPressApp = !buildConfigWrapper.isJetpackApp
-        val isPhase3 = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == JetpackFeatureRemovalPhase.PhaseThree
+        val shouldShowCardIntheCurrentPhase = shouldShowJetpackFeatureCardInCurrentPhase()
         val shouldHideJetpackFeatureCard = appPrefsWrapper.getShouldHideJetpackFeatureCard()
         val exceedsShowFrequency = exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded()
-        return isWordPressApp && isPhase3 && !shouldHideJetpackFeatureCard && exceedsShowFrequency
+        return isWordPressApp && shouldShowCardIntheCurrentPhase &&
+                !shouldHideJetpackFeatureCard && exceedsShowFrequency
+    }
+
+    private fun shouldShowJetpackFeatureCardInCurrentPhase(): Boolean {
+        return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
+            is PhaseThree, PhaseNewUsers, PhaseSelfHostedUsers -> true
+            else -> false
+        }
+    }
+
+    fun getCardContent(): UiString.UiStringRes? {
+        return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
+            is PhaseThree ->
+                UiString.UiStringRes(R.string.jetpack_feature_card_content_phase_three)
+            is PhaseNewUsers, PhaseSelfHostedUsers ->
+                UiString.UiStringRes(R.string.jetpack_feature_card_content_phase_self_hosted_and_new_users)
+            else -> null
+        }
     }
 
     fun track(stat: Stat) {
