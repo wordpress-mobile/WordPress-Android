@@ -39,7 +39,7 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
 ) {
     fun getCurrentPhase(): JetpackFeatureRemovalPhase? {
         return if (buildConfigWrapper.isJetpackApp) null
-        else if (jetpackFeatureRemovalSelfHostedUsersConfig.isEnabled()) PhaseNewUsers
+        else if (jetpackFeatureRemovalSelfHostedUsersConfig.isEnabled()) PhaseSelfHostedUsers
         else if (jetpackFeatureRemovalNewUsersConfig.isEnabled()) PhaseNewUsers
         else if (jetpackFeatureRemovalPhaseFourConfig.isEnabled()) PhaseFour
         else if (jetpackFeatureRemovalPhaseThreeConfig.isEnabled()) PhaseThree
