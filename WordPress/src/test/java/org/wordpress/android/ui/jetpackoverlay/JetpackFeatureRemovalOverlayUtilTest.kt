@@ -52,9 +52,6 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
     @Mock
     private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
-    @Mock
-    private lateinit var appPrefsWrapper: AppPrefsWrapper
-
     private lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
     private val currentMockedDate = Date(System.currentTimeMillis())
@@ -68,8 +65,7 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
             siteUtilsWrapper,
             buildConfigWrapper,
             dateTimeUtilsWrapper,
-            analyticsTrackerWrapper,
-            appPrefsWrapper
+            analyticsTrackerWrapper
         )
     }
 

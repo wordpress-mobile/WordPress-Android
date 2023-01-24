@@ -93,6 +93,34 @@ class JetpackFeatureCardHelper @Inject constructor(
         return exceedsFrequency
     }
 
+    fun shouldShowSwitchToJetpackMenuCard(): Boolean {
+        return shouldShowSwitchToJetpackMenuCardInCurrentPhase() &&
+                exceedsShowFrequencyAndResetSwitchToJetpackMenuLastShownTimestampIfNeeded()
+    }
+
+    private fun shouldShowSwitchToJetpackMenuCardInCurrentPhase(): Boolean {
+        return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
+            is JetpackFeatureRemovalPhase.PhaseFour -> true
+            else -> false
+        }
+    }
+    private fun exceedsShowFrequencyAndResetSwitchToJetpackMenuLastShownTimestampIfNeeded(): Boolean {
+        val lastShownTimestamp = appPrefsWrapper.getSwitchToJetpackMenuCardLastShownTimestamp()
+        if (lastShownTimestamp == DEFAULT_LAST_SHOWN_TIMESTAMP) return true
+
+        val lastShownDate = Date(lastShownTimestamp)
+        val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
+            lastShownDate,
+            Date(System.currentTimeMillis())
+        )
+
+        val exceedsFrequency = daysPastOverlayShown >= FREQUENCY_IN_DAYS
+        if (exceedsFrequency) {
+            appPrefsWrapper.setSwitchToJetpackMenuCardLastShownTimestamp(DEFAULT_LAST_SHOWN_TIMESTAMP)
+        }
+        return exceedsFrequency
+    }
+
     companion object {
         const val PHASE = "phase"
         const val FREQUENCY_IN_DAYS = 4

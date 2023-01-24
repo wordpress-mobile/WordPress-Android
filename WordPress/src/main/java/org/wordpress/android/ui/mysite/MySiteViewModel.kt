@@ -464,7 +464,7 @@ class MySiteViewModel @Inject constructor(
             onRemindMeLaterItemClick = ListItemInteraction.create(this::onSwitchToJetpackMenuCardRemindMeLaterClick),
             onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick)
         ).takeIf {
-            jetpackFeatureRemovalUtils.shouldShowSwitchToJetpackMenuCard()
+            jetpackFeatureCardHelper.shouldShowSwitchToJetpackMenuCard()
         }
 
 

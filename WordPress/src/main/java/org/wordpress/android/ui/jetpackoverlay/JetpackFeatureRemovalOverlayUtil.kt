@@ -11,11 +11,10 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -27,8 +26,6 @@ import javax.inject.Inject
 private const val CURRENT_PHASE_KEY = "phase"
 private const val SCREEN_TYPE_KEY = "source"
 private const val DISMISSAL_TYPE_KEY = "dismissal_type"
-private const val FREQUENCY_IN_DAYS = 4
-private const val DEFAULT_LAST_SHOWN_TIMESTAMP = 0L
 
 @Suppress("LongParameterList", "TooManyFunctions")
 class JetpackFeatureRemovalOverlayUtil @Inject constructor(
@@ -38,9 +35,9 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper
-) {
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    )
+{
     fun shouldShowFeatureSpecificJetpackOverlay(feature: JetpackOverlayConnectedFeature): Boolean {
         return !buildConfigWrapper.isJetpackApp && isWpComSite() &&
                 isInFeatureSpecificRemovalPhase() && hasExceededOverlayFrequency(
@@ -51,27 +48,6 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
 
     fun shouldHideJetpackFeatures(): Boolean {
         return jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
-    }
-
-    fun shouldShowSwitchToJetpackMenuCard(): Boolean {
-        return shouldHideJetpackFeatures() && exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded()
-    }
-
-    private fun exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded(): Boolean {
-        val lastShownTimestamp = appPrefsWrapper.getSwitchToJetpackMenuCardLastShownTimestamp()
-        if (lastShownTimestamp == DEFAULT_LAST_SHOWN_TIMESTAMP) return true
-
-        val lastShownDate = Date(lastShownTimestamp)
-        val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
-            lastShownDate,
-            Date(System.currentTimeMillis())
-        )
-
-        val exceedsFrequency = daysPastOverlayShown >= FREQUENCY_IN_DAYS
-        if (exceedsFrequency) {
-            appPrefsWrapper.setSwitchToJetpackMenuCardLastShownTimestamp(DEFAULT_LAST_SHOWN_TIMESTAMP)
-        }
-        return exceedsFrequency
     }
 
     fun shouldShowSiteCreationOverlay(): Boolean {
