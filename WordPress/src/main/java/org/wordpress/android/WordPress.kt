@@ -1,7 +1,7 @@
 package org.wordpress.android
 
+import android.app.Application
 import android.content.Context
-import androidx.multidex.MultiDexApplication
 import com.android.volley.RequestQueue
 import dagger.hilt.EntryPoints
 import org.wordpress.android.AppInitializer.StoryNotificationTrackerProvider
@@ -12,7 +12,7 @@ import org.wordpress.android.modules.AppComponent
  * An abstract class to be extended by {@link WordPressApp} for real application and WordPressTest for UI test
  * application. Containing public static variables and methods to be accessed by other classes.
  */
-abstract class WordPress : MultiDexApplication() {
+abstract class WordPress : Application() {
     val storyNotificationTrackerProvider: StoryNotificationTrackerProvider
         get() = initializer().storyNotificationTrackerProvider
 
