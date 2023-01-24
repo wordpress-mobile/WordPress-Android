@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
@@ -34,7 +33,6 @@ class BloggingPromptCardViewHolder(
 ) : CardViewHolder<MySiteBloggingPromptCardBinding>(
     parent.viewBinding(MySiteBloggingPromptCardBinding::inflate)
 ) {
-    @SuppressLint("ClickableViewAccessibility")
     fun bind(card: BloggingPromptCardWithData) = with(binding) {
         val cardPrompt = htmlCompatWrapper.fromHtml(
             uiHelpers.getTextOfUiString(promptContent.context, card.prompt).toString()

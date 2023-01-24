@@ -1350,7 +1350,7 @@ class MySiteViewModel @Inject constructor(
     private fun onBloggingPromptViewAnswersClick(promptId: Int) {
         bloggingPromptsCardAnalyticsTracker.trackMySiteCardViewAnswersClicked()
         val tag = BloggingPromptsPostTagProvider.promptIdSearchReaderTag(promptId)
-        _onBloggingPromptsViewAnswers.postValue(Event(tag))
+        _onBloggingPromptsViewAnswers.value = Event(tag)
     }
 
     private fun onJetpackFeatureCardClick() {
