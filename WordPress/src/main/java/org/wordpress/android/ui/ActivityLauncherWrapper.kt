@@ -36,8 +36,9 @@ class ActivityLauncherWrapper @Inject constructor() {
     ) = ActivityLauncher.previewPostOrPageForResult(activity, site, post, remotePreviewType)
 
     @Suppress("SwallowedException")
-    fun openPlayStoreLink(context: Context, packageName: String) {
-        var intent: Intent? = context.packageManager.getLaunchIntentForPackage(packageName)
+    fun openPlayStoreLink(activity: Activity, packageName: String) {
+        var intent: Intent? = activity.packageManager.getLaunchIntentForPackage(packageName)
+        val isAppAlreadyInstalled = intent != null
 
         if (intent == null) {
             intent = Intent(Intent.ACTION_VIEW).apply {
@@ -47,14 +48,21 @@ class ActivityLauncherWrapper @Inject constructor() {
             }
         }
         try {
-            context.startActivity(intent)
+            activity.startActivity(intent)
+            preventBackNavigation(activity, isAppAlreadyInstalled)
         } catch (e: ActivityNotFoundException) {
             // No Google Play Store installed
             Toast.makeText(
-                    context,
+                activity,
                     R.string.install_play_store_to_get_jetpack,
                     Toast.LENGTH_LONG
             ).show()
+        }
+    }
+
+    private fun preventBackNavigation(activity: Activity, shouldPrevent: Boolean) {
+        if (shouldPrevent) {
+            activity.finishAffinity()
         }
     }
 
