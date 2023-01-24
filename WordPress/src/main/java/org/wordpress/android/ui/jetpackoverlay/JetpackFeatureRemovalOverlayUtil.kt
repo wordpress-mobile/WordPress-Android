@@ -13,6 +13,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseN
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
@@ -49,7 +50,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     }
 
     fun shouldHideJetpackFeatures(): Boolean {
-        return jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == PhaseFour
+        return jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
     }
 
     fun shouldShowSwitchToJetpackMenuCard(): Boolean {
@@ -101,7 +102,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
                 when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
                     null -> false
                     PhaseOne, PhaseTwo, PhaseThree -> true
-                    PhaseFour, PhaseNewUsers -> false
+                    PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> false
                 }
     }
 
@@ -132,10 +133,10 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private fun hasExceededGlobalOverlayFrequency(phase: JetpackFeatureRemovalOverlayPhase): Boolean {
         // Overlay is never shown
         val lastOverlayShownDate = jetpackFeatureOverlayShownTracker.getTheLastShownOverlayTimeStamp(phase)
-                ?.let { Date(it) } ?: return true
+            ?.let { Date(it) } ?: return true
         val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
-                lastOverlayShownDate,
-                dateTimeUtilsWrapper.getTodaysDate()
+            lastOverlayShownDate,
+            dateTimeUtilsWrapper.getTodaysDate()
         )
         return daysPastOverlayShown >= PhaseOne.globalOverlayFrequency
     }
