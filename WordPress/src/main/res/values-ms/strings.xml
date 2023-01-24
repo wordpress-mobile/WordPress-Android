@@ -694,7 +694,6 @@ Language: ms
     <string name="pages_fetching">Mengambil halaman…</string>
     <string name="posts_fetching">Mengambil kiriman…</string>
     <string name="reader_empty_posts_request_failed">Tidak dapat mendapatkan kiriman</string>
-    <string name="publisher">Penerbit:</string>
     <string name="stats_search_terms_unknown_search_terms">Istilah Carian Tidak Diketahui</string>
     <string name="stats_view_search_terms">Istilah Carian</string>
     <string name="error_copy_to_clipboard">Ralat berlaku semasa menyalin teks ke papan keratan</string>
@@ -792,11 +791,9 @@ Language: ms
     <string name="mnu_comment_unapprove">Tidak diluluskan</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="file_error_create">Tidak dapat mencipta fail sementara untuk muat naik media. Pastikan terdapat ruang yang cukup dalam peranti anda.</string>
-    <string name="open_source_licenses">Lesen sumber terbuka</string>
     <string name="view_in_browser">Lihat di pelayar</string>
     <string name="add_new_category">Tambah kategori baharu</string>
     <string name="category_name">Nama kategori</string>
-    <string name="privacy_policy">Polisi privasi</string>
     <string name="local_changes">Perubahan setempat</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="fatal_db_error">Ralat berlaku semasa mencipta pangkalan data aplikasi. Cuba memasangnya semula.</string>
@@ -891,9 +888,6 @@ Language: ms
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Memuat naik…</string>
-    <string name="version">Versi</string>
-    <string name="tos">Terma Perkhidmatan</string>
-    <string name="app_title">WordPress untuk Android</string>
     <string name="image_alignment">Penjajaran</string>
     <string name="refresh">Segar semula</string>
     <string name="untitled">Tiada tajuk</string>

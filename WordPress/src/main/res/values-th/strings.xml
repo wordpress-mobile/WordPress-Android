@@ -173,7 +173,6 @@ Language: th
     <string name="invalid_verification_code">โค้ดยืนยันไม่ถูกต้อง</string>
     <string name="auth_required">เข้าสู่ระบบอีกครั้งเพื่อทำต่อ</string>
     <string name="reader_empty_posts_request_failed">ไม่สามารถดึงเรื่องได้</string>
-    <string name="publisher">ผู้เผยแพร่:</string>
     <string name="error_notification_open">ไม่สามารถเปิดคำเตือนได้</string>
     <string name="stats_search_terms_unknown_search_terms">เงื่อนไขการค้นหาที่ไม่รู้จัก</string>
     <string name="stats_view_authors">ผู้เขียน</string>
@@ -254,7 +253,6 @@ Language: th
     <string name="invalid_email_message">ที่อยู่อีเมลของคุณไม่ถูกต้อง</string>
     <string name="email_invalid">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
     <string name="new_media">ไฟล์สื่อใหม่</string>
-    <string name="privacy_policy">นโยบายความเป็นส่วนตัว</string>
     <string name="image_settings">การตั้งค่ารูปภาพ</string>
     <string name="wordpress_blog">บล็อกเวิร์ดเพรส</string>
     <string name="error_blog_hidden">บล็อกนี้ถูกซ่อนและไม่สามารถโหลดได้  ให้เปิดใช้งานมันอีกครั้งในการตั้งค่าและลองดูอีกครั้ง</string>
@@ -290,7 +288,6 @@ Language: th
     <string name="learn_more">เรียนเพิ่มเติม</string>
     <string name="media_error_no_permission">คุณไม่มีสิทธิที่จะดูคลังไฟล์รูป</string>
     <string name="cannot_delete_multi_media_items">ไม่สามารถลบไฟล์สื่อบางไฟล์ในตอนนี้  โปรดลองใหม่ภายหลัง</string>
-    <string name="open_source_licenses">ลิขสิทธิ์โอเพ่นซอร์ส</string>
     <string name="file_error_create">ไม่สามารถสร้างไฟล์ชั่วคราวสำหรับการอัปโหลดไฟล์สื่อ โปรดตรวจสอบว่าอุปกรณ์ของคุณมีพื้นที่ว่างเพียงพอสำหรับการอัปโหลด</string>
     <string name="local_changes">การเปลี่ยนแปลงบนอุปกรณ์</string>
     <string name="media_gallery_type_thumbnail_grid">ตารางรูปขนาดย่อ</string>
@@ -371,9 +368,6 @@ Language: th
     <string name="ok">ตกลง</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">กำลังอัปโหลด…</string>
-    <string name="version">รุ่น</string>
-    <string name="tos">เงื่อนไขบริการ</string>
-    <string name="app_title">เวิร์ดเพรสสำหรับแอนดรอยด์</string>
     <string name="image_alignment">จัดหน้า</string>
     <string name="refresh">รีเฟรช</string>
     <string name="untitled">ไม่มีหัวข้อ</string>

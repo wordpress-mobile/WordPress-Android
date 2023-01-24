@@ -2361,6 +2361,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blogging_prompts_introduction_modal_got_it_tapped";
             case BLOGGING_PROMPTS_LIST_SCREEN_VIEWED:
                 return "blogging_prompts_prompts_list_viewed";
+            case BLOGGING_PROMPTS_LIST_ITEM_TAPPED:
+                return "blogging_prompts_list_item_tapped";
             case BLOGGING_REMINDERS_NOTIFICATION_PROMPT_ANSWER_TAPPED:
                 return "blogging_reminders_notification_prompt_answer_tapped";
             case BLOGGING_REMINDERS_NOTIFICATION_PROMPT_DISMISS_TAPPED:

@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-06 07:14:36+0000
+Translation-Revision-Date: 2023-01-21 18:23:21+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ro
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">De la &lt;b&gt;DayOne&lt;/b&gt;</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statisticile, cititorul, notificările și alte funcționalități propulsate de Jetpack vor fi înlăturate din aplicația WordPress pe %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">În curând, statisticile, cititorul, notificările și alte funcționalități propulsate de Jetpack vor fi înlăturate din aplicația WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Comutarea este gratuită și durează numai un minut.</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Află mai multe la jetpack.com</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Comută la aplicația Jetpack</string>
+    <string name="jetpack_feature_card_content">In curând, statisticile, cititorul, notificările și alte funcționalități se vor muta în aplicația mobilă Jetpack.</string>
+    <string name="jetpack_feature_card_menu_item_remind_me_later">Amintește-mi mai târziu</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">Ascunde asta</string>
+    <string name="blogging_prompts_list_number_of_answers_zero">Niciun răspuns</string>
+    <string name="blogging_prompts_list_number_of_answers_one">Un răspuns</string>
+    <string name="blogging_prompts_list_number_of_answers_other">%d răspunsuri</string>
+    <string name="blogging_prompts_list_no_prompts">Niciun îndemn încă</string>
+    <string name="blogging_prompts_list_error_fetch_title">Hopa</string>
+    <string name="blogging_prompts_list_error_fetch_subtitle">A fost o eroare la încărcarea îndemnurilor.</string>
+    <string name="blogging_prompts_list_error_network_title">Nu pot să încarc acest conținut chiar acum</string>
+    <string name="blogging_prompts_list_error_network_subtitle">Verifică conexiunea rețelei și încearcă din nou.</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Comută la noua aplicație Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statisticile se mută în aplicația Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Cititorul a fost mutat în aplicația Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Notificările au fost mutate în Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Funcționalitățile Jetpack se mută în curând.</string>
+    <string name="close_desc">închide</string>
+    <string name="blogging_prompts_list_title">Îndemnuri</string>
+    <string name="blogging_prompts_list_answered_prompt">✓ Am răspuns</string>
     <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativ, poți detașa și edita aceste blocuri separat, atingând „Convertește în blocuri normale”.</string>
     <string name="deleting_cat_failed">Ștergerea categoriei a eșuat</string>
     <string name="deleting_cat_success">Am șters cu succes categoria</string>
@@ -649,6 +674,7 @@ Language: ro
     <string name="gutenberg_native_no_preview_available">Nu este disponibilă nicio previzualizare</string>
     <string name="gutenberg_native_text_color">Culoare text</string>
     <string name="gutenberg_native_padding">Distanțare</string>
+    <string name="gutenberg_native_featured">Reprezentativ</string>
     <string name="gutenberg_native_four">Patru</string>
     <string name="gutenberg_native_create_embed">Creează înglobare</string>
     <string name="gutenberg_native_custom_url">URL personalizat</string>
@@ -2236,7 +2262,6 @@ Language: ro
     <string name="me_section_screen_title">Eu</string>
     <string name="notif_settings_screen_title">Setări notificări</string>
     <string name="help_screen_title">Ajutor și suport</string>
-    <string name="license_screen_title">Licență</string>
     <string name="release_notes_screen_title">Note de lansare</string>
     <string name="my_site_section_screen_title">Site-ul meu</string>
     <string name="signup_epilogue_error_avatar_view">Avatarul tău a fost încărcat și va fi disponibil în scurt timp.</string>
@@ -2246,8 +2271,6 @@ Language: ro
     <string name="sharing_disabled">Extensia Partajare dezactivată</string>
     <string name="version_with_name_param">Versiunea %s</string>
     <string name="permissions_denied_message">Se pare că ai dezactivat permisiunile necesare pentru această funcționalitate.&lt;br/&gt;&lt;br/&gt;Pentru a modifica asta, editează-ți permisiunile și asigură-te că &lt;strong&gt;%s&lt;/strong&gt; este activată.</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="publisher_with_company_param">Editor: %s</string>
     <string name="notification_sound_has_invalid_path">Sunetul ales are o cale invalidă. Te rog alege altul.</string>
     <string name="uploading_subtitle_pages_posts">%1$d pagini/articole rămase</string>
     <string name="uploading_subtitle_pages_only_one">O pagină rămasă</string>
@@ -3132,7 +3155,6 @@ Language: ro
     <string name="verification_code">Cod de verificare</string>
     <string name="auth_required">Autentifică-te din nou pentru a continua.</string>
     <string name="invalid_verification_code">Codul de verificare nu este valid</string>
-    <string name="publisher">Editor:</string>
     <string name="error_notification_open">Nu pot deschide notificarea</string>
     <string name="stats_view_authors">Autori</string>
     <string name="stats_view_search_terms">Termeni căutați</string>
@@ -3252,11 +3274,9 @@ Language: ro
     <string name="add_new_category">Adaugă categorie nouă</string>
     <string name="category_name">Nume categorie</string>
     <string name="file_error_create">Nu am putut crea fișierul temporar pentru a încărca media. Asigură-te că este destul spațiu liber pe dispozitiv.</string>
-    <string name="open_source_licenses">Licențe Open source</string>
     <string name="http_authorization_required">Autorizație necesară</string>
     <string name="new_post">Articol nou</string>
     <string name="new_media">Media nouă</string>
-    <string name="privacy_policy">Politică de confidențialitate</string>
     <string name="local_changes">Schimbări locale</string>
     <string name="image_settings">Setări imagine</string>
     <string name="wordpress_blog">Blog WordPress</string>
@@ -3362,9 +3382,6 @@ Language: ro
     <string name="done">gata</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Încărcare…</string>
-    <string name="version">Versiune</string>
-    <string name="tos">Termenii de funcționare a serviciului</string>
-    <string name="app_title">WordPress pentru Android</string>
     <string name="image_alignment">Aliniere</string>
     <string name="refresh">Reîmprospătează</string>
     <string name="untitled">Fără titlu</string>

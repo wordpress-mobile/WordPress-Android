@@ -84,6 +84,7 @@
         <ignore path="**/.gradle/caches/**" />
         <ignore path="**/generated/**" />
         <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
+        <ignore regexp=".*\/values\/strings\.xml$"/>
     </issue>
 
     <issue id="Typos" severity="error">
