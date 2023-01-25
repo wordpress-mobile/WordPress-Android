@@ -19,6 +19,7 @@ class AvatarViewHolder(
         )
 
         this.avatar.setOnClickListener(null)
+        this.avatar.isClickable = false
         imageManager.loadIntoCircle(this.avatar, ImageType.AVATAR_WITH_BACKGROUND, likerAvatarUrl)
     }
 }

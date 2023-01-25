@@ -776,6 +776,7 @@
         <!-- Blogging Prompts -->
         <activity
             android:name=".ui.bloggingprompts.promptslist.BloggingPromptsListActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/blogging_prompts_list_title"
             android:theme="@style/WordPress.NoActionBar" />
 

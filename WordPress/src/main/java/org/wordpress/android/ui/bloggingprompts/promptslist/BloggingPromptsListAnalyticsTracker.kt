@@ -10,4 +10,8 @@ class BloggingPromptsListAnalyticsTracker @Inject constructor(
     fun trackScreenShown() = analyticsTracker.track(
         Stat.BLOGGING_PROMPTS_LIST_SCREEN_VIEWED, emptyMap()
     )
+
+    fun trackItemClicked() = analyticsTracker.track(
+        Stat.BLOGGING_PROMPTS_LIST_ITEM_TAPPED, emptyMap()
+    )
 }

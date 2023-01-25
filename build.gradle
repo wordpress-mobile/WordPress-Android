@@ -20,12 +20,12 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '2.0.0'
     automatticTracksVersion = '2.2.0'
-    gutenbergMobileVersion = 'v1.87.1'
+    gutenbergMobileVersion = 'v1.87.2'
     wordPressAztecVersion = 'v1.6.2'
     wordPressFluxCVersion = '2.10.0'
     wordPressLoginVersion = '1.0.0'
     wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressUtilsVersion = 'trunk-1ec18489fc79bb8f10b827586f6efcdf3c13f5b1'
+    wordPressUtilsVersion = '3.2.0'
 
     // debug
     stethoVersion = '1.6.0'
@@ -47,13 +47,11 @@ ext {
     androidxGridlayoutVersion = '1.0.0'
     androidxLifecycleVersion = '2.5.1'
     androidxMediaVersion = '1.0.1'
-    androidXMultidexVersion = '2.0.1'
     androidxPercentlayoutVersion = '1.0.0'
     androidxPreferenceVersion = '1.1.0'
     androidxRecyclerviewVersion = '1.0.0'
     androidxRoomVersion = '2.3.0'
     androidxSwipeToRefreshVersion = '1.1.0'
-    androidxVectordrawableAnimatedVersion = '1.0.0'
     androidxViewpager2Version = '1.0.0'
     androidxWorkVersion = "2.7.0"
     apacheCommonsTextVersion = '1.10.0'

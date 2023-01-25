@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Jetpack</string>
-    <string name="widgets_enabled" translatable="false">false</string>
 
     <!-- About View -->
     <string name="app_title">Jetpack for Android</string>

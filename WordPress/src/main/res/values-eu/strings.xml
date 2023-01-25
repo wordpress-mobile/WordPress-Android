@@ -446,7 +446,6 @@ Language: eu_ES
     <string name="pages_fetching">Orrialdeak eskuratzen…</string>
     <string name="posts_fetching">Bidalketak eskuratzen…</string>
     <string name="media_fetching">Media eskuratzen…</string>
-    <string name="publisher">Argitaratzailea:</string>
     <string name="stats_view_search_terms">Bilaketa terminoak</string>
     <string name="reader_label_new_posts">Bidalketa berriak</string>
     <string name="error_copy_to_clipboard">Errore bat gertatu da testua arbelera kopiatzean</string>
@@ -532,7 +531,6 @@ Language: eu_ES
     <string name="trash">Zakarrontzia</string>
     <string name="add_new_category">Gehitu kategoria berria</string>
     <string name="category_name">Kategoriaren izena</string>
-    <string name="privacy_policy">Pribatutasun politika</string>
     <string name="local_changes">Aldaketa lokalak</string>
     <string name="wordpress_blog">WordPress-eko bloga</string>
     <string name="select_categories">Kategoriak aukeratu</string>
@@ -553,7 +551,6 @@ Language: eu_ES
     <string name="saving_changes">Aldaketak gordetzen</string>
     <string name="sure_to_cancel_edit_comment">Iruzkin honen edizioa ezeztatu?</string>
     <string name="file_error_create">Ezin izan da media fitxategia igotzeko behin-behineko fitxategia sortu. Ziurtatu zaitez gailuak behar haina toki duela.</string>
-    <string name="open_source_licenses">Kode irekiko lizentziak</string>
     <string name="new_post">Bidalketa berria</string>
     <string name="new_media">Media berria</string>
     <string name="error_blog_hidden">Blog hau ezkutatuta dago eta ezin izan da kargatu. Hobespenetan gaitu eta berriz saiatu.</string>
@@ -649,9 +646,6 @@ Language: eu_ES
     <string name="done">egina</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Igotzen…</string>
-    <string name="app_title">WordPress Android-erako</string>
-    <string name="tos">Zerbitzuaren baldintzak</string>
-    <string name="version">Bertsioa:</string>
     <string name="image_alignment">Lerrokatzea</string>
     <string name="refresh">Freskatu</string>
     <string name="untitled">Izenbururik gabe</string>

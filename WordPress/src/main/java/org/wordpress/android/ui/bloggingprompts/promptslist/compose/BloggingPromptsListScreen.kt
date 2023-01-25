@@ -33,6 +33,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 fun BloggingPromptsListScreen(
     uiState: UiState,
     onNavigateUp: () -> Unit,
+    onItemClick: (BloggingPromptsListItemModel) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -45,7 +46,7 @@ fun BloggingPromptsListScreen(
     ) {
         Surface(modifier = Modifier.fillMaxSize()) {
             when (uiState) {
-                is Content -> ListContent(uiState.content)
+                is Content -> ListContent(uiState.content, onItemClick)
                 Loading -> LoadingContent()
                 FetchError -> FetchErrorContent()
                 NetworkError -> NetworkErrorContent()
@@ -57,7 +58,8 @@ fun BloggingPromptsListScreen(
 
 @Composable
 private fun ListContent(
-    promptsList: List<BloggingPromptsListItemModel>
+    promptsList: List<BloggingPromptsListItemModel>,
+    onItemClick: (BloggingPromptsListItemModel) -> Unit
 ) {
     if (promptsList.isEmpty()) {
         NoContent()
@@ -68,7 +70,8 @@ private fun ListContent(
 
                 BloggingPromptsListItem(
                     model = item,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onItemClick,
                 )
             }
         }
@@ -121,6 +124,6 @@ fun BloggingPromptsListScreenPreview(
     @PreviewParameter(provider = BloggingPromptsListScreenPreviewProvider::class) uiState: UiState
 ) {
     AppTheme {
-        BloggingPromptsListScreen(uiState = uiState, onNavigateUp = {})
+        BloggingPromptsListScreen(uiState = uiState, onNavigateUp = {}, onItemClick = {})
     }
 }

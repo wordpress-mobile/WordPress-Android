@@ -17,8 +17,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
-import org.wordpress.android.ui.posts.BLOGGING_PROMPT_ID_TAG
-import org.wordpress.android.ui.posts.BLOGGING_PROMPT_TAG
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.posts.BloggingPromptsEditorBlockMapper
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel.EditorLoadedPrompt
@@ -104,7 +103,7 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     fun `should not add prompt id tag if enhancements feature flag is DISABLED`() {
         whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(false)
         viewModel.start(siteModel, 123)
-        assertThat(loadedPrompt?.tags).containsOnly(BLOGGING_PROMPT_TAG)
+        assertThat(loadedPrompt?.tags).containsOnly(BloggingPromptsPostTagProvider.BLOGGING_PROMPT_TAG)
     }
 
     @Test
@@ -112,8 +111,8 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
         viewModel.start(siteModel, 123)
         assertThat(loadedPrompt?.tags).containsOnly(
-            BLOGGING_PROMPT_TAG,
-            BLOGGING_PROMPT_ID_TAG.format(123)
+            BloggingPromptsPostTagProvider.BLOGGING_PROMPT_TAG,
+            BloggingPromptsPostTagProvider.promptIdTag(123)
         )
     }
 }

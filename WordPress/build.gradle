@@ -77,9 +77,6 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
-        multiDexEnabled true
-
-        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
@@ -129,6 +126,7 @@ android {
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_NEW_USERS", "false"
         buildConfigField "boolean", "PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD", "false"
         buildConfigField "boolean", "OPEN_WEB_LINKS_WITH_JETPACK_FLOW", "false"
+        buildConfigField "boolean", "ENABLE_WORDPRESS_SUPPORT_FORUM", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -380,7 +378,6 @@ dependencies {
     implementation "androidx.activity:activity-ktx:$androidxActivityVersion"
     implementation "androidx.fragment:fragment:$androidxFragmentVersion"
     implementation "androidx.fragment:fragment-ktx:$androidxFragmentVersion"
-    implementation "androidx.multidex:multidex:$androidXMultidexVersion"
     implementation "androidx.media:media:$androidxMediaVersion"
     implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
     implementation "androidx.appcompat:appcompat-resources:$androidxAppcompatVersion"

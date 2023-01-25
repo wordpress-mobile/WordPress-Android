@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-12-20 13:54:10+0000
+Translation-Revision-Date: 2023-01-17 23:54:23+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.3
 Language: ar
 -->
 <resources>
+    <string name="jetpack_feature_card_menu_item_hide_this">إخفاء هذا</string>
+    <string name="jetpack_feature_card_menu_item_remind_me_later">ذكرني لاحقًا</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">التبديل إلى تطبيق Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">معرفة المزيد على jetpack.com</string>
+    <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">التبديل مجاني، ولا يستغرق سوى بضع دقائق.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">ستتم إزالة ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات التي يدعمها Jetpack من تطبيق ووردبريس قريبًا.</string>
+    <string name="jetpack_feature_card_content">ستنتقل ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات قريبًا إلى تطبيق Jetpack للهاتف المحمول.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">ستتم إزالة ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات التي يدعمها Jetpack من تطبيق ووردبريس في %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">ستنتقل ميزات Jetpack قريبًا.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">ستنتقل ميزة التنبيهات إلى Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">ستنتقل ميزة القارئ إلى تطبيق Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">التبديل إلى تطبيق Jetpack الجديد</string>
+    <string name="blogging_prompts_list_error_network_title">يتعذر تحميل هذا المحتوى حاليًا.</string>
+    <string name="blogging_prompts_list_error_fetch_subtitle">حدث خطأ في أثناء تحميل المطالبات.</string>
+    <string name="blogging_prompts_list_error_fetch_title">عذرًا</string>
+    <string name="blogging_prompts_list_no_prompts">لا توجد مطالبات بعد</string>
+    <string name="blogging_prompts_list_number_of_answers_other">%d من الإجابات</string>
+    <string name="blogging_prompts_list_number_of_answers_one">إجابة واحدة</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">ستنتقل ميزة الإحصاءات لديك إلى تطبيق Jetpack</string>
+    <string name="blogging_prompts_list_error_network_subtitle">تحقق من اتصالك بالشبكة وحاول مرة أخرى.</string>
+    <string name="blogging_prompts_list_number_of_answers_zero">0 من الإجابات</string>
+    <string name="blogging_prompts_list_answered_prompt">✓ تم الرد</string>
+    <string name="blogging_prompts_list_title">المطالبات</string>
+    <string name="close_desc">إغلاق</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">وبدلاً من ذلك، يمكنك فصل هذا المكوّن وتحريره على حدة عن طريق النقر على \"التحويل إلى مكوّن عادي\".</string>
+    <string name="dlg_confirm_delete_category">هل تريد حذف تصنيف \"%s\" بشكل دائم؟</string>
+    <string name="deleting_cat_success">نجح حذف التصنيف</string>
+    <string name="deleting_cat_failed">فشل حذف التصنيف</string>
+    <string name="deleting_cat">حذف التصنيف</string>
+    <string name="updating_cat">تحديث التصنيف</string>
+    <string name="update_category">تحديث التصنيف</string>
     <string name="reader_menu_block_user">حظر مستخدم</string>
     <string name="reader_toast_user_blocked">لن تظهر التدوينات الواردة من هذا المستخدم بعد الآن</string>
     <string name="reader_menu_report_user">الإبلاغ عن هذا المستخدم</string>
@@ -29,6 +60,7 @@ Language: ar
     <string name="preference_open_links_in_jetpack">فتح الروابط في Jetpack</string>
     <string name="jp_migration_need_help_button">هل تحتاج إلى مساعدة؟</string>
     <string name="jp_migration_got_it_button">فهمت</string>
+    <string name="jp_migration_delete_message">يرجى &lt;b&gt;حذف تطبيق ووردبريس&lt;/b&gt; لتفادي تعارضات البيانات.</string>
     <string name="jp_migration_delete_subtitle">يبدو أن تطبيق ووردبريس لا يزال مثبتًا لديك. نوصي بأن تحذف تطبيق ووردبريس لتفادي تعارضات البيانات.</string>
     <string name="jp_migration_delete_title">لن تحتاج إلى تطبيق ووردبريس بعد الآن</string>
     <string name="jp_migration_network_error_message">يتعذر علينا نقل بياناتك وإعداداتك من دون اتصال الشبكة.</string>
@@ -40,6 +72,7 @@ Language: ar
     <string name="jp_migration_try_again_button">المحاولة مجددًا</string>
     <string name="jp_migration_finish_button">إنهاء</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">إزالة أيقونة تطبيق ووردبريس</string>
+    <string name="jp_migration_done_delete_wp_message">يرجى &lt;b&gt;حذف تطبيق ووردبريس&lt;/b&gt; لتفادي تعارضات البيانات.</string>
     <string name="jp_migration_done_subtitle">لقد نقلنا كل بياناتك وإعداداتك. يصبح كل شيء صحيحًا عندما تتركه.</string>
     <string name="jp_migration_done_title">شكرًا على التبديل إلى Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">سنقوم بإيقاف تشغيل التنبيهات من تطبيق ووردبريس.</string>
@@ -601,6 +634,7 @@ Language: ar
     <string name="gutenberg_native_current_unit_is_s">الوحدة الحالي هي %s</string>
     <string name="gutenberg_native_crosspost">النشر المتعدد</string>
     <string name="gutenberg_native_columns_settings">إعدادات الأعمدة</string>
+    <string name="gutenberg_native_s_converted_to_regular_block">تم تحويل %s إلى مكوّن عادي</string>
     <string name="gutenberg_native_add_link_to_s">إضافة رابط إلى %s</string>
     <string name="gutenberg_native_add_link_text">إضافة نصّ للرابط</string>
     <string name="gutenberg_native_add_image_or_video_b7b3d22b">إضافة صورة أو فيديو</string>
@@ -639,6 +673,7 @@ Language: ar
     <string name="gutenberg_native_no_preview_available">لا توجد معاينة متاحة</string>
     <string name="gutenberg_native_text_color">لون النص</string>
     <string name="gutenberg_native_padding">الهوامش الداخلية</string>
+    <string name="gutenberg_native_featured">مميز</string>
     <string name="gutenberg_native_four">أربعة</string>
     <string name="gutenberg_native_create_embed">إنشاء تضمين</string>
     <string name="gutenberg_native_custom_url">رابط (URL) مخصّص</string>
@@ -2226,7 +2261,6 @@ Language: ar
     <string name="my_site_section_screen_title">موقعي</string>
     <string name="notif_settings_screen_title">إعدادات التنبيه</string>
     <string name="help_screen_title">المساعدة والدعم</string>
-    <string name="license_screen_title">الترخيص</string>
     <string name="release_notes_screen_title">ملاحظات الإصدار</string>
     <string name="notifications_screen_title">الإشعارات</string>
     <string name="signup_epilogue_error_avatar_view">تم رفع الصورة الرمزية الخاصة بك وستصبح متاحة قريبًا.</string>
@@ -2236,8 +2270,6 @@ Language: ar
     <string name="sharing_disabled_description">لا يمكنك الوصول إلى إعدادات المشاركة الخاصة بك بسبب تعطيل وحدة Jetpack النمطية للمشاركة الخاصة بك.</string>
     <string name="sharing_disabled">تم تعطيل الوحدة النمطية للمشاركة</string>
     <string name="version_with_name_param">الإصدار %s</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="publisher_with_company_param">الناشر: %s</string>
     <string name="notification_sound_has_invalid_path">يتضمن الصوت المختار مسارًا غير صالح. يُرجى اختيار صوت آخر.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d من الصفحات / المقالات متبقٍّ</string>
@@ -3123,7 +3155,6 @@ Language: ar
     <string name="language">اللغة</string>
     <string name="auth_required">سجّل الدخول مرة أخرى للمتابعة.</string>
     <string name="reader_empty_posts_request_failed">يتعذر استرداد المقالات</string>
-    <string name="publisher">الناشر:</string>
     <string name="error_notification_open">تعذر فتح التنبيه</string>
     <string name="stats_search_terms_unknown_search_terms">مصطلحات بحث غير معروفة</string>
     <string name="stats_view_search_terms">مصطلحات البحث</string>
@@ -3224,7 +3255,6 @@ Language: ar
     <string name="local_draft">مسودة محلية</string>
     <string name="new_post">مقال جديد</string>
     <string name="wordpress_blog">مدونة ووردبريس</string>
-    <string name="privacy_policy">سياسة الخصوصية</string>
     <string name="reader_title_applog">سجل التطبيق</string>
     <string name="select_categories">تحديد التصنيفات</string>
     <string name="post_not_found">حدث خطأ أثناء تحميل المقال . قم بتحديث مقالاتك ثم أعد المحاولة.</string>
@@ -3239,7 +3269,6 @@ Language: ar
     <string name="mnu_comment_unapprove">غير موافق</string>
     <string name="edit_comment">تعديل التعليق</string>
     <string name="image_settings">إعدادات الصورة</string>
-    <string name="open_source_licenses">رخص البرمجيات الحرة</string>
     <string name="toast_comment_unedited">لم يتم تغيير التعليق</string>
     <string name="view_in_browser">عرض في المستعرض</string>
     <string name="add_new_category">إضافة تصنيف جديد</string>
@@ -3352,9 +3381,6 @@ Language: ar
     <string name="ok">موافق</string>
     <string name="link_enter_url">الرابط URL</string>
     <string name="uploading">جاري الرفع…</string>
-    <string name="version">النسخة</string>
-    <string name="tos">بنود الخدمة</string>
-    <string name="app_title">ووردبريس للآندرويد</string>
     <string name="image_alignment">المحاذاة</string>
     <string name="refresh">تجديد</string>
     <string name="untitled">بدون عنوان</string>
@@ -3369,9 +3395,11 @@ Language: ar
     <string name="tags_separate_with_commas">الفصل بين الوسوم بفواصل</string>
     <string name="sdcard_title">بطاقة الذاكرة مطلوبة</string>
     <string name="media">الوسائط</string>
+    <string name="updating_cat_success">نجح تحديث التصنيف</string>
     <string name="delete">حذف</string>
     <string name="approve">وافق</string>
     <string name="none">بدون</string>
+    <string name="updating_cat_failed">فشل تحديث التصنيف</string>
     <string name="error">خطأ </string>
     <string name="cancel">إلغاء</string>
     <string name="save">حفظ </string>
