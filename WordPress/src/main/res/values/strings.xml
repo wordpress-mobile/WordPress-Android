@@ -4333,6 +4333,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Create a new WordPress site with the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.\n\nThe WordPress app no longer supports creating a new site.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_primary_button" translatable="false">@string/wp_jetpack_get_new_jetpack_app</string>
     <string name="wp_jetpack_continue_without_jetpack">Continue without Jetpack</string>
 
     <string name="wp_jetpack_deep_link_overlay_title">Open links in Jetpack?</string>
