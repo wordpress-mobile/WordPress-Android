@@ -84,7 +84,8 @@ class JetpackFeatureCardHelper @Inject constructor(
     }
 
     private fun exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded(): Boolean {
-        val lastShownTimestamp = appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()
+        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() ?: return false
+        val lastShownTimestamp = appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp(currentPhase)
         if (lastShownTimestamp == DEFAULT_LAST_SHOWN_TIMESTAMP) return true
 
         val lastShownDate = Date(lastShownTimestamp)
@@ -95,7 +96,7 @@ class JetpackFeatureCardHelper @Inject constructor(
 
         val exceedsFrequency = daysPastOverlayShown >= FREQUENCY_IN_DAYS
         if (exceedsFrequency) {
-            appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(DEFAULT_LAST_SHOWN_TIMESTAMP)
+            appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(currentPhase, DEFAULT_LAST_SHOWN_TIMESTAMP)
         }
         return exceedsFrequency
     }
@@ -133,6 +134,13 @@ class JetpackFeatureCardHelper @Inject constructor(
         track(Stat.REMOVE_FEATURE_CARD_HIDE_TAPPED)
         jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.let {
             appPrefsWrapper.setShouldHideJetpackFeatureCard(it, true)
+        }
+    }
+
+    fun setJetpackFeatureCardLastShownTimeStamp(currentTimeMillis: Long) {
+        track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED)
+        jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.let {
+            appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(it, currentTimeMillis)
         }
     }
 

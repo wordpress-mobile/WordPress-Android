@@ -368,7 +368,7 @@ public class AppPrefs {
     }
 
     public static void putInt(final PrefKey key, final int value) {
-        prefs().edit().putInt(key.name(), value) .apply();
+        prefs().edit().putInt(key.name(), value).apply();
     }
 
     public static void setInt(PrefKey key, int value) {
@@ -389,7 +389,7 @@ public class AppPrefs {
     }
 
     public static void putStringSet(final PrefKey key, final Set<String> value) {
-        prefs().edit().putStringSet(key.name(), value) .apply();
+        prefs().edit().putStringSet(key.name(), value).apply();
     }
 
     private static void remove(PrefKey key) {
@@ -1534,18 +1534,24 @@ public class AppPrefs {
         prefs().edit().putBoolean(getHideJetpackFeatureCardWithPhaseKey(phase), isHidden).apply();
     }
 
-    public static Long getJetpackFeatureCardLastShownTimestamp() {
-        return getLong(DeletablePrefKey.JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP, 0L);
+    public static Long getJetpackFeatureCardLastShownTimestamp(JetpackFeatureRemovalPhase jetpackFeatureRemovalPhase) {
+        return prefs().getLong(getJetpackFeatureCardLastShownTimeStampWithPhaseKey(jetpackFeatureRemovalPhase), 0L);
     }
 
-    public static void setJetpackFeatureCardLastShownTimestamp(final Long lastShownTimestamp) {
-        setLong(DeletablePrefKey.JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP, lastShownTimestamp);
+    public static void setJetpackFeatureCardLastShownTimestamp(JetpackFeatureRemovalPhase jetpackFeatureRemovalPhase,
+                                                               final Long lastShownTimestamp) {
+        prefs().edit().putLong(getJetpackFeatureCardLastShownTimeStampWithPhaseKey(jetpackFeatureRemovalPhase),
+                lastShownTimestamp).apply();
     }
 
     @NonNull private static String getHideJetpackFeatureCardWithPhaseKey(JetpackFeatureRemovalPhase phase) {
         return DeletablePrefKey.SHOULD_HIDE_JETPACK_FEATURE_CARD.name() + phase.getTrackingName();
     }
 
+    @NonNull
+    private static String getJetpackFeatureCardLastShownTimeStampWithPhaseKey(JetpackFeatureRemovalPhase phase) {
+        return DeletablePrefKey.JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP.name() + phase.getTrackingName();
+    }
 
     public static Long getSwitchToJetpackMenuCardLastShownTimestamp() {
         return getLong(DeletablePrefKey.SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP, 0L);

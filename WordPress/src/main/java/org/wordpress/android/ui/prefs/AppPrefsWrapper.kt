@@ -281,10 +281,14 @@ class AppPrefsWrapper @Inject constructor() {
     fun setShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase, isHidden: Boolean) =
         AppPrefs.setShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase, isHidden)
 
-    fun getJetpackFeatureCardLastShownTimestamp(): Long = AppPrefs.getJetpackFeatureCardLastShownTimestamp()
+    fun getJetpackFeatureCardLastShownTimestamp(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase): Long =
+        AppPrefs.getJetpackFeatureCardLastShownTimestamp(jetpackFeatureRemovalPhase)
 
-    fun setJetpackFeatureCardLastShownTimestamp(lastShownTimestamp: Long) {
-        AppPrefs.setJetpackFeatureCardLastShownTimestamp(lastShownTimestamp)
+    fun setJetpackFeatureCardLastShownTimestamp(
+        jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase,
+        lastShownTimestamp: Long
+    ) {
+        AppPrefs.setJetpackFeatureCardLastShownTimestamp(jetpackFeatureRemovalPhase, lastShownTimestamp)
     }
 
     fun getSwitchToJetpackMenuCardLastShownTimestamp(): Long = AppPrefs.getSwitchToJetpackMenuCardLastShownTimestamp()

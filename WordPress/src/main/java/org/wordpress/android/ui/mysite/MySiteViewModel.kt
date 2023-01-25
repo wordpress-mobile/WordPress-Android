@@ -1357,8 +1357,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onJetpackFeatureCardRemindMeLaterClick() {
-        jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED)
-        appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(System.currentTimeMillis())
+        jetpackFeatureCardHelper.setJetpackFeatureCardLastShownTimeStamp(System.currentTimeMillis())
         refresh()
     }
 
