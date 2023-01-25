@@ -5,6 +5,8 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -293,10 +295,13 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         blogPostLink: String?,
         currentPhase: JetpackFeatureRemovalPhase
     ): JetpackFeatureOverlayContent {
-        return if (currentPhase == PhaseThree) {
-            getJetpackFeatureOverlayContentForPhaseThree(isRtl, blogPostLink)
-        } else {
-            getJetpackFeatureOverlayContentForPhaseFour(isRtl, blogPostLink)
+        return when(currentPhase) {
+            is PhaseThree ->getJetpackFeatureOverlayContentForPhaseThree(isRtl, blogPostLink)
+            is PhaseFour ->getJetpackFeatureOverlayContentForPhaseFour(isRtl, blogPostLink)
+            is PhaseNewUsers -> getJetpackFeatureOverlayContentForNewUsers(isRtl)
+            else -> {
+                throw IllegalStateException("Invalid phase for feature collection overlay")
+            }
         }
     }
 
@@ -313,6 +318,16 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         migrationInfoUrl = blogPostLink,
         primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app,
         secondaryButtonText = R.string.wp_jetpack_feature_removal_phase_four_secondary_text
+    )
+
+    private fun getJetpackFeatureOverlayContentForNewUsers(
+        isRtl: Boolean,
+    ) = JetpackFeatureOverlayContent(
+        illustration = if (isRtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
+        title = R.string.wp_jetpack_feature_removal_phase_new_users_title,
+        caption = UiStringRes(R.string.wp_jetpack_feature_removal_phase_new_users_description),
+        primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app,
+        secondaryButtonText = R.string.wp_jetpack_feature_removal_overlay_continue_without_jetpack
     )
 
     private fun getJetpackFeatureOverlayContentForPhaseThree(

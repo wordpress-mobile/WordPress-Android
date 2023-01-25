@@ -4324,6 +4324,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_overlay_phase_three_all_features_description" translatable="false">@string/wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Switch to Jetpack </string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Do this later</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Give WordPress a boost with Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack lets you do more with your WordPress site. Switching is free and only takes a minute.</string>
 
     <!-- Deep Linking Activity Aliases -->
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
