@@ -19,7 +19,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 
-@Suppress("MaxLineLength")
 @ExperimentalCoroutinesApi
 class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker = mock()
@@ -32,6 +31,7 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
         dashboardCardsFlow = MutableSharedFlow()
     }
 
+    @Suppress("MaxLineLength")
     @Test
     fun `given onResume was called in dashboard, when dashboard cards are received with prompts card, then track once`() =
         test {
@@ -60,6 +60,7 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
             }
         }
 
+    @Suppress("MaxLineLength")
     @Test
     fun `given onResume was called in dashboard, when dashboard cards are received without prompts card, then don't track`() =
         test {
@@ -87,6 +88,8 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
                 cancel()
             }
         }
+
+    @Suppress("MaxLineLength")
 
     @Test
     fun `given dashboard cards were received with prompts card, when onResume is called in dashboard, then track once`() =
@@ -117,6 +120,7 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
             }
         }
 
+    @Suppress("MaxLineLength")
     @Test
     fun `given dashboard cards were received without prompts card, when onResume is called in dashboard, then don't track`() =
         test {
