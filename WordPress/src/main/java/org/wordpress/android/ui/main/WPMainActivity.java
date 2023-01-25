@@ -137,6 +137,7 @@ import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PackageManagerWrapper;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
@@ -483,24 +484,45 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void setUpMainView() {
+        setupBottomNav();
+        showMySiteFragment();
+    }
+
+    private void setupBottomNav() {
         if (!mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
-            mBottomNav = findViewById(R.id.bottom_navigation);
-            mBottomNav.setVisibility(View.VISIBLE);
-            mBottomNav.init(getSupportFragmentManager(), this);
+            enableBottomNavbar();
         } else {
-            if (mBottomNav != null) {
-                mBottomNav.setVisibility(View.GONE);
-                mBottomNav.clear();
-            }
-            showMySiteFragment();
+            disableBottomNavbar();
+        }
+    }
+
+    private void enableBottomNavbar() {
+        mBottomNav = findViewById(R.id.bottom_navigation);
+        mBottomNav.setVisibility(View.VISIBLE);
+        if (mFirstResume) {
+            mBottomNav.init(getSupportFragmentManager(), this);
+        }
+    }
+
+    private void disableBottomNavbar() {
+        if (mBottomNav != null) {
+            mBottomNav.setVisibility(View.GONE);
+            mBottomNav.clear();
         }
     }
 
     private void showMySiteFragment() {
         MySiteFragment fragment = MySiteFragment.Companion.newInstance();
-        getSupportFragmentManager().beginTransaction()
-                                   .add(R.id.fragment_container, fragment, MySiteFragment.TAG)
-                                   .commitNow();
+        MySiteFragment frag = (MySiteFragment) getSupportFragmentManager().findFragmentByTag(MySiteFragment.TAG);
+        if (frag != null) {
+            getSupportFragmentManager().beginTransaction()
+                                       .replace(R.id.fragment_container, fragment, MySiteFragment.TAG)
+                                       .commitNow();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                                       .add(R.id.fragment_container, fragment, MySiteFragment.TAG)
+                                       .commitNow();
+        }
     }
 
     private void showBloggingPromptsOnboarding() {
