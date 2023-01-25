@@ -7,7 +7,11 @@
 21.6
 -----
 * [*] [internal] [Jetpack-only] Adds additional logging for Jetpack migration errors [https://github.com/wordpress-mobile/WordPress-Android/pull/17748]
-
+* [*] [internal] [Jetpack-only] Adds support to resume the Jetpack migration after interruptions [https://github.com/wordpress-mobile/WordPress-Android/pull/17701]
+* [*] [internal] [Jetpack-only] Adds support to start the Jetpack migration flow from deep links [https://github.com/wordpress-mobile/WordPress-Android/pull/17742]
+* [*] [internal] [Jetpack-only] Adds support to apply the app theme from the WP app in the Jetpack migration flow [https://github.com/wordpress-mobile/WordPress-Android/pull/17749]
+* [*] [internal] [Jetpack-only] Adds support to apply the interface language from the WP app in the Jetpack migration flow [https://github.com/wordpress-mobile/WordPress-Android/pull/17768]
+* [*] [internal] [Jetpack-only] Adds support to migrate the blogging reminders at the start of the Jetpack migration flow [https://github.com/wordpress-mobile/WordPress-Android/pull/17778]
 
 21.5
 -----
