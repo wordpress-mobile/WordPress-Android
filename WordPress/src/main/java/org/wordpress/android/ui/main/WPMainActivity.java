@@ -137,7 +137,6 @@ import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.PackageManagerWrapper;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
@@ -484,11 +483,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void setUpMainView() {
-        setupBottomNav();
-        showMySiteFragment();
-    }
-
-    private void setupBottomNav() {
         if (!mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
             enableBottomNavbar();
         } else {
@@ -498,17 +492,25 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void enableBottomNavbar() {
         mBottomNav = findViewById(R.id.bottom_navigation);
-        mBottomNav.setVisibility(View.VISIBLE);
         if (mFirstResume) {
+            mBottomNav.setVisibility(View.VISIBLE);
             mBottomNav.init(getSupportFragmentManager(), this);
+        } else {
+            if (mBottomNav.getVisibility() != View.VISIBLE) {
+                mBottomNav.setVisibility(View.VISIBLE);
+                mBottomNav.init(getSupportFragmentManager(), this);
+            }
         }
     }
 
     private void disableBottomNavbar() {
         if (mBottomNav != null) {
-            mBottomNav.setVisibility(View.GONE);
-            mBottomNav.clear();
+            if (mBottomNav.getVisibility() == View.VISIBLE) {
+                mBottomNav.setVisibility(View.GONE);
+                mBottomNav.clear();
+               }
         }
+        showMySiteFragment();
     }
 
     private void showMySiteFragment() {
