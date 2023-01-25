@@ -19,7 +19,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseO
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
