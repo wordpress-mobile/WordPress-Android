@@ -11,9 +11,9 @@ import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,7 +30,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineScope {
+class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider, CoroutineScope {
     private var job: Job = Job()
 
     override val coroutineContext: CoroutineContext
@@ -51,39 +51,27 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
     private var binding: PageParentFragmentBinding? = null
 
     companion object {
+        private const val SEARCH_ACTION_LEFT_MARGIN_DP = -8
+
         fun newInstance(): PageParentFragment {
             return PageParentFragment()
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+        android.R.id.home -> {
             activity?.onBackPressed()
-            return true
-        } else if (item.itemId == R.id.save_parent) {
-            viewModel.onSaveButtonTapped()
-            return true
+            true
         }
-
-        return super.onOptionsItemSelected(item)
+        R.id.save_parent -> {
+            viewModel.onSaveButtonTapped()
+            true
+        }
+        else -> false
     }
 
-    private fun returnParentChoiceAndExit() {
-        val result = Intent()
-        result.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, pageId)
-        result.putExtra(EXTRA_PAGE_PARENT_ID_KEY, viewModel.currentParent.id)
-        activity?.setResult(Activity.RESULT_OK, result)
-        activity?.onBackPressed()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.page_parent_menu, menu)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.page_parent_menu, menu)
 
         saveButton = menu.findItem(R.id.save_parent)
         viewModel.isSaveButtonVisible.value?.let { saveButton?.isVisible = it }
@@ -92,6 +80,14 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
         }
 
         binding!!.initializeSearchView()
+    }
+
+    private fun returnParentChoiceAndExit() {
+        val result = Intent()
+        result.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, pageId)
+        result.putExtra(EXTRA_PAGE_PARENT_ID_KEY, viewModel.currentParent.id)
+        activity?.setResult(Activity.RESULT_OK, result)
+        activity?.onBackPressed()
     }
 
     private fun PageParentFragmentBinding.initializeSearchView() {
@@ -127,19 +123,20 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
 
         val searchEditFrame = searchAction.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
         (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
-            .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
+            .apply { this.leftMargin = DisplayUtils.dpToPx(activity, SEARCH_ACTION_LEFT_MARGIN_DP) }
 
-        viewModel.isSearchExpanded.observe(this@PageParentFragment, Observer {
+        viewModel.isSearchExpanded.observe(this@PageParentFragment) {
             if (it == true) {
                 showSearchList(searchAction)
             } else {
                 hideSearchList(searchAction)
             }
-        })
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
 
         pageId = activity?.intent?.getLongExtra(EXTRA_PAGE_REMOTE_ID_KEY, 0)
 
@@ -196,17 +193,17 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
     }
 
     private fun PageParentFragmentBinding.setupObservers() {
-        viewModel.pages.observe(viewLifecycleOwner, { pages ->
+        viewModel.pages.observe(viewLifecycleOwner) { pages ->
             pages?.let { setPages(pages) }
-        })
+        }
 
-        viewModel.isSaveButtonVisible.observe(viewLifecycleOwner, { isVisible ->
+        viewModel.isSaveButtonVisible.observe(viewLifecycleOwner) { isVisible ->
             isVisible?.let { saveButton?.isVisible = isVisible }
-        })
+        }
 
-        viewModel.saveParent.observe(viewLifecycleOwner, {
+        viewModel.saveParent.observe(viewLifecycleOwner) {
             returnParentChoiceAndExit()
-        })
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

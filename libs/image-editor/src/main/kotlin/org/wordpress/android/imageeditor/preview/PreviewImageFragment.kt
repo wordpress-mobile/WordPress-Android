@@ -17,12 +17,12 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER
 import android.widget.ImageView.ScaleType.CENTER_CROP
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
 import com.yalantis.ucrop.UCrop
 import kotlinx.parcelize.Parcelize
@@ -42,13 +42,13 @@ import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
 import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
-class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
+class PreviewImageFragment : Fragment(R.layout.preview_image_fragment), MenuProvider {
     private var binding: PreviewImageFragmentBinding? = null
     private lateinit var viewModel: PreviewImageViewModel
     private lateinit var parentViewModel: EditImageViewModel
     private lateinit var tabLayoutMediator: TabLayoutMediator
     private var pagerAdapterObserver: PagerAdapterObserver? = null
-    private lateinit var pageChangeCallback: OnPageChangeCallback
+    private lateinit var pageChangeCallback: ViewPager2.OnPageChangeCallback
 
     private var cropActionMenu: MenuItem? = null
 
@@ -71,13 +71,9 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
         with(PreviewImageFragmentBinding.bind(view)) {
             binding = this
             val nonNullIntent = checkNotNull(requireActivity().intent)
@@ -160,9 +156,9 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
     }
 
     private fun PreviewImageFragmentBinding.setupObservers() {
-        viewModel.uiState.observe(viewLifecycleOwner, { state -> updateUiState(state) })
+        viewModel.uiState.observe(viewLifecycleOwner) { state -> updateUiState(state) }
 
-        viewModel.loadIntoFile.observe(viewLifecycleOwner, { fileStateEvent ->
+        viewModel.loadIntoFile.observe(viewLifecycleOwner) { fileStateEvent ->
             fileStateEvent?.getContentIfNotHandled()?.let { fileState ->
                 when (fileState) {
                     is ImageLoadToFileIdleState -> { // Do nothing
@@ -177,15 +173,15 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
                     }
                 }
             }
-        })
+        }
 
-        viewModel.navigateToCropScreenWithFileInfo.observe(viewLifecycleOwner, { fileInfoEvent ->
+        viewModel.navigateToCropScreenWithFileInfo.observe(viewLifecycleOwner) { fileInfoEvent ->
             fileInfoEvent?.getContentIfNotHandled()?.let { fileInfo ->
                 navigateToCropScreenWithFileInfo(fileInfo)
             }
-        })
+        }
 
-        parentViewModel.cropResult.observe(viewLifecycleOwner, { cropResult ->
+        parentViewModel.cropResult.observe(viewLifecycleOwner) { cropResult ->
             cropResult?.getContentIfNotHandled()?.let {
                 if (it.resultCode == RESULT_OK) {
                     val data: Intent = it.data
@@ -197,15 +193,15 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
                     }
                 }
             }
-        })
+        }
 
-        viewModel.finishAction.observe(viewLifecycleOwner, { event ->
+        viewModel.finishAction.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 val intent = Intent().apply { putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, ArrayList(it)) }
                 requireActivity().setResult(RESULT_OK, intent)
                 requireActivity().finish()
             }
-        })
+        }
     }
 
     private fun PreviewImageFragmentBinding.updateUiState(state: UiState) {
@@ -283,17 +279,17 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_preview_fragment, menu)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_preview_fragment, menu)
         cropActionMenu = menu.findItem(R.id.menu_crop)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_crop) {
-        viewModel.onCropMenuClicked()
-        true
-    } else {
-        super.onOptionsItemSelected(item)
+    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+        R.id.menu_crop -> {
+            viewModel.onCropMenuClicked()
+            true
+        }
+        else -> false
     }
 
     override fun onDestroyView() {

@@ -9,8 +9,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -33,7 +33,7 @@ import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
 /**
  * Container fragment for displaying third party crop fragment and done menu item.
  */
-class CropFragment : Fragment(), UCropFragmentCallback {
+class CropFragment : Fragment(), MenuProvider, UCropFragmentCallback {
     private lateinit var viewModel: CropViewModel
     private var doneMenu: MenuItem? = null
     private val navArgs: CropFragmentArgs by navArgs()
@@ -41,11 +41,6 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     companion object {
         private val TAG = CropFragment::class.java.simpleName
         const val CROP_RESULT = "crop_result"
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -56,6 +51,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
         initializeViewModels()
     }
 
@@ -72,7 +68,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             when (uiState) {
                 is UiStartLoadingWithBundleState -> {
                     showThirdPartyCropFragmentWithBundle(uiState.bundle)
@@ -81,9 +77,9 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                 }
             }
             doneMenu?.isVisible = uiState.doneMenuVisible
-        })
+        }
 
-        viewModel.cropAndSaveImageStateEvent.observe(viewLifecycleOwner, Observer { stateEvent ->
+        viewModel.cropAndSaveImageStateEvent.observe(viewLifecycleOwner) { stateEvent ->
             stateEvent?.getContentIfNotHandled()?.let { state ->
                 when (state) {
                     is ImageCropAndSaveStartState -> {
@@ -102,31 +98,32 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                     }
                 }
             }
-        })
+        }
 
-        viewModel.navigateBackWithCropResult.observe(viewLifecycleOwner, Observer { cropResult ->
+        viewModel.navigateBackWithCropResult.observe(viewLifecycleOwner) { cropResult ->
             navigateBackWithCropResult(cropResult)
-        })
+        }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_crop_fragment, menu)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_crop_fragment, menu)
         doneMenu = menu.findItem(R.id.menu_done)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_done) {
-        viewModel.onDoneMenuClicked()
-        true
-    } else if (item.itemId == android.R.id.home) {
-        if (navArgs.shouldReturnToPreviewScreen) {
-            findNavController().popBackStack()
+    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+        R.id.menu_done -> {
+            viewModel.onDoneMenuClicked()
             true
-        } else {
-            super.onOptionsItemSelected(item)
         }
-    } else {
-        super.onOptionsItemSelected(item)
+        android.R.id.home -> {
+            if (navArgs.shouldReturnToPreviewScreen) {
+                findNavController().popBackStack()
+                true
+            } else {
+                false
+            }
+        }
+        else -> false
     }
 
     private fun showThirdPartyCropFragmentWithBundle(bundle: Bundle) {

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerFragment
 import org.wordpress.android.R
@@ -24,11 +23,6 @@ class StatsDetailFragment : DaggerFragment(R.layout.stats_detail_fragment) {
     lateinit var statsSiteProvider: StatsSiteProvider
     private lateinit var viewModel: StatsDetailViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -75,10 +69,10 @@ class StatsDetailFragment : DaggerFragment(R.layout.stats_detail_fragment) {
     }
 
     private fun setupObservers(viewModel: StatsDetailViewModel) {
-        viewModel.isRefreshing.observe(viewLifecycleOwner, Observer {
+        viewModel.isRefreshing.observe(viewLifecycleOwner) {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
             }
-        })
+        }
     }
 }
