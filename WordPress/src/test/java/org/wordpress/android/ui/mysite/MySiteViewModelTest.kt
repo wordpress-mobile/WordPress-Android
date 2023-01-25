@@ -2876,13 +2876,26 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when feature card criteria is met, then items do contain feature card`() = test {
+    fun `when feature card criteria is met + show at top, then items do contain feature card`() = test {
         whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+        whenever(jetpackFeatureCardHelper.shouldShowFeatureCardAtTop()).thenReturn(true)
 
         initSelectedSite()
 
         assertThat(getSiteMenuTabLastItems()[0]).isInstanceOf(JetpackFeatureCard::class.java)
         assertThat(getLastItems()[0]).isInstanceOf(JetpackFeatureCard::class.java)
+    }
+
+    @Test
+    fun `when feature card criteria is met + show at bottom, then items do contain feature card`() = test {
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+        whenever(jetpackFeatureCardHelper.shouldShowFeatureCardAtTop()).thenReturn(false)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems()[getSiteMenuTabLastItems().size - 1])
+            .isInstanceOf(JetpackFeatureCard::class.java)
+        assertThat(getLastItems()[getLastItems().size - 1]).isInstanceOf(JetpackFeatureCard::class.java)
     }
 
     @Test
@@ -2932,7 +2945,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         findJetpackFeatureCard()?.onHideMenuItemClick?.click()
 
-        verify(jetpackFeatureCardHelper).track(Stat.REMOVE_FEATURE_CARD_HIDE_TAPPED)
+        verify(jetpackFeatureCardHelper).hideJetpackFeatureCard()
     }
 
     @Test
@@ -2942,7 +2955,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         findJetpackFeatureCard()?.onRemindMeLaterItemClick?.click()
 
-        verify(jetpackFeatureCardHelper).track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED)
+        verify(jetpackFeatureCardHelper).setJetpackFeatureCardLastShownTimeStamp(any())
     }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
