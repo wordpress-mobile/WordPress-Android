@@ -5,6 +5,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseN
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
 import org.wordpress.android.util.BuildConfigWrapper
@@ -13,6 +14,7 @@ import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseFourConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseOneConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseThreeConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseTwoConfig
+import org.wordpress.android.util.config.JetpackFeatureRemovalSelfHostedUsersConfig
 import javax.inject.Inject
 
 private const val PHASE_ONE_GLOBAL_OVERLAY_FREQUENCY_IN_DAYS = 2
@@ -32,10 +34,12 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
     private val jetpackFeatureRemovalPhaseTwoConfig: JetpackFeatureRemovalPhaseTwoConfig,
     private val jetpackFeatureRemovalPhaseThreeConfig: JetpackFeatureRemovalPhaseThreeConfig,
     private val jetpackFeatureRemovalPhaseFourConfig: JetpackFeatureRemovalPhaseFourConfig,
-    private val jetpackFeatureRemovalNewUsersConfig: JetpackFeatureRemovalNewUsersConfig
+    private val jetpackFeatureRemovalNewUsersConfig: JetpackFeatureRemovalNewUsersConfig,
+    private val jetpackFeatureRemovalSelfHostedUsersConfig: JetpackFeatureRemovalSelfHostedUsersConfig
 ) {
     fun getCurrentPhase(): JetpackFeatureRemovalPhase? {
         return if (buildConfigWrapper.isJetpackApp) null
+        else if (jetpackFeatureRemovalSelfHostedUsersConfig.isEnabled()) PhaseSelfHostedUsers
         else if (jetpackFeatureRemovalNewUsersConfig.isEnabled()) PhaseNewUsers
         else if (jetpackFeatureRemovalPhaseFourConfig.isEnabled()) PhaseFour
         else if (jetpackFeatureRemovalPhaseThreeConfig.isEnabled()) PhaseThree
@@ -48,7 +52,7 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
         val currentPhase = getCurrentPhase() ?: return null
         return when (currentPhase) {
             is PhaseOne, PhaseTwo, PhaseThree -> PHASE_ONE
-            is PhaseFour, PhaseNewUsers -> PHASE_TWO
+            is PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> PHASE_TWO
         }
     }
 
@@ -56,14 +60,14 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
         val currentPhase = getCurrentPhase() ?: return null
         return when (currentPhase) {
             is PhaseOne, PhaseTwo, PhaseThree -> PHASE_ONE
-            is PhaseFour, PhaseNewUsers -> PHASE_TWO
+            is PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> PHASE_TWO
         }
     }
 
     fun shouldRemoveJetpackFeatures(): Boolean {
         val currentPhase = getCurrentPhase() ?: return false
         return when (currentPhase) {
-            is PhaseFour, PhaseNewUsers -> true
+            is PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers-> true
             is PhaseOne, PhaseTwo, PhaseThree -> false
         }
     }
@@ -71,7 +75,7 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
     fun shouldShowNotifications(): Boolean {
         val currentPhase = getCurrentPhase() ?: return true
         return when (currentPhase) {
-            is PhaseFour, PhaseNewUsers -> false
+            is PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> false
             is PhaseOne, PhaseTwo, PhaseThree -> true
         }
     }
@@ -105,7 +109,8 @@ sealed class JetpackFeatureRemovalPhase(
     )
 
     object PhaseFour : JetpackFeatureRemovalPhase(trackingName = "four")
-    object PhaseNewUsers : JetpackFeatureRemovalPhase(trackingName = "new")
+    object PhaseNewUsers : JetpackFeatureRemovalPhase(trackingName = "new_users")
+    object PhaseSelfHostedUsers : JetpackFeatureRemovalPhase(trackingName = "self_hosted")
 }
 
 enum class JetpackFeatureRemovalSiteCreationPhase(val trackingName: String) {

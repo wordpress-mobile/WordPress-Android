@@ -452,6 +452,7 @@ class MySiteViewModel @Inject constructor(
             )
         )
         val jetpackFeatureCard = JetpackFeatureCard(
+            content = jetpackFeatureCardHelper.getCardContent(),
             onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
             onHideMenuItemClick = ListItemInteraction.create(this::onJetpackFeatureCardHideMenuItemClick),
             onLearnMoreClick = ListItemInteraction.create(
@@ -470,7 +471,7 @@ class MySiteViewModel @Inject constructor(
             onRemindMeLaterItemClick = ListItemInteraction.create(this::onSwitchToJetpackMenuCardRemindMeLaterClick),
             onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick)
         ).takeIf {
-            jetpackFeatureRemovalUtils.shouldShowSwitchToJetpackMenuCard()
+            jetpackFeatureCardHelper.shouldShowSwitchToJetpackMenuCard()
         }
 
 
@@ -714,7 +715,6 @@ class MySiteViewModel @Inject constructor(
         val indexOfDashboardCards = cards.indexOfFirst { it is DashboardCards }
         return mutableListOf<MySiteCardAndItem>().apply {
             infoItem?.let { add(infoItem) }
-            jetpackFeatureCard?.let { add(jetpackFeatureCard) }
             migrationSuccessCard?.let { add(migrationSuccessCard) }
             addAll(cards)
             if (indexOfDashboardCards == -1) {
@@ -725,6 +725,9 @@ class MySiteViewModel @Inject constructor(
             addAll(siteItems)
             jetpackBadge?.let { add(jetpackBadge) }
             jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
+            if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
+                jetpackFeatureCard?.let { add(0, jetpackFeatureCard) }
+            else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
         }.toList()
     }
 
@@ -1359,8 +1362,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onJetpackFeatureCardHideMenuItemClick() {
-        jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_HIDE_TAPPED)
-        appPrefsWrapper.setShouldHideJetpackFeatureCard(true)
+        jetpackFeatureCardHelper.hideJetpackFeatureCard()
         refresh()
     }
 
@@ -1370,8 +1372,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onJetpackFeatureCardRemindMeLaterClick() {
-        jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED)
-        appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(System.currentTimeMillis())
+        jetpackFeatureCardHelper.setJetpackFeatureCardLastShownTimeStamp(System.currentTimeMillis())
         refresh()
     }
 

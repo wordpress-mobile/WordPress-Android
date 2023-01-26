@@ -14,6 +14,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseN
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
 import org.wordpress.android.util.BuildConfigWrapper
@@ -22,6 +23,7 @@ import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseFourConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseOneConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseThreeConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseTwoConfig
+import org.wordpress.android.util.config.JetpackFeatureRemovalSelfHostedUsersConfig
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -44,6 +46,9 @@ class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
     @Mock
     private lateinit var jetpackFeatureRemovalNewUsersConfig: JetpackFeatureRemovalNewUsersConfig
 
+    @Mock
+    private lateinit var jetpackFeatureRemovalSelfHostedUsersConfig: JetpackFeatureRemovalSelfHostedUsersConfig
+
     private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Before
@@ -54,7 +59,8 @@ class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
             jetpackFeatureRemovalPhaseTwoConfig,
             jetpackFeatureRemovalPhaseThreeConfig,
             jetpackFeatureRemovalPhaseFourConfig,
-            jetpackFeatureRemovalNewUsersConfig
+            jetpackFeatureRemovalNewUsersConfig,
+            jetpackFeatureRemovalSelfHostedUsersConfig
         )
     }
 
@@ -111,6 +117,15 @@ class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
         val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
         assertEquals(currentPhase, PhaseNewUsers)
+    }
+
+    @Test
+    fun `given self hosted users config true, when current phase is fetched, then return self hosted users config`() {
+        whenever(jetpackFeatureRemovalSelfHostedUsersConfig.isEnabled()).thenReturn(true)
+
+        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
+
+        assertEquals(currentPhase, PhaseSelfHostedUsers)
     }
 
     // site creation phase tests

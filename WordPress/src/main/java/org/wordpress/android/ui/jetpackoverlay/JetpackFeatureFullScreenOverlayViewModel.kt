@@ -12,6 +12,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource.UNSPECIFIED
 import org.wordpress.android.util.config.JPDeadlineConfig
+import org.wordpress.android.util.config.PhaseFourBlogPostLinkConfig
 import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
 import org.wordpress.android.util.config.PhaseTwoBlogPostLinkConfig
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -28,7 +29,8 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val jpDeadlineConfig: JPDeadlineConfig,
     private val phaseTwoBlogPostLinkConfig: PhaseTwoBlogPostLinkConfig,
-    private val phaseThreeBlogPostLinkConfig: PhaseThreeBlogPostLinkConfig
+    private val phaseThreeBlogPostLinkConfig: PhaseThreeBlogPostLinkConfig,
+    private val phaseFourBlogPostLinkConfig: PhaseFourBlogPostLinkConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = SingleLiveEvent<JetpackFeatureOverlayUIState>()
     val uiState: LiveData<JetpackFeatureOverlayUIState> = _uiState
@@ -133,7 +135,7 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
                 jetpackFeatureOverlayContentBuilder.buildFeatureCollectionOverlayState(
                     rtlLayout,
                     getCurrentPhase()!!,
-                    phaseThreeBlogPostLinkConfig.getValue()
+                    getBlogPostLinkForTheCurrentPhase()
                 )
             )
             jetpackFeatureRemovalOverlayUtil.onFeatureCollectionOverlayShown(featureCollectionOverlaySource)
@@ -166,6 +168,15 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
             jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClicked(screenType)
         }
         _action.value = OpenMigrationInfoLink(migrationInfoRedirectUrl)
+    }
+
+    private fun getBlogPostLinkForTheCurrentPhase(): String? {
+        return when (getCurrentPhase()) {
+            JetpackFeatureRemovalPhase.PhaseTwo -> phaseTwoBlogPostLinkConfig.getValue()
+            JetpackFeatureRemovalPhase.PhaseThree -> phaseThreeBlogPostLinkConfig.getValue()
+            JetpackFeatureRemovalPhase.PhaseFour -> phaseFourBlogPostLinkConfig.getValue()
+            else -> null
+        }
     }
 }
 

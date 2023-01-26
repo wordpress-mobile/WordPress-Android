@@ -1,9 +1,14 @@
 package org.wordpress.android.ui.mysite.cards.jetpackfeature
 
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -21,10 +26,41 @@ class JetpackFeatureCardHelper @Inject constructor(
 ) {
     fun shouldShowJetpackFeatureCard(): Boolean {
         val isWordPressApp = !buildConfigWrapper.isJetpackApp
-        val isPhase3 = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == JetpackFeatureRemovalPhase.PhaseThree
-        val shouldHideJetpackFeatureCard = appPrefsWrapper.getShouldHideJetpackFeatureCard()
         val exceedsShowFrequency = exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded()
-        return isWordPressApp && isPhase3 && !shouldHideJetpackFeatureCard && exceedsShowFrequency
+        return isWordPressApp && shouldShowJetpackFeatureCardInCurrentPhase() &&
+                !isJetpackCardHiddenByUser() && exceedsShowFrequency
+    }
+
+    private fun isJetpackCardHiddenByUser(): Boolean {
+        return jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.run {
+            appPrefsWrapper.getShouldHideJetpackFeatureCard(
+                this
+            )
+        } ?: false
+    }
+
+    fun shouldShowFeatureCardAtTop(): Boolean {
+        return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
+            is PhaseThree, PhaseSelfHostedUsers -> true
+            else -> false
+        }
+    }
+
+    private fun shouldShowJetpackFeatureCardInCurrentPhase(): Boolean {
+        return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
+            is PhaseThree, PhaseNewUsers, PhaseSelfHostedUsers -> true
+            else -> false
+        }
+    }
+
+    fun getCardContent(): UiString.UiStringRes? {
+        return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
+            is PhaseThree ->
+                UiString.UiStringRes(R.string.jetpack_feature_card_content_phase_three)
+            is PhaseNewUsers, PhaseSelfHostedUsers ->
+                UiString.UiStringRes(R.string.jetpack_feature_card_content_phase_self_hosted_and_new_users)
+            else -> null
+        }
     }
 
     fun track(stat: Stat) {
@@ -46,8 +82,10 @@ class JetpackFeatureCardHelper @Inject constructor(
             url
     }
 
+    @Suppress("ReturnCount")
     private fun exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded(): Boolean {
-        val lastShownTimestamp = appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()
+        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() ?: return false
+        val lastShownTimestamp = appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp(currentPhase)
         if (lastShownTimestamp == DEFAULT_LAST_SHOWN_TIMESTAMP) return true
 
         val lastShownDate = Date(lastShownTimestamp)
@@ -58,9 +96,52 @@ class JetpackFeatureCardHelper @Inject constructor(
 
         val exceedsFrequency = daysPastOverlayShown >= FREQUENCY_IN_DAYS
         if (exceedsFrequency) {
-            appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(DEFAULT_LAST_SHOWN_TIMESTAMP)
+            appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(currentPhase, DEFAULT_LAST_SHOWN_TIMESTAMP)
         }
         return exceedsFrequency
+    }
+
+    fun shouldShowSwitchToJetpackMenuCard(): Boolean {
+        return shouldShowSwitchToJetpackMenuCardInCurrentPhase() &&
+                exceedsShowFrequencyAndResetSwitchToJetpackMenuLastShownTimestampIfNeeded()
+    }
+
+    private fun shouldShowSwitchToJetpackMenuCardInCurrentPhase(): Boolean {
+        return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
+            is JetpackFeatureRemovalPhase.PhaseFour -> true
+            else -> false
+        }
+    }
+
+    private fun exceedsShowFrequencyAndResetSwitchToJetpackMenuLastShownTimestampIfNeeded(): Boolean {
+        val lastShownTimestamp = appPrefsWrapper.getSwitchToJetpackMenuCardLastShownTimestamp()
+        if (lastShownTimestamp == DEFAULT_LAST_SHOWN_TIMESTAMP) return true
+
+        val lastShownDate = Date(lastShownTimestamp)
+        val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
+            lastShownDate,
+            Date(System.currentTimeMillis())
+        )
+
+        val exceedsFrequency = daysPastOverlayShown >= FREQUENCY_IN_DAYS
+        if (exceedsFrequency) {
+            appPrefsWrapper.setSwitchToJetpackMenuCardLastShownTimestamp(DEFAULT_LAST_SHOWN_TIMESTAMP)
+        }
+        return exceedsFrequency
+    }
+
+    fun hideJetpackFeatureCard() {
+        track(Stat.REMOVE_FEATURE_CARD_HIDE_TAPPED)
+        jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.let {
+            appPrefsWrapper.setShouldHideJetpackFeatureCard(it, true)
+        }
+    }
+
+    fun setJetpackFeatureCardLastShownTimeStamp(currentTimeMillis: Long) {
+        track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED)
+        jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.let {
+            appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(it, currentTimeMillis)
+        }
     }
 
     companion object {

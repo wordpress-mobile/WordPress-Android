@@ -18,6 +18,7 @@ class JetpackFeatureCardViewHolder(
     parent.viewBinding(JetpackFeatureCardBinding::inflate)
 ) {
     fun bind(card: JetpackFeatureCard) = with(binding) {
+        uiHelpers.setTextOrHide(mySiteJetpackFeatureCardContent, card.content)
         mySiteJetpackFeatureCardCta.setOnClickListener { card.onClick.click() }
         mySiteJetpackFeatureCardLearnMore.setOnClickListener { card.onLearnMoreClick.click() }
         mySiteJetpackFeatureCardMore.setOnClickListener {

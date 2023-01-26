@@ -129,6 +129,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         }
 
         data class JetpackFeatureCard(
+            val content: UiString?,
             val onClick: ListItemInteraction,
             val onRemindMeLaterItemClick: ListItemInteraction,
             val onHideMenuItemClick: ListItemInteraction,

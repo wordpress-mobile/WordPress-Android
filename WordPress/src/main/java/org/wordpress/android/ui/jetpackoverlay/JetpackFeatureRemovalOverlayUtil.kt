@@ -11,10 +11,10 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -26,8 +26,6 @@ import javax.inject.Inject
 private const val CURRENT_PHASE_KEY = "phase"
 private const val SCREEN_TYPE_KEY = "source"
 private const val DISMISSAL_TYPE_KEY = "dismissal_type"
-private const val FREQUENCY_IN_DAYS = 4
-private const val DEFAULT_LAST_SHOWN_TIMESTAMP = 0L
 
 @Suppress("LongParameterList", "TooManyFunctions")
 class JetpackFeatureRemovalOverlayUtil @Inject constructor(
@@ -37,9 +35,9 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper
-) {
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    )
+{
     fun shouldShowFeatureSpecificJetpackOverlay(feature: JetpackOverlayConnectedFeature): Boolean {
         return !buildConfigWrapper.isJetpackApp && isWpComSite() &&
                 isInFeatureSpecificRemovalPhase() && hasExceededOverlayFrequency(
@@ -49,28 +47,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     }
 
     fun shouldHideJetpackFeatures(): Boolean {
-        return jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == PhaseFour
-    }
-
-    fun shouldShowSwitchToJetpackMenuCard(): Boolean {
-        return shouldHideJetpackFeatures() && exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded()
-    }
-
-    private fun exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded(): Boolean {
-        val lastShownTimestamp = appPrefsWrapper.getSwitchToJetpackMenuCardLastShownTimestamp()
-        if (lastShownTimestamp == DEFAULT_LAST_SHOWN_TIMESTAMP) return true
-
-        val lastShownDate = Date(lastShownTimestamp)
-        val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
-            lastShownDate,
-            Date(System.currentTimeMillis())
-        )
-
-        val exceedsFrequency = daysPastOverlayShown >= FREQUENCY_IN_DAYS
-        if (exceedsFrequency) {
-            appPrefsWrapper.setSwitchToJetpackMenuCardLastShownTimestamp(DEFAULT_LAST_SHOWN_TIMESTAMP)
-        }
-        return exceedsFrequency
+        return jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
     }
 
     fun shouldShowSiteCreationOverlay(): Boolean {
@@ -101,7 +78,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
                 when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
                     null -> false
                     PhaseOne, PhaseTwo, PhaseThree -> true
-                    PhaseFour, PhaseNewUsers -> false
+                    PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> false
                 }
     }
 
@@ -132,10 +109,10 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private fun hasExceededGlobalOverlayFrequency(phase: JetpackFeatureRemovalOverlayPhase): Boolean {
         // Overlay is never shown
         val lastOverlayShownDate = jetpackFeatureOverlayShownTracker.getTheLastShownOverlayTimeStamp(phase)
-                ?.let { Date(it) } ?: return true
+            ?.let { Date(it) } ?: return true
         val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
-                lastOverlayShownDate,
-                dateTimeUtilsWrapper.getTodaysDate()
+            lastOverlayShownDate,
+            dateTimeUtilsWrapper.getTodaysDate()
         )
         return daysPastOverlayShown >= PhaseOne.globalOverlayFrequency
     }
