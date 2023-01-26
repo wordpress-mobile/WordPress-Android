@@ -246,7 +246,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
             illustration = if (rtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
             title = R.string.wp_jetpack_feature_removal_site_creation_overlay_title,
             caption = UiStringRes(R.string.wp_jetpack_feature_removal_site_creation_overlay_phase_two_description),
-            primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
+            primaryButtonText = R.string.wp_jetpack_feature_removal_site_creation_overlay_phase_two_primary_button,
         )
     }
 

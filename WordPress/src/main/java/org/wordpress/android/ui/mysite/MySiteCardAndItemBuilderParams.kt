@@ -96,10 +96,12 @@ sealed class MySiteCardAndItemBuilderParams {
     data class BloggingPromptCardBuilderParams(
         val bloggingPrompt: BloggingPromptModel?,
         val showViewMoreAction: Boolean,
+        val enhancementsEnabled: Boolean,
         val onShareClick: (message: String) -> Unit,
         val onAnswerClick: (promptId: Int) -> Unit,
         val onSkipClick: () -> Unit,
-        val onViewMoreClick: () -> Unit
+        val onViewMoreClick: () -> Unit,
+        val onViewAnswersClick: (promptId: Int) -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
     data class SingleActionCardParams(

@@ -63,6 +63,8 @@ import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment
 import org.wordpress.android.ui.quickstart.QuickStartTracker
+import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
@@ -119,6 +121,9 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     @Inject
     lateinit var quickStartTracker: QuickStartTracker
+
+    @Inject
+    lateinit var readerTracker: ReaderTracker
 
     @Inject
     lateinit var htmlCompatWrapper: HtmlCompatWrapper
@@ -288,6 +293,14 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
                 bloggingPromptId,
                 EntryPoint.MY_SITE_CARD_ANSWER_PROMPT
+            )
+        }
+        viewModel.onBloggingPromptsViewAnswers.observeEvent(viewLifecycleOwner) { tag ->
+            ReaderActivityLauncher.showReaderTagPreview(
+                activity,
+                tag,
+                ReaderTracker.SOURCE_BLOGGING_PROMPTS_VIEW_ANSWERS,
+                readerTracker,
             )
         }
         viewModel.onBloggingPromptsLearnMore.observeEvent(viewLifecycleOwner) {

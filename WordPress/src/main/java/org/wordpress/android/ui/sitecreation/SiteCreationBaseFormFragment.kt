@@ -7,24 +7,26 @@ import android.view.MenuItem
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
 import org.wordpress.android.databinding.SiteCreationFormScreenBinding
 
-abstract class SiteCreationBaseFormFragment : Fragment(R.layout.site_creation_form_screen) {
+abstract class SiteCreationBaseFormFragment : Fragment(R.layout.site_creation_form_screen), MenuProvider {
     @LayoutRes
     protected abstract fun getContentLayout(): Int
+
     protected abstract val screenTitle: String
+
     protected abstract fun setupContent()
+
     protected abstract fun onHelp()
+
     protected abstract fun setBindingViewStubListener(parentBinding: SiteCreationFormScreenBinding)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
 
         with(SiteCreationFormScreenBinding.bind(view)) {
             siteCreationFormContentStub.layoutResource = getContentLayout()
@@ -44,16 +46,16 @@ abstract class SiteCreationBaseFormFragment : Fragment(R.layout.site_creation_fo
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_site_creation, menu)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_site_creation, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.help) {
+    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+        R.id.help -> {
             onHelp()
-            return true
+            true
         }
-        return false
+        else -> false
     }
 
     companion object {

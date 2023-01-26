@@ -174,7 +174,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                 is OpenEditor -> {
                     activity?.let {
                         startActivity(
-                            ActivityLauncher.openEditorWithBloggingPrompt(
+                            ActivityLauncher.createOpenEditorWithBloggingPromptIntent(
                                 it, action.promptId, BLOGGING_PROMPTS_INTRODUCTION
                             )
                         )

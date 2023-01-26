@@ -590,7 +590,8 @@ public class PostUtils {
         BLOGGING_PROMPTS_INTRODUCTION("blogging_prompts_introduction"),
         BLOGGING_REMINDERS_NOTIFICATION_ANSWER_PROMPT("blogging_reminders_notification_answer_prompt"),
         MY_SITE_CARD_ANSWER_PROMPT("my_site_card_answer_prompt"),
-        ADD_NEW_SHEET_ANSWER_PROMPT("add_new_sheet_answer_prompt");
+        ADD_NEW_SHEET_ANSWER_PROMPT("add_new_sheet_answer_prompt"),
+        BLOGGING_PROMPTS_LIST("blogging_prompts_list_view");
 
         private final String mTrackingValue;
 

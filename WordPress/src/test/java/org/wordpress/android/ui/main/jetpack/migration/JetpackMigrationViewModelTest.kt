@@ -18,6 +18,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
+import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
@@ -171,6 +172,25 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should not dispatch any action when logging out from wpcom`() {
         classToTest.logoutAndFallbackToLogin()
+
+        verifyNoInteractions(dispatcher)
+    }
+
+    fun `Should dispatch fetch account action when finish button is tapped on success screen if needed`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(accountStore.account).thenReturn(mock())
+        val successScreen = classToTest.initSuccessScreenUi()
+
+        successScreen.primaryActionButton.onClick.invoke()
+
+        verify(dispatcher).dispatch(argThat { type == AccountAction.FETCH_ACCOUNT })
+    }
+
+    @Test
+    fun `Should not dispatch any action when finish button is tapped on success screen if not needed`() {
+        val successScreen = classToTest.initSuccessScreenUi()
+
+        successScreen.primaryActionButton.onClick.invoke()
 
         verifyNoInteractions(dispatcher)
     }

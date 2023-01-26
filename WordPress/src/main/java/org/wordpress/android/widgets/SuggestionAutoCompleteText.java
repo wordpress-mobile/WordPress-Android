@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
 
 import org.wordpress.android.ui.suggestion.util.SuggestionTokenizer;
@@ -20,7 +21,7 @@ import org.wordpress.persistentedittext.PersistentEditTextHelper;
 public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextView {
     PersistentEditTextHelper mPersistentEditTextHelper;
     private OnEditTextBackListener mBackListener;
-    private SuggestionTokenizer mSuggestionTokenizer;
+    @Nullable private SuggestionTokenizer mSuggestionTokenizer;
     private char mPrefix;
 
     public interface OnEditTextBackListener {
@@ -60,7 +61,7 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
         Editable text = getText();
 
         int end = getSelectionEnd();
-        if (end < 0) {
+        if (end < 0 || mSuggestionTokenizer == null) {
             return false;
         }
 

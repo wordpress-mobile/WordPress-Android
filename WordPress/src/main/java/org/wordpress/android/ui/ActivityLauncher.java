@@ -378,7 +378,7 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static Intent openEditorWithBloggingPrompt(
+    public static Intent createOpenEditorWithBloggingPromptIntent(
             @NonNull final Context context,
             final int promptId,
             final EntryPoint entryPoint

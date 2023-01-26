@@ -7,8 +7,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -56,7 +56,7 @@ import java.util.EnumSet
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableViewInitializedListener {
+class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, ScrollableViewInitializedListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -92,7 +92,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
             initToolbar()
             initViewPager()
@@ -118,8 +118,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         activity?.let { viewModel.onScreenInBackground(it.isChangingConfigurations) }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.reader_home, menu)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.reader_home, menu)
         menu.findItem(R.id.menu_search).apply {
             searchMenuItem = this
             this.isVisible = viewModel.uiState.value?.searchMenuItemUiState?.isVisible ?: false
@@ -134,20 +134,16 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_search -> {
-                viewModel.onSearchActionClicked()
-                true
-            }
-            R.id.menu_settings -> {
-                viewModel.onSettingsActionClicked()
-                true
-            }
-            else -> {
-                super.onOptionsItemSelected(item)
-            }
+    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+        R.id.menu_search -> {
+            viewModel.onSearchActionClicked()
+            true
         }
+        R.id.menu_settings -> {
+            viewModel.onSettingsActionClicked()
+            true
+        }
+        else -> false
     }
 
     private fun ReaderFragmentLayoutBinding.initToolbar() {
@@ -289,7 +285,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     private inner class ReaderTabConfigurationStrategy(
         private val uiState: ContentUiState
     ) : TabLayoutMediator.TabConfigurationStrategy {
-        override fun onConfigureTab(@NonNull tab: TabLayout.Tab, position: Int) {
+        override fun onConfigureTab(tab: TabLayout.Tab, position: Int) {
             binding?.updateTab(tab, uiState.tabUiStates[position])
         }
     }
