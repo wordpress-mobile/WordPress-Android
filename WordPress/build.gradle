@@ -439,7 +439,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
     implementation "com.github.PhilJay:MPAndroidChart:$philjayMpAndroidChartVersion"
     implementation "org.jsoup:jsoup:$jsoupVersion"
-    implementation "androidx.emoji:emoji:$androidxEmojiVersion"
     implementation ("com.google.android.exoplayer:exoplayer:$googleExoPlayerVersion") {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
