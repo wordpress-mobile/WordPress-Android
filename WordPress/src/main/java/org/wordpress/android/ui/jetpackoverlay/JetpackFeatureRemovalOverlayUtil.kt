@@ -61,8 +61,10 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     }
 
     fun shouldShowFeatureCollectionJetpackOverlay(): Boolean {
-        return !jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown() &&
-                jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == PhaseThree
+        val phase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() ?: return false
+        val featureCollectionOverlayShown = jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown(phase)
+        return (!featureCollectionOverlayShown && phase == PhaseThree) ||
+                (!featureCollectionOverlayShown && phase == PhaseFour)
     }
 
     private fun isInSiteCreationPhase(): Boolean {
@@ -267,7 +269,9 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
 
     fun onFeatureCollectionOverlayShown(source: JetpackFeatureCollectionOverlaySource) {
         if (source == APP_OPEN) {
-            jetpackFeatureOverlayShownTracker.setFeatureCollectionOverlayShown()
+            jetpackFeatureOverlayShownTracker.setFeatureCollectionOverlayShown(
+                jetpackFeatureRemovalPhaseHelper.getCurrentPhase()!!
+            )
         }
         trackFeatureCollectionOverlayShown(source)
     }
