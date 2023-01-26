@@ -18,6 +18,7 @@ class WPAPIAuthenticator @Inject constructor(
     private val siteSqlUtils: SiteSqlUtils,
     private val currentTimeProvider: CurrentTimeProvider
 ) {
+    @Suppress("ComplexMethod")
     suspend fun <T : Payload<BaseNetworkError?>> makeAuthenticatedWPAPIRequest(
         site: SiteModel,
         fetchMethod: suspend (Nonce?) -> T
