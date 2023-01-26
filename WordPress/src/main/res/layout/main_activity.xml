@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorSurface"
             app:elevation="@dimen/navbar_elevation"
-            android:visibility="gone"
+            android:visibility="visible"
             app:menu="@menu/bottom_nav_main" />
     </LinearLayout>
 

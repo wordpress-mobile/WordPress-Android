@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
@@ -324,6 +325,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         String authTokenToSet = null;
         boolean canShowAppRatingPrompt = savedInstanceState != null;
 
+        mBottomNav = findViewById(R.id.bottom_navigation);
+        mBottomNav.init(getSupportFragmentManager(), this);
+
         if (savedInstanceState == null) {
             if (!AppPrefs.isInstallationReferrerObtained()) {
                 InstallationReferrerServiceStarter.startService(this, null);
@@ -484,23 +488,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void setUpMainView() {
         if (!mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
-            mBottomNav = findViewById(R.id.bottom_navigation);
-            mBottomNav.setVisibility(View.VISIBLE);
-            mBottomNav.init(getSupportFragmentManager(), this);
+            if (mBottomNav != null) {
+                mBottomNav.setVisibility(View.VISIBLE);
+            }
         } else {
             if (mBottomNav != null) {
                 mBottomNav.setVisibility(View.GONE);
-                mBottomNav.clear();
             }
-            showMySiteFragment();
         }
-    }
-
-    private void showMySiteFragment() {
-        MySiteFragment fragment = MySiteFragment.Companion.newInstance();
-        getSupportFragmentManager().beginTransaction()
-                                   .add(R.id.fragment_container, fragment, MySiteFragment.TAG)
-                                   .commitNow();
     }
 
     private void showBloggingPromptsOnboarding() {
@@ -977,6 +972,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Override
     protected void onResume() {
+        Log.i(WPMainActivity.class.getSimpleName(), "***=> onResume");
         super.onResume();
 
         setUpMainView();
