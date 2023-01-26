@@ -280,10 +280,12 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         currentPhase: JetpackFeatureRemovalPhase,
         blogPostLink: String?
     ): JetpackFeatureOverlayUIState {
-        val componentVisibility = if (currentPhase == PhaseThree)
-            JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseThree()
-        else
-            JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.Final()
+        val componentVisibility = when (currentPhase) {
+            PhaseThree -> JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseThree()
+            JetpackFeatureRemovalPhase.PhaseFour ->
+                JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseFour()
+            else -> JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.Final()
+        }
         val content = getContentForFeatureCollection(isRtl, blogPostLink, currentPhase)
         return JetpackFeatureOverlayUIState(componentVisibility, content)
     }
