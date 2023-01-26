@@ -21,9 +21,11 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.LocalMigrationState
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Failure
@@ -79,6 +81,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val migrationEmailHelper: MigrationEmailHelper,
     private val migrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
     private val accountStore: AccountStore,
+    private val siteStore: SiteStore,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val jetpackMigrationLanguageUtil: JetpackMigrationLanguageUtil,
     private val dispatcher: Dispatcher,
@@ -244,6 +247,13 @@ class JetpackMigrationViewModel @Inject constructor(
             application.wordPressComSignOut()
             postActionEvent(FallbackToLogin(deepLinkData))
         }
+        dispatchRemoveAllSitesActionIfNeeded()
+    }
+
+    private fun dispatchRemoveAllSitesActionIfNeeded() {
+        if (!accountStore.hasAccessToken() && siteStore.hasSiteAccessedViaXMLRPC()) {
+            dispatcher.dispatch(SiteActionBuilder.newRemoveAllSitesAction())
+        }
     }
 
     private fun siteUiFromModel(site: SiteModel) = SiteListItemUiState(
@@ -271,6 +281,7 @@ class JetpackMigrationViewModel @Inject constructor(
             postActionEvent(Logout)
         } else {
             postActionEvent(FallbackToLogin(deepLinkData))
+            dispatchRemoveAllSitesActionIfNeeded()
         }
     }
 
