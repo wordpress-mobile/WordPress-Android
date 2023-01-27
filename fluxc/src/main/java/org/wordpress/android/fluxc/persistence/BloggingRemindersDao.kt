@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.persistence
 
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Insert
@@ -35,6 +36,7 @@ interface BloggingRemindersDao {
         val sunday: Boolean = false,
         val hour: Int = 10,
         val minute: Int = 0,
-        val isPromptRemindersOptedIn: Boolean = false
+        val isPromptRemindersOptedIn: Boolean = false,
+        @ColumnInfo(defaultValue = "1") val isPromptsCardOptedIn: Boolean = true,
     )
 }
