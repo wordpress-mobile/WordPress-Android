@@ -3,11 +3,16 @@ package org.wordpress.android.fluxc.network.rest.wpapi.site
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.discovery.RootWPAPIRestResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
+import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
+import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.store.SiteStore.FetchWPAPISitePayload
@@ -37,12 +42,22 @@ class SiteWPAPIRestClient @Inject constructor(
             username = payload.username,
             password = payload.password
         ) { wpApiUrl, nonce ->
+            if (nonce !is Available) {
+                val networkError = (nonce as? FailedRequest)?.networkError ?: WPAPINetworkError(
+                    BaseNetworkError(GenericErrorType.UNKNOWN)
+                )
+
+                return@makeAuthenticatedWPAPIRequest SiteModel().apply {
+                    error = networkError
+                }
+            }
+
             val result = wpapiGsonRequestBuilder.syncGetRequest(
                 restClient = this,
                 url = wpApiUrl,
                 clazz = RootWPAPIRestResponse::class.java,
                 params = mapOf("_fields" to FETCH_API_CALL_FIELDS),
-                nonce = nonce?.value
+                nonce = nonce.value
             )
 
             return@makeAuthenticatedWPAPIRequest when (result) {
