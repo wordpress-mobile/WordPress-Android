@@ -41,7 +41,7 @@ class WPAPIEncodedBodyRequest(
             mOnAuthFailedListener.onAuthFailed(AuthenticateErrorPayload(authenticationError))
         }
 
-        return error
+        return WPAPINetworkError(error)
     }
 
     override fun parseNetworkResponse(response: NetworkResponse?): Response<String> {
