@@ -13,6 +13,9 @@ public class SiteErrorUtils {
                 case INVALID_RESPONSE:
                     errorType = SiteErrorType.INVALID_RESPONSE;
                     break;
+                case NOT_AUTHENTICATED:
+                    errorType = SiteErrorType.NOT_AUTHENTICATED;
+                    break;
             }
         }
 
