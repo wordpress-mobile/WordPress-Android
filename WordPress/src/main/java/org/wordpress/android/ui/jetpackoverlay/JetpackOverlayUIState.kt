@@ -13,7 +13,8 @@ sealed class JetpackFeatureOverlayComponentVisibility(
     val primaryButton: Boolean = true,
     open val closeButton: Boolean = true,
     open val secondaryButton: Boolean = true,
-    open val migrationInfoText: Boolean = false
+    open val migrationInfoText: Boolean = false,
+    open val newUsersContent: Boolean = false
 ) {
     class PhaseOne : JetpackFeatureOverlayComponentVisibility()
     class PhaseTwo(override val migrationInfoText: Boolean = true) : JetpackFeatureOverlayComponentVisibility()
@@ -41,6 +42,19 @@ sealed class JetpackFeatureOverlayComponentVisibility(
 
         class PhaseFour(
             override val migrationInfoText: Boolean = true,
+            override val closeButton: Boolean = false,
+            override val migrationText: Boolean = true
+        ) : FeatureCollectionPhase()
+
+        class PhaseNewUsers(
+            override val migrationInfoText: Boolean = false,
+            override val closeButton: Boolean = false,
+            override val migrationText: Boolean = false,
+            override val newUsersContent: Boolean = true
+        ) : FeatureCollectionPhase()
+
+        class PhaseSelfHostedUsers(
+            override val migrationInfoText: Boolean = false,
             override val closeButton: Boolean = false,
             override val migrationText: Boolean = true
         ) : FeatureCollectionPhase()

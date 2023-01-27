@@ -5,6 +5,9 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -29,7 +32,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
             is PhaseOne -> getStateForPhaseOne(params, params.feature!!)
             is PhaseTwo -> getStateForPhaseTwo(params)
             is PhaseThree -> getStateForPhaseThree(params)
-            else  -> TODO()
+            else -> TODO()
         }
     }
 
@@ -282,23 +285,30 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
     ): JetpackFeatureOverlayUIState {
         val componentVisibility = when (currentPhase) {
             PhaseThree -> JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseThree()
-            JetpackFeatureRemovalPhase.PhaseFour ->
-                JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseFour()
+            PhaseFour -> JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseFour()
+            PhaseNewUsers -> JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseNewUsers()
+            PhaseSelfHostedUsers ->
+                JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseSelfHostedUsers()
             else -> JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.Final()
         }
         val content = getContentForFeatureCollection(isRtl, blogPostLink, currentPhase)
         return JetpackFeatureOverlayUIState(componentVisibility, content)
     }
 
+    @Suppress("UseCheckOrError")
     private fun getContentForFeatureCollection(
         isRtl: Boolean,
         blogPostLink: String?,
         currentPhase: JetpackFeatureRemovalPhase
     ): JetpackFeatureOverlayContent {
-        return if (currentPhase == PhaseThree) {
-            getJetpackFeatureOverlayContentForPhaseThree(isRtl, blogPostLink)
-        } else {
-            getJetpackFeatureOverlayContentForPhaseFour(isRtl, blogPostLink)
+        return when (currentPhase) {
+            is PhaseThree -> getJetpackFeatureOverlayContentForPhaseThree(isRtl, blogPostLink)
+            is PhaseFour -> getJetpackFeatureOverlayContentForPhaseFour(isRtl, blogPostLink)
+            is PhaseNewUsers -> getJetpackFeatureOverlayContentForNewUsers(isRtl)
+            is PhaseSelfHostedUsers -> getJetpackFeatureOverlayContentForSelfHostedUsers(isRtl)
+            else -> {
+                throw IllegalStateException("Invalid phase for feature collection overlay")
+            }
         }
     }
 
@@ -315,6 +325,27 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         migrationInfoUrl = blogPostLink,
         primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app,
         secondaryButtonText = R.string.wp_jetpack_feature_removal_phase_four_secondary_text
+    )
+
+    private fun getJetpackFeatureOverlayContentForNewUsers(
+        isRtl: Boolean,
+    ) = JetpackFeatureOverlayContent(
+        illustration = if (isRtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
+        title = R.string.wp_jetpack_feature_removal_phase_new_users_title,
+        caption = UiStringRes(R.string.wp_jetpack_feature_removal_phase_new_users_description),
+        primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app,
+        secondaryButtonText = R.string.wp_jetpack_feature_removal_overlay_continue_without_jetpack
+    )
+
+    private fun getJetpackFeatureOverlayContentForSelfHostedUsers(
+        isRtl: Boolean,
+    ) = JetpackFeatureOverlayContent(
+        illustration = if (isRtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
+        title = R.string.wp_jetpack_feature_removal_phase_self_hosted_users_title,
+        caption = UiStringRes(R.string.wp_jetpack_feature_removal_phase_self_hosted_users_description),
+        migrationText = R.string.wp_jetpack_feature_removal_overlay_migration_helper_text,
+        primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app,
+        secondaryButtonText = R.string.wp_jetpack_feature_removal_overlay_continue_without_jetpack
     )
 
     private fun getJetpackFeatureOverlayContentForPhaseThree(

@@ -36,8 +36,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    )
-{
+) {
     fun shouldShowFeatureSpecificJetpackOverlay(feature: JetpackOverlayConnectedFeature): Boolean {
         return !buildConfigWrapper.isJetpackApp && isWpComSite() &&
                 isInFeatureSpecificRemovalPhase() && hasExceededOverlayFrequency(
@@ -60,11 +59,17 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
                 JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
     }
 
-    fun shouldShowFeatureCollectionJetpackOverlay(): Boolean {
+    fun shouldShowFeatureCollectionJetpackOverlayForFirstTime(): Boolean {
         val phase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() ?: return false
         val featureCollectionOverlayShown = jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown(phase)
-        return (!featureCollectionOverlayShown && phase == PhaseThree) ||
-                (!featureCollectionOverlayShown && phase == PhaseFour)
+        return !featureCollectionOverlayShown && shouldShowFeatureCollectionOverlayInCurrentPhase(phase)
+    }
+
+    private fun shouldShowFeatureCollectionOverlayInCurrentPhase(phase: JetpackFeatureRemovalPhase): Boolean {
+        return when (phase) {
+            PhaseThree, PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> true
+            else -> false
+        }
     }
 
     private fun isInSiteCreationPhase(): Boolean {
@@ -110,8 +115,9 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
 
     private fun hasExceededGlobalOverlayFrequency(phase: JetpackFeatureRemovalOverlayPhase): Boolean {
         // Overlay is never shown
-        val lastOverlayShownDate = jetpackFeatureOverlayShownTracker.getTheLastShownOverlayTimeStamp(phase)
-            ?.let { Date(it) } ?: return true
+        val lastOverlayShownDate =
+            jetpackFeatureOverlayShownTracker.getTheLastShownOverlayTimeStamp(phase)
+                ?.let { Date(it) } ?: return true
         val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
             lastOverlayShownDate,
             dateTimeUtilsWrapper.getTodaysDate()
