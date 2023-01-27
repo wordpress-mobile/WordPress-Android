@@ -537,7 +537,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void displayJetpackFeatureCollectionOverlayIfNeeded() {
-        if (mJetpackFeatureRemovalOverlayUtil.shouldShowFeatureCollectionJetpackOverlay()) {
+        if (mJetpackFeatureRemovalOverlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()) {
             JetpackFeatureFullScreenOverlayFragment.newInstance(
                     null,
                     false,
