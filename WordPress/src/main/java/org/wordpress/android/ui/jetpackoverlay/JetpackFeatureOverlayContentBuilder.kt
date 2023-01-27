@@ -32,7 +32,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
             is PhaseOne -> getStateForPhaseOne(params, params.feature!!)
             is PhaseTwo -> getStateForPhaseTwo(params)
             is PhaseThree -> getStateForPhaseThree(params)
-            else  -> TODO()
+            else -> TODO()
         }
     }
 
@@ -287,6 +287,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
             PhaseThree -> JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseThree()
             PhaseFour -> JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseFour()
             PhaseNewUsers -> JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseNewUsers()
+            PhaseSelfHostedUsers -> JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseSelfHostedUsers()
             else -> JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.Final()
         }
         val content = getContentForFeatureCollection(isRtl, blogPostLink, currentPhase)
@@ -298,9 +299,9 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         blogPostLink: String?,
         currentPhase: JetpackFeatureRemovalPhase
     ): JetpackFeatureOverlayContent {
-        return when(currentPhase) {
-            is PhaseThree ->getJetpackFeatureOverlayContentForPhaseThree(isRtl, blogPostLink)
-            is PhaseFour ->getJetpackFeatureOverlayContentForPhaseFour(isRtl, blogPostLink)
+        return when (currentPhase) {
+            is PhaseThree -> getJetpackFeatureOverlayContentForPhaseThree(isRtl, blogPostLink)
+            is PhaseFour -> getJetpackFeatureOverlayContentForPhaseFour(isRtl, blogPostLink)
             is PhaseNewUsers -> getJetpackFeatureOverlayContentForNewUsers(isRtl)
             is PhaseSelfHostedUsers -> getJetpackFeatureOverlayContentForSelfHostedUsers(isRtl)
             else -> {

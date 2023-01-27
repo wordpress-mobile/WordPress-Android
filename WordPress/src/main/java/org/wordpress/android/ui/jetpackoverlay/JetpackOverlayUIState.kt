@@ -53,6 +53,11 @@ sealed class JetpackFeatureOverlayComponentVisibility(
             override val newUsersContent: Boolean = true
         ) : FeatureCollectionPhase()
 
+        class PhaseSelfHostedUsers(
+            override val migrationInfoText: Boolean = false,
+            override val closeButton: Boolean = false,
+            override val migrationText: Boolean = true
+        ) : FeatureCollectionPhase()
 
         class Final(override val closeButton: Boolean = false) : FeatureCollectionPhase()
     }
