@@ -7,6 +7,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseT
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -301,6 +302,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
             is PhaseThree ->getJetpackFeatureOverlayContentForPhaseThree(isRtl, blogPostLink)
             is PhaseFour ->getJetpackFeatureOverlayContentForPhaseFour(isRtl, blogPostLink)
             is PhaseNewUsers -> getJetpackFeatureOverlayContentForNewUsers(isRtl)
+            is PhaseSelfHostedUsers -> getJetpackFeatureOverlayContentForSelfHostedUsers(isRtl)
             else -> {
                 throw IllegalStateException("Invalid phase for feature collection overlay")
             }
@@ -328,6 +330,17 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         illustration = if (isRtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
         title = R.string.wp_jetpack_feature_removal_phase_new_users_title,
         caption = UiStringRes(R.string.wp_jetpack_feature_removal_phase_new_users_description),
+        primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app,
+        secondaryButtonText = R.string.wp_jetpack_feature_removal_overlay_continue_without_jetpack
+    )
+
+    private fun getJetpackFeatureOverlayContentForSelfHostedUsers(
+        isRtl: Boolean,
+    ) = JetpackFeatureOverlayContent(
+        illustration = if (isRtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
+        title = R.string.wp_jetpack_feature_removal_phase_self_hosted_users_title,
+        caption = UiStringRes(R.string.wp_jetpack_feature_removal_phase_self_hosted_users_description),
+        migrationText = R.string.wp_jetpack_feature_removal_overlay_migration_helper_text,
         primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app,
         secondaryButtonText = R.string.wp_jetpack_feature_removal_overlay_continue_without_jetpack
     )
