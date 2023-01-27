@@ -742,5 +742,7 @@
     <!-- Jetpack full screen overlay -->
     <dimen name="jp_migration_full_screen_overlay_padding_horizontal">90dp</dimen>
     <dimen name="jetpack_full_screen_overlay_margin_close_button">20dp</dimen>
+    <dimen name="jetpack_full_screen_overlay_new_users_content_margin">50dp</dimen>
+    <dimen name="jetpack_full_screen_overlay_new_users_content_text_size">15sp</dimen>
 
 </resources>

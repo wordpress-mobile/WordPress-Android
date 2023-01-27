@@ -76,6 +76,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title" />
 
+        <include
+            layout="@layout/jetpack_feature_removal_overlay_new_users_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+            android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+            android:layout_marginTop="@dimen/jetpack_full_screen_overlay_new_users_content_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/caption"/>
+
         <TextView
             android:id="@+id/migration_helper_text"
             android:layout_width="match_parent"
