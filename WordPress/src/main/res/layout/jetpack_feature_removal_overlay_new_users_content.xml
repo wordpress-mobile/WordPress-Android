@@ -10,7 +10,7 @@
     android:orientation="vertical">
 
     <ImageButton
-        android:id="@+id/close_button"
+        android:id="@+id/stats_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
@@ -27,7 +27,7 @@
         android:background="?attr/selectableItemBackground"
         android:src="@drawable/ic_reader_feature_overlay_reader_new_users"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/caption"
+        app:layout_constraintTop_toBottomOf="@+id/reader_description"
         tools:ignore="ContentDescription" />
 
     <ImageButton
@@ -47,15 +47,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
-        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:text="@string/wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title"
         android:textFontWeight="700"
         app:autoSizeMaxTextSize="@dimen/text_sz_extra_extra_large"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/close_button"
-        app:layout_constraintTop_toTopOf="@+id/close_button"
+        app:layout_constraintStart_toEndOf="@+id/stats_icon"
+        app:layout_constraintTop_toTopOf="@+id/stats_icon"
         tools:targetApi="p" />
 
     <TextView
@@ -63,7 +63,7 @@
         style="?attr/textAppearanceBody1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:text="@string/wp_jetpack_feature_removal_phase_new_users_reader_title"
         android:textFontWeight="700"
         app:autoSizeMaxTextSize="@dimen/text_sz_extra_extra_large"
@@ -85,7 +85,7 @@
         app:layout_constraintTop_toBottomOf="@id/reader_title" />
 
     <TextView
-        android:id="@+id/caption"
+        android:id="@+id/reader_description"
         android:layout_width="0dp"
         android:textSize="@dimen/jetpack_full_screen_overlay_new_users_content_text_size"
         android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
         style="?attr/textAppearanceBody1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:text="@string/wp_jetpack_feature_removal_phase_new_users_notifications_title"
         android:textFontWeight="700"
         app:autoSizeMaxTextSize="@dimen/text_sz_extra_extra_large"
