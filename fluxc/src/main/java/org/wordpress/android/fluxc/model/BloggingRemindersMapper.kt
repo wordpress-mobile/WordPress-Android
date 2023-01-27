@@ -26,7 +26,8 @@ class BloggingRemindersMapper
                 sunday = enabledDays.contains(SUNDAY),
                 hour = this.hour,
                 minute = this.minute,
-                isPromptRemindersOptedIn = domainModel.isPromptIncluded
+                isPromptRemindersOptedIn = domainModel.isPromptIncluded,
+                isPromptsCardOptedIn = domainModel.isPromptsCardEnabled,
             )
         }
 
@@ -46,7 +47,8 @@ class BloggingRemindersMapper
                 },
                 hour = hour,
                 minute = minute,
-                isPromptIncluded = isPromptRemindersOptedIn
+                isPromptIncluded = isPromptRemindersOptedIn,
+                isPromptsCardEnabled = isPromptsCardOptedIn,
             )
         }
 }
