@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -8,10 +9,10 @@ import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.wordpress.android.fluxc.persistence.BloggingRemindersDao.BloggingReminders
+import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao.FeatureFlag
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOffer
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferFeature
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
-import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao.FeatureFlag
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfig
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao.BloggingPromptEntity
@@ -22,7 +23,7 @@ import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
 
 @Database(
-        version = 10,
+        version = 11,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -33,6 +34,9 @@ import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
             BloggingPromptEntity::class,
             FeatureFlag::class,
             RemoteConfig::class,
+        ],
+        autoMigrations = [
+            AutoMigration(from = 10, to = 11)
         ]
 )
 @TypeConverters(
