@@ -175,7 +175,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:barrierDirection="bottom"
-                app:constraint_referenced_ids="migrationInfoText,new_users_content"/>
+                app:constraint_referenced_ids="migrationInfoText,new_users_content_view_parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
