@@ -1,18 +1,16 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.site
 
 import com.android.volley.RequestQueue
-import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.endpoint.WPAPI
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.android.fluxc.network.discovery.RootWPAPIRestResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.store.SiteStore.FetchWPAPISitePayload
-import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -25,6 +23,12 @@ class SiteWPAPIRestClient @Inject constructor(
     @Named("custom-ssl") requestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
+    companion object {
+        private const val WOO_API_NAMESPACE_PREFIX = "wc/"
+        private const val FETCH_API_CALL_FIELDS =
+            "name,description,gmt_offset,url,authentication,namespaces"
+    }
+
     suspend fun fetchWPAPISite(
         payload: FetchWPAPISitePayload
     ): SiteModel {
@@ -33,29 +37,32 @@ class SiteWPAPIRestClient @Inject constructor(
             username = payload.username,
             password = payload.password
         ) { wpApiUrl, nonce ->
-            val url = wpApiUrl.slashJoin(WPAPI.settings.urlV2)
             val result = wpapiGsonRequestBuilder.syncGetRequest(
                 restClient = this,
-                url = url,
-                clazz = WPSiteSettingsResponse::class.java,
+                url = wpApiUrl,
+                clazz = RootWPAPIRestResponse::class.java,
+                params = mapOf("_fields" to FETCH_API_CALL_FIELDS),
                 nonce = nonce?.value
             )
 
             return@makeAuthenticatedWPAPIRequest when (result) {
                 is Success -> {
+                    val response = result.data
                     SiteModel().apply {
-                        name = result.data?.title
-                        description = result.data?.description
-                        timezone = result.data?.timezone
-                        email = result.data?.email
-                        showOnFront = result.data?.showOnFront
-                        pageOnFront = result.data?.pageOnFront ?: 0
+                        name = response?.name
+                        description = response?.description
+                        timezone = response?.gmtOffset
                         origin = SiteModel.ORIGIN_WPAPI
-                        this.url = result.data?.url ?: payload.url
+                        hasWooCommerce = response?.namespaces?.any {
+                            it.startsWith(WOO_API_NAMESPACE_PREFIX)
+                        } ?: false
+                        wpApiRestUrl = wpApiUrl
+                        this.url = response?.url ?: payload.url
                         this.username = payload.username
                         this.password = payload.password
                     }
                 }
+
                 is Error -> {
                     SiteModel().apply {
                         error = result.error
@@ -76,15 +83,4 @@ class SiteWPAPIRestClient @Inject constructor(
             )
         )
     }
-
-    private data class WPSiteSettingsResponse(
-        @SerializedName("title") val title: String? = null,
-        @SerializedName("description") val description: String? = null,
-        @SerializedName("timezone") val timezone: String? = null,
-        @SerializedName("email") val email: String? = null,
-        @SerializedName("url") val url: String? = null,
-        @SerializedName("show_on_front") val showOnFront: String? = null,
-        @SerializedName("page_on_front") val pageOnFront: Long? = null
-    )
 }
-
