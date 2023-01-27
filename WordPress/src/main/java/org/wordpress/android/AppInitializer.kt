@@ -25,10 +25,6 @@ import android.util.Log
 import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.provider.FontRequest
-import androidx.emoji.text.EmojiCompat
-import androidx.emoji.text.EmojiCompat.InitCallback
-import androidx.emoji.text.FontRequestEmojiCompatConfig
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -366,7 +362,6 @@ class AppInitializer @Inject constructor(
         systemNotificationsTracker.checkSystemNotificationsState()
         ImageEditorInitializer.init(imageManager, imageEditorTracker, imageEditorFileUtils, appScope)
 
-        initEmojiCompat()
         storyNotificationTrackerProvider = StoryNotificationTrackerProvider()
         storyMediaSaveUploadBridge.init(application)
         ProcessLifecycleOwner.get().lifecycle.addObserver(storyMediaSaveUploadBridge)
@@ -741,31 +736,6 @@ class AppInitializer @Inject constructor(
     private fun flushHttpCache() {
         val cache = HttpResponseCache.getInstalled()
         cache?.flush()
-    }
-
-    private fun initEmojiCompat() {
-        // Use a downloadable font for EmojiCompat
-        val fontRequest = FontRequest(
-            "com.google.android.gms.fonts",
-            "com.google.android.gms",
-            "Noto Color Emoji Compat",
-            R.array.com_google_android_gms_fonts_certs
-        )
-        val config = FontRequestEmojiCompatConfig(application, fontRequest)
-        config.setReplaceAll(true)
-        config.setUseEmojiAsDefaultStyle(true)
-        config.registerInitCallback(object : InitCallback() {
-            override fun onInitialized() {
-                super.onInitialized()
-                AppLog.d(MAIN, "EmojiCompat initialized")
-            }
-
-            override fun onFailed(throwable: Throwable?) {
-                super.onFailed(throwable)
-                AppLog.d(MAIN, "EmojiCompat initialization failed: " + throwable!!.message)
-            }
-        })
-        EmojiCompat.init(config)
     }
 
     override fun onStart(owner: LifecycleOwner) {
