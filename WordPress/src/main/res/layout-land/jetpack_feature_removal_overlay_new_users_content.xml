@@ -42,7 +42,7 @@
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/stats_and_insights_title"
         style="?attr/textAppearanceBody1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -91,8 +91,8 @@
         android:layout_height="wrap_content"
         android:text="@string/wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/title"
-        app:layout_constraintTop_toBottomOf="@id/title" />
+        app:layout_constraintStart_toStartOf="@+id/stats_and_insights_title"
+        app:layout_constraintTop_toBottomOf="@id/stats_and_insights_title" />
 
     <TextView
         android:id="@+id/notification_title"
