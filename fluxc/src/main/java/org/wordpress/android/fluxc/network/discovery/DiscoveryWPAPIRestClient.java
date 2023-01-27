@@ -59,7 +59,7 @@ public class DiscoveryWPAPIRestClient extends BaseWPAPIRestClient {
         add(request);
         try {
             RootWPAPIRestResponse response = future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
-            if (!response.namespaces.contains("wp/v2")) {
+            if (!response.getNamespaces().contains("wp/v2")) {
                 AppLog.i(AppLog.T.NUX, "Site does not have the full WP-API available "
                         + "(missing wp/v2 namespace)");
                 return null;
