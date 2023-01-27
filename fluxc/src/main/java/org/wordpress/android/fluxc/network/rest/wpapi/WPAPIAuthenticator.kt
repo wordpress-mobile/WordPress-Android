@@ -24,7 +24,7 @@ class WPAPIAuthenticator @Inject constructor(
         siteUrl: String,
         username: String,
         password: String,
-        fetchMethod: suspend (wpApiUrl: String, nonce: Nonce?) -> T
+        fetchMethod: suspend (wpApiUrl: String, nonce: Nonce) -> T
     ): T {
         val wpApiUrl = discoverApiEndpoint(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false))
         val scheme = wpApiUrl.toHttpUrl().scheme
@@ -41,7 +41,7 @@ class WPAPIAuthenticator @Inject constructor(
 
     suspend fun <T : Payload<BaseNetworkError?>> makeAuthenticatedWPAPIRequest(
         site: SiteModel,
-        fetchMethod: suspend (Nonce?) -> T
+        fetchMethod: suspend (Nonce) -> T
     ): T {
         val usingSavedRestUrl = site.wpApiRestUrl != null
         if (!usingSavedRestUrl) {
@@ -81,12 +81,12 @@ class WPAPIAuthenticator @Inject constructor(
         wpApiUrl: String,
         username: String,
         password: String,
-        fetchMethod: suspend (wpApiUrl: String, nonce: Nonce?) -> T
+        fetchMethod: suspend (wpApiUrl: String, nonce: Nonce) -> T
     ): T {
         var nonce = nonceRestClient.getNonce(siteUrl)
         val usingSavedNonce = nonce is Available
         val failedRecently = nonce.failedRecently()
-        if (nonce is Unknown || !(usingSavedNonce || failedRecently)) {
+        if (nonce == null || nonce is Unknown || !(usingSavedNonce || failedRecently)) {
             nonce = nonceRestClient.requestNonce(siteUrl, username, password)
         }
 
@@ -101,7 +101,7 @@ class WPAPIAuthenticator @Inject constructor(
                     val newNonce = nonceRestClient.requestNonce(siteUrl, username, password)
 
                     // Try original call again if we have a new nonce
-                    val nonceIsUpdated = newNonce != null && newNonce != previousNonce
+                    val nonceIsUpdated = newNonce != previousNonce
                     if (nonceIsUpdated) {
                         fetchMethod(wpApiUrl, newNonce)
                     } else {
