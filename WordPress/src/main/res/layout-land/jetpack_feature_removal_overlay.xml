@@ -76,16 +76,16 @@
                 app:layout_constraintTop_toBottomOf="@id/title" />
 
             <include
-                android:id="@+id/new_users_content"
                 layout="@layout/jetpack_feature_removal_overlay_new_users_content"
+                android:id="@+id/new_users_content_view_parent"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:layout_marginBottom="@dimen/margin_large"
                 android:layout_marginEnd="@dimen/jp_migration_full_screen_overlay_padding_horizontal"
                 android:layout_marginStart="@dimen/jp_migration_full_screen_overlay_padding_horizontal"
-                android:layout_marginTop="@dimen/jetpack_full_screen_overlay_new_users_content_margin"
-                android:visibility="gone"
+                android:layout_marginTop="@dimen/jetpack_full_screen_overlay_new_users_content_margin_land"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/caption" />
