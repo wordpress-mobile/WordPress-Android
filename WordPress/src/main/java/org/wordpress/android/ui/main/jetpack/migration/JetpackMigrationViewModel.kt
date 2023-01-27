@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
 import android.content.Intent
+import android.text.TextUtils
 import androidx.annotation.DrawableRes
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
@@ -19,8 +20,12 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.LocalMigrationState
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Failure
@@ -39,6 +44,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.NotificationsPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FinishActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.Logout
@@ -75,8 +81,10 @@ class JetpackMigrationViewModel @Inject constructor(
     private val migrationEmailHelper: MigrationEmailHelper,
     private val migrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
     private val accountStore: AccountStore,
+    private val siteStore: SiteStore,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val jetpackMigrationLanguageUtil: JetpackMigrationLanguageUtil,
+    private val dispatcher: Dispatcher,
 ) : ViewModel() {
     private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
@@ -239,6 +247,13 @@ class JetpackMigrationViewModel @Inject constructor(
             application.wordPressComSignOut()
             postActionEvent(FallbackToLogin(deepLinkData))
         }
+        dispatchRemoveAllSitesActionIfNeeded()
+    }
+
+    private fun dispatchRemoveAllSitesActionIfNeeded() {
+        if (!accountStore.hasAccessToken() && siteStore.hasSiteAccessedViaXMLRPC()) {
+            dispatcher.dispatch(SiteActionBuilder.newRemoveAllSitesAction())
+        }
     }
 
     private fun siteUiFromModel(site: SiteModel) = SiteListItemUiState(
@@ -266,6 +281,7 @@ class JetpackMigrationViewModel @Inject constructor(
             postActionEvent(Logout)
         } else {
             postActionEvent(FallbackToLogin(deepLinkData))
+            dispatchRemoveAllSitesActionIfNeeded()
         }
     }
 
@@ -300,7 +316,16 @@ class JetpackMigrationViewModel @Inject constructor(
         migrationEmailHelper.notifyMigrationComplete()
         appPrefsWrapper.setJetpackMigrationCompleted(true)
         appPrefsWrapper.setJetpackMigrationInProgress(false)
+        dispatchFetchAccountActionIfNeeded()
         postActionEvent(CompleteFlow(deepLinkData))
+    }
+
+    private fun dispatchFetchAccountActionIfNeeded() {
+        // User might have opened the Help screen, in which case their account info is already loaded
+        if (accountStore.hasAccessToken() && TextUtils.isEmpty(accountStore.account.userName)) {
+            // Load account info to make sure the avatar will always show on My Site screen
+            dispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
+        }
     }
 
     private fun onHelpClicked(source: HelpButtonSource) {
@@ -315,7 +340,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun onGotItClicked() {
         migrationAnalyticsTracker.trackPleaseDeleteWordPressGotItTapped()
-        postActionEvent(CompleteFlow())
+        postActionEvent(FinishActivity)
     }
 
     private fun resizeAvatarUrl(avatarUrl: String) = gravatarUtilsWrapper.fixGravatarUrlWithResource(
@@ -513,6 +538,7 @@ class JetpackMigrationViewModel @Inject constructor(
             val deepLinkData: PreMigrationDeepLinkData? = null,
         ) : JetpackMigrationActionEvent()
 
+        object FinishActivity : JetpackMigrationActionEvent()
         object Logout : JetpackMigrationActionEvent()
     }
 }

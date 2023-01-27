@@ -45,11 +45,6 @@
         android:name="android.hardware.screen.landscape"
         android:required="false" />
 
-    <!-- Adding this meta-data will download the font when application is installed from
-    Google Play Store. This way the font will be downloaded and ready when your app starts
-    for the first time. -->
-    <meta-data android:name="fontProviderRequests" android:value="Noto Color Emoji Compat"/>
-
     <application
         android:allowBackup="true"
         android:fullBackupContent="@xml/legacy_backup_scheme"
@@ -776,6 +771,7 @@
         <!-- Blogging Prompts -->
         <activity
             android:name=".ui.bloggingprompts.promptslist.BloggingPromptsListActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/blogging_prompts_list_title"
             android:theme="@style/WordPress.NoActionBar" />
 

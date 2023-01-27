@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
+import android.content.Context
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.MenuCompat
@@ -12,6 +13,7 @@ import org.wordpress.android.databinding.MySiteBloggingPromptCardBinding
 import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution.DAY_ONE
@@ -70,7 +72,7 @@ class BloggingPromptCardViewHolder(
         ).apply { justifyContent = JustifyContent.CENTER }
 
         if (card.numberOfAnswers > 0) {
-            uiHelpers.updateVisibility(answeredUsersRecycler, true)
+            uiHelpers.updateVisibility(answeredUsersContainer, true)
             answeredUsersRecycler.addItemDecoration(
                 AvatarItemDecorator(
                     RtlUtils.isRtl(answeredUsersRecycler.context),
@@ -87,9 +89,28 @@ class BloggingPromptCardViewHolder(
             answeredUsersRecycler.adapter = adapter
 
             adapter.loadData(card.respondents)
+
+            card.onViewAnswersClick?.let { onClick ->
+                answeredUsersContainer.setOnClickListener { onClick(card.promptId) }
+            }
+            answeredUsersContainer.contentDescription = createViewAnswersContentDescription(
+                answeredUsersContainer.context,
+                card.respondents
+            )
         } else {
-            uiHelpers.updateVisibility(answeredUsersRecycler, false)
+            uiHelpers.updateVisibility(answeredUsersContainer, false)
         }
+    }
+
+    private fun createViewAnswersContentDescription(
+        context: Context,
+        respondents: List<TrainOfAvatarsItem>,
+    ): CharSequence? {
+        return respondents
+            .filterIsInstance<TrainOfAvatarsItem.TrailingLabelTextItem>()
+            .firstOrNull()
+            ?.text
+            ?.let { uiHelpers.getTextOfUiString(context, it) }
     }
 
     private fun MySiteBloggingPromptCardBinding.showCardMenu(card: BloggingPromptCardWithData) {

@@ -16,7 +16,6 @@ import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
 import java.util.Date
 import javax.inject.Inject
 
-
 class JetpackFeatureCardHelper @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
@@ -83,6 +82,7 @@ class JetpackFeatureCardHelper @Inject constructor(
             url
     }
 
+    @Suppress("ReturnCount")
     private fun exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded(): Boolean {
         val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() ?: return false
         val lastShownTimestamp = appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp(currentPhase)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.wordpress.android.ui.reader.views.InterceptingFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.ui.InterceptingFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/liker_faces_container"
@@ -49,4 +49,4 @@
         tools:text="There was an issue loading people who liked this post."
         tools:visibility="gone" />
 
-</org.wordpress.android.ui.reader.views.InterceptingFrameLayout>
+</org.wordpress.android.ui.InterceptingFrameLayout>

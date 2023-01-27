@@ -6,6 +6,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.viewmodel.Event
@@ -18,6 +22,9 @@ import javax.inject.Named
 class HelpViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher,
+    private val accountStore: AccountStore,
+    private val siteStore: SiteStore,
+    private val dispatcher: Dispatcher,
 ) : ScopedViewModel(mainDispatcher) {
     private val _showSigningOutDialog = MutableLiveData<Event<Boolean>>()
     val showSigningOutDialog: LiveData<Event<Boolean>> = _showSigningOutDialog
@@ -33,6 +40,13 @@ class HelpViewModel @Inject constructor(
             }
             _showSigningOutDialog.value = Event(false)
             _onSignOutCompleted.call()
+        }
+        dispatchRemoveAllSitesActionIfNeeded()
+    }
+
+    private fun dispatchRemoveAllSitesActionIfNeeded() {
+        if (!accountStore.hasAccessToken() && siteStore.hasSiteAccessedViaXMLRPC()) {
+            dispatcher.dispatch(SiteActionBuilder.newRemoveAllSitesAction())
         }
     }
 }

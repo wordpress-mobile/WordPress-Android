@@ -9,12 +9,18 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.SiteAction
+import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.MigrationEmailHelper
 import org.wordpress.android.localcontentmigration.WelcomeScreenData
@@ -55,8 +61,10 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()
     private val contextProvider: ContextProvider = mock()
     private val accountStore: AccountStore = mock()
+    private val siteStore: SiteStore = mock()
     private val localeManagerWrapper: LocaleManagerWrapper = mock()
     private val jetpackMigrationLanguageUtil: JetpackMigrationLanguageUtil = mock()
+    private val dispatcher: Dispatcher = mock()
 
     private lateinit var classToTest: JetpackMigrationViewModel
 
@@ -74,8 +82,10 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
             migrationEmailHelper = migrationEmailHelper,
             migrationAnalyticsTracker = contentMigrationAnalyticsTracker,
             accountStore = accountStore,
+            siteStore = siteStore,
             localeManagerWrapper = localeManagerWrapper,
             jetpackMigrationLanguageUtil = jetpackMigrationLanguageUtil,
+            dispatcher = dispatcher,
         )
         classToTest.refreshAppTheme.observeForever(refreshAppThemeObserver)
         classToTest.refreshAppLanguage.observeForever(refreshAppLanguageObserver)
@@ -132,6 +142,57 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         successScreen.primaryActionButton.onClick.invoke()
 
         verify(refreshAppThemeObserver).onChanged(Unit)
+    }
+
+    @Test
+    fun `Should dispatch remove all sites action when signing out from site address`() {
+        whenever(siteStore.hasSiteAccessedViaXMLRPC()).thenReturn(true)
+
+        classToTest.signOutWordPress(mock())
+
+        verify(dispatcher).dispatch(argThat { type == SiteAction.REMOVE_ALL_SITES })
+    }
+
+    @Test
+    fun `Should not dispatch any action when signing out from wpcom`() {
+        classToTest.signOutWordPress(mock())
+
+        verifyNoInteractions(dispatcher)
+    }
+
+    @Test
+    fun `Should dispatch remove all sites action when logging out from site address`() {
+        whenever(siteStore.hasSiteAccessedViaXMLRPC()).thenReturn(true)
+
+        classToTest.logoutAndFallbackToLogin()
+
+        verify(dispatcher).dispatch(argThat { type == SiteAction.REMOVE_ALL_SITES })
+    }
+
+    @Test
+    fun `Should not dispatch any action when logging out from wpcom`() {
+        classToTest.logoutAndFallbackToLogin()
+
+        verifyNoInteractions(dispatcher)
+    }
+
+    fun `Should dispatch fetch account action when finish button is tapped on success screen if needed`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(accountStore.account).thenReturn(mock())
+        val successScreen = classToTest.initSuccessScreenUi()
+
+        successScreen.primaryActionButton.onClick.invoke()
+
+        verify(dispatcher).dispatch(argThat { type == AccountAction.FETCH_ACCOUNT })
+    }
+
+    @Test
+    fun `Should not dispatch any action when finish button is tapped on success screen if not needed`() {
+        val successScreen = classToTest.initSuccessScreenUi()
+
+        successScreen.primaryActionButton.onClick.invoke()
+
+        verifyNoInteractions(dispatcher)
     }
 
     // endregion

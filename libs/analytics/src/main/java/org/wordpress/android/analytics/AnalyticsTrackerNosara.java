@@ -2333,6 +2333,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blogging_prompts_my_site_card_answer_prompt_tapped";
             case BLOGGING_PROMPTS_MY_SITE_CARD_SHARE_CLICKED:
                 return "blogging_prompts_my_site_card_share_tapped";
+            case BLOGGING_PROMPTS_MY_SITE_CARD_VIEW_ANSWERS_CLICKED:
+                return "blogging_prompts_my_site_card_view_answers_tapped";
             case BLOGGING_PROMPTS_MY_SITE_CARD_MENU_CLICKED:
                 return "blogging_prompts_my_site_card_menu_tapped";
             case BLOGGING_PROMPTS_MY_SITE_CARD_MENU_VIEW_MORE_PROMPTS_CLICKED:
@@ -2347,6 +2349,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blogging_prompts_my_site_card_menu_remove_from_dashboard_undo_tapped";
             case BLOGGING_PROMPTS_MY_SITE_CARD_MENU_LEARN_MORE_CLICKED:
                 return "blogging_prompts_my_site_card_menu_learn_more_tapped";
+            case BLOGGING_PROMPTS_MY_SITE_CARD_VIEWED:
+                return "blogging_prompts_my_site_card_viewed";
             case BLOGGING_PROMPTS_INTRODUCTION_SCREEN_VIEWED:
                 return "blogging_prompts_introduction_modal_viewed";
             case BLOGGING_PROMPTS_INTRODUCTION_SCREEN_DISMISSED:
@@ -2359,6 +2363,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blogging_prompts_introduction_modal_got_it_tapped";
             case BLOGGING_PROMPTS_LIST_SCREEN_VIEWED:
                 return "blogging_prompts_prompts_list_viewed";
+            case BLOGGING_PROMPTS_LIST_ITEM_TAPPED:
+                return "blogging_prompts_list_item_tapped";
             case BLOGGING_REMINDERS_NOTIFICATION_PROMPT_ANSWER_TAPPED:
                 return "blogging_reminders_notification_prompt_answer_tapped";
             case BLOGGING_REMINDERS_NOTIFICATION_PROMPT_DISMISS_TAPPED:

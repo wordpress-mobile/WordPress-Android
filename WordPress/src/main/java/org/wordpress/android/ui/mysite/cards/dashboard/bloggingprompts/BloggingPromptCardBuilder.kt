@@ -7,17 +7,24 @@ import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import javax.inject.Inject
 
 class BloggingPromptCardBuilder @Inject constructor() {
     fun build(params: BloggingPromptCardBuilderParams) = params.bloggingPrompt?.let {
-        val trailingLabel = UiStringPluralRes(
-            0,
-            R.string.my_site_blogging_prompt_card_number_of_answers_one,
-            R.string.my_site_blogging_prompt_card_number_of_answers_other,
-            params.bloggingPrompt.respondentsCount
-        )
+        val trailingLabel = if (params.enhancementsEnabled) {
+            UiStringRes(
+                R.string.my_site_blogging_prompt_card_view_answers
+            )
+        } else {
+            UiStringPluralRes(
+                0,
+                R.string.my_site_blogging_prompt_card_number_of_answers_one,
+                R.string.my_site_blogging_prompt_card_number_of_answers_other,
+                params.bloggingPrompt.respondentsCount
+            )
+        }
 
         val avatarsTrain = params.bloggingPrompt.respondentsAvatarUrls.map { respondent -> AvatarItem(respondent) }
             .toMutableList<TrainOfAvatarsItem>()
@@ -35,6 +42,7 @@ class BloggingPromptCardBuilder @Inject constructor() {
             onAnswerClick = params.onAnswerClick,
             onSkipClick = params.onSkipClick,
             onViewMoreClick = params.onViewMoreClick,
+            onViewAnswersClick = params.onViewAnswersClick.takeIf { params.enhancementsEnabled },
         )
     }
 }

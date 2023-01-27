@@ -25,7 +25,7 @@ ext {
     wordPressFluxCVersion = '2.10.0'
     wordPressLoginVersion = '1.0.0'
     wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressUtilsVersion = 'trunk-1ec18489fc79bb8f10b827586f6efcdf3c13f5b1'
+    wordPressUtilsVersion = '3.2.0'
 
     // debug
     stethoVersion = '1.6.0'
@@ -33,26 +33,24 @@ ext {
     // main
     androidInstallReferrerVersion = '2.2'
     androidVolleyVersion = '1.1.1'
-    androidxAppcompatVersion = '1.1.0'
-    androidxArchCoreVersion = '2.0.0'
+    androidxAppcompatVersion = '1.4.2'
+    androidxArchCoreVersion = '2.1.0'
     androidxComposeVersion = '1.1.1'
     androidxComposeCompilerVersion = '1.1.1'
-    androidxComposeLifecycleVersion = '2.4.1'
+    androidxComposeLifecycleVersion = '2.5.1'
     androidxCardviewVersion = '1.0.0'
     androidxConstraintlayoutVersion = '1.1.3'
-    androidxCoreVersion = '1.3.2'
-    androidxEmojiVersion = '1.0.0'
-    androidxFragmentVersion = '1.4.1'
+    androidxCoreVersion = '1.8.0'
+    androidxActivityVersion = '1.5.1'
+    androidxFragmentVersion = '1.5.5'
     androidxGridlayoutVersion = '1.0.0'
-    androidxLifecycleVersion = '2.4.1'
+    androidxLifecycleVersion = '2.5.1'
     androidxMediaVersion = '1.0.1'
-    androidXMultidexVersion = '2.0.1'
     androidxPercentlayoutVersion = '1.0.0'
     androidxPreferenceVersion = '1.1.0'
     androidxRecyclerviewVersion = '1.0.0'
     androidxRoomVersion = '2.3.0'
     androidxSwipeToRefreshVersion = '1.1.0'
-    androidxVectordrawableAnimatedVersion = '1.0.0'
     androidxViewpager2Version = '1.0.0'
     androidxWorkVersion = "2.7.0"
     apacheCommonsTextVersion = '1.10.0'
@@ -156,7 +154,8 @@ allprojects {
             jvmTarget = JavaVersion.VERSION_1_8
             allWarningsAsErrors = true
             freeCompilerArgs += [
-                    "-Xopt-in=kotlin.RequiresOptIn"
+                    "-Xopt-in=kotlin.RequiresOptIn",
+                    "-Xjvm-default=all"
             ]
         }
     }
