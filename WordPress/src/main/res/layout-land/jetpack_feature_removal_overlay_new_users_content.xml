@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/jetpack_powered_bottom_sheet_background"
+    android:orientation="vertical">
+
+    <ImageButton
+        android:id="@+id/close_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:src="@drawable/ic_stats_feature_overlay_new_users"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/reader_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:background="?attr/selectableItemBackground"
+        android:src="@drawable/ic_reader_feature_overlay_reader_new_users"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/caption"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/notifications_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:background="?attr/selectableItemBackground"
+        android:src="@drawable/ic_notification_feature_overlay_new_users"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reader_caption"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/title"
+        style="?attr/textAppearanceBody1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:text="@string/wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title"
+        android:textFontWeight="700"
+        app:autoSizeMaxTextSize="@dimen/text_sz_extra_extra_large"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/close_button"
+        app:layout_constraintTop_toTopOf="@+id/close_button"
+        tools:targetApi="p" />
+
+    <TextView
+        android:id="@+id/reader_title"
+        style="?attr/textAppearanceBody1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:text="@string/wp_jetpack_feature_removal_phase_new_users_reader_title"
+        android:textFontWeight="700"
+        app:autoSizeMaxTextSize="@dimen/text_sz_extra_extra_large"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/reader_icon"
+        app:layout_constraintTop_toTopOf="@+id/reader_icon"
+        tools:targetApi="p" />
+
+    <TextView
+        android:id="@+id/reader_caption"
+        android:layout_width="0dp"
+        android:textSize="@dimen/jetpack_full_screen_overlay_new_users_content_text_size"
+        android:layout_height="wrap_content"
+        android:text="@string/wp_jetpack_feature_removal_phase_new_users_reader_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/reader_title"
+        app:layout_constraintTop_toBottomOf="@id/reader_title" />
+
+    <TextView
+        android:id="@+id/caption"
+        android:layout_width="0dp"
+        android:textSize="@dimen/jetpack_full_screen_overlay_new_users_content_text_size"
+        android:layout_height="wrap_content"
+        android:text="@string/wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <TextView
+        android:id="@+id/notification_title"
+        style="?attr/textAppearanceBody1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:text="@string/wp_jetpack_feature_removal_phase_new_users_notifications_title"
+        android:textFontWeight="700"
+        app:autoSizeMaxTextSize="@dimen/text_sz_extra_extra_large"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/notifications_icon"
+        app:layout_constraintTop_toTopOf="@+id/notifications_icon"
+        tools:targetApi="p" />
+
+    <TextView
+        android:id="@+id/notification_content"
+        android:layout_width="0dp"
+        android:textSize="@dimen/jetpack_full_screen_overlay_new_users_content_text_size"
+        android:layout_height="wrap_content"
+        android:text="@string/wp_jetpack_feature_removal_phase_new_users_notifications_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/notification_title"
+        app:layout_constraintTop_toBottomOf="@id/notification_title" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
