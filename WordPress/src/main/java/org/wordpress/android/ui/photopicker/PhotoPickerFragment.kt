@@ -35,6 +35,8 @@ import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -90,8 +92,9 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val browserType = requireArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
-        val site = requireArguments().getSerializable(WordPress.SITE) as? SiteModel
+        val browserType =
+            requireArguments().getSerializableCompat<MediaBrowserType>(MediaBrowserActivity.ARG_BROWSER_TYPE)
+        val site = requireArguments().getSerializableCompat<SiteModel>(WordPress.SITE)
         var selectedIds: List<Long>? = null
         var lastTappedIcon: PhotoPickerIcon? = null
         if (savedInstanceState != null) {
@@ -111,7 +114,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
                 NUM_COLUMNS
             )
 
-            savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
+            savedInstanceState?.getParcelableCompat<Parcelable>(KEY_LIST_STATE)?.let {
                 layoutManager.onRestoreInstanceState(it)
             }
 
@@ -131,7 +134,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
             setupProgressDialog()
 
-            viewModel.start(selectedIds, browserType, lastTappedIcon, site)
+            browserType?.let { viewModel.start(selectedIds, it, lastTappedIcon, site) }
         }
     }
 

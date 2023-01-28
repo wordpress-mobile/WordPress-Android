@@ -29,6 +29,8 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -62,7 +64,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvid
         super.onViewCreated(view, savedInstanceState)
         requireActivity().addMenuProvider(this, viewLifecycleOwner)
         binding = ScanHistoryFragmentBinding.bind(view).apply {
-            initViewModel(getSite(savedInstanceState))
+            getSite(savedInstanceState)?.let { initViewModel(it) }
             initToolbar()
         }
     }
@@ -120,11 +122,11 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvid
         }
     }
 
-    private fun getSite(savedInstanceState: Bundle?): SiteModel {
+    private fun getSite(savedInstanceState: Bundle?): SiteModel? {
         return if (savedInstanceState == null) {
-            requireActivity().intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            requireActivity().intent.getSerializableExtraCompat(WordPress.SITE)
         } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            savedInstanceState.getSerializableCompat(WordPress.SITE)
         }
     }
 

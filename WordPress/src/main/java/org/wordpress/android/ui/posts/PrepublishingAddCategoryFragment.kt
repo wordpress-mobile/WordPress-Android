@@ -21,6 +21,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -137,16 +138,19 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
     }
 
     private fun PrepublishingAddCategoryFragmentBinding.initViewModel() {
-        viewModel = ViewModelProvider(this@PrepublishingAddCategoryFragment, viewModelFactory)
-            .get(PrepublishingAddCategoryViewModel::class.java)
-        parentViewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
-            .get(PrepublishingViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this@PrepublishingAddCategoryFragment,
+            viewModelFactory
+        )[PrepublishingAddCategoryViewModel::class.java]
+        parentViewModel =
+            ViewModelProvider(requireParentFragment(), viewModelFactory)[PrepublishingViewModel::class.java]
 
         startObserving()
 
         val needsRequestLayout = requireArguments().getBoolean(PrepublishingTagsFragment.NEEDS_REQUEST_LAYOUT)
-        val siteModel = requireArguments().getSerializable(WordPress.SITE) as SiteModel
-        viewModel.start(siteModel, !needsRequestLayout)
+        requireArguments().getSerializableCompat<SiteModel>(WordPress.SITE)?.let {
+            viewModel.start(it, !needsRequestLayout)
+        }
     }
 
     private fun PrepublishingAddCategoryFragmentBinding.startObserving() {

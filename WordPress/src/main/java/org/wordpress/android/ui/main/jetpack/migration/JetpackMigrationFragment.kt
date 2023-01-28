@@ -44,6 +44,7 @@ import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.util.AppThemeUtils
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -77,7 +78,7 @@ class JetpackMigrationFragment : Fragment() {
         observeViewModelEvents()
         observeRefreshAppThemeEvents()
         val showDeleteWpState = arguments?.getBoolean(KEY_SHOW_DELETE_WP_STATE, false) ?: false
-        val deepLinkData = arguments?.getParcelable<PreMigrationDeepLinkData>(KEY_DEEP_LINK_DATA)
+        val deepLinkData = arguments?.getParcelableCompat<PreMigrationDeepLinkData>(KEY_DEEP_LINK_DATA)
         initBackPressHandler(showDeleteWpState)
         viewModel.start(
             showDeleteWpState,

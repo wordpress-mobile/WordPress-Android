@@ -41,6 +41,7 @@ import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.extensions.exhaustive
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -96,9 +97,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     @Suppress("UseCheckOrError")
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        arguments?.let {
-            dialogType = it.getSerializable(KEY_DIALOG_TYPE) as DialogType
-        }
+        arguments?.getSerializableCompat<DialogType>(KEY_DIALOG_TYPE)?.let { dialogType = it }
         (requireActivity().applicationContext as WordPress).component().inject(this)
         if (dialogType == ONBOARDING && context !is BloggingPromptsReminderSchedulerListener) {
             throw IllegalStateException(

@@ -17,6 +17,7 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.State.NoUser
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.State.ShowUser
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.io.Serializable
@@ -55,11 +56,11 @@ class LoginNoSitesViewModel @Inject constructor(
         } else {
             buildStateFromAccountStore()
         }
-        _uiModel.postValue(UiModel(state = state))
+        state?.let { _uiModel.postValue(UiModel(state = it)) }
     }
 
     private fun buildStateFromSavedInstanceState(savedInstanceState: Bundle) =
-        savedInstanceState.getSerializable(KEY_STATE) as State
+        savedInstanceState.getSerializableCompat<State>(KEY_STATE)
 
     private fun buildStateFromAccountStore() =
         accountStore.account?.let {

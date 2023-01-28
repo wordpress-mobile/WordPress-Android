@@ -17,6 +17,7 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
@@ -37,7 +38,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val entryPoint = requireActivity().intent.getSerializableExtra(READER_INTEREST_ENTRY_POINT) as? EntryPoint
+        val entryPoint = requireActivity().intent.getSerializableExtraCompat(READER_INTEREST_ENTRY_POINT) as? EntryPoint
             ?: EntryPoint.DISCOVER
         with(ReaderInterestsFragmentLayoutBinding.bind(view)) {
             initDoneButton()

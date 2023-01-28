@@ -30,6 +30,7 @@ import org.wordpress.android.ui.ListDiffCallback
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType.FEATURED
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType.NEW
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType.POPULAR
@@ -138,7 +139,7 @@ class PluginBrowserViewModel @Inject constructor(
             // read from the bundle
             return
         }
-        site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+        savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)?.let { site = it }
         searchQuery = requireNotNull(savedInstanceState.getString(KEY_SEARCH_QUERY))
         setTitle(savedInstanceState.getString(KEY_TITLE))
     }

@@ -16,6 +16,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMedia
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
@@ -109,8 +110,8 @@ class StoriesMediaPickerResultHandler
 
     private fun isWPStoriesMediaBrowserTypeResult(data: Intent): Boolean {
         if (data.hasExtra(MediaBrowserActivity.ARG_BROWSER_TYPE)) {
-            val browserType = data.getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE)
-            return (browserType as MediaBrowserType).isWPStoriesPicker
+            val browserType = data.getSerializableExtraCompat<MediaBrowserType>(MediaBrowserActivity.ARG_BROWSER_TYPE)
+            return browserType?.isWPStoriesPicker ?: false
         }
         return false
     }

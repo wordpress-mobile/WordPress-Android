@@ -13,7 +13,9 @@ import org.wordpress.android.databinding.StatsDetailFragmentBinding
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import java.io.Serializable
 
 @AndroidEntryPoint
 class InsightsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
@@ -29,14 +31,14 @@ class InsightsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
-        val listType = nonNullActivity.intent.extras?.get(StatsListFragment.LIST_TYPE) as StatsSection
+        val listType = nonNullActivity.intent.extras?.getSerializableCompat<StatsSection>(StatsListFragment.LIST_TYPE)
         with(StatsDetailFragmentBinding.bind(view)) {
             with(nonNullActivity as AppCompatActivity) {
                 setSupportActionBar(toolbar)
-                supportActionBar?.let {
-                    it.title = getString(listType.titleRes)
-                    it.setHomeButtonEnabled(true)
-                    it.setDisplayHomeAsUpEnabled(true)
+                supportActionBar?.let { actionBar ->
+                    listType?.let { statsSection -> actionBar.title = getString(statsSection.titleRes) }
+                    actionBar.setHomeButtonEnabled(true)
+                    actionBar.setDisplayHomeAsUpEnabled(true)
                 }
             }
             initializeViewModels(nonNullActivity)
@@ -52,7 +54,7 @@ class InsightsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
 
     private fun initializeViewModels(activity: FragmentActivity) {
         val siteId = activity.intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0
-        val listType = activity.intent.extras?.get(StatsListFragment.LIST_TYPE)
+        val listType = activity.intent.extras?.getSerializableCompat<Serializable>(StatsListFragment.LIST_TYPE)
 
         viewModel = when (listType) {
             StatsSection.INSIGHT_DETAIL -> viewsVisitorsDetailViewModel

@@ -41,6 +41,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener
 import org.wordpress.android.util.URLFilteredWebViewClient
+import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 
 private const val ARG_DATA = "arg_site_creation_data"
@@ -97,7 +98,9 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
-        viewModel.start(requireArguments()[ARG_DATA] as SiteCreationState, savedInstanceState)
+        requireArguments().getParcelableCompat<SiteCreationState>(ARG_DATA)?.let {
+            viewModel.start(it, savedInstanceState)
+        }
     }
 
     override fun getContentLayout(): Int {

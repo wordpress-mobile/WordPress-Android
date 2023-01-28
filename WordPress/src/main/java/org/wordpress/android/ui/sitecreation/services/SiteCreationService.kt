@@ -17,6 +17,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AutoForeground
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.extensions.getParcelableExtraCompat
 import javax.inject.Inject
 
 private val INITIAL_STATE = IDLE
@@ -47,7 +48,7 @@ class SiteCreationService : AutoForeground<SiteCreationServiceState>(SiteCreatio
             return Service.START_NOT_STICKY
         }
 
-        val data = intent.getParcelableExtra<SiteCreationServiceData>(ARG_DATA)!!
+        val data = intent.getParcelableExtraCompat<SiteCreationServiceData>(ARG_DATA)!!
         manager.onStart(
             LocaleManager.getLanguageWordPressId(this),
             localeManagerWrapper.getTimeZone().id,

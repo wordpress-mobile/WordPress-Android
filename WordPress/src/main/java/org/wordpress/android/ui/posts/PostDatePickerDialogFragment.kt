@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel
+import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 
 class PostDatePickerDialogFragment : DialogFragment() {
@@ -18,15 +19,19 @@ class PostDatePickerDialogFragment : DialogFragment() {
     private lateinit var viewModel: PublishSettingsViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val publishSettingsFragmentType = arguments?.getParcelable<PublishSettingsFragmentType>(
+        val publishSettingsFragmentType = arguments?.getParcelableCompat<PublishSettingsFragmentType>(
             ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE
         )
 
         viewModel = when (publishSettingsFragmentType) {
-            PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(EditPostPublishSettingsViewModel::class.java)
-            PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(PrepublishingPublishSettingsViewModel::class.java)
+            PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(
+                requireActivity(),
+                viewModelFactory
+            )[EditPostPublishSettingsViewModel::class.java]
+            PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(
+                requireActivity(),
+                viewModelFactory
+            )[PrepublishingPublishSettingsViewModel::class.java]
             null -> error("PublishSettingsViewModel not initialized")
         }
 

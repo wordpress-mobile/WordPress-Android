@@ -49,6 +49,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -137,7 +138,7 @@ class SitePreviewViewModel @Inject constructor(
         urlWithoutScheme = siteCreationState.domain
         siteTitle = siteCreationState.siteName
 
-        val restoredState = savedState?.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE)
+        val restoredState = savedState?.getParcelableCompat<CreateSiteState>(KEY_CREATE_SITE_STATE)
 
         init(restoredState ?: SiteNotCreated)
     }

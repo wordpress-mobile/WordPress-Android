@@ -33,6 +33,7 @@ import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.config.UnifiedCommentsDetailFeatureConfig
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
 
@@ -70,14 +71,12 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(UnifiedCommentListViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[UnifiedCommentListViewModel::class.java]
         activityViewModel = ViewModelProvider(
             requireActivity(),
             viewModelFactory
-        ).get(UnifiedCommentActivityViewModel::class.java)
-        arguments?.let {
-            commentListFilter = it.getSerializable(KEY_COMMENT_LIST_FILTER) as CommentFilter
-        }
+        )[UnifiedCommentActivityViewModel::class.java]
+        arguments?.getSerializableCompat<CommentFilter>(KEY_COMMENT_LIST_FILTER)?.let { commentListFilter = it }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

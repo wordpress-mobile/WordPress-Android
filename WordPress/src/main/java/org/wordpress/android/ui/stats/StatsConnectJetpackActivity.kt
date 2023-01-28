@@ -22,6 +22,7 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 /**
@@ -72,14 +73,16 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
             if (TextUtils.isEmpty(mAccountStore.account.userName)) {
                 mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
             } else {
-                startJetpackConnectionFlow(intent.getSerializableExtra(WordPress.SITE) as SiteModel)
+                intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)?.let { startJetpackConnectionFlow(it) }
             }
         }
     }
 
     private fun StatsJetpackConnectionActivityBinding.initViews() {
         jetpackSetup.setOnClickListener {
-            startJetpackConnectionFlow(intent.getSerializableExtra(WordPress.SITE) as SiteModel)
+            intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)?.let { site ->
+                startJetpackConnectionFlow(site)
+            }
         }
         jetpackFaq.setOnClickListener {
             WPWebViewActivity.openURL(this@StatsConnectJetpackActivity, FAQ_URL)
@@ -133,7 +136,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
                 event.causeOfChange == FETCH_ACCOUNT &&
                 !TextUtils.isEmpty(mAccountStore.account.userName)
             ) {
-                startJetpackConnectionFlow(intent.getSerializableExtra(WordPress.SITE) as SiteModel)
+                intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)?.let { startJetpackConnectionFlow(it) }
             }
         }
     }

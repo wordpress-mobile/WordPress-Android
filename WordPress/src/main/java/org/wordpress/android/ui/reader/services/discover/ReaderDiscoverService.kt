@@ -14,6 +14,7 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverServiceSt
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -56,8 +57,9 @@ class ReaderDiscoverService : Service(), ServiceCompletionListener, CoroutineSco
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null && intent.hasExtra(ARG_DISCOVER_TASK)) {
-            val task = intent.getSerializableExtra(ARG_DISCOVER_TASK) as DiscoverTasks
-            readerDiscoverLogic.performTasks(task, null, this, this)
+            intent.getSerializableExtraCompat<DiscoverTasks>(ARG_DISCOVER_TASK)?.let { task ->
+                readerDiscoverLogic.performTasks(task, null, this, this)
+            }
         }
         return START_NOT_STICKY
     }

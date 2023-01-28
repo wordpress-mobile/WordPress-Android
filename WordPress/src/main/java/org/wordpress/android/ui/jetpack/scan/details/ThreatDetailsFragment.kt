@@ -22,6 +22,7 @@ import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiSt
 import org.wordpress.android.ui.jetpack.scan.details.adapters.ThreatDetailsAdapter
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
@@ -68,39 +69,37 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
 
     private fun ThreatDetailsFragmentBinding.setupObservers() {
         viewModel.uiState.observe(
-            viewLifecycleOwner,
-            { uiState ->
-                if (uiState is Content) {
-                    refreshContentScreen(uiState)
-                }
+            viewLifecycleOwner
+        ) { uiState ->
+            if (uiState is Content) {
+                refreshContentScreen(uiState)
             }
-        )
+        }
 
-        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar() })
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { it.showSnackbar() }
 
         viewModel.navigationEvents.observeEvent(
-            viewLifecycleOwner,
-            { events ->
-                when (events) {
-                    is OpenThreatActionDialog -> showThreatActionDialog(events)
+            viewLifecycleOwner
+        ) { events ->
+            when (events) {
+                is OpenThreatActionDialog -> showThreatActionDialog(events)
 
-                    is ShowUpdatedScanStateWithMessage -> {
-                        val site = requireNotNull(requireActivity().intent.extras)
-                            .getSerializable(WordPress.SITE) as SiteModel
-                        ActivityLauncher.viewScanRequestScanState(requireActivity(), site, events.messageRes)
-                    }
-                    is ShowUpdatedFixState -> {
-                        val site = requireNotNull(requireActivity().intent.extras)
-                            .getSerializable(WordPress.SITE) as SiteModel
-                        ActivityLauncher.viewScanRequestFixState(requireActivity(), site, events.threatId)
-                    }
-                    is ShowGetFreeEstimate -> {
-                        ActivityLauncher.openUrlExternal(context, events.url())
-                    }
-                    is ShowJetpackSettings -> ActivityLauncher.openUrlExternal(context, events.url)
+                is ShowUpdatedScanStateWithMessage -> {
+                    val site = requireNotNull(requireActivity().intent.extras)
+                        .getSerializableCompat<SiteModel>(WordPress.SITE)
+                    ActivityLauncher.viewScanRequestScanState(requireActivity(), site, events.messageRes)
                 }
+                is ShowUpdatedFixState -> {
+                    val site = requireNotNull(requireActivity().intent.extras)
+                        .getSerializableCompat<SiteModel>(WordPress.SITE)
+                    ActivityLauncher.viewScanRequestFixState(requireActivity(), site, events.threatId)
+                }
+                is ShowGetFreeEstimate -> {
+                    ActivityLauncher.openUrlExternal(context, events.url())
+                }
+                is ShowJetpackSettings -> ActivityLauncher.openUrlExternal(context, events.url)
             }
-        )
+        }
     }
 
     private fun ThreatDetailsFragmentBinding.refreshContentScreen(content: Content) {

@@ -8,6 +8,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.INSTALL_JETPACK_CAN
 import org.wordpress.android.databinding.JetpackRemoteInstallActivityBinding
 import org.wordpress.android.ui.JetpackConnectionUtils.trackWithSource
 import org.wordpress.android.ui.JetpackRemoteInstallFragment.Companion.TRACKING_SOURCE_KEY
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
 class JetpackRemoteInstallActivity : LocaleAwareActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +27,7 @@ class JetpackRemoteInstallActivity : LocaleAwareActivity() {
         onBackPressedDispatcher.addCallback {
             trackWithSource(
                 INSTALL_JETPACK_CANCELLED,
-                intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
+                intent.getSerializableExtraCompat(TRACKING_SOURCE_KEY)
             )
         }
     }

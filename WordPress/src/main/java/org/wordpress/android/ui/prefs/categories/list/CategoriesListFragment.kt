@@ -17,6 +17,8 @@ import org.wordpress.android.ui.prefs.categories.list.CategoryDetailNavigation.E
 import org.wordpress.android.ui.prefs.categories.list.UiState.Content
 import org.wordpress.android.ui.prefs.categories.list.UiState.Loading
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,7 +36,7 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
             initRecyclerView()
             initFabButton()
             initEmptyView()
-            initViewModel(getSite(savedInstanceState))
+            getSite(savedInstanceState)?.let { initViewModel(it) }
         }
     }
 
@@ -67,11 +69,11 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
         actionableEmptyView.updateVisibility(false)
     }
 
-    private fun getSite(savedInstanceState: Bundle?): SiteModel {
+    private fun getSite(savedInstanceState: Bundle?): SiteModel? {
         return if (savedInstanceState == null) {
-            requireActivity().intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            requireActivity().intent.getSerializableExtraCompat(WordPress.SITE)
         } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            savedInstanceState.getSerializableCompat(WordPress.SITE)
         }
     }
 

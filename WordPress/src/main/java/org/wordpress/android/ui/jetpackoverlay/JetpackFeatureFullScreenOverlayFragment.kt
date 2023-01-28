@@ -27,6 +27,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.extensions.exhaustive
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setVisible
 import javax.inject.Inject
 
@@ -55,15 +56,19 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.init(
-            getSiteScreen(),
-            getIfSiteCreationOverlay(),
-            getIfDeepLinkOverlay(),
-            getSiteCreationSource(),
-            getIfFeatureCollectionOverlay(),
-            getFeatureCollectionOverlaysSource(),
-            RtlUtils.isRtl(view.context)
-        )
+        val siteCreationSource = getSiteCreationSource()
+        val featureCollectionOverlaySource = getFeatureCollectionOverlaysSource()
+        if (siteCreationSource != null && featureCollectionOverlaySource != null) {
+            viewModel.init(
+                getSiteScreen(),
+                getIfSiteCreationOverlay(),
+                getIfDeepLinkOverlay(),
+                siteCreationSource,
+                getIfFeatureCollectionOverlay(),
+                featureCollectionOverlaySource,
+                RtlUtils.isRtl(view.context)
+            )
+        }
         binding.setupObservers()
 
         (dialog as? BottomSheetDialog)?.apply {
@@ -93,23 +98,19 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private fun getSiteScreen() =
-        arguments?.getSerializable(OVERLAY_SCREEN_TYPE) as JetpackFeatureOverlayScreenType?
+    private fun getSiteScreen() = arguments?.getSerializableCompat<JetpackFeatureOverlayScreenType>(OVERLAY_SCREEN_TYPE)
 
-    private fun getIfSiteCreationOverlay() =
-        arguments?.getSerializable(IS_SITE_CREATION_OVERLAY) as Boolean
+    private fun getIfSiteCreationOverlay() = arguments?.getBoolean(IS_SITE_CREATION_OVERLAY) ?: false
 
-    private fun getIfDeepLinkOverlay() =
-        arguments?.getSerializable(IS_DEEP_LINK_OVERLAY) as Boolean
+    private fun getIfDeepLinkOverlay() = arguments?.getBoolean(IS_DEEP_LINK_OVERLAY) ?: false
 
     private fun getSiteCreationSource() =
-        arguments?.getSerializable(SITE_CREATION_OVERLAY_SOURCE) as SiteCreationSource
+        arguments?.getSerializableCompat<SiteCreationSource>(SITE_CREATION_OVERLAY_SOURCE)
 
-    private fun getIfFeatureCollectionOverlay() =
-        arguments?.getSerializable(IS_FEATURE_COLLECTION_OVERLAY) as Boolean
+    private fun getIfFeatureCollectionOverlay() = arguments?.getBoolean(IS_FEATURE_COLLECTION_OVERLAY) ?: false
 
     private fun getFeatureCollectionOverlaysSource() =
-        arguments?.getSerializable(FEATURE_COLLECTION_OVERLAY_SOURCE) as JetpackFeatureCollectionOverlaySource
+        arguments?.getSerializableCompat<JetpackFeatureCollectionOverlaySource>(FEATURE_COLLECTION_OVERLAY_SOURCE)
 
     private fun JetpackFeatureRemovalOverlayBinding.setupObservers() {
         viewModel.uiState.observe(viewLifecycleOwner) {

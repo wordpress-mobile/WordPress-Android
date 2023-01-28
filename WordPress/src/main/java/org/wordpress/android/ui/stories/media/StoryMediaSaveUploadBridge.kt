@@ -36,6 +36,7 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
 import javax.inject.Named
@@ -238,14 +239,16 @@ class StoryMediaSaveUploadBridge @Inject constructor(
         // track event
         storiesTrackerHelper.trackStorySaveResultEvent(event)
 
-        event.metadata?.let {
-            val site = it.getSerializable(WordPress.SITE) as SiteModel
+        event.metadata?.let { bundle ->
+            val site = bundle.getSerializableCompat<SiteModel>(WordPress.SITE)
             val story = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)
-            saveStoryGutenbergBlockUseCase.saveNewLocalFilesToStoriesPrefsTempSlides(
-                site,
-                event.storyIndex,
-                story.frames
-            )
+            site?.let { siteModel ->
+                saveStoryGutenbergBlockUseCase.saveNewLocalFilesToStoriesPrefsTempSlides(
+                    siteModel,
+                    event.storyIndex,
+                    story.frames
+                )
+            }
 
             // only trigger the bridge preparation and the UploadService if the Story is now complete
             // otherwise we can be receiving successful retry events for individual frames we shouldn't care about just
@@ -254,9 +257,9 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 // only remove it if it was successful - we want to keep it and show a snackbar once when the user
                 // comes back to the app if it wasn't, see MySiteFragment for details.
                 eventBusWrapper.removeStickyEvent(event)
-                editPostRepository.loadPostByLocalPostId(it.getInt(StoryComposerActivity.KEY_POST_LOCAL_ID))
+                editPostRepository.loadPostByLocalPostId(bundle.getInt(StoryComposerActivity.KEY_POST_LOCAL_ID))
                 // media upload tracking already in addLocalMediaToPostUseCase.addNewMediaToEditorAsync
-                addNewStoryFrameMediaItemsToPostAndUploadAsync(site, event)
+                site?.let { siteModel -> addNewStoryFrameMediaItemsToPostAndUploadAsync(siteModel, event) }
             }
         }
     }

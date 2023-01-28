@@ -25,6 +25,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PageParentFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.viewmodel.pages.PageParentViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
@@ -158,7 +160,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
 
     private fun PageParentFragmentBinding.initializeViews(activity: FragmentActivity, savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
+        savedInstanceState?.getParcelableCompat<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 
@@ -184,7 +186,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
         setupObservers()
 
         if (isFirstStart) {
-            val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
+            val site = activity.intent?.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
             val nonNullSite = checkNotNull(site)
             viewModel.start(nonNullSite, pageId)
         } else {

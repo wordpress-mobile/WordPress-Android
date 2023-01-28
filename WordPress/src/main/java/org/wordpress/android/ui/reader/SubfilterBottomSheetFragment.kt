@@ -24,6 +24,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.SubfilterPagerAdapter
+import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 import javax.inject.Inject
 
 class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
@@ -66,11 +67,12 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
 
         val subfilterVmKey = requireArguments().getString(SUBFILTER_VIEW_MODEL_KEY)!!
         val bottomSheetTitle = requireArguments().getCharSequence(SUBFILTER_TITLE_KEY)!!
-        val categories: ArrayList<SubfilterCategory> = requireArguments()
-            .getParcelableArrayList(SUBFILTER_CATEGORIES_KEY)!!
+        val categories = requireArguments().getParcelableArrayListCompat<SubfilterCategory>(SUBFILTER_CATEGORIES_KEY)!!
 
-        viewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory)
-            .get(subfilterVmKey, SubFilterViewModel::class.java)
+        viewModel = ViewModelProvider(
+            parentFragment as ViewModelStoreOwner,
+            viewModelFactory
+        )[subfilterVmKey, SubFilterViewModel::class.java]
 
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)

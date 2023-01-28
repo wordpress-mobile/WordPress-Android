@@ -30,6 +30,8 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.EmptyViewRecyclerView
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
@@ -51,7 +53,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         with(ScanFragmentBinding.bind(view)) {
             initRecyclerView()
             listView = recyclerView
-            initViewModel(getSite(savedInstanceState))
+            getSite(savedInstanceState)?.let { initViewModel(it) }
         }
     }
 
@@ -174,11 +176,11 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         fixThreatsConfirmationDialog?.dismiss()
     }
 
-    private fun getSite(savedInstanceState: Bundle?): SiteModel {
+    private fun getSite(savedInstanceState: Bundle?): SiteModel? {
         return if (savedInstanceState == null) {
-            requireActivity().intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            requireActivity().intent.getSerializableExtraCompat(WordPress.SITE)
         } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            savedInstanceState.getSerializableCompat(WordPress.SITE)
         }
     }
 

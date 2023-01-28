@@ -24,6 +24,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.AD
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -116,18 +117,19 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     }
 
     private fun PrepublishingCategoriesFragmentBinding.initViewModel() {
-        viewModel = ViewModelProvider(this@PrepublishingCategoriesFragment, viewModelFactory)
-            .get(PrepublishingCategoriesViewModel::class.java)
-        parentViewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
-            .get(PrepublishingViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this@PrepublishingCategoriesFragment,
+            viewModelFactory
+        )[PrepublishingCategoriesViewModel::class.java]
+        parentViewModel =
+            ViewModelProvider(requireParentFragment(), viewModelFactory)[PrepublishingViewModel::class.java]
         startObserving()
-        val siteModel = requireArguments().getSerializable(WordPress.SITE) as SiteModel
-        val addCategoryRequest: PrepublishingAddCategoryRequest? =
-            arguments?.getSerializable(ADD_CATEGORY_REQUEST) as? PrepublishingAddCategoryRequest
+        val siteModel = requireArguments().getSerializableCompat<SiteModel>(WordPress.SITE)
+        val addCategoryRequest = arguments?.getSerializableCompat<PrepublishingAddCategoryRequest>(ADD_CATEGORY_REQUEST)
         val selectedCategoryIds: List<Long> =
             arguments?.getLongArray(SELECTED_CATEGORY_IDS)?.toList() ?: listOf()
 
-        viewModel.start(getEditPostRepository(), siteModel, addCategoryRequest, selectedCategoryIds)
+        siteModel?.let { viewModel.start(getEditPostRepository(), it, addCategoryRequest, selectedCategoryIds) }
     }
 
     private fun PrepublishingCategoriesFragmentBinding.startObserving() {

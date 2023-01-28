@@ -15,6 +15,8 @@ import org.wordpress.android.ui.PreviewModeHandler
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.extensions.getParcelableArrayListCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -307,10 +309,10 @@ abstract class LayoutPickerViewModel(
 
     fun loadSavedState(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) return
-        val layouts = savedInstanceState.getParcelableArrayList<LayoutModel>(FETCHED_LAYOUTS)
-        val categories = savedInstanceState.getParcelableArrayList<LayoutCategoryModel>(FETCHED_CATEGORIES)
+        val layouts = savedInstanceState.getParcelableArrayListCompat<LayoutModel>(FETCHED_LAYOUTS)
+        val categories = savedInstanceState.getParcelableArrayListCompat<LayoutCategoryModel>(FETCHED_CATEGORIES)
         val selected = savedInstanceState.getString(SELECTED_LAYOUT)
-        val selectedCategories = (savedInstanceState.getSerializable(SELECTED_CATEGORIES) as? List<*>)
+        val selectedCategories = (savedInstanceState.getSerializableCompat(SELECTED_CATEGORIES) as? List<*>)
             ?.filterIsInstance<String>() ?: listOf()
         val previewMode = savedInstanceState.getString(PREVIEW_MODE, MOBILE.name)
         resetState(selected, ArrayList(selectedCategories.toMutableList()), previewMode)

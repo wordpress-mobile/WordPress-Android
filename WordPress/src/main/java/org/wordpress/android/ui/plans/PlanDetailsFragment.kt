@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.plans.PlanOffersModel
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogContent
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController
 import org.wordpress.android.util.StringUtils
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
@@ -42,9 +43,9 @@ class PlanDetailsFragment : Fragment(), FullScreenDialogContent {
         (requireActivity().application as WordPress).component().inject(this)
 
         plan = if (savedInstanceState != null) {
-            savedInstanceState.getParcelable(KEY_PLAN)
+            savedInstanceState.getParcelableCompat(KEY_PLAN)
         } else {
-            arguments?.getParcelable(EXTRA_PLAN)
+            arguments?.getParcelableCompat(EXTRA_PLAN)
         }
     }
 

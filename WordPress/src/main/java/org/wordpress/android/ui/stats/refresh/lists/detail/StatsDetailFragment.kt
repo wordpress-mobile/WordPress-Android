@@ -52,9 +52,9 @@ class StatsDetailFragment : DaggerFragment(R.layout.stats_detail_fragment) {
         statsSiteProvider.start(siteId)
 
         val postId = activity.intent?.getLongExtra(POST_ID, 0L)
-        val postType = activity.intent?.getSerializableExtra(POST_TYPE) as String?
-        val postTitle = activity.intent?.getSerializableExtra(POST_TITLE) as String?
-        val postUrl = activity.intent?.getSerializableExtra(POST_URL) as String?
+        val postType = activity.intent?.getStringExtra(POST_TYPE)
+        val postTitle = activity.intent?.getStringExtra(POST_TITLE)
+        val postUrl = activity.intent?.getStringExtra(POST_URL)
 
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(StatsSection.DETAIL.name, StatsDetailViewModel::class.java)

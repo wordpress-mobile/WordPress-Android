@@ -27,6 +27,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogAction.DismissDialog
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogAction.OpenPlayStore
 import org.wordpress.android.util.extensions.exhaustive
+import org.wordpress.android.util.extensions.getSerializableCompat
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -85,7 +86,7 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
 
     private fun setupFullScreenViews(view: View) {
         with(JetpackPoweredExpandedBottomSheetBinding.bind(view)) {
-            when (arguments?.getSerializable(KEY_SITE_SCREEN) as? PageType ?: MY_SITE) {
+            when (arguments?.getSerializableCompat(KEY_SITE_SCREEN) ?: MY_SITE) {
                 MY_SITE -> {
                     val animRes = if (rtlLayout(view)) raw.jp_stats_rtl else raw.jp_stats_left
                     illustrationView.setAnimation(animRes)

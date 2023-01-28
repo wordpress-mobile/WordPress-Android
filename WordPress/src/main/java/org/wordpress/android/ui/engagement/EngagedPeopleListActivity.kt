@@ -7,6 +7,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.EngagedPeopleListActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
+import org.wordpress.android.util.extensions.getParcelableExtraCompat
 import javax.inject.Inject
 
 class EngagedPeopleListActivity : LocaleAwareActivity() {
@@ -22,7 +23,7 @@ class EngagedPeopleListActivity : LocaleAwareActivity() {
             setSupportActionBar(toolbarMain)
         }
 
-        val listScenario = intent.getParcelableExtra<ListScenario>(KEY_LIST_SCENARIO)
+        val listScenario = intent.getParcelableExtraCompat<ListScenario>(KEY_LIST_SCENARIO)
             ?: throw IllegalArgumentException(
                 "List Scenario cannot be null. Make sure to pass a valid List Scenario in the intent"
             )

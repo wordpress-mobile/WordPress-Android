@@ -18,6 +18,7 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.DOMAIN_REGISTRATION_PURPOSE_KEY
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -38,21 +39,22 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
         super.onViewCreated(view, savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
 
-        mainViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-            .get(DomainRegistrationMainViewModel::class.java)
+        mainViewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[DomainRegistrationMainViewModel::class.java]
 
-        viewModel = ViewModelProvider(this, viewModelFactory)
-            .get(DomainSuggestionsViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[DomainSuggestionsViewModel::class.java]
 
         with(DomainSuggestionsFragmentBinding.bind(view)) {
             val intent = requireActivity().intent
-            val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-            val domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
-                    as DomainRegistrationPurpose
+            val site = intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+            val domainRegistrationPurpose =
+                intent.getSerializableExtraCompat<DomainRegistrationPurpose>(DOMAIN_REGISTRATION_PURPOSE_KEY)
 
             setupViews()
             setupObservers()
-            viewModel.start(site, domainRegistrationPurpose)
+            if (site != null && domainRegistrationPurpose != null) {
+                viewModel.start(site, domainRegistrationPurpose)
+            }
         }
     }
 

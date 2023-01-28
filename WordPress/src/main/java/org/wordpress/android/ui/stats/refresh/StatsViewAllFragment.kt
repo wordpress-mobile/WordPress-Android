@@ -34,6 +34,10 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getParcelableExtraCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
@@ -78,13 +82,13 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
             if (intent.hasExtra(ARGS_VIEW_TYPE)) {
                 outState.putSerializable(
                     ARGS_VIEW_TYPE,
-                    intent.getSerializableExtra(ARGS_VIEW_TYPE)
+                    intent.getSerializableExtraCompat(ARGS_VIEW_TYPE)
                 )
             }
             if (intent.hasExtra(ARGS_TIMEFRAME)) {
                 outState.putSerializable(
                     ARGS_TIMEFRAME,
-                    intent.getSerializableExtra(ARGS_TIMEFRAME)
+                    intent.getSerializableExtraCompat(ARGS_TIMEFRAME)
                 )
             }
             outState.putInt(WordPress.LOCAL_SITE_ID, intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0))
@@ -96,7 +100,7 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
     private fun StatsViewAllFragmentBinding.initializeViews(savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
 
-        savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
+        savedInstanceState?.getParcelableCompat<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
         with(statsListFragment) {
@@ -153,29 +157,31 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         savedInstanceState: Bundle?
     ) {
         val nonNullIntent = checkNotNull(activity.intent)
-        val type = if (savedInstanceState == null) {
-            nonNullIntent.getSerializableExtra(ARGS_VIEW_TYPE) as StatsViewType
+        val type: StatsViewType? = if (savedInstanceState == null) {
+            nonNullIntent.getSerializableExtraCompat(ARGS_VIEW_TYPE)
         } else {
-            savedInstanceState.getSerializable(ARGS_VIEW_TYPE) as StatsViewType
+            savedInstanceState.getSerializableCompat(ARGS_VIEW_TYPE)
         }
 
-        val granularity = if (savedInstanceState == null) {
-            nonNullIntent.getSerializableExtra(ARGS_TIMEFRAME) as StatsGranularity?
+        val granularity: StatsGranularity? = if (savedInstanceState == null) {
+            nonNullIntent.getSerializableExtraCompat(ARGS_TIMEFRAME)
         } else {
-            savedInstanceState.getSerializable(ARGS_TIMEFRAME) as StatsGranularity?
+            savedInstanceState.getSerializableCompat(ARGS_TIMEFRAME)
         }
 
         val siteId = savedInstanceState?.getInt(WordPress.LOCAL_SITE_ID, 0)
             ?: nonNullIntent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
         statsSiteProvider.start(siteId)
 
-        val viewModelFactory = viewModelFactoryBuilder.build(type, granularity)
-        viewModel = ViewModelProvider(activity, viewModelFactory).get(StatsViewAllViewModel::class.java)
+        type?.let {
+            val viewModelFactory = viewModelFactoryBuilder.build(it, granularity)
+            viewModel = ViewModelProvider(activity, viewModelFactory)[StatsViewAllViewModel::class.java]
+        }
 
-        val selectedDate = if (savedInstanceState == null) {
-            nonNullIntent.getParcelableExtra(ARGS_SELECTED_DATE) as SelectedDate?
+        val selectedDate: SelectedDate? = if (savedInstanceState == null) {
+            nonNullIntent.getParcelableExtraCompat(ARGS_SELECTED_DATE)
         } else {
-            savedInstanceState.getParcelable(ARGS_SELECTED_DATE) as SelectedDate?
+            savedInstanceState.getParcelableCompat(ARGS_SELECTED_DATE)
         }
         setupObservers(activity)
 

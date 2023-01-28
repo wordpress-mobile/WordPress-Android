@@ -22,6 +22,8 @@ import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActio
 import org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN
 import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fragment) {
@@ -44,25 +46,26 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
     private fun JetpackRemoteInstallFragmentBinding.initViewModel(savedInstanceState: Bundle?) {
         requireActivity().let { activity ->
             val intent = activity.intent
-            val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-            val source = intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
-            val retrievedState = savedInstanceState?.getSerializable(VIEW_STATE) as? JetpackRemoteInstallViewState.Type
+            val site = intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+            val source = intent.getSerializableExtraCompat<JetpackConnectionSource>(TRACKING_SOURCE_KEY)
+            val retrievedState =
+                savedInstanceState?.getSerializableCompat<JetpackRemoteInstallViewState.Type>(VIEW_STATE)
             viewModel = ViewModelProvider(
                 this@JetpackRemoteInstallFragment, viewModelFactory
-            ).get(JetpackRemoteInstallViewModel::class.java)
-            viewModel.start(site, retrievedState)
+            )[JetpackRemoteInstallViewModel::class.java]
+            site?.let { viewModel.start(it, retrievedState) }
 
             initLiveViewStateObserver()
 
-            viewModel.liveActionOnResult.observe(viewLifecycleOwner, Observer { result ->
-                if (result != null) {
+            viewModel.liveActionOnResult.observe(viewLifecycleOwner) { result ->
+                if (result != null && source != null) {
                     when (result.action) {
                         MANUAL_INSTALL -> onManualInstallResultAction(activity, source, result)
                         LOGIN -> onLoginResultAction(activity, source)
                         CONNECT -> onConnectResultAction(activity, source, result)
                     }
                 }
-            })
+            }
         }
     }
 

@@ -18,6 +18,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTrac
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.merge
 import org.wordpress.android.util.perform
 import org.wordpress.android.viewmodel.Event
@@ -219,8 +220,8 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     fun restoreState(state: Bundle) {
-        state.getSerializable(SELECTED_SCREEN)?.let {
-            _selectedScreen.value = it as Screen
+        state.getSerializableCompat<Screen>(SELECTED_SCREEN)?.let {
+            _selectedScreen.value = it
         }
         val siteId = state.getInt(SITE_ID)
         if (siteId != 0) {

@@ -27,6 +27,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
@@ -89,11 +90,12 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
         viewModel = ViewModelProvider(
             this@BackupDownloadFragment,
             viewModelFactory
-        ).get(BackupDownloadViewModel::class.java)
+        )[BackupDownloadViewModel::class.java]
 
         val (site, activityId) = when {
             requireActivity().intent?.extras != null -> {
-                val site = requireNotNull(requireActivity().intent.extras).getSerializable(WordPress.SITE) as SiteModel
+                val site =
+                    requireNotNull(requireActivity().intent.extras).getSerializableCompat<SiteModel>(WordPress.SITE)
                 val activityId = requireNotNull(requireActivity().intent.extras).getString(
                     KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY
                 ) as String
@@ -107,7 +109,7 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
 
         initObservers()
 
-        viewModel.start(site, activityId, savedInstanceState)
+        site?.let { viewModel.start(it, activityId, savedInstanceState) }
     }
 
     private fun JetpackBackupRestoreFragmentBinding.initObservers() {

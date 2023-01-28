@@ -28,6 +28,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.QuickStartUtils.getQuickStartListSkippedTracker
 import org.wordpress.android.util.QuickStartUtils.getQuickStartListTappedTracker
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import java.io.Serializable
 import javax.inject.Inject
@@ -74,7 +75,7 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        tasksType = arguments?.getSerializable(EXTRA_TYPE) as QuickStartTaskType? ?: QuickStartTaskType.UNKNOWN
+        tasksType = arguments?.getSerializableCompat(EXTRA_TYPE) ?: UNKNOWN
         quickStartTracker.trackQuickStartListViewed(tasksType)
         binding.setupQuickStartList()
     }

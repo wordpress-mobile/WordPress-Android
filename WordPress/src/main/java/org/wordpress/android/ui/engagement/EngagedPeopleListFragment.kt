@@ -39,6 +39,7 @@ import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.observeEvent
@@ -93,17 +94,17 @@ class EngagedPeopleListFragment : Fragment() {
         loadingView = view.findViewById(R.id.loading_view)
         emptyView = view.findViewById(R.id.actionable_empty_view)
 
-        val listScenario = requireArguments().getParcelable<ListScenario>(KEY_LIST_SCENARIO)
+        val listScenario = requireArguments().getParcelableCompat<ListScenario>(KEY_LIST_SCENARIO)
 
         val layoutManager = LinearLayoutManager(activity)
 
-        savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
+        savedInstanceState?.getParcelableCompat<Parcelable>(KEY_LIST_STATE)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 
         recycler.layoutManager = layoutManager
 
-        userProfileViewModel.onBottomSheetAction.observeEvent(viewLifecycleOwner, { state ->
+        userProfileViewModel.onBottomSheetAction.observeEvent(viewLifecycleOwner) { state ->
             var bottomSheet = childFragmentManager.findFragmentByTag(USER_PROFILE_BOTTOM_SHEET_TAG)
                     as? UserProfileBottomSheetFragment
 
@@ -118,31 +119,31 @@ class EngagedPeopleListFragment : Fragment() {
                     bottomSheet?.apply { this.dismiss() }
                 }
             }
-        })
+        }
 
-        viewModel.uiState.observe(viewLifecycleOwner, { state ->
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
             if (!isAdded) return@observe
 
             updateUiState(state)
-        })
+        }
 
-        viewModel.onNavigationEvent.observeEvent(viewLifecycleOwner, { event ->
+        viewModel.onNavigationEvent.observeEvent(viewLifecycleOwner) { event ->
             if (!isAdded) return@observeEvent
 
             manageNavigation(event)
-        })
+        }
 
-        viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner, { messageHolder ->
+        viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner) { messageHolder ->
             if (!isAdded || !lifecycle.currentState.isAtLeast(State.RESUMED)) return@observeEvent
 
             showSnackbar(messageHolder)
-        })
+        }
 
-        viewModel.onServiceRequestEvent.observeEvent(viewLifecycleOwner, { serviceRequest ->
+        viewModel.onServiceRequestEvent.observeEvent(viewLifecycleOwner) { serviceRequest ->
             if (!isAdded) return@observeEvent
 
             manageServiceRequest(serviceRequest)
-        })
+        }
 
         viewModel.start(listScenario!!)
     }

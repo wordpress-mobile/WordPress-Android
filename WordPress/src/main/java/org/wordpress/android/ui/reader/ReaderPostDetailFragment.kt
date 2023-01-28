@@ -132,6 +132,8 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelp
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.isDarkTheme
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -317,12 +319,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (args != null) {
             blogId = args.getLong(ReaderConstants.ARG_BLOG_ID)
             postId = args.getLong(ReaderConstants.ARG_POST_ID)
-            directOperation = args.getSerializable(ReaderConstants.ARG_DIRECT_OPERATION) as? DirectOperation
+            directOperation = args.getSerializableCompat(ReaderConstants.ARG_DIRECT_OPERATION)
             commentId = args.getInt(ReaderConstants.ARG_COMMENT_ID)
             isRelatedPost = args.getBoolean(ReaderConstants.ARG_IS_RELATED_POST)
             interceptedUri = args.getString(ReaderConstants.ARG_INTERCEPTED_URI)
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
-                this.postListType = args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType
+                args.getSerializableCompat<ReaderPostListType>(ReaderConstants.ARG_POST_LIST_TYPE)?.let {
+                    postListType = it
+                }
             }
             postSlugsResolutionUnderway = args.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY)
         }
@@ -499,7 +503,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun initLikeFacesRecycler(savedInstanceState: Bundle?) {
         if (!likesEnhancementsFeatureConfig.isEnabled()) return
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        savedInstanceState?.getParcelable<Parcelable>(KEY_LIKERS_LIST_STATE)?.let {
+        savedInstanceState?.getParcelableCompat<Parcelable>(KEY_LIKERS_LIST_STATE)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 
@@ -518,7 +522,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (!commentsSnippetFeatureConfig.isEnabled()) return
         val layoutManager = LinearLayoutManager(activity)
 
-        savedInstanceState?.getParcelable<Parcelable>(KEY_COMMENTS_SNIPPET_LIST_STATE)?.let {
+        savedInstanceState?.getParcelableCompat<Parcelable>(KEY_COMMENTS_SNIPPET_LIST_STATE)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 
@@ -1082,8 +1086,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         savedInstanceState?.let {
             blogId = it.getLong(ReaderConstants.ARG_BLOG_ID)
             postId = it.getLong(ReaderConstants.ARG_POST_ID)
-            directOperation = it
-                .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION) as? DirectOperation
+            directOperation = it.getSerializableCompat(ReaderConstants.ARG_DIRECT_OPERATION)
             commentId = it.getInt(ReaderConstants.ARG_COMMENT_ID)
             isRelatedPost = it.getBoolean(ReaderConstants.ARG_IS_RELATED_POST)
             interceptedUri = it.getString(ReaderConstants.ARG_INTERCEPTED_URI)
@@ -1092,7 +1095,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             hasTrackedGlobalRelatedPosts = it.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS)
             hasTrackedLocalRelatedPosts = it.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS)
             if (it.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
-                this.postListType = it.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType
+                it.getSerializableCompat<ReaderPostListType>(ReaderConstants.ARG_POST_LIST_TYPE)
+                    ?.let { argPostListType -> postListType = argPostListType }
             }
             if (it.containsKey(ReaderConstants.KEY_ERROR_MESSAGE)) {
                 errorMessage = it.getString(ReaderConstants.KEY_ERROR_MESSAGE)

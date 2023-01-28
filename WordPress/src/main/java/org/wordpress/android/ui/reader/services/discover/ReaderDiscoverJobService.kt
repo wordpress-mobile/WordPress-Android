@@ -37,7 +37,7 @@ class ReaderDiscoverJobService : JobService(), ServiceCompletionListener, Corout
     override fun onStartJob(params: JobParameters): Boolean {
         AppLog.i(READER, "reader discover job service > started")
 
-        val task = DiscoverTasks.values()[(params.extras[ReaderDiscoverServiceStarter.ARG_DISCOVER_TASK] as Int)]
+        val task = DiscoverTasks.values()[params.extras.getInt(ReaderDiscoverServiceStarter.ARG_DISCOVER_TASK)]
 
         readerDiscoverLogic.performTasks(task, params, this, this)
         return true

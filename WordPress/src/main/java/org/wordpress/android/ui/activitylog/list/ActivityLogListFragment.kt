@@ -29,6 +29,8 @@ import org.wordpress.android.ui.prefs.EmptyViewRecyclerView
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
@@ -87,11 +89,11 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
                 }
             }
 
-            val site = if (savedInstanceState == null) {
+            val site: SiteModel? = if (savedInstanceState == null) {
                 val nonNullIntent = checkNotNull(nonNullActivity.intent)
-                nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
+                nonNullIntent.getSerializableExtraCompat(WordPress.SITE)
             } else {
-                savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+                savedInstanceState.getSerializableCompat(WordPress.SITE)
             }
             val rewindableOnly = nonNullActivity.intent.getBooleanExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)
 
@@ -106,7 +108,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
 
             setupObservers()
 
-            viewModel.start(site, rewindableOnly)
+            site?.let { viewModel.start(it, rewindableOnly) }
         }
     }
 

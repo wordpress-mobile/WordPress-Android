@@ -18,6 +18,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistr
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -46,9 +47,9 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
 
     private fun setupViewModel() {
         val intent = requireActivity().intent
-        val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(DomainsDashboardViewModel::class.java)
-        viewModel.start(site)
+        val site = intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[DomainsDashboardViewModel::class.java]
+        site?.let { viewModel.start(it) }
     }
 
     private fun DomainsDashboardFragmentBinding.setupObservers() {

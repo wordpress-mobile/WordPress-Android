@@ -21,6 +21,7 @@ import org.wordpress.android.ui.deeplinks.handlers.ServerTrackingHandler
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -167,12 +168,11 @@ class DeepLinkingIntentReceiverViewModel
 
     private fun extractSavedInstanceStateIfNeeded(savedInstanceState: Bundle?) {
         savedInstanceState?.let {
-            val uri: Uri? = savedInstanceState.getParcelable(URI_KEY)
+            val uri = savedInstanceState.getParcelableCompat<Uri>(URI_KEY)
             uriWrapper = uri?.let { UriWrapper(it) }
-            deepLinkEntryPoint =
-                DeepLinkEntryPoint.valueOf(
-                    savedInstanceState.getString(DEEP_LINK_ENTRY_POINT_KEY, DeepLinkEntryPoint.DEFAULT.name)
-                )
+            deepLinkEntryPoint = DeepLinkEntryPoint.valueOf(
+                savedInstanceState.getString(DEEP_LINK_ENTRY_POINT_KEY, DeepLinkEntryPoint.DEFAULT.name)
+            )
         }
     }
 

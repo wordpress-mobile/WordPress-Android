@@ -17,6 +17,8 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
@@ -88,20 +90,21 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
     }
 
     private fun PagesListFragmentBinding.initializeViewModels(activity: FragmentActivity) {
-        val pagesViewModel = ViewModelProvider(activity, viewModelFactory).get(PagesViewModel::class.java)
+        val pagesViewModel = ViewModelProvider(activity, viewModelFactory)[PagesViewModel::class.java]
 
-        val listType = arguments?.getSerializable(typeKey) as PageListType
-        viewModel = ViewModelProvider(this@PageListFragment, viewModelFactory)
-            .get(listType.name, PageListViewModel::class.java)
+        arguments?.getSerializableCompat<PageListType>(typeKey)?.let { listType ->
+            viewModel =
+                ViewModelProvider(this@PageListFragment, viewModelFactory)[listType.name, PageListViewModel::class.java]
 
-        viewModel.start(listType, pagesViewModel)
+            viewModel.start(listType, pagesViewModel)
+        }
 
         setupObservers()
     }
 
     private fun PagesListFragmentBinding.initializeViews(savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
+        savedInstanceState?.getParcelableCompat<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 

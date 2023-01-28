@@ -12,6 +12,7 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 const val EXTRA_PAGE_REMOTE_ID_KEY = "extra_page_remote_id_key"
@@ -39,9 +40,9 @@ class PagesActivity : LocaleAwareActivity(),
 
     private fun handleIntent(intent: Intent) {
         if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
-            val notificationType: NotificationType =
-                intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
-            systemNotificationTracker.trackTappedNotification(notificationType)
+            intent.getSerializableExtraCompat<NotificationType>(ARG_NOTIFICATION_TYPE)?.let { notificationType ->
+                systemNotificationTracker.trackTappedNotification(notificationType)
+            }
         }
 
         if (intent.hasExtra(EXTRA_PAGE_REMOTE_ID_KEY)) {

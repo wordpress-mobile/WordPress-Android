@@ -28,6 +28,8 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
@@ -84,7 +86,7 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
             val areButtonsVisible = areButtonsVisible(savedInstanceState, activity.intent)
             val isRestoreHidden = isRestoreHidden(savedInstanceState, activity.intent)
 
-            viewModel.start(site, activityLogId, areButtonsVisible, isRestoreHidden)
+            site?.let { siteModel ->  viewModel.start(siteModel, activityLogId, areButtonsVisible, isRestoreHidden) }
         }
 
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
@@ -221,7 +223,7 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
 
     private fun sideAndActivityId(savedInstanceState: Bundle?, intent: Intent?) = when {
         savedInstanceState != null -> {
-            val site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            val site = savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)
             val activityLogId = requireNotNull(
                 savedInstanceState.getString(
                     ACTIVITY_LOG_ID_KEY
@@ -230,7 +232,7 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
             site to activityLogId
         }
         intent != null -> {
-            val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            val site = intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
             val activityLogId = intent.getStringExtra(ACTIVITY_LOG_ID_KEY) as String
             site to activityLogId
         }

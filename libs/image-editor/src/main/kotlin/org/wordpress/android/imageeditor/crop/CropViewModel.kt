@@ -4,6 +4,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -157,11 +158,23 @@ class CropViewModel : ViewModel() {
 
     private fun createCropResult(cropResultCode: Int, cropData: Intent) = CropResult(cropResultCode, cropData)
 
-    private fun getOutputPath(): String =
-        cropOptionsBundleWithFilesInfo.getParcelable<Uri?>(UCrop.EXTRA_OUTPUT_URI)?.path ?: ""
+    private fun getOutputPath(): String {
+        val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            cropOptionsBundleWithFilesInfo.getParcelable(UCrop.EXTRA_OUTPUT_URI, Uri::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            cropOptionsBundleWithFilesInfo.getParcelable(UCrop.EXTRA_OUTPUT_URI)
+        }
+        return uri?.path ?: ""
+    }
 
     fun getOutputData(cropResult: CropResult): ArrayList<OutputData> {
-        val imageUri: Uri? = cropResult.data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI)
+        val imageUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            cropResult.data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI, Uri::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            cropResult.data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI)
+        }
 
         return if (imageUri != null) {
             arrayListOf(OutputData(imageUri.toString()))
