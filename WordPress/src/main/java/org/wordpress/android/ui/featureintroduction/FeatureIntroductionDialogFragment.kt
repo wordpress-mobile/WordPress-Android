@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.DialogFragment
@@ -32,9 +33,12 @@ abstract class FeatureIntroductionDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         object : Dialog(requireContext(), theme) {
-            override fun onBackPressed() {
-                viewModel.onBackButtonClick()
-                super.onBackPressed()
+            override fun onCreate(savedInstanceState: Bundle?) {
+                super.onCreate(savedInstanceState)
+
+                requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+                    viewModel.onBackButtonClick()
+                }
             }
         }.apply {
             setStatusBarAsSurfaceColor()

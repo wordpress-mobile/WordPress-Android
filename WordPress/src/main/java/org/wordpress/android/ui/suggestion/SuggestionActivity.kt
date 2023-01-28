@@ -42,6 +42,8 @@ class SuggestionActivity : LocaleAwareActivity() {
             binding = this
         }
 
+        onBackPressedDispatcher.addCallback(this) { viewModel.trackExit(false) }
+
         val siteModel = intent.getSerializableExtra(INTENT_KEY_SITE_MODEL) as? SiteModel
         val suggestionType = intent.getSerializableExtra(INTENT_KEY_SUGGESTION_TYPE) as? SuggestionType
         when {
@@ -55,11 +57,6 @@ class SuggestionActivity : LocaleAwareActivity() {
         val message = "${this.javaClass.simpleName} started without $key. Finishing Activity."
         AppLog.e(T.EDITOR, message)
         finish()
-    }
-
-    override fun onBackPressed() {
-        viewModel.trackExit(false)
-        super.onBackPressed()
     }
 
     private fun initializeActivity(siteModel: SiteModel, suggestionType: SuggestionType) {

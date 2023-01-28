@@ -83,7 +83,7 @@ class ScanActivity : AppCompatActivity(), ScrollableViewInitializedListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
             return true
         } else if (item.itemId == R.id.menu_scan_history) {
             // todo malinjir is it worth introducing a vm?
