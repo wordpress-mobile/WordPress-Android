@@ -21,6 +21,7 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.State.NoUser
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.State.ShowUser
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.UiModel
+import org.wordpress.android.util.extensions.getSerializableCompat
 
 private const val USERNAME = "username"
 private const val DISPLAY_NAME = "display_name"
@@ -152,11 +153,11 @@ class LoginNoSitesViewModelTest : BaseUnitTest() {
     }
 
     private fun setupInstanceStateForNoUser() {
-        whenever(savedInstanceState.getSerializable(KEY_STATE)).thenReturn(NoUser)
+        whenever(savedInstanceState.getSerializableCompat<LoginNoSitesViewModel.State>(KEY_STATE)).thenReturn(NoUser)
     }
 
     private fun setupInstanceStateForShowUser() {
-        whenever(savedInstanceState.getSerializable(KEY_STATE)).thenReturn(
+        whenever(savedInstanceState.getSerializableCompat<LoginNoSitesViewModel.State>(KEY_STATE)).thenReturn(
             ShowUser(
                 userName = USERNAME,
                 displayName = DISPLAY_NAME,

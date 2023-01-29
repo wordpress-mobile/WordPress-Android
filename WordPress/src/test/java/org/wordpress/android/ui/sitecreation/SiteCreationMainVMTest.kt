@@ -32,6 +32,7 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.Creat
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -231,7 +232,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         /* we need to model a real use case of data only existing for steps the user has visited (Segment only in
         this case). Otherwise, subsequent steps' state will be cleared and make the test fail. (issue #10189)*/
         val expectedState = SiteCreationState(segmentId = SEGMENT_ID)
-        whenever(savedInstanceState.getParcelable<SiteCreationState>(KEY_SITE_CREATION_STATE))
+        whenever(savedInstanceState.getParcelableCompat<SiteCreationState>(KEY_SITE_CREATION_STATE))
             .thenReturn(expectedState)
 
         // we need to create a new instance of the VM as the `viewModel` has already been started in setUp()
@@ -252,7 +253,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         whenever(savedInstanceState.getInt(KEY_CURRENT_STEP)).thenReturn(index)
 
         // siteCreationState is not nullable - we need to set it
-        whenever(savedInstanceState.getParcelable<SiteCreationState>(KEY_SITE_CREATION_STATE))
+        whenever(savedInstanceState.getParcelableCompat<SiteCreationState>(KEY_SITE_CREATION_STATE))
             .thenReturn(SiteCreationState())
 
         // we need to create a new instance of the VM as the `viewModel` has already been started in setUp()
@@ -276,7 +277,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun `given instance state is not null, when start, then site creation accessed is not tracked`() {
         val expectedState = SiteCreationState(segmentId = SEGMENT_ID)
-        whenever(savedInstanceState.getParcelable<SiteCreationState>(KEY_SITE_CREATION_STATE))
+        whenever(savedInstanceState.getParcelableCompat<SiteCreationState>(KEY_SITE_CREATION_STATE))
             .thenReturn(expectedState)
 
         val newViewModel = getNewViewModel()

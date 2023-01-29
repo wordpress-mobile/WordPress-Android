@@ -60,6 +60,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -459,7 +460,7 @@ class RestoreViewModelTest : BaseUnitTest() {
     private fun startViewModelForStep(step: RestoreStep, restoreState: RestoreState? = null) {
         whenever(savedInstanceState.getInt(KEY_RESTORE_CURRENT_STEP))
             .thenReturn(step.id)
-        whenever(savedInstanceState.getParcelable<RestoreState>(KEY_RESTORE_STATE))
+        whenever(savedInstanceState.getParcelableCompat<RestoreState>(KEY_RESTORE_STATE))
             .thenReturn(restoreState ?: this.restoreState)
         startViewModel(savedInstanceState)
     }

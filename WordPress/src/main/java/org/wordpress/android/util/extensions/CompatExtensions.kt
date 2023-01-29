@@ -9,7 +9,7 @@ import java.io.Serializable
 /**
  * Remove this file when stable androidx.core 1.10 is released. Use IntentCompat and BundleCompat instead.
  */
-inline fun <reified T : Parcelable> Intent.getParcelableExtraCompat(key: String): T? =
+inline fun <reified T : Parcelable?> Intent.getParcelableExtraCompat(key: String): T? =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         getParcelableExtra(key, T::class.java)
     } else {
@@ -17,7 +17,7 @@ inline fun <reified T : Parcelable> Intent.getParcelableExtraCompat(key: String)
         getParcelableExtra(key) as T?
     }
 
-inline fun <reified T : Serializable> Intent.getSerializableExtraCompat(key: String): T? =
+inline fun <reified T : Serializable?> Intent.getSerializableExtraCompat(key: String): T? =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         getSerializableExtra(key, T::class.java)
     } else {
@@ -25,7 +25,7 @@ inline fun <reified T : Serializable> Intent.getSerializableExtraCompat(key: Str
         getSerializableExtra(key) as T?
     }
 
-inline fun <reified T : Parcelable> Bundle.getParcelableCompat(key: String): T? =
+inline fun <reified T : Parcelable?> Bundle.getParcelableCompat(key: String): T? =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         getParcelable(key, T::class.java)
     } else {
@@ -33,7 +33,7 @@ inline fun <reified T : Parcelable> Bundle.getParcelableCompat(key: String): T? 
         getParcelable(key)
     }
 
-inline fun <reified T : Parcelable> Bundle.getParcelableArrayListCompat(key: String): ArrayList<T>? =
+inline fun <reified T : Parcelable?> Bundle.getParcelableArrayListCompat(key: String): ArrayList<T>? =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         getParcelableArrayList(key, T::class.java)
     } else {
@@ -41,7 +41,7 @@ inline fun <reified T : Parcelable> Bundle.getParcelableArrayListCompat(key: Str
         getParcelableArrayList(key)
     }
 
-inline fun <reified T : Serializable> Bundle.getSerializableCompat(key: String): T? =
+inline fun <reified T : Serializable?> Bundle.getSerializableCompat(key: String): T? =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         getSerializable(key, T::class.java)
     } else {

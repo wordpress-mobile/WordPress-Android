@@ -45,6 +45,7 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.S
 import org.wordpress.android.ui.sitecreation.theme.defaultTemplateSlug
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
+import org.wordpress.android.util.extensions.getParcelableCompat
 
 private const val SUB_DOMAIN = "test"
 private const val DOMAIN = ".wordpress.com"
@@ -302,7 +303,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
 
     @Test
     fun `show fullscreen progress when restoring from SiteNotCreated state`() = testWithSuccessResponse {
-        whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE)).thenReturn(SiteNotCreated)
+        whenever(bundle.getParcelableCompat<CreateSiteState>(KEY_CREATE_SITE_STATE)).thenReturn(SiteNotCreated)
         initViewModel(bundle)
 
         assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewFullscreenProgressUiState::class.java)
@@ -311,7 +312,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
 
     @Test
     fun `service started when restoring from SiteNotCreated state`() {
-        whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE)).thenReturn(SiteNotCreated)
+        whenever(bundle.getParcelableCompat<CreateSiteState>(KEY_CREATE_SITE_STATE)).thenReturn(SiteNotCreated)
         initViewModel(bundle)
 
         assertThat(viewModel.startCreateSiteService.value).isNotNull
@@ -319,7 +320,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
 
     @Test
     fun `show fullscreen progress when restoring from SiteNotInLocalDb state`() = testWithSuccessResponse {
-        whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE)).thenReturn(SiteNotCreated)
+        whenever(bundle.getParcelableCompat<CreateSiteState>(KEY_CREATE_SITE_STATE)).thenReturn(SiteNotCreated)
         initViewModel(bundle)
 
         assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewFullscreenProgressUiState::class.java)
@@ -328,7 +329,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
 
     @Test
     fun `start pre-loading WebView when restoring from SiteNotInLocalDb state`() = testWithSuccessResponse {
-        whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE))
+        whenever(bundle.getParcelableCompat<CreateSiteState>(KEY_CREATE_SITE_STATE))
             .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID, false))
         initViewModel(bundle)
 
@@ -337,7 +338,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
 
     @Test
     fun `fetch newly created SiteModel when restoring from SiteNotInLocalDb state`() = testWithSuccessResponse {
-        whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE))
+        whenever(bundle.getParcelableCompat<CreateSiteState>(KEY_CREATE_SITE_STATE))
             .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID, false))
         initViewModel(bundle)
 
@@ -346,7 +347,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
 
     @Test
     fun `start pre-loading WebView when restoring from SiteCreationCompleted state`() {
-        whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE))
+        whenever(bundle.getParcelableCompat<CreateSiteState>(KEY_CREATE_SITE_STATE))
             .thenReturn(SiteCreationCompleted(LOCAL_SITE_ID, false))
         initViewModel(bundle)
 
