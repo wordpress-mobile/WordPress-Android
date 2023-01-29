@@ -551,18 +551,18 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                     .scaleY(1f)
                     .setDuration(LABEL_ANIMATION_DURATION)
                     .setListener(object : Animator.AnimatorListener {
-                        override fun onAnimationStart(animation: Animator?) {
+                        override fun onAnimationStart(animation: Animator) {
                             label.visibility = View.INVISIBLE
                             hint.visibility = View.VISIBLE
                         }
 
-                        override fun onAnimationEnd(animation: Animator?) {
+                        override fun onAnimationEnd(animation: Animator) {
                         }
 
-                        override fun onAnimationCancel(animation: Animator?) {
+                        override fun onAnimationCancel(animation: Animator) {
                         }
 
-                        override fun onAnimationRepeat(animation: Animator?) {
+                        override fun onAnimationRepeat(animation: Animator) {
                         }
                     }).start()
             }
@@ -581,21 +581,21 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                     .scaleY(label.height.toFloat() / hint.height)
                     .setDuration(LABEL_ANIMATION_DURATION)
                     .setListener(object : Animator.AnimatorListener {
-                        override fun onAnimationStart(animation: Animator?) {
+                        override fun onAnimationStart(animation: Animator) {
                             setLabelColor(label, colorSurface, outlineColorAlphaFocused)
                             label.visibility = View.VISIBLE
                             hint.visibility = View.VISIBLE
                         }
 
-                        override fun onAnimationEnd(animation: Animator?) {
+                        override fun onAnimationEnd(animation: Animator) {
                             hint.visibility = View.INVISIBLE
                             setLabelColor(label, outlineColorFocused, outlineColorAlphaFocused)
                         }
 
-                        override fun onAnimationCancel(animation: Animator?) {
+                        override fun onAnimationCancel(animation: Animator) {
                         }
 
-                        override fun onAnimationRepeat(animation: Animator?) {
+                        override fun onAnimationRepeat(animation: Animator) {
                         }
                     }).start()
             }

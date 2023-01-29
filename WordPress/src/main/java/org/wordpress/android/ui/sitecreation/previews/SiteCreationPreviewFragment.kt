@@ -271,7 +271,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 progressText.text = newText
             }
 
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 super.onAnimationEnd(animation)
                 animatorSet = null
             }
