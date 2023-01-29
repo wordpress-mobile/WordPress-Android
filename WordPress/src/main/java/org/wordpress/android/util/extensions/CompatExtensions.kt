@@ -7,7 +7,7 @@ import android.os.Parcelable
 import java.io.Serializable
 
 /**
- * TODO: Remove this file when stable androidx.core 1.10 is released. Use IntentCompat and BundleCompat instead.
+ * Remove this file when stable androidx.core 1.10 is released. Use IntentCompat and BundleCompat instead.
  */
 inline fun <reified T : Parcelable> Intent.getParcelableExtraCompat(key: String): T? =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

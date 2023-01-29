@@ -32,18 +32,17 @@ class InsightsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
 
         val nonNullActivity = requireActivity()
         val listType = nonNullActivity.intent.extras?.getSerializableCompat<StatsSection>(StatsListFragment.LIST_TYPE)
-        with(StatsDetailFragmentBinding.bind(view)) {
-            with(nonNullActivity as AppCompatActivity) {
-                setSupportActionBar(toolbar)
-                supportActionBar?.let { actionBar ->
-                    listType?.let { statsSection -> actionBar.title = getString(statsSection.titleRes) }
-                    actionBar.setHomeButtonEnabled(true)
-                    actionBar.setDisplayHomeAsUpEnabled(true)
-                }
+        val binding = StatsDetailFragmentBinding.bind(view)
+        with(nonNullActivity as AppCompatActivity) {
+            setSupportActionBar(binding.toolbar)
+            supportActionBar?.let { actionBar ->
+                listType?.let { statsSection -> actionBar.title = getString(statsSection.titleRes) }
+                actionBar.setHomeButtonEnabled(true)
+                actionBar.setDisplayHomeAsUpEnabled(true)
             }
-            initializeViewModels(nonNullActivity)
-            initializeViews()
         }
+        initializeViewModels(nonNullActivity)
+        binding.initializeViews()
     }
 
     private fun StatsDetailFragmentBinding.initializeViews() {
