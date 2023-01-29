@@ -153,11 +153,11 @@ class LoginNoSitesViewModelTest : BaseUnitTest() {
     }
 
     private fun setupInstanceStateForNoUser() {
-        whenever(savedInstanceState.getSerializableCompat<LoginNoSitesViewModel.State>(KEY_STATE)).thenReturn(NoUser)
+        whenever(savedInstanceState.getSerializableCompat<LoginNoSitesViewModel.State?>(KEY_STATE)).thenReturn(NoUser)
     }
 
     private fun setupInstanceStateForShowUser() {
-        whenever(savedInstanceState.getSerializableCompat<LoginNoSitesViewModel.State>(KEY_STATE)).thenReturn(
+        whenever(savedInstanceState.getSerializableCompat<LoginNoSitesViewModel.State?>(KEY_STATE)).thenReturn(
             ShowUser(
                 userName = USERNAME,
                 displayName = DISPLAY_NAME,
