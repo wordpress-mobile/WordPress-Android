@@ -137,7 +137,7 @@ class WPTooltipView @JvmOverloads constructor(
                 .alpha(0f)
                 .setDuration(HIDE_ANIMATION_DURATION)
                 .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator?) {
+                    override fun onAnimationEnd(animation: Animator) {
                         super.onAnimationEnd(animation)
                         visibility = View.GONE
                     }
