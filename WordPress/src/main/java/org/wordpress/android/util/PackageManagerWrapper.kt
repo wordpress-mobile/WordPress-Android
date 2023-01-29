@@ -3,6 +3,8 @@ package org.wordpress.android.util
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.pm.PackageManager.ComponentInfoFlags
+import android.os.Build
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
@@ -38,7 +40,15 @@ class PackageManagerWrapper @Inject constructor(
         intent.component?.let {
             try {
                 val context = contextProvider.getContext()
-                val activityInfo = context.packageManager.getActivityInfo(it, PackageManager.GET_META_DATA)
+                val activityInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    context.packageManager.getActivityInfo(
+                        it,
+                        ComponentInfoFlags.of(PackageManager.GET_META_DATA.toLong())
+                    )
+                } else {
+                    @Suppress("DEPRECATION")
+                    context.packageManager.getActivityInfo(it, PackageManager.GET_META_DATA)
+                }
                 return activityInfo.labelRes
             } catch (ex: PackageManager.NameNotFoundException) {
                 AppLog.e(T.UTILS, "Unable to extract label res from activity info")

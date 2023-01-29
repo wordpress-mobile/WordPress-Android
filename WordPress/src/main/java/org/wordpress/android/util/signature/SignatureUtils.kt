@@ -28,9 +28,18 @@ class SignatureUtils @Inject constructor(
         trustedPackageId: String,
         trustedSignatureHash: String
     ): Boolean = try {
-        val signingInfo = contextProvider.getContext().packageManager.getPackageInfo(
-            trustedPackageId, PackageManager.GET_SIGNING_CERTIFICATES
-        ).signingInfo
+        val signingInfo = if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
+            contextProvider.getContext().packageManager.getPackageInfo(
+                trustedPackageId,
+                PackageManager.PackageInfoFlags.of(PackageManager.GET_SIGNING_CERTIFICATES.toLong())
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            contextProvider.getContext().packageManager.getPackageInfo(
+                trustedPackageId,
+                PackageManager.GET_SIGNING_CERTIFICATES
+            )
+        }.signingInfo
         if (signingInfo.hasMultipleSigners()) {
             throw SignatureNotFoundException()
         }
