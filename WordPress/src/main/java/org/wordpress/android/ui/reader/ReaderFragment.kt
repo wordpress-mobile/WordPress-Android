@@ -126,11 +126,11 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         }
         menu.findItem(R.id.menu_settings).apply {
             settingsMenuItem = this
-            settingsMenuItemFocusPoint = this.actionView.findViewById(R.id.menu_quick_start_focus_point)
+            settingsMenuItemFocusPoint = this.actionView?.findViewById(R.id.menu_quick_start_focus_point)
             this.isVisible = viewModel.uiState.value?.settingsMenuItemUiState?.isVisible ?: false
             settingsMenuItemFocusPoint?.isVisible =
                 viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
-            this.actionView.setOnClickListener { viewModel.onSettingsActionClicked() }
+            this.actionView?.setOnClickListener { viewModel.onSettingsActionClicked() }
         }
     }
 
