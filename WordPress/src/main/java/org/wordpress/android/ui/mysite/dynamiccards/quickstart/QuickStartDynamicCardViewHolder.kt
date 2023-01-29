@@ -128,14 +128,14 @@ class QuickStartDynamicCardViewHolder(
          * We need to do this immediately, because if we don't, then the next move event could potentially
          * trigger the viewPager to switch tabs
          */
-        override fun onDown(e: MotionEvent?): Boolean = with(binding) {
+        override fun onDown(e: MotionEvent): Boolean = with(binding) {
             quickStartCardRecyclerView.parent.requestDisallowInterceptTouchEvent(true)
             return super.onDown(e)
         }
 
         override fun onScroll(
-            e1: MotionEvent?,
-            e2: MotionEvent?,
+            e1: MotionEvent,
+            e2: MotionEvent,
             distanceX: Float,
             distanceY: Float
         ): Boolean = with(binding) {
