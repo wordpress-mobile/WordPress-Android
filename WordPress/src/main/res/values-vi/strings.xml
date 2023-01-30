@@ -67,8 +67,6 @@ Language: vi_VN
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Dùng &lt;b&gt; Khám phá &lt;/b&gt; để tìm blog và thẻ. Thử chọn %1$s Cài đặt %2$s để thêm những đề tài bạn thích.</string>
     <string name="photo_picker_video_thumbnail_content_description">Ảnh đại diện video</string>
     <string name="stats_details_top_commentators">Top người bình luận</string>
-    <string name="stats_insights_total_stats_negative">%1$s thấp hơn tuần trước</string>
-    <string name="stats_insights_total_stats_positive">%1$s cao hơn tuần trước</string>
     <string name="stats_published_years_ago">Đăng %1$d năm trước</string>
     <string name="stats_published_a_year_ago">Đăng một năm trước</string>
     <string name="stats_published_months_ago">Đăng %1$d tháng trước</string>
@@ -95,12 +93,6 @@ Language: vi_VN
     <string name="photo_picker_media_thumbnail_content_description">Ảnh đại diện media</string>
     <string name="stats_insights_popular_title">🔥 Ưa Chuộng</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Khách truy cập tuần này ít hơn %1$s tuần trước.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Khách truy cập tuần này cao hơn %1$s tuần trước.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Lượt xem tuần này ít hơn %1$s tuần trước.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Lượt xem tuần này cao hơn %1$s tuần trước.</string>
-    <string name="stats_timeframe_previous_week">Tuần Trước</string>
-    <string name="stats_timeframe_this_week">Tuần Này</string>
     <string name="scan_vault_press_active_on_site_button_text">Xem tổng quan</string>
     <string name="scan_vault_press_active_on_site_subtitle">Blog của bạn được bảo vệ với VaultPress. Xem trang tổng quan VaultPress bên dưới.</string>
     <string name="scan_vault_press_active_on_site_title">Trang của bạn có VaultPress</string>

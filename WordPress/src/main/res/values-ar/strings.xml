@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-17 23:54:23+0000
+Translation-Revision-Date: 2023-01-25 17:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.3
 Language: ar
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">من &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">إخفاء هذا</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">ذكرني لاحقًا</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">التبديل إلى تطبيق Jetpack</string>
@@ -130,7 +131,6 @@ Language: ar
     <string name="weekly_roundup_notification_text_views_and_likes">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات و⁦%2$s⁩ من الإعجابات</string>
     <string name="weekly_roundup_notification_text_views_only">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات.</string>
     <string name="weekly_roundup_notification_text_all">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات، و⁦%2$s⁩ من الإعجابات، و⁦%3$s⁩ من التعليقات.</string>
-    <string name="stats_revamp_v2_update_alert_message">تم التحديث إلى رؤى جديدة لتساعدك على فهم مدى أداء محتواك وما يفلح مع جمهورك.</string>
     <string name="stats_insights_like_guide_card">⭐️ لقد تلقت تدوينتك الأخيرة ⁦%1$s⁩ ⁦%2$s⁩ إعجاب.</string>
     <string name="wp_jetpack_powered">مدعوم بواسطة Jetpack</string>
     <string name="qrcode_auth_flow_error_content_description">صورة تشير إلى وجود خطأ</string>
@@ -152,7 +152,6 @@ Language: ar
     <string name="qrcode_auth_flow_validated_primary_action">نعم، قم بتسجيل الدخول لي</string>
     <string name="qrcode_auth_flow_validated_subtitle">لا تقم سوى بمسح رموز الاستجابة السريعة ضوئيًا التي تم الحصول عليها مباشرةً من متصفح الويب الخاص بك. لا تقم أبدًا بمسح رمز ضوئيًا تم إرساله إليك بواسطة أي شخص آخر.</string>
     <string name="qrcode_auth_flow_scan_again">إعادة المسح</string>
-    <string name="stats_revamp_v2_intro_header_title">تحديث الرؤى</string>
     <string name="qrcode_auth_flow_validated_title">هل تحاول تسجيل الدخول إلى ⁦%1$s⁩ بالقرب من ⁦%2$s⁩؟</string>
     <string name="stats_insights_followers_guide_card">💡يُعد التعليق على مدونات أخرى طريقة رائعة لإنشاء اهتمام ومتابعين لموقعك الجديد.</string>
     <string name="stats_insights_comments_guide_card">💡اضغط على \"عرض المزيد\" للاطلاع على أفضل المعلقين لديك.</string>
@@ -209,8 +208,6 @@ Language: ar
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">استخدم &lt;b&gt;الاكتشاف&lt;/b&gt; للعثور على المواقع والوسوم. جرَّب تحديد ⁦%1$s⁩الإعدادات⁦%2$s⁩ لإضافة موضوعات تنال إعجابك.</string>
     <string name="photo_picker_video_thumbnail_content_description">صورة مصغَّرة للفيديو</string>
     <string name="stats_details_top_commentators">أفضل المعلقين</string>
-    <string name="stats_insights_total_stats_negative">⁦%1$s⁩ أقل من الأسبوع الماضي</string>
-    <string name="stats_insights_total_stats_positive">⁦%1$s⁩ أعلى من الأسبوع الماضي</string>
     <string name="stats_view_total_comments">إجمالي التعليقات</string>
     <string name="stats_view_total_likes">إجمالي الإعجابات</string>
     <string name="stats_published_years_ago">تم النشر منذ ⁦%1$d⁩ من السنوات</string>
@@ -237,14 +234,8 @@ Language: ar
     <string name="photo_picker_media_thumbnail_content_description">الصورة المصغَّرة للوسائط</string>
     <string name="stats_insights_popular_title">🔥 الوقت الأكثر شيوعًا</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">يقل زائروك هذا الأسبوع عن الأسبوع الماضي بنسبة قدرها ⁦%1$s⁩.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">يزيد زائروك هذا الأسبوع عن الأسبوع الماضي بنسبة قدرها ⁦%1$s⁩.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">تقل مشاهداتك هذا الأسبوع عن الأسبوع الماضي بنسبة قدرها ⁦%1$s⁩.</string>
-    <string name="stats_timeframe_previous_week">الأسبوع الماضي</string>
-    <string name="stats_timeframe_this_week">هذا الأسبوع</string>
     <string name="scan_vault_press_active_on_site_button_text">زيارة لوحة التحكم</string>
     <string name="scan_vault_press_active_on_site_subtitle">أنت محمي بالفعل بواسطة VaultPress. يمكنك العثور على رابط إلى لوحة تحكم VaultPress الخاصة بك أدناه.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">تزيد مشاهداتك هذا الأسبوع عن الأسبوع الماضي بنسبة قدرها ⁦%1$s⁩.</string>
     <string name="scan_vault_press_active_on_site_title">يحتوي موقعك على VaultPress</string>
     <string name="locale_picker_current_language">اللغة الحالية:</string>
     <string name="hpp_choose_and_create_site">إنشاء موقع</string>

@@ -1,11 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-12-20 17:54:23+0000
+Translation-Revision-Date: 2023-01-25 11:18:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sq_AL
 -->
 <resources>
+    <string name="install_play_store_to_get_jetpack">Që të merrni aplikacionin Jetpack, ju lutemi, instaloni Google Play Store</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Bëjeni më vonë</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Kalo te Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të fuqishme të Jetpack-ut janë hequr nga aplikacioni WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Veçori të Jetpack-ut janë lëvizur.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s po kalohet në %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s po kalohet në %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">Së shpejti %1$s do të lëvizen</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">Së shpejti %1$s do të lëvizet</string>
+    <string name="wp_jetpack_powered_phase_2">Merrni aplikacionin Jetpack</string>
+    <string name="my_site_blogging_prompt_card_view_answers">Shihni krejt përgjigjet</string>
+    <string name="stats_insights_total_stats_seven_days_negative">%1$s më poshtë se 7 ditët e mëparshme</string>
+    <string name="stats_insights_total_stats_seven_days_positive">%1$s më sipër se 7 ditët e mëparshme</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Vizitorët tuaj gjatë 7 ditëve të fundit janë %1$s më pak se ata të 7 ditëve të mëparshme.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Vizitorët tuaj gjatë 7 ditëve të fundit janë %1$s më shumë se ata të 7 ditëve të mëparshme.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Parjet tuaja gjatë 7 ditëve të fundit janë %1$s më poshtë se ato të 7 ditëve të kaluara.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Parjet tuaja gjatë 7 ditëve të fundit janë %1$s më lart se ato të 7 ditëve të kaluara.</string>
+    <string name="stats_timeframe_previous_seven_days">7 ditët e mëparshme</string>
+    <string name="stats_timeframe_last_seven_days">7 ditët e fundit</string>
+    <string name="weeks_quantity_other">%d javë</string>
+    <string name="weeks_quantity_one">1 javë</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Nga &lt;b&gt;Dita e Parë&lt;/b&gt;</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">Fshihe këtë</string>
+    <string name="jetpack_feature_card_menu_item_remind_me_later">Kujtoma më vonë</string>
+    <string name="jetpack_feature_card_content">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të fuqishme të Jetpack-ut së shpejti do të kalohen te aplikacioni Jetpack për celular.</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Kaloni te aplikacioni Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Mësoni më tepër, te jetpack.com</string>
+    <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Kalimi është falas dhe do vetëm një minutë.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të fuqishme të Jetpack-ut do të hiqen së shpejti nga aplikacioni WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të fuqishme të Jetpack-ut do të hiqen nga aplikacioni WordPress në %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Veçoritë Jetpack së shpejti do të shpërngulen.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Njoftimet po kalojnë te aplikacioni Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Lexuesi po kalohet te aplikacioni Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statistikat tuaja po kalojnë te aplikacioni Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Kaloni në aplikacionin e ri Jetpack</string>
+    <string name="blogging_prompts_list_error_network_subtitle">Kontrolloni lidhjen tuaj në rrjet dhe riprovoni.</string>
+    <string name="blogging_prompts_list_error_network_title">S’arrihet të ngarkohet kjo lëndë këtë çast.</string>
+    <string name="blogging_prompts_list_error_fetch_subtitle">Pati një gabim në ngarkim cytjesh.</string>
+    <string name="blogging_prompts_list_error_fetch_title">Hëm</string>
+    <string name="blogging_prompts_list_no_prompts">Ende pa cytje</string>
+    <string name="blogging_prompts_list_number_of_answers_other">%d përgjigje</string>
+    <string name="blogging_prompts_list_number_of_answers_one">1 përgjigje</string>
+    <string name="blogging_prompts_list_number_of_answers_zero">0 përgjigje</string>
+    <string name="blogging_prompts_list_answered_prompt">✓ Me Përgjigje</string>
+    <string name="blogging_prompts_list_title">Cytje</string>
+    <string name="close_desc">mbylle</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Ndryshe, mund ta shkëputni dhe përpunoni ndarazi këtë bllok, duke prekur “Shndërroje në bllok të rregullt”.</string>
+    <string name="dlg_confirm_delete_category">Të fshihet përgjithmonë Kategoria \'%s\'?</string>
+    <string name="deleting_cat_success">Kategoria u fshi me sukses</string>
+    <string name="deleting_cat_failed">Fshirja e kategorisëdështoi</string>
+    <string name="deleting_cat">Po fshihet kategoria</string>
+    <string name="updating_cat">Po përditësohet kategori</string>
+    <string name="update_category">Përditësojeni kategorinë</string>
     <string name="reader_toast_user_blocked">Postimet prej këtij përdoruesi s’do të shfaqen më</string>
     <string name="reader_menu_block_user">Blloko përdoruesin</string>
     <string name="reader_menu_report_user">Raportojeni këtë përdorues</string>
@@ -28,6 +81,7 @@ Language: sq_AL
     <string name="preference_open_links_in_jetpack">Lidhjet hapi në Jetpack</string>
     <string name="jp_migration_need_help_button">Ju duhet ndihmë?</string>
     <string name="jp_migration_got_it_button">E kuptova</string>
+    <string name="jp_migration_delete_message">Ju lutemi, &lt;b&gt;fshini aplikacionin WordPress&lt;/b&gt;, që të shmangen përplasje të dhënash.</string>
     <string name="jp_migration_delete_subtitle">Duket sikur keni ende të instaluar aplikacionin WordPress. Rekomandojmë ta fshini aplikacionin WordPress, për të shmangur përplasje të dhënash.</string>
     <string name="jp_migration_delete_title">S’ju duhet më aplikacioni WordPress</string>
     <string name="jp_migration_network_error_message">S’jeni në gjendje të shpërngulim të dhënat dhe rregullimet tuaja pa një lidhje në rrjet.</string>
@@ -39,6 +93,7 @@ Language: sq_AL
     <string name="jp_migration_try_again_button">Riprovoni</string>
     <string name="jp_migration_finish_button">Përfundoje</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Hiqni ikonë aplikacioni WordPress</string>
+    <string name="jp_migration_done_delete_wp_message">Ju lutemi, &lt;b&gt;fshini aplikacionin WordPress&lt;/b&gt;, që të shmangen përplasje të dhënash.</string>
     <string name="jp_migration_done_subtitle">Kemi shpërngulur krejt të dhënat dhe rregullimet tuaja. Gjithçka është mu atje ku e latë.</string>
     <string name="jp_migration_done_title">Faleminderit që kaloni në Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Do t’i çaktivizojmë njoftimet prej aplikacionit WordPress.</string>
@@ -96,7 +151,6 @@ Language: sq_AL
     <string name="weekly_roundup_notification_text_views_and_likes">Javën e kaluar patët %1$s parje dhe %2$s pëlqime</string>
     <string name="weekly_roundup_notification_text_views_only">Javën e kaluar patët %1$s parje.</string>
     <string name="weekly_roundup_notification_text_all">Javën e kaluar patët %1$s parje, %2$s pëlqime dhe %3$s komente.</string>
-    <string name="stats_revamp_v2_update_alert_message">U përditësua me Tendenca të Reja për t’ju ndihmuar të kuptoni se si ecën lënda juaj dhe se çfarë ka rezonancë me publikun.</string>
     <string name="stats_insights_like_guide_card">⭐️ Postimi juaj më i ri %1$s ka marrë %2$s pëlqime.</string>
     <string name="wp_jetpack_powered">Bazuar në Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Figurë që tregon skanim kodi hyrjeje në punë e sipër</string>
@@ -118,7 +172,6 @@ Language: sq_AL
     <string name="qrcode_auth_flow_validated_subtitle">Skanoni vetëm kode QR të marrë drejt e nga shfletuesi juaj. Mos skanoni kurrë një kod të dërguar për ju nga dikush tjetër.</string>
     <string name="qrcode_auth_flow_validated_default_title">Po provoni të hyni në shfletuesin tuaj pranë %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">A po provoni të hyni te %1$s pranë %2$s?</string>
-    <string name="stats_revamp_v2_intro_header_title">Përditësim Tendencash</string>
     <string name="stats_insights_followers_guide_card">💡Komentimi në blogje të tjerë është një mënyrë e goditur për të shtuar vëmendjen dhe ndjekësit për sajtin tuaj të ri.</string>
     <string name="stats_insights_comments_guide_card">💡Prekni “SHIHNI MË TEPËR”, që të shihni komentuesit tuaj kryesues.</string>
     <string name="stats_insights_latest_post_empty">Shihni prapë, kur të keni botuar postimin tuaj të parë!</string>
@@ -174,8 +227,6 @@ Language: sq_AL
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Përdorni &lt;b&gt; Zbuloni &lt;/b&gt; që të gjeni sajte dhe etiketa. Provoni të përzgjidhni %1$s Rregullime %2$s që të shtoni subjekte që ju pëlqejnë.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniaturë Videoje</string>
     <string name="stats_details_top_commentators">Komentatorët Kryesues</string>
-    <string name="stats_insights_total_stats_negative">%1$s më poshtë se javën e kaluar</string>
-    <string name="stats_insights_total_stats_positive">%1$s më sipër se javën e kaluar</string>
     <string name="stats_published_years_ago">Botuar %1$d vjet më parë</string>
     <string name="stats_published_a_year_ago">Botuar një vit më parë</string>
     <string name="stats_published_months_ago">Botuar %1$d muaj më parë</string>
@@ -202,12 +253,6 @@ Language: sq_AL
     <string name="photo_picker_media_thumbnail_content_description">Miniaturë Media</string>
     <string name="stats_insights_popular_title">Koha Më Popullore</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Vizitorët tuaj këtë javë janë %1$s më pak se sa javën e kaluar.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Vizitorët tuaj këtë javë janë %1$s më tepër se sa javën e kaluar.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Parjet tuaja këtë javë janë %1$s më poshtë se sa javën e kaluar.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Parjet tuaja këtë javë janë %1$s më sipër se sa javën e kaluar.</string>
-    <string name="stats_timeframe_previous_week">Java e Kaluar</string>
-    <string name="stats_timeframe_this_week">Këtë Javë</string>
     <string name="scan_vault_press_active_on_site_button_text">Vizitoni Pultin</string>
     <string name="scan_vault_press_active_on_site_subtitle">Sajti juaj mbrohet tashmë nga VaultPress. Më poshtë mund të gjeni një lidhje për te pulti juaj VaultPress.</string>
     <string name="scan_vault_press_active_on_site_title">Sajti juaj ka VaultPress</string>
@@ -302,6 +347,7 @@ Language: sq_AL
     <string name="new_site_creation_intents_title">Temë sajti</string>
     <string name="quick_start_site_menu_tab_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të vazhdohet.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Hiqe nga pulti</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Anashkaloje për sot</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Shihni më tepër cytje</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d përgjigje</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Ndani me të tjerë cytje blogimi</string>
@@ -543,7 +589,7 @@ Language: sq_AL
     <string name="activity_log_multisite_message">Jetpack Backup për instalim Shumësajtësh furnizon kopjeruajtje të shkarkueshme, jo rikthime me një klikim. Për më tepër hollësi, %1$s.</string>
     <string name="blogging_reminders_tip_message">Postimi rregullisht mund të ndihmojë t’i mbani lexuesit tuaj të angazhuar, dhe të tërhiqni vizitorë të rinj te sajti juaj.</string>
     <string name="blogging_reminders_tip">Ndihmëz</string>
-    <string name="blogging_reminders_select_days_message">Këtë mund ta përditësoni në çfarëdo kohe.</string>
+    <string name="blogging_reminders_select_days_message">Këtë mund ta përditësoni në çfarëdo kohe</string>
     <string name="blogging_reminders_select_days">Përzgjidhni ditët në të cilat doni të shkruani në blog</string>
     <string name="blogging_reminders_epilogue_caption">Këtë mund ta përditësoni në çfarëdo kohe, që nga Sajti Im &gt; Rregullime &gt; Kujtues blogimi.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">S’keni të ujdisur kujtues.</string>
@@ -565,8 +611,8 @@ Language: sq_AL
     <string name="blogging_reminders_done">U bë</string>
     <string name="blogging_reminders_notify_me">Njoftomë</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;, që të aktivizoni rikthime sajti me një klikim, prej kopjeruajtjesh.</string>
-    <string name="gutenberg_native_set_as_featured_image">Vëre Si Figurë të Zgjedhur </string>
-    <string name="gutenberg_native_remove_as_featured_image">Hiqe si Figurë të Zgjedhur </string>
+    <string name="gutenberg_native_set_as_featured_image">Vëre si Figurë të Zgjedhur</string>
+    <string name="gutenberg_native_remove_as_featured_image">Hiqe si Figurë të Zgjedhur</string>
     <string name="fab_add_category_desc">Krijoni Kategori</string>
     <string name="support_ticket_subject">Asistencë për WordPress për Android</string>
     <string name="site_settings_categories_hint">Administroni kategoritë e sajtit tuaj</string>
@@ -593,6 +639,7 @@ Language: sq_AL
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Prekeni dyfish që të hapet Fleta e Poshtme për shtim figure ose videoje</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Prekeni dyfish që të hapet Fleta e Veprimeve për shtim figure ose videoje</string>
     <string name="gutenberg_native_current_unit_is_s">Njësia e tanishme është %s</string>
+    <string name="gutenberg_native_s_converted_to_regular_block">%s u shndërrua në bllok të rregullt</string>
     <string name="gutenberg_native_columns_settings">Rregullime Shtyllash</string>
     <string name="gutenberg_native_add_link_to_s">Shtoni lidhje për te %s</string>
     <string name="gutenberg_native_add_link_text">Shtoni tekst lidhjeje</string>
@@ -604,7 +651,7 @@ Language: sq_AL
     <string name="error_media_unexpected_null_value">Media qe e zbrazët</string>
     <string name="threat_fix_enter_server_creds_msg_plural">Që të zgjidhen kërcënimet, &lt;a href=\"%1$s\"&gt;jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">Që të zgjidhet kërcënimit, &lt;a href=\"%1$s\"&gt;jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;.</string>
-    <string name="gutenberg_native_double_tap_to_add_a_link">Që të shtoni një lidhje, prekeni dyfish</string>
+    <string name="gutenberg_native_double_tap_to_add_a_link">Që të shtoni një lidhje, prekeni dyfish.</string>
     <string name="login_empty_view_try_another_account">Provoni me tjetër llogari</string>
     <string name="login_empty_view_see_instructions">Shihni udhëzimet</string>
     <string name="login_no_jetpack_sites_error_message">Nëse keni tashmë një sajt, do t’ju duhet të instaloni shtojcën e lirë Jetpack dhe ta lidhni me llogarinë tuaj WordPress.com.</string>
@@ -637,7 +684,7 @@ Language: sq_AL
     <string name="gutenberg_native_custom_url">URL Vetjake</string>
     <string name="gutenberg_native_create_embed">Krijo trupëzim</string>
     <string name="gutenberg_native_column_d">Shtylla %d</string>
-    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Përshkruajeni shkurt lidhjen që të ndihmoni përdoruesin e lexuesit të ekranit.</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Përshkruajeni shkurt lidhjen, që të ndihmoni përdoruesin e lexuesit të ekranit</string>
     <string name="gutenberg_native_add_blocks">Shtoni blloqe</string>
     <string name="login_no_jetpack_sites">S’u gjetën sajte Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">Ç’është teksti alternativ?</string>
@@ -645,7 +692,7 @@ Language: sq_AL
     <string name="gutenberg_native_transform_block">Shndërroni bllokun…</string>
     <string name="gutenberg_native_failed_to_insert_media">S’u arrit të futej media.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">S’u arrit të futej kartelë audio.</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Përshkruani qëllimin e figurës. Lëreni të zbrazët, nëse figura është thjesht dekorative.  </string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Përshkruani qëllimin e figurës. Lëreni të zbrazët, nëse figura është thjesht dekorative.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s u shndërrua në %2$s</string>
     <string name="like_faces_error_loading_message">Gabim gjatë ngarkimi të dhënash pëlqimesh. %s.</string>
     <string name="like_title_plural">%d Pëlqime</string>
@@ -660,10 +707,10 @@ Language: sq_AL
     <string name="gutenberg_native_no_custom_placeholder_set">S’është caktuar vendmbajtëse vetjake</string>
     <string name="gutenberg_native_inside">Brenda</string>
     <string name="gutenberg_native_hide_search_heading">Fshih kryet e kërkimit</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Që të përpunoni tekstin e vendmbajtëses, prekeni dy herë </string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Që të përpunoni tekstin e etiketës, prekeni dy herë</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Që të përpunoni tekstin e butonit, prekeni dy herë</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">Që të ndryshoni njësinë, prekeni dy herë</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Që të përpunoni tekstin e vendmbajtëses, prekeni dyfish</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Që të përpunoni tekstin e etiketës, prekeni dyfish</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Që të përpunoni tekstin e butonit, prekeni dyfish</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">Që të ndryshoni njësinë, prekeni dyfish</string>
     <string name="gutenberg_native_current_placeholder_text_is">Teksti i tanishëm i vendmbajtëses është</string>
     <string name="gutenberg_native_clear_search">Spastroje kërkimin</string>
     <string name="gutenberg_native_cancel_search">Anuloje kërkimin</string>
@@ -3353,8 +3400,10 @@ Language: sq_AL
     <string name="categories">Kategori</string>
     <string name="sdcard_title">Lypset Kartë SD</string>
     <string name="media">Media</string>
+    <string name="updating_cat_success">Kategoria u përditësua me sukses</string>
     <string name="approve">Miratojeni</string>
     <string name="delete">Fshije</string>
+    <string name="updating_cat_failed">Përditësimi i kategorisë dështoi</string>
     <string name="none">Asnjë</string>
     <string name="publish_now">Botoje Që Tani</string>
     <string name="reply">Përgjigjuni</string>

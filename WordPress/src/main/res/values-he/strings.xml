@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-18 14:54:08+0000
+Translation-Revision-Date: 2023-01-25 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: he_IL
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">מתוך &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">להסתיר את המידע</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">הזכירו לי מאוחר יותר</string>
     <string name="jetpack_feature_card_content">האפשרויות של נתונים סטטיסטיים, Reader, הודעות ואפשרויות אחרות יועברו בקרוב אל האפליקציה של Jetpack לנייד.</string>
@@ -130,7 +131,6 @@ Language: he_IL
     <string name="weekly_roundup_notification_text_views_and_likes">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ו-⁦%2$s⁩ לייקים</string>
     <string name="weekly_roundup_notification_text_views_only">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות.</string>
     <string name="weekly_roundup_notification_text_all">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות, ⁦%2$s⁩ לייקים ו-⁦%3$s⁩ תגובות.</string>
-    <string name="stats_revamp_v2_update_alert_message">השירות עודכן כדי להציג תובנות חדשות שיעזרו לך להבין את הביצועים של התוכן ולאילו תכנים הקהל הגיב בצורה חיובית.</string>
     <string name="stats_insights_like_guide_card">⭐️ הפוסט האחרון שלך ⁦%1$s⁩ קיבל לייק ⁦%2$s⁩.</string>
     <string name="wp_jetpack_powered">מופעל באמצעות Jetpack</string>
     <string name="qrcode_auth_flow_content_description">תמונה להמחשה שתהליך הסריקה של קוד ההתחברות החל</string>
@@ -153,7 +153,6 @@ Language: he_IL
     <string name="qrcode_auth_flow_validated_subtitle">יש לסרוק רק קוד QR שנלקח ישירות מדפדפן האינטרנט שלך. אין לסרוק קוד QR שנשלח אליך ממישהו אחר.</string>
     <string name="qrcode_auth_flow_validated_default_title">האם ניסית להתחבר לדפדפן האינטרנט שלך ליד ⁦%1$s⁩?</string>
     <string name="qrcode_auth_flow_validated_title">האם ניסית להתחבר אל ⁦%1$s⁩ ליד ⁦%2$s⁩?</string>
-    <string name="stats_revamp_v2_intro_header_title">עדכון לתובנות</string>
     <string name="stats_insights_followers_guide_card">💡הוספת תגובה בבלוגים אחרים היא דרך נהדרת להראות נוכחות ולצבור עוקבים לאתר החדש שלך.</string>
     <string name="stats_insights_comments_guide_card">💡אפשר להקיש על \'להציג עוד\' כדי לראות את המגיבים המובילים שלך.</string>
     <string name="stats_insights_latest_post_empty">כדאי לחזור לכאן אחרי שפרסמת את הפוסט הראשון שלך!</string>
@@ -209,8 +208,6 @@ Language: he_IL
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">יש להשתמש באפשרות &lt;b&gt; היכרות &lt;/b&gt; כדי לחפש אתרים ותגיות. יש לבחור את ⁦%1$s⁩ הגדרות ⁦%2$s⁩ אם ברצונך להוסיף נושאים שמעניינים אותך.</string>
     <string name="photo_picker_video_thumbnail_content_description">תמונה ממוזערת לסרטון</string>
     <string name="stats_details_top_commentators">מגיבים מובילים</string>
-    <string name="stats_insights_total_stats_negative">⁦%1$s⁩ פחות לעומת השבוע הקודם</string>
-    <string name="stats_insights_total_stats_positive">⁦%1$s⁩ יותר לעומת השבוע הקודם</string>
     <string name="stats_published_years_ago">פורסמו לפני ⁦%1$d⁩ שנים</string>
     <string name="stats_published_a_year_ago">פורסמו לפני שנה</string>
     <string name="stats_published_months_ago">פורסמו לפני ⁦%1$d⁩ חודשים</string>
@@ -237,14 +234,8 @@ Language: he_IL
     <string name="photo_picker_media_thumbnail_content_description">תצוגה ממוזערת של המדיה</string>
     <string name="stats_insights_popular_title">🔥 המועד הפופולרי ביותר</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">השבוע היו ⁦%1$s⁩ פחות מבקרים  באתר לעומת השבוע הקודם.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">השבוע היו ⁦%1$s⁩ יותר מבקרים באתר לעומת השבוע הקודם.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">השבוע היו ⁦%1$s⁩ פחות צפיות באתר לעומת השבוע הקודם.</string>
-    <string name="stats_timeframe_previous_week">השבוע הקודם</string>
-    <string name="stats_timeframe_this_week">השבוע</string>
     <string name="scan_vault_press_active_on_site_button_text">מעבר ללוח בקרה</string>
     <string name="scan_vault_press_active_on_site_subtitle">האתר שלך כבר מוגן באמצעות VaultPress. אפשר למצוא את הקישור ללוח הבקרה של VaultPress למטה.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">השבוע היו ⁦ %1$s⁩יותר צפיות באתר לעומת השבוע הקודם.</string>
     <string name="scan_vault_press_active_on_site_title">השירות של VaultPress מותקן באתר שלך</string>
     <string name="locale_picker_current_language">השפה הנוכחית:</string>
     <string name="hpp_choose_and_create_site">יצירת אתר</string>

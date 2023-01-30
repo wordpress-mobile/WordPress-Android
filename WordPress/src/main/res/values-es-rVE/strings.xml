@@ -30,7 +30,6 @@ Language: es_VE
     <string name="weekly_roundup_notification_text_views_and_likes">La semana pasada tuviste %1$s visitas y %2$s Me gusta</string>
     <string name="weekly_roundup_notification_text_views_only">La semana pasada tuviste %1$s visitas.</string>
     <string name="weekly_roundup_notification_text_all">La semana pasada tuviste %1$s visitas, %2$s Me gusta y %3$s comentarios.</string>
-    <string name="stats_revamp_v2_update_alert_message">Se ha actualizado al nuevo Detalles para ayudarte a entender cómo es el rendimiento de tu contenido y qué tiene impacto en tu público.</string>
     <string name="stats_insights_like_guide_card">⭐️ Tu última entrada %1$s ha recibido %2$s Me gusta.</string>
     <string name="wp_jetpack_powered">Funciona gracias a Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Imagen que señala que el escaneo de código de acceso está en proceso</string>
@@ -53,7 +52,6 @@ Language: es_VE
     <string name="qrcode_auth_flow_validated_subtitle">Escanea solo los códigos QR que has cogido directamente del navegador web. No escanees nunca un código que te haya enviado alguien.</string>
     <string name="qrcode_auth_flow_validated_default_title">¿Estás intentando acceder a tu navegador web cerca de %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">¿Estás intentando acceder a %1$s cerca de %2$s?</string>
-    <string name="stats_revamp_v2_intro_header_title">Actualización de Detalles</string>
     <string name="stats_insights_followers_guide_card">💡Comentar en otros blogs es una buena forma de llamar la atención y tener más seguidores en tu nuevo sitio.</string>
     <string name="stats_insights_comments_guide_card">💡Toca \"VER MÁS\" para ver los principales comentaristas.</string>
     <string name="stats_insights_latest_post_empty">¡Vuelve a comprobarlo cuando hayas publicado tu primera entrada!</string>
@@ -109,8 +107,6 @@ Language: es_VE
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Utiliza &lt;b&gt; Descubrir &lt;/b&gt; para encontrar sitios y etiquetas. Prueba a seleccionar %1$s Ajustes %2$s para añadir temáticas que te gusten.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatura de video</string>
     <string name="stats_details_top_commentators">Principales comentaristas</string>
-    <string name="stats_insights_total_stats_negative">%1$s menos que la semana anterior</string>
-    <string name="stats_insights_total_stats_positive">%1$s más que la semana anterior</string>
     <string name="stats_published_years_ago">Publicada hace %1$d años</string>
     <string name="stats_published_a_year_ago">Publicada hace un año</string>
     <string name="stats_published_months_ago">Publicada hace %1$d meses</string>
@@ -137,12 +133,6 @@ Language: es_VE
     <string name="photo_picker_media_thumbnail_content_description">Miniatura del medio</string>
     <string name="stats_insights_popular_title">🔥 La hora más popular</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Tus visitantes de esta semana son %1$s menos que los de la semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Tus visitantes de esta semana son %1$s más que los de la semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Tus visualizaciones de esta semana son %1$s menos que las de la semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Tus visitas de esta semana son %1$s más que las de la semana anterior.</string>
-    <string name="stats_timeframe_previous_week">Semana anterior</string>
-    <string name="stats_timeframe_this_week">Esta semana</string>
     <string name="scan_vault_press_active_on_site_button_text">Visitar el escritorio</string>
     <string name="scan_vault_press_active_on_site_subtitle">Tu sitio ya está protegido con VaultPress. Más abajo, puedes encontrar un enlace a tu escritorio de VaultPress.</string>
     <string name="scan_vault_press_active_on_site_title">Tu sitio tiene VaultPress</string>

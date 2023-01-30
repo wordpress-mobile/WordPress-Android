@@ -24,8 +24,6 @@ Language: nb_NO
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Bruk &lt;b&gt; Oppdag &lt;/b&gt; for å finne nettsteder og stikkord. Prøv å velge %1$s Innstillinger %2$s for å legge til emner du liker.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatyrbilde for video</string>
     <string name="stats_details_top_commentators">Toppkommentatorer</string>
-    <string name="stats_insights_total_stats_negative">%1$s lavere enn forrige uke</string>
-    <string name="stats_insights_total_stats_positive">%1$s høyere enn forrige uke</string>
     <string name="stats_published_years_ago">Publisert for %1$d år siden</string>
     <string name="stats_published_a_year_ago">Publisert for et år siden</string>
     <string name="stats_published_months_ago">Publisert for %1$d måneder siden</string>
@@ -50,8 +48,6 @@ Language: nb_NO
     <string name="photo_picker_media_thumbnail_content_description">Media-miniatyrbilde</string>
     <string name="stats_insights_popular_title">🔥 Mest populære tidspunkt</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_timeframe_previous_week">Forrige uke</string>
-    <string name="stats_timeframe_this_week">Denne uken</string>
     <string name="scan_vault_press_active_on_site_button_text">Gå til kontrollpanelet</string>
     <string name="locale_picker_current_language">Nåværende språk:</string>
     <string name="hpp_choose_and_create_site">Opprett netsted</string>
