@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
@@ -41,7 +42,6 @@ import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.map
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.merge
@@ -66,7 +66,7 @@ class WPMainActivityViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
-    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
     private val bloggingPromptsStore: BloggingPromptsStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
@@ -154,7 +154,7 @@ class WPMainActivityViewModel @Inject constructor(
     @Suppress("LongMethod")
     private fun loadMainActions(site: SiteModel?, onFabClicked: Boolean = false) = launch {
         val actionsList = ArrayList<MainActionListItem>()
-        if (bloggingPromptsFeatureConfig.isEnabled()) {
+        if (bloggingPromptsSettingsHelper.isPromptsFeatureActive()) {
             val prompt = site?.let {
                 if (it.isUsingWpComRestApi) {
                     bloggingPromptsStore.getPromptForDate(it, Date()).firstOrNull()?.model
