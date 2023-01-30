@@ -3,21 +3,21 @@ package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.distinct
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
@@ -30,8 +30,7 @@ class BloggingPromptCardSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val promptsStore: BloggingPromptsStore,
     private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
-    private val appPrefsWrapper: AppPrefsWrapper,
-    private val bloggingRemindersStore: BloggingRemindersStore,
+    private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MySiteRefreshSource<BloggingPromptUpdate> {
     override val refresh = MutableLiveData(false)
@@ -63,11 +62,11 @@ class BloggingPromptCardSource @Inject constructor(
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId && bloggingPromptsFeatureConfig.isEnabled()) {
             coroutineScope.launch(bgDispatcher) {
-                if (isPrompAvailable()) {
+                if (bloggingPromptsSettingsHelper.isPromptsFeatureActive()) {
                     promptsStore.getPrompts(selectedSite)
                         .map { it.model?.filter { prompt -> isSameDay(prompt.date, Date()) } }
                         .collect { result ->
-                            postValue(BloggingPromptUpdate(result?.firstOrNull()))
+                            postState(BloggingPromptUpdate(result?.firstOrNull()))
                         }
                 } else {
                     postEmptyState()
@@ -99,7 +98,7 @@ class BloggingPromptCardSource @Inject constructor(
         if (selectedSite != null && selectedSite.id == siteLocalId) {
             if (bloggingPromptsFeatureConfig.isEnabled()) {
                 coroutineScope.launch(bgDispatcher) {
-                    if (isPrompAvailable()) {
+                    if (bloggingPromptsSettingsHelper.isPromptsFeatureActive()) {
                         fetchPromptsAndPostErrorIfAvailable(coroutineScope, selectedSite, isSinglePromptRefresh)
                     } else {
                         postEmptyState()
@@ -122,12 +121,14 @@ class BloggingPromptCardSource @Inject constructor(
             delay(REFRESH_DELAY)
             val numOfPromptsToFetch = if (isSinglePromptRefresh) 1 else NUM_PROMPTS_TO_REQUEST
             val result = promptsStore.fetchPrompts(selectedSite, numOfPromptsToFetch, Date())
-            val error = result.error
             when {
-                error != null -> {
-                    postErrorState()
+                result.isError -> postErrorState()
+                else -> {
+                    result.model
+                        ?.firstOrNull { prompt -> isSameDay(prompt.date, Date()) }
+                        ?.let { prompt -> postState(BloggingPromptUpdate(prompt)) }
+                        ?: onRefreshedBackgroundThread()
                 }
-                else -> onRefreshedBackgroundThread()
             }
         }
     }
@@ -140,19 +141,6 @@ class BloggingPromptCardSource @Inject constructor(
 
     private fun MediatorLiveData<BloggingPromptUpdate>.postEmptyState() {
         postState(BloggingPromptUpdate(null))
-    }
-
-    private suspend fun isPrompAvailable(): Boolean {
-        val selectedSite = selectedSiteRepository.getSelectedSite() ?: return false
-        val isPotentialBloggingSite = selectedSite.isPotentialBloggingSite
-        val isPromptReminderOptedIn = bloggingRemindersStore.bloggingRemindersModel(selectedSite.localId().value)
-            .firstOrNull()?.isPromptIncluded == true
-        val promptSkippedDate = appPrefsWrapper.getSkippedPromptDay(selectedSite.localId().value)
-
-        val isPromptSkippedForToday = promptSkippedDate != null && isSameDay(promptSkippedDate, Date())
-
-        return !isPromptSkippedForToday &&
-                (isPromptReminderOptedIn || (!isPromptReminderOptedIn && isPotentialBloggingSite))
     }
 
     private fun isSameDay(date1: Date, date2: Date): Boolean {
