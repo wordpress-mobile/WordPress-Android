@@ -499,6 +499,10 @@ dependencies {
     androidTestImplementation "androidx.room:room-runtime:$androidxRoomVersion"
     kapt "androidx.room:room-compiler:$androidxRoomVersion"
     androidTestImplementation "androidx.room:room-ktx:$androidxRoomVersion"
+    // added to test compose ui
+    androidTestImplementation "androidx.compose.ui:ui-test:$androidxComposeVersion"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$androidxComposeVersion"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$androidxComposeVersion"
 
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$androidDesugarVersion"

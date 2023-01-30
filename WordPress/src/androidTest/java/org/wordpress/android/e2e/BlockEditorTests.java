@@ -23,7 +23,7 @@ public class BlockEditorTests extends BaseTest {
 
     @Before
     public void setUp() {
-        logoutIfNecessary();
+//        logoutIfNecessary();
         wpLogin();
     }
 
