@@ -99,41 +99,17 @@ class HelpActivity : LocaleAwareActivity() {
                 actionBar.elevation = 0f // remove shadow
             }
 
-            contactUsButton.setOnClickListener {
-                if (wpSupportForumFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
-                    openWpSupportForum()
-                } else {
-                    createNewZendeskTicket()
-                }
+            if (wpSupportForumFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+                showSupportForum()
+            } else {
+                showContactUs()
             }
-            faqButton.setOnClickListener { showFaq() }
-            myTicketsButton.setOnClickListener { showZendeskTickets() }
+
             applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
             applicationLogButton.setOnClickListener { v ->
                 startActivity(Intent(v.context, AppLogViewerActivity::class.java))
             }
 
-            contactEmailContainer.setOnClickListener {
-                var emailSuggestion = AppPrefs.getSupportEmail()
-                if (emailSuggestion.isNullOrEmpty()) {
-                    emailSuggestion = supportHelper
-                        .getSupportEmailAndNameSuggestion(
-                            accountStore.account,
-                            selectedSiteFromExtras
-                        ).first
-                }
-
-                supportHelper.showSupportIdentityInputDialog(
-                    this@HelpActivity,
-                    emailSuggestion,
-                    isNameInputHidden = true
-                ) { email, _ ->
-                    zendeskHelper.setSupportEmail(email)
-                    refreshContactEmailText()
-                    AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_SET)
-                }
-                AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_FORM_VIEWED)
-            }
             if (originFromExtras == Origin.JETPACK_MIGRATION_HELP) {
                 configureForJetpackMigrationHelp()
             }
@@ -200,6 +176,51 @@ class HelpActivity : LocaleAwareActivity() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://apps.wordpress.com/mobile-app-support/"))
         startActivity(intent)
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
+    }
+
+    private fun HelpActivityBinding.showContactUs() {
+        contactUsButton.setOnClickListener { createNewZendeskTicket() }
+
+        faqButton.setOnClickListener { showFaq() }
+
+        myTicketsButton.setOnClickListener { showZendeskTickets() }
+
+        contactEmailContainer.setOnClickListener {
+            var emailSuggestion = AppPrefs.getSupportEmail()
+            if (emailSuggestion.isNullOrEmpty()) {
+                emailSuggestion = supportHelper
+                    .getSupportEmailAndNameSuggestion(
+                        accountStore.account,
+                        selectedSiteFromExtras
+                    ).first
+            }
+
+            supportHelper.showSupportIdentityInputDialog(
+                this@HelpActivity,
+                emailSuggestion,
+                isNameInputHidden = true
+            ) { email, _ ->
+                zendeskHelper.setSupportEmail(email)
+                refreshContactEmailText()
+                AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_SET)
+            }
+            AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_FORM_VIEWED)
+        }
+    }
+
+    private fun HelpActivityBinding.showSupportForum() {
+        contactUsButton.isVisible = false
+        faqButton.isVisible = false
+        myTicketsButton.isVisible = false
+        emailContainerTopDivider.isVisible = false
+        contactEmailContainer.isVisible = false
+        emailContainerBottomDivider.isVisible = false
+
+        forumContainer.run {
+            isVisible = true
+            setOnClickListener { openWpSupportForum() }
+        }
+        forumContainerBottomDivider.isVisible = true
     }
 
     private fun HelpActivityBinding.refreshContactEmailText() {
