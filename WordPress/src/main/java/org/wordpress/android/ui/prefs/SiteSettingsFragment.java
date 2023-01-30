@@ -193,7 +193,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
-    @Inject BloggingPromptsSettingsHelper mPromptsSettingsManager;
+    @Inject BloggingPromptsSettingsHelper mPromptsSettingsHelper;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
@@ -1267,12 +1267,13 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void initBloggingPrompts() {
-        if (!mBloggingPromptsFeatureConfig.isEnabled() || !mBloggingPromptsEnhancementFeatureConfig.isEnabled()) {
+        if (!mPromptsSettingsHelper.isPromptsFeatureAvailableBlocking()
+            || !mBloggingPromptsEnhancementFeatureConfig.isEnabled()) {
             removeBloggingPromptsSettings();
             return;
         }
 
-        mPromptsSettingsManager
+        mPromptsSettingsHelper
                 .getPromptsCardEnabledLiveData(mSite.getId())
                 .observe(getAppCompatActivity(), isEnabled -> {
                     if (mBloggingPromptsPref != null) {
@@ -1282,7 +1283,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void setBloggingPromptsEnabled(boolean newValue) {
-        mPromptsSettingsManager
+        mPromptsSettingsHelper
                 .updatePromptsCardEnabledBlocking(mSite.getId(), newValue);
     }
 

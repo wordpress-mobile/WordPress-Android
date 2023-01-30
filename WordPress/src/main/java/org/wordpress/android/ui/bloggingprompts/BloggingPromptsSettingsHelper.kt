@@ -39,6 +39,7 @@ class BloggingPromptsSettingsHelper @Inject constructor(
 
     fun isPromptsFeatureAvailableBlocking(): Boolean = runBlocking { isPromptsFeatureAvailable() }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     suspend fun isPromptsFeatureAvailable(): Boolean {
         val selectedSite = selectedSiteRepository.getSelectedSite() ?: return false
         val isPotentialBloggingSite = selectedSite.isPotentialBloggingSite
