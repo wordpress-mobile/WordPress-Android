@@ -37,7 +37,7 @@ class WPAPIEncodedBodyRequest(
             else -> null
         }
 
-        authenticationError?.let {
+        if (mOnAuthFailedListener != null && authenticationError != null) {
             mOnAuthFailedListener.onAuthFailed(AuthenticateErrorPayload(authenticationError))
         }
 
