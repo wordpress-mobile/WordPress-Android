@@ -66,7 +66,7 @@ public class WPAPIGsonRequest<T> extends GsonRequest<T> {
                 authenticationError = new AuthenticationError(AuthenticationErrorType.NOT_AUTHENTICATED, errorCode);
             }
 
-            if (authenticationError != null) {
+            if (mOnAuthFailedListener != null && authenticationError != null) {
                 mOnAuthFailedListener.onAuthFailed(new AuthenticateErrorPayload(authenticationError));
             }
         }
