@@ -34,6 +34,7 @@
     <string name="pref_key_site_tagline" translatable="false">wp_pref_site_tagline</string>
     <string name="pref_key_site_address" translatable="false">wp_pref_site_address</string>
     <string name="pref_key_site_language" translatable="false">wp_pref_site_language</string>
+    <string name="pref_key_blogging_prompts" translatable="false">wp_pref_blogging_prompts</string>
     <string name="pref_key_site_visibility" translatable="false">wp_pref_site_visibility</string>
     <string name="pref_key_site_username" translatable="false">wp_pref_site_username</string>
     <string name="pref_key_site_password" translatable="false">wp_pref_site_password</string>

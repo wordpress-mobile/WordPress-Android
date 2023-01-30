@@ -63,6 +63,11 @@
             android:key="@string/pref_key_blogging_reminders"
             android:title="@string/site_settings_blogging_reminders_title" />
 
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_blogging_prompts"
+            android:key="@string/pref_key_blogging_prompts"
+            android:title="@string/site_settings_blogging_prompts_title" />
+
     </PreferenceCategory>
 
     <!-- Homepage settings -->

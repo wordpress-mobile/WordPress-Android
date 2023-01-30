@@ -75,6 +75,7 @@ import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
@@ -98,6 +99,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig;
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig;
 import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.util.config.ManageCategoriesFeatureConfig;
@@ -187,9 +189,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
     @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
+    @Inject BloggingPromptsEnhancementsFeatureConfig mBloggingPromptsEnhancementFeatureConfig;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject BloggingPromptsSettingsHelper mPromptsSettingsManager;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
@@ -210,6 +214,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private EditTextPreference mAddressPref;
     private DetailListPreference mPrivacyPref;
     private DetailListPreference mLanguagePref;
+    private WPSwitchPreference mBloggingPromptsPref;
 
     // Homepage settings
     private WPPreference mHomepagePref;
@@ -503,6 +508,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initBloggingReminders();
+        initBloggingPrompts();
     }
 
     private AppCompatActivity getAppCompatActivity() {
@@ -810,6 +816,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                     mSite, BlockEditorEnabledSource.VIA_SITE_SETTINGS.asPropertyMap());
             // we need to refresh metadata as gutenberg_enabled is now part of the user data
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
+        } else if (preference == mBloggingPromptsPref) {
+            setBloggingPromptsEnabled((Boolean) newValue);
         } else {
             return false;
         }
@@ -980,6 +988,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mPostsPerPagePref = getClickPref(R.string.pref_key_site_posts_per_page);
         mTimezonePref = getClickPref(R.string.pref_key_site_timezone);
         mBloggingRemindersPref = getClickPref(R.string.pref_key_blogging_reminders);
+        mBloggingPromptsPref = (WPSwitchPreference) getChangePref(R.string.pref_key_blogging_prompts);
         mHomepagePref = (WPPreference) getChangePref(R.string.pref_key_homepage_settings);
         updateHomepageSummary();
         mAmpPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_amp);
@@ -1110,7 +1119,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mDateFormatPref, mTimeFormatPref, mTimezonePref, mBloggingRemindersPref, mPostsPerPagePref, mAmpPref,
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
                 mJpMonitorWpNotesPref, mJpBruteForcePref, mJpAllowlistPref, mJpMatchEmailPref, mJpUseTwoFactorPref,
-                mGutenbergDefaultForNewPosts, mHomepagePref
+                mGutenbergDefaultForNewPosts, mHomepagePref, mBloggingPromptsPref
         };
 
         for (Preference preference : editablePreference) {
@@ -1239,12 +1248,14 @@ public class SiteSettingsFragment extends PreferenceFragment
                     BLOGGING_REMINDERS_BOTTOM_SHEET_TAG,
                     () -> getAppCompatActivity().getSupportFragmentManager()
             );
-            mBloggingRemindersViewModel.getBlogSettingsUiState(mSite.getId()).observe(getAppCompatActivity(), s -> {
-                if (mBloggingRemindersPref != null) {
-                    CharSequence summary = mUiHelpers.getTextOfUiString(getActivity(), s);
-                    mBloggingRemindersPref.setSummary(summary);
-                }
-            });
+            mBloggingRemindersViewModel
+                    .getBlogSettingsUiState(mSite.getId())
+                    .observe(getAppCompatActivity(), s -> {
+                        if (mBloggingRemindersPref != null) {
+                            CharSequence summary = mUiHelpers.getTextOfUiString(getActivity(), s);
+                            mBloggingRemindersPref.setSummary(summary);
+                        }
+                    });
         }
     }
 
@@ -1253,6 +1264,26 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
         mBloggingRemindersViewModel.onBlogSettingsItemClicked(mSite.getId());
+    }
+
+    private void initBloggingPrompts() {
+        if (!mBloggingPromptsFeatureConfig.isEnabled() || !mBloggingPromptsEnhancementFeatureConfig.isEnabled()) {
+            removeBloggingPromptsSettings();
+            return;
+        }
+
+        mPromptsSettingsManager
+                .getPromptsCardEnabledLiveData(mSite.getId())
+                .observe(getAppCompatActivity(), isEnabled -> {
+                    if (mBloggingPromptsPref != null) {
+                        mBloggingPromptsPref.setChecked(isEnabled);
+                    }
+                });
+    }
+
+    private void setBloggingPromptsEnabled(boolean newValue) {
+        mPromptsSettingsManager
+                .updatePromptsCardEnabledBlocking(mSite.getId(), newValue);
     }
 
     private void showHomepageSettings() {
@@ -2006,6 +2037,10 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void removeBloggingRemindersSettings() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_blogging_reminders);
+    }
+
+    private void removeBloggingPromptsSettings() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_blogging_prompts);
     }
 
     private void removePrivateOptionFromPrivacySetting() {
