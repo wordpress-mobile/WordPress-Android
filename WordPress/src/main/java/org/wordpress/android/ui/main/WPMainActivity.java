@@ -826,7 +826,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     setUpMainView();
                     if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
                         Map<String,  String> trackingProperties = new HashMap<>();
-                        trackingProperties.put("calling_function", "deeplink");
+                        trackingProperties.put("calling_function", "deeplink_notifications");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
                         break;
                     }
@@ -836,7 +836,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     setUpMainView();
                     if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
                         Map<String, String> trackingProperties = new HashMap<>();
-                        trackingProperties.put("calling_function", "deeplink");
+                        trackingProperties.put("calling_function", "deeplink_reader");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
                         break;
                     }
@@ -861,7 +861,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     }
                     if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
                         Map<String, String> trackingProperties = new HashMap<>();
-                        trackingProperties.put("calling_function", "deeplink");
+                        trackingProperties.put("calling_function", "deeplink_stats");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
                         break;
                     }
