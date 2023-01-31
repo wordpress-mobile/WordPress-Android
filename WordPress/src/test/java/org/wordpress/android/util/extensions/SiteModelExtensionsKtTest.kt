@@ -6,7 +6,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class SiteModelExtensionsKtTest {
-
     // region isJetpackConnectedWithoutFullPlugin
     @Test
     fun `Should return FALSE if plugins string is null`() {
