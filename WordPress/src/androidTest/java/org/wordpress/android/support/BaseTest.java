@@ -115,7 +115,7 @@ public class BaseTest {
 
     protected void wpLogin() {
         logoutIfNecessary();
-        new LoginFlow().chooseContinueWithWpCom()
+        new LoginFlow().chooseContinueWithWpCom(mComposeTestRule)
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .enterPassword(E2E_WP_COM_USER_PASSWORD)
                        .confirmLogin(false);
