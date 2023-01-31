@@ -31,13 +31,6 @@ import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class LoginFlow {
-    public LoginFlow chooseContinueWithWpCom() {
-        // Login Prologue – We want to Continue with WordPress.com, not a site address
-        // See LoginPrologueFragment
-        clickOn(R.id.continue_with_wpcom_button);
-        return this;
-    }
-
     public LoginFlow chooseContinueWithWpCom(ComposeTestRule composeTestRule) {
         // Login Prologue – We want to Continue with WordPress.com, not a site address
         // See LoginPrologueRevampedFragment
