@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.EditText;
 
+import androidx.compose.ui.test.junit4.ComposeTestRule;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
 
@@ -11,6 +12,7 @@ import org.hamcrest.Matchers;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.HelpAndSupportScreen;
+import org.wordpress.android.util.compose.ComposeUiTestingUtils;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
@@ -23,6 +25,7 @@ import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_USERNAME;
 import static org.wordpress.android.support.WPSupportUtils.atLeastOneElementWithIdIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
@@ -32,6 +35,14 @@ public class LoginFlow {
         // Login Prologue – We want to Continue with WordPress.com, not a site address
         // See LoginPrologueFragment
         clickOn(R.id.continue_with_wpcom_button);
+        return this;
+    }
+
+    public LoginFlow chooseContinueWithWpCom(ComposeTestRule composeTestRule) {
+        // Login Prologue – We want to Continue with WordPress.com, not a site address
+        // See LoginPrologueRevampedFragment
+        new ComposeUiTestingUtils(composeTestRule)
+                .performClickOnNodeWithText(getTranslatedString(R.string.continue_with_wpcom));
         return this;
     }
 
@@ -110,10 +121,11 @@ public class LoginFlow {
         return this;
     }
 
-    public LoginFlow chooseEnterYourSiteAddress() {
+    public LoginFlow chooseEnterYourSiteAddress(ComposeTestRule composeTestRule) {
         // Login Prologue – We want to continue with a site address not a WordPress.com account
-        // See LoginPrologueFragment
-        clickOn(R.id.enter_your_site_address_button);
+        // See LoginPrologueRevampedFragment
+        new ComposeUiTestingUtils(composeTestRule)
+                .performClickOnNodeWithText(getTranslatedString(R.string.enter_your_site_address));
         return this;
     }
 
