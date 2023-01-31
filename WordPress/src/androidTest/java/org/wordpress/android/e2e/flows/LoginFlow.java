@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.EditText;
 
+import androidx.compose.ui.test.SemanticsNodeInteraction;
 import androidx.compose.ui.test.junit4.ComposeTestRule;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
@@ -14,6 +15,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.HelpAndSupportScreen;
 
+import static androidx.compose.ui.test.ActionsKt.performClick;
 import static androidx.compose.ui.test.FiltersKt.hasTestTag;
 import static androidx.compose.ui.test.junit4.AndroidComposeTestRule_androidKt.createComposeRule;
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
@@ -37,15 +39,18 @@ public class LoginFlow {
 //    val composeTestRule = createComposeRule()
 
     // this seems to work but not sure if correct
+    @Rule
     ComposeTestRule mComposeTestRule = createComposeRule();
 
     public LoginFlow chooseContinueWithWpCom() {
         // Login Prologue – We want to Continue with WordPress.com, not a site address
         // See LoginPrologueFragment
 //        clickOn(R.id.continue_with_wpcom_button);
-//        onView(withText(R.string.continue_with_wpcom_no_signup)).perform(click());
 
-        mComposeTestRule.onNode(hasTestTag("continueButton"), true);
+        // newly added to test compose ui - doesn't work as is
+        SemanticsNodeInteraction button = mComposeTestRule.onNode(hasTestTag("continueButton"), true);
+        button.assertExists("Button does not exist!");
+        performClick(button);
 
         return this;
     }
