@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
@@ -972,7 +971,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Override
     protected void onResume() {
-        Log.i(WPMainActivity.class.getSimpleName(), "***=> onResume");
         super.onResume();
 
         setUpMainView();
