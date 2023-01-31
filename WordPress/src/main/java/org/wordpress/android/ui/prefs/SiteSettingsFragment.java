@@ -1267,7 +1267,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void initBloggingPrompts() {
-        if (!mPromptsSettingsHelper.isPromptsFeatureAvailableBlocking()
+        if (!mPromptsSettingsHelper.isPromptsFeatureAvailable()
             || !mBloggingPromptsEnhancementFeatureConfig.isEnabled()) {
             removeBloggingPromptsSettings();
             return;

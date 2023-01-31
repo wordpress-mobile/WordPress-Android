@@ -37,15 +37,9 @@ class BloggingPromptsSettingsHelper @Inject constructor(
         bloggingRemindersStore.updateBloggingReminders(current.copy(isPromptsCardEnabled = isEnabled))
     }
 
-    fun isPromptsFeatureAvailableBlocking(): Boolean = runBlocking { isPromptsFeatureAvailable() }
-
-    @Suppress("MemberVisibilityCanBePrivate")
-    suspend fun isPromptsFeatureAvailable(): Boolean {
+    fun isPromptsFeatureAvailable(): Boolean {
         val selectedSite = selectedSiteRepository.getSelectedSite() ?: return false
-        val isPotentialBloggingSite = selectedSite.isPotentialBloggingSite
-
-        return bloggingPromptsFeatureConfig.isEnabled() &&
-                (isPotentialBloggingSite || isPromptIncludedInReminder(selectedSite.localId().value))
+        return bloggingPromptsFeatureConfig.isEnabled() && selectedSite.isPotentialBloggingSite
     }
 
     suspend fun isPromptsFeatureActive(): Boolean {
@@ -71,11 +65,4 @@ class BloggingPromptsSettingsHelper @Inject constructor(
         .bloggingRemindersModel(siteId)
         .firstOrNull()
         ?.isPromptsCardEnabled == true
-
-    private suspend fun isPromptIncludedInReminder(
-        siteId: Int
-    ): Boolean = bloggingRemindersStore
-        .bloggingRemindersModel(siteId)
-        .firstOrNull()
-        ?.isPromptIncluded == true
 }
