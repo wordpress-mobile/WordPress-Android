@@ -326,15 +326,15 @@ class MySiteViewModel @Inject constructor(
     }
 
     private val bloggingPromptsCardTrackHelper = BloggingPromptsCardTrackHelper(
-            scope = viewModelScope,
-            tracker = bloggingPromptsCardAnalyticsTracker,
-            siteIdFlow = state.asFlow().map { it.site?.id },
-            dashboardCardsFlow = uiModel.asFlow()
-                    .map { it.state as? SiteSelected }
-                    .filterNotNull()
-                    .map {
-                        it.dashboardCardsAndItems.filterIsInstance<DashboardCards>()
-                    }
+        scope = viewModelScope,
+        tracker = bloggingPromptsCardAnalyticsTracker,
+        siteIdFlow = state.asFlow().map { it.site?.id },
+        dashboardCardsFlow = uiModel.asFlow()
+            .map { it.state as? SiteSelected }
+            .filterNotNull()
+            .map {
+                it.dashboardCardsAndItems.filterIsInstance<DashboardCards>()
+            }
     )
 
     private fun CardsUpdate.checkAndShowSnackbarError() {
@@ -1375,6 +1375,32 @@ class MySiteViewModel @Inject constructor(
         _onBloggingPromptsViewAnswers.value = Event(tag)
     }
 
+    private fun onBloggingPromptViewMoreClick() {
+        _onBloggingPromptsViewMore.value = Event(Unit)
+    }
+
+    private fun onBloggingPromptRemoveClick() {
+        selectedSiteRepository.getSelectedSite()?.localId()?.value?.let { siteId ->
+            val snackbar = SnackbarMessageHolder(
+                message = UiStringRes(R.string.my_site_blogging_prompt_card_removed_snackbar),
+                buttonTitle = UiStringRes(R.string.undo),
+                buttonAction = {
+                    launch {
+                        bloggingPromptsSettingsHelper.updatePromptsCardEnabled(siteId, isEnabled = true)
+                        mySiteSourceManager.refreshBloggingPrompts(true)
+                    }
+                },
+                isImportant = true
+            )
+
+            launch {
+                bloggingPromptsSettingsHelper.updatePromptsCardEnabled(siteId, isEnabled = false)
+                mySiteSourceManager.refreshBloggingPrompts(true)
+                _onSnackbarMessage.postValue(Event(snackbar))
+            }
+        }
+    }
+
     private fun onJetpackFeatureCardClick() {
         jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenJetpackFeatureOverlay(source = FEATURE_CARD))
@@ -1403,19 +1429,6 @@ class MySiteViewModel @Inject constructor(
 
     private fun onJetpackFeatureCardMoreMenuClick() {
         jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_MENU_ACCESSED)
-    }
-
-    private fun onBloggingPromptViewMoreClick() {
-        _onBloggingPromptsViewMore.value = Event(Unit)
-    }
-
-    private fun onBloggingPromptRemoveClick() {
-        launch {
-            selectedSiteRepository.getSelectedSite()?.localId()?.value?.let {  siteId ->
-                bloggingPromptsSettingsHelper.updatePromptsCardEnabled(siteId, isEnabled = false)
-                refresh()
-            }
-        }
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
