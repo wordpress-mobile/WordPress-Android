@@ -825,7 +825,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 case ARG_NOTIFICATIONS:
                     setUpMainView();
                     if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
-                        Map<String,  String> trackingProperties = new HashMap<>();
+                        Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_notifications");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
                         break;
