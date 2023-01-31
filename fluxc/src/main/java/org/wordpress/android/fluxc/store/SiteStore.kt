@@ -1972,4 +1972,28 @@ open class SiteStore @Inject constructor(
                 is ApplicationPasswordDeletionResult.Failure -> OnApplicationPasswordDeleted(site, result.error)
             }
         }
+
+    suspend fun fetchSitePlans(siteModel: SiteModel): FetchedPlansPayload {
+        return if (siteModel.isUsingWpComRestApi) {
+            coroutineEngine.withDefaultContext(T.API, this, "Fetch site plans") {
+                return@withDefaultContext when (val response =
+                    siteRestClient.fetchSitePlans(siteModel)) {
+                    is Success -> {
+                        FetchedPlansPayload(siteModel, response.data.plansList)
+                    }
+                    is Error -> {
+                        val siteErrorType = when (response.error.apiError) {
+                            "unauthorized" -> PlansErrorType.UNAUTHORIZED
+                            "unknown_blog" -> PlansErrorType.UNKNOWN_BLOG
+                            else -> PlansErrorType.GENERIC_ERROR
+                        }
+                        val plansError = PlansError(siteErrorType, response.error.message)
+                        FetchedPlansPayload(siteModel, plansError)
+                    }
+                }
+            }
+        } else {
+            FetchedPlansPayload(siteModel, PlansError(NOT_AVAILABLE))
+        }
+    }
 }
