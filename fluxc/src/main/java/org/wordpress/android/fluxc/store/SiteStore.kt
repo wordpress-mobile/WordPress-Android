@@ -112,7 +112,6 @@ import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.SiteErrorUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.AppLog.T.API
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Provider
@@ -1009,7 +1008,7 @@ open class SiteStore @Inject constructor(
     }
 
     override fun onRegister() {
-        AppLog.d(API, "SiteStore onRegister")
+        AppLog.d(T.API, "SiteStore onRegister")
     }
 
     /**
@@ -1668,7 +1667,7 @@ open class SiteStore @Inject constructor(
             if (currentModel == null) {
                 // this could happen when a site was added to the current account with another app, or on the web
                 AppLog.e(
-                    API,
+                    T.API,
                     "handleDesignatedMobileEditorForAllSites - The backend returned info for the " +
                         "following siteID $key but there is no site with that remote ID in SiteStore."
                 )
