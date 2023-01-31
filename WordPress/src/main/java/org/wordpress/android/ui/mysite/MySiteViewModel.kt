@@ -43,6 +43,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.FEATURE_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
@@ -186,7 +187,8 @@ class MySiteViewModel @Inject constructor(
     private val wordPressPublicData: WordPressPublicData,
     private val jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker,
     private val jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil,
-    private val jetpackFeatureCardHelper: JetpackFeatureCardHelper
+    private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
+    private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -543,7 +545,8 @@ class MySiteViewModel @Inject constructor(
                     onAnswerClick = this::onBloggingPromptAnswerClick,
                     onSkipClick = this::onBloggingPromptSkipClick,
                     onViewMoreClick = this::onBloggingPromptViewMoreClick,
-                    onViewAnswersClick = this::onBloggingPromptViewAnswersClick
+                    onViewAnswersClick = this::onBloggingPromptViewAnswersClick,
+                    onRemoveClick = this::onBloggingPromptRemoveClick
                 )
             ),
             QuickLinkRibbonBuilderParams(
@@ -1404,6 +1407,15 @@ class MySiteViewModel @Inject constructor(
 
     private fun onBloggingPromptViewMoreClick() {
         _onBloggingPromptsViewMore.value = Event(Unit)
+    }
+
+    private fun onBloggingPromptRemoveClick() {
+        launch {
+            selectedSiteRepository.getSelectedSite()?.localId()?.value?.let {  siteId ->
+                bloggingPromptsSettingsHelper.updatePromptsCardEnabled(siteId, isEnabled = false)
+                refresh()
+            }
+        }
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()

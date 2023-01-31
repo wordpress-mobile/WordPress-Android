@@ -10,10 +10,12 @@
             android:title="@string/my_site_blogging_prompt_card_menu_skip" />
     </group>
     <item
-        android:id="@+id/remove"
-        android:title="@string/my_site_blogging_prompt_card_menu_remove"
-        android:visible="false" />
-    <item
         android:id="@+id/learn_more"
         android:title="@string/my_site_blogging_prompt_card_menu_learn_more" />
+    <group android:id="@+id/prompt_remove_action">
+        <item
+            android:id="@+id/remove"
+            android:title="@string/my_site_blogging_prompt_card_menu_remove"
+            android:visible="true" />
+    </group>
 </menu>
