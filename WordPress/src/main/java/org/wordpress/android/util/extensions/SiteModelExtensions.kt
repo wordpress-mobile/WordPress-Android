@@ -24,3 +24,8 @@ val SiteModel.stateLogInformation: String
             else -> "self_hosted"
         }
     }
+
+fun SiteModel.isJetpackConnectedWithoutFullPlugin(): Boolean =
+    activeJetpackConnectionPlugins?.split(",")?.run {
+        isNotEmpty() && !contains("jetpack") && firstOrNull { it.startsWith("jetpack-") } != null
+    } ?: false
