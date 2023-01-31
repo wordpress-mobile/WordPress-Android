@@ -106,7 +106,6 @@ class PostListItemUiStateHelper @Inject constructor(
             shouldRemoveJetpackFeatures = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
         )
         val defaultActions = createDefaultViewActions(buttonTypes, onButtonClicked)
-        // todo: annmarie
         val compactActions = createCompactViewActions(buttonTypes, onButtonClicked)
 
         val remotePostId = RemotePostId(RemoteId(post.remotePostId))
