@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.PARSE_ER
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PlansResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload
@@ -32,6 +33,8 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSiteError
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.SITE_NAME_INVALID
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged
+import org.wordpress.android.fluxc.store.SiteStore.PlansError
+import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType.INVALID_SITE
 import org.wordpress.android.fluxc.store.SiteStore.SiteError
@@ -49,8 +52,10 @@ class SiteStoreTest {
     @Mock lateinit var siteXMLRPCClient: SiteXMLRPCClient
     @Mock lateinit var privateAtomicCookie: PrivateAtomicCookie
     @Mock lateinit var siteSqlUtils: SiteSqlUtils
-    @Mock lateinit var successResponse: Response.Success<DomainsResponse>
-    @Mock lateinit var errorResponse: Response.Error<DomainsResponse>
+    @Mock lateinit var domainsSuccessResponse: Response.Success<DomainsResponse>
+    @Mock lateinit var plansSuccessResponse: Response.Success<PlansResponse>
+    @Mock lateinit var domainsErrorResponse: Response.Error<DomainsResponse>
+    @Mock lateinit var plansErrorResponse: Response.Error<PlansResponse>
     private lateinit var siteStore: SiteStore
 
     @Before
@@ -300,8 +305,8 @@ class SiteStoreTest {
         val site = SiteModel()
         site.setIsWPCom(true)
 
-        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(successResponse)
-        whenever(successResponse.data).thenReturn(DomainsResponse(listOf()))
+        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(domainsSuccessResponse)
+        whenever(domainsSuccessResponse.data).thenReturn(DomainsResponse(listOf()))
 
         val onSiteDomainsFetched = siteStore.fetchSiteDomains(site)
 
@@ -314,11 +319,38 @@ class SiteStoreTest {
         val site = SiteModel()
         site.setIsWPCom(true)
 
-        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(errorResponse)
-        whenever(errorResponse.error).thenReturn(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
+        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(domainsErrorResponse)
+        whenever(domainsErrorResponse.error).thenReturn(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
 
         val onSiteDomainsFetched = siteStore.fetchSiteDomains(site)
 
         assertThat(onSiteDomainsFetched.error).isEqualTo(SiteError(GENERIC_ERROR, null))
+    }
+
+    @Test
+    fun `fetchSitePlans from WPCom endpoint`() = test {
+        val site = SiteModel()
+        site.setIsWPCom(true)
+
+        whenever(siteRestClient.fetchSitePlans(site)).thenReturn(plansSuccessResponse)
+        whenever(plansSuccessResponse.data).thenReturn(PlansResponse(listOf()))
+
+        val onSitePlansFetched = siteStore.fetchSitePlans(site)
+
+        assertThat(onSitePlansFetched.plans).isNotNull
+        assertThat(onSitePlansFetched.error).isNull()
+    }
+
+    @Test
+    fun `fetchSitePlans error from WPCom endpoint returns error`() = test {
+        val site = SiteModel()
+        site.setIsWPCom(true)
+
+        whenever(siteRestClient.fetchSitePlans(site)).thenReturn(plansErrorResponse)
+        whenever(plansErrorResponse.error).thenReturn(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
+
+        val onSitePlansFetched = siteStore.fetchSitePlans(site)
+
+        assertThat(onSitePlansFetched.error.type).isEqualTo(PlansError(PlansErrorType.GENERIC_ERROR, null).type)
     }
 }
