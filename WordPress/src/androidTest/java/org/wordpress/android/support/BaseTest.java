@@ -2,6 +2,7 @@ package org.wordpress.android.support;
 
 import android.app.Instrumentation;
 
+import androidx.compose.ui.test.junit4.ComposeTestRule;
 import androidx.test.espresso.accessibility.AccessibilityChecks;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -37,6 +38,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import static androidx.compose.ui.test.junit4.AndroidComposeTestRule_androidKt.createComposeRule;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesTypes;
 import static org.hamcrest.Matchers.anyOf;
@@ -58,10 +60,13 @@ public class BaseTest {
     public InitializationRule mInitializationRule = new InitializationRule();
 
     @Rule(order = 2)
+    public ComposeTestRule mComposeTestRule = createComposeRule();
+
+    @Rule(order = 3)
     public ActivityScenarioRule<WPLaunchActivity> mActivityScenarioRule
             = new ActivityScenarioRule<>(WPLaunchActivity.class);
 
-    @Rule(order = 3)
+    @Rule(order = 4)
     public WireMockRule wireMockRule;
 
     {
