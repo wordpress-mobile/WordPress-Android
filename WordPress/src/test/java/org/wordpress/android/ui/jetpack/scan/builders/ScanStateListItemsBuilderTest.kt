@@ -7,6 +7,7 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyArray
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -108,7 +109,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             scanStore,
             percentFormatter
         )
-        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn("")
+        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), anyArray<Any?>())).thenReturn("")
         whenever(resourceProvider.getString(anyInt())).thenReturn(DUMMY_TEXT)
         whenever(site.name).thenReturn((""))
         whenever(site.siteId).thenReturn(TEST_SITE_ID)
@@ -363,7 +364,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         test {
             val clickableText = "clickable help text"
             val descriptionWithClickableText = "description with $clickableText"
-            whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any()))
+            whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), anyArray<Any>()))
                 .thenReturn(descriptionWithClickableText)
             whenever(resourceProvider.getString(R.string.scan_here_to_help)).thenReturn(clickableText)
 
