@@ -105,16 +105,6 @@ class WPMainNavigationView @JvmOverloads constructor(
         currentPosition = AppPrefs.getMainPageIndex(numPages() - 1)
     }
 
-    fun clear() {
-        assignNavigationListeners(false)
-        fragmentManager?.apply {
-            for (fragment in fragments) {
-                beginTransaction().remove(fragment).commit()
-            }
-            popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        }
-    }
-
     private fun hideReaderTab() {
         menu.removeItem(R.id.nav_reader)
     }

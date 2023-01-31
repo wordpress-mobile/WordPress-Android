@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-21 01:04:29+0000
+Translation-Revision-Date: 2023-01-25 18:05:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: en_GB
 -->
 <resources>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s are moving in %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s are moving soon</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s is moving in %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s is moving soon</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Do this later</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack features have moved.</string>
+    <string name="install_play_store_to_get_jetpack">Please install Google Play Store to get the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Stats, Reader, Notifications and other Jetpack powered features have been removed from the WordPress app.</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Switch to Jetpack </string>
+    <string name="stats_insights_total_stats_seven_days_positive">%1$s higher than the previous 7 days</string>
+    <string name="stats_insights_total_stats_seven_days_negative">%1$s lower than the previous 7 days</string>
+    <string name="weeks_quantity_other">%d weeks</string>
+    <string name="weeks_quantity_one">1 week</string>
+    <string name="wp_jetpack_powered_phase_2">Get the Jetpack app</string>
+    <string name="stats_timeframe_last_seven_days">Last 7 days</string>
+    <string name="stats_timeframe_previous_seven_days">Previous 7 days</string>
+    <string name="my_site_blogging_prompt_card_view_answers">View all responses</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Your views in the last 7 days are %1$s higher than the previous 7 days.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Your views in the last 7 days are %1$s lower than the previous 7 days.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Your visitors in the last 7 days are %1$s higher than the previous 7 days.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Your visitors in the last 7 days are %1$s lower than the previous 7 days.</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">From &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
@@ -127,7 +148,6 @@ Language: en_GB
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Upgrade your plan to use video covers</string>
     <string name="wp_jetpack_get_new_jetpack_app">Try the new Jetpack app</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problem displaying block. \nTap to attempt block recovery.</string>
-    <string name="stats_revamp_v2_update_alert_message">Updated to New Insights to help you understand how your content is performing and what\'s resonating with your audience.</string>
     <string name="stats_insights_like_guide_card">⭐️ Your latest post %1$s has received %2$s like.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Last week, you had %1$s views and %2$s comments</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Last week, you had %1$s views and %2$s likes</string>
@@ -154,7 +174,6 @@ Language: en_GB
     <string name="qrcode_auth_flow_validated_subtitle">Only scan QR codes taken directly from your web browser. Never scan a code sent to you by anyone else.</string>
     <string name="qrcode_auth_flow_validated_default_title">Are you trying to log in to your web browser near %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Are you trying to log in to %1$s near %2$s?</string>
-    <string name="stats_revamp_v2_intro_header_title">Insights update</string>
     <string name="stats_insights_followers_guide_card">💡Commenting on other blogs is a great way to build attention and followers for your new site.</string>
     <string name="stats_insights_comments_guide_card">💡Tap \'VIEW MORE\' to see your top commenters.</string>
     <string name="stats_insights_latest_post_empty">Check back when you\'ve published your first post!</string>
@@ -210,8 +229,6 @@ Language: en_GB
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Use &lt;b&gt; Discover &lt;/b&gt; to find sites and tags. Try selecting %1$s Settings %2$s to add topics you like.</string>
     <string name="photo_picker_video_thumbnail_content_description">Video Thumbnail</string>
     <string name="stats_details_top_commentators">Top Commentators</string>
-    <string name="stats_insights_total_stats_negative">%1$s lower than the previous week</string>
-    <string name="stats_insights_total_stats_positive">%1$s higher than the previous week</string>
     <string name="stats_published_years_ago">Published %1$d years ago</string>
     <string name="stats_published_a_year_ago">Published a year ago</string>
     <string name="stats_published_months_ago">Published %1$d months ago</string>
@@ -238,14 +255,8 @@ Language: en_GB
     <string name="photo_picker_media_thumbnail_content_description">Media Thumbnail</string>
     <string name="stats_insights_popular_title">🔥 Most Popular Time</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Your visitors this week are %1$s lower than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Your visitors this week are %1$s higher than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Your views this week are %1$s lower than the previous week.</string>
-    <string name="stats_timeframe_previous_week">Previous Week</string>
-    <string name="stats_timeframe_this_week">This Week</string>
     <string name="scan_vault_press_active_on_site_button_text">Visit Dashboard</string>
     <string name="scan_vault_press_active_on_site_subtitle">Your site already is protected by VaultPress. You can find a link to your VaultPress dashboard below.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Your views this week are %1$s higher than the previous week.</string>
     <string name="scan_vault_press_active_on_site_title">Your site has VaultPress</string>
     <string name="locale_picker_current_language">Current language:</string>
     <string name="hpp_choose_and_create_site">Create site</string>
@@ -341,6 +352,7 @@ Language: en_GB
     <string name="site_creation_intent_books">Books</string>
     <string name="site_creation_intent_beauty">Beauty</string>
     <string name="new_site_creation_intents_input_hint">E.g. Fashion, Poetry, Politics</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Skip for today</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Share blogging prompt</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Answered</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d answers</string>

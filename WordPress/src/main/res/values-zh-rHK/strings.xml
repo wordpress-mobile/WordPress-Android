@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-17 12:54:07+0000
+Translation-Revision-Date: 2023-01-25 15:11:17+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_TW
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">從 &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">隱藏此項目</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">稍後再提醒我</string>
     <string name="jetpack_feature_card_content">「統計資料」、「閱讀器」、「通知」及其他功能即將搬遷至 Jetpack 行動應用程式。</string>
@@ -129,7 +130,6 @@ Language: zh_TW
     <string name="weekly_roundup_notification_text_views_and_likes">上週你有 %1$s 個瀏覽次數和 %2$s 個讚</string>
     <string name="weekly_roundup_notification_text_views_only">上週你有 %1$s 個瀏覽次數。</string>
     <string name="weekly_roundup_notification_text_all">上週你有 %1$s 個瀏覽次數、%2$s 個讚和 %3$s 個留言。</string>
-    <string name="stats_revamp_v2_update_alert_message">全新洞察報告的更新內容有助於瞭解你的內容成效如何，以及哪些內容能讓讀者產生共鳴。</string>
     <string name="stats_insights_like_guide_card">⭐️ 你的最新文章 %1$s 已獲得 %2$s 個讚。</string>
     <string name="wp_jetpack_powered">採用 Jetpack 技術</string>
     <string name="qrcode_auth_flow_content_description">圖片表示正在掃描登入碼</string>
@@ -152,7 +152,6 @@ Language: zh_TW
     <string name="qrcode_auth_flow_validated_subtitle">請只掃描直接由網頁瀏覽器顯示的 QR 碼。 永遠不要掃描其他任何人傳送給你的代碼。</string>
     <string name="qrcode_auth_flow_validated_default_title">你是否在 %1$s 附近嘗試登入網頁瀏覽器？</string>
     <string name="qrcode_auth_flow_validated_title">你是否在 %2$s 附近嘗試登入 %1$s？</string>
-    <string name="stats_revamp_v2_intro_header_title">洞察報告更新</string>
     <string name="stats_insights_followers_guide_card">💡 在其他網誌留言是為自己的新網站吸引注意和關注者的絕佳方式。</string>
     <string name="stats_insights_comments_guide_card">💡 點選「檢視更多」即可查看哪些人踴躍留言。</string>
     <string name="stats_insights_latest_post_empty">發表第一篇文章之後，請再回來查看！</string>
@@ -208,8 +207,6 @@ Language: zh_TW
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">使用&lt;b&gt;探索&lt;/b&gt;功能來找出網站和分頁。 試試選取%1$s設定%2$s來新增你喜歡的主題。 </string>
     <string name="photo_picker_video_thumbnail_content_description">影片縮圖</string>
     <string name="stats_details_top_commentators">踴躍回應者</string>
-    <string name="stats_insights_total_stats_negative">較上週低 %1$s</string>
-    <string name="stats_insights_total_stats_positive">較上週高 %1$s</string>
     <string name="stats_published_years_ago">%1$d 年前發佈</string>
     <string name="stats_published_a_year_ago">1 年前發佈</string>
     <string name="stats_published_months_ago">%1$d 個月前發佈</string>
@@ -236,12 +233,6 @@ Language: zh_TW
     <string name="photo_picker_media_thumbnail_content_description">媒體縮圖</string>
     <string name="stats_insights_popular_title">🔥 最熱門的時間</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">你本週的訪客比上週減少了 %1$s。</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">你本週的訪客比上週增加了 %1$s。</string>
-    <string name="stats_insights_views_and_visitors_views_negative">你本週的瀏覽次數比上週減少了 %1$s。</string>
-    <string name="stats_insights_views_and_visitors_views_positive">你本週的瀏覽次數比上週增加了 %1$s。</string>
-    <string name="stats_timeframe_previous_week">上週</string>
-    <string name="stats_timeframe_this_week">本週</string>
     <string name="scan_vault_press_active_on_site_button_text">造訪儀表板</string>
     <string name="scan_vault_press_active_on_site_subtitle">你的網站已受 VaultPress 保護 按下方連結即可前往你的 VaultPress 儀表板。</string>
     <string name="scan_vault_press_active_on_site_title">你的網站擁有 VaultPress 功能</string>
