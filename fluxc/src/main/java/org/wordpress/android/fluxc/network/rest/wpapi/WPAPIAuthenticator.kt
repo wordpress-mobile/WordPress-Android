@@ -18,6 +18,7 @@ class WPAPIAuthenticator @Inject constructor(
     private val siteSqlUtils: SiteSqlUtils,
     private val currentTimeProvider: CurrentTimeProvider
 ) {
+    @Suppress("ComplexMethod")
     suspend fun <T : Payload<BaseNetworkError?>> makeAuthenticatedWPAPIRequest(
         site: SiteModel,
         fetchMethod: suspend (Nonce?) -> T
@@ -41,8 +42,11 @@ class WPAPIAuthenticator @Inject constructor(
         val response = fetchMethod(nonce)
 
         if (!response.isError) return response
-        return when (response.error?.volleyError?.networkResponse?.statusCode) {
-            STATUS_CODE_UNAUTHORIZED -> {
+        val statusCode = response.error?.volleyError?.networkResponse?.statusCode
+        val errorCode = (response.error as? WPAPINetworkError)?.errorCode
+        return when  {
+            statusCode == STATUS_CODE_UNAUTHORIZED ||
+                    (statusCode == STATUS_CODE_FORBIDDEN && errorCode == "rest_cookie_invalid_nonce") -> {
                 if (usingSavedNonce) {
                     // Call with saved nonce failed, so try getting a new one
                     val previousNonce = nonce
@@ -59,7 +63,7 @@ class WPAPIAuthenticator @Inject constructor(
                     response
                 }
             }
-            STATUS_CODE_NOT_FOUND -> {
+            statusCode == STATUS_CODE_NOT_FOUND -> {
                 // call failed with 'not found' so clear the (failing) rest url
                 site.wpApiRestUrl = null
                 (siteSqlUtils::insertOrUpdateSite)(site)
@@ -87,6 +91,7 @@ class WPAPIAuthenticator @Inject constructor(
     companion object {
         private const val FIVE_MIN_MILLIS: Long = 5 * 60 * 1000
         private const val STATUS_CODE_NOT_FOUND = 404
+        private const val STATUS_CODE_FORBIDDEN = 403
         private const val STATUS_CODE_UNAUTHORIZED = 401
     }
 }
