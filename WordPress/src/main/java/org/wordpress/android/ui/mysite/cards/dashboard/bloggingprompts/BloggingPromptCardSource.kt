@@ -17,7 +17,6 @@ import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
-import org.wordpress.android.util.distinct
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
@@ -46,7 +45,7 @@ class BloggingPromptCardSource @Inject constructor(
         result.addSource(refresh) { result.refreshData(coroutineScope, siteLocalId, refresh.value) }
         result.addSource(singleRefresh) { result.refreshData(coroutineScope, siteLocalId, singleRefresh.value, true) }
         refresh()
-        return result
+        return result.distinctUntilChanged()
     }
 
     fun refreshTodayPrompt() {

@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -13,14 +14,13 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsError
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsErrorType
-import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -64,7 +64,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     private lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Mock
-    private lateinit var bloggingRemindersStore: BloggingRemindersStore
+    private lateinit var bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper
     private lateinit var bloggingPromptCardSource: BloggingPromptCardSource
 
     private val data = BloggingPromptsResult(
@@ -79,11 +79,6 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         setIsPotentialBloggingSite(true)
     }
 
-    private val bloggingReminderSettings = BloggingRemindersModel(
-        siteId = SITE_LOCAL_ID,
-        isPromptIncluded = true
-    )
-
     @Before
     fun setUp() {
         init()
@@ -95,17 +90,16 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
             selectedSiteRepository,
             bloggingPromptsStore,
             bloggingPromptsFeatureConfig,
-            appPrefsWrapper,
-            bloggingRemindersStore,
+            bloggingPromptsSettingsHelper,
             testDispatcher()
         )
     }
 
-    private fun setUpMocks(isBloggingPromptFeatureEnabled: Boolean) {
+    private fun setUpMocks(isBloggingPromptFeatureEnabled: Boolean) = runBlocking {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptFeatureEnabled)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(null)
-        whenever(bloggingRemindersStore.bloggingRemindersModel(any())).thenReturn(flowOf(bloggingReminderSettings))
+        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(isBloggingPromptFeatureEnabled)
     }
 
     /* GET DATA */
@@ -195,9 +189,9 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     /* SKIPPED PROMPT */
 
     @Test
-    fun `given build is invoked, when prompt is skipped, then empty state is loaded`() = test {
+    fun `given build is invoked, when prompt is not active, then empty state is loaded`() = test {
         val result = mutableListOf<BloggingPromptUpdate>()
-        whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(Date())
+        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(false)
         bloggingPromptCardSource.refresh.observeForever { }
 
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
@@ -211,18 +205,11 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     /* SITE BASED PROMPT AVAILABILITY LOGIC */
 
     @Test
-    fun `on build, if prompt not skipped, prompt reminder opted-in then prompt is loaded`() =
+    fun `on build, if prompt active then prompt is loaded`() =
         test {
             val result = mutableListOf<BloggingPromptUpdate>()
             whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
-            whenever(bloggingRemindersStore.bloggingRemindersModel(any())).thenReturn(
-                flowOf(
-                    BloggingRemindersModel(
-                        siteId = 1,
-                        isPromptIncluded = true
-                    )
-                )
-            )
+            whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(true)
             bloggingPromptCardSource.refresh.observeForever { }
 
             bloggingPromptCardSource.build(
@@ -234,37 +221,9 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
             assertThat(result.first()).isEqualTo(BloggingPromptUpdate(PROMPT))
         }
 
-    @Test
-    fun `on build, if prompt not skipped, prompt reminder opted-out and site is blog then prompt is loaded`() =
-        test {
-            val result = mutableListOf<BloggingPromptUpdate>()
-            val bloggingSite = SiteModel().apply {
-                id = SITE_LOCAL_ID
-                setIsPotentialBloggingSite(true)
-            }
-            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(bloggingSite)
-            whenever(bloggingPromptsStore.getPrompts(eq(bloggingSite))).thenReturn(flowOf(data))
-            whenever(bloggingRemindersStore.bloggingRemindersModel(any())).thenReturn(
-                flowOf(
-                    BloggingRemindersModel(
-                        siteId = 1,
-                        isPromptIncluded = false
-                    )
-                )
-            )
-            bloggingPromptCardSource.refresh.observeForever { }
-
-            bloggingPromptCardSource.build(
-                testScope(),
-                SITE_LOCAL_ID
-            ).observeForever { it?.let { result.add(it) } }
-
-            assertThat(result.size).isEqualTo(1)
-            assertThat(result.first()).isEqualTo(BloggingPromptUpdate(PROMPT))
-        }
 
     @Test
-    fun `on build, if prompt not skipped, prompt reminder opted-out and site is not blog then prompt is not loaded`() =
+    fun `on build, if prompt is not active then prompt is not loaded`() =
         test {
             val result = mutableListOf<BloggingPromptUpdate>()
             val bloggingSite = SiteModel().apply {
@@ -272,14 +231,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 setIsPotentialBloggingSite(false)
             }
             whenever(selectedSiteRepository.getSelectedSite()).thenReturn(bloggingSite)
-            whenever(bloggingRemindersStore.bloggingRemindersModel(any())).thenReturn(
-                flowOf(
-                    BloggingRemindersModel(
-                        siteId = 1,
-                        isPromptIncluded = false
-                    )
-                )
-            )
+            whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(false)
             bloggingPromptCardSource.refresh.observeForever { }
 
             bloggingPromptCardSource.build(
@@ -289,35 +241,6 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
 
             assertThat(result.size).isEqualTo(1)
             assertThat(result.first()).isEqualTo(BloggingPromptUpdate(null))
-        }
-
-    @Test
-    fun `on build, if prompt not skipped, prompt reminder opted-in and site is not blog then prompt is loaded`() =
-        test {
-            val result = mutableListOf<BloggingPromptUpdate>()
-            val bloggingSite = SiteModel().apply {
-                id = SITE_LOCAL_ID
-                setIsPotentialBloggingSite(false)
-            }
-            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(bloggingSite)
-            whenever(bloggingPromptsStore.getPrompts(eq(bloggingSite))).thenReturn(flowOf(data))
-            whenever(bloggingRemindersStore.bloggingRemindersModel(any())).thenReturn(
-                flowOf(
-                    BloggingRemindersModel(
-                        siteId = 1,
-                        isPromptIncluded = true
-                    )
-                )
-            )
-            bloggingPromptCardSource.refresh.observeForever { }
-
-            bloggingPromptCardSource.build(
-                testScope(),
-                SITE_LOCAL_ID
-            ).observeForever { it?.let { result.add(it) } }
-
-            assertThat(result.size).isEqualTo(1)
-            assertThat(result.first()).isEqualTo(BloggingPromptUpdate(PROMPT))
         }
 
     /* IS REFRESHING */
@@ -344,13 +267,15 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
 
         bloggingPromptCardSource.refresh()
         advanceUntilIdle()
+        println(result)
 
-        assertThat(result.size).isEqualTo(5)
+        assertThat(result.size).isEqualTo(6)
         assertThat(result[0]).isFalse // init
-        assertThat(result[1]).isTrue // build(...) -> refresh()
-        assertThat(result[2]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
-        assertThat(result[3]).isFalse // refresh()
-        assertThat(result[4]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
+        assertThat(result[1]).isFalse // build(...) -> getData(...)
+        assertThat(result[2]).isTrue // build(...) -> refresh()
+        assertThat(result[3]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
+        assertThat(result[4]).isFalse // refresh()
+        assertThat(result[5]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
     }
 
     @Test
@@ -397,12 +322,13 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.refresh()
         advanceUntilIdle()
 
-        assertThat(result.size).isEqualTo(5)
+        assertThat(result.size).isEqualTo(6)
         assertThat(result[0]).isFalse // init
-        assertThat(result[1]).isTrue // build(...) -> refresh()
-        assertThat(result[2]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
-        assertThat(result[3]).isFalse // refresh()
-        assertThat(result[4]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
+        assertThat(result[1]).isFalse // build(...) -> getData(...)
+        assertThat(result[2]).isTrue // build(...) -> refresh()
+        assertThat(result[3]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
+        assertThat(result[4]).isFalse // refresh()
+        assertThat(result[5]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
     }
 
     @Test
@@ -418,11 +344,12 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.refresh()
         advanceUntilIdle()
 
-        assertThat(result.size).isEqualTo(5)
+        assertThat(result.size).isEqualTo(6)
         assertThat(result[0]).isFalse // init
-        assertThat(result[1]).isTrue // build(...) -> refresh()
-        assertThat(result[2]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> error
-        assertThat(result[3]).isFalse // refresh()
-        assertThat(result[4]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> error
+        assertThat(result[1]).isFalse // build(...) -> getData(...)
+        assertThat(result[2]).isTrue // build(...) -> refresh()
+        assertThat(result[3]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> error
+        assertThat(result[4]).isFalse // refresh()
+        assertThat(result[5]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> error
     }
 }
