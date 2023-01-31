@@ -334,6 +334,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     enum class JetpackFeatureCollectionOverlaySource(val label: String) {
         FEATURE_CARD("card"),
         APP_OPEN("app_open"),
+        DISABLED_ENTRY_POINT("disabled_entry_point"),
         UNSPECIFIED("unspecified");
 
         companion object {

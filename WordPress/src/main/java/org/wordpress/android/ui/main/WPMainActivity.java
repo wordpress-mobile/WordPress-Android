@@ -77,6 +77,7 @@ import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.WPTooltipView;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -159,7 +160,9 @@ import org.wordpress.android.workers.notification.createsite.CreateSiteNotificat
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
 
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -366,6 +369,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     initSelectedSite();
                     mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
                             ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
+                    showJetpackOverlayIfNeeded(getIntent().getStringExtra(
+                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
                 } else if (isQuickStartRequestedFromPush) {
@@ -484,6 +489,39 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         displayJetpackFeatureCollectionOverlayIfNeeded();
+    }
+
+    private void showJetpackOverlayIfNeeded(String action) {
+        Shortcut shortcut = Shortcut.fromActionString(action);
+        if (shortcut == null) {
+            AppLog.e(AppLog.T.MAIN, String.format("Unknown Android Shortcut action[%s]", action));
+            return;
+        }
+
+        Map<String, String> trackingProperties = new HashMap<>();
+        trackingProperties.put("calling_function", "shortcut");
+
+        switch (shortcut) {
+            case CREATE_NEW_POST:
+                break;
+            case OPEN_STATS:
+            case OPEN_NOTIFICATIONS:
+                mAnalyticsTrackerWrapper.track(
+                        Stat.JETPACK_FEATURE_INCORRECTLY_ACCESSED, trackingProperties);
+                if (mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
+                    JetpackFeatureFullScreenOverlayFragment.newInstance(
+                            null,
+                            false,
+                            false,
+                            SiteCreationSource.UNSPECIFIED,
+                            true,
+                            JetpackFeatureCollectionOverlaySource.DISABLED_ENTRY_POINT
+                    ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
+                }
+                break;
+            default:
+                AppLog.e(AppLog.T.MAIN, String.format("Unknown Android Shortcut[%s]", shortcut));
+        }
     }
 
     private void setUpMainView() {
