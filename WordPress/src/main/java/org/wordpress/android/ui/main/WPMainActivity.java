@@ -502,7 +502,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         Map<String, String> trackingProperties = new HashMap<>();
-        trackingProperties.put("calling_function", "shortcut");
+        trackingProperties.put("calling_function", "shortcut_" + shortcut.name());
 
         switch (shortcut) {
             case CREATE_NEW_POST:
