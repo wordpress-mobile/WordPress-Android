@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelStore
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertTrue
@@ -50,6 +51,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
@@ -257,6 +259,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig
 
     @Mock
+    lateinit var bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper
+
+    @Mock
     lateinit var contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker
 
     @Mock
@@ -358,6 +363,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onBloggingPromptSkipClicked: (() -> Unit)? = null
     private var onBloggingPromptViewMoreClicked: (() -> Unit)? = null
     private var onBloggingPromptViewAnswersClicked: ((promptId: Int) -> Unit)? = null
+    private var onBloggingPromptRemoveClicked: (() -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
             taskType = QuickStartTaskType.CUSTOMIZE,
@@ -497,7 +503,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             wordPressPublicData,
             jetpackFeatureCardShownTracker,
             jetpackFeatureRemovalOverlayUtil,
-            jetpackFeatureCardHelper
+            jetpackFeatureCardHelper,
+            bloggingPromptsSettingsHelper,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1877,6 +1884,26 @@ class MySiteViewModelTest : BaseUnitTest() {
             assertThat(expectedSnackbar.buttonTitle).isEqualTo(UiStringRes(R.string.undo))
             assertThat(expectedSnackbar.message).isEqualTo(
                 UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar)
+            )
+            assertThat(expectedSnackbar.isImportant).isEqualTo(true)
+        }
+
+    @Test
+    fun `given blogging prompt card, when remove button is clicked, prompt is remove and undo snackbar displayed`() =
+        test {
+            initSelectedSite()
+
+            requireNotNull(onBloggingPromptRemoveClicked).invoke()
+
+            verify(bloggingPromptsSettingsHelper).updatePromptsCardEnabled(any(), eq(false))
+            verify(mySiteSourceManager).refreshBloggingPrompts(eq(true))
+
+            assertThat(snackbars.size).isEqualTo(1)
+
+            val expectedSnackbar = snackbars[0]
+            assertThat(expectedSnackbar.buttonTitle).isEqualTo(UiStringRes(R.string.undo))
+            assertThat(expectedSnackbar.message).isEqualTo(
+                UiStringRes(R.string.my_site_blogging_prompt_card_removed_snackbar)
             )
             assertThat(expectedSnackbar.isImportant).isEqualTo(true)
         }
@@ -3395,6 +3422,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onBloggingPromptSkipClicked = params.bloggingPromptCardBuilderParams.onSkipClick
         onBloggingPromptViewMoreClicked = params.bloggingPromptCardBuilderParams.onViewMoreClick
         onBloggingPromptViewAnswersClicked = params.bloggingPromptCardBuilderParams.onViewAnswersClick
+        onBloggingPromptRemoveClicked = params.bloggingPromptCardBuilderParams.onRemoveClick
         return BloggingPromptCardWithData(
             prompt = UiStringText("Test prompt"),
             respondents = emptyList(),
@@ -3403,11 +3431,13 @@ class MySiteViewModelTest : BaseUnitTest() {
             promptId = bloggingPromptId,
             attribution = BloggingPromptAttribution.DAY_ONE,
             showViewMoreAction = params.bloggingPromptCardBuilderParams.showViewMoreAction,
+            showRemoveAction = params.bloggingPromptCardBuilderParams.enhancementsEnabled,
             onShareClick = onBloggingPromptShareClicked!!,
             onAnswerClick = onBloggingPromptAnswerClicked!!,
             onSkipClick = onBloggingPromptSkipClicked!!,
             onViewMoreClick = onBloggingPromptViewMoreClicked!!,
             onViewAnswersClick = onBloggingPromptViewAnswersClicked!!,
+            onRemoveClick = onBloggingPromptRemoveClicked!!,
         )
     }
 
