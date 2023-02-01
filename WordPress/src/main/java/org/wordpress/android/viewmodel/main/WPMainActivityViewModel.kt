@@ -146,13 +146,13 @@ class WPMainActivityViewModel @Inject constructor(
 
         setMainFabUiState(false, site)
 
-        loadMainActions(site)
+        launch { loadMainActions(site) }
 
         updateFeatureAnnouncements()
     }
 
     @Suppress("LongMethod")
-    private fun loadMainActions(site: SiteModel?, onFabClicked: Boolean = false) = launch {
+    private suspend fun loadMainActions(site: SiteModel?, onFabClicked: Boolean = false) {
         val actionsList = ArrayList<MainActionListItem>()
         if (bloggingPromptsSettingsHelper.isPromptsFeatureActive()) {
             val prompt = site?.let {
@@ -270,16 +270,18 @@ class WPMainActivityViewModel @Inject constructor(
         _showQuickStarInBottomSheet.postValue(quickStartRepository.activeTask.value == PUBLISH_POST)
 
         if (SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper) || hasFullAccessToContent(site)) {
-            // The user has at least two create options available for this site (pages and/or story posts),
-            // so we should show a bottom sheet.
-            // Creation options added in the future should also be weighed here.
+            launch {
+                // The user has at least two create options available for this site (pages and/or story posts),
+                // so we should show a bottom sheet.
+                // Creation options added in the future should also be weighed here.
 
-            // Reload main actions, since the first time this is initialized the SiteModel may not contain the
-            // latest info.
-            loadMainActions(site, onFabClicked = true)
+                // Reload main actions, since the first time this is initialized the SiteModel may not contain the
+                // latest info.
+                loadMainActions(site, onFabClicked = true)
 
-            analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_SHOWN)
-            _isBottomSheetShowing.value = Event(true)
+                analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_SHOWN)
+                _isBottomSheetShowing.postValue(Event(true))
+            }
         } else {
             // User only has one option - creating a post. Skip the bottom sheet and go straight to that action.
             _createAction.postValue(CREATE_NEW_POST)
