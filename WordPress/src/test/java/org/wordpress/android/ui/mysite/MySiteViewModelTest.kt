@@ -1977,6 +1977,16 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed()
     }
 
+    @Test
+    fun `when updatePromptsCardEnabled is called then it updates setting and refresh prompts`() = test {
+        initSelectedSite()
+
+        viewModel.updatePromptsCardEnabled(true)
+
+        verify(bloggingPromptsSettingsHelper).updatePromptsCardEnabled(any(), eq(true))
+        verify(mySiteSourceManager).refreshBloggingPrompts(eq(true))
+    }
+
     /* DASHBOARD ERROR SNACKBAR */
 
     @Test
