@@ -205,6 +205,7 @@ class MySiteViewModel @Inject constructor(
     private val _onBloggingPromptsViewAnswers = SingleLiveEvent<Event<ReaderTag>>()
     private val _onBloggingPromptsLearnMore = SingleLiveEvent<Event<Unit>>()
     private val _onBloggingPromptsViewMore = SingleLiveEvent<Event<Unit>>()
+    private val _onBloggingPromptsRemoved = SingleLiveEvent<Event<Unit>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartTabStep
         .switchMap { quickStartSiteMenuStep ->
@@ -276,6 +277,7 @@ class MySiteViewModel @Inject constructor(
     val onBloggingPromptsViewAnswers = _onBloggingPromptsViewAnswers as LiveData<Event<ReaderTag>>
     val onBloggingPromptsLearnMore = _onBloggingPromptsLearnMore as LiveData<Event<Unit>>
     val onBloggingPromptsViewMore = _onBloggingPromptsViewMore as LiveData<Event<Unit>>
+    val onBloggingPromptsRemoved = _onBloggingPromptsRemoved as LiveData<Event<Unit>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     private var shouldMarkUpdateSiteTitleTaskComplete = false
@@ -1380,24 +1382,16 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onBloggingPromptRemoveClick() {
-        selectedSiteRepository.getSelectedSite()?.localId()?.value?.let { siteId ->
-            val snackbar = SnackbarMessageHolder(
-                message = UiStringRes(R.string.my_site_blogging_prompt_card_removed_snackbar),
-                buttonTitle = UiStringRes(R.string.undo),
-                buttonAction = {
-                    launch {
-                        bloggingPromptsSettingsHelper.updatePromptsCardEnabled(siteId, isEnabled = true)
-                        mySiteSourceManager.refreshBloggingPrompts(true)
-                    }
-                },
-                isImportant = true
-            )
+        launch {
+            updatePromptsCardEnabled(isEnabled = false).join()
+            _onBloggingPromptsRemoved.postValue(Event(Unit))
+        }
+    }
 
-            launch {
-                bloggingPromptsSettingsHelper.updatePromptsCardEnabled(siteId, isEnabled = false)
-                mySiteSourceManager.refreshBloggingPrompts(true)
-                _onSnackbarMessage.postValue(Event(snackbar))
-            }
+    fun updatePromptsCardEnabled(isEnabled: Boolean) = launch {
+        selectedSiteRepository.getSelectedSite()?.localId()?.value?.let { siteId ->
+            bloggingPromptsSettingsHelper.updatePromptsCardEnabled(siteId, isEnabled)
+            mySiteSourceManager.refreshBloggingPrompts(true)
         }
     }
 
