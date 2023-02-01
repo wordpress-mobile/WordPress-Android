@@ -31,7 +31,6 @@ class BloggingPromptsSettingsHelper @Inject constructor(
         updatePromptsCardEnabled(siteId, isEnabled)
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
     suspend fun updatePromptsCardEnabled(siteId: Int, isEnabled: Boolean) {
         val current = bloggingRemindersStore.bloggingRemindersModel(siteId).firstOrNull() ?: return
         bloggingRemindersStore.updateBloggingReminders(current.copy(isPromptsCardEnabled = isEnabled))
