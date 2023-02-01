@@ -98,9 +98,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     @Test
     fun `given prompts FF is off and site is potential blog, when isPromptsFeatureAvailable, then returns false`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(
-            SiteModel().apply { setIsPotentialBloggingSite(true) }
-        )
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
 
         val result = helper.isPromptsFeatureAvailable()
 
@@ -110,9 +108,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     @Test
     fun `given prompts FF is on and site is not potential blog, when isPromptsFeatureAvailable, then returns false`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(
-            SiteModel().apply { setIsPotentialBloggingSite(false) }
-        )
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel(isPotentialBloggingSite = false))
 
         val result = helper.isPromptsFeatureAvailable()
 
@@ -131,9 +127,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     @Test
     fun `given prompts FF is on and site is potential blog, when isPromptsFeatureAvailable, then returns true`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(
-            SiteModel().apply { setIsPotentialBloggingSite(true) }
-        )
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
 
         val result = helper.isPromptsFeatureAvailable()
 
@@ -152,12 +146,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     @Test
     fun `given prompts feature not available, when isPromptsFeatureActive, then returns false`() = test {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(
-            SiteModel().apply {
-                id = 123
-                setIsPotentialBloggingSite(true)
-            }
-        )
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
 
         val result = helper.shouldShowPromptsFeature()
 
@@ -168,12 +157,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     fun `given enhancements FF on and prompts setting off, when isPromptsFeatureActive, then returns false`() = test {
         // prompts feature is available
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(
-            SiteModel().apply {
-                id = 123
-                setIsPotentialBloggingSite(true)
-            }
-        )
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
 
         whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
 
@@ -193,12 +177,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
         test {
             // prompts feature is available
             whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
-            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(
-                SiteModel().apply {
-                    id = 123
-                    setIsPotentialBloggingSite(true)
-                }
-            )
+            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
 
             whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
 
@@ -218,12 +197,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     fun `given enhancements FF off and skipped for today, when isPromptsFeatureActive, then returns false`() = test {
         // prompts feature is available
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(
-            SiteModel().apply {
-                id = 123
-                setIsPotentialBloggingSite(true)
-            }
-        )
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
 
         whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(false)
 
@@ -240,12 +214,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
         test {
             // prompts feature is available
             whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
-            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(
-                SiteModel().apply {
-                    id = 123
-                    setIsPotentialBloggingSite(true)
-                }
-            )
+            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
 
             whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
 
@@ -267,12 +236,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
         test {
             // prompts feature is available
             whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
-            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(
-                SiteModel().apply {
-                    id = 123
-                    setIsPotentialBloggingSite(true)
-                }
-            )
+            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
 
             whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(false)
 
@@ -290,5 +254,12 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
             siteId = 123,
             isPromptsCardEnabled = isPromptsCardEnabled,
         )
+
+        private fun createSiteModel(
+            isPotentialBloggingSite: Boolean = true
+        ) = SiteModel().apply {
+            this.id = 123
+            setIsPotentialBloggingSite(isPotentialBloggingSite)
+        }
     }
 }
