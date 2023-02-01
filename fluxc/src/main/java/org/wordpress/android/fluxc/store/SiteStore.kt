@@ -112,7 +112,6 @@ import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.SiteErrorUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.AppLog.T.API
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Provider
@@ -1009,7 +1008,7 @@ open class SiteStore @Inject constructor(
     }
 
     override fun onRegister() {
-        AppLog.d(API, "SiteStore onRegister")
+        AppLog.d(T.API, "SiteStore onRegister")
     }
 
     /**
@@ -1668,7 +1667,7 @@ open class SiteStore @Inject constructor(
             if (currentModel == null) {
                 // this could happen when a site was added to the current account with another app, or on the web
                 AppLog.e(
-                    API,
+                    T.API,
                     "handleDesignatedMobileEditorForAllSites - The backend returned info for the " +
                         "following siteID $key but there is no site with that remote ID in SiteStore."
                 )
@@ -1973,4 +1972,28 @@ open class SiteStore @Inject constructor(
                 is ApplicationPasswordDeletionResult.Failure -> OnApplicationPasswordDeleted(site, result.error)
             }
         }
+
+    suspend fun fetchSitePlans(siteModel: SiteModel): FetchedPlansPayload {
+        return if (siteModel.isUsingWpComRestApi) {
+            coroutineEngine.withDefaultContext(T.API, this, "Fetch site plans") {
+                return@withDefaultContext when (val response =
+                    siteRestClient.fetchSitePlans(siteModel)) {
+                    is Success -> {
+                        FetchedPlansPayload(siteModel, response.data.plansList)
+                    }
+                    is Error -> {
+                        val siteErrorType = when (response.error.apiError) {
+                            "unauthorized" -> PlansErrorType.UNAUTHORIZED
+                            "unknown_blog" -> PlansErrorType.UNKNOWN_BLOG
+                            else -> PlansErrorType.GENERIC_ERROR
+                        }
+                        val plansError = PlansError(siteErrorType, response.error.message)
+                        FetchedPlansPayload(siteModel, plansError)
+                    }
+                }
+            }
+        } else {
+            FetchedPlansPayload(siteModel, PlansError(NOT_AVAILABLE))
+        }
+    }
 }
