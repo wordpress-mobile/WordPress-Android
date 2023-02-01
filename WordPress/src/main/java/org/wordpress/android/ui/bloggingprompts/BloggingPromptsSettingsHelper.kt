@@ -41,7 +41,7 @@ class BloggingPromptsSettingsHelper @Inject constructor(
         return bloggingPromptsFeatureConfig.isEnabled() && selectedSite.isPotentialBloggingSite
     }
 
-    suspend fun isPromptsFeatureActive(): Boolean {
+    suspend fun shouldShowPromptsFeature(): Boolean {
         val siteId = selectedSiteRepository.getSelectedSite()?.localId()?.value ?: return false
 
         // if the enhancements is turned off, consider the prompts user-enabled, otherwise check the user setting

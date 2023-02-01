@@ -61,7 +61,7 @@ class BloggingPromptCardSource @Inject constructor(
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId && bloggingPromptsFeatureConfig.isEnabled()) {
             coroutineScope.launch(bgDispatcher) {
-                if (bloggingPromptsSettingsHelper.isPromptsFeatureActive()) {
+                if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
                     promptsStore.getPrompts(selectedSite)
                         .map { it.model?.filter { prompt -> isSameDay(prompt.date, Date()) } }
                         .collect { result ->
@@ -97,7 +97,7 @@ class BloggingPromptCardSource @Inject constructor(
         if (selectedSite != null && selectedSite.id == siteLocalId) {
             if (bloggingPromptsFeatureConfig.isEnabled()) {
                 coroutineScope.launch(bgDispatcher) {
-                    if (bloggingPromptsSettingsHelper.isPromptsFeatureActive()) {
+                    if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
                         fetchPromptsAndPostErrorIfAvailable(coroutineScope, selectedSite, isSinglePromptRefresh)
                     } else {
                         postEmptyState()

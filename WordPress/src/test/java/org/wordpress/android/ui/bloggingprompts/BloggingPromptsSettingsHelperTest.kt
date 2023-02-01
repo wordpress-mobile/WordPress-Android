@@ -144,7 +144,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     fun `given site is not selected, when isPromptsFeatureActive, then returns false`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 
-        val result = helper.isPromptsFeatureActive()
+        val result = helper.shouldShowPromptsFeature()
 
         assertThat(result).isFalse
     }
@@ -159,7 +159,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
             }
         )
 
-        val result = helper.isPromptsFeatureActive()
+        val result = helper.shouldShowPromptsFeature()
 
         assertThat(result).isFalse
     }
@@ -182,7 +182,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
             flowOf(model)
         }
 
-        val result = helper.isPromptsFeatureActive()
+        val result = helper.shouldShowPromptsFeature()
 
         assertThat(result).isFalse
     }
@@ -209,7 +209,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
 
             whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(Date())
 
-            val result = helper.isPromptsFeatureActive()
+            val result = helper.shouldShowPromptsFeature()
 
             assertThat(result).isFalse
         }
@@ -229,7 +229,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
 
         whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(Date())
 
-        val result = helper.isPromptsFeatureActive()
+        val result = helper.shouldShowPromptsFeature()
 
         assertThat(result).isFalse
     }
@@ -256,7 +256,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
 
             whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(null)
 
-            val result = helper.isPromptsFeatureActive()
+            val result = helper.shouldShowPromptsFeature()
 
             assertThat(result).isTrue
         }
@@ -278,7 +278,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
 
             whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(null)
 
-            val result = helper.isPromptsFeatureActive()
+            val result = helper.shouldShowPromptsFeature()
 
             assertThat(result).isTrue
         }

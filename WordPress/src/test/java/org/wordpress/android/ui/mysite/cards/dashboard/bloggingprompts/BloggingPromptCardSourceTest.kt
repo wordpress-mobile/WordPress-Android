@@ -99,7 +99,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptFeatureEnabled)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(null)
-        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(isBloggingPromptFeatureEnabled)
+        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(isBloggingPromptFeatureEnabled)
     }
 
     /* GET DATA */
@@ -191,7 +191,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     @Test
     fun `given build is invoked, when prompt is not active, then empty state is loaded`() = test {
         val result = mutableListOf<BloggingPromptUpdate>()
-        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(false)
+        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(false)
         bloggingPromptCardSource.refresh.observeForever { }
 
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
@@ -209,7 +209,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         test {
             val result = mutableListOf<BloggingPromptUpdate>()
             whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
-            whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(true)
+            whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(true)
             bloggingPromptCardSource.refresh.observeForever { }
 
             bloggingPromptCardSource.build(
@@ -231,7 +231,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 setIsPotentialBloggingSite(false)
             }
             whenever(selectedSiteRepository.getSelectedSite()).thenReturn(bloggingSite)
-            whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(false)
+            whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(false)
             bloggingPromptCardSource.refresh.observeForever { }
 
             bloggingPromptCardSource.build(

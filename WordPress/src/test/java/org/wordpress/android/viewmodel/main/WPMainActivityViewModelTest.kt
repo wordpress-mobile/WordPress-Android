@@ -158,7 +158,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask = MutableLiveData()
         externalFocusPointEvents = mutableListOf()
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
-        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(false)
+        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(false)
         whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(bloggingPrompt))
         whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
         viewModel = WPMainActivityViewModel(
@@ -432,7 +432,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Test
     fun `bottom sheet does not show prompt card when prompts feature is not active`() = test {
-        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(false)
+        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(false)
         startViewModelWithDefaultParameters()
         val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMPT }
         assertThat(hasBloggingPromptAction).isFalse()
@@ -440,7 +440,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Test
     fun `bottom sheet does show prompt card when prompts feature is active`() = test {
-        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(true)
+        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(true)
         startViewModelWithDefaultParameters()
         val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMPT }
         assertThat(hasBloggingPromptAction).isTrue()
@@ -448,7 +448,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Test
     fun `bottom sheet does not show prompt card when site is self-hosted`() = test {
-        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(true)
+        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(true)
         startViewModelWithDefaultParameters(isWpcomOrJpSite = false)
         val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMPT }
         assertThat(hasBloggingPromptAction).isFalse()
@@ -456,7 +456,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Test
     fun `bottom sheet action is ANSWER_BLOGGING_PROMPT when the BP answer button is clicked`() = test {
-        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(true)
+        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(true)
         startViewModelWithDefaultParameters()
         val action = viewModel.mainActions.value?.firstOrNull {
             it.actionType == ANSWER_BLOGGING_PROMPT
@@ -831,7 +831,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Test
     fun `Should track analytics event when onHelpPromptActionClicked is called`() = test {
-        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(true)
+        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(true)
         startViewModelWithDefaultParameters()
         val action = viewModel.mainActions.value?.first {
             it.actionType == ANSWER_BLOGGING_PROMPT
@@ -842,7 +842,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Test
     fun `Should trigger openBloggingPromptsOnboarding when onHelpPromptActionClicked is called`() = test {
-        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(true)
+        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(true)
         startViewModelWithDefaultParameters()
         val action = viewModel.mainActions.value?.first {
             it.actionType == ANSWER_BLOGGING_PROMPT
@@ -855,7 +855,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Suppress("MaxLineLength")
     fun `Should track BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED when onFabClicked is called and actions contains AnswerBloggingPromptAction`() =
         test {
-            whenever(bloggingPromptsSettingsHelper.isPromptsFeatureActive()).thenReturn(true)
+            whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(true)
             startViewModelWithDefaultParameters()
             viewModel.onFabClicked(initSite())
             verify(analyticsTrackerWrapper).track(Stat.BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED)

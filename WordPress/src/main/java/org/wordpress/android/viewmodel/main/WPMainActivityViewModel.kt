@@ -154,7 +154,7 @@ class WPMainActivityViewModel @Inject constructor(
     @Suppress("LongMethod")
     private suspend fun loadMainActions(site: SiteModel?, onFabClicked: Boolean = false) {
         val actionsList = ArrayList<MainActionListItem>()
-        if (bloggingPromptsSettingsHelper.isPromptsFeatureActive()) {
+        if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
             val prompt = site?.let {
                 if (it.isUsingWpComRestApi) {
                     bloggingPromptsStore.getPromptForDate(it, Date()).firstOrNull()?.model
