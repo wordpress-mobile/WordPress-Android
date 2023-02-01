@@ -76,6 +76,7 @@ import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.WPTooltipView;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -158,7 +159,9 @@ import org.wordpress.android.workers.notification.createsite.CreateSiteNotificat
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
 
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -365,6 +368,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     initSelectedSite();
                     mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
                             ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
+                    showJetpackOverlayIfNeeded(getIntent().getStringExtra(
+                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
                 } else if (isQuickStartRequestedFromPush) {
@@ -483,6 +488,44 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         displayJetpackFeatureCollectionOverlayIfNeeded();
+    }
+
+    private void showJetpackOverlayIfNeeded(String action) {
+        if (!mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
+            return;
+        }
+        Shortcut shortcut = Shortcut.fromActionString(action);
+        if (shortcut == null) {
+            AppLog.e(AppLog.T.MAIN, String.format("Unknown Android Shortcut action[%s]", action));
+            return;
+        }
+
+        Map<String, String> trackingProperties = new HashMap<>();
+        trackingProperties.put("calling_function", "shortcut_" + shortcut.name());
+
+        switch (shortcut) {
+            case CREATE_NEW_POST:
+                break;
+            case OPEN_STATS:
+            case OPEN_NOTIFICATIONS:
+                showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
+                break;
+            default:
+                AppLog.e(AppLog.T.MAIN, String.format("Unknown Android Shortcut[%s]", shortcut));
+        }
+    }
+
+    private void showJetpackFeatureOverlayAccessedInCorrectly(Map<String, String> trackingProperties) {
+        mAnalyticsTrackerWrapper.track(
+                Stat.JETPACK_FEATURE_INCORRECTLY_ACCESSED, trackingProperties);
+        JetpackFeatureFullScreenOverlayFragment.newInstance(
+                null,
+                false,
+                false,
+                SiteCreationSource.UNSPECIFIED,
+                true,
+                JetpackFeatureCollectionOverlaySource.DISABLED_ENTRY_POINT
+        ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
     }
 
     private void setUpMainView() {
@@ -772,6 +815,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void handleOpenPageIntent(Intent intent) {
         String pagePosition = intent.getStringExtra(ARG_OPEN_PAGE);
+        Log.e("Main", "handleOpenPageIntent " + pagePosition);
         if (!TextUtils.isEmpty(pagePosition)) {
             switch (pagePosition) {
                 case ARG_MY_SITE:
@@ -779,10 +823,22 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     break;
                 case ARG_NOTIFICATIONS:
                     setUpMainView();
+                    if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                        Map<String, String> trackingProperties = new HashMap<>();
+                        trackingProperties.put("calling_function", "deeplink_notifications");
+                        showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
+                        break;
+                    }
                     if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.NOTIFS);
                     break;
                 case ARG_READER:
                     setUpMainView();
+                    if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                        Map<String, String> trackingProperties = new HashMap<>();
+                        trackingProperties.put("calling_function", "deeplink_reader");
+                        showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
+                        break;
+                    }
                     if (intent.getBooleanExtra(ARG_READER_BOOKMARK_TAB, false) && mBottomNav != null && mBottomNav
                             .getActiveFragment() instanceof ReaderFragment) {
                         ((ReaderFragment) mBottomNav.getActiveFragment()).requestBookmarkTab();
@@ -801,6 +857,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 case ARG_STATS:
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
                         initSelectedSite();
+                    }
+                    if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                        Map<String, String> trackingProperties = new HashMap<>();
+                        trackingProperties.put("calling_function", "deeplink_stats");
+                        showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
+                        break;
                     }
                     if (intent.hasExtra(ARG_STATS_TIMEFRAME)) {
                         ActivityLauncher.viewBlogStatsForTimeframe(this, getSelectedSite(),
