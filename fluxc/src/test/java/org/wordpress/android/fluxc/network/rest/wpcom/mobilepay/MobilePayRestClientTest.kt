@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.mobilepay
 
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import com.android.volley.VolleyError
 import org.assertj.core.api.Assertions.assertThat
@@ -32,6 +33,7 @@ class MobilePayRestClientTest {
 
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var bodyCaptor: KArgumentCaptor<Map<String, Any>>
+    private lateinit var retryPolicyCaptor: KArgumentCaptor<DefaultRetryPolicy>
     private lateinit var headersCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var restClient: MobilePayRestClient
 
@@ -40,6 +42,7 @@ class MobilePayRestClientTest {
         urlCaptor = argumentCaptor()
         bodyCaptor = argumentCaptor()
         headersCaptor = argumentCaptor()
+        retryPolicyCaptor = argumentCaptor()
         restClient = MobilePayRestClient(
             wpComGsonRequestBuilder,
             null,
@@ -310,6 +313,28 @@ class MobilePayRestClientTest {
         assertThat(result.message).isEqualTo(reason)
     }
 
+    @Test
+    fun `when create order, then specific policy applyied`() = test {
+        // GIVEN
+        initResponse()
+
+        // WHEN
+        restClient.createOrder(
+            productIdentifier = PRODUCT_IDENTIFIER,
+            priceInCents = PRICE_IN_CENTS,
+            currency = CURRENCY,
+            purchaseToken = PURCHASE_TOKEN,
+            appId = APP_ID,
+            siteId = SITE_ID,
+            customBaseUrl = null
+        )
+
+        // THEN
+        assertThat(retryPolicyCaptor.firstValue.currentRetryCount).isEqualTo(0)
+        assertThat(retryPolicyCaptor.firstValue.currentTimeout).isEqualTo(120_000)
+        assertThat(retryPolicyCaptor.firstValue.backoffMultiplier).isEqualTo(1.0f)
+    }
+
     private suspend fun initResponse(
         data: CreateOrderResponseType? = null,
         error: WPComGsonNetworkError? = null
@@ -328,7 +353,7 @@ class MobilePayRestClientTest {
                 params = eq(null),
                 body = bodyCaptor.capture(),
                 clazz = eq(CreateOrderResponseType::class.java),
-                retryPolicy = eq(null),
+                retryPolicy = retryPolicyCaptor.capture(),
                 headers = headersCaptor.capture()
             )
         ).thenReturn(response)
