@@ -815,7 +815,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void handleOpenPageIntent(Intent intent) {
         String pagePosition = intent.getStringExtra(ARG_OPEN_PAGE);
-        Log.e("Main", "handleOpenPageIntent " + pagePosition);
         if (!TextUtils.isEmpty(pagePosition)) {
             switch (pagePosition) {
                 case ARG_MY_SITE:
