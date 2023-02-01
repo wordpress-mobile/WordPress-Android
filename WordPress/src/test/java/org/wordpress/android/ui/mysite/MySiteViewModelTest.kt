@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelStore
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertTrue
@@ -310,6 +309,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var bloggingPromptsViewAnswersRequests: MutableList<ReaderTag>
     private var bloggingPromptsAnswerRequests: Int = 0
     private var bloggingPromptsViewMoreRequests: Int = 0
+    private var bloggingPromptsRemovedRequests: Int = 0
     private lateinit var trackWithTabSource: MutableList<MySiteTrackWithTabSource>
     private lateinit var tabNavigation: MutableList<TabNavigation>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
@@ -520,6 +520,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         bloggingPromptsViewAnswersRequests = mutableListOf()
         bloggingPromptsAnswerRequests = 0
         bloggingPromptsViewMoreRequests = 0
+        bloggingPromptsRemovedRequests = 0
         launch(testDispatcher()) {
             viewModel.uiModel.observeForever {
                 uiModels.add(it)
@@ -581,6 +582,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onBloggingPromptsViewMore.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
                 bloggingPromptsViewMoreRequests++
+            }
+        }
+        viewModel.onBloggingPromptsRemoved.observeForever { event ->
+            event?.getContentIfNotHandled()?.let {
+                bloggingPromptsRemovedRequests++
             }
         }
         site = SiteModel()
@@ -1889,7 +1895,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given blogging prompt card, when remove button is clicked, prompt is remove and undo snackbar displayed`() =
+    fun `given blogging prompt card, when remove button is clicked, prompt is removed and notifies card was removed`() =
         test {
             initSelectedSite()
 
@@ -1897,15 +1903,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
             verify(bloggingPromptsSettingsHelper).updatePromptsCardEnabled(any(), eq(false))
             verify(mySiteSourceManager).refreshBloggingPrompts(eq(true))
-
-            assertThat(snackbars.size).isEqualTo(1)
-
-            val expectedSnackbar = snackbars[0]
-            assertThat(expectedSnackbar.buttonTitle).isEqualTo(UiStringRes(R.string.undo))
-            assertThat(expectedSnackbar.message).isEqualTo(
-                UiStringRes(R.string.my_site_blogging_prompt_card_removed_snackbar)
-            )
-            assertThat(expectedSnackbar.isImportant).isEqualTo(true)
+            assertTrue(bloggingPromptsRemovedRequests == 1)
         }
 
     @Test
