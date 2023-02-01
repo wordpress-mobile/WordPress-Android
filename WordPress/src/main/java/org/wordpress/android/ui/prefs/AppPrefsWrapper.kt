@@ -300,7 +300,10 @@ class AppPrefsWrapper @Inject constructor() {
     fun getShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase): Boolean =
         AppPrefs.getShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase)
 
-    fun setShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase, isHidden: Boolean) =
+    fun setShouldHideSwitchToJetpackMenuCard(
+        jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase,
+        isHidden: Boolean
+    ) =
         AppPrefs.setShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase, isHidden)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
