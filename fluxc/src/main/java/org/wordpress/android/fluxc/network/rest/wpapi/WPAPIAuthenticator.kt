@@ -6,10 +6,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
-import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
-import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Unknown
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
-import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
@@ -17,8 +14,7 @@ import javax.inject.Inject
 class WPAPIAuthenticator @Inject constructor(
     private val nonceRestClient: NonceRestClient,
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
-    private val siteSqlUtils: SiteSqlUtils,
-    private val currentTimeProvider: CurrentTimeProvider
+    private val siteSqlUtils: SiteSqlUtils
 ) {
     suspend fun <T : Payload<BaseNetworkError?>> makeAuthenticatedWPAPIRequest(
         siteUrl: String,
@@ -85,9 +81,7 @@ class WPAPIAuthenticator @Inject constructor(
     ): T {
         var nonce = nonceRestClient.getNonce(siteUrl)
         val usingSavedNonce = nonce is Available
-        // Failed more than 5 minutes ago
-        val pastFailure = nonce.pastFailure()
-        if (nonce == null || nonce is Unknown || pastFailure) {
+        if (nonce !is Available) {
             nonce = nonceRestClient.requestNonce(siteUrl, username, password)
         }
 
@@ -127,12 +121,7 @@ class WPAPIAuthenticator @Inject constructor(
             ?: url.slashJoin("wp-json/") // fallback to ".../wp-json/" if discovery fails
     }
 
-    private fun Nonce?.pastFailure() = (this as? FailedRequest)?.timeOfResponse?.let {
-        currentTimeProvider.currentDate().time > it + FIVE_MIN_MILLIS
-    } == true
-
     companion object {
-        private const val FIVE_MIN_MILLIS: Long = 5 * 60 * 1000
         private const val STATUS_CODE_NOT_FOUND = 404
         private const val STATUS_CODE_FORBIDDEN = 403
         private const val STATUS_CODE_UNAUTHORIZED = 401
