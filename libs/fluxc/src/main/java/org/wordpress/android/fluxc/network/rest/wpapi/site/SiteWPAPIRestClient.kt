@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.android.fluxc.network.discovery.DiscoveryUtils
 import org.wordpress.android.fluxc.network.discovery.RootWPAPIRestResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
@@ -16,6 +17,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.store.SiteStore.FetchWPAPISitePayload
+import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -37,8 +39,11 @@ class SiteWPAPIRestClient @Inject constructor(
     suspend fun fetchWPAPISite(
         payload: FetchWPAPISitePayload
     ): SiteModel {
+        val cleanedUrl = UrlUtils.addUrlSchemeIfNeeded(payload.url, false).let { urlWithScheme ->
+            DiscoveryUtils.stripKnownPaths(urlWithScheme)
+        }
         return wpapiAuthenticator.makeAuthenticatedWPAPIRequest(
-            siteUrl = payload.url,
+            siteUrl = cleanedUrl,
             username = payload.username,
             password = payload.password
         ) { wpApiUrl, nonce ->
@@ -72,7 +77,7 @@ class SiteWPAPIRestClient @Inject constructor(
                             it.startsWith(WOO_API_NAMESPACE_PREFIX)
                         } ?: false
                         wpApiRestUrl = wpApiUrl
-                        this.url = response?.url ?: payload.url
+                        this.url = response?.url ?: cleanedUrl
                         this.username = payload.username
                         this.password = payload.password
                     }
