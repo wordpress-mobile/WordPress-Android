@@ -85,8 +85,9 @@ class WPAPIAuthenticator @Inject constructor(
     ): T {
         var nonce = nonceRestClient.getNonce(siteUrl)
         val usingSavedNonce = nonce is Available
-        val failedRecently = nonce.failedRecently()
-        if (nonce == null || nonce is Unknown || !(usingSavedNonce || failedRecently)) {
+        // Failed more than 5 minutes ago
+        val pastFailure = nonce.pastFailure()
+        if (nonce == null || nonce is Unknown || pastFailure) {
             nonce = nonceRestClient.requestNonce(siteUrl, username, password)
         }
 
@@ -126,8 +127,8 @@ class WPAPIAuthenticator @Inject constructor(
             ?: url.slashJoin("wp-json/") // fallback to ".../wp-json/" if discovery fails
     }
 
-    private fun Nonce?.failedRecently() = (this as? FailedRequest)?.timeOfResponse?.let {
-        it + FIVE_MIN_MILLIS > currentTimeProvider.currentDate().time
+    private fun Nonce?.pastFailure() = (this as? FailedRequest)?.timeOfResponse?.let {
+        currentTimeProvider.currentDate().time > it + FIVE_MIN_MILLIS
     } == true
 
     companion object {
