@@ -297,6 +297,12 @@ class AppPrefsWrapper @Inject constructor() {
         AppPrefs.setSwitchToJetpackMenuCardLastShownTimestamp(lastShownTimestamp)
     }
 
+    fun getShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase): Boolean =
+        AppPrefs.getShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase)
+
+    fun setShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase, isHidden: Boolean) =
+        AppPrefs.setShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase, isHidden)
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {
