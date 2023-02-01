@@ -28,6 +28,8 @@ import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload
+import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.SITE_NAME_INVALID
@@ -325,6 +327,7 @@ class SiteStoreTest {
         val onSiteDomainsFetched = siteStore.fetchSiteDomains(site)
 
         assertThat(onSiteDomainsFetched.error).isEqualTo(SiteError(GENERIC_ERROR, null))
+        assertThat(onSiteDomainsFetched).isEqualTo(FetchedDomainsPayload(site, onSiteDomainsFetched.domains))
     }
 
     @Test
@@ -339,6 +342,7 @@ class SiteStoreTest {
 
         assertThat(onSitePlansFetched.plans).isNotNull
         assertThat(onSitePlansFetched.error).isNull()
+        assertThat(onSitePlansFetched).isEqualTo(FetchedPlansPayload(site, onSitePlansFetched.plans))
     }
 
     @Test
