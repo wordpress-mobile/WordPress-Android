@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.BLOCK_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
@@ -14,6 +16,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.mergeNotNull
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -24,7 +27,8 @@ class StatsDetailViewModel
     @Named(BLOCK_DETAIL_USE_CASE) private val detailUseCase: BaseListUseCase,
     private val statsSiteProvider: StatsSiteProvider,
     private val statsPostProvider: StatsPostProvider,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -36,6 +40,9 @@ class StatsDetailViewModel
     )
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
+    private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
+    val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
+
     fun init(
         postId: Long,
         postType: String,
@@ -43,6 +50,15 @@ class StatsDetailViewModel
         postUrl: String?
     ) {
         statsPostProvider.init(postId, postType, postTitle, postUrl)
+
+        if (jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(
+                JetpackOverlayConnectedFeature.STATS)) {
+            showJetpackOverlay()
+        }
+    }
+
+    private fun showJetpackOverlay() {
+        _showJetpackOverlay.value = Event(true)
     }
 
     fun refresh() {
