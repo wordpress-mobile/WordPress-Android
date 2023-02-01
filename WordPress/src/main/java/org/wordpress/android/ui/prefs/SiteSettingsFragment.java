@@ -1252,7 +1252,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     .getBlogSettingsUiState(mSite.getId())
                     .observe(getAppCompatActivity(), s -> {
                         if (mBloggingRemindersPref != null) {
-                            CharSequence summary = mUiHelpers.getTextOfUiString(getActivity(), s);
+                            final CharSequence summary = mUiHelpers.getTextOfUiString(getActivity(), s);
                             mBloggingRemindersPref.setSummary(summary);
                         }
                     });
