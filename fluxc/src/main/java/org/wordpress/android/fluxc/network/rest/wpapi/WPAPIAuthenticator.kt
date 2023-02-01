@@ -26,7 +26,7 @@ class WPAPIAuthenticator @Inject constructor(
         password: String,
         fetchMethod: suspend (wpApiUrl: String, nonce: Nonce) -> T
     ): T {
-        val wpApiUrl = discoverApiEndpoint(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false))
+        val wpApiUrl = discoverApiEndpoint(siteUrl)
         val scheme = wpApiUrl.toHttpUrl().scheme
 
         return makeAuthenticatedWPAPIRequest(
@@ -96,9 +96,9 @@ class WPAPIAuthenticator @Inject constructor(
         if (!response.isError) return response
         val statusCode = response.error?.volleyError?.networkResponse?.statusCode
         val errorCode = (response.error as? WPAPINetworkError)?.errorCode
-        return when  {
+        return when {
             statusCode == STATUS_CODE_UNAUTHORIZED ||
-                    (statusCode == STATUS_CODE_FORBIDDEN && errorCode == "rest_cookie_invalid_nonce") -> {
+                (statusCode == STATUS_CODE_FORBIDDEN && errorCode == "rest_cookie_invalid_nonce") -> {
                 if (usingSavedNonce) {
                     // Call with saved nonce failed, so try getting a new one
                     val previousNonce = nonce
