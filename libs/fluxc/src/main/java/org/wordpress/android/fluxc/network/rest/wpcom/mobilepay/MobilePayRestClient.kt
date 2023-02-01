@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.mobilepay
 
 import android.content.Context
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
@@ -14,8 +15,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
-
-private const val APP_ID_HEADER = "X-APP-ID"
 
 @Singleton
 class MobilePayRestClient @Inject constructor(
@@ -53,6 +52,7 @@ class MobilePayRestClient @Inject constructor(
                 "purchase_token" to purchaseToken,
             ),
             clazz = CreateOrderResponseType::class.java,
+            retryPolicy = DefaultRetryPolicy(TIMEOUT, 0, 1f),
             headers = mapOf(APP_ID_HEADER to appId)
         )
         return when (response) {
@@ -102,4 +102,9 @@ class MobilePayRestClient @Inject constructor(
             BaseRequest.GenericErrorType.UNKNOWN -> CreateOrderErrorType.GENERIC_ERROR
             null -> CreateOrderErrorType.GENERIC_ERROR
         }
+
+    companion object {
+        private const val APP_ID_HEADER = "X-APP-ID"
+        private const val TIMEOUT = 120_000
+    }
 }
