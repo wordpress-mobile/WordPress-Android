@@ -269,13 +269,12 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         advanceUntilIdle()
         println(result)
 
-        assertThat(result.size).isEqualTo(6)
+        assertThat(result.size).isEqualTo(5)
         assertThat(result[0]).isFalse // init
-        assertThat(result[1]).isFalse // build(...) -> getData(...)
-        assertThat(result[2]).isTrue // build(...) -> refresh()
-        assertThat(result[3]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
-        assertThat(result[4]).isFalse // refresh()
-        assertThat(result[5]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
+        assertThat(result[1]).isTrue // build(...) -> refresh()
+        assertThat(result[2]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
+        assertThat(result[3]).isFalse // refresh()
+        assertThat(result[4]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
     }
 
     @Test
@@ -322,13 +321,12 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.refresh()
         advanceUntilIdle()
 
-        assertThat(result.size).isEqualTo(6)
+        assertThat(result.size).isEqualTo(5)
         assertThat(result[0]).isFalse // init
-        assertThat(result[1]).isFalse // build(...) -> getData(...)
-        assertThat(result[2]).isTrue // build(...) -> refresh()
-        assertThat(result[3]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
-        assertThat(result[4]).isFalse // refresh()
-        assertThat(result[5]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
+        assertThat(result[1]).isTrue // build(...) -> refresh()
+        assertThat(result[2]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
+        assertThat(result[3]).isFalse // refresh()
+        assertThat(result[4]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
     }
 
     @Test
@@ -344,12 +342,11 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.refresh()
         advanceUntilIdle()
 
-        assertThat(result.size).isEqualTo(6)
+        assertThat(result.size).isEqualTo(5)
         assertThat(result[0]).isFalse // init
-        assertThat(result[1]).isFalse // build(...) -> getData(...)
-        assertThat(result[2]).isTrue // build(...) -> refresh()
-        assertThat(result[3]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> error
-        assertThat(result[4]).isFalse // refresh()
-        assertThat(result[5]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> error
+        assertThat(result[1]).isTrue // build(...) -> refresh()
+        assertThat(result[2]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> error
+        assertThat(result[3]).isFalse // refresh()
+        assertThat(result[4]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> error
     }
 }

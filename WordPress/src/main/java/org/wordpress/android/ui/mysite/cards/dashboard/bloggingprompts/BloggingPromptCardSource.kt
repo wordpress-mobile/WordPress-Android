@@ -65,7 +65,7 @@ class BloggingPromptCardSource @Inject constructor(
                     promptsStore.getPrompts(selectedSite)
                         .map { it.model?.filter { prompt -> isSameDay(prompt.date, Date()) } }
                         .collect { result ->
-                            postState(BloggingPromptUpdate(result?.firstOrNull()))
+                            postValue(BloggingPromptUpdate(result?.firstOrNull()))
                         }
                 } else {
                     postEmptyState()
