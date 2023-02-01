@@ -73,7 +73,7 @@ class NonceRestClient
                     // No connection, so we do not know if a nonce is available
                     Unknown
                 } else {
-                    val networkResponse = response.error.volleyError.networkResponse
+                    val networkResponse = response.error.volleyError?.networkResponse
                     if (networkResponse?.statusCode?.isRedirect() == true) {
                         requestNonce(networkResponse.headers["Location"] ?: redirectUrl)
                     } else {
