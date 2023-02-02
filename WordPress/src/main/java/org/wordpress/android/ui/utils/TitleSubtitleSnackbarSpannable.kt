@@ -11,7 +11,7 @@ import androidx.core.graphics.red
 import org.wordpress.android.R
 import org.wordpress.android.util.extensions.getColorFromAttribute
 
-object TitleSnackbarSpannable {
+object TitleSubtitleSnackbarSpannable {
     private const val SUBTITLE_ALPHA: Int = (0.6 * 0xFF).toInt()
     private const val LINE_BREAK = "\n"
 
@@ -32,7 +32,7 @@ object TitleSnackbarSpannable {
         spannable.append(subtitle)
         spannable.setSpan(
             ForegroundColorSpan(subtitleColor),
-            title.length + 1,
+            title.length + LINE_BREAK.length,
             spannable.length,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )

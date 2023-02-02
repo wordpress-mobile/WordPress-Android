@@ -69,7 +69,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
-import org.wordpress.android.ui.utils.TitleSnackbarSpannable
+import org.wordpress.android.ui.utils.TitleSubtitleSnackbarSpannable
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -319,7 +319,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                     getString(R.string.my_site_blogging_prompt_card_removed_snackbar_subtitle),
                     HtmlCompat.FROM_HTML_MODE_COMPACT
                 )
-                val message = TitleSnackbarSpannable.create(this, title, subtitle)
+                val message = TitleSubtitleSnackbarSpannable.create(this, title, subtitle)
 
                 val snackbarContent = SnackbarMessageHolder(
                     message = UiStringText(message),
