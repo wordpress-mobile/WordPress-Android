@@ -244,13 +244,27 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `contains report user action`() = test {
+    fun `contains report user action for wpcom sites`() = test {
         // Arrange
         val post = init()
+        whenever(readerUtilsWrapper.isSelfHosted(post.authorId)).thenReturn(false)
+
         // Act
         val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
         // Assert
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.REPORT_USER }).isNotNull
+    }
+
+    @Test
+    fun `does not contain report user action for self-hosted sites`() = test {
+        // Arrange
+        val post = init()
+        whenever(readerUtilsWrapper.isSelfHosted(post.authorId)).thenReturn(true)
+
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find { it.type == ReaderPostCardActionType.REPORT_USER }).isNull()
     }
 
     @Test
