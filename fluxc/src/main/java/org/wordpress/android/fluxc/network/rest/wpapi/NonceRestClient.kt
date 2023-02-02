@@ -58,7 +58,7 @@ class NonceRestClient @Inject constructor(
         val nonce = when (response) {
             is Success -> {
                 // A success means we got 200 from the wp-login.php call, which means
-                // an authentication issue
+                // an authentication issue: https://core.trac.wordpress.org/ticket/25446
                 // A successful login should result in a redirection to the redirect URL
                 FailedRequest(
                     timeOfResponse = currentTimeProvider.currentDate().time,
