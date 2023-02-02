@@ -9,8 +9,7 @@ import androidx.test.espresso.ViewInteraction;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
-import org.wordpress.android.ui.pages.LoginPage;
-import org.wordpress.android.util.compose.ComposeUiTestingUtils;
+import org.wordpress.android.e2e.pages.LandingPage;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
@@ -20,30 +19,13 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.dismissJetpackAdIfPresent;
-import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class SignupFlow {
     public SignupFlow chooseContinueWithWpCom(ComposeTestRule composeTestRule) {
         // Login Prologue – We want to Continue with WordPress.com, not a site address
-        if (BuildConfig.IS_JETPACK_APP) {
-            // See LoginPrologueRevampedFragment
-            return tapContinueWithWpComOnRevampedLandingScreen(composeTestRule);
-        } else {
-            // See LoginPrologueFragment
-            return tapContinueWithWpComOnOldLandingScreen();
-        }
-    }
-
-    private SignupFlow tapContinueWithWpComOnOldLandingScreen() {
-        clickOn(R.id.continue_with_wpcom_button);
-        return this;
-    }
-
-    private SignupFlow tapContinueWithWpComOnRevampedLandingScreen(ComposeTestRule composeTestRule) {
-        new ComposeUiTestingUtils(composeTestRule)
-                .performClickOnNodeWithText(getTranslatedString(LoginPage.continueWithWpComButtonStringRes));
+        LandingPage.tapContinueWithWpCom(composeTestRule);
         return this;
     }
 
