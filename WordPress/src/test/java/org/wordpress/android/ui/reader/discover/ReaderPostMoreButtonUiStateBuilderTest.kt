@@ -309,6 +309,34 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.SPACER_NO_ACTION }).isNotNull
     }
 
+    @Test
+    fun `does contain block user action for wpcom sites`() = test {
+        // Arrange
+        val post = init()
+        whenever(readerUtilsWrapper.isSelfHosted(post.authorId)).thenReturn(false)
+
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find {
+            it.type == ReaderPostCardActionType.BLOCK_USER
+        }).isNotNull()
+    }
+
+    @Test
+    fun `does not contain block user action for wpcom sites`() = test {
+        // Arrange
+        val post = init()
+        whenever(readerUtilsWrapper.isSelfHosted(post.authorId)).thenReturn(true)
+
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find {
+            it.type == ReaderPostCardActionType.BLOCK_USER
+        }).isNull()
+    }
+
     private fun init(
         isFollowed: Boolean = false,
         isNotificationsEnabled: Boolean = false,

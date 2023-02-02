@@ -58,7 +58,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         menuItems.add(buildBlockSite(onButtonClicked))
         menuItems.add(buildReportPost(onButtonClicked))
         menuItems.add(buildReportUser(onButtonClicked))
-        checkAndAddMenuItemForBlockUser(menuItems, onButtonClicked)
+        checkAndAddMenuItemForBlockUser(post, menuItems, onButtonClicked)
 
         return menuItems
     }
@@ -196,10 +196,13 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         )
 
     private fun checkAndAddMenuItemForBlockUser(
+        post: ReaderPost,
         menuItems: MutableList<ReaderPostCardAction>,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ) {
-        menuItems.add(buildBlockUser(onButtonClicked))
+        if (!readerUtilsWrapper.isSelfHosted(post.authorBlogId)) {
+            menuItems.add(buildBlockUser(onButtonClicked))
+        }
     }
 
     private fun buildBlockUser(onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit) =
