@@ -1359,6 +1359,7 @@ class MySiteViewModel @Inject constructor(
                 message = UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar),
                 buttonTitle = UiStringRes(R.string.undo),
                 buttonAction = {
+                    bloggingPromptsCardAnalyticsTracker.trackMySiteCardSkipThisPromptUndoClicked()
                     appPrefsWrapper.setSkippedPromptDay(null, siteId)
                     mySiteSourceManager.refreshBloggingPrompts(true)
                 },

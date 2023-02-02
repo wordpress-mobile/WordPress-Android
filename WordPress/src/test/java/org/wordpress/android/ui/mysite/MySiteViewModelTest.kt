@@ -21,10 +21,12 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.atLeastOnce
+import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.notNull
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -1881,17 +1883,50 @@ class MySiteViewModelTest : BaseUnitTest() {
 
             requireNotNull(onBloggingPromptSkipClicked).invoke()
 
-            verify(appPrefsWrapper).setSkippedPromptDay(any(), any())
+            verify(appPrefsWrapper).setSkippedPromptDay(notNull(), any())
             verify(mySiteSourceManager).refreshBloggingPrompts(eq(true))
 
             assertThat(snackbars.size).isEqualTo(1)
 
-            val expectedSnackbar = snackbars[0]
+            val expectedSnackbar = snackbars.first()
             assertThat(expectedSnackbar.buttonTitle).isEqualTo(UiStringRes(R.string.undo))
             assertThat(expectedSnackbar.message).isEqualTo(
                 UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar)
             )
             assertThat(expectedSnackbar.isImportant).isEqualTo(true)
+        }
+
+    @Test
+    fun `given skip undo snackbar, when undo is clicked, then undo skip action and refresh prompt`() =
+        test {
+            initSelectedSite()
+
+            requireNotNull(onBloggingPromptSkipClicked).invoke()
+
+            clearInvocations(appPrefsWrapper, mySiteSourceManager)
+
+            // click undo action
+            val snackbar = snackbars.first()
+            snackbar.buttonAction.invoke()
+
+            verify(appPrefsWrapper).setSkippedPromptDay(eq(null), any())
+            verify(mySiteSourceManager).refreshBloggingPrompts(eq(true))
+        }
+
+    @Test
+    fun `given skip undo snackbar, when undo is clicked, then it tracks undo event`() =
+        test {
+            initSelectedSite()
+
+            requireNotNull(onBloggingPromptSkipClicked).invoke()
+
+            clearInvocations(appPrefsWrapper, mySiteSourceManager)
+
+            // click undo action
+            val snackbar = snackbars.first()
+            snackbar.buttonAction.invoke()
+
+            verify(bloggingPromptsCardAnalyticsTracker).trackMySiteCardSkipThisPromptUndoClicked()
         }
 
     @Test
