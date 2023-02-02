@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchBlockLayoutsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchJetpackCapabilitiesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchWPAPISitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedBlockLayoutsResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackCapabilitiesPayload;
@@ -50,6 +51,8 @@ public enum SiteAction implements IAction {
     FETCH_SITES,
     @Action(payloadType = RefreshSitesXMLRPCPayload.class)
     FETCH_SITES_XML_RPC,
+    @Action(payloadType = FetchWPAPISitePayload.class)
+    FETCH_SITE_WP_API,
     @Action(payloadType = NewSitePayload.class)
     CREATE_NEW_SITE,
     @Action(payloadType = SiteModel.class)

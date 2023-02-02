@@ -4,6 +4,8 @@ import com.android.volley.NoConnectionError
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
@@ -16,48 +18,99 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class NonceRestClient
-@Inject constructor(
+class NonceRestClient @Inject constructor(
     private val wpApiEncodedBodyRequestBuilder: WPAPIEncodedBodyRequestBuilder,
     private val currentTimeProvider: CurrentTimeProvider,
     dispatcher: Dispatcher,
-    @Named("custom-ssl") requestQueue: RequestQueue,
+    @Named("no-redirects") requestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
-    private val nonceMap: MutableMap<SiteModel, Nonce> = mutableMapOf()
-    fun getNonce(site: SiteModel): Nonce? = nonceMap[site]
+    private val nonceMap: MutableMap<String, Nonce> = mutableMapOf()
+    fun getNonce(siteUrl: String, username: String): Nonce? = nonceMap[siteUrl]?.takeIf { it.username == username }
+    fun getNonce(site: SiteModel): Nonce? = getNonce(site.url, site.username)
 
     /**
      *  Requests a nonce using the
      *  [rest-nonce endpoint](https://developer.wordpress.org/reference/functions/wp_ajax_rest_nonce/)
      *  that became available in WordPress 5.3.
      */
-    suspend fun requestNonce(site: SiteModel): Nonce? {
-        val wpLoginUrl = slashJoin(site.url, "wp-login.php")
-        val redirectUrl = slashJoin(site.url, "wp-admin/admin-ajax.php?action=rest-nonce")
+    suspend fun requestNonce(site: SiteModel): Nonce {
+        return requestNonce(site.url, site.username, site.password)
+    }
+
+    /**
+     *  Requests a nonce using the
+     *  [rest-nonce endpoint](https://developer.wordpress.org/reference/functions/wp_ajax_rest_nonce/)
+     *  that became available in WordPress 5.3.
+     */
+    suspend fun requestNonce(siteUrl: String, username: String, password: String): Nonce {
+        @Suppress("MagicNumber")
+        fun Int.isRedirect(): Boolean = this in 300..399
+        val wpLoginUrl = slashJoin(siteUrl, "wp-login.php")
+        val redirectUrl = slashJoin(siteUrl, "wp-admin/admin-ajax.php?action=rest-nonce")
         val body = mapOf(
-                "log" to site.username,
-                "pwd" to site.password,
-                "redirect_to" to redirectUrl
+            "log" to username,
+            "pwd" to password,
+            "redirect_to" to redirectUrl
         )
         val response =
-                wpApiEncodedBodyRequestBuilder.syncPostRequest(this, wpLoginUrl, body = body)
-        nonceMap[site] = when (response) {
-            is Success -> if (response.data?.matches("[0-9a-zA-Z]{2,}".toRegex()) == true) {
-                Available(response.data)
-            } else {
-                FailedRequest(currentTimeProvider.currentDate().time)
+            wpApiEncodedBodyRequestBuilder.syncPostRequest(this, wpLoginUrl, body = body)
+        val nonce = when (response) {
+            is Success -> {
+                // A success means we got 200 from the wp-login.php call, which means
+                // an authentication issue: https://core.trac.wordpress.org/ticket/25446
+                // A successful login should result in a redirection to the redirect URL
+                FailedRequest(
+                    timeOfResponse = currentTimeProvider.currentDate().time,
+                    networkError = WPAPINetworkError(
+                        BaseNetworkError(GenericErrorType.NOT_AUTHENTICATED)
+                    ),
+                    username = username
+                )
             }
             is Error -> {
                 if (response.error.volleyError is NoConnectionError) {
                     // No connection, so we do not know if a nonce is available
-                    Unknown
+                    Unknown(username)
                 } else {
-                    FailedRequest(currentTimeProvider.currentDate().time)
+                    val networkResponse = response.error.volleyError?.networkResponse
+                    if (networkResponse?.statusCode?.isRedirect() == true) {
+                        requestNonce(networkResponse.headers["Location"] ?: redirectUrl, username)
+                    } else {
+                        FailedRequest(
+                            timeOfResponse = currentTimeProvider.currentDate().time,
+                            username = username,
+                            networkError = response.error
+                        )
+                    }
                 }
             }
         }
-        return nonceMap[site]
+        return nonce.also {
+            nonceMap[siteUrl] = it
+        }
+    }
+
+    private suspend fun requestNonce(redirectUrl: String, username: String): Nonce {
+        return when (
+            val response = wpApiEncodedBodyRequestBuilder.syncGetRequest(this, redirectUrl)
+        ) {
+            is Success -> {
+                if (response.data?.matches("[0-9a-zA-Z]{2,}".toRegex()) == true) {
+                    Available(value = response.data, username = username)
+                } else {
+                    FailedRequest(timeOfResponse = currentTimeProvider.currentDate().time, username = username)
+                }
+            }
+
+            is Error -> {
+                FailedRequest(
+                    timeOfResponse = currentTimeProvider.currentDate().time,
+                    username = username,
+                    networkError = response.error
+                )
+            }
+        }
     }
 
     private fun slashJoin(begin: String, end: String): String {

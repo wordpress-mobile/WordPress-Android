@@ -30,11 +30,12 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     private static final long serialVersionUID = -7641813766771796252L;
 
     @Retention(SOURCE)
-    @IntDef({ORIGIN_UNKNOWN, ORIGIN_WPCOM_REST, ORIGIN_XMLRPC})
+    @IntDef({ORIGIN_UNKNOWN, ORIGIN_WPCOM_REST, ORIGIN_XMLRPC, ORIGIN_WPAPI})
     public @interface SiteOrigin {}
     public static final int ORIGIN_UNKNOWN = 0;
     public static final int ORIGIN_WPCOM_REST = 1;
     public static final int ORIGIN_XMLRPC = 2;
+    public static final int ORIGIN_WPAPI = 3;
 
     public static final long VIP_PLAN_ID = 31337;
 

@@ -58,12 +58,13 @@ class PluginWPApiRestClientTest {
         )
         site = SiteModel()
         site.url = siteUrl
+        site.username = "username"
     }
 
     @Test
     fun `fetches plugins`() = test {
         initFetchPluginsResponse(listOf(testPlugin))
-        val responseModel = restClient.fetchPlugins(site, Available("nonce"), false)
+        val responseModel = restClient.fetchPlugins(site, Available("nonce", site.username), false)
         assertThat(responseModel.data).isNotNull()
         assertMappedPlugin(responseModel.data!![0], testPlugin)
         assertThat(urlCaptor.lastValue)
@@ -85,7 +86,7 @@ class PluginWPApiRestClientTest {
         initFetchPluginsResponse(
             error = error
         )
-        val responseModel = restClient.fetchPlugins(site, Available("nonce"), false)
+        val responseModel = restClient.fetchPlugins(site, Available("nonce", site.username), false)
         assertThat(responseModel.error).isEqualTo(error)
     }
 
@@ -93,7 +94,7 @@ class PluginWPApiRestClientTest {
     fun `installs a plugin`() = test {
         initInstallPluginResponse(testPlugin)
         val installedPluginSlug = "plugin_slug"
-        val responseModel = restClient.installPlugin(site, Available("nonce"), installedPluginSlug)
+        val responseModel = restClient.installPlugin(site, Available("nonce", site.username), installedPluginSlug)
         assertMappedPlugin(responseModel.data!!, testPlugin)
         assertThat(urlCaptor.lastValue)
                 .isEqualTo("http://site.com/wp-json/wp/v2/plugins")
@@ -105,7 +106,8 @@ class PluginWPApiRestClientTest {
         initConfigurePluginResponse(testPlugin)
         val installedPluginSlug = "plugin_slug"
         val active = true
-        val responseModel = restClient.updatePlugin(site, Available("nonce"), installedPluginSlug, active)
+        val nonce = Available("nonce", site.username)
+        val responseModel = restClient.updatePlugin(site, nonce, installedPluginSlug, active)
         assertMappedPlugin(responseModel.data!!, testPlugin)
         assertThat(urlCaptor.lastValue)
                 .isEqualTo("http://site.com/wp-json/wp/v2/plugins/$installedPluginSlug")
@@ -117,7 +119,8 @@ class PluginWPApiRestClientTest {
         initConfigurePluginResponse(testPlugin)
         val installedPluginSlug = "plugin_slug"
         val active = false
-        val responseModel = restClient.updatePlugin(site, Available("nonce"), installedPluginSlug, active)
+        val nonce = Available("nonce", site.username)
+        val responseModel = restClient.updatePlugin(site, nonce, installedPluginSlug, active)
         assertMappedPlugin(responseModel.data!!, testPlugin)
         assertThat(urlCaptor.lastValue)
                 .isEqualTo("http://site.com/wp-json/wp/v2/plugins/$installedPluginSlug")
@@ -128,7 +131,7 @@ class PluginWPApiRestClientTest {
     fun `deletes a plugin`() = test {
         initDeletePluginResponse(testPlugin)
         val installedPluginSlug = "plugin_slug"
-        val responseModel = restClient.deletePlugin(site, Available("nonce"), installedPluginSlug)
+        val responseModel = restClient.deletePlugin(site, Available("nonce", site.username), installedPluginSlug)
         assertMappedPlugin(responseModel.data!!, testPlugin)
         assertThat(urlCaptor.lastValue)
                 .isEqualTo("http://site.com/wp-json/wp/v2/plugins/$installedPluginSlug")
