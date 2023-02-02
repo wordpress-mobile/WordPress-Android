@@ -10,9 +10,11 @@ import org.wordpress.android.support.WPSupportUtils.getTranslatedString
 import org.wordpress.android.ui.pages.LoginPage
 
 object LandingPage {
+    private const val isNewUiEnabled = BuildConfig.IS_JETPACK_APP || BuildConfig.LANDING_SCREEN_REVAMP
+
     @JvmStatic
     fun tapContinueWithWpCom(composeTestRule: ComposeTestRule) {
-        if (BuildConfig.IS_JETPACK_APP) {
+        if (isNewUiEnabled) {
             // New UI - See LoginPrologueRevampedFragment
             composeTestRule
                 .onNodeWithText(getTranslatedString(LoginPage.continueWithWpComButtonStringRes))
@@ -25,7 +27,7 @@ object LandingPage {
 
     @JvmStatic
     fun tapEnterYourSiteAddress(composeTestRule: ComposeTestRule) {
-        if (BuildConfig.IS_JETPACK_APP) {
+        if (isNewUiEnabled) {
             // New UI - See LoginPrologueRevampedFragment
             composeTestRule
                 .onNodeWithText(getTranslatedString(R.string.enter_your_site_address))
