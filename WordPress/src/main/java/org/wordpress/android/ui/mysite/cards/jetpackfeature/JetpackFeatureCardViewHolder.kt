@@ -29,7 +29,7 @@ class JetpackFeatureCardViewHolder(
                 mySiteJetpackFeatureCardMore,
             )
         }
-        uiHelpers.updateVisibility(mySiteJetpackFeatureCardLearnMore, !card.learnMoreUrl.isNullOrEmpty())
+        uiHelpers.updateVisibility(mySiteJetpackFeatureCardLearnMore, true)
     }
 
     private fun showMoreMenu(

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
         android:id="@+id/jetpack_card_menu_item_remind_me_later"
         android:title="@string/jetpack_feature_card_menu_item_remind_me_later"
         android:icon="@drawable/ic_time_white_24dp"/>
-    
+
+    <item
+        android:id="@+id/jetpack_card_menu_item_hide_this"
+        android:title="@string/jetpack_feature_card_menu_item_hide_this"
+        android:icon="@drawable/ic_not_visible_white_24dp"/>
 </menu>

@@ -20,6 +20,7 @@ class SwitchToJetpackMenuCardViewHolder(
         switchToAppMoreIcon.setOnClickListener {
             showMoreMenu(
                 card.onRemindMeLaterItemClick,
+                card.onHideMenuItemClick,
                 card.onMoreMenuClick,
                 switchToAppMoreIcon,
             )
@@ -27,6 +28,7 @@ class SwitchToJetpackMenuCardViewHolder(
     }
 
     private fun showMoreMenu(
+        onHideClick: ListItemInteraction,
         onRemindMeLaterClick: ListItemInteraction,
         onMoreMenuClick: ListItemInteraction,
         anchor: View
@@ -37,6 +39,10 @@ class SwitchToJetpackMenuCardViewHolder(
             when (it.itemId) {
                 R.id.jetpack_card_menu_item_remind_me_later -> {
                     onRemindMeLaterClick.click()
+                    return@setOnMenuItemClickListener true
+                }
+                R.id.jetpack_card_menu_item_hide_this -> {
+                    onHideClick.click()
                     return@setOnMenuItemClickListener true
                 }
                 else -> return@setOnMenuItemClickListener true

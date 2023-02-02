@@ -1,11 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-17 15:19:20+0000
+Translation-Revision-Date: 2023-01-26 21:59:24+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: lv
 -->
 <resources>
+    <string name="install_play_store_to_get_jetpack">Lūdzu, instalējiet Google Play veikalu, lai iegūtu lietotni Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Dariet to vēlāk</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Pārslēdzieties uz Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistika, lasītājs, paziņojumi un citas Jetpack darbināmas funkcijas ir noņemtas no WordPress lietotnes.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack funkcijas ir pārvietotas.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s pārvietojas uz %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s pārvietojas uz %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s drīzumā tiks pārvietoti</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s drīzumā tiks pārvietots</string>
+    <string name="wp_jetpack_powered_phase_2">Iegūst Jetpack lietotni</string>
+    <string name="my_site_blogging_prompt_card_view_answers">Skatīt visas atbildes</string>
+    <string name="stats_insights_total_stats_seven_days_negative">Par %1$s mazāk nekā iepriekšējās 7 dienās</string>
+    <string name="stats_insights_total_stats_seven_days_positive">Par %1$s vairāk nekā iepriekšējās 7 dienās</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Jūsu apmeklētāju skaits pēdējo 7 dienu laikā ir par %1$s mazāks nekā iepriekšējās 7 dienās.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Jūsu apmeklētāju skaits pēdējo 7 dienu laikā ir par %1$s lielāks nekā iepriekšējās 7 dienās.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Jūsu skatījumu skaits pēdējo 7 dienu laikā ir par %1$s mazāks nekā iepriekšējās 7 dienās.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Jūsu skatījumu skaits pēdējo 7 dienu laikā ir par %1$s lielāks nekā iepriekšējās 7 dienās.</string>
+    <string name="stats_timeframe_previous_seven_days">Iepriekšējās 7 dienas</string>
+    <string name="stats_timeframe_last_seven_days">Pēdējās 7 dienas</string>
+    <string name="weeks_quantity_other">%d nedēļas</string>
+    <string name="weeks_quantity_one">1 nedēļa</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">No &lt;b&gt;DayOne&lt;/b&gt;</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">Slēpt šo</string>
+    <string name="jetpack_feature_card_menu_item_remind_me_later">Atgādināt vēlāk</string>
+    <string name="jetpack_feature_card_content">Statistika, lasītājs, paziņojumi un citas funkcijas drīzumā tiks pārvietotas uz Jetpack mobilo lietotni.</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Pārslēdzieties uz Jetpack lietotni</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Uzziniet vairāk vietnē jetpack.com</string>
+    <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Pārslēgšanās ir bezmaksas un aizņem tikai minūti.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Statistika, Lasītājs, paziņojumi un citas Jetpack darbināmas funkcijas drīzumā tiks noņemtas no WordPress lietotnes.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statistika, Lasītājs, paziņojumi un citas Jetpack darbināmas funkcijas tiks noņemtas no WordPress lietotnes vietnē %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Jetpack funkcijas drīzumā tiks pārvietotas.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Paziņojumi tiek pārvietoti uz Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Lasītājs pāriet uz Jetpack lietotni</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Jūsu statistika tiek pārvietota uz Jetpack lietotni</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Pārslēdzieties uz jauno Jetpack lietotni</string>
+    <string name="blogging_prompts_list_error_network_subtitle">Pārbaudiet tīkla savienojumu un mēģiniet vēlreiz.</string>
+    <string name="blogging_prompts_list_error_network_title">Pašlaik nevar ielādēt šo saturu</string>
+    <string name="blogging_prompts_list_error_fetch_subtitle">Ielādējot uzvednes, radās kļūda.</string>
+    <string name="blogging_prompts_list_error_fetch_title">Hmm…</string>
+    <string name="blogging_prompts_list_no_prompts">Vēl nav uzvedņu</string>
+    <string name="blogging_prompts_list_number_of_answers_other">%d atbildes</string>
+    <string name="blogging_prompts_list_number_of_answers_one">1 atbilde</string>
+    <string name="blogging_prompts_list_number_of_answers_zero">0 atbildes</string>
+    <string name="blogging_prompts_list_answered_prompt">✓ Atbildēts</string>
+    <string name="blogging_prompts_list_title">Uzvednes</string>
+    <string name="close_desc">aizvērt</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Varat arī atdalīt un rediģēt šo bloku atsevišķi, pieskaroties “Konvertēt uz parastu bloku”.</string>
+    <string name="dlg_confirm_delete_category">Vai neatgriezeniski dzēst kategoriju \"%s\"?</string>
+    <string name="deleting_cat_success">Kategorija veiksmīgi izdzēsta</string>
+    <string name="deleting_cat_failed">Neizdevās dzēst kategoriju</string>
+    <string name="deleting_cat">Notiek kategorijas dzēšana</string>
+    <string name="updating_cat">Notiek kategorijas atjaunošana</string>
+    <string name="update_category">Atjaunot kategoriju</string>
+    <string name="reader_toast_user_blocked">Ziņas no šī lietotāja vairs netiks rādītas</string>
+    <string name="reader_menu_block_user">Bloķēt lietotāju</string>
+    <string name="reader_menu_report_user">Ziņot par šo lietotāju</string>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">Atveriet saites pakalpojumā WordPress</string>
+    <string name="wp_jetpack_deep_link_overlay_description">Izskatās, ka jums ir instalēta Jetpack lietotne.\n\nVai vēlaties nākotnē atvērt saites Jetpack lietotnē?\n\nTo vienmēr varat mainīt sadaļā Lietotnes iestatījumi &gt; Atvērt saites Jetpack.</string>
+    <string name="wp_jetpack_deep_link_overlay_title">Vai atvērt saites pakalpojumā Jetpack?</string>
+    <string name="wp_jetpack_continue_without_jetpack">Turpiniet bez Jetpack</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack nodrošina statistiku, paziņojumus un daudz ko citu, lai palīdzētu jums izveidot un attīstīt savu sapņu WordPress vietni.\n\nWordPress lietotne vairs neatbalsta jaunas vietnes izveidi.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack nodrošina statistiku, paziņojumus un citu informāciju, lai palīdzētu jums izveidot un attīstīt savu sapņu WordPress vietni.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Izveidojiet jaunu WordPress vietni, izmantojot lietotni Jetpack</string>
+    <string name="deep_linking_weblinks_alias_label">tīmekļa saites</string>
+    <string name="deep_linking_urilinks_alias_label">urilinks</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Pārslēdzieties uz Jetpack lietotni, lai turpinātu saņemt reāllaika paziņojumus savā ierīcē.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Pārslēdzieties uz lietotni Jetpack, lai atrastu, sekotu un patīk visām savām iecienītākajām vietnēm un ziņām, izmantojot programmu Reader.\nPārslēdzieties uz Jetpack lietotni, lai atrastu, sekotu un skatītu visas iecienītākās vietnes un ziņojumus, izmantojot Lasītāju.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Pārslēdzieties uz lietotni Jetpack, lai, izmantojot statistiku un ieskatus, vērotu savas vietnes datplūsmas pieaugumu.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Saņemiet paziņojumus, izmantojot Jetpack lietotni</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Sekojiet jebkurai vietnei, izmantojot Jetpack lietotni</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Iegūstiet savu statistiku, izmantojot jauno Jetpack lietotni</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Nevar atspējot atvērtās saites pakalpojumā Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Nevar iespējot atvērtās saites pakalpojumā Jetpack</string>
+    <string name="preference_open_links_in_jetpack">Atveriet saites pakalpojumā Jetpack</string>
+    <string name="jp_migration_need_help_button">Vajadzīga palīdzība?</string>
+    <string name="jp_migration_got_it_button">Sapratu</string>
+    <string name="jp_migration_delete_message">Lūdzu, &lt;b&gt;izdzēsiet WordPress lietotni&lt;/b&gt;, lai izvairītos no datu konfliktiem.</string>
+    <string name="jp_migration_delete_subtitle">Šķiet, ka jums joprojām ir instalēta WordPress lietotne. Mēs iesakām dzēst WordPress lietotni, lai izvairītos no datu konfliktiem.</string>
+    <string name="jp_migration_delete_title">Jums vairs nav nepieciešama WordPress lietotne</string>
+    <string name="jp_migration_network_error_message">Mēs nevaram pārsūtīt jūsu datus un iestatījumus bez tīkla savienojuma.</string>
+    <string name="jp_migration_network_error_subtitle">Lūdzu, pārbaudiet, vai tīkla savienojums darbojas, un mēģiniet vēlreiz.</string>
+    <string name="jp_migration_network_error_title">Nevar izveidot savienojumu ar internetu.</string>
+    <string name="jp_migration_generic_error_message">Lūdzu, sazinieties ar atbalsta dienestu vai vēlāk mēģiniet vēlreiz.</string>
+    <string name="jp_migration_generic_error_subtitle">Atvainojiet, bet kaut kas neizdevās kā plānots. Jūsu dati ir drošībā, taču mēs pašlaik nevaram tos pārsūtīt.</string>
+    <string name="jp_migration_generic_error_title">Ak, kaut kas nogāja greizi…</string>
+    <string name="jp_migration_try_again_button">Mēģini vēlreiz</string>
+    <string name="jp_migration_finish_button">Pabeigt</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">Noņemiet WordPress lietotnes ikonu</string>
+    <string name="jp_migration_done_delete_wp_message">Lūdzu, &lt;b&gt;izdzēsiet WordPress lietotni&lt;/b&gt;, lai izvairītos no datu konfliktiem.</string>
+    <string name="jp_migration_done_subtitle">Mēs esam pārsūtījuši visus jūsu datus un iestatījumus. Viss ir tieši tur, kur tas tika atstāts.</string>
+    <string name="jp_migration_done_title">Paldies, ka pārgājāt uz Jetpack!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">Mēs izslēgsim paziņojumus no WordPress lietotnes.</string>
+    <string name="jp_migration_notifications_subtitle">Jūs saņemsiet visus tos pašus paziņojumus, taču tagad tie tiks saņemti no lietotnes Jetpack.</string>
+    <string name="jp_migration_notifications_title">Paziņojumi tagad nāk no Jetpack</string>
+    <string name="jp_migration_success_card_message">Lūdzu, izdzēsiet WordPress lietotni</string>
+    <string name="wordpress_help_center_button">WordPress palīdzības centrs</string>
+    <string name="support_title">Atbalsts</string>
+    <string name="notification_disable_broadcast_permission_desc">Ļauj lietotnei atspējot WordPress paziņojumus.</string>
+    <string name="notification_disable_broadcast_permission_label">atspējot WordPress paziņojumus</string>
     <string name="jp_migration_help_button">Vajadzīga palīdzība?</string>
     <string name="jp_migration_continue_button">Turpināt</string>
     <string name="jp_migration_welcome_site_found_message">Mēs atradām jūsu vietni. Turpiniet pārsūtīt visus savus datus un automātiski pierakstieties Jetpack.</string>
@@ -53,7 +152,6 @@ Language: lv
     <string name="weekly_roundup_notification_text_views_and_likes">Pagājušajā nedēļā jums bija %1$s skatījumi un %2$s atzīmes Patīk</string>
     <string name="weekly_roundup_notification_text_views_only">Pagājušajā nedēļā jums bija %1$s skatījumi.</string>
     <string name="weekly_roundup_notification_text_all">Pagājušajā nedēļā jums bija %1$s skatījumi, %2$s atzīmes Patīk un %3$s komentāri.</string>
-    <string name="stats_revamp_v2_update_alert_message">Atjaunināts uz New Insights, lai palīdzētu jums saprast, kāda ir jūsu satura veiktspēja un kāda ir jūsu auditorija.</string>
     <string name="stats_insights_like_guide_card">⭐️ Jūsu jaunākajai ziņai %1$s ir atzīmēta %2$s atzīme.</string>
     <string name="wp_jetpack_powered">Jetpack darbināms</string>
     <string name="qrcode_auth_flow_content_description">Attēls, kas norāda, ka tiek skenēts pieteikšanās kods</string>
@@ -76,7 +174,6 @@ Language: lv
     <string name="qrcode_auth_flow_validated_subtitle">Skenējiet tikai QR kodus, kas ņemti tieši no jūsu tīmekļa pārlūkprogrammas. Nekad neskenējiet kodu, ko jums nosūtījis kāds cits.</string>
     <string name="qrcode_auth_flow_validated_default_title">Vai mēģināt pieteikties savā tīmekļa pārlūkprogrammā netālu no %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Vai mēģināt pieteikties pakalpojumā %1$s netālu no %2$s?</string>
-    <string name="stats_revamp_v2_intro_header_title">Ieskatu atjauninājums</string>
     <string name="stats_insights_followers_guide_card">💡Komentēšana citos emuāros ir lielisks veids, kā piesaistīt uzmanību un sekotājus savai jaunajai vietnei.</string>
     <string name="stats_insights_comments_guide_card">💡Pieskarieties SKATĪT VAIRĀK, lai redzētu savus labākos komentētājus.</string>
     <string name="stats_insights_latest_post_empty">Pārbaudiet vēlreiz, kad esat publicējis savu pirmo ziņu!</string>
@@ -93,7 +190,6 @@ Language: lv
     <string name="hpp_title">Izvēlieties tēmu</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Izlaida šodienas emuāru rakstīšanas pamudinājumu</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Uzzināt vairāk</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">No </string>
     <string name="stats_follower_types_pie_chart_total_label">Kopskaiti</string>
     <string name="stats_referrers_pie_chart_others">Citi</string>
     <string name="stats_referrers_pie_chart_search">Meklēt</string>
@@ -133,8 +229,6 @@ Language: lv
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Izmantojiet &lt;b&gt; Atklāt &lt;/b&gt;, lai atrastu vietnes un atzīmes. Mēģiniet atlasīt %1$s Iestatījumus %2$s, lai pievienotu tēmas, kas jums patīk.</string>
     <string name="photo_picker_video_thumbnail_content_description">Video sīktēls</string>
     <string name="stats_details_top_commentators">Labākie komentētāji</string>
-    <string name="stats_insights_total_stats_negative">Par %1$s mazāk nekā iepriekšējā nedēļā</string>
-    <string name="stats_insights_total_stats_positive">%1$s vairāk nekā iepriekšējā nedēļā</string>
     <string name="stats_published_years_ago">Publicēts pirms %1$d gadiem</string>
     <string name="stats_published_a_year_ago">Publicēts pirms gada</string>
     <string name="stats_published_months_ago">Publicēts pirms %1$d mēnešiem</string>
@@ -161,12 +255,6 @@ Language: lv
     <string name="photo_picker_media_thumbnail_content_description">Multivides sīktēls</string>
     <string name="stats_insights_popular_title">🔥 Populārākais laiks</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Jūsu šīs nedēļas apmeklētāju skaits ir par %1$s mazāks nekā iepriekšējā nedēļā.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Jūsu šīs nedēļas apmeklētāju skaits ir par %1$s lielāks nekā iepriekšējā nedēļā.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Šonedēļ jūsu skatījumu skaits ir par %1$s mazāks nekā iepriekšējā nedēļā.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Šonedēļ jūsu skatījumu skaits ir par %1$s lielāks nekā iepriekšējā nedēļā.</string>
-    <string name="stats_timeframe_previous_week">Iepriekšējā nedēļa</string>
-    <string name="stats_timeframe_this_week">Šonedēļ</string>
     <string name="scan_vault_press_active_on_site_button_text">Apmeklējiet informācijas paneli</string>
     <string name="scan_vault_press_active_on_site_subtitle">Jūsu vietni jau aizsargā VaultPress. Tālāk varat atrast saiti uz savu VaultPress informācijas paneli.</string>
     <string name="scan_vault_press_active_on_site_title">Jūsu vietnē ir VaultPress</string>
@@ -263,6 +351,7 @@ Language: lv
     <string name="new_site_creation_intents_title">Vietnes tēma</string>
     <string name="quick_start_site_menu_tab_message_short">Lai turpinātu, pieskarieties vienumam &lt;b&gt;%1$s&lt;/b&gt;.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Noņemt no informācijas paneļa</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Izlaist šodien</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Skatīt vairāk uzvedņu</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d atbildes</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Kopīgojiet emuāru rakstīšanas uzvedni</string>

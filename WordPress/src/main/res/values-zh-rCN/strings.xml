@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-18 10:54:08+0000
+Translation-Revision-Date: 2023-01-26 23:34:48+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_CN
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">从&lt;b&gt;第一天&lt;/b&gt;开始</string>
     <string name="jetpack_feature_card_menu_item_hide_this">隐藏此内容</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">稍后提醒我</string>
     <string name="jetpack_feature_card_content">统计信息、阅读器、通知和其他功能即将移至 Jetpack 移动应用。</string>
@@ -125,7 +126,6 @@ Language: zh_CN
     <string name="weekly_roundup_notification_text_views_and_likes">上周共计 %1$s 次查看和 %2$s 个赞</string>
     <string name="weekly_roundup_notification_text_views_only">上周共计 %1$s 次查看。</string>
     <string name="weekly_roundup_notification_text_all">上周共计 %1$s 次查看、%2$s 个赞和 %3$s 条评论。</string>
-    <string name="stats_revamp_v2_update_alert_message">更新至新数据分析可帮助您了解内容的表现情况，以及是什么引起了受众的共鸣。</string>
     <string name="stats_insights_like_guide_card">⭐️ 您的最新文章 %1$s 收到了 %2$s 个赞。</string>
     <string name="wp_jetpack_powered">由 Jetpack 提供支持</string>
     <string name="qrcode_auth_flow_content_description">图片显示正在扫描登录代码</string>
@@ -148,7 +148,6 @@ Language: zh_CN
     <string name="qrcode_auth_flow_validated_subtitle">仅扫描直接从网页浏览器获取的二维码。 切勿扫描其他人发送给您的代码。</string>
     <string name="qrcode_auth_flow_validated_default_title">您是否正在尝试登录到%1$s附近的网页浏览器？</string>
     <string name="qrcode_auth_flow_validated_title">您是否正在尝试登录到%2$s附近的 %1$s？</string>
-    <string name="stats_revamp_v2_intro_header_title">数据分析更新</string>
     <string name="stats_insights_followers_guide_card">💡 评论其他博客是为您的新站点吸引关注和粉丝的好方法。</string>
     <string name="stats_insights_comments_guide_card">💡 点击“查看更多”可查看热门评论者。</string>
     <string name="stats_insights_latest_post_empty">发表第一篇文章后，请回来查看！</string>
@@ -204,8 +203,6 @@ Language: zh_CN
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">使用&lt;b&gt;发现&lt;/b&gt;查找站点和标签。 尝试选择%1$s设置%2$s，添加您喜欢的话题。</string>
     <string name="photo_picker_video_thumbnail_content_description">视频缩略图</string>
     <string name="stats_details_top_commentators">优秀评论者</string>
-    <string name="stats_insights_total_stats_negative">比上一周低 %1$s</string>
-    <string name="stats_insights_total_stats_positive">比上一周高 %1$s</string>
     <string name="stats_published_years_ago">发表于 %1$d 年前</string>
     <string name="stats_published_a_year_ago">发表于 1 年前</string>
     <string name="stats_published_months_ago">发表于 %1$d 个月前</string>
@@ -232,12 +229,6 @@ Language: zh_CN
     <string name="photo_picker_media_thumbnail_content_description">媒体缩略图</string>
     <string name="stats_insights_popular_title">🔥 人气最高的时间</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">您本周的访客数量比上周低 %1$s。</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">您本周的访客数量比上周高 %1$s。</string>
-    <string name="stats_insights_views_and_visitors_views_negative">您本周的查看数量比上周低 %1$s。</string>
-    <string name="stats_insights_views_and_visitors_views_positive">您本周的预览数量比上周高 %1$s。</string>
-    <string name="stats_timeframe_previous_week">上周</string>
-    <string name="stats_timeframe_this_week">本周</string>
     <string name="scan_vault_press_active_on_site_button_text">访问仪表盘</string>
     <string name="scan_vault_press_active_on_site_subtitle">您的站点已受 VaultPress 保护。 您可以在下面找到指向您的 VaultPress 仪表盘的链接。</string>
     <string name="scan_vault_press_active_on_site_title">您的站点使用 VaultPress</string>

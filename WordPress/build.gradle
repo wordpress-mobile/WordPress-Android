@@ -128,6 +128,7 @@ android {
         buildConfigField "boolean", "PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD", "false"
         buildConfigField "boolean", "OPEN_WEB_LINKS_WITH_JETPACK_FLOW", "false"
         buildConfigField "boolean", "ENABLE_WORDPRESS_SUPPORT_FORUM", "false"
+        buildConfigField "boolean", "JETPACK_INSTALL_FULL_PLUGIN", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"

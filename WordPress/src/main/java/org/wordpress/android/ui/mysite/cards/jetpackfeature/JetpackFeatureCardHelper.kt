@@ -63,6 +63,14 @@ class JetpackFeatureCardHelper @Inject constructor(
         }
     }
 
+    private fun isSwitchToJetpackMenuCardHiddenByUser(): Boolean {
+        return jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.run {
+            appPrefsWrapper.getShouldHideSwitchToJetpackMenuCard(
+                this
+            )
+        } ?: false
+    }
+
     fun track(stat: Stat) {
         analyticsTrackerWrapper.track(
             stat,
@@ -103,7 +111,8 @@ class JetpackFeatureCardHelper @Inject constructor(
 
     fun shouldShowSwitchToJetpackMenuCard(): Boolean {
         return shouldShowSwitchToJetpackMenuCardInCurrentPhase() &&
-                exceedsShowFrequencyAndResetSwitchToJetpackMenuLastShownTimestampIfNeeded()
+                exceedsShowFrequencyAndResetSwitchToJetpackMenuLastShownTimestampIfNeeded() &&
+                !isSwitchToJetpackMenuCardHiddenByUser()
     }
 
     private fun shouldShowSwitchToJetpackMenuCardInCurrentPhase(): Boolean {
@@ -143,7 +152,12 @@ class JetpackFeatureCardHelper @Inject constructor(
             appPrefsWrapper.setJetpackFeatureCardLastShownTimestamp(it, currentTimeMillis)
         }
     }
-
+    fun hideSwitchToJetpackMenuCard() {
+        track(Stat.REMOVE_FEATURE_CARD_HIDE_TAPPED)
+        jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.let {
+            appPrefsWrapper.setShouldHideSwitchToJetpackMenuCard(it, true)
+        }
+    }
     companion object {
         const val PHASE = "phase"
         const val FREQUENCY_IN_DAYS = 4

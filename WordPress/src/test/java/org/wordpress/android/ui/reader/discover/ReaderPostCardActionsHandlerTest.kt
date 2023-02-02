@@ -13,6 +13,7 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyArray
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
@@ -160,7 +161,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         )
         actionHandler.initScope(testScope())
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)
-        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), anyOrNull())).thenReturn(mock())
+        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), anyArray<Any?>())).thenReturn(mock())
         whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(mock())
     }
 

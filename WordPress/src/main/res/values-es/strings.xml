@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-19 18:04:14+0000
+Translation-Revision-Date: 2023-01-26 10:56:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: es
 -->
 <resources>
+    <string name="install_play_store_to_get_jetpack">Por favor, instala la Google Play Store para obener al app Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Hacerlo más tarde</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Cambiar a Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Algunas características de Jetpack como Estadísticas, Lector o Notificaciones, entre otras, han sido eliminadas de la app de WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Las características de Jetpack se han trasladado.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s se trasladarán a %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s se trasladará a %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s se trasladarán pronto</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s se trasladará pronto</string>
+    <string name="wp_jetpack_powered_phase_2">Obtén la aplicación de Jetpack</string>
+    <string name="my_site_blogging_prompt_card_view_answers">Ver todas las respuestas</string>
+    <string name="stats_insights_total_stats_seven_days_negative">%1$s es menor que la semana anterior</string>
+    <string name="stats_insights_total_stats_seven_days_positive">%1$s es mayor que la semana anterior</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Tus visitantes en los últimos siete días son %1$s menos que en los siete días anteriores.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Tus visitantes en los últimos siete días son %1$s más que en los siete días anteriores.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Tus visitas en los últimos siete días son %1$s más que en los siete días anteriores.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Tus visitas en los últimos siete días son %1$s menos que en los siete días anteriores.</string>
+    <string name="stats_timeframe_previous_seven_days">Siete días anteriores</string>
+    <string name="stats_timeframe_last_seven_days">Últimos siete días</string>
+    <string name="weeks_quantity_other">%d semanas</string>
+    <string name="weeks_quantity_one">1 semana</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Desde el &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Ocultar esto</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Recuérdamelo más tarde</string>
@@ -129,7 +150,6 @@ Language: es
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema al mostrar el bloque. \nToca para intentar la recuperación del bloque.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">La semana pasada tuviste %1$s visitas y %2$s comentarios</string>
     <string name="weekly_roundup_notification_text_views_only">La semana pasada tuviste %1$s visitas.</string>
-    <string name="stats_revamp_v2_update_alert_message">Se ha actualizado al nuevo Detalles para ayudarte a entender cómo es el rendimiento de tu contenido y qué tiene impacto en tu público.</string>
     <string name="weekly_roundup_notification_text_views_and_likes">La semana pasada tuviste %1$s visitas y %2$s Me gusta</string>
     <string name="weekly_roundup_notification_text_all">La semana pasada tuviste %1$s visitas, %2$s Me gusta y %3$s comentarios.</string>
     <string name="stats_insights_like_guide_card">⭐️ Tu última entrada %1$s ha recibido %2$s Me gusta.</string>
@@ -154,7 +174,6 @@ Language: es
     <string name="qrcode_auth_flow_validated_subtitle">Escanea solo los códigos QR que has cogido directamente del navegador web. No escanees nunca un código que te haya enviado alguien.</string>
     <string name="qrcode_auth_flow_validated_default_title">¿Estás intentando acceder a tu navegador web cerca de %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">¿Estás intentando acceder a %1$s cerca de %2$s?</string>
-    <string name="stats_revamp_v2_intro_header_title">Actualización de Detalles</string>
     <string name="stats_insights_followers_guide_card">💡Comentar en otros blogs es una buena forma de llamar la atención y tener más seguidores en tu nuevo sitio.</string>
     <string name="stats_insights_comments_guide_card">💡Toca \"VER MÁS\" para ver los principales comentaristas.</string>
     <string name="stats_insights_latest_post_empty">¡Vuelve a comprobarlo cuando hayas publicado tu primera entrada!</string>
@@ -205,8 +224,6 @@ Language: es
     <string name="quick_start_dialog_check_notifications_title">Comprueba tus avisos</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Utiliza &lt;b&gt; Descubrir &lt;/b&gt; para encontrar sitios y etiquetas.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatura de vídeo</string>
-    <string name="stats_insights_total_stats_negative">%1$s menos que la semana anterior</string>
-    <string name="stats_insights_total_stats_positive">%1$s más que la semana anterior</string>
     <string name="quick_start_dialog_upload_media_message">Selecciona %1$s Medios %2$s para ver tu biblioteca actual.</string>
     <string name="quick_start_dialog_check_notifications_message_short">Selecciona la %1$s Pestaña de avisos %2$s para recibir actualizaciones sobre la marcha.</string>
     <string name="quick_start_dialog_upload_media_message_short_plus">Selecciona %1$s Más %2$s para subir medios. Puedes añadirlos a tus entradas o páginas desde cualquier dispositivo.</string>
@@ -238,14 +255,8 @@ Language: es
     <string name="photo_picker_media_thumbnail_content_description">Miniatura del medio</string>
     <string name="stats_insights_popular_title">🔥 La hora más popular</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Tus visitantes de esta semana son %1$s menos que los de la semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Tus visitantes de esta semana son %1$s más que los de la semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Tus visualizaciones de esta semana son %1$s menos que las de la semana anterior.</string>
-    <string name="stats_timeframe_previous_week">Semana anterior</string>
-    <string name="stats_timeframe_this_week">Esta semana</string>
     <string name="scan_vault_press_active_on_site_button_text">Visitar el escritorio</string>
     <string name="scan_vault_press_active_on_site_subtitle">Tu sitio ya está protegido con VaultPress. Más abajo, puedes encontrar un enlace a tu escritorio de VaultPress.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Tus visitas de esta semana son %1$s más que las de la semana anterior.</string>
     <string name="locale_picker_current_language">Idioma actual:</string>
     <string name="scan_vault_press_active_on_site_title">Tu sitio tiene VaultPress</string>
     <string name="hpp_choose_and_create_site">Crear sitio</string>
@@ -341,6 +352,7 @@ Language: es
     <string name="my_site_blogging_prompt_card_menu_view_more">Ver más estímulos</string>
     <string name="quick_start_site_menu_tab_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para continuar.</string>
     <string name="new_site_creation_intents_input_hint">Ej.: Moda, poesía, política</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Omitir por hoy</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Comparte el estímulo de bloguear</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Respondido</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d respuestas</string>

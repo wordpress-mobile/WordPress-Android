@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-19 07:35:00+0000
+Translation-Revision-Date: 2023-01-27 15:45:17+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: cs_CZ
 -->
 <resources>
+    <string name="install_play_store_to_get_jetpack">Chcete-li získat aplikaci Jetpack, nainstalujte si obchod Google Play</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Odložit na později</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Přejděte na Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistiky, čtečka, upozornění a další funkce poháněné Jetpack byly z aplikace WordPress odstraněny.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Funkce Jetpacku se přesunuly</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s se přesunou za %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s se přesune za %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s se brzy přesunou</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s se brzy přesune</string>
+    <string name="wp_jetpack_powered_phase_2">Získejte aplikaci Jetpack</string>
+    <string name="my_site_blogging_prompt_card_view_answers">Zobrazit všechny odpovědi</string>
+    <string name="stats_insights_total_stats_seven_days_negative">%1$s méně než za předchozích 7 dní</string>
+    <string name="stats_insights_total_stats_seven_days_positive">%1$s vyšší než za předchozích 7 dní</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Počet návštěvníků za posledních 7 dní je o %1$s nižší než za předchozích 7 dní.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Počet návštěvníků za posledních 7 dní je o %1$s vyšší než za předchozích 7 dní.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Počet zhlédnutí za posledních 7 dní je o %1$s nižší než za předchozích 7 dní.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Počet zhlédnutí za posledních 7 dní je o %1$s vyšší než za předchozích 7 dní.</string>
+    <string name="stats_timeframe_previous_seven_days">Předchozích 7 dní</string>
+    <string name="stats_timeframe_last_seven_days">Posledních 7 dní</string>
+    <string name="weeks_quantity_other">%d týdnů</string>
+    <string name="weeks_quantity_one">1 týden</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Od &lt;b&gt;prvního dne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Skrýt toto</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Připomenout později</string>
@@ -131,7 +152,6 @@ Language: cs_CZ
     <string name="weekly_roundup_notification_text_views_and_likes">Minulý týden jste měli %1$s zhlédnutí a %2$s lajků</string>
     <string name="weekly_roundup_notification_text_views_only">Minulý týden jste měli %1$s zhlédnutí.</string>
     <string name="weekly_roundup_notification_text_all">Minulý týden jste měli %1$s zhlédnutí, %2$s lajků a %3$s komentářů.</string>
-    <string name="stats_revamp_v2_update_alert_message">Aktualizováno na nové statistiky, které vám pomohou porozumět tomu, jak si váš obsah vede a co u vašeho publika rezonuje.</string>
     <string name="stats_insights_like_guide_card">⭐️ Vašemu poslednímu příspěvku %1$s se líbí %2$s.</string>
     <string name="wp_jetpack_powered">Poháněno Jetpackem</string>
     <string name="qrcode_auth_flow_content_description">Obrázek označující probíhající skenování přihlašovacího kódu</string>
@@ -154,7 +174,6 @@ Language: cs_CZ
     <string name="qrcode_auth_flow_validated_subtitle">Skenujte pouze QR kódy pořízené přímo z vašeho webového prohlížeče. Nikdy neskenujte kód, který vám poslal někdo jiný.</string>
     <string name="qrcode_auth_flow_validated_default_title">Pokoušíte se přihlásit do webového prohlížeče poblíž %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Pokoušíte se přihlásit do %1$s poblíž %2$s?</string>
-    <string name="stats_revamp_v2_intro_header_title">Aktualizace statistik</string>
     <string name="stats_insights_followers_guide_card">💡Komentování na jiných blozích je skvělý způsob, jak získat pozornost a sledovatele vašeho nového webu.</string>
     <string name="stats_insights_comments_guide_card">💡Klepnutím na „ZOBRAZIT VÍCE“ zobrazíte své nejlepší komentátory.</string>
     <string name="stats_insights_latest_post_empty">Vraťte se, až publikujete svůj první příspěvek!</string>
@@ -210,8 +229,6 @@ Language: cs_CZ
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Pomocí &lt;b&gt; Objevit &lt;/b&gt; vyhledejte stránky a značky. Zkuste vybrat %1$s Nastavení %2$s a přidat témata, která se vám líbí.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatura videa</string>
     <string name="stats_details_top_commentators">Nejlepší komentátoři</string>
-    <string name="stats_insights_total_stats_negative">%1$s nižší než předchozí týden</string>
-    <string name="stats_insights_total_stats_positive">%1$s vyšší než předchozí týden</string>
     <string name="stats_published_years_ago">Publikováno před %1$d lety</string>
     <string name="stats_published_a_year_ago">Publikováno před rokem</string>
     <string name="stats_published_months_ago">Publikováno před %1$d měsíci</string>
@@ -238,12 +255,6 @@ Language: cs_CZ
     <string name="photo_picker_media_thumbnail_content_description">Náhled mediálních souborů</string>
     <string name="stats_insights_popular_title">🔥 Nejoblíbenější čas</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Návštěvníci za tento týden jsou o %1$s nižší než v předchozím týdnu.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Vaši návštěvníci za tento týden jsou o %1$s vyšší než v předchozím týdnu.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Vaše zhlédnutí za tento týden jsou o %1$s nižší než v předchozím týdnu.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Vaše zhlédnutí za tento týden jsou o %1$s vyšší než v předchozím týdnu.</string>
-    <string name="stats_timeframe_previous_week">Minulý týden</string>
-    <string name="stats_timeframe_this_week">Tento týden</string>
     <string name="scan_vault_press_active_on_site_button_text">Přejít na nástěnku</string>
     <string name="scan_vault_press_active_on_site_subtitle">Vaše stránky jsou již chráněny VaultPress. Níže naleznete odkaz na svůj řídicí panel VaultPress.</string>
     <string name="scan_vault_press_active_on_site_title">Váš web má VaultPress</string>
@@ -341,6 +352,7 @@ Language: cs_CZ
     <string name="quick_start_site_menu_tab_message_short">Pokračujte klepnutím na &lt;b&gt;%1$s&lt;/b&gt;.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Odebrat z nástěnky</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Zobrazit další výzvy</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Pro dnešek přeskočte</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Sdílejte výzvu k blogování</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Odpovězeno</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d odpovědí</string>

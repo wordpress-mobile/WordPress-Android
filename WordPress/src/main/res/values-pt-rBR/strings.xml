@@ -1,11 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-09 20:01:50+0000
+Translation-Revision-Date: 2023-01-26 12:07:56+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: pt_BR
 -->
 <resources>
+    <string name="install_play_store_to_get_jetpack">Instale o Google Play Store para obter o aplicativo Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Fazer isso depois</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Mudar para o Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Estatísticas, Leitor, Notificações e outros recursos fornecidos pelo Jetpack foram removidos do aplicativo WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Recursos do Jetpack foram movidos.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s serão movidos em %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s será movido em %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s serão movidos em breve</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s será movido em breve</string>
+    <string name="wp_jetpack_powered_phase_2">Obtenha o aplicativo do Jetpack</string>
+    <string name="my_site_blogging_prompt_card_view_answers">Ver todas as respostas</string>
+    <string name="stats_insights_total_stats_seven_days_negative">%1$s menor do que nos sete dias anteriores</string>
+    <string name="stats_insights_total_stats_seven_days_positive">%1$s maior do que nos sete dias anteriores</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">O número de visitantes nos últimos sete dias é %1$s menor do que nos sete dias anteriores.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">O número de visitantes nos últimos sete dias é %1$s maior do que nos sete dias anteriores.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">O número de visualizações nos últimos sete dias é %1$s menor do que nos sete dias anteriores.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">O número de visualizações nos últimos sete dias é %1$s maior do que nos sete dias anteriores.</string>
+    <string name="stats_timeframe_previous_seven_days">7 dias anteriores</string>
+    <string name="stats_timeframe_last_seven_days">Últimos 7 dias</string>
+    <string name="weeks_quantity_other">%d semanas</string>
+    <string name="weeks_quantity_one">1 semana</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Do &lt;b&gt;DayOne&lt;/b&gt;</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">Esconder isso</string>
+    <string name="jetpack_feature_card_menu_item_remind_me_later">Lembre-me depois</string>
+    <string name="jetpack_feature_card_content">As estatísticas, o Leitor, as notificações e outras funcionalidades em breve irão para o aplicativo móvel do Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Mudar para o aplicativo do Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Saiba mais em br.jetpack.com</string>
+    <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">A migração é gratuita e leva apenas um minuto.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">As estatísticas, o Leitor, as notificações e outras funcionalidades com tecnologia Jetpack serão removidas do aplicativo do WordPress em breve.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">As estatísticas, o Leitor, as notificações e outras funcionalidades com tecnologia Jetpack serão removidas do aplicativo do WordPress em %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Recursos do Jetpack serão movidos em breve.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">As notificações estão migrando para o aplicativo Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">O Leitor está migrando para o aplicativo Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Suas estatísticas estão migrando para o aplicativo Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Mudar para o novo aplicativo do Jetpack</string>
+    <string name="blogging_prompts_list_error_network_subtitle">Verifique sua conexão de rede e tente novamente.</string>
+    <string name="blogging_prompts_list_error_network_title">Não foi possível carregar esse conteúdo no momento</string>
+    <string name="blogging_prompts_list_error_fetch_subtitle">Ocorreu um erro ao carregar as sugestões.</string>
+    <string name="blogging_prompts_list_error_fetch_title">Opa</string>
+    <string name="blogging_prompts_list_no_prompts">Nenhuma sugestão ainda</string>
+    <string name="blogging_prompts_list_number_of_answers_other">%d respostas</string>
+    <string name="blogging_prompts_list_number_of_answers_one">1 resposta</string>
+    <string name="blogging_prompts_list_number_of_answers_zero">0 respostas</string>
+    <string name="blogging_prompts_list_answered_prompt">✓ Respondida</string>
+    <string name="blogging_prompts_list_title">Sugestões</string>
+    <string name="close_desc">fechar</string>
     <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Como alternativa, você pode desanexar e editar este bloco separadamente tocando em “Converter em bloco normal”.</string>
     <string name="dlg_confirm_delete_category">Excluir permanentemente a categoria \'%s\'?</string>
     <string name="deleting_cat_success">Categoria excluída com sucesso</string>
@@ -106,7 +152,6 @@ Language: pt_BR
     <string name="weekly_roundup_notification_text_views_and_likes">Na semana passada, você recebeu %1$s visualizações e %2$s curtidas</string>
     <string name="weekly_roundup_notification_text_views_only">Na semana passada, você recebeu %1$s visualizações.</string>
     <string name="weekly_roundup_notification_text_all">Na semana passada, você recebeu %1$s visualizações, %2$s curtidas e %3$s comentários.</string>
-    <string name="stats_revamp_v2_update_alert_message">Atualização para Novas Informações para ajudar você a entender o desempenho do seu conteúdo e o que está atraindo o seu público.</string>
     <string name="stats_insights_like_guide_card">⭐️ Seu post mais recente, %1$s, recebeu %2$s curtida.</string>
     <string name="wp_jetpack_powered">Recurso do Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Imagem indicando que a verificação do código de acesso está em andamento</string>
@@ -129,7 +174,6 @@ Language: pt_BR
     <string name="qrcode_auth_flow_validated_subtitle">Leia apenas códigos QR retirados diretamente do seu navegador da web. Nunca leia um código enviado a você por outra pessoa.</string>
     <string name="qrcode_auth_flow_validated_default_title">Você está tentando acessar no seu navegador da web perto de %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Você está tentando acessar em %1$s perto de %2$s?</string>
-    <string name="stats_revamp_v2_intro_header_title">Atualização de informações</string>
     <string name="stats_insights_followers_guide_card">💡Comentar em outros blogs é uma ótima maneira de conquistar seguidores para o seu novo site.</string>
     <string name="stats_insights_comments_guide_card">💡Toque em \'VISUALIZAR MAIS\' para ver seus principais comentaristas.</string>
     <string name="stats_insights_latest_post_empty">Confira novamente quando você tiver feito seu primeiro post!</string>
@@ -185,8 +229,6 @@ Language: pt_BR
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Use &lt;b&gt; descobrir &lt;/b&gt; para encontrar sites e tags. Tente selecionar %1$s configurações %2$s para adicionar tópicos que você gosta.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatura do vídeo</string>
     <string name="stats_details_top_commentators">Principais comentaristas</string>
-    <string name="stats_insights_total_stats_negative">%1$s menor do que na semana anterior</string>
-    <string name="stats_insights_total_stats_positive">%1$s maior do que na semana anterior</string>
     <string name="stats_published_years_ago">Publicado há %1$d anos</string>
     <string name="stats_published_a_year_ago">Publicado há um ano</string>
     <string name="stats_published_months_ago">Publicado há %1$d meses</string>
@@ -213,12 +255,6 @@ Language: pt_BR
     <string name="photo_picker_media_thumbnail_content_description">Miniatura de mídia</string>
     <string name="stats_insights_popular_title">🔥 Horário mais popular</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">O número de visitantes desta semana é %1$s menor do que na semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">O número de visitantes desta semana é %1$s maior do que na semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Suas visualizações desta semana são %1$s menores do que na semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Suas visualizações desta semana são %1$s maiores do que na semana anterior.</string>
-    <string name="stats_timeframe_previous_week">Semana anterior</string>
-    <string name="stats_timeframe_this_week">Esta semana</string>
     <string name="scan_vault_press_active_on_site_button_text">Visitar painel</string>
     <string name="scan_vault_press_active_on_site_subtitle">Seu site já está protegido pelo VaultPress. Você pode encontrar um link para o painel do VaultPress abaixo.</string>
     <string name="scan_vault_press_active_on_site_title">Seu site possui o VaultPress</string>
@@ -315,6 +351,7 @@ Language: pt_BR
     <string name="new_site_creation_intents_title">Assunto do site</string>
     <string name="quick_start_site_menu_tab_message_short">Toque em &lt;b&gt;%1$s&lt;/b&gt; para continuar.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Remover do painel</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Pular por enquanto</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Visualizar mais sugestões</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d respostas</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Compartilhar sugestão de publicação</string>

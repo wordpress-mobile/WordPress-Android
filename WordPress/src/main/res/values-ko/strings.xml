@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-16 14:54:07+0000
+Translation-Revision-Date: 2023-01-25 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ko_KR
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt;부터</string>
     <string name="jetpack_feature_card_menu_item_hide_this">숨기기</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">나중에 다시 알림</string>
     <string name="jetpack_feature_card_content">곧 통계, 리더, 알림 및 기타 기능이 젯팩 모바일 앱으로 이동됩니다.</string>
@@ -130,7 +131,6 @@ Language: ko_KR
     <string name="weekly_roundup_notification_text_views_and_likes">지난주에는 조회수 %1$s개와 좋아요 %2$s개가 있습니다.</string>
     <string name="weekly_roundup_notification_text_views_only">지난주에는 조회수 %1$s개가 있습니다.</string>
     <string name="weekly_roundup_notification_text_all">지난주에는 조회수 %1$s개, 좋아요 %2$s개 및 댓글 %3$s개가 있습니다.</string>
-    <string name="stats_revamp_v2_update_alert_message">새 인사이트로 업데이트하면 콘텐츠의 성과와 잠재 고객이 공감하는 내용을 이해하는 데 도움이 됩니다.</string>
     <string name="stats_insights_like_guide_card">⭐️ 최신 글 %1$s에 좋아요 %2$s개가 있습니다.</string>
     <string name="wp_jetpack_powered">Jetpack powered</string>
     <string name="qrcode_auth_flow_content_description">진행 중인 로그인 코드 스캔을 나타내는 이미지</string>
@@ -153,7 +153,6 @@ Language: ko_KR
     <string name="qrcode_auth_flow_validated_subtitle">웹 브라우저에서 직접 가져온 QR 코드만 스캔하세요. 다른 사람이 보낸 코드는 스캔하지 마세요.</string>
     <string name="qrcode_auth_flow_validated_default_title">%1$s 근처에서 웹 브라우저 로그인을 시도하는 중이신가요?</string>
     <string name="qrcode_auth_flow_validated_title">%2$s 근처에서 %1$s 로그인을 시도하는 중이신가요?</string>
-    <string name="stats_revamp_v2_intro_header_title">인사이트 업데이트</string>
     <string name="stats_insights_followers_guide_card">💡다른 블로그에서 댓글을 다는 것은 새 사이트에 대한 관심과 팔로워를 형성하는 훌륭한 방법입니다.</string>
     <string name="stats_insights_comments_guide_card">💡\"더 보기\"를 눌러 상위 댓글 작성자를 참조하세요.</string>
     <string name="stats_insights_latest_post_empty">언제 첫 번째 글을 발행했는지 다시 확인하세요!</string>
@@ -209,8 +208,6 @@ Language: ko_KR
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">사이트와 태그를 찾으려면 &lt;b&gt; 검색 &lt;/b&gt;을(를) 사용하세요. 원하는 주제를 추가하려면 %1$s 설정 %2$s을(를) 선택해 보세요.</string>
     <string name="photo_picker_video_thumbnail_content_description">비디오 썸네일</string>
     <string name="stats_details_top_commentators">최상위 댓글 작성자</string>
-    <string name="stats_insights_total_stats_negative">이전 주보다 %1$s 낮음</string>
-    <string name="stats_insights_total_stats_positive">이전 주보다 %1$s 높음</string>
     <string name="stats_published_years_ago">%1$d년 전에 발행됨</string>
     <string name="stats_published_a_year_ago">1년 전에 발행됨</string>
     <string name="stats_published_months_ago">%1$d개월 전에 발행됨</string>
@@ -237,12 +234,6 @@ Language: ko_KR
     <string name="photo_picker_media_thumbnail_content_description">미디어 썸네일</string>
     <string name="stats_insights_popular_title">🔥 가장 인기 있는 시간</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">이번 주 방문자는 이전 주보다 %1$s 적습니다.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">이번 주 방문자는 이전 주보다 %1$s 많습니다.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">이번 주 조회수는 이전 주보다 %1$s 적습니다.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">이번 주 조회수는 이전 주보다 %1$s 많습니다.</string>
-    <string name="stats_timeframe_previous_week">이전 주</string>
-    <string name="stats_timeframe_this_week">이번 주</string>
     <string name="scan_vault_press_active_on_site_button_text">알림판 방문</string>
     <string name="scan_vault_press_active_on_site_subtitle">사이트가 이미 VaultPress로 보호되고 있습니다. 아래에서 VaultPress 알림판 링크를 찾을 수 있습니다.</string>
     <string name="scan_vault_press_active_on_site_title">사이트에 VaultPress가 있음</string>

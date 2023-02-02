@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-09 15:18:14+0000
+Translation-Revision-Date: 2023-01-25 12:19:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: gl_ES
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Desde o &lt;b&gt;DayOne&lt;/b&gt;</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">Ocultar isto</string>
+    <string name="jetpack_feature_card_menu_item_remind_me_later">Recórdamo máis tarde</string>
+    <string name="jetpack_feature_card_content">Algunhas funcións, como Estatísticas, Lector ou Notificacións, trasladaranse á aplicación móbil de Jetpack pronto.</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Cambiar á aplicación de Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Máis información en jetpack.com</string>
+    <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">O cambio é gratuíto e só leva un minuto.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Vanse a retirar pronto da aplicación de WordPress as estatísticas, lectura, avisos e outras funcionalidades de Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Vanse a retirar da aplicación de WordPress as estatísticas, lectura, avisos e outras funcionalidades de Jetpack o %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">As funcións de Jetpack trasladaranse pronto.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Os avisos estanse trasladando á aplicación de Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">O lector estase trasladando á aplicación de Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">A estatísticas estanse trasladado á aplicación de Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Cambiar á nova aplicación de Jetpack</string>
+    <string name="blogging_prompts_list_error_network_subtitle">Comproba a túa conexión á rede e inténtao de novo.</string>
+    <string name="blogging_prompts_list_error_network_title">Neste momento non se puido cargar este contido</string>
+    <string name="blogging_prompts_list_error_fetch_subtitle">Produciuse un erro ao cargar as indicacións.</string>
+    <string name="blogging_prompts_list_error_fetch_title">Vaia!</string>
+    <string name="blogging_prompts_list_no_prompts">Aínda non hai suxerencias</string>
+    <string name="blogging_prompts_list_number_of_answers_other">%d respostas</string>
+    <string name="blogging_prompts_list_number_of_answers_one">1 resposta</string>
+    <string name="blogging_prompts_list_number_of_answers_zero">0 respostas</string>
+    <string name="blogging_prompts_list_answered_prompt">✓ Respondido</string>
+    <string name="blogging_prompts_list_title">Peticións</string>
+    <string name="close_desc">cerrar</string>
     <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativamente, podes separar e editar este bloque por separado tocando en «Converter en bloque normal».</string>
     <string name="dlg_confirm_delete_category">Borrar permanentemente a categoría «%s»?</string>
     <string name="deleting_cat_success">Categoría borrada correctamente</string>
@@ -106,7 +131,6 @@ Language: gl_ES
     <string name="weekly_roundup_notification_text_views_and_likes">A semana pasada tiveches %1$s visitas e %2$s Gústame</string>
     <string name="weekly_roundup_notification_text_views_only">A semana pasada tiveches %1$s visitas.</string>
     <string name="weekly_roundup_notification_text_all">A semana pasada tiveches %1$s visitas, %2$s Gústame e %3$s comentarios.</string>
-    <string name="stats_revamp_v2_update_alert_message">Actualizouse ao novo Detalles para axudarche a entender como é o rendemento do teu contido e que ten impacto no teu público.</string>
     <string name="stats_insights_like_guide_card">⭐️ A túa última entrada %1$s recibiu %2$s Gústame.</string>
     <string name="wp_jetpack_powered">Funciona grazas a Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Imaxe que sinala que o escaneo do código de acceso está en proceso</string>
@@ -129,7 +153,6 @@ Language: gl_ES
     <string name="qrcode_auth_flow_validated_subtitle">Escanea só os códigos QR que colliches directamente do navegador web. Non escanees nunca un código que che enviara alguén.</string>
     <string name="qrcode_auth_flow_validated_default_title">Estás intentando acceder ao teu navegador web cerca de %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Estás intentando acceder a %1$s cerca de %2$s?</string>
-    <string name="stats_revamp_v2_intro_header_title">Actualización de Detalles</string>
     <string name="stats_insights_followers_guide_card">💡Comentar noutros blogs é unha boa forma de chamar a atención e ter máis seguidores no teu novo sitio.</string>
     <string name="stats_insights_comments_guide_card">💡Toca «VER MÁIS» para ver os principais comentaristas.</string>
     <string name="stats_insights_latest_post_empty">Volve a comprobalo cando teñas publicado a túa primeira entrada!</string>
@@ -185,8 +208,6 @@ Language: gl_ES
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Utiliza &lt;b&gt; Descubrir &lt;/b&gt; para encontrar sitios e etiquetas. Proba a seleccionar %1$s Axustes %2$s para engadir temáticas que che gusten.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatura de vídeo</string>
     <string name="stats_details_top_commentators">Principais comentaristas</string>
-    <string name="stats_insights_total_stats_negative">%1$s menos que a semana anterior</string>
-    <string name="stats_insights_total_stats_positive">%1$s máis que a semana anterior</string>
     <string name="stats_published_years_ago">Publicada fai %1$d anos</string>
     <string name="stats_published_a_year_ago">Publicada fai un ano</string>
     <string name="stats_published_months_ago">Publicada fai %1$d meses</string>
@@ -213,12 +234,6 @@ Language: gl_ES
     <string name="photo_picker_media_thumbnail_content_description">Miniatura do medio</string>
     <string name="stats_insights_popular_title">🔥 A hora máis popular</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Os teus visitantes desta semana son %1$s menos que os da semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Os teus visitantes desta semana son %1$s máis que os da semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">As túas visualizacións desta semana son %1$s menos que as da semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">As túas visitas desta semana son %1$s máis que as da semana anterior.</string>
-    <string name="stats_timeframe_previous_week">Semana anterior</string>
-    <string name="stats_timeframe_this_week">Esta semana</string>
     <string name="scan_vault_press_active_on_site_button_text">Visitar o escritorio</string>
     <string name="scan_vault_press_active_on_site_subtitle">O teu sitio xa está protexido con VaultPress. Máis abaixo, podes encontrar unha ligazón ao teu escritorio de VaultPress.</string>
     <string name="scan_vault_press_active_on_site_title">O teu sitio ten VaultPress</string>
@@ -315,6 +330,7 @@ Language: gl_ES
     <string name="new_site_creation_intents_title">Temática do sitio</string>
     <string name="quick_start_site_menu_tab_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para continuar.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Quitar do escritorio</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Omitir hoxe</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Ver máis estímulos</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d respostas</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Comparte o estímulo de bloguear</string>
