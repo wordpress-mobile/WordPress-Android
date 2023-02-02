@@ -19,6 +19,7 @@ import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostActi
 import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.TRASHING_POST
 import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.TRASHING_POST_WITH_LOCAL_CHANGES
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
+import org.wordpress.android.ui.posts.PostListAction.LaunchBlaze
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
 import org.wordpress.android.ui.posts.PostListAction.RetryUpload
 import org.wordpress.android.ui.posts.PostListAction.ViewPost
@@ -33,6 +34,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButtonType
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_BLAZE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY_URL
@@ -129,6 +131,9 @@ class PostActionHandler(
             }
             BUTTON_MORE -> {
             } // do nothing - ui will show a popup window
+            BUTTON_BLAZE -> {
+                triggerPostListAction.invoke(LaunchBlaze(site, post))
+            }
         }
     }
 
