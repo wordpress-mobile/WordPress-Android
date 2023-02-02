@@ -79,7 +79,7 @@ class WPAPIAuthenticator @Inject constructor(
         password: String,
         fetchMethod: suspend (wpApiUrl: String, nonce: Nonce) -> T
     ): T {
-        var nonce = nonceRestClient.getNonce(siteUrl)
+        var nonce = nonceRestClient.getNonce(siteUrl, username)
         val usingSavedNonce = nonce is Available
         if (nonce !is Available) {
             nonce = nonceRestClient.requestNonce(siteUrl, username, password)
