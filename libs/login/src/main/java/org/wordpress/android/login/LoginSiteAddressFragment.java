@@ -429,23 +429,13 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             endProgressIfNeeded();
             // Not a WordPress site
             mLoginListener.handleSiteAddressError(siteInfo);
-        } else if (mConnectSiteInfoCalculatedHasJetpack) {
+        } else {
             endProgressIfNeeded();
             mLoginListener.gotConnectedSiteInfo(
                     mConnectSiteInfoUrl,
                     mConnectSiteInfoUrlRedirect,
                     mConnectSiteInfoCalculatedHasJetpack
             );
-        } else {
-            /**
-             * Jetpack internally uses xml-rpc protocol. Due to a bug on the API, when jetpack is
-             * setup and connected to a .com account `isJetpackConnected` returns false when xml-rpc
-             * is disabled.
-             * This is causing issues to the client apps as they can't differentiate between
-             * "xml-rpc disabled" and "jetpack not connected" states. Therefore, the login flow
-             * library needs to invoke "xml-rpc discovery" to check if xml-rpc is accessible.
-             */
-            initiateDiscovery();
         }
     }
 
