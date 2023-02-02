@@ -1907,6 +1907,25 @@ class MySiteViewModelTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given remove undo snackbar, when undo is clicked, then it updates setting and refresh prompts`() = test {
+        initSelectedSite()
+
+        viewModel.onBloggingPromptUndoClick()
+
+        verify(bloggingPromptsSettingsHelper).updatePromptsCardEnabled(any(), eq(true))
+        verify(mySiteSourceManager).refreshBloggingPrompts(eq(true))
+    }
+
+    @Test
+    fun `given remove undo snackbar, when undo is clicked, then it tracks undo event`() = test {
+        initSelectedSite()
+
+        viewModel.onBloggingPromptUndoClick()
+
+        verify(bloggingPromptsCardAnalyticsTracker).trackMySiteCardRemoveFromDashboardUndoClicked()
+    }
+
+    @Test
     fun `when blogging prompt answer is uploaded, refresh prompt card`() = test {
         initSelectedSite()
 
@@ -1975,16 +1994,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed()
-    }
-
-    @Test
-    fun `when updatePromptsCardEnabled is called then it updates setting and refresh prompts`() = test {
-        initSelectedSite()
-
-        viewModel.updatePromptsCardEnabled(true)
-
-        verify(bloggingPromptsSettingsHelper).updatePromptsCardEnabled(any(), eq(true))
-        verify(mySiteSourceManager).refreshBloggingPrompts(eq(true))
     }
 
     /* DASHBOARD ERROR SNACKBAR */

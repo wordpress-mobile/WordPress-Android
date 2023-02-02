@@ -324,7 +324,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 val snackbarContent = SnackbarMessageHolder(
                     message = UiStringText(message),
                     buttonTitle = UiString.UiStringRes(R.string.undo),
-                    buttonAction = { viewModel.updatePromptsCardEnabled(true) },
+                    buttonAction = { viewModel.onBloggingPromptUndoClick() },
                     isImportant = true
                 )
                 showSnackbar(snackbarContent)

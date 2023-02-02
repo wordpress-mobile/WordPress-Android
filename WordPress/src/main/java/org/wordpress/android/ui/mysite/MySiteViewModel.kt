@@ -1386,7 +1386,12 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    fun updatePromptsCardEnabled(isEnabled: Boolean) = launch {
+    fun onBloggingPromptUndoClick() {
+        bloggingPromptsCardAnalyticsTracker.trackMySiteCardRemoveFromDashboardUndoClicked()
+        updatePromptsCardEnabled(true)
+    }
+
+    private fun updatePromptsCardEnabled(isEnabled: Boolean) = launch {
         selectedSiteRepository.getSelectedSite()?.localId()?.value?.let { siteId ->
             bloggingPromptsSettingsHelper.updatePromptsCardEnabled(siteId, isEnabled)
             mySiteSourceManager.refreshBloggingPrompts(true)
