@@ -180,7 +180,8 @@ public class AppPrefs {
         OPEN_WEB_LINKS_WITH_JETPACK,
         SHOULD_HIDE_JETPACK_FEATURE_CARD,
         JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP,
-        SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP
+        SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP,
+        SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD,
     }
 
     /**
@@ -1559,5 +1560,17 @@ public class AppPrefs {
 
     public static void setSwitchToJetpackMenuCardLastShownTimestamp(final Long lastShownTimestamp) {
         setLong(DeletablePrefKey.SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP, lastShownTimestamp);
+    }
+
+    public static Boolean getShouldHideSwitchToJetpackMenuCard(JetpackFeatureRemovalPhase phase) {
+        return prefs().getBoolean(getHideSwitchToJetpackMenuCardWithPhaseKey(phase), false);
+    }
+
+    public static void setShouldHideSwitchToJetpackMenuCard(JetpackFeatureRemovalPhase phase, final boolean isHidden) {
+        prefs().edit().putBoolean(getHideSwitchToJetpackMenuCardWithPhaseKey(phase), isHidden).apply();
+    }
+
+    @NonNull private static String getHideSwitchToJetpackMenuCardWithPhaseKey(JetpackFeatureRemovalPhase phase) {
+        return DeletablePrefKey.SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD.name() + phase.getTrackingName();
     }
 }

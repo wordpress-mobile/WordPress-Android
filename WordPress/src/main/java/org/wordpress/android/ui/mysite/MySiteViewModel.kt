@@ -481,6 +481,7 @@ class MySiteViewModel @Inject constructor(
         val jetpackSwitchMenu = MySiteCardAndItem.Card.JetpackSwitchMenu(
             onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
             onRemindMeLaterItemClick = ListItemInteraction.create(this::onSwitchToJetpackMenuCardRemindMeLaterClick),
+            onHideMenuItemClick = ListItemInteraction.create(this::onSwitchToJetpackMenuCardHideMenuItemClick),
             onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick)
         ).takeIf {
             jetpackFeatureCardHelper.shouldShowSwitchToJetpackMenuCard()
@@ -1395,6 +1396,10 @@ class MySiteViewModel @Inject constructor(
         refresh()
     }
 
+    private fun onSwitchToJetpackMenuCardHideMenuItemClick() {
+        jetpackFeatureCardHelper.hideSwitchToJetpackMenuCard()
+        refresh()
+    }
     private fun onJetpackFeatureCardMoreMenuClick() {
         jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_MENU_ACCESSED)
     }
