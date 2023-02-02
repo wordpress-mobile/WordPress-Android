@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -132,6 +133,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public static final String PRIVATE_AT_SITE_ID = "PRIVATE_AT_SITE_ID";
     private static final int PREVIEW_INITIAL_SCALE = 90;
     private static final long PREVIEW_JS_EVALUATION_DELAY = 250L;
+    public static final String IS_BLAZE_REQUEST = "IS_BLAZE_REQUEST";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -156,6 +158,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private TextView mDesktopPreviewHint;
     private boolean mPreviewModeChangeAllowed = false;
     private WPWebChromeClientWithFileChooser mWPWebChromeClientWithFileChooser;
+    private Boolean mIsBlazeRequest = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -177,8 +180,31 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         initRetryButton();
         initViewModel(webViewUsageCategory);
 
-        mNavBarContainer = findViewById(R.id.navbar_container);
+        setupNavBarContainerIfNeeded();
 
+        final Bundle extras = getIntent().getExtras();
+
+        if (extras != null) {
+            mPreviewModeChangeAllowed = extras.getBoolean(SHOW_PREVIEW_MODE_TOGGLE, false);
+            if (!mPreviewModeChangeAllowed) {
+                mNavBar.setWeightSum(80);
+                mPreviewModeButton.setVisibility(View.GONE);
+            }
+            mIsBlazeRequest = extras.getBoolean(IS_BLAZE_REQUEST, false);
+            if (mIsBlazeRequest) {
+                mNavBarContainer.setVisibility(View.GONE);
+            }
+        }
+
+        mPreviewModeSelectorPopup = new PreviewModeSelectorPopup(this, mPreviewModeButton);
+
+        setupToolbar();
+
+        mViewModel.track(Stat.WEBVIEW_DISPLAYED);
+    }
+
+    private void setupNavBarContainerIfNeeded() {
+        mNavBarContainer = findViewById(R.id.navbar_container);
         mElevationOverlayProvider = new ElevationOverlayProvider(WPWebViewActivity.this);
 
         int elevatedAppbarColor =
@@ -231,22 +257,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 mViewModel.togglePreviewModeSelectorVisibility(true);
             }
         });
-
-        final Bundle extras = getIntent().getExtras();
-
-        if (extras != null) {
-            mPreviewModeChangeAllowed = extras.getBoolean(SHOW_PREVIEW_MODE_TOGGLE, false);
-            if (!mPreviewModeChangeAllowed) {
-                mNavBar.setWeightSum(80);
-                mPreviewModeButton.setVisibility(View.GONE);
-            }
-        }
-
-        mPreviewModeSelectorPopup = new PreviewModeSelectorPopup(this, mPreviewModeButton);
-
-        setupToolbar();
-
-        mViewModel.track(Stat.WEBVIEW_DISPLAYED);
     }
 
     private void setupToolbar() {
@@ -883,6 +893,21 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
+        if (mWebView == null) {
+            return false;
+        }
+
+        if (mIsBlazeRequest) {
+            MenuItem item = menu.findItem(R.id.menu_refresh);
+            item.setVisible(false);
+        }
+
+        super.onPrepareOptionsMenu(menu);
+        return false;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (mWebView == null) {
             return false;
@@ -978,5 +1003,23 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @Override
     public void startActivityForFileChooserResult(Intent intent, int requestCode) {
         startActivityForResult(intent, requestCode);
+    }
+
+    // todo: annmarie - blaze
+    // This method is for wp.com users - we would need to create similar methods for
+    public static void openWPComBlaze(
+            Context context,
+            String url
+    ) {
+        if (!checkContextAndUrl(context, url)) {
+            return;
+        }
+
+        Intent intent = new Intent(context, WPWebViewActivity.class);
+        intent.putExtra(WPWebViewActivity.USE_GLOBAL_WPCOM_USER, true);
+        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
+        intent.putExtra(WPWebViewActivity.IS_BLAZE_REQUEST, true);
+        context.startActivity(intent);
     }
 }
