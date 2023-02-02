@@ -1,11 +1,16 @@
 package org.wordpress.android.fluxc.network.rest.wpapi
 
-sealed class Nonce(open val value: String?) {
-    data class Available(override val value: String) : Nonce(value)
+sealed interface Nonce {
+    val value: String?
+        get() = null
+    val username: String
+
+    data class Available(override val value: String, override val username: String) : Nonce
     data class FailedRequest(
         val timeOfResponse: Long,
-        val networkError: WPAPINetworkError? = null
-    ) : Nonce(null)
+        override val username: String,
+        val networkError: WPAPINetworkError? = null,
+    ) : Nonce
 
-    object Unknown : Nonce(null)
+    data class Unknown(override val username: String) : Nonce
 }
