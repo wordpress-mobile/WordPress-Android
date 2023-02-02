@@ -9,18 +9,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import org.wordpress.android.ui.compose.components.ButtonsColumn
+import org.wordpress.android.ui.compose.components.Message
+import org.wordpress.android.ui.compose.components.PrimaryButton
+import org.wordpress.android.ui.compose.components.ScreenIcon
+import org.wordpress.android.ui.compose.components.SecondaryButton
+import org.wordpress.android.ui.compose.components.Subtitle
+import org.wordpress.android.ui.compose.components.Title
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
-import org.wordpress.android.ui.main.jetpack.migration.compose.components.ButtonsColumn
-import org.wordpress.android.ui.main.jetpack.migration.compose.components.Message
-import org.wordpress.android.ui.main.jetpack.migration.compose.components.PrimaryButton
-import org.wordpress.android.ui.main.jetpack.migration.compose.components.ScreenIcon
-import org.wordpress.android.ui.main.jetpack.migration.compose.components.SecondaryButton
-import org.wordpress.android.ui.main.jetpack.migration.compose.components.Subtitle
-import org.wordpress.android.ui.main.jetpack.migration.compose.components.Title
 import org.wordpress.android.ui.main.jetpack.migration.compose.dimmed
 
 @Composable
