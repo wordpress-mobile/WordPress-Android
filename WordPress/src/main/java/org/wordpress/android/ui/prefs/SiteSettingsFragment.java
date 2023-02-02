@@ -2041,7 +2041,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void removeBloggingPromptsSettings() {
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_blogging_prompts);
+        WPPrefUtils.removePreference(this, R.string.pref_key_blogging, R.string.pref_key_blogging_prompts);
     }
 
     private void removePrivateOptionFromPrivacySetting() {

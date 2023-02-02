@@ -612,6 +612,7 @@
     <string name="site_settings_traffic_header">Traffic</string>
     <string name="site_settings_performance">Performance</string>
     <string name="site_settings_homepage">Homepage</string>
+    <string name="site_settings_blogging">Blogging</string>
 
     <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>
