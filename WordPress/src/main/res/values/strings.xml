@@ -309,6 +309,7 @@
     <string name="button_move_to_draft">Move to Draft</string>
     <string name="button_copy">Duplicate</string>
     <string name="button_copy_link">Copy link</string>
+    <string name="button_blaze">Promote with Blaze</string>
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
