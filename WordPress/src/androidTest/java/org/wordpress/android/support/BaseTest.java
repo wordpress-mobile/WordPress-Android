@@ -22,6 +22,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.InitializationRule;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.flows.LoginFlow;
@@ -90,6 +91,18 @@ public class BaseTest {
                         anyOf(is(AccessibilityCheckResultType.INFO), is(AccessibilityCheckResultType.WARNING))));
         AccessibilityChecks.enable().setRunChecksFromRootView(true).setThrowExceptionForErrors(false)
                            .setSuppressingResultMatcher(nonErrorLevelMatcher);
+
+        disableAutoSyncWithComposeUiInJetpackApp();
+    }
+
+    /**
+     * Disable auto-sync with Compose UI.
+     * @see <a href="https://developer.android.com/jetpack/compose/testing#disable-autosync">Disabling Auto Sync</a>
+     */
+    private void disableAutoSyncWithComposeUiInJetpackApp() {
+        if (BuildConfig.IS_JETPACK_APP) {
+            mComposeTestRule.getMainClock().setAutoAdvance(false);
+        }
     }
 
     private void logout() {
