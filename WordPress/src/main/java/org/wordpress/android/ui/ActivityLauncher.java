@@ -9,6 +9,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -1809,5 +1810,18 @@ public class ActivityLauncher {
         intent.putExtra(ARG_BYPASS_MIGRATION, bypassMigration);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+    // todo: blaze
+    // This is for wp.com only, we would need to follow a similar pattern to the browsePostOrPageEx method
+    public static void launchBlazeInWebview(Context context, SiteModel site, PostImmutableModel post) {
+        // https://wordpress.com/advertising/annmarietest.wpcomstaging.com?blazepress-widget=post-559
+        if (site == null || post == null) {
+            return;
+        }
+
+        String baseUrl = "https://wordpress.com/advertising/" + site.getUrl().replace("https://", "");
+        String urlWithPostId = baseUrl + "?blazepress-widget=post-" + post.getId();
+
+        WPWebViewActivity.openWPComBlaze(context, urlWithPostId);
     }
 }
