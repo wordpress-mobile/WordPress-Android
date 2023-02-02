@@ -23,6 +23,7 @@ class ApplicationPasswordManagerTests {
     private val siteDomain = "test-site.com"
     private val uuid = "uuid"
     private val testSite = SiteModel().apply {
+        username = "username"
         url = "http://$siteDomain"
     }
     private val testCredentials = ApplicationPasswordCredentials(
