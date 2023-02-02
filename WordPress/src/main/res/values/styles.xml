@@ -806,9 +806,9 @@
     <style name="MySiteTodaysStatsCardTitle">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:layout_marginTop">@dimen/margin_medium_large</item>
-        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_medium</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:lineSpacingExtra">@dimen/my_site_todays_stats_card_title_line_spacing_extra</item>
     </style>
 
