@@ -51,6 +51,7 @@ sealed class PostListAction {
     class ViewStats(val site: SiteModel, val post: PostModel) : PostListAction()
     class ViewPost(val site: SiteModel, val post: PostModel) : PostListAction()
     class DismissPendingNotification(val pushId: Int) : PostListAction()
+    class LaunchBlaze(val site: SiteModel, val post: PostModel) : PostListAction()
 }
 
 @Suppress("TooGenericExceptionCaught")
@@ -121,6 +122,9 @@ fun handlePostListAction(
                 AppLog.e(AppLog.T.POSTS, e)
                 action.showSnackbar.invoke(action.messageError)
             }
+        }
+        is PostListAction.LaunchBlaze -> {
+            ActivityLauncher.launchBlazeInWebview(activity, action.site, action.post)
         }
     }
 }
