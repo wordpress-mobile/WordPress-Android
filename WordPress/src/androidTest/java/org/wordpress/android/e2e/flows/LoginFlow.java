@@ -36,19 +36,19 @@ public class LoginFlow {
         // Login Prologue – We want to Continue with WordPress.com, not a site address
         if (BuildConfig.IS_JETPACK_APP) {
             // See LoginPrologueRevampedFragment
-            return tapContinueWithWpComOnRevampedLoginScreen(composeTestRule);
+            return tapContinueWithWpComOnRevampedLandingScreen(composeTestRule);
         } else {
             // See LoginPrologueFragment
-            return tapContinueWithWpComOnOldLoginScreen();
+            return tapContinueWithWpComOnOldLandingScreen();
         }
     }
 
-    private LoginFlow tapContinueWithWpComOnOldLoginScreen() {
+    private LoginFlow tapContinueWithWpComOnOldLandingScreen() {
         clickOn(R.id.continue_with_wpcom_button);
         return this;
     }
 
-    private LoginFlow tapContinueWithWpComOnRevampedLoginScreen(ComposeTestRule composeTestRule) {
+    private LoginFlow tapContinueWithWpComOnRevampedLandingScreen(ComposeTestRule composeTestRule) {
         new ComposeUiTestingUtils(composeTestRule)
                 .performClickOnNodeWithText(getTranslatedString(LoginPage.continueWithWpComButtonStringRes));
         return this;
