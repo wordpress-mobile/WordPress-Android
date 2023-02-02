@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-17 10:54:07+0000
+Translation-Revision-Date: 2023-01-24 15:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: id
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Dari &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Tutup</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Ganti ke aplikasi Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Bergantilah ke aplikasi—gratis dan prosesnya cepat!</string>
@@ -120,7 +121,6 @@ Language: id
     <string name="weekly_roundup_notification_text_views_and_likes">Minggu lalu Anda mendapatkan %1$s tayangan dan %2$s suka</string>
     <string name="weekly_roundup_notification_text_views_only">Minggu lalu Anda mendapatkan %1$s tayangan.</string>
     <string name="weekly_roundup_notification_text_all">Minggu lalu Anda mendapatkan %1$s tayangan, %2$s suka, dan %3$s komentar.</string>
-    <string name="stats_revamp_v2_update_alert_message">Diperbarui di Wawasan Baru untuk membantu Anda memahami performa konten dan minat audiens Anda.</string>
     <string name="stats_insights_like_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
     <string name="wp_jetpack_powered">Didukung Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Gambar menunjukkan pemindaian kode login sedang berlangsung</string>
@@ -143,7 +143,6 @@ Language: id
     <string name="qrcode_auth_flow_validated_subtitle">Hanya pindai kode QR yang diambil langsung dari browser web Anda. Jangan pindai kode yang dikirimkan oleh orang lain.</string>
     <string name="qrcode_auth_flow_validated_default_title">Apakah Anda mencoba login melalui browser web di sekitar %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Apakah Anda mencoba login ke %1$s di sekitar %2$s</string>
-    <string name="stats_revamp_v2_intro_header_title">Wawasan terbaru</string>
     <string name="stats_insights_followers_guide_card">💡Cobalah memberikan komentar di blog lain untuk menarik perhatian dan pengikut ke situs baru Anda.</string>
     <string name="stats_insights_comments_guide_card">💡Ketuk \'LIHAT LEBIH BANYAK\' untuk melihat komentator teratas Anda.</string>
     <string name="stats_insights_latest_post_empty">Periksa lagi setelah Anda memposkan pos pertama Anda!</string>
@@ -199,8 +198,6 @@ Language: id
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Gunakan &lt;b&gt; Jelajahi &lt;/b&gt; untuk menemukan situs dan tag. Coba pilih %1$s Pengaturan %2$s untuk menambahkan topik yang Anda sukai.</string>
     <string name="photo_picker_video_thumbnail_content_description">Gambar Poster Video</string>
     <string name="stats_details_top_commentators">Komentator Teratas</string>
-    <string name="stats_insights_total_stats_negative">%1$s lebih rendah dari minggu sebelumnya</string>
-    <string name="stats_insights_total_stats_positive">%1$s lebih tinggi dari minggu sebelumnya</string>
     <string name="stats_published_years_ago">Diposkan %1$d tahun yang lalu</string>
     <string name="stats_published_a_year_ago">Diposkan setahun yang lalu</string>
     <string name="stats_published_months_ago">Diposkan %1$d bulan yang lalu</string>
@@ -227,12 +224,6 @@ Language: id
     <string name="photo_picker_media_thumbnail_content_description">Gambar Poster Media</string>
     <string name="stats_insights_popular_title">🔥 Waktu Paling Populer</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Pengunjung Anda minggu ini %1$s lebih rendah dari minggu sebelumnya.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Pengunjung Anda minggu ini %1$s lebih tinggi dari minggu sebelumnya.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Tayangan Anda minggu ini %1$s lebih rendah dari minggu sebelumnya.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Tayangan Anda minggu ini %1$s lebih tinggi dari minggu sebelumnya.</string>
-    <string name="stats_timeframe_previous_week">Minggu Sebelumnya</string>
-    <string name="stats_timeframe_this_week">Minggu Ini</string>
     <string name="scan_vault_press_active_on_site_button_text">Kunjungi Dasbor</string>
     <string name="scan_vault_press_active_on_site_subtitle">Situs Anda sudah dilindungi oleh VaultPress. Anda dapat menemukan tautan ke dasbor VaultPress di bawah ini.</string>
     <string name="scan_vault_press_active_on_site_title">Situs Anda memiliki VaultPress</string>

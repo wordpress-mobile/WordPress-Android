@@ -2503,6 +2503,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "remove_feature_card_hide_tapped";
             case REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED:
                 return "remove_feature_card_remind_later_tapped";
+            case JETPACK_FEATURE_INCORRECTLY_ACCESSED:
+                return "jetpack_feature_incorrectly_accessed";
         }
         return null;
     }

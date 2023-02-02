@@ -72,8 +72,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
             serverTrackingHandler,
             deepLinkTrackingUtils,
             analyticsUtilsWrapper,
-            openWebLinksWithJetpackHelper,
-            jetpackFeatureRemovalPhaseHelper
+            openWebLinksWithJetpackHelper
         )
         isFinished = false
         viewModel.finish.observeForever {

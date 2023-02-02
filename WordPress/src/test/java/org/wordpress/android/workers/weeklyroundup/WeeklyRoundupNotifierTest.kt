@@ -7,7 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.anyArray
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -39,7 +39,7 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
     }
     private val contextProvider: ContextProvider = mock()
     private val resourceProvider: ResourceProvider = mock {
-        on { getString(any(), anyOrNull()) }.thenReturn("mock_string")
+        on { getString(any(), anyArray<Any>()) }.thenReturn("mock_string")
     }
     private val weeklyRoundupScheduler: WeeklyRoundupScheduler = mock()
     private val notificationsTracker: SystemNotificationsTracker = mock()

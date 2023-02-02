@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-21 18:23:21+0000
+Translation-Revision-Date: 2023-01-26 07:04:56+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ro
 -->
 <resources>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Funcționalitățile Jetpack s-au mutat.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statisticile, cititorul, notificările și alte funcționalități propulsate de Jetpack au fost înlăturate din aplicația WordPress.</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Comută la Jetpack </string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Fă asta mai târziu</string>
+    <string name="install_play_store_to_get_jetpack">Te rog instalează Google Play Store pentru a obține aplicația Jetpack</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s se mută în curând</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s se mută în curând</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s se mută în %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s se mută în %2$s</string>
+    <string name="weeks_quantity_one">O săptămână</string>
+    <string name="weeks_quantity_other">%d săptămâni</string>
+    <string name="stats_timeframe_last_seven_days">Ultimele 7 zile</string>
+    <string name="stats_timeframe_previous_seven_days">7 zile anterioare</string>
+    <string name="wp_jetpack_powered_phase_2">Obține aplicația Jetpack</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Vizualizările din ultimele 7 zile sunt cu %1$s mai mari decât cele din 7 zile anterioare.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Vizualizările din ultimele 7 zile sunt cu %1$s mai mici decât cele din 7 zile anterioare.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Vizitatorii din ultimele 7 zile sunt cu %1$s mai mulți decât vizitatorii din 7 zile anterioare.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Vizitatorii din ultimele 7 zile sunt cu %1$s mai puțini decât vizitatorii din 7 zile anterioare.</string>
+    <string name="stats_insights_total_stats_seven_days_positive">Cu %1$s mai mult decât în ultimele 7 zile</string>
+    <string name="stats_insights_total_stats_seven_days_negative">Cu %1$s mai puțin decât în ultimele 7 zile</string>
+    <string name="my_site_blogging_prompt_card_view_answers">Vezi toate răspunsurile</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">De la &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statisticile, cititorul, notificările și alte funcționalități propulsate de Jetpack vor fi înlăturate din aplicația WordPress pe %s.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">În curând, statisticile, cititorul, notificările și alte funcționalități propulsate de Jetpack vor fi înlăturate din aplicația WordPress.</string>
@@ -132,7 +153,6 @@ Language: ro
     <string name="weekly_roundup_notification_text_views_only">Săptămâna trecută ai avut %1$s de vizualizări.</string>
     <string name="weekly_roundup_notification_text_all">Săptămâna trecută ai avut %1$s de vizualizări, %2$s aprecieri și %3$s comentarii.</string>
     <string name="stats_insights_like_guide_card">⭐️ Ultimul tău articol %1$s a avut %2$s aprecieri.</string>
-    <string name="stats_revamp_v2_update_alert_message">Am actualizat Privire generală ca să te ajute să înțelegi cum evoluează conținutul tău și cum este privit de public.</string>
     <string name="wp_jetpack_powered">Propulsat de Jetpack</string>
     <string name="qrcode_auth_flow_error_auth_failed_subtitle">Nu am putut să te autentific folosind acest cod de autentificare. Te rog atinge butonul Scanează din nou pentru a scana din nou codul.</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">Sigur vrei să continui?</string>
@@ -154,7 +174,6 @@ Language: ro
     <string name="qrcode_auth_flow_validated_subtitle">Scanează numai coduri QR preluate direct din navigatorul tău web. Nu scana niciodată coduri trimise de altcineva.</string>
     <string name="qrcode_auth_flow_validated_default_title">Încerci să te autentifici în navigatorul tău web lângă %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Încerci să te autentifici în %1$s lângă %2$s?</string>
-    <string name="stats_revamp_v2_intro_header_title">Actualizare privire generală statistici</string>
     <string name="stats_insights_followers_guide_card">💡 Publicarea de comentarii pe alte bloguri este o modalitate foarte bună de a stârni interesul și de a atrage urmăritori pe noul tău site.</string>
     <string name="stats_insights_comments_guide_card">💡 Atinge „Vezi mai multe” pentru a vedea comentatorii cei mai activi.</string>
     <string name="stats_insights_latest_post_empty">Mergi înapoi după ce ai publicat primul articol!</string>
@@ -208,8 +227,6 @@ Language: ro
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Folosește &lt;b&gt; Descoperă &lt;/b&gt; pentru a găsi site-uri și etichete. Încearcă să selectezi %1$s Setări %2$s pentru a adăuga subiecte care îți plac.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatură video</string>
     <string name="stats_details_top_commentators">Cei mai activi comentatori</string>
-    <string name="stats_insights_total_stats_positive">Cu %1$s mai mult decât în săptămâna anterioară</string>
-    <string name="stats_insights_total_stats_negative">Cu %1$s mai puțin decât în săptămâna anterioară</string>
     <string name="quick_start_list_check_notification_subtitle">Primești actualizări în timp real, chiar din buzunar</string>
     <string name="quick_start_dialog_check_notifications_message">Primești actualizări în timp real, chiar din buzunar.</string>
     <string name="stats_view_total_likes">Total aprecieri</string>
@@ -238,13 +255,7 @@ Language: ro
     <string name="photo_picker_video_thumbnail_unselected">Video deselectat</string>
     <string name="blogging_reminders_prompt_help_button_desc">Află mai mult despre îndemnuri</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Vizualizările din această săptămână sunt cu %1$s mai puține decât în săptămâna precedentă.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Vizitatorii din această săptămână sunt cu %1$s mai \nmulți decât în săptămâna precedentă.</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Vizitatorii din această săptămână sunt cu %1$s mai \npuțini decât în săptămâna precedentă.</string>
-    <string name="stats_timeframe_this_week">Săptămâna aceasta</string>
-    <string name="stats_timeframe_previous_week">Săptămâna anterioară</string>
     <string name="scan_vault_press_active_on_site_subtitle">Site-ul este deja protejat de VaultPress. Mai jos găsești o legătură la panoul de control VaultPress.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Vizualizările din această săptămână sunt cu %1$s mai multe decât în săptămâna precedentă.</string>
     <string name="scan_vault_press_active_on_site_button_text">Du-te la Panou control</string>
     <string name="locale_picker_current_language">Limba curentă:</string>
     <string name="scan_vault_press_active_on_site_title">Site-ul folosește VaultPress</string>
@@ -341,6 +352,7 @@ Language: ro
     <string name="my_site_blogging_prompt_card_menu_view_more">Vezi mai multe îndemnuri</string>
     <string name="new_site_creation_intents_input_hint">De exemplu: modă, poezie, politică</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Înlătură din panoul de control</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Nu azi</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d răspunsuri</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Partajează îndemnul la blogging</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Am răspuns</string>

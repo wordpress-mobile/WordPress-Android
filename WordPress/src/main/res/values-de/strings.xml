@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-16 16:54:26+0000
+Translation-Revision-Date: 2023-01-25 09:31:00+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: de
 -->
 <resources>
+    <string name="install_play_store_to_get_jetpack">Bitte installiere Google Play Store, um die Jetpack-App zu erhalten</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Später erledigen</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Zu Jetpack wechseln </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistiken, der Reader, Benachrichtigungen und weitere von Jetpack unterstützte Funktionen wurden aus der WordPress-App entfernt.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack-Funktionen wurden verschoben.</string>
+    <string name="my_site_blogging_prompt_card_view_answers">Alle Antworten anzeigen</string>
+    <string name="stats_insights_total_stats_seven_days_negative">%1$s niedriger als in den vorherigen 7 Tagen</string>
+    <string name="stats_insights_total_stats_seven_days_positive">%1$s höher als in den vorherigen 7 Tagen</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Deine Besucherzahlen in den letzten 7 Tagen sind %1$s niedriger als in den vorherigen 7 Tagen.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Deine Besucherzahlen in den letzten 7 Tagen sind %1$s höher als in den vorherigen 7 Tagen.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Deine Aufrufe in den letzten 7 Tagen sind %1$s niedriger als die vorherigen 7 Tage.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Deine Aufrufe in den letzten 7 Tagen sind %1$s höher als die vorherigen 7 Tage.</string>
+    <string name="stats_timeframe_previous_seven_days">Vorherige 7 Tage</string>
+    <string name="stats_timeframe_last_seven_days">Letzte 7 Tage</string>
+    <string name="weeks_quantity_other">%d Wochen</string>
+    <string name="weeks_quantity_one">1 Woche</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Von &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Ausblenden</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Später daran erinnern</string>
     <string name="jetpack_feature_card_content">Statistiken, der Reader, Benachrichtigungen und weitere Funktionen werden bald in die Jetpack-Mobil-App verschoben.</string>
@@ -130,7 +147,6 @@ Language: de
     <string name="weekly_roundup_notification_text_views_and_likes">Letzte Woche hattest du %1$s Aufrufe und %2$s Likes</string>
     <string name="weekly_roundup_notification_text_views_only">Letzte Woche hattest du %1$s Aufrufe.</string>
     <string name="weekly_roundup_notification_text_all">Letzte Woche hattest du %1$s Aufrufe, %2$s Likes und %3$s Kommentare.</string>
-    <string name="stats_revamp_v2_update_alert_message">Anhand von aktualisierten Einsichten kannst du nachvollziehen, wie deine Inhalte ankommen und was deinem Publikum gefällt.</string>
     <string name="stats_insights_like_guide_card">⭐️Dein neuster Beitrag %1$s hat %2$s Like erhalten.</string>
     <string name="wp_jetpack_powered">Angetrieben von Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Bild, das anzeigt, dass der Scan des Anmeldecodes läuft</string>
@@ -153,7 +169,6 @@ Language: de
     <string name="qrcode_auth_flow_validated_subtitle">Scanne nur QR-Codes, die direkt von deinem Webbrowser kommen. Scanne niemals einen Code, der dir von jemand anderem geschickt wurde.</string>
     <string name="qrcode_auth_flow_validated_default_title">Versuchst du dich in der Nähe von %1$s in deinem Webbrowser anzumelden?</string>
     <string name="qrcode_auth_flow_validated_title">Versuchst du dich in der Nähe von %2$s in %1$s anzumelden?</string>
-    <string name="stats_revamp_v2_intro_header_title">Einsichten-Update</string>
     <string name="stats_insights_followers_guide_card">💡Andere Blogs zu kommentieren ist ein guter Weg, Aufmerksamkeit zu erregen und Follower für deine neue Website zu gewinnen.</string>
     <string name="stats_insights_comments_guide_card">💡Tippe auf „MEHR ANZEIGEN“, um dir deine Top-Kommentatoren anzeigen zu lassen.</string>
     <string name="stats_insights_latest_post_empty">Schau nochmal vorbei, wenn du deinen ersten Beitrag veröffentlicht hast!</string>
@@ -209,8 +224,6 @@ Language: de
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Benutze &lt;b&gt; Entdecken &lt;/b&gt;, um Websites und Tags zu finden. Versuche, die %1$s Einstellungen %2$s auszuwählen, um Themen deiner Wahl hinzuzufügen.</string>
     <string name="photo_picker_video_thumbnail_content_description">Video-Vorschaubild</string>
     <string name="stats_details_top_commentators">Top-Kommentatoren</string>
-    <string name="stats_insights_total_stats_negative">%1$s weniger als in der Vorwoche</string>
-    <string name="stats_insights_total_stats_positive">%1$s mehr als in der Vorwoche</string>
     <string name="stats_published_years_ago">Vor %1$d Jahren veröffentlicht</string>
     <string name="stats_published_a_year_ago">Vor einem Jahr veröffentlicht</string>
     <string name="stats_published_months_ago">Vor %1$d Monaten veröffentlicht</string>
@@ -237,12 +250,6 @@ Language: de
     <string name="photo_picker_media_thumbnail_content_description">Medien-Vorschaubild</string>
     <string name="stats_insights_popular_title">🔥 Beliebteste Zeit</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Deine Besucher in dieser Woche sind um %1$s niedriger als letzte Woche.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Deine Besucher in dieser Woche sind um %1$s höher als letzte Woche.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Deine Aufrufe in dieser Woche sind um %1$s niedriger als letzte Woche.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Deine Aufrufe in dieser Woche sind um %1$s höher als letzte Woche.</string>
-    <string name="stats_timeframe_previous_week">Vorherige Woche</string>
-    <string name="stats_timeframe_this_week">Diese Woche</string>
     <string name="scan_vault_press_active_on_site_button_text">Dashboard besuchen</string>
     <string name="scan_vault_press_active_on_site_subtitle">Deine Website ist bereits durch VaultPress geschützt. Klicke auf den nachfolgenden Button, um zu deinem VaultPress-Dashboard zu gelangen.</string>
     <string name="scan_vault_press_active_on_site_title">Deine Website hat VaultPress</string>
@@ -339,6 +346,7 @@ Language: de
     <string name="new_site_creation_intents_title">Website-Thema</string>
     <string name="quick_start_site_menu_tab_message_short">Tippe zum Fortfahren auf &lt;b&gt;%1$s&lt;/b&gt;.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Aus Dashboard entfernen</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Für heute überspringen</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Mehr Themenvorschläge anzeigen</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d Antworten</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Blog-Vorschlag teilen</string>
@@ -1607,7 +1615,7 @@ Language: de
     <string name="preview_unavailable_self_hosted_sites">Vorschau nicht verfügbar</string>
     <string name="remote_preview_operation_error">Fehler beim Versuch, Den Beitrag vor der Vorschau zu speichern</string>
     <string name="post_preview_remote_auto_saving_post">Vorschau wird generiert…</string>
-    <string name="post_preview_saving_draft">Speichern…</string>
+    <string name="post_preview_saving_draft">Wird gespeichert …</string>
     <string name="local_post_autosave_revision_available">Sie haben nicht gespeicherte Änderungen an diesem Beitrag vorgenommen</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Die Version dieser App</string>
     <string name="dialog_confirm_autosave_restore_button">Die Version von einem anderen Gerät</string>

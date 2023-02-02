@@ -141,6 +141,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         data class JetpackSwitchMenu(
             val onClick: ListItemInteraction,
             val onRemindMeLaterItemClick: ListItemInteraction,
+            val onHideMenuItemClick: ListItemInteraction,
             val onMoreMenuClick: ListItemInteraction
         ) : Card(Type.JETPACK_SWITCH_CARD)
 

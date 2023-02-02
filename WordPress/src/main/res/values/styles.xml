@@ -350,7 +350,7 @@
     </style>
 
     <style name="WordPress.SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
-        <item name="android:textColor">@color/blue_30</item>
+        <item name="android:textColor">@color/primary_30</item>
     </style>
 
     <style name="WordPress.SnackbarText" parent="@style/Widget.MaterialComponents.Snackbar.TextView">

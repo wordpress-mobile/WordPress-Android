@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-17 08:54:25+0000
+Translation-Revision-Date: 2023-01-24 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: fr
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Depuis le &lt;b&gt;jour 1&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Masquer ceci</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Me rappeler ultérieurement</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Passer à l’application Jetpack</string>
@@ -131,7 +132,6 @@ Language: fr
     <string name="weekly_roundup_notification_text_views_only">La semaine dernière, vous avez eu %1$s vues.</string>
     <string name="weekly_roundup_notification_text_all">La semaine dernière, vous avez eu %1$s vues, %2$s mentions J’aime et %3$s commentaires.</string>
     <string name="stats_insights_like_guide_card">⭐️ Votre dernier article %1$s a reçu %2$s mentions J’aime.</string>
-    <string name="stats_revamp_v2_update_alert_message">Mis à jour vers les nouvelles tendances pour vous aider à comprendre les performances de votre contenu et ce qui intéresse le plus votre public.</string>
     <string name="wp_jetpack_powered">Optimisé par Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Image indiquant que le scan du code de connexion est en cours</string>
     <string name="qrcode_auth_flow_error_content_description">Image indiquant une erreur</string>
@@ -153,7 +153,6 @@ Language: fr
     <string name="qrcode_auth_flow_validated_subtitle">Scannez uniquement les codes QR provenant directement de votre navigateur Web. Ne scannez jamais un code envoyé par une tierce personne.</string>
     <string name="qrcode_auth_flow_validated_default_title">Essayez-vous de vous connecter à votre navigateur Web près de %1$s ?</string>
     <string name="qrcode_auth_flow_validated_title">Essayez-vous de vous connecter à %1$s près de %2$s ?</string>
-    <string name="stats_revamp_v2_intro_header_title">Mise à jour de Tendances</string>
     <string name="stats_insights_followers_guide_card">💡 L’ajout de commentaires sur d’autres blogs est un bon moyen d’attirer l’attention et d’obtenir des abonnés pour votre nouveau site.</string>
     <string name="stats_insights_comments_guide_card">💡 Appuyez sur « VOIR PLUS » pour voir les utilisateurs qui ont le plus commenté.</string>
     <string name="stats_insights_latest_post_empty">Revenez lorsque vous aurez publié votre premier article !</string>
@@ -206,8 +205,6 @@ Language: fr
     <string name="quick_start_dialog_upload_media_message_short_plus">Sélectionnez %1$s plus %2$s pour charger un média. Vous pouvez l’ajouter à vos articles/pages depuis n’importe quel appareil.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Utilisez &lt;b&gt; Découvrir &lt;/b&gt; pour rechercher des sites et des étiquettes.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Utilisez &lt;b&gt; Découvrir &lt;/b&gt; pour rechercher des sites et des étiquettes. Sélectionnez %1$s Réglages %2$s pour ajouter les thèmes de votre choix.</string>
-    <string name="stats_insights_total_stats_negative">inférieur de %1$s par rapport à la semaine précédente</string>
-    <string name="stats_insights_total_stats_positive">supérieur de %1$s par rapport à la semaine précédente</string>
     <string name="quick_start_dialog_check_notifications_message_short">Sélectionnez %1$s l’onglet Notifications %2$s pour suivre l’activité en déplacement.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniature vidéo</string>
     <string name="stats_details_top_commentators">Les meilleurs commentateurs</string>
@@ -237,12 +234,6 @@ Language: fr
     <string name="photo_picker_media_thumbnail_content_description">Miniature média</string>
     <string name="stats_insights_popular_title">🔥 Heure la plus populaire</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Votre nombre de visiteurs de cette semaine est inférieur de %1$s par rapport à la semaine précédente.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Votre nombre de visiteurs de cette semaine est supérieur de %1$s par rapport à la semaine précédente.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Votre nombre de vues de cette semaine est inférieur de %1$s par rapport la semaine précédente.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Votre nombre de vues de cette semaine est supérieur de %1$s par rapport à la semaine précédente.</string>
-    <string name="stats_timeframe_previous_week">La semaine précédente</string>
-    <string name="stats_timeframe_this_week">Cette semaine</string>
     <string name="scan_vault_press_active_on_site_button_text">Se rendre sur le Tableau de bord</string>
     <string name="scan_vault_press_active_on_site_subtitle">Votre site est déjà protégé par VaultPress. Vous trouverez ci-dessous un lien vers votre tableau de bord VaultPress.</string>
     <string name="scan_vault_press_active_on_site_title">Votre site comporte VaultPress</string>

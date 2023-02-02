@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-18 20:55:19+0000
+Translation-Revision-Date: 2023-01-25 09:36:30+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ru
 -->
 <resources>
+    <string name="install_play_store_to_get_jetpack">Пожалуйста, установите Google Play Store, чтобы получить приложение Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Позже</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Перейти на Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Статистика, Чтиво, Уведомления и другие функции Jetpack удалены из приложения WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Возможности Jetpack переехали.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s переедут через %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s переедет через %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s скоро переедут</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s скоро переедет</string>
+    <string name="wp_jetpack_powered_phase_2">Получить приложение Jetpack</string>
+    <string name="my_site_blogging_prompt_card_view_answers">Показать все ответы</string>
+    <string name="stats_insights_total_stats_seven_days_negative">На %1$s меньше, чем в предыдущие 7 дней</string>
+    <string name="stats_insights_total_stats_seven_days_positive">На %1$s больше, чем в предыдущие 7 дней</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Посетителей за последние 7 дней на %1$s меньше, чем в предыдущие.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Посетителей за последние 7 дней на %1$s больше, чем в предыдущие.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Просмотров за последние 7 дней на %1$s меньше, чем в предыдущие.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Просмотров за последние 7 дней на %1$s больше, чем в предыдущие.</string>
+    <string name="stats_timeframe_previous_seven_days">Предыдущие 7 дней</string>
+    <string name="stats_timeframe_last_seven_days">Последние 7 дней</string>
+    <string name="weeks_quantity_other">%d нед.</string>
+    <string name="weeks_quantity_one">1 неделя</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">От &lt;b&gt;В Первый День&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Скрыть это</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Напомнить мне позже</string>
@@ -131,7 +152,6 @@ Language: ru
     <string name="weekly_roundup_notification_text_views_and_likes">За последнюю неделю: просмотров сайта — %1$s, отметок «Нравится» —%2$s</string>
     <string name="weekly_roundup_notification_text_views_only">Просмотров сайта за последнюю неделю — %1$s.</string>
     <string name="weekly_roundup_notification_text_all">За последнюю неделю: просмотров сайта — %1$s, отметок «Нравится» —%2$s, комментариев — %3$s.</string>
-    <string name="stats_revamp_v2_update_alert_message">Обновите страницу обзора, чтобы просматривать показатели публикуемого содержимого и выяснять, что интересно вашей аудитории.</string>
     <string name="stats_insights_like_guide_card">⭐️ На последней записи %1$s %2$s отметка «Нравится».</string>
     <string name="wp_jetpack_powered">Работает с Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Изображение процедуры сканирования кода для входа</string>
@@ -154,7 +174,6 @@ Language: ru
     <string name="qrcode_auth_flow_validated_subtitle">Сканируйте только QR-коды, полученные напрямую из браузера. Не сканируйте коды, полученные от других людей.</string>
     <string name="qrcode_auth_flow_validated_default_title">Это вы пытаетесь войти через веб-браузер в %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Вы пытаетесь войти через %1$s в %2$s?</string>
-    <string name="stats_revamp_v2_intro_header_title">Обновленный раздел \"Обзор\"</string>
     <string name="stats_insights_followers_guide_card">💡 Комментировать другие блоги ― отличный способ привлечь внимание и новых подписчиков.</string>
     <string name="stats_insights_comments_guide_card">💡 Нажмите \"ПОДРОБНЕЕ\", чтобы просмотреть список топ-комментаторов.</string>
     <string name="stats_insights_latest_post_empty">Вернитесь, когда опубликуете первую запись!</string>
@@ -210,8 +229,6 @@ Language: ru
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Используйте раздел &lt;b&gt;Поиск&lt;/b&gt;, чтобы искать сайты и метки. Перейдите в %1$sНастройки%2$s, чтобы добавить интересные вам темы.</string>
     <string name="photo_picker_video_thumbnail_content_description">Миниатюра видео</string>
     <string name="stats_details_top_commentators">Топ комментаторов</string>
-    <string name="stats_insights_total_stats_negative">На %1$s меньше, чем на прошлой неделе</string>
-    <string name="stats_insights_total_stats_positive">На %1$s больше, чем на прошлой неделе</string>
     <string name="stats_published_years_ago">Опубликовано %1$d г./лет назад</string>
     <string name="stats_published_a_year_ago">Опубликовано год назад</string>
     <string name="stats_published_months_ago">Опубликовано %1$d мес. назад</string>
@@ -238,12 +255,6 @@ Language: ru
     <string name="photo_picker_media_thumbnail_content_description">Миниатюра медиафайла</string>
     <string name="stats_insights_popular_title">🔥 Самое популярное время</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Посетителей на этой неделе на %1$s меньше, чем на предыдущей.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Посетителей на этой неделе на %1$s больше, чем на предыдущей.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Просмотров на этой неделе на %1$s меньше, чем на предыдущей.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Просмотров на этой неделе на %1$s больше, чем на предыдущей.</string>
-    <string name="stats_timeframe_previous_week">Предыдущая неделя</string>
-    <string name="stats_timeframe_this_week">Эта неделя</string>
     <string name="scan_vault_press_active_on_site_button_text">Перейти в консоль</string>
     <string name="scan_vault_press_active_on_site_subtitle">Ваш сайт уже защищается VaultPress. Ссылка на консоль VailtPress находится ниже.</string>
     <string name="scan_vault_press_active_on_site_title">На вашем сайте включён VaultPress</string>
@@ -340,6 +351,7 @@ Language: ru
     <string name="new_site_creation_intents_title">Тема сайта</string>
     <string name="quick_start_site_menu_tab_message_short">Нажмите &lt;b&gt;%1$s&lt;/b&gt;, чтобы продолжить.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Удалить с консоли</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Пропустить сейчас</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Смотреть другие подсказки</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">Ответы: %d</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Поделиться подсказкой о ведении блога</string>

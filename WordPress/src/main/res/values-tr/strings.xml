@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-12 11:04:30+0000
+Translation-Revision-Date: 2023-01-29 15:24:35+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: tr
 -->
 <resources>
+    <string name="install_play_store_to_get_jetpack">Jetpack uygulamasını edinmek için lütfen Google Play mağazasını yükleyin</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Bunu daha sonra yap</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Jetpack\'e geç </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">İstatistikler, Okuyucu, Bildirimler ve Jetpack destekli diğer özellikler, yakında WordPress uygulamasından kaldırıldı.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack özellikleri taşındı.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s %2$s içinde taşınıyor</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s %2$s içinde taşınıyor</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s yakında taşınıyor</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s yakında taşınıyor</string>
+    <string name="wp_jetpack_powered_phase_2">Jetpack uygulamasını edinin</string>
+    <string name="my_site_blogging_prompt_card_view_answers">Tüm yanıtları görüntüle</string>
+    <string name="stats_insights_total_stats_seven_days_negative">Son 7 güne göre %1$s daha düşük</string>
+    <string name="stats_insights_total_stats_seven_days_positive">Son 7 güne göre %1$s daha yüksek</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Son 7 gün içindeki ziyaretçileriniz, önceki 7 güne göre %1$s daha düşük.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Son 7 gün içindeki ziyaretçileriniz önceki 7 güne göre %1$s daha yüksek.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Son 7 gündeki görüntülemeleriniz, önceki 7 güne göre %1$s daha düşük.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Son 7 gündeki görüntülemeleriniz, önceki 7 güne göre %1$s daha yüksek.</string>
+    <string name="stats_timeframe_previous_seven_days">Önceki 7 gün</string>
+    <string name="stats_timeframe_last_seven_days">Son 7 gün</string>
+    <string name="weeks_quantity_other">%d hafta</string>
+    <string name="weeks_quantity_one">1 hafta</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt; tarafından</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Bunu gizle</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Daha sonra hatırlat</string>
     <string name="jetpack_feature_card_content">İstatistikler, Okuyucu, Bildirimler ve diğer özellikler, yakında Jetpack mobil uygulamasına taşınacaktır.</string>
@@ -130,7 +152,6 @@ Language: tr
     <string name="weekly_roundup_notification_text_views_and_likes">Geçen hafta %1$s görüntüleme ve %2$s beğeni aldınız.</string>
     <string name="weekly_roundup_notification_text_views_only">Geçen hafta %1$s görüntüleme aldınız.</string>
     <string name="weekly_roundup_notification_text_all">Geçen hafta %1$s görüntüleme, %2$s beğeni ve %3$s yorum aldınız.</string>
-    <string name="stats_revamp_v2_update_alert_message">İçeriğinizin nasıl performans gösterdiğini ve kitlenizde nelerin ilgi çektiğini anlamanıza yardımcı olacak Yeni Tek Bakışta sürümüne güncellendi.</string>
     <string name="stats_insights_like_guide_card">⭐️ En son yazınız (%1$s) %2$s beğeni aldı.</string>
     <string name="wp_jetpack_powered">Jetpack destekli</string>
     <string name="qrcode_auth_flow_content_description">İşlem sırasında tarama giriş kodunu gösteren görsel</string>
@@ -153,7 +174,6 @@ Language: tr
     <string name="qrcode_auth_flow_validated_subtitle">Yalnızca doğrudan web tarayıcınızdan alınan QR kodlarını tarayın. Size başkaları tarafından gönderilen bir kodu asla taramayın.</string>
     <string name="qrcode_auth_flow_validated_default_title">%1$s yakınından web tarayıcınız ile giriş yapmaya mı çalışıyorsunuz?</string>
     <string name="qrcode_auth_flow_validated_title">%1$s için %2$s yakınından giriş yapmaya mı çalışıyorsunuz?</string>
-    <string name="stats_revamp_v2_intro_header_title">İçgörüler güncellemesi</string>
     <string name="stats_insights_followers_guide_card">💡Diğer bloglara yorum yapmak, yeni siteniz için dikkat çekmenin ve takipçi oluşturmanın harika bir yoludur.</string>
     <string name="stats_insights_comments_guide_card">💡En iyi yorumcularınızı görmek için \'DAHA FAZLASI\' düğmesine dokunun.</string>
     <string name="stats_insights_latest_post_empty">İlk yazınızı yayınladıktan sonra tekrar kontrol edin!</string>
@@ -209,8 +229,6 @@ Language: tr
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Siteleri ve etiketleri bulmak için &lt;b&gt;Keşfet&lt;/b&gt;\'i kullanın. Beğendiğiniz konuları eklemek için %1$s Ayarlar\'ı %2$s seçmeyi deneyin.</string>
     <string name="photo_picker_video_thumbnail_content_description">Video küçük resmi</string>
     <string name="stats_details_top_commentators">En iyi yorumcular</string>
-    <string name="stats_insights_total_stats_negative">Bir önceki haftaya göre %1$s daha düşük</string>
-    <string name="stats_insights_total_stats_positive">Bir önceki haftaya göre %1$s daha yüksek</string>
     <string name="stats_published_years_ago">%1$d yıl önce yayımlandı</string>
     <string name="stats_published_a_year_ago">Bir yıl önce yayımlandı</string>
     <string name="stats_published_months_ago">%1$d ay önce yayımlandı</string>
@@ -237,12 +255,6 @@ Language: tr
     <string name="photo_picker_media_thumbnail_content_description">Ortam küçük görseli</string>
     <string name="stats_insights_popular_title">🔥 En popüler zaman</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Bu haftaki ziyaretçileriniz bir önceki haftaya göre %1$s daha düşük.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Bu haftaki ziyaretçileriniz bir önceki haftaya göre %1$s daha yüksek.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Bu haftaki görüntülemeleriniz bir önceki haftaya göre %1$s daha düşük.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Bu haftaki görüntülemeleriniz bir önceki haftaya göre %1$s daha yüksek.</string>
-    <string name="stats_timeframe_previous_week">Önceki hafta</string>
-    <string name="stats_timeframe_this_week">Bu hafta</string>
     <string name="scan_vault_press_active_on_site_button_text">Panoya git</string>
     <string name="scan_vault_press_active_on_site_subtitle">Siteniz zaten VaultPress tarafından korunuyor. Aşağıda VaultPress panonuzun bağlantısını bulabilirsiniz.</string>
     <string name="scan_vault_press_active_on_site_title">Sitenizde VaultPress var</string>
@@ -339,6 +351,7 @@ Language: tr
     <string name="new_site_creation_intents_title">Site Konusu</string>
     <string name="quick_start_site_menu_tab_message_short">Devam etmek için &lt;b&gt;%1$s&lt;/b&gt; öğesine dokunun.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Panodan kaldır</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Bugünlük atla</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Daha fazla bilgi görüntüle</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d yanıt</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Blog paylaşma istemi</string>

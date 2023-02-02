@@ -89,8 +89,6 @@ Language: pl
     <string name="photo_picker_video_thumbnail_unselected">Cofnięto zaznaczenie filmu</string>
     <string name="photo_picker_video_thumbnail_selected">Wybrano film</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_timeframe_previous_week">Poprzedni tydzień</string>
-    <string name="stats_timeframe_this_week">Bieżący tydzień</string>
     <string name="scan_vault_press_active_on_site_button_text">Przejdź do kokpitu</string>
     <string name="locale_picker_current_language">Aktualny język:</string>
     <string name="new_site_creation_site_name_title">Nazwa witryny</string>

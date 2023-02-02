@@ -20,8 +20,8 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '2.0.0'
     automatticTracksVersion = '2.2.0'
-    gutenbergMobileVersion = 'v1.87.2'
-    wordPressAztecVersion = 'v1.6.2'
+    gutenbergMobileVersion = 'v1.88.0-alpha1'
+    wordPressAztecVersion = 'v1.6.3'
     wordPressFluxCVersion = 'trunk-5863df97d8427540a8326b995647433882ca0e48'
     wordPressLoginVersion = '1.0.0'
     wordPressPersistentEditTextVersion = '1.0.2'
@@ -81,7 +81,7 @@ ext {
     // test
     assertjVersion = '3.23.1'
     junitVersion = '4.13.2'
-    mockitoVersion = '4.9.0'
+    mockitoVersion = '5.1.1'
     mockitoKotlinVersion = '4.1.0'
 
     // android test
