@@ -7,7 +7,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.support.WPSupportUtils.clickOn
 import org.wordpress.android.support.WPSupportUtils.getTranslatedString
-import org.wordpress.android.ui.pages.LoginPage
+import org.wordpress.android.ui.pages.LandingPageBase
 
 object LandingPage {
     private const val isNewUiEnabled = BuildConfig.IS_JETPACK_APP || BuildConfig.LANDING_SCREEN_REVAMP
@@ -17,7 +17,7 @@ object LandingPage {
         if (isNewUiEnabled) {
             // New UI - See LoginPrologueRevampedFragment
             composeTestRule
-                .onNodeWithText(getTranslatedString(LoginPage.continueWithWpComButtonStringRes))
+                .onNodeWithText(getTranslatedString(LandingPageBase.continueWithWpComButtonStringRes))
                 .performClick()
         } else {
             // Old UI - See LoginPrologueFragment
