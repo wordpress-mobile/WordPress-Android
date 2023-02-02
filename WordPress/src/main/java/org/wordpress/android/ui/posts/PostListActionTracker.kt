@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.widgets.PostListButtonType
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_BLAZE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY_URL
@@ -51,6 +52,7 @@ fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postDat
         BUTTON_CANCEL_PENDING_AUTO_UPLOAD -> "cancel_pending_auto_upload"
         BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG -> "show_move_trashed_post_to_draft_post_dialog"
         BUTTON_COPY_URL -> "copy_url"
+        BUTTON_BLAZE -> "blaze"
     }
 
     AnalyticsUtils.trackWithSiteDetails(statsEvent, site, properties)
