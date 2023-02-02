@@ -10,14 +10,12 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
 
 import org.hamcrest.Matchers;
-import org.junit.Rule;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.HelpAndSupportScreen;
 
 import static androidx.compose.ui.test.ActionsKt.performClick;
 import static androidx.compose.ui.test.FiltersKt.hasTestTag;
-import static androidx.compose.ui.test.junit4.AndroidComposeTestRule_androidKt.createComposeRule;
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -34,21 +32,13 @@ import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class LoginFlow {
-// this doesn't work - not sure how to create a new rule on this screen
-//    @get:Rule
-//    val composeTestRule = createComposeRule()
-
-    // this seems to work but not sure if correct
-    @Rule
-    ComposeTestRule mComposeTestRule = createComposeRule();
-
-    public LoginFlow chooseContinueWithWpCom() {
+    public LoginFlow chooseContinueWithWpCom(ComposeTestRule composeTestRule) {
         // Login Prologue – We want to Continue with WordPress.com, not a site address
         // See LoginPrologueFragment
 //        clickOn(R.id.continue_with_wpcom_button);
 
         // newly added to test compose ui - doesn't work as is
-        SemanticsNodeInteraction button = mComposeTestRule.onNode(hasTestTag("continueButton"), true);
+        SemanticsNodeInteraction button = composeTestRule.onNode(hasTestTag("continueButton"), true);
         button.assertExists("Button does not exist!");
         performClick(button);
 

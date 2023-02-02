@@ -21,7 +21,7 @@ public class ContactUsTests extends BaseTest {
     public void e2eSendButtonEnabledWhenTextIsEntered() {
         try {
             new LoginFlow()
-                .chooseContinueWithWpCom()
+                .chooseContinueWithWpCom(mComposeTestRule)
                 .tapHelp()
                 .assertHelpAndSupportScreenLoaded()
                 .openContactUs()
@@ -39,7 +39,7 @@ public class ContactUsTests extends BaseTest {
     @Test
     public void e2eHelpCanBeOpenedWhileEnteringEmail() {
         new LoginFlow()
-                .chooseContinueWithWpCom()
+                .chooseContinueWithWpCom(mComposeTestRule)
                 .tapHelp()
                 .assertHelpAndSupportScreenLoaded();
     }
@@ -47,7 +47,7 @@ public class ContactUsTests extends BaseTest {
     @Test
     public void e2eHelpCanBeOpenedWhileEnteringPassword() {
         new LoginFlow()
-                .chooseContinueWithWpCom()
+                .chooseContinueWithWpCom(mComposeTestRule)
                 .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                 .tapHelp()
                 .assertHelpAndSupportScreenLoaded();

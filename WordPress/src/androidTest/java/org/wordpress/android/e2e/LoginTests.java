@@ -25,7 +25,7 @@ public class LoginTests extends BaseTest {
 
     @Test
     public void e2eLoginWithEmailPassword() {
-        new LoginFlow().chooseContinueWithWpCom()
+        new LoginFlow().chooseContinueWithWpCom(mComposeTestRule)
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .enterPassword(E2E_WP_COM_USER_PASSWORD)
                        .confirmLogin(false);
@@ -33,7 +33,7 @@ public class LoginTests extends BaseTest {
 
     @Test
     public void e2eLoginWithPasswordlessAccount() {
-        new LoginFlow().chooseContinueWithWpCom()
+        new LoginFlow().chooseContinueWithWpCom(mComposeTestRule)
                        .enterEmailAddress(E2E_WP_COM_PASSWORDLESS_USER_EMAIL)
                        .openMagicLink()
                        .confirmLogin(false);
@@ -50,7 +50,7 @@ public class LoginTests extends BaseTest {
 
     @Test
     public void e2eLoginWithMagicLink() {
-        new LoginFlow().chooseContinueWithWpCom()
+        new LoginFlow().chooseContinueWithWpCom(mComposeTestRule)
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .chooseMagicLink()
                        .openMagicLink()
