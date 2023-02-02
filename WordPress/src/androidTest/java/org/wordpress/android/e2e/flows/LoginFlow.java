@@ -138,6 +138,23 @@ public class LoginFlow {
         return this;
     }
 
+    public LoginFlow chooseEnterYourSiteAddress(ComposeTestRule composeTestRule) {
+        // Login Prologue – We want to continue with a site address not a WordPress.com account
+        if (BuildConfig.IS_JETPACK_APP) {
+            // See LoginPrologueRevampedFragment
+            return tapEnterYourSiteAddressOnRevampedLoginScreen(composeTestRule);
+        } else {
+            // See LoginPrologueFragment
+            return chooseEnterYourSiteAddress();
+        }
+    }
+
+    private LoginFlow tapEnterYourSiteAddressOnRevampedLoginScreen(ComposeTestRule composeTestRule) {
+        new ComposeUiTestingUtils(composeTestRule)
+                .performClickOnNodeWithText(getTranslatedString(R.string.enter_your_site_address));
+        return this;
+    }
+
     public LoginFlow enterSiteAddress(String siteAddress) {
         // Site Address Screen – Fill it in and click "Continue"
         // See LoginSiteAddressFragment
