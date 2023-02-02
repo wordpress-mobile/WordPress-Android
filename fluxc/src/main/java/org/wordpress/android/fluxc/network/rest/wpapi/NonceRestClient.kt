@@ -18,8 +18,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class NonceRestClient
-@Inject constructor(
+class NonceRestClient @Inject constructor(
     private val wpApiEncodedBodyRequestBuilder: WPAPIEncodedBodyRequestBuilder,
     private val currentTimeProvider: CurrentTimeProvider,
     dispatcher: Dispatcher,
@@ -27,8 +26,8 @@ class NonceRestClient
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
     private val nonceMap: MutableMap<String, Nonce> = mutableMapOf()
-    fun getNonce(siteUrl: String): Nonce? = nonceMap[siteUrl]
-    fun getNonce(site: SiteModel): Nonce? = nonceMap[site.url]
+    fun getNonce(siteUrl: String, username: String): Nonce? = nonceMap[siteUrl]?.takeIf { it.username == username }
+    fun getNonce(site: SiteModel): Nonce? = getNonce(site.url, site.username)
 
     /**
      *  Requests a nonce using the
@@ -65,19 +64,24 @@ class NonceRestClient
                     timeOfResponse = currentTimeProvider.currentDate().time,
                     networkError = WPAPINetworkError(
                         BaseNetworkError(GenericErrorType.NOT_AUTHENTICATED)
-                    )
+                    ),
+                    username = username
                 )
             }
             is Error -> {
                 if (response.error.volleyError is NoConnectionError) {
                     // No connection, so we do not know if a nonce is available
-                    Unknown
+                    Unknown(username)
                 } else {
                     val networkResponse = response.error.volleyError?.networkResponse
                     if (networkResponse?.statusCode?.isRedirect() == true) {
-                        requestNonce(networkResponse.headers["Location"] ?: redirectUrl)
+                        requestNonce(networkResponse.headers["Location"] ?: redirectUrl, username)
                     } else {
-                        FailedRequest(currentTimeProvider.currentDate().time, response.error)
+                        FailedRequest(
+                            timeOfResponse = currentTimeProvider.currentDate().time,
+                            username = username,
+                            networkError = response.error
+                        )
                     }
                 }
             }
@@ -87,20 +91,24 @@ class NonceRestClient
         }
     }
 
-    private suspend fun requestNonce(redirectUrl: String): Nonce {
+    private suspend fun requestNonce(redirectUrl: String, username: String): Nonce {
         return when (
             val response = wpApiEncodedBodyRequestBuilder.syncGetRequest(this, redirectUrl)
         ) {
             is Success -> {
                 if (response.data?.matches("[0-9a-zA-Z]{2,}".toRegex()) == true) {
-                    Available(response.data)
+                    Available(value = response.data, username = username)
                 } else {
-                    FailedRequest(currentTimeProvider.currentDate().time)
+                    FailedRequest(timeOfResponse = currentTimeProvider.currentDate().time, username = username)
                 }
             }
 
             is Error -> {
-                FailedRequest(currentTimeProvider.currentDate().time, response.error)
+                FailedRequest(
+                    timeOfResponse = currentTimeProvider.currentDate().time,
+                    username = username,
+                    networkError = response.error
+                )
             }
         }
     }

@@ -83,7 +83,7 @@ class NonceRestClientTest {
 
         val actual = subject.requestNonce(site)
 
-        TestCase.assertEquals(Available(expectedNonce), actual)
+        TestCase.assertEquals(Available(expectedNonce, site.username), actual)
     }
 
     @Test
@@ -125,7 +125,7 @@ class NonceRestClientTest {
             .thenReturn(response)
 
         val actual = subject.requestNonce(site)
-        TestCase.assertEquals(FailedRequest(time), actual)
+        TestCase.assertEquals(FailedRequest(time, site.username), actual)
     }
 
     @Test
@@ -149,7 +149,7 @@ class NonceRestClientTest {
                 .thenReturn(response)
 
         val actual = subject.requestNonce(site)
-        TestCase.assertEquals(FailedRequest(time, baseNetworkError), actual)
+        TestCase.assertEquals(FailedRequest(time, site.username, baseNetworkError), actual)
     }
 
     @Test
@@ -173,6 +173,6 @@ class NonceRestClientTest {
                 .thenReturn(response)
 
         val actual = subject.requestNonce(site)
-        TestCase.assertEquals(Unknown, actual)
+        TestCase.assertEquals(Unknown(site.username), actual)
     }
 }
