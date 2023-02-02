@@ -13,7 +13,6 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.HelpAndSupportScreen;
 import org.wordpress.android.e2e.pages.LandingPage;
-import org.wordpress.android.util.compose.ComposeUiTestingUtils;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
@@ -26,7 +25,6 @@ import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_USERNAME;
 import static org.wordpress.android.support.WPSupportUtils.atLeastOneElementWithIdIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
-import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
