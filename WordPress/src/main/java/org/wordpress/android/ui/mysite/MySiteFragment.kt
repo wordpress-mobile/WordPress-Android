@@ -10,11 +10,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.appcompat.widget.TooltipCompat
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.AppBarLayout.LayoutParams
+import com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+import com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
+import com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP
+import com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.R
@@ -27,9 +33,9 @@ import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.SiteInfoToolbarViewParams
-import org.wordpress.android.ui.mysite.MySiteViewModel.State
-import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState
 import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
+import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState
+import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment
 import org.wordpress.android.ui.mysite.tabs.MySiteTabsAdapter
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
@@ -59,6 +65,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private var binding: MySiteFragmentBinding? = null
     private var siteTitle: String? = null
+    private var globalOffset: Int = 1
 
     private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
@@ -114,7 +121,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             val currentOffset = maxOffset + verticalOffset
 
             val percentage = if (maxOffset == 0) {
-                updateCollapsibleToolbar(1)
+                updateCollapsibleToolbar(globalOffset)
                 MAX_PERCENT
             } else {
                 updateCollapsibleToolbar(currentOffset)
@@ -202,6 +209,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
 
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
+        val collapsingToolbarParams = collapsingToolbar.layoutParams as LayoutParams
+        collapsingToolbarParams.scrollFlags = SCROLL_FLAG_SCROLL or SCROLL_FLAG_EXIT_UNTIL_COLLAPSED or SCROLL_FLAG_SNAP
         tabLayout.setVisible(state.tabsUiState.showTabs)
         updateTabs(state.tabsUiState)
         actionableEmptyView.setVisible(false)
@@ -240,7 +249,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
     }
 
-    private fun MySiteFragmentBinding.updateSiteInfoToolbarView(siteInfoToolbarViewParams: SiteInfoToolbarViewParams) {
+    private fun MySiteFragmentBinding.updateSiteInfoToolbarView(
+            siteInfoToolbarViewParams: SiteInfoToolbarViewParams) {
         showHeader(siteInfoToolbarViewParams.headerVisible)
         val appBarHeight = resources.getDimension(siteInfoToolbarViewParams.appBarHeight).toInt()
         appbarMain.layoutParams.height = appBarHeight
@@ -258,15 +268,28 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
+        globalOffset = 0
         tabLayout.setVisible(state.tabsUiState.showTabs)
         viewModel.setActionableEmptyViewVisible(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(true)
             actionableEmptyView.image.setVisible(state.shouldShowImage)
         }
+        if (!state.tabsUiState.showTabs) {
+            val collapsingToolbarParams = collapsingToolbar.layoutParams as LayoutParams
+            collapsingToolbarParams.scrollFlags = SCROLL_FLAG_NO_SCROLL
+        }
         actionableEmptyView.image.setVisible(state.shouldShowImage)
         siteTitle = getString(R.string.my_site_section_screen_title)
         updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
         appbarMain.setExpanded(false, true)
+        val params: CoordinatorLayout.LayoutParams = appbarMain.layoutParams as CoordinatorLayout.LayoutParams
+        params.behavior = AppBarLayout.Behavior()
+        val behavior: AppBarLayout.Behavior = params.behavior as AppBarLayout.Behavior
+        behavior.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
+            override fun canDrag(appBarLayout: AppBarLayout): Boolean {
+                return false
+            }
+        })
     }
 
     private fun MySiteFragmentBinding.showHeader(visibility: Boolean) {

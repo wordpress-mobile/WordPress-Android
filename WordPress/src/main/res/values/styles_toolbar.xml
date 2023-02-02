@@ -47,6 +47,7 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="fontFamily">serif</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
     </style>
 
     <style name="TextAppearance.App.CollapsingToolbar.Collapsed" parent="TextAppearance.MaterialComponents.Headline6">
