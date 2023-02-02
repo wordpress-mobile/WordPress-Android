@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.EditText;
 
+import androidx.compose.ui.test.junit4.ComposeTestRule;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
 
@@ -11,6 +12,8 @@ import org.hamcrest.Matchers;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.HelpAndSupportScreen;
+import org.wordpress.android.ui.pages.LoginPage;
+import org.wordpress.android.util.compose.ComposeUiTestingUtils;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
@@ -23,6 +26,7 @@ import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_USERNAME;
 import static org.wordpress.android.support.WPSupportUtils.atLeastOneElementWithIdIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
@@ -32,6 +36,23 @@ public class LoginFlow {
         // Login Prologue – We want to Continue with WordPress.com, not a site address
         // See LoginPrologueFragment
         clickOn(R.id.continue_with_wpcom_button);
+        return this;
+    }
+
+    public LoginFlow chooseContinueWithWpCom(ComposeTestRule composeTestRule) {
+        // Login Prologue – We want to Continue with WordPress.com, not a site address
+        if (BuildConfig.IS_JETPACK_APP) {
+            // See LoginPrologueRevampedFragment
+            return tapContinueWithWpComOnRevampedLoginScreen(composeTestRule);
+        } else {
+            // See LoginPrologueFragment
+            return chooseContinueWithWpCom();
+        }
+    }
+
+    private LoginFlow tapContinueWithWpComOnRevampedLoginScreen(ComposeTestRule composeTestRule) {
+        new ComposeUiTestingUtils(composeTestRule)
+                .performClickOnNodeWithText(getTranslatedString(LoginPage.continueWithWpComButtonStringRes));
         return this;
     }
 
