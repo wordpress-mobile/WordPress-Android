@@ -60,8 +60,11 @@ class PluginCoroutineStoreTest {
     }
     @Mock lateinit var pluginSqlUtils: PluginSqlUtilsWrapper
     private lateinit var store: PluginCoroutineStore
-    private lateinit var site: SiteModel
-    private val nonce = Nonce.Available("nonce")
+    private val site: SiteModel = SiteModel().apply {
+        url = "site.com"
+        username = "username"
+    }
+    private val nonce = Nonce.Available("nonce", site.username)
     private lateinit var onFetchedEventCaptor: KArgumentCaptor<OnPluginDirectoryFetched>
     private lateinit var onDeletedEventCaptor: KArgumentCaptor<OnSitePluginDeleted>
     private lateinit var onConfiguredEventCaptor: KArgumentCaptor<OnSitePluginConfigured>
@@ -75,8 +78,6 @@ class PluginCoroutineStoreTest {
                 wpapiAuthenticator,
                 pluginSqlUtils
         )
-        site = SiteModel()
-        site.url = "site.com"
         onFetchedEventCaptor = argumentCaptor()
         onDeletedEventCaptor = argumentCaptor()
         onConfiguredEventCaptor = argumentCaptor()

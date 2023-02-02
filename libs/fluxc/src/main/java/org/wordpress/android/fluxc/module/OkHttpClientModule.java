@@ -40,7 +40,7 @@ public abstract class OkHttpClientModule {
     @Provides
     @Named("no-redirects")
     public static OkHttpClient provideNoRedirectsOkHttpClientBuilder(
-            @Named("regular") final OkHttpClient okHttpRegularClient) {
+            @Named("custom-ssl") final OkHttpClient okHttpRegularClient) {
         return okHttpRegularClient.newBuilder()
                                   .followRedirects(false)
                                   .build();

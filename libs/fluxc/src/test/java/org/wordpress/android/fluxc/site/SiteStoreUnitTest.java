@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.WellSqlTestUtils;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
+import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
@@ -55,9 +56,16 @@ import static org.wordpress.android.fluxc.site.SiteUtils.generateWPComSite;
 public class SiteStoreUnitTest {
     private PostSqlUtils mPostSqlUtils = new PostSqlUtils();
     private SiteSqlUtils mSiteSqlUtils = new SiteSqlUtils();
-    private SiteStore mSiteStore = new SiteStore(new Dispatcher(), mPostSqlUtils, Mockito.mock(SiteRestClient.class),
-            Mockito.mock(SiteXMLRPCClient.class), Mockito.mock(PrivateAtomicCookie.class), mSiteSqlUtils,
-            CoroutineEngineUtilsKt.initCoroutineEngine());
+    private SiteStore mSiteStore = new SiteStore(
+            new Dispatcher(),
+            mPostSqlUtils,
+            Mockito.mock(SiteRestClient.class),
+            Mockito.mock(SiteXMLRPCClient.class),
+            Mockito.mock(SiteWPAPIRestClient.class),
+            Mockito.mock(PrivateAtomicCookie.class),
+            mSiteSqlUtils,
+            CoroutineEngineUtilsKt.initCoroutineEngine()
+    );
 
     @Before
     public void setUp() {
