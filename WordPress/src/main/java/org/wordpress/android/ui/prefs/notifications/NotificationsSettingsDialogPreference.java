@@ -248,7 +248,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
 
     private void addBloggingReminderSetting(LinearLayout view) {
         view.addView(setupClickSettingView(
-                getContext().getString(R.string.site_settings_blogging_reminders_title),
+                getContext().getString(R.string.site_settings_blogging_reminders_notification_title),
                 mBloggingRemindersProvider != null ? mBloggingRemindersProvider.getSummary(mBlogId) : null,
                 true,
                 (v -> {
