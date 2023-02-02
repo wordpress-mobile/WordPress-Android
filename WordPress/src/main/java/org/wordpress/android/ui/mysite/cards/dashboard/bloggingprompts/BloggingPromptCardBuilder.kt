@@ -38,11 +38,13 @@ class BloggingPromptCardBuilder @Inject constructor() {
             promptId = params.bloggingPrompt.id,
             attribution = BloggingPromptAttribution.fromString(params.bloggingPrompt.attribution),
             showViewMoreAction = params.showViewMoreAction,
+            showRemoveAction = params.enhancementsEnabled,
             onShareClick = params.onShareClick,
             onAnswerClick = params.onAnswerClick,
             onSkipClick = params.onSkipClick,
             onViewMoreClick = params.onViewMoreClick,
             onViewAnswersClick = params.onViewAnswersClick.takeIf { params.enhancementsEnabled },
+            onRemoveClick = params.onRemoveClick,
         )
     }
 }

@@ -125,7 +125,10 @@ class BloggingPromptCardViewHolder(
                         bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
                         card.onSkipClick.invoke()
                     }
-                    R.id.remove -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuRemoveFromDashboardClicked()
+                    R.id.remove -> {
+                        bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuRemoveFromDashboardClicked()
+                        card.onRemoveClick.invoke()
+                    }
                     R.id.learn_more -> {
                         bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuLearnMoreClicked()
                         learnMoreClicked()
@@ -135,6 +138,7 @@ class BloggingPromptCardViewHolder(
             }
             inflate(R.menu.blogging_prompt_card_menu)
             menu.findItem(R.id.view_more)?.isVisible = card.showViewMoreAction
+            menu.findItem(R.id.remove)?.isVisible = card.showRemoveAction
             MenuCompat.setGroupDividerEnabled(menu, true)
         }.also {
             it.show()
