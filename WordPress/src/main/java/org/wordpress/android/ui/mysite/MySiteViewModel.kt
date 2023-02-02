@@ -124,6 +124,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsListFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
@@ -177,6 +178,7 @@ class MySiteViewModel @Inject constructor(
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     bloggingPromptsListFeatureConfig: BloggingPromptsListFeatureConfig,
     bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig,
+    bloggingPromptsSocialFeatureConfig: BloggingPromptsSocialFeatureConfig,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
@@ -227,6 +229,7 @@ class MySiteViewModel @Inject constructor(
     private val isBloggingPromptsEnabled by lazy { bloggingPromptsFeatureConfig.isEnabled() }
     private val isBloggingPromptsListEnabled by lazy { bloggingPromptsListFeatureConfig.isEnabled() }
     private val isBloggingPromptsEnhancementsEnabled by lazy { bloggingPromptsEnhancementsFeatureConfig.isEnabled() }
+    private val isBloggingPromptsSocialEnabled by lazy { bloggingPromptsSocialFeatureConfig.isEnabled() }
 
     val isMySiteTabsEnabled: Boolean
         get() = isMySiteDashboardTabsEnabled &&
@@ -540,7 +543,8 @@ class MySiteViewModel @Inject constructor(
                         bloggingPromptUpdate?.promptModel
                     } else null,
                     showViewMoreAction = isBloggingPromptsListEnabled,
-                    enhancementsEnabled = isBloggingPromptsEnhancementsEnabled,
+                    showViewAnswersAction = isBloggingPromptsSocialEnabled,
+                    showRemoveAction = isBloggingPromptsEnhancementsEnabled,
                     onShareClick = this::onBloggingPromptShareClick,
                     onAnswerClick = this::onBloggingPromptAnswerClick,
                     onSkipClick = this::onBloggingPromptSkipClick,

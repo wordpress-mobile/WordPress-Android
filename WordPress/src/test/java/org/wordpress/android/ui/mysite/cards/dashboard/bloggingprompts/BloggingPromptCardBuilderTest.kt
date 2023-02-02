@@ -36,7 +36,7 @@ private val RESPONDENTS_IN_CARD = listOf(
     )
 )
 
-private val RESPONDENTS_IN_CARD_ENHANCEMENTS = listOf(
+private val RESPONDENTS_IN_CARD_VIEW_ANSWERS = listOf(
     AvatarItem("http://avatar1.url"),
     AvatarItem("http://avatar2.url"),
     AvatarItem("http://avatar3.url"),
@@ -101,17 +101,31 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given blogging prompt, when card is built with prompt enhancements, then return matching card`() {
-        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, enhancementsEnabled = true)
+    fun `given blogging prompt, when card is built showing view answers action, then return matching card`() {
+        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, showViewAnswersAction = true)
 
-        assertThat(statCard).isEqualTo(bloggingPromptCard(enhancementsEnabled = true))
+        assertThat(statCard).isEqualTo(bloggingPromptCard(showViewAnswersAction = true))
     }
 
     @Test
-    fun `given blogging prompt, when card is built without prompt enhancements, then return matching card`() {
-        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, enhancementsEnabled = false)
+    fun `given blogging prompt, when card is built without showing view answers action, then return matching card`() {
+        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, showViewAnswersAction = false)
 
-        assertThat(statCard).isEqualTo(bloggingPromptCard(enhancementsEnabled = false))
+        assertThat(statCard).isEqualTo(bloggingPromptCard(showViewAnswersAction = false))
+    }
+
+    @Test
+    fun `given blogging prompt, when card is built showing remove action, then return matching card`() {
+        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, showRemoveAction = true)
+
+        assertThat(statCard).isEqualTo(bloggingPromptCard(showRemoveAction = true))
+    }
+
+    @Test
+    fun `given blogging prompt, when card is built without remove answers action, then return matching card`() {
+        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, showRemoveAction = false)
+
+        assertThat(statCard).isEqualTo(bloggingPromptCard(showRemoveAction = false))
     }
 
     @Test
@@ -124,12 +138,14 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private fun buildBloggingPromptCardBuilderParams(
         bloggingPrompt: BloggingPromptModel?,
         showViewMoreAction: Boolean = false,
-        enhancementsEnabled: Boolean = false,
+        showViewAnswersAction: Boolean = false,
+        showRemoveAction: Boolean = false,
     ) = builder.build(
         BloggingPromptCardBuilderParams(
             bloggingPrompt,
             showViewMoreAction,
-            enhancementsEnabled,
+            showViewAnswersAction,
+            showRemoveAction,
             onShareClick,
             onAnswerClick,
             onSkipClick,
@@ -148,21 +164,22 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
 
     private fun bloggingPromptCard(
         showViewMoreAction: Boolean = false,
-        enhancementsEnabled: Boolean = false,
+        showViewAnswersAction: Boolean = false,
+        showRemoveAction: Boolean = false,
     ) = BloggingPromptCardWithData(
         prompt = UiStringText(PROMPT_TITLE),
-        respondents = if (enhancementsEnabled) RESPONDENTS_IN_CARD_ENHANCEMENTS else RESPONDENTS_IN_CARD,
+        respondents = if (showViewAnswersAction) RESPONDENTS_IN_CARD_VIEW_ANSWERS else RESPONDENTS_IN_CARD,
         numberOfAnswers = NUMBER_OF_RESPONDENTS,
         false,
         promptId = 123,
         attribution = BloggingPromptAttribution.DAY_ONE,
         showViewMoreAction = showViewMoreAction,
-        showRemoveAction = enhancementsEnabled,
+        showRemoveAction = showRemoveAction,
         onShareClick = onShareClick,
         onAnswerClick = onAnswerClick,
         onSkipClick = onSkipClick,
         onViewMoreClick = onViewMoreClick,
-        onViewAnswersClick = if (enhancementsEnabled) onViewAnswersClick else null,
+        onViewAnswersClick = if (showViewAnswersAction) onViewAnswersClick else null,
         onRemoveClick = onRemoveClick,
     )
 }

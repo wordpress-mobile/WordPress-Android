@@ -152,6 +152,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsListFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
@@ -258,6 +259,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig
+
+    @Mock
+    lateinit var bloggingPromptsSocialFeatureConfig: BloggingPromptsSocialFeatureConfig
 
     @Mock
     lateinit var bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper
@@ -495,6 +499,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             bloggingPromptsFeatureConfig,
             bloggingPromptsListFeatureConfig,
             bloggingPromptsEnhancementsFeatureConfig,
+            bloggingPromptsSocialFeatureConfig,
             jetpackBrandingUtils,
             appPrefsWrapper,
             bloggingPromptsCardAnalyticsTracker,
@@ -1798,13 +1803,13 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     @Suppress("SimplifyBooleanWithConstants")
-    fun `given blogging prompt card, when prompts enhancements FF is ON, view more action is shown`() = test {
-        initSelectedSite(isBloggingPromptsEnhancementsEnabled = true)
+    fun `given blogging prompt card, when prompts social FF is ON, view answers action is shown`() = test {
+        initSelectedSite(isBloggingPromptsSocialEnabled = true)
 
         verify(cardsBuilder).build(
             any(), any(), any(),
             argWhere {
-                it.bloggingPromptCardBuilderParams.enhancementsEnabled == true
+                it.bloggingPromptCardBuilderParams.showViewAnswersAction == true
             },
             any(),
             any()
@@ -1813,13 +1818,43 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     @Suppress("SimplifyBooleanWithConstants")
-    fun `given blogging prompt card, when prompts enhancements FF is OFF, view more action is not shown`() = test {
+    fun `given blogging prompt card, when prompts social FF is OFF, view answers action is not shown`() = test {
+        initSelectedSite(isBloggingPromptsSocialEnabled = false)
+
+        verify(cardsBuilder).build(
+            any(), any(), any(),
+            argWhere {
+                it.bloggingPromptCardBuilderParams.showViewAnswersAction == false
+            },
+            any(),
+            any()
+        )
+    }
+
+    @Test
+    @Suppress("SimplifyBooleanWithConstants")
+    fun `given blogging prompt card, when prompts enhancements FF is ON, remove action is shown`() = test {
+        initSelectedSite(isBloggingPromptsEnhancementsEnabled = true)
+
+        verify(cardsBuilder).build(
+            any(), any(), any(),
+            argWhere {
+                it.bloggingPromptCardBuilderParams.showRemoveAction == true
+            },
+            any(),
+            any()
+        )
+    }
+
+    @Test
+    @Suppress("SimplifyBooleanWithConstants")
+    fun `given blogging prompt card, when prompts enhancements FF is OFF, remove action is not shown`() = test {
         initSelectedSite(isBloggingPromptsEnhancementsEnabled = false)
 
         verify(cardsBuilder).build(
             any(), any(), any(),
             argWhere {
-                it.bloggingPromptCardBuilderParams.enhancementsEnabled == false
+                it.bloggingPromptCardBuilderParams.showRemoveAction == false
             },
             any(),
             any()
@@ -3226,6 +3261,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         isBloggingPromptsEnabled: Boolean = true,
         isBloggingPromptsListEnabled: Boolean = true,
         isBloggingPromptsEnhancementsEnabled: Boolean = true,
+        isBloggingPromptsSocialEnabled: Boolean = true,
         shouldShowJetpackBranding: Boolean = true
     ) {
         setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled)
@@ -3240,6 +3276,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsEnabled)
         whenever(bloggingPromptsListFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsListEnabled)
         whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsEnhancementsEnabled)
+        whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsSocialEnabled)
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsEnabled)
         whenever(jetpackBrandingUtils.shouldShowJetpackBranding()).thenReturn(shouldShowJetpackBranding)
         if (isSiteUsingWpComRestApi) {
@@ -3483,7 +3520,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             promptId = bloggingPromptId,
             attribution = BloggingPromptAttribution.DAY_ONE,
             showViewMoreAction = params.bloggingPromptCardBuilderParams.showViewMoreAction,
-            showRemoveAction = params.bloggingPromptCardBuilderParams.enhancementsEnabled,
+            showRemoveAction = params.bloggingPromptCardBuilderParams.showRemoveAction,
             onShareClick = onBloggingPromptShareClicked!!,
             onAnswerClick = onBloggingPromptAnswerClicked!!,
             onSkipClick = onBloggingPromptSkipClicked!!,

@@ -201,7 +201,16 @@ class CardsBuilderTest {
                 todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
                 postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
                 bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
-                    mock(), false, false, mock(), mock(), mock(), mock(), mock(), mock(),
+                    mock(),
+                    false,
+                    false,
+                    false,
+                    mock(),
+                    mock(),
+                    mock(),
+                    mock(),
+                    mock(),
+                    mock(),
                 )
             ),
             quickLinkRibbonBuilderParams = QuickLinkRibbonBuilderParams(

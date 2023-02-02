@@ -108,6 +108,7 @@ android {
         buildConfigField "boolean", "BLOGGING_PROMPTS", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS_LIST", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS_ENHANCEMENTS", "false"
+        buildConfigField "boolean", "BLOGGING_PROMPTS_SOCIAL", "false"
         buildConfigField "boolean", "QUICK_START_EXISTING_USERS_V2", "false"
         buildConfigField "boolean", "QRCODE_AUTH_FLOW", "false"
         buildConfigField "boolean", "BETA_SITE_DESIGNS", "false"
