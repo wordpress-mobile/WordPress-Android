@@ -56,7 +56,7 @@ class TotalStatsMapper @Inject constructor(
     }
 
     fun shouldShowFollowersGuideCard(domainModel: Int): Boolean {
-        return domainModel <= 0
+        return domainModel <= 1
     }
 
     fun shouldShowLikesGuideCard(dates: List<PeriodData>): Boolean {
