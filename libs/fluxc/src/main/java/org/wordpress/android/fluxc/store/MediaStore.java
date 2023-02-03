@@ -808,7 +808,8 @@ public class MediaStore extends Store {
             mMediaRestClient.uploadMedia(payload.site, payload.media);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.uploadMedia(payload.site, payload.media);
-        } else if (mApplicationPasswordsConfiguration.isEnabled()) {
+        } else if (payload.site.getOrigin() == SiteModel.ORIGIN_WPAPI
+                   && mApplicationPasswordsConfiguration.isEnabled()) {
             mApplicationPasswordsMediaRestClient.uploadMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.uploadMedia(payload.site, payload.media);
@@ -831,7 +832,8 @@ public class MediaStore extends Store {
             mMediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
-        } else if (mApplicationPasswordsConfiguration.isEnabled()) {
+        } else if (payload.site.getOrigin() == SiteModel.ORIGIN_WPAPI
+                   && mApplicationPasswordsConfiguration.isEnabled()) {
             mApplicationPasswordsMediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
         } else {
             mMediaXmlrpcClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
@@ -882,7 +884,8 @@ public class MediaStore extends Store {
             mMediaRestClient.cancelUpload(media);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.cancelUpload(media);
-        } else if (mApplicationPasswordsConfiguration.isEnabled()) {
+        } else if (payload.site.getOrigin() == SiteModel.ORIGIN_WPAPI
+                   && mApplicationPasswordsConfiguration.isEnabled()) {
             mApplicationPasswordsMediaRestClient.cancelUpload(media);
         } else {
             mMediaXmlrpcClient.cancelUpload(media);

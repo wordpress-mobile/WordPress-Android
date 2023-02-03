@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.PARSE_ERROR
+import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainsResponse
@@ -52,6 +53,7 @@ class SiteStoreTest {
     @Mock lateinit var postSqlUtils: PostSqlUtils
     @Mock lateinit var siteRestClient: SiteRestClient
     @Mock lateinit var siteXMLRPCClient: SiteXMLRPCClient
+    @Mock lateinit var siteWPAPIClient: SiteWPAPIRestClient
     @Mock lateinit var privateAtomicCookie: PrivateAtomicCookie
     @Mock lateinit var siteSqlUtils: SiteSqlUtils
     @Mock lateinit var domainsSuccessResponse: Response.Success<DomainsResponse>
@@ -67,6 +69,7 @@ class SiteStoreTest {
                 postSqlUtils,
                 siteRestClient,
                 siteXMLRPCClient,
+                siteWPAPIClient,
                 privateAtomicCookie,
                 siteSqlUtils,
                 initCoroutineEngine()
@@ -77,6 +80,7 @@ class SiteStoreTest {
     fun `fetchSite from WPCom endpoint and stores it to DB`() = test {
         val site = SiteModel()
         site.setIsWPCom(true)
+        site.origin = SiteModel.ORIGIN_WPCOM_REST
         val updatedSite = SiteModel()
         whenever(siteRestClient.fetchSite(site)).thenReturn(updatedSite)
 
@@ -87,6 +91,7 @@ class SiteStoreTest {
     fun `fetchSite error from WPCom endpoint returns error`() = test {
         val site = SiteModel()
         site.setIsWPCom(true)
+        site.origin = SiteModel.ORIGIN_WPCOM_REST
         val errorSite = SiteModel()
         errorSite.error = BaseNetworkError(PARSE_ERROR)
         whenever(siteRestClient.fetchSite(site)).thenReturn(errorSite)
