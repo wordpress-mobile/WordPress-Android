@@ -8,17 +8,21 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argThat
+import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.spy
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import java.util.Date
@@ -40,7 +44,10 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     @Mock
     lateinit var bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig
 
-    lateinit var helper: BloggingPromptsSettingsHelper
+    @Mock
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
+
+    private lateinit var helper: BloggingPromptsSettingsHelper
 
     @Before
     fun setUp() {
@@ -50,6 +57,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
             appPrefsWrapper,
             bloggingPromptsFeatureConfig,
             bloggingPromptsEnhancementsFeatureConfig,
+            analyticsTracker
         )
     }
 
@@ -230,7 +238,6 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
             assertThat(result).isTrue
         }
 
-    @Suppress("MaxLineLength")
     @Test
     fun `given enhancements FF off and not skipped for today, when isPromptsFeatureActive, then returns false`() =
         test {
@@ -246,6 +253,23 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
 
             assertThat(result).isTrue
         }
+
+    @Test
+    fun `when trackPromptsCardEnabledSettingTapped is called, then it tracks with correct properties`() {
+        val isEnabled = true
+
+        helper.trackPromptsCardEnabledSettingTapped(isEnabled)
+
+        verify(analyticsTracker)
+            .track(
+                eq(AnalyticsTracker.Stat.BLOGGING_PROMPTS_SETTINGS_SHOW_PROMPTS_TAPPED),
+                argWhere<Map<String, Any?>> {
+                    assertThat(it).hasSize(1)
+                    assertThat(it).containsEntry("enabled", isEnabled)
+                    true
+                }
+            )
+    }
 
     companion object {
         private fun createRemindersModel(
