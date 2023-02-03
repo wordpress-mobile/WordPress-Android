@@ -816,7 +816,9 @@ public class SiteSettingsFragment extends PreferenceFragment
             // we need to refresh metadata as gutenberg_enabled is now part of the user data
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         } else if (preference == mBloggingPromptsPref) {
-            setBloggingPromptsEnabled((Boolean) newValue);
+            final boolean isEnabled = (boolean) newValue;
+            mPromptsSettingsHelper.updatePromptsCardEnabledBlocking(mSite.getId(), isEnabled);
+            mPromptsSettingsHelper.trackPromptsCardEnabledSettingTapped(isEnabled);
         } else {
             return false;
         }
@@ -1281,14 +1283,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                 .getPromptsCardEnabledLiveData(mSite.getId())
                 .observe(getAppCompatActivity(), isEnabled -> {
                     if (mBloggingPromptsPref != null) {
-                        mBloggingPromptsPref.setChecked(isEnabled);
+                        mBloggingPromptsPref.setDefaultValue(isEnabled);
                     }
                 });
-    }
-
-    private void setBloggingPromptsEnabled(boolean newValue) {
-        mPromptsSettingsHelper
-                .updatePromptsCardEnabledBlocking(mSite.getId(), newValue);
     }
 
     private void showHomepageSettings() {
