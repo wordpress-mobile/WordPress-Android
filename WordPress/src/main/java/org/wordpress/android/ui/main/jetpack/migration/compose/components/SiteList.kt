@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.Message
-import org.wordpress.android.ui.compose.components.ScreenIcon
 import org.wordpress.android.ui.compose.components.Subtitle
 import org.wordpress.android.ui.compose.components.Title
 import org.wordpress.android.ui.compose.modifiers.disableUserScroll
