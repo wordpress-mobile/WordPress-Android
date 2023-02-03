@@ -44,7 +44,8 @@ internal class ApplicationPasswordsManager @Inject constructor(
             )
         )
         val existingPassword = applicationPasswordsStore.getCredentials(site.domainName)
-        if (existingPassword != null) {
+        if (existingPassword != null &&
+            (site.username == existingPassword.userName || site.isUsingWpComRestApi)) {
             return ApplicationPasswordCreationResult.Existing(existingPassword)
         }
 
