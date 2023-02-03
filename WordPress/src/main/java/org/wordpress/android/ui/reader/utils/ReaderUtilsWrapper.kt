@@ -59,4 +59,6 @@ class ReaderUtilsWrapper @Inject constructor(
         contextProvider.getContext(),
         numComments
     )
+
+    fun isSelfHosted(authorBlogId: Long) = ReaderUtils.isSelfHosted(authorBlogId)
 }
