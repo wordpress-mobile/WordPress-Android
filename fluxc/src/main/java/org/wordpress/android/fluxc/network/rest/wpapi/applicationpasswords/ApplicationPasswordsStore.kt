@@ -109,10 +109,6 @@ internal class ApplicationPasswordsStore @Inject constructor(
         }
     }
 
-    fun getUuid(site: SiteModel): ApplicationPasswordUUID? {
-        return encryptedPreferences.getString(site.uuidPrefKey, null)
-    }
-
     private val SiteModel.domainName
         get() = UrlUtils.removeScheme(url).trim('/')
 
