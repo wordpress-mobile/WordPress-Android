@@ -17,6 +17,7 @@ import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,6 +32,7 @@ import org.wordpress.android.ui.accounts.login.components.LoopingTextWithBackgro
 import org.wordpress.android.ui.accounts.login.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.components.TopLinearGradient
+import org.wordpress.android.ui.compose.TestTags
 import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.setEdgeToEdgeContentDisplay
@@ -128,7 +130,10 @@ private fun LoginScreenRevamped(
             borderColor = colorResource(R.color.border_top_jetpack_login_splash_bottom_panel),
             background = { clipModifier, blurModifier -> LoopingTextWithBackground(clipModifier, blurModifier) }
         ) {
-            PrimaryButton(onClick = onWpComLoginClicked)
+            PrimaryButton(
+                onClick = onWpComLoginClicked,
+                modifier = Modifier.testTag(TestTags.BUTTON_WPCOM_AUTH)
+            )
             SecondaryButton(onClick = onSiteAddressLoginClicked)
         }
     }
