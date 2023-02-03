@@ -20,7 +20,7 @@ fun Title(
         fontSize = FontSize.ExtraExtraExtraLarge.value,
         fontWeight = FontWeight.Bold,
         modifier = modifier
-            .padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
+            .padding(horizontal = 30.dp)
             .padding(top = 30.dp)
     )
 }
