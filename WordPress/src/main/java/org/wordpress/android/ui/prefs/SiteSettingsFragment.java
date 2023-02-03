@@ -716,6 +716,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mTitlePref) {
             mSiteSettings.setTitle(newValue.toString());
             changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
+            ((BlogPreferencesActivity) getActivity()).updateActionBarTitle(newValue.toString());
         } else if (preference == mTaglinePref) {
             mSiteSettings.setTagline(newValue.toString());
             changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());

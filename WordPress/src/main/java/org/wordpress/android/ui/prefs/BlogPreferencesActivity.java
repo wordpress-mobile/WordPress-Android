@@ -34,6 +34,7 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
     private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";
 
     private SiteModel mSite;
+    private ActionBar mActionBar;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -60,11 +61,11 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(StringEscapeUtils.unescapeHtml4(SiteUtils.getSiteNameOrHomeURL(mSite)));
+        mActionBar = getSupportActionBar();
+        if (mActionBar != null) {
+            mActionBar.setHomeButtonEnabled(true);
+            mActionBar.setDisplayHomeAsUpEnabled(true);
+            mActionBar.setTitle(StringEscapeUtils.unescapeHtml4(SiteUtils.getSiteNameOrHomeURL(mSite)));
         }
 
         // TODO: android.app.Fragment  is deprecated since Android P.
@@ -79,6 +80,12 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
             fragmentManager.beginTransaction()
                            .replace(R.id.fragment_container, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
                            .commit();
+        }
+    }
+
+    public void updateActionBarTitle(String title) {
+        if (mActionBar != null) {
+            mActionBar.setTitle(StringEscapeUtils.unescapeHtml4(title));
         }
     }
 
