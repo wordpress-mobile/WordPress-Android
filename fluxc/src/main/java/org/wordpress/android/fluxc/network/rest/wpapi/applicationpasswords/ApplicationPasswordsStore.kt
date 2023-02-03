@@ -35,14 +35,15 @@ internal class ApplicationPasswordsStore @Inject constructor(
         val password = encryptedPreferences.getString(site.passwordPrefKey, null)
         val uuid = encryptedPreferences.getString(site.uuidPrefKey, null)
 
-        return if (username != null && password != null && uuid != null) {
-            ApplicationPasswordCredentials(
-                userName = username,
-                password = password,
-                uuid = uuid
-            )
-        } else {
-            null
+        return when {
+            !site.isUsingWpComRestApi && site.username != username -> null
+            username != null && password != null && uuid != null ->
+                ApplicationPasswordCredentials(
+                    userName = username,
+                    password = password,
+                    uuid = uuid
+                )
+            else -> null
         }
     }
 
