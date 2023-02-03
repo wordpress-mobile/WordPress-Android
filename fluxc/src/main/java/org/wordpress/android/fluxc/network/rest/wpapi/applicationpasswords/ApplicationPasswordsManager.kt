@@ -141,10 +141,11 @@ internal class ApplicationPasswordsManager @Inject constructor(
     suspend fun deleteApplicationCredentials(
         site: SiteModel
     ): ApplicationPasswordDeletionResult {
-        val uuid = applicationPasswordsStore.getUuid(site) ?: fetchApplicationPasswordUUID(site).let {
-            if (it.isError) return ApplicationPasswordDeletionResult.Failure(it.error)
-            it.uuid
-        }
+        val uuid = applicationPasswordsStore.getCredentials(site)?.uuid
+            ?: fetchApplicationPasswordUUID(site).let {
+                if (it.isError) return ApplicationPasswordDeletionResult.Failure(it.error)
+                it.uuid
+            }
 
         val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
             jetpackApplicationPasswordsRestClient.deleteApplicationPassword(

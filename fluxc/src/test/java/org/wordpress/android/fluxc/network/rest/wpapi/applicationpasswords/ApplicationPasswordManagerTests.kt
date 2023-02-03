@@ -212,7 +212,7 @@ class ApplicationPasswordManagerTests {
                 origin = SiteModel.ORIGIN_WPCOM_REST
             }
 
-            whenever(applicationPasswordsStore.getUuid(testSite)).thenReturn(uuid)
+            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(testCredentials)
             whenever(mJetpackApplicationPasswordsRestClient.deleteApplicationPassword(site, uuid))
                 .thenReturn(ApplicationPasswordDeletionPayload(isDeleted = true))
 
@@ -231,7 +231,7 @@ class ApplicationPasswordManagerTests {
                 username = testCredentials.userName
             }
 
-            whenever(applicationPasswordsStore.getUuid(testSite)).thenReturn(uuid)
+            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(testCredentials)
             whenever(mWpApiApplicationPasswordsRestClient.deleteApplicationPassword(site, uuid))
                 .thenReturn(ApplicationPasswordDeletionPayload(isDeleted = true))
 
@@ -273,7 +273,7 @@ class ApplicationPasswordManagerTests {
                 origin = SiteModel.ORIGIN_XMLRPC
                 username = testCredentials.userName
             }
-            whenever(applicationPasswordsStore.getUuid(testSite)).thenReturn(null)
+            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(null)
             whenever(mWpApiApplicationPasswordsRestClient.fetchApplicationPasswordUUID(site, applicationName))
                 .thenReturn(ApplicationPasswordUUIDFetchPayload(uuid))
             whenever(mWpApiApplicationPasswordsRestClient.deleteApplicationPassword(site, uuid))
