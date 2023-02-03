@@ -1232,7 +1232,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         initBloggingPrompts();
 
         // check if there's still any blogging settings visible, if not remove the whole section
-        PreferenceCategory blogging = (PreferenceCategory) findPreference(getString(R.string.pref_key_blogging));
+        final PreferenceCategory blogging = (PreferenceCategory) findPreference(getString(R.string.pref_key_blogging));
         if (blogging.getPreferenceCount() == 0) removeBloggingSection();
     }
 
