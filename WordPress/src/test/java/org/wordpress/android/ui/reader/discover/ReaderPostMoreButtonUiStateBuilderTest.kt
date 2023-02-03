@@ -338,7 +338,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `does not contain block user action for wpcom sites`() = test {
+    fun `does not contain block user action for self-hosted sites`() = test {
         // Arrange
         val post = init()
         whenever(readerUtilsWrapper.isSelfHosted(post.authorId)).thenReturn(true)
