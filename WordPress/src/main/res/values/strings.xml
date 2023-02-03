@@ -612,6 +612,7 @@
     <string name="site_settings_traffic_header">Traffic</string>
     <string name="site_settings_performance">Performance</string>
     <string name="site_settings_homepage">Homepage</string>
+    <string name="site_settings_blogging">Blogging</string>
 
     <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>
@@ -634,9 +635,9 @@
     <string name="site_settings_time_format_title">Time Format</string>
     <string name="site_settings_timezone_title">Timezone</string>
     <string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
-    <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
-    <string name="site_settings_blogging_prompts_title">Blogging Prompts</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Reminders and prompts</string>
+    <string name="site_settings_blogging_reminders_title">Reminders</string>
+    <string name="site_settings_blogging_prompts_title">Show prompts</string>
+    <string name="site_settings_blogging_reminders_notification_title">Blogging reminders</string>
     <string name="site_settings_posts_per_page_title">Posts per page</string>
     <string name="site_settings_format_entry_custom">Custom</string>
     <string name="site_settings_format_hint_custom">Custom format</string>
