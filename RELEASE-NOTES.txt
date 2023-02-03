@@ -3,6 +3,7 @@
 21.7
 -----
 * [*] [internal] Bump Aztec version to `1.6.3` [https://github.com/wordpress-mobile/WordPress-Android/pull/17852]
+* [**] [Jetpack-only] Blogging Prompts: add the ability to answer previous prompts, disable prompts, and other minor enhancements.
 
 21.6
 -----
