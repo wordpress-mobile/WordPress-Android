@@ -73,12 +73,14 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordDeletionResult
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsManager
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
+import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainPriceResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory
@@ -1994,6 +1996,20 @@ open class SiteStore @Inject constructor(
             }
         } else {
             FetchedPlansPayload(siteModel, PlansError(NOT_AVAILABLE))
+        }
+    }
+
+    suspend fun fetchDomainPrice(domainName: String): WPAPIResponse<DomainPriceResponse> {
+        return coroutineEngine.withDefaultContext(T.API, this, "Fetch domain price") {
+            when (val response =
+                siteRestClient.fetchDomainPrice(domainName)) {
+                is Success -> {
+                    WPAPIResponse.Success(response.data)
+                }
+                is Error -> {
+                    WPAPIResponse.Error(WPAPINetworkError(response.error))
+                }
+            }
         }
     }
 }

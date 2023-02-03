@@ -41,6 +41,7 @@
 /domains/supported-countries/
 /domains/supported-states/$countryCode#String
 /domains/$domainName#String/is-available
+/domains/$domainName#String/price
 
 /meta/external-media/pexels
 /sites/$site/external-media-upload

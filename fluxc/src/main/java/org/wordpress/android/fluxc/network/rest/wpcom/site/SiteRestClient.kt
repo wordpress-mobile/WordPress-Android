@@ -761,6 +761,11 @@ class SiteRestClient @Inject constructor(
         return wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), PlansResponse::class.java)
     }
 
+    suspend fun fetchDomainPrice(domainName: String): Response<DomainPriceResponse> {
+        val url = WPCOMREST.domains.domainName(domainName).price.urlV1_1
+        return wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), DomainPriceResponse::class.java)
+    }
+
     fun designatePrimaryDomain(site: SiteModel, domain: String) {
         val url = WPCOMREST.sites.site(site.siteId).domains.primary.urlV1_1
         val params = mutableMapOf<String, Any>()
