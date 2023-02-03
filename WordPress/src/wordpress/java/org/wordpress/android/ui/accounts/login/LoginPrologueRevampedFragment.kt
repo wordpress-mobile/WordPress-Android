@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,6 +33,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.ui.accounts.login.compose.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.Tagline
+import org.wordpress.android.ui.compose.TestTags
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.setEdgeToEdgeContentDisplay
 
@@ -109,6 +111,7 @@ fun LoginScreenRevamped(
             PrimaryButton(
                 text = stringResource(string.continue_with_wpcom),
                 onClick = onWpComLoginClicked,
+                modifier = Modifier.testTag(TestTags.BUTTON_WPCOM_AUTH)
             )
             SecondaryButton(
                 text = stringResource(string.enter_your_site_address),

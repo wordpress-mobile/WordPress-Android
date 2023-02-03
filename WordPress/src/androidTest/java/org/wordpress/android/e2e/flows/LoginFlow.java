@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.EditText;
 
+import androidx.compose.ui.test.junit4.ComposeTestRule;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
 
@@ -11,6 +12,7 @@ import org.hamcrest.Matchers;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.HelpAndSupportScreen;
+import org.wordpress.android.e2e.pages.LandingPage;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
@@ -28,10 +30,9 @@ import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class LoginFlow {
-    public LoginFlow chooseContinueWithWpCom() {
+    public LoginFlow chooseContinueWithWpCom(ComposeTestRule composeTestRule) {
         // Login Prologue – We want to Continue with WordPress.com, not a site address
-        // See LoginPrologueFragment
-        clickOn(R.id.continue_with_wpcom_button);
+        LandingPage.tapContinueWithWpCom(composeTestRule);
         return this;
     }
 
@@ -110,10 +111,9 @@ public class LoginFlow {
         return this;
     }
 
-    public LoginFlow chooseEnterYourSiteAddress() {
+    public LoginFlow chooseEnterYourSiteAddress(ComposeTestRule composeTestRule) {
         // Login Prologue – We want to continue with a site address not a WordPress.com account
-        // See LoginPrologueFragment
-        clickOn(R.id.enter_your_site_address_button);
+        LandingPage.tapEnterYourSiteAddress(composeTestRule);
         return this;
     }
 

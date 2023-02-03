@@ -612,6 +612,7 @@
     <string name="site_settings_traffic_header">Traffic</string>
     <string name="site_settings_performance">Performance</string>
     <string name="site_settings_homepage">Homepage</string>
+    <string name="site_settings_blogging">Blogging</string>
 
     <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>
@@ -634,9 +635,9 @@
     <string name="site_settings_time_format_title">Time Format</string>
     <string name="site_settings_timezone_title">Timezone</string>
     <string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
-    <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
-    <string name="site_settings_blogging_prompts_title">Blogging Prompts</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Reminders and prompts</string>
+    <string name="site_settings_blogging_reminders_title">Reminders</string>
+    <string name="site_settings_blogging_prompts_title">Show prompts</string>
+    <string name="site_settings_blogging_reminders_notification_title">Blogging reminders</string>
     <string name="site_settings_posts_per_page_title">Posts per page</string>
     <string name="site_settings_format_entry_custom">Custom</string>
     <string name="site_settings_format_hint_custom">Custom format</string>
@@ -4046,8 +4047,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_reminders_notification_time">Notification time</string>
     <string name="set_your_blogging_prompts_title">Become a better writer by building a habit</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Posting regularly attracts new readers. Tell us when you want to write and we\’ll send you a reminder!</string>
-    <string name="blogging_reminders_prompt_title">Include daily prompt</string>
-    <string name="blogging_reminders_prompt_subtitle">Reminder will include a daily prompt</string>
+    <string name="blogging_reminders_prompt_title">Include a Blogging Prompt</string>
+    <string name="blogging_reminders_prompt_subtitle">Notification will include a word or short phrase for inspiration</string>
     <string name="blogging_prompt_set_reminders">Set reminders</string>
 
     <!-- Stats module disabled error view -->
@@ -4107,11 +4108,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_notification_dismiss">Dismiss</string>
 
     <!-- Blogging Prompts Onboarding -->
-    <string name="blogging_prompts_onboarding_header_title">Introducing Prompts</string>
+    <string name="blogging_prompts_onboarding_header_title">Introducing\nBlogging Prompts</string>
     <string name="blogging_prompts_onboarding_content_top">The best way to become a better writer is to build a writing habit and share with others — that’s where Prompts come in!</string>
     <string name="blogging_prompts_onboarding_content_bottom">We’ll show you a new prompt each day on your dashboard to help get those creative juices flowing!</string>
     <string name="blogging_prompts_onboarding_content_note_title">Note:</string>
-    <string name="blogging_prompts_onboarding_content_note_content">You can learn more and set up reminders at any time in My Site &gt; Settings &gt; Blogging Reminders</string>
+    <string name="blogging_prompts_onboarding_content_note_content">You can control Blogging Prompts and Reminders at any time in My Site &gt; Settings &gt; Blogging</string>
     <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
     <string name="blogging_prompts_onboarding_got_it">Got it</string>
