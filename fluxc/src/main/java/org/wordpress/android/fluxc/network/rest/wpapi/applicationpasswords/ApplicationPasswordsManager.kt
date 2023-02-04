@@ -8,7 +8,6 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.UrlUtils
 import java.util.Optional
 import javax.inject.Inject
 
@@ -43,9 +42,8 @@ internal class ApplicationPasswordsManager @Inject constructor(
                 )
             )
         )
-        val existingPassword = applicationPasswordsStore.getCredentials(site.domainName)
-        if (existingPassword != null &&
-            (site.username == existingPassword.userName || site.isUsingWpComRestApi)) {
+        val existingPassword = applicationPasswordsStore.getCredentials(site)
+        if (existingPassword != null) {
             return ApplicationPasswordCreationResult.Existing(existingPassword)
         }
 
@@ -56,7 +54,7 @@ internal class ApplicationPasswordsManager @Inject constructor(
             createApplicationPassword(site, usernamePayload.userName).also {
                 if (it is ApplicationPasswordCreationResult.Created) {
                     applicationPasswordsStore.saveCredentials(
-                        site.domainName,
+                        site,
                         it.credentials
                     )
                 }
@@ -143,10 +141,11 @@ internal class ApplicationPasswordsManager @Inject constructor(
     suspend fun deleteApplicationCredentials(
         site: SiteModel
     ): ApplicationPasswordDeletionResult {
-        val uuid = applicationPasswordsStore.getUuid(site.domainName) ?: fetchApplicationPasswordUUID(site).let {
-            if (it.isError) return ApplicationPasswordDeletionResult.Failure(it.error)
-            it.uuid
-        }
+        val uuid = applicationPasswordsStore.getCredentials(site)?.uuid
+            ?: fetchApplicationPasswordUUID(site).let {
+                if (it.isError) return ApplicationPasswordDeletionResult.Failure(it.error)
+                it.uuid
+            }
 
         val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
             jetpackApplicationPasswordsRestClient.deleteApplicationPassword(
@@ -200,9 +199,6 @@ internal class ApplicationPasswordsManager @Inject constructor(
     }
 
     fun deleteLocalApplicationPassword(site: SiteModel) {
-        applicationPasswordsStore.deleteCredentials(site.domainName)
+        applicationPasswordsStore.deleteCredentials(site)
     }
-
-    private val SiteModel.domainName
-        get() = UrlUtils.removeScheme(url).trim('/')
 }

@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.UrlUtils
 import java.security.KeyStore
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,37 +30,38 @@ internal class ApplicationPasswordsStore @Inject constructor(
     }
 
     @Synchronized
-    fun getCredentials(host: String): ApplicationPasswordCredentials? {
-        val username = encryptedPreferences.getString(host.usernamePrefKey, null)
-        val password = encryptedPreferences.getString(host.passwordPrefKey, null)
-        val uuid = encryptedPreferences.getString(host.uuidPrefKey, null)
+    fun getCredentials(site: SiteModel): ApplicationPasswordCredentials? {
+        val username = encryptedPreferences.getString(site.usernamePrefKey, null)
+        val password = encryptedPreferences.getString(site.passwordPrefKey, null)
+        val uuid = encryptedPreferences.getString(site.uuidPrefKey, null)
 
-        return if (username != null && password != null && uuid != null) {
-            ApplicationPasswordCredentials(
-                userName = username,
-                password = password,
-                uuid = uuid
-            )
-        } else {
-            null
+        return when {
+            !site.isUsingWpComRestApi && site.username != username -> null
+            username != null && password != null && uuid != null ->
+                ApplicationPasswordCredentials(
+                    userName = username,
+                    password = password,
+                    uuid = uuid
+                )
+            else -> null
         }
     }
 
     @Synchronized
-    fun saveCredentials(host: String, credentials: ApplicationPasswordCredentials) {
+    fun saveCredentials(site: SiteModel, credentials: ApplicationPasswordCredentials) {
         encryptedPreferences.edit()
-            .putString(host.usernamePrefKey, credentials.userName)
-            .putString(host.passwordPrefKey, credentials.password)
-            .putString(host.uuidPrefKey, credentials.uuid)
+            .putString(site.usernamePrefKey, credentials.userName)
+            .putString(site.passwordPrefKey, credentials.password)
+            .putString(site.uuidPrefKey, credentials.uuid)
             .apply()
     }
 
     @Synchronized
-    fun deleteCredentials(host: String) {
+    fun deleteCredentials(site: SiteModel) {
         encryptedPreferences.edit()
-            .remove(host.usernamePrefKey)
-            .remove(host.passwordPrefKey)
-            .remove(host.uuidPrefKey)
+            .remove(site.usernamePrefKey)
+            .remove(site.passwordPrefKey)
+            .remove(site.uuidPrefKey)
             .apply()
     }
 
@@ -106,16 +109,15 @@ internal class ApplicationPasswordsStore @Inject constructor(
         }
     }
 
-    fun getUuid(host: String): ApplicationPasswordUUID? {
-        return encryptedPreferences.getString(host.uuidPrefKey, null)
-    }
+    private val SiteModel.domainName
+        get() = UrlUtils.removeScheme(url).trim('/')
 
-    private val String.usernamePrefKey
-        get() = "$USERNAME_PREFERENCE_KEY_PREFIX$this"
+    private val SiteModel.usernamePrefKey
+        get() = "$USERNAME_PREFERENCE_KEY_PREFIX$domainName"
 
-    private val String.passwordPrefKey
-        get() = "$PASSWORD_PREFERENCE_KEY_PREFIX$this"
+    private val SiteModel.passwordPrefKey
+        get() = "$PASSWORD_PREFERENCE_KEY_PREFIX$domainName"
 
-    private val String.uuidPrefKey
-        get() = "$UUID_PREFERENCE_KEY_PREFIX$this"
+    private val SiteModel.uuidPrefKey
+        get() = "$UUID_PREFERENCE_KEY_PREFIX$domainName"
 }
