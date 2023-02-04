@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-25 09:54:07+0000
+Translation-Revision-Date: 2023-02-01 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ja_JP
 -->
 <resources>
+    <string name="install_play_store_to_get_jetpack">Jetpack アプリを入手するには Google Play ストアをインストールしてください</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">後で実行する</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Jetpack に切り替える </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">統計、Reader、通知などの Jetpack 機能は、WordPress アプリから削除されました。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack 機能が移動しました。</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s がまもなく %2$s に移動します</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s がまもなく %2$s に移動します</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s がまもなく移動します</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s がまもなく移動します</string>
+    <string name="wp_jetpack_powered_phase_2">Jetpack アプリを入手</string>
+    <string name="my_site_blogging_prompt_card_view_answers">すべての回答を表示</string>
+    <string name="stats_insights_total_stats_seven_days_negative">前の7日間と比べて%1$s 減少</string>
+    <string name="stats_insights_total_stats_seven_days_positive">前の7日間と比べて%1$s 増加</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">過去7日間の訪問者数は、その前の7日間よりも%1$s人減りました。</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">過去7日間の訪問者数は、その前の7日間よりも%1$s人増えました。</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">過去7日間の表示数は、その前の7日間よりも%1$s人減りました。</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">過去7日間の表示数は、その前の7日間よりも%1$s人増えました。</string>
+    <string name="stats_timeframe_previous_seven_days">前の7日間</string>
+    <string name="stats_timeframe_last_seven_days">過去7日間</string>
+    <string name="weeks_quantity_other">%d週</string>
+    <string name="weeks_quantity_one">1週</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt; から</string>
     <string name="jetpack_feature_card_menu_item_hide_this">非表示</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">後で再通知</string>
@@ -330,6 +351,7 @@ Language: ja_JP
     <string name="new_site_creation_intents_title">サイトのテーマ</string>
     <string name="quick_start_site_menu_tab_message_short">&lt;b&gt;%1$s&lt;/b&gt; をタップして続行します。</string>
     <string name="my_site_blogging_prompt_card_menu_remove">ダッシュボードから削除</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">今日にスキップ</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">プロンプトをさらに表示</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d件の回答</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">ブログ作成のプロンプトを共有</string>

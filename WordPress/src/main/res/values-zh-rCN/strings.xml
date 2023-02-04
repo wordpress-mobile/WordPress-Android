@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-26 23:34:48+0000
+Translation-Revision-Date: 2023-01-31 16:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_CN
 -->
 <resources>
+    <string name="install_play_store_to_get_jetpack">请安装 Google Play 商店获取 Jetpack 应用程序</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">以后再说</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">切换至 Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">统计信息、阅读器、通知和其他由 Jetpack 提供支持的功能已从 WordPress 应用程序上删除。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack 功能已移动。</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s 将在 %2$s后移动</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s 将在 %2$s后移动</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s 即将移动</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s 即将移动</string>
+    <string name="wp_jetpack_powered_phase_2">获取 Jetpack 应用程序</string>
+    <string name="my_site_blogging_prompt_card_view_answers">查看所有回复</string>
+    <string name="stats_insights_total_stats_seven_days_negative">比上一个 7 天低 %1$s</string>
+    <string name="stats_insights_total_stats_seven_days_positive">比上一个 7 天高 %1$s</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">您过去 7 天的访客数比上一个 7 天低 %1$s。</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">您过去 7 天的访客数比上一个 7 天高 %1$s。</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">您过去 7 天的查看数比上一个 7 天低 %1$s。</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">您过去 7 天的查看数比上一个 7 天高 %1$s。</string>
+    <string name="stats_timeframe_previous_seven_days">上一个 7 天</string>
+    <string name="stats_timeframe_last_seven_days">过去 7 天</string>
+    <string name="weeks_quantity_other">%d 周</string>
+    <string name="weeks_quantity_one">1 周</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">从&lt;b&gt;第一天&lt;/b&gt;开始</string>
     <string name="jetpack_feature_card_menu_item_hide_this">隐藏此内容</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">稍后提醒我</string>
@@ -325,6 +346,7 @@ Language: zh_CN
     <string name="new_site_creation_intents_title">站点主题</string>
     <string name="quick_start_site_menu_tab_message_short">轻点“&lt;b&gt;%1$s&lt;/b&gt;”继续。</string>
     <string name="my_site_blogging_prompt_card_menu_remove">从仪表盘中移除</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">跳过今天</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">查看更多提示</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d 条回复</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">共享博客提示</string>
