@@ -20,11 +20,10 @@ import kotlin.test.assertEquals
 @ExperimentalCoroutinesApi
 class ApplicationPasswordManagerTests {
     private val applicationName = "name"
-    private val siteDomain = "test-site.com"
     private val uuid = "uuid"
     private val testSite = SiteModel().apply {
         username = "username"
-        url = "http://$siteDomain"
+        url = "http://test-site.com"
     }
     private val testCredentials = ApplicationPasswordCredentials(
         userName = "username",
@@ -52,7 +51,7 @@ class ApplicationPasswordManagerTests {
 
     @Test
     fun `given a local password exists, when we ask for a password, then return it`() = runBlockingTest {
-        whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(testCredentials)
+        whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(testCredentials)
         val result = mApplicationPasswordsManager.getApplicationCredentials(
             testSite
         )
@@ -67,7 +66,7 @@ class ApplicationPasswordManagerTests {
                 origin = SiteModel.ORIGIN_WPCOM_REST
             }
 
-            whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(null)
+            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(null)
             whenever(mJetpackApplicationPasswordsRestClient.fetchWPAdminUsername(site))
                 .thenReturn(UsernameFetchPayload(testCredentials.userName))
             whenever(
@@ -88,7 +87,7 @@ class ApplicationPasswordManagerTests {
             )
 
             assertEquals(ApplicationPasswordCreationResult.Created(testCredentials), result)
-            verify(applicationPasswordsStore).saveCredentials(siteDomain, testCredentials)
+            verify(applicationPasswordsStore).saveCredentials(testSite, testCredentials)
         }
 
     @Test
@@ -99,7 +98,7 @@ class ApplicationPasswordManagerTests {
                 username = testCredentials.userName
             }
 
-            whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(null)
+            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(null)
             whenever(
                 mWpApiApplicationPasswordsRestClient.createApplicationPassword(
                     site,
@@ -128,7 +127,7 @@ class ApplicationPasswordManagerTests {
             }
             val networkError = BaseNetworkError(VolleyError(NetworkResponse(404, null, true, 0, emptyList())))
 
-            whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(null)
+            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(null)
             whenever(mJetpackApplicationPasswordsRestClient.fetchWPAdminUsername(site))
                 .thenReturn(UsernameFetchPayload(testCredentials.userName))
             whenever(mJetpackApplicationPasswordsRestClient.createApplicationPassword(site, applicationName))
@@ -151,7 +150,7 @@ class ApplicationPasswordManagerTests {
                 apiError = "application_passwords_disabled"
             }
 
-            whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(null)
+            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(null)
             whenever(mJetpackApplicationPasswordsRestClient.fetchWPAdminUsername(site))
                 .thenReturn(UsernameFetchPayload(testCredentials.userName))
             whenever(mJetpackApplicationPasswordsRestClient.createApplicationPassword(site, applicationName))
@@ -173,7 +172,7 @@ class ApplicationPasswordManagerTests {
             }
             val networkError = BaseNetworkError(VolleyError(NetworkResponse(404, null, true, 0, emptyList())))
 
-            whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(null)
+            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(null)
             whenever(mWpApiApplicationPasswordsRestClient.createApplicationPassword(site, applicationName))
                 .thenReturn(ApplicationPasswordCreationPayload(networkError))
 
@@ -195,7 +194,7 @@ class ApplicationPasswordManagerTests {
                 apiError = "application_passwords_disabled"
             }
 
-            whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(null)
+            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(null)
             whenever(mWpApiApplicationPasswordsRestClient.createApplicationPassword(site, applicationName))
                 .thenReturn(ApplicationPasswordCreationPayload(networkError))
 
@@ -213,7 +212,7 @@ class ApplicationPasswordManagerTests {
                 origin = SiteModel.ORIGIN_WPCOM_REST
             }
 
-            whenever(applicationPasswordsStore.getUuid(siteDomain)).thenReturn(uuid)
+            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(testCredentials)
             whenever(mJetpackApplicationPasswordsRestClient.deleteApplicationPassword(site, uuid))
                 .thenReturn(ApplicationPasswordDeletionPayload(isDeleted = true))
 
@@ -232,7 +231,7 @@ class ApplicationPasswordManagerTests {
                 username = testCredentials.userName
             }
 
-            whenever(applicationPasswordsStore.getUuid(siteDomain)).thenReturn(uuid)
+            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(testCredentials)
             whenever(mWpApiApplicationPasswordsRestClient.deleteApplicationPassword(site, uuid))
                 .thenReturn(ApplicationPasswordDeletionPayload(isDeleted = true))
 
@@ -251,7 +250,7 @@ class ApplicationPasswordManagerTests {
                 username = testCredentials.userName
             }
             val creationNetworkError = BaseNetworkError(VolleyError(NetworkResponse(409, null, true, 0, emptyList())))
-            whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(null)
+            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(null)
             whenever(mWpApiApplicationPasswordsRestClient.createApplicationPassword(site, applicationName))
                 .thenReturn(ApplicationPasswordCreationPayload(creationNetworkError))
                 .thenReturn(ApplicationPasswordCreationPayload(testCredentials.password, testCredentials.uuid))
@@ -274,7 +273,7 @@ class ApplicationPasswordManagerTests {
                 origin = SiteModel.ORIGIN_XMLRPC
                 username = testCredentials.userName
             }
-            whenever(applicationPasswordsStore.getUuid(siteDomain)).thenReturn(null)
+            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(null)
             whenever(mWpApiApplicationPasswordsRestClient.fetchApplicationPasswordUUID(site, applicationName))
                 .thenReturn(ApplicationPasswordUUIDFetchPayload(uuid))
             whenever(mWpApiApplicationPasswordsRestClient.deleteApplicationPassword(site, uuid))
