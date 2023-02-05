@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.compose.components
+package org.wordpress.android.ui.compose.components.text
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
