@@ -10,6 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,9 +28,10 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.UiState
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.extensions.isRtl
 
 @Composable
-fun JetpackStandalonePluginOnboardingScreen(isRtl: Boolean, content: UiState.Content) = Box {
+fun JetpackFullPluginInstallOnboardingScreen(content: UiState.Content) = Box {
     with(content) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -40,7 +42,12 @@ fun JetpackStandalonePluginOnboardingScreen(isRtl: Boolean, content: UiState.Con
                     .verticalScroll(scrollState)
                     .weight(1f)
             ) {
-                val animationRawRes = if (isRtl) R.raw.jp_install_full_plugin_rtl else R.raw.jp_install_full_plugin_left
+                val animationRawRes =
+                    if (LocalContext.current.isRtl()) {
+                        R.raw.jp_install_full_plugin_rtl
+                    } else {
+                        R.raw.jp_install_full_plugin_left
+                    }
                 val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(animationRawRes))
                 LottieAnimation(
                     composition, modifier = Modifier
@@ -80,6 +87,6 @@ private fun PreviewPreviewJetpackStandalonePluginOnboardingScreen() {
             secondaryActionButtonClick = {},
             secondaryActionButtonText = UiString.UiStringRes(R.string.jetpack_full_plugin_install_onboarding_contact_support_button),
         )
-        JetpackStandalonePluginOnboardingScreen(true, uiState)
+        JetpackFullPluginInstallOnboardingScreen(uiState)
     }
 }

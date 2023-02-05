@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.util.extensions.isRtl
 
 class JetpackFullPluginInstallOnboardingDialogFragment : DialogFragment() {
     private val viewModel: JetpackFullPluginInstallOnboardingViewModel by viewModels()
@@ -19,7 +20,7 @@ class JetpackFullPluginInstallOnboardingDialogFragment : DialogFragment() {
     ): View = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
-//                PreviewJetpackStandalonePluginOnboardingScreen()
+//                JetpackFullPluginInstallOnboardingScreen()
             }
         }
     }
