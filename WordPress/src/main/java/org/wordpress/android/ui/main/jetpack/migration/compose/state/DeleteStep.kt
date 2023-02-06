@@ -26,8 +26,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ButtonsColumn
 import org.wordpress.android.ui.compose.components.PrimaryButton
 import org.wordpress.android.ui.compose.components.SecondaryButton
-import org.wordpress.android.ui.compose.components.Subtitle
-import org.wordpress.android.ui.compose.components.Title
+import org.wordpress.android.ui.compose.components.text.Subtitle
+import org.wordpress.android.ui.compose.components.text.Title
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.htmlToAnnotatedString
 import org.wordpress.android.ui.compose.utils.uiStringText
