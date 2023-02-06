@@ -4371,8 +4371,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Jetpack full plugin install onboarding -->
     <string name="jetpack_individual_plugin_support_onboarding_title">Please install the full Jetpack plugin</string>
-    <!-- translators: %1$s = the current site address (e.g. "https://wordpress.com/") -->
-    <string name="jetpack_full_plugin_install_onboarding_description">%1$s is using the %2$s plugin, which doesn’t support all features of the app yet.\n\nPlease install the full Jetpack plugin to use the app with this site.</string>
+    <!-- translators: %1$s = the current site address (e.g. "https://wordpress.com/"), %2$s = the name of the plugin (e.g. "Jetpack Backup"), %3$s = the text "full Jetpack plugin" -->
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s is using the %2$s plugin, which doesn’t support all features of the app yet.\n\nPlease install the %3$s to use the app with this site.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">full Jetpack plugin</string>
     <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">By setting up Jetpack you agree to our </string>
     <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Terms and conditions</string>
     <string name="jetpack_full_plugin_install_onboarding_install_button">Install the full plugin</string>
