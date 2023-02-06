@@ -21,7 +21,7 @@ object AppColor {
     val DarkGray = Color(0xFF121212)
 
     @Stable
-    val Gray = Color(0xFF787c82)
+    val Gray40 = Color(0xFF787c82)
 
     // Blues (Automattic Color Studio)
     @Stable
