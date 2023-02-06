@@ -52,7 +52,7 @@ ext {
     androidxRoomVersion = '2.3.0'
     androidxSwipeToRefreshVersion = '1.1.0'
     androidxViewpager2Version = '1.0.0'
-    androidxWorkVersion = "2.7.0"
+    androidxWorkManagerVersion = "2.7.0"
     apacheCommonsTextVersion = '1.10.0'
     coilComposeVersion = '1.4.0'
     chrisbanesPhotoviewVersion = '2.3.0'
