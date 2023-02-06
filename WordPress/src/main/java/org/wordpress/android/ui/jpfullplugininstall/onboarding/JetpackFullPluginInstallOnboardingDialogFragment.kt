@@ -6,12 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.util.extensions.isRtl
 
 class JetpackFullPluginInstallOnboardingDialogFragment : DialogFragment() {
-    private val viewModel: JetpackFullPluginInstallOnboardingViewModel by viewModels()
+//    private val viewModel: JetpackFullPluginInstallOnboardingViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

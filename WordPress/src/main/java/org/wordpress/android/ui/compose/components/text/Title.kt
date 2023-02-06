@@ -4,10 +4,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import org.wordpress.android.R.dimen
 import org.wordpress.android.ui.compose.unit.FontSize
 
 @Composable

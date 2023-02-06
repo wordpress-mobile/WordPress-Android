@@ -6,7 +6,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class JetpackFullPluginInstallOnboardingViewModel @Inject constructor() : ViewModel() {
-
     sealed class UiState {
         data class Content(
             val siteName: String,
