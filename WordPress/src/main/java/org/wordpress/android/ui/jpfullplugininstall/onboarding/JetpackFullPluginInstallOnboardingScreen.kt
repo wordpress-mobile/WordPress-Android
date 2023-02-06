@@ -35,7 +35,6 @@ import org.wordpress.android.util.extensions.isRtl
 @Composable
 fun JetpackFullPluginInstallOnboardingScreen(
     content: UiState.Content,
-    onTermsAndConditionsClick: () -> Unit,
 ) = Box {
     with(content) {
         Column(
@@ -77,11 +76,11 @@ fun JetpackFullPluginInstallOnboardingScreen(
             ButtonsColumn {
                 PrimaryButton(
                     text = stringResource(R.string.jetpack_full_plugin_install_onboarding_install_button),
-                    onClick = primaryActionButtonClick,
+                    onClick = onPrimaryButtonClick,
                 )
                 SecondaryButton(
                     text = stringResource(R.string.jetpack_full_plugin_install_onboarding_contact_support_button),
-                    onClick = secondaryActionButtonClick
+                    onClick = onSecondaryButtonClick
                 )
             }
         }
@@ -97,9 +96,10 @@ private fun PreviewJetpackFullPluginInstallOnboardingScreen() {
         val uiState = UiState.Content(
             siteName = "wordpress.com",
             pluginName = "Jetpack Backup",
-            primaryActionButtonClick = {},
-            secondaryActionButtonClick = {},
+            onTermsAndConditionsClick = {},
+            onPrimaryButtonClick = {},
+            onSecondaryButtonClick = {},
         )
-        JetpackFullPluginInstallOnboardingScreen(uiState) {}
+        JetpackFullPluginInstallOnboardingScreen(uiState)
     }
 }

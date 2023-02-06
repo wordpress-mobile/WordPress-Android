@@ -10,8 +10,9 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor() : ViewMo
         data class Content(
             val siteName: String,
             val pluginName: String,
-            val primaryActionButtonClick: () -> Unit,
-            val secondaryActionButtonClick: () -> Unit,
+            val onTermsAndConditionsClick: () -> Unit,
+            val onPrimaryButtonClick: () -> Unit,
+            val onSecondaryButtonClick: () -> Unit,
         ) : UiState()
     }
 }
