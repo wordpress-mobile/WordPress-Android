@@ -3,10 +3,13 @@ package org.wordpress.android.e2e.flows;
 import android.content.Intent;
 import android.net.Uri;
 
+import androidx.compose.ui.test.junit4.ComposeTestRule;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
+import org.wordpress.android.e2e.pages.LandingPage;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
@@ -20,10 +23,9 @@ import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class SignupFlow {
-    public SignupFlow chooseContinueWithWpCom() {
+    public SignupFlow chooseContinueWithWpCom(ComposeTestRule composeTestRule) {
         // Login Prologue – We want to Continue with WordPress.com, not a site address
-        // See LoginPrologueFragment
-        clickOn(R.id.continue_with_wpcom_button);
+        LandingPage.tapContinueWithWpCom(composeTestRule);
         return this;
     }
 
@@ -41,9 +43,10 @@ public class SignupFlow {
 
         // Follow the magic link to continue login
         // Intent is invoked directly rather than through a browser as WireMock is unavailable once in the background
+        final String appVariant = BuildConfig.FLAVOR_app; // Either "wordpress" or "jetpack"
         Intent intent = new Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("wordpress://magic-login?token=valid_token&new_user=1")
+                Uri.parse(appVariant + "://magic-login?token=valid_token&new_user=1")
         ).setPackage(getApplicationContext().getPackageName());
 
         ActivityScenario.launch(intent);

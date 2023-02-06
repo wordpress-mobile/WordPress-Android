@@ -10,6 +10,7 @@ import android.os.Parcelable
 import android.view.View
 import android.view.WindowManager
 import androidx.annotation.StringRes
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -68,7 +69,9 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
+import org.wordpress.android.ui.utils.TitleSubtitleSnackbarSpannable
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
@@ -308,6 +311,24 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         }
         viewModel.onBloggingPromptsViewMore.observeEvent(viewLifecycleOwner) {
             ActivityLauncher.showBloggingPromptsListActivity(activity)
+        }
+        viewModel.onBloggingPromptsRemoved.observeEvent(viewLifecycleOwner) {
+            context?.run {
+                val title = getString(R.string.my_site_blogging_prompt_card_removed_snackbar_title)
+                val subtitle = HtmlCompat.fromHtml(
+                    getString(R.string.my_site_blogging_prompt_card_removed_snackbar_subtitle),
+                    HtmlCompat.FROM_HTML_MODE_COMPACT
+                )
+                val message = TitleSubtitleSnackbarSpannable.create(this, title, subtitle)
+
+                val snackbarContent = SnackbarMessageHolder(
+                    message = UiStringText(message),
+                    buttonTitle = UiString.UiStringRes(R.string.undo),
+                    buttonAction = { viewModel.onBloggingPromptUndoClick() },
+                    isImportant = true
+                )
+                showSnackbar(snackbarContent)
+            }
         }
     }
 

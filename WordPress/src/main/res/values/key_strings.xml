@@ -34,7 +34,6 @@
     <string name="pref_key_site_tagline" translatable="false">wp_pref_site_tagline</string>
     <string name="pref_key_site_address" translatable="false">wp_pref_site_address</string>
     <string name="pref_key_site_language" translatable="false">wp_pref_site_language</string>
-    <string name="pref_key_blogging_prompts" translatable="false">wp_pref_blogging_prompts</string>
     <string name="pref_key_site_visibility" translatable="false">wp_pref_site_visibility</string>
     <string name="pref_key_site_username" translatable="false">wp_pref_site_username</string>
     <string name="pref_key_site_password" translatable="false">wp_pref_site_password</string>
@@ -47,7 +46,6 @@
     <string name="pref_key_site_date_format" translatable="false">wp_pref_site_date_format</string>
     <string name="pref_key_site_time_format" translatable="false">wp_pref_site_time_format</string>
     <string name="pref_key_site_timezone" translatable="false">wp_pref_site_timezone</string>
-    <string name="pref_key_blogging_reminders" translatable="false">wp_pref_blogging_reminders</string>
     <string name="pref_key_site_posts_per_page" translatable="false">wp_pref_site_post_per_page</string>
     <string name="pref_key_site_amp" translatable="false">wp_pref_site_amp</string>
     <string name="pref_key_site_traffic" translatable="false">wp_pref_site_traffic</string>
@@ -90,6 +88,10 @@
     <string name="pref_key_web_address" translatable="false">wp_pref_key_web_address</string>
     <string name="pref_key_change_password" translatable="false">pref_key_change_password</string>
     <string name="pref_key_site_start_over_screen" translatable="false">wp_pref_key_site_start_over_screen</string>
+    <!-- Front page settings -->
+    <string name="pref_key_blogging" translatable="false">wp_pref_key_blogging</string>
+    <string name="pref_key_blogging_reminders" translatable="false">wp_pref_blogging_reminders</string>
+    <string name="pref_key_blogging_prompts" translatable="false">wp_pref_blogging_prompts</string>
     <!-- Front page settings -->
     <string name="pref_key_homepage" translatable="false">wp_pref_key_homepage</string>
     <string name="pref_key_homepage_settings" translatable="false">wp_pref_key_homepage_settings</string>

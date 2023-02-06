@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class BloggingPromptCardBuilder @Inject constructor() {
     fun build(params: BloggingPromptCardBuilderParams) = params.bloggingPrompt?.let {
-        val trailingLabel = if (params.enhancementsEnabled) {
+        val trailingLabel = if (params.showViewAnswersAction) {
             UiStringRes(
                 R.string.my_site_blogging_prompt_card_view_answers
             )
@@ -38,11 +38,13 @@ class BloggingPromptCardBuilder @Inject constructor() {
             promptId = params.bloggingPrompt.id,
             attribution = BloggingPromptAttribution.fromString(params.bloggingPrompt.attribution),
             showViewMoreAction = params.showViewMoreAction,
+            showRemoveAction = params.showRemoveAction,
             onShareClick = params.onShareClick,
             onAnswerClick = params.onAnswerClick,
             onSkipClick = params.onSkipClick,
             onViewMoreClick = params.onViewMoreClick,
-            onViewAnswersClick = params.onViewAnswersClick.takeIf { params.enhancementsEnabled },
+            onViewAnswersClick = params.onViewAnswersClick.takeIf { params.showViewAnswersAction },
+            onRemoveClick = params.onRemoveClick,
         )
     }
 }

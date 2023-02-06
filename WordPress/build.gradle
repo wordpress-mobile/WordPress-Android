@@ -108,6 +108,7 @@ android {
         buildConfigField "boolean", "BLOGGING_PROMPTS", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS_LIST", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS_ENHANCEMENTS", "false"
+        buildConfigField "boolean", "BLOGGING_PROMPTS_SOCIAL", "false"
         buildConfigField "boolean", "QUICK_START_EXISTING_USERS_V2", "false"
         buildConfigField "boolean", "QRCODE_AUTH_FLOW", "false"
         buildConfigField "boolean", "BETA_SITE_DESIGNS", "false"
@@ -362,6 +363,7 @@ dependencies {
     implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
 
     // To enable Android Studio specific features for Jetpack Compose.
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$androidxComposeVersion"
     debugImplementation "androidx.compose.ui:ui-tooling:$androidxComposeVersion"
     implementation "androidx.compose.ui:ui-tooling-preview:$androidxComposeVersion"
     // To enable Stetho, a debug bridge that enables the Chrome Developer Tools for debug purposes.
@@ -496,7 +498,7 @@ dependencies {
     androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
     androidTestImplementation "com.google.dagger:hilt-android-testing:$gradle.ext.daggerVersion"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$gradle.ext.daggerVersion"
-
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$androidxComposeVersion"
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$androidDesugarVersion"
     lintChecks "org.wordpress:lint:$wordPressLintVersion"

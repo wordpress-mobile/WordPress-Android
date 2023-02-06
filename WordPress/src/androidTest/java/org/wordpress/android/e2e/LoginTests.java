@@ -25,7 +25,7 @@ public class LoginTests extends BaseTest {
 
     @Test
     public void e2eLoginWithEmailPassword() {
-        new LoginFlow().chooseContinueWithWpCom()
+        new LoginFlow().chooseContinueWithWpCom(super.mComposeTestRule)
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .enterPassword(E2E_WP_COM_USER_PASSWORD)
                        .confirmLogin(false);
@@ -33,7 +33,7 @@ public class LoginTests extends BaseTest {
 
     @Test
     public void e2eLoginWithPasswordlessAccount() {
-        new LoginFlow().chooseContinueWithWpCom()
+        new LoginFlow().chooseContinueWithWpCom(super.mComposeTestRule)
                        .enterEmailAddress(E2E_WP_COM_PASSWORDLESS_USER_EMAIL)
                        .openMagicLink()
                        .confirmLogin(false);
@@ -41,7 +41,7 @@ public class LoginTests extends BaseTest {
 
     @Test
     public void e2eLoginWithSiteAddress() {
-        new LoginFlow().chooseEnterYourSiteAddress()
+        new LoginFlow().chooseEnterYourSiteAddress(super.mComposeTestRule)
                        .enterSiteAddress(E2E_WP_COM_USER_SITE_ADDRESS)
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .enterPassword(E2E_WP_COM_USER_PASSWORD)
@@ -50,7 +50,7 @@ public class LoginTests extends BaseTest {
 
     @Test
     public void e2eLoginWithMagicLink() {
-        new LoginFlow().chooseContinueWithWpCom()
+        new LoginFlow().chooseContinueWithWpCom(super.mComposeTestRule)
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .chooseMagicLink()
                        .openMagicLink()
@@ -59,7 +59,7 @@ public class LoginTests extends BaseTest {
 
     @Test
     public void e2eLoginWithSelfHostedAccount() {
-        new LoginFlow().chooseEnterYourSiteAddress()
+        new LoginFlow().chooseEnterYourSiteAddress(super.mComposeTestRule)
                        .enterSiteAddress(E2E_SELF_HOSTED_USER_SITE_ADDRESS)
                        .enterUsernameAndPassword(E2E_SELF_HOSTED_USER_USERNAME, E2E_SELF_HOSTED_USER_PASSWORD)
                        .confirmLogin(true);

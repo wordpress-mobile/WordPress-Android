@@ -1816,7 +1816,7 @@
     <style name="BloggingPromptsOnboardingTitle">
         <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:maxLines">1</item>
+        <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">serif</item>
