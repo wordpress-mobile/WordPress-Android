@@ -86,7 +86,7 @@ ext {
 
     // android test
     androidxTestCoreVersion = '1.5.0'
-    androidxTestEspressoVersion = '3.4.0'
+    androidxTestEspressoVersion = '3.5.1'
     androidxTestExtJunitVersion = '1.1.4'
     androidxTestUiAutomatorVersion = '2.2.0'
     screengrabVersion = '2.1.1'
