@@ -38,7 +38,7 @@ fun TermsAndConditions(
             style = TextStyle(
                 letterSpacing = (-0.02).sp,
             ),
-            color = AppColor.LightGray60,
+            color = AppColor.Gray,
         )
         Text(
             modifier = Modifier
@@ -50,7 +50,7 @@ fun TermsAndConditions(
                 textDecoration = TextDecoration.Underline,
                 letterSpacing = (-0.02).sp,
             ),
-            color = AppColor.LightGray60,
+            color = AppColor.Gray,
         )
     }
 }
