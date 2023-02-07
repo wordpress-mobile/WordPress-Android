@@ -1,23 +1,23 @@
 package org.wordpress.android.ui.mysite
 
-import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Helper class to coordinate some My Site Dashboard events and trigger the appropriate Blogging Prompts Card viewed
@@ -26,80 +26,71 @@ import java.util.concurrent.atomic.AtomicReference
  * [BloggingPromptsCardAnalyticsTracker.trackMySiteCardViewed] event if identified that the user, on the current site,
  * has the Dashboard selected and the Prompts card is showing in that Dashboard.
  */
-class BloggingPromptsCardTrackHelper(
-    private val scope: CoroutineScope,
+class BloggingPromptsCardTrackHelper @Inject constructor(
     private val tracker: BloggingPromptsCardAnalyticsTracker,
-    private val siteIdFlow: Flow<Int?>,
-    dashboardCardsFlow: Flow<List<DashboardCards>>,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
+    private var scope: CoroutineScope? = null
+
     private val latestPromptCardVisible = AtomicReference<Boolean?>(null)
     private val waitingToTrack = AtomicBoolean(false)
+    private val currentSite = AtomicReference<Int?>(null)
 
     private val onDashboardRefreshed = MutableSharedFlow<Unit>()
-    private val trackBloggingPromptCardShownFlow = MutableSharedFlow<Unit>()
+    private val promptsCardVisibilityChanged = MutableSharedFlow<Boolean>()
 
     @OptIn(FlowPreview::class)
-    private val onBloggingPromptsCardVisible: Flow<Boolean> = dashboardCardsFlow
-        .map {
-            it.firstOrNull()
-                ?.cards
-                ?.any { card -> card is BloggingPromptCard }
-                ?: false
-        }
-        .debounce(PROMPT_CARD_VISIBLE_DEBOUNCE) // this flows emits several times so add some debounce to it
+    private val onBloggingPromptsCardVisible: Flow<Boolean> = promptsCardVisibilityChanged
+        .debounce(PROMPT_CARD_VISIBLE_DEBOUNCE)
 
-    init {
-        trackBloggingPromptCardShownFlow
-            .onEach { tracker.trackMySiteCardViewed() }
-            .launchIn(scope)
+    fun initialize(parentScope: CoroutineScope) {
+        val newScope = CoroutineScope(parentScope.coroutineContext + bgDispatcher)
+        scope = newScope
 
-        scope.launch {
-            val currentSite = AtomicReference<Int?>(null)
-
-            siteIdFlow
-                .distinctUntilChanged()
-                .onEach { siteId ->
-                    if (currentSite.getAndSet(siteId) != siteId) {
-                        latestPromptCardVisible.set(null)
-                        onDashboardRefreshed.emit(Unit)
-                    }
-                }
-                .launchIn(this)
-        }
-
-        scope.launch {
-            val outerScope = this
-
-            launch {
-                try {
-                    onBloggingPromptsCardVisible.collect { isVisible ->
-                        latestPromptCardVisible.set(isVisible)
-                        if (isVisible && waitingToTrack.getAndSet(false)) {
-                            trackBloggingPromptCardShownFlow.emit(Unit)
-                        }
-                    }
-                } catch (e: CancellationException) {
-                    outerScope.cancel(e)
+        // experiment
+        onBloggingPromptsCardVisible
+            .onEach { isVisible ->
+                latestPromptCardVisible.set(isVisible)
+                if (isVisible && waitingToTrack.getAndSet(false)) {
+                    tracker.trackMySiteCardViewed()
                 }
             }
+            .launchIn(newScope)
 
-            onDashboardRefreshed.collect {
+        onDashboardRefreshed
+            .onEach {
                 latestPromptCardVisible.get()?.let { isPromptCardVisible ->
-                    if (isPromptCardVisible) trackBloggingPromptCardShownFlow.emit(Unit)
+                    if (isPromptCardVisible) tracker.trackMySiteCardViewed()
                     waitingToTrack.set(false)
                 } ?: run {
                     waitingToTrack.set(true)
                 }
             }
-        }
+            .launchIn(newScope)
     }
 
     fun onResume(currentTab: MySiteTabType) {
         if (currentTab == MySiteTabType.DASHBOARD) {
-            scope.launch { onDashboardRefreshed.emit(Unit) }
+            scope?.launch { onDashboardRefreshed.emit(Unit) }
         } else {
             // moved away from dashboard, no longer waiting to track
             waitingToTrack.set(false)
+        }
+    }
+
+    fun onDashboardCardsUpdated(dashboard: DashboardCards?) {
+        scope?.launch {
+            val isPromptsCardVisible = dashboard?.cards?.any { card -> card is BloggingPromptCard } ?: false
+            promptsCardVisibilityChanged.emit(isPromptsCardVisible)
+        }
+    }
+
+    fun onSiteChanged(siteId: Int?) {
+        scope?.launch {
+            if (currentSite.getAndSet(siteId) != siteId) {
+                latestPromptCardVisible.set(null)
+                onDashboardRefreshed.emit(Unit)
+            }
         }
     }
 

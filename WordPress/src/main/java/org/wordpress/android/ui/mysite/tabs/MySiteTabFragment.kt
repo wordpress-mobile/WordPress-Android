@@ -501,7 +501,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     override fun onResume() {
         super.onResume()
-        viewModel.onResume()
+        viewModel.onResume(mySiteTabType)
     }
 
     override fun onPause() {
