@@ -322,6 +322,7 @@ class MySiteViewModel @Inject constructor(
                 trackCardsAndItemsShownIfNeeded(state)
 
                 bloggingPromptsCardTrackHelper.onDashboardCardsUpdated(
+                    viewModelScope,
                     state.dashboardCardsAndItems.filterIsInstance<DashboardCards>().firstOrNull()
                 )
 
@@ -345,7 +346,6 @@ class MySiteViewModel @Inject constructor(
 
     init {
         dispatcher.register(this)
-        bloggingPromptsCardTrackHelper.initialize(viewModelScope)
     }
 
     @Suppress("LongParameterList")

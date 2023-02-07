@@ -2,12 +2,8 @@ package org.wordpress.android.ui.mysite
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
@@ -30,67 +26,57 @@ class BloggingPromptsCardTrackHelper @Inject constructor(
     private val tracker: BloggingPromptsCardAnalyticsTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    private var scope: CoroutineScope? = null
+    private var dashboardUpdateDebounceJob: Job? = null
 
     private val latestPromptCardVisible = AtomicReference<Boolean?>(null)
     private val waitingToTrack = AtomicBoolean(false)
     private val currentSite = AtomicReference<Int?>(null)
 
-    private val onDashboardRefreshed = MutableSharedFlow<Unit>()
-    private val promptsCardVisibilityChanged = MutableSharedFlow<Boolean>()
+    private fun onDashboardRefreshed() {
+        latestPromptCardVisible.get()?.let { isPromptCardVisible ->
+            if (isPromptCardVisible) tracker.trackMySiteCardViewed()
+            waitingToTrack.set(false)
+        } ?: run {
+            waitingToTrack.set(true)
+        }
+    }
 
-    @OptIn(FlowPreview::class)
-    private val onBloggingPromptsCardVisible: Flow<Boolean> = promptsCardVisibilityChanged
-        .debounce(PROMPT_CARD_VISIBLE_DEBOUNCE)
 
-    fun initialize(parentScope: CoroutineScope) {
-        val newScope = CoroutineScope(parentScope.coroutineContext + bgDispatcher)
-        scope = newScope
+    fun onDashboardCardsUpdated(scope: CoroutineScope, dashboard: DashboardCards?) {
+        // cancel any existing job (debouncing mechanism)
+        dashboardUpdateDebounceJob?.cancel()
 
-        // experiment
-        onBloggingPromptsCardVisible
-            .onEach { isVisible ->
-                latestPromptCardVisible.set(isVisible)
-                if (isVisible && waitingToTrack.getAndSet(false)) {
-                    tracker.trackMySiteCardViewed()
-                }
+        dashboardUpdateDebounceJob = scope.launch(bgDispatcher) {
+            val isVisible = dashboard?.cards?.any { card -> card is BloggingPromptCard } ?: false
+
+            // add a delay (debouncing mechanism)
+            delay(PROMPT_CARD_VISIBLE_DEBOUNCE)
+
+            latestPromptCardVisible.set(isVisible)
+            if (isVisible && waitingToTrack.getAndSet(false)) {
+                tracker.trackMySiteCardViewed()
             }
-            .launchIn(newScope)
-
-        onDashboardRefreshed
-            .onEach {
-                latestPromptCardVisible.get()?.let { isPromptCardVisible ->
-                    if (isPromptCardVisible) tracker.trackMySiteCardViewed()
-                    waitingToTrack.set(false)
-                } ?: run {
-                    waitingToTrack.set(true)
-                }
+        }.also {
+            it.invokeOnCompletion { cause ->
+                // only set the job to null if it wasn't cancelled since cancellation is part of debouncing
+                if (cause == null) dashboardUpdateDebounceJob = null
             }
-            .launchIn(newScope)
+        }
     }
 
     fun onResume(currentTab: MySiteTabType) {
         if (currentTab == MySiteTabType.DASHBOARD) {
-            scope?.launch { onDashboardRefreshed.emit(Unit) }
+            onDashboardRefreshed()
         } else {
             // moved away from dashboard, no longer waiting to track
             waitingToTrack.set(false)
         }
     }
 
-    fun onDashboardCardsUpdated(dashboard: DashboardCards?) {
-        scope?.launch {
-            val isPromptsCardVisible = dashboard?.cards?.any { card -> card is BloggingPromptCard } ?: false
-            promptsCardVisibilityChanged.emit(isPromptsCardVisible)
-        }
-    }
-
     fun onSiteChanged(siteId: Int?) {
-        scope?.launch {
-            if (currentSite.getAndSet(siteId) != siteId) {
-                latestPromptCardVisible.set(null)
-                onDashboardRefreshed.emit(Unit)
-            }
+        if (currentSite.getAndSet(siteId) != siteId) {
+            latestPromptCardVisible.set(null)
+            onDashboardRefreshed()
         }
     }
 
