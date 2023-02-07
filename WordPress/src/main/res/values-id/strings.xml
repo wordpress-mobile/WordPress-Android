@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-24 15:54:07+0000
+Translation-Revision-Date: 2023-01-31 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: id
 -->
 <resources>
+    <string name="install_play_store_to_get_jetpack">Silakan instal Google Play Store untuk mendapatkan aplikasi Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Lakukan ini nanti</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Ganti ke Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistik, Reader, Pemberitahuan, dan beragam fitur lain berbasis Jetpack telah dihapus dari aplikasi WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Fitur-fitur Jetpack telah berpindah.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s berpindah %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s berpindah %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s segera berpindah</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s segera berpindah</string>
+    <string name="wp_jetpack_powered_phase_2">Dapatkan aplikasi Jetpack</string>
+    <string name="my_site_blogging_prompt_card_view_answers">Lihat semua tanggapan</string>
+    <string name="stats_insights_total_stats_seven_days_negative">%1$s lebih rendah dari 7 hari sebelumnya</string>
+    <string name="stats_insights_total_stats_seven_days_positive">%1$s lebih tinggi dari 7 hari sebelumnya</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Pengunjung Anda dalam 7 hari terakhir %1$s lebih rendah dari 7 hari sebelumnya.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Pengunjung Anda dalam 7 hari terakhir %1$s  lebih tinggi dari 7 hari sebelumnya.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Penayangan Anda dalam 7 hari terakhir %1$s lebih rendah dari 7 hari sebelumnya.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Penayangan Anda dalam 7 hari terakhir %1$s lebih tinggi dari 7 hari sebelumnya.</string>
+    <string name="stats_timeframe_previous_seven_days">7 hari sebelumnya</string>
+    <string name="stats_timeframe_last_seven_days">7 hari terakhir</string>
+    <string name="weeks_quantity_other">%d minggu</string>
+    <string name="weeks_quantity_one">1 minggu</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Dari &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Tutup</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Ganti ke aplikasi Jetpack</string>
@@ -320,6 +341,7 @@ Language: id
     <string name="new_site_creation_intents_title">Topik situs</string>
     <string name="quick_start_site_menu_tab_message_short">Ketuk untuk melanjutkan.&lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Hapus dari dasbor</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Lewati hari ini</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Lihat lebih banyak prompt</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d jawaban</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Bagikan prompt blogging</string>

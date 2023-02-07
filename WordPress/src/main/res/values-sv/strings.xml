@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-25 09:20:35+0000
+Translation-Revision-Date: 2023-01-31 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sv_SE
@@ -11,11 +11,21 @@ Language: sv_SE
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Byt till Jetpack </string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistik, läsare, aviseringar och andra Jetpack-drivna funktioner har tagits bort från WordPress-appen.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack-funktioner har flyttat.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s flyttar om %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s flyttar om %2$s</string>
     <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s flyttar snart</string>
     <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s flyttar snart</string>
     <string name="wp_jetpack_powered_phase_2">Skaffa Jetpack-appen</string>
     <string name="my_site_blogging_prompt_card_view_answers">Visa alla svar</string>
+    <string name="stats_insights_total_stats_seven_days_negative">%1$s lägre än under de föregående 7 dagarna</string>
+    <string name="stats_insights_total_stats_seven_days_positive">%1$s högre än under de föregående 7 dagarna</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Antalet besökare under de senaste 7 dagarna är %1$s lägre än under de föregående 7 dagarna.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Antalet besökare under de senaste 7 dagarna är %1$s högre än under de föregående 7 dagarna.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Antalet visningar under de senaste 7 dagarna är %1$s lägre än under de föregående 7 dagarna.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Antalet visningar under de senaste 7 dagarna är %1$s högre än under de föregående 7 dagarna.</string>
+    <string name="stats_timeframe_previous_seven_days">De föregående 7 dagarna</string>
     <string name="stats_timeframe_last_seven_days">Senaste 7 dagarna</string>
+    <string name="weeks_quantity_other">%d veckor</string>
     <string name="weeks_quantity_one">1 vecka</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Från &lt;b&gt;dag ett&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Dölj detta</string>

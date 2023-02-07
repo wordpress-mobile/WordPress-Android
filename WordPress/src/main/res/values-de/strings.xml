@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-25 09:31:00+0000
+Translation-Revision-Date: 2023-01-31 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: de
@@ -11,6 +11,11 @@ Language: de
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Zu Jetpack wechseln </string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistiken, der Reader, Benachrichtigungen und weitere von Jetpack unterstützte Funktionen wurden aus der WordPress-App entfernt.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack-Funktionen wurden verschoben.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s werden in %2$s verschoben</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s wird in %2$s verschoben</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s werden demnächst verschoben</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s wird demnächst verschoben</string>
+    <string name="wp_jetpack_powered_phase_2">Jetpack-App sichern</string>
     <string name="my_site_blogging_prompt_card_view_answers">Alle Antworten anzeigen</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s niedriger als in den vorherigen 7 Tagen</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s höher als in den vorherigen 7 Tagen</string>

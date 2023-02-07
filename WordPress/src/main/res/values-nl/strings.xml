@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-26 13:54:07+0000
+Translation-Revision-Date: 2023-02-01 12:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: nl
 -->
 <resources>
+    <string name="install_play_store_to_get_jetpack">Installeer Google Play Store om de Jetpack-app te downloaden</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Overstappen naar Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistieken, Reader, meldingen en andere functies die door Jetpack aangedreven worden, zijn verwijderd uit de WordPress-app.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack-functies zijn verplaatst.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s worden over %2$s verplaatst</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s wordt over %2$s verplaatst</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s worden binnenkort verplaatst</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s wordt binnenkort verplaatst</string>
+    <string name="wp_jetpack_powered_phase_2">Installeer de Jetpack-app</string>
+    <string name="my_site_blogging_prompt_card_view_answers">Alle reacties bekijken</string>
+    <string name="stats_insights_total_stats_seven_days_negative">%1$s minder dan de vorige 7 dagen</string>
+    <string name="stats_insights_total_stats_seven_days_positive">%1$s meer dan de vorige 7 dagen</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Je hebt de afgelopen 7dagen %1$s minder bezoekers gehad dan de vorige 7 dagen.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Je hebt de afgelopen 7dagen %1$s meer bezoekers gehad dan de vorige 7 dagen.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Je hebt de afgelopen 7dagen %1$s minder weergaven gehad dan de vorige 7 dagen.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Je hebt de afgelopen 7dagen %1$s meer weergaven gehad dan de vorige 7 dagen.</string>
+    <string name="weeks_quantity_other">%d weken</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Vanaf &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Dit verbergen</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Herinner mij hier later aan</string>
