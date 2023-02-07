@@ -159,8 +159,8 @@ class HelpActivity : LocaleAwareActivity() {
     }
 
     private fun openWpSupportForum() {
-        // Enhance this as project evolves
         ActivityLauncher.openUrlExternal(this, "https://wordpress.org/support/forum/mobile/")
+        AnalyticsTracker.track(Stat.SUPPORT_OPEN_MOBILE_FORUM_TAPPED)
     }
 
     private fun showZendeskTickets() {
