@@ -2375,6 +2375,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     false,
                     false,
                     false,
+                    false,
                     true,
                     false,
                     false,
