@@ -27,6 +27,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.extensions.expandTouchTargetArea
+import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -233,16 +234,17 @@ sealed class PostListItemViewHolder(
         loadedFeaturedImgUrl = imageUrl
     }
 
-    private fun setTint(d: Drawable, color: Int): Drawable {
-        val wrappedDrawable: Drawable = DrawableCompat.wrap(d)
+    private fun setTint(context: Context , drawable: Drawable, color: Int): Drawable {
+        val wrappedDrawable: Drawable = DrawableCompat.wrap(drawable)
         if(color != 0) {
-            DrawableCompat.setTint(wrappedDrawable, color)
+            val iconColor = context.getColorFromAttribute(color)
+            DrawableCompat.setTint(wrappedDrawable, iconColor)
         }
         return wrappedDrawable
     }
 
     private fun getMenuItemTitleWithIcon(context: Context, item: PostListItemAction) : SpannableStringBuilder {
-        var icon: Drawable? = setTint(context.getDrawable(item.buttonType.iconResId)!!, item.buttonType.colorAttrId)
+        var icon: Drawable? = setTint(context, context.getDrawable(item.buttonType.iconResId)!!,item.buttonType.colorAttrId)
 
         // If there's no icon, we insert a transparent one to keep the title aligned with the items which have icons.
         if (icon == null) icon = ColorDrawable(Color.TRANSPARENT)
