@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteDeleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
@@ -80,12 +81,6 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
             fragmentManager.beginTransaction()
                            .replace(R.id.fragment_container, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
                            .commit();
-        }
-    }
-
-    public void updateActionBarTitle(String title) {
-        if (mActionBar != null) {
-            mActionBar.setTitle(StringEscapeUtils.unescapeHtml4(title));
         }
     }
 
@@ -159,6 +154,14 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
             siteSettingsFragment.handleSiteDeleted();
             setResult(SiteSettingsFragment.RESULT_BLOG_REMOVED);
             finish();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        if (!event.isError()) {
+            mSite = mSiteStore.getSiteByLocalId(mSite.getId());
+            mActionBar.setTitle(StringEscapeUtils.unescapeHtml4(SiteUtils.getSiteNameOrHomeURL(mSite)));
         }
     }
 
