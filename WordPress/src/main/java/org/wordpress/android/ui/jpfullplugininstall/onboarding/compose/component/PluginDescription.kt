@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jpfullplugininstall.onboarding.components
+package org.wordpress.android.ui.jpfullplugininstall.onboarding.compose.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.padding

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jpfullplugininstall.onboarding
+package org.wordpress.android.ui.jpfullplugininstall.onboarding.compose.state
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -28,13 +28,13 @@ import org.wordpress.android.ui.compose.components.text.Title
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.UiState
-import org.wordpress.android.ui.jpfullplugininstall.onboarding.components.PluginDescription
-import org.wordpress.android.ui.jpfullplugininstall.onboarding.components.TermsAndConditions
+import org.wordpress.android.ui.jpfullplugininstall.onboarding.compose.component.PluginDescription
+import org.wordpress.android.ui.jpfullplugininstall.onboarding.compose.component.TermsAndConditions
 import org.wordpress.android.util.extensions.isRtl
 
 @Composable
-fun JetpackFullPluginInstallOnboardingScreen(
-    content: UiState.Content,
+fun Loaded(
+    content: UiState.Loaded,
 ) = Box {
     with(content) {
         Column(
@@ -76,11 +76,11 @@ fun JetpackFullPluginInstallOnboardingScreen(
             ButtonsColumn {
                 PrimaryButton(
                     text = stringResource(R.string.jetpack_full_plugin_install_onboarding_install_button),
-                    onClick = onPrimaryButtonClick,
+                    onClick = onInstallFullPluginClick,
                 )
                 SecondaryButton(
                     text = stringResource(R.string.jetpack_full_plugin_install_onboarding_contact_support_button),
-                    onClick = onSecondaryButtonClick
+                    onClick = onContactSupportClick
                 )
             }
         }
@@ -93,13 +93,13 @@ fun JetpackFullPluginInstallOnboardingScreen(
 @Composable
 private fun PreviewJetpackFullPluginInstallOnboardingScreen() {
     AppTheme {
-        val uiState = UiState.Content(
+        val uiState = UiState.Loaded(
             siteName = "wordpress.com",
             pluginName = "Jetpack Backup",
             onTermsAndConditionsClick = {},
-            onPrimaryButtonClick = {},
-            onSecondaryButtonClick = {},
+            onInstallFullPluginClick = {},
+            onContactSupportClick = {},
         )
-        JetpackFullPluginInstallOnboardingScreen(uiState)
+        Loaded(uiState)
     }
 }
