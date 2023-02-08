@@ -444,9 +444,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
     implementation "com.github.PhilJay:MPAndroidChart:$philjayMpAndroidChartVersion"
     implementation "org.jsoup:jsoup:$jsoupVersion"
-    implementation ("com.google.android.exoplayer:exoplayer:$googleExoPlayerVersion") {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
+    implementation "com.google.android.exoplayer:exoplayer:$googleExoPlayerVersion"
     compileOnly "org.glassfish:javax.annotation:$glassfishJavaxAnnotationVersion"
     implementation "com.google.dagger:dagger-android-support:$gradle.ext.daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$gradle.ext.daggerVersion"
