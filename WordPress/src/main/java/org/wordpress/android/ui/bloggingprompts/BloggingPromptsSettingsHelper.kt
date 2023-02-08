@@ -55,10 +55,10 @@ class BloggingPromptsSettingsHelper @Inject constructor(
         val siteId = selectedSiteRepository.getSelectedSite()?.localId()?.value ?: return false
 
         // if the enhancements is turned off, consider the prompts user-enabled, otherwise check the user setting
-        val isPromptsCardUserEnabled = !bloggingPromptsEnhancementsFeatureConfig.isEnabled() ||
-                isPromptsCardEnabled(siteId)
+        val isPromptsSettingUserEnabled = !bloggingPromptsEnhancementsFeatureConfig.isEnabled() ||
+                isPromptsSettingEnabled(siteId)
 
-        return isPromptsFeatureAvailable() && isPromptsCardUserEnabled && !isPromptSkippedForToday()
+        return isPromptsFeatureAvailable() && isPromptsSettingUserEnabled && !isPromptSkippedForToday()
     }
 
     fun shouldShowPromptsSetting(): Boolean {
@@ -72,7 +72,7 @@ class BloggingPromptsSettingsHelper @Inject constructor(
         return promptSkippedDate != null && isSameDay(promptSkippedDate, Date())
     }
 
-    private suspend fun isPromptsCardEnabled(
+    private suspend fun isPromptsSettingEnabled(
         siteId: Int
     ): Boolean = bloggingRemindersStore
         .bloggingRemindersModel(siteId)
