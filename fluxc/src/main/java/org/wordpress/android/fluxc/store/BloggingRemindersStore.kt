@@ -15,23 +15,30 @@ class BloggingRemindersStore
 @Inject constructor(
     private val bloggingRemindersDao: BloggingRemindersDao,
     private val mapper: BloggingRemindersMapper,
+    private val siteStore: SiteStore,
     private val coroutineEngine: CoroutineEngine
 ) {
-    fun getAll() = bloggingRemindersDao.getAll().map { dbModel -> dbModel.map { mapper.toDomainModel(it) } }
+    fun getAll() = bloggingRemindersDao.getAll()
+        .map { dbModel -> dbModel.map { mapper.toDomainModel(it) } }
 
     fun bloggingRemindersModel(siteId: Int): Flow<BloggingRemindersModel> {
         return bloggingRemindersDao.liveGetBySiteId(siteId).map {
-            it?.let { dbModel -> mapper.toDomainModel(dbModel) } ?: BloggingRemindersModel(siteId)
+            it?.let { dbModel -> mapper.toDomainModel(dbModel) } ?: BloggingRemindersModel(
+                siteId,
+                isPromptsCardEnabled = siteStore.getSiteByLocalId(siteId)
+                    ?.isPotentialBloggingSite
+                    ?: true
+            )
         }
     }
 
     suspend fun hasModifiedBloggingReminders(siteId: Int) =
-            coroutineEngine.withDefaultContext(T.SETTINGS, this, "Has blogging reminders") {
-                bloggingRemindersDao.getBySiteId(siteId).isNotEmpty()
-            }
+        coroutineEngine.withDefaultContext(T.SETTINGS, this, "Has blogging reminders") {
+            bloggingRemindersDao.getBySiteId(siteId).isNotEmpty()
+        }
 
     suspend fun updateBloggingReminders(model: BloggingRemindersModel) =
-            coroutineEngine.withDefaultContext(T.SETTINGS, this, "Updating blogging reminders") {
-                bloggingRemindersDao.insert(mapper.toDatabaseModel(model))
-            }
+        coroutineEngine.withDefaultContext(T.SETTINGS, this, "Updating blogging reminders") {
+            bloggingRemindersDao.insert(mapper.toDatabaseModel(model))
+        }
 }
