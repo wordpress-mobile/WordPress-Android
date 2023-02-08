@@ -121,8 +121,8 @@ public class MySitesPage {
         onData(allOf(
                 instanceOf(WPPreference.class),
                 withKey(getTranslatedString(R.string.pref_key_blogging_reminders)),
-                withTitleText(getTranslatedString(R.string.site_settings_blogging_reminders_and_prompts_title))))
-                .onChildView(withText(getTranslatedString(R.string.site_settings_blogging_reminders_and_prompts_title)))
+                withTitleText(getTranslatedString(R.string.site_settings_blogging_reminders_title))))
+                .onChildView(withText(getTranslatedString(R.string.site_settings_blogging_reminders_title)))
                 .perform(click());
 
         idleFor(4000);

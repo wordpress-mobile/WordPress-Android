@@ -54,6 +54,7 @@
                 android:layout_marginStart="@dimen/jp_migration_full_screen_overlay_padding_horizontal"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:text="@string/wp_jetpack_powered_reader_powered_by_jetpack"
+                android:textAlignment="viewStart"
                 android:textFontWeight="700"
                 app:autoSizeTextType="none"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -71,6 +72,7 @@
                 android:layout_marginStart="@dimen/jp_migration_full_screen_overlay_padding_horizontal"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:text="@string/wp_jetpack_powered_reader_powered_by_jetpack_caption"
+                android:textAlignment="viewStart"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title" />
@@ -99,6 +101,7 @@
                 android:layout_marginStart="@dimen/jp_migration_full_screen_overlay_padding_horizontal"
                 android:layout_marginTop="@dimen/jetpack_full_screen_overlay_margin_close_button"
                 android:text="@string/wp_jetpack_feature_removal_overlay_migration_helper_text"
+                android:textAlignment="viewStart"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/caption" />

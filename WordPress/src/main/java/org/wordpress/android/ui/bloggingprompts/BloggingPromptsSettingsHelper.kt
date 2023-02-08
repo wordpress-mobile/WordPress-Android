@@ -5,10 +5,12 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.DateUtils.isSameDay
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import java.util.Date
@@ -20,6 +22,7 @@ class BloggingPromptsSettingsHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
 ) {
     fun getPromptsCardEnabledLiveData(
         siteId: Int
@@ -29,6 +32,13 @@ class BloggingPromptsSettingsHelper @Inject constructor(
 
     fun updatePromptsCardEnabledBlocking(siteId: Int, isEnabled: Boolean) = runBlocking {
         updatePromptsCardEnabled(siteId, isEnabled)
+    }
+
+    fun trackPromptsCardEnabledSettingTapped(isEnabled: Boolean) {
+        analyticsTracker.track(
+            AnalyticsTracker.Stat.BLOGGING_PROMPTS_SETTINGS_SHOW_PROMPTS_TAPPED,
+            mapOf(TRACK_PROPERTY_ENABLED to isEnabled)
+        )
     }
 
     suspend fun updatePromptsCardEnabled(siteId: Int, isEnabled: Boolean) {
@@ -64,4 +74,8 @@ class BloggingPromptsSettingsHelper @Inject constructor(
         .bloggingRemindersModel(siteId)
         .firstOrNull()
         ?.isPromptsCardEnabled == true
+
+    companion object {
+        private const val TRACK_PROPERTY_ENABLED = "enabled"
+    }
 }

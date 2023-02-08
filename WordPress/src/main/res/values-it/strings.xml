@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-25 11:54:07+0000
+Translation-Revision-Date: 2023-02-02 08:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: it
 -->
 <resources>
+    <string name="install_play_store_to_get_jetpack">Installa Google Play Store per ottenere l\'app Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Fallo più tardi</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Passa a Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistiche, Reader, Notifiche e altre funzionalità basate su Jetpack sono state rimosse dall\'app WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Le funzionalità di Jetpack sono state trasferite.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s si stanno trasferendo a %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s si sta trasferendo a %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s si trasferiranno presto</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s si trasferirà presto</string>
+    <string name="wp_jetpack_powered_phase_2">Ottieni l\'app di Jetpack</string>
+    <string name="my_site_blogging_prompt_card_view_answers">Visualizza tutte le risposte</string>
+    <string name="stats_insights_total_stats_seven_days_negative">%1$s in meno rispetto ai 7 giorni precedenti</string>
+    <string name="stats_insights_total_stats_seven_days_positive">%1$s in più rispetto ai 7 giorni precedenti</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">I tuoi visitatori negli ultimi 7 giorni sono %1$s in meno rispetto ai 7 giorni precedenti.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">I tuoi visitatori negli ultimi 7 giorni sono %1$s in più rispetto ai 7 giorni precedenti.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">Le tue visualizzazioni negli ultimi 7 giorni sono %1$s in meno rispetto ai 7 giorni precedenti.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">Le tue visualizzazioni negli ultimi 7 giorni sono %1$s in più rispetto ai 7 giorni precedenti.</string>
+    <string name="stats_timeframe_previous_seven_days">7 giorni precedenti</string>
+    <string name="stats_timeframe_last_seven_days">Ultimi 7 giorni</string>
+    <string name="weeks_quantity_other">%d settimane</string>
+    <string name="weeks_quantity_one">1 settimana</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Da &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Nascondi</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Ricordamelo più tardi</string>
@@ -330,6 +351,7 @@ Language: it
     <string name="new_site_creation_intents_title">Tema del sito</string>
     <string name="quick_start_site_menu_tab_message_short">Tocca &lt;b&gt;%1$s&lt;/b&gt; per continuare.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Rimuovi dalla bacheca</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Ignora per oggi</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Visualizza altre richieste</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d risposte</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Condividi la richiesta di blogging</string>

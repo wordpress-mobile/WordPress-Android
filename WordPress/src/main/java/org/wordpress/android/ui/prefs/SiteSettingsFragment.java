@@ -507,8 +507,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initBloggingReminders();
-        initBloggingPrompts();
+        initBloggingSection();
     }
 
     private AppCompatActivity getAppCompatActivity() {
@@ -818,7 +817,9 @@ public class SiteSettingsFragment extends PreferenceFragment
             // we need to refresh metadata as gutenberg_enabled is now part of the user data
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         } else if (preference == mBloggingPromptsPref) {
-            setBloggingPromptsEnabled((Boolean) newValue);
+            final boolean isEnabled = (boolean) newValue;
+            mPromptsSettingsHelper.updatePromptsCardEnabledBlocking(mSite.getId(), isEnabled);
+            mPromptsSettingsHelper.trackPromptsCardEnabledSettingTapped(isEnabled);
         } else {
             return false;
         }
@@ -1229,6 +1230,15 @@ public class SiteSettingsFragment extends PreferenceFragment
         bottomSheet.show((getAppCompatActivity()).getSupportFragmentManager(), TIMEZONE_BOTTOM_SHEET_TAG);
     }
 
+    private void initBloggingSection() {
+        initBloggingReminders();
+        initBloggingPrompts();
+
+        // check if there's still any blogging settings visible, if not remove the whole section
+        final PreferenceCategory blogging = (PreferenceCategory) findPreference(getString(R.string.pref_key_blogging));
+        if (blogging.getPreferenceCount() == 0) removeBloggingSection();
+    }
+
     private void initBloggingReminders() {
         if (mBloggingRemindersPref == null || !isAdded()) {
             return;
@@ -1237,10 +1247,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (!mBloggingRemindersFeatureConfig.isEnabled()) {
             removeBloggingRemindersSettings();
         } else {
-            if (mBloggingPromptsFeatureConfig.isEnabled()) {
-                mBloggingRemindersPref.setTitle(R.string.site_settings_blogging_reminders_and_prompts_title);
-            }
-
             mBloggingRemindersViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
                     .get(BloggingRemindersViewModel.class);
             BloggingReminderUtils.observeBottomSheet(
@@ -1278,14 +1284,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                 .getPromptsCardEnabledLiveData(mSite.getId())
                 .observe(getAppCompatActivity(), isEnabled -> {
                     if (mBloggingPromptsPref != null) {
-                        mBloggingPromptsPref.setChecked(isEnabled);
+                        mBloggingPromptsPref.setDefaultValue(isEnabled);
                     }
                 });
-    }
-
-    private void setBloggingPromptsEnabled(boolean newValue) {
-        mPromptsSettingsHelper
-                .updatePromptsCardEnabledBlocking(mSite.getId(), newValue);
     }
 
     private void showHomepageSettings() {
@@ -2038,11 +2039,15 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void removeBloggingRemindersSettings() {
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_blogging_reminders);
+        WPPrefUtils.removePreference(this, R.string.pref_key_blogging, R.string.pref_key_blogging_reminders);
     }
 
     private void removeBloggingPromptsSettings() {
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_blogging_prompts);
+        WPPrefUtils.removePreference(this, R.string.pref_key_blogging, R.string.pref_key_blogging_prompts);
+    }
+
+    private void removeBloggingSection() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_blogging);
     }
 
     private void removePrivateOptionFromPrivacySetting() {

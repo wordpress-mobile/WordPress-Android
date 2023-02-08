@@ -58,6 +58,14 @@
             android:key="@string/pref_key_site_timezone"
             android:title="@string/site_settings_timezone_title" />
 
+    </PreferenceCategory>
+
+    <!-- Blogging settings -->
+    <PreferenceCategory
+        android:id="@+id/pref_blogging"
+        android:key="@string/pref_key_blogging"
+        android:title="@string/site_settings_blogging">
+
         <org.wordpress.android.ui.prefs.WPPreference
             android:id="@+id/pref_blogging_reminders"
             android:key="@string/pref_key_blogging_reminders"

@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-25 12:19:10+0000
+Translation-Revision-Date: 2023-02-03 13:02:26+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: gl_ES
 -->
 <resources>
+    <string name="install_play_store_to_get_jetpack">Por favor, instala a Google Play Store para obter a app de Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Facelo máis tarde</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Cambiar a Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Algunhas características de Jetpack como Estatísticas, Lector ou Notificacións, entre outras, elimináronse da app de WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">As características de Jetpack trasladáronse.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s trasladaranse a %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s trasladarase a %2$s</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s trasladaranse pronto</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s trasladarase pronto</string>
+    <string name="wp_jetpack_powered_phase_2">Obtén a aplicación de Jetpack</string>
+    <string name="my_site_blogging_prompt_card_view_answers">Ver todas as respostas</string>
+    <string name="stats_insights_total_stats_seven_days_negative">%1$s é menor que a semana anterior</string>
+    <string name="stats_insights_total_stats_seven_days_positive">%1$s é maior que a semana anterior</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">Os teus visitantes nos últimos sete días son %1$s menos que nos sete días anteriores.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Os teus visitantes nos últimos sete días son %1$s máis que nos sete días anteriores.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">As túas visitas nos últimos sete días son %1$s menos que nos sete días anteriores.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">As túas visitas nos últimos sete días son %1$s máis que nos sete días anteriores.</string>
+    <string name="stats_timeframe_previous_seven_days">Sete días anteriores</string>
+    <string name="stats_timeframe_last_seven_days">Últimos sete días</string>
+    <string name="weeks_quantity_other">%d semanas</string>
+    <string name="weeks_quantity_one">1 semana</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Desde o &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Ocultar isto</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Recórdamo máis tarde</string>

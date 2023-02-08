@@ -546,4 +546,12 @@ public class ReaderUtils {
     public static boolean commentExists(long blogId, long postId, long commentId) {
         return ReaderCommentTable.commentExists(blogId, postId, commentId);
     }
+
+    /**
+     * Self-hosted sites have a site id of 0, but we use -1 to indicate a self-hosted site
+     * @param authorBlogId  site id of the post's author
+     */
+    public static boolean isSelfHosted(long authorBlogId) {
+        return authorBlogId < 1;
+    }
 }
