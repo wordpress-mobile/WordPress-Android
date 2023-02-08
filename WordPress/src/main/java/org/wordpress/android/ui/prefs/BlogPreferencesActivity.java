@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteDeleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
@@ -34,6 +35,7 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
     private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";
 
     private SiteModel mSite;
+    private ActionBar mActionBar;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -60,11 +62,11 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(StringEscapeUtils.unescapeHtml4(SiteUtils.getSiteNameOrHomeURL(mSite)));
+        mActionBar = getSupportActionBar();
+        if (mActionBar != null) {
+            mActionBar.setHomeButtonEnabled(true);
+            mActionBar.setDisplayHomeAsUpEnabled(true);
+            mActionBar.setTitle(StringEscapeUtils.unescapeHtml4(SiteUtils.getSiteNameOrHomeURL(mSite)));
         }
 
         // TODO: android.app.Fragment  is deprecated since Android P.
@@ -152,6 +154,14 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
             siteSettingsFragment.handleSiteDeleted();
             setResult(SiteSettingsFragment.RESULT_BLOG_REMOVED);
             finish();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        if (!event.isError()) {
+            mSite = mSiteStore.getSiteByLocalId(mSite.getId());
+            mActionBar.setTitle(StringEscapeUtils.unescapeHtml4(SiteUtils.getSiteNameOrHomeURL(mSite)));
         }
     }
 
