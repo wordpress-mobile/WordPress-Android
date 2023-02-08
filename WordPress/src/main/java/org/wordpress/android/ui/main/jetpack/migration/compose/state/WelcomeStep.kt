@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ColumnWithTopGlassBorder
+import org.wordpress.android.ui.compose.components.PrimaryButton
+import org.wordpress.android.ui.compose.components.SecondaryButton
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
@@ -37,8 +39,6 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
 import org.wordpress.android.ui.main.jetpack.migration.compose.DIM_ALPHA
-import org.wordpress.android.ui.main.jetpack.migration.compose.components.PrimaryButton
-import org.wordpress.android.ui.main.jetpack.migration.compose.components.SecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.SiteList
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.UserAvatarImage
 import org.wordpress.android.ui.main.jetpack.migration.compose.dimmed

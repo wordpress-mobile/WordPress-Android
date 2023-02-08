@@ -414,6 +414,7 @@ dependencies {
     implementation "com.squareup.okio:okio:$squareupOkioVersion"
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation "com.airbnb.android:lottie:$lottieVersion"
+    implementation "com.airbnb.android:lottie-compose:$lottieVersion"
     implementation "com.facebook.shimmer:shimmer:$facebookShimmerVersion"
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
         exclude group: 'androidx.core', module: 'core'
