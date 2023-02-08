@@ -63,7 +63,7 @@ class DaySelectionBuilder
                 )
             )
 
-            if (bloggingPromptsSettingsHelper.shouldShowPromptsSetting()) {
+            if (bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()) {
                 selectionList.add(
                     PromptSwitch(
                         bloggingRemindersModel.isPromptIncluded,
@@ -92,7 +92,7 @@ class DaySelectionBuilder
             true
         }
         val buttonText = if (isFirstTimeFlow) {
-            if (bloggingPromptsSettingsHelper.shouldShowPromptsSetting()) {
+            if (bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()) {
                 string.blogging_prompt_set_reminders
             } else {
                 string.blogging_reminders_notify_me

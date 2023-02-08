@@ -73,7 +73,7 @@ class DaySelectionBuilderTest {
         )
         whenever(daysProvider.getDaysOfWeekByLocale()).thenReturn(DayOfWeek.values().toList())
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
-        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsSetting()).thenReturn(false)
+        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()).thenReturn(false)
         daySelected = null
         confirmed = false
         promptSwitchToggled = false
@@ -219,7 +219,7 @@ class DaySelectionBuilderTest {
 
     @Test
     fun `primary button shows a different label when blogging prompt FF is on`() {
-        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsSetting()).thenReturn(true)
+        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()).thenReturn(true)
 
         val bloggingRemindersModel = BloggingRemindersUiModel(
             1,
@@ -261,7 +261,7 @@ class DaySelectionBuilderTest {
 
     @Test
     fun `include prompt switch is visible when days are selected`() {
-        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsSetting()).thenReturn(true)
+        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()).thenReturn(true)
 
         val bloggingRemindersModel = BloggingRemindersUiModel(
             1,
@@ -314,7 +314,7 @@ class DaySelectionBuilderTest {
 
     @Test
     fun `single include prompt switch is visible when FF is on`() {
-        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsSetting()).thenReturn(true)
+        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()).thenReturn(true)
 
         val bloggingRemindersModel = BloggingRemindersUiModel(
             1,
@@ -342,7 +342,7 @@ class DaySelectionBuilderTest {
 
     @Test
     fun `include prompt switch is not visible when FF is off`() {
-        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsSetting()).thenReturn(false)
+        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()).thenReturn(false)
 
         val bloggingRemindersModel = BloggingRemindersUiModel(
             1,
@@ -370,7 +370,7 @@ class DaySelectionBuilderTest {
 
     @Test
     fun `click on a prompt switch toggles the prompt state`() {
-        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsSetting()).thenReturn(true)
+        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()).thenReturn(true)
 
         val bloggingRemindersModel = BloggingRemindersUiModel(
             1,
@@ -400,7 +400,7 @@ class DaySelectionBuilderTest {
 
     @Test
     fun `click on a blogging prompt help button shows blogging prompt dialog`() {
-        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsSetting()).thenReturn(true)
+        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()).thenReturn(true)
 
         val bloggingRemindersModel = BloggingRemindersUiModel(
             1,
