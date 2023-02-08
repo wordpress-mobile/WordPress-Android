@@ -1,6 +1,11 @@
 package org.wordpress.android.ui.posts
 
+import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.text.SpannableStringBuilder
+import android.text.style.ImageSpan
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -16,6 +21,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiHelpers
@@ -33,6 +39,7 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.WPTextView
 import java.util.concurrent.atomic.AtomicBoolean
+
 
 sealed class PostListItemViewHolder(
     @LayoutRes layout: Int,
@@ -171,7 +178,7 @@ sealed class PostListItemViewHolder(
                 Menu.NONE,
                 singleItemAction.buttonType.value,
                 Menu.NONE,
-                singleItemAction.buttonType.textResId
+                getMenuItemTitleWithIcon(v.context, singleItemAction)
             )
             menuItem.setOnMenuItemClickListener {
                 singleItemAction.onButtonClicked.invoke(singleItemAction.buttonType)
@@ -224,5 +231,30 @@ sealed class PostListItemViewHolder(
             imageManager.load(featuredImageView, ImageType.PHOTO, imageUrl, ScaleType.CENTER_CROP)
         }
         loadedFeaturedImgUrl = imageUrl
+    }
+
+    private fun setTint(d: Drawable, color: Int): Drawable {
+        val wrappedDrawable: Drawable = DrawableCompat.wrap(d)
+        if(color != 0) {
+            DrawableCompat.setTint(wrappedDrawable, color)
+        }
+        return wrappedDrawable
+    }
+
+    private fun getMenuItemTitleWithIcon(context: Context, item: PostListItemAction) : SpannableStringBuilder {
+        var icon: Drawable? = setTint(context.getDrawable(item.buttonType.iconResId)!!, item.buttonType.colorAttrId)
+
+        // If there's no icon, we insert a transparent one to keep the title aligned with the items which have icons.
+        if (icon == null) icon = ColorDrawable(Color.TRANSPARENT)
+        val iconSize: Int = context.getResources().getDimensionPixelSize(R.dimen.menu_item_icon_size)
+        icon.setBounds(0, 0, iconSize, iconSize)
+        val imageSpan = ImageSpan(icon)
+
+        // Add a space placeholder for the icon, before the title.
+        val ssb = SpannableStringBuilder("       " + context.getText(item.buttonType.textResId))
+
+        // Replace the space placeholder with the icon.
+        ssb.setSpan(imageSpan, 1, 2, 0)
+        return ssb
     }
 }
