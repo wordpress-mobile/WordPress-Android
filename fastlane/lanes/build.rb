@@ -259,23 +259,14 @@ platform :android do
     return if ENV['BUILDKITE_PULL_REQUEST'].nil?
 
     install_url = "#{INSTALLABLE_BUILD_DOMAIN}/#{upload_path}"
-    qr_code_url = "https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=#{CGI.escape(install_url)}&choe=UTF-8"
-    icon = "<img alt='#{product}' align='top' src='https://raw.githubusercontent.com/buildkite/emojis/main/img-buildkite-64/#{product.downcase}.png' width='20px' />"
-    comment_body = <<~PR_COMMENT
-      <details>
-        <summary>#{icon}📲 You can test these changes on #{product} by <a href='#{install_url}'>downloading <tt>#{filename}</tt></a></summary>
-        <table><tr>
-          <td width='250' rowspan='5'><a href='#{install_url}'><img src='#{qr_code_url}' width='250' height='250' /></a></td>
-          <td colspan='2'>💡 Scan this QR code with your Android phone to download and install the APK directly on it.</td>
-        </tr>
-        <tr><td width='150px'><b>App</b></td><td><tt>#{product}</tt></td></tr>
-        <tr><td><b>Build Flavor</b></td><td><tt>#{INSTALLABLE_BUILD_FLAVOR}</tt></td></tr>
-        <tr><td><b>Build Type</b></td><td><tt>#{INSTALLABLE_BUILD_TYPE}</tt></td></tr>
-        <tr><td><b>Commit</b></td><td>#{ENV['BUILDKITE_COMMIT']}</td></tr>
-        </table>
-      </details>
-      <em>Note: This installable build uses the <tt>#{INSTALLABLE_BUILD_FLAVOR}#{INSTALLABLE_BUILD_TYPE}</tt> build flavor, and does not support Google Login.</em>
-    PR_COMMENT
+    comment_body = prototype_build_details_comment(
+      app_display_name: product,
+      app_icon: ":#{product.downcase}:", # Use Buildkite emoji based on product name
+      download_url: install_url,
+      metadata: { Flavor: INSTALLABLE_BUILD_FLAVOR, 'Build Type': INSTALLABLE_BUILD_TYPE },
+      footnote: '<em>Note: Google Login is not supported on these builds.</em>',
+      fold: true
+    )
 
     comment_on_pr(
       project: GHHELPER_REPO,
