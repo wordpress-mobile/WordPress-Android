@@ -18,7 +18,7 @@ class BlazeFeatureUtils @Inject constructor(
         postModel: PostModel
     ): Boolean {
         //add the logic to check whether the site is eligible for blaze
-        return !buildConfigWrapper.isJetpackApp &&
+        return buildConfigWrapper.isJetpackApp &&
                 blazeFeatureConfig.isEnabled() &&
                 postStatus == PostStatus.PUBLISHED &&
                 postModel.password.isEmpty() &&
