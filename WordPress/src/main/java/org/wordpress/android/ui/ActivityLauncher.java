@@ -9,6 +9,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -1812,8 +1813,6 @@ public class ActivityLauncher {
     }
 
     public static void openPromoteWithBlaze(@NonNull Context context, PostModel postModel) {
-        Intent intent = new Intent();
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        Toast.makeText(context, R.string.button_promote_with_blaze, Toast.LENGTH_LONG).show();
     }
 }
