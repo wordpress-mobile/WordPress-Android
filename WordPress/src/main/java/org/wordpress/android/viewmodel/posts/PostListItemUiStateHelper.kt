@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.post.PostStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
@@ -73,7 +74,8 @@ class PostListItemUiStateHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val uploadUiStateUseCase: PostModelUploadUiStateUseCase,
     private val labelColorUseCase: PostPageListLabelColorUseCase,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
+    private val blazeFeatureUtils: BlazeFeatureUtils
 ) {
     @Suppress("LongParameterList", "LongMethod")
     fun createPostListItemUiState(
@@ -104,7 +106,8 @@ class PostListItemUiStateHelper @Inject constructor(
             uploadUiState = uploadUiState,
             siteHasCapabilitiesToPublish = capabilitiesToPublish,
             statsSupported = statsSupported,
-            shouldRemoveJetpackFeatures = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
+            shouldRemoveJetpackFeatures = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures(),
+            shouldShowPromoteWithBlaze = blazeFeatureUtils.shouldShowPromoteWithBlaze(postStatus, site, post),
         )
         val defaultActions = createDefaultViewActions(buttonTypes, onButtonClicked)
         val compactActions = createCompactViewActions(buttonTypes, onButtonClicked)
@@ -374,7 +377,8 @@ class PostListItemUiStateHelper @Inject constructor(
         uploadUiState: PostUploadUiState,
         siteHasCapabilitiesToPublish: Boolean,
         statsSupported: Boolean,
-        shouldRemoveJetpackFeatures: Boolean
+        shouldRemoveJetpackFeatures: Boolean,
+        shouldShowPromoteWithBlaze: Boolean
     ): List<PostListButtonType> {
         val canRetryUpload = uploadUiState is UploadFailed
         val canCancelPendingAutoUpload = (uploadUiState is UploadWaitingForConnection ||
@@ -431,7 +435,9 @@ class PostListItemUiStateHelper @Inject constructor(
             buttonTypes.add(BUTTON_COPY_URL)
         }
 
-        buttonTypes.add(BUTTON_PROMOTE_WITH_BLAZE)
+        if (shouldShowPromoteWithBlaze) {
+            buttonTypes.add(BUTTON_PROMOTE_WITH_BLAZE)
+        }
 
         buttonTypes.addDeletingOrTrashAction(isLocalDraft, postStatus)
 
