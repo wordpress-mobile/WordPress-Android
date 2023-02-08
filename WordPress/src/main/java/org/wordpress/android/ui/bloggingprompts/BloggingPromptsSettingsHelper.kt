@@ -48,7 +48,7 @@ class BloggingPromptsSettingsHelper @Inject constructor(
 
     fun isPromptsFeatureAvailable(): Boolean {
         val selectedSite = selectedSiteRepository.getSelectedSite() ?: return false
-        return bloggingPromptsFeatureConfig.isEnabled() && selectedSite.isPotentialBloggingSite
+        return bloggingPromptsFeatureConfig.isEnabled() && selectedSite.isUsingWpComRestApi
     }
 
     suspend fun shouldShowPromptsFeature(): Boolean {
@@ -59,6 +59,10 @@ class BloggingPromptsSettingsHelper @Inject constructor(
                 isPromptsCardEnabled(siteId)
 
         return isPromptsFeatureAvailable() && isPromptsCardUserEnabled && !isPromptSkippedForToday()
+    }
+
+    fun shouldShowPromptsSetting(): Boolean {
+        return isPromptsFeatureAvailable() && bloggingPromptsEnhancementsFeatureConfig.isEnabled()
     }
 
     private fun isPromptSkippedForToday(): Boolean {

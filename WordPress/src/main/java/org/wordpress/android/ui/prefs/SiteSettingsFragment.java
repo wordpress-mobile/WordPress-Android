@@ -189,7 +189,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
     @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
-    @Inject BloggingPromptsEnhancementsFeatureConfig mBloggingPromptsEnhancementFeatureConfig;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
@@ -1273,8 +1272,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void initBloggingPrompts() {
-        if (!mPromptsSettingsHelper.isPromptsFeatureAvailable()
-            || !mBloggingPromptsEnhancementFeatureConfig.isEnabled()) {
+        if (!mPromptsSettingsHelper.shouldShowPromptsSetting()) {
             removeBloggingPromptsSettings();
             return;
         }
