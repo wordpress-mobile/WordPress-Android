@@ -43,7 +43,7 @@ enum class PostListButtonType constructor(
         18,
         R.string.button_promote_with_blaze,
         R.drawable.ic_promote_with_blaze,
-        R.attr.colorOnSurface
+        0
     );
 
     companion object {
