@@ -53,6 +53,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTL
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_MOVE_TO_DRAFT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_PROMOTE_WITH_BLAZE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG
@@ -429,6 +430,8 @@ class PostListItemUiStateHelper @Inject constructor(
         if (canShowCopyUrlButton) {
             buttonTypes.add(BUTTON_COPY_URL)
         }
+
+        buttonTypes.add(BUTTON_PROMOTE_WITH_BLAZE)
 
         buttonTypes.addDeletingOrTrashAction(isLocalDraft, postStatus)
 

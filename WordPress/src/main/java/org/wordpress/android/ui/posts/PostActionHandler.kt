@@ -50,6 +50,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_PROMOTE_WITH_BLAZE
 
 /**
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
@@ -129,6 +130,7 @@ class PostActionHandler(
             }
             BUTTON_MORE -> {
             } // do nothing - ui will show a popup window
+            BUTTON_PROMOTE_WITH_BLAZE -> TODO()
         }
     }
 
