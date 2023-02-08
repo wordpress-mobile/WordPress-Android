@@ -130,7 +130,9 @@ class PostActionHandler(
             }
             BUTTON_MORE -> {
             } // do nothing - ui will show a popup window
-            BUTTON_PROMOTE_WITH_BLAZE -> TODO()
+            BUTTON_PROMOTE_WITH_BLAZE -> {
+                triggerPostListAction.invoke(PostListAction.ShowPromoteWithBlaze(post))
+            }
         }
     }
 
