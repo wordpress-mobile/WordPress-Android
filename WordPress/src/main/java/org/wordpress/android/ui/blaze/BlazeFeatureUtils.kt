@@ -11,13 +11,12 @@ class BlazeFeatureUtils @Inject constructor(
     private val blazeFeatureConfig: BlazeFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
-
     fun shouldShowPromoteWithBlaze(
         postStatus: PostStatus,
         siteModel: SiteModel,
         postModel: PostModel
     ): Boolean {
-        //add the logic to check whether the site is eligible for blaze
+        // add the logic to check whether the site is eligible for blaze
         return buildConfigWrapper.isJetpackApp &&
                 blazeFeatureConfig.isEnabled() &&
                 postStatus == PostStatus.PUBLISHED &&

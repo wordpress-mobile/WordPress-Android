@@ -41,7 +41,6 @@ import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.WPTextView
 import java.util.concurrent.atomic.AtomicBoolean
 
-
 sealed class PostListItemViewHolder(
     @LayoutRes layout: Int,
     parent: ViewGroup,
@@ -243,9 +242,10 @@ sealed class PostListItemViewHolder(
         return wrappedDrawable
     }
 
+    @Suppress("ComplexMethod")
     private fun getMenuItemTitleWithIcon(context: Context, item: PostListItemAction) : SpannableStringBuilder {
-        var icon: Drawable? = setTint(context, context.getDrawable(item.buttonType.iconResId)!!,item.buttonType.colorAttrId)
-
+        var icon: Drawable? = setTint(context,
+            context.getDrawable(item.buttonType.iconResId)!!,item.buttonType.colorAttrId)
         // If there's no icon, we insert a transparent one to keep the title aligned with the items which have icons.
         if (icon == null) icon = ColorDrawable(Color.TRANSPARENT)
         val iconSize: Int = context.getResources().getDimensionPixelSize(R.dimen.menu_item_icon_size)

@@ -53,10 +53,9 @@ sealed class PostListAction {
     class DismissPendingNotification(val pushId: Int) : PostListAction()
 
     class ShowPromoteWithBlaze(val post: PostModel) : PostListAction()
-
 }
 
-@Suppress("TooGenericExceptionCaught")
+@Suppress("TooGenericExceptionCaught", "LongMethod", "ComplexMethod")
 fun handlePostListAction(
     activity: FragmentActivity,
     action: PostListAction,
