@@ -2392,6 +2392,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 SiteUtils.supportsContactInfoFeature(mSite),
                 SiteUtils.supportsLayoutGridFeature(mSite),
                 SiteUtils.supportsTiledGalleryFeature(mSite),
+                SiteUtils.supportsVideoPressFeature(mSite),
                 SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_FACEBOOK_EMBED_JETPACK_VERSION),
                 SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_INSTAGRAM_EMBED_JETPACK_VERSION),
                 SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_LOOM_EMBED_JETPACK_VERSION),
