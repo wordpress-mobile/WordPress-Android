@@ -1283,7 +1283,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 .getPromptsCardEnabledLiveData(mSite.getId())
                 .observe(getAppCompatActivity(), isEnabled -> {
                     if (mBloggingPromptsPref != null) {
-                        mBloggingPromptsPref.setDefaultValue(isEnabled);
+                        mBloggingPromptsPref.setChecked(isEnabled);
                     }
                 });
     }
