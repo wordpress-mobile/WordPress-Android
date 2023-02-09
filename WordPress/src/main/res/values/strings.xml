@@ -4369,4 +4369,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Featured</string>
 
     <string name="install_play_store_to_get_jetpack">Please install Google Play Store to get the Jetpack app</string>
+    <string name="blaze_promotional_text">Drive more traffic to your site with Blaze</string>
+    <string name="blaze_promotional_subtitle_1">Promote any post or page in only a few minutes for just a few dollars a day.</string>
+    <string name="blaze_promotional_subtitle_2">Your content will appear on millions of WordPress and Tumblr sites.</string>
+    <string name="blaze_promotional_subtitle_3">Track performance, start, and stop your Blaze at any time.</string>
+    <string name="blaze_post_promotional_button">Blaze this Post</string>
 </resources>

@@ -428,6 +428,7 @@ dependencies {
     implementation "androidx.compose.foundation:foundation:$androidxComposeVersion"
     implementation "androidx.compose.foundation:foundation-layout:$androidxComposeVersion"
     implementation "androidx.compose.ui:ui:$androidxComposeVersion"
+    implementation "androidx.constraintlayout:constraintlayout-compose:$composeConstraintVersion"
     implementation "androidx.compose.ui:ui-graphics:$androidxComposeVersion"
     implementation "androidx.compose.ui:ui-text:$androidxComposeVersion"
     implementation "androidx.compose.ui:ui-unit:$androidxComposeVersion"

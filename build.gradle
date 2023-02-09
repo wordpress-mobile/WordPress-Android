@@ -56,6 +56,7 @@ ext {
     apacheCommonsTextVersion = '1.10.0'
     coilComposeVersion = '1.4.0'
     chrisbanesPhotoviewVersion = '2.3.0'
+    composeConstraintVersion = '1.0.1'
     eventBusVersion = '3.3.1'
     facebookShimmerVersion = '0.5.0'
     firebaseConfigVersion = '19.1.3'
