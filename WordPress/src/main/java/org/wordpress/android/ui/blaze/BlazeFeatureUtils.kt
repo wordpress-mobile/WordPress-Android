@@ -23,4 +23,12 @@ class BlazeFeatureUtils @Inject constructor(
                 postModel.password.isEmpty() &&
                 siteModel.isAdmin
     }
+
+    fun trackOverlayDisplayed() {
+        // add the logic to track the overlay displayed event
+    }
+
+    fun trackPromoteWithBlazeClicked() {
+        // add the logic to track the promote with blaze clicked event
+    }
 }

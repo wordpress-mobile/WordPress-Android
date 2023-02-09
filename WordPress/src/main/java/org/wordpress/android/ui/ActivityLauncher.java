@@ -45,6 +45,7 @@ import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
+import org.wordpress.android.ui.blaze.BlazeParentActivity;
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
@@ -1813,6 +1814,7 @@ public class ActivityLauncher {
     }
 
     public static void openPromoteWithBlaze(@NonNull Context context, PostModel postModel) {
-        Toast.makeText(context, R.string.button_promote_with_blaze, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(context, BlazeParentActivity.class);
+        context.startActivity(intent);
     }
 }
