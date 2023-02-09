@@ -2718,6 +2718,7 @@
     <string name="account_settings">Account Settings</string>
     <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
     <string name="primary_site">Primary site</string>
+    <string name="only_one_primary_site_message">Only one site is available, so you can\'t change your primary site.</string>
     <string name="web_address">Web address</string>
     <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
     <string name="change_password">Change password</string>
