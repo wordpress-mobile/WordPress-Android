@@ -11,7 +11,9 @@ import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class BlazeStore @Inject constructor(
     private val blazeRestClient: BlazeRestClient,
     private val blazeStatusDao: BlazeStatusDao,
