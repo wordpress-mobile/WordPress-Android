@@ -22,37 +22,51 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 @Composable
 fun PluginDescription(
     siteName: String,
-    pluginName: String,
+    pluginNames: List<String>,
 ) {
     Text(
-        text = buildAnnotatedString {
-            val fullJpPluginText =
-                stringResource(R.string.jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin)
-            val text = String.format(
-                stringResource(R.string.jetpack_full_plugin_install_onboarding_description),
-                siteName,
-                pluginName,
-                fullJpPluginText,
-            )
-            val indexTextList = mutableListOf<PluginDescriptionTextPart>()
-            indexTextList.add(PluginDescriptionTextPart(text.indexOf(pluginName), pluginName, true))
-            indexTextList.add(PluginDescriptionTextPart(text.indexOf(siteName), siteName, true))
-            indexTextList.add(PluginDescriptionTextPart(text.indexOf(fullJpPluginText), fullJpPluginText, true))
-            text.split(pluginName, siteName, fullJpPluginText)
-                .filter { it.isNotEmpty() }
-                .forEach {
-                    indexTextList.add(PluginDescriptionTextPart(text.indexOf(it), it, false))
-                }
-            indexTextList.sortedBy { it.index }.forEach {
-                if (it.isBold) appendBold(it.text) else append(it.text)
-            }
-        },
+        text = buildPluginDescriptionText(pluginNames, siteName),
         fontSize = 17.sp,
         style = TextStyle(letterSpacing = (-0.01).sp),
         modifier = Modifier
             .padding(horizontal = 30.dp)
             .padding(top = 20.dp)
     )
+}
+
+@Composable
+private fun buildPluginDescriptionText(
+    pluginNames: List<String>,
+    siteName: String
+) = buildAnnotatedString {
+    val pluginText = if (pluginNames.size > 1) {
+        stringResource(R.string.jetpack_full_plugin_install_onboarding_description_multiple_plugins)
+    } else {
+        String.format(
+            stringResource(R.string.jetpack_full_plugin_install_onboarding_description_single_plugin),
+            pluginNames.firstOrNull().orEmpty()
+        )
+    }
+    val fullJpPluginText =
+        stringResource(R.string.jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin)
+    val text = String.format(
+        stringResource(R.string.jetpack_full_plugin_install_onboarding_description),
+        siteName,
+        pluginText,
+        fullJpPluginText,
+    )
+    val indexTextList = mutableListOf<PluginDescriptionTextPart>()
+    indexTextList.add(PluginDescriptionTextPart(text.indexOf(pluginText), pluginText, true))
+    indexTextList.add(PluginDescriptionTextPart(text.indexOf(siteName), siteName, true))
+    indexTextList.add(PluginDescriptionTextPart(text.indexOf(fullJpPluginText), fullJpPluginText, true))
+    text.split(pluginText, siteName, fullJpPluginText)
+        .filter { it.isNotEmpty() }
+        .forEach {
+            indexTextList.add(PluginDescriptionTextPart(text.indexOf(it), it, false))
+        }
+    indexTextList.sortedBy { it.index }.forEach {
+        if (it.isBold) appendBold(it.text) else append(it.text)
+    }
 }
 
 private fun AnnotatedString.Builder.appendBold(text: String) {
@@ -71,11 +85,24 @@ private data class PluginDescriptionTextPart(
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
 @Composable
-private fun PreviewPluginDescription() {
+private fun PreviewPluginDescriptionOnePlugin() {
     AppTheme {
         PluginDescription(
             siteName = "wordpress.com",
-            pluginName = "Jetpack Backup",
+            pluginNames = listOf("Jetpack Search"),
+        )
+    }
+}
+
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL)
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
+@Composable
+private fun PreviewPluginDescriptionMultiplePlugins() {
+    AppTheme {
+        PluginDescription(
+            siteName = "wordpress.com",
+            pluginNames = listOf("Jetpack Search", "Jetpack Protect"),
         )
     }
 }

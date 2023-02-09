@@ -56,14 +56,15 @@ fun Loaded(
                     }
                 val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(animationRawRes))
                 LottieAnimation(
-                    composition, modifier = Modifier
+                    composition,
+                    modifier = Modifier
                         .padding(horizontal = 30.dp)
                         .padding(top = 34.dp)
                 )
                 Title(text = stringResource(R.string.jetpack_individual_plugin_support_onboarding_title))
                 PluginDescription(
                     siteName = siteName,
-                    pluginName = pluginName
+                    pluginNames = pluginNames
                 )
             }
             TermsAndConditions(
@@ -95,7 +96,7 @@ private fun PreviewJetpackFullPluginInstallOnboardingScreen() {
     AppTheme {
         val uiState = UiState.Loaded(
             siteName = "wordpress.com",
-            pluginName = "Jetpack Backup",
+            pluginNames = listOf("Jetpack Search"),
             onTermsAndConditionsClick = {},
             onInstallFullPluginClick = {},
             onContactSupportClick = {},
