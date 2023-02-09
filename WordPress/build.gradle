@@ -484,8 +484,11 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
+        exclude group: 'org.checkerframework', module: 'checker'
     }
-    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$androidxTestEspressoVersion"
+    androidTestImplementation("androidx.test.espresso:espresso-accessibility:$androidxTestEspressoVersion") {
+        exclude group: 'org.checkerframework', module: 'checker'
+    }
     androidTestImplementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.commons', module: 'commons-lang3'
