@@ -25,7 +25,6 @@ import org.wordpress.android.ui.utils.AuthenticationUtils
 import javax.inject.Inject
 
 @Reusable
-@Suppress("DEPRECATION")
 class ExoPlayerUtils @Inject constructor(
     private val authenticationUtils: AuthenticationUtils,
     private val appContext: Context
