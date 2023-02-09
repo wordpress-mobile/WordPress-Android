@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao
 import org.wordpress.android.fluxc.persistence.WPAndroidDatabase
 import org.wordpress.android.fluxc.persistence.WPAndroidDatabase.Companion.buildDb
+import org.wordpress.android.fluxc.persistence.blaze.BlazeStatusDao
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
@@ -62,5 +63,11 @@ class DatabaseModule {
     @Provides
     fun provideRemoteConfigDao(wpAndroidDatabase: WPAndroidDatabase): RemoteConfigDao {
         return wpAndroidDatabase.remoteConfigDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideBlazeStatusDao(wpAndroidDatabase: WPAndroidDatabase): BlazeStatusDao {
+        return wpAndroidDatabase.blazeStatusDao()
     }
 }
