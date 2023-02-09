@@ -6,6 +6,7 @@ import android.content.Context
 import android.net.Uri
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.C.ContentType
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.offline.FilteringManifestParser
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.MediaSource
@@ -44,20 +45,22 @@ class ExoPlayerUtils @Inject constructor(
         DefaultDataSourceFactory(appContext, httpDataSourceFactory)
 
     @Suppress("UseCheckOrError")
-    fun buildMediaSource(uri: Uri): MediaSource? {
+    fun buildMediaSource(uri: Uri): MediaSource {
+        val mediaItem = MediaItem.Builder().setUri(uri).build()
         val httpDataSourceFactory = buildHttpDataSourceFactory(uri.toString())
         val defaultDataSourceFactory = buildDefaultDataSourceFactory(httpDataSourceFactory)
         return when (@ContentType val type = Util.inferContentType(uri)) {
             C.TYPE_DASH -> DashMediaSource.Factory(defaultDataSourceFactory)
                 .setManifestParser(FilteringManifestParser(DashManifestParser(), null))
-                .createMediaSource(uri)
+                .createMediaSource(mediaItem)
             C.TYPE_SS -> SsMediaSource.Factory(defaultDataSourceFactory)
                 .setManifestParser(FilteringManifestParser(SsManifestParser(), null))
-                .createMediaSource(uri)
+                .createMediaSource(mediaItem)
             C.TYPE_HLS -> HlsMediaSource.Factory(defaultDataSourceFactory)
                 .setPlaylistParserFactory(DefaultHlsPlaylistParserFactory())
-                .createMediaSource(uri)
-            C.TYPE_OTHER -> ProgressiveMediaSource.Factory(defaultDataSourceFactory).createMediaSource(uri)
+                .createMediaSource(mediaItem)
+            C.TYPE_OTHER -> ProgressiveMediaSource.Factory(defaultDataSourceFactory)
+                .createMediaSource(mediaItem)
             else -> {
                 throw IllegalStateException("$UNSUPPORTED_TYPE $type")
             }
