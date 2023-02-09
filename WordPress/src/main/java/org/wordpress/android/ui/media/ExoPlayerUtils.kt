@@ -9,14 +9,14 @@ import com.google.android.exoplayer2.C.ContentType
 import com.google.android.exoplayer2.offline.FilteringManifestParser
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.dash.DashMediaSource.Factory
+import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.dash.manifest.DashManifestParser
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.source.hls.playlist.DefaultHlsPlaylistParserFactory
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
 import com.google.android.exoplayer2.source.smoothstreaming.manifest.SsManifestParser
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.Util
 import dagger.Reusable
 import org.wordpress.android.WordPress
@@ -29,17 +29,18 @@ class ExoPlayerUtils @Inject constructor(
     private val authenticationUtils: AuthenticationUtils,
     private val appContext: Context
 ) {
-    private var httpDataSourceFactory: DefaultHttpDataSourceFactory? = null
+    private var httpDataSourceFactory: DefaultHttpDataSource.Factory? = null
 
-    fun buildHttpDataSourceFactory(url: String): DefaultHttpDataSourceFactory {
+    fun buildHttpDataSourceFactory(url: String): DefaultHttpDataSource.Factory {
         if (httpDataSourceFactory == null) {
-            httpDataSourceFactory = DefaultHttpDataSourceFactory(WordPress.getUserAgent())
+            httpDataSourceFactory = DefaultHttpDataSource.Factory()
+                .setUserAgent(WordPress.getUserAgent())
         }
-        httpDataSourceFactory?.defaultRequestProperties?.set(authenticationUtils.getAuthHeaders(url))
-        return httpDataSourceFactory as DefaultHttpDataSourceFactory
+        httpDataSourceFactory?.setDefaultRequestProperties(authenticationUtils.getAuthHeaders(url))
+        return httpDataSourceFactory as DefaultHttpDataSource.Factory
     }
 
-    private fun buildDefaultDataSourceFactory(httpDataSourceFactory: DefaultHttpDataSourceFactory) =
+    private fun buildDefaultDataSourceFactory(httpDataSourceFactory: DefaultHttpDataSource.Factory) =
         DefaultDataSourceFactory(appContext, httpDataSourceFactory)
 
     @Suppress("UseCheckOrError")
@@ -47,7 +48,7 @@ class ExoPlayerUtils @Inject constructor(
         val httpDataSourceFactory = buildHttpDataSourceFactory(uri.toString())
         val defaultDataSourceFactory = buildDefaultDataSourceFactory(httpDataSourceFactory)
         return when (@ContentType val type = Util.inferContentType(uri)) {
-            C.TYPE_DASH -> Factory(defaultDataSourceFactory)
+            C.TYPE_DASH -> DashMediaSource.Factory(defaultDataSourceFactory)
                 .setManifestParser(FilteringManifestParser(DashManifestParser(), null))
                 .createMediaSource(uri)
             C.TYPE_SS -> SsMediaSource.Factory(defaultDataSourceFactory)
