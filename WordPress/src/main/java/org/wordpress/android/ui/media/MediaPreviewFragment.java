@@ -19,8 +19,8 @@ import androidx.fragment.app.Fragment;
 
 import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.StyledPlayerView;
@@ -79,7 +79,7 @@ public class MediaPreviewFragment extends Fragment {
     @Inject AuthenticationUtils mAuthenticationUtils;
     @Inject ExoPlayerUtils mExoPlayerUtils;
 
-    private SimpleExoPlayer mPlayer;
+    private ExoPlayer mPlayer;
 
     /**
      * @param site       optional site this media is associated with
@@ -293,7 +293,7 @@ public class MediaPreviewFragment extends Fragment {
     }
 
     private void initializePlayer() {
-        mPlayer = (new SimpleExoPlayer.Builder(requireContext())).build();
+        mPlayer = (new ExoPlayer.Builder(requireContext())).build();
         mPlayer.addListener(new PlayerEventListener());
 
         if (mIsVideo) {
