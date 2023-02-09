@@ -23,7 +23,7 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.ui.PlayerControlView;
-import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.ui.StyledPlayerView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -69,7 +69,7 @@ public class MediaPreviewFragment extends Fragment {
     private SiteModel mSite;
 
     private PhotoView mImageView;
-    private PlayerView mExoPlayerView;
+    private StyledPlayerView mExoPlayerView;
     private PlayerControlView mExoPlayerControlsView;
     private ImageView mExoPlayerArtworkView;
     private OnMediaTappedListener mMediaTapListener;
