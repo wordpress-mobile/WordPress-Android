@@ -32,7 +32,7 @@ class ExoPlayerUtils @Inject constructor(
 ) {
     private var httpDataSourceFactory: DefaultHttpDataSource.Factory? = null
 
-    fun buildHttpDataSourceFactory(url: String): DefaultHttpDataSource.Factory {
+    private fun buildHttpDataSourceFactory(url: String): DefaultHttpDataSource.Factory {
         if (httpDataSourceFactory == null) {
             httpDataSourceFactory = DefaultHttpDataSource.Factory()
                 .setUserAgent(WordPress.getUserAgent())
