@@ -330,7 +330,8 @@ public class MediaPreviewFragment extends Fragment {
     }
 
     private class PlayerEventListener implements Player.Listener {
-        @Override public void onLoadingChanged(boolean isLoading) {
+        @Override
+        public void onIsLoadingChanged(boolean isLoading) {
             showProgress(isLoading);
         }
     }
