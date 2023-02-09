@@ -92,16 +92,6 @@
                     style="@style/HelpActivitySingleText"
                     android:text="@string/contact_support" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/faq_button"
-                    style="@style/HelpActivitySingleText"
-                    android:text="@string/browse_our_faq_button" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/my_tickets_button"
-                    style="@style/HelpActivitySingleText"
-                    android:text="@string/my_tickets" />
-
                 <LinearLayout
                     android:id="@+id/forumContainer"
                     android:layout_width="match_parent"
@@ -132,6 +122,16 @@
                     android:background="?android:attr/listDivider"
                     android:visibility="gone"
                     tools:visibility="visible"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/faq_button"
+                    style="@style/HelpActivitySingleText"
+                    android:text="@string/browse_our_faq_button" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/my_tickets_button"
+                    style="@style/HelpActivitySingleText"
+                    android:text="@string/my_tickets" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/application_log_button"
