@@ -7,7 +7,7 @@ import android.net.Uri
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.C.ContentType
 import com.google.android.exoplayer2.offline.FilteringManifestParser
-import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.dash.DashMediaSource.Factory
 import com.google.android.exoplayer2.source.dash.manifest.DashManifestParser
@@ -56,7 +56,7 @@ class ExoPlayerUtils @Inject constructor(
             C.TYPE_HLS -> HlsMediaSource.Factory(defaultDataSourceFactory)
                 .setPlaylistParserFactory(DefaultHlsPlaylistParserFactory())
                 .createMediaSource(uri)
-            C.TYPE_OTHER -> ExtractorMediaSource.Factory(defaultDataSourceFactory).createMediaSource(uri)
+            C.TYPE_OTHER -> ProgressiveMediaSource.Factory(defaultDataSourceFactory).createMediaSource(uri)
             else -> {
                 throw IllegalStateException("$UNSUPPORTED_TYPE $type")
             }
