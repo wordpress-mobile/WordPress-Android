@@ -1,23 +1,33 @@
 package org.wordpress.android.ui.jpfullplugininstall.onboarding
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.jpfullplugininstall.JetpackFullPluginInstallOnboardingUiStateMapper
+import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.ContactSupport
+import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.OpenTermsAndConditions
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
-    private val uiStateMapper: JetpackFullPluginInstallOnboardingUiStateMapper
-) : ViewModel() {
-    private val _actionEvents = Channel<ActionEvent>(Channel.BUFFERED)
-    val actionEvents = _actionEvents.receiveAsFlow()
+    private val uiStateMapper: JetpackFullPluginInstallOnboardingUiStateMapper,
+    private val selectedSiteRepository: SelectedSiteRepository,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+) : ScopedViewModel(bgDispatcher) {
+    private val _uiState = MutableStateFlow<UiState>(UiState.None)
+    val uiState = _uiState.asStateFlow()
 
-    private val _uiState = Channel<UiState>(Channel.BUFFERED)
-    val uiState = _uiState.receiveAsFlow()
+    private val _actionEvents = MutableSharedFlow<ActionEvent>()
+    val actionEvents = _actionEvents
 
     fun start() {
         postUiState(
@@ -25,34 +35,41 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
         )
     }
 
+    private fun onTermsAndConditionsClick() {
+        postActionEvent(OpenTermsAndConditions)
+    }
+
+    private fun onInstallFullPluginClick() {
+        //TODO tracking event
+        //TODO open install full plugin screen when it's done
+    }
+
+    private fun onContactSupportClick() {
+        postActionEvent(
+            ContactSupport(
+                origin = HelpActivity.Origin.JETPACK_INSTALL_FULL_PLUGIN_ONBOARDING,
+                selectedSite = selectedSiteRepository.getSelectedSite(),
+            )
+        )
+    }
+
     private fun postUiState(uiState: UiState) {
-        viewModelScope.launch {
-            _uiState.send(uiState)
+        launch {
+            _uiState.update { uiState }
         }
     }
 
     private fun postActionEvent(actionEvent: ActionEvent) {
-        viewModelScope.launch {
-            _actionEvents.send(actionEvent)
+        launch {
+            _actionEvents.emit(actionEvent)
         }
     }
 
-    private fun onTermsAndConditionsClick() {
-
-    }
-
-    private fun onInstallFullPluginClick() {
-
-    }
-
-    private fun onContactSupportClick() {
-
-    }
-
     sealed class UiState {
+        object None : UiState()
         data class Loaded(
             val siteName: String,
-            val pluginName: String,
+            val pluginNames: List<String>,
             val onTermsAndConditionsClick: () -> Unit,
             val onInstallFullPluginClick: () -> Unit,
             val onContactSupportClick: () -> Unit,
@@ -60,6 +77,11 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
     }
 
     sealed class ActionEvent {
-
+        object OpenTermsAndConditions : ActionEvent()
+        object InstallJPFullPlugin : ActionEvent()
+        data class ContactSupport(
+            val origin: HelpActivity.Origin,
+            val selectedSite: SiteModel?,
+        ) : ActionEvent()
     }
 }
