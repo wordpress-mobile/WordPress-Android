@@ -14,6 +14,7 @@ class TrailingLabelViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
 ) : TrainOfAvatarsViewHolder<TrailingLabelItemBinding>(parent.viewBinding(TrailingLabelItemBinding::inflate)) {
+    @Suppress("DEPRECATION")
     fun bind(textItem: TrailingLabelTextItem) = with(binding) {
         val position = adapterPosition
 
