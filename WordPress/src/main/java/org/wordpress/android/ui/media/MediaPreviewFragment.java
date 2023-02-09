@@ -21,7 +21,6 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.StyledPlayerView;
 
@@ -311,9 +310,9 @@ public class MediaPreviewFragment extends Fragment {
         mPlayer.setPlayWhenReady(mAutoPlay);
         mPlayer.seekTo(0, mPosition);
 
-        MediaSource mediaSource = mExoPlayerUtils.buildMediaSource(uri);
+        mPlayer.setMediaSource(mExoPlayerUtils.buildMediaSource(uri));
         showProgress(true);
-        mPlayer.prepare(mediaSource);
+        mPlayer.prepare();
     }
 
     private void releasePlayer() {
