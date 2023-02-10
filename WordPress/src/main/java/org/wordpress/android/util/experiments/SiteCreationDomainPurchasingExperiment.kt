@@ -6,6 +6,10 @@ class SiteCreationDomainPurchasingExperiment
 @Inject constructor(
     exPlat: ExPlat,
 ) : Experiment(
-    "jpandroid_site_creation_domain_purchasing_v1",
+    NAME,
     exPlat
-)
+) {
+    companion object {
+        const val NAME = "jpandroid_site_creation_domain_purchasing_v1"
+    }
+}
