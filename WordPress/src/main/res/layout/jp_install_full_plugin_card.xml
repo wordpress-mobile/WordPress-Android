@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/WordPress.CardView.Unelevated"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -41,12 +42,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium_large"
             android:layout_marginHorizontal="@dimen/my_site_card_row_padding"
-            android:text="@string/my_site_jp_install_full_plugin_card_content"
             android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/text_sz_large"
             android:lineSpacingMultiplier="1.2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/jp_install_full_plugin_icon" />
+            app:layout_constraintTop_toBottomOf="@id/jp_install_full_plugin_icon"
+            tools:text="@string/my_site_jp_install_full_plugin_card_content" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/jp_install_full_plugin_card_learn_more"

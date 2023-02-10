@@ -8,14 +8,21 @@ import org.wordpress.android.databinding.JpInstallFullPluginCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
 
 class JetpackInstallFullPluginCardViewHolder(
     parent: ViewGroup,
+    private val uiHelpers: UiHelpers,
 ) : MySiteCardAndItemViewHolder<JpInstallFullPluginCardBinding>(
     parent.viewBinding(JpInstallFullPluginCardBinding::inflate)
 ) {
     fun bind(card: JetpackInstallFullPluginCard) = with(binding) {
+        jpInstallFullPluginCardContent.text = uiHelpers.getTextOfUiString(
+            jpInstallFullPluginCardContent.context,
+            card.content
+        )
+
         jpInstallFullPluginCardMenu.setOnClickListener {
             showMenu(card.onHideMenuItemClick, it)
         }
