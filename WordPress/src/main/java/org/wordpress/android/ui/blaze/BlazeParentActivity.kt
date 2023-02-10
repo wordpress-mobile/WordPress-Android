@@ -1,13 +1,20 @@
 package org.wordpress.android.ui.blaze
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeOverlayFragment
+import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeViewModel
+
+const val ARG_EXTRA_POST = "blaze_post_model"
+const val ARG_BLAZE_FLOW_SOURCE = "blaze_flow_source"
 
 @AndroidEntryPoint
 class BlazeParentActivity : AppCompatActivity() {
+
+    private val viewModel: BlazeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,5 +24,10 @@ class BlazeParentActivity : AppCompatActivity() {
                 .replace(R.id.container, BlazeOverlayFragment.newInstance())
                 .commitNow()
         }
+        viewModel.trackOverlayDisplayed(getSource())
+    }
+
+    private fun getSource(): BlazeFlowSource {
+        return intent.getSerializableExtra(ARG_BLAZE_FLOW_SOURCE) as BlazeFlowSource
     }
 }

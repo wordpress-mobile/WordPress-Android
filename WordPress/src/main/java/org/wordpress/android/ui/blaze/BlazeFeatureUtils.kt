@@ -24,7 +24,8 @@ class BlazeFeatureUtils @Inject constructor(
                 siteModel.isAdmin
     }
 
-    fun trackOverlayDisplayed() {
+    @Suppress("UNUSED_PARAMETER")
+    fun trackOverlayDisplayed(trackingName: BlazeFlowSource) {
         // add the logic to track the overlay displayed event
     }
 

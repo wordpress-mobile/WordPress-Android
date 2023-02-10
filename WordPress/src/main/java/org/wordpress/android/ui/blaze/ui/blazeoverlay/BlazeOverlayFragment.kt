@@ -51,7 +51,7 @@ class BlazeOverlayFragment : Fragment() {
         fun newInstance() = BlazeOverlayFragment()
     }
 
-    private val viewModel: BlazeActivityViewModel by activityViewModels()
+    private val viewModel: BlazeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
