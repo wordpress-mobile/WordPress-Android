@@ -41,7 +41,7 @@ import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.WPTextView
 import java.util.concurrent.atomic.AtomicBoolean
 
-const val POST_LIST_MORE_MENU_ICON_PADDING = 7
+const val POST_LIST_ICON_PADDING = 8
 
 sealed class PostListItemViewHolder(
     @LayoutRes layout: Int,
@@ -235,9 +235,9 @@ sealed class PostListItemViewHolder(
         loadedFeaturedImgUrl = imageUrl
     }
 
-    private fun setTint(context: Context , drawable: Drawable, color: Int): Drawable {
+    private fun setTint(context: Context, drawable: Drawable, color: Int): Drawable {
         val wrappedDrawable: Drawable = DrawableCompat.wrap(drawable)
-        if(color != 0) {
+        if (color != 0) {
             val iconColor = context.getColorFromAttribute(color)
             DrawableCompat.setTint(wrappedDrawable, iconColor)
         }
@@ -245,9 +245,11 @@ sealed class PostListItemViewHolder(
     }
 
     @Suppress("ComplexMethod")
-    private fun getMenuItemTitleWithIcon(context: Context, item: PostListItemAction) : SpannableStringBuilder {
-        var icon: Drawable? = setTint(context,
-            context.getDrawable(item.buttonType.iconResId)!!,item.buttonType.colorAttrId)
+    private fun getMenuItemTitleWithIcon(context: Context, item: PostListItemAction): SpannableStringBuilder {
+        var icon: Drawable? = setTint(
+            context,
+            context.getDrawable(item.buttonType.iconResId)!!, item.buttonType.colorAttrId
+        )
         // If there's no icon, we insert a transparent one to keep the title aligned with the items which have icons.
         if (icon == null) icon = ColorDrawable(Color.TRANSPARENT)
         val iconSize: Int = context.getResources().getDimensionPixelSize(R.dimen.menu_item_icon_size)
@@ -255,8 +257,10 @@ sealed class PostListItemViewHolder(
         val imageSpan = ImageSpan(icon)
 
         // Add a space placeholder for the icon, before the title.
-        val ssb = SpannableStringBuilder(context.getText(item.buttonType.textResId)
-            .padStart(POST_LIST_MORE_MENU_ICON_PADDING))
+        val menuTitle = context.getText(item.buttonType.textResId)
+        val ssb = SpannableStringBuilder(
+            menuTitle.padStart(menuTitle.length + POST_LIST_ICON_PADDING)
+        )
 
         // Replace the space placeholder with the icon.
         ssb.setSpan(imageSpan, 1, 2, 0)
