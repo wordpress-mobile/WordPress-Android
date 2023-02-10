@@ -253,7 +253,7 @@ sealed class PostListItemViewHolder(
         val imageSpan = ImageSpan(icon)
 
         // Add a space placeholder for the icon, before the title.
-        val ssb = SpannableStringBuilder("       " + context.getText(item.buttonType.textResId))
+        val ssb = SpannableStringBuilder(context.getText(item.buttonType.textResId).padStart(7))
 
         // Replace the space placeholder with the icon.
         ssb.setSpan(imageSpan, 1, 2, 0)
