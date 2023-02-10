@@ -1753,6 +1753,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.bloggingPrompt != null
             },
             any(),
+            TODO("thomashorta"),
             any()
         )
     }
@@ -1767,6 +1768,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.bloggingPrompt == null
             },
             any(),
+            TODO("thomashorta"),
             any()
         )
     }
@@ -1782,6 +1784,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.showViewMoreAction == true
             },
             any(),
+            TODO("thomashorta"),
             any()
         )
     }
@@ -1797,6 +1800,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.showViewMoreAction == false
             },
             any(),
+            TODO("thomashorta"),
             any()
         )
     }
@@ -1812,6 +1816,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.showViewAnswersAction == true
             },
             any(),
+            TODO("thomashorta"),
             any()
         )
     }
@@ -1827,6 +1832,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.showViewAnswersAction == false
             },
             any(),
+            TODO("thomashorta"),
             any()
         )
     }
@@ -1842,6 +1848,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.showRemoveAction == true
             },
             any(),
+            TODO("thomashorta"),
             any()
         )
     }
@@ -1857,6 +1864,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.showRemoveAction == false
             },
             any(),
+            TODO("thomashorta"),
             any()
         )
     }
@@ -3316,6 +3324,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             quickStartCardBuilderParams = any(),
             dashboardCardsBuilderParams = any(),
             quickLinkRibbonBuilderParams = any(),
+            jetpackInstallFullPluginCardBuilderParams = TODO("thomashorta"),
             isMySiteTabsEnabled = any()
         )
 

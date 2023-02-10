@@ -221,6 +221,7 @@ class CardsBuilderTest {
                 onStatsClick = mock(),
                 activeTask = activeTask
             ),
+            TODO("thomashorta"),
             isMySiteTabsEnabled
         )
     }
