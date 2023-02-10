@@ -1455,15 +1455,16 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onJetpackInstallFullPluginHideMenuItemClick() {
-        // TODO thomashorta hide the install full plugin card
         selectedSiteRepository.getSelectedSite()?.localId()?.value?.let {
+            trackWithTabSourceIfNeeded(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_DISMISSED)
             appPrefsWrapper.setShouldHideJetpackInstallFullPluginCard(it, true)
             refresh()
         }
     }
 
     private fun onJetpackInstallFullPluginLearnMoreClick() {
-        // TODO thomashorta open the Jetpack installation flow
+        trackWithTabSourceIfNeeded(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_TAPPED)
+        // TODO 17836-jp-install-card open the Jetpack installation flow
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
