@@ -10,8 +10,6 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.L
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.PREVIEW_MODE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.RECOMMENDED
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEARCH_TERM
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_ID
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_NAME
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SELECTED_FILTERS
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SITE_NAME
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.TEMPLATE
@@ -34,8 +32,6 @@ private const val SITE_CREATION_SOURCE = "source"
 class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapper) : LayoutPickerTracker {
     private enum class PROPERTY(val key: String) {
         TEMPLATE("template"),
-        SEGMENT_NAME("segment_name"),
-        SEGMENT_ID("segment_id"),
         CHOSEN_DOMAIN("chosen_domain"),
         SEARCH_TERM("search_term"),
         THUMBNAIL_MODE("thumbnail_mode"),
@@ -54,20 +50,6 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         tracker.track(
             AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ACCESSED,
             mapOf(SITE_CREATION_SOURCE to siteCreationSource.label)
-        )
-    }
-
-    fun trackSegmentsViewed() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SEGMENTS_VIEWED)
-    }
-
-    fun trackSegmentSelected(segmentName: String, segmentId: Long) {
-        tracker.track(
-            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SEGMENTS_SELECTED,
-            mapOf(
-                SEGMENT_NAME.key to segmentName,
-                SEGMENT_ID.key to segmentId
-            )
         )
     }
 
