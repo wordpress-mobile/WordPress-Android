@@ -34,6 +34,8 @@
 
 /sites/$site/blogging-prompts
 
+/sites/$site/blaze/status
+
 /users/username/suggestions/
 
 /segments
