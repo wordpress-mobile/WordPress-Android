@@ -22,6 +22,8 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.experiments.Variation.Control
+import org.wordpress.android.fluxc.model.experiments.Variation.Treatment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
@@ -32,6 +34,7 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.Creat
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.experiments.SiteCreationDomainPurchasingExperiment
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -89,6 +92,10 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
     @Mock
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+
+    @Mock
+    lateinit var domainPurchasingExperiment: SiteCreationDomainPurchasingExperiment
+
     private val wizardManagerNavigatorLiveData = SingleLiveEvent<SiteCreationStep>()
 
     private lateinit var viewModel: SiteCreationMainVM
@@ -286,6 +293,25 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         verify(tracker, times(1)).trackSiteCreationAccessed(SiteCreationSource.UNSPECIFIED)
     }
 
+    @Test
+    fun `given control variation, when start, then tracked domain purchasing experiment variation is control`() {
+        whenever(domainPurchasingExperiment.getVariation()).thenReturn(Control)
+
+        getNewViewModel().start(null, SiteCreationSource.UNSPECIFIED)
+
+        verify(tracker).trackSiteCreationDomainPurchasingExperimentVariation(Control)
+    }
+
+    @Test
+    fun `given treatment variation, when start, then tracked domain purchasing experiment variation is treatment`() {
+        val variation = Treatment(SiteCreationDomainPurchasingExperiment.NAME)
+        whenever(domainPurchasingExperiment.getVariation()).thenReturn(variation)
+
+        getNewViewModel().start(null, SiteCreationSource.UNSPECIFIED)
+
+        verify(tracker).trackSiteCreationDomainPurchasingExperimentVariation(variation)
+    }
+
     private fun currentWizardState(vm: SiteCreationMainVM) =
         vm.navigationTargetObservable.lastEvent!!.wizardState
 
@@ -296,6 +322,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         dispatcher,
         fetchHomePageLayoutsUseCase,
         imageManager,
-        jetpackFeatureRemovalOverlayUtil
+        jetpackFeatureRemovalOverlayUtil,
+        domainPurchasingExperiment,
     )
 }
