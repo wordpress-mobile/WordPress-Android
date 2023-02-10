@@ -44,7 +44,7 @@
             android:text="@string/my_site_jp_install_full_plugin_card_content"
             android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/text_sz_large"
-            android:lineSpacingMultiplier="1.5"
+            android:lineSpacingMultiplier="1.2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/jp_install_full_plugin_icon" />
 
@@ -54,6 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/learn_more"
+            android:layout_marginTop="@dimen/margin_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/jp_install_full_plugin_card_content" />
 
