@@ -2,15 +2,15 @@ package org.wordpress.android.ui.blaze
 
 import org.wordpress.android.fluxc.model.PostModel
 
-sealed class UIStatus {
-    sealed class PromoteScreen : UIStatus() {
+sealed class BlazeUiState {
+    sealed class PromoteScreen : BlazeUiState() {
         data class PromoteWithBlaze(val postModel: PostModel) : PromoteScreen()
         object PromoteWithSite : PromoteScreen()
     }
-    object PostSelectionScreen : UIStatus()
-    data class AppearanceScreen(val postModel: PostModel) : UIStatus()
-    object AudienceScreen : UIStatus()
-    object PaymentGateway : UIStatus()
+    object PostSelectionScreen : BlazeUiState()
+    data class AppearanceScreen(val postModel: PostModel) : BlazeUiState()
+    object AudienceScreen : BlazeUiState()
+    object PaymentGateway : BlazeUiState()
 }
 
 enum class BlazeFlowSource(val trackingName: String) {
