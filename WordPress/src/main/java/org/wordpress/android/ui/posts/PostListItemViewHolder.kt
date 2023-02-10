@@ -41,6 +41,8 @@ import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.WPTextView
 import java.util.concurrent.atomic.AtomicBoolean
 
+const val POST_LIST_MORE_MENU_ICON_PADDING = 7
+
 sealed class PostListItemViewHolder(
     @LayoutRes layout: Int,
     parent: ViewGroup,
@@ -253,7 +255,8 @@ sealed class PostListItemViewHolder(
         val imageSpan = ImageSpan(icon)
 
         // Add a space placeholder for the icon, before the title.
-        val ssb = SpannableStringBuilder("       " + context.getText(item.buttonType.textResId))
+        val ssb = SpannableStringBuilder(context.getText(item.buttonType.textResId)
+            .padStart(POST_LIST_MORE_MENU_ICON_PADDING))
 
         // Replace the space placeholder with the icon.
         ssb.setSpan(imageSpan, 1, 2, 0)
