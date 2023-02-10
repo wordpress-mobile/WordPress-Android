@@ -1456,8 +1456,10 @@ class MySiteViewModel @Inject constructor(
 
     private fun onJetpackInstallFullPluginHideMenuItemClick() {
         // TODO thomashorta hide the install full plugin card
-        jetpackInstallFullPluginCardBuilder.shouldShow = false
-        refresh()
+        selectedSiteRepository.getSelectedSite()?.localId()?.value?.let {
+            appPrefsWrapper.setShouldHideJetpackInstallFullPluginCard(it, true)
+            refresh()
+        }
     }
 
     private fun onJetpackInstallFullPluginLearnMoreClick() {
