@@ -4,15 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Icon
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,6 +28,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -65,21 +71,36 @@ class BlazeOverlayFragment : Fragment() {
         }
     }
 
+
+    @Preview
+    @Composable
+    fun BlazeOverlayContentPreview() {
+        AppTheme {
+            BlazeOverlayContent()
+        }
+    }
+
     @Composable
     fun BlazeOverlayContent() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(horizontal = Margin.ExtraLarge.value)
+            modifier = Modifier.padding(
+                top = Margin.ExtraLarge.value,
+                start = Margin.ExtraLarge.value,
+                end = Margin.ExtraLarge.value
+            )
         ) {
             Image(
                 painterResource(id = R.drawable.ic_blaze_promotional_image),
-                contentDescription = "Blaze",
+                contentDescription = stringResource(id = R.string.blaze_activity_title),
                 modifier = Modifier.size(100.dp)
             )
             Text(
                 stringResource(id = R.string.blaze_promotional_text),
-                fontSize = FontSize.ExtraLarge.value,
-                fontWeight = FontWeight.Bold
+                fontSize = FontSize.DoubleExtraLarge.value,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = Margin.ExtraExtraMediumLarge.value),
+                textAlign = TextAlign.Center
             )
             Subtitles(
                 listOf(
@@ -89,7 +110,14 @@ class BlazeOverlayFragment : Fragment() {
                 )
             )
             ImageButton(
-                buttonText = UiString.UiStringRes(R.string.button_promote_with_blaze),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .background(
+                        Color.Gray,
+                        shape = RoundedCornerShape(6.dp)
+                    ),
+                buttonText = UiString.UiStringRes(R.string.blaze_post_promotional_button),
                 drawableRight = Drawable(R.drawable.ic_promote_with_blaze),
                 onClick = { viewModel.onPromoteWithBlazeClicked() }
             )
@@ -97,8 +125,14 @@ class BlazeOverlayFragment : Fragment() {
     }
 
     @Composable
-    fun Subtitles(list: List<Int>) {
-        LazyColumn {
+    fun Subtitles(list: List<Int>, modifier: Modifier = Modifier) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = modifier.padding(
+                top = Margin.ExtraLarge.value,
+                bottom = Margin.ExtraLarge.value
+            )
+        ) {
             items(list) {
                 BulletedText(it)
             }
@@ -108,16 +142,18 @@ class BlazeOverlayFragment : Fragment() {
     @Composable
     fun BulletedText(stringResource: Int) {
         Row(horizontalArrangement = Arrangement.Start) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_story_icon_24dp),
-                tint = Color.LightGray,
-                contentDescription = "Bullet",
-            )
+            Canvas(modifier = Modifier
+                .padding(start = 8.dp, top = 12.dp)
+                .size(6.dp),
+                onDraw = {
+                    drawCircle(Color.LightGray)
+                })
             Text(
-                stringResource(id = stringResource),
+                modifier = Modifier.padding(start = Margin.ExtraLarge.value),
+                text = stringResource(id = stringResource),
                 fontSize = FontSize.Large.value,
                 fontWeight = FontWeight.Light,
-                color = Color.LightGray
+                color = Color.Gray
             )
         }
     }

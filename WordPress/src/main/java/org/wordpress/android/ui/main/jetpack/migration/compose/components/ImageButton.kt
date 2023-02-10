@@ -1,8 +1,13 @@
 package org.wordpress.android.ui.main.jetpack.migration.compose.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,18 +19,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.utils.UiString
 
-class Drawable(val resId: Int, val iconSize: Dp = 24.dp)
+class Drawable(val resId: Int, val iconSize: Dp = 24.dp, val padding: Dp = 12.dp)
 
 
 @Preview
 @Composable
 fun PreviewDrawButton() {
     ImageButton(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp)
+            .background(
+                Color.Gray,
+                shape = RoundedCornerShape(6.dp)
+            ),
         drawableLeft = Drawable(R.drawable.ic_story_icon_24dp),
+        drawableRight = Drawable(R.drawable.ic_story_icon_24dp),
+        drawableTop = Drawable(R.drawable.ic_story_icon_24dp),
+        drawableBottom = Drawable(R.drawable.ic_story_icon_24dp),
         buttonText = UiString.UiStringText("Button Text"),
         onClick = {}
     )
@@ -50,6 +66,7 @@ fun ImageButton(
                 bottom.linkTo(parent.bottom, drawableBottom?.iconSize ?: 0.dp)
                 start.linkTo(parent.start, drawableLeft?.iconSize ?: 0.dp)
                 end.linkTo(parent.end, drawableRight?.iconSize ?: 0.dp)
+                width = Dimension.wrapContent
             }
             .clickable { onClick.invoke() }
         ) {
@@ -63,7 +80,7 @@ fun ImageButton(
             Text(
                 text = buttonTextValue.toString(),
                 fontSize = FontSize.Large.value,
-                fontWeight = FontWeight.Light,
+                fontWeight = FontWeight.Bold,
                 color = Color.LightGray
             )
         }
@@ -87,8 +104,8 @@ fun ImageButton(
                 modifier = Modifier.constrainAs(imageRight) {
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
-                    end.linkTo(parent.end)
-                },
+                    start.linkTo(buttonTextRef.end, margin = drawable.padding )
+                }.size(drawable.iconSize),
                 painter = painterResource(id = drawable.resId),
                 contentDescription = null
             )
