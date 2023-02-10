@@ -77,6 +77,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.config.LandingScreenRevampFeatureConfig;
+import org.wordpress.android.util.config.WordPressSupportForumFeatureConfig;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
@@ -139,6 +140,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     @Inject LandingScreenRevampFeatureConfig mLandingScreenRevampFeatureConfig;
+
+    @Inject WordPressSupportForumFeatureConfig mWordPressSupportForumFeatureConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -677,7 +680,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Override
     public void helpFindingSiteAddress(String username, SiteStore siteStore) {
         mUnifiedLoginTracker.trackClick(Click.HELP_FINDING_SITE_ADDRESS);
-        mZendeskHelper.createNewTicket(this, Origin.LOGIN_SITE_ADDRESS, null);
+        if (mWordPressSupportForumFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
+            viewHelpAndSupport(Origin.LOGIN_SITE_ADDRESS);
+        } else {
+            mZendeskHelper.createNewTicket(this, Origin.LOGIN_SITE_ADDRESS, null);
+        }
     }
 
     @Override
