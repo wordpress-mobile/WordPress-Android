@@ -28,7 +28,7 @@ Language: sv_SE
     <string name="weeks_quantity_other">%d veckor</string>
     <string name="weeks_quantity_one">1 vecka</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Från &lt;b&gt;dag ett&lt;/b&gt;</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Dölj detta</string>
+    <string name="my_site_card_menu_item_hide_this">Dölj detta</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Påminn mig senare</string>
     <string name="jetpack_feature_card_content">Statistik, läsare, aviseringar och andra funktioner kommer snart att flyttas till Jetpacks mobilapp.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Byt till Jetpack-appen</string>

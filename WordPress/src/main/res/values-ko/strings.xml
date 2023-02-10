@@ -28,7 +28,7 @@ Language: ko_KR
     <string name="weeks_quantity_other">%d주</string>
     <string name="weeks_quantity_one">1주</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt;부터</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">숨기기</string>
+    <string name="my_site_card_menu_item_hide_this">숨기기</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">나중에 다시 알림</string>
     <string name="jetpack_feature_card_content">곧 통계, 리더, 알림 및 기타 기능이 젯팩 모바일 앱으로 이동됩니다.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">젯팩 앱으로 전환</string>

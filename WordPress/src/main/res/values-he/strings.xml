@@ -28,7 +28,7 @@ Language: he_IL
     <string name="weeks_quantity_other">%d שבועות</string>
     <string name="weeks_quantity_one">שבוע אחד</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">מתוך &lt;b&gt;DayOne&lt;/b&gt;</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">להסתיר את המידע</string>
+    <string name="my_site_card_menu_item_hide_this">להסתיר את המידע</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">הזכירו לי מאוחר יותר</string>
     <string name="jetpack_feature_card_content">האפשרויות של נתונים סטטיסטיים, Reader, הודעות ואפשרויות אחרות יועברו בקרוב אל האפליקציה של Jetpack לנייד.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">החלפה לאפליקציה של Jetpack</string>

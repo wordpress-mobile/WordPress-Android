@@ -28,7 +28,7 @@ Language: zh_CN
     <string name="weeks_quantity_other">%d 周</string>
     <string name="weeks_quantity_one">1 周</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">从&lt;b&gt;第一天&lt;/b&gt;开始</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">隐藏此内容</string>
+    <string name="my_site_card_menu_item_hide_this">隐藏此内容</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">稍后提醒我</string>
     <string name="jetpack_feature_card_content">统计信息、阅读器、通知和其他功能即将移至 Jetpack 移动应用。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">切换到 Jetpack 应用</string>

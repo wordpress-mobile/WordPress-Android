@@ -35,7 +35,7 @@ Language: ro
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Comută la aplicația Jetpack</string>
     <string name="jetpack_feature_card_content">In curând, statisticile, cititorul, notificările și alte funcționalități se vor muta în aplicația mobilă Jetpack.</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Amintește-mi mai târziu</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Ascunde asta</string>
+    <string name="my_site_card_menu_item_hide_this">Ascunde asta</string>
     <string name="blogging_prompts_list_number_of_answers_zero">Niciun răspuns</string>
     <string name="blogging_prompts_list_number_of_answers_one">Un răspuns</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d răspunsuri</string>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/WordPress.CardView.Unelevated"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/jp_install_full_plugin_card_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/my_site_card_row_top_padding"
+            android:layout_marginEnd="@dimen/my_site_card_row_padding"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/content_description_more"
+            android:focusable="true"
+            android:src="@drawable/ic_more_vert_white_24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/wpColorOnSurfaceMedium" />
+
+        <ImageView
+            android:id="@+id/jp_install_full_plugin_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/my_site_card_row_padding"
+            android:layout_marginTop="@dimen/my_site_card_row_top_padding"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_jetpack_plugin_install"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/jp_install_full_plugin_card_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium_large"
+            android:layout_marginHorizontal="@dimen/my_site_card_row_padding"
+            android:text="@string/my_site_jp_install_full_plugin_card_content"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/text_sz_large"
+            android:lineSpacingMultiplier="1.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/jp_install_full_plugin_icon" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/jp_install_full_plugin_card_learn_more"
+            style="@style/MySiteCardFooterLinkItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/learn_more"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/jp_install_full_plugin_card_content" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</com.google.android.material.card.MaterialCardView>
