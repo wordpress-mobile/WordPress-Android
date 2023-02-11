@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.R.string
 import org.wordpress.android.databinding.FragmentJetpackSecuritySettingsBinding
@@ -12,6 +13,11 @@ class JetpackSecuritySettingsActivity : AppCompatActivity() {
         with(FragmentJetpackSecuritySettingsBinding.inflate(layoutInflater)) {
             setContentView(root)
             setupToolbar()
+        }
+
+        onBackPressedDispatcher.addCallback(this) {
+            setResult(RESULT_OK, null)
+            finish()
         }
     }
 
@@ -33,11 +39,6 @@ class JetpackSecuritySettingsActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed() {
-        setResult(RESULT_OK, null)
-        finish()
     }
 
     companion object {

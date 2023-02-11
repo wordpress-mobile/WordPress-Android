@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -86,10 +87,10 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -151,22 +152,26 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private ConversationNotificationsViewModel mConversationViewModel;
 
     @Override
-    public void onBackPressed() {
-        CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
-                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
-
-        if (fragment != null) {
-            fragment.onBackPressed();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.reader_activity_comment_list);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
+                        getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
+
+                if (fragment != null) {
+                    fragment.onBackPressed();
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);

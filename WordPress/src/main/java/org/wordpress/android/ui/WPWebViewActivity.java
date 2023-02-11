@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -161,6 +162,22 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public void onCreate(Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (mWebView.canGoBack()) {
+                    mWebView.goBack();
+                    refreshBackForwardNavButtons();
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                    mViewModel.track(Stat.WEBVIEW_DISMISSED);
+                    setResultIfNeeded();
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     @Override
@@ -914,18 +931,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private void setResultIfNeededAndFinish() {
         setResultIfNeeded();
         finish();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mWebView.canGoBack()) {
-            mWebView.goBack();
-            refreshBackForwardNavButtons();
-        } else {
-            super.onBackPressed();
-            mViewModel.track(Stat.WEBVIEW_DISMISSED);
-            setResultIfNeeded();
-        }
     }
 
     @Override

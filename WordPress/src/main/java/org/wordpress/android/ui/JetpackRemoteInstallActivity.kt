@@ -2,6 +2,7 @@ package org.wordpress.android.ui
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.addCallback
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.INSTALL_JETPACK_CANCELLED
 import org.wordpress.android.databinding.JetpackRemoteInstallActivityBinding
@@ -14,6 +15,15 @@ class JetpackRemoteInstallActivity : LocaleAwareActivity() {
         with(JetpackRemoteInstallActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
             setSupportActionBar(toolbarLayout.toolbarMain)
+        }
+
+        onBackPressedDispatcher.addCallback(this) {
+            trackWithSource(
+                INSTALL_JETPACK_CANCELLED,
+                intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
+            )
+            isEnabled = false
+            onBackPressedDispatcher.onBackPressed()
         }
 
         supportActionBar?.let {
@@ -29,13 +39,5 @@ class JetpackRemoteInstallActivity : LocaleAwareActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed() {
-        trackWithSource(
-            INSTALL_JETPACK_CANCELLED,
-            intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
-        )
-        super.onBackPressed()
     }
 }

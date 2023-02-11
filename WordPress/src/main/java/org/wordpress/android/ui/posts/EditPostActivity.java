@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -524,6 +525,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                handleBackPressed();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
         mDispatcher.register(this);
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorePostViewModel.class);
         mStorageUtilsViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorageUtilsViewModel.class);
@@ -1966,11 +1976,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     public interface OnPostUpdatedFromUIListener {
         void onPostUpdatedFromUI(@Nullable UpdatePostResult updatePostResult);
-    }
-
-    @Override
-    public void onBackPressed() {
-        handleBackPressed();
     }
 
     @Override

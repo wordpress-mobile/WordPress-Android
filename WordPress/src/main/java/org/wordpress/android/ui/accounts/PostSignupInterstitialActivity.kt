@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts
 
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
@@ -31,6 +32,9 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
             .get(PostSignupInterstitialViewModel::class.java)
         val binding = PostSignupInterstitialActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        onBackPressedDispatcher.addCallback(this) { viewModel.onBackButtonPressed() }
+
         with(binding) {
             viewModel.onInterstitialShown()
             createNewSiteButton().setOnClickListener { viewModel.onCreateNewSiteButtonPressed() }
@@ -49,10 +53,6 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
 
     private fun PostSignupInterstitialActivityBinding.dismissButton() =
         root.findViewById<MaterialButton>(R.id.dismiss_button)
-
-    override fun onBackPressed() {
-        viewModel.onBackButtonPressed()
-    }
 
     private fun executeAction(navigationAction: NavigationAction) = when (navigationAction) {
         START_SITE_CREATION_FLOW -> startSiteCreationFlow()

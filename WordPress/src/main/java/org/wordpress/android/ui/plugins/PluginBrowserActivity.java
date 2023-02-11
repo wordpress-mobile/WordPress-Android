@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -40,13 +41,13 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
@@ -79,6 +80,19 @@ public class PluginBrowserActivity extends LocaleAwareActivity
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.plugin_browser_activity);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    // update the lift on scroll target id when we return to the root fragment
+                    AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBar, R.id.scroll_view);
+                }
+                setEnabled(false);
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(PluginBrowserViewModel.class);
 
@@ -229,15 +243,6 @@ public class PluginBrowserActivity extends LocaleAwareActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            // update the lift on scroll target id when we return to the root fragment
-            AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBar, R.id.scroll_view);
-        }
-        super.onBackPressed();
     }
 
     private void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType,

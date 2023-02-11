@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -176,6 +177,25 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
 
         setContentView(R.layout.reader_activity_post_pager);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                ReaderPostDetailFragment fragment = getActiveDetailFragment();
+                if (fragment != null && fragment.isCustomViewShowing()) {
+                    // if full screen video is showing, hide the custom view rather than navigate back
+                    fragment.hideCustomView();
+                } else {
+                    if (fragment != null && fragment.goBackInPostHistory()) {
+                        // noop - fragment moved back to a previous post
+                    } else {
+                        setEnabled(false);
+                        getOnBackPressedDispatcher().onBackPressed();
+                    }
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         // Start migration flow passing deep link data if requirements are met
         if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
@@ -691,21 +711,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             return null;
         }
         return adapter.getBlogIdPostIdAtPosition(position);
-    }
-
-    @Override
-    public void onBackPressed() {
-        ReaderPostDetailFragment fragment = getActiveDetailFragment();
-        if (fragment != null && fragment.isCustomViewShowing()) {
-            // if full screen video is showing, hide the custom view rather than navigate back
-            fragment.hideCustomView();
-        } else {
-            if (fragment != null && fragment.goBackInPostHistory()) {
-                // noop - fragment moved back to a previous post
-            } else {
-                super.onBackPressed();
-            }
-        }
     }
 
     /*

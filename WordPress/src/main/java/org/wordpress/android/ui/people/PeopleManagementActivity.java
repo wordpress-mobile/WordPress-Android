@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -99,6 +100,17 @@ public class PeopleManagementActivity extends LocaleAwareActivity
         mDispatcher.register(this);
 
         setContentView(R.layout.people_management_activity);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (!navigateBackToPeopleListFragment()) {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -215,13 +227,6 @@ public class PeopleManagementActivity extends LocaleAwareActivity
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (!navigateBackToPeopleListFragment()) {
-            super.onBackPressed();
-        }
     }
 
     @Override

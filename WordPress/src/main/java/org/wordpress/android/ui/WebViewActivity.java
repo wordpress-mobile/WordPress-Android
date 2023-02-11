@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.Window;
 import android.webkit.WebView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
@@ -38,6 +39,20 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
         setTitle("");
 
         configureView();
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (mWebView != null && mWebView.canGoBack()) {
+                    mWebView.goBack();
+                } else {
+                    cancel();
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -143,16 +158,6 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
 
     public void loadUrl(String url, Map<String, String> additionalHttpHeaders) {
         mWebView.loadUrl(url, additionalHttpHeaders);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mWebView != null && mWebView.canGoBack()) {
-            mWebView.goBack();
-        } else {
-            cancel();
-            super.onBackPressed();
-        }
     }
 
     @Override

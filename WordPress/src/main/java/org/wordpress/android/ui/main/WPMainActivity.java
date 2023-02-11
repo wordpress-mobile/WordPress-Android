@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
@@ -309,6 +310,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
+        initBackPressHandler();
 
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(v -> {
@@ -488,6 +490,31 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         displayJetpackFeatureCollectionOverlayIfNeeded();
+    }
+
+    private void initBackPressHandler() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // let the fragment handle the back button if it implements our OnParentBackPressedListener
+                if (mBottomNav != null) {
+                    Fragment fragment = mBottomNav.getActiveFragment();
+                    if (fragment instanceof OnActivityBackPressedListener) {
+                        boolean handled = ((OnActivityBackPressedListener) fragment).onActivityBackPressed();
+                        if (handled) {
+                            return;
+                        }
+                    }
+                }
+
+                if (isTaskRoot() && DeviceUtils.getInstance().isChromebook(WPMainActivity.this)) {
+                    return; // don't close app in Main Activity
+                }
+                setEnabled(false);
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     private void showJetpackOverlayIfNeeded(String action) {
@@ -1105,25 +1132,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void announceTitleForAccessibility(PageType pageType) {
         getWindow().getDecorView().announceForAccessibility(mBottomNav.getContentDescriptionForPageType(pageType));
-    }
-
-    @Override
-    public void onBackPressed() {
-        // let the fragment handle the back button if it implements our OnParentBackPressedListener
-        if (mBottomNav != null) {
-            Fragment fragment = mBottomNav.getActiveFragment();
-            if (fragment instanceof OnActivityBackPressedListener) {
-                boolean handled = ((OnActivityBackPressedListener) fragment).onActivityBackPressed();
-                if (handled) {
-                    return;
-                }
-            }
-        }
-
-        if (isTaskRoot() && DeviceUtils.getInstance().isChromebook(this)) {
-            return; // don't close app in Main Activity
-        }
-        super.onBackPressed();
     }
 
     @Override

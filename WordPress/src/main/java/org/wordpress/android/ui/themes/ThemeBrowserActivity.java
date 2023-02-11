@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.View.OnScrollChangeListener;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -93,6 +94,20 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
 
         setContentView(R.layout.theme_browser_activity);
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                FragmentManager fm = getSupportFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    fm.popBackStack();
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
         if (savedInstanceState == null) {
             addBrowserFragment();
             fetchInstalledThemesIfJetpackSite();
@@ -134,16 +149,6 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @Override

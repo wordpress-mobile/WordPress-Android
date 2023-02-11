@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -57,13 +58,13 @@ import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.StatsViewType;
-import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig;
+import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
@@ -74,13 +75,13 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import dagger.hilt.android.AndroidEntryPoint;
-
 import static org.wordpress.android.models.Note.NOTE_COMMENT_LIKE_TYPE;
 import static org.wordpress.android.models.Note.NOTE_COMMENT_TYPE;
 import static org.wordpress.android.models.Note.NOTE_FOLLOW_TYPE;
 import static org.wordpress.android.models.Note.NOTE_LIKE_TYPE;
 import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class NotificationsDetailActivity extends LocaleAwareActivity implements
@@ -106,24 +107,28 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     private Toolbar mToolbar;
 
     @Override
-    public void onBackPressed() {
-        CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
-                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
-
-        if (fragment != null) {
-            fragment.onBackPressed();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         AppLog.i(AppLog.T.NOTIFS, "Creating NotificationsDetailActivity");
 
         setContentView(R.layout.notifications_detail_activity);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
+                        getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
+
+                if (fragment != null) {
+                    fragment.onBackPressed();
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         mToolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(mToolbar);

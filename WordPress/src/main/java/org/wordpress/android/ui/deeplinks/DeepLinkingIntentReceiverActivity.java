@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -49,6 +50,17 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                setEnabled(false);
+                getOnBackPressedDispatcher().onBackPressed();
+                finish();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
         mViewModel = new ViewModelProvider(this).get(DeepLinkingIntentReceiverViewModel.class);
         mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
         setupObservers();
@@ -138,11 +150,5 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         } else {
             finish();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 }

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -97,6 +98,25 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.site_settings_tag_list_activity);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (getFragmentManager().getBackStackEntryCount() > 0) {
+                    SiteSettingsTagDetailFragment fragment = getDetailFragment();
+                    if (fragment != null && fragment.hasChanges()) {
+                        saveTag(fragment.getTerm(), fragment.isNewTerm());
+                    } else {
+                        hideDetailFragment();
+                        loadTags();
+                    }
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -221,21 +241,6 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
             return true;
         } else {
             return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            SiteSettingsTagDetailFragment fragment = getDetailFragment();
-            if (fragment != null && fragment.hasChanges()) {
-                saveTag(fragment.getTerm(), fragment.isNewTerm());
-            } else {
-                hideDetailFragment();
-                loadTags();
-            }
-        } else {
-            super.onBackPressed();
         }
     }
 

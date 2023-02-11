@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -69,6 +70,17 @@ public class SelectCategoriesActivity extends LocaleAwareActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                saveAndFinish();
+                setEnabled(false);
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
         mDispatcher.register(this);
 
         if (savedInstanceState == null) {
@@ -235,12 +247,6 @@ public class SelectCategoriesActivity extends LocaleAwareActivity {
         mListScrollPositionManager.saveScrollOffset();
         updateSelectedCategoryList();
         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(mSite));
-    }
-
-    @Override
-    public void onBackPressed() {
-        saveAndFinish();
-        super.onBackPressed();
     }
 
     private void updateSelectedCategoryList() {

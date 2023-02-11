@@ -10,6 +10,7 @@ import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -92,6 +93,19 @@ public class ReaderSubsActivity extends LocaleAwareActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (!TextUtils.isEmpty(mLastAddedTagName)) {
+                    EventBus.getDefault().postSticky(new ReaderEvents.TagAdded(mLastAddedTagName));
+                }
+                mReaderTracker.track(Stat.READER_MANAGE_VIEW_DISMISSED);
+                setEnabled(false);
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         setContentView(R.layout.reader_activity_subs);
         restoreState(savedInstanceState);
@@ -234,15 +248,6 @@ public class ReaderSubsActivity extends LocaleAwareActivity
             outState.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
         }
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (!TextUtils.isEmpty(mLastAddedTagName)) {
-            EventBus.getDefault().postSticky(new ReaderEvents.TagAdded(mLastAddedTagName));
-        }
-        mReaderTracker.track(Stat.READER_MANAGE_VIEW_DISMISSED);
-        super.onBackPressed();
     }
 
     /*

@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
@@ -74,18 +75,6 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     private boolean mCanLoadMoreComments = true;
 
     @Override
-    public void onBackPressed() {
-        CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
-                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
-
-        if (fragment != null) {
-            fragment.onBackPressed();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
@@ -93,6 +82,22 @@ public class CommentsDetailActivity extends LocaleAwareActivity
         AppLog.i(AppLog.T.COMMENTS, "Creating CommentsDetailActivity");
 
         setContentView(R.layout.comments_detail_activity);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
+                        getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
+
+                if (fragment != null) {
+                    fragment.onBackPressed();
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);

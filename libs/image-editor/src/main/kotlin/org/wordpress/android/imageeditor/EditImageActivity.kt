@@ -1,6 +1,7 @@
 package org.wordpress.android.imageeditor
 
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
@@ -24,6 +25,14 @@ class EditImageActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this).get(EditImageViewModel::class.java)
         setContentView(R.layout.activity_edit_image)
+
+        onBackPressedDispatcher.addCallback(this) {
+            isEnabled = false
+            onBackPressedDispatcher.onBackPressed()
+            if (hostFragment.childFragmentManager.backStackEntryCount == 0) {
+                ImageEditor.instance.onEditorAction(EditorCancelled)
+            }
+        }
 
         hostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment?
@@ -57,13 +66,6 @@ class EditImageActivity : AppCompatActivity() {
             true
         } else {
             navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-        }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        if (hostFragment.childFragmentManager.backStackEntryCount == 0) {
-            ImageEditor.instance.onEditorAction(EditorCancelled)
         }
     }
 }

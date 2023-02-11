@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -66,6 +67,18 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.reader_activity_post_list);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                ReaderPostListFragment fragment = getListFragment();
+                if (fragment == null || !fragment.onActivityBackPressed()) {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -186,14 +199,6 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
         }
 
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onBackPressed() {
-        ReaderPostListFragment fragment = getListFragment();
-        if (fragment == null || !fragment.onActivityBackPressed()) {
-            super.onBackPressed();
-        }
     }
 
     @Override

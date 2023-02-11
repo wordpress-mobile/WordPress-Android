@@ -34,6 +34,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IntegerRes;
 import androidx.annotation.NonNull;
@@ -214,6 +215,16 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.media_settings_activity);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                saveChanges();
+                setEnabled(false);
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         setSupportActionBar(findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
@@ -505,12 +516,6 @@ public class MediaSettingsActivity extends LocaleAwareActivity
 
     private void showProgress(boolean show) {
         findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public void onBackPressed() {
-        saveChanges();
-        super.onBackPressed();
     }
 
     @Override
