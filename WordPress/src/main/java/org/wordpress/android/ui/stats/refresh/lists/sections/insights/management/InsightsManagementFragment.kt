@@ -5,7 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -33,11 +33,7 @@ class InsightsManagementFragment : DaggerFragment(R.layout.insights_management_f
             initializeViews()
             initializeViewModels(requireActivity(), siteId)
         }
-        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                viewModel.onBackPressed()
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback(this) { viewModel.onBackPressed() }
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {

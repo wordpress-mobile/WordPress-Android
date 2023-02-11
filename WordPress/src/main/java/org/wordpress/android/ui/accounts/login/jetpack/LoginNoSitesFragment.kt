@@ -3,7 +3,7 @@ package org.wordpress.android.ui.accounts.login.jetpack
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,7 +42,7 @@ class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initBackPressHandler()
+        requireActivity().onBackPressedDispatcher.addCallback(this) { viewModel.onBackPressed() }
         with(JetpackLoginEmptyViewBinding.bind(view)) {
             initContentViews()
             initClickListeners()
@@ -140,17 +140,5 @@ class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
     override fun onResume() {
         super.onResume()
         viewModel.onFragmentResume()
-    }
-
-    private fun initBackPressHandler() {
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(
-                true
-            ) {
-                override fun handleOnBackPressed() {
-                    viewModel.onBackPressed()
-                }
-            })
     }
 }

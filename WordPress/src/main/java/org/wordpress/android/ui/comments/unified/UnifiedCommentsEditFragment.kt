@@ -6,7 +6,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.core.widget.doAfterTextChanged
@@ -82,15 +82,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
             it.setDisplayHomeAsUpEnabled(true)
             it.setHomeAsUpIndicator(R.drawable.ic_cross_white_24dp)
         }
-        activity.onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(
-                true
-            ) {
-                override fun handleOnBackPressed() {
-                    viewModel.onBackPressed()
-                }
-            })
+        activity.onBackPressedDispatcher.addCallback(this@UnifiedCommentsEditFragment) { viewModel.onBackPressed() }
     }
 
     private fun hideKeyboard() {

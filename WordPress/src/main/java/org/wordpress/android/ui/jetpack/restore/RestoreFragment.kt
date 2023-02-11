@@ -5,7 +5,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -50,7 +50,7 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
         super.onViewCreated(view, savedInstanceState)
         with(JetpackBackupRestoreFragmentBinding.bind(view)) {
             initDagger()
-            initBackPressHandler()
+            requireActivity().onBackPressedDispatcher.addCallback(this@RestoreFragment) { viewModel.onBackPressed() }
             initAdapter()
             initViewModel(savedInstanceState)
         }
@@ -58,22 +58,6 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
 
     private fun initDagger() {
         (requireActivity().application as WordPress).component().inject(this)
-    }
-
-    private fun initBackPressHandler() {
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(
-                true
-            ) {
-                override fun handleOnBackPressed() {
-                    onBackPressed()
-                }
-            })
-    }
-
-    private fun onBackPressed() {
-        viewModel.onBackPressed()
     }
 
     private fun JetpackBackupRestoreFragmentBinding.initAdapter() {
