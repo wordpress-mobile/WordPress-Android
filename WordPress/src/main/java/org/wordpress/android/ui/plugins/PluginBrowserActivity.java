@@ -225,7 +225,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -315,7 +315,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
 
     private void hideListFragment() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
         }
     }
 

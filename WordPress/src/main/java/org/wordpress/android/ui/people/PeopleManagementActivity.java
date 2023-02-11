@@ -227,7 +227,7 @@ public class PeopleManagementActivity extends LocaleAwareActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.remove_person) {
             confirmRemovePerson();

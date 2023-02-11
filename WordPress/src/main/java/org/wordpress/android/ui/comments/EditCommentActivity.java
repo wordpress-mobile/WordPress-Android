@@ -194,7 +194,7 @@ public class EditCommentActivity extends LocaleAwareActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else if (i == R.id.menu_save_comment) {
             saveComment();

@@ -134,7 +134,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         })
         mainViewModel.onBackPressedObservable.observe(this, Observer {
             ActivityUtils.hideKeyboard(this)
-            super.onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
         })
         siteCreationIntentsViewModel.onBackButtonPressed.observe(this, Observer {
             mainViewModel.onBackPressed()
@@ -274,7 +274,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
             return true
         }
         return false

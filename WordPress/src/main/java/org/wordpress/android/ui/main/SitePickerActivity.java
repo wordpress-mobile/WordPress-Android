@@ -274,7 +274,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_DISMISSED);
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else if (itemId == R.id.menu_edit) {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_TOGGLED_EDIT_TAPPED,

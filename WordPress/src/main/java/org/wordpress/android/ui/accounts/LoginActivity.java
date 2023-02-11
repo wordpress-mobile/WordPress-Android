@@ -295,7 +295,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         }
 

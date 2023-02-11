@@ -107,7 +107,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            toolbar.setNavigationOnClickListener(v -> onBackPressed());
+            toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         }
 
         ActionBar actionBar = getSupportActionBar();

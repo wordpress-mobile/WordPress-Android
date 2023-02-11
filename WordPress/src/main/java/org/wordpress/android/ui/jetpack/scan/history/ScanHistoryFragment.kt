@@ -139,7 +139,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvid
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
         android.R.id.home -> {
-            requireActivity().onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
             true
         }
         else -> false
