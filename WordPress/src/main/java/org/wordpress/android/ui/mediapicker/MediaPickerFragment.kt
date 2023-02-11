@@ -416,13 +416,13 @@ class MediaPickerFragment : Fragment(), MenuProvider {
     private fun initializeSearchView(actionMenuItem: MenuItem) {
         var isExpanding = false
         actionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 viewModel.onSearchExpanded()
                 isExpanding = true
                 return true
             }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 viewModel.onSearchCollapsed()
                 return true
             }

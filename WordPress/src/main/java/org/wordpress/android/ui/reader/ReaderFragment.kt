@@ -24,6 +24,7 @@ import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.databinding.ReaderFragmentLayoutBinding
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
@@ -44,7 +45,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
@@ -126,11 +126,11 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         }
         menu.findItem(R.id.menu_settings).apply {
             settingsMenuItem = this
-            settingsMenuItemFocusPoint = this.actionView.findViewById(R.id.menu_quick_start_focus_point)
+            settingsMenuItemFocusPoint = this.actionView?.findViewById(R.id.menu_quick_start_focus_point)
             this.isVisible = viewModel.uiState.value?.settingsMenuItemUiState?.isVisible ?: false
             settingsMenuItemFocusPoint?.isVisible =
                 viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
-            this.actionView.setOnClickListener { viewModel.onSettingsActionClicked() }
+            this.actionView?.setOnClickListener { viewModel.onSettingsActionClicked() }
         }
     }
 

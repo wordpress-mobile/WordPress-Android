@@ -264,12 +264,12 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
     private fun PagesFragmentBinding.initializeSearchView() {
         actionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 viewModel.onSearchExpanded(restorePreviousSearch)
                 return true
             }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 viewModel.onSearchCollapsed()
                 return true
             }
@@ -294,8 +294,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         })
 
         // fix the search view margins to match the action bar
-        val searchEditFrame = actionMenuItem.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
-        (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
+        val searchEditFrame = actionMenuItem.actionView?.findViewById<LinearLayout>(R.id.search_edit_frame)
+        (searchEditFrame?.layoutParams as LinearLayout.LayoutParams)
             .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
 
         viewModel.isSearchExpanded.observe(this@PagesFragment, Observer {
