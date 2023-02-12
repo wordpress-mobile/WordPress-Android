@@ -298,13 +298,13 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         (searchEditFrame?.layoutParams as LinearLayout.LayoutParams)
             .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
 
-        viewModel.isSearchExpanded.observe(this@PagesFragment, Observer {
+        viewModel.isSearchExpanded.observe(this@PagesFragment) {
             if (it == true) {
                 showSearchList(actionMenuItem)
             } else {
                 hideSearchList(actionMenuItem)
             }
-        })
+        }
     }
 
     private fun PagesFragmentBinding.initializeViewModelObservers(
