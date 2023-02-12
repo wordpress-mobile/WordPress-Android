@@ -42,7 +42,7 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
             dismissButton().setOnClickListener { viewModel.onDismissButtonPressed() }
         }
 
-        viewModel.navigationAction.observe(this, { executeAction(it) })
+        viewModel.navigationAction.observe(this) { executeAction(it) }
     }
 
     private fun PostSignupInterstitialActivityBinding.createNewSiteButton() =
