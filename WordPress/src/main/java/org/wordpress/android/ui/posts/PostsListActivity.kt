@@ -604,10 +604,10 @@ class PostsListActivity : LocaleAwareActivity(),
             }
         })
 
-        viewModel.isSearchExpanded.observe(this@PostsListActivity, { isExpanded ->
+        viewModel.isSearchExpanded.observe(this@PostsListActivity) { isExpanded ->
             toggleViewLayoutMenuItem.isVisible = !isExpanded
             toggleSearch(isExpanded)
-        })
+        }
     }
 
     private fun PostListActivityBinding.toggleSearch(isExpanded: Boolean) {
