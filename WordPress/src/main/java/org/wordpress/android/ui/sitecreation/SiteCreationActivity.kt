@@ -123,13 +123,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
                 finish()
             }
         }
-        mainViewModel.dialogActionObservable.observe(this) { dialogHolder ->
-            dialogHolder?.let {
-                val supportFragmentManager = requireNotNull(supportFragmentManager) {
-                    "FragmentManager can't be null at this point"
-                }
-                dialogHolder.show(this, supportFragmentManager, uiHelpers)
-            }
+        mainViewModel.dialogActionObservable.observe(this) {
+            it?.show(this, supportFragmentManager, uiHelpers)
         }
         mainViewModel.exitFlowObservable.observe(this) {
             setResult(Activity.RESULT_CANCELED)

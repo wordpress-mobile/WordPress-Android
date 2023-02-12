@@ -253,9 +253,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 mSuggestionServiceConnectionManager,
                 mPost.isWP()
         );
-        if (mSuggestionAdapter != null) {
-            mEditComment.setAdapter(mSuggestionAdapter);
-        }
+        mEditComment.setAdapter(mSuggestionAdapter);
 
         mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost, mSource);
 

@@ -244,7 +244,7 @@ public class PeopleManagementActivity extends LocaleAwareActivity
             if (peopleInviteFragment == null) {
                 peopleInviteFragment = PeopleInviteFragment.newInstance(mSite);
             }
-            if (peopleInviteFragment != null && !peopleInviteFragment.isAdded()) {
+            if (!peopleInviteFragment.isAdded()) {
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, peopleInviteFragment, KEY_PEOPLE_INVITE_FRAGMENT);
                 fragmentTransaction.addToBackStack(null);
