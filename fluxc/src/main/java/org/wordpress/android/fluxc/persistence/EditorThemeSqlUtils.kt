@@ -89,10 +89,10 @@ class EditorThemeSqlUtils {
         @Column var version: String? = null
         @Column var rawStyles: String? = null
         @Column var rawFeatures: String? = null
-        @Column var isFSETheme: Boolean = false
-            @JvmName("isFSETheme")
+        @Column var isBlockBasedTheme: Boolean = false
+            @JvmName("isBlockBasedTheme")
             get
-            @JvmName("setIsFSETheme")
+            @JvmName("setIsBlockBasedTheme")
             set
         @Column var galleryWithImageBlocks: Boolean = false
         @Column var quoteBlockV2: Boolean = false
@@ -123,7 +123,7 @@ class EditorThemeSqlUtils {
                     gradients,
                     rawStyles,
                     rawFeatures,
-                    isFSETheme,
+                    isBlockBasedTheme,
                     galleryWithImageBlocks,
                     quoteBlockV2,
                     listBlockV2
