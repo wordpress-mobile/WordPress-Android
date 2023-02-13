@@ -70,7 +70,7 @@ platform :android do
       model: 'Pixel2.arm',
       version: 30,
       test_apk_path: File.join(apk_dir, 'androidTest', 'jetpackVanilla', 'debug', 'org.wordpress.android-jetpack-vanilla-debug-androidTest.apk'),
-      apk_path: File.join(apk_dir, 'wordpressVanilla', 'debug', 'org.wordpress.android-jetpack-vanilla-debug.apk'),
+      apk_path: File.join(apk_dir, 'jetpackVanilla', 'debug', 'org.wordpress.android-jetpack-vanilla-debug.apk'),
       test_targets: 'notPackage org.wordpress.android.ui.screenshots',
       results_output_dir: File.join(PROJECT_ROOT_FOLDER, 'build', 'instrumented-tests'),
       crash_on_test_failure: false
