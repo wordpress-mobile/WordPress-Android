@@ -4,22 +4,23 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.rememberLottieComposition
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ButtonsColumn
 import org.wordpress.android.ui.compose.components.PrimaryButton
@@ -56,19 +57,24 @@ fun Loaded(
                     .verticalScroll(scrollState)
                     .weight(1f)
             ) {
-                val animationRawRes =
-                    if (LocalContext.current.isRtl()) {
-                        R.raw.jp_install_full_plugin_rtl
-                    } else {
-                        R.raw.jp_install_full_plugin_left
-                    }
-                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(animationRawRes))
-                LottieAnimation(
-                    composition,
+                Row(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .padding(horizontal = 30.dp)
-                        .padding(top = 34.dp)
-                )
+                        .padding(top = 34.dp),
+                ) {
+                    JPInstallFullPluginAnimation()
+                    Spacer(Modifier.weight(1f))
+                    IconButton(onClick = onDismissScreenClick) {
+                        Icon(
+                            modifier = Modifier.align(Alignment.Top),
+                            painter = painterResource(R.drawable.ic_close_white_24dp),
+                            contentDescription = stringResource(
+                                R.string.jetpack_full_plugin_install_onboarding_dismiss_button_content_description
+                            ),
+                        )
+                    }
+                }
                 Title(text = stringResource(R.string.jetpack_individual_plugin_support_onboarding_title))
                 PluginDescription(
                     siteName = siteName,
