@@ -147,7 +147,7 @@ import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.blaze.BlazeParentActivityKt.ARG_BLAZE_FLOW_SOURCE;
-import static org.wordpress.android.ui.blaze.BlazeParentActivityKt.ARG_EXTRA_POST;
+import static org.wordpress.android.ui.blaze.BlazeParentActivityKt.ARG_EXTRA_POST_ID;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
@@ -1820,7 +1820,7 @@ public class ActivityLauncher {
                                             @Nullable PostModel postModel,
                                             @NonNull BlazeFlowSource source) {
         Intent intent = new Intent(context, BlazeParentActivity.class);
-        intent.putExtra(ARG_EXTRA_POST, postModel);
+        intent.putExtra(ARG_EXTRA_POST_ID, postModel.getRemotePostId());
         intent.putExtra(ARG_BLAZE_FLOW_SOURCE, source);
         context.startActivity(intent);
     }

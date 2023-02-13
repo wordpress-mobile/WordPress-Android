@@ -8,7 +8,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeOverlayFragment
 import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeViewModel
 
-const val ARG_EXTRA_POST = "blaze_post_model"
+const val ARG_EXTRA_POST_ID = "post_id"
 const val ARG_BLAZE_FLOW_SOURCE = "blaze_flow_source"
 
 @AndroidEntryPoint
@@ -19,15 +19,27 @@ class BlazeParentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_blaze_parent)
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, BlazeOverlayFragment.newInstance())
-                .commitNow()
+        viewModel.start(getSource(), getPostId())
+        observe()
+    }
+
+    private fun observe() {
+        viewModel.uiState.observe(this) { uiState ->
+            when (uiState) {
+                is BlazeUiState.PromoteScreen -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, BlazeOverlayFragment.newInstance())
+                        .commitNow()
+                }
+            }
         }
-        viewModel.trackOverlayDisplayed(getSource())
     }
 
     private fun getSource(): BlazeFlowSource {
         return intent.getSerializableExtra(ARG_BLAZE_FLOW_SOURCE) as BlazeFlowSource
+    }
+
+    private fun getPostId(): Int {
+        return intent.getIntExtra(ARG_EXTRA_POST_ID,0) as Int
     }
 }
