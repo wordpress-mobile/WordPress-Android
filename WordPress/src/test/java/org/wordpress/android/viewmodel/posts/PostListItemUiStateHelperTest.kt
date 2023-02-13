@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
@@ -62,6 +63,10 @@ class PostListItemUiStateHelperTest {
 
     @Mock
     private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
+    @Mock
+    private lateinit var blazeFeatureUtils: BlazeFeatureUtils
+
     private lateinit var helper: PostListItemUiStateHelper
 
     @Before
@@ -70,7 +75,8 @@ class PostListItemUiStateHelperTest {
             appPrefsWrapper,
             uploadUiStateUseCase,
             labelColorUseCase,
-            jetpackFeatureRemovalPhaseHelper
+            jetpackFeatureRemovalPhaseHelper,
+            blazeFeatureUtils
         )
         whenever(appPrefsWrapper.isAztecEditorEnabled).thenReturn(true)
     }

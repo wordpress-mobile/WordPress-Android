@@ -103,7 +103,7 @@ android {
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
         buildConfigField "boolean", "SITE_INTENT_QUESTION", "true"
         buildConfigField "boolean", "SITE_NAME", "false"
-        buildConfigField "boolean", "LANDING_SCREEN_REVAMP", "false"
+        buildConfigField "boolean", "LANDING_SCREEN_REVAMP", "true"
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS_LIST", "false"
@@ -130,6 +130,7 @@ android {
         buildConfigField "boolean", "OPEN_WEB_LINKS_WITH_JETPACK_FLOW", "false"
         buildConfigField "boolean", "ENABLE_WORDPRESS_SUPPORT_FORUM", "false"
         buildConfigField "boolean", "JETPACK_INSTALL_FULL_PLUGIN", "false"
+        buildConfigField "boolean", "ENABLE_BLAZE_FEATURE", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -143,6 +144,7 @@ android {
         buildConfigField "boolean", "ENABLE_MY_SITE_DASHBOARD_TABS", "true"
         buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
         buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
+        buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -169,6 +171,7 @@ android {
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "false"
             buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
+            buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
 
             manifestPlaceholders = [magicLinkScheme:"wordpress"]
         }
@@ -187,11 +190,11 @@ android {
             buildConfigField "boolean", "ENABLE_FOLLOWED_SITES_SETTINGS", "true"
             buildConfigField "boolean", "ENABLE_WHATS_NEW_FEATURE", "true"
             buildConfigField "boolean", "ENABLE_MY_SITE_DASHBOARD_TABS", "true"
-            buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
             buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "false"
+            buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
 
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
 
@@ -382,7 +385,6 @@ dependencies {
     implementation "androidx.activity:activity-ktx:$androidxActivityVersion"
     implementation "androidx.fragment:fragment:$androidxFragmentVersion"
     implementation "androidx.fragment:fragment-ktx:$androidxFragmentVersion"
-    implementation "androidx.media:media:$androidxMediaVersion"
     implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
     implementation "androidx.appcompat:appcompat-resources:$androidxAppcompatVersion"
     implementation "androidx.cardview:cardview:$androidxCardviewVersion"
@@ -391,9 +393,8 @@ dependencies {
     implementation "androidx.percentlayout:percentlayout:$androidxPercentlayoutVersion"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidxSwipeToRefreshVersion"
     implementation "androidx.preference:preference:$androidxPreferenceVersion"
-    implementation "androidx.work:work-runtime:$androidxWorkVersion"
-    implementation "androidx.work:work-runtime-ktx:$androidxWorkVersion"
-    implementation "androidx.work:work-gcm:$androidxWorkVersion" // GCMNetworkManager on api <= 22
+    implementation "androidx.work:work-runtime:$androidxWorkManagerVersion"
+    implementation "androidx.work:work-runtime-ktx:$androidxWorkManagerVersion"
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidxLifecycleVersion"
@@ -413,6 +414,7 @@ dependencies {
     implementation "com.squareup.okio:okio:$squareupOkioVersion"
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation "com.airbnb.android:lottie:$lottieVersion"
+    implementation "com.airbnb.android:lottie-compose:$lottieVersion"
     implementation "com.facebook.shimmer:shimmer:$facebookShimmerVersion"
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
         exclude group: 'androidx.core', module: 'core'
@@ -495,7 +497,7 @@ dependencies {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
     androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
-    androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
+    androidTestImplementation "androidx.work:work-testing:$androidxWorkManagerVersion"
     androidTestImplementation "com.google.dagger:hilt-android-testing:$gradle.ext.daggerVersion"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$gradle.ext.daggerVersion"
     // Necessary because of the failing android tests

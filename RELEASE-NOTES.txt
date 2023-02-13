@@ -2,7 +2,7 @@
 
 21.8
 -----
-
+* [*] [WordPress-only] We have redesigned the landing screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17871]
 
 21.7
 -----
