@@ -70,7 +70,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         fun onNewPostButtonClicked(promptId: Int, origin: EntryPoint)
     }
 
-    fun init(fm: FragmentManager, listener: OnPageListener) {
+    fun init(fm: FragmentManager, listener: OnPageListener, showMySitePage: Boolean) {
         fragmentManager = fm
         pageListener = listener
 
@@ -102,6 +102,9 @@ class WPMainNavigationView @JvmOverloads constructor(
             itemView.addView(customView)
         }
 
+        if (showMySitePage) {
+            AppPrefs.setMainPageIndex(getPosition(MY_SITE))
+        }
         currentPosition = AppPrefs.getMainPageIndex(numPages() - 1)
     }
 

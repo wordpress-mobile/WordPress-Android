@@ -328,7 +328,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         boolean canShowAppRatingPrompt = savedInstanceState != null;
 
         mBottomNav = findViewById(R.id.bottom_navigation);
-        mBottomNav.init(getSupportFragmentManager(), this);
+        boolean showMySiteTab = mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures();
+        mBottomNav.init(getSupportFragmentManager(), this, showMySiteTab);
 
         if (savedInstanceState == null) {
             if (!AppPrefs.isInstallationReferrerObtained()) {
