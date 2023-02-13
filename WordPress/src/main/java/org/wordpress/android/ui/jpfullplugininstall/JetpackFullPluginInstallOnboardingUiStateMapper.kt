@@ -8,18 +8,11 @@ import javax.inject.Inject
 class JetpackFullPluginInstallOnboardingUiStateMapper @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
 ) {
-    fun mapLoaded(
-        onTermsAndConditionsClick: () -> Unit,
-        onInstallFullPluginClick: () -> Unit,
-        onContactSupportClick: () -> Unit,
-    ): UiState.Loaded {
+    fun mapLoaded(): UiState.Loaded {
         val selectedSite = selectedSiteRepository.getSelectedSite()
         return UiState.Loaded(
             siteName = selectedSite?.name.orEmpty(),
             pluginNames = selectedSite?.activeJetpackConnectionPluginNames().orEmpty(),
-            onTermsAndConditionsClick = onTermsAndConditionsClick,
-            onInstallFullPluginClick = onInstallFullPluginClick,
-            onContactSupportClick = onContactSupportClick,
         )
     }
 }

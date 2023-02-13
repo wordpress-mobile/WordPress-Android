@@ -29,10 +29,8 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents = _actionEvents
 
-    fun start() {
-        postUiState(
-            uiStateMapper.mapLoaded(::onTermsAndConditionsClick, ::onInstallFullPluginClick, ::onContactSupportClick)
-        )
+    fun onScreenShown() {
+        postUiState(uiStateMapper.mapLoaded())
     }
 
     private fun onTermsAndConditionsClick() {
