@@ -81,7 +81,7 @@ steps:
   # Instrumented (aka UI) Tests
   #################
   - label: "🔬 Instrumented tests"
-    command: ".buildkite/commands/instrumented-tests.sh"
+    command: ".buildkite/commands/instrumented-tests.sh jetpack"
     plugins: *common_plugins
     artifact_paths:
       - "**/build/instrumented-tests/**/*"
