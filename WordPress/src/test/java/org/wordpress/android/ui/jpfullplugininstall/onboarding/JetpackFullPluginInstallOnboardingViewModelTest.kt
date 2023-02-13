@@ -20,6 +20,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 class JetpackFullPluginInstallOnboardingViewModelTest : BaseUnitTest() {
     private val selectedSiteRepository: SelectedSiteRepository = mock()
     private val uiStateMapper: JetpackFullPluginInstallOnboardingUiStateMapper = mock()
+    private val analyticsTracker: JetpackFullPluginInstallOnboardingAnalyticsTracker = mock()
 
     private val siteName = "Site Name"
     private val pluginNames = listOf("jetpack-search", "jetpack-backup")
@@ -34,6 +35,7 @@ class JetpackFullPluginInstallOnboardingViewModelTest : BaseUnitTest() {
     private val classToTest = JetpackFullPluginInstallOnboardingViewModel(
         uiStateMapper = uiStateMapper,
         selectedSiteRepository = selectedSiteRepository,
+        analyticsTracker = analyticsTracker,
         bgDispatcher = testDispatcher(),
     )
 
@@ -101,6 +103,18 @@ class JetpackFullPluginInstallOnboardingViewModelTest : BaseUnitTest() {
         classToTest.onDismissScreenClick()
         assertThat(result.first()).isEqualTo(ActionEvent.Dismiss)
         job.cancel()
+    }
+
+    @Test
+    fun `Should track install button click when onInstallFullPluginClick is called`() {
+        classToTest.onInstallFullPluginClick()
+        verify(analyticsTracker).trackInstallButtonClick()
+    }
+
+    @Test
+    fun `Should track dismiss screen click when onDismissScreenClick is called`() {
+        classToTest.onDismissScreenClick()
+        verify(analyticsTracker).trackScreenDismissed()
     }
 
     private fun mockSelectedSite() {
