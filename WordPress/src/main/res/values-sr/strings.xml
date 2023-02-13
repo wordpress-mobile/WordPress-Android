@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-31 00:22:10+0000
+Translation-Revision-Date: 2023-02-12 21:30:22+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: sr_RS
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_menu_remove">Искључи обавештења</string>
+    <string name="support_forum_title">Форуми заједнице</string>
+    <string name="site_settings_blogging_prompts_title">Прикажи обавештења</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Уради ово касније</string>
     <string name="my_site_blogging_prompt_card_view_answers">Види све одговоре</string>
+    <string name="stats_timeframe_last_seven_days">Последњих 7 дана</string>
+    <string name="stats_timeframe_previous_seven_days">Претходних 7 дана</string>
+    <string name="weeks_quantity_other">%d седмица</string>
+    <string name="weeks_quantity_one">1 седмица</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">Сакриј ово</string>
+    <string name="jetpack_feature_card_menu_item_remind_me_later">Подсети ме касније</string>
+    <string name="blogging_prompts_list_error_fetch_title">Упс</string>
     <string name="post_settings_parent">Надређена страна</string>
     <string name="post_settings_page_attributes">Особине стране</string>
     <string name="about_automattic_contribute_item_title">Допринесите</string>
@@ -591,6 +601,8 @@ Language: sr_RS
     <string name="stats_widget_site">Сајт</string>
     <string name="stats_widget_views_title">Прегледи ове седмице</string>
     <string name="stats_widget_add">Додај виџет</string>
+    <string name="stats_widget_error_no_network">Нема доступне мреже</string>
+    <string name="stats_widget_error_no_data">Није могуће учитати податке</string>
     <string name="domain_contact_information_state_not_available_hint">Покрајина (није доступно)</string>
     <string name="site_settings_password_updated">Лозинка ажурирана</string>
     <string name="site_settings_password_dialog_title">Ажурирај лозинку</string>
@@ -622,6 +634,7 @@ Language: sr_RS
     <string name="domains_suggestions_empty_list">Нема пронађених предлога</string>
     <string name="stats_insights_annual_site_stats">Годишње статистике сајта</string>
     <string name="stats_insights_social">Друштвено</string>
+    <string name="stats_view_follower_totals">Укупан број пратилаца</string>
     <string name="stats_menu_move_down">Помери доле</string>
     <string name="stats_menu_move_up">Помери горе</string>
     <string name="post_restored">Чланак враћен</string>
@@ -673,6 +686,7 @@ Language: sr_RS
     <string name="plans_loading_error_network_title">Нема везе</string>
     <string name="menu_switch_to_gutenberg_editor">Пребаци на блоковски уређивач</string>
     <string name="stats_loading_error">Подаци нису учитани</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">Уреди нове чланке и странице са уређивачем блокова</string>
     <string name="exit">излаз</string>
     <string name="quick_start_sites_type_grow">Увећајте свој аудиторијум</string>
     <string name="quick_start_sites_type_customize">Прилагодите свој сајт</string>
@@ -1249,6 +1263,7 @@ Language: sr_RS
     <string name="reader_excerpt_link">Посети %s за више</string>
     <string name="add_media_progress">Додавање садржаја</string>
     <string name="upload_failed_param">Отпремање неуспело за \"%s\"</string>
+    <string name="cant_open_url">Није могуће отворити везу</string>
     <string name="error_media_canceled">Отпремање садржаја је отказано</string>
     <string name="editor_uploading_post">Ваш чланак се отпрема</string>
     <string name="uploading_media">Отпремање садржаја…</string>
