@@ -43,7 +43,6 @@ platform :android do
       UI.test_failure!(message)
     end
   end
-end
 
   #####################################################################################
   # build_and_run_jetpack_instrumented_test
