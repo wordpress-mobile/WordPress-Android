@@ -39,8 +39,8 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
     }
 
     fun onInstallFullPluginClick() {
-        //TODO tracking event
-        //TODO open install full plugin screen when it's done
+        // TODO tracking event
+        // TODO open install full plugin screen when it's done
     }
 
     fun onContactSupportClick() {

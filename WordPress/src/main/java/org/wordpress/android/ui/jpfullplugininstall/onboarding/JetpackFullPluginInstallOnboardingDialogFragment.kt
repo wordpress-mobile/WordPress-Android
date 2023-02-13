@@ -100,7 +100,7 @@ class JetpackFullPluginInstallOnboardingDialogFragment : DialogFragment() {
                 )
             }
             is InstallJPFullPlugin -> {
-                //TODO open install JP full plugin screen
+                // TODO open install JP full plugin screen
                 dismiss()
             }
             is ContactSupport -> {
