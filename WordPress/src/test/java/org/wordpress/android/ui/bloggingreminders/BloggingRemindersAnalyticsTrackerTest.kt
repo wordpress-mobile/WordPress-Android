@@ -137,7 +137,7 @@ class BloggingRemindersAnalyticsTrackerTest {
     @Test
     fun `trackRemindersScheduled tracks correct event and properties`() {
         bloggingRemindersUiModel = BloggingRemindersUiModel(
-            1, setOf(MONDAY, THURSDAY, FRIDAY), 14, 30, true
+            1, setOf(MONDAY, THURSDAY, FRIDAY), 14, 30, isPromptIncluded = true, isPromptsCardEnabled = true,
         )
         bloggingRemindersAnalyticsTracker.trackRemindersScheduled(
             bloggingRemindersUiModel.enabledDays.size, bloggingRemindersUiModel.getNotificationTime24hour()

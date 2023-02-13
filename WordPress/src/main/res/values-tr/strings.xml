@@ -30,7 +30,6 @@ Language: tr
     <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt; tarafından</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Bunu gizle</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Daha sonra hatırlat</string>
-    <string name="jetpack_feature_card_content">İstatistikler, Okuyucu, Bildirimler ve diğer özellikler, yakında Jetpack mobil uygulamasına taşınacaktır.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Jetpack uygulamasına geçiş yapın</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Jetpack.com\'da daha fazla bilgi edinin</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Geçiş ücretsizdir ve yalnızca bir dakika sürer.</string>
@@ -307,14 +306,10 @@ Language: tr
     <string name="blogging_prompts_onboarding_card_prompt">Hayatınızın filmini oynayın.</string>
     <string name="blogging_prompts_onboarding_remind_me">Bana hatırlat</string>
     <string name="blogging_prompts_onboarding_try_it_now">Şimdi deneyin</string>
-    <string name="blogging_prompts_onboarding_content_note_content">İstediğiniz zaman Sitem &gt; Ayarlar &gt; Blog Hatırlatıcıları bölümünden daha fazla bilgi edinebilir ve hatırlatıcı oluşturabilirsiniz.</string>
     <string name="blogging_prompts_onboarding_content_note_title">Not:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Yaratıcı fikirlerin fışkırmasına yardımcı olmak için her gün size panonuzda yeni bir bilgi göstereceğiz!</string>
     <string name="blogging_prompts_onboarding_content_top">Daha iyi bir yazar olmanın en iyi yolu, yazma alışkanlığı kazanmak ve başkalarıyla paylaşmaktır - işte burada Bilgiler devreye girer!</string>
-    <string name="blogging_prompts_onboarding_header_title">Bilgilerle Tanışın</string>
     <string name="blogging_prompt_set_reminders">Hatırlatıcı ayarla</string>
-    <string name="blogging_reminders_prompt_subtitle">Hatırlatıcı, günlük bir bilgi içerecektir</string>
-    <string name="blogging_reminders_prompt_title">Günlük bilgiyi dahil et</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Düzenli olarak yayın yapmak yeni okuyucuları cezbeder. Ne zaman yazmak istediğinizi bize söyleyin, size hatırlatalım!</string>
     <string name="set_your_blogging_prompts_title">Bir alışkanlık kazanarak daha iyi bir yazar olun</string>
     <string name="site_creation_intent_writing_poetry">Yazı ve Şiir</string>
@@ -350,7 +345,6 @@ Language: tr
     <string name="new_site_creation_intents_input_hint">Örn. Moda, Şiir, Politika</string>
     <string name="new_site_creation_intents_title">Site Konusu</string>
     <string name="quick_start_site_menu_tab_message_short">Devam etmek için &lt;b&gt;%1$s&lt;/b&gt; öğesine dokunun.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Panodan kaldır</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Bugünlük atla</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Daha fazla bilgi görüntüle</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d yanıt</string>
@@ -359,7 +353,6 @@ Language: tr
     <string name="my_site_blogging_prompt_card_answer_prompt">Yanıt istemi</string>
     <string name="my_site_blogging_prompt_card_title">İstemler</string>
     <string name="my_site_all_tab_title">Tümü</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Hatırlatıcılar ve istemler</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Bu renk birleşiminde insanların okuması zor olabilir. Daha parlak bir arka plan ve/veya daha koyu bir metin rengi kullanmayı deneyin.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Bu renk birleşimi insanların okuması zor olabilir. Daha parlak bir arka plan ve/veya daha koyu bir metin rengi kullanmayı deneyin.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Medya eklenemedi.\nDaha fazla bilgi için dokunun.</string>
@@ -622,7 +615,6 @@ Language: tr
     <string name="support_ticket_subject">Android için WordPress Desteği</string>
     <string name="site_settings_categories_hint">Sitenizin kategorilerini yönetin</string>
     <string name="site_settings_categories_title">Kategoriler</string>
-    <string name="site_settings_blogging_reminders_title">Blog hatırlatıcıları</string>
     <string name="page_is_posts_page_warning">Güncel paylaşımlar sayfanızın içeriği, otomatik olarak oluşturulur ve düzenlenemez.</string>
     <string name="gutenberg_native_border_settings">Kenarlık Ayarları</string>
     <string name="storage_utils_dialog_dont_show_button">Tekrar Gösterme</string>
