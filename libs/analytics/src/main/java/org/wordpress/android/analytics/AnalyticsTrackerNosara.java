@@ -2507,6 +2507,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "remove_feature_card_remind_later_tapped";
             case JETPACK_FEATURE_INCORRECTLY_ACCESSED:
                 return "jetpack_feature_incorrectly_accessed";
+            case JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING_SCREEN_SHOWN:
+                return "jp_install_full_plugin_onboarding_modal_viewed";
+            case JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING_SCREEN_DISMISSED:
+                return "jp_install_full_plugin_onboarding_modal_dismissed";
+            case JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING_INSTALL_TAPPED:
+                return "jp_install_full_plugin_onboarding_modal_install_tapped";
         }
         return null;
     }
