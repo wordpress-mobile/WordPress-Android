@@ -3718,7 +3718,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     .onEditorThemeUpdated(editorThemeSupport.toBundle());
 
         mPostEditorAnalyticsSession
-                .editorSettingsFetched(editorThemeSupport.isFSETheme(), event.getEndpoint().getValue());
+                .editorSettingsFetched(editorThemeSupport.isBlockBasedTheme(), event.getEndpoint().getValue());
     }
     // EditPostActivityHook methods
 
