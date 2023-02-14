@@ -93,7 +93,8 @@ public class LoginFlow {
 
         // Follow the magic link to continue login
         // Intent is invoked directly rather than through a browser as WireMock is unavailable once in the background
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("wordpress://magic-login?token=valid_token"))
+        final String appVariant = BuildConfig.FLAVOR_app;
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appVariant + "://magic-login?token=valid_token"))
                 .setPackage(getApplicationContext().getPackageName());
         ActivityScenario.launch(intent);
 

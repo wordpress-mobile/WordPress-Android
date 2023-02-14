@@ -99,7 +99,6 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
-import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig;
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig;
 import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.util.config.ManageCategoriesFeatureConfig;
@@ -189,7 +188,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
     @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
-    @Inject BloggingPromptsEnhancementsFeatureConfig mBloggingPromptsEnhancementFeatureConfig;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
@@ -1273,8 +1271,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void initBloggingPrompts() {
-        if (!mPromptsSettingsHelper.isPromptsFeatureAvailable()
-            || !mBloggingPromptsEnhancementFeatureConfig.isEnabled()) {
+        if (!mPromptsSettingsHelper.shouldShowPromptsSetting()) {
             removeBloggingPromptsSettings();
             return;
         }
@@ -1283,7 +1280,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 .getPromptsCardEnabledLiveData(mSite.getId())
                 .observe(getAppCompatActivity(), isEnabled -> {
                     if (mBloggingPromptsPref != null) {
-                        mBloggingPromptsPref.setDefaultValue(isEnabled);
+                        mBloggingPromptsPref.setChecked(isEnabled);
                     }
                 });
     }

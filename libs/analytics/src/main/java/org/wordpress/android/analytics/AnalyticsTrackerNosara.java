@@ -1795,6 +1795,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "support_identity_form_viewed";
             case SUPPORT_IDENTITY_SET:
                 return "support_identity_set";
+            case SUPPORT_OPEN_MOBILE_FORUM_TAPPED:
+                return "support_open_mobile_forum_tapped";
             case QUICK_START_TASK_DIALOG_VIEWED:
                 return "quick_start_task_dialog_viewed";
             case QUICK_START_STARTED:

@@ -14,6 +14,7 @@ steps:
   - label: "Gradle Wrapper Validation"
     command: |
       validate_gradle_wrapper
+    priority: 1
     plugins: *common_plugins
 
   # Wait for Gradle Wrapper to be validated before running any other jobs
@@ -28,12 +29,14 @@ steps:
       - label: "🕵️ Lint WordPress"
         key: wplint
         command: ".buildkite/commands/lint.sh wordpress"
+        priority: 1
         artifact_paths:
           - "**/build/reports/lint-results*.*"
 
       - label: "🕵️ Lint Jetpack"
         key: jplint
         command: ".buildkite/commands/lint.sh jetpack"
+        priority: 1
         artifact_paths:
           - "**/build/reports/lint-results*.*"
 
@@ -46,6 +49,7 @@ steps:
       - label: ":wordpress: :android: Release Build"
         key: wpbuild
         command: ".buildkite/commands/release-build.sh wordpress"
+        priority: 1
         depends_on: wplint
         plugins: *common_plugins
         notify:
@@ -54,6 +58,7 @@ steps:
       - label: ":jetpack: :android: Release Build"
         key: jpbuild
         command: ".buildkite/commands/release-build.sh jetpack"
+        priority: 1
         depends_on: jplint
         plugins: *common_plugins
         notify:
@@ -67,4 +72,5 @@ steps:
       - wpbuild
       - jpbuild
     command: ".buildkite/commands/create-github-release.sh"
+    priority: 1
     plugins: *common_plugins

@@ -267,6 +267,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper
 
     @Mock
+    lateinit var bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper
+
+    @Mock
     lateinit var contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker
 
     @Mock
@@ -346,7 +349,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val currentAvatar = MutableLiveData(CurrentAvatarUrl(""))
     private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
     private val activeTask = MutableLiveData<QuickStartTask>()
-    private val quickStartTabStep = MutableLiveData<QuickStartTabStep>()
+    private val quickStartTabStep = MutableLiveData<QuickStartTabStep?>()
     private val dynamicCards = MutableLiveData(
         DynamicCardsUpdate(
             cards = listOf(
@@ -512,6 +515,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             jetpackFeatureRemovalOverlayUtil,
             jetpackFeatureCardHelper,
             bloggingPromptsSettingsHelper,
+            bloggingPromptsCardTrackHelper,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -842,29 +846,23 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* ON RESUME */
     @Test
     fun `given not first resume, when on resume is triggered, then mySiteSourceManager onResume is invoked`() {
-        whenever(quickStartRepository.currentTab).thenReturn(mock())
+        viewModel.onResume(mock()) // first call
 
-        viewModel.onResume() // first call
-
-        viewModel.onResume() // second call
+        viewModel.onResume(mock()) // second call
 
         verify(mySiteSourceManager).onResume(false)
     }
 
     @Test
     fun `given first resume, when on resume is triggered, then mySiteSourceManager onResume is invoked`() {
-        whenever(quickStartRepository.currentTab).thenReturn(mock())
-
-        viewModel.onResume()
+        viewModel.onResume(mock())
 
         verify(mySiteSourceManager).onResume(true)
     }
 
     @Test
     fun `when first onResume is triggered, then checkAndShowQuickStartNotice is invoked`() {
-        whenever(quickStartRepository.currentTab).thenReturn(mock())
-
-        viewModel.onResume()
+        viewModel.onResume(mock())
 
         verify(quickStartRepository).checkAndShowQuickStartNotice()
     }
@@ -2022,48 +2020,66 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given blogging prompt card, when resuming dashboard, then track card viewed`() = test {
+    fun `given blogging prompt card, when resuming dashboard, then tracker helper called as expected`() = test {
         initSelectedSite(
             isMySiteDashboardTabsEnabled = true,
             isBloggingPromptsEnabled = true,
         )
 
-        whenever(quickStartRepository.currentTab).thenReturn(MySiteTabType.DASHBOARD)
-        viewModel.onResume()
+        verify(bloggingPromptsCardTrackHelper, atLeastOnce()).onSiteChanged(siteLocalId)
 
-        advanceUntilIdle()
+        viewModel.onResume(MySiteTabType.DASHBOARD)
 
-        verify(bloggingPromptsCardAnalyticsTracker).trackMySiteCardViewed()
+        verify(bloggingPromptsCardTrackHelper).onResume(MySiteTabType.DASHBOARD)
+        verify(bloggingPromptsCardTrackHelper, atLeastOnce())
+            .onDashboardCardsUpdated(
+                any(),
+                argWhere {
+                    it.cards.any { card -> card is DashboardCard.BloggingPromptCard }
+                }
+            )
     }
 
     @Test
-    fun `given no blogging prompt card, when resuming dashboard, then don't track card viewed`() = test {
+    fun `given no blogging prompt card, when resuming dashboard, then tracker helper called as expected`() = test {
         initSelectedSite(
             isMySiteDashboardTabsEnabled = true,
             isBloggingPromptsEnabled = false,
         )
 
-        whenever(quickStartRepository.currentTab).thenReturn(MySiteTabType.DASHBOARD)
-        viewModel.onResume()
+        verify(bloggingPromptsCardTrackHelper, atLeastOnce()).onSiteChanged(siteLocalId)
 
-        advanceUntilIdle()
+        viewModel.onResume(MySiteTabType.DASHBOARD)
 
-        verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed()
+        verify(bloggingPromptsCardTrackHelper).onResume(MySiteTabType.DASHBOARD)
+        verify(bloggingPromptsCardTrackHelper, never())
+            .onDashboardCardsUpdated(
+                any(),
+                argWhere {
+                    it.cards.any { card -> card is DashboardCard.BloggingPromptCard }
+                }
+            )
     }
 
     @Test
-    fun `given blogging prompt card, when resuming menu, then don't track card viewed`() = test {
+    fun `given blogging prompt card, when resuming menu, then tracker helper called as expected`() = test {
         initSelectedSite(
             isMySiteDashboardTabsEnabled = true,
             isBloggingPromptsEnabled = true,
         )
 
-        whenever(quickStartRepository.currentTab).thenReturn(MySiteTabType.SITE_MENU)
-        viewModel.onResume()
+        verify(bloggingPromptsCardTrackHelper, atLeastOnce()).onSiteChanged(siteLocalId)
 
-        advanceUntilIdle()
+        viewModel.onResume(MySiteTabType.SITE_MENU)
 
-        verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed()
+        verify(bloggingPromptsCardTrackHelper).onResume(MySiteTabType.SITE_MENU)
+        verify(bloggingPromptsCardTrackHelper, atLeastOnce())
+            .onDashboardCardsUpdated(
+                any(),
+                argWhere {
+                    it.cards.any { card -> card is DashboardCard.BloggingPromptCard }
+                }
+            )
     }
 
     /* DASHBOARD ERROR SNACKBAR */

@@ -367,7 +367,6 @@ Language: pl
     <string name="support_ticket_subject">Wsparcie dla WordPressa dla Androida</string>
     <string name="site_settings_categories_hint">Zarządzaj kategoriami swojej witryny</string>
     <string name="site_settings_categories_title">Kategorie</string>
-    <string name="site_settings_blogging_reminders_title">Przypomnienia o blogowaniu</string>
     <string name="page_is_posts_page_warning">Zawartość twoich ostatnich wpisów jest automatycznie generowana i nie może być edytowana.</string>
     <string name="gutenberg_native_border_settings">Ustawienia obramowania</string>
     <string name="storage_utils_dialog_dont_show_button">Nie pokazuj ponownie</string>

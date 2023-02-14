@@ -1,23 +1,19 @@
 package org.wordpress.android.ui.mysite
 
-import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Helper class to coordinate some My Site Dashboard events and trigger the appropriate Blogging Prompts Card viewed
@@ -26,80 +22,61 @@ import java.util.concurrent.atomic.AtomicReference
  * [BloggingPromptsCardAnalyticsTracker.trackMySiteCardViewed] event if identified that the user, on the current site,
  * has the Dashboard selected and the Prompts card is showing in that Dashboard.
  */
-class BloggingPromptsCardTrackHelper(
-    private val scope: CoroutineScope,
+class BloggingPromptsCardTrackHelper @Inject constructor(
     private val tracker: BloggingPromptsCardAnalyticsTracker,
-    private val siteIdFlow: Flow<Int?>,
-    dashboardCardsFlow: Flow<List<DashboardCards>>,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
+    private var dashboardUpdateDebounceJob: Job? = null
+
     private val latestPromptCardVisible = AtomicReference<Boolean?>(null)
     private val waitingToTrack = AtomicBoolean(false)
+    private val currentSite = AtomicReference<Int?>(null)
 
-    private val onDashboardRefreshed = MutableSharedFlow<Unit>()
-    private val trackBloggingPromptCardShownFlow = MutableSharedFlow<Unit>()
-
-    @OptIn(FlowPreview::class)
-    private val onBloggingPromptsCardVisible: Flow<Boolean> = dashboardCardsFlow
-        .map {
-            it.firstOrNull()
-                ?.cards
-                ?.any { card -> card is BloggingPromptCard }
-                ?: false
+    private fun onDashboardRefreshed() {
+        latestPromptCardVisible.get()?.let { isPromptCardVisible ->
+            if (isPromptCardVisible) tracker.trackMySiteCardViewed()
+            waitingToTrack.set(false)
+        } ?: run {
+            waitingToTrack.set(true)
         }
-        .debounce(PROMPT_CARD_VISIBLE_DEBOUNCE) // this flows emits several times so add some debounce to it
+    }
 
-    init {
-        trackBloggingPromptCardShownFlow
-            .onEach { tracker.trackMySiteCardViewed() }
-            .launchIn(scope)
 
-        scope.launch {
-            val currentSite = AtomicReference<Int?>(null)
+    fun onDashboardCardsUpdated(scope: CoroutineScope, dashboard: DashboardCards?) {
+        // cancel any existing job (debouncing mechanism)
+        dashboardUpdateDebounceJob?.cancel()
 
-            siteIdFlow
-                .distinctUntilChanged()
-                .onEach { siteId ->
-                    if (currentSite.getAndSet(siteId) != siteId) {
-                        latestPromptCardVisible.set(null)
-                        onDashboardRefreshed.emit(Unit)
-                    }
-                }
-                .launchIn(this)
-        }
+        dashboardUpdateDebounceJob = scope.launch(bgDispatcher) {
+            val isVisible = dashboard?.cards?.any { card -> card is BloggingPromptCard } ?: false
 
-        scope.launch {
-            val outerScope = this
+            // add a delay (debouncing mechanism)
+            delay(PROMPT_CARD_VISIBLE_DEBOUNCE)
 
-            launch {
-                try {
-                    onBloggingPromptsCardVisible.collect { isVisible ->
-                        latestPromptCardVisible.set(isVisible)
-                        if (isVisible && waitingToTrack.getAndSet(false)) {
-                            trackBloggingPromptCardShownFlow.emit(Unit)
-                        }
-                    }
-                } catch (e: CancellationException) {
-                    outerScope.cancel(e)
-                }
+            latestPromptCardVisible.set(isVisible)
+            if (isVisible && waitingToTrack.getAndSet(false)) {
+                tracker.trackMySiteCardViewed()
             }
-
-            onDashboardRefreshed.collect {
-                latestPromptCardVisible.get()?.let { isPromptCardVisible ->
-                    if (isPromptCardVisible) trackBloggingPromptCardShownFlow.emit(Unit)
-                    waitingToTrack.set(false)
-                } ?: run {
-                    waitingToTrack.set(true)
-                }
+        }.also {
+            it.invokeOnCompletion { cause ->
+                // only set the job to null if it wasn't cancelled since cancellation is part of debouncing
+                if (cause == null) dashboardUpdateDebounceJob = null
             }
         }
     }
 
     fun onResume(currentTab: MySiteTabType) {
         if (currentTab == MySiteTabType.DASHBOARD) {
-            scope.launch { onDashboardRefreshed.emit(Unit) }
+            onDashboardRefreshed()
         } else {
             // moved away from dashboard, no longer waiting to track
             waitingToTrack.set(false)
+        }
+    }
+
+    fun onSiteChanged(siteId: Int?) {
+        if (currentSite.getAndSet(siteId) != siteId) {
+            latestPromptCardVisible.set(null)
+            onDashboardRefreshed()
         }
     }
 

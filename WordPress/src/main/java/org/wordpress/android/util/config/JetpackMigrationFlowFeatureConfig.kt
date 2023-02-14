@@ -14,4 +14,3 @@ class JetpackMigrationFlowFeatureConfig
         return BuildConfig.IS_JETPACK_APP && super.isEnabled()
     }
 }
-

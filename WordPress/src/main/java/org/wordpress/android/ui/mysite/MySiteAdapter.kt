@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
@@ -17,6 +18,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
+import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationViewHolder
@@ -73,10 +75,12 @@ class MySiteAdapter(
             MySiteCardAndItem.Type.SINGLE_ACTION_CARD.ordinal -> SingleActionCardViewHolder(parent)
             MySiteCardAndItem.Type.JETPACK_FEATURE_CARD.ordinal -> JetpackFeatureCardViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.JETPACK_SWITCH_CARD.ordinal -> SwitchToJetpackMenuCardViewHolder(parent)
+            MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE.ordinal ->  PromoteWithBlazeCardViewHolder(parent, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
 
+    @Suppress("ComplexMethod")
     override fun onBindViewHolder(holder: MySiteCardAndItemViewHolder<*>, position: Int) {
         when (holder) {
             is QuickActionsViewHolder -> holder.bind(getItem(position) as QuickActionsCard)
@@ -92,6 +96,7 @@ class MySiteAdapter(
             is SingleActionCardViewHolder -> holder.bind(getItem(position) as SingleActionCard)
             is JetpackFeatureCardViewHolder -> holder.bind(getItem(position) as JetpackFeatureCard)
             is SwitchToJetpackMenuCardViewHolder -> holder.bind(getItem(position) as JetpackSwitchMenu)
+            is PromoteWithBlazeCardViewHolder -> holder.bind(getItem(position) as PromoteWithBlazeCard)
         }
     }
 

@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-25 17:54:08+0000
+Translation-Revision-Date: 2023-01-31 21:54:27+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.3
 Language: ar
 -->
 <resources>
+    <string name="install_play_store_to_get_jetpack">يرجى تثبيت متجر Google Play للحصول على تطبيق Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">القيام بهذا لاحقًا</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">التبديل إلى Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">تمت إزالة ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات التي يدعمها Jetpack من تطبيق ووردبريس.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">لقد انتقلت ميزات Jetpack.</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">ستنتقل ⁦%1$s⁩ في غضون ⁦%2$s⁩</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">ستنتقل ⁦%1$s⁩ قريبًا</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">سينتقل ⁦%1$s⁩ قريبًا</string>
+    <string name="wp_jetpack_powered_phase_2">تنزيل تطبيق Jetpack</string>
+    <string name="my_site_blogging_prompt_card_view_answers">عرض كل الردود</string>
+    <string name="stats_insights_total_stats_seven_days_negative">⁦%1$s⁩ أقل من الأيام الـ 7 السابقة</string>
+    <string name="stats_insights_total_stats_seven_days_positive">⁦%1$s⁩ أعلى من الأيام الـ 7 السابقة</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">إن زائريك في آخر 7 أيام أقل بنسبة ⁦%1$s⁩ من الأيام الـ 7 السابقة.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">إن زائريك في آخر 7 أيام أعلى بنسبة ⁦%1$s⁩ من الأيام الـ 7 السابقة.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">إن مشاهداتك في آخر 7 أيام أقل بنسبة ⁦%1$s⁩ من الأيام الـ 7 السابقة.</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">إن مشاهداتك في آخر 7 أيام أعلى بنسبة ⁦%1$s⁩ من الأيام الـ 7 السابقة.</string>
+    <string name="stats_timeframe_previous_seven_days">الأيام الـ 7 السابقة</string>
+    <string name="stats_timeframe_last_seven_days">آخر 7 أيام</string>
+    <string name="weeks_quantity_other">%d من الأسابيع</string>
+    <string name="weeks_quantity_one">أسبوع واحد</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">من &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">إخفاء هذا</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">ذكرني لاحقًا</string>
@@ -13,7 +33,6 @@ Language: ar
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">معرفة المزيد على jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">التبديل مجاني، ولا يستغرق سوى بضع دقائق.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">ستتم إزالة ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات التي يدعمها Jetpack من تطبيق ووردبريس قريبًا.</string>
-    <string name="jetpack_feature_card_content">ستنتقل ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات قريبًا إلى تطبيق Jetpack للهاتف المحمول.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">ستتم إزالة ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات التي يدعمها Jetpack من تطبيق ووردبريس في %s.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">ستنتقل ميزات Jetpack قريبًا.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">ستنتقل ميزة التنبيهات إلى Jetpack</string>
@@ -286,14 +305,10 @@ Language: ar
     <string name="blogging_prompts_onboarding_card_prompt">قم ببناء فيلم حياتك.</string>
     <string name="blogging_prompts_onboarding_remind_me">ذكِّرني</string>
     <string name="blogging_prompts_onboarding_try_it_now">تجربته الآن</string>
-    <string name="blogging_prompts_onboarding_content_note_content">يمكنك معرفة المزيد وإعداد التذكيرات في أي وقت في موقعي &gt; الإعدادات &gt; تذكيرات التدوين.</string>
     <string name="blogging_prompts_onboarding_content_note_title">ملاحظة:</string>
     <string name="blogging_prompts_onboarding_content_bottom">سنظهر لك مطالبة جديدة يوميًا على لوحة التحكم الخاصة بك للمساعدة على تدفق القدرات الإبداعية!</string>
     <string name="blogging_prompts_onboarding_content_top">تتمثَّل أفضل طريقة لتصبح كاتبًا أفضل في إنشاء عادة كتابة والمشاركة مع الآخرين — حيث تتوافر المطالبات!</string>
-    <string name="blogging_prompts_onboarding_header_title">تقديم المطالبات</string>
     <string name="blogging_prompt_set_reminders">تعيين التذكيرات</string>
-    <string name="blogging_reminders_prompt_subtitle">سيتضمن التذكير مطالبة يومية</string>
-    <string name="blogging_reminders_prompt_title">يتضمن مطالبة يومية</string>
     <string name="post_publishing_set_up_blogging_prompts_message">يجذب النشر بانتظام قراء جدد. أخبرنا متى تريد الكتابة وسنرسل إليك تذكيرًا!</string>
     <string name="set_your_blogging_prompts_title">يمكنك أن تصبح كاتبًا أفضل عن طريق إنشاء عادة</string>
     <string name="site_creation_intent_writing_poetry">الكتابة والشعر</string>
@@ -328,16 +343,15 @@ Language: ar
     <string name="site_creation_intent_art">الفن</string>
     <string name="new_site_creation_intents_title">موضوع الموقع</string>
     <string name="quick_start_site_menu_tab_message_short">انقر على &lt;b&gt;%1$s&lt;/b&gt; للمتابعة.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">إزالة من لوحة التحكم</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">عرض مزيد من المطالبات</string>
     <string name="new_site_creation_intents_input_hint">على سبيل المثال الموضة والشعر والسياسة</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">التخطي لهذا اليوم</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d من الإجابات</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">مشاركة مطالبة التدوين</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ تم الرد</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">الرد على المطالبة</string>
     <string name="my_site_blogging_prompt_card_title">المطالبات</string>
     <string name="my_site_all_tab_title">الكل</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">التذكيرات والمطالبات</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">قد يصعب على الأشخاص قراءة تركيبة الألوان هذه. حاول استخدام لون خلفية أغمق و/أو لون نص أكثر إشراقًا.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">قد يصعب على الأشخاص قراءة تركيبة الألوان هذه. حاول استخدام لون خلفية أغمق و/أو لون نص أكثر إشراقًا.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">فشل في إدراج وسائط.\nانقر للحصول على مزيد من المعلومات.</string>
@@ -601,7 +615,6 @@ Language: ar
     <string name="site_settings_categories_hint">إدارة تصنيفات موقعك</string>
     <string name="site_settings_categories_title">التصنيفات</string>
     <string name="page_is_posts_page_warning">تم إنشاء محتوى صفحة أحدث المقالات تلقائيًّا ولا يمكن تحريره.</string>
-    <string name="site_settings_blogging_reminders_title">تذكيرات التدوين</string>
     <string name="gutenberg_native_border_settings">إعدادات الحدود</string>
     <string name="storage_utils_dialog_dont_show_button">عدم العرض مرة أخرى</string>
     <string name="storage_utils_dialog_ok_button">عرض مساحة التخزين</string>

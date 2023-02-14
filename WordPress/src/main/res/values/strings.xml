@@ -309,6 +309,7 @@
     <string name="button_move_to_draft">Move to Draft</string>
     <string name="button_copy">Duplicate</string>
     <string name="button_copy_link">Copy link</string>
+    <string name="button_promote_with_blaze">Promote with Blaze</string>
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
@@ -2718,6 +2719,7 @@
     <string name="account_settings">Account Settings</string>
     <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
     <string name="primary_site">Primary site</string>
+    <string name="only_one_primary_site_message">Only one site is available, so you can\'t change your primary site.</string>
     <string name="web_address">Web address</string>
     <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
     <string name="change_password">Change password</string>
@@ -4335,11 +4337,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack lets you do more with your WordPress site. Switching is free and only takes a minute.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Stats &amp; Insights</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Watch your traffic grow with helpful insights and comprehensive stats.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_title" translatable="false" >@string/reader</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_title" translatable="false">@string/reader</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Find and follow your favorite sites and communities, and share you content.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_title" translatable="false"> @string/notifications_screen_title</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Get notifications for new comments, likes, views, and more.</string>
-    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">The Jetpack mobile app is designed to work in companion with the Jetpack plugin. Switch now to get access to stats, notifcations, reader, and more.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">The Jetpack mobile app is designed to work in companion with the Jetpack plugin. Switch now to get access to stats, notifications, reader, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Your site has the Jetpack plugin</string>
 
     <!-- Deep Linking Activity Aliases -->
@@ -4368,4 +4370,19 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Featured</string>
 
     <string name="install_play_store_to_get_jetpack">Please install Google Play Store to get the Jetpack app</string>
+
+    <!-- Jetpack full plugin install onboarding -->
+    <string name="jetpack_individual_plugin_support_onboarding_title">Please install the full Jetpack plugin</string>
+    <!-- translators: %1$s = the current site address (e.g. "https://wordpress.com/"), %2$s = the name of the plugin (e.g. "Jetpack Backup"), %3$s = the text "full Jetpack plugin" -->
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s is using the %2$s plugin, which doesn’t support all features of the app yet.\n\nPlease install the %3$s to use the app with this site.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">full Jetpack plugin</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">By setting up Jetpack you agree to our </string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Terms and conditions</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Install the full plugin</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contact support</string>
+
+    <!-- Promote Blaze Card-->
+    <string name="promote_blaze_card_title">Promote your content with Blaze</string>
+    <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
+    <string name="promote_blaze_card_menu_hide_this">Hide this</string>
 </resources>
