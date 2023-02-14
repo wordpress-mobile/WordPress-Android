@@ -31,6 +31,7 @@ class BlazeParentActivity : AppCompatActivity() {
                         .replace(R.id.container, BlazeOverlayFragment.newInstance())
                         .commitNow()
                 }
+                else -> {}
             }
         }
     }

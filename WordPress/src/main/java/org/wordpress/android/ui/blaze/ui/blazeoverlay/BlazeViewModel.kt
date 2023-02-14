@@ -36,7 +36,7 @@ class BlazeViewModel @Inject constructor(private val blazeFeatureUtils: BlazeFea
         blazeFeatureUtils.trackPromoteWithBlazeClicked()
     }
 
-    fun initialize(postModel: Int) {
+    fun initialize(postModel: Int?) {
         postModel?.let {
             _uiState.value =
                 BlazeUiState.PromoteScreen.PromotePost
@@ -70,9 +70,5 @@ class BlazeViewModel @Inject constructor(private val blazeFeatureUtils: BlazeFea
     fun start(source: BlazeFlowSource, postId: Int) {
         blazeFlowSource = source
         initialize(postId)
-    }
-
-    fun createPostUiModel() {
-
     }
 }
