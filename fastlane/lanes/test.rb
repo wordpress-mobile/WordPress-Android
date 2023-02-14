@@ -55,14 +55,14 @@ platform :android do
   #####################################################################################
   desc "Build the application and instrumented tests, then run the tests in Firebase Test Lab"
   lane :build_and_run_instrumented_test do | options |
-    gradle(tasks: ['WordPress:assembleJetpackVanillaDebug', 'WordPress:assembleJetpackVanillaDebugAndroidTest'])
+    gradle(tasks: ['Jetpack:assembleJetpackVanillaDebug', 'Jetpack:assembleJetpackVanillaDebugAndroidTest'])
 
     # Run the instrumented tests in Firebase Test Lab
     firebase_login(
       key_file: GOOGLE_FIREBASE_SECRETS_PATH
     )
 
-    apk_dir = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'outputs', 'apk')
+    apk_dir = File.join(PROJECT_ROOT_FOLDER, 'Jetpack', 'build', 'outputs', 'apk')
 
     test_succeeded = android_firebase_test(
       project_id: firebase_secret(name: 'project_id'),
