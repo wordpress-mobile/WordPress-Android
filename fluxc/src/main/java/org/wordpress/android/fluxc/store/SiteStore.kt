@@ -301,14 +301,26 @@ open class SiteStore @Inject constructor(
 
     data class SuggestDomainsPayload(
         @JvmField val query: String,
+        @JvmField val quantity: Int,
+        @JvmField val vendor: String? = null,
         @JvmField val onlyWordpressCom: Boolean? = null,
         @JvmField val includeWordpressCom: Boolean? = null,
         @JvmField val includeDotBlogSubdomain: Boolean? = null,
         @JvmField val tlds: String? = null,
-        @JvmField val segmentId: Long? = null,
-        @JvmField val quantity: Int,
-        @JvmField val includeVendorDot: Boolean = false
+        @JvmField val segmentId: Long? = null
     ) : Payload<BaseNetworkError>() {
+        @Deprecated(
+            "Replace with primary constructor " +
+                "which accepts 'vendor = \"dot\"' instead of 'includeVendorDot = true' " +
+                "or 'vendor = null' instead of 'includeVendorDot = false'.",
+            replaceWith = ReplaceWith(expression = "SiteStore.SuggestDomainsPayload(" +
+                    "query = query, " +
+                    "onlyWordpressCom = onlyWordpressCom, " +
+                    "includeWordpressCom = includeWordpressCom, " +
+                    "includeDotBlogSubdomain = includeDotBlogSubdomain, " +
+                    "quantity = quantity, " +
+                    "vendor = null)")
+        )
         constructor(
             query: String,
             onlyWordpressCom: Boolean,
@@ -317,29 +329,39 @@ open class SiteStore @Inject constructor(
             quantity: Int,
             includeVendorDot: Boolean
         ) : this(
-                query = query,
-                onlyWordpressCom = onlyWordpressCom,
-                includeWordpressCom = includeWordpressCom,
-                includeDotBlogSubdomain = includeDotBlogSubdomain,
-                quantity = quantity,
-                includeVendorDot = includeVendorDot,
-                segmentId = null,
-                tlds = null
+            query = query,
+            quantity = quantity,
+            vendor = if (includeVendorDot) "dot" else null,
+            onlyWordpressCom = onlyWordpressCom,
+            includeWordpressCom = includeWordpressCom,
+            includeDotBlogSubdomain = includeDotBlogSubdomain,
+            tlds = null,
+            segmentId = null
         )
 
-        constructor(query: String, segmentId: Long?, quantity: Int, includeVendorDot: Boolean) : this(
-                query = query,
-                segmentId = segmentId,
-                quantity = quantity,
-                includeVendorDot = includeVendorDot,
-                tlds = null
+        constructor(
+            query: String,
+            onlyWordpressCom: Boolean,
+            includeWordpressCom: Boolean,
+            includeDotBlogSubdomain: Boolean,
+            quantity: Int,
+            vendor: String?,
+        ) : this(
+            query = query,
+            quantity = quantity,
+            vendor = vendor,
+            onlyWordpressCom = onlyWordpressCom,
+            includeWordpressCom = includeWordpressCom,
+            includeDotBlogSubdomain = includeDotBlogSubdomain,
+            tlds = null,
+            segmentId = null
         )
 
         constructor(query: String, quantity: Int, tlds: String?) : this(
-                query = query,
-                quantity = quantity,
-                tlds = tlds,
-                segmentId = null
+            query = query,
+            quantity = quantity,
+            tlds = tlds,
+            segmentId = null,
         )
     }
 
@@ -1765,9 +1787,14 @@ open class SiteStore @Inject constructor(
 
     private fun suggestDomains(payload: SuggestDomainsPayload) {
         siteRestClient.suggestDomains(
-                payload.query, payload.onlyWordpressCom, payload.includeWordpressCom,
-                payload.includeDotBlogSubdomain, payload.segmentId, payload.quantity, payload.includeVendorDot,
-                payload.tlds
+            payload.query,
+            payload.quantity,
+            payload.vendor,
+            payload.onlyWordpressCom,
+            payload.includeWordpressCom,
+            payload.includeDotBlogSubdomain,
+            payload.segmentId,
+            payload.tlds
         )
     }
 
