@@ -35,9 +35,11 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_DOT
+import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_MOBILE
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -53,6 +55,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val domainSanitizer: SiteCreationDomainSanitizer,
     private val fetchDomainsUseCase: FetchDomainsUseCase,
+    private val purchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig,
     private val tracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
@@ -141,11 +144,10 @@ class SiteCreationDomainsViewModel @Inject constructor(
             updateUiStateToContent(query, Loading(Ready(emptyList()), false))
             fetchDomainsJob = launch {
                 delay(THROTTLE_DELAY)
-                val onSuggestedDomains: OnSuggestedDomains = fetchDomainsUseCase.fetchDomains(
-                    query.value,
-                    vendor = FETCH_DOMAINS_VENDOR_DOT,
-                    onlyWordpressCom = true,
-                )
+                val onSuggestedDomains: OnSuggestedDomains = when (purchasingFeatureConfig.isEnabled()) {
+                    true -> fetchFreeAndPaidDomains(query)
+                    false -> fetchFreeDomains(query)
+                }
 
                 withContext(mainDispatcher) {
                     onDomainsFetched(query, onSuggestedDomains)
@@ -158,6 +160,22 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 Error(listState, errorMessageResId = R.string.no_network_message)
             )
         }
+    }
+
+    private suspend fun fetchFreeAndPaidDomains(query: DomainSuggestionsQuery): OnSuggestedDomains {
+        return fetchDomainsUseCase.fetchDomains(
+            query.value,
+            vendor = FETCH_DOMAINS_VENDOR_MOBILE,
+            onlyWordpressCom = false,
+        )
+    }
+
+    private suspend fun fetchFreeDomains(query: DomainSuggestionsQuery): OnSuggestedDomains {
+        return fetchDomainsUseCase.fetchDomains(
+            query.value,
+            vendor = FETCH_DOMAINS_VENDOR_DOT,
+            onlyWordpressCom = true,
+        )
     }
 
     private fun onDomainsFetched(query: DomainSuggestionsQuery, event: OnSuggestedDomains) {

@@ -13,6 +13,7 @@ import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
 const val FETCH_DOMAINS_VENDOR_DOT = "dot"
+const val FETCH_DOMAINS_VENDOR_MOBILE = "mobile"
 private const val FETCH_DOMAINS_SIZE = 20
 
 /**
