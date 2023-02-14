@@ -86,6 +86,7 @@ public class BaseTest {
 
     @Before
     public void setup() {
+        mHiltRule.inject();
         Matcher<? super AccessibilityCheckResult> nonErrorLevelMatcher =
                 Matchers.allOf(matchesTypes(
                         anyOf(is(AccessibilityCheckResultType.INFO), is(AccessibilityCheckResultType.WARNING))));
