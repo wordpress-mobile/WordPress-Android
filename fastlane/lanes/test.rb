@@ -62,7 +62,7 @@ platform :android do
       key_file: GOOGLE_FIREBASE_SECRETS_PATH
     )
 
-    apk_dir = File.join(PROJECT_ROOT_FOLDER, 'Jetpack', 'build', 'outputs', 'apk')
+    apk_dir = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'outputs', 'apk')
 
     test_succeeded = android_firebase_test(
       project_id: firebase_secret(name: 'project_id'),
