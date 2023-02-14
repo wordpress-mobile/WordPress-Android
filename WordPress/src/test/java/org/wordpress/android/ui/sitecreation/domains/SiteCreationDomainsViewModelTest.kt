@@ -13,7 +13,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.firstValue
-import org.mockito.kotlin.isNull
 import org.mockito.kotlin.lastValue
 import org.mockito.kotlin.secondValue
 import org.mockito.kotlin.thirdValue
@@ -105,15 +104,9 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             whenever(mSiteCreationDomainSanitizer.sanitizeDomainQuery(any())).thenReturn(
                 createSanitizedDomainResult(isDomainAvailableInSuggestions)
             )
-            whenever(
-                fetchDomainsUseCase.fetchDomains(
-                    eq(queryResultSizePair.first),
-                    isNull(),
-                    eq(true),
-                    eq(true),
-                    any()
-                )
-            ).thenReturn(createSuccessfulOnSuggestedDomains(queryResultSizePair))
+            whenever(fetchDomainsUseCase.fetchDomains(eq(queryResultSizePair.first), any(), any(), any())).thenReturn(
+                createSuccessfulOnSuggestedDomains(queryResultSizePair)
+            )
             block()
         }
     }
@@ -199,15 +192,9 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponse() = test {
         val queryResultErrorPair = "error_result_query" to "GENERIC_ERROR"
-        whenever(
-            fetchDomainsUseCase.fetchDomains(
-                eq(queryResultErrorPair.first),
-                isNull(),
-                eq(true),
-                eq(true),
-                any()
-            )
-        ).thenReturn(createFailedOnSuggestedDomains(queryResultErrorPair))
+        whenever(fetchDomainsUseCase.fetchDomains(eq(queryResultErrorPair.first), any(), any(), any())).thenReturn(
+            createFailedOnSuggestedDomains(queryResultErrorPair)
+        )
 
         viewModel.start()
         viewModel.updateQuery(queryResultErrorPair.first)
@@ -230,15 +217,9 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponseOfTypeInvalidQuery() = test {
         val queryResultErrorPair = "empty_result_query_invalid" to "INVALID_QUERY"
-        whenever(
-            fetchDomainsUseCase.fetchDomains(
-                eq(queryResultErrorPair.first),
-                isNull(),
-                eq(true),
-                eq(true),
-                any()
-            )
-        ).thenReturn(createFailedOnSuggestedDomains(queryResultErrorPair))
+        whenever(fetchDomainsUseCase.fetchDomains(eq(queryResultErrorPair.first), any(), any(), any())).thenReturn(
+            createFailedOnSuggestedDomains(queryResultErrorPair)
+        )
 
         viewModel.start()
         viewModel.updateQuery(queryResultErrorPair.first)

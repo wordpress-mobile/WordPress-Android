@@ -34,6 +34,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
+import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_DOT
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -142,8 +143,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 delay(THROTTLE_DELAY)
                 val onSuggestedDomains: OnSuggestedDomains = fetchDomainsUseCase.fetchDomains(
                     query.value,
-                    includeVendorDot = true,
-                    includeDotBlog = true
+                    vendor = FETCH_DOMAINS_VENDOR_DOT,
+                    onlyWordpressCom = true,
                 )
 
                 withContext(mainDispatcher) {
