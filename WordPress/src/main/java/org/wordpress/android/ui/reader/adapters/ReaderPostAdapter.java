@@ -149,7 +149,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mTxtSubtitle = itemView.findViewById(R.id.text_subtitle);
 
             postContainer.setOnClickListener(v -> {
-                int position = getAdapterPosition();
+                int position = getBindingAdapterPosition();
                 ReaderPost post = getItem(position);
                 if (mPostSelectedListener != null && post != null) {
                     mPostSelectedListener.onPostSelected(post);
