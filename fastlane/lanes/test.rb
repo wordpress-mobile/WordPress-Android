@@ -55,7 +55,7 @@ platform :android do
   #####################################################################################
   desc "Build the application and instrumented tests, then run the tests in Firebase Test Lab"
   lane :build_and_run_instrumented_test do | options |
-    gradle(tasks: ['Jetpack:assembleJetpackVanillaDebug', 'Jetpack:assembleJetpackVanillaDebugAndroidTest'])
+    gradle(tasks: ['WordPress:assembleJetpackVanillaDebug', 'WordPress:assembleJetpackVanillaDebugAndroidTest'])
 
     # Run the instrumented tests in Firebase Test Lab
     firebase_login(
