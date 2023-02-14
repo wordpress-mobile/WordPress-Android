@@ -4380,4 +4380,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Terms and conditions</string>
     <string name="jetpack_full_plugin_install_onboarding_install_button">Install the full plugin</string>
     <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contact support</string>
+
+    <!-- Promote Blaze Card-->
+    <string name="promote_blaze_card_title">Promote your content with Blaze</string>
+    <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
+    <string name="promote_blaze_card_menu_hide_this">Hide this</string>
 </resources>

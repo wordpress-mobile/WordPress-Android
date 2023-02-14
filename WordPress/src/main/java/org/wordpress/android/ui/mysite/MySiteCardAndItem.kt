@@ -14,6 +14,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_BADGE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_FEATURE_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_LINK_RIBBON
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
@@ -42,7 +43,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         JETPACK_BADGE,
         SINGLE_ACTION_CARD,
         JETPACK_FEATURE_CARD,
-        JETPACK_SWITCH_CARD
+        JETPACK_SWITCH_CARD,
+        PROMOTE_WITH_BLAZE
     }
 
     enum class DashboardCardType {
@@ -254,6 +256,15 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 }
             }
         }
+
+        data class PromoteWithBlazeCard(
+            val title: UiString?,
+            val subtitle: UiString?,
+            @DrawableRes val primaryImage: Int,
+            val onClick: ListItemInteraction,
+            val onHideMenuItemClick: ListItemInteraction,
+            val onMoreMenuClick: ListItemInteraction,
+        ): Card(PROMOTE_WITH_BLAZE)
     }
 
     sealed class DynamicCard(
