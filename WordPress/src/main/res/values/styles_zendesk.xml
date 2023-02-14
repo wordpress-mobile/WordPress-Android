@@ -14,7 +14,7 @@
     <!-- Zendesk Styles Override -->
 
     <style name="ZendeskRequestListButton" parent="@style/Widget.MaterialComponents.Button">
-        <item name="android:textColor">@color/zs_request_list_white</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="backgroundTint">@null</item> <!-- This is done so that the custom background is not tinted. See https://git.io/JyEnY -->
         <item name="android:background">@color/colorPrimary</item>
