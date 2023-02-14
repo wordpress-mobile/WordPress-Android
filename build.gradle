@@ -48,7 +48,6 @@ ext {
     androidxPercentlayoutVersion = '1.0.0'
     androidxPreferenceVersion = '1.1.0'
     androidxRecyclerviewVersion = '1.2.1'
-    androidxRoomVersion = '2.3.0'
     androidxSwipeToRefreshVersion = '1.1.0'
     androidxViewpager2Version = '1.0.0'
     androidxWorkManagerVersion = "2.7.1"
