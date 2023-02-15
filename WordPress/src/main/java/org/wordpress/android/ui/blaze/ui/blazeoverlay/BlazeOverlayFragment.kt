@@ -1,12 +1,9 @@
 package org.wordpress.android.ui.blaze.ui.blazeoverlay
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,16 +32,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import coil.compose.rememberImagePainter
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.blaze.BlazeUiState
+import org.wordpress.android.ui.blaze.PostUIModel
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
@@ -54,7 +48,6 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.components.Drawab
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.ImageButton
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.LocaleManager
-import org.wordpress.android.util.UrlUtils
 
 //todo: post thumbnail view
 //todo: promote blaze button theme
@@ -76,39 +69,24 @@ class BlazeOverlayFragment : Fragment() {
         setContent {
             AppTheme {
                 val userLanguage by viewModel.refreshAppLanguage.observeAsState("")
-                viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-//                    when(uiState) {
-//                        is BlazeUiState.PromoteScreen.Site -> {
-//                            BlazeOverlayContent()
-//                        }
-//                        is BlazeUiState.PromoteScreen.PromotePost -> {
-//                            BlazeOverlayContent(uiState.postModel)
-//                        }
-//                    }
-                }
-
+                val postModel by viewModel.promoteUiState.observeAsState(BlazeUiState.PromoteScreen.Site)
                 LocaleAwareComposable(
                     locale = LocaleManager.languageLocale(userLanguage),
                     onLocaleChange = viewModel::setAppLanguage
                 ) {
                     viewModel.trackOverlayDisplayed()
-                    BlazeOverlayContent()
+                    BlazeOverlayContent(postModel)
                 }
             }
         }
     }
 
-
-    @Preview
     @Composable
-    fun BlazeOverlayContentPreview() {
-        AppTheme {
-            BlazeOverlayContent()
+    fun BlazeOverlayContent(postModelState: BlazeUiState.PromoteScreen) {
+        val post = when (postModelState) {
+            is BlazeUiState.PromoteScreen.PromotePost -> postModelState.postUIModel
+            else -> null
         }
-    }
-
-    @Composable
-    fun BlazeOverlayContent(postModel: PostModel? = null) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(
@@ -136,7 +114,10 @@ class BlazeOverlayFragment : Fragment() {
                     R.string.blaze_promotional_subtitle_3
                 )
             )
-            postModel?.autoSavePreviewUrl?.let { PostThumbnailView(url = it) }
+            post?.let {
+                PostThumbnailView(it)
+            }
+
             ImageButton(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -153,16 +134,30 @@ class BlazeOverlayFragment : Fragment() {
     }
 
     @Composable
-    fun PostThumbnailView(url: String) {
-        AndroidView(factory = {
-            WebView(requireContext()).apply {
-                webViewClient = WebViewClient()
-                loadUrl(UrlUtils.makeHttps(url))
+    fun PostThumbnailView(postUIModel: PostUIModel) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(
+                top = Margin.ExtraLarge.value,
+                start = Margin.ExtraLarge.value,
+                end = Margin.ExtraLarge.value
+            )
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(
+                        top = Margin.ExtraLarge.value,
+                        start = Margin.ExtraLarge.value,
+                        end = Margin.ExtraLarge.value
+                    )
+                ) {
+                    PostTitle(title = postUIModel.title)
+                    PostUrl(url = postUIModel.url)
+                }
+                PostThumbnail(url = "")
             }
-        },
-            Modifier
-                .height(50.dp)
-                .fillMaxWidth())
+        }
     }
 
     @Composable
