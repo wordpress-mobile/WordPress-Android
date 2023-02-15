@@ -447,14 +447,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `bottom sheet does not show prompt card when site is self-hosted`() = test {
-        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(true)
-        startViewModelWithDefaultParameters(isWpcomOrJpSite = false)
-        val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMPT }
-        assertThat(hasBloggingPromptAction).isFalse()
-    }
-
-    @Test
     fun `bottom sheet action is ANSWER_BLOGGING_PROMPT when the BP answer button is clicked`() = test {
         whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(true)
         startViewModelWithDefaultParameters()

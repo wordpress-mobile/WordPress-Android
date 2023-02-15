@@ -68,7 +68,7 @@ class BloggingRemindersHelperTest : BaseUnitTest() {
     private val userSetBloggingRemindersModel = BloggingRemindersModel(validLocalId, setOf(MONDAY), 5, 43, false)
     private val defaultBloggingRemindersModel = BloggingRemindersModel(validLocalId)
     private val bloggingRemindersUiModel = BloggingRemindersUiModel(
-        validLocalId, setOf(DayOfWeek.MONDAY), 5, 43, false
+        validLocalId, setOf(DayOfWeek.MONDAY), 5, 43, isPromptIncluded = false, isPromptsCardEnabled = false,
     )
 
     @Before

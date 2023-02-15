@@ -612,6 +612,7 @@
     <string name="site_settings_traffic_header">Traffic</string>
     <string name="site_settings_performance">Performance</string>
     <string name="site_settings_homepage">Homepage</string>
+    <string name="site_settings_blogging">Blogging</string>
 
     <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>
@@ -634,8 +635,9 @@
     <string name="site_settings_time_format_title">Time Format</string>
     <string name="site_settings_timezone_title">Timezone</string>
     <string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
-    <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Reminders and prompts</string>
+    <string name="site_settings_blogging_reminders_title">Reminders</string>
+    <string name="site_settings_blogging_prompts_title">Show prompts</string>
+    <string name="site_settings_blogging_reminders_notification_title">Blogging reminders</string>
     <string name="site_settings_posts_per_page_title">Posts per page</string>
     <string name="site_settings_format_entry_custom">Custom</string>
     <string name="site_settings_format_hint_custom">Custom format</string>
@@ -2234,6 +2236,8 @@
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
     <string name="contact_fragment_title" translatable="false" tools:ignore="UnusedResources">@string/contact_support</string>
+    <string name="support_forum_title">Community forums</string>
+    <string name="support_forum_caption">Get help from our group of volunteers.</string>
 
     <!-- Contact us -->
     <string name="support_ticket_subject">WordPress for Android Support</string>
@@ -2322,10 +2326,12 @@
     <string name="my_site_blogging_prompt_card_share_chooser_title">Share blogging prompt</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">View more prompts</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Skip for today</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Remove from dashboard</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Turn off prompts</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">From &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Learn more</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Skipped today\'s blogging prompt</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Blogging Prompts hidden</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Visit &lt;b&gt;Site Settings&lt;/b&gt; to turn back on</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 answer</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d answers</string>
     <string name="my_site_blogging_prompt_card_view_answers">View all responses</string>
@@ -4041,8 +4047,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_reminders_notification_time">Notification time</string>
     <string name="set_your_blogging_prompts_title">Become a better writer by building a habit</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Posting regularly attracts new readers. Tell us when you want to write and we\’ll send you a reminder!</string>
-    <string name="blogging_reminders_prompt_title">Include daily prompt</string>
-    <string name="blogging_reminders_prompt_subtitle">Reminder will include a daily prompt</string>
+    <string name="blogging_reminders_prompt_title">Include a Blogging Prompt</string>
+    <string name="blogging_reminders_prompt_subtitle">Notification will include a word or short phrase for inspiration</string>
     <string name="blogging_prompt_set_reminders">Set reminders</string>
 
     <!-- Stats module disabled error view -->
@@ -4102,11 +4108,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_notification_dismiss">Dismiss</string>
 
     <!-- Blogging Prompts Onboarding -->
-    <string name="blogging_prompts_onboarding_header_title">Introducing Prompts</string>
+    <string name="blogging_prompts_onboarding_header_title">Introducing\nBlogging Prompts</string>
     <string name="blogging_prompts_onboarding_content_top">The best way to become a better writer is to build a writing habit and share with others — that’s where Prompts come in!</string>
     <string name="blogging_prompts_onboarding_content_bottom">We’ll show you a new prompt each day on your dashboard to help get those creative juices flowing!</string>
     <string name="blogging_prompts_onboarding_content_note_title">Note:</string>
-    <string name="blogging_prompts_onboarding_content_note_content">You can learn more and set up reminders at any time in My Site &gt; Settings &gt; Blogging Reminders</string>
+    <string name="blogging_prompts_onboarding_content_note_content">You can control Blogging Prompts and Reminders at any time in My Site &gt; Settings &gt; Blogging</string>
     <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
     <string name="blogging_prompts_onboarding_got_it">Got it</string>
@@ -4325,6 +4331,16 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_overlay_phase_three_all_features_description" translatable="false">@string/wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Switch to Jetpack </string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Do this later</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Give WordPress a boost with Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack lets you do more with your WordPress site. Switching is free and only takes a minute.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Stats &amp; Insights</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Watch your traffic grow with helpful insights and comprehensive stats.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_title" translatable="false">@string/reader</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Find and follow your favorite sites and communities, and share you content.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_title" translatable="false"> @string/notifications_screen_title</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Get notifications for new comments, likes, views, and more.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">The Jetpack mobile app is designed to work in companion with the Jetpack plugin. Switch now to get access to stats, notifications, reader, and more.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Your site has the Jetpack plugin</string>
 
     <!-- Deep Linking Activity Aliases -->
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
@@ -4333,6 +4349,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Create a new WordPress site with the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.\n\nThe WordPress app no longer supports creating a new site.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_primary_button" translatable="false">@string/wp_jetpack_get_new_jetpack_app</string>
     <string name="wp_jetpack_continue_without_jetpack">Continue without Jetpack</string>
 
     <string name="wp_jetpack_deep_link_overlay_title">Open links in Jetpack?</string>
@@ -4343,7 +4360,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_s_converted_to_regular_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s converted to regular block</string>
 
     <!-- Jetpack Feature Card -->
-    <string name="jetpack_feature_card_content">Stats, Reader, Notifications and other features will soon move to the Jetpack mobile app.</string>
+    <string name="jetpack_feature_card_content_phase_three">Stats, Reader, Notifications and other features will soon move to the Jetpack mobile app.</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Unlock your site’s full potential. Get stats, notications and more with Jetpack.</string>
     <string name="jetpack_feature_card_learn_more" translatable="false">@string/learn_more</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>

@@ -745,5 +745,6 @@
     <dimen name="jetpack_full_screen_overlay_new_users_content_margin">32dp</dimen>
     <dimen name="jetpack_full_screen_overlay_new_users_content_margin_land">16dp</dimen>
     <dimen name="jetpack_full_screen_overlay_new_users_content_text_size">15sp</dimen>
+    <dimen name="menu_item_icon_size">24dp</dimen>
 
 </resources>

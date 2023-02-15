@@ -156,11 +156,7 @@ class WPMainActivityViewModel @Inject constructor(
         val actionsList = ArrayList<MainActionListItem>()
         if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
             val prompt = site?.let {
-                if (it.isUsingWpComRestApi) {
-                    bloggingPromptsStore.getPromptForDate(it, Date()).firstOrNull()?.model
-                } else {
-                    null
-                }
+                bloggingPromptsStore.getPromptForDate(it, Date()).firstOrNull()?.model
             }
 
             prompt?.let {

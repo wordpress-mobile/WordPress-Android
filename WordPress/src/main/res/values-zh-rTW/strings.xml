@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-25 15:11:17+0000
+Translation-Revision-Date: 2023-01-31 16:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_TW
 -->
 <resources>
+    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">稍後進行</string>
+    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">切換至 Jetpack </string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">WordPress 應用程式已移除「統計資料」、「閱讀器」、「通知」和其他 Jetpack 提供的功能。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack 功能已經搬遷。</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s 即將搬遷</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s 即將搬遷</string>
+    <string name="install_play_store_to_get_jetpack">請安裝 Google Play 商店以取得 Jetpack 應用程式</string>
+    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s 即將於 %2$s後搬遷</string>
+    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s 即將於 %2$s後搬遷</string>
+    <string name="wp_jetpack_powered_phase_2">取得 Jetpack 應用程式</string>
+    <string name="my_site_blogging_prompt_card_view_answers">檢視所有回應</string>
+    <string name="stats_insights_total_stats_seven_days_negative">較先前 7 天低 %1$s</string>
+    <string name="stats_insights_total_stats_seven_days_positive">較先前 7 天高 %1$s</string>
+    <string name="stats_timeframe_previous_seven_days">更早之前 7 天</string>
+    <string name="weeks_quantity_other">%d 週</string>
+    <string name="weeks_quantity_one">1 週</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_negative">你在過去 7 天內的訪客數比更早之前 7 天的訪客數低 %1$s。</string>
+    <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">你在過去 7 天內的訪客數比更早之前 7 天的訪客數高 %1$s。</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_negative">你在過去 7 天內的檢視數比更早之前 7 天的檢視數低 %1$s。</string>
+    <string name="stats_insights_views_and_visitors_seven_days_views_positive">你在過去 7 天內的檢視數比更早之前 7 天的檢視數高 %1$s。</string>
+    <string name="stats_timeframe_last_seven_days">過去 7 天</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">從 &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">隱藏此項目</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">稍後再提醒我</string>
-    <string name="jetpack_feature_card_content">「統計資料」、「閱讀器」、「通知」及其他功能即將搬遷至 Jetpack 行動應用程式。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">切換至 Jetpack 應用程式</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">切換完全免費，只要 1 分鐘就能完成。</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">WordPress 應用程式即將移除「統計資料」、「閱讀器」、「通知」和 Jetpack 提供的其他功能。</string>
@@ -285,14 +305,10 @@ Language: zh_TW
     <string name="blogging_prompts_onboarding_card_prompt">投放你的人生電影。</string>
     <string name="blogging_prompts_onboarding_remind_me">提醒我</string>
     <string name="blogging_prompts_onboarding_try_it_now">立即試試</string>
-    <string name="blogging_prompts_onboarding_content_note_content">你可以隨時在「我的網站」&gt;「設定」&gt;「網誌提醒」中深入瞭解並設定提醒。</string>
     <string name="blogging_prompts_onboarding_content_note_title">注意：</string>
     <string name="blogging_prompts_onboarding_content_bottom">儀表板上每天都會顯示最新提示，讓你的創意源源不絕！</string>
     <string name="blogging_prompts_onboarding_content_top">想成為更好的撰稿人，最佳方法是養成寫作習慣並與他人分享 - 這就是「提示」的功用！</string>
-    <string name="blogging_prompts_onboarding_header_title">提示簡介</string>
     <string name="blogging_prompt_set_reminders">設定提醒</string>
-    <string name="blogging_reminders_prompt_subtitle">提醒將包含每日提示</string>
-    <string name="blogging_reminders_prompt_title">包含每日提示</string>
     <string name="post_publishing_set_up_blogging_prompts_message">定期張貼文章能夠吸引新讀者。 告訴我們你想寫作的時間，我們將傳送提醒給你！</string>
     <string name="set_your_blogging_prompts_title">養成寫作習慣，成為更好的撰稿人</string>
     <string name="site_creation_intent_writing_poetry">寫作和詩歌</string>
@@ -328,15 +344,14 @@ Language: zh_TW
     <string name="new_site_creation_intents_input_hint">例如： 時尚、詩歌、政治</string>
     <string name="new_site_creation_intents_title">網站主題</string>
     <string name="quick_start_site_menu_tab_message_short">點選「&lt;b&gt;%1$s&lt;/b&gt;」以繼續。</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">從儀表板移除</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">檢視更多提示</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">今天跳過</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d 個答案</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">分享網誌提示</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ 已回答</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">回答提示</string>
     <string name="my_site_blogging_prompt_card_title">提示</string>
     <string name="my_site_all_tab_title">全部</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">提醒和提示</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">此色彩組合可能讓人難以閱讀。 請嘗試更亮的背景顏色和/或較深的文字顏色。</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">此色彩組合可能讓人難以閱讀。 請嘗試更深的背景顏色和/或較亮的文字顏色。</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">無法插入媒體。\n點選以瞭解更多資訊。</string>
@@ -600,7 +615,6 @@ Language: zh_TW
     <string name="site_settings_categories_hint">管理你的網站分類</string>
     <string name="site_settings_categories_title">分類</string>
     <string name="page_is_posts_page_warning">最新文章頁面的內容由系統自動產生，無法編輯。</string>
-    <string name="site_settings_blogging_reminders_title">網誌提醒</string>
     <string name="gutenberg_native_border_settings">框線設定</string>
     <string name="storage_utils_dialog_dont_show_button">不要再顯示</string>
     <string name="storage_utils_dialog_ok_button">檢視儲存空間</string>

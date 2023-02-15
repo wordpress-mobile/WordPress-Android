@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-07 10:38:48+0000
+Translation-Revision-Date: 2023-01-31 20:35:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: el_GR
 -->
 <resources>
+    <string name="jp_migration_network_error_title">Αδυναμία σύνδεσης στο διαδίκτυο</string>
+    <string name="jp_migration_try_again_button">Δοκιμάστε ξανά</string>
+    <string name="jp_migration_generic_error_title">Χμμ.. κάτι πήγε στραβά!</string>
     <string name="login_select_email_client">Ποια εφαρμογή διαχείρισης email χρησιμοποιείτε;</string>
     <string name="gutenberg_native_move_image_forward">Μετακίνηση εικόνας εμπρός</string>
     <string name="gutenberg_native_move_image_backward">Μετακίνηση εικόνας πίσω</string>
