@@ -22,6 +22,7 @@ import javax.inject.Named
 class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
     private val uiStateMapper: JetpackFullPluginInstallOnboardingUiStateMapper,
     private val selectedSiteRepository: SelectedSiteRepository,
+    private val analyticsTracker: JetpackFullPluginInstallOnboardingAnalyticsTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiState = MutableStateFlow<UiState>(UiState.None)
@@ -31,6 +32,7 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
     val actionEvents = _actionEvents
 
     fun onScreenShown() {
+        analyticsTracker.trackScreenShown()
         postUiState(uiStateMapper.mapLoaded())
     }
 
@@ -39,6 +41,7 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
     }
 
     fun onInstallFullPluginClick() {
+        analyticsTracker.trackInstallButtonClick()
         // TODO tracking event
         // TODO open install full plugin screen when it's done
     }
@@ -53,6 +56,7 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
     }
 
     fun onDismissScreenClick() {
+        analyticsTracker.trackScreenDismissed()
         postActionEvent(Dismiss)
     }
 
