@@ -78,16 +78,19 @@ fun Loaded(
                 Title(text = stringResource(R.string.jetpack_individual_plugin_support_onboarding_title))
                 PluginDescription(
                     siteName = siteName,
-                    pluginNames = pluginNames
+                    pluginNames = pluginNames,
+                )
+                Spacer(Modifier.weight(1f))
+                TermsAndConditions(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            top = Margin.ExtraMediumLarge.value,
+                            bottom = Margin.ExtraMediumLarge.value,
+                        ),
+                    onTermsAndConditionsClick = { onTermsAndConditionsClick() },
                 )
             }
-            TermsAndConditions(
-                modifier = Modifier.padding(
-                    top = Margin.ExtraMediumLarge.value,
-                    bottom = Margin.ExtraMediumLarge.value
-                ),
-                onTermsAndConditionsClick = { onTermsAndConditionsClick() },
-            )
             ButtonsColumn {
                 PrimaryButton(
                     text = stringResource(R.string.jetpack_full_plugin_install_onboarding_install_button),
