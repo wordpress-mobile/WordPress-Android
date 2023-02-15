@@ -351,7 +351,8 @@ class HelpActivity : LocaleAwareActivity() {
         SITE_CREATION_SITE_INFO("origin:site-create-site-info"),
         EDITOR_HELP("origin:editor-help"),
         SCAN_SCREEN_HELP("origin:scan-screen-help"),
-        JETPACK_MIGRATION_HELP("origin:jetpack-migration-help");
+        JETPACK_MIGRATION_HELP("origin:jetpack-migration-help"),
+        JETPACK_INSTALL_FULL_PLUGIN_ONBOARDING("origin:jp-install-full-plugin-overlay");
 
         override fun toString(): String {
             return stringValue
