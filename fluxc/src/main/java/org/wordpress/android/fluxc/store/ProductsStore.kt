@@ -27,7 +27,7 @@ class ProductsStore @Inject constructor(
     override fun onAction(action: Action<*>) {
         when (action.type as? ProductAction ?: return) {
             FETCH_PRODUCTS -> {
-                coroutineEngine.launch(AppLog.T.API, this, "FETCH_PRODUCTS") {
+                coroutineEngine.launch(T.API, this, "FETCH_PRODUCTS") {
                     emitChange(fetchProducts())
                 }
             }
@@ -35,22 +35,22 @@ class ProductsStore @Inject constructor(
     }
 
     override fun onRegister() {
-        AppLog.d(AppLog.T.API, ProductsStore::class.java.simpleName + " onRegister")
+        AppLog.d(T.API, ProductsStore::class.java.simpleName + " onRegister")
     }
 
-    suspend fun fetchProducts(): OnProductsFetched =
-                coroutineEngine.withDefaultContext(T.API, this, "Fetch products") {
-                    return@withDefaultContext when (val response = productsRestClient.fetchProducts()) {
-                        is Success -> {
-                            OnProductsFetched(response.data.products)
-                        }
-                        is Error -> {
-                            OnProductsFetched(FetchProductsError(GENERIC_ERROR, response.error.message))
-                        }
-                    }
+    suspend fun fetchProducts(type: String? = null): OnProductsFetched =
+        coroutineEngine.withDefaultContext(T.API, this, "Fetch products") {
+            return@withDefaultContext when (val response = productsRestClient.fetchProducts(type)) {
+                is Success -> {
+                    OnProductsFetched(response.data.products)
                 }
+                is Error -> {
+                    OnProductsFetched(FetchProductsError(GENERIC_ERROR, response.error.message))
+                }
+            }
+        }
 
-    data class OnProductsFetched(val products: List<Product>? = null) : Store.OnChanged<FetchProductsError>() {
+    data class OnProductsFetched(val products: List<Product>? = null) : OnChanged<FetchProductsError>() {
         constructor(error: FetchProductsError) : this() {
             this.error = error
         }
