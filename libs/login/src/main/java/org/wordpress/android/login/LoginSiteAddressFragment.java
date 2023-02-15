@@ -3,6 +3,7 @@ package org.wordpress.android.login;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,6 +27,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
+import org.wordpress.android.fluxc.network.discovery.DiscoveryUtils;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
@@ -216,10 +218,10 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
         mRequestedSiteAddress = mLoginSiteAddressValidator.getCleanedSiteAddress();
 
-        String cleanedXmlrpcSuffix = UrlUtils.removeXmlrpcSuffix(mRequestedSiteAddress);
+        String cleanedUrl = stripKnownPaths(mRequestedSiteAddress);
 
-        mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedXmlrpcSuffix);
-        mDispatcher.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedXmlrpcSuffix));
+        mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedUrl);
+        mDispatcher.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedUrl));
 
         startProgress();
     }
@@ -501,5 +503,23 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         properties.put(KEY_SITE_INFO_IS_WPCOM, Boolean.toString(siteInfo.isWPCom));
         properties.put(KEY_SITE_INFO_CALCULATED_HAS_JETPACK, Boolean.toString(hasJetpack));
         return properties;
+    }
+
+    private String stripKnownPaths(String url) {
+        String cleanedXmlrpcSuffix = UrlUtils.removeXmlrpcSuffix(url);
+
+        // Make sure to use a valid URL so that DiscoveryUtils#stripKnownPaths is able to strip paths
+        String scheme = Uri.parse(cleanedXmlrpcSuffix).getScheme();
+        String urlWithScheme;
+        if (scheme == null) {
+            urlWithScheme = UrlUtils.addUrlSchemeIfNeeded(cleanedXmlrpcSuffix, false);
+        } else {
+            urlWithScheme = cleanedXmlrpcSuffix;
+        }
+
+        String cleanedUrl = DiscoveryUtils.stripKnownPaths(urlWithScheme);
+
+        // Revert the scheme changes
+        return scheme == null ? UrlUtils.removeScheme(cleanedUrl) : cleanedUrl;
     }
 }
