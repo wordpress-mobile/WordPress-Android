@@ -15,6 +15,9 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.isA
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
@@ -34,6 +37,7 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.Creat
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
 import org.wordpress.android.util.experiments.SiteCreationDomainPurchasingExperiment
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
@@ -95,6 +99,9 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
     @Mock
     lateinit var domainPurchasingExperiment: SiteCreationDomainPurchasingExperiment
+
+    @Mock
+    lateinit var domainPurchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig
 
     private val wizardManagerNavigatorLiveData = SingleLiveEvent<SiteCreationStep>()
 
@@ -294,7 +301,17 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given control variation, when start, then tracked domain purchasing experiment variation is control`() {
+    fun `given domain purchasing experiment off, when start, then experiment is not tracked`() {
+        whenever(domainPurchasingFeatureConfig.isEnabledState()).thenReturn(false)
+        whenever(domainPurchasingExperiment.getVariation()).thenReturn(mock())
+
+        getNewViewModel().start(null, SiteCreationSource.UNSPECIFIED)
+
+        verify(tracker, never()).trackSiteCreationDomainPurchasingExperimentVariation(any())
+    }
+    @Test
+    fun `given domain purchasing experiment on, when start in control variation, then experiment is tracked`() {
+        whenever(domainPurchasingFeatureConfig.isEnabledState()).thenReturn(true)
         whenever(domainPurchasingExperiment.getVariation()).thenReturn(Control)
 
         getNewViewModel().start(null, SiteCreationSource.UNSPECIFIED)
@@ -303,13 +320,13 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given treatment variation, when start, then tracked domain purchasing experiment variation is treatment`() {
-        val variation = Treatment(SiteCreationDomainPurchasingExperiment.NAME)
-        whenever(domainPurchasingExperiment.getVariation()).thenReturn(variation)
+    fun `given domain purchasing experiment on, when start in treatment variation, then experiment is tracked`() {
+        whenever(domainPurchasingFeatureConfig.isEnabledState()).thenReturn(true)
+        whenever(domainPurchasingExperiment.getVariation()).thenReturn(mock<Treatment>())
 
         getNewViewModel().start(null, SiteCreationSource.UNSPECIFIED)
 
-        verify(tracker).trackSiteCreationDomainPurchasingExperimentVariation(variation)
+        verify(tracker).trackSiteCreationDomainPurchasingExperimentVariation(isA<Treatment>())
     }
 
     private fun currentWizardState(vm: SiteCreationMainVM) =
@@ -324,5 +341,6 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         imageManager,
         jetpackFeatureRemovalOverlayUtil,
         domainPurchasingExperiment,
+        domainPurchasingFeatureConfig,
     )
 }
