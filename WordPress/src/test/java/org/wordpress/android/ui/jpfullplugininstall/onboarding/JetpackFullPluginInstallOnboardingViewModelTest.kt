@@ -117,6 +117,12 @@ class JetpackFullPluginInstallOnboardingViewModelTest : BaseUnitTest() {
         verify(analyticsTracker).trackScreenDismissed()
     }
 
+    @Test
+    fun `Should track screen shown when onScreenShown is called`() {
+        classToTest.onScreenShown()
+        verify(analyticsTracker).trackScreenShown()
+    }
+
     private fun mockSelectedSite() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(selectedSite)
     }
