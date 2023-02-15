@@ -1387,12 +1387,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_social_to_login";
             case ENHANCED_SITE_CREATION_ACCESSED:
                 return "enhanced_site_creation_accessed";
-            case ENHANCED_SITE_CREATION_SEGMENTS_VIEWED:
-                return "enhanced_site_creation_segments_viewed";
-            case ENHANCED_SITE_CREATION_SEGMENTS_SELECTED:
-                return "enhanced_site_creation_segments_selected";
             case ENHANCED_SITE_CREATION_DOMAINS_ACCESSED:
                 return "enhanced_site_creation_domains_accessed";
+            case ENHANCED_SITE_CREATION_DOMAIN_PURCHASING_EXPERIMENT:
+                return "enhanced_site_creation_domain_purchasing_experiment";
             case ENHANCED_SITE_CREATION_DOMAINS_SELECTED:
                 return "enhanced_site_creation_domains_selected";
             case ENHANCED_SITE_CREATION_SUCCESS_LOADING:
