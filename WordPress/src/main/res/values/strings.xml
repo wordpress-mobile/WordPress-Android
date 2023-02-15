@@ -2719,6 +2719,7 @@
     <string name="account_settings">Account Settings</string>
     <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
     <string name="primary_site">Primary site</string>
+    <string name="only_one_primary_site_message">Only one site is available, so you can\'t change your primary site.</string>
     <string name="web_address">Web address</string>
     <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
     <string name="change_password">Change password</string>
@@ -4380,7 +4381,12 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jetpack_full_plugin_install_onboarding_install_button">Install the full plugin</string>
     <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contact support</string>
 
-    <!-- Blaze -->
+    <!-- Promote Blaze Card-->
+    <string name="promote_blaze_card_title">Promote your content with Blaze</string>
+    <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
+    <string name="promote_blaze_card_menu_hide_this">Hide this</string>
+
+    <!-- Blaze Overlay-->
     <string name="blaze_activity_title">Blaze</string>
     <string name="blaze_promotional_text">Drive more traffic to your site with Blaze</string>
     <string name="blaze_promotional_subtitle_1">Promote any post or page in only a few minutes for just a few dollars a day.</string>

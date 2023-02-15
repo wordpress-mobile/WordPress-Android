@@ -1,4 +1,2 @@
-* [*] [internal] Bump Aztec version to `1.6.3` [https://github.com/wordpress-mobile/WordPress-Android/pull/17852]
-* [**] [Jetpack-only] Blogging Prompts: add the ability to answer previous prompts, disable prompts, and other minor enhancements. [https://github.com/wordpress-mobile/WordPress-Android/pull/17882]
-* [*] Reader: Removes the option to block and report reader users for self-hosted sites [https://github.com/wordpress-mobile/WordPress-Android/pull/17866]
-
+We made some tweaks to blogging prompts so you can answer old prompts or disable new ones. (Although we can’t imagine why you would.)
+While we were making updates, we removed the option to block and report authors on self-hosted sites.

@@ -144,6 +144,7 @@ android {
         buildConfigField "boolean", "ENABLE_MY_SITE_DASHBOARD_TABS", "true"
         buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
         buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
+        buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -170,6 +171,7 @@ android {
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "false"
             buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
+            buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
 
             manifestPlaceholders = [magicLinkScheme:"wordpress"]
         }
@@ -188,11 +190,11 @@ android {
             buildConfigField "boolean", "ENABLE_FOLLOWED_SITES_SETTINGS", "true"
             buildConfigField "boolean", "ENABLE_WHATS_NEW_FEATURE", "true"
             buildConfigField "boolean", "ENABLE_MY_SITE_DASHBOARD_TABS", "true"
-            buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
             buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "false"
+            buildConfigField "boolean", "ENABLE_SITE_CREATION_DOMAIN_PURCHASING", "false"
 
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
 
@@ -499,10 +501,6 @@ dependencies {
     androidTestImplementation "androidx.work:work-testing:$androidxWorkManagerVersion"
     androidTestImplementation "com.google.dagger:hilt-android-testing:$gradle.ext.daggerVersion"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$gradle.ext.daggerVersion"
-    // Necessary because of the failing android tests
-    androidTestImplementation "androidx.room:room-runtime:$androidxRoomVersion"
-    kapt "androidx.room:room-compiler:$androidxRoomVersion"
-    androidTestImplementation "androidx.room:room-ktx:$androidxRoomVersion"
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$androidxComposeVersion"
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$androidDesugarVersion"
