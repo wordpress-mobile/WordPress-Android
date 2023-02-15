@@ -19,7 +19,7 @@ class BlazeParentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_blaze_parent)
-        viewModel.start(getSource(), getPostId())
+        viewModel.start(getSource(), getPostModel())
         observe()
     }
 
@@ -40,7 +40,7 @@ class BlazeParentActivity : AppCompatActivity() {
         return intent.getSerializableExtra(ARG_BLAZE_FLOW_SOURCE) as BlazeFlowSource
     }
 
-    private fun getPostId(): Int {
-        return intent.getIntExtra(ARG_EXTRA_POST_ID,0) as Int
+    private fun getPostModel(): PostUIModel? {
+        return intent.getParcelableExtra<PostUIModel>(ARG_EXTRA_POST_ID)
     }
 }

@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.BlazeUiState
+import org.wordpress.android.ui.blaze.PostUIModel
 import java.util.Locale
 import javax.inject.Inject
 
@@ -24,6 +25,9 @@ class BlazeViewModel @Inject constructor(private val blazeFeatureUtils: BlazeFea
     private val _uiState = MutableLiveData<BlazeUiState>()
     val uiState: LiveData<BlazeUiState> = _uiState
 
+    private val _promoteUiState = MutableLiveData<BlazeUiState.PromoteScreen>()
+    val promoteUiState: LiveData<BlazeUiState.PromoteScreen> = _promoteUiState
+
     fun setAppLanguage(locale: Locale) {
         _refreshAppLanguage.value = locale.language
     }
@@ -36,11 +40,16 @@ class BlazeViewModel @Inject constructor(private val blazeFeatureUtils: BlazeFea
         blazeFeatureUtils.trackPromoteWithBlazeClicked()
     }
 
-    fun initialize(postModel: Int?) {
+    fun initialize(postModel: PostUIModel?) {
         postModel?.let {
             _uiState.value =
-                BlazeUiState.PromoteScreen.PromotePost
-        } ?: run { _uiState.value = BlazeUiState.PromoteScreen.Site }
+                BlazeUiState.PromoteScreen.PromotePost(postModel)
+            _promoteUiState.value =
+                BlazeUiState.PromoteScreen.PromotePost(postModel)
+        } ?: run {
+            _uiState.value = BlazeUiState.PromoteScreen.Site
+            _promoteUiState.value = BlazeUiState.PromoteScreen.Site
+        }
     }
 
 
@@ -64,10 +73,11 @@ class BlazeViewModel @Inject constructor(private val blazeFeatureUtils: BlazeFea
             is BlazeUiState.PaymentGateway -> {
                 _uiState.value = BlazeUiState.Done
             }
+            else -> {}
         }
     }
 
-    fun start(source: BlazeFlowSource, postId: Int) {
+    fun start(source: BlazeFlowSource, postId: PostUIModel?) {
         blazeFlowSource = source
         initialize(postId)
     }
