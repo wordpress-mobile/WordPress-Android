@@ -1,8 +1,11 @@
 package org.wordpress.android.ui.blaze
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 sealed class BlazeUiState {
     sealed class PromoteScreen : BlazeUiState() {
-        object PromotePost : PromoteScreen()
+        data class PromotePost(val postUIModel: PostUIModel) : PromoteScreen()
         object Site : PromoteScreen()
     }
 
@@ -21,10 +24,11 @@ enum class BlazeFlowSource(val trackingName: String) {
     POST_STATS("post_stats")
 }
 
-sealed class PostUIModel(
-    val postId: Int,
+@Parcelize
+data class PostUIModel(
+    val postId: Long,
     val title: String,
     val url: String,
-    val imageUrl: String,
-)
+    val imageUrl: Long,
+) : Parcelable
 

@@ -9,7 +9,6 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,6 +46,7 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.blaze.BlazeFlowSource;
 import org.wordpress.android.ui.blaze.BlazeParentActivity;
+import org.wordpress.android.ui.blaze.PostUIModel;
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
@@ -1820,7 +1820,12 @@ public class ActivityLauncher {
                                             @Nullable PostModel postModel,
                                             @NonNull BlazeFlowSource source) {
         Intent intent = new Intent(context, BlazeParentActivity.class);
-        intent.putExtra(ARG_EXTRA_POST_ID, postModel.getRemotePostId());
+        PostUIModel postUIModel =
+                new PostUIModel(postModel.getRemotePostId(),
+                        postModel.getTitle(),
+                        postModel.getLink(),
+                        postModel.getFeaturedImageId());
+        intent.putExtra(ARG_EXTRA_POST_ID, postUIModel);
         intent.putExtra(ARG_BLAZE_FLOW_SOURCE, source);
         context.startActivity(intent);
     }
