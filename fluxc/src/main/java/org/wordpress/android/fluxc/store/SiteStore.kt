@@ -315,13 +315,15 @@ open class SiteStore @Inject constructor(
             "Replace with primary constructor " +
                 "which accepts 'vendor = \"dot\"' instead of 'includeVendorDot = true' " +
                 "or 'vendor = null' instead of 'includeVendorDot = false'.",
-            replaceWith = ReplaceWith(expression = "SiteStore.SuggestDomainsPayload(" +
+            replaceWith = ReplaceWith(
+                expression = "SiteStore.SuggestDomainsPayload(" +
                     "query = query, " +
                     "onlyWordpressCom = onlyWordpressCom, " +
                     "includeWordpressCom = includeWordpressCom, " +
                     "includeDotBlogSubdomain = includeDotBlogSubdomain, " +
                     "quantity = quantity, " +
-                    "vendor = null)")
+                    "vendor = null)"
+            )
         )
         constructor(
             query: String,
@@ -336,9 +338,7 @@ open class SiteStore @Inject constructor(
             vendor = if (includeVendorDot) "dot" else null,
             onlyWordpressCom = onlyWordpressCom,
             includeWordpressCom = includeWordpressCom,
-            includeDotBlogSubdomain = includeDotBlogSubdomain,
-            tlds = null,
-            segmentId = null
+            includeDotBlogSubdomain = includeDotBlogSubdomain
         )
 
         constructor(
@@ -347,23 +347,21 @@ open class SiteStore @Inject constructor(
             includeWordpressCom: Boolean,
             includeDotBlogSubdomain: Boolean,
             quantity: Int,
-            vendor: String?,
+            vendor: String? = null,
         ) : this(
-            query = query,
-            quantity = quantity,
-            vendor = vendor,
-            onlyWordpressCom = onlyWordpressCom,
-            includeWordpressCom = includeWordpressCom,
-            includeDotBlogSubdomain = includeDotBlogSubdomain,
-            tlds = null,
-            segmentId = null
+            query,
+            quantity,
+            vendor,
+            onlyWordpressCom,
+            includeWordpressCom,
+            includeDotBlogSubdomain
         )
 
         constructor(query: String, quantity: Int, tlds: String?) : this(
-            query = query,
-            quantity = quantity,
-            tlds = tlds,
-            segmentId = null,
+            query,
+            quantity,
+            vendor = null, // Avoids error: "There's a cycle in the delegation calls chain"
+            tlds = tlds
         )
     }
 
