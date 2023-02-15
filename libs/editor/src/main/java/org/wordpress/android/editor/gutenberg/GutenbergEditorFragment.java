@@ -1354,6 +1354,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mUploadingMediaProgressMax.remove(localMediaId);
 
         WritableNativeMap metadata = new WritableNativeMap();
+        metadata.putString("videopressGUID", mediaFile.getVideoPressGuid());
 
         getGutenbergContainerFragment()
                 .mediaFileUploadSucceeded(Integer.parseInt(localMediaId), mediaFile.getOptimalFileURL(),

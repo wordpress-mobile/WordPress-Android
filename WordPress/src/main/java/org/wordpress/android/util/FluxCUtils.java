@@ -55,7 +55,7 @@ public class FluxCUtils {
         mediaModel.setId(file.getId());
         mediaModel.setUploadState(file.getUploadState());
         mediaModel.setLocalSiteId(Integer.valueOf(file.getBlogId()));
-        mediaModel.setVideoPressGuid(ShortcodeUtils.getVideoPressIdFromShortCode(file.getVideoPressShortCode()));
+        mediaModel.setVideoPressGuid(file.getVideoPressGuid());
         return mediaModel;
     }
 
@@ -84,6 +84,7 @@ public class FluxCUtils {
         mediaFile.setVideoPressShortCode(ShortcodeUtils.getVideoPressShortcodeFromId(media.getVideoPressGuid()));
         mediaFile.setHeight(media.getHeight());
         mediaFile.setWidth(media.getWidth());
+        mediaFile.setVideoPressGuid(media.getVideoPressGuid());
         return mediaFile;
     }
 
