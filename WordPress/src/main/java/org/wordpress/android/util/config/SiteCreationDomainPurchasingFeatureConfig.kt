@@ -18,4 +18,8 @@ class SiteCreationDomainPurchasingFeatureConfig
     override fun isEnabled(): Boolean {
         return super.isEnabled() && experiment.getVariation() != Control
     }
+
+    fun isEnabledState(): Boolean {
+        return featureState().isEnabled
+    }
 }

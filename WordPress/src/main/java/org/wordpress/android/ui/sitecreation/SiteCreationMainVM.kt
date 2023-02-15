@@ -30,6 +30,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
 import org.wordpress.android.util.experiments.SiteCreationDomainPurchasingExperiment
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
@@ -68,6 +69,7 @@ class SiteCreationMainVM @Inject constructor(
     private val imageManager: ImageManager,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val domainPurchasingExperiment: SiteCreationDomainPurchasingExperiment,
+    private val domainPurchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig,
 ) : ViewModel() {
     init {
         dispatcher.register(fetchHomePageLayoutsUseCase)
@@ -114,7 +116,9 @@ class SiteCreationMainVM @Inject constructor(
         if (isStarted) return
         if (savedInstanceState == null) {
             tracker.trackSiteCreationAccessed(siteCreationSource)
-            tracker.trackSiteCreationDomainPurchasingExperimentVariation(domainPurchasingExperiment.getVariation())
+            if (domainPurchasingFeatureConfig.isEnabledState()) {
+                tracker.trackSiteCreationDomainPurchasingExperimentVariation(domainPurchasingExperiment.getVariation())
+            }
             siteCreationState = SiteCreationState()
             if (jetpackFeatureRemovalOverlayUtil.shouldShowSiteCreationOverlay())
                 showJetpackOverlay()
