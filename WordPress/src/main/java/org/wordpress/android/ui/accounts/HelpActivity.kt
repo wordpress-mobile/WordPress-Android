@@ -105,6 +105,7 @@ class HelpActivity : LocaleAwareActivity() {
                 showContactUs()
             }
 
+            faqButton.setOnClickListener { showFaq() }
             applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
             applicationLogButton.setOnClickListener { v ->
                 startActivity(Intent(v.context, AppLogViewerActivity::class.java))
@@ -180,9 +181,6 @@ class HelpActivity : LocaleAwareActivity() {
 
     private fun HelpActivityBinding.showContactUs() {
         contactUsButton.setOnClickListener { createNewZendeskTicket() }
-
-        faqButton.setOnClickListener { showFaq() }
-
         myTicketsButton.setOnClickListener { showZendeskTickets() }
 
         contactEmailContainer.setOnClickListener {
@@ -210,7 +208,6 @@ class HelpActivity : LocaleAwareActivity() {
 
     private fun HelpActivityBinding.showSupportForum() {
         contactUsButton.isVisible = false
-        faqButton.isVisible = false
         myTicketsButton.isVisible = false
         emailContainerTopDivider.isVisible = false
         contactEmailContainer.isVisible = false
