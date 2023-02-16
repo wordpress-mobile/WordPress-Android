@@ -8,6 +8,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,7 +33,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import coil.compose.rememberImagePainter
@@ -112,16 +116,22 @@ class BlazeOverlayFragment : Fragment() {
                     R.string.blaze_promotional_subtitle_1,
                     R.string.blaze_promotional_subtitle_2,
                     R.string.blaze_promotional_subtitle_3
-                )
+                ),
+                modifier = Modifier.padding(start = 20.dp, end = 20.dp)
             )
             post?.let {
-                PostThumbnailView(it)
+                PostThumbnailView(
+                    it, modifier = Modifier
+                        .fillMaxWidth()
+                        .height(110.dp)
+                )
             }
 
             ImageButton(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
+                    .padding(start = 20.dp, end = 20.dp)
                     .background(
                         Color.Gray,
                         shape = RoundedCornerShape(6.dp)
@@ -133,35 +143,65 @@ class BlazeOverlayFragment : Fragment() {
         }
     }
 
+    @Preview
     @Composable
-    fun PostThumbnailView(postUIModel: PostUIModel) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(
-                top = Margin.ExtraLarge.value,
-                start = Margin.ExtraLarge.value,
-                end = Margin.ExtraLarge.value
-            )
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(
-                        top = Margin.ExtraLarge.value,
-                        start = Margin.ExtraLarge.value,
-                        end = Margin.ExtraLarge.value
+    fun PreviewThumbNailView() {
+        AppTheme {
+            BlazeOverlayContent(
+                postModelState = BlazeUiState.PromoteScreen.PromotePost(
+                    PostUIModel(
+                        postId = 119,
+                        title = "Post title check if this is long enough to be truncated",
+                        url = "https://www.google.long.ttiiitititititiit.com",
+                        imageUrl = 0
                     )
-                ) {
-                    PostTitle(title = postUIModel.title)
-                    PostUrl(url = postUIModel.url)
-                }
-                PostThumbnail(url = "")
-            }
+                )
+            )
         }
     }
 
     @Composable
-    private fun PostThumbnail(url: String) {
+    fun PostThumbnailView(postUIModel: PostUIModel, modifier: Modifier = Modifier) {
+        ConstraintLayout(
+            modifier = modifier
+                .padding(20.dp)
+        ) {
+            val (postContainer, featuredImage, title, url) = createRefs()
+            Box(modifier = Modifier
+                .constrainAs(postContainer) {
+                    top.linkTo(parent.top, 0.dp)
+                    bottom.linkTo(parent.bottom, 0.dp)
+                    start.linkTo(parent.start, 0.dp)
+                    end.linkTo(parent.end, 0.dp)
+                    width = Dimension.fillToConstraints
+                }
+                .background(color = Color.LightGray)
+            )
+            PostFeaturedImage(url = "", modifier = Modifier
+                .constrainAs(featuredImage) {
+                    top.linkTo(postContainer.top, 0.dp)
+                    bottom.linkTo(postContainer.bottom, 0.dp)
+                    end.linkTo(postContainer.end, 0.dp)
+                    width = Dimension.fillToConstraints
+                }
+                .height(80.dp))
+            PostTitle(title = postUIModel.title, modifier = Modifier.constrainAs(title) {
+                top.linkTo(parent.top, 0.dp)
+                start.linkTo(parent.start, 0.dp)
+                end.linkTo(featuredImage.start, margin = 4.dp)
+                width = Dimension.fillToConstraints
+            })
+            PostUrl(url = postUIModel.url, modifier = Modifier.constrainAs(url) {
+                top.linkTo(title.bottom, 0.dp)
+                start.linkTo(parent.start, 0.dp)
+                end.linkTo(featuredImage.start, margin = 4.dp)
+                width = Dimension.fillToConstraints
+            })
+        }
+    }
+
+    @Composable
+    private fun PostFeaturedImage(url: String, modifier: Modifier = Modifier) {
         val painter = rememberImagePainter(url) {
             placeholder(R.drawable.bg_rectangle_placeholder_globe_margin_8dp)
             error(R.drawable.bg_rectangle_placeholder_globe_margin_8dp)
@@ -170,7 +210,7 @@ class BlazeOverlayFragment : Fragment() {
         Image(
             painter = painter,
             contentDescription = stringResource(R.string.blavatar_desc),
-            modifier = Modifier
+            modifier = modifier
                 .padding(vertical = 15.dp)
                 .padding(end = 20.dp)
                 .size(dimensionResource(R.dimen.jp_migration_site_icon_size))
