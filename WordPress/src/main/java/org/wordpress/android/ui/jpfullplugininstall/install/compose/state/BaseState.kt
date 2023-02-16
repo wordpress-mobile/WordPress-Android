@@ -89,7 +89,7 @@ fun BaseState(
 @Composable
 private fun PreviewInitialState() {
     AppTheme {
-        val uiState = JetpackFullPluginInstallViewModel.UiState.Initial
-        InitialState(uiState, {}, {})
+        val uiState = JetpackFullPluginInstallViewModel.UiState.Initial()
+        BaseState(uiState, {}, {})
     }
 }

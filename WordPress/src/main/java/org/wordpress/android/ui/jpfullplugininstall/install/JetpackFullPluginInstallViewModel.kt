@@ -12,15 +12,23 @@ class JetpackFullPluginInstallViewModel {
         @StringRes val imageContentDescription: Int,
         @StringRes val title: Int,
         @StringRes val description: Int,
-        @StringRes val buttonText: Int,
     ) {
-        object Initial : UiState(
+        data class Initial(
+            @StringRes val buttonText: Int = R.string.jetpack_full_plugin_install_continue,
+        ) : UiState(
             toolbarTitle = R.string.jetpack,
             image = R.drawable.ic_jetpack_logo_green_24dp,
             imageContentDescription = R.string.jetpack_full_plugin_install_image_content_description,
-            title = R.string.install_jetpack,
-            description = R.string.install_jetpack_message,
-            buttonText = R.string.jetpack_full_plugin_install_continue,
+            title = R.string.jetpack_full_plugin_install_initial_title,
+            description = R.string.jetpack_full_plugin_install_initial_description,
+        )
+
+        object Installing : UiState(
+            toolbarTitle = R.string.jetpack,
+            image = R.drawable.ic_jetpack_logo_green_24dp,
+            imageContentDescription = R.string.jetpack_full_plugin_install_image_content_description,
+            title = R.string.jetpack_full_plugin_install_installing_title,
+            description = R.string.jetpack_full_plugin_install_installing_description,
         )
     }
 }

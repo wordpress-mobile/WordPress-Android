@@ -5,37 +5,31 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.jpfullplugininstall.install.JetpackFullPluginInstallViewModel.UiState
-import org.wordpress.android.ui.qrcodeauth.compose.components.PrimaryButton
 
 @Composable
-fun InitialState(
-    uiState: UiState.Initial,
-    onContinueClick: () -> Unit,
+fun InstallingState(
+    uiState: UiState.Installing,
     onDismissScreenClick: () -> Unit,
 ) = Box(
     Modifier
         .fillMaxWidth()
         .fillMaxHeight()
 ) {
-    with(uiState) {
-        BaseState(
-            uiState = uiState,
-            onDismissScreenClick = onDismissScreenClick
-        ) {
-            PrimaryButton(
-                text = stringResource(buttonText),
-                onClick = onContinueClick,
-                modifier = Modifier.padding(top = Margin.ExtraLarge.value),
-            )
-        }
+    BaseState(
+        uiState = uiState,
+        onDismissScreenClick = onDismissScreenClick
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.padding(top = Margin.ExtraLarge.value),
+        )
     }
 }
 
@@ -43,9 +37,9 @@ fun InitialState(
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
 @Composable
-private fun PreviewInitialState() {
+private fun PreviewInstallingState() {
     AppTheme {
-        val uiState = UiState.Initial()
-        InitialState(uiState, {}, {})
+        val uiState = UiState.Installing
+        InstallingState(uiState) {}
     }
 }
