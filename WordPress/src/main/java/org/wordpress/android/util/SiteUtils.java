@@ -368,6 +368,15 @@ public class SiteUtils {
         return site.getPlanId() == PlansConstants.FREE_PLAN_ID;
     }
 
+    public static boolean hasSiteWithPaidPlan(SiteStore siteStore) {
+        for (SiteModel site : siteStore.getSites()) {
+            if (!site.getHasFreePlan()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean onBloggerPlan(@NonNull SiteModel site) {
         return site.getPlanId() == PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
                || site.getPlanId() == PlansConstants.BLOGGER_PLAN_TWO_YEARS_ID;

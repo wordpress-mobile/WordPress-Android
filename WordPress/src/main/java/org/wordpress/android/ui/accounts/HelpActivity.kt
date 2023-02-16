@@ -99,7 +99,9 @@ class HelpActivity : LocaleAwareActivity() {
                 actionBar.elevation = 0f // remove shadow
             }
 
-            if (wpSupportForumFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+            if (wpSupportForumFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP &&
+                !SiteUtils.hasSiteWithPaidPlan(siteStore)
+            ) {
                 showSupportForum()
             } else {
                 showContactUs()
