@@ -14,7 +14,7 @@ class JetpackFullPluginInstallViewModel {
         @StringRes val description: Int,
     ) {
         data class Initial(
-            @StringRes val buttonText: Int = R.string.jetpack_full_plugin_install_initial_continue,
+            @StringRes val buttonText: Int = R.string.jetpack_full_plugin_install_initial_button,
         ) : UiState(
             toolbarTitle = R.string.jetpack,
             image = R.drawable.ic_jetpack_logo_green_24dp,
