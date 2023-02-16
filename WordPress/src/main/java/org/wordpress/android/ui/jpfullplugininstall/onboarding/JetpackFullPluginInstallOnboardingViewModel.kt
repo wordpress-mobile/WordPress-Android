@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.update
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.accounts.HelpActivity
-import org.wordpress.android.ui.jpfullplugininstall.JetpackFullPluginInstallOnboardingUiStateMapper
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.ContactSupport
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.Dismiss
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.OpenTermsAndConditions
