@@ -30,5 +30,15 @@ class JetpackFullPluginInstallViewModel {
             title = R.string.jetpack_full_plugin_install_installing_title,
             description = R.string.jetpack_full_plugin_install_installing_description,
         )
+
+        data class Done(
+            @StringRes val buttonText: Int = R.string.jetpack_full_plugin_install_done_button,
+        ) : UiState(
+            toolbarTitle = R.string.jetpack,
+            image = R.drawable.ic_jetpack_logo_green_24dp,
+            imageContentDescription = R.string.jetpack_full_plugin_install_image_content_description,
+            title = R.string.jetpack_full_plugin_install_done_title,
+            description = R.string.jetpack_full_plugin_install_done_description,
+        )
     }
 }

@@ -1094,7 +1094,9 @@
     <string name="jetpack_full_plugin_install_initial_button">Continue</string>
     <string name="jetpack_full_plugin_install_installing_title">Installing Jetpack</string>
     <string name="jetpack_full_plugin_install_installing_description">Installing Jetpack on your site. This can take up to a few minutes to complete.</string>
-
+    <string name="jetpack_full_plugin_install_done_title">Jetpack installed</string>
+    <string name="jetpack_full_plugin_install_done_description">Ready to use this site with the app.</string>
+    <string name="jetpack_full_plugin_install_done_button">Done</string>
 
     <!-- activity log -->
     <string name="activity_log">Activity Log</string>
