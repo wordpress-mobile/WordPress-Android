@@ -1454,15 +1454,18 @@ class MySiteViewModel @Inject constructor(
         jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_MENU_ACCESSED)
     }
 
+    @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardMoreMenuClick() {
         // todo: implement tracking the event for More Menu tapped
     }
 
+    @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardClick() {
         /// todo: implement tracking the event for on card tapped
         //  todo: add the navigation action and post value to _onNavigation.value
     }
 
+    @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardHideMenuItemClick() {
         // todo: implement the hide logic into appPrefs
         refresh()
