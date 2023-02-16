@@ -4,7 +4,6 @@ import androidx.recyclerview.widget.DiffUtil
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
@@ -36,7 +35,6 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
             }
             oldItem is JetpackFeatureCard && updatedItem is JetpackFeatureCard -> true
             oldItem is JetpackSwitchMenu && updatedItem is JetpackSwitchMenu -> true
-            oldItem is PromoteWithBlazeCard && updatedItem is PromoteWithBlazeCard -> true
             else -> throw UnsupportedOperationException("Diff not implemented yet")
         }
     }
