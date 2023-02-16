@@ -122,7 +122,6 @@ import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.MyProfileFragment;
-import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
@@ -368,8 +367,6 @@ public interface AppComponent {
     void inject(ReaderBlogAdapter object);
 
     void inject(ReaderCommentsPostHeaderView object);
-
-    void inject(ReleaseNotesActivity object);
 
     void inject(WPWebViewActivity object);
 
