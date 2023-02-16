@@ -23,8 +23,17 @@ class ProductsRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchProducts(): Response<ProductsResponse> {
+    suspend fun fetchProducts(type: String? = null): Response<ProductsResponse> {
         val url = WPCOMREST.products.urlV1_1
-        return wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), ProductsResponse::class.java)
+        return wpComGsonRequestBuilder.syncGetRequest(
+            this,
+            url,
+            mutableMapOf<String, String>().apply {
+                type?.let {
+                    put("type", it)
+                }
+            },
+            ProductsResponse::class.java
+        )
     }
 }
