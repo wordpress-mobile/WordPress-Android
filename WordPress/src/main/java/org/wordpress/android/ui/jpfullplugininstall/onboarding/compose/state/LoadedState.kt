@@ -34,7 +34,7 @@ import org.wordpress.android.ui.jpfullplugininstall.onboarding.compose.component
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.compose.component.TermsAndConditions
 
 @Composable
-fun Loaded(
+fun LoadedState(
     content: UiState.Loaded,
     onTermsAndConditionsClick: () -> Unit,
     onInstallFullPluginClick: () -> Unit,
@@ -109,12 +109,12 @@ fun Loaded(
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
 @Composable
-private fun PreviewLoaded() {
+private fun PreviewLoadedState() {
     AppTheme {
         val uiState = UiState.Loaded(
             siteName = "wordpress.com",
             pluginNames = listOf("Jetpack Search"),
         )
-        Loaded(uiState, {}, {}, {}, {})
+        LoadedState(uiState, {}, {}, {}, {})
     }
 }
