@@ -6,12 +6,14 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
+import org.wordpress.android.fluxc.model.blaze.BlazeStatusModel
 
 @Dao
 abstract class BlazeStatusDao {
     @Transaction
     @Query("SELECT * from BlazeStatus WHERE `siteId` = :siteId")
-    abstract fun getBlazeStatus(siteId: Long): List<BlazeStatus>
+    abstract fun getBlazeStatus(siteId: Long): Flow<List<BlazeStatus>>
 
     @Transaction
     @Suppress("SpreadOperator")
@@ -38,5 +40,10 @@ abstract class BlazeStatusDao {
     data class BlazeStatus(
         val siteId: Long,
         val isEligible: Boolean
-    )
+    ) {
+        fun toBlazeModel() = BlazeStatusModel(
+            siteId = siteId,
+            isEligible = isEligible
+        )
+    }
 }
