@@ -1087,6 +1087,10 @@
     <string name="install_jetpack_retry">Retry</string>
     <string name="login_to_to_connect_jetpack" tools:ignore="UnusedResources" a8c-src-lib="login">Log in to the WordPress.com account you used to connect Jetpack.</string>
 
+    <!-- Jetpack install full plugin -->
+    <string name="jetpack_full_plugin_install_continue">Continue</string>
+    <string name="jetpack_full_plugin_install_image_content_description">Jetpack icon</string>
+
     <!-- activity log -->
     <string name="activity_log">Activity Log</string>
     <string name="activity_log_icon">Activity icon</string>
