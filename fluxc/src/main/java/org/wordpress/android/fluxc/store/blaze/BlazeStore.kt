@@ -1,8 +1,12 @@
 package org.wordpress.android.fluxc.store.blaze
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.blaze.BlazeStatusModel
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeStatusError
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeStatusErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeStatusErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeStatusFetchedPayload
 import org.wordpress.android.fluxc.persistence.blaze.BlazeStatusDao
@@ -21,29 +25,36 @@ class BlazeStore @Inject constructor(
 ) {
     suspend fun fetchBlazeStatus(
         site: SiteModel
-    ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch blaze status") {
-        val payload = blazeRestClient.fetchBlazeStatus(site)
-        storeBlazeStatus(site, payload)
+    ): BlazeStatusResult<List<BlazeStatusModel>> {
+        return coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch blaze status") {
+            val payload = blazeRestClient.fetchBlazeStatus(site)
+            storeBlazeStatus(site, payload)
+        }
     }
 
     private fun storeBlazeStatus(
         site: SiteModel,
         payload: BlazeStatusFetchedPayload
-    ): BlazeStatusResult {
+    ): BlazeStatusResult<List<BlazeStatusModel>> {
         return when {
             payload.isError -> handlePayloadError(payload.error)
             payload.eligibility != null -> handlePayloadSuccess(site, payload.eligibility)
             else -> BlazeStatusResult(BlazeStatusError((INVALID_RESPONSE)))
         }
     }
-
-    private fun handlePayloadSuccess(site: SiteModel, eligibility: Map<String, Boolean>?): BlazeStatusResult {
-        val isEligible = eligibility?.get("approved")?.toString()?.toBoolean()?:false
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    private fun handlePayloadSuccess(
+        site: SiteModel,
+        eligibility: Map<String, Boolean>?
+    ): BlazeStatusResult<List<BlazeStatusModel>> = try {
+        val isEligible = eligibility?.get("approved")?.toString()?.toBoolean() ?: false
         insertBlazeStatusValue(site.siteId, isEligible)
-        return BlazeStatusResult(isEligible)
+        BlazeStatusResult(listOf(BlazeStatusModel(site.siteId, isEligible)))
+    } catch (e: java.lang.Exception) {
+        BlazeStatusResult(BlazeStatusError(GENERIC_ERROR))
     }
 
-    private fun handlePayloadError(error: BlazeStatusError): BlazeStatusResult {
+    private fun handlePayloadError(error: BlazeStatusError): BlazeStatusResult<List<BlazeStatusModel>> {
         return BlazeStatusResult(error)
     }
 
@@ -56,17 +67,23 @@ class BlazeStore @Inject constructor(
         )
     }
 
-    fun isSiteEligibleForBlaze(siteId: Long): Boolean {
-        return blazeStatusDao.getBlazeStatus(siteId).takeIf { it.isNotEmpty() }?.first()?.isEligible
-            ?: false
+    fun getBlazeStatus(siteId: Long): Flow<BlazeStatusResult<List<BlazeStatusModel>>> {
+        return blazeStatusDao.getBlazeStatus(siteId).map { result ->
+            val model = result.firstOrNull()?.toBlazeModel()
+            val list = model?.let {
+                listOf(model)
+            }?: emptyList()
+            BlazeStatusResult(model = list)
+        }
     }
 
     fun clear() {
         blazeStatusDao.clear()
     }
 
-    data class BlazeStatusResult(
-        val isEligible: Boolean = false
+    data class BlazeStatusResult<T>(
+        val model: T? = null,
+        val cached: Boolean = false
     ) : Store.OnChanged<BlazeStatusError>() {
         constructor(error: BlazeStatusError) : this() {
             this.error = error
