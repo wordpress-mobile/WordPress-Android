@@ -45,6 +45,7 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         SITE_NAME("site_name"),
         RECOMMENDED("recommended"),
         VARIATION("variation"),
+        DOMAIN_COST("domain_cost"),
     }
 
     private var designSelectionSkipped: Boolean = false
@@ -60,12 +61,13 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_ACCESSED)
     }
 
-    fun trackDomainSelected(chosenDomain: String, searchTerm: String) {
+    fun trackDomainSelected(chosenDomain: String, searchTerm: String, domainCost: String = "free") {
         tracker.track(
             AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_SELECTED,
             mapOf(
                 CHOSEN_DOMAIN.key to chosenDomain,
-                SEARCH_TERM.key to searchTerm
+                SEARCH_TERM.key to searchTerm,
+                PROPERTY.DOMAIN_COST.key to domainCost.lowercase(), // Homogenize data (e.g. "Free" will turn to "free")
             )
         )
     }
