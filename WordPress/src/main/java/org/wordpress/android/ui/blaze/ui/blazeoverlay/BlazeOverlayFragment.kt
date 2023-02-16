@@ -220,22 +220,22 @@ class BlazeOverlayFragment : Fragment() {
 
 
     @Composable
-    private fun PostTitle(title: String) {
+    private fun PostTitle(title: String, modifier: Modifier = Modifier) {
         Text(
             text = title,
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.body1,
             maxLines = 2,
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = modifier
         )
     }
 
     @Composable
-    private fun PostUrl(url: String) {
+    private fun PostUrl(url: String, modifier: Modifier = Modifier) {
         Text(
             text = url,
             style = MaterialTheme.typography.body2,
-            maxLines = 1,
-            modifier = Modifier.padding(top = 8.dp)
+            maxLines = 2,
+            modifier = modifier
         )
     }
 
@@ -259,7 +259,7 @@ class BlazeOverlayFragment : Fragment() {
     fun BulletedText(stringResource: Int) {
         Row(horizontalArrangement = Arrangement.Start) {
             Canvas(modifier = Modifier
-                .padding(start = 8.dp, top = 12.dp)
+                .padding(start = 4.dp, top = 12.dp)
                 .size(6.dp),
                 onDraw = {
                     drawCircle(Color.LightGray)
