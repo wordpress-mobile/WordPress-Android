@@ -109,7 +109,7 @@ fun Loaded(
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
 @Composable
-private fun PreviewJetpackFullPluginInstallOnboardingScreen() {
+private fun PreviewLoaded() {
     AppTheme {
         val uiState = UiState.Loaded(
             siteName = "wordpress.com",
