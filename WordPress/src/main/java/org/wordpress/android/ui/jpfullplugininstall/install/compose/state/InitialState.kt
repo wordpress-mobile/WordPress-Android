@@ -33,7 +33,7 @@ fun InitialState(
             PrimaryButton(
                 text = stringResource(buttonText),
                 onClick = onContinueClick,
-                modifier = Modifier.padding(top = Margin.ExtraLarge.value),
+                modifier = Modifier.padding(top = Margin.Large.value),
             )
         }
     }

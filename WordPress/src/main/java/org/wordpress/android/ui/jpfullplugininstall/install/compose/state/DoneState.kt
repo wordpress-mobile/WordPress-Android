@@ -33,7 +33,7 @@ fun DoneState(
             PrimaryButton(
                 text = stringResource(buttonText),
                 onClick = onDoneClick,
-                modifier = Modifier.padding(top = Margin.ExtraLarge.value),
+                modifier = Modifier.padding(top = Margin.Large.value),
             )
         }
     }

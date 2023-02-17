@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.PrimaryButton
 import org.wordpress.android.ui.compose.components.SecondaryButton
 import org.wordpress.android.ui.compose.theme.AppTheme
@@ -36,10 +35,10 @@ fun ErrorState(
             PrimaryButton(
                 text = stringResource(retryButtonText),
                 onClick = onRetryClick,
-                modifier = Modifier.padding(top = Margin.ExtraLarge.value),
+                modifier = Modifier.padding(top = Margin.Large.value),
             )
             SecondaryButton(
-                text = stringResource(R.string.jetpack_full_plugin_install_onboarding_contact_support_button),
+                text = stringResource(contactSupportButtonText),
                 onClick = onContactSupportClick,
             )
         }
