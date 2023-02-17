@@ -210,6 +210,7 @@ class MySiteViewModel @Inject constructor(
     private val _onBloggingPromptsLearnMore = SingleLiveEvent<Event<Unit>>()
     private val _onBloggingPromptsViewMore = SingleLiveEvent<Event<Unit>>()
     private val _onBloggingPromptsRemoved = SingleLiveEvent<Event<Unit>>()
+    private val _onJetpackInstallFullPluginLearnMore = SingleLiveEvent<Event<Unit>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartTabStep
         .switchMap { quickStartSiteMenuStep ->
@@ -283,6 +284,7 @@ class MySiteViewModel @Inject constructor(
     val onBloggingPromptsLearnMore = _onBloggingPromptsLearnMore as LiveData<Event<Unit>>
     val onBloggingPromptsViewMore = _onBloggingPromptsViewMore as LiveData<Event<Unit>>
     val onBloggingPromptsRemoved = _onBloggingPromptsRemoved as LiveData<Event<Unit>>
+    val onJetpackInstallFullPluginLearnMore = _onJetpackInstallFullPluginLearnMore as LiveData<Event<Unit>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     private var shouldMarkUpdateSiteTitleTaskComplete = false
@@ -1459,7 +1461,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onJetpackInstallFullPluginLearnMoreClick() {
         trackWithTabSourceIfNeeded(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_TAPPED)
-        // TODO 17836-jp-install-card open the Jetpack installation flow
+        _onJetpackInstallFullPluginLearnMore.postValue(Event(Unit))
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
