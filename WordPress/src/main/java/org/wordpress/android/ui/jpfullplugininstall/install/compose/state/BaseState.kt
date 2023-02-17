@@ -31,11 +31,11 @@ import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
-import org.wordpress.android.ui.jpfullplugininstall.install.JetpackFullPluginInstallViewModel
+import org.wordpress.android.ui.jpfullplugininstall.install.UiState
 
 @Composable
 fun BaseState(
-    uiState: JetpackFullPluginInstallViewModel.UiState,
+    uiState: UiState,
     onDismissScreenClick: () -> Unit,
     content: @Composable () -> Unit
 ) = Box(
@@ -89,7 +89,7 @@ fun BaseState(
 @Composable
 private fun PreviewInitialState() {
     AppTheme {
-        val uiState = JetpackFullPluginInstallViewModel.UiState.Initial()
+        val uiState = UiState.Installing
         BaseState(uiState, {}, {})
     }
 }

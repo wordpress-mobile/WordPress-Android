@@ -10,10 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.PrimaryButton
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
-import org.wordpress.android.ui.jpfullplugininstall.install.JetpackFullPluginInstallViewModel.UiState
+import org.wordpress.android.ui.jpfullplugininstall.install.UiState
 
 @Composable
 fun InitialState(
@@ -45,7 +46,9 @@ fun InitialState(
 @Composable
 private fun PreviewInitialState() {
     AppTheme {
-        val uiState = UiState.Initial()
+        val uiState = UiState.Initial(
+            buttonText = R.string.jetpack_full_plugin_install_initial_button,
+        )
         InitialState(uiState, {}, {})
     }
 }
