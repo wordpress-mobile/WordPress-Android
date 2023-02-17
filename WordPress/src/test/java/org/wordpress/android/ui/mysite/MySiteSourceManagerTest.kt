@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
+import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
@@ -64,6 +65,9 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     lateinit var bloggingPromptCardSource: BloggingPromptCardSource
 
     @Mock
+    lateinit var promoteWithBlazeCardSource: PromoteWithBlazeCardSource
+
+    @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
     @Mock
@@ -94,6 +98,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
             cardsSource,
             siteIconProgressSource,
             bloggingPromptCardSource,
+            promoteWithBlazeCardSource,
             selectedSiteRepository
         )
 
