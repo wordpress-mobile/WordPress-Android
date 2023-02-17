@@ -18,7 +18,6 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.jpfullplugininstall.install.JetpackFullPluginInstallViewModel.ActionEvent
 import org.wordpress.android.ui.jpfullplugininstall.install.compose.state.DoneState
 import org.wordpress.android.ui.jpfullplugininstall.install.compose.state.ErrorState
 import org.wordpress.android.ui.jpfullplugininstall.install.compose.state.InitialState

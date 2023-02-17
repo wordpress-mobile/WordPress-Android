@@ -14,7 +14,9 @@ class JetpackFullPluginInstallUiStateMapperTest {
             assertThat(buttonText).isEqualTo(R.string.jetpack_full_plugin_install_initial_button)
             assertThat(toolbarTitle).isEqualTo(R.string.jetpack)
             assertThat(image).isEqualTo(R.drawable.ic_jetpack_logo_green_24dp)
-            assertThat(imageContentDescription).isEqualTo(R.string.jetpack_full_plugin_install_jp_logo_content_description)
+            assertThat(imageContentDescription).isEqualTo(
+                R.string.jetpack_full_plugin_install_jp_logo_content_description
+            )
             assertThat(title).isEqualTo(R.string.jetpack_full_plugin_install_initial_title)
             assertThat(description).isEqualTo(R.string.jetpack_full_plugin_install_initial_description)
         }
@@ -26,7 +28,9 @@ class JetpackFullPluginInstallUiStateMapperTest {
         with(actual) {
             assertThat(toolbarTitle).isEqualTo(R.string.jetpack)
             assertThat(image).isEqualTo(R.drawable.ic_jetpack_logo_green_24dp)
-            assertThat(imageContentDescription).isEqualTo(R.string.jetpack_full_plugin_install_jp_logo_content_description)
+            assertThat(imageContentDescription).isEqualTo(
+                R.string.jetpack_full_plugin_install_jp_logo_content_description
+            )
             assertThat(title).isEqualTo(R.string.jetpack_full_plugin_install_installing_title)
             assertThat(description).isEqualTo(R.string.jetpack_full_plugin_install_installing_description)
         }
@@ -39,7 +43,9 @@ class JetpackFullPluginInstallUiStateMapperTest {
             assertThat(buttonText).isEqualTo(R.string.jetpack_full_plugin_install_done_button)
             assertThat(toolbarTitle).isEqualTo(R.string.jetpack)
             assertThat(image).isEqualTo(R.drawable.ic_jetpack_logo_green_24dp)
-            assertThat(imageContentDescription).isEqualTo(R.string.jetpack_full_plugin_install_jp_logo_content_description)
+            assertThat(imageContentDescription).isEqualTo(
+                R.string.jetpack_full_plugin_install_jp_logo_content_description
+            )
             assertThat(title).isEqualTo(R.string.jetpack_full_plugin_install_done_title)
             assertThat(description).isEqualTo(R.string.jetpack_full_plugin_install_done_description)
         }
@@ -50,10 +56,14 @@ class JetpackFullPluginInstallUiStateMapperTest {
         val actual = classToTest.mapError()
         with(actual) {
             assertThat(retryButtonText).isEqualTo(R.string.jetpack_full_plugin_install_error_button_retry)
-            assertThat(contactSupportButtonText).isEqualTo(R.string.jetpack_full_plugin_install_error_button_contact_support)
+            assertThat(contactSupportButtonText).isEqualTo(
+                R.string.jetpack_full_plugin_install_error_button_contact_support
+            )
             assertThat(toolbarTitle).isEqualTo(R.string.jetpack)
             assertThat(image).isEqualTo(R.drawable.img_illustration_info_outline_88dp)
-            assertThat(imageContentDescription).isEqualTo(R.string.jetpack_full_plugin_install_error_image_content_description)
+            assertThat(imageContentDescription).isEqualTo(
+                R.string.jetpack_full_plugin_install_error_image_content_description
+            )
             assertThat(title).isEqualTo(R.string.jetpack_full_plugin_install_error_title)
             assertThat(description).isEqualTo(R.string.jetpack_full_plugin_install_error_description)
         }

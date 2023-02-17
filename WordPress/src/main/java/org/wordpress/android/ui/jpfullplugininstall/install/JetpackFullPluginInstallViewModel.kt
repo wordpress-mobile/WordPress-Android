@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -54,8 +53,9 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
         )
     }
 
+    @Suppress("MagicNumber")
     private fun installJetpackPlugin() {
-        // TODO replace mock with endpoint call
+        // TODO replace mock with endpoint call and update unit tests
         launch {
             delay(2000L)
             val success = true
@@ -77,14 +77,5 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
         launch {
             _actionEvents.emit(actionEvent)
         }
-    }
-
-    sealed class ActionEvent {
-        data class ContactSupport(
-            val origin: HelpActivity.Origin,
-            val selectedSite: SiteModel?,
-        ) : ActionEvent()
-
-        object Dismiss : ActionEvent()
     }
 }
