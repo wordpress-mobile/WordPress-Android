@@ -5,7 +5,6 @@ import androidx.annotation.StringRes
 import org.wordpress.android.R
 
 class JetpackFullPluginInstallViewModel {
-
     sealed class UiState(
         @StringRes val toolbarTitle: Int,
         @DrawableRes val image: Int,
@@ -43,7 +42,8 @@ class JetpackFullPluginInstallViewModel {
 
         data class Error(
             @StringRes val retryButtonText: Int = R.string.jetpack_full_plugin_install_error_button_retry,
-            @StringRes val contactSupportButtonText: Int = R.string.jetpack_full_plugin_install_error_button_contact_support,
+            @StringRes val contactSupportButtonText: Int =
+                R.string.jetpack_full_plugin_install_error_button_contact_support,
         ) : UiState(
             toolbarTitle = R.string.jetpack,
             image = R.drawable.img_illustration_info_outline_88dp,
