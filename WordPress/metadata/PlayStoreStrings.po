@@ -11,25 +11,6 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
-msgctxt "release_note_215"
-msgid ""
-"21.5:\n"
-"We’ve been hard at work on extra-technical, behind-the-scenes fixes and updates to keep the WordPress app running smoothly.\n"
-"\n"
-"- Posticulating features\n"
-"- Rearchitecting interfaces\n"
-"- Reticulating splines\n"
-"- Codifying similitude\n"
-"- Rebuilding the gigaverse\n"
-msgstr ""
-
-msgctxt "release_note_214"
-msgid ""
-"21.4:\n"
-"- You can now add, edit, and delete categories within your site settings.\n"
-"- We fixed a few comment-related translation errors caused by changing your language in App Settings.\n"
-msgstr ""
-
 #. translators: Shorter Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 msgctxt "sample_post_content"
 msgid "The best moment of any trip, for me, is when I first step foot off the plane. The whole of the trip is in front me, ripe with possibility."

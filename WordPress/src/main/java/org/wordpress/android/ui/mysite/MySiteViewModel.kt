@@ -10,14 +10,11 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.map
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
@@ -194,7 +191,8 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil,
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
-    private val blazeFeatureConfig: BlazeFeatureConfig
+    private val blazeFeatureConfig: BlazeFeatureConfig,
+    private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -327,25 +325,22 @@ class MySiteViewModel @Inject constructor(
                 )
                 selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
+
+                bloggingPromptsCardTrackHelper.onDashboardCardsUpdated(
+                    viewModelScope,
+                    state.dashboardCardsAndItems.filterIsInstance<DashboardCards>().firstOrNull()
+                )
+
                 state
             } else {
                 buildNoSiteState()
             }
+
+            bloggingPromptsCardTrackHelper.onSiteChanged(site?.id)
+
             UiModel(currentAvatarUrl.orEmpty(), state)
         }
     }
-
-    private val bloggingPromptsCardTrackHelper = BloggingPromptsCardTrackHelper(
-        scope = viewModelScope,
-        tracker = bloggingPromptsCardAnalyticsTracker,
-        siteIdFlow = state.asFlow().map { it.site?.id },
-        dashboardCardsFlow = uiModel.asFlow()
-            .map { it.state as? SiteSelected }
-            .filterNotNull()
-            .map {
-                it.dashboardCardsAndItems.filterIsInstance<DashboardCards>()
-            }
-    )
 
     private fun CardsUpdate.checkAndShowSnackbarError() {
         if (showSnackbarError) {
@@ -1024,11 +1019,11 @@ class MySiteViewModel @Inject constructor(
         mySiteSourceManager.refresh()
     }
 
-    fun onResume() {
+    fun onResume(currentTab: MySiteTabType) {
         mySiteSourceManager.onResume(isSiteSelected)
         isSiteSelected = false
         checkAndShowQuickStartNotice()
-        bloggingPromptsCardTrackHelper.onResume(quickStartRepository.currentTab)
+        bloggingPromptsCardTrackHelper.onResume(currentTab)
     }
 
     fun clearActiveQuickStartTask() {

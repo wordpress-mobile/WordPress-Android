@@ -166,14 +166,10 @@ Language: es_CO
     <string name="blogging_prompts_onboarding_card_prompt">Haz la película de tu vida.</string>
     <string name="blogging_prompts_onboarding_remind_me">Recordármelo</string>
     <string name="blogging_prompts_onboarding_try_it_now">Pruébalo ahora</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Puedes aprender más y configurar recordatorios en cualquier momento en «Mi sitio &gt; Ajustes &gt; Recordatorios de bloguear».</string>
     <string name="blogging_prompts_onboarding_content_note_title">Nota:</string>
     <string name="blogging_prompts_onboarding_content_bottom">¡Te mostraremos un nuevo estímulo cada día en tu escritorio para ayudarte a que fluyan esos fluidos creativos!</string>
     <string name="blogging_prompts_onboarding_content_top">El mejor modo de convertirte en un mejor escritor es crear un hábito de escritura y compartir con otros - ¡aquí es donde entran los estímulos! </string>
-    <string name="blogging_prompts_onboarding_header_title">Presentando los estímulos</string>
     <string name="blogging_prompt_set_reminders">Configurar recordatorios</string>
-    <string name="blogging_reminders_prompt_subtitle">El recordatorio incluirá un estímulo diario</string>
-    <string name="blogging_reminders_prompt_title">Incluir el estímulo diario</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Publicar con regularidad atrae nuevos lectores. ¡Cuéntanos cuándo quieres escribir y te enviaremos un recordatorio!</string>
     <string name="set_your_blogging_prompts_title">Conviértete en un mejor escritor creando un hábito</string>
     <string name="site_creation_intent_writing_poetry">Escritura y poesía</string>
@@ -209,14 +205,12 @@ Language: es_CO
     <string name="new_site_creation_intents_input_hint">Ej.: Moda, poesía, política</string>
     <string name="new_site_creation_intents_title">Temática del sitio</string>
     <string name="quick_start_site_menu_tab_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para continuar.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Quitar del escritorio</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Ver más estímulos</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Comparte el estímulo de bloguear</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Respondido</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Responder estímulo</string>
     <string name="my_site_blogging_prompt_card_title">Estímulos</string>
     <string name="my_site_all_tab_title">Todos</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Recordatorios y estímulos</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Esta combinación de color puede ser difícil de leer para la gente. Intenta usar un color de fondo más claro y/o un color de texto más oscuro.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Esta combinación de color puede ser difícil de leer para la gente. Intenta usar un color de fondo más oscuro y/o un color de texto más claro.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Fallo al insertar los medios.\nToca para más información.</string>
@@ -478,7 +472,6 @@ Language: es_CO
     <string name="support_ticket_subject">Soporte de WordPress para Android</string>
     <string name="site_settings_categories_hint">Gestiona las categorías de tu sitio</string>
     <string name="site_settings_categories_title">Categorías</string>
-    <string name="site_settings_blogging_reminders_title">Recordatorios de blogueo</string>
     <string name="page_is_posts_page_warning">El contenido de la página de tus últimas entradas se genera automáticamente y no se puede editar.</string>
     <string name="gutenberg_native_border_settings">Ajustes del borde</string>
     <string name="storage_utils_dialog_dont_show_button">No mostrar de nuevo</string>

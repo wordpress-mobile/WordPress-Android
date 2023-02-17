@@ -30,7 +30,6 @@ Language: it
     <string name="my_site_blogging_prompt_card_attribution_dayone">Da &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Nascondi</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Ricordamelo più tardi</string>
-    <string name="jetpack_feature_card_content">Statistiche, Reader, Notifiche e altre funzionalità passeranno presto all\'app mobile Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Passa all\'app Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Maggiori informazioni su jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Il passaggio è gratuito e richiede solo un minuto.</string>
@@ -307,14 +306,10 @@ Language: it
     <string name="blogging_prompts_onboarding_card_prompt">Trasmetti il film della tua vita.</string>
     <string name="blogging_prompts_onboarding_remind_me">Ricordamelo</string>
     <string name="blogging_prompts_onboarding_try_it_now">Prova ora</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Puoi saperne di più e impostare i promemoria in qualsiasi momento in Il mio sito &gt; Impostazioni &gt; Promemoria relativi al blog</string>
     <string name="blogging_prompts_onboarding_content_note_title">Nota:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Ti mostreremo una nuova richiesta ogni giorno sulla tua bacheca per aiutarti a mantenere viva la tua vena creativa.</string>
     <string name="blogging_prompts_onboarding_content_top">Il modo migliore per diventare uno scrittore o una scrittrice migliore è abituarsi a scrivere e condividere questa abitudine con gli altri. È qui che entrano in gioco le Richieste.</string>
-    <string name="blogging_prompts_onboarding_header_title">Presentazione di Richieste</string>
     <string name="blogging_prompt_set_reminders">Imposta promemoria</string>
-    <string name="blogging_reminders_prompt_subtitle">Il promemoria includerà una richiesta di blogging ogni giorno</string>
-    <string name="blogging_reminders_prompt_title">Includi richiesta quotidiana</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Pubblicare attrae regolarmente nuovi lettori. Dicci quando vuoi scrivere e ti invieremo un promemoria.</string>
     <string name="set_your_blogging_prompts_title">Diventa uno scrittore o una scrittrice migliore costruendoti un\'abitudine</string>
     <string name="site_creation_intent_writing_poetry">Poesia e scrivere</string>
@@ -350,7 +345,6 @@ Language: it
     <string name="new_site_creation_intents_input_hint">Ad esempio Moda, poesia, politica</string>
     <string name="new_site_creation_intents_title">Tema del sito</string>
     <string name="quick_start_site_menu_tab_message_short">Tocca &lt;b&gt;%1$s&lt;/b&gt; per continuare.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Rimuovi dalla bacheca</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Ignora per oggi</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Visualizza altre richieste</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d risposte</string>
@@ -359,7 +353,6 @@ Language: it
     <string name="my_site_blogging_prompt_card_answer_prompt">Rispondi alla richiesta</string>
     <string name="my_site_blogging_prompt_card_title">Richiesta</string>
     <string name="my_site_all_tab_title">Tutti</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Promemoria e richieste</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Questa combinazione di colori può essere difficile da leggere per le persone. Prova a usare un colore di sfondo più brillante e/o un colore di testo più scuro.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Questa combinazione di colori può essere difficile da leggere per le persone. Prova a usare un colore di sfondo più scuro e/o un colore di testo più brillante.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Impossibile inserire elementi multimediali.\nTocca per ulteriori informazioni.</string>
@@ -622,7 +615,6 @@ Language: it
     <string name="support_ticket_subject">Supporto WordPress per Android</string>
     <string name="site_settings_categories_hint">Gestisci le categorie del tuo sito</string>
     <string name="site_settings_categories_title">Categorie</string>
-    <string name="site_settings_blogging_reminders_title">Promemoria relativi al blog</string>
     <string name="page_is_posts_page_warning">Il contenuto della pagina degli articoli recenti viene generato automaticamente e non può essere modificato.</string>
     <string name="gutenberg_native_border_settings">Impostazioni del bordo</string>
     <string name="storage_utils_dialog_dont_show_button">Non mostrare nuovamente</string>

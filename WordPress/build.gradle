@@ -500,10 +500,6 @@ dependencies {
     androidTestImplementation "androidx.work:work-testing:$androidxWorkManagerVersion"
     androidTestImplementation "com.google.dagger:hilt-android-testing:$gradle.ext.daggerVersion"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$gradle.ext.daggerVersion"
-    // Necessary because of the failing android tests
-    androidTestImplementation "androidx.room:room-runtime:$androidxRoomVersion"
-    kapt "androidx.room:room-compiler:$androidxRoomVersion"
-    androidTestImplementation "androidx.room:room-ktx:$androidxRoomVersion"
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$androidxComposeVersion"
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$androidDesugarVersion"

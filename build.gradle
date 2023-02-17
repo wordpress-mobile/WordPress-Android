@@ -20,7 +20,7 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '2.0.0'
     automatticTracksVersion = '2.2.0'
-    gutenbergMobileVersion = 'v1.88.0'
+    gutenbergMobileVersion = 'v1.89.0'
     wordPressAztecVersion = 'v1.6.3'
     wordPressFluxCVersion = '2659-47edce13d78a7535ca277aacf5e18c1bb0ee2bed'
     wordPressLoginVersion = '1.0.0'
@@ -47,8 +47,7 @@ ext {
     androidxLifecycleVersion = '2.5.1'
     androidxPercentlayoutVersion = '1.0.0'
     androidxPreferenceVersion = '1.1.0'
-    androidxRecyclerviewVersion = '1.0.0'
-    androidxRoomVersion = '2.3.0'
+    androidxRecyclerviewVersion = '1.2.1'
     androidxSwipeToRefreshVersion = '1.1.0'
     androidxViewpager2Version = '1.0.0'
     androidxWorkManagerVersion = "2.7.1"

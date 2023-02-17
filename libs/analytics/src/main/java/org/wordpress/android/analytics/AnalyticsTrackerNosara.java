@@ -1387,12 +1387,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_social_to_login";
             case ENHANCED_SITE_CREATION_ACCESSED:
                 return "enhanced_site_creation_accessed";
-            case ENHANCED_SITE_CREATION_SEGMENTS_VIEWED:
-                return "enhanced_site_creation_segments_viewed";
-            case ENHANCED_SITE_CREATION_SEGMENTS_SELECTED:
-                return "enhanced_site_creation_segments_selected";
             case ENHANCED_SITE_CREATION_DOMAINS_ACCESSED:
                 return "enhanced_site_creation_domains_accessed";
+            case ENHANCED_SITE_CREATION_DOMAIN_PURCHASING_EXPERIMENT:
+                return "enhanced_site_creation_domain_purchasing_experiment";
             case ENHANCED_SITE_CREATION_DOMAINS_SELECTED:
                 return "enhanced_site_creation_domains_selected";
             case ENHANCED_SITE_CREATION_SUCCESS_LOADING:
@@ -2509,6 +2507,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "remove_feature_card_remind_later_tapped";
             case JETPACK_FEATURE_INCORRECTLY_ACCESSED:
                 return "jetpack_feature_incorrectly_accessed";
+            case JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING_SCREEN_SHOWN:
+                return "jp_install_full_plugin_onboarding_modal_viewed";
+            case JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING_SCREEN_DISMISSED:
+                return "jp_install_full_plugin_onboarding_modal_dismissed";
+            case JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING_INSTALL_TAPPED:
+                return "jp_install_full_plugin_onboarding_modal_install_tapped";
         }
         return null;
     }

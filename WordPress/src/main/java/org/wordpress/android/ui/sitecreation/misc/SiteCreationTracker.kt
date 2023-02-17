@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitecreation.misc
 
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.experiments.Variation
 import org.wordpress.android.ui.layoutpicker.LayoutPickerTracker
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
@@ -10,12 +11,11 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.L
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.PREVIEW_MODE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.RECOMMENDED
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEARCH_TERM
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_ID
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_NAME
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SELECTED_FILTERS
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SITE_NAME
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.TEMPLATE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.THUMBNAIL_MODE
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VARIATION
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VERTICAL_SLUG
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -34,8 +34,6 @@ private const val SITE_CREATION_SOURCE = "source"
 class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapper) : LayoutPickerTracker {
     private enum class PROPERTY(val key: String) {
         TEMPLATE("template"),
-        SEGMENT_NAME("segment_name"),
-        SEGMENT_ID("segment_id"),
         CHOSEN_DOMAIN("chosen_domain"),
         SEARCH_TERM("search_term"),
         THUMBNAIL_MODE("thumbnail_mode"),
@@ -45,7 +43,8 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         SELECTED_FILTERS("selected_filters"),
         VERTICAL_SLUG("vertical_slug"),
         SITE_NAME("site_name"),
-        RECOMMENDED("recommended")
+        RECOMMENDED("recommended"),
+        VARIATION("variation"),
     }
 
     private var designSelectionSkipped: Boolean = false
@@ -54,20 +53,6 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         tracker.track(
             AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ACCESSED,
             mapOf(SITE_CREATION_SOURCE to siteCreationSource.label)
-        )
-    }
-
-    fun trackSegmentsViewed() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SEGMENTS_VIEWED)
-    }
-
-    fun trackSegmentSelected(segmentName: String, segmentId: Long) {
-        tracker.track(
-            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SEGMENTS_SELECTED,
-            mapOf(
-                SEGMENT_NAME.key to segmentName,
-                SEGMENT_ID.key to segmentId
-            )
         )
     }
 
@@ -286,6 +271,17 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
 
     fun trackSiteNameEntered(siteName: String?) {
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_NAME_ENTERED, mapOf(SITE_NAME.key to siteName))
+    }
+
+    // endregion
+
+    // region Domain Purchasing
+
+    fun trackSiteCreationDomainPurchasingExperimentVariation(variation: Variation) {
+        tracker.track(
+            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAIN_PURCHASING_EXPERIMENT,
+            mapOf(VARIATION.key to variation.name)
+        )
     }
 
     // endregion

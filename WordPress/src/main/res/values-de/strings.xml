@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-31 09:54:08+0000
+Translation-Revision-Date: 2023-02-08 12:42:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: de
@@ -30,7 +30,7 @@ Language: de
     <string name="my_site_blogging_prompt_card_attribution_dayone">Von &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Ausblenden</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Später daran erinnern</string>
-    <string name="jetpack_feature_card_content">Statistiken, der Reader, Benachrichtigungen und weitere Funktionen werden bald in die Jetpack-Mobil-App verschoben.</string>
+    <string name="jetpack_feature_card_content_phase_three">Die Statistiken, der Reader, die Benachrichtigungen und weitere Funktionen werden bald in die Jetpack-Mobil-App verschoben.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Zur Jetpack-App wechseln</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Weitere Informationen auf jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Der Wechsel ist kostenlos und dauert nur eine Minute.</string>
@@ -307,14 +307,10 @@ Language: de
     <string name="blogging_prompts_onboarding_card_prompt">Dreh einen Film über dein Leben.</string>
     <string name="blogging_prompts_onboarding_remind_me">Später daran erinnern</string>
     <string name="blogging_prompts_onboarding_try_it_now">Jetzt ausprobieren</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Unter Meine Website &gt; Einstellungen &gt; Blog-Erinnerungen kannst du jederzeit mehr erfahren und Erinnerungen festlegen</string>
     <string name="blogging_prompts_onboarding_content_note_title">Hinweis:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Wir zeigen dir jeden Tag einen neuen Themenvorschlag in deinem Dashboard, um deine Kreativität anzuregen!</string>
     <string name="blogging_prompts_onboarding_content_top">Wenn du deine Schreibkünste verbessern willst, kreiere deinen eigenen Schreibstil und teile ihn mit anderen – und dabei helfen dir unsere Themenvorschläge!</string>
-    <string name="blogging_prompts_onboarding_header_title">Neu: Themenvorschläge</string>
     <string name="blogging_prompt_set_reminders">Erinnerungen festlegen</string>
-    <string name="blogging_reminders_prompt_subtitle">Die Erinnerung beinhaltet auch einen täglichen Themenvorschlag</string>
-    <string name="blogging_reminders_prompt_title">Täglichen Themenvorschlag einbinden</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Durch regelmäßiges Veröffentlichen von Beiträgen gewinnst du neue Leser. Sag uns, wann du etwas schreiben möchtest. Dann senden wir dir eine Erinnerung!</string>
     <string name="set_your_blogging_prompts_title">Verbessere deine Schreibkünste, indem du deinen eigenen Schreibstil entwickelst</string>
     <string name="site_creation_intent_writing_poetry">Kreatives Schreiben und Poesie</string>
@@ -350,7 +346,6 @@ Language: de
     <string name="new_site_creation_intents_input_hint">z. B. Mode, Poesie, Politik</string>
     <string name="new_site_creation_intents_title">Website-Thema</string>
     <string name="quick_start_site_menu_tab_message_short">Tippe zum Fortfahren auf &lt;b&gt;%1$s&lt;/b&gt;.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Aus Dashboard entfernen</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Für heute überspringen</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Mehr Themenvorschläge anzeigen</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d Antworten</string>
@@ -359,7 +354,6 @@ Language: de
     <string name="my_site_blogging_prompt_card_answer_prompt">Auf Themenvorschlag antworten</string>
     <string name="my_site_blogging_prompt_card_title">Themenvorschläge</string>
     <string name="my_site_all_tab_title">Alle</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Erinnerungen und Themenvorschläge</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Diese Farbkombination ist unter Umständen für manche Menschen schwer lesbar. Wähle eine hellere Hintergrundfarbe und/oder eine dunklere Textfarbe.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Diese Farbkombination ist unter Umständen für manche Menschen schwer lesbar. Wähle eine dunklere Hintergrundfarbe und/oder eine hellere Textfarbe.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Das Einfügen des Mediums ist fehlgeschlagen.\nTippe für weitere Informationen.</string>
@@ -622,7 +616,7 @@ Language: de
     <string name="support_ticket_subject">WordPress für Android-Support</string>
     <string name="site_settings_categories_hint">Kategorien deiner Website verwalten</string>
     <string name="site_settings_categories_title">Kategorien</string>
-    <string name="site_settings_blogging_reminders_title">Blog-Erinnerungen</string>
+    <string name="site_settings_blogging_reminders_title">Erinnerungen</string>
     <string name="page_is_posts_page_warning">Der Inhalt der Seite mit deinen letzten Beiträgen wird automatisch generiert und kann nicht bearbeitet werden.</string>
     <string name="gutenberg_native_border_settings">Rahmeneinstellungen</string>
     <string name="storage_utils_dialog_dont_show_button">Nicht erneut anzeigen</string>
