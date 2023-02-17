@@ -26,10 +26,10 @@ class JetpackInstallFullPluginCardBuilder @Inject constructor(
     } else null
 
     private fun shouldShowCard(site: SiteModel): Boolean {
-        return true || (site.id != 0 &&
+        return site.id != 0 &&
                 installFullPluginFeatureConfig.isEnabled() &&
                 !appPrefsWrapper.getShouldHideJetpackInstallFullPluginCard(site.id) &&
-                site.isJetpackConnectedWithoutFullPlugin())
+                site.isJetpackConnectedWithoutFullPlugin()
 
     }
 }
