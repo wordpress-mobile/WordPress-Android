@@ -46,6 +46,7 @@ import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
 import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.ui.debug.DebugSettingsActivity;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
@@ -110,6 +111,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject LocaleProvider mLocaleProvider;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mOpenWebLinksWithJetpackHelper;
     @Inject UiHelpers mUiHelpers;
+    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
 
     private static final String TRACK_STYLE = "style";
     private static final String TRACK_ENABLED = "enabled";
@@ -234,6 +236,10 @@ public class AppSettingsFragment extends PreferenceFragment
 
         if (!mOpenWebLinksWithJetpackHelper.shouldShowAppSetting()) {
             removeOpenWebLinksWithJetpack();
+        }
+
+        if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()){
+            removeInitialScreen();
         }
     }
 
