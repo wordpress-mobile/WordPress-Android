@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequest
+import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginError
@@ -121,12 +122,19 @@ class PluginJetpackTunnelRestClient @Inject constructor(
                 },
                 { error ->
                     val installError = InstallSitePluginError(error)
-                    val payload = InstalledSitePluginPayload(site, pluginSlug, installError)
-                    dispatcher.dispatch(if (isJetpackIndividualPluginScenario) {
-                        PluginActionBuilder.newInstalledJpForIndividualPluginSiteAction(payload)
+                    if (
+                        isJetpackIndividualPluginScenario &&
+                        installError.type == PluginStore.InstallSitePluginErrorType.PLUGIN_ALREADY_INSTALLED
+                    ) {
+                        configurePlugin(site, "jetpack/jetpack", true)
                     } else {
-                        PluginActionBuilder.newInstalledSitePluginAction(payload)
-                    })
+                        val payload = InstalledSitePluginPayload(site, pluginSlug, installError)
+                        dispatcher.dispatch(if (isJetpackIndividualPluginScenario) {
+                            PluginActionBuilder.newInstalledJpForIndividualPluginSiteAction(payload)
+                        } else {
+                            PluginActionBuilder.newInstalledSitePluginAction(payload)
+                        })
+                    }
                 }
         )
         add(request)
