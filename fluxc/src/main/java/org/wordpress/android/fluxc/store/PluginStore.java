@@ -831,6 +831,9 @@ public class PluginStore extends Store {
             case INSTALL_SITE_PLUGIN:
                 installSitePlugin((InstallSitePluginPayload) action.getPayload());
                 break;
+            case INSTALL_JP_FOR_INDIVIDUAL_PLUGIN_SITE:
+                installJPForIndividualPluginSite((InstallSitePluginPayload) action.getPayload());
+                break;
             case SEARCH_PLUGIN_DIRECTORY:
                 searchPluginDirectory((SearchPluginDirectoryPayload) action.getPayload());
                 break;
@@ -859,6 +862,9 @@ public class PluginStore extends Store {
                 break;
             case INSTALLED_SITE_PLUGIN:
                 installedSitePlugin((InstalledSitePluginPayload) action.getPayload());
+                break;
+            case INSTALLED_JP_FOR_INDIVIDUAL_PLUGIN_SITE:
+                installedJPForIndividualPluginSite((InstalledSitePluginPayload) action.getPayload());
                 break;
             case SEARCHED_PLUGIN_DIRECTORY:
                 searchedPluginDirectory((SearchedPluginDirectoryPayload) action.getPayload());
@@ -998,6 +1004,10 @@ public class PluginStore extends Store {
         }
     }
 
+    private void installJPForIndividualPluginSite(InstallSitePluginPayload payload) {
+        mPluginJetpackTunnelRestClient.installJetpackOnIndividualPluginSite(payload.site);
+    }
+
     private void searchPluginDirectory(SearchPluginDirectoryPayload payload) {
         mPluginWPOrgClient.searchPluginDirectory(payload.site, payload.searchTerm, payload.page);
     }
@@ -1096,14 +1106,7 @@ public class PluginStore extends Store {
     }
 
     private void installedSitePlugin(InstalledSitePluginPayload payload) {
-        OnSitePluginInstalled event = new OnSitePluginInstalled(payload.site, payload.slug);
-        if (payload.isError()) {
-            event.error = payload.error;
-        } else {
-            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
-        }
-        emitChange(event);
-
+        emitPluginInstalledEvent(payload);
         // Once the plugin is installed activate it and enable auto-updates
         if (!payload.isError() && payload.plugin != null) {
             try {
@@ -1118,6 +1121,20 @@ public class PluginStore extends Store {
                     payload.plugin.getName(), payload.plugin.getSlug(), true, true);
             mDispatcher.dispatch(PluginActionBuilder.newConfigureSitePluginAction(configurePayload));
         }
+    }
+
+    private void emitPluginInstalledEvent(InstalledSitePluginPayload payload) {
+        OnSitePluginInstalled event = new OnSitePluginInstalled(payload.site, payload.slug);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
+        }
+        emitChange(event);
+    }
+
+    private void installedJPForIndividualPluginSite(InstalledSitePluginPayload payload) {
+        emitPluginInstalledEvent(payload);
     }
 
     private void searchedPluginDirectory(SearchedPluginDirectoryPayload payload) {
