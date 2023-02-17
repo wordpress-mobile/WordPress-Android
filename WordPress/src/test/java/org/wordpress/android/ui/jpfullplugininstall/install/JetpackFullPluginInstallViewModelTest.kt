@@ -79,7 +79,7 @@ class JetpackFullPluginInstallViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should post action Dismiss when onContactSupportClick is called`() = test {
+    fun `Should post action ContactSupport when onContactSupportClick is called`() = test {
         mockSelectedSite(selectedSite)
         val result = ArrayList<ActionEvent>()
         val job = launch {
