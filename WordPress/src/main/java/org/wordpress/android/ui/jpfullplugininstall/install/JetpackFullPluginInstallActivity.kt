@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.jpfullplugininstall.install
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -91,5 +93,10 @@ class JetpackFullPluginInstallActivity : AppCompatActivity() {
                 finish()
             }
         }.exhaustive
+    }
+
+    companion object {
+        @JvmStatic
+        fun createIntent(context: Context) = Intent(context, JetpackFullPluginInstallActivity::class.java)
     }
 }

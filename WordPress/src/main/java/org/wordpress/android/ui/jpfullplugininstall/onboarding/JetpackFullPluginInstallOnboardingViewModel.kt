@@ -11,6 +11,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.ContactSupport
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.Dismiss
+import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.OpenInstallJetpackFullPlugin
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.OpenTermsAndConditions
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -41,8 +42,7 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
 
     fun onInstallFullPluginClick() {
         analyticsTracker.trackInstallButtonClick()
-        // TODO tracking event
-        // TODO open install full plugin screen when it's done
+        postActionEvent(OpenInstallJetpackFullPlugin)
     }
 
     fun onContactSupportClick() {
@@ -81,7 +81,7 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
 
     sealed class ActionEvent {
         object OpenTermsAndConditions : ActionEvent()
-        object InstallJPFullPlugin : ActionEvent()
+        object OpenInstallJetpackFullPlugin : ActionEvent()
         data class ContactSupport(
             val origin: HelpActivity.Origin,
             val selectedSite: SiteModel?,

@@ -20,10 +20,11 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.jpfullplugininstall.install.JetpackFullPluginInstallActivity
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.ContactSupport
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.Dismiss
-import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.InstallJPFullPlugin
+import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.OpenInstallJetpackFullPlugin
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.OpenTermsAndConditions
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.UiState
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.compose.state.LoadedState
@@ -99,8 +100,8 @@ class JetpackFullPluginInstallOnboardingDialogFragment : DialogFragment() {
                     WPUrlUtils.buildTermsOfServiceUrl(requireContext())
                 )
             }
-            is InstallJPFullPlugin -> {
-                // TODO open install JP full plugin screen
+            is OpenInstallJetpackFullPlugin -> {
+                startActivity(JetpackFullPluginInstallActivity.createIntent(requireContext()))
                 dismiss()
             }
             is ContactSupport -> {
