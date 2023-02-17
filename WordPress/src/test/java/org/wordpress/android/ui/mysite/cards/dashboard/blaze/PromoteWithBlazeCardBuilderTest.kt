@@ -35,7 +35,6 @@ class PromoteWithBlazeCardBuilderTest {
         assertNotNull(result.onClick)
         assertNotNull(result.onHideMenuItemClick)
         assertNotNull(result.onMoreMenuClick)
-
     }
 
     @Test

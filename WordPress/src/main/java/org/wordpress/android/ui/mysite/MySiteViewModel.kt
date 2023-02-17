@@ -1456,7 +1456,7 @@ class MySiteViewModel @Inject constructor(
 
     @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardClick() {
-        /// todo: implement tracking the event for on card tapped
+        // todo: implement tracking the event for on card tapped
         //  todo: add the navigation action and post value to _onNavigation.value
     }
 
