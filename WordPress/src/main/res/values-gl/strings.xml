@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-03 13:02:26+0000
+Translation-Revision-Date: 2023-02-08 19:38:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: gl_ES
@@ -30,7 +30,7 @@ Language: gl_ES
     <string name="my_site_blogging_prompt_card_attribution_dayone">Desde o &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="my_site_card_menu_item_hide_this">Ocultar isto</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Recórdamo máis tarde</string>
-    <string name="jetpack_feature_card_content">Algunhas funcións, como Estatísticas, Lector ou Notificacións, trasladaranse á aplicación móbil de Jetpack pronto.</string>
+    <string name="jetpack_feature_card_content_phase_three">As estatísticas, o lector, as notificacións e outras características trasladaranse pronto á aplicación móbil de Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Cambiar á aplicación de Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Máis información en jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">O cambio é gratuíto e só leva un minuto.</string>
@@ -307,14 +307,12 @@ Language: gl_ES
     <string name="blogging_prompts_onboarding_card_prompt">Fai a película da túa vida.</string>
     <string name="blogging_prompts_onboarding_remind_me">Recordarmo</string>
     <string name="blogging_prompts_onboarding_try_it_now">Próbao agora</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Podes aprender máis e configurar recordatorios en calquera momento en «O meu sitio &gt; Axustes &gt; Recordatorios de bloguear».</string>
     <string name="blogging_prompts_onboarding_content_note_title">Nota:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Mostrarémosche un novo estímulo cada día no teu escritorio para axudarche a que flúan eses fluídos creativos!</string>
     <string name="blogging_prompts_onboarding_content_top">O mellor modo de converterte nun mellor escritor é crear un hábito de escritura e compartir con outros - aquí é onde entran os estímulos!</string>
-    <string name="blogging_prompts_onboarding_header_title">Presentando os estímulos</string>
+    <string name="blogging_prompts_onboarding_header_title">Presentando\nIndicacións para bloguear</string>
     <string name="blogging_prompt_set_reminders">Configurar recordatorios</string>
-    <string name="blogging_reminders_prompt_subtitle">O recordatorio incluirá un estímulo diario</string>
-    <string name="blogging_reminders_prompt_title">Incluír o estímulo diario</string>
+    <string name="blogging_reminders_prompt_title">Incluír as indicacións para bloguear</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Publicar con regularidade atrae novos lectores. Cóntanos cando queres escribir e enviarémosche un recordatorio!</string>
     <string name="set_your_blogging_prompts_title">Convértete nun mellor escritor creando un hábito</string>
     <string name="site_creation_intent_writing_poetry">Escritura e poesía</string>
@@ -350,7 +348,6 @@ Language: gl_ES
     <string name="new_site_creation_intents_input_hint">P.ex.: Moda, poesía, política</string>
     <string name="new_site_creation_intents_title">Temática do sitio</string>
     <string name="quick_start_site_menu_tab_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para continuar.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Quitar do escritorio</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Omitir hoxe</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Ver máis estímulos</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d respostas</string>
@@ -359,7 +356,6 @@ Language: gl_ES
     <string name="my_site_blogging_prompt_card_answer_prompt">Responder estímulo</string>
     <string name="my_site_blogging_prompt_card_title">Estímulos</string>
     <string name="my_site_all_tab_title">Todos</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Recordatorios e estímulos</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Esta combinación de cor pode ser difícil de ler para a xente. Intenta usar unha cor de fondo máis clara e/ou unha cor de texto máis escura.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Esta combinación de cor pode ser difícil de ler para a xente. Intenta usar unha cor de fondo máis escura e/ou unha cor de texto máis clara.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Fallo ao inserir os medios.\nToca para máis información.</string>
@@ -622,7 +618,7 @@ Language: gl_ES
     <string name="support_ticket_subject">Soporte de WordPress para Android</string>
     <string name="site_settings_categories_hint">Xestiona as categorías do teu sitio</string>
     <string name="site_settings_categories_title">Categorías</string>
-    <string name="site_settings_blogging_reminders_title">Recordatorios de blogueo</string>
+    <string name="site_settings_blogging_reminders_title">Recordatorios</string>
     <string name="page_is_posts_page_warning">O contido da páxina das túas últimas entradas xérase automaticamente e non se pode editar.</string>
     <string name="gutenberg_native_border_settings">Axustes do borde</string>
     <string name="storage_utils_dialog_dont_show_button">Non amosar de novo</string>

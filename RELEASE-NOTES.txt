@@ -3,6 +3,7 @@
 21.8
 -----
 * [*] [WordPress-only] We have redesigned the landing screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17871]
+* [**] [internal][WordPress-only] Help & Support: replaces Contact Support with new Community forums. [https://github.com/wordpress-mobile/WordPress-Android/pull/17820]
 
 21.7
 -----

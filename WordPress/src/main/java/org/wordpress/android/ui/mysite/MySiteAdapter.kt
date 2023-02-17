@@ -8,6 +8,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
+import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationViewHolder
@@ -79,10 +81,12 @@ class MySiteAdapter(
                 parent,
                 uiHelpers
             )
+            MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE.ordinal ->  PromoteWithBlazeCardViewHolder(parent, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
 
+    @Suppress("ComplexMethod")
     override fun onBindViewHolder(holder: MySiteCardAndItemViewHolder<*>, position: Int) {
         when (holder) {
             is QuickActionsViewHolder -> holder.bind(getItem(position) as QuickActionsCard)
@@ -99,6 +103,7 @@ class MySiteAdapter(
             is JetpackFeatureCardViewHolder -> holder.bind(getItem(position) as JetpackFeatureCard)
             is SwitchToJetpackMenuCardViewHolder -> holder.bind(getItem(position) as JetpackSwitchMenu)
             is JetpackInstallFullPluginCardViewHolder -> holder.bind(getItem(position) as JetpackInstallFullPluginCard)
+            is PromoteWithBlazeCardViewHolder -> holder.bind(getItem(position) as PromoteWithBlazeCard)
         }
     }
 

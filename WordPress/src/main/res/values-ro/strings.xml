@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-26 07:04:56+0000
+Translation-Revision-Date: 2023-02-09 07:15:55+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ro
 -->
 <resources>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Deblochează întregul potențial al site-ului tău. Cu Jetpack, ai statistici, notificări și multe altele.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Urmărești creșterea traficului cu informații generale utile și statistici comprehensive.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Găsește, urmărește site-urile și comunitățile preferate și partajează conținutul tău.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Primești notificări pentru comentarii noi, aprecieri, vizualizări și multe altele.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Site-ul tău are modulul Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Aplicația Jetpack pentru mobil este proiectată să funcționeze împreună cu modulul Jetpack. Comută acum pentru a avea acces la statistici, notificări, cititor și multe altele.</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Îndemnuri pentru publicare ascunse</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Accesează&lt;b&gt;Setări site&lt;/b&gt; pentru a le reactiva</string>
+    <string name="blogging_reminders_prompt_subtitle">Notificarea va include un cuvânt sau o frază scurtă pentru inspirație</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Îmbunătățește WordPress cu Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack îți permite să realizezi mai multe cu site-ul tău WordPress. Este gratuit și instalarea durează numai un minut.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistici și privire generală</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Poți controla în orice moment îndemnurile și reamintirile pentru publicare în Site-ul meu &gt; Setări &gt; Blogging</string>
+    <string name="site_settings_blogging_prompts_title">Arată îndemnurile</string>
+    <string name="support_forum_title">Forumuri pentru comunitate</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Oprește îndemnurile</string>
+    <string name="support_forum_caption">Primești ajutor de la grupul nostru de voluntari.</string>
+    <string name="site_settings_blogging">Blogging</string>
+    <string name="site_settings_blogging_reminders_notification_title">Reamintiri pentru publicare</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Funcționalitățile Jetpack s-au mutat.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statisticile, cititorul, notificările și alte funcționalități propulsate de Jetpack au fost înlăturate din aplicația WordPress.</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Comută la Jetpack </string>
@@ -19,7 +38,6 @@ Language: ro
     <string name="weeks_quantity_other">%d săptămâni</string>
     <string name="stats_timeframe_last_seven_days">Ultimele 7 zile</string>
     <string name="stats_timeframe_previous_seven_days">7 zile anterioare</string>
-    <string name="wp_jetpack_powered_phase_2">Obține aplicația Jetpack</string>
     <string name="stats_insights_views_and_visitors_seven_days_views_positive">Vizualizările din ultimele 7 zile sunt cu %1$s mai mari decât cele din 7 zile anterioare.</string>
     <string name="stats_insights_views_and_visitors_seven_days_views_negative">Vizualizările din ultimele 7 zile sunt cu %1$s mai mici decât cele din 7 zile anterioare.</string>
     <string name="stats_insights_views_and_visitors_seven_days_visitors_positive">Vizitatorii din ultimele 7 zile sunt cu %1$s mai mulți decât vizitatorii din 7 zile anterioare.</string>
@@ -27,15 +45,16 @@ Language: ro
     <string name="stats_insights_total_stats_seven_days_positive">Cu %1$s mai mult decât în ultimele 7 zile</string>
     <string name="stats_insights_total_stats_seven_days_negative">Cu %1$s mai puțin decât în ultimele 7 zile</string>
     <string name="my_site_blogging_prompt_card_view_answers">Vezi toate răspunsurile</string>
+    <string name="wp_jetpack_powered_phase_2">Ia aplicația Jetpack</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">De la &lt;b&gt;DayOne&lt;/b&gt;</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statisticile, cititorul, notificările și alte funcționalități propulsate de Jetpack vor fi înlăturate din aplicația WordPress pe %s.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">În curând, statisticile, cititorul, notificările și alte funcționalități propulsate de Jetpack vor fi înlăturate din aplicația WordPress.</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Comutarea este gratuită și durează numai un minut.</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Află mai multe la jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Comută la aplicația Jetpack</string>
-    <string name="jetpack_feature_card_content">In curând, statisticile, cititorul, notificările și alte funcționalități se vor muta în aplicația mobilă Jetpack.</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Amintește-mi mai târziu</string>
     <string name="my_site_card_menu_item_hide_this">Ascunde asta</string>
+    <string name="jetpack_feature_card_content_phase_three">În curând, Statistici, Cititor, Notificări și alte funcționalități se vor muta în aplicația Jetpack pentru mobil.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">În curând, Statistici, Cititor, Notificări și alte funcționalități propulsate de Jetpack vor fi înlăturate din aplicația WordPress.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statistici, Cititor, Notificări și alte funcționalități propulsate de Jetpack vor fi înlăturate din aplicația WordPress pe %s.</string>
     <string name="blogging_prompts_list_number_of_answers_zero">Niciun răspuns</string>
     <string name="blogging_prompts_list_number_of_answers_one">Un răspuns</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d răspunsuri</string>
@@ -81,8 +100,8 @@ Language: ro
     <string name="preference_open_links_in_jetpack">Deschide legăturile în Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Cu aplicația Jetpack, primești notificări</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Cu aplicația Jetpack, poți să urmărești orice site</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Folosind noua aplicație Jetpack, îți vezi statisticile</string>
     <string name="jp_migration_delete_message">Te rog &lt;b&gt;șterge aplicația WordPress&lt;/b&gt; pentru a evita conflictele de date.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Cu aplicația Jetpack, îți vezi statisticile</string>
     <string name="jp_migration_network_error_title">Nu mă pot conecta la internet.</string>
     <string name="jp_migration_delete_title">Nu mai ai nevoie de aplicația WordPress</string>
     <string name="jp_migration_delete_subtitle">Se pare că încă ai aplicația WordPress instalată. Îți recomandăm să ștergi aplicația WordPress pentru a evita conflictele de date.</string>
@@ -306,16 +325,14 @@ Language: ro
     <string name="post_content">Conținut</string>
     <string name="blogging_prompts_onboarding_card_prompt">Distribuie filmul vieții tale.</string>
     <string name="blogging_prompts_onboarding_remind_me">Amintește-mi</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Poți să afli mai multe și să configurezi oricând reamintirile în Site-ul meu &gt; Setări &gt; Reamintiri publicare</string>
     <string name="blogging_prompts_onboarding_content_note_title">Notă:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Îți vom arăta în fiecare zi un îndemn în panoul de control ca să-ți stimulăm creativitatea și să te inspirăm.</string>
     <string name="blogging_prompts_onboarding_try_it_now">Încearcă-le acum</string>
     <string name="blogging_prompts_onboarding_content_top">Cel mai bun mod de a deveni un scriitor mai bun este să-ți faci un obicei de a scrie și să împărtășești cu ceilalți ce ai scris - aici venim cu îndemnuri!</string>
-    <string name="blogging_prompts_onboarding_header_title">Prezentăm niște îndemnuri</string>
     <string name="blogging_prompt_set_reminders">Setează reamintirile</string>
-    <string name="blogging_reminders_prompt_subtitle">Reamintirea va include un îndemn zilnic</string>
-    <string name="blogging_reminders_prompt_title">Include un îndemn zilnic</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Dacă publici în mod regulat vei atrage cititori noi. Spune-ne când vrei să scrii și îți vom trimite o reamintire.</string>
+    <string name="blogging_reminders_prompt_title">Include un îndemn pentru publicare</string>
+    <string name="blogging_prompts_onboarding_header_title">Îți prezentăm\nîndemnurile pentru publicare</string>
     <string name="site_creation_intent_writing_poetry">Literatură și poezie</string>
     <string name="site_creation_intent_travel">Călătorie</string>
     <string name="site_creation_intent_technology">Tehnologie</string>
@@ -351,15 +368,13 @@ Language: ro
     <string name="quick_start_site_menu_tab_message_short">Atinge &lt;b&gt;%1$s&lt;/b&gt; pentru a continua.</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Vezi mai multe îndemnuri</string>
     <string name="new_site_creation_intents_input_hint">De exemplu: modă, poezie, politică</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Înlătură din panoul de control</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Nu azi</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d răspunsuri</string>
-    <string name="my_site_blogging_prompt_card_share_chooser_title">Partajează îndemnul la blogging</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Am răspuns</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">Partajează îndemnul pentru publicare</string>
     <string name="my_site_blogging_prompt_card_title">Îndemnuri</string>
     <string name="my_site_all_tab_title">Toate</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Răspunde la îndemn</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Reamintiri și îndemnuri</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Această combinație de culori poate să nu fie lizibilă pentru toți cititorii. Încearcă să folosești o culoare de fundal mai luminoasă și/sau o culoare pentru text mai închisă.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Această combinație de culori poate să nu fie lizibilă pentru toți cititorii. Încearcă să folosești o culoare de fundal mai întunecată și/sau o culoare pentru text mai deschisă.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Inserarea media a eșuat.\nDă tap pentru mai multe informații.</string>
@@ -595,8 +610,8 @@ Language: ro
     <string name="blogging_reminders_tip">Sfat</string>
     <string name="blogging_reminders_select_days_message">Poți actualiza oricând</string>
     <string name="blogging_reminders_select_days">Selectează zilele în care vrei să publici</string>
-    <string name="blogging_reminders_epilogue_caption">Poți să actualizezi oricând, mergi la Site-ul meu &gt; Setări &gt; Reamintiri publicare</string>
     <string name="blogging_reminders_tip_message">Dacă publici în mod regulat, cititorii tăi rămân angrenați pe site și atragi vizitatori noi.</string>
+    <string name="blogging_reminders_epilogue_caption">Poți să actualizezi oricând, mergi la Site-ul meu &gt; Setări &gt; Reamintiri pentru publicare.</string>
     <string name="blogging_reminders_epilogue_title">Gata!</string>
     <string name="blogging_reminders_epilogue_not_set_title">Reamintiri înlăturate!</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">Nu ai setat nicio reamintire.</string>
@@ -623,7 +638,7 @@ Language: ro
     <string name="site_settings_categories_hint">Administrează-ți categoriile site-ului</string>
     <string name="page_is_posts_page_warning">Conținutul paginii tale cu ultimele articole este generat automat și nu poate fi editat.</string>
     <string name="site_settings_categories_title">Categorii</string>
-    <string name="site_settings_blogging_reminders_title">Reamintiri publicare</string>
+    <string name="site_settings_blogging_reminders_title">Reamintiri</string>
     <string name="gutenberg_native_border_settings">Setări chenar</string>
     <string name="storage_utils_dialog_ok_button">Vezi spațiul de stocare</string>
     <string name="storage_utils_dialog_message">Înainte de a putea fi publicat, trebuie să salvăm conținutul pe dispozitivul tău. Examinează setările pentru spațiul de stocare și înlătură câteva fișiere pentru a elibera spațiu.</string>

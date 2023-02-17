@@ -30,7 +30,6 @@ Language: lv
     <string name="my_site_blogging_prompt_card_attribution_dayone">No &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="my_site_card_menu_item_hide_this">Slēpt šo</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Atgādināt vēlāk</string>
-    <string name="jetpack_feature_card_content">Statistika, lasītājs, paziņojumi un citas funkcijas drīzumā tiks pārvietotas uz Jetpack mobilo lietotni.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Pārslēdzieties uz Jetpack lietotni</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Uzziniet vairāk vietnē jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Pārslēgšanās ir bezmaksas un aizņem tikai minūti.</string>
@@ -307,14 +306,10 @@ Language: lv
     <string name="blogging_prompts_onboarding_card_prompt">Izvēlēties savas dzīves filmu.</string>
     <string name="blogging_prompts_onboarding_remind_me">Atgādini man</string>
     <string name="blogging_prompts_onboarding_try_it_now">Pamēģini to tagad</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Jebkurā laikā varat uzzināt vairāk un iestatīt atgādinājumus sadaļā Mana vietne &gt; Iestatījumi &gt; Emuāru rakstīšanas atgādinājumi</string>
     <string name="blogging_prompts_onboarding_content_note_title">Piezīme:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Katru dienu uz vadības paneļa parādīsim jums jaunu pamudinājumu, lai palīdzētu iedarbināt radošos spēkus!</string>
     <string name="blogging_prompts_onboarding_content_top">Labākais veids, kā kļūt par labāku rakstnieku, ir izveidot rakstīšanas ieradumu un dalīties ar citiem — tieši šeit parādās uzvednes!</string>
-    <string name="blogging_prompts_onboarding_header_title">Iepazīstinām ar uzvednēm</string>
     <string name="blogging_prompt_set_reminders">Iestatiet atgādinājumus</string>
-    <string name="blogging_reminders_prompt_subtitle">Atgādinājums ietvers ikdienas uzvedni</string>
-    <string name="blogging_reminders_prompt_title">Iekļaujiet ikdienas uzvedni</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Regulāra publicēšana piesaista jaunus lasītājus. Pastāstiet mums, kad vēlaties rakstīt, un mēs jums nosūtīsim atgādinājumu!</string>
     <string name="set_your_blogging_prompts_title">Kļūsti par labāku rakstnieku, veidojot ieradumu</string>
     <string name="site_creation_intent_writing_poetry">Rakstniecība un dzeja</string>
@@ -350,7 +345,6 @@ Language: lv
     <string name="new_site_creation_intents_input_hint">Piem. Mode, dzeja, politika</string>
     <string name="new_site_creation_intents_title">Vietnes tēma</string>
     <string name="quick_start_site_menu_tab_message_short">Lai turpinātu, pieskarieties vienumam &lt;b&gt;%1$s&lt;/b&gt;.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Noņemt no informācijas paneļa</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Izlaist šodien</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Skatīt vairāk uzvedņu</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d atbildes</string>
@@ -359,7 +353,6 @@ Language: lv
     <string name="my_site_blogging_prompt_card_answer_prompt">Atbildes uzvedne</string>
     <string name="my_site_blogging_prompt_card_title">Uzvednes</string>
     <string name="my_site_all_tab_title">Visi</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Atgādinājumi un uzvednes</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Cilvēkiem var būt grūti izlasīt šo krāsu kombināciju. Mēģiniet izmantot gaišāku fona krāsu un/vai tumšāku teksta krāsu.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Cilvēkiem var būt grūti izlasīt šo krāsu kombināciju. Mēģiniet izmantot tumšāku fona krāsu un/vai gaišāku teksta krāsu.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Neizdevās ievietot datu nesēju. \nPieskarieties, lai iegūtu papildinformāciju.</string>
@@ -622,7 +615,6 @@ Language: lv
     <string name="support_ticket_subject">WordPress atbalsts Android ierīcēm</string>
     <string name="site_settings_categories_hint">Pārvaldiet savas vietnes kategorijas</string>
     <string name="site_settings_categories_title">Kategorijas</string>
-    <string name="site_settings_blogging_reminders_title">Emuāru rakstīšanas atgādinājumi</string>
     <string name="page_is_posts_page_warning">Jaunāko ziņu lapas saturs tiek izveidots automātiski, un to nevar rediģēt.</string>
     <string name="gutenberg_native_border_settings">Apmales iestatījumi</string>
     <string name="storage_utils_dialog_dont_show_button">Nerādīt vēlreiz</string>

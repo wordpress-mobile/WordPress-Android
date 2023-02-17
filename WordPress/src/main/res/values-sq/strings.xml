@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-25 11:18:28+0000
+Translation-Revision-Date: 2023-02-08 18:34:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sq_AL
 -->
 <resources>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Çlironi potencialin e plotë të sajtit tuaj. Merrni statistika, njoftime, etj me Jetpack-un.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Sajti juaj e ka shtojcën Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Aplikacioni Jetpack për celular është menduar të punojë tok me shtojcën Jetpack. Kaloni që tani në të, që të mund të përdorni statistikat, njoftimet, lexuesin, etj.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Merrni njoftime për komente, pëlqime, parje të reja, etj.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Gjeni dhe ndiqni sajtet dhe bashkësitë tuaja të parapëlqyera dhe ndani me të tjerë lëndën tuaj.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Shiheni si rritet trafiku juaj, me prirje të dobishme dhe statistika të plota.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistika &amp; Tendenca</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack-u ju lejon të bëni më tepër gjëra me sajtin tuaj WordPress. Kalimi është falas dhe do vetëm një minutë.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Jepini WordPress-it një përforcim me Jetpack-un</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Cytjet dhe Kujtuesit për Blogim mund t’i kontrolloni në çfarëdo kohe që nga Sajti Im &gt; Rregullime &gt; Blogim</string>
+    <string name="blogging_reminders_prompt_subtitle">Njoftimi do të përfshijë një fjalë, ose togfjalësh të shkurtër, për frymëzim</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Që ta riaktivizoni, vizitoni &lt;b&gt;Rregullime Sajti&lt;/b&gt;</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Cytje Blogimi të fshehura</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Çaktivizo cytje</string>
+    <string name="support_forum_caption">Merrni ndihmë nga grupi ynë i vullnetarëve.</string>
+    <string name="support_forum_title">Forume bashkësie</string>
+    <string name="site_settings_blogging_reminders_notification_title">Kujtues blogimi</string>
+    <string name="site_settings_blogging_prompts_title">Shfaq cytje</string>
+    <string name="site_settings_blogging">Blogim</string>
     <string name="install_play_store_to_get_jetpack">Që të merrni aplikacionin Jetpack, ju lutemi, instaloni Google Play Store</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Bëjeni më vonë</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Kalo te Jetpack </string>
@@ -30,7 +49,7 @@ Language: sq_AL
     <string name="my_site_blogging_prompt_card_attribution_dayone">Nga &lt;b&gt;Dita e Parë&lt;/b&gt;</string>
     <string name="my_site_card_menu_item_hide_this">Fshihe këtë</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Kujtoma më vonë</string>
-    <string name="jetpack_feature_card_content">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të fuqishme të Jetpack-ut së shpejti do të kalohen te aplikacioni Jetpack për celular.</string>
+    <string name="jetpack_feature_card_content_phase_three">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të Jetpack-ut së shpejti do të kalohen te aplikacioni Jetpack për celular.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Kaloni te aplikacioni Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Mësoni më tepër, te jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Kalimi është falas dhe do vetëm një minutë.</string>
@@ -305,14 +324,12 @@ Language: sq_AL
     <string name="blogging_prompts_onboarding_card_prompt">Hidheni në film jetën tuaj.</string>
     <string name="blogging_prompts_onboarding_remind_me">Kujtoma</string>
     <string name="blogging_prompts_onboarding_try_it_now">Provojeni tani</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Mund të mësoni më tepër dhe të ujdisni kujtues në çfarëdo kohe, që nga Sajti Im &gt; Rregullime &gt; Kujtues Blogimi</string>
     <string name="blogging_prompts_onboarding_content_note_title">Shënim:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Do t’ju shfaqim përditë në pultin tuaj një cytje të re, për të ndihmuar të vini në udhë rrjedhat krijuese!</string>
     <string name="blogging_prompts_onboarding_content_top">Rruga më e mirë për t’u bërë një shkrues më i mirë është të krijohet një zakon shkrimi dhe dhënia e shkrimeve të tjerëve — këtu hyjnë në lojë Cytjet!</string>
-    <string name="blogging_prompts_onboarding_header_title">Ju prezantojmë Cytjet</string>
+    <string name="blogging_prompts_onboarding_header_title">Cytje Blogimi</string>
     <string name="blogging_prompt_set_reminders">Ujdisni kujtues</string>
-    <string name="blogging_reminders_prompt_subtitle">Kujtuesi do të përfshijë një cytje të përditshme</string>
-    <string name="blogging_reminders_prompt_title">Përfshi cytje të përditshme</string>
+    <string name="blogging_reminders_prompt_title">Përfshi një Cytje Blogimi</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Postimi rregullisht tërheq lexues të rinj.Tregonani kur doni të shkruani dhe do t’ju dërgojmë një kujtues!</string>
     <string name="set_your_blogging_prompts_title">Bëhuni një shkrimtar më i mirë duke formuar zakonin e të shkruarit</string>
     <string name="site_creation_intent_writing_poetry">Shkrim &amp; Poezi</string>
@@ -346,7 +363,6 @@ Language: sq_AL
     <string name="new_site_creation_intents_input_hint">P.sh., Modë, Poezi, Politikë</string>
     <string name="new_site_creation_intents_title">Temë sajti</string>
     <string name="quick_start_site_menu_tab_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të vazhdohet.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Hiqe nga pulti</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Anashkaloje për sot</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Shihni më tepër cytje</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d përgjigje</string>
@@ -355,7 +371,6 @@ Language: sq_AL
     <string name="my_site_blogging_prompt_card_answer_prompt">Përgjigjuni cytjes</string>
     <string name="my_site_blogging_prompt_card_title">Cytje</string>
     <string name="my_site_all_tab_title">Krejt</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Kujtues dhe cytje</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Kjo ndërthurje ngjyrash mund të vështirësojë leximin nga njerëzit. Provoni të përdorni një ngjyrë sfondi më të ndritshme dhe/ose një ngjyrë të errët teksti.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Kjo ndërthurje ngjyrash mund të vështirësojë leximin nga njerëzit. Provoni të përdorni një ngjyrë sfondi më të errët dhe/ose një ngjyrë të ndritshme teksti.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">S’u arrit të futej media.\nPrekeni për më tepër hollësi.</string>
@@ -617,7 +632,7 @@ Language: sq_AL
     <string name="support_ticket_subject">Asistencë për WordPress për Android</string>
     <string name="site_settings_categories_hint">Administroni kategoritë e sajtit tuaj</string>
     <string name="site_settings_categories_title">Kategori</string>
-    <string name="site_settings_blogging_reminders_title">Kujtues blogimi</string>
+    <string name="site_settings_blogging_reminders_title">Kujtues</string>
     <string name="page_is_posts_page_warning">Lënda e faqes tuaj të postimeve më të reja prodhohet automatikisht dhe s’mund të përpunohet.</string>
     <string name="gutenberg_native_border_settings">Rregullime Anësh</string>
     <string name="storage_utils_dialog_dont_show_button">Mos e Shfaq Sërish</string>

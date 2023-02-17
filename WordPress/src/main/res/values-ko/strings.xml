@@ -30,7 +30,6 @@ Language: ko_KR
     <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt;부터</string>
     <string name="my_site_card_menu_item_hide_this">숨기기</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">나중에 다시 알림</string>
-    <string name="jetpack_feature_card_content">곧 통계, 리더, 알림 및 기타 기능이 젯팩 모바일 앱으로 이동됩니다.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">젯팩 앱으로 전환</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">jetpack.com에서 더 알아보기</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">전환은 무료이며 1분밖에 걸리지 않습니다.</string>
@@ -307,14 +306,10 @@ Language: ko_KR
     <string name="blogging_prompts_onboarding_card_prompt">자신의 인생을 영화로 만들어 보세요.</string>
     <string name="blogging_prompts_onboarding_remind_me">나에게 알림</string>
     <string name="blogging_prompts_onboarding_try_it_now">지금 시도하기</string>
-    <string name="blogging_prompts_onboarding_content_note_content">내 사이트 &gt; 설정 &gt; 블로깅 알림에서 언제든지 자세히 알아보고 알림을 설정할 수 있습니다.</string>
     <string name="blogging_prompts_onboarding_content_note_title">참고:</string>
     <string name="blogging_prompts_onboarding_content_bottom">영감을 발휘할 수 있도록 알림판에 매일 새로운 프롬프트가 표시됩니다!</string>
     <string name="blogging_prompts_onboarding_content_top">더 좋은 작가가 되는 가장 좋은 방법은 글쓰기를 습관화하고 다른 사람과 공유하는 것입니다. 그래서 프롬프트가 필요합니다!</string>
-    <string name="blogging_prompts_onboarding_header_title">프롬프트 소개</string>
     <string name="blogging_prompt_set_reminders">알림 설정</string>
-    <string name="blogging_reminders_prompt_subtitle">알림에는 일일 프롬프트가 포함됩니다</string>
-    <string name="blogging_reminders_prompt_title">일일 프롬프트 포함</string>
     <string name="post_publishing_set_up_blogging_prompts_message">정기적으로 글을 작성하여 신규 독자를 유치하세요. 글을 쓰고 싶을 때 알려주시면 알림을 보내드리겠습니다!</string>
     <string name="set_your_blogging_prompts_title">습관화하여 더 좋은 작가 되기</string>
     <string name="site_creation_intent_writing_poetry">글쓰기 및 시</string>
@@ -350,7 +345,6 @@ Language: ko_KR
     <string name="new_site_creation_intents_input_hint">예: 패션, 시, 정치</string>
     <string name="new_site_creation_intents_title">사이트 주제</string>
     <string name="quick_start_site_menu_tab_message_short">계속하려면 &lt;b&gt;%1$s&lt;/b&gt;을(를) 누르세요.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">알림판에서 제거</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">더 많은 프롬프트 보기</string>
     <string name="my_site_blogging_prompt_card_menu_skip">오늘 건너뛰기</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d개 답변</string>
@@ -359,7 +353,6 @@ Language: ko_KR
     <string name="my_site_blogging_prompt_card_answer_prompt">답변 프롬프트</string>
     <string name="my_site_blogging_prompt_card_title">프롬프트</string>
     <string name="my_site_all_tab_title">전체</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">알림 및 프롬프트</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">이 색상 조합은 사람들이 읽기 힘들 수 있습니다. 더 밝은 배경 색상 및/또는 더 어두운 텍스트 색상을 사용해 보세요.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">이 색상 조합은 사람들이 읽기 힘들 수 있습니다. 더 어두운 배경 색상 및/또는 더 밝은 텍스트 색상을 사용해 보세요.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">미디어를 삽입하지 못했습니다.\n자세히 알아보려면 누르세요.</string>
@@ -623,7 +616,6 @@ Language: ko_KR
     <string name="site_settings_categories_hint">사이트의 카테고리 관리</string>
     <string name="site_settings_categories_title">카테고리</string>
     <string name="page_is_posts_page_warning">최신 글 페이지의 콘텐츠는 자동으로 생성되며 편집할 수 없습니다.</string>
-    <string name="site_settings_blogging_reminders_title">블로깅 알림</string>
     <string name="gutenberg_native_border_settings">경계선 설정</string>
     <string name="storage_utils_dialog_dont_show_button">다시 보지 않음</string>
     <string name="storage_utils_dialog_ok_button">저장 공간 보기</string>

@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-31 13:54:08+0000
+Translation-Revision-Date: 2023-02-08 16:40:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sv_SE
 -->
 <resources>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Lås upp din webbplats fulla potential. Få statistik, aviseringar och mer med Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Din webbplats har Jetpack-tillägget</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpacks mobilapp är designad för att fungera tillsammans med tillägget Jetpack. Byt nu för att få åtkomst till statistik, aviseringar, läsare och mer.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Få aviseringar för nya kommentarer, gilla-markeringar, visningar och mer.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Se din trafik öka med användbara insikter och omfattande statistik.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistik och insikter</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Med Jetpack kan du göra mer med din WordPress-webbplats. Att byta är gratis och tar bara en minut.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Förbättra WordPress med Jetpack</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Du kan kontrollera bloggningsförslag och påminnelser när som helst i Min webbplats &gt; Inställningar &gt; Bloggande</string>
+    <string name="blogging_reminders_prompt_subtitle">Aviseringen kommer att innehålla ett ord eller en kort fras för inspiration</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Bloggningsförslag dolt</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Stäng av förslag</string>
+    <string name="support_forum_caption">Få hjälp från vår grupp av volontärer.</string>
+    <string name="support_forum_title">Community-forum</string>
+    <string name="site_settings_blogging_reminders_notification_title">Bloggningspåminnelser</string>
+    <string name="site_settings_blogging_prompts_title">Visa förslag</string>
+    <string name="site_settings_blogging">Bloggande</string>
     <string name="install_play_store_to_get_jetpack">Installera Google Play Store för att hämta Jetpack-appen</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Gör detta senare</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Byt till Jetpack </string>
@@ -30,7 +47,7 @@ Language: sv_SE
     <string name="my_site_blogging_prompt_card_attribution_dayone">Från &lt;b&gt;dag ett&lt;/b&gt;</string>
     <string name="my_site_card_menu_item_hide_this">Dölj detta</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Påminn mig senare</string>
-    <string name="jetpack_feature_card_content">Statistik, läsare, aviseringar och andra funktioner kommer snart att flyttas till Jetpacks mobilapp.</string>
+    <string name="jetpack_feature_card_content_phase_three">Statistik, läsare, aviseringar och andra funktioner kommer snart att flyttas till Jetpacks mobilapp.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Byt till Jetpack-appen</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Läs mer på jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Bytet är gratis och tar bara en minut.</string>
@@ -307,14 +324,12 @@ Language: sv_SE
     <string name="blogging_prompts_onboarding_card_prompt">Välj skådespelarna för din drömfilm.</string>
     <string name="blogging_prompts_onboarding_remind_me">Påminn mig</string>
     <string name="blogging_prompts_onboarding_try_it_now">Prova nu</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Du kan när som helst ta reda på mer och konfigurera påminnelser under Min webbplats &gt; Inställningar &gt; Bloggningspåminnelser</string>
     <string name="blogging_prompts_onboarding_content_note_title">Obs:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Varje dag visar vi ett annorlunda förslag i din adminpanel för att hjälpa din kreativitet på traven!</string>
     <string name="blogging_prompts_onboarding_content_top">Det bästa sättet att bli en bättre skribent är att börja skriva regelbundet och visa det för andra – det är här bloggningspåminnelserna kommer in i bilden!</string>
-    <string name="blogging_prompts_onboarding_header_title">Inkluderar förslag</string>
+    <string name="blogging_prompts_onboarding_header_title">Introducerar\nBloggningsförslag</string>
     <string name="blogging_prompt_set_reminders">Ställ in påminnelser</string>
-    <string name="blogging_reminders_prompt_subtitle">Påminnelsen kommer att innehålla ett förslag för dagen</string>
-    <string name="blogging_reminders_prompt_title">Inkludera dagliga förslag</string>
+    <string name="blogging_reminders_prompt_title">Inkludera ett bloggningsförslag</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Om du regelbundet publicerar får du fler läsare. Berätta för oss när du vill skriva så skickar vi påminnelser!</string>
     <string name="set_your_blogging_prompts_title">Bli en bättre skribent genom att bygga upp en vana</string>
     <string name="site_creation_intent_writing_poetry">Skrivande och poesi</string>
@@ -350,7 +365,6 @@ Language: sv_SE
     <string name="new_site_creation_intents_input_hint">T.ex. mode, poesi, politik</string>
     <string name="new_site_creation_intents_title">Webbplatsämne</string>
     <string name="quick_start_site_menu_tab_message_short">Tryck &lt;b&gt;%1$s&lt;/b&gt; för att fortsätta.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Ta bort från adminpanelen</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Hoppa över för idag</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Visa fler förslag</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d svar</string>
@@ -359,7 +373,6 @@ Language: sv_SE
     <string name="my_site_blogging_prompt_card_answer_prompt">Svara på förslaget</string>
     <string name="my_site_blogging_prompt_card_title">Förslag</string>
     <string name="my_site_all_tab_title">Alla</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Påminnelser och förslag</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Denna färgkombination kan vara svår för människor att läsa. Försök använda en ljusare bakgrundsfärg och/eller en mörkare textfärg.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Denna färgkombination kan vara svår för människor att läsa. Försök använda en mörkare bakgrundsfärg och/eller en ljusare textfärg.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Misslyckades att infoga media.\nTryck för mer information.</string>
@@ -622,7 +635,7 @@ Language: sv_SE
     <string name="support_ticket_subject">Support för WordPress för Android</string>
     <string name="site_settings_categories_hint">Hantera kategorierna för din webbplats</string>
     <string name="site_settings_categories_title">Kategorier</string>
-    <string name="site_settings_blogging_reminders_title">Bloggningspåminnelser</string>
+    <string name="site_settings_blogging_reminders_title">Påminnelser</string>
     <string name="page_is_posts_page_warning">Innehållet på sidan med dina senaste inlägg genereras automatiskt och kan inte redigeras.</string>
     <string name="gutenberg_native_border_settings">Raminställningar</string>
     <string name="storage_utils_dialog_dont_show_button">Visa inte igen</string>

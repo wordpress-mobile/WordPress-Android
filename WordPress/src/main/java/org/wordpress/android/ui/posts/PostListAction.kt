@@ -51,9 +51,11 @@ sealed class PostListAction {
     class ViewStats(val site: SiteModel, val post: PostModel) : PostListAction()
     class ViewPost(val site: SiteModel, val post: PostModel) : PostListAction()
     class DismissPendingNotification(val pushId: Int) : PostListAction()
+
+    class ShowPromoteWithBlaze(val post: PostModel) : PostListAction()
 }
 
-@Suppress("TooGenericExceptionCaught")
+@Suppress("TooGenericExceptionCaught", "LongMethod", "ComplexMethod")
 fun handlePostListAction(
     activity: FragmentActivity,
     action: PostListAction,
@@ -105,6 +107,9 @@ fun handlePostListAction(
         }
         is PostListAction.DismissPendingNotification -> {
             NativeNotificationsUtils.dismissNotification(action.pushId, activity)
+        }
+        is PostListAction.ShowPromoteWithBlaze -> {
+            ActivityLauncher.openPromoteWithBlaze(activity, action.post)
         }
         is PostListAction.CopyUrl -> {
             try {

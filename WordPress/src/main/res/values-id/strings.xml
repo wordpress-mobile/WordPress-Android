@@ -297,14 +297,10 @@ Language: id
     <string name="blogging_prompts_onboarding_card_prompt">Berperanlah dalam film kehidupan Anda.</string>
     <string name="blogging_prompts_onboarding_remind_me">Ingatkan saya</string>
     <string name="blogging_prompts_onboarding_try_it_now">Coba sekarang</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Anda dapat baca selengkapnya dan mengatur pengingat setiap saat di SItus saya &gt; Settings &gt; Pengingat Blogging</string>
     <string name="blogging_prompts_onboarding_content_note_title">Catatan:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Kami akan menunjukkan prompt baru setiap hari di dasbor Anda untuk membantu Anda mendapatkan ide!</string>
     <string name="blogging_prompts_onboarding_content_top">Cara ter baik untuk menjadi penulis yang baik adalah membangun kebiasaan menulis dan membaginya dengan yang lain - Itulah saat Prompts muncul!</string>
-    <string name="blogging_prompts_onboarding_header_title">Memperkenalkan Prompts</string>
     <string name="blogging_prompt_set_reminders">Setel pengingat</string>
-    <string name="blogging_reminders_prompt_subtitle">Pengingat akan memasukkan prompt harian</string>
-    <string name="blogging_reminders_prompt_title">Termasuk prompt harian</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Posting secara reguler menarik pembaca baru. Beritahu kami kapan Anda mau menulis dan kami akan mengirimkan Anda pengingat!</string>
     <string name="set_your_blogging_prompts_title">Menjadi penulis yang baik dengan membangun kebiasaan</string>
     <string name="site_creation_intent_writing_poetry">Penulisan &amp; Puisi</string>
@@ -340,7 +336,6 @@ Language: id
     <string name="new_site_creation_intents_input_hint">Contohnya: Fesyen, Puisi, Politik</string>
     <string name="new_site_creation_intents_title">Topik situs</string>
     <string name="quick_start_site_menu_tab_message_short">Ketuk untuk melanjutkan.&lt;b&gt;%1$s&lt;/b&gt;</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Hapus dari dasbor</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Lewati hari ini</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Lihat lebih banyak prompt</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d jawaban</string>
@@ -349,7 +344,6 @@ Language: id
     <string name="my_site_blogging_prompt_card_answer_prompt">Menjawab prompt</string>
     <string name="my_site_blogging_prompt_card_title">Prompt</string>
     <string name="my_site_all_tab_title">Semua</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Pengingat dan prompt</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Kombinasi warna ini mungkin sulit dibaca. Coba gunakan warna latar belakang yang lebih terang dan/atau warna teks yang lebih gelap.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Kombinasi warna ini mungkin sulit dibaca. Coba gunakan warna latar belakang yang lebih gelap dan/atau warna teks yang lebih terang.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Gagal menyisipkan media.\nKetuk untuk info selengkapnya.</string>
@@ -612,7 +606,6 @@ Language: id
     <string name="support_ticket_subject">WordPress untuk Dukungan Android</string>
     <string name="site_settings_categories_hint">Kelola kategori situs Anda</string>
     <string name="site_settings_categories_title">Kategori</string>
-    <string name="site_settings_blogging_reminders_title">Pengingat blogging</string>
     <string name="page_is_posts_page_warning">Konten halaman pos terbaru Anda dibuat secara otomatis dan tidak dapat disunting.</string>
     <string name="gutenberg_native_border_settings">Pengaturan Batas</string>
     <string name="storage_utils_dialog_dont_show_button">Jangan Tampilkan Lagi</string>

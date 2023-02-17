@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/promote_with_blaze_card_menu_item_hide_this"
+        android:title="@string/promote_blaze_card_menu_hide_this"
+        android:icon="@drawable/ic_not_visible_white_24dp"/>
+</menu>

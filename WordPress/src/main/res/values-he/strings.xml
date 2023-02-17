@@ -30,7 +30,6 @@ Language: he_IL
     <string name="my_site_blogging_prompt_card_attribution_dayone">מתוך &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="my_site_card_menu_item_hide_this">להסתיר את המידע</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">הזכירו לי מאוחר יותר</string>
-    <string name="jetpack_feature_card_content">האפשרויות של נתונים סטטיסטיים, Reader, הודעות ואפשרויות אחרות יועברו בקרוב אל האפליקציה של Jetpack לנייד.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">החלפה לאפליקציה של Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">מידע נוסף באתר Jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">ההחלפה היא חינמית ואורכת דקה בלבד.</string>
@@ -307,14 +306,10 @@ Language: he_IL
     <string name="blogging_prompts_onboarding_card_prompt">לשדר את הסרט של חייך.</string>
     <string name="blogging_prompts_onboarding_remind_me">אני רוצה לקבל תזכורת</string>
     <string name="blogging_prompts_onboarding_try_it_now">כדאי לנסות עכשיו</string>
-    <string name="blogging_prompts_onboarding_content_note_content">אפשר לקבל מידע נוסף ולהגדיר תזכורות בכל עת דרך \'האתר שלי\' &gt; \'הגדרות\' &gt; \'תזכורות לכתיבת בלוג\'</string>
     <string name="blogging_prompts_onboarding_content_note_title">הערה:</string>
     <string name="blogging_prompts_onboarding_content_bottom">נציג לך הצעה חדשה כל יום בלוח הבקרה כדי לעזור לתהליך היצירתי להתחיל לנוע!</string>
     <string name="blogging_prompts_onboarding_content_top">הדרך הטובה ביותר לשפר את יכולת הכתיבה היא ליצור הרגל לכתיבה ולשתף עם אחרים – כאן בדיוק נכנסות ההצעות!</string>
-    <string name="blogging_prompts_onboarding_header_title">שמחים להציג את האפשרות \'הצעות\'</string>
     <string name="blogging_prompt_set_reminders">הגדרת תזכורות</string>
-    <string name="blogging_reminders_prompt_subtitle">התזכורת תכלות הצעה יומית</string>
-    <string name="blogging_reminders_prompt_title">כולל הצעה יומית</string>
     <string name="post_publishing_set_up_blogging_prompts_message">פרסום פוסטים באופן קבוע מושך קוראים חדשים. אפשר לספר לנו מתי ברצונך לכתוב, ואנחנו נשלח לך תזכורת!</string>
     <string name="set_your_blogging_prompts_title">לשפר את הכתיבה על ידי יצירת הרגל</string>
     <string name="site_creation_intent_writing_poetry">כתיבה ושירה</string>
@@ -350,7 +345,6 @@ Language: he_IL
     <string name="new_site_creation_intents_input_hint">לדוגמה, אופנה, שירה ופוליטיקה</string>
     <string name="new_site_creation_intents_title">נושא האתר</string>
     <string name="quick_start_site_menu_tab_message_short">יש להקיש &lt;b&gt;%1$s&lt;/b&gt; להמשך.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">להסיר מלוח הבקרה</string>
     <string name="my_site_blogging_prompt_card_menu_skip">לדלג להיום</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">להציג הצעות נוספות</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d תשובות</string>
@@ -359,7 +353,6 @@ Language: he_IL
     <string name="my_site_blogging_prompt_card_answer_prompt">הצעה לתשובה</string>
     <string name="my_site_blogging_prompt_card_title">הצעות</string>
     <string name="my_site_all_tab_title">הכול</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">תזכורות והצעות</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">ייתכן ששילוב הצבעים הזה יהיה מאתגר לקריאה עבור אנשים מסוימים. אנחנו ממליצים לנסות צבע רקע בהיר יותר ו/או צבע טקסט כהה יותר.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">ייתכן ששילוב הצבעים הזה יהיה מאתגר לקריאה עבור אנשים מסוימים. אנחנו ממליצים לנסות צבע רקע כהה יותר ו/או צבע טקסט בהיר יותר.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">ההוספה של המדיה נכשלה.\nיש להקיש לפרטים נוספים.</string>
@@ -622,7 +615,6 @@ Language: he_IL
     <string name="support_ticket_subject">תמיכה ב-WordPress ל-Android</string>
     <string name="site_settings_categories_hint">לנהל את הקטגוריות באתר שלך</string>
     <string name="site_settings_categories_title">קטגוריות</string>
-    <string name="site_settings_blogging_reminders_title">תזכורת לכתיבת בלוג</string>
     <string name="page_is_posts_page_warning">התוכן בעמוד \'הפוסטים האחרונים\' מיוצר באופן אוטומטי ולא ניתן לערוך אותו.</string>
     <string name="gutenberg_native_border_settings">הגדרות גבול</string>
     <string name="storage_utils_dialog_dont_show_button">לא להציג שוב</string>

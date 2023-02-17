@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jpfullplugininstall.onboarding.components
+package org.wordpress.android.ui.jpfullplugininstall.onboarding.compose.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,6 +35,7 @@ fun TermsAndConditions(
             modifier = Modifier
                 .padding(horizontal = 30.dp),
             text = stringResource(R.string.jetpack_full_plugin_install_onboarding_terms_and_conditions_text),
+            textAlign = TextAlign.Center,
             fontSize = 15.sp,
             style = TextStyle(
                 letterSpacing = (-0.02).sp,
@@ -46,6 +48,7 @@ fun TermsAndConditions(
                 .clickable { onTermsAndConditionsClick() },
             text = stringResource(R.string.jetpack_full_plugin_install_onboarding_terms_and_conditions_button),
             fontSize = 15.sp,
+            textAlign = TextAlign.Center,
             style = TextStyle(
                 textDecoration = TextDecoration.Underline,
                 letterSpacing = (-0.02).sp,
