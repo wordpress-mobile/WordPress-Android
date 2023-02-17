@@ -26,7 +26,7 @@ import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPlugin
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.InstallJPFullPlugin
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.OpenTermsAndConditions
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.UiState
-import org.wordpress.android.ui.jpfullplugininstall.onboarding.compose.state.Loaded
+import org.wordpress.android.ui.jpfullplugininstall.onboarding.compose.state.LoadedState
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
@@ -75,7 +75,7 @@ class JetpackFullPluginInstallOnboardingDialogFragment : DialogFragment() {
         val uiState by viewModel.uiState.collectAsState()
         uiState.apply {
             when (this) {
-                is UiState.Loaded -> Loaded(
+                is UiState.Loaded -> LoadedState(
                     content = this,
                     onTermsAndConditionsClick = { viewModel.onTermsAndConditionsClick() },
                     onInstallFullPluginClick = { viewModel.onInstallFullPluginClick() },

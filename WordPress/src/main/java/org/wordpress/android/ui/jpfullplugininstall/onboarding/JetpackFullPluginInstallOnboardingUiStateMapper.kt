@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jpfullplugininstall
+package org.wordpress.android.ui.jpfullplugininstall.onboarding
 
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.UiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
