@@ -238,7 +238,7 @@ public class AppSettingsFragment extends PreferenceFragment
             removeOpenWebLinksWithJetpack();
         }
 
-        if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()){
+        if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
             removeInitialScreen();
         }
     }
