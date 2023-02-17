@@ -146,8 +146,6 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
         init(true)
         val invalidSiteId = 2
         val result = mutableListOf<PromoteWithBlazeUpdate>()
-        whenever(blazeStore.getBlazeStatus(siteModel.siteId)).thenReturn(flowOf(data))
-        whenever(blazeStore.fetchBlazeStatus(siteModel)).thenReturn(apiError)
         blazeCardSource.refresh.observeForever { }
 
         blazeCardSource.build(testScope(), invalidSiteId).observeForever {
