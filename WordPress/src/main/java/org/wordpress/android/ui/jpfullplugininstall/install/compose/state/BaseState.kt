@@ -26,8 +26,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.MainTopAppBar
-import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
@@ -36,7 +34,6 @@ import org.wordpress.android.ui.jpfullplugininstall.install.UiState
 @Composable
 fun BaseState(
     uiState: UiState,
-    onDismissScreenClick: () -> Unit,
     content: @Composable () -> Unit
 ) = Box(
     Modifier
@@ -44,11 +41,6 @@ fun BaseState(
         .fillMaxHeight()
 ) {
     with(uiState) {
-        MainTopAppBar(
-            title = stringResource(toolbarTitle),
-            navigationIcon = NavigationIcons.BackIcon,
-            onNavigationIconClick = onDismissScreenClick
-        )
         val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
@@ -90,6 +82,6 @@ fun BaseState(
 private fun PreviewInitialState() {
     AppTheme {
         val uiState = UiState.Installing
-        BaseState(uiState, {}, {})
+        BaseState(uiState, {})
     }
 }

@@ -20,17 +20,13 @@ import org.wordpress.android.ui.jpfullplugininstall.install.UiState
 fun InitialState(
     uiState: UiState.Initial,
     onContinueClick: () -> Unit,
-    onDismissScreenClick: () -> Unit,
 ) = Box(
     Modifier
         .fillMaxWidth()
         .fillMaxHeight()
 ) {
     with(uiState) {
-        BaseState(
-            uiState = uiState,
-            onDismissScreenClick = onDismissScreenClick
-        ) {
+        BaseState(uiState) {
             PrimaryButton(
                 text = stringResource(buttonText),
                 onClick = onContinueClick,
@@ -49,6 +45,6 @@ private fun PreviewInitialState() {
         val uiState = UiState.Initial(
             buttonText = R.string.jetpack_full_plugin_install_initial_button,
         )
-        InitialState(uiState, {}, {})
+        InitialState(uiState, {})
     }
 }

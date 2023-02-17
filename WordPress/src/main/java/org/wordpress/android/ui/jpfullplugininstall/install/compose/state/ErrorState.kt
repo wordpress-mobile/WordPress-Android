@@ -22,17 +22,13 @@ fun ErrorState(
     uiState: UiState.Error,
     onRetryClick: () -> Unit,
     onContactSupportClick: () -> Unit,
-    onDismissScreenClick: () -> Unit,
 ) = Box(
     Modifier
         .fillMaxWidth()
         .fillMaxHeight()
 ) {
     with(uiState) {
-        BaseState(
-            uiState = uiState,
-            onDismissScreenClick = onDismissScreenClick
-        ) {
+        BaseState(uiState) {
             PrimaryButton(
                 text = stringResource(retryButtonText),
                 onClick = onRetryClick,
@@ -56,6 +52,6 @@ private fun PreviewErrorState() {
             retryButtonText = R.string.jetpack_full_plugin_install_error_button_retry,
             contactSupportButtonText = R.string.jetpack_full_plugin_install_error_button_contact_support,
         )
-        ErrorState(uiState, {}, {}, {})
+        ErrorState(uiState, {}, {})
     }
 }
