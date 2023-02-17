@@ -77,6 +77,9 @@ fun LoadedState(
                 }
                 Title(text = stringResource(R.string.jetpack_individual_plugin_support_onboarding_title))
                 PluginDescription(
+                    modifier = Modifier
+                        .padding(horizontal = 30.dp)
+                        .padding(top = 20.dp),
                     siteName = siteName,
                     pluginNames = pluginNames,
                 )

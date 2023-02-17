@@ -36,28 +36,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/jp_install_full_plugin_card_content"
-            android:layout_width="match_parent"
+        <!-- TODO: avoid using only paddingEnd (which triggers a warning) to align the View -->
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/jp_install_full_plugin_card_content_composable"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium_large"
             android:layout_marginHorizontal="@dimen/my_site_card_row_padding"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="@dimen/text_sz_large"
-            android:lineSpacingMultiplier="1.2"
+            android:layout_marginTop="@dimen/margin_medium_large"
+            android:paddingEnd="@dimen/margin_extra_extra_medium_large"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/jp_install_full_plugin_icon"
-            tools:text="@string/my_site_jp_install_full_plugin_card_content" />
+            tools:ignore="RtlSymmetry" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/jp_install_full_plugin_card_learn_more"
             style="@style/MySiteCardFooterLinkItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/learn_more"
             android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/learn_more"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/jp_install_full_plugin_card_content" />
+            app:layout_constraintTop_toBottomOf="@id/jp_install_full_plugin_card_content_composable" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

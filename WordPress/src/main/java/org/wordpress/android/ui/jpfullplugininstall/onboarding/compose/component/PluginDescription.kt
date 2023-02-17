@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.jpfullplugininstall.onboarding.compose.component
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,23 +13,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
 fun PluginDescription(
+    modifier: Modifier = Modifier,
     siteName: String,
     pluginNames: List<String>,
 ) {
     Text(
+        modifier = modifier,
         text = buildPluginDescriptionText(pluginNames, siteName),
         fontSize = 17.sp,
         style = TextStyle(letterSpacing = (-0.01).sp),
-        modifier = Modifier
-            .padding(horizontal = 30.dp)
-            .padding(top = 20.dp)
     )
 }
 

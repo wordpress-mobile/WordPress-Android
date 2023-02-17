@@ -149,7 +149,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         ) : Card(Type.JETPACK_SWITCH_CARD)
 
         data class JetpackInstallFullPluginCard(
-            val content: UiString,
+            val siteName: String,
+            val pluginNames: List<String>,
             val onLearnMoreClick: ListItemInteraction,
             val onHideMenuItemClick: ListItemInteraction,
         ) : Card(Type.JETPACK_INSTALL_FULL_PLUGIN_CARD)

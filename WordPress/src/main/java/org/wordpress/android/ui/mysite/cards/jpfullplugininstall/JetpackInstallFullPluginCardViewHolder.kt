@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import org.wordpress.android.R
 import org.wordpress.android.databinding.JpInstallFullPluginCardBinding
+import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.jpfullplugininstall.onboarding.compose.component.PluginDescription
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -18,10 +20,12 @@ class JetpackInstallFullPluginCardViewHolder(
     parent.viewBinding(JpInstallFullPluginCardBinding::inflate)
 ) {
     fun bind(card: JetpackInstallFullPluginCard) = with(binding) {
-        jpInstallFullPluginCardContent.text = uiHelpers.getTextOfUiString(
-            jpInstallFullPluginCardContent.context,
-            card.content
-        )
+        jpInstallFullPluginCardContentComposable.setContent {
+            AppTheme {
+                uiHelpers::class.java
+                PluginDescription(siteName = card.siteName, pluginNames = card.pluginNames)
+            }
+        }
 
         jpInstallFullPluginCardMenu.setOnClickListener {
             showMenu(card.onHideMenuItemClick, it)
