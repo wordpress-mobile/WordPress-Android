@@ -62,7 +62,7 @@ ext {
     glideVersion = '4.10.0'
     glideVolleyVersion = '4.6.1@aar'
     googleAutoServiceVersion = '1.0'
-    googleExoPlayerVersion = '2.13.3'
+    googleExoPlayerVersion = '2.18.3'
     googleGsonVersion = '2.6.2'
     googleMaterialVersion = '1.2.1'
     googlePlayServicesAuthVersion = '20.3.0'
