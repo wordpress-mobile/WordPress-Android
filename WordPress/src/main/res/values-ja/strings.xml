@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-01 10:54:08+0000
+Translation-Revision-Date: 2023-02-15 10:54:16+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ja_JP
 -->
 <resources>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">サイトの可能性を十分に引き出すことができます。 Jetpack で統計、通知などを利用できます。</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">ご利用のサイトには Jetpack プラグインが設定されています</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack モバイルアプリは、Jetpack プラグインと連携させて利用できます。 今すぐ乗り換えて、統計、通知、Reader などをご利用ください。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">新しいコメントや「いいね」、表示数などの通知を受信できます。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">お気に入りのサイトやコミュニティを見つけてフォローし、コンテンツを共有できます。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">便利な統計概要と包括的な統計情報で、トラフィックの成長を確認できます。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">統計情報と統計概要</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack を使用すれば、WordPress でさらなる機能を利用できます。 切り替えは無料で、数分で終わります。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Jetpack で WordPress をレベルアップ</string>
+    <string name="blogging_prompts_onboarding_content_note_content">ブログのプロンプトやリマインダーは、「My Site」 &gt; 「設定」 &gt; 「ブログ」でいつでもコントロールできます</string>
+    <string name="blogging_reminders_prompt_subtitle">通知にはヒントになる言葉や短いフレーズが記載されます</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">&lt;b&gt;「サイトの設定」&lt;/b&gt;に移動して表示をオンに戻す</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">ブログのプロンプトが非表示</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">プロンプトをオフにする</string>
+    <string name="support_forum_caption">ボランティアグループのサポートを得ることができます。</string>
+    <string name="support_forum_title">コミュニティフォーラム</string>
+    <string name="site_settings_blogging_reminders_notification_title">ブログ投稿のリマインダー</string>
+    <string name="site_settings_blogging_prompts_title">プロンプトを表示</string>
+    <string name="site_settings_blogging">ブログ</string>
     <string name="install_play_store_to_get_jetpack">Jetpack アプリを入手するには Google Play ストアをインストールしてください</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">後で実行する</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Jetpack に切り替える </string>
@@ -311,6 +330,8 @@ Language: ja_JP
     <string name="blogging_prompts_onboarding_content_top">執筆の腕を磨くのに一番よい方法は、執筆習慣を身に付け、他の人と共有することです。そこでプロンプトの出番です !</string>
     <string name="blogging_prompt_set_reminders">リマインダーを設定</string>
     <string name="post_publishing_set_up_blogging_prompts_message">定期的に投稿することで、新しい読者を引きつけることができます。 執筆するタイミングを指定していただければ、リマインダーをお送りします !</string>
+    <string name="blogging_prompts_onboarding_header_title">はじめに\nブログのプロンプト</string>
+    <string name="blogging_reminders_prompt_title">ブログのプロンプトを含める</string>
     <string name="set_your_blogging_prompts_title">習慣をつけて執筆の腕を磨く</string>
     <string name="site_creation_intent_writing_poetry">文章と詩</string>
     <string name="site_creation_intent_travel">旅行</string>
@@ -616,6 +637,7 @@ Language: ja_JP
     <string name="site_settings_categories_hint">サイトのカテゴリーを管理</string>
     <string name="site_settings_categories_title">カテゴリー</string>
     <string name="page_is_posts_page_warning">最新の投稿ページのコンテンツは自動的に生成され、編集することはできません。</string>
+    <string name="site_settings_blogging_reminders_title">リマインダー</string>
     <string name="gutenberg_native_border_settings">枠線設定</string>
     <string name="storage_utils_dialog_dont_show_button">今後表示しない</string>
     <string name="storage_utils_dialog_ok_button">ストレージを表示</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-08 16:40:45+0000
+Translation-Revision-Date: 2023-02-15 12:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sv_SE
@@ -10,12 +10,14 @@ Language: sv_SE
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Din webbplats har Jetpack-tillägget</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpacks mobilapp är designad för att fungera tillsammans med tillägget Jetpack. Byt nu för att få åtkomst till statistik, aviseringar, läsare och mer.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Få aviseringar för nya kommentarer, gilla-markeringar, visningar och mer.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Hitta och följ dina favoritwebbplatser och -communities samt dela ditt innehåll.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Se din trafik öka med användbara insikter och omfattande statistik.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistik och insikter</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_description">Med Jetpack kan du göra mer med din WordPress-webbplats. Att byta är gratis och tar bara en minut.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_title">Förbättra WordPress med Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Du kan kontrollera bloggningsförslag och påminnelser när som helst i Min webbplats &gt; Inställningar &gt; Bloggande</string>
     <string name="blogging_reminders_prompt_subtitle">Aviseringen kommer att innehålla ett ord eller en kort fras för inspiration</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Gå till &lt;b&gt;Webbplatsinställningar&lt;/b&gt; för att aktivera igen</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_title">Bloggningsförslag dolt</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Stäng av förslag</string>
     <string name="support_forum_caption">Få hjälp från vår grupp av volontärer.</string>

@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-31 09:54:08+0000
+Translation-Revision-Date: 2023-02-16 21:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: id
 -->
 <resources>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Maksimalkan potensi situs Anda. Dapatkan statistik, pemberitahuan, dan lainnya dengan Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Situs Anda memiliki plugin Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Aplikasi seluler Jetpack didesain agar terintegrasi dengan plugin Jetpack. Beralih sekarang untuk mengakses statistik, pemberitahuan, pembaca dan lainnya.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Dapatkan notifikasi komentar, jumlah suka, jumlah pengunjung baru, dan lainnya.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Temukan dan ikuti situs dan komunitas favorit Anda, serta bagikan konten Anda.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Amati peningkatan lalu lintas Anda lewat statistik lengkap dan wawasan penuh makna.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistik &amp; Wawasan</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack membuka jalan untuk lebih memberdayakan situs WordPress Anda. Beralihlah ke aplikasi—gratis dan prosesnya cepat!</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Sempurnakan WordPress dengan Jetpack</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Anda dapat mengendalikan Prompt dan Pengingat Blogging kapan pun di Situs Saya &gt; Pengaturan &gt; Blogging</string>
+    <string name="blogging_reminders_prompt_subtitle">Pemberitahuan akan mencakup kata atau frasa singkat sebagai inspirasi</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Buka &lt;b&gt;Pengaturan Situs&lt;/b&gt; untuk menyalakan kembali</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Prompt Blogging tersembunyi</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Matikan prompt</string>
+    <string name="support_forum_caption">Dapatkan bantuan dari kelompok relawan kami.</string>
+    <string name="support_forum_title">Forum komunitas</string>
+    <string name="site_settings_blogging_reminders_notification_title">Pengingat blogging</string>
+    <string name="site_settings_blogging_prompts_title">Tampilkan prompt</string>
+    <string name="site_settings_blogging">Penulisan Blog</string>
     <string name="install_play_store_to_get_jetpack">Silakan instal Google Play Store untuk mendapatkan aplikasi Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Lakukan ini nanti</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Ganti ke Jetpack </string>
@@ -300,7 +319,9 @@ Language: id
     <string name="blogging_prompts_onboarding_content_note_title">Catatan:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Kami akan menunjukkan prompt baru setiap hari di dasbor Anda untuk membantu Anda mendapatkan ide!</string>
     <string name="blogging_prompts_onboarding_content_top">Cara ter baik untuk menjadi penulis yang baik adalah membangun kebiasaan menulis dan membaginya dengan yang lain - Itulah saat Prompts muncul!</string>
+    <string name="blogging_prompts_onboarding_header_title">Mempersembahkan\nPrompt Blogging</string>
     <string name="blogging_prompt_set_reminders">Setel pengingat</string>
+    <string name="blogging_reminders_prompt_title">Sertakan Prompt Blogging</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Posting secara reguler menarik pembaca baru. Beritahu kami kapan Anda mau menulis dan kami akan mengirimkan Anda pengingat!</string>
     <string name="set_your_blogging_prompts_title">Menjadi penulis yang baik dengan membangun kebiasaan</string>
     <string name="site_creation_intent_writing_poetry">Penulisan &amp; Puisi</string>
@@ -606,6 +627,7 @@ Language: id
     <string name="support_ticket_subject">WordPress untuk Dukungan Android</string>
     <string name="site_settings_categories_hint">Kelola kategori situs Anda</string>
     <string name="site_settings_categories_title">Kategori</string>
+    <string name="site_settings_blogging_reminders_title">Pengingat</string>
     <string name="page_is_posts_page_warning">Konten halaman pos terbaru Anda dibuat secara otomatis dan tidak dapat disunting.</string>
     <string name="gutenberg_native_border_settings">Pengaturan Batas</string>
     <string name="storage_utils_dialog_dont_show_button">Jangan Tampilkan Lagi</string>
