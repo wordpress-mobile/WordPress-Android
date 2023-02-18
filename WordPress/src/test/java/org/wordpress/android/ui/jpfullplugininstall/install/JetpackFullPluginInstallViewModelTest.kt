@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.ui.jpfullplugininstall.install.JetpackFullPluginInstallAnalyticsTracker.*
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 
 @ExperimentalCoroutinesApi
@@ -27,13 +28,15 @@ class JetpackFullPluginInstallViewModelTest : BaseUnitTest() {
     private val selectedSiteRepository: SelectedSiteRepository = mock()
     private val pluginStore: PluginStore = mock()
     private val dispatcher: Dispatcher = mock()
+    private val analyticsTracker: JetpackFullPluginInstallAnalyticsTracker = mock()
     private lateinit var actionCaptor: KArgumentCaptor<Action<Any>>
     private val classToTest = JetpackFullPluginInstallViewModel(
         uiStateMapper = uiStateMapper,
         selectedSiteRepository = selectedSiteRepository,
         bgDispatcher = testDispatcher(),
         pluginStore,
-        dispatcher
+        dispatcher,
+        analyticsTracker
     )
 
     private val selectedSite = SiteModel().apply {
@@ -54,7 +57,8 @@ class JetpackFullPluginInstallViewModelTest : BaseUnitTest() {
             selectedSiteRepository = selectedSiteRepository,
             bgDispatcher = testDispatcher(),
             pluginStore,
-            dispatcher
+            dispatcher,
+            analyticsTracker
         )
         assertThat(initialMockedClassToTest.uiState.value).isInstanceOf(UiState.Initial::class.java)
     }
@@ -122,6 +126,60 @@ class JetpackFullPluginInstallViewModelTest : BaseUnitTest() {
             )
         )
         job.cancel()
+    }
+
+    @Test
+    fun `Should track initial screen shown when onInitialShown is called`() {
+        classToTest.onInitialShown()
+        verify(analyticsTracker).trackScreenShown(Status.Initial)
+    }
+
+    @Test
+    fun `Should track loading screen shown when onInstallingShown is called`() {
+        classToTest.onInstallingShown()
+        verify(analyticsTracker).trackScreenShown(Status.Loading)
+    }
+
+    @Test
+    fun `Should track error screen shown when onErrorShown is called`() {
+        classToTest.onErrorShown()
+        verify(analyticsTracker).trackScreenShown(Status.Error)
+    }
+
+    @Test
+    fun `Should track install button clicked when onContinueClick is called`() {
+        classToTest.onContinueClick()
+        verify(analyticsTracker).trackInstallButtonClicked()
+    }
+
+    @Test
+    fun `Should track done button clicked when onDoneClick is called`() {
+        classToTest.onDoneClick()
+        verify(analyticsTracker).trackDoneButtonClicked()
+    }
+
+    @Test
+    fun `Should track retry button clicked when onRetryClick is called`() {
+        classToTest.onRetryClick()
+        verify(analyticsTracker).trackRetryButtonClicked()
+    }
+
+    @Test
+    fun `Should track cancel button clicked when onBackPressed is called`() = test {
+        mockSelectedSite(selectedSite)
+        whenever(uiStateMapper.mapInstalling()).thenReturn(UiState.Installing)
+        classToTest.onContinueClick()
+        classToTest.onBackPressed()
+        verify(analyticsTracker).trackCancelButtonClicked(Status.Loading)
+    }
+
+    @Test
+    fun `Should track cancel button clicked when onDismissScreenClick is called`() = test {
+        mockSelectedSite(selectedSite)
+        whenever(uiStateMapper.mapInstalling()).thenReturn(UiState.Installing)
+        classToTest.onContinueClick()
+        classToTest.onDismissScreenClick()
+        verify(analyticsTracker).trackCancelButtonClicked(Status.Loading)
     }
 
     private fun mockSelectedSite(selectedSite: SiteModel) {

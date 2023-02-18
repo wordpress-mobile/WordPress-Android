@@ -2517,6 +2517,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jp_install_full_plugin_onboarding_modal_dismissed";
             case JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING_INSTALL_TAPPED:
                 return "jp_install_full_plugin_onboarding_modal_install_tapped";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_VIEWED:
+                return "jp_install_full_plugin_flow_viewed";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_CANCEL_TAPPED:
+                return "jp_install_full_plugin_flow_cancel_tapped";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_INSTALL_TAPPED:
+                return "jp_install_full_plugin_flow_install_tapped";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_RETRY_TAPPED:
+                return "jp_install_full_plugin_flow_retry_tapped";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_SUCCESS:
+                return "jp_install_full_plugin_flow_success";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_DONE_TAPPED:
+                return "jp_install_full_plugin_flow_done_tapped";
         }
         return null;
     }
