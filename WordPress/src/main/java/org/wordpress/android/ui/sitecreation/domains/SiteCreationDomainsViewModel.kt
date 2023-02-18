@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType
 import org.wordpress.android.models.networkresource.ListState
@@ -187,7 +188,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
              * domain names into two, one part for the domain names that start with the current query plus `.` and the
              * other part for the others. We then combine them back again into a single list.
              */
-            val domainNames = event.suggestions.map { it.domain_name }
+            val domainNames = event.suggestions.map(::parseSuggestion)
                 .partition { it.startsWith("${query.value}.") }
                 .toList().flatten()
 
@@ -199,6 +200,15 @@ class SiteCreationDomainsViewModel @Inject constructor(
             }
 
             updateUiStateToContent(query, Success(domainNames), emptyListMessage)
+        }
+    }
+
+    @Suppress("ForbiddenComment")
+    private fun parseSuggestion(response: DomainSuggestionResponse): String = with(response) {
+        // TODO: Replace string with data class
+        return when {
+            purchasingFeatureConfig.isEnabledOrManuallyOverridden() -> "$domain_name ($cost)"
+            else -> domain_name
         }
     }
 
