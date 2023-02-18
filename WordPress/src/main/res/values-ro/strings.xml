@@ -51,7 +51,7 @@ Language: ro
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Află mai multe la jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Comută la aplicația Jetpack</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Amintește-mi mai târziu</string>
-    <string name="my_site_card_menu_item_hide_this">Ascunde asta</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">Ascunde asta</string>
     <string name="jetpack_feature_card_content_phase_three">În curând, Statistici, Cititor, Notificări și alte funcționalități se vor muta în aplicația Jetpack pentru mobil.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">În curând, Statistici, Cititor, Notificări și alte funcționalități propulsate de Jetpack vor fi înlăturate din aplicația WordPress.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statistici, Cititor, Notificări și alte funcționalități propulsate de Jetpack vor fi înlăturate din aplicația WordPress pe %s.</string>

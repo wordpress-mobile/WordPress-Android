@@ -8,6 +8,6 @@
 
     <item
         android:id="@+id/jetpack_card_menu_item_hide_this"
-        android:title="@string/my_site_card_menu_item_hide_this"
+        android:title="@string/jetpack_feature_card_menu_item_hide_this"
         android:icon="@drawable/ic_not_visible_white_24dp"/>
 </menu>

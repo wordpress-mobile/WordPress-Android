@@ -47,7 +47,7 @@ Language: sq_AL
     <string name="weeks_quantity_other">%d javë</string>
     <string name="weeks_quantity_one">1 javë</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Nga &lt;b&gt;Dita e Parë&lt;/b&gt;</string>
-    <string name="my_site_card_menu_item_hide_this">Fshihe këtë</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">Fshihe këtë</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Kujtoma më vonë</string>
     <string name="jetpack_feature_card_content_phase_three">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të Jetpack-ut së shpejti do të kalohen te aplikacioni Jetpack për celular.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Kaloni te aplikacioni Jetpack</string>

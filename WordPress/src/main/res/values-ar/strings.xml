@@ -27,7 +27,7 @@ Language: ar
     <string name="weeks_quantity_other">%d من الأسابيع</string>
     <string name="weeks_quantity_one">أسبوع واحد</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">من &lt;b&gt;DayOne&lt;/b&gt;</string>
-    <string name="my_site_card_menu_item_hide_this">إخفاء هذا</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">إخفاء هذا</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">ذكرني لاحقًا</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">التبديل إلى تطبيق Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">معرفة المزيد على jetpack.com</string>

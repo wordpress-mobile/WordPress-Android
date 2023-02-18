@@ -19,7 +19,7 @@ Language: fr
     <string name="stats_timeframe_last_seven_days">7 derniers jours</string>
     <string name="weeks_quantity_one">1 semaine</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Depuis le &lt;b&gt;jour 1&lt;/b&gt;</string>
-    <string name="my_site_card_menu_item_hide_this">Masquer ceci</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">Masquer ceci</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Me rappeler ultérieurement</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Passer à l’application Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Lire la suite sur jetpack.com</string>

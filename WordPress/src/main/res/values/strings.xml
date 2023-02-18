@@ -2302,7 +2302,7 @@
     <string name="my_site_bottom_sheet_add_story">Story post</string>
     <string name="my_site_quick_actions_title">Quick Links</string>
 
-    <string name="my_site_card_menu_item_hide_this">Hide this</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
 
     <!-- My Site - Dashboard -->
     <string name="my_site_dashboard_tab_title">Home</string>

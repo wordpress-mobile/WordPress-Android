@@ -28,7 +28,7 @@ Language: ja_JP
     <string name="weeks_quantity_other">%d週</string>
     <string name="weeks_quantity_one">1週</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt; から</string>
-    <string name="my_site_card_menu_item_hide_this">非表示</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">非表示</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">後で再通知</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Jetpack アプリに切り替える</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">詳細は jetpack.com をご覧ください</string>
