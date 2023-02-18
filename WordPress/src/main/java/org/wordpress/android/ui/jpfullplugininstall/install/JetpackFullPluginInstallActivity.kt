@@ -39,6 +39,10 @@ class JetpackFullPluginInstallActivity : AppCompatActivity() {
         observeActionEvents()
     }
 
+    override fun onBackPressed() {
+        viewModel.onBackPressed()
+    }
+
     @Composable
     private fun JetpackFullPluginInstallScreen() {
         val uiState by viewModel.uiState.collectAsState()
@@ -53,22 +57,33 @@ class JetpackFullPluginInstallActivity : AppCompatActivity() {
                 },
             ) {
                 when (this) {
-                    is UiState.Initial -> InitialState(
-                        uiState = this,
-                        onContinueClick = viewModel::onContinueClick,
-                    )
-                    is UiState.Installing -> InstallingState(
-                        uiState = this,
-                    )
-                    is UiState.Done -> DoneState(
-                        uiState = this,
-                        onDoneClick = viewModel::onDoneClick,
-                    )
-                    is UiState.Error -> ErrorState(
-                        uiState = this,
-                        onRetryClick = viewModel::onRetryClick,
-                        onContactSupportClick = viewModel::onContactSupportClick,
-                    )
+                    is UiState.Initial -> {
+                        InitialState(
+                            uiState = this,
+                            onContinueClick = viewModel::onContinueClick,
+                        )
+                        viewModel.onInitialShown()
+                    }
+                    is UiState.Installing -> {
+                        InstallingState(
+                            uiState = this,
+                        )
+                        viewModel.onInstallingShown()
+                    }
+                    is UiState.Done -> {
+                        DoneState(
+                            uiState = this,
+                            onDoneClick = viewModel::onDoneClick,
+                        )
+                    }
+                    is UiState.Error -> {
+                        ErrorState(
+                            uiState = this,
+                            onRetryClick = viewModel::onRetryClick,
+                            onContactSupportClick = viewModel::onContactSupportClick,
+                        )
+                        viewModel.onErrorShown()
+                    }
                 }
             }
         }
@@ -89,6 +104,7 @@ class JetpackFullPluginInstallActivity : AppCompatActivity() {
                 )
             }
             is ActionEvent.Dismiss -> {
+                ActivityLauncher.showMainActivity(this)
                 finish()
             }
         }.exhaustive
