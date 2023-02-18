@@ -46,6 +46,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
@@ -56,6 +57,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPr
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
@@ -81,6 +83,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
+import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -188,6 +191,7 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil,
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
+    private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
@@ -206,6 +210,7 @@ class MySiteViewModel @Inject constructor(
     private val _onBloggingPromptsLearnMore = SingleLiveEvent<Event<Unit>>()
     private val _onBloggingPromptsViewMore = SingleLiveEvent<Event<Unit>>()
     private val _onBloggingPromptsRemoved = SingleLiveEvent<Event<Unit>>()
+    private val _onJetpackInstallFullPluginLearnMore = SingleLiveEvent<Event<Unit>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartTabStep
         .switchMap { quickStartSiteMenuStep ->
@@ -279,6 +284,7 @@ class MySiteViewModel @Inject constructor(
     val onBloggingPromptsLearnMore = _onBloggingPromptsLearnMore as LiveData<Event<Unit>>
     val onBloggingPromptsViewMore = _onBloggingPromptsViewMore as LiveData<Event<Unit>>
     val onBloggingPromptsRemoved = _onBloggingPromptsRemoved as LiveData<Event<Unit>>
+    val onJetpackInstallFullPluginLearnMore = _onJetpackInstallFullPluginLearnMore as LiveData<Event<Unit>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     private var shouldMarkUpdateSiteTitleTaskComplete = false
@@ -489,7 +495,6 @@ class MySiteViewModel @Inject constructor(
             jetpackFeatureCardHelper.shouldShowSwitchToJetpackMenuCard()
         }
 
-
         val migrationSuccessCard = SingleActionCard(
             textResource = R.string.jp_migration_success_card_message,
             imageResource = R.drawable.ic_wordpress_blue_32dp,
@@ -500,7 +505,15 @@ class MySiteViewModel @Inject constructor(
             val isWordPressInstalled = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
             isJetpackApp && isMigrationCompleted && isWordPressInstalled
         }
-        val cardsResult = if (jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()) emptyList<MySiteCardAndItem>()
+
+        val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderParams(
+            site = site,
+            onLearnMoreClick = ::onJetpackInstallFullPluginLearnMoreClick,
+            onHideMenuItemClick = ::onJetpackInstallFullPluginHideMenuItemClick,
+        )
+        val jetpackInstallFullPluginCard = jetpackInstallFullPluginCardBuilder.build(jetpackInstallFullPluginCardParams)
+
+        val cardsResult = if (jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()) emptyList()
         else cardsBuilder.build(
             QuickActionsCardBuilderParams(
                 siteModel = site,
@@ -557,6 +570,7 @@ class MySiteViewModel @Inject constructor(
                 activeTask = activeTask,
                 enableFocusPoints = shouldEnableQuickLinkRibbonFocusPoints()
             ),
+            jetpackInstallFullPluginCardParams,
             isMySiteTabsEnabled
         )
         val dynamicCards = dynamicCardsBuilder.build(
@@ -596,6 +610,7 @@ class MySiteViewModel @Inject constructor(
             MySiteTabType.SITE_MENU to orderForDisplay(
                 infoItem = infoItem,
                 migrationSuccessCard = migrationSuccessCard,
+                jetpackInstallFullPluginCard = jetpackInstallFullPluginCard,
                 cards = cardsResult.filterNot {
                     getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
                 },
@@ -662,6 +677,7 @@ class MySiteViewModel @Inject constructor(
                 add(Type.QUICK_START_CARD)
             }
             add(Type.QUICK_LINK_RIBBON)
+            add(Type.JETPACK_INSTALL_FULL_PLUGIN_CARD)
         }
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
             if (defaultTab == MySiteTabType.SITE_MENU) {
@@ -722,6 +738,7 @@ class MySiteViewModel @Inject constructor(
     private fun orderForDisplay(
         infoItem: InfoItem?,
         migrationSuccessCard: SingleActionCard? = null,
+        jetpackInstallFullPluginCard: JetpackInstallFullPluginCard? = null,
         cards: List<MySiteCardAndItem>,
         dynamicCards: List<MySiteCardAndItem>,
         siteItems: List<MySiteCardAndItem>,
@@ -733,6 +750,7 @@ class MySiteViewModel @Inject constructor(
         return mutableListOf<MySiteCardAndItem>().apply {
             infoItem?.let { add(infoItem) }
             migrationSuccessCard?.let { add(migrationSuccessCard) }
+            jetpackInstallFullPluginCard?.let { add(jetpackInstallFullPluginCard) }
             addAll(cards)
             if (indexOfDashboardCards == -1) {
                 addAll(dynamicCards)
@@ -1431,6 +1449,19 @@ class MySiteViewModel @Inject constructor(
 
     private fun onJetpackFeatureCardMoreMenuClick() {
         jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_MENU_ACCESSED)
+    }
+
+    private fun onJetpackInstallFullPluginHideMenuItemClick() {
+        selectedSiteRepository.getSelectedSite()?.localId()?.value?.let {
+            trackWithTabSourceIfNeeded(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_DISMISSED)
+            appPrefsWrapper.setShouldHideJetpackInstallFullPluginCard(it, true)
+            refresh()
+        }
+    }
+
+    private fun onJetpackInstallFullPluginLearnMoreClick() {
+        trackWithTabSourceIfNeeded(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_TAPPED)
+        _onJetpackInstallFullPluginLearnMore.postValue(Event(Unit))
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
