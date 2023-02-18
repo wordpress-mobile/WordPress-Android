@@ -33,9 +33,9 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
-import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_DOT
 import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_MOBILE
+import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -144,10 +144,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             updateUiStateToContent(query, Loading(Ready(emptyList()), false))
             fetchDomainsJob = launch {
                 delay(THROTTLE_DELAY)
-                val onSuggestedDomains: OnSuggestedDomains = when (purchasingFeatureConfig.isEnabled()) {
-                    true -> fetchFreeAndPaidDomains(query)
-                    false -> fetchFreeDomains(query)
-                }
+                val onSuggestedDomains: OnSuggestedDomains = fetchDomainsByPurchasingFeatureConfig(query.value)
 
                 withContext(mainDispatcher) {
                     onDomainsFetched(query, onSuggestedDomains)
@@ -162,20 +159,11 @@ class SiteCreationDomainsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchFreeAndPaidDomains(query: DomainSuggestionsQuery): OnSuggestedDomains {
-        return fetchDomainsUseCase.fetchDomains(
-            query.value,
-            vendor = FETCH_DOMAINS_VENDOR_MOBILE,
-            onlyWordpressCom = false,
-        )
-    }
+    private suspend fun fetchDomainsByPurchasingFeatureConfig(query: String): OnSuggestedDomains {
+        val onlyWordpressCom = !purchasingFeatureConfig.isEnabledOrManuallyOverridden()
+        val vendor = if (onlyWordpressCom) FETCH_DOMAINS_VENDOR_DOT else FETCH_DOMAINS_VENDOR_MOBILE
 
-    private suspend fun fetchFreeDomains(query: DomainSuggestionsQuery): OnSuggestedDomains {
-        return fetchDomainsUseCase.fetchDomains(
-            query.value,
-            vendor = FETCH_DOMAINS_VENDOR_DOT,
-            onlyWordpressCom = true,
-        )
+        return fetchDomainsUseCase.fetchDomains(query, vendor, onlyWordpressCom)
     }
 
     private fun onDomainsFetched(query: DomainSuggestionsQuery, event: OnSuggestedDomains) {
