@@ -183,6 +183,7 @@ public class AppPrefs {
         SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP,
         SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD,
         SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD,
+        SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING,
     }
 
     /**
@@ -1585,5 +1586,17 @@ public class AppPrefs {
 
     @NonNull private static String getHideJetpackInstallFullPluginCardPref(int siteId) {
         return DeletablePrefKey.SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD.name() + siteId;
+    }
+
+    public static Boolean getShouldShowJetpackFullPluginInstallOnboarding(int siteId) {
+        return prefs().getBoolean(getShouldShowJetpackFullPluginInstallOnboardingPref(siteId), true);
+    }
+
+    public static void setShouldShowJetpackFullPluginInstallOnboarding(int siteId, final boolean isShown) {
+        prefs().edit().putBoolean(getShouldShowJetpackFullPluginInstallOnboardingPref(siteId), isShown).apply();
+    }
+
+    @NonNull private static String getShouldShowJetpackFullPluginInstallOnboardingPref(int siteId) {
+        return DeletablePrefKey.SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING.name() + siteId;
     }
 }
