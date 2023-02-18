@@ -27,13 +27,15 @@ class JetpackFullPluginInstallViewModelTest : BaseUnitTest() {
     private val selectedSiteRepository: SelectedSiteRepository = mock()
     private val pluginStore: PluginStore = mock()
     private val dispatcher: Dispatcher = mock()
+    private val analyticsTracker: JetpackFullPluginInstallAnalyticsTracker = mock()
     private lateinit var actionCaptor: KArgumentCaptor<Action<Any>>
     private val classToTest = JetpackFullPluginInstallViewModel(
         uiStateMapper = uiStateMapper,
         selectedSiteRepository = selectedSiteRepository,
         bgDispatcher = testDispatcher(),
         pluginStore,
-        dispatcher
+        dispatcher,
+        analyticsTracker
     )
 
     private val selectedSite = SiteModel().apply {
@@ -54,7 +56,8 @@ class JetpackFullPluginInstallViewModelTest : BaseUnitTest() {
             selectedSiteRepository = selectedSiteRepository,
             bgDispatcher = testDispatcher(),
             pluginStore,
-            dispatcher
+            dispatcher,
+            analyticsTracker
         )
         assertThat(initialMockedClassToTest.uiState.value).isInstanceOf(UiState.Initial::class.java)
     }

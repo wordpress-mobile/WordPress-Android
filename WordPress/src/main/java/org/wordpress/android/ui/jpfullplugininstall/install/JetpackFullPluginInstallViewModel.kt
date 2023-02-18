@@ -69,16 +69,12 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
         installJetpackPlugin()
     }
 
+    fun onBackPressed() {
+        dismissScreen()
+    }
+
     fun onDismissScreenClick() {
-        when (uiState.value) {
-            is UiState.Initial -> Status.Initial
-            is UiState.Installing -> Status.Loading
-            is UiState.Error -> Status.Error
-            else -> null
-        }?.let { status ->
-            analyticsTracker.trackCancelButtonClicked(status)
-        }
-        postActionEvent(ActionEvent.Dismiss)
+        dismissScreen()
     }
 
     fun onDoneClick() {
@@ -165,6 +161,18 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
             val payload = InstallSitePluginPayload(it, "jetpack")
             dispatcher.dispatch(PluginActionBuilder.newInstallJpForIndividualPluginSiteAction(payload))
         }
+    }
+
+    private fun dismissScreen() {
+        when (uiState.value) {
+            is UiState.Initial -> Status.Initial
+            is UiState.Installing -> Status.Loading
+            is UiState.Error -> Status.Error
+            else -> null
+        }?.let { status ->
+            analyticsTracker.trackCancelButtonClicked(status)
+        }
+        postActionEvent(ActionEvent.Dismiss)
     }
 
     private fun postUiState(uiState: UiState) {

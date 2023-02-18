@@ -39,6 +39,10 @@ class JetpackFullPluginInstallActivity : AppCompatActivity() {
         observeActionEvents()
     }
 
+    override fun onBackPressed() {
+        viewModel.onBackPressed()
+    }
+
     @Composable
     private fun JetpackFullPluginInstallScreen() {
         val uiState by viewModel.uiState.collectAsState()
