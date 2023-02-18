@@ -2,7 +2,6 @@ package org.wordpress.android.ui.jpfullplugininstall.install
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,8 +13,9 @@ import org.wordpress.android.fluxc.generated.PluginActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginPayload
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled
-import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -25,6 +25,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
+@Suppress("UnusedPrivateMember")
 class JetpackFullPluginInstallViewModel @Inject constructor(
     private val uiStateMapper: JetpackFullPluginInstallUiStateMapper,
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -93,7 +94,7 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSitePluginConfigured(event: PluginStore.OnSitePluginConfigured) {
+    fun onSitePluginConfigured(event: OnSitePluginConfigured) {
         if (event.isError) {
             AppLog.d(
                 AppLog.T.PLUGINS,
@@ -109,7 +110,7 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSiteChanged(event: SiteStore.OnSiteChanged) {
+    fun onSiteChanged(event: OnSiteChanged) {
         val success = if (event.isError) {
             AppLog.d(
                 AppLog.T.PLUGINS,
