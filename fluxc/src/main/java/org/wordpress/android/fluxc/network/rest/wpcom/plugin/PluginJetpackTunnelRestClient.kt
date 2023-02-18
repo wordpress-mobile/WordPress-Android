@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequest
+import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginError
@@ -76,10 +77,30 @@ class PluginJetpackTunnelRestClient @Inject constructor(
      * https://wordpress.org/plugins/<slug>. For example, for Jetpack, the value is 'jetpack'.
      */
     fun installPlugin(site: SiteModel, pluginSlug: String) {
-        val url = WPAPI.plugins.urlV2
-        val body = mapOf(
-                "slug" to pluginSlug
+        runInstallPlugin(
+            site,
+            pluginSlug,
+            mapOf("slug" to pluginSlug),
+            false
         )
+    }
+
+    fun installJetpackOnIndividualPluginSite(site: SiteModel) {
+        runInstallPlugin(
+            site,
+            "jetpack",
+            mapOf("slug" to "jetpack", "status" to "active"),
+            true
+        )
+    }
+
+    private fun runInstallPlugin(
+        site: SiteModel,
+        pluginSlug: String,
+        body: Map<String, String>,
+        isJetpackIndividualPluginScenario: Boolean
+    ) {
+        val url = WPAPI.plugins.urlV2
 
         val request = JetpackTunnelGsonRequest.buildPostRequest(
                 url,
@@ -92,13 +113,28 @@ class PluginJetpackTunnelRestClient @Inject constructor(
                                 site,
                                 it.toDomainModel(site.id)
                         )
-                        dispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(payload))
+                        dispatcher.dispatch(if (isJetpackIndividualPluginScenario) {
+                            PluginActionBuilder.newInstalledJpForIndividualPluginSiteAction(payload)
+                        } else {
+                            PluginActionBuilder.newInstalledSitePluginAction(payload)
+                        })
                     }
                 },
                 { error ->
                     val installError = InstallSitePluginError(error)
-                    val payload = InstalledSitePluginPayload(site, pluginSlug, installError)
-                    dispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(payload))
+                    if (
+                        isJetpackIndividualPluginScenario &&
+                        installError.type == PluginStore.InstallSitePluginErrorType.PLUGIN_ALREADY_INSTALLED
+                    ) {
+                        configurePlugin(site, "jetpack/jetpack", true)
+                    } else {
+                        val payload = InstalledSitePluginPayload(site, pluginSlug, installError)
+                        dispatcher.dispatch(if (isJetpackIndividualPluginScenario) {
+                            PluginActionBuilder.newInstalledJpForIndividualPluginSiteAction(payload)
+                        } else {
+                            PluginActionBuilder.newInstalledSitePluginAction(payload)
+                        })
+                    }
                 }
         )
         add(request)
