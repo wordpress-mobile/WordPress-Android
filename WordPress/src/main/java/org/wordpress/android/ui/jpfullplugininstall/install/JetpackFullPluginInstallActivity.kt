@@ -89,6 +89,7 @@ class JetpackFullPluginInstallActivity : AppCompatActivity() {
                 )
             }
             is ActionEvent.Dismiss -> {
+                ActivityLauncher.showMainActivity(this)
                 finish()
             }
         }.exhaustive
