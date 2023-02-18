@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.ui.jpfullplugininstall.install.JetpackFullPluginInstallAnalyticsTracker.Status
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -32,7 +33,8 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     // adding pluginStore seems needed to allow the events Subscribe to work
     private val pluginStore: PluginStore,
-    private val dispatcher: Dispatcher
+    private val dispatcher: Dispatcher,
+    private val analyticsTracker: JetpackFullPluginInstallAnalyticsTracker,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiState = MutableStateFlow<UiState>(uiStateMapper.mapInitial())
     val uiState = _uiState.asStateFlow()
@@ -49,20 +51,43 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
         dispatcher.unregister(this)
     }
 
+    fun onInitialShown() {
+        analyticsTracker.trackScreenShown(Status.Initial)
+    }
+
+    fun onInstallingShown() {
+        analyticsTracker.trackScreenShown(Status.Loading)
+    }
+
+    fun onErrorShown() {
+        analyticsTracker.trackScreenShown(Status.Error)
+    }
+
     fun onContinueClick() {
+        analyticsTracker.trackInstallButtonClicked()
         postUiState(uiStateMapper.mapInstalling())
         installJetpackPlugin()
     }
 
     fun onDismissScreenClick() {
+        when (uiState.value) {
+            is UiState.Initial -> Status.Initial
+            is UiState.Installing -> Status.Loading
+            is UiState.Error -> Status.Error
+            else -> null
+        }?.let { status ->
+            analyticsTracker.trackCancelButtonClicked(status)
+        }
         postActionEvent(ActionEvent.Dismiss)
     }
 
     fun onDoneClick() {
+        analyticsTracker.trackDoneButtonClicked()
         postActionEvent(ActionEvent.Dismiss)
     }
 
     fun onRetryClick() {
+        analyticsTracker.trackRetryButtonClicked()
         postUiState(uiStateMapper.mapInstalling())
         installJetpackPlugin()
     }
@@ -127,6 +152,7 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
         }
 
         if (success) {
+            analyticsTracker.trackJetpackInstallationSuccess()
             postUiState(uiStateMapper.mapDone())
         } else {
             postUiState(uiStateMapper.mapError())
