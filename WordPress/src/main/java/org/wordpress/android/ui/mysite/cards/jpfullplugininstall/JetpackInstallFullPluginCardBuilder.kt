@@ -30,6 +30,5 @@ class JetpackInstallFullPluginCardBuilder @Inject constructor(
                 installFullPluginFeatureConfig.isEnabled() &&
                 !appPrefsWrapper.getShouldHideJetpackInstallFullPluginCard(site.id) &&
                 site.isJetpackConnectedWithoutFullPlugin()
-
     }
 }
