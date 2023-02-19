@@ -71,8 +71,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
     val uiState: LiveData<DomainsUiState> = _uiState
 
     private var currentQuery: DomainSuggestionsQuery? = null
-    private var listState: ListState<String> = ListState.Init()
-    private var selectedDomain by Delegates.observable<String?>(null) { _, old, new ->
+    private var listState: ListState<DomainModel> = ListState.Init()
+    private var selectedDomain by Delegates.observable<DomainModel?>(null) { _, old, new ->
         if (old != new) {
             updateUiStateToContent(currentQuery, listState)
         }
@@ -105,12 +105,12 @@ class SiteCreationDomainsViewModel @Inject constructor(
         resetUiState()
     }
 
-    fun createSiteBtnClicked() {
+    fun onCreateSiteBtnClicked() {
         val domain = requireNotNull(selectedDomain) {
             "Create site button should not be visible if a domain is not selected"
         }
-        tracker.trackDomainSelected(domain, currentQuery?.value ?: "")
-        _createSiteBtnClicked.value = domain
+        tracker.trackDomainSelected(domain.domainName, currentQuery?.value ?: "")
+        _createSiteBtnClicked.value = domain.domainName
     }
 
     fun onClearTextBtnClicked() {
@@ -185,11 +185,11 @@ class SiteCreationDomainsViewModel @Inject constructor(
         } else {
             /**
              * We would like to show the domains that matches the current query at the top. For this, we split the
-             * domain names into two, one part for the domain names that start with the current query plus `.` and the
+             * domains into two, one part for the domain names that start with the current query plus `.` and the
              * other part for the others. We then combine them back again into a single list.
              */
-            val domainNames = event.suggestions.map(::parseSuggestion)
-                .partition { it.startsWith("${query.value}.") }
+            val domains = event.suggestions.map(::parseSuggestion)
+                .partition { it.domainName.startsWith("${query.value}.") }
                 .toList().flatten()
 
             // We inform the user when the search query contains non-alphanumeric characters
@@ -199,22 +199,25 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 UiStringRes(R.string.new_site_creation_empty_domain_list_message)
             }
 
-            updateUiStateToContent(query, Success(domainNames), emptyListMessage)
+            updateUiStateToContent(query, Success(domains), emptyListMessage)
         }
     }
 
-    @Suppress("ForbiddenComment")
-    private fun parseSuggestion(response: DomainSuggestionResponse): String = with(response) {
-        // TODO: Replace string with data class
-        return when {
+    private fun parseSuggestion(response: DomainSuggestionResponse): DomainModel = with(response) {
+        val domainName = when {
             purchasingFeatureConfig.isEnabledOrManuallyOverridden() -> "$domain_name ($cost)"
             else -> domain_name
         }
+
+        DomainModel(
+            domainName,
+            isFree = is_free
+        )
     }
 
     private fun updateUiStateToContent(
         query: DomainSuggestionsQuery?,
-        state: ListState<String>,
+        state: ListState<DomainModel>,
         emptyListMessage: UiString? = null
     ) {
         listState = state
@@ -236,7 +239,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
     private fun createDomainsUiContentState(
         query: DomainSuggestionsQuery?,
-        state: ListState<String>,
+        state: ListState<DomainModel>,
         emptyListMessage: UiString?
     ): DomainsUiContentState {
         // Only treat it as an error if the search is user initiated
@@ -261,7 +264,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private fun createSuggestionsUiStates(
         onRetry: () -> Unit,
         query: String?,
-        data: List<String>,
+        data: List<DomainModel>,
         errorFetchingSuggestions: Boolean,
         @StringRes errorResId: Int?
     ): List<DomainsListItemUiState> {
@@ -280,13 +283,13 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 }
             }
 
-            data.forEach { domainName ->
+            data.forEach { domain ->
                 val itemUiState = DomainsModelAvailableUiState(
-                    domainSanitizer.getName(domainName),
-                    domainSanitizer.getDomain(domainName),
-                    checked = domainName == selectedDomain
+                    domainSanitizer.getName(domain.domainName),
+                    domainSanitizer.getDomain(domain.domainName),
+                    checked = domain == selectedDomain
                 )
-                itemUiState.onItemTapped = { setSelectedDomainName(domainName) }
+                itemUiState.onItemTapped = { onDomainSelected(domain) }
                 items.add(itemUiState)
             }
         }
@@ -295,7 +298,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
     private fun getDomainUnavailableUiState(
         query: String,
-        domains: List<String>
+        domains: List<DomainModel>
     ): DomainsModelUiState? {
         if (domains.isEmpty()) {
             return null
@@ -304,8 +307,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
         val sanitizedQuery = domainSanitizer.sanitizeDomainQuery(query)
 
         val isDomainUnavailable = (domains.find { domain ->
-            domain.startsWith("$sanitizedQuery.")
-        }).isNullOrEmpty()
+            domain.domainName.startsWith("$sanitizedQuery.")
+        })?.domainName.isNullOrEmpty()
 
         return if (isDomainUnavailable) {
             DomainsModelUnavailabilityUiState(
@@ -342,8 +345,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun setSelectedDomainName(domainName: String) {
-        selectedDomain = domainName
+    fun onDomainSelected(domain: DomainModel) {
+        selectedDomain = domain
     }
 
     private fun isNonEmptyUserQuery(query: DomainSuggestionsQuery?): Boolean =
@@ -379,6 +382,11 @@ class SiteCreationDomainsViewModel @Inject constructor(
             )
         }
     }
+
+    data class DomainModel(
+        val domainName: String,
+        val isFree: Boolean,
+    )
 
     sealed class DomainsListItemUiState {
         var onItemTapped: (() -> Unit)? = null

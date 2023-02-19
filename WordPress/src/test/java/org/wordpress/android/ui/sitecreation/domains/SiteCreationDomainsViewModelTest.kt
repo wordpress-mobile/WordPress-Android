@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainModel
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelAvailableUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelUnavailabilityUiState
@@ -282,12 +283,12 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
      */
     @Test
     fun verifyCreateSiteBtnClickedPropagated() = testWithSuccessResponse {
-        val domainName = "test.domain"
-        viewModel.setSelectedDomainName(domainName)
-        viewModel.createSiteBtnClicked()
+        val domain = DomainModel("test.domain", isFree = false)
+        viewModel.onDomainSelected(domain)
+        viewModel.onCreateSiteBtnClicked()
         val captor = ArgumentCaptor.forClass(String::class.java)
         verify(createSiteBtnObserver, times(1)).onChanged(captor.capture())
-        assertThat(captor.firstValue).isEqualTo(domainName)
+        assertThat(captor.firstValue).isEqualTo(domain.domainName)
     }
 
     @Test

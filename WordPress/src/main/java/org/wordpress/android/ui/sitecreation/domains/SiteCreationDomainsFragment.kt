@@ -66,7 +66,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                 rootView = it.root as ViewGroup,
                 onClear = { viewModel.onClearTextBtnClicked() }
             )
-            it.createSiteButton.setOnClickListener { viewModel.createSiteBtnClicked() }
+            it.createSiteButton.setOnClickListener { viewModel.onCreateSiteBtnClicked() }
             it.initRecyclerView()
             it.initViewModel()
         }
