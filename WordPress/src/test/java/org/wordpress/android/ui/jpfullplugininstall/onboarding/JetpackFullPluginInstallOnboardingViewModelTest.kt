@@ -14,16 +14,19 @@ import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.UiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 @ExperimentalCoroutinesApi
 class JetpackFullPluginInstallOnboardingViewModelTest : BaseUnitTest() {
     private val selectedSiteRepository: SelectedSiteRepository = mock()
     private val uiStateMapper: JetpackFullPluginInstallOnboardingUiStateMapper = mock()
     private val analyticsTracker: JetpackFullPluginInstallOnboardingAnalyticsTracker = mock()
+    private val appPrefsWrapper: AppPrefsWrapper = mock()
 
     private val siteName = "Site Name"
     private val pluginNames = listOf("jetpack-search", "jetpack-backup")
     private val selectedSite = SiteModel().apply {
+        id = 1
         name = siteName
         activeJetpackConnectionPlugins = pluginNames.joinToString(",")
     }
@@ -35,6 +38,7 @@ class JetpackFullPluginInstallOnboardingViewModelTest : BaseUnitTest() {
         uiStateMapper = uiStateMapper,
         selectedSiteRepository = selectedSiteRepository,
         analyticsTracker = analyticsTracker,
+        appPrefsWrapper = appPrefsWrapper,
         bgDispatcher = testDispatcher(),
     )
 
@@ -50,6 +54,13 @@ class JetpackFullPluginInstallOnboardingViewModelTest : BaseUnitTest() {
         val loadedUiState = classToTest.uiState.value as UiState.Loaded
         assertThat(loadedUiState.siteName).isEqualTo(siteName)
         assertThat(loadedUiState.pluginNames).isEqualTo(pluginNames)
+    }
+
+    @Test
+    fun `Should update show onboarding flag when onScreenShown is called`() {
+        mockSelectedSite()
+        classToTest.onScreenShown()
+        verify(appPrefsWrapper).setShouldShowJetpackInstallOnboarding(selectedSite.id, false)
     }
 
     @Test

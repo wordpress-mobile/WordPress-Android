@@ -43,6 +43,7 @@ import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.FEATURE_CARD
+import org.wordpress.android.ui.jpfullplugininstall.GetShowJetpackFullPluginInstallOnboardingUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
@@ -84,6 +85,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCa
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
+import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -193,6 +195,8 @@ class MySiteViewModel @Inject constructor(
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
     private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
+    private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
+    private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -210,7 +214,7 @@ class MySiteViewModel @Inject constructor(
     private val _onBloggingPromptsLearnMore = SingleLiveEvent<Event<Unit>>()
     private val _onBloggingPromptsViewMore = SingleLiveEvent<Event<Unit>>()
     private val _onBloggingPromptsRemoved = SingleLiveEvent<Event<Unit>>()
-    private val _onJetpackInstallFullPluginLearnMore = SingleLiveEvent<Event<Unit>>()
+    private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartTabStep
         .switchMap { quickStartSiteMenuStep ->
@@ -284,7 +288,7 @@ class MySiteViewModel @Inject constructor(
     val onBloggingPromptsLearnMore = _onBloggingPromptsLearnMore as LiveData<Event<Unit>>
     val onBloggingPromptsViewMore = _onBloggingPromptsViewMore as LiveData<Event<Unit>>
     val onBloggingPromptsRemoved = _onBloggingPromptsRemoved as LiveData<Event<Unit>>
-    val onJetpackInstallFullPluginLearnMore = _onJetpackInstallFullPluginLearnMore as LiveData<Event<Unit>>
+    val onOpenJetpackInstallFullPluginOnboarding = _onOpenJetpackInstallFullPluginOnboarding as LiveData<Event<Unit>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     private var shouldMarkUpdateSiteTitleTaskComplete = false
@@ -1024,8 +1028,17 @@ class MySiteViewModel @Inject constructor(
     fun onResume(currentTab: MySiteTabType) {
         mySiteSourceManager.onResume(isSiteSelected)
         isSiteSelected = false
+        checkAndShowJetpackFullPluginInstallOnboarding()
         checkAndShowQuickStartNotice()
         bloggingPromptsCardTrackHelper.onResume(currentTab)
+    }
+
+    private fun checkAndShowJetpackFullPluginInstallOnboarding() {
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            if (getShowJetpackFullPluginInstallOnboardingUseCase.execute(selectedSite)) {
+                _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
+            }
+        }
     }
 
     fun clearActiveQuickStartTask() {
@@ -1461,7 +1474,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onJetpackInstallFullPluginLearnMoreClick() {
         trackWithTabSourceIfNeeded(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_TAPPED)
-        _onJetpackInstallFullPluginLearnMore.postValue(Event(Unit))
+        _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
@@ -1529,6 +1542,8 @@ class MySiteViewModel @Inject constructor(
             .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
         siteSelected.cardAndItems.filterIsInstance<JetpackFeatureCard>()
             .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
+        siteSelected.cardAndItems.filterIsInstance<JetpackInstallFullPluginCard>()
+            .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type, quickStartRepository.currentTab) }
     }
 
     private fun resetShownTrackers() {
@@ -1536,6 +1551,7 @@ class MySiteViewModel @Inject constructor(
         cardsTracker.resetShown()
         quickStartTracker.resetShown()
         jetpackFeatureCardShownTracker.resetShown()
+        jetpackInstallFullPluginShownTracker.resetShown()
     }
 
     private fun trackTabChanged(isSiteMenu: Boolean) {

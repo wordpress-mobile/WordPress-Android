@@ -54,6 +54,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.jpfullplugininstall.GetShowJetpackFullPluginInstallOnboardingUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
@@ -116,6 +117,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCa
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
+import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -271,6 +273,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper
 
     @Mock
+    lateinit var getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase
+
+    @Mock
     lateinit var contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker
 
     @Mock
@@ -308,6 +313,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder
+
+    @Mock
+    lateinit var jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
@@ -521,6 +529,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             bloggingPromptsSettingsHelper,
             jetpackInstallFullPluginCardBuilder,
             bloggingPromptsCardTrackHelper,
+            getShowJetpackFullPluginInstallOnboardingUseCase,
+            jetpackInstallFullPluginShownTracker            
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
