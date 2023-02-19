@@ -1,6 +1,9 @@
 package org.wordpress.android.fluxc.store.blaze
 
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -18,7 +21,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeStatusErrorType
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeStatusFetchedPayload
 import org.wordpress.android.fluxc.persistence.blaze.BlazeStatusDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeStatusDao.BlazeStatus
-import org.wordpress.android.fluxc.store.blaze.BlazeStore.BlazeStatusResult
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
 
@@ -32,7 +34,6 @@ class BlazeStoreTest {
     private val successResponse = mapOf("approved" to true)
     private val statusResult = BlazeStatus(SITE_ID,true)
     private val errorResponse = BlazeStatusError( type = GENERIC_ERROR)
-    private val errorResult = BlazeStatusError( type = GENERIC_ERROR)
 
     @Before
     fun setUp() {
@@ -49,10 +50,9 @@ class BlazeStoreTest {
             )
         )
 
-        val response = store.fetchBlazeStatus(siteModel)
+        store.fetchBlazeStatus(siteModel)
 
         verify(dao).insert(statusResult)
-        assertThat(response.isEligible).isTrue
     }
 
     @Test
@@ -64,20 +64,22 @@ class BlazeStoreTest {
                     errorResponse
                 )
             )
-            val response = store.fetchBlazeStatus(siteModel)
+            val result = store.fetchBlazeStatus(siteModel)
 
             verifyNoInteractions(dao)
-            assertThat(response.isEligible).isFalse
-            assertEquals(BlazeStatusResult(errorResult), response)
+            assertThat(result.model).isNull()
+            assertEquals(GENERIC_ERROR, result.error.type)
+            assertNull(result.error.message)
         }
 
     @Test
-    fun `given site not in db, when is eligible for blaze is triggered, then false is returned`() {
-        whenever(dao.getBlazeStatus(SITE_ID)).thenReturn(emptyList())
+    fun `given site not in db, when is eligible for blaze is triggered, then model is null`() = test {
+        whenever(dao.getBlazeStatus(SITE_ID)).thenReturn(flowOf(emptyList()))
 
-        val result = store.isSiteEligibleForBlaze(SITE_ID)
+        val result = store.getBlazeStatus(SITE_ID)
 
-        assertThat(result).isFalse
+        assertThat(result).isNotNull
+        assertThat(result.first().model).isEmpty()
     }
 
     @Test
