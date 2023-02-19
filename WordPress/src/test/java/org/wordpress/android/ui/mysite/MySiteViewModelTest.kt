@@ -54,6 +54,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.jpfullplugininstall.GetShowJetpackFullPluginInstallOnboardingUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
@@ -270,6 +271,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper
+
+    @Mock
+    lateinit var getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase
 
     @Mock
     lateinit var contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker
@@ -525,7 +529,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             bloggingPromptsSettingsHelper,
             jetpackInstallFullPluginCardBuilder,
             bloggingPromptsCardTrackHelper,
-            jetpackInstallFullPluginShownTracker
+            getShowJetpackFullPluginInstallOnboardingUseCase,
+            jetpackInstallFullPluginShownTracker            
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
