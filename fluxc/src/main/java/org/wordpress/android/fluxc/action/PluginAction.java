@@ -35,6 +35,8 @@ public enum PluginAction implements IAction {
     FETCH_SITE_PLUGIN,
     @Action(payloadType = InstallSitePluginPayload.class)
     INSTALL_SITE_PLUGIN,
+    @Action(payloadType = InstallSitePluginPayload.class)
+    INSTALL_JP_FOR_INDIVIDUAL_PLUGIN_SITE,
     @Action(payloadType = SearchPluginDirectoryPayload.class)
     SEARCH_PLUGIN_DIRECTORY,
     @Action(payloadType = UpdateSitePluginPayload.class)
@@ -53,6 +55,8 @@ public enum PluginAction implements IAction {
     FETCHED_SITE_PLUGIN,
     @Action(payloadType = InstalledSitePluginPayload.class)
     INSTALLED_SITE_PLUGIN,
+    @Action(payloadType = InstalledSitePluginPayload.class)
+    INSTALLED_JP_FOR_INDIVIDUAL_PLUGIN_SITE,
     @Action(payloadType = SearchedPluginDirectoryPayload.class)
     SEARCHED_PLUGIN_DIRECTORY,
     @Action(payloadType = UpdatedSitePluginPayload.class)
