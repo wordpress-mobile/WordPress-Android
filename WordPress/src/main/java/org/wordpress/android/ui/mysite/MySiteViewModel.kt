@@ -85,6 +85,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCa
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
+import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -195,6 +196,7 @@ class MySiteViewModel @Inject constructor(
     private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
+    private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -1540,6 +1542,8 @@ class MySiteViewModel @Inject constructor(
             .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
         siteSelected.cardAndItems.filterIsInstance<JetpackFeatureCard>()
             .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
+        siteSelected.cardAndItems.filterIsInstance<JetpackInstallFullPluginCard>()
+            .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type, quickStartRepository.currentTab) }
     }
 
     private fun resetShownTrackers() {
@@ -1547,6 +1551,7 @@ class MySiteViewModel @Inject constructor(
         cardsTracker.resetShown()
         quickStartTracker.resetShown()
         jetpackFeatureCardShownTracker.resetShown()
+        jetpackInstallFullPluginShownTracker.resetShown()
     }
 
     private fun trackTabChanged(isSiteMenu: Boolean) {
