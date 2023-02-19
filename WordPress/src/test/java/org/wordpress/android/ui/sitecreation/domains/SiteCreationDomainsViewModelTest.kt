@@ -293,7 +293,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
     @Test
     fun verifyFetchFreeAndPaidDomainsWhenPurchasingFeatureConfigIsEnabled() = testWithSuccessResponse {
-        whenever(purchasingFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(purchasingFeatureConfig.isEnabledOrManuallyOverridden()).thenReturn(true)
         viewModel.start()
 
         viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
