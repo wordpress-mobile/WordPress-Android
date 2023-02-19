@@ -356,6 +356,11 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private fun isNonEmptyUserQuery(query: DomainSuggestionsQuery?): Boolean =
         query is UserQuery && query.value.isNotBlank()
 
+    data class DomainModel(
+        val domainName: String,
+        val isFree: Boolean,
+    )
+
     data class DomainsUiState(
         val headerUiState: SiteCreationHeaderUiState?,
         val searchInputUiState: SiteCreationSearchInputUiState,
@@ -386,11 +391,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
             )
         }
     }
-
-    data class DomainModel(
-        val domainName: String,
-        val isFree: Boolean,
-    )
 
     sealed class DomainsListItemUiState {
         var onItemTapped: (() -> Unit)? = null
