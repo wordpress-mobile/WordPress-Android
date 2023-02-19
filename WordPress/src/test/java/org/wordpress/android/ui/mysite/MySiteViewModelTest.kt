@@ -54,6 +54,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.jpfullplugininstall.GetShowJetpackFullPluginInstallOnboardingUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
@@ -115,6 +116,8 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
+import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
+import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -271,6 +274,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper
 
     @Mock
+    lateinit var getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase
+
+    @Mock
     lateinit var contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker
 
     @Mock
@@ -305,6 +311,12 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+
+    @Mock
+    lateinit var jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder
+
+    @Mock
+    lateinit var jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker
 
     @Mock
     lateinit var blazeFeatureConfig: BlazeFeatureConfig
@@ -523,7 +535,10 @@ class MySiteViewModelTest : BaseUnitTest() {
             jetpackFeatureCardHelper,
             bloggingPromptsSettingsHelper,
             blazeFeatureConfig,
+            jetpackInstallFullPluginCardBuilder,
             bloggingPromptsCardTrackHelper,
+            getShowJetpackFullPluginInstallOnboardingUseCase,
+            jetpackInstallFullPluginShownTracker
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1759,6 +1774,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.bloggingPrompt != null
             },
             any(),
+            any(),
             any()
         )
     }
@@ -1772,6 +1788,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             argWhere {
                 it.bloggingPromptCardBuilderParams.bloggingPrompt == null
             },
+            any(),
             any(),
             any()
         )
@@ -1788,6 +1805,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.showViewMoreAction == true
             },
             any(),
+            any(),
             any()
         )
     }
@@ -1802,6 +1820,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             argWhere {
                 it.bloggingPromptCardBuilderParams.showViewMoreAction == false
             },
+            any(),
             any(),
             any()
         )
@@ -1818,6 +1837,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.showViewAnswersAction == true
             },
             any(),
+            any(),
             any()
         )
     }
@@ -1832,6 +1852,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             argWhere {
                 it.bloggingPromptCardBuilderParams.showViewAnswersAction == false
             },
+            any(),
             any(),
             any()
         )
@@ -1848,6 +1869,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.showRemoveAction == true
             },
             any(),
+            any(),
             any()
         )
     }
@@ -1862,6 +1884,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             argWhere {
                 it.bloggingPromptCardBuilderParams.showRemoveAction == false
             },
+            any(),
             any(),
             any()
         )
@@ -3342,6 +3365,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             quickStartCardBuilderParams = any(),
             dashboardCardsBuilderParams = any(),
             quickLinkRibbonBuilderParams = any(),
+            jetpackInstallFullPluginCardBuilderParams = any(),
             isMySiteTabsEnabled = any()
         )
 

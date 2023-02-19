@@ -119,4 +119,10 @@ sealed class MySiteCardAndItemBuilderParams {
         @DrawableRes val imageResource: Int,
         val onActionClick: () -> Unit
     )
+
+    data class JetpackInstallFullPluginCardBuilderParams(
+        val site: SiteModel,
+        val onLearnMoreClick: () -> Unit,
+        val onHideMenuItemClick: () -> Unit,
+    )
 }

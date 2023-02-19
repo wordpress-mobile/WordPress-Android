@@ -2302,6 +2302,8 @@
     <string name="my_site_bottom_sheet_add_story">Story post</string>
     <string name="my_site_quick_actions_title">Quick Links</string>
 
+    <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
+
     <!-- My Site - Dashboard -->
     <string name="my_site_dashboard_tab_title">Home</string>
     <string name="my_site_menu_tab_title">Menu</string>
@@ -2352,6 +2354,8 @@
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 answer</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d answers</string>
     <string name="my_site_blogging_prompt_card_view_answers">View all responses</string>
+
+    <string name="my_site_jp_install_full_plugin_card_content">This site is using an individual plugin, which doesn\'t support all features of the app yet. Please install the full Jetpack plugin.</string>
 
     <!-- My Site - Jetpack migration success card -->
     <string name="jp_migration_success_card_message">Please delete the WordPress app</string>
@@ -4382,7 +4386,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Unlock your site’s full potential. Get stats, notications and more with Jetpack.</string>
     <string name="jetpack_feature_card_learn_more" translatable="false">@string/learn_more</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
     <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Featured</string>
 
     <string name="install_play_store_to_get_jetpack">Please install Google Play Store to get the Jetpack app</string>

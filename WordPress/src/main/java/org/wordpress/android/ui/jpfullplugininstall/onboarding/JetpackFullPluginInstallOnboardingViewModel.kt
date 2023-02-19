@@ -11,8 +11,10 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.ContactSupport
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.Dismiss
+import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.OpenInstallJetpackFullPlugin
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.OpenTermsAndConditions
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -22,6 +24,7 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
     private val uiStateMapper: JetpackFullPluginInstallOnboardingUiStateMapper,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val analyticsTracker: JetpackFullPluginInstallOnboardingAnalyticsTracker,
+    private val appPrefsWrapper: AppPrefsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiState = MutableStateFlow<UiState>(UiState.None)
@@ -31,6 +34,7 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
     val actionEvents = _actionEvents
 
     fun onScreenShown() {
+        updateOnboardingShownForCurrentSite()
         analyticsTracker.trackScreenShown()
         postUiState(uiStateMapper.mapLoaded())
     }
@@ -41,8 +45,7 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
 
     fun onInstallFullPluginClick() {
         analyticsTracker.trackInstallButtonClick()
-        // TODO tracking event
-        // TODO open install full plugin screen when it's done
+        postActionEvent(OpenInstallJetpackFullPlugin)
     }
 
     fun onContactSupportClick() {
@@ -57,6 +60,12 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
     fun onDismissScreenClick() {
         analyticsTracker.trackScreenDismissed()
         postActionEvent(Dismiss)
+    }
+
+    private fun updateOnboardingShownForCurrentSite() {
+        selectedSiteRepository.getSelectedSite()?.id?.let {
+            appPrefsWrapper.setShouldShowJetpackInstallOnboarding(it, false)
+        }
     }
 
     private fun postUiState(uiState: UiState) {
@@ -81,7 +90,7 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
 
     sealed class ActionEvent {
         object OpenTermsAndConditions : ActionEvent()
-        object InstallJPFullPlugin : ActionEvent()
+        object OpenInstallJetpackFullPlugin : ActionEvent()
         data class ContactSupport(
             val origin: HelpActivity.Origin,
             val selectedSite: SiteModel?,

@@ -10,26 +10,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.PrimaryButton
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
-import org.wordpress.android.ui.jpfullplugininstall.install.JetpackFullPluginInstallViewModel.UiState
+import org.wordpress.android.ui.jpfullplugininstall.install.UiState
 
 @Composable
 fun DoneState(
     uiState: UiState.Done,
     onDoneClick: () -> Unit,
-    onDismissScreenClick: () -> Unit,
 ) = Box(
     Modifier
         .fillMaxWidth()
         .fillMaxHeight()
 ) {
     with(uiState) {
-        BaseState(
-            uiState = uiState,
-            onDismissScreenClick = onDismissScreenClick
-        ) {
+        BaseState(uiState) {
             PrimaryButton(
                 text = stringResource(buttonText),
                 onClick = onDoneClick,
@@ -45,7 +42,9 @@ fun DoneState(
 @Composable
 private fun PreviewDoneState() {
     AppTheme {
-        val uiState = UiState.Done()
-        DoneState(uiState, {}, {})
+        val uiState = UiState.Done(
+            buttonText = R.string.jetpack_full_plugin_install_done_button,
+        )
+        DoneState(uiState, {})
     }
 }
