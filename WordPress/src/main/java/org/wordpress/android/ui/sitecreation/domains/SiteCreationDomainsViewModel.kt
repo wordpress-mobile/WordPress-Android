@@ -219,25 +219,20 @@ class SiteCreationDomainsViewModel @Inject constructor(
     ) {
         listState = state
         val isNonEmptyUserQuery = isNonEmptyUserQuery(query)
-        updateUiState(
-            DomainsUiState(
-                headerUiState = createHeaderUiState(
-                    !isNonEmptyUserQuery
-                ),
-                searchInputUiState = createSearchInputUiState(
-                    showProgress = state is Loading,
-                    showClearButton = isNonEmptyUserQuery,
-                    showDivider = state.data.isNotEmpty(),
-                    showKeyboard = true
-                ),
-                contentState = createDomainsUiContentState(query, state, emptyListMessage),
-                createSiteButtonContainerVisibility = selectedDomain != null
-            )
-        )
-    }
 
-    private fun updateUiState(uiState: DomainsUiState) {
-        _uiState.value = uiState
+        _uiState.value = DomainsUiState(
+            headerUiState = createHeaderUiState(
+                !isNonEmptyUserQuery
+            ),
+            searchInputUiState = createSearchInputUiState(
+                showProgress = state is Loading,
+                showClearButton = isNonEmptyUserQuery,
+                showDivider = state.data.isNotEmpty(),
+                showKeyboard = true
+            ),
+            contentState = createDomainsUiContentState(query, state, emptyListMessage),
+            createSiteButtonContainerVisibility = selectedDomain != null
+        )
     }
 
     private fun createDomainsUiContentState(
