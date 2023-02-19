@@ -331,7 +331,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 showSnackbar(snackbarContent)
             }
         }
-        viewModel.onJetpackInstallFullPluginLearnMore.observeEvent(viewLifecycleOwner) {
+        viewModel.onOpenJetpackInstallFullPluginOnboarding.observeEvent(viewLifecycleOwner) {
             JetpackFullPluginInstallOnboardingDialogFragment.newInstance().show(
                 requireActivity().supportFragmentManager,
                 JetpackFullPluginInstallOnboardingDialogFragment.TAG
