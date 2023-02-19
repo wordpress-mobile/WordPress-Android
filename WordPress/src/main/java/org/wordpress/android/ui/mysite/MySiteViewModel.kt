@@ -1532,7 +1532,7 @@ class MySiteViewModel @Inject constructor(
         siteSelected.cardAndItems.filterIsInstance<JetpackFeatureCard>()
             .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
         siteSelected.cardAndItems.filterIsInstance<JetpackInstallFullPluginCard>()
-            .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type, defaultTab) }
+            .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type, quickStartRepository.currentTab) }
     }
 
     private fun resetShownTrackers() {
