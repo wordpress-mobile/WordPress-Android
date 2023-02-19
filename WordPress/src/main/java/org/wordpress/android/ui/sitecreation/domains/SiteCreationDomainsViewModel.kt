@@ -129,7 +129,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         currentQuery = query
         selectedDomain = null
         fetchDomainsJob?.cancel() // cancel any previous requests
-        if (query != null && !query.value.isBlank()) {
+        if (query != null && query.value.isNotBlank()) {
             fetchDomains(query)
         } else {
             resetUiState()
@@ -347,7 +347,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     private fun isNonEmptyUserQuery(query: DomainSuggestionsQuery?): Boolean =
-        query is UserQuery && !query.value.isBlank()
+        query is UserQuery && query.value.isNotBlank()
 
     data class DomainsUiState(
         val headerUiState: SiteCreationHeaderUiState?,
