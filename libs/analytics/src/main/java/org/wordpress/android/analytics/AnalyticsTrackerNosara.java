@@ -2507,6 +2507,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "remove_feature_card_remind_later_tapped";
             case JETPACK_FEATURE_INCORRECTLY_ACCESSED:
                 return "jetpack_feature_incorrectly_accessed";
+            case JETPACK_INSTALL_FULL_PLUGIN_CARD_VIEWED:
+                return "jp_install_full_plugin_card_viewed";
             case JETPACK_INSTALL_FULL_PLUGIN_CARD_TAPPED:
                 return "jp_install_full_plugin_card_tapped";
             case JETPACK_INSTALL_FULL_PLUGIN_CARD_DISMISSED:
