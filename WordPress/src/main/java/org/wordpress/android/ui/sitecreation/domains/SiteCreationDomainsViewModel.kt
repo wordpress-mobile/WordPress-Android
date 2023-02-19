@@ -233,8 +233,12 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 showDivider = state.data.isNotEmpty()
             ),
             contentState = createDomainsUiContentState(query, state, emptyListMessage),
-            createSiteButtonContainerVisibility = selectedDomain != null
+            createSiteButtonContainerVisibility = getCreateSiteButtonState()
         )
+    }
+
+    private fun getCreateSiteButtonState(): Boolean {
+        return selectedDomain?.isFree ?: false
     }
 
     private fun createDomainsUiContentState(
