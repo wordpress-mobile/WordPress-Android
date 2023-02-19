@@ -8,11 +8,10 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PromoteWithBlazeCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackSwitchMenu
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackSwitchMenu
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem

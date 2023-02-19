@@ -52,6 +52,8 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
     private val data = BlazeStatusResult(
         model = BLAZE_STATUS_MODELS
     )
+
+    @Suppress("UnusedPrivateMember")
     private val apiError = BlazeStatusResult<List<BlazeStatusModel>>(
         error = BlazeStatusError(BlazeStatusErrorType.API_ERROR)
     )
