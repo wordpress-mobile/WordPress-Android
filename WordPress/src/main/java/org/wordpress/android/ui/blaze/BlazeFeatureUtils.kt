@@ -58,7 +58,7 @@ class BlazeFeatureUtils @Inject constructor(
     }
     enum class BlazeEntryPointSource(val trackingName: String) {
         DASHBOARD_CARD("dashboard_card"),
-        MENU_ITEM("menu_item"),
-        POSTS_LIST("posts_list")
+    //    MENU_ITEM("menu_item"),
+    //    POSTS_LIST("posts_list")
     }
 }
