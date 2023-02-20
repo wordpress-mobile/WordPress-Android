@@ -94,3 +94,5 @@
 /admin/notes/<note_id>/action/<action_id>
 /admin/notes/delete/<note_id>
 /admin/notes/delete/all
+
+/onboarding/tasks
