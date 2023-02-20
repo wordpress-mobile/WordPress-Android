@@ -152,6 +152,7 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BlazeFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsListFeatureConfig
@@ -317,6 +318,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker
 
+    @Mock
+    lateinit var blazeFeatureConfig: BlazeFeatureConfig
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -385,6 +389,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onBloggingPromptViewMoreClicked: (() -> Unit)? = null
     private var onBloggingPromptViewAnswersClicked: ((promptId: Int) -> Unit)? = null
     private var onBloggingPromptRemoveClicked: (() -> Unit)? = null
+    private var onPromoteWithBlazeCardClick: (() -> Unit) = {}
+    private var onPromoteWithBlazeCardMenuClicked: (() -> Unit) = {}
+    private var onPromoteWithBlazeCardHideThisClick: (() -> Unit) = {}
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
             taskType = QuickStartTaskType.CUSTOMIZE,
@@ -527,10 +534,11 @@ class MySiteViewModelTest : BaseUnitTest() {
             jetpackFeatureRemovalOverlayUtil,
             jetpackFeatureCardHelper,
             bloggingPromptsSettingsHelper,
+            blazeFeatureConfig,
             jetpackInstallFullPluginCardBuilder,
             bloggingPromptsCardTrackHelper,
             getShowJetpackFullPluginInstallOnboardingUseCase,
-            jetpackInstallFullPluginShownTracker            
+            jetpackInstallFullPluginShownTracker
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -3301,7 +3309,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         isBloggingPromptsListEnabled: Boolean = true,
         isBloggingPromptsEnhancementsEnabled: Boolean = true,
         isBloggingPromptsSocialEnabled: Boolean = true,
-        shouldShowJetpackBranding: Boolean = true
+        shouldShowJetpackBranding: Boolean = true,
+        isBlazeEnabled: Boolean = true,
     ) {
         setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled)
         whenever(
@@ -3318,6 +3327,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsSocialEnabled)
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsEnabled)
         whenever(jetpackBrandingUtils.shouldShowJetpackBranding()).thenReturn(shouldShowJetpackBranding)
+        whenever(blazeFeatureConfig.isEnabled()).thenReturn(isBlazeEnabled)
         if (isSiteUsingWpComRestApi) {
             site.setIsWPCom(true)
             site.setIsJetpackConnected(true)
@@ -3490,6 +3500,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                     add(initPostCard(mockInvocation))
                     add(initTodaysStatsCard(mockInvocation))
                     if (bloggingPromptsFeatureConfig.isEnabled()) add(initBloggingPromptCard(mockInvocation))
+                    if (blazeFeatureConfig.isEnabled()) add(initPromoteWithBlazeCard(mockInvocation))
                 }
             }
         )
@@ -3567,6 +3578,20 @@ class MySiteViewModelTest : BaseUnitTest() {
             onViewMoreClick = onBloggingPromptViewMoreClicked!!,
             onViewAnswersClick = onBloggingPromptViewAnswersClicked!!,
             onRemoveClick = onBloggingPromptRemoveClicked!!,
+        )
+    }
+
+    private fun initPromoteWithBlazeCard(mockInvocation: InvocationOnMock): DashboardCard.PromoteWithBlazeCard {
+        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
+        onPromoteWithBlazeCardClick = params.promoteWithBlazeCardBuilderParams.onClick
+        onPromoteWithBlazeCardMenuClicked = params.promoteWithBlazeCardBuilderParams.onMoreMenuClick
+        onPromoteWithBlazeCardHideThisClick = params.promoteWithBlazeCardBuilderParams.onHideMenuItemClick
+        return DashboardCard.PromoteWithBlazeCard(
+            title = UiStringRes(0),
+            subtitle = UiStringRes(0),
+            onClick = ListItemInteraction.create { onPromoteWithBlazeCardClick },
+            onMoreMenuClick = ListItemInteraction.create { onPromoteWithBlazeCardMenuClicked },
+            onHideMenuItemClick = ListItemInteraction.create { onPromoteWithBlazeCardHideThisClick }
         )
     }
 

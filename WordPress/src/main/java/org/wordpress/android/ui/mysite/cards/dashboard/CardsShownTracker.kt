@@ -5,6 +5,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
@@ -73,6 +74,12 @@ class CardsShownTracker @Inject constructor(
             Pair(
                 card.dashboardCardType.toTypeValue().label,
                 Type.BLOGGING_PROMPT.label
+            )
+        )
+        is PromoteWithBlazeCard -> trackCardShown(
+            Pair(
+                card.dashboardCardType.toTypeValue().label,
+                Type.PROMOTE_WITH_BLAZE.label
             )
         )
     }
