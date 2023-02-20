@@ -133,7 +133,6 @@ import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
-import org.wordpress.android.util.config.BlazeFeatureConfig
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
@@ -197,7 +196,6 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil,
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
-    private val blazeFeatureConfig: BlazeFeatureConfig,
     private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
@@ -575,8 +573,9 @@ val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderPara
                     onRemoveClick = this::onBloggingPromptRemoveClick
                 ),
                 promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
-                    isEligible = blazeFeatureConfig.isEnabled() &&
-                            (promoteWithBlazeUpdate?.blazeStatusModel?.isEligible == true),
+                    isEligible = blazeFeatureUtils.shouldShowPromoteWithBlazeCard(
+                        promoteWithBlazeUpdate?.blazeStatusModel
+                    ),
                     onClick = this::onPromoteWithBlazeCardClick,
                     onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
                     onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
@@ -1515,7 +1514,7 @@ val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderPara
             Stat.BLAZE_FEATURE_HIDE_TAPPED,
             BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
         )
-        // todo: implement the hide logic into appPrefs
+        blazeFeatureUtils.hidePromoteWithBlazeCard()
         refresh()
     }
 

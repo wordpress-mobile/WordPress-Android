@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.blaze.BlazeStatusModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
@@ -153,7 +154,6 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.BlazeFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsListFeatureConfig
@@ -318,9 +318,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker
-
-    @Mock
-    lateinit var blazeFeatureConfig: BlazeFeatureConfig
 
     @Mock
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
@@ -538,7 +535,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             jetpackFeatureRemovalOverlayUtil,
             jetpackFeatureCardHelper,
             bloggingPromptsSettingsHelper,
-            blazeFeatureConfig,
             jetpackInstallFullPluginCardBuilder,
             bloggingPromptsCardTrackHelper,
             getShowJetpackFullPluginInstallOnboardingUseCase,
@@ -3366,7 +3362,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsSocialEnabled)
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsEnabled)
         whenever(jetpackBrandingUtils.shouldShowJetpackBranding()).thenReturn(shouldShowJetpackBranding)
-        whenever(blazeFeatureConfig.isEnabled()).thenReturn(isBlazeEnabled)
+        whenever(blazeFeatureUtils.shouldShowPromoteWithBlazeCard(any())).thenReturn(isBlazeEnabled)
         if (isSiteUsingWpComRestApi) {
             site.setIsWPCom(true)
             site.setIsJetpackConnected(true)
@@ -3539,7 +3535,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                     add(initPostCard(mockInvocation))
                     add(initTodaysStatsCard(mockInvocation))
                     if (bloggingPromptsFeatureConfig.isEnabled()) add(initBloggingPromptCard(mockInvocation))
-                    if (blazeFeatureConfig.isEnabled()) add(initPromoteWithBlazeCard(mockInvocation))
+                    if (blazeFeatureUtils.shouldShowPromoteWithBlazeCard(BlazeStatusModel(1, true))) add(
+                        initPromoteWithBlazeCard(mockInvocation)
+                    )
                 }
             }
         )
