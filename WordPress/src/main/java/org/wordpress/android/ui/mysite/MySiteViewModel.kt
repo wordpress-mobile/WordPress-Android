@@ -39,6 +39,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -200,7 +201,8 @@ class MySiteViewModel @Inject constructor(
     private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
-    private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker
+    private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker,
+    private val blazeFeatureUtils: BlazeFeatureUtils
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -1492,19 +1494,27 @@ val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderPara
         _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
     }
 
-    @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardMoreMenuClick() {
-        // todo: implement tracking the event for More Menu tapped
+        blazeFeatureUtils.track(
+            Stat.BLAZE_FEATURE_MENU_ACCESSED,
+            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+        )
     }
 
     @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardClick() {
-        // todo: implement tracking the event for on card tapped
+        blazeFeatureUtils.track(
+            Stat.BLAZE_FEATURE_TAPPED,
+            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+        )
         //  todo: add the navigation action and post value to _onNavigation.value
     }
 
-    @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardHideMenuItemClick() {
+        blazeFeatureUtils.track(
+            Stat.BLAZE_FEATURE_HIDE_TAPPED,
+            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+        )
         // todo: implement the hide logic into appPrefs
         refresh()
     }
