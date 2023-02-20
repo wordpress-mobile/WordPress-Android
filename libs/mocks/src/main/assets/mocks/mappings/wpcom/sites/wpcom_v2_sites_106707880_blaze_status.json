@@ -1,12 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "urlPattern": "/wpcom/v2/sites/106707880/blaze/status",
-    "queryParameters": {
-      "_locale": {
-        "matches": "(.*)"
-      }
-    }
+    "urlPattern": "/wpcom/v2/sites/106707880/blaze/status(/)?($|\\?.*)"
   },
   "response": {
     "status": 200,
