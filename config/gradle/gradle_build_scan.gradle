@@ -1,0 +1,8 @@
+
+buildScan {
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
+    if (System.getenv('CI')) tag 'CI' else tag 'LOCAL'
+    publishAlways()
+    if (System.getenv('CI')) uploadInBackground = false else uploadInBackground = true
+}

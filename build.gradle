@@ -228,3 +228,5 @@ tasks.register("configureApply") {
 dependencies {
     detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$gradle.ext.detektVersion"
 }
+
+apply from: './config/gradle/gradle_build_scan.gradle'
