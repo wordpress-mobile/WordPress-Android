@@ -128,7 +128,7 @@ android {
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_SELF_HOSTED_USERS", "false"
         buildConfigField "boolean", "PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD", "false"
         buildConfigField "boolean", "OPEN_WEB_LINKS_WITH_JETPACK_FLOW", "false"
-        buildConfigField "boolean", "ENABLE_WORDPRESS_SUPPORT_FORUM", "false"
+        buildConfigField "boolean", "ENABLE_WORDPRESS_SUPPORT_FORUM", "true"
         buildConfigField "boolean", "JETPACK_INSTALL_FULL_PLUGIN", "false"
         buildConfigField "boolean", "ENABLE_BLAZE_FEATURE", "false"
 
