@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "urlPattern": "/wpcom/v2/sites/106707880/blaze/status(/)?($|\\?.*)"
+    "urlPattern": "/wpcom/v2/sites/.*/blaze/status(/)?($|\\?.*)"
   },
   "response": {
     "status": 200,
