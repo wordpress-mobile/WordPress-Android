@@ -51,6 +51,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -321,6 +322,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var blazeFeatureConfig: BlazeFeatureConfig
 
+    @Mock
+    lateinit var blazeFeatureUtils: BlazeFeatureUtils
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -538,7 +542,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             jetpackInstallFullPluginCardBuilder,
             bloggingPromptsCardTrackHelper,
             getShowJetpackFullPluginInstallOnboardingUseCase,
-            jetpackInstallFullPluginShownTracker
+            jetpackInstallFullPluginShownTracker,
+            blazeFeatureUtils
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1590,7 +1595,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* DASHBOARD TODAYS STATS CARD */
-
     @Test
     fun `given todays stat card, when card item is clicked, then stats page is opened`() =
         test {
@@ -3236,6 +3240,41 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(jetpackFeatureCardHelper).setJetpackFeatureCardLastShownTimeStamp(any())
     }
 
+    /* Promote with Blaze */
+    @Test
+    fun `when promote with blaze card is tapped, then blaze card tapped is tracked`() = test {
+        initSelectedSite()
+
+        onPromoteWithBlazeCardClick.invoke()
+
+        verify(blazeFeatureUtils).track(
+            Stat.BLAZE_FEATURE_TAPPED,
+            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+        )
+    }
+    @Test
+    fun `when promote with blaze card menu is accessed, then blaze card menu is accessed is tracked`() = test {
+        initSelectedSite()
+
+        onPromoteWithBlazeCardMenuClicked.invoke()
+
+        verify(blazeFeatureUtils).track(
+            Stat.BLAZE_FEATURE_MENU_ACCESSED,
+            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+        )
+    }
+
+    @Test
+    fun `when promote with blaze hide this is tapped, then blaze card hide this tapped is tracked`() = test {
+        initSelectedSite()
+
+        onPromoteWithBlazeCardHideThisClick.invoke()
+
+        verify(blazeFeatureUtils).track(
+            Stat.BLAZE_FEATURE_HIDE_TAPPED,
+            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+        )
+    }
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
