@@ -14,13 +14,13 @@ import org.wordpress.android.ui.utils.UiHelpers
 private const val suggestionItemViewType: Int = 1
 private const val suggestionErrorViewType: Int = 2
 
-class SiteCreationDomainsAdapter(private val uiHelpers: UiHelpers) : Adapter<SiteCreationDomainViewHolder>() {
+class SiteCreationDomainsAdapter(private val uiHelpers: UiHelpers) : Adapter<SiteCreationDomainViewHolder<*>>() {
     private val items = mutableListOf<DomainsListItemUiState>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): SiteCreationDomainViewHolder {
+    ): SiteCreationDomainViewHolder<*> {
         return when (viewType) {
             suggestionItemViewType -> DomainSuggestionItemViewHolder(parent, uiHelpers)
             suggestionErrorViewType -> DomainSuggestionErrorViewHolder(parent)
@@ -30,7 +30,7 @@ class SiteCreationDomainsAdapter(private val uiHelpers: UiHelpers) : Adapter<Sit
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: SiteCreationDomainViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SiteCreationDomainViewHolder<*>, position: Int) {
         holder.onBind(items[position])
     }
 
