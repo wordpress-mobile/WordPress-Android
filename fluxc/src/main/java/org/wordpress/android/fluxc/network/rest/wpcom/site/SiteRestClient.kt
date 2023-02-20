@@ -457,17 +457,21 @@ class SiteRestClient @Inject constructor(
     @Suppress("LongParameterList")
     fun suggestDomains(
         query: String,
+        quantity: Int,
+        vendor: String?,
         onlyWordpressCom: Boolean?,
         includeWordpressCom: Boolean?,
         includeDotBlogSubdomain: Boolean?,
         segmentId: Long?,
-        quantity: Int,
-        includeVendorDot: Boolean,
         tlds: String?
     ) {
         val url = WPCOMREST.domains.suggestions.urlV1_1
         val params = mutableMapOf<String, String>()
         params["query"] = query
+        params["quantity"] = quantity.toString()
+        if (vendor != null) {
+            params["vendor"] = vendor
+        }
         if (onlyWordpressCom != null) {
             params["only_wordpressdotcom"] = onlyWordpressCom.toString() // CHECKSTYLE IGNORE
         }
@@ -482,10 +486,6 @@ class SiteRestClient @Inject constructor(
         }
         if (tlds != null) {
             params["tlds"] = tlds
-        }
-        params["quantity"] = quantity.toString()
-        if (includeVendorDot) {
-            params["vendor"] = "dot"
         }
         val request = WPComGsonRequest.buildGetRequest<List<DomainSuggestionResponse>>(url, params,
                 object : TypeToken<List<DomainSuggestionResponse>>() {}.type,
