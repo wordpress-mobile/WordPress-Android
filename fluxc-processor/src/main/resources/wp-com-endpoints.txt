@@ -147,5 +147,3 @@
 /products
 
 /plans
-
-/wc-admin/onboarding/tasks

@@ -15,6 +15,8 @@ public class WCWPAPIEndpoint {
 
     private static final String WC_PREFIX_TELEMETRY = "wc-telemetry";
 
+    private static final String WC_PREFIX_ADMIN = "wc-admin";
+
     private final String mEndpoint;
 
     public WCWPAPIEndpoint(String endpoint) {
@@ -59,5 +61,9 @@ public class WCWPAPIEndpoint {
 
     public String getPathWcTelemetry() {
         return "/" + WC_PREFIX_TELEMETRY + mEndpoint;
+    }
+
+    public String getPathWcAdmin() {
+        return "/" + WC_PREFIX_ADMIN + mEndpoint;
     }
 }
