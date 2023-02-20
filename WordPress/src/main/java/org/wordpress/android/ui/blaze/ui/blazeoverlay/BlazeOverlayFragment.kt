@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -52,11 +54,6 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.components.Drawab
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.ImageButton
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.LocaleManager
-
-//todo: post thumbnail view
-//todo: promote blaze button theme
-//todo: post data details
-
 
 @AndroidEntryPoint
 class BlazeOverlayFragment : Fragment() {
@@ -123,7 +120,7 @@ class BlazeOverlayFragment : Fragment() {
                 PostThumbnailView(
                     it, modifier = Modifier
                         .fillMaxWidth()
-                        .height(110.dp)
+                        .wrapContentHeight()
                 )
             }
 
@@ -133,8 +130,8 @@ class BlazeOverlayFragment : Fragment() {
                     .height(48.dp)
                     .padding(start = 20.dp, end = 20.dp)
                     .background(
-                        Color.Gray,
-                        shape = RoundedCornerShape(6.dp)
+                        Color.Black,
+                        shape = RoundedCornerShape(15.dp)
                     ),
                 buttonText = UiString.UiStringRes(R.string.blaze_post_promotional_button),
                 drawableRight = Drawable(R.drawable.ic_promote_with_blaze),
@@ -164,7 +161,7 @@ class BlazeOverlayFragment : Fragment() {
     fun PostThumbnailView(postUIModel: PostUIModel, modifier: Modifier = Modifier) {
         ConstraintLayout(
             modifier = modifier
-                .padding(20.dp)
+                .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 15.dp)
         ) {
             val (postContainer, featuredImage, title, url) = createRefs()
             Box(modifier = Modifier
@@ -174,32 +171,37 @@ class BlazeOverlayFragment : Fragment() {
                     start.linkTo(parent.start, 0.dp)
                     end.linkTo(parent.end, 0.dp)
                     width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
                 }
-                .background(color = Color.LightGray)
+                .background(color = Color.Gray, shape = RoundedCornerShape(15.dp))
             )
             PostFeaturedImage(url = "", modifier = Modifier
                 .constrainAs(featuredImage) {
-                    top.linkTo(postContainer.top, 0.dp)
-                    bottom.linkTo(postContainer.bottom, 0.dp)
-                    end.linkTo(postContainer.end, 0.dp)
-                    width = Dimension.fillToConstraints
+                    top.linkTo(postContainer.top, 15.dp)
+                    bottom.linkTo(postContainer.bottom, 15.dp)
+                    end.linkTo(postContainer.end, 20.dp)
                 }
+                .width(80.dp)
                 .height(80.dp))
             PostTitle(title = postUIModel.title, modifier = Modifier.constrainAs(title) {
-                top.linkTo(parent.top, 0.dp)
-                start.linkTo(parent.start, 0.dp)
-                end.linkTo(featuredImage.start, margin = 4.dp)
+                top.linkTo(postContainer.top, 15.dp)
+                start.linkTo(postContainer.start, 20.dp)
+                end.linkTo(featuredImage.start, margin = 20.dp)
                 width = Dimension.fillToConstraints
+                height = Dimension.wrapContent
             })
             PostUrl(url = postUIModel.url, modifier = Modifier.constrainAs(url) {
-                top.linkTo(title.bottom, 0.dp)
-                start.linkTo(parent.start, 0.dp)
-                end.linkTo(featuredImage.start, margin = 4.dp)
+                top.linkTo(title.bottom, 5.dp)
+                start.linkTo(postContainer.start, 20.dp)
+                end.linkTo(featuredImage.start, margin = 20.dp)
+                bottom.linkTo(postContainer.bottom, 15.dp)
                 width = Dimension.fillToConstraints
+                height = Dimension.wrapContent
             })
         }
     }
 
+    // todo the logic for showing the featured image is not implemented yet
     @Composable
     private fun PostFeaturedImage(url: String, modifier: Modifier = Modifier) {
         val painter = rememberImagePainter(url) {
@@ -211,8 +213,6 @@ class BlazeOverlayFragment : Fragment() {
             painter = painter,
             contentDescription = stringResource(R.string.blavatar_desc),
             modifier = modifier
-                .padding(vertical = 15.dp)
-                .padding(end = 20.dp)
                 .size(dimensionResource(R.dimen.jp_migration_site_icon_size))
                 .clip(RoundedCornerShape(3.dp))
         )
