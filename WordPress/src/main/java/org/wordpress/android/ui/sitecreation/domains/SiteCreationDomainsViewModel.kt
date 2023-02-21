@@ -97,9 +97,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     fun start() {
-        if (isStarted) {
-            return
-        }
+        if (isStarted) return
         isStarted = true
         tracker.trackDomainsAccessed()
         resetUiState()
