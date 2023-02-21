@@ -54,7 +54,6 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
             errorText.text = itemView.context.getText(uiState.messageResId)
             retry.setCompoundDrawablesWithIntrinsicBounds(getRetryCompoundDrawable(), null, null, null)
             retry.text = itemView.context.getText(uiState.retryButtonResId)
-            requireNotNull(uiState.onClick) { "OnItemTapped is required." }
             itemView.setOnClickListener {
                 uiState.onClick.invoke()
             }
