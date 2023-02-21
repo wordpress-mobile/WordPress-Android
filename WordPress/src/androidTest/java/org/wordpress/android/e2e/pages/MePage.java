@@ -55,7 +55,7 @@ public class MePage {
     }
 
     public boolean isSelfHosted() {
-        waitForElementToBeDisplayed(R.id.row_account_settings);
+        waitForElementToBeDisplayed(R.id.row_app_settings);
         return isElementDisplayed(onView(withText(R.string.sign_in_wpcom)));
     }
 
