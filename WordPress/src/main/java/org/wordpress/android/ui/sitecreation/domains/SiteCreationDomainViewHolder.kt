@@ -25,28 +25,20 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
     ) : SiteCreationDomainViewHolder<SiteCreationDomainsItemBinding>(
         parentView.viewBinding(SiteCreationDomainsItemBinding::inflate)
     ) {
-        private var onDomainSelected: (() -> Unit)? = null
-
-        init {
-            binding.domainSuggestionRadioButton.buttonTintList = ContextCompat.getColorStateList(
-                parentView.context,
-                R.color.neutral_10_primary_40_selector
-            )
-            binding.container.setOnClickListener {
-                onDomainSelected?.invoke()
-            }
-        }
-
         override fun onBind(uiState: DomainsListItemUiState) = with(binding) {
             uiState as DomainsModelUiState
-            if (uiState.onClick != null) {
-                onDomainSelected = requireNotNull(uiState.onClick) { "OnItemTapped is required." }
-            }
             nameSuggestion.text = uiState.name
             domainSuggestion.text = uiState.domain
             domainSuggestionRadioButton.isChecked = uiState.checked
             domainSuggestionRadioButton.visibility = if (uiState.radioButtonVisibility) View.VISIBLE else View.INVISIBLE
+            domainSuggestionRadioButton.buttonTintList = ContextCompat.getColorStateList(
+                root.context,
+                R.color.neutral_10_primary_40_selector
+            )
             container.isEnabled = uiState.onClick != null
+            binding.container.setOnClickListener {
+                uiState.onClick?.invoke()
+            }
             uiHelpers.setTextOrHide(domainUnavailability, uiState.subTitle)
         }
     }
