@@ -7,4 +7,4 @@ echo "--- :closed_lock_with_key: Installing Secrets"
 bundle exec fastlane run configure_apply
 
 echo "--- 🧪 Testing"
-bundle exec fastlane "build_and_run_instrumented_test"
+bundle exec fastlane "build_and_run_$1_instrumented_test"

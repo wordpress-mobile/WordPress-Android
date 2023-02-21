@@ -80,11 +80,19 @@ steps:
   #################
   # Instrumented (aka UI) Tests
   #################
-  - label: "🔬 Instrumented tests"
-    command: ".buildkite/commands/instrumented-tests.sh"
-    plugins: *common_plugins
-    artifact_paths:
-      - "**/build/instrumented-tests/**/*"
+  - group: "🔬 Instrumented tests"
+    steps:
+      - label: ":wordpress: 🔬 Instrumented tests"
+        command: ".buildkite/commands/instrumented-tests.sh wordpress"
+        plugins: *common_plugins
+        artifact_paths:
+          - "**/build/instrumented-tests/**/*"
+
+      - block: ":jetpack: 🔬 Instrumented tests (Optional)"
+        command: ".buildkite/commands/instrumented-tests.sh jetpack"
+        plugins: *common_plugins
+        artifact_paths:
+          - "**/build/instrumented-tests/**/*"
 
   #################
   # Create Installable Builds for WP and JP
