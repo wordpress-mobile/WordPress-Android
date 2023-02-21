@@ -64,12 +64,14 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PromoteWithBlazeUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
@@ -130,6 +132,7 @@ import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
+import org.wordpress.android.util.config.BlazeFeatureConfig
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
@@ -193,6 +196,7 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil,
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
+    private val blazeFeatureConfig: BlazeFeatureConfig,
     private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
@@ -326,7 +330,8 @@ class MySiteViewModel @Inject constructor(
                     backupAvailable,
                     scanAvailable,
                     cardsUpdate,
-                    bloggingPromptsUpdate
+                    bloggingPromptsUpdate,
+                    promoteWithBlazeUpdate
                 )
                 selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
@@ -371,7 +376,8 @@ class MySiteViewModel @Inject constructor(
         backupAvailable: Boolean,
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
-        bloggingPromptUpdate: BloggingPromptUpdate?
+        bloggingPromptUpdate: BloggingPromptUpdate?,
+        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
             site,
@@ -383,7 +389,8 @@ class MySiteViewModel @Inject constructor(
             backupAvailable,
             scanAvailable,
             cardsUpdate,
-            bloggingPromptUpdate
+            bloggingPromptUpdate,
+            promoteWithBlazeUpdate
         )
 
         val siteInfoCardBuilderParams = SiteInfoCardBuilderParams(
@@ -471,7 +478,8 @@ class MySiteViewModel @Inject constructor(
         backupAvailable: Boolean,
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
-        bloggingPromptUpdate: BloggingPromptUpdate?
+        bloggingPromptUpdate: BloggingPromptUpdate?,
+        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
             InfoItemBuilderParams(
@@ -510,7 +518,7 @@ class MySiteViewModel @Inject constructor(
             isJetpackApp && isMigrationCompleted && isWordPressInstalled
         }
 
-        val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderParams(
+val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderParams(
             site = site,
             onLearnMoreClick = ::onJetpackInstallFullPluginLearnMoreClick,
             onHideMenuItemClick = ::onJetpackInstallFullPluginHideMenuItemClick,
@@ -563,6 +571,13 @@ class MySiteViewModel @Inject constructor(
                     onViewMoreClick = this::onBloggingPromptViewMoreClick,
                     onViewAnswersClick = this::onBloggingPromptViewAnswersClick,
                     onRemoveClick = this::onBloggingPromptRemoveClick
+                ),
+                promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
+                    isEligible = blazeFeatureConfig.isEnabled() &&
+                            (promoteWithBlazeUpdate?.blazeStatusModel?.isEligible == true),
+                    onClick = this::onPromoteWithBlazeCardClick,
+                    onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
+                    onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
                 )
             ),
             QuickLinkRibbonBuilderParams(
@@ -1475,6 +1490,23 @@ class MySiteViewModel @Inject constructor(
     private fun onJetpackInstallFullPluginLearnMoreClick() {
         trackWithTabSourceIfNeeded(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_TAPPED)
         _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
+    }
+
+    @Suppress("ForbiddenComment")
+    private fun onPromoteWithBlazeCardMoreMenuClick() {
+        // todo: implement tracking the event for More Menu tapped
+    }
+
+    @Suppress("ForbiddenComment")
+    private fun onPromoteWithBlazeCardClick() {
+        // todo: implement tracking the event for on card tapped
+        //  todo: add the navigation action and post value to _onNavigation.value
+    }
+
+    @Suppress("ForbiddenComment")
+    private fun onPromoteWithBlazeCardHideMenuItemClick() {
+        // todo: implement the hide logic into appPrefs
+        refresh()
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
