@@ -46,6 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.blaze.BlazeUiState
 import org.wordpress.android.ui.blaze.PostUIModel
+import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
@@ -83,7 +84,10 @@ class BlazeOverlayFragment : Fragment() {
     }
 
     @Composable
-    fun BlazeOverlayContent(postModelState: BlazeUiState.PromoteScreen) {
+    fun BlazeOverlayContent(
+        postModelState: BlazeUiState.PromoteScreen,
+        isDarkTheme: Boolean = false
+    ) {
         val post = when (postModelState) {
             is BlazeUiState.PromoteScreen.PromotePost -> postModelState.postUIModel
             else -> null
@@ -173,7 +177,7 @@ class BlazeOverlayFragment : Fragment() {
                     width = Dimension.fillToConstraints
                     height = Dimension.fillToConstraints
                 }
-                .background(color = Color.Gray, shape = RoundedCornerShape(15.dp))
+                .background(color = AppColor.Gray60, shape = RoundedCornerShape(15.dp))
             )
             PostFeaturedImage(url = "", modifier = Modifier
                 .constrainAs(featuredImage) {
