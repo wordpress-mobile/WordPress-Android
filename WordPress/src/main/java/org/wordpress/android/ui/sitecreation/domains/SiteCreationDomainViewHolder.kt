@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation.domains
 
+import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -48,24 +49,19 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
     ) : SiteCreationDomainViewHolder<SiteCreationSuggestionsErrorItemBinding>(
         parentView.viewBinding(SiteCreationSuggestionsErrorItemBinding::inflate)
     ) {
-        init {
-            binding.addRetryCompoundDrawable()
-        }
-
-        private fun SiteCreationSuggestionsErrorItemBinding.addRetryCompoundDrawable() {
-            ContextCompat.getDrawable(root.context, R.drawable.retry_icon)?.let { drawable ->
-                drawable.setTint(ContextCompat.getColor(root.context, R.color.primary))
-                retry.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
-            }
-        }
-
         override fun onBind(uiState: DomainsListItemUiState) = with(binding) {
             uiState as DomainsFetchSuggestionsErrorUiState
             errorText.text = itemView.context.getText(uiState.messageResId)
+            retry.setCompoundDrawablesWithIntrinsicBounds(getRetryCompoundDrawable(), null, null, null)
             retry.text = itemView.context.getText(uiState.retryButtonResId)
             requireNotNull(uiState.onClick) { "OnItemTapped is required." }
             itemView.setOnClickListener {
                 uiState.onClick.invoke()
+            }
+        }
+        private fun SiteCreationSuggestionsErrorItemBinding.getRetryCompoundDrawable(): Drawable? {
+            return ContextCompat.getDrawable(root.context, R.drawable.retry_icon)?.apply {
+                setTint(ContextCompat.getColor(root.context, R.color.primary))
             }
         }
     }
