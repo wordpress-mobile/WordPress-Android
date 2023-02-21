@@ -4411,4 +4411,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="promote_blaze_card_title">Promote your content with Blaze</string>
     <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
     <string name="promote_blaze_card_menu_hide_this">Hide this</string>
+    <string name="gutenberg_native_blocks_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks menu</string>
 </resources>
