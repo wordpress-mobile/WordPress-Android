@@ -193,11 +193,11 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 .toList().flatten()
 
             // We inform the user when the search query contains non-alphanumeric characters
-            val emptyListMessage = if (event.isError && event.error.type == SuggestDomainErrorType.INVALID_QUERY) {
-                UiStringRes(R.string.new_site_creation_empty_domain_list_message_invalid_query)
-            } else {
-                UiStringRes(R.string.new_site_creation_empty_domain_list_message)
-            }
+            val emptyListMessage = UiStringRes(
+                if (event.isError && event.error.type == SuggestDomainErrorType.INVALID_QUERY)
+                    R.string.new_site_creation_empty_domain_list_message_invalid_query
+                else R.string.new_site_creation_empty_domain_list_message
+            )
 
             updateUiStateToContent(query, Success(domains), emptyListMessage)
         }
@@ -344,8 +344,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         selectedDomain = domain
     }
 
-    private fun isNonEmptyUserQuery(query: DomainSuggestionsQuery?): Boolean =
-        query is UserQuery && query.value.isNotBlank()
+    private fun isNonEmptyUserQuery(query: DomainSuggestionsQuery?) = query is UserQuery && query.value.isNotBlank()
 
     data class DomainModel(
         val domainName: String,
