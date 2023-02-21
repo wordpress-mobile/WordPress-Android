@@ -375,6 +375,12 @@ class SiteCreationDomainsViewModel @Inject constructor(
     sealed class DomainsListItemUiState {
         var onItemTapped: (() -> Unit)? = null
         open val clickable: Boolean = false
+        abstract val type: Type
+
+        enum class Type {
+            DOMAIN_V1,
+            ERROR_FETCH_V1,
+        }
 
         sealed class DomainsModelUiState(
             open val name: String,
@@ -382,8 +388,10 @@ class SiteCreationDomainsViewModel @Inject constructor(
             open val checked: Boolean,
             val radioButtonVisibility: Boolean,
             open val subTitle: UiString? = null,
-            override val clickable: Boolean
+            override val clickable: Boolean,
+            override val type: Type = Type.DOMAIN_V1,
         ) : DomainsListItemUiState() {
+
             data class DomainsModelAvailableUiState(
                 override val name: String,
                 override val domain: String,
@@ -399,7 +407,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
         data class DomainsFetchSuggestionsErrorUiState(
             @StringRes val messageResId: Int,
-            @StringRes val retryButtonResId: Int
+            @StringRes val retryButtonResId: Int,
+            override val type: Type = Type.ERROR_FETCH_V1,
         ) : DomainsListItemUiState()
     }
 

@@ -9,10 +9,10 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolde
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.Type
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.Type.DOMAIN_V1
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.Type.ERROR_FETCH_V1
 import org.wordpress.android.ui.utils.UiHelpers
-
-private const val suggestionItemViewType: Int = 1
-private const val suggestionErrorViewType: Int = 2
 
 class SiteCreationDomainsAdapter(private val uiHelpers: UiHelpers) : Adapter<SiteCreationDomainViewHolder<*>>() {
     private val items = mutableListOf<DomainsListItemUiState>()
@@ -21,10 +21,9 @@ class SiteCreationDomainsAdapter(private val uiHelpers: UiHelpers) : Adapter<Sit
         parent: ViewGroup,
         viewType: Int
     ): SiteCreationDomainViewHolder<*> {
-        return when (viewType) {
-            suggestionItemViewType -> DomainSuggestionItemViewHolder(parent, uiHelpers)
-            suggestionErrorViewType -> DomainSuggestionErrorViewHolder(parent)
-            else -> throw NotImplementedError("Unknown ViewType")
+        return when (Type.values()[viewType]) {
+            DOMAIN_V1 -> DomainSuggestionItemViewHolder(parent, uiHelpers)
+            ERROR_FETCH_V1 -> DomainSuggestionErrorViewHolder(parent)
         }
     }
 
@@ -41,13 +40,7 @@ class SiteCreationDomainsAdapter(private val uiHelpers: UiHelpers) : Adapter<Sit
         items.addAll(newItems)
         diffResult.dispatchUpdatesTo(this)
     }
-
-    override fun getItemViewType(position: Int): Int {
-        return when (items[position]) {
-            is DomainsModelUiState -> suggestionItemViewType
-            is DomainsFetchSuggestionsErrorUiState -> suggestionErrorViewType
-        }
-    }
+    override fun getItemViewType(position: Int) = items[position].type.ordinal
 
     private class DomainsDiffUtils(
         val oldItems: List<DomainsListItemUiState>,
