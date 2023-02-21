@@ -1820,12 +1820,14 @@ public class ActivityLauncher {
                                             @Nullable PostModel postModel,
                                             @NonNull BlazeFlowSource source) {
         Intent intent = new Intent(context, BlazeParentActivity.class);
-        PostUIModel postUIModel =
-                new PostUIModel(postModel.getRemotePostId(),
-                        postModel.getTitle(),
-                        postModel.getLink(),
-                        postModel.getFeaturedImageId());
-        intent.putExtra(ARG_EXTRA_POST_ID, postUIModel);
+        if(postModel!=null) {
+            PostUIModel postUIModel =
+                    new PostUIModel(postModel.getRemotePostId(),
+                            postModel.getTitle(),
+                            postModel.getLink(),
+                            postModel.getFeaturedImageId());
+            intent.putExtra(ARG_EXTRA_POST_ID, postUIModel);
+        }
         intent.putExtra(ARG_BLAZE_FLOW_SOURCE, source);
         context.startActivity(intent);
     }

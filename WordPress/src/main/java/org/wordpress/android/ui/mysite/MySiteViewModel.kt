@@ -39,6 +39,8 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -197,6 +199,7 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
     private val blazeFeatureConfig: BlazeFeatureConfig,
+    private val blazeFeatureUtils: BlazeFeatureUtils,
     private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
@@ -518,7 +521,7 @@ class MySiteViewModel @Inject constructor(
             isJetpackApp && isMigrationCompleted && isWordPressInstalled
         }
 
-val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderParams(
+        val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderParams(
             site = site,
             onLearnMoreClick = ::onJetpackInstallFullPluginLearnMoreClick,
             onHideMenuItemClick = ::onJetpackInstallFullPluginHideMenuItemClick,
@@ -1499,8 +1502,9 @@ val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderPara
 
     @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardClick() {
-        // todo: implement tracking the event for on card tapped
-        //  todo: add the navigation action and post value to _onNavigation.value
+        blazeFeatureUtils.trackPromoteWithBlazeClicked()
+        _onNavigation.value =
+            Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD))
     }
 
     @Suppress("ForbiddenComment")

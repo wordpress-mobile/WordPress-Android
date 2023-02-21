@@ -432,6 +432,11 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         is SiteNavigationAction.OpenJetpackPoweredBottomSheet -> showJetpackPoweredBottomSheet()
         is SiteNavigationAction.OpenJetpackMigrationDeleteWP -> showJetpackMigrationDeleteWP()
         is SiteNavigationAction.OpenJetpackFeatureOverlay -> showJetpackFeatureOverlay(action.source)
+        is SiteNavigationAction.OpenPromoteWithBlazeOverlay -> ActivityLauncher.openPromoteWithBlaze(
+            requireActivity(),
+            null,
+            action.source
+        )
     }
 
     private fun showJetpackPoweredBottomSheet() {
