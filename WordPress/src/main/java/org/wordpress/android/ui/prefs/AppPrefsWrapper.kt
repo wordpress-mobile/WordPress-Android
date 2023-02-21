@@ -303,8 +303,23 @@ class AppPrefsWrapper @Inject constructor() {
     fun setShouldHideSwitchToJetpackMenuCard(
         jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase,
         isHidden: Boolean
-    ) =
-        AppPrefs.setShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase, isHidden)
+    ) = AppPrefs.setShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase, isHidden)
+
+    fun getShouldHideJetpackInstallFullPluginCard(siteId: Int): Boolean =
+        AppPrefs.getShouldHideJetpackInstallFullPluginCard(siteId)
+
+    fun setShouldHideJetpackInstallFullPluginCard(
+        siteId: Int,
+        isHidden: Boolean
+    ) = AppPrefs.setShouldHideJetpackInstallFullPluginCard(siteId, isHidden)
+
+    fun getShouldShowJetpackInstallOnboarding(siteId: Int): Boolean =
+        AppPrefs.getShouldShowJetpackFullPluginInstallOnboarding(siteId)
+
+    fun setShouldShowJetpackInstallOnboarding(
+        siteId: Int,
+        isShown: Boolean
+    ) = AppPrefs.setShouldShowJetpackFullPluginInstallOnboarding(siteId, isShown)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 

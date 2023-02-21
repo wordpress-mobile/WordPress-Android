@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import org.wordpress.android.R
 import org.wordpress.android.databinding.PromoteWithBlazeCardBinding
-import org.wordpress.android.ui.mysite.MySiteCardAndItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PromoteWithBlazeCard
+import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
@@ -14,10 +14,10 @@ import org.wordpress.android.util.extensions.viewBinding
 class PromoteWithBlazeCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
-) : MySiteCardAndItemViewHolder<PromoteWithBlazeCardBinding>(
+) : CardViewHolder<PromoteWithBlazeCardBinding>(
     parent.viewBinding(PromoteWithBlazeCardBinding::inflate)
 ) {
-    fun bind(card: MySiteCardAndItem.Card.PromoteWithBlazeCard) = with(binding) {
+    fun bind(card: PromoteWithBlazeCard) = with(binding) {
         uiHelpers.setTextOrHide(mySitePromoteWithBlazeCardTitle, card.title)
         mySitePromoteWithBlazeCardCta.setOnClickListener { card.onClick.click() }
         mySitePromoteWithBlazeCardMore.setOnClickListener {

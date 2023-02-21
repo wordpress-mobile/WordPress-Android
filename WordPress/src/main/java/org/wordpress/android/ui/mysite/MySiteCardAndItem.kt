@@ -14,7 +14,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_BADGE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_FEATURE_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_LINK_RIBBON
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
@@ -44,7 +43,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         SINGLE_ACTION_CARD,
         JETPACK_FEATURE_CARD,
         JETPACK_SWITCH_CARD,
-        PROMOTE_WITH_BLAZE
+        JETPACK_INSTALL_FULL_PLUGIN_CARD
     }
 
     enum class DashboardCardType {
@@ -55,7 +54,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         POST_CARD_ERROR,
         POST_CARD_WITHOUT_POST_ITEMS,
         POST_CARD_WITH_POST_ITEMS,
-        BLOGGING_PROMPT_CARD
+        BLOGGING_PROMPT_CARD,
+        PROMOTE_WITH_BLAZE_CARD
     }
 
     data class SiteInfoHeaderCard(
@@ -146,6 +146,13 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onHideMenuItemClick: ListItemInteraction,
             val onMoreMenuClick: ListItemInteraction
         ) : Card(Type.JETPACK_SWITCH_CARD)
+
+        data class JetpackInstallFullPluginCard(
+            val siteName: String,
+            val pluginNames: List<String>,
+            val onLearnMoreClick: ListItemInteraction,
+            val onHideMenuItemClick: ListItemInteraction,
+        ) : Card(Type.JETPACK_INSTALL_FULL_PLUGIN_CARD)
 
         data class DashboardCards(
             val cards: List<DashboardCard>
@@ -254,17 +261,16 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val onRemoveClick: () -> Unit,
                     ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD)
                 }
+
+                data class PromoteWithBlazeCard(
+                    val title: UiString?,
+                    val subtitle: UiString?,
+                    val onClick: ListItemInteraction,
+                    val onHideMenuItemClick: ListItemInteraction,
+                    val onMoreMenuClick: ListItemInteraction,
+                ): DashboardCard(dashboardCardType = DashboardCardType.PROMOTE_WITH_BLAZE_CARD)
             }
         }
-
-        data class PromoteWithBlazeCard(
-            val title: UiString?,
-            val subtitle: UiString?,
-            @DrawableRes val primaryImage: Int,
-            val onClick: ListItemInteraction,
-            val onHideMenuItemClick: ListItemInteraction,
-            val onMoreMenuClick: ListItemInteraction,
-        ): Card(PROMOTE_WITH_BLAZE)
     }
 
     sealed class DynamicCard(

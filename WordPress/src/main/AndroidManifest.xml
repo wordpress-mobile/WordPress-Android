@@ -775,6 +775,11 @@
             android:label="@string/blogging_prompts_list_title"
             android:theme="@style/WordPress.NoActionBar" />
 
+        <!-- Jetpack full plugin install -->
+        <activity
+            android:name=".ui.jpfullplugininstall.install.JetpackFullPluginInstallActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+
         <!-- Services -->
         <service
             android:name=".ui.uploads.UploadService"

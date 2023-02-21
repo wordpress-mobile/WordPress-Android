@@ -99,12 +99,15 @@ class HelpActivity : LocaleAwareActivity() {
                 actionBar.elevation = 0f // remove shadow
             }
 
-            if (wpSupportForumFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+            if (wpSupportForumFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP &&
+                !SiteUtils.hasSiteWithPaidPlan(siteStore)
+            ) {
                 showSupportForum()
             } else {
                 showContactUs()
             }
 
+            faqButton.setOnClickListener { showFaq() }
             applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
             applicationLogButton.setOnClickListener { v ->
                 startActivity(Intent(v.context, AppLogViewerActivity::class.java))
@@ -180,9 +183,6 @@ class HelpActivity : LocaleAwareActivity() {
 
     private fun HelpActivityBinding.showContactUs() {
         contactUsButton.setOnClickListener { createNewZendeskTicket() }
-
-        faqButton.setOnClickListener { showFaq() }
-
         myTicketsButton.setOnClickListener { showZendeskTickets() }
 
         contactEmailContainer.setOnClickListener {
@@ -210,7 +210,6 @@ class HelpActivity : LocaleAwareActivity() {
 
     private fun HelpActivityBinding.showSupportForum() {
         contactUsButton.isVisible = false
-        faqButton.isVisible = false
         myTicketsButton.isVisible = false
         emailContainerTopDivider.isVisible = false
         contactEmailContainer.isVisible = false
@@ -351,7 +350,9 @@ class HelpActivity : LocaleAwareActivity() {
         SITE_CREATION_SITE_INFO("origin:site-create-site-info"),
         EDITOR_HELP("origin:editor-help"),
         SCAN_SCREEN_HELP("origin:scan-screen-help"),
-        JETPACK_MIGRATION_HELP("origin:jetpack-migration-help");
+        JETPACK_MIGRATION_HELP("origin:jetpack-migration-help"),
+        JETPACK_INSTALL_FULL_PLUGIN_ONBOARDING("origin:jp-install-full-plugin-overlay"),
+        JETPACK_INSTALL_FULL_PLUGIN_ERROR("origin:jp-install-full-plugin-error");
 
         override fun toString(): String {
             return stringValue

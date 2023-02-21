@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-08 12:42:45+0000
+Translation-Revision-Date: 2023-02-14 15:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: de
 -->
 <resources>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Entfalte das volle Potenzial deiner Website. Erhalte Statistiken, Benachrichtigungen und vieles mehr mit Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Deine Website hat das Jetpack-Plugin</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Die Jetpack-Mobil-App wurde entwickelt, um mit dem Jetpack-Plugin zusammenzuarbeiten. Wechsle jetzt, um u. a. Zugang zu Statistiken, Benachrichtigungen und dem Reader zu erhalten.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Erhalte Benachrichtigungen über neue Kommentare, Likes, Aufrufe und vieles mehr.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Suche deine Lieblingswebsites und -communities, folge ihnen und teile deine Inhalte.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Beobachte dank hilfreicher Einsichten und umfassender Statistiken, wie dein Traffic wächst.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistiken &amp; Einsichten</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Mit Jetpack kannst du mehr aus deiner WordPress-Website herausholen. Der Wechsel ist kostenlos und dauert nur eine Minute.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Gib WordPress einen Schub mit Jetpack</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Unter „Meine Website &gt; Einstellungen &gt; Bloggen“ kannst du jederzeit Einstellungen für Blog-Schreibanregungen und -Erinnerungen vornehmen</string>
+    <string name="blogging_reminders_prompt_subtitle">Die Benachrichtigung beinhaltet ein Wort oder einen kurzen Satz zur Inspiration</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Wechsle zu den &lt;b&gt;Website-Einstellungen&lt;/b&gt;, um sie wieder zu aktivieren</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Blog-Schreibanregungen ausgeblendet</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Schreibanregungen ausschalten</string>
+    <string name="support_forum_caption">Erhalte Hilfe von unserer Gruppe Freiwilliger.</string>
+    <string name="support_forum_title">Community-Foren</string>
+    <string name="site_settings_blogging_reminders_notification_title">Blog-Erinnerungen</string>
+    <string name="site_settings_blogging_prompts_title">Schreibanregungen anzeigen</string>
+    <string name="site_settings_blogging">Bloggen</string>
     <string name="install_play_store_to_get_jetpack">Bitte installiere Google Play Store, um die Jetpack-App zu erhalten</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Später erledigen</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Zu Jetpack wechseln </string>
@@ -310,7 +329,9 @@ Language: de
     <string name="blogging_prompts_onboarding_content_note_title">Hinweis:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Wir zeigen dir jeden Tag einen neuen Themenvorschlag in deinem Dashboard, um deine Kreativität anzuregen!</string>
     <string name="blogging_prompts_onboarding_content_top">Wenn du deine Schreibkünste verbessern willst, kreiere deinen eigenen Schreibstil und teile ihn mit anderen – und dabei helfen dir unsere Themenvorschläge!</string>
+    <string name="blogging_prompts_onboarding_header_title">Einführung\nBlog-Schreibanregungen</string>
     <string name="blogging_prompt_set_reminders">Erinnerungen festlegen</string>
+    <string name="blogging_reminders_prompt_title">Eine Blog-Schreibanregung einschließen</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Durch regelmäßiges Veröffentlichen von Beiträgen gewinnst du neue Leser. Sag uns, wann du etwas schreiben möchtest. Dann senden wir dir eine Erinnerung!</string>
     <string name="set_your_blogging_prompts_title">Verbessere deine Schreibkünste, indem du deinen eigenen Schreibstil entwickelst</string>
     <string name="site_creation_intent_writing_poetry">Kreatives Schreiben und Poesie</string>
