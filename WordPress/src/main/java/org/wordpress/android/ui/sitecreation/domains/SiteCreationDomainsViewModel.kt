@@ -281,9 +281,9 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 val itemUiState = DomainsModelAvailableUiState(
                     domainSanitizer.getName(domain.domainName),
                     domainSanitizer.getDomain(domain.domainName),
-                    checked = domain == selectedDomain
+                    checked = domain == selectedDomain,
+                    onClick = { onDomainSelected(domain) }
                 )
-                itemUiState.onClick = { onDomainSelected(domain) }
                 items.add(itemUiState)
             }
         }
@@ -388,12 +388,13 @@ class SiteCreationDomainsViewModel @Inject constructor(
             open val subTitle: UiString? = null,
             override val type: Type = Type.DOMAIN_V1,
         ) : DomainsListItemUiState() {
-            open var onClick: (() -> Unit)? = null
+            open val onClick: (() -> Unit)? = null
 
             data class DomainsModelAvailableUiState(
                 override val name: String,
                 override val domain: String,
                 override val checked: Boolean,
+                override val onClick: () -> Unit,
             ) : DomainsModelUiState(name, domain, checked, true)
 
             data class DomainsModelUnavailabilityUiState(
