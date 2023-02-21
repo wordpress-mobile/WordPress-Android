@@ -20,7 +20,6 @@ import org.wordpress.android.util.extensions.viewBinding
 
 sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding: T) :
     RecyclerView.ViewHolder(binding.root) {
-
     class DomainSuggestionItemViewHolder(
         parentView: ViewGroup,
         private val uiHelpers: UiHelpers

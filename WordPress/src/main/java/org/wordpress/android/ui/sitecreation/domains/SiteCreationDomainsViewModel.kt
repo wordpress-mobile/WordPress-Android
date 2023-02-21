@@ -396,7 +396,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 val radioButtonVisibility: Boolean,
                 open val subTitle: UiString? = null,
             ) : Old(Type.DOMAIN_V1) {
-
                 data class AvailableDomain(
                     override val name: String,
                     override val domain: String,
