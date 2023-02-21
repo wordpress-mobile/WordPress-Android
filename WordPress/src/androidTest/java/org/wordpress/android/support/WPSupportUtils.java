@@ -98,14 +98,12 @@ public class WPSupportUtils {
     }
 
     public static void scrollToThenClickOn(Integer elementID) {
-        waitForElementToBeDisplayed(elementID);
         onView(withId(elementID))
                 .perform(scrollTo());
         clickOn(elementID);
     }
 
     public static void scrollToThenClickOn(ViewInteraction element) {
-        waitForElementToBeDisplayed(element);
         element.perform(scrollTo());
         clickOn(element);
     }
