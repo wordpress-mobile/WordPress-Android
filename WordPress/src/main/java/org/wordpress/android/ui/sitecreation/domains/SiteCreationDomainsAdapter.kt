@@ -27,11 +27,13 @@ class SiteCreationDomainsAdapter(private val uiHelpers: UiHelpers) : Adapter<Sit
         }
     }
 
-    override fun getItemCount(): Int = items.size
-
     override fun onBindViewHolder(holder: SiteCreationDomainViewHolder<*>, position: Int) {
         holder.onBind(items[position])
     }
+
+    override fun getItemViewType(position: Int) = items[position].type.ordinal
+
+    override fun getItemCount(): Int = items.size
 
     @MainThread
     fun update(newItems: List<DomainsListItemUiState>) {
@@ -40,7 +42,6 @@ class SiteCreationDomainsAdapter(private val uiHelpers: UiHelpers) : Adapter<Sit
         items.addAll(newItems)
         diffResult.dispatchUpdatesTo(this)
     }
-    override fun getItemViewType(position: Int) = items[position].type.ordinal
 
     private class DomainsDiffUtils(
         val oldItems: List<DomainsListItemUiState>,
