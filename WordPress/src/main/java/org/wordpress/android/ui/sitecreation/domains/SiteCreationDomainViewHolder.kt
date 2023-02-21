@@ -11,9 +11,9 @@ import org.wordpress.android.databinding.SiteCreationDomainsItemBinding
 import org.wordpress.android.databinding.SiteCreationDomainsItemV2Binding
 import org.wordpress.android.databinding.SiteCreationSuggestionsErrorItemBinding
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelAvailableUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.ErrorItemUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.DomainUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.DomainUiState.AvailableDomain
 import org.wordpress.android.ui.sitecreation.domains.compose.DomainItem
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
@@ -27,7 +27,7 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
     ) : SiteCreationDomainViewHolder<SiteCreationDomainsItemBinding>(
         parentView.viewBinding(SiteCreationDomainsItemBinding::inflate)
     ) {
-        fun onBind(uiState: DomainsModelUiState) = with(binding) {
+        fun onBind(uiState: DomainUiState) = with(binding) {
             nameSuggestion.text = uiState.name
             domainSuggestion.text = uiState.domain
             domainSuggestionRadioButton.apply {
@@ -36,7 +36,7 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
                 buttonTintList = ContextCompat.getColorStateList(context, R.color.neutral_10_primary_40_selector)
             }
             container.apply {
-                val onClick = (uiState as? DomainsModelAvailableUiState)?.onClick
+                val onClick = (uiState as? AvailableDomain)?.onClick
                 isEnabled = onClick != null
                 setOnClickListener { onClick?.invoke() }
             }
@@ -49,7 +49,7 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
     ) : SiteCreationDomainViewHolder<SiteCreationSuggestionsErrorItemBinding>(
         parentView.viewBinding(SiteCreationSuggestionsErrorItemBinding::inflate)
     ) {
-        fun onBind(uiState: DomainsFetchSuggestionsErrorUiState) = with(binding) {
+        fun onBind(uiState: ErrorItemUiState) = with(binding) {
             errorText.text = root.context.getText(uiState.messageResId)
             retry.apply {
                 text = context.getText(uiState.retryButtonResId)
@@ -70,7 +70,7 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
     ) {
         val composeView = binding.composeView
 
-        fun onBind(uiState: DomainsModelUiState) = with(composeView) {
+        fun onBind(uiState: DomainUiState) = with(composeView) {
             // TODO: Remove this for Compose 1.2.0-beta02+ and RecyclerView 1.3.0-alpha02+
             setViewCompositionStrategy(DisposeOnViewTreeLifecycleDestroyed)
             setContent {

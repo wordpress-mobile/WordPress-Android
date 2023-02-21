@@ -10,11 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.DomainUiState
 
 @Composable
 fun DomainItem(
-    uiState: DomainsModelUiState,
+    uiState: DomainUiState,
 ) = with(uiState) {
     Row(
         modifier = Modifier
@@ -31,7 +31,7 @@ fun DomainItem(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun DomainItemPreview() {
-    val uiState = DomainsModelUiState.DomainsModelAvailableUiState(
+    val uiState = DomainUiState.AvailableDomain(
         name = "name",
         domain = "domain",
         checked = false,

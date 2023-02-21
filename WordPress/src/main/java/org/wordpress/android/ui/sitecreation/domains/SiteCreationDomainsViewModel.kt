@@ -25,9 +25,9 @@ import org.wordpress.android.models.networkresource.ListState.Success
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.*
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelAvailableUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelUnavailabilityUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.*
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.DomainUiState.AvailableDomain
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.DomainUiState.UnavailableDomain
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
@@ -260,10 +260,10 @@ class SiteCreationDomainsViewModel @Inject constructor(
         data: List<DomainModel>,
         errorFetchingSuggestions: Boolean,
         @StringRes errorResId: Int?
-    ): List<DomainsListItemUiState> {
-        val items: ArrayList<DomainsListItemUiState> = ArrayList()
+    ): List<ListItemUiState> {
+        val items: ArrayList<ListItemUiState> = ArrayList()
         if (errorFetchingSuggestions) {
-            val errorUiState = DomainsFetchSuggestionsErrorUiState(
+            val errorUiState = ErrorItemUiState(
                 messageResId = errorResId ?: R.string.site_creation_fetch_suggestions_error_unknown,
                 retryButtonResId = R.string.button_retry,
                 onClick = onRetry,
@@ -277,7 +277,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             }
 
             data.forEach { domain ->
-                val itemUiState = DomainsModelAvailableUiState(
+                val itemUiState = AvailableDomain(
                     domainSanitizer.getName(domain.domainName),
                     domainSanitizer.getDomain(domain.domainName),
                     checked = domain == selectedDomain,
@@ -300,12 +300,12 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private fun getDomainUnavailableUiState(
         query: String,
         domains: List<DomainModel>
-    ): DomainsModelUiState? {
+    ): DomainUiState? {
         if (domains.isEmpty()) return null
         val sanitizedQuery = domainSanitizer.sanitizeDomainQuery(query)
         val isDomainUnavailable = domains.none { it.domainName.startsWith("$sanitizedQuery.") }
         return if (isDomainUnavailable) {
-            DomainsModelUnavailabilityUiState(
+            UnavailableDomain(
                 sanitizedQuery,
                 ".wordpress.com",
                 UiStringRes(R.string.new_site_creation_unavailable_domain)
@@ -357,7 +357,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         sealed class DomainsUiContentState(
             val emptyViewVisibility: Boolean,
             val exampleViewVisibility: Boolean,
-            val items: List<DomainsListItemUiState>
+            val items: List<ListItemUiState>
         ) {
             object Initial : DomainsUiContentState(
                 emptyViewVisibility = false,
@@ -371,7 +371,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 items = emptyList()
             )
 
-            class VisibleItems(items: List<DomainsListItemUiState>) : DomainsUiContentState(
+            class VisibleItems(items: List<ListItemUiState>) : DomainsUiContentState(
                 emptyViewVisibility = false,
                 exampleViewVisibility = false,
                 items = items
@@ -379,7 +379,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         }
     }
 
-    sealed class DomainsListItemUiState {
+    sealed class ListItemUiState {
         abstract val type: Type
 
         enum class Type {
@@ -388,36 +388,36 @@ class SiteCreationDomainsViewModel @Inject constructor(
             ERROR_FETCH_V1,
         }
 
-        sealed class DomainsModelUiState(
+        sealed class DomainUiState(
             open val name: String,
             open val domain: String,
             open val checked: Boolean,
             val radioButtonVisibility: Boolean,
             open val subTitle: UiString? = null,
-        ) : DomainsListItemUiState() {
+        ) : ListItemUiState() {
 
-            data class DomainsModelAvailableUiState(
+            data class AvailableDomain(
                 override val name: String,
                 override val domain: String,
                 override val checked: Boolean,
                 override val type: Type = Type.DOMAIN_V1,
                 val onClick: () -> Unit,
-            ) : DomainsModelUiState(name, domain, checked, true)
+            ) : DomainUiState(name, domain, checked, true)
 
-            data class DomainsModelUnavailabilityUiState(
+            data class UnavailableDomain(
                 override val name: String,
                 override val domain: String,
                 override val subTitle: UiString,
                 override val type: Type = Type.DOMAIN_V1,
-            ) : DomainsModelUiState(name, domain, false, false, subTitle)
+            ) : DomainUiState(name, domain, false, false, subTitle)
         }
 
-        data class DomainsFetchSuggestionsErrorUiState(
+        data class ErrorItemUiState(
             @StringRes val messageResId: Int,
             @StringRes val retryButtonResId: Int,
             val onClick: () -> Unit,
             override val type: Type = Type.ERROR_FETCH_V1,
-        ) : DomainsListItemUiState()
+        ) : ListItemUiState()
     }
 
     /**

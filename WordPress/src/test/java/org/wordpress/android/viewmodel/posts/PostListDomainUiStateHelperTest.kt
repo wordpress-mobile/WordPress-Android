@@ -48,7 +48,7 @@ private val POST_STATE_TRASHED = PostStatus.TRASHED.toString()
 
 @Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
-class PostListItemUiStateHelperTest {
+class PostListDomainUiStateHelperTest {
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
 

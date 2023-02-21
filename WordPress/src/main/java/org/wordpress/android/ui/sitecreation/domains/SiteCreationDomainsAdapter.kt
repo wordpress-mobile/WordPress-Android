@@ -7,19 +7,19 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolder.DomainComposeItemViewHolder
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolder.DomainSuggestionErrorViewHolder
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolder.DomainSuggestionItemViewHolder
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.Type
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.Type.DOMAIN_V1
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.Type.DOMAIN_V2
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.Type.ERROR_FETCH_V1
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.ErrorItemUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.DomainUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Type
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Type.DOMAIN_V1
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Type.DOMAIN_V2
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Type.ERROR_FETCH_V1
 import org.wordpress.android.ui.utils.UiHelpers
 
 class SiteCreationDomainsAdapter(
     private val uiHelpers: UiHelpers,
 ) : Adapter<SiteCreationDomainViewHolder<*>>() {
-    private val items = mutableListOf<DomainsListItemUiState>()
+    private val items = mutableListOf<ListItemUiState>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -35,9 +35,9 @@ class SiteCreationDomainsAdapter(
     override fun onBindViewHolder(holder: SiteCreationDomainViewHolder<*>, position: Int) {
         val item = items[position]
         return when (holder) {
-            is DomainSuggestionItemViewHolder -> holder.onBind(item as DomainsModelUiState)
-            is DomainSuggestionErrorViewHolder -> holder.onBind(item as DomainsFetchSuggestionsErrorUiState)
-            is DomainComposeItemViewHolder -> holder.onBind(item as DomainsModelUiState)
+            is DomainSuggestionItemViewHolder -> holder.onBind(item as DomainUiState)
+            is DomainSuggestionErrorViewHolder -> holder.onBind(item as ErrorItemUiState)
+            is DomainComposeItemViewHolder -> holder.onBind(item as DomainUiState)
         }
     }
 
@@ -46,7 +46,7 @@ class SiteCreationDomainsAdapter(
     override fun getItemCount(): Int = items.size
 
     @MainThread
-    fun update(newItems: List<DomainsListItemUiState>) {
+    fun update(newItems: List<ListItemUiState>) {
         val diffResult = DiffUtil.calculateDiff(DomainsDiffUtils(items.toList(), newItems))
         items.clear()
         items.addAll(newItems)
@@ -63,8 +63,8 @@ class SiteCreationDomainsAdapter(
     }
 
     private class DomainsDiffUtils(
-        val oldItems: List<DomainsListItemUiState>,
-        val newItems: List<DomainsListItemUiState>
+        val oldItems: List<ListItemUiState>,
+        val newItems: List<ListItemUiState>
     ) : DiffUtil.Callback() {
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldItems[oldItemPosition]
@@ -73,8 +73,8 @@ class SiteCreationDomainsAdapter(
                 return false
             }
             return when (oldItem) {
-                is DomainsFetchSuggestionsErrorUiState -> true
-                is DomainsModelUiState -> oldItem.name == (newItem as DomainsModelUiState).name
+                is ErrorItemUiState -> true
+                is DomainUiState -> oldItem.name == (newItem as DomainUiState).name
             }
         }
 

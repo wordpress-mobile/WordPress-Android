@@ -27,9 +27,9 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelAvailableUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelUnavailabilityUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.ErrorItemUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.DomainUiState.AvailableDomain
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.DomainUiState.UnavailableDomain
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -217,7 +217,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             numberOfItems = 1
         )
         assertThat(captor.thirdValue.contentState.items[0])
-            .isInstanceOf(DomainsFetchSuggestionsErrorUiState::class.java)
+            .isInstanceOf(ErrorItemUiState::class.java)
     }
 
     /**
@@ -352,13 +352,13 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     }
 
     /**
-     * Helper function to verify a [DomainsModelUnavailabilityUiState] Ui State.
+     * Helper function to verify a [UnavailableDomain] Ui State.
      */
     private fun verifyContentAndDomainValidityUiStatesAreVisible(
         uiState: DomainsUiState
     ) {
         assertThat(uiState.contentState.items.first())
-            .isInstanceOf(DomainsModelUnavailabilityUiState::class.java)
+            .isInstanceOf(UnavailableDomain::class.java)
     }
 
     /**
@@ -408,8 +408,8 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     /**
      * Helper function that creates the current sanitized query being used to generate the domain suggestions.
      * It returns a test domain that's based on the test suggestions being used so that the app can behave in it's
-     * normal [DomainsModelAvailableUiState] state. It also returns an unavailable domain query so that the
-     *  [DomainsModelUnavailabilityUiState] state is activated.
+     * normal [AvailableDomain] state. It also returns an unavailable domain query so that the
+     *  [UnavailableDomain] state is activated.
      */
     private fun createSanitizedDomainResult(isDomainAvailableInSuggestions: Boolean) =
         if (isDomainAvailableInSuggestions) {
