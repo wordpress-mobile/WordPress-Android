@@ -111,17 +111,11 @@ class SiteCreationDomainsViewModel @Inject constructor(
         _createSiteBtnClicked.value = domain.domainName
     }
 
-    fun onClearTextBtnClicked() {
-        _clearBtnClicked.call()
-    }
+    fun onClearTextBtnClicked() = _clearBtnClicked.call()
 
-    fun onHelpClicked() {
-        _onHelpClicked.call()
-    }
+    fun onHelpClicked() = _onHelpClicked.call()
 
-    fun updateQuery(query: String) {
-        updateQueryInternal(UserQuery(query))
-    }
+    fun updateQuery(query: String) = updateQueryInternal(UserQuery(query))
 
     private fun updateQueryInternal(query: DomainSuggestionsQuery?) {
         currentQuery = query
@@ -134,9 +128,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         }
     }
 
-    private fun resetUiState() {
-        updateUiStateToContent(null, Ready(emptyList()))
-    }
+    private fun resetUiState() = updateUiStateToContent(null, Ready(emptyList()))
 
     private fun fetchDomains(query: DomainSuggestionsQuery) {
         if (networkUtils.isNetworkAvailable()) {
