@@ -3,11 +3,11 @@ GEM
   specs:
     CFPropertyList (3.0.6)
       rexml
-    activesupport (5.2.8.1)
+    activesupport (7.0.4.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (>= 0.7, < 2)
-      minitest (~> 5.1)
-      tzinfo (~> 1.1)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
     addressable (2.8.1)
       public_suffix (>= 2.0.2, < 6.0)
     artifactory (3.0.15)
@@ -116,8 +116,8 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
-    fastlane-plugin-wpmreleasetoolkit (6.3.0)
-      activesupport (~> 5)
+    fastlane-plugin-wpmreleasetoolkit (7.0.0)
+      activesupport (>= 6.1.7.1)
       bigdecimal (~> 1.4)
       buildkit (~> 1.5)
       chroma (= 0.2.0)
@@ -132,7 +132,7 @@ GEM
       rake (>= 12.3, < 14.0)
       rake-compiler (~> 1.0)
     gh_inspector (1.1.3)
-    git (1.13.1)
+    git (1.13.2)
       addressable (~> 2.8)
       rchardet (~> 1.8)
     google-apis-androidpublisher_v3 (0.34.0)
@@ -236,14 +236,13 @@ GEM
     terminal-notifier (2.0.0)
     terminal-table (1.8.0)
       unicode-display_width (~> 1.1, >= 1.1.1)
-    thread_safe (0.3.6)
     trailblazer-option (0.1.2)
     tty-cursor (0.7.1)
     tty-screen (0.8.1)
     tty-spinner (0.9.3)
       tty-cursor (~> 0.7)
-    tzinfo (1.2.10)
-      thread_safe (~> 0.1)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
     uber (0.1.0)
     unf (0.1.4)
       unf_ext
@@ -268,7 +267,7 @@ PLATFORMS
 
 DEPENDENCIES
   fastlane (~> 2)
-  fastlane-plugin-wpmreleasetoolkit (~> 6.1)
+  fastlane-plugin-wpmreleasetoolkit (~> 7.0)
   nokogiri
   rmagick (~> 4.1)
 
