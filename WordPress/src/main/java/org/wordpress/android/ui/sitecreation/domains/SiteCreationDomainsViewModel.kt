@@ -192,14 +192,9 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     private fun parseSuggestion(response: DomainSuggestionResponse): DomainModel = with(response) {
-        val domainName = when {
-            purchasingFeatureConfig.isEnabledOrManuallyOverridden() -> "$domain_name ($cost)"
-            else -> domain_name
-        }
-
         DomainModel(
-            domainName,
-            isFree = is_free
+            domainName = domain_name,
+            isFree = is_free,
         )
     }
 
