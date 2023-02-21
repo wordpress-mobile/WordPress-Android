@@ -284,6 +284,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             true -> New.DomainUiState(
                 domain.domainName,
                 domain.cost,
+                onClick = { onDomainSelected(domain) },
             )
             else -> Old.DomainUiState.AvailableDomain(
                 domainSanitizer.getName(domain.domainName),
@@ -333,9 +334,10 @@ class SiteCreationDomainsViewModel @Inject constructor(
         )
     }
 
+    @Suppress("ForbiddenComment")
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun onDomainSelected(domain: DomainModel) {
-        selectedDomain = domain
+        selectedDomain = domain.takeIf { it.isFree }
     }
 
     private fun isNonEmptyUserQuery(query: DomainSuggestionsQuery?) = query is UserQuery && query.value.isNotBlank()
@@ -418,6 +420,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             data class DomainUiState(
                 val domainName: String,
                 val cost: String,
+                val onClick: () -> Unit,
             ) : New(Type.DOMAIN_V2)
         }
     }

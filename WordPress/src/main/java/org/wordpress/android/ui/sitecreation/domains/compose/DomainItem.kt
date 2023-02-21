@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitecreation.domains.compose
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ fun DomainItem(
 ) = with(uiState) {
     Row(
         modifier = Modifier
+            .clickable { onClick.invoke() }
             .padding(horizontal = 24.dp, vertical = 16.dp)
     )
     {
@@ -34,6 +36,7 @@ private fun DomainItemPreview() {
     val uiState = DomainUiState(
         domainName = "sub.domain.com",
         cost = "Free",
+        onClick = {}
     )
     AppTheme {
         DomainItem(uiState)
