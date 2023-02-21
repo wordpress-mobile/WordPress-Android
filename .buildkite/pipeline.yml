@@ -88,7 +88,7 @@ steps:
         artifact_paths:
           - "**/build/instrumented-tests/**/*"
 
-      - block: ":jetpack: 🔬 Instrumented tests (Optional)"
+      - label: ":jetpack: 🔬 Instrumented tests"
         command: ".buildkite/commands/instrumented-tests.sh jetpack"
         plugins: *common_plugins
         artifact_paths:
