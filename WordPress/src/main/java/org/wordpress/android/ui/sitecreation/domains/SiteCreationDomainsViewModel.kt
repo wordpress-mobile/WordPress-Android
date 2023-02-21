@@ -295,7 +295,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         }
     }
 
-    @Suppress("ForbiddenComment")
+    @Suppress("ForbiddenComment", "ReturnCount")
     private fun getDomainUnavailableUiState(
         query: String,
         domains: List<DomainModel>
