@@ -388,13 +388,12 @@ class SiteCreationDomainsViewModel @Inject constructor(
             open val subTitle: UiString? = null,
             override val type: Type = Type.DOMAIN_V1,
         ) : DomainsListItemUiState() {
-            open val onClick: (() -> Unit)? = null
 
             data class DomainsModelAvailableUiState(
                 override val name: String,
                 override val domain: String,
                 override val checked: Boolean,
-                override val onClick: () -> Unit,
+                val onClick: () -> Unit,
             ) : DomainsModelUiState(name, domain, checked, true)
 
             data class DomainsModelUnavailabilityUiState(
