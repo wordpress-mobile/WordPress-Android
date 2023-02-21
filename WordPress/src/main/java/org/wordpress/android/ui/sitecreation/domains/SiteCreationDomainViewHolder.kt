@@ -9,7 +9,6 @@ import androidx.viewbinding.ViewBinding
 import org.wordpress.android.R
 import org.wordpress.android.databinding.SiteCreationDomainsItemBinding
 import org.wordpress.android.databinding.SiteCreationSuggestionsErrorItemBinding
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
 import org.wordpress.android.ui.utils.UiHelpers
@@ -18,16 +17,13 @@ import org.wordpress.android.util.extensions.viewBinding
 sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding: T) :
     RecyclerView.ViewHolder(binding.root) {
 
-    abstract fun onBind(uiState: DomainsListItemUiState)
-
     class DomainSuggestionItemViewHolder(
         parentView: ViewGroup,
         private val uiHelpers: UiHelpers
     ) : SiteCreationDomainViewHolder<SiteCreationDomainsItemBinding>(
         parentView.viewBinding(SiteCreationDomainsItemBinding::inflate)
     ) {
-        override fun onBind(uiState: DomainsListItemUiState) = with(binding) {
-            uiState as DomainsModelUiState
+        fun onBind(uiState: DomainsModelUiState) = with(binding) {
             nameSuggestion.text = uiState.name
             domainSuggestion.text = uiState.domain
             domainSuggestionRadioButton.isChecked = uiState.checked
@@ -49,8 +45,7 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
     ) : SiteCreationDomainViewHolder<SiteCreationSuggestionsErrorItemBinding>(
         parentView.viewBinding(SiteCreationSuggestionsErrorItemBinding::inflate)
     ) {
-        override fun onBind(uiState: DomainsListItemUiState) = with(binding) {
-            uiState as DomainsFetchSuggestionsErrorUiState
+        fun onBind(uiState: DomainsFetchSuggestionsErrorUiState) = with(binding) {
             errorText.text = itemView.context.getText(uiState.messageResId)
             retry.setCompoundDrawablesWithIntrinsicBounds(getRetryCompoundDrawable(), null, null, null)
             retry.text = itemView.context.getText(uiState.retryButtonResId)
@@ -58,6 +53,7 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
                 uiState.onClick.invoke()
             }
         }
+
         private fun SiteCreationSuggestionsErrorItemBinding.getRetryCompoundDrawable(): Drawable? {
             return ContextCompat.getDrawable(root.context, R.drawable.retry_icon)?.apply {
                 setTint(ContextCompat.getColor(root.context, R.color.primary))

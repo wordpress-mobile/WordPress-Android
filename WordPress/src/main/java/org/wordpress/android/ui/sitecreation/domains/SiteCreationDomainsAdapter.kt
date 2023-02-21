@@ -28,7 +28,11 @@ class SiteCreationDomainsAdapter(private val uiHelpers: UiHelpers) : Adapter<Sit
     }
 
     override fun onBindViewHolder(holder: SiteCreationDomainViewHolder<*>, position: Int) {
-        holder.onBind(items[position])
+        val item = items[position]
+        return when (holder) {
+            is DomainSuggestionItemViewHolder -> holder.onBind(item as DomainsModelUiState)
+            is DomainSuggestionErrorViewHolder -> holder.onBind(item as DomainsFetchSuggestionsErrorUiState)
+        }
     }
 
     override fun getItemViewType(position: Int) = items[position].type.ordinal
