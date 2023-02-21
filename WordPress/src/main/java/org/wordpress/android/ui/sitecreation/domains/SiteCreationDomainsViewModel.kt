@@ -195,7 +195,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         DomainModel(
             domainName = domain_name,
             isFree = is_free,
-            cost = cost,
+            cost = cost.orEmpty(),
         )
     }
 
