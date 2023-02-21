@@ -8,8 +8,8 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolde
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolder.DomainSuggestionErrorViewHolder
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolder.DomainSuggestionItemViewHolder
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.ErrorItemUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.DomainUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Type
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Type.DOMAIN_V1
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Type.DOMAIN_V2
@@ -35,9 +35,9 @@ class SiteCreationDomainsAdapter(
     override fun onBindViewHolder(holder: SiteCreationDomainViewHolder<*>, position: Int) {
         val item = items[position]
         return when (holder) {
-            is DomainSuggestionItemViewHolder -> holder.onBind(item as DomainUiState)
-            is DomainSuggestionErrorViewHolder -> holder.onBind(item as ErrorItemUiState)
-            is DomainComposeItemViewHolder -> holder.onBind(item as DomainUiState)
+            is DomainSuggestionItemViewHolder -> holder.onBind(item as Old.DomainUiState)
+            is DomainSuggestionErrorViewHolder -> holder.onBind(item as Old.ErrorItemUiState)
+            is DomainComposeItemViewHolder -> holder.onBind(item as New.DomainUiState)
         }
     }
 
@@ -73,8 +73,9 @@ class SiteCreationDomainsAdapter(
                 return false
             }
             return when (oldItem) {
-                is ErrorItemUiState -> true
-                is DomainUiState -> oldItem.name == (newItem as DomainUiState).name
+                is Old.ErrorItemUiState -> true
+                is Old.DomainUiState -> oldItem.name == (newItem as Old.DomainUiState).name
+                is New.DomainUiState -> oldItem.domainName == (newItem as New.DomainUiState).domainName
             }
         }
 

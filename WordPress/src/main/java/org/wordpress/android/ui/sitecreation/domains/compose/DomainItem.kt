@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.DomainUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState
 
 @Composable
 fun DomainItem(
@@ -21,9 +21,9 @@ fun DomainItem(
             .padding(horizontal = 24.dp, vertical = 16.dp)
     )
     {
-        Text(name + domain)
+        Text(domainName)
         Spacer(modifier = Modifier.weight(1f))
-        Text("Free")
+        Text(cost)
     }
 }
 
@@ -31,11 +31,9 @@ fun DomainItem(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun DomainItemPreview() {
-    val uiState = DomainUiState.AvailableDomain(
-        name = "name",
-        domain = "domain",
-        checked = false,
-        onClick = {},
+    val uiState = DomainUiState(
+        domainName = "sub.domain.com",
+        cost = "Free",
     )
     AppTheme {
         DomainItem(uiState)
