@@ -25,8 +25,7 @@ import org.wordpress.android.models.networkresource.ListState.Success
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.*
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelAvailableUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelUnavailabilityUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
@@ -282,12 +281,20 @@ class SiteCreationDomainsViewModel @Inject constructor(
                     domainSanitizer.getName(domain.domainName),
                     domainSanitizer.getDomain(domain.domainName),
                     checked = domain == selectedDomain,
+                    type = getDomainsModelAvailableUiStateType(),
                     onClick = { onDomainSelected(domain) }
                 )
                 items.add(itemUiState)
             }
         }
         return items
+    }
+
+    private fun getDomainsModelAvailableUiStateType(): Type {
+        return when (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
+            true -> Type.DOMAIN_V2
+            else -> Type.DOMAIN_V1
+        }
     }
 
     private fun getDomainUnavailableUiState(
@@ -377,6 +384,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
         enum class Type {
             DOMAIN_V1,
+            DOMAIN_V2,
             ERROR_FETCH_V1,
         }
 
@@ -386,20 +394,21 @@ class SiteCreationDomainsViewModel @Inject constructor(
             open val checked: Boolean,
             val radioButtonVisibility: Boolean,
             open val subTitle: UiString? = null,
-            override val type: Type = Type.DOMAIN_V1,
         ) : DomainsListItemUiState() {
 
             data class DomainsModelAvailableUiState(
                 override val name: String,
                 override val domain: String,
                 override val checked: Boolean,
+                override val type: Type = Type.DOMAIN_V1,
                 val onClick: () -> Unit,
             ) : DomainsModelUiState(name, domain, checked, true)
 
             data class DomainsModelUnavailabilityUiState(
                 override val name: String,
                 override val domain: String,
-                override val subTitle: UiString
+                override val subTitle: UiString,
+                override val type: Type = Type.DOMAIN_V1,
             ) : DomainsModelUiState(name, domain, false, false, subTitle)
         }
 

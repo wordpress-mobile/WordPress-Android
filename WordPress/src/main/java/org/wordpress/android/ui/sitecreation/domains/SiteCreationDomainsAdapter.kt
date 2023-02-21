@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.annotation.MainThread
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolder.DomainComposeItemViewHolder
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolder.DomainSuggestionErrorViewHolder
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolder.DomainSuggestionItemViewHolder
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState
@@ -11,10 +12,13 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.Type
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.Type.DOMAIN_V1
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.Type.DOMAIN_V2
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.Type.ERROR_FETCH_V1
 import org.wordpress.android.ui.utils.UiHelpers
 
-class SiteCreationDomainsAdapter(private val uiHelpers: UiHelpers) : Adapter<SiteCreationDomainViewHolder<*>>() {
+class SiteCreationDomainsAdapter(
+    private val uiHelpers: UiHelpers,
+) : Adapter<SiteCreationDomainViewHolder<*>>() {
     private val items = mutableListOf<DomainsListItemUiState>()
 
     override fun onCreateViewHolder(
@@ -23,6 +27,7 @@ class SiteCreationDomainsAdapter(private val uiHelpers: UiHelpers) : Adapter<Sit
     ): SiteCreationDomainViewHolder<*> {
         return when (Type.values()[viewType]) {
             DOMAIN_V1 -> DomainSuggestionItemViewHolder(parent, uiHelpers)
+            DOMAIN_V2 -> DomainComposeItemViewHolder(parent)
             ERROR_FETCH_V1 -> DomainSuggestionErrorViewHolder(parent)
         }
     }
@@ -32,6 +37,7 @@ class SiteCreationDomainsAdapter(private val uiHelpers: UiHelpers) : Adapter<Sit
         return when (holder) {
             is DomainSuggestionItemViewHolder -> holder.onBind(item as DomainsModelUiState)
             is DomainSuggestionErrorViewHolder -> holder.onBind(item as DomainsFetchSuggestionsErrorUiState)
+            is DomainComposeItemViewHolder -> holder.onBind(item as DomainsModelUiState)
         }
     }
 
@@ -45,6 +51,15 @@ class SiteCreationDomainsAdapter(private val uiHelpers: UiHelpers) : Adapter<Sit
         items.clear()
         items.addAll(newItems)
         diffResult.dispatchUpdatesTo(this)
+    }
+
+    @Suppress("ForbiddenComment")
+    override fun onViewRecycled(holder: SiteCreationDomainViewHolder<*>) {
+        if (holder is DomainComposeItemViewHolder) {
+            // TODO: Remove this for Compose 1.2.0-beta02+ and RecyclerView 1.3.0-alpha02+
+            holder.composeView.disposeComposition()
+        }
+        super.onViewRecycled(holder)
     }
 
     private class DomainsDiffUtils(

@@ -1,16 +1,20 @@
 package org.wordpress.android.ui.sitecreation.domains
 
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
 import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import org.wordpress.android.R
 import org.wordpress.android.databinding.SiteCreationDomainsItemBinding
+import org.wordpress.android.databinding.SiteCreationDomainsItemV2Binding
 import org.wordpress.android.databinding.SiteCreationSuggestionsErrorItemBinding
+import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelAvailableUiState
+import org.wordpress.android.ui.sitecreation.domains.compose.DomainItem
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
 
@@ -55,6 +59,25 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
                 setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
             }
             container.setOnClickListener { uiState.onClick.invoke() }
+        }
+    }
+
+    @Suppress("ForbiddenComment")
+    class DomainComposeItemViewHolder(
+        parentView: ViewGroup,
+    ) : SiteCreationDomainViewHolder<SiteCreationDomainsItemV2Binding>(
+        parentView.viewBinding(SiteCreationDomainsItemV2Binding::inflate)
+    ) {
+        val composeView = binding.composeView
+
+        fun onBind(uiState: DomainsModelUiState) = with(composeView) {
+            // TODO: Remove this for Compose 1.2.0-beta02+ and RecyclerView 1.3.0-alpha02+
+            setViewCompositionStrategy(DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AppTheme {
+                    DomainItem(uiState)
+                }
+            }
         }
     }
 }
