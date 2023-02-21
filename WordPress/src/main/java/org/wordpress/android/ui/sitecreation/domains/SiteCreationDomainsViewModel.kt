@@ -195,6 +195,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         DomainModel(
             domainName = domain_name,
             isFree = is_free,
+            cost = cost,
         )
     }
 
@@ -282,7 +283,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         return when (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
             true -> New.DomainUiState(
                 domain.domainName,
-                cost = "Free",
+                domain.cost,
             )
             else -> Old.DomainUiState.AvailableDomain(
                 domainSanitizer.getName(domain.domainName),
@@ -342,6 +343,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     data class DomainModel(
         val domainName: String,
         val isFree: Boolean,
+        val cost: String,
     )
 
     data class DomainsUiState(
