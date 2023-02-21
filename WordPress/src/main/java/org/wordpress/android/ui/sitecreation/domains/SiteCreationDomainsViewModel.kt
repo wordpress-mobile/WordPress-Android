@@ -295,11 +295,13 @@ class SiteCreationDomainsViewModel @Inject constructor(
         }
     }
 
+    @Suppress("ForbiddenComment")
     private fun getDomainUnavailableUiState(
         query: String,
         domains: List<DomainModel>
     ): ListItemUiState? {
         if (domains.isEmpty()) return null
+        if (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) return null // TODO: Add FQDN availability check
         val sanitizedQuery = domainSanitizer.sanitizeDomainQuery(query)
         val isDomainUnavailable = domains.none { it.domainName.startsWith("$sanitizedQuery.") }
         return if (isDomainUnavailable) {
