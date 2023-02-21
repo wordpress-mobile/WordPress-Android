@@ -39,14 +39,14 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
 
         override fun onBind(uiState: DomainsListItemUiState) = with(binding) {
             uiState as DomainsModelUiState
-            if (uiState.onItemTapped != null) {
-                onDomainSelected = requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
+            if (uiState.onClick != null) {
+                onDomainSelected = requireNotNull(uiState.onClick) { "OnItemTapped is required." }
             }
             nameSuggestion.text = uiState.name
             domainSuggestion.text = uiState.domain
             domainSuggestionRadioButton.isChecked = uiState.checked
             domainSuggestionRadioButton.visibility = if (uiState.radioButtonVisibility) View.VISIBLE else View.INVISIBLE
-            container.isEnabled = uiState.onItemTapped != null
+            container.isEnabled = uiState.onClick != null
             uiHelpers.setTextOrHide(domainUnavailability, uiState.subTitle)
         }
     }
@@ -71,9 +71,9 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
             uiState as DomainsFetchSuggestionsErrorUiState
             errorText.text = itemView.context.getText(uiState.messageResId)
             retry.text = itemView.context.getText(uiState.retryButtonResId)
-            requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
+            requireNotNull(uiState.onClick) { "OnItemTapped is required." }
             itemView.setOnClickListener {
-                uiState.onItemTapped.invoke()
+                uiState.onClick.invoke()
             }
         }
     }

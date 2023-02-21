@@ -267,7 +267,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             val errorUiState = DomainsFetchSuggestionsErrorUiState(
                 messageResId = errorResId ?: R.string.site_creation_fetch_suggestions_error_unknown,
                 retryButtonResId = R.string.button_retry,
-                onItemTapped = onRetry,
+                onClick = onRetry,
             )
             items.add(errorUiState)
         } else {
@@ -283,7 +283,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
                     domainSanitizer.getDomain(domain.domainName),
                     checked = domain == selectedDomain
                 )
-                itemUiState.onItemTapped = { onDomainSelected(domain) }
+                itemUiState.onClick = { onDomainSelected(domain) }
                 items.add(itemUiState)
             }
         }
@@ -388,7 +388,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             open val subTitle: UiString? = null,
             override val type: Type = Type.DOMAIN_V1,
         ) : DomainsListItemUiState() {
-            open var onItemTapped: (() -> Unit)? = null
+            open var onClick: (() -> Unit)? = null
 
             data class DomainsModelAvailableUiState(
                 override val name: String,
@@ -406,7 +406,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         data class DomainsFetchSuggestionsErrorUiState(
             @StringRes val messageResId: Int,
             @StringRes val retryButtonResId: Int,
-            val onItemTapped: () -> Unit,
+            val onClick: () -> Unit,
             override val type: Type = Type.ERROR_FETCH_V1,
         ) : DomainsListItemUiState()
     }
