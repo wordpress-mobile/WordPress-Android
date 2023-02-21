@@ -11,9 +11,11 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.firstValue
 import org.mockito.kotlin.lastValue
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.secondValue
 import org.mockito.kotlin.thirdValue
 import org.mockito.kotlin.times
@@ -25,7 +27,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainModel
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelAvailableUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelUnavailabilityUiState
@@ -283,12 +284,12 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
      */
     @Test
     fun verifyCreateSiteBtnClickedPropagated() = testWithSuccessResponse {
-        val domain = DomainModel("test.domain", isFree = false)
-        viewModel.onDomainSelected(domain)
+        val domainName = "test.domain"
+        viewModel.onDomainSelected(mock() { on { it.domainName } doReturn domainName })
         viewModel.onCreateSiteBtnClicked()
         val captor = ArgumentCaptor.forClass(String::class.java)
         verify(createSiteBtnObserver, times(1)).onChanged(captor.capture())
-        assertThat(captor.firstValue).isEqualTo(domain.domainName)
+        assertThat(captor.firstValue).isEqualTo(domainName)
     }
 
     @Test
