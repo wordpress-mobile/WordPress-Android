@@ -266,9 +266,9 @@ class SiteCreationDomainsViewModel @Inject constructor(
         if (errorFetchingSuggestions) {
             val errorUiState = DomainsFetchSuggestionsErrorUiState(
                 messageResId = errorResId ?: R.string.site_creation_fetch_suggestions_error_unknown,
-                retryButtonResId = R.string.button_retry
+                retryButtonResId = R.string.button_retry,
+                onItemTapped = onRetry,
             )
-            errorUiState.onItemTapped = onRetry
             items.add(errorUiState)
         } else {
             query?.let { value ->
@@ -373,8 +373,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     sealed class DomainsListItemUiState {
-        var onItemTapped: (() -> Unit)? = null
-        open val clickable: Boolean = false
         abstract val type: Type
 
         enum class Type {
@@ -388,26 +386,27 @@ class SiteCreationDomainsViewModel @Inject constructor(
             open val checked: Boolean,
             val radioButtonVisibility: Boolean,
             open val subTitle: UiString? = null,
-            override val clickable: Boolean,
             override val type: Type = Type.DOMAIN_V1,
         ) : DomainsListItemUiState() {
+            open var onItemTapped: (() -> Unit)? = null
 
             data class DomainsModelAvailableUiState(
                 override val name: String,
                 override val domain: String,
-                override val checked: Boolean
-            ) : DomainsModelUiState(name, domain, checked, true, clickable = true)
+                override val checked: Boolean,
+            ) : DomainsModelUiState(name, domain, checked, true)
 
             data class DomainsModelUnavailabilityUiState(
                 override val name: String,
                 override val domain: String,
                 override val subTitle: UiString
-            ) : DomainsModelUiState(name, domain, false, false, subTitle, false)
+            ) : DomainsModelUiState(name, domain, false, false, subTitle)
         }
 
         data class DomainsFetchSuggestionsErrorUiState(
             @StringRes val messageResId: Int,
             @StringRes val retryButtonResId: Int,
+            val onItemTapped: () -> Unit,
             override val type: Type = Type.ERROR_FETCH_V1,
         ) : DomainsListItemUiState()
     }
