@@ -336,7 +336,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
         )
     }
 
-    @Suppress("ForbiddenComment")
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun onDomainSelected(domain: DomainModel) {
         selectedDomain = domain.takeIf { it.isFree }
