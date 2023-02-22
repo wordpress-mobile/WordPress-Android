@@ -183,7 +183,7 @@ class HelpActivity : LocaleAwareActivity() {
 
     private fun HelpActivityBinding.showContactUs() {
         contactUsButton.setOnClickListener { createNewZendeskTicket() }
-        myTicketsButton.setOnClickListener { showZendeskTickets() }
+        ticketsButton.setOnClickListener { showZendeskTickets() }
 
         contactEmailContainer.setOnClickListener {
             var emailSuggestion = AppPrefs.getSupportEmail()
@@ -210,7 +210,7 @@ class HelpActivity : LocaleAwareActivity() {
 
     private fun HelpActivityBinding.showSupportForum() {
         contactUsButton.isVisible = false
-        myTicketsButton.isVisible = false
+        ticketsButton.isVisible = false
         emailContainerTopDivider.isVisible = false
         contactEmailContainer.isVisible = false
         emailContainerBottomDivider.isVisible = false

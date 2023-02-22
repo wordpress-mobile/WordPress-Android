@@ -129,9 +129,9 @@
                     android:text="@string/browse_our_faq_button" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/my_tickets_button"
+                    android:id="@+id/tickets_button"
                     style="@style/HelpActivitySingleText"
-                    android:text="@string/my_tickets" />
+                    android:text="@string/tickets" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/application_log_button"

@@ -2247,6 +2247,7 @@
     <string name="wordpress_help_center_button">WordPress help center</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
+    <string name="tickets">Tickets</string>
     <string name="application_log_button">Application log</string>
     <string name="support_contact_email">Contact email</string>
     <string name="support_contact_email_not_set">Not set</string>
