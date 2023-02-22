@@ -18,7 +18,6 @@ translationY compensates for the line height adjustment of text
         <item name="android:textSize">15sp</item>
         <item name="android:letterSpacing">-0.02</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-<!--        <item name="android:textColor">#E6000000</item>-->
         <item name="android:lineSpacingExtra">3sp</item>
     </style>
 </resources>
