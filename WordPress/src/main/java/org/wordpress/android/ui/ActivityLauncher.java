@@ -1820,7 +1820,7 @@ public class ActivityLauncher {
                                             @Nullable PostModel postModel,
                                             @NonNull BlazeFlowSource source) {
         Intent intent = new Intent(context, BlazeParentActivity.class);
-        if(postModel!=null) {
+        if (postModel != null) {
             PostUIModel postUIModel =
                     new PostUIModel(postModel.getRemotePostId(),
                             postModel.getTitle(),

@@ -83,6 +83,7 @@ class BlazeOverlayFragment : Fragment() {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @Composable
     fun BlazeOverlayContent(
         postModelState: BlazeUiState.PromoteScreen,
@@ -167,7 +168,7 @@ class BlazeOverlayFragment : Fragment() {
             modifier = modifier
                 .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 15.dp)
         ) {
-            val (postContainer, featuredImage, title, url) = createRefs()
+            val (postContainer, featuredImage, title) = createRefs()
             Box(modifier = Modifier
                 .constrainAs(postContainer) {
                     top.linkTo(parent.top, 0.dp)
@@ -194,6 +195,7 @@ class BlazeOverlayFragment : Fragment() {
                 width = Dimension.fillToConstraints
                 height = Dimension.wrapContent
             })
+            val url =  createRef()
             PostUrl(url = postUIModel.url, modifier = Modifier.constrainAs(url) {
                 top.linkTo(title.bottom, 5.dp)
                 start.linkTo(postContainer.start, 20.dp)

@@ -24,9 +24,6 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.utils.UiString
 
-class Drawable(val resId: Int, val iconSize: Dp = 24.dp, val padding: Dp = 12.dp)
-
-
 @Preview
 @Composable
 fun PreviewDrawButton() {
@@ -138,3 +135,6 @@ fun ImageButton(
         }
     }
 }
+
+class Drawable(val resId: Int, val iconSize: Dp = 24.dp, val padding: Dp = 12.dp)
+

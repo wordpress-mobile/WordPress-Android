@@ -13,7 +13,6 @@ const val ARG_BLAZE_FLOW_SOURCE = "blaze_flow_source"
 
 @AndroidEntryPoint
 class BlazeParentActivity : AppCompatActivity() {
-
     private val viewModel: BlazeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

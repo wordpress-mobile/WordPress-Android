@@ -13,7 +13,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BlazeViewModel @Inject constructor(private val blazeFeatureUtils: BlazeFeatureUtils) : ViewModel() {
-
     private lateinit var blazeFlowSource: BlazeFlowSource
 
     private val _refreshAppTheme = MutableLiveData<Unit>()
