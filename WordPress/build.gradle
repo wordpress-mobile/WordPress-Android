@@ -407,6 +407,7 @@ dependencies {
     implementation "com.google.firebase:firebase-config:$firebaseConfigVersion"
     implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
     implementation "com.google.android.gms:play-services-code-scanner:$googlePlayServicesCodeScannerVersion"
+    implementation "com.google.mlkit:barcode-scanning-common:$googleMLKitBarcodeScanningVersion"
     implementation "com.android.installreferrer:installreferrer:$androidInstallReferrerVersion"
     implementation "com.github.chrisbanes:PhotoView:$chrisbanesPhotoviewVersion"
     implementation "org.greenrobot:eventbus:$eventBusVersion"
