@@ -184,6 +184,7 @@ public class AppPrefs {
         SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD,
         SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD,
         SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING,
+        SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD,
     }
 
     /**
@@ -1598,5 +1599,13 @@ public class AppPrefs {
 
     @NonNull private static String getShouldShowJetpackFullPluginInstallOnboardingPref(int siteId) {
         return DeletablePrefKey.SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING.name() + siteId;
+    }
+
+    public static Boolean getShouldHidePromoteWithBlazeCard() {
+        return getBoolean(DeletablePrefKey.SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD, false);
+    }
+
+    public static void setShouldHidePromoteWithBlazeCard(final boolean isHidden) {
+        setBoolean(DeletablePrefKey.SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD, isHidden);
     }
 }
