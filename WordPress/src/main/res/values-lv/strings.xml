@@ -2103,8 +2103,6 @@ Language: lv
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Nav uzstādīts</string>
     <string name="support_contact_email">E-pasts saziņai</string>
-    <string name="application_log_button">Lietojumprogrammu žurnāls</string>
-    <string name="my_tickets">Manas biļetes</string>
     <string name="activity_log_currently_restoring_message_no_dates">Notiek atjaunošana</string>
     <string name="activity_log_currently_restoring_message">Atjaunots uz %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Pašlaik tiek atjaunota jūsu vietne</string>
@@ -3134,7 +3132,6 @@ Language: lv
     <string name="me_disconnect_from_wordpress_com">Izrakstieties no vietnes WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Piesakieties vietnē WordPress.com</string>
     <string name="me_btn_login_logout">Pieteikšanās / atteikšanās</string>
-    <string name="me_btn_support">Palīdzība un atbalsts</string>
     <string name="account_settings">Konta iestatījumi</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" netika paslēpts, jo tā ir pašreizējā vietne</string>
     <string name="site_picker_create_wpcom">Izveidojiet vietni WordPress.com</string>

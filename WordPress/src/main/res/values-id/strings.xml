@@ -2116,8 +2116,6 @@ Language: id
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Tidak ditentukan</string>
     <string name="support_contact_email">Email kontak</string>
-    <string name="application_log_button">Log aplikasi</string>
-    <string name="my_tickets">Tiket Saya</string>
     <string name="activity_log_currently_restoring_message_no_dates">Pemulihan sedang berlangsung</string>
     <string name="activity_log_currently_restoring_message">Memulihkan ke %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Sedang memulihkan situs Anda</string>
@@ -3147,7 +3145,6 @@ Language: id
     <string name="me_disconnect_from_wordpress_com">Logout dari WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Log in ke WordPress.com</string>
     <string name="me_btn_login_logout">Log masuk/keluar</string>
-    <string name="me_btn_support">Bantuan &amp; Dukungan</string>
     <string name="account_settings">Pengaturan Akun</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" tidak tersembunyi karena itu adalah situs saat ini</string>
     <string name="site_picker_create_wpcom">Buat situs WordPress.com</string>

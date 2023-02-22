@@ -2126,8 +2126,6 @@ Language: ru
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Не установлен</string>
     <string name="support_contact_email">Контактный адрес эл.почты</string>
-    <string name="application_log_button">Журнал приложения</string>
-    <string name="my_tickets">Мои тикеты</string>
     <string name="activity_log_currently_restoring_message_no_dates">Откат в процессе</string>
     <string name="activity_log_currently_restoring_message">Откат на %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Ваш сайт в процессе восстановления</string>
@@ -3157,7 +3155,6 @@ Language: ru
     <string name="me_disconnect_from_wordpress_com">Отключение от WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Подключение к WordPress.com</string>
     <string name="me_btn_login_logout">Вход/выход</string>
-    <string name="me_btn_support">Помощь и техническая поддержка</string>
     <string name="account_settings">Настройки учётной записи</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" не был скрыт, так как это текущий сайт.</string>
     <string name="site_picker_create_wpcom">Создать сайт на WordPress.com</string>

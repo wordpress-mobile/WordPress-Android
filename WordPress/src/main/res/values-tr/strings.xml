@@ -2126,8 +2126,6 @@ Language: tr
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Ayarlanmadı</string>
     <string name="support_contact_email">İletişim e-postası</string>
-    <string name="application_log_button">Uygulama kaydı</string>
-    <string name="my_tickets">Taleplerim</string>
     <string name="activity_log_currently_restoring_message_no_dates">Geri alma devam ediyor</string>
     <string name="activity_log_currently_restoring_message">%1$s %2$s durumuna geri alınıyor</string>
     <string name="activity_log_currently_restoring_title">Siteniz şuan geri alınıyor</string>
@@ -3157,7 +3155,6 @@ Language: tr
     <string name="me_disconnect_from_wordpress_com">WordPress.com hesabından çıkış yap</string>
     <string name="me_connect_to_wordpress_com">WordPress.com hesabına giriş yap</string>
     <string name="me_btn_login_logout">Giriş/Çıkış</string>
-    <string name="me_btn_support">Yardım ve destek</string>
     <string name="account_settings">Hesap ayarları</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" şu anki site olduğundan gizlenmedi</string>
     <string name="site_picker_create_wpcom">WordPress.com sitesi oluştur</string>

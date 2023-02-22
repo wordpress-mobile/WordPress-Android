@@ -899,9 +899,7 @@ Language: sr_RS
     <string name="support_push_notification_message">Нова порука од \"Помоћи и Подршке\"</string>
     <string name="support_push_notification_title">Вордпрес</string>
     <string name="support_contact_email_not_set">Није подешено</string>
-    <string name="my_tickets">Моји тикети</string>
     <string name="notification_channel_transient_title">Пролазан</string>
-    <string name="application_log_button">Дневник апликације</string>
     <string name="activity_log_currently_restoring_message">Враћање на %1$s %2$s</string>
     <string name="activity_log_currently_restoring_message_no_dates">Враћање у претходно стање у току</string>
     <string name="support_contact_email">Електронска пошта за контакт</string>
@@ -1758,7 +1756,6 @@ Language: sr_RS
     <string name="me_disconnect_from_wordpress_com">Одјави се са WordPress.com</string>
     <string name="me_btn_login_logout">Пријава/одјава</string>
     <string name="me_connect_to_wordpress_com">Пријави се на WordPress.com</string>
-    <string name="me_btn_support">Помоћ и подршка</string>
     <string name="site_picker_cant_hide_current_site">„%s“ није сакривен зато што је тренутно веб место</string>
     <string name="account_settings">Подешавања налога</string>
     <string name="site_picker_create_wpcom">Направи WordPress.com сајт</string>

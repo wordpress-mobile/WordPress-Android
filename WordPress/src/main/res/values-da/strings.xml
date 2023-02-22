@@ -85,7 +85,6 @@ Language: da_DK
     <string name="me_connect_to_wordpress_com">Forbind til WordPress.com</string>
     <string name="me_btn_login_logout">Log ind/ud</string>
     <string name="account_settings">Kontoindstillinger</string>
-    <string name="me_btn_support">Hjælp &amp; Support</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" blev ikke skjult, fordi det er det aktuelle websted</string>
     <string name="site_picker_create_wpcom">Opret WordPress.com websted</string>
     <string name="site_picker_edit_visibility">Vis/skjul websteder</string>

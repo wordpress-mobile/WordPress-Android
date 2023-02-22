@@ -2120,8 +2120,6 @@ Language: zh_CN
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">未设置</string>
     <string name="support_contact_email">联系电子邮箱地址</string>
-    <string name="application_log_button">应用程序日志</string>
-    <string name="my_tickets">我的工单</string>
     <string name="activity_log_currently_restoring_message_no_dates">恢复正在进行中</string>
     <string name="activity_log_currently_restoring_message">正在恢复至 %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">目前正在恢复您的站点</string>
@@ -3151,7 +3149,6 @@ Language: zh_CN
     <string name="me_disconnect_from_wordpress_com">退出 WordPress.com</string>
     <string name="me_connect_to_wordpress_com">登录 WordPress.com</string>
     <string name="me_btn_login_logout">登录/退出</string>
-    <string name="me_btn_support">帮助与支持</string>
     <string name="account_settings">账户设置</string>
     <string name="site_picker_cant_hide_current_site">「%s」未隐藏，因为它是当前站点</string>
     <string name="site_picker_create_wpcom">创建 WordPress.com 站点</string>

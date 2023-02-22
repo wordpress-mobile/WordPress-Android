@@ -507,10 +507,8 @@ Language: en_AU
     <string name="support_identity_input_dialog_enter_email">Please enter your email address</string>
     <string name="support_contact_email_not_set">Not set</string>
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
-    <string name="my_tickets">My Tickets</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_contact_email">Contact email</string>
-    <string name="application_log_button">Application log</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Your site has been successfully restored</string>
     <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
     <string name="activity_log_button">Activity Log action button</string>
@@ -1506,7 +1504,6 @@ Language: en_AU
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
-    <string name="me_btn_support">Help &amp; Support</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
     <string name="account_settings">Account Settings</string>
     <string name="site_picker_create_wpcom">Create WordPress.com site</string>

@@ -2126,8 +2126,6 @@ Language: ro
     <string name="support_contact_email">Email de contact</string>
     <string name="notification_channel_transient_title">Tranzitoriu</string>
     <string name="support_push_notification_message">Mesaj nou de la „Ajutor și suport”</string>
-    <string name="application_log_button">Jurnal aplicații</string>
-    <string name="my_tickets">Tichetele mele</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restaurare în curs de desfășurare</string>
     <string name="activity_log_currently_restoring_message">Restaurez la %1$s %2$s</string>
     <string name="activity_log_button">Buton acțiune jurnal de activități</string>
@@ -3158,7 +3156,6 @@ Language: ro
     <string name="me_btn_login_logout">Autentificare/Deautentificare</string>
     <string name="me_connect_to_wordpress_com">Autentifică-te în WordPress.com</string>
     <string name="account_settings">Setări cont</string>
-    <string name="me_btn_support">Ajutor și suport</string>
     <string name="site_picker_cant_hide_current_site">„%s” n-a fost ascuns pentru că este site-ul curent</string>
     <string name="site_picker_create_wpcom">Creează un site WordPress.com</string>
     <string name="site_picker_add_self_hosted">Adaugă site auto-găzduit</string>

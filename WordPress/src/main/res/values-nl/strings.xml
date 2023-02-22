@@ -2101,8 +2101,6 @@ Language: nl
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Niet ingesteld</string>
     <string name="support_contact_email">E-mail voor contact</string>
-    <string name="application_log_button">Toepassingslog</string>
-    <string name="my_tickets">Mijn tickets</string>
     <string name="activity_log_currently_restoring_message_no_dates">Terugzetten in bewerking</string>
     <string name="activity_log_currently_restoring_message">Terugzetten naar %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Je site wordt momenteel hersteld</string>
@@ -3132,7 +3130,6 @@ Language: nl
     <string name="me_disconnect_from_wordpress_com">Uitloggen van WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Inloggen op WordPress.com</string>
     <string name="me_btn_login_logout">Inloggen/uitloggen</string>
-    <string name="me_btn_support">Help &amp; ondersteuning</string>
     <string name="account_settings">Accountinstellingen</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" was niet verborgen omdat het de huidige site is</string>
     <string name="site_picker_create_wpcom">WordPress.com site maken</string>

@@ -419,7 +419,6 @@ Language: eu_ES
     <string name="me_btn_login_logout">Hasi/itxi saioa</string>
     <string name="me_connect_to_wordpress_com">Hasi saioa WordPress.com-en</string>
     <string name="account_settings">Kontuaren ezarpenak</string>
-    <string name="me_btn_support">Laguntza eta euskarria</string>
     <string name="site_picker_create_wpcom">Sortu WordPress.com gunea</string>
     <string name="site_picker_add_self_hosted">Gehitu zuk ostatatutako gunea</string>
     <string name="site_picker_edit_visibility">Erakutsi/ezkutatu guneak</string>

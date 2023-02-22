@@ -608,7 +608,6 @@ Language: bg
     <string name="me_disconnect_from_wordpress_com">Излизане от WordPress.com</string>
     <string name="me_btn_login_logout">Вход/Изход</string>
     <string name="me_connect_to_wordpress_com">Влизане в WordPress.com</string>
-    <string name="me_btn_support">Помощ и поддръжка</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" не беше скрит защото е текущият уебсайт</string>
     <string name="account_settings">Настройки на профила</string>
     <string name="site_picker_edit_visibility">Показване/скриване на сайтовете</string>

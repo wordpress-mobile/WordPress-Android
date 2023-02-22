@@ -2125,8 +2125,6 @@ Language: ja_JP
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">未設定</string>
     <string name="support_contact_email">連絡先メールアドレス</string>
-    <string name="application_log_button">アプリケーションログ</string>
-    <string name="my_tickets">自分のチケット</string>
     <string name="activity_log_currently_restoring_message_no_dates">復元中です</string>
     <string name="activity_log_currently_restoring_message">%1$s %2$s に復元中です</string>
     <string name="activity_log_currently_restoring_title">現在サイトを復元中です</string>
@@ -3157,7 +3155,6 @@ Language: ja_JP
     <string name="me_btn_login_logout">ログイン/ログアウト</string>
     <string name="me_connect_to_wordpress_com">WordPress.com にログイン</string>
     <string name="account_settings">アカウント設定</string>
-    <string name="me_btn_support">ヘルプ &amp; サポート</string>
     <string name="site_picker_cant_hide_current_site">現在のサイトのため “%s” は非表示になりませんでした</string>
     <string name="site_picker_create_wpcom">WordPress.com サイトを作成</string>
     <string name="site_picker_add_self_hosted">インストール型サイトを追加</string>

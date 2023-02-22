@@ -2124,8 +2124,6 @@ Language: zh_TW
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">未設定</string>
     <string name="support_contact_email">聯絡電子郵件</string>
-    <string name="application_log_button">應用程式記錄檔</string>
-    <string name="my_tickets">我的票證</string>
     <string name="activity_log_currently_restoring_message">正在還原至 %1$s %2$s</string>
     <string name="activity_log_currently_restoring_message_no_dates">正在還原</string>
     <string name="activity_log_currently_restoring_title">目前正在還原你的網站</string>
@@ -3155,7 +3153,6 @@ Language: zh_TW
     <string name="me_disconnect_from_wordpress_com">中斷與 WordPress.com 的連線</string>
     <string name="me_connect_to_wordpress_com">連線 WordPress.com</string>
     <string name="me_btn_login_logout">登入/登出</string>
-    <string name="me_btn_support">說明與客戶服務</string>
     <string name="site_picker_cant_hide_current_site">由於「%s」是目前的網站，因此並未隱藏</string>
     <string name="account_settings">帳號設定</string>
     <string name="site_picker_create_wpcom">建立 WordPress.com 網站</string>

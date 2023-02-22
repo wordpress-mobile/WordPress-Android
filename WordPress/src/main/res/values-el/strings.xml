@@ -206,12 +206,10 @@ Language: el_GR
     <string name="featured_image_desc">προβεβλημένη εικόνα</string>
     <string name="button_discard">Απόρριψη</string>
     <string name="reader_avatar_desc">εικόνα προφίλ</string>
-    <string name="application_log_button">Αρχείο καταγραφής εφαρμογής</string>
     <string name="support_contact_email_not_set">Μη ρυθμισμένο</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email">Email επικοινωνίας</string>
-    <string name="my_tickets">Τα Δελτία μου</string>
     <string name="support_identity_input_dialog_enter_email">Παρακαλώ συμπληρώστε το email σας</string>
     <string name="reader_empty_search_title">Δεν βρέθηκαν αποτελέσματα</string>
     <string name="sites">Ιστότοποι</string>
@@ -981,7 +979,6 @@ Language: el_GR
     <string name="me_connect_to_wordpress_com">Συνδεθείτε στο WordPress.com</string>
     <string name="me_btn_login_logout">Σύνδεση/Αποσύνδεση</string>
     <string name="account_settings">Ρυθμίσεις Λογαριασμού</string>
-    <string name="me_btn_support">Βοήθεια &amp; Υποστήριξη</string>
     <string name="site_picker_cant_hide_current_site">Το \"%s\" δεν κρύφτηκε επειδή είναι ο τρέχων ιστότοπος</string>
     <string name="site_picker_create_wpcom">Δημιουργία WordPress.com ιστότοπου</string>
     <string name="site_picker_add_site">Προσθήκη ιστότοπου</string>

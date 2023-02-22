@@ -2126,8 +2126,6 @@ Language: de
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Nicht festgelegt</string>
     <string name="support_contact_email">Kontakt-E-Mail-Adresse</string>
-    <string name="application_log_button">Anwendungsprotokoll</string>
-    <string name="my_tickets">Meine Tickets</string>
     <string name="activity_log_currently_restoring_message_no_dates">Wiederherstellung in Bearbeitung</string>
     <string name="activity_log_currently_restoring_message">Wird wiederhergestellt auf %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Deine Website wird derzeit wiederhergestellt</string>
@@ -3157,7 +3155,6 @@ Language: de
     <string name="me_disconnect_from_wordpress_com">Bei WordPress.com abmelden</string>
     <string name="me_connect_to_wordpress_com">Bei WordPress.com anmelden</string>
     <string name="me_btn_login_logout">Anmelden/Abmelden</string>
-    <string name="me_btn_support">Hilfe &amp; Support</string>
     <string name="account_settings">Konto-Einstellungen</string>
     <string name="site_picker_cant_hide_current_site">„%s“ wurde nicht ausgeblendet, denn es ist die aktuelle Website</string>
     <string name="site_picker_create_wpcom">WordPress.com-Website erstellen</string>

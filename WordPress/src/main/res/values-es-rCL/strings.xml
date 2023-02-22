@@ -278,8 +278,6 @@ Language: es_CL
     <string name="reader_avatar_desc">imagen de perfil</string>
     <string name="support_identity_input_dialog_email_label">Correo</string>
     <string name="support_push_notification_title">WordPress</string>
-    <string name="my_tickets">Mis Tickets</string>
-    <string name="application_log_button">Registro de aplicaciones</string>
     <string name="support_contact_email">Email de contacto</string>
     <string name="support_contact_email_not_set">No establecido</string>
     <string name="support_identity_input_dialog_enter_email">Por favor ingresa tu dirección de correo electrónico</string>
@@ -1276,7 +1274,6 @@ Language: es_CL
     <string name="me_btn_login_logout">Iniciar/Cerrar sesión</string>
     <string name="me_connect_to_wordpress_com">Iniciar sesión en WordPress.com</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" no se ocultó porque es el sitio actual</string>
-    <string name="me_btn_support">Ayuda y Soporte</string>
     <string name="account_settings">Preferencias de la Cuenta</string>
     <string name="site_picker_create_wpcom">Crear sitio WordPress.com</string>
     <string name="site_picker_add_self_hosted">Añadir sitio autoalojado</string>

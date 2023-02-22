@@ -2095,10 +2095,8 @@ Language: en_GB
     <string name="theme_image_desc">theme image</string>
     <string name="button_discard">Discard</string>
     <string name="reader_avatar_desc">profile picture</string>
-    <string name="application_log_button">Application log</string>
     <string name="support_contact_email">Contact email</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
-    <string name="my_tickets">My Tickets</string>
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
     <string name="support_contact_email_not_set">Not set</string>
     <string name="support_identity_input_dialog_enter_email">Please enter your email address</string>
@@ -3135,7 +3133,6 @@ Language: en_GB
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
     <string name="account_settings">Account Settings</string>
-    <string name="me_btn_support">Help &amp; Support</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
     <string name="site_picker_create_wpcom">Create WordPress.com site</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
