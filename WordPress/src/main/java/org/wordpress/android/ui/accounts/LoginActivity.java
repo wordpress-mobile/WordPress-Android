@@ -666,22 +666,22 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         });
     }
 
-    private void viewHelpAndSupport(Origin origin) {
+    private void viewHelp(Origin origin) {
         List<String> extraSupportTags = getLoginMode() == LoginMode.JETPACK_STATS ? Collections
                 .singletonList(ZendeskExtraTags.connectingJetpack) : null;
-        ActivityLauncher.viewHelpAndSupport(this, origin, null, extraSupportTags);
+        ActivityLauncher.viewHelp(this, origin, null, extraSupportTags);
     }
 
     @Override
     public void helpSiteAddress(String url) {
-        viewHelpAndSupport(Origin.LOGIN_SITE_ADDRESS);
+        viewHelp(Origin.LOGIN_SITE_ADDRESS);
     }
 
     @Override
     public void helpFindingSiteAddress(String username, SiteStore siteStore) {
         mUnifiedLoginTracker.trackClick(Click.HELP_FINDING_SITE_ADDRESS);
         if (mWordPressSupportForumFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
-            viewHelpAndSupport(Origin.LOGIN_SITE_ADDRESS);
+            viewHelp(Origin.LOGIN_SITE_ADDRESS);
         } else {
             mZendeskHelper.createNewTicket(this, Origin.LOGIN_SITE_ADDRESS, null);
         }
@@ -694,27 +694,27 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void helpEmailScreen(String email) {
-        viewHelpAndSupport(Origin.LOGIN_EMAIL);
+        viewHelp(Origin.LOGIN_EMAIL);
     }
 
     @Override
     public void helpSignupEmailScreen(String email) {
-        viewHelpAndSupport(Origin.SIGNUP_EMAIL);
+        viewHelp(Origin.SIGNUP_EMAIL);
     }
 
     @Override
     public void helpSignupMagicLinkScreen(String email) {
-        viewHelpAndSupport(Origin.SIGNUP_MAGIC_LINK);
+        viewHelp(Origin.SIGNUP_MAGIC_LINK);
     }
 
     @Override
     public void helpSignupConfirmationScreen(String email) {
-        viewHelpAndSupport(Origin.SIGNUP_CONFIRMATION);
+        viewHelp(Origin.SIGNUP_CONFIRMATION);
     }
 
     @Override
     public void helpSocialEmailScreen(String email) {
-        viewHelpAndSupport(Origin.LOGIN_SOCIAL);
+        viewHelp(Origin.LOGIN_SOCIAL);
     }
 
     @Override
@@ -724,22 +724,22 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void helpMagicLinkRequest(String email) {
-        viewHelpAndSupport(Origin.LOGIN_MAGIC_LINK);
+        viewHelp(Origin.LOGIN_MAGIC_LINK);
     }
 
     @Override
     public void helpMagicLinkSent(String email) {
-        viewHelpAndSupport(Origin.LOGIN_MAGIC_LINK);
+        viewHelp(Origin.LOGIN_MAGIC_LINK);
     }
 
     @Override
     public void helpEmailPasswordScreen(String email) {
-        viewHelpAndSupport(Origin.LOGIN_EMAIL_PASSWORD);
+        viewHelp(Origin.LOGIN_EMAIL_PASSWORD);
     }
 
     @Override
     public void help2FaScreen(String email) {
-        viewHelpAndSupport(Origin.LOGIN_2FA);
+        viewHelp(Origin.LOGIN_2FA);
     }
 
     @Override
@@ -755,7 +755,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void helpUsernamePassword(String url, String username, boolean isWpcom) {
-        viewHelpAndSupport(Origin.LOGIN_USERNAME_PASSWORD);
+        viewHelp(Origin.LOGIN_USERNAME_PASSWORD);
     }
 
     // SmartLock

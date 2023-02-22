@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
 
-public class HelpAndSupportScreen {
+public class HelpScreen {
     static ViewInteraction contactUsButton = onView(withId(R.id.contact_us_button));
     static ViewInteraction faqButton = onView(withId(R.id.faq_button));
     static ViewInteraction myTicketsButton = onView(withId(R.id.my_tickets_button));
@@ -24,7 +24,7 @@ public class HelpAndSupportScreen {
     static ViewInteraction emailAddressText = onView(withId(R.id.contactEmailAddress));
 
 
-    public HelpAndSupportScreen assertHelpAndSupportScreenLoaded() {
+    public HelpScreen assertHelpScreenLoaded() {
         contactUsButton.check(matches(isCompletelyDisplayed()));
         faqButton.check(matches(isCompletelyDisplayed()));
         myTicketsButton.check(matches(isCompletelyDisplayed()));

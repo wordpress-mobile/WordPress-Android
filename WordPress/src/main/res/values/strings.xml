@@ -30,7 +30,7 @@
 
     <!-- Screen titles -->
     <string name="release_notes_screen_title">Release notes</string>
-    <string name="help_screen_title">Help and Support</string>
+    <string name="help_screen_title">Help</string>
     <string name="notif_settings_screen_title">Notification settings</string>
     <string name="my_site_section_screen_title">My Site</string>
     <string name="me_section_screen_title">Me</string>
