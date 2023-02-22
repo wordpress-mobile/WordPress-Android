@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.dashboard
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
@@ -116,7 +117,7 @@ class CardsShownTracker @Inject constructor(
         if (cardType == Type.PROMOTE_WITH_BLAZE.label) {
             analyticsTrackerWrapper.track(
                 Stat.BLAZE_FEATURE_DISPLAYED,
-                mapOf("source" to BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD.trackingName)
+                mapOf("source" to BlazeFlowSource.DASHBOARD_CARD.trackingName)
             )
         }
     }

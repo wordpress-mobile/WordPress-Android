@@ -18,7 +18,7 @@ sealed class BlazeUiState {
 
 enum class BlazeFlowSource(val trackingName: String) {
     STATS("stats"),
-    DASHBOARD("dashboard"),
+    DASHBOARD_CARD("dashboard_card"),
     MENU_ITEM("menu_item"),
     POST_LIST("post_list"),
     POST_STATS("post_stats")

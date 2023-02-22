@@ -1497,7 +1497,7 @@ class MySiteViewModel @Inject constructor(
     private fun onPromoteWithBlazeCardMoreMenuClick() {
         blazeFeatureUtils.track(
             Stat.BLAZE_FEATURE_MENU_ACCESSED,
-            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+            BlazeFlowSource.DASHBOARD_CARD
         )
     }
 
@@ -1505,16 +1505,16 @@ class MySiteViewModel @Inject constructor(
     private fun onPromoteWithBlazeCardClick() {
         blazeFeatureUtils.track(
             Stat.BLAZE_FEATURE_TAPPED,
-            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+            BlazeFlowSource.DASHBOARD_CARD
         )
         _onNavigation.value =
-            Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD))
+            Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
     }
 
     private fun onPromoteWithBlazeCardHideMenuItemClick() {
         blazeFeatureUtils.track(
             Stat.BLAZE_FEATURE_HIDE_TAPPED,
-            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+            BlazeFlowSource.DASHBOARD_CARD
         )
         blazeFeatureUtils.hidePromoteWithBlazeCard()
         refresh()

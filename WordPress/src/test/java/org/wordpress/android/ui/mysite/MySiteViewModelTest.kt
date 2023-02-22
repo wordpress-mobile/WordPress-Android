@@ -53,6 +53,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -3245,7 +3246,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(blazeFeatureUtils).track(
             Stat.BLAZE_FEATURE_TAPPED,
-            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+            BlazeFlowSource.DASHBOARD_CARD
         )
     }
     @Test
@@ -3256,7 +3257,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(blazeFeatureUtils).track(
             Stat.BLAZE_FEATURE_MENU_ACCESSED,
-            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+            BlazeFlowSource.DASHBOARD_CARD
         )
     }
 
@@ -3268,7 +3269,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(blazeFeatureUtils).track(
             Stat.BLAZE_FEATURE_HIDE_TAPPED,
-            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+            BlazeFlowSource.DASHBOARD_CARD
         )
     }
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
