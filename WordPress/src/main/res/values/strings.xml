@@ -2387,6 +2387,7 @@
     <string name="me_profile_photo">Profile Photo</string>
     <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
+    <string name="me_btn_help">Help</string>
     <string name="me_btn_share">Share WordPress with a friend</string>
     <string name="me_btn_about">About WordPress</string>
     <string name="me_btn_login_logout">Login/Logout</string>
