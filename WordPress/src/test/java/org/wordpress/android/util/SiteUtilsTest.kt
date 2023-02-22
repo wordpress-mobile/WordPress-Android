@@ -52,9 +52,12 @@ class SiteUtilsTest {
 
         site1.hasFreePlan = true
         site2.hasFreePlan = true
+        site1.planId = FREE_PLAN_ID
+        site2.planId = FREE_PLAN_ID
         assertFalse(SiteUtils.hasSiteWithPaidPlan(siteStore))
 
         site2.hasFreePlan = false
+        site2.planId = BLOGGER_PLAN_ONE_YEAR_ID
         assertTrue(SiteUtils.hasSiteWithPaidPlan(siteStore))
     }
 
