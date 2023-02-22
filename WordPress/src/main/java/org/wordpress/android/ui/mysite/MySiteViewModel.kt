@@ -39,6 +39,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -132,7 +133,6 @@ import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
-import org.wordpress.android.util.config.BlazeFeatureConfig
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
@@ -196,11 +196,11 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil,
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
-    private val blazeFeatureConfig: BlazeFeatureConfig,
     private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
-    private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker
+    private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker,
+    private val blazeFeatureUtils: BlazeFeatureUtils
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -573,8 +573,9 @@ val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderPara
                     onRemoveClick = this::onBloggingPromptRemoveClick
                 ),
                 promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
-                    isEligible = blazeFeatureConfig.isEnabled() &&
-                            (promoteWithBlazeUpdate?.blazeStatusModel?.isEligible == true),
+                    isEligible = blazeFeatureUtils.shouldShowPromoteWithBlazeCard(
+                        promoteWithBlazeUpdate?.blazeStatusModel
+                    ),
                     onClick = this::onPromoteWithBlazeCardClick,
                     onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
                     onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
@@ -1492,20 +1493,28 @@ val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderPara
         _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
     }
 
-    @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardMoreMenuClick() {
-        // todo: implement tracking the event for More Menu tapped
+        blazeFeatureUtils.track(
+            Stat.BLAZE_FEATURE_MENU_ACCESSED,
+            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+        )
     }
 
     @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardClick() {
-        // todo: implement tracking the event for on card tapped
+        blazeFeatureUtils.track(
+            Stat.BLAZE_FEATURE_TAPPED,
+            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+        )
         //  todo: add the navigation action and post value to _onNavigation.value
     }
 
-    @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardHideMenuItemClick() {
-        // todo: implement the hide logic into appPrefs
+        blazeFeatureUtils.track(
+            Stat.BLAZE_FEATURE_HIDE_TAPPED,
+            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+        )
+        blazeFeatureUtils.hidePromoteWithBlazeCard()
         refresh()
     }
 
