@@ -19,7 +19,7 @@ public class HelpScreen {
     static ViewInteraction contactUsButton = onView(withId(R.id.contact_us_button));
     static ViewInteraction faqButton = onView(withId(R.id.faq_button));
     static ViewInteraction ticketsButton = onView(withId(R.id.tickets_button));
-    static ViewInteraction applicationLogButton = onView(withId(R.id.application_log_button));
+    static ViewInteraction logsButton = onView(withId(R.id.logs_button));
     static ViewInteraction applicationVersionText = onView(withId(R.id.applicationVersion));
     static ViewInteraction emailAddressText = onView(withId(R.id.contactEmailAddress));
 
@@ -28,7 +28,7 @@ public class HelpScreen {
         contactUsButton.check(matches(isCompletelyDisplayed()));
         faqButton.check(matches(isCompletelyDisplayed()));
         ticketsButton.check(matches(isCompletelyDisplayed()));
-        applicationLogButton.check(matches(isCompletelyDisplayed()));
+        logsButton.check(matches(isCompletelyDisplayed()));
         applicationVersionText.check(matches(isCompletelyDisplayed()));
         emailAddressText.check(matches(isCompletelyDisplayed()));
         return this;

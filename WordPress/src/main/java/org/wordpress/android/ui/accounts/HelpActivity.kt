@@ -109,7 +109,7 @@ class HelpActivity : LocaleAwareActivity() {
 
             faqButton.setOnClickListener { showFaq() }
             applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
-            applicationLogButton.setOnClickListener { v ->
+            logsButton.setOnClickListener { v ->
                 startActivity(Intent(v.context, AppLogViewerActivity::class.java))
             }
 
@@ -239,7 +239,7 @@ class HelpActivity : LocaleAwareActivity() {
             setOnClickListener { showFaq() }
         }
         applicationVersion.isVisible = false
-        applicationLogButton.isVisible = false
+        logsButton.isVisible = false
 
         if (accountStore.hasAccessToken()) {
             val defaultAccount = accountStore.account

@@ -134,9 +134,9 @@
                     android:text="@string/tickets" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/application_log_button"
+                    android:id="@+id/logs_button"
                     style="@style/HelpActivitySingleText"
-                    android:text="@string/application_log_button" />
+                    android:text="@string/logs_button" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/applicationVersion"

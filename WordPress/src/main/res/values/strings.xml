@@ -2249,6 +2249,7 @@
     <string name="my_tickets">My Tickets</string>
     <string name="tickets">Tickets</string>
     <string name="application_log_button">Application log</string>
+    <string name="logs_button">Logs</string>
     <string name="support_contact_email">Contact email</string>
     <string name="support_contact_email_not_set">Not set</string>
     <string name="support_push_notification_title">WordPress</string>
