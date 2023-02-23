@@ -46,13 +46,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.blaze.BlazeUiState
 import org.wordpress.android.ui.blaze.PostUIModel
+import org.wordpress.android.ui.compose.components.Drawable
+import org.wordpress.android.ui.compose.components.ImageButton
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
-import org.wordpress.android.ui.main.jetpack.migration.compose.components.Drawable
-import org.wordpress.android.ui.main.jetpack.migration.compose.components.ImageButton
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.LocaleManager
 
