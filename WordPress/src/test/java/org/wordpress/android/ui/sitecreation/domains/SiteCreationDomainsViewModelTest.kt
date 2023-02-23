@@ -11,10 +11,11 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.firstValue
-import org.mockito.kotlin.isNull
 import org.mockito.kotlin.lastValue
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.secondValue
 import org.mockito.kotlin.thirdValue
 import org.mockito.kotlin.times
@@ -32,9 +33,12 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_DOT
+import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_MOBILE
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
 
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = "multi_result_query" to MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
@@ -48,6 +52,9 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var fetchDomainsUseCase: FetchDomainsUseCase
+
+    @Mock
+    lateinit var purchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig
 
     @Mock
     private lateinit var tracker: SiteCreationTracker
@@ -79,6 +86,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             domainSanitizer = mSiteCreationDomainSanitizer,
             dispatcher = dispatcher,
             fetchDomainsUseCase = fetchDomainsUseCase,
+            purchasingFeatureConfig = purchasingFeatureConfig,
             tracker = tracker,
             bgDispatcher = testDispatcher(),
             mainDispatcher = testDispatcher()
@@ -105,15 +113,9 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             whenever(mSiteCreationDomainSanitizer.sanitizeDomainQuery(any())).thenReturn(
                 createSanitizedDomainResult(isDomainAvailableInSuggestions)
             )
-            whenever(
-                fetchDomainsUseCase.fetchDomains(
-                    eq(queryResultSizePair.first),
-                    isNull(),
-                    eq(true),
-                    eq(true),
-                    any()
-                )
-            ).thenReturn(createSuccessfulOnSuggestedDomains(queryResultSizePair))
+            whenever(fetchDomainsUseCase.fetchDomains(eq(queryResultSizePair.first), any(), any(), any())).thenReturn(
+                createSuccessfulOnSuggestedDomains(queryResultSizePair)
+            )
             block()
         }
     }
@@ -199,15 +201,9 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponse() = test {
         val queryResultErrorPair = "error_result_query" to "GENERIC_ERROR"
-        whenever(
-            fetchDomainsUseCase.fetchDomains(
-                eq(queryResultErrorPair.first),
-                isNull(),
-                eq(true),
-                eq(true),
-                any()
-            )
-        ).thenReturn(createFailedOnSuggestedDomains(queryResultErrorPair))
+        whenever(fetchDomainsUseCase.fetchDomains(eq(queryResultErrorPair.first), any(), any(), any())).thenReturn(
+            createFailedOnSuggestedDomains(queryResultErrorPair)
+        )
 
         viewModel.start()
         viewModel.updateQuery(queryResultErrorPair.first)
@@ -230,15 +226,9 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponseOfTypeInvalidQuery() = test {
         val queryResultErrorPair = "empty_result_query_invalid" to "INVALID_QUERY"
-        whenever(
-            fetchDomainsUseCase.fetchDomains(
-                eq(queryResultErrorPair.first),
-                isNull(),
-                eq(true),
-                eq(true),
-                any()
-            )
-        ).thenReturn(createFailedOnSuggestedDomains(queryResultErrorPair))
+        whenever(fetchDomainsUseCase.fetchDomains(eq(queryResultErrorPair.first), any(), any(), any())).thenReturn(
+            createFailedOnSuggestedDomains(queryResultErrorPair)
+        )
 
         viewModel.start()
         viewModel.updateQuery(queryResultErrorPair.first)
@@ -295,11 +285,42 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     @Test
     fun verifyCreateSiteBtnClickedPropagated() = testWithSuccessResponse {
         val domainName = "test.domain"
-        viewModel.setSelectedDomainName(domainName)
-        viewModel.createSiteBtnClicked()
+        viewModel.onDomainSelected(mock() { on { it.domainName } doReturn domainName })
+        viewModel.onCreateSiteBtnClicked()
         val captor = ArgumentCaptor.forClass(String::class.java)
         verify(createSiteBtnObserver, times(1)).onChanged(captor.capture())
         assertThat(captor.firstValue).isEqualTo(domainName)
+    }
+
+    @Test
+    fun verifyFetchFreeAndPaidDomainsWhenPurchasingFeatureConfigIsEnabled() = testWithSuccessResponse {
+        whenever(purchasingFeatureConfig.isEnabledOrManuallyOverridden()).thenReturn(true)
+        viewModel.start()
+
+        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        advanceUntilIdle()
+
+        verify(fetchDomainsUseCase).fetchDomains(
+            eq(MULTI_RESULT_DOMAIN_FETCH_QUERY.first),
+            eq(FETCH_DOMAINS_VENDOR_MOBILE),
+            eq(false),
+            eq(MULTI_RESULT_DOMAIN_FETCH_QUERY.second),
+        )
+    }
+
+    @Test
+    fun verifyFetchFreeDomainsWhenPurchasingFeatureConfigIsDisabled() = testWithSuccessResponse {
+        viewModel.start()
+
+        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        advanceUntilIdle()
+
+        verify(fetchDomainsUseCase).fetchDomains(
+            eq(MULTI_RESULT_DOMAIN_FETCH_QUERY.first),
+            eq(FETCH_DOMAINS_VENDOR_DOT),
+            eq(true),
+            eq(MULTI_RESULT_DOMAIN_FETCH_QUERY.second),
+        )
     }
 
     /**
