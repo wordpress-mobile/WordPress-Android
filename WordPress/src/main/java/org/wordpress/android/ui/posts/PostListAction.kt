@@ -110,7 +110,7 @@ fun handlePostListAction(
             NativeNotificationsUtils.dismissNotification(action.pushId, activity)
         }
         is PostListAction.ShowPromoteWithBlaze -> {
-            ActivityLauncher.openPromoteWithBlaze(activity, action.post, BlazeFlowSource.POST_LIST)
+            ActivityLauncher.openPromoteWithBlaze(activity, action.post, BlazeFlowSource.POSTS_LIST)
         }
         is PostListAction.CopyUrl -> {
             try {

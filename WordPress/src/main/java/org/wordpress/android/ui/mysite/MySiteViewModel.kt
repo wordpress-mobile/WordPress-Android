@@ -1501,7 +1501,6 @@ class MySiteViewModel @Inject constructor(
         )
     }
 
-    @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardClick() {
         blazeFeatureUtils.track(
             Stat.BLAZE_FEATURE_TAPPED,
