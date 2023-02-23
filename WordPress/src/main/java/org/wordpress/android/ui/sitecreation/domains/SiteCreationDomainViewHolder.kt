@@ -65,10 +65,13 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
         ) {
         val composeView = binding.composeView
 
-        fun onBind(uiState: New.DomainUiState) = with(composeView) {
+        init {
             // TODO: Remove this for Compose 1.2.0-beta02+ and RecyclerView 1.3.0-alpha02+
-            setViewCompositionStrategy(DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
+            binding.composeView.setViewCompositionStrategy(DisposeOnViewTreeLifecycleDestroyed)
+        }
+
+        fun onBind(uiState: New.DomainUiState) = with(binding) {
+            composeView.setContent {
                 AppTheme {
                     DomainItem(uiState)
                 }
