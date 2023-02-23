@@ -46,7 +46,7 @@ ext {
     androidxGridlayoutVersion = '1.0.0'
     androidxLifecycleVersion = '2.5.1'
     androidxPercentlayoutVersion = '1.0.0'
-    androidxPreferenceVersion = '1.1.0'
+    androidxPreferenceVersion = '1.2.0'
     androidxRecyclerviewVersion = '1.2.1'
     androidxSwipeToRefreshVersion = '1.1.0'
     androidxViewpager2Version = '1.0.0'
