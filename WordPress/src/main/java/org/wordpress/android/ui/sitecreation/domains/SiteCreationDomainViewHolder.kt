@@ -20,7 +20,7 @@ import org.wordpress.android.util.extensions.viewBinding
 
 sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding: T) :
     RecyclerView.ViewHolder(binding.root) {
-    class DomainSuggestionItemViewHolder(
+    class OldDomainViewHolder(
         parentView: ViewGroup,
         private val uiHelpers: UiHelpers
     ) : SiteCreationDomainViewHolder<SiteCreationDomainsItemBinding>(
@@ -43,7 +43,7 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
         }
     }
 
-    class DomainSuggestionErrorViewHolder(
+    class OldDomainErrorViewHolder(
         parentView: ViewGroup
     ) : SiteCreationDomainViewHolder<SiteCreationSuggestionsErrorItemBinding>(
         parentView.viewBinding(SiteCreationSuggestionsErrorItemBinding::inflate)
@@ -62,7 +62,7 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
     }
 
     @Suppress("ForbiddenComment")
-    class DomainComposeItemViewHolder(
+    class NewDomainViewHolder(
         parentView: ViewGroup,
     ) : SiteCreationDomainViewHolder<SiteCreationDomainsItemV2Binding>(
         parentView.viewBinding(SiteCreationDomainsItemV2Binding::inflate)

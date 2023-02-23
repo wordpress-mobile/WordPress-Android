@@ -4,9 +4,9 @@ import android.view.ViewGroup
 import androidx.annotation.MainThread
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolder.DomainComposeItemViewHolder
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolder.DomainSuggestionErrorViewHolder
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolder.DomainSuggestionItemViewHolder
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolder.NewDomainViewHolder
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolder.OldDomainErrorViewHolder
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainViewHolder.OldDomainViewHolder
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
@@ -26,18 +26,18 @@ class SiteCreationDomainsAdapter(
         viewType: Int
     ): SiteCreationDomainViewHolder<*> {
         return when (Type.values()[viewType]) {
-            DOMAIN_V1 -> DomainSuggestionItemViewHolder(parent, uiHelpers)
-            DOMAIN_V2 -> DomainComposeItemViewHolder(parent)
-            ERROR_FETCH_V1 -> DomainSuggestionErrorViewHolder(parent)
+            DOMAIN_V1 -> OldDomainViewHolder(parent, uiHelpers)
+            DOMAIN_V2 -> NewDomainViewHolder(parent)
+            ERROR_FETCH_V1 -> OldDomainErrorViewHolder(parent)
         }
     }
 
     override fun onBindViewHolder(holder: SiteCreationDomainViewHolder<*>, position: Int) {
         val item = items[position]
         return when (holder) {
-            is DomainSuggestionItemViewHolder -> holder.onBind(item as Old.DomainUiState)
-            is DomainSuggestionErrorViewHolder -> holder.onBind(item as Old.ErrorItemUiState)
-            is DomainComposeItemViewHolder -> holder.onBind(item as New.DomainUiState)
+            is OldDomainViewHolder -> holder.onBind(item as Old.DomainUiState)
+            is OldDomainErrorViewHolder -> holder.onBind(item as Old.ErrorItemUiState)
+            is NewDomainViewHolder -> holder.onBind(item as New.DomainUiState)
         }
     }
 
@@ -55,7 +55,7 @@ class SiteCreationDomainsAdapter(
 
     @Suppress("ForbiddenComment")
     override fun onViewRecycled(holder: SiteCreationDomainViewHolder<*>) {
-        if (holder is DomainComposeItemViewHolder) {
+        if (holder is NewDomainViewHolder) {
             // TODO: Remove this for Compose 1.2.0-beta02+ and RecyclerView 1.3.0-alpha02+
             holder.composeView.disposeComposition()
         }
