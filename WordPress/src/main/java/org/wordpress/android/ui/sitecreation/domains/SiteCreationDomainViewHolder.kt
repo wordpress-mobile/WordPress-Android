@@ -20,12 +20,10 @@ import org.wordpress.android.util.extensions.viewBinding
 
 sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding: T) :
     RecyclerView.ViewHolder(binding.root) {
-    class OldDomainViewHolder(
-        parentView: ViewGroup,
-        private val uiHelpers: UiHelpers
-    ) : SiteCreationDomainViewHolder<SiteCreationDomainsItemBinding>(
-        parentView.viewBinding(SiteCreationDomainsItemBinding::inflate)
-    ) {
+    class OldDomainViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
+        SiteCreationDomainViewHolder<SiteCreationDomainsItemBinding>(
+            parentView.viewBinding(SiteCreationDomainsItemBinding::inflate)
+        ) {
         fun onBind(uiState: Old.DomainUiState) = with(binding) {
             nameSuggestion.text = uiState.name
             domainSuggestion.text = uiState.domain
@@ -43,11 +41,10 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
         }
     }
 
-    class OldDomainErrorViewHolder(
-        parentView: ViewGroup
-    ) : SiteCreationDomainViewHolder<SiteCreationSuggestionsErrorItemBinding>(
-        parentView.viewBinding(SiteCreationSuggestionsErrorItemBinding::inflate)
-    ) {
+    class OldDomainErrorViewHolder(parentView: ViewGroup) :
+        SiteCreationDomainViewHolder<SiteCreationSuggestionsErrorItemBinding>(
+            parentView.viewBinding(SiteCreationSuggestionsErrorItemBinding::inflate)
+        ) {
         fun onBind(uiState: Old.ErrorItemUiState) = with(binding) {
             errorText.text = root.context.getText(uiState.messageResId)
             retry.apply {
@@ -62,11 +59,10 @@ sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding
     }
 
     @Suppress("ForbiddenComment")
-    class NewDomainViewHolder(
-        parentView: ViewGroup,
-    ) : SiteCreationDomainViewHolder<SiteCreationDomainsItemV2Binding>(
-        parentView.viewBinding(SiteCreationDomainsItemV2Binding::inflate)
-    ) {
+    class NewDomainViewHolder(parentView: ViewGroup) :
+        SiteCreationDomainViewHolder<SiteCreationDomainsItemV2Binding>(
+            parentView.viewBinding(SiteCreationDomainsItemV2Binding::inflate)
+        ) {
         val composeView = binding.composeView
 
         fun onBind(uiState: New.DomainUiState) = with(composeView) {
