@@ -384,7 +384,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         enum class Type {
             DOMAIN_V1,
             DOMAIN_V2,
-            ERROR_FETCH_V1,
+            ERROR_V1,
         }
 
         sealed class Old(override val type: Type) : ListItemUiState(type) {
@@ -413,7 +413,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 @StringRes val messageResId: Int,
                 @StringRes val retryButtonResId: Int,
                 val onClick: () -> Unit,
-            ) : Old(Type.ERROR_FETCH_V1)
+            ) : Old(Type.ERROR_V1)
         }
 
         sealed class New(override val type: Type) : ListItemUiState(type) {

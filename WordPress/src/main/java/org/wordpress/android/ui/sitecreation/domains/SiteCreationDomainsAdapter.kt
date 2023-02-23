@@ -13,7 +13,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Type
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Type.DOMAIN_V1
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Type.DOMAIN_V2
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Type.ERROR_FETCH_V1
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Type.ERROR_V1
 import org.wordpress.android.ui.utils.UiHelpers
 
 class SiteCreationDomainsAdapter(
@@ -28,7 +28,7 @@ class SiteCreationDomainsAdapter(
         return when (Type.values()[viewType]) {
             DOMAIN_V1 -> OldDomainViewHolder(parent, uiHelpers)
             DOMAIN_V2 -> NewDomainViewHolder(parent)
-            ERROR_FETCH_V1 -> OldDomainErrorViewHolder(parent)
+            ERROR_V1 -> OldDomainErrorViewHolder(parent)
         }
     }
 
