@@ -135,7 +135,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     @Test
     fun verifyNonEmptyUpdateQueryInitialUiState() = testWithSuccessResponse {
         viewModel.start()
-        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        viewModel.onQueryChanged(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         advanceUntilIdle()
 
@@ -151,7 +151,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         queryResultSizePair = EMPTY_RESULT_DOMAIN_FETCH_QUERY
     ) {
         viewModel.start()
-        viewModel.updateQuery(EMPTY_RESULT_DOMAIN_FETCH_QUERY.first)
+        viewModel.onQueryChanged(EMPTY_RESULT_DOMAIN_FETCH_QUERY.first)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         advanceUntilIdle()
 
@@ -168,7 +168,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithMultipleResults() = testWithSuccessResponse {
         viewModel.start()
-        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        viewModel.onQueryChanged(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         advanceUntilIdle()
 
@@ -185,7 +185,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         isDomainAvailableInSuggestions = false
     ) {
         viewModel.start()
-        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        viewModel.onQueryChanged(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         advanceUntilIdle()
 
@@ -206,7 +206,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         )
 
         viewModel.start()
-        viewModel.updateQuery(queryResultErrorPair.first)
+        viewModel.onQueryChanged(queryResultErrorPair.first)
         advanceUntilIdle()
 
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
@@ -231,7 +231,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         )
 
         viewModel.start()
-        viewModel.updateQuery(queryResultErrorPair.first)
+        viewModel.onQueryChanged(queryResultErrorPair.first)
         advanceUntilIdle()
 
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
@@ -250,8 +250,8 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     @Test
     fun verifyClearQueryWithEmptyTitleInitialState() = testWithSuccessResponse {
         viewModel.start()
-        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
-        viewModel.updateQuery("")
+        viewModel.onQueryChanged(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        viewModel.onQueryChanged("")
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         advanceUntilIdle()
 
@@ -297,7 +297,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         whenever(purchasingFeatureConfig.isEnabledOrManuallyOverridden()).thenReturn(true)
         viewModel.start()
 
-        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        viewModel.onQueryChanged(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         advanceUntilIdle()
 
         verify(fetchDomainsUseCase).fetchDomains(
@@ -312,7 +312,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     fun verifyFetchFreeDomainsWhenPurchasingFeatureConfigIsDisabled() = testWithSuccessResponse {
         viewModel.start()
 
-        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        viewModel.onQueryChanged(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         advanceUntilIdle()
 
         verify(fetchDomainsUseCase).fetchDomains(

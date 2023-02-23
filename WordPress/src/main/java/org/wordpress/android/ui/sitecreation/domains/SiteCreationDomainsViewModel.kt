@@ -113,9 +113,9 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
     fun onHelpClicked() = _onHelpClicked.call()
 
-    fun updateQuery(query: String) = updateQueryInternal(UserQuery(query))
+    fun onQueryChanged(query: String) = updateQuery(UserQuery(query))
 
-    private fun updateQueryInternal(query: DomainSuggestionsQuery?) {
+    private fun updateQuery(query: DomainSuggestionsQuery?) {
         currentQuery = query
         selectedDomain = null
         fetchDomainsJob?.cancel() // cancel any previous requests
@@ -234,7 +234,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         val isError = isNonEmptyUserQuery(query) && state is Error
 
         val items = createSuggestionsUiStates(
-            onRetry = { updateQueryInternal(query) },
+            onRetry = { updateQuery(query) },
             query = query?.value,
             data = state.data,
             errorFetchingSuggestions = isError,
