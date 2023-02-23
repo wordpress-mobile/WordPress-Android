@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PromoteWithBlazeCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
@@ -75,6 +77,12 @@ class CardsShownTracker @Inject constructor(
                 Type.BLOGGING_PROMPT.label
             )
         )
+        is PromoteWithBlazeCard -> trackCardShown(
+            Pair(
+                card.dashboardCardType.toTypeValue().label,
+                Type.PROMOTE_WITH_BLAZE.label
+            )
+        )
     }
 
     fun trackQuickStartCardShown(quickStartType: QuickStartType) {
@@ -95,6 +103,20 @@ class CardsShownTracker @Inject constructor(
                     CardsTracker.TYPE to pair.first,
                     CardsTracker.SUBTYPE to pair.second
                 )
+            )
+            trackBlazeCardShownIfNeeded(pair.second)
+        }
+    }
+
+    // Note: The track with blaze card tracks with two different events
+    // (1) Matching all the existing dashboard cards
+    // (2) Specific tracking event for Blaze itself
+    // The tracking of the card shown remains the same
+    private fun trackBlazeCardShownIfNeeded(cardType: String) {
+        if (cardType == Type.PROMOTE_WITH_BLAZE.label) {
+            analyticsTrackerWrapper.track(
+                Stat.BLAZE_FEATURE_DISPLAYED,
+                mapOf("source" to BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD.trackingName)
             )
         }
     }

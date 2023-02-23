@@ -132,8 +132,7 @@ public class BlockEditorPage {
     }
 
     public void dismissBloggingRemindersAlertIfNeeded() {
-        ViewInteraction bloggingRemindersAlertTitle = onView(withText(R.string.set_your_blogging_reminders_title));
-
+        ViewInteraction bloggingRemindersAlertTitle = onView(withId(R.id.title));
         if (waitForElementToBeDisplayedWithoutFailure(bloggingRemindersAlertTitle)) {
             bloggingRemindersAlertTitle.perform(swipeDown());
         }

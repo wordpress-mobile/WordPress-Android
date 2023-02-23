@@ -1387,12 +1387,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_social_to_login";
             case ENHANCED_SITE_CREATION_ACCESSED:
                 return "enhanced_site_creation_accessed";
-            case ENHANCED_SITE_CREATION_SEGMENTS_VIEWED:
-                return "enhanced_site_creation_segments_viewed";
-            case ENHANCED_SITE_CREATION_SEGMENTS_SELECTED:
-                return "enhanced_site_creation_segments_selected";
             case ENHANCED_SITE_CREATION_DOMAINS_ACCESSED:
                 return "enhanced_site_creation_domains_accessed";
+            case ENHANCED_SITE_CREATION_DOMAIN_PURCHASING_EXPERIMENT:
+                return "enhanced_site_creation_domain_purchasing_experiment";
             case ENHANCED_SITE_CREATION_DOMAINS_SELECTED:
                 return "enhanced_site_creation_domains_selected";
             case ENHANCED_SITE_CREATION_SUCCESS_LOADING:
@@ -1795,6 +1793,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "support_identity_form_viewed";
             case SUPPORT_IDENTITY_SET:
                 return "support_identity_set";
+            case SUPPORT_OPEN_MOBILE_FORUM_TAPPED:
+                return "support_open_mobile_forum_tapped";
             case QUICK_START_TASK_DIALOG_VIEWED:
                 return "quick_start_task_dialog_viewed";
             case QUICK_START_STARTED:
@@ -2507,6 +2507,38 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "remove_feature_card_remind_later_tapped";
             case JETPACK_FEATURE_INCORRECTLY_ACCESSED:
                 return "jetpack_feature_incorrectly_accessed";
+            case JETPACK_INSTALL_FULL_PLUGIN_CARD_VIEWED:
+                return "jp_install_full_plugin_card_viewed";
+            case JETPACK_INSTALL_FULL_PLUGIN_CARD_TAPPED:
+                return "jp_install_full_plugin_card_tapped";
+            case JETPACK_INSTALL_FULL_PLUGIN_CARD_DISMISSED:
+                return "jp_install_full_plugin_card_dismissed";
+            case JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING_SCREEN_SHOWN:
+                return "jp_install_full_plugin_onboarding_modal_viewed";
+            case JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING_SCREEN_DISMISSED:
+                return "jp_install_full_plugin_onboarding_modal_dismissed";
+            case JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING_INSTALL_TAPPED:
+                return "jp_install_full_plugin_onboarding_modal_install_tapped";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_VIEWED:
+                return "jp_install_full_plugin_flow_viewed";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_CANCEL_TAPPED:
+                return "jp_install_full_plugin_flow_cancel_tapped";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_INSTALL_TAPPED:
+                return "jp_install_full_plugin_flow_install_tapped";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_RETRY_TAPPED:
+                return "jp_install_full_plugin_flow_retry_tapped";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_SUCCESS:
+                return "jp_install_full_plugin_flow_success";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_DONE_TAPPED:
+                return "jp_install_full_plugin_flow_done_tapped";
+            case BLAZE_FEATURE_DISPLAYED:
+                return "blaze_feature_displayed";
+            case BLAZE_FEATURE_TAPPED:
+                return "blaze_feature_tapped";
+            case BLAZE_FEATURE_MENU_ACCESSED:
+                return "blaze_feature_menu_accessed";
+            case BLAZE_FEATURE_HIDE_TAPPED:
+                return "blaze_feature_hide_tapped";
         }
         return null;
     }

@@ -171,7 +171,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 blogHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int clickedPosition = blogHolder.getAdapterPosition();
+                        int clickedPosition = blogHolder.getBindingAdapterPosition();
                         if (clickedPosition == RecyclerView.NO_POSITION) {
                             return;
                         }

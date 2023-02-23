@@ -182,6 +182,9 @@ public class AppPrefs {
         JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP,
         SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP,
         SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD,
+        SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD,
+        SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING,
+        SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD,
     }
 
     /**
@@ -1572,5 +1575,37 @@ public class AppPrefs {
 
     @NonNull private static String getHideSwitchToJetpackMenuCardWithPhaseKey(JetpackFeatureRemovalPhase phase) {
         return DeletablePrefKey.SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD.name() + phase.getTrackingName();
+    }
+
+    public static Boolean getShouldHideJetpackInstallFullPluginCard(int siteId) {
+        return prefs().getBoolean(getHideJetpackInstallFullPluginCardPref(siteId), false);
+    }
+
+    public static void setShouldHideJetpackInstallFullPluginCard(int siteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getHideJetpackInstallFullPluginCardPref(siteId), isHidden).apply();
+    }
+
+    @NonNull private static String getHideJetpackInstallFullPluginCardPref(int siteId) {
+        return DeletablePrefKey.SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD.name() + siteId;
+    }
+
+    public static Boolean getShouldShowJetpackFullPluginInstallOnboarding(int siteId) {
+        return prefs().getBoolean(getShouldShowJetpackFullPluginInstallOnboardingPref(siteId), true);
+    }
+
+    public static void setShouldShowJetpackFullPluginInstallOnboarding(int siteId, final boolean isShown) {
+        prefs().edit().putBoolean(getShouldShowJetpackFullPluginInstallOnboardingPref(siteId), isShown).apply();
+    }
+
+    @NonNull private static String getShouldShowJetpackFullPluginInstallOnboardingPref(int siteId) {
+        return DeletablePrefKey.SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING.name() + siteId;
+    }
+
+    public static Boolean getShouldHidePromoteWithBlazeCard() {
+        return getBoolean(DeletablePrefKey.SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD, false);
+    }
+
+    public static void setShouldHidePromoteWithBlazeCard(final boolean isHidden) {
+        setBoolean(DeletablePrefKey.SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD, isHidden);
     }
 }

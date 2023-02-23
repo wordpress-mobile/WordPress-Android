@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-01 12:54:09+0000
+Translation-Revision-Date: 2023-02-15 20:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: nl
 -->
 <resources>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Ontgrendel de volledige functionaliteit van je site. Krijg statistieken, meldingen en meer met Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Je site heeft de Jetpack-plugin</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">De Jetpack mobiele app is ontworpen om samen met de Jetpack-plugin te werken. Stap nu over om toegang te krijgen tot Statistieken, Meldingen, Reader en meer.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Krijg meldingen over nieuwe reacties, likes, weergaven en meer.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Vind en volg je favoriete sites en community’s, en deel je content.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Laat het aantal bezoekers van je site groeien via waardevolle inzichten en uitgebreide statistieken.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistieken en inzichten</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Met Jetpack kun je meer doen met je WordPress-site. Overstappen is gratis en duurt maar een minuut.</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Je kunt blogmeldingen en -herinneringen te allen tijde beheren via Mijn site &gt; Instellingen &gt; Bloggen</string>
+    <string name="blogging_reminders_prompt_subtitle">Meldingen bevatten een woord of korte zin ter inspiratie</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Ga naar &lt;b&gt;Site-instellingen&lt;/b&gt; om weer in te schakelen</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Blogmeldingen zijn verborgen</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Meldingen uitschakelen</string>
+    <string name="support_forum_caption">Krijg hulp van onze groep vrijwilligers.</string>
+    <string name="support_forum_title">Communityforums</string>
+    <string name="site_settings_blogging_reminders_notification_title">Blogherinneringen</string>
+    <string name="site_settings_blogging_prompts_title">Meldingen weergeven</string>
     <string name="install_play_store_to_get_jetpack">Installeer Google Play Store om de Jetpack-app te downloaden</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Overstappen naar Jetpack </string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistieken, Reader, meldingen en andere functies die door Jetpack aangedreven worden, zijn verwijderd uit de WordPress-app.</string>
@@ -26,7 +43,7 @@ Language: nl
     <string name="my_site_blogging_prompt_card_attribution_dayone">Vanaf &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Dit verbergen</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Herinner mij hier later aan</string>
-    <string name="jetpack_feature_card_content">Statistieken, Lezer, Meldingen en andere functies worden binnenkort verplaatst naar de Jetpack mobiele app.</string>
+    <string name="jetpack_feature_card_content_phase_three">Statistieken, Lezer, Meldingen en andere functies worden binnenkort verplaatst naar de mobiele Jetpack-app.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Schakel over naar de Jetpack-app</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Ga naar jetpack.com voor meer informatie</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Overstappen is gratis en duurt maar een minuut.</string>
@@ -285,14 +302,12 @@ Language: nl
     <string name="blogging_prompts_onboarding_card_prompt">Maak de film van je leven.</string>
     <string name="blogging_prompts_onboarding_remind_me">Herinner me</string>
     <string name="blogging_prompts_onboarding_try_it_now">Probeer het nu</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Je vindt meer informatie en kunt te allen tijde herinneringen instellen via Mijn site &gt; Instellingen &gt; Blog-herinneringen</string>
     <string name="blogging_prompts_onboarding_content_note_title">Let op:</string>
     <string name="blogging_prompts_onboarding_content_bottom">We zullen je iedere dag een nieuwe opdracht laten zien op je dashboard, zodat jij je creativiteit de vrije loop kunt laten!</string>
     <string name="blogging_prompts_onboarding_content_top">De beste manier om een betere schrijver te worden, is door elke dag wat te schrijven en dat met anderen te delen - hier kunnen deze opdrachten je mee helpen!</string>
-    <string name="blogging_prompts_onboarding_header_title">Introductie van prompts</string>
+    <string name="blogging_prompts_onboarding_header_title">Nieuw\nBlogmeldingen</string>
     <string name="blogging_prompt_set_reminders">Herinneringen instellen</string>
-    <string name="blogging_reminders_prompt_subtitle">Bij deze herinnering zit een dagelijkse opdracht</string>
-    <string name="blogging_reminders_prompt_title">Dagelijkse opdracht bijvoegen</string>
+    <string name="blogging_reminders_prompt_title">Blogmelding toevoegen</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Je trekt nieuwe lezers aan door regelmatig content te plaatsen. Vertel ons wanneer je wilt gaan schrijven en wij zullen je dan een herinnering sturen!</string>
     <string name="set_your_blogging_prompts_title">Word een betere schrijver door elke dag te schrijven</string>
     <string name="site_creation_intent_writing_poetry">Schrijven &amp; poëzie</string>
@@ -328,7 +343,6 @@ Language: nl
     <string name="new_site_creation_intents_input_hint">Bijv. mode, poëzie, politiek</string>
     <string name="new_site_creation_intents_title">Onderwerp van de site</string>
     <string name="quick_start_site_menu_tab_message_short">Tik op &lt;b&gt;%1$s&lt;/b&gt; om door te gaan.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Uit dashboard verwijderen</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Bekijk meer prompts</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d antwoorden</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Blog-opdracht delen</string>
@@ -336,7 +350,6 @@ Language: nl
     <string name="my_site_blogging_prompt_card_answer_prompt">Antwoord prompt</string>
     <string name="my_site_blogging_prompt_card_title">Prompts</string>
     <string name="my_site_all_tab_title">Alle</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Herinneringen en prompts</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Deze kleurencombinatie is mogelijk lastig te lezen. Gebruik een lichtere achtergrondkleur en/of een donkerdere tekstkleur.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Deze kleurencombinatie is mogelijk lastig te lezen. Gebruik een donkerdere achtergrondkleur en/of een lichtere tekstkleur.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Media invoegen mislukt.\nTik voor meer info.</string>
@@ -599,7 +612,7 @@ Language: nl
     <string name="support_ticket_subject">WordPress voor Android ondersteuning</string>
     <string name="site_settings_categories_hint">Beheer je site categorieën</string>
     <string name="site_settings_categories_title">Categorieën</string>
-    <string name="site_settings_blogging_reminders_title">Blogging herinneringen</string>
+    <string name="site_settings_blogging_reminders_title">Herinneringen</string>
     <string name="page_is_posts_page_warning">De inhoud van je laatste berichten pagina is automatisch gegenereerd en kan niet bewerkt worden.</string>
     <string name="gutenberg_native_border_settings">Randinstellingen</string>
     <string name="storage_utils_dialog_dont_show_button">Niet opnieuw tonen</string>

@@ -43,7 +43,7 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
 
     @Override
     public void onBindViewHolder(final ItemHolder holder, int position) {
-        String item = getItem(holder.getAdapterPosition());
+        String item = getItem(holder.getBindingAdapterPosition());
         holder.mText.setText(item);
         holder.mContainer.setSelected(isItemSelected(position));
     }
