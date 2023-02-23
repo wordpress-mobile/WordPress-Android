@@ -69,9 +69,7 @@ class SiteCreationDomainsAdapter(
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldItems[oldItemPosition]
             val newItem = newItems[newItemPosition]
-            if (oldItem::class != newItem::class) {
-                return false
-            }
+            if (oldItem::class != newItem::class) return false
             return when (oldItem) {
                 is Old.ErrorItemUiState -> true
                 is Old.DomainUiState -> oldItem.name == (newItem as Old.DomainUiState).name
