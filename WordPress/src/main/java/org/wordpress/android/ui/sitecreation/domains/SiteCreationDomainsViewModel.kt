@@ -180,10 +180,9 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 .partition { it.domainName.startsWith("${query.value}.") }
                 .toList().flatten()
 
-            // We inform the user when the search query contains non-alphanumeric characters
+            val isInvalidQuery = event.isError && event.error.type == SuggestDomainErrorType.INVALID_QUERY
             val emptyListMessage = UiStringRes(
-                if (event.isError && event.error.type == SuggestDomainErrorType.INVALID_QUERY)
-                    R.string.new_site_creation_empty_domain_list_message_invalid_query
+                if (isInvalidQuery) R.string.new_site_creation_empty_domain_list_message_invalid_query
                 else R.string.new_site_creation_empty_domain_list_message
             )
 
