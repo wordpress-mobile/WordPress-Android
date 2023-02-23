@@ -8,59 +8,63 @@
     android:layout_height="wrap_content"
     android:foreground="?attr/selectableItemBackground">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_extra_large">
-
-        <ImageView
-            android:id="@+id/my_site_promote_with_blaze_card_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:contentDescription="@string/content_description_more"
-            android:focusable="true"
-            android:src="@drawable/ic_more_vert_white_24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/wpColorOnSurfaceMedium"
-            tools:ignore="TouchTargetSizeCheck" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/my_site_promote_with_blaze_card_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/promote_blaze_card_title"
-            android:textAlignment="viewStart"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            app:layout_constraintEnd_toStartOf="@+id/my_site_promote_with_blaze_card_more"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/promote_blaze_card_title" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/my_site_promote_with_blaze_card_sub_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/margin_medium"
-            android:paddingTop="@dimen/margin_medium"
-            android:text="@string/promote_blaze_card_sub_title"
-            android:textAppearance="?attr/textAppearanceBody1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/my_site_promote_with_blaze_card_title" />
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/my_site_promote_with_blaze_card_flame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/content_description_more"
-            android:src="@drawable/img_blaze_flame"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/my_site_promote_with_blaze_card_sub_title"
-            app:layout_constraintTop_toBottomOf="@+id/my_site_promote_with_blaze_card_more" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:scaleType="fitEnd"
+            android:src="@drawable/img_blaze_flame" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_extra_large">
+
+            <ImageView
+                android:id="@+id/my_site_promote_with_blaze_card_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/content_description_more"
+                android:focusable="true"
+                android:src="@drawable/ic_more_vert_white_24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="?attr/wpColorOnSurfaceMedium"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/my_site_promote_with_blaze_card_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/promote_blaze_card_title"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/blaze_title"
+                app:layout_constraintEnd_toStartOf="@+id/my_site_promote_with_blaze_card_more"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/promote_blaze_card_title" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/my_site_promote_with_blaze_card_sub_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingTop="@dimen/margin_medium"
+                android:text="@string/promote_blaze_card_sub_title"
+                android:textAppearance="@style/blaze_sub_title"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/my_site_promote_with_blaze_card_title" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

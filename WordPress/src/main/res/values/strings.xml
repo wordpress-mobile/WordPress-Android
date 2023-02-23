@@ -29,7 +29,6 @@
     <string name="anonymous">Anonymous</string>
 
     <!-- Screen titles -->
-    <string name="release_notes_screen_title">Release notes</string>
     <string name="help_screen_title">Help and Support</string>
     <string name="notif_settings_screen_title">Notification settings</string>
     <string name="my_site_section_screen_title">My Site</string>
@@ -75,7 +74,6 @@
     <string name="cancel_edit">Cancel edit</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="refresh">Refresh</string>
-    <string name="report_bug">Report bug</string>
     <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
     <string name="sign_in">Log in</string>
@@ -4411,4 +4409,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="promote_blaze_card_title">Promote your content with Blaze</string>
     <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
     <string name="promote_blaze_card_menu_hide_this">Hide this</string>
+    <string name="gutenberg_native_blocks_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks menu</string>
 </resources>
