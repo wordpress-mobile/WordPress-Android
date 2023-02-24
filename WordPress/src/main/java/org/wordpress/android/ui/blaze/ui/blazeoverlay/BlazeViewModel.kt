@@ -21,15 +21,13 @@ class BlazeViewModel @Inject constructor(private val blazeFeatureUtils: BlazeFea
     private val _promoteUiState = MutableLiveData<BlazeUiState.PromoteScreen>()
     val promoteUiState: LiveData<BlazeUiState.PromoteScreen> = _promoteUiState
 
-    fun trackOverlayDisplayed() {
-        blazeFeatureUtils.trackOverlayDisplayed(blazeFlowSource)
-    }
-
-    fun onPromoteWithBlazeClicked() {
-        blazeFeatureUtils.trackPromoteWithBlazeClicked()
+    fun start(source: BlazeFlowSource, postId: PostUIModel?) {
+        blazeFlowSource = source
+        initialize(postId)
     }
 
     fun initialize(postModel: PostUIModel?) {
+        blazeFeatureUtils.trackOverlayDisplayed(blazeFlowSource)
         postModel?.let {
             _uiState.value = BlazeUiState.PromoteScreen.PromotePost(postModel)
             _promoteUiState.value = BlazeUiState.PromoteScreen.PromotePost(postModel)
@@ -52,8 +50,7 @@ class BlazeViewModel @Inject constructor(private val blazeFeatureUtils: BlazeFea
         }
     }
 
-    fun start(source: BlazeFlowSource, postId: PostUIModel?) {
-        blazeFlowSource = source
-        initialize(postId)
+    fun onPromoteWithBlazeClicked() {
+        blazeFeatureUtils.trackPromoteWithBlazeClicked()
     }
 }
