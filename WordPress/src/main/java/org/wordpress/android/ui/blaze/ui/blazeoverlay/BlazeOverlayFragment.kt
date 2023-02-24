@@ -138,7 +138,7 @@ class BlazeOverlayFragment : Fragment() {
 
     @Preview
     @Composable
-    fun PreviewThumbNailView() {
+    private fun PreviewThumbnailView() {
         AppTheme {
             BlazeOverlayContent(
                 postModelState = BlazeUiState.PromoteScreen.PromotePost(
