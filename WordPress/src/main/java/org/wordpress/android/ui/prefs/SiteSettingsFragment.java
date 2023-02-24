@@ -502,12 +502,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         return view;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        initBloggingSection();
-    }
-
     private AppCompatActivity getAppCompatActivity() {
         return (AppCompatActivity) getActivity();
     }
@@ -1079,6 +1073,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_performance_more_settings,
                     R.string.pref_key_jetpack_performance_media_settings);
         }
+
+        initBloggingSection();
     }
 
     private void updateHomepageSummary() {
