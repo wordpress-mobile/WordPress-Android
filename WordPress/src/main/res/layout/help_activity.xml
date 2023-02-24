@@ -133,6 +133,17 @@
                     style="@style/HelpActivitySingleText"
                     android:text="@string/my_tickets" />
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/application_log_button"
+                    style="@style/HelpActivitySingleText"
+                    android:text="@string/application_log_button" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/applicationVersion"
+                    style="@style/HelpActivitySingleText"
+                    android:textColor="?attr/wpColorOnSurfaceMedium"
+                    tools:text="Version NN.1" />
+
                 <View
                     android:id="@+id/emailContainerTopDivider"
                     android:layout_width="match_parent"
@@ -166,17 +177,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_size"
                     android:background="?android:attr/listDivider" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/application_log_button"
-                    style="@style/HelpActivitySingleText"
-                    android:text="@string/application_log_button" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/applicationVersion"
-                    style="@style/HelpActivitySingleText"
-                    android:textColor="?attr/wpColorOnSurfaceMedium"
-                    tools:text="Version NN.1" />
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
