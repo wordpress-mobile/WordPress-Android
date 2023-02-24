@@ -51,7 +51,7 @@ ext {
     androidxRecyclerviewVersion = '1.2.1'
     androidxSwipeToRefreshVersion = '1.1.0'
     androidxViewpager2Version = '1.0.0'
-    androidxWorkManagerVersion = "2.7.1"
+    androidxWorkManagerVersion = "2.8.0"
     apacheCommonsTextVersion = '1.10.0'
     coilComposeVersion = '1.4.0'
     chrisbanesPhotoviewVersion = '2.3.0'
