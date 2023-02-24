@@ -39,6 +39,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
@@ -518,7 +519,7 @@ class MySiteViewModel @Inject constructor(
             isJetpackApp && isMigrationCompleted && isWordPressInstalled
         }
 
-val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderParams(
+        val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderParams(
             site = site,
             onLearnMoreClick = ::onJetpackInstallFullPluginLearnMoreClick,
             onHideMenuItemClick = ::onJetpackInstallFullPluginHideMenuItemClick,
@@ -1496,23 +1497,23 @@ val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderPara
     private fun onPromoteWithBlazeCardMoreMenuClick() {
         blazeFeatureUtils.track(
             Stat.BLAZE_FEATURE_MENU_ACCESSED,
-            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+            BlazeFlowSource.DASHBOARD_CARD
         )
     }
 
-    @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardClick() {
         blazeFeatureUtils.track(
             Stat.BLAZE_FEATURE_TAPPED,
-            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+            BlazeFlowSource.DASHBOARD_CARD
         )
-        //  todo: add the navigation action and post value to _onNavigation.value
+        _onNavigation.value =
+            Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
     }
 
     private fun onPromoteWithBlazeCardHideMenuItemClick() {
         blazeFeatureUtils.track(
             Stat.BLAZE_FEATURE_HIDE_TAPPED,
-            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+            BlazeFlowSource.DASHBOARD_CARD
         )
         blazeFeatureUtils.hidePromoteWithBlazeCard()
         refresh()

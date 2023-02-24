@@ -1058,6 +1058,12 @@
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="barcode_ui"/>
+
+        <activity android:name=".ui.blaze.BlazeParentActivity"
+            android:exported="false"
+            android:label="@string/blaze_activity_title"
+            android:screenOrientation="portrait"
+            android:theme="@style/WordPress.NoActionBar"/>
     </application>
     <queries>
         <intent>

@@ -396,6 +396,7 @@ dependencies {
     implementation "androidx.work:work-runtime:$androidxWorkManagerVersion"
     implementation "androidx.work:work-runtime-ktx:$androidxWorkManagerVersion"
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
+    implementation "androidx.constraintlayout:constraintlayout-compose:$androidxConstraintlayoutComposeVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-core:$androidxLifecycleVersion"
