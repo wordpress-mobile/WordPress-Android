@@ -36,6 +36,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.RES
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
+import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPluginInstallOnboardingDialogFragment
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
@@ -330,6 +331,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 showSnackbar(snackbarContent)
             }
         }
+        viewModel.onOpenJetpackInstallFullPluginOnboarding.observeEvent(viewLifecycleOwner) {
+            JetpackFullPluginInstallOnboardingDialogFragment.newInstance().show(
+                requireActivity().supportFragmentManager,
+                JetpackFullPluginInstallOnboardingDialogFragment.TAG
+            )
+        }
     }
 
     @Suppress("ComplexMethod", "LongMethod")
@@ -501,7 +508,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     override fun onResume() {
         super.onResume()
-        viewModel.onResume()
+        viewModel.onResume(mySiteTabType)
     }
 
     override fun onPause() {

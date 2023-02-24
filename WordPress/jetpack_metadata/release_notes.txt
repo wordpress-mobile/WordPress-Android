@@ -1,3 +1,2 @@
-* [*] [internal] [Jetpack-only] Adds additional logging for Jetpack migration errors [https://github.com/wordpress-mobile/WordPress-Android/pull/17748]
-
+* [**] [Jetpack-only] Jetpack individual plugin support: Warns user about sites with only individual plugins not supporting all features of the app yet and gives the ability to install the full Jetpack plugin. [https://github.com/wordpress-mobile/WordPress-Android/pull/17983]
 

@@ -30,7 +30,6 @@ Language: cs_CZ
     <string name="my_site_blogging_prompt_card_attribution_dayone">Od &lt;b&gt;prvního dne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Skrýt toto</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Připomenout později</string>
-    <string name="jetpack_feature_card_content">Statistiky, čtečka, upozornění a další funkce se brzy přesunou do mobilní aplikace Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Přepněte do aplikace Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Více se dozvíte na jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Přepínání je zdarma a trvá jen minutu.</string>
@@ -307,14 +306,10 @@ Language: cs_CZ
     <string name="blogging_prompts_onboarding_card_prompt">Obsaďte film svého života.</string>
     <string name="blogging_prompts_onboarding_remind_me">Připomeň mi</string>
     <string name="blogging_prompts_onboarding_try_it_now">Zkusit teď</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Další informace a připomenutí můžete kdykoli nastavit v části Můj web &gt; Nastavení &gt; Připomenutí blogů.</string>
     <string name="blogging_prompts_onboarding_content_note_title">Poznámka:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Každý den vám na hlavním panelu zobrazíme novou výzvu, která vám pomůže rozproudit kreativitu!</string>
     <string name="blogging_prompts_onboarding_content_top">Nejlepší způsob, jak se stát lepším spisovatelem, je vybudovat si návyk na psaní a sdílet ho s ostatními – to je místo, kde přicházejí výzvy!</string>
-    <string name="blogging_prompts_onboarding_header_title">Představujeme výzvy</string>
     <string name="blogging_prompt_set_reminders">Nastavit připomenutí</string>
-    <string name="blogging_reminders_prompt_subtitle">Připomenutí bude obsahovat denní výzvu</string>
-    <string name="blogging_reminders_prompt_title">Zahrnout denní výzvu</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Publikování pravidelně přitahuje nové čtenáře. Řekněte nám, kdy chcete psát, a my vám zašleme připomenutí!</string>
     <string name="site_creation_intent_writing_poetry">Psaní poezie</string>
     <string name="site_creation_intent_travel">Cestování</string>
@@ -350,7 +345,6 @@ Language: cs_CZ
     <string name="new_site_creation_intents_input_hint">Např.: móda, poezie, politika</string>
     <string name="new_site_creation_intents_title">Téma webu</string>
     <string name="quick_start_site_menu_tab_message_short">Pokračujte klepnutím na &lt;b&gt;%1$s&lt;/b&gt;.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Odebrat z nástěnky</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Zobrazit další výzvy</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Pro dnešek přeskočte</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Sdílejte výzvu k blogování</string>
@@ -359,7 +353,6 @@ Language: cs_CZ
     <string name="my_site_blogging_prompt_card_answer_prompt">Výzva k odpovědi</string>
     <string name="my_site_blogging_prompt_card_title">Výzvy</string>
     <string name="my_site_all_tab_title">Vše</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Připomenutí a výzvy</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Tato barevná kombinace může být špatně čitelná. Zkuste použít jasnější barvu pozadí a/nebo tmavší barvu textu.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Tato barevná kombinace může být obtížně čitelná. Zkuste použít tmavší barvu pozadí a/nebo světlejší barvu textu.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Médium se nepodařilo vložit.\nKlepnutím zobrazíte další informace.</string>
@@ -623,7 +616,6 @@ Language: cs_CZ
     <string name="site_settings_categories_hint">Spravujte rubriky svého webu</string>
     <string name="site_settings_categories_title">Rubriky</string>
     <string name="page_is_posts_page_warning">Obsah stránky s nejnovějšími příspěvky je generován automaticky a nelze jej upravovat.</string>
-    <string name="site_settings_blogging_reminders_title">Připomenutí blogů</string>
     <string name="gutenberg_native_border_settings">Nastavení okrajů</string>
     <string name="storage_utils_dialog_dont_show_button">Neptat se znovu</string>
     <string name="storage_utils_dialog_ok_button">Zobrazit úložiště</string>

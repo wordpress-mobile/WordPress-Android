@@ -500,7 +500,7 @@ public class PeopleListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mOnPersonSelectedListener != null) {
-                    Person person = getPerson(getAdapterPosition());
+                    Person person = getPerson(getBindingAdapterPosition());
                     mOnPersonSelectedListener.onPersonSelected(person);
                 }
             }

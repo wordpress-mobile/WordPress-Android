@@ -1,0 +1,12 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/wpcom/v2/sites/.*/blaze/status(/)?($|\\?.*)"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "approved": true
+    }
+  }
+}

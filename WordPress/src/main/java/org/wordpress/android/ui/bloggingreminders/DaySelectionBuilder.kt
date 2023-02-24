@@ -2,6 +2,7 @@ package org.wordpress.android.ui.bloggingreminders
 
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
@@ -16,7 +17,6 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import java.time.DayOfWeek
 import java.time.format.TextStyle.SHORT
 import javax.inject.Inject
@@ -26,7 +26,7 @@ class DaySelectionBuilder
     private val daysProvider: DaysProvider,
     private val dayLabelUtils: DayLabelUtils,
     private val localeManagerWrapper: LocaleManagerWrapper,
-    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
 ) {
     fun buildSelection(
         bloggingRemindersModel: BloggingRemindersUiModel?,
@@ -63,7 +63,7 @@ class DaySelectionBuilder
                 )
             )
 
-            if (bloggingPromptsFeatureConfig.isEnabled()) {
+            if (bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()) {
                 selectionList.add(
                     PromptSwitch(
                         bloggingRemindersModel.isPromptIncluded,
@@ -92,7 +92,7 @@ class DaySelectionBuilder
             true
         }
         val buttonText = if (isFirstTimeFlow) {
-            if (bloggingPromptsFeatureConfig.isEnabled()) {
+            if (bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()) {
                 string.blogging_prompt_set_reminders
             } else {
                 string.blogging_reminders_notify_me
