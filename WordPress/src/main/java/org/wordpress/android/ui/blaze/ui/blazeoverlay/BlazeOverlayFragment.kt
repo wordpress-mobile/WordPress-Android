@@ -146,7 +146,8 @@ class BlazeOverlayFragment : Fragment() {
                         postId = 119,
                         title = "Post title check if this is long enough to be truncated",
                         url = "https://www.google.long.ttiiitititititiit.com",
-                        imageUrl = 0
+                        imageUrl = 0,
+                        featuredImageUrl = null
                     )
                 )
             )
@@ -171,7 +172,7 @@ class BlazeOverlayFragment : Fragment() {
                 }
                 .background(color = AppColor.Gray60, shape = RoundedCornerShape(15.dp))
             )
-            PostFeaturedImage(url = "", modifier = Modifier
+            PostFeaturedImage(url = postUIModel.featuredImageUrl, modifier = Modifier
                 .constrainAs(featuredImage) {
                     top.linkTo(postContainer.top, 15.dp)
                     bottom.linkTo(postContainer.bottom, 15.dp)
@@ -200,7 +201,7 @@ class BlazeOverlayFragment : Fragment() {
 
     // todo the logic for showing the featured image is not implemented yet
     @Composable
-    private fun PostFeaturedImage(url: String, modifier: Modifier = Modifier) {
+    private fun PostFeaturedImage(url: String?, modifier: Modifier = Modifier) {
         val painter = rememberImagePainter(url) {
             placeholder(R.drawable.bg_rectangle_placeholder_globe_margin_8dp)
             error(R.drawable.bg_rectangle_placeholder_globe_margin_8dp)
