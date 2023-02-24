@@ -157,7 +157,7 @@ class BlazeOverlayFragment : Fragment() {
     fun PostThumbnailView(postUIModel: PostUIModel, modifier: Modifier = Modifier) {
         ConstraintLayout(
             modifier = modifier
-                .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 15.dp)
+                .padding(horizontal = 20.dp, vertical = 15.dp)
         ) {
             val (postContainer, featuredImage, title) = createRefs()
             Box(modifier = Modifier
