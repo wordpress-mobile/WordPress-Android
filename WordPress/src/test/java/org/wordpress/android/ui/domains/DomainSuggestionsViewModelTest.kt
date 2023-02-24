@@ -27,7 +27,6 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistr
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.ui.plans.PlansConstants
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 import org.wordpress.android.util.helpers.Debouncer
 
@@ -40,7 +39,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     lateinit var debouncer: Debouncer
 
     @Mock
-    lateinit var tracker: AnalyticsTrackerWrapper
+    lateinit var tracker: DomainsRegistrationTracker
 
     @Mock
     lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig

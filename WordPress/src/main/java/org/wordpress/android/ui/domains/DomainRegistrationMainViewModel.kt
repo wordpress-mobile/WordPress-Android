@@ -3,7 +3,6 @@ package org.wordpress.android.ui.domains
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
@@ -13,12 +12,11 @@ import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenD
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationDetails
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationResult
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainSuggestions
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class DomainRegistrationMainViewModel @Inject constructor(
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: DomainsRegistrationTracker
 ) : ViewModel() {
     private var isStarted: Boolean = false
 
@@ -44,11 +42,11 @@ class DomainRegistrationMainViewModel @Inject constructor(
     fun selectDomain(domainProductDetails: DomainProductDetails) {
         _onNavigation.value = when (domainRegistrationPurpose) {
             DOMAIN_PURCHASE -> {
-                analyticsTracker.track(Stat.DOMAINS_REGISTRATION_FORM_VIEWED)
+                analyticsTracker.trackDomainsRegistrationFormViewed()
                 Event(OpenDomainRegistrationCheckout(site, domainProductDetails))
             }
             else -> {
-                analyticsTracker.track(Stat.DOMAIN_CREDIT_NAME_SELECTED)
+                analyticsTracker.trackDomainCreditNameSelected()
                 Event(OpenDomainRegistrationDetails(domainProductDetails))
             }
         }
@@ -57,7 +55,7 @@ class DomainRegistrationMainViewModel @Inject constructor(
     fun completeDomainRegistration(event: DomainRegistrationCompletedEvent) {
         _onNavigation.value = when (domainRegistrationPurpose) {
             CTA_DOMAIN_CREDIT_REDEMPTION, DOMAIN_PURCHASE -> {
-                analyticsTracker.track(Stat.DOMAINS_REGISTRATION_FORM_SUBMITTED)
+                analyticsTracker.trackDomainsRegistrationFormSubmitted()
                 Event(OpenDomainRegistrationResult(event))
             }
             else -> Event(FinishDomainRegistration(event))
@@ -66,7 +64,7 @@ class DomainRegistrationMainViewModel @Inject constructor(
 
     @Suppress("ForbiddenComment")
     fun finishDomainRegistration(event: DomainRegistrationCompletedEvent) {
-        analyticsTracker.track(Stat.DOMAINS_PURCHASE_DOMAIN_SUCCESS) // TODO: is it a success or just a back press
+        analyticsTracker.trackDomainsPurchaseDomainSuccess() // TODO: is it a success or just a back press
         _onNavigation.value = Event(FinishDomainRegistration(event))
     }
 }
