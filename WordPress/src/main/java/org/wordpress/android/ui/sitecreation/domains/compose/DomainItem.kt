@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.asString
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variation.BestAlternative
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variation.Recommended
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variation.Sale
@@ -69,7 +70,7 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
                 }
             }
             if (variant !is Unavailable) {
-                Price(cost, modifier = Modifier.padding(start = 16.dp))
+                Price(cost.uiString.asString(), modifier = Modifier.padding(start = 16.dp))
             }
         }
         Divider(thickness = 0.5.dp)
@@ -111,7 +112,7 @@ private fun DomainItemPreview() {
                 repeat(25) { index -> append('a' + it + index) }
                 append(".domain.com")
             },
-            cost = if (it % 3 == 0) "$${it * 5}/yr" else "Free",
+            cost = if (it % 3 == 0) Cost.Paid("$${it * 5}") else Cost.Free,
             variant = when (it) {
                 0 -> Unavailable
                 1 -> Recommended

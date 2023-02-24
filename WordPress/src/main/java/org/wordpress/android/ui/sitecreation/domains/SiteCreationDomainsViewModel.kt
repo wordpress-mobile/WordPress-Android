@@ -28,6 +28,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
@@ -38,6 +39,8 @@ import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_MOBIL
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -279,11 +282,12 @@ class SiteCreationDomainsViewModel @Inject constructor(
         return items
     }
 
+    @Suppress("ForbiddenComment")
     private fun createAvailableItemUiState(domain: DomainModel, index: Int): ListItemUiState {
         return when (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
             true -> New.DomainUiState(
                 domain.domainName,
-                domain.cost,
+                cost = if (domain.isFree) Cost.Free else Cost.Paid(domain.cost), // TODO: Apply discounts
                 variant = when (index) {
                     0 -> New.DomainUiState.Variation.Recommended
                     1 -> New.DomainUiState.Variation.BestAlternative
@@ -424,7 +428,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         sealed class New(override val type: Type) : ListItemUiState(type) {
             data class DomainUiState(
                 val domainName: String,
-                val cost: String,
+                val cost: Cost,
                 val onClick: () -> Unit,
                 val variant: Variation? = null,
             ) : New(Type.DOMAIN_V2) {
@@ -434,10 +438,12 @@ class SiteCreationDomainsViewModel @Inject constructor(
                     val subtitle: UiString,
                 ) {
                     constructor(@ColorRes color: Int, subtitle: UiString) : this(color, color, subtitle)
+
                     object Unavailable : Variation(
                         dotColor = R.color.red_50,
                         subtitle = UiStringRes(R.string.site_creation_domain_tag_unavailable),
                     )
+
                     object Recommended : Variation(
                         color = R.color.jetpack_green_50,
                         subtitle = UiStringRes(R.string.site_creation_domain_tag_recommended),
@@ -451,6 +457,18 @@ class SiteCreationDomainsViewModel @Inject constructor(
                     object Sale : Variation(
                         color = R.color.yellow_50,
                         subtitle = UiStringRes(R.string.site_creation_domain_tag_sale),
+                    )
+                }
+
+                sealed class Cost(
+                    val uiString: UiString,
+                ) {
+                    object Free : Cost(UiStringRes(R.string.free))
+                    data class Paid(val cost: String) : Cost(
+                        UiStringResWithParams(
+                            R.string.site_creation_domain_cost,
+                            listOf(UiStringText(cost))
+                        )
                     )
                 }
             }

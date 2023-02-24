@@ -110,6 +110,7 @@
     <string name="publish_now">Publish Now</string>
     <string name="update_now">Update Now</string>
     <string name="status_and_visibility">Status &amp; Visibility</string>
+    <string name="free">Free</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>
@@ -3333,6 +3334,7 @@
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
 
     <!-- Site Creation : Domains -->
+    <string name="site_creation_domain_cost">%s/yr</string>
     <string name="site_creation_domain_tag_best_alternative">Best Alternative</string>
     <string name="site_creation_domain_tag_recommended">Recommended</string>
     <string name="site_creation_domain_tag_sale">Sale</string>
