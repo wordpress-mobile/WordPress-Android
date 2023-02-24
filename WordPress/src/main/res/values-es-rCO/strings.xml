@@ -1951,6 +1951,8 @@ Language: es_CO
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">No establecido</string>
     <string name="support_contact_email">Correo electrónico de contacto</string>
+    <string name="application_log_button">Registro de la aplicación</string>
+    <string name="my_tickets">Mis tickets</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restauración en progreso</string>
     <string name="activity_log_currently_restoring_message">Restaurando a %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Actualmente restaurando tu sitio</string>
@@ -2979,6 +2981,7 @@ Language: es_CO
     <string name="me_disconnect_from_wordpress_com">Salir de WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Acceder a WordPress.com</string>
     <string name="me_btn_login_logout">Iniciar/Cerrar sesión</string>
+    <string name="me_btn_support">Ayuda y soporte</string>
     <string name="account_settings">Ajustes de la cuenta</string>
     <string name="site_picker_cant_hide_current_site">«%s» no se ha ocultado porque es el sitio actual</string>
     <string name="site_picker_create_wpcom">Crear sitio en WordPress.com</string>

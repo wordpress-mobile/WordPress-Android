@@ -2123,6 +2123,8 @@ Language: ar
     <string name="support_push_notification_message">رسالة جديدة من \"التعليمات والدعم\"</string>
     <string name="support_contact_email_not_set">لم يتم التعيين</string>
     <string name="support_contact_email">البريد الإلكتروني الخاص بجهة الاتصال</string>
+    <string name="application_log_button">سجل التطبيق</string>
+    <string name="my_tickets">تذاكري</string>
     <string name="support_push_notification_title">ووردبريس</string>
     <string name="activity_log_currently_restoring_message">الاستعادة إلى %1$s %2$s</string>
     <string name="activity_log_currently_restoring_message_no_dates">الاستعادة قيد التقدّم</string>
@@ -3153,6 +3155,7 @@ Language: ar
     <string name="me_disconnect_from_wordpress_com">تسجيل الخروج من WordPress.com</string>
     <string name="me_btn_login_logout">تسجيل الدخول/تسجيل الخروج</string>
     <string name="me_connect_to_wordpress_com">تسجيل الدخول إلى WordPress.com</string>
+    <string name="me_btn_support">المساعدة والدعم</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" لم يكن مخفيًا لأنه الموقع الحالي</string>
     <string name="account_settings">إعدادات الحساب</string>
     <string name="site_picker_create_wpcom">إنشاء موقع WordPress.com</string>

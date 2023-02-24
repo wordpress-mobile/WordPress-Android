@@ -1173,6 +1173,8 @@ Language: es_MX
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">No establecido</string>
     <string name="support_contact_email">Correo electrónico de contacto</string>
+    <string name="application_log_button">Registro de la aplicación</string>
+    <string name="my_tickets">Mis tickets</string>
     <string name="activity_log_currently_restoring_title">Actualmente restaurando tu sitio</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Tu sitio ha sido restaurado satisfactoriamente</string>
     <string name="activity_log_button">Botón de acción del registro de actividad</string>
@@ -2194,6 +2196,7 @@ Language: es_MX
     <string name="me_connect_to_wordpress_com">Acceder a WordPress.com</string>
     <string name="account_settings">Configuración de la cuenta</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" no se ocultó porque es el sitio actual</string>
+    <string name="me_btn_support">Ayuda y soporte</string>
     <string name="site_picker_create_wpcom">Crear sitio en WordPress.com</string>
     <string name="site_picker_add_self_hosted">Añadir sitio autoalojado</string>
     <string name="site_picker_edit_visibility">Mostrar/Ocultar sitios</string>

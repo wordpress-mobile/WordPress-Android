@@ -2118,6 +2118,8 @@ Language: sq_AL
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">S’është caktuar</string>
     <string name="support_contact_email">Email kontaktesh</string>
+    <string name="application_log_button">Regjistër aplikacioni</string>
+    <string name="my_tickets">Çështjet e Mia</string>
     <string name="activity_log_currently_restoring_message_no_dates">Rikthim në ecuri e sipër</string>
     <string name="activity_log_currently_restoring_message">Po rikthehet te %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Sajti juaj po rikthehet</string>
@@ -3147,6 +3149,7 @@ Language: sq_AL
     <string name="me_disconnect_from_wordpress_com">Dil nga WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Hyni te WordPress.com</string>
     <string name="me_btn_login_logout">Hyrje/Dalje</string>
+    <string name="me_btn_support">Ndihmë &amp; Asistencë</string>
     <string name="account_settings">Rregullime Llogarie</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" s’u fsheh, ngaqë është sajti i tanishëm</string>
     <string name="site_picker_create_wpcom">Ndërtoni një sajt te WordPress.com</string>

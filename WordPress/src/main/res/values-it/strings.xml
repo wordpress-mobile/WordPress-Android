@@ -2125,6 +2125,8 @@ Language: it
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Non impostato</string>
     <string name="support_contact_email">Email di contatto</string>
+    <string name="application_log_button">Registro applicazione</string>
+    <string name="my_tickets">I miei ticket</string>
     <string name="activity_log_currently_restoring_message_no_dates">Ripristino in corso</string>
     <string name="activity_log_currently_restoring_message">Ripristino al %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Al momento stiamo ripristinando il tuo sito</string>
@@ -3154,6 +3156,7 @@ Language: it
     <string name="me_disconnect_from_wordpress_com">Disconnettiti da WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Connettiti a WordPress.com</string>
     <string name="me_btn_login_logout">Login/Logout</string>
+    <string name="me_btn_support">Aiuto e supporto</string>
     <string name="account_settings">Impostazioni account</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" non è stato nascosto perchè è il sito corrente</string>
     <string name="site_picker_create_wpcom">Crea un sito su WordPress.com</string>

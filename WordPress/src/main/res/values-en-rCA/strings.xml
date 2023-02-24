@@ -2103,6 +2103,8 @@ Language: en_CA
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Not set</string>
     <string name="support_contact_email">Contact email</string>
+    <string name="application_log_button">Application log</string>
+    <string name="my_tickets">My Tickets</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restore in progress</string>
     <string name="activity_log_currently_restoring_message">Restoring to %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
@@ -3132,6 +3134,7 @@ Language: en_CA
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
+    <string name="me_btn_support">Help &amp; Support</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
     <string name="account_settings">Account Settings</string>
     <string name="site_picker_create_wpcom">Create WordPress.com site</string>

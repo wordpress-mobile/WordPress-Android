@@ -2126,6 +2126,8 @@ Language: sv_SE
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Inte angivet</string>
     <string name="support_contact_email">E-postadress för kontakt</string>
+    <string name="application_log_button">Logg för applikationen</string>
+    <string name="my_tickets">Mina ärenden</string>
     <string name="activity_log_currently_restoring_message_no_dates">Återställning pågår</string>
     <string name="activity_log_currently_restoring_message">Återställer till %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Din webbplats återställs just nu</string>
@@ -3155,6 +3157,7 @@ Language: sv_SE
     <string name="me_disconnect_from_wordpress_com">Logga ut från WordPress.com </string>
     <string name="me_connect_to_wordpress_com">Logga in på WordPress.com</string>
     <string name="me_btn_login_logout">Logga in/Logga ut</string>
+    <string name="me_btn_support">Hjälp och support</string>
     <string name="account_settings">Kontoinställningar</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" kunde inte döljas eftersom den är den nuvarande webbplatsen</string>
     <string name="site_picker_create_wpcom">Skapa en webbplats på WordPress.com</string>

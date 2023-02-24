@@ -669,6 +669,7 @@ Language: ms
     <string name="me_connect_to_wordpress_com">Log masuk ke WordPress.com</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" tidak disembunyikan kerana ianya laman semasa</string>
     <string name="account_settings">Tetapan Akaun</string>
+    <string name="me_btn_support">Bantuan &amp; Sokongan</string>
     <string name="site_picker_add_self_hosted">Tambah laman yang dihos sendiri</string>
     <string name="site_picker_edit_visibility">Tunjuk/sembunyi laman</string>
     <string name="site_picker_title">Pilih laman</string>

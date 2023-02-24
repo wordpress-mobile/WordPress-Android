@@ -2126,6 +2126,8 @@ Language: gl_ES
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Non establecido</string>
     <string name="support_contact_email">Correo electrónico de contacto</string>
+    <string name="application_log_button">Rexistro da aplicación</string>
+    <string name="my_tickets">Os meus tickets</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restauración en progreso</string>
     <string name="activity_log_currently_restoring_message">Restaurando a %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Actualmente restaurando o teu sitio</string>
@@ -3155,6 +3157,7 @@ Language: gl_ES
     <string name="me_disconnect_from_wordpress_com">Desconectarse de WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Conectarse a WordPress.com</string>
     <string name="me_btn_login_logout">Entrar/Saír</string>
+    <string name="me_btn_support">Axuda e soporte</string>
     <string name="account_settings">Configuración da conta</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" non foi ocultado porque é o sitio actual</string>
     <string name="site_picker_create_wpcom">Crear un sitio en WordPress.com</string>

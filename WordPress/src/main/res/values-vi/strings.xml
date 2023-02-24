@@ -1930,6 +1930,8 @@ Language: vi_VN
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Chưa cài</string>
     <string name="support_contact_email">Email liên hệ</string>
+    <string name="application_log_button">Nhật ký ứng dụng</string>
+    <string name="my_tickets">Lượt yêu cầu hỗ trợ</string>
     <string name="activity_log_currently_restoring_message_no_dates">Đang khôi phục</string>
     <string name="activity_log_currently_restoring_message">Đang khôi phục tới %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Đang khôi phục blog của bạn</string>
@@ -2958,6 +2960,7 @@ Language: vi_VN
     <string name="me_disconnect_from_wordpress_com">Đăng xuất tài khoản WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Đăng nhập WordPress.com</string>
     <string name="me_btn_login_logout">Đăng nhập/Đăng xuất</string>
+    <string name="me_btn_support">Trợ giúp</string>
     <string name="account_settings">Cài đặt tài khoản</string>
     <string name="site_picker_cant_hide_current_site">Không ẩn được \"%s\" vì đó là blog hiện tại</string>
     <string name="site_picker_create_wpcom">Tạo blog với WordPress.com</string>

@@ -2246,7 +2246,9 @@
     <string name="help_and_support">Help &amp; Support</string>
     <string name="wordpress_help_center_button">WordPress help center</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
+    <string name="my_tickets">My Tickets</string>
     <string name="tickets">Tickets</string>
+    <string name="application_log_button">Application log</string>
     <string name="logs_button">Logs</string>
     <string name="support_contact_email">Contact email</string>
     <string name="support_contact_email_not_set">Not set</string>
@@ -2384,6 +2386,7 @@
     <!--Me-->
     <string name="me_profile_photo">Profile Photo</string>
     <string name="me_btn_app_settings">App Settings</string>
+    <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_help">Help</string>
     <string name="me_btn_share">Share WordPress with a friend</string>
     <string name="me_btn_about">About WordPress</string>

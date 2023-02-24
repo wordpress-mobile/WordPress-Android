@@ -2098,7 +2098,9 @@ Language: cs_CZ
     <string name="support_push_notification_message">Nová zpráva od \"Pomoc a Podpora\"</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Nezadán</string>
+    <string name="my_tickets">Moje konverzace</string>
     <string name="notification_channel_transient_title">Přechodný</string>
+    <string name="application_log_button">Aplikační log</string>
     <string name="support_identity_input_dialog_email_label">E-mail</string>
     <string name="support_identity_input_dialog_enter_email">Zadejte e-mailovou adresu</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Pro pokračování je třeba nejprve zadat e-mailovou adresu a jméno</string>
@@ -3133,6 +3135,7 @@ Language: cs_CZ
     <string name="me_connect_to_wordpress_com">Připojit k WordPress.com</string>
     <string name="me_btn_login_logout">Přihlášení/Odhlášení</string>
     <string name="account_settings">Uživatelské nastavení</string>
+    <string name="me_btn_support">Pomoc a podpora</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" nebyl skrytý, protože je to aktuální stránka</string>
     <string name="site_picker_create_wpcom">Vytvořit web na WordPress.com</string>
     <string name="site_picker_add_self_hosted">Přidat vlastní WordPress web</string>

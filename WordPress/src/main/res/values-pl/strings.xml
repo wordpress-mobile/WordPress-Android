@@ -1826,6 +1826,8 @@ Language: pl
     <string name="support_push_notification_message">Nowe wiadomości od zespołu \'Pomocy i wsparcia\'</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Nie ustawiono</string>
+    <string name="application_log_button">Log/dziennik aplikacji</string>
+    <string name="my_tickets">Moje bilety</string>
     <string name="notification_channel_transient_title">Krótkotrwały</string>
     <string name="activity_log_currently_restoring_message">Przywracanie stanu do %1$s %2$s</string>
     <string name="activity_log_currently_restoring_message_no_dates">Trwa przywracanie</string>
@@ -2858,6 +2860,7 @@ Language: pl
     <string name="me_connect_to_wordpress_com">Zaloguj się do WordPress.com</string>
     <string name="me_btn_login_logout">Zaloguj/Wyloguj się</string>
     <string name="account_settings">Ustawienia konta</string>
+    <string name="me_btn_support">Pomoc i wsparcie</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" została ukryta ponieważ jest to aktualna witryna</string>
     <string name="site_picker_create_wpcom">Utwórz witrynę WordPress.com</string>
     <string name="site_picker_edit_visibility">Pokaż/ukryj witryny</string>

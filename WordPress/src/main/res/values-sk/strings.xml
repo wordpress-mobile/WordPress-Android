@@ -229,7 +229,9 @@ Language: sk
     <string name="support_identity_input_dialog_enter_email">Vložte, prosím, Vašu emailovú adresu</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="activity_log_currently_restoring_message_no_dates">Prebieha obnovenie</string>
+    <string name="application_log_button">Aplikačný záznam</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Ak chcete pokračovať, zadajte svoju e-mailovú adresu a meno</string>
+    <string name="my_tickets">Moje tickety</string>
     <string name="activity_log_currently_restoring_message">Obnovovanie na %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Prebieha obnovenie Vašej webovej stránky</string>
     <string name="activity_log_button">tlačidlo Záznamu aktivít</string>
@@ -1254,6 +1256,7 @@ Language: sk
     <string name="me_disconnect_from_wordpress_com">Odhláste sa z WordPress.com</string>
     <string name="me_btn_login_logout">Prihlásiť/Odhlásiť</string>
     <string name="me_connect_to_wordpress_com">Prihláste sa na WordPress.com</string>
+    <string name="me_btn_support">Pomoc a podpora</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" nebola skrytá, pretože to je aktuálna webová stránka</string>
     <string name="account_settings">Nastavenia účtu</string>
     <string name="site_picker_create_wpcom">Vytvorte webovú stránku WordPress.com</string>

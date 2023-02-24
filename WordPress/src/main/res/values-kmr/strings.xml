@@ -1097,6 +1097,8 @@ Language: ku_TR
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_enter_email">Ji kerema xwe navnîşana emaila xwe bikevê</string>
     <string name="support_contact_email">Emaila têkiliyê</string>
+    <string name="application_log_button">Tomargeha sepanê</string>
+    <string name="my_tickets">Bilêtên Min</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Ji bo domandinê ji kerema xwe, email û navê xwe bikevê</string>
     <string name="support_push_notification_message">Peyameke nû ji \'Alîkarî û Piştgirî\'yê heye</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Malpera te bi serkeftî hat vegerandin</string>
@@ -2104,6 +2106,7 @@ Language: ku_TR
     <string name="me_disconnect_from_wordpress_com">Ji WordPress.com\'ê derkeve</string>
     <string name="me_btn_login_logout">Têketin/Derketin</string>
     <string name="me_connect_to_wordpress_com">Têkeve WordPress.com\'ê</string>
+    <string name="me_btn_support">Alîkarî &amp; Piştgirî</string>
     <string name="account_settings">Sazkariyên Hesêb</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" nehat veşartin ji ber ku ew malpera niha ye</string>
     <string name="site_picker_create_wpcom">Malpera WordPress.com\'ê biafirîne</string>

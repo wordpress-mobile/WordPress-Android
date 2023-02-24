@@ -1290,6 +1290,8 @@ Language: nb_NO
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Ikke angitt</string>
     <string name="support_contact_email">Epost for kontakt</string>
+    <string name="application_log_button">Appllikasjonslogg</string>
+    <string name="my_tickets">Mine saker</string>
     <string name="activity_log_currently_restoring_message">Tilbakestiller til %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Ditt nettsted tilbakestilles nå</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Ditt nettsted er tilbakestilt</string>
@@ -2295,6 +2297,7 @@ Language: nb_NO
     <string name="me_disconnect_from_wordpress_com">Logg ut av WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Logg inn til WordPress.com</string>
     <string name="me_btn_login_logout">Logg inn/Logg ut</string>
+    <string name="me_btn_support">Hjelp og støtte</string>
     <string name="account_settings">Kontoinnstillinger</string>
     <string name="site_picker_cant_hide_current_site">«%s» ble ikke skjult, siden det er det nåværende nettstedet</string>
     <string name="site_picker_create_wpcom">Opprett et WordPress.com-nettsted</string>

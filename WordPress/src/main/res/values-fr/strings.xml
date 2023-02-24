@@ -2116,6 +2116,8 @@ Language: fr
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Non configuré</string>
     <string name="support_contact_email">E-mail de contact</string>
+    <string name="application_log_button">Journal d’application</string>
+    <string name="my_tickets">Mes tickets</string>
     <string name="activity_log_currently_restoring_message_no_dates">Rétablissement en cours</string>
     <string name="activity_log_currently_restoring_message">Rétablissement vers %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Restauration de votre site en cours</string>
@@ -3145,6 +3147,7 @@ Language: fr
     <string name="me_disconnect_from_wordpress_com">Se déconnecter de WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Se connecter à WordPress.com</string>
     <string name="me_btn_login_logout">Se Connecter/Déconnecter</string>
+    <string name="me_btn_support">Aide &amp; Support</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" n\'a pas été caché, c\'est le site selectionné</string>
     <string name="account_settings">Paramètres du compte</string>
     <string name="site_picker_create_wpcom">Créer un site WordPress.com</string>

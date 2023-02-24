@@ -379,6 +379,7 @@ Language: cy_GB
     <string name="stats_insights">Mewnwelediadau</string>
     <string name="me_btn_login_logout">Mewngofnodi/Allgofnodi</string>
     <string name="me_connect_to_wordpress_com">Mewngofnodwch i WordPress.com</string>
+    <string name="me_btn_support">Cymorth a Chefnogaeth</string>
     <string name="site_picker_cant_hide_current_site">Nid oedd \"%s\" wedi ei guddio gan taw hi yw\'r wefan gyfredol</string>
     <string name="account_settings">Gosodiadau\'r Cyfrif</string>
     <string name="site_picker_add_self_hosted">Ychwanegu gwefan hunanwesteio</string>
