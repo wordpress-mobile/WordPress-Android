@@ -15,21 +15,11 @@ import javax.inject.Inject
 class BlazeViewModel @Inject constructor(private val blazeFeatureUtils: BlazeFeatureUtils) : ViewModel() {
     private lateinit var blazeFlowSource: BlazeFlowSource
 
-    private val _refreshAppTheme = MutableLiveData<Unit>()
-    val refreshAppTheme: LiveData<Unit> = _refreshAppTheme
-
-    private val _refreshAppLanguage = MutableLiveData<String>()
-    val refreshAppLanguage: LiveData<String> = _refreshAppLanguage
-
     private val _uiState = MutableLiveData<BlazeUiState>()
     val uiState: LiveData<BlazeUiState> = _uiState
 
     private val _promoteUiState = MutableLiveData<BlazeUiState.PromoteScreen>()
     val promoteUiState: LiveData<BlazeUiState.PromoteScreen> = _promoteUiState
-
-    fun setAppLanguage(locale: Locale) {
-        _refreshAppLanguage.value = locale.language
-    }
 
     fun trackOverlayDisplayed() {
         blazeFeatureUtils.trackOverlayDisplayed(blazeFlowSource)

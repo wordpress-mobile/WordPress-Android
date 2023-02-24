@@ -70,15 +70,8 @@ class BlazeOverlayFragment : Fragment() {
     ): View = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
-                val userLanguage by viewModel.refreshAppLanguage.observeAsState("")
                 val postModel by viewModel.promoteUiState.observeAsState(BlazeUiState.PromoteScreen.Site)
-                LocaleAwareComposable(
-                    locale = LocaleManager.languageLocale(userLanguage),
-                    onLocaleChange = viewModel::setAppLanguage
-                ) {
-                    viewModel.trackOverlayDisplayed()
-                    BlazeOverlayContent(postModel)
-                }
+                BlazeOverlayContent(postModel)
             }
         }
     }
