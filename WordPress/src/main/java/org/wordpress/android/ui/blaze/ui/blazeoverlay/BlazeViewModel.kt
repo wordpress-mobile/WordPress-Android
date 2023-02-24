@@ -8,7 +8,6 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.BlazeUiState
 import org.wordpress.android.ui.blaze.PostUIModel
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel

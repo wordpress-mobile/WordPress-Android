@@ -52,9 +52,7 @@ import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
-import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.LocaleManager
 
 @AndroidEntryPoint
 class BlazeOverlayFragment : Fragment() {
