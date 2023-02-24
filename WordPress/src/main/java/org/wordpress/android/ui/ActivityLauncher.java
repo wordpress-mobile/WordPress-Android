@@ -1825,7 +1825,8 @@ public class ActivityLauncher {
                     postModel.getRemotePostId(),
                     postModel.getTitle(),
                     postModel.getLink(),
-                    postModel.getFeaturedImageId());
+                    postModel.getFeaturedImageId(),
+                    null);
             intent.putExtra(ARG_EXTRA_POST_ID, postUIModel);
         }
         intent.putExtra(ARG_BLAZE_FLOW_SOURCE, source);
