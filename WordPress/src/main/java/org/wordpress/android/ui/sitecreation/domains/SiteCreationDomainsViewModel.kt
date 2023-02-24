@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation.domains
 
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
@@ -270,19 +271,24 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 }
             }
 
-            data.forEach { domain ->
-                val itemUiState = createAvailableItemUiState(domain)
+            data.forEachIndexed { index, domain ->
+                val itemUiState = createAvailableItemUiState(domain, index)
                 items.add(itemUiState)
             }
         }
         return items
     }
 
-    private fun createAvailableItemUiState(domain: DomainModel): ListItemUiState {
+    private fun createAvailableItemUiState(domain: DomainModel, index: Int): ListItemUiState {
         return when (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
             true -> New.DomainUiState(
                 domain.domainName,
                 domain.cost,
+                variant = when (index) {
+                    0 -> New.DomainUiState.Variation.Recommended
+                    1 -> New.DomainUiState.Variation.BestAlternative
+                    else -> null
+                },
                 onClick = { onDomainSelected(domain) },
             )
             else -> Old.DomainUiState.AvailableDomain(
@@ -420,7 +426,34 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 val domainName: String,
                 val cost: String,
                 val onClick: () -> Unit,
-            ) : New(Type.DOMAIN_V2)
+                val variant: Variation? = null,
+            ) : New(Type.DOMAIN_V2) {
+                sealed class Variation(
+                    @ColorRes val dotColor: Int,
+                    @ColorRes val subtitleColor: Int? = null,
+                    val subtitle: UiString,
+                ) {
+                    constructor(@ColorRes color: Int, subtitle: UiString) : this(color, color, subtitle)
+                    object Unavailable : Variation(
+                        dotColor = R.color.red_50,
+                        subtitle = UiStringRes(R.string.site_creation_domain_tag_unavailable),
+                    )
+                    object Recommended : Variation(
+                        color = R.color.jetpack_green_50,
+                        subtitle = UiStringRes(R.string.site_creation_domain_tag_recommended),
+                    )
+
+                    object BestAlternative : Variation(
+                        color = R.color.purple_50,
+                        subtitle = UiStringRes(R.string.site_creation_domain_tag_best_alternative),
+                    )
+
+                    object Sale : Variation(
+                        color = R.color.yellow_50,
+                        subtitle = UiStringRes(R.string.site_creation_domain_tag_sale),
+                    )
+                }
+            }
         }
     }
 
