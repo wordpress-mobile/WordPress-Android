@@ -103,8 +103,8 @@ class BlazeOverlayFragment : Fragment() {
                 stringResource(id = R.string.blaze_promotional_text),
                 fontSize = FontSize.DoubleExtraLarge.value,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = Margin.ExtraExtraMediumLarge.value),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = Margin.ExtraExtraMediumLarge.value)
             )
             Subtitles(
                 listOf(
@@ -188,7 +188,7 @@ class BlazeOverlayFragment : Fragment() {
                 width = Dimension.fillToConstraints
                 height = Dimension.wrapContent
             })
-            val url =  createRef()
+            val url = createRef()
             PostUrl(url = postUIModel.url, modifier = Modifier.constrainAs(url) {
                 top.linkTo(title.bottom, 5.dp)
                 start.linkTo(postContainer.start, 20.dp)
