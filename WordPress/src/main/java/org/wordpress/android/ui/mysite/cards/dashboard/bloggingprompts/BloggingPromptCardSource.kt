@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -45,7 +44,7 @@ class BloggingPromptCardSource @Inject constructor(
         result.addSource(refresh) { result.refreshData(coroutineScope, siteLocalId, refresh.value) }
         result.addSource(singleRefresh) { result.refreshData(coroutineScope, siteLocalId, singleRefresh.value, true) }
         refresh()
-        return result.distinctUntilChanged()
+        return result
     }
 
     fun refreshTodayPrompt() {
@@ -72,7 +71,7 @@ class BloggingPromptCardSource @Inject constructor(
                 }
             }
         } else {
-            postErrorState()
+            postLastState()
         }
     }
 
@@ -104,10 +103,10 @@ class BloggingPromptCardSource @Inject constructor(
                     }
                 }
             } else {
-                onRefreshedMainThread()
+                postEmptyState()
             }
         } else {
-            postErrorState()
+            postLastState()
         }
     }
 
@@ -121,19 +120,26 @@ class BloggingPromptCardSource @Inject constructor(
             val numOfPromptsToFetch = if (isSinglePromptRefresh) 1 else NUM_PROMPTS_TO_REQUEST
             val result = promptsStore.fetchPrompts(selectedSite, numOfPromptsToFetch, Date())
             when {
-                result.isError -> postErrorState()
+                result.isError -> postLastState()
                 else -> {
                     result.model
                         ?.firstOrNull { prompt -> isSameDay(prompt.date, Date()) }
                         ?.let { prompt -> postState(BloggingPromptUpdate(prompt)) }
-                        ?: onRefreshedBackgroundThread()
+                        ?: postLastState()
                 }
             }
         }
     }
 
-    // we don't have any special error handling at this point - just show the last available prompt
-    private fun MediatorLiveData<BloggingPromptUpdate>.postErrorState() {
+    /**
+     * This function is used to make sure the [refresh] information is propagated and processed correctly even though
+     * the previous status is still the current one. This avoids issues like the loading progress indicator being shown
+     * indefinitely.
+     *
+     * Also, for this card source, this can be used as the error state as we don't have any special error handling at
+     * this point, so we just show the last available prompt.
+     */
+    private fun MediatorLiveData<BloggingPromptUpdate>.postLastState() {
         val lastPrompt = this.value?.promptModel
         postState(BloggingPromptUpdate(lastPrompt))
     }
