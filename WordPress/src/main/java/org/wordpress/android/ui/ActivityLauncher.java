@@ -1821,11 +1821,11 @@ public class ActivityLauncher {
                                             @NonNull BlazeFlowSource source) {
         Intent intent = new Intent(context, BlazeParentActivity.class);
         if (postModel != null) {
-            PostUIModel postUIModel =
-                    new PostUIModel(postModel.getRemotePostId(),
-                            postModel.getTitle(),
-                            postModel.getLink(),
-                            postModel.getFeaturedImageId());
+            PostUIModel postUIModel = new PostUIModel(
+                    postModel.getRemotePostId(),
+                    postModel.getTitle(),
+                    postModel.getLink(),
+                    postModel.getFeaturedImageId());
             intent.putExtra(ARG_EXTRA_POST_ID, postUIModel);
         }
         intent.putExtra(ARG_BLAZE_FLOW_SOURCE, source);
