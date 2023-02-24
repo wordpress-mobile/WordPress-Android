@@ -38,7 +38,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.SparseArrayCompat;
@@ -500,12 +499,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         mDispatcher.register(this);
 
         return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        initBloggingSection();
     }
 
     private AppCompatActivity getAppCompatActivity() {
@@ -1079,6 +1072,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_performance_more_settings,
                     R.string.pref_key_jetpack_performance_media_settings);
         }
+
+        initBloggingSection();
     }
 
     private void updateHomepageSummary() {
