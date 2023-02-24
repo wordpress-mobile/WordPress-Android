@@ -31,7 +31,7 @@ platform :android do
       version: 30,
       test_apk_path: File.join(apk_dir, 'androidTest', "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug-androidTest.apk"),
       apk_path: File.join(apk_dir, "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug.apk"),
-      test_targets: APP_SPECIFIC_VALUES[app.to_sym][:test_targets],
+      test_targets: APP_SPECIFIC_VALUES[app.to_sym][:instrumented_test_targets],
       results_output_dir: File.join(PROJECT_ROOT_FOLDER, 'build', 'instrumented-tests'),
       crash_on_test_failure: false
     )
