@@ -12,13 +12,13 @@ class DomainsRegistrationTracker @Inject constructor(val tracker: AnalyticsTrack
         ORIGIN("origin"),
     }
 
-    private enum class PROPERTY_VALUE(val key: String) {
+    private enum class VALUE(val key: String) {
         ORIGIN_MENU("menu"),
         ORIGIN_SITE_CREATION("site_creation"),
     }
 
     fun trackDomainsPurchaseWebviewViewed(site: SiteModel?, isSiteCreation: Boolean) {
-        val origin = if (isSiteCreation) PROPERTY_VALUE.ORIGIN_SITE_CREATION.key else PROPERTY_VALUE.ORIGIN_MENU.key
+        val origin = if (isSiteCreation) VALUE.ORIGIN_SITE_CREATION.key else VALUE.ORIGIN_MENU.key
         tracker.track(
             AnalyticsTracker.Stat.DOMAINS_PURCHASE_WEBVIEW_VIEWED, site, mutableMapOf(PROPERTY.ORIGIN.key to origin)
         )
