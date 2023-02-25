@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-25 09:36:30+0000
+Translation-Revision-Date: 2023-02-15 09:54:11+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ru
 -->
 <resources>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Используйте возможности сайта максимально эффективно. Установите Jetpack и получите доступ к статистике, уведомлениям и многим другим функциям.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">На вашем сайте есть плагин Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Мобильное приложение Jetpack создано работать в паре с плагином Jetpack. Перейдите в приложение, чтобы использовать статистику, уведомления, Чтиво и другие возможности.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Получайте уведомления о новых комментариях, отметках «Нравится», просмотрах и других событиях.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Находите интересные сайты и сообщества и подписывайтесь на них, а также публикуйте своё содержимое.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Увеличивайте посещаемость с помощью полезной статистики и аналитики.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Статистика и обзор</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack открывает дополнительные возможности для сайтов WordPress. Переход бесплатен и занимает всего минуту.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Расширьте возможности WordPress с помощью Jetpack</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Настроить подсказки по ведению блога и напоминания можно в любое время в разделе Мой сайт &gt; Настройки &gt; Ведение блога.</string>
+    <string name="blogging_reminders_prompt_subtitle">Напоминание будет содержать слово или короткую вдохновляющую фразу</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Перейдите в &lt;b&gt;настройки сайта&lt;/b&gt;, чтобы снова включить</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Подсказки для ведения блога скрыты</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Отключить подсказки</string>
+    <string name="support_forum_caption">Обратитесь за помощью к нашим волонтерам.</string>
+    <string name="support_forum_title">Форумы сообщества</string>
+    <string name="site_settings_blogging_reminders_notification_title">Напоминания блогинга</string>
+    <string name="site_settings_blogging_prompts_title">Показать подсказки</string>
+    <string name="site_settings_blogging">Ведение блога</string>
     <string name="install_play_store_to_get_jetpack">Пожалуйста, установите Google Play Store, чтобы получить приложение Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Позже</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Перейти на Jetpack </string>
@@ -30,7 +49,7 @@ Language: ru
     <string name="my_site_blogging_prompt_card_attribution_dayone">От &lt;b&gt;В Первый День&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Скрыть это</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Напомнить мне позже</string>
-    <string name="jetpack_feature_card_content">Статистика, Чтиво, Уведомления и другие функции скоро переедут в мобильное приложение Jetpack.</string>
+    <string name="jetpack_feature_card_content_phase_three">Статистика, Чтиво, Уведомления и другие функции скоро переедут в мобильное приложение Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Перейти в новое приложение Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Узнайте больше на Jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Переход бесплатен и займет всего минуту.</string>
@@ -307,14 +326,12 @@ Language: ru
     <string name="blogging_prompts_onboarding_card_prompt">Создайте историю своей жизни.</string>
     <string name="blogging_prompts_onboarding_remind_me">Напомнить</string>
     <string name="blogging_prompts_onboarding_try_it_now">Попробовать сейчас</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Узнать подробности, а также настроить напоминания можно в любой момент в разделе \"Мой сайт\" &gt; \"Настройки\" &gt; \"Напоминания о блоге\"</string>
     <string name="blogging_prompts_onboarding_content_note_title">Примечание:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Ежедневно на консоли будет отображаться новая подсказка, чтобы помочь вам настроиться на творческий лад!</string>
     <string name="blogging_prompts_onboarding_content_top">Чтобы развивать свои писательские способности, следует выработать привычку писать и делиться написанным с читателями. Именно для этого будут полезны подсказки!</string>
-    <string name="blogging_prompts_onboarding_header_title">Представляем подсказки</string>
+    <string name="blogging_prompts_onboarding_header_title">Представляем\n подсказки для ведения блога</string>
     <string name="blogging_prompt_set_reminders">Установить напоминания</string>
-    <string name="blogging_reminders_prompt_subtitle">Напоминания будут включать в себя ежедневную подсказку</string>
-    <string name="blogging_reminders_prompt_title">Включить ежедневную подсказку</string>
+    <string name="blogging_reminders_prompt_title">Включить подсказку ведения блога</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Регулярные публикации привлекают внимание новых читателей. Расскажите нам, в какое время вы хотите писать, и мы отправим вам напоминание!</string>
     <string name="set_your_blogging_prompts_title">Улучшите свои писательские способности, выработав привычку писать</string>
     <string name="site_creation_intent_writing_poetry">Поэзия и проза</string>
@@ -350,7 +367,6 @@ Language: ru
     <string name="new_site_creation_intents_input_hint">Пример: Мода, поэзия, политика</string>
     <string name="new_site_creation_intents_title">Тема сайта</string>
     <string name="quick_start_site_menu_tab_message_short">Нажмите &lt;b&gt;%1$s&lt;/b&gt;, чтобы продолжить.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Удалить с консоли</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Пропустить сейчас</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Смотреть другие подсказки</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">Ответы: %d</string>
@@ -359,7 +375,6 @@ Language: ru
     <string name="my_site_blogging_prompt_card_answer_prompt">Подсказка по ответам</string>
     <string name="my_site_blogging_prompt_card_title">Подсказки</string>
     <string name="my_site_all_tab_title">Все</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Напоминания и подсказки</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Это сочетание цветов может затруднить чтение. Попробуйте использовать более яркий цвет фона и/или более темный цвет текста.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Это сочетание цветов может затруднить чтение. Попробуйте использовать более темный цвет фона и/или более яркий цвет текста.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Не удалось вставить медиафайл.\nКоснитесь, чтобы получить больше информации.</string>
@@ -622,7 +637,7 @@ Language: ru
     <string name="support_ticket_subject">Поддержка WordPress для Android</string>
     <string name="site_settings_categories_hint">Управлять рубриками сайта</string>
     <string name="site_settings_categories_title">Рубрики</string>
-    <string name="site_settings_blogging_reminders_title">Напоминания блоггинга</string>
+    <string name="site_settings_blogging_reminders_title">Напоминания</string>
     <string name="page_is_posts_page_warning">Содержимое страницы последних записей формируется автоматически, его нельзя изменить.</string>
     <string name="gutenberg_native_border_settings">Настройки границы</string>
     <string name="storage_utils_dialog_dont_show_button">Не показывать снова</string>

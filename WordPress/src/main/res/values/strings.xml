@@ -29,7 +29,6 @@
     <string name="anonymous">Anonymous</string>
 
     <!-- Screen titles -->
-    <string name="release_notes_screen_title">Release notes</string>
     <string name="help_screen_title">Help and Support</string>
     <string name="notif_settings_screen_title">Notification settings</string>
     <string name="my_site_section_screen_title">My Site</string>
@@ -75,7 +74,6 @@
     <string name="cancel_edit">Cancel edit</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="refresh">Refresh</string>
-    <string name="report_bug">Report bug</string>
     <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
     <string name="sign_in">Log in</string>
@@ -1086,6 +1084,22 @@
     <string name="install_jetpack_continue">Set up</string>
     <string name="install_jetpack_retry">Retry</string>
     <string name="login_to_to_connect_jetpack" tools:ignore="UnusedResources" a8c-src-lib="login">Log in to the WordPress.com account you used to connect Jetpack.</string>
+
+    <!-- Jetpack install full plugin -->
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack icon</string>
+    <string name="jetpack_full_plugin_install_initial_title">Install Jetpack</string>
+    <string name="jetpack_full_plugin_install_initial_description">Your website credentials will not be stored and are used only for the purpose of installing Jetpack.</string>
+    <string name="jetpack_full_plugin_install_initial_button">Continue</string>
+    <string name="jetpack_full_plugin_install_installing_title">Installing Jetpack</string>
+    <string name="jetpack_full_plugin_install_installing_description">Installing Jetpack on your site. This can take up to a few minutes to complete.</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack installed</string>
+    <string name="jetpack_full_plugin_install_done_description">Ready to use this site with the app.</string>
+    <string name="jetpack_full_plugin_install_done_button">Done</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Error icon</string>
+    <string name="jetpack_full_plugin_install_error_title">There was a problem</string>
+    <string name="jetpack_full_plugin_install_error_description">Jetpack could not be installed at this time.</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">Retry</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">Contact Support</string>
 
     <!-- activity log -->
     <string name="activity_log">Activity Log</string>
@@ -2286,6 +2300,8 @@
     <string name="my_site_bottom_sheet_add_story">Story post</string>
     <string name="my_site_quick_actions_title">Quick Links</string>
 
+    <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
+
     <!-- My Site - Dashboard -->
     <string name="my_site_dashboard_tab_title">Home</string>
     <string name="my_site_menu_tab_title">Menu</string>
@@ -2336,6 +2352,8 @@
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 answer</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d answers</string>
     <string name="my_site_blogging_prompt_card_view_answers">View all responses</string>
+
+    <string name="my_site_jp_install_full_plugin_card_content">This site is using an individual plugin, which doesn\'t support all features of the app yet. Please install the full Jetpack plugin.</string>
 
     <!-- My Site - Jetpack migration success card -->
     <string name="jp_migration_success_card_message">Please delete the WordPress app</string>
@@ -2719,6 +2737,7 @@
     <string name="account_settings">Account Settings</string>
     <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
     <string name="primary_site">Primary site</string>
+    <string name="only_one_primary_site_message">Only one site is available, so you can\'t change your primary site.</string>
     <string name="web_address">Web address</string>
     <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
     <string name="change_password">Change password</string>
@@ -4365,18 +4384,39 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Unlock your site’s full potential. Get stats, notications and more with Jetpack.</string>
     <string name="jetpack_feature_card_learn_more" translatable="false">@string/learn_more</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
     <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Featured</string>
 
     <string name="install_play_store_to_get_jetpack">Please install Google Play Store to get the Jetpack app</string>
 
     <!-- Jetpack full plugin install onboarding -->
     <string name="jetpack_individual_plugin_support_onboarding_title">Please install the full Jetpack plugin</string>
-    <!-- translators: %1$s = the current site address (e.g. "https://wordpress.com/"), %2$s = the name of the plugin (e.g. "Jetpack Backup"), %3$s = the text "full Jetpack plugin" -->
-    <string name="jetpack_full_plugin_install_onboarding_description">%1$s is using the %2$s plugin, which doesn’t support all features of the app yet.\n\nPlease install the %3$s to use the app with this site.</string>
+    <!-- translators:
+        %1$s = the current site address (e.g. "https://wordpress.com/"),
+        %2$s = can be either "the <plugin name> plugin" (e.g. "the Jetpack Backup plugin") OR "individual plugins"
+        %3$s = the text "full Jetpack plugin" -->
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s is using %2$s, which don’t support all features of the app yet.\n\nPlease install the %3$s to use the app with this site.</string>
+    <!-- translators: %1$s = a plugin name (e.g. "Jetpack Search") -->
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">the %1$s plugin</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">individual Jetpack plugins</string>
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">full Jetpack plugin</string>
     <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">By setting up Jetpack you agree to our </string>
     <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Terms and conditions</string>
     <string name="jetpack_full_plugin_install_onboarding_install_button">Install the full plugin</string>
     <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contact support</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Close</string>
+
+    <!-- Promote Blaze Card-->
+    <string name="promote_blaze_card_title">Promote your content with Blaze</string>
+    <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
+    <string name="promote_blaze_card_menu_hide_this">Hide this</string>
+
+    <string name="gutenberg_native_blocks_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks menu</string>
+
+    <!-- Blaze Overlay-->
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="blaze_promotional_text">Drive more traffic to your site with Blaze</string>
+    <string name="blaze_promotional_subtitle_1">Promote any post or page in only a few minutes for just a few dollars a day.</string>
+    <string name="blaze_promotional_subtitle_2">Your content will appear on millions of WordPress and Tumblr sites.</string>
+    <string name="blaze_promotional_subtitle_3">Track performance, start, and stop your Blaze at any time.</string>
+    <string name="blaze_post_promotional_button">Blaze this Post</string>
 </resources>

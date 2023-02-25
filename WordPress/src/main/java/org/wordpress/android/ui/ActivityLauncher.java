@@ -9,7 +9,6 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,6 +44,9 @@ import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
+import org.wordpress.android.ui.blaze.BlazeFlowSource;
+import org.wordpress.android.ui.blaze.BlazeParentActivity;
+import org.wordpress.android.ui.blaze.PostUIModel;
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
@@ -144,6 +146,8 @@ import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
+import static org.wordpress.android.ui.blaze.BlazeParentActivityKt.ARG_BLAZE_FLOW_SOURCE;
+import static org.wordpress.android.ui.blaze.BlazeParentActivityKt.ARG_EXTRA_POST_ID;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
@@ -1812,7 +1816,19 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void openPromoteWithBlaze(@NonNull Context context, PostModel postModel) {
-        Toast.makeText(context, R.string.button_promote_with_blaze, Toast.LENGTH_LONG).show();
+    public static void openPromoteWithBlaze(@NonNull Context context,
+                                            @Nullable PostModel postModel,
+                                            @NonNull BlazeFlowSource source) {
+        Intent intent = new Intent(context, BlazeParentActivity.class);
+        if (postModel != null) {
+            PostUIModel postUIModel = new PostUIModel(
+                    postModel.getRemotePostId(),
+                    postModel.getTitle(),
+                    postModel.getLink(),
+                    postModel.getFeaturedImageId());
+            intent.putExtra(ARG_EXTRA_POST_ID, postUIModel);
+        }
+        intent.putExtra(ARG_BLAZE_FLOW_SOURCE, source);
+        context.startActivity(intent);
     }
 }

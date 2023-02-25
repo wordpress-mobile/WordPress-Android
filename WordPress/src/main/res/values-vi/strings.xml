@@ -145,14 +145,10 @@ Language: vi_VN
     <string name="blogging_prompts_onboarding_card_prompt">Quay lại bộ phim về cuộc đời bạn</string>
     <string name="blogging_prompts_onboarding_remind_me">Nhắc tôi</string>
     <string name="blogging_prompts_onboarding_try_it_now">Thử ngay</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Xem nhắc nhở trong Blog của tôi &gt; Cài đặt &gt; Nhắc viết bài</string>
     <string name="blogging_prompts_onboarding_content_note_title">Lưu ý:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Chúng tôi sẽ hiển thị cho bạn lời nhắc mới mỗi ngày trên trang tổng quan của bạn để giúp khơi dậy những nguồn sáng tạo!</string>
     <string name="blogging_prompts_onboarding_content_top">Cách tốt nhất để trở thành một nhà văn giỏi hơn là xây dựng thói quen viết lách và chia sẻ với những người khác — đó chính là điểm xuất phát của Nhắc nhở!</string>
-    <string name="blogging_prompts_onboarding_header_title">Giới thiệu Nhắc nhở</string>
     <string name="blogging_prompt_set_reminders">Cài nhắc nhở</string>
-    <string name="blogging_reminders_prompt_subtitle">Nhắc nhở kèm với lời dạy hằng ngày</string>
-    <string name="blogging_reminders_prompt_title">Bao gồm lời dạy hằng ngày</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Đăng thường xuyên thu hút độc giả mới. Hãy cho chúng tôi biết khi nào bạn muốn viết và chúng tôi sẽ gửi cho bạn lời nhắc!</string>
     <string name="set_your_blogging_prompts_title">Trở thành một nhà văn giỏi hơn bằng cách xây dựng một thói quen</string>
     <string name="site_creation_intent_writing_poetry">Thơ Văn</string>
@@ -188,14 +184,12 @@ Language: vi_VN
     <string name="new_site_creation_intents_input_hint">E.g. Thời trang, Thơ, Chính trị</string>
     <string name="new_site_creation_intents_title">Chủ đề blog</string>
     <string name="quick_start_site_menu_tab_message_short">Nhấn &lt;b&gt;%1$s&lt;/b&gt; để tiếp tục.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Xóa khỏi trang tổng quan</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Xem nhiều nhắc nhở hơn</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Chia sẻ nhắc viết bài</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Đã trả lời</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Kiểu trả lời</string>
     <string name="my_site_blogging_prompt_card_title">Lời dạy</string>
     <string name="my_site_all_tab_title">Toàn bộ</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Nhắc nhở và dạy bảo</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Màu phối này có thể gây khó đọc. Hãy thử sử dụng màu nền sáng hơn hoặc màu văn bản tối hơn.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Màu này có thể gây khó đọc cho mọi người. Thử dùng màu nền tối hơn hoặc chữ sáng hơn.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Không thể chèn media.\nNhấn để biết thêm thông tin.</string>
@@ -457,7 +451,6 @@ Language: vi_VN
     <string name="support_ticket_subject">Hỗ trợ cho WordPress Android</string>
     <string name="site_settings_categories_hint">Quản lý chuyên mục</string>
     <string name="site_settings_categories_title">Chuyên mục</string>
-    <string name="site_settings_blogging_reminders_title">Nhắc đăng bài</string>
     <string name="page_is_posts_page_warning">Nội dung từ những bài viết gần đây nhất sẽ được tự động tạo và không thể chỉnh sửa.</string>
     <string name="gutenberg_native_border_settings">Thiết lập Viền</string>
     <string name="storage_utils_dialog_dont_show_button">Không hiện nữa</string>

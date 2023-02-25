@@ -28,7 +28,6 @@ Language: en_CA
     <string name="weeks_quantity_other">%d weeks</string>
     <string name="wp_jetpack_powered_phase_2">Get the Jetpack app</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">From &lt;b&gt;DayOne&lt;/b&gt;</string>
-    <string name="jetpack_feature_card_content">Stats, Reader, Notifications and other features will soon move to the Jetpack mobile app.</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
@@ -307,15 +306,11 @@ Language: en_CA
     <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
     <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
-    <string name="blogging_prompts_onboarding_content_note_content">You can learn more and set up reminders at any time in My Site &gt; Settings &gt; Blogging Reminders</string>
     <string name="blogging_prompts_onboarding_content_note_title">Note:</string>
     <string name="blogging_prompts_onboarding_content_bottom">We’ll show you a new prompt each day on your dashboard to help get those creative juices flowing!</string>
     <string name="blogging_prompts_onboarding_content_top">The best way to become a better writer is to build a writing habit and share with others - that’s where Prompts come in!</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Posting regularly attracts new readers. Tell us when you want to write and we’ll send you a reminder!</string>
-    <string name="blogging_prompts_onboarding_header_title">Introducing Prompts</string>
     <string name="blogging_prompt_set_reminders">Set reminders</string>
-    <string name="blogging_reminders_prompt_subtitle">Reminder will include a daily prompt</string>
-    <string name="blogging_reminders_prompt_title">Include daily prompt</string>
     <string name="set_your_blogging_prompts_title">Become a better writer by building a habit</string>
     <string name="site_creation_intent_writing_poetry">Writing &amp; Poetry</string>
     <string name="site_creation_intent_travel">Travel</string>
@@ -346,7 +341,6 @@ Language: en_CA
     <string name="site_creation_intent_art">Art</string>
     <string name="new_site_creation_intents_title">Site topic</string>
     <string name="quick_start_site_menu_tab_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to continue.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Remove from dashboard</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">View more prompts</string>
     <string name="site_creation_intent_business">Business</string>
     <string name="site_creation_intent_books">Books</string>
@@ -359,7 +353,6 @@ Language: en_CA
     <string name="my_site_blogging_prompt_card_answer_prompt">Answer prompt</string>
     <string name="my_site_blogging_prompt_card_title">Prompts</string>
     <string name="my_site_all_tab_title">All</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Reminders and prompts</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">This colour combination may be hard for people to read. Try using a brighter background colour and/or a darker text colour.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">This colour combination may be hard for people to read. Try using a darker background colour and/or a brighter text colour.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Failed to insert media.\nTap for more info.</string>
@@ -623,7 +616,6 @@ Language: en_CA
     <string name="site_settings_categories_hint">Manage your site\'s categories</string>
     <string name="site_settings_categories_title">Categories</string>
     <string name="page_is_posts_page_warning">The content of your latest posts page is automatically generated and cannot be edited.</string>
-    <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
     <string name="gutenberg_native_border_settings">Border Settings</string>
     <string name="storage_utils_dialog_dont_show_button">Don\'t Show Again</string>
     <string name="storage_utils_dialog_ok_button">View Storage</string>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Extracted from figma design
+Font family: SF Pro
+Line height: 22sp
+(identical to box height)
+translationY compensates for the line height adjustment of text
+-->
+    <!-- styles.xml -->
+    <style name="blaze_title">
+        <item name="android:textSize">17sp</item>
+        <item name="android:letterSpacing">-0.03</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceHigh</item>
+        <item name="android:lineSpacingExtra">2sp</item>
+    </style>
+
+    <style name="blaze_sub_title">
+        <item name="android:textSize">15sp</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:lineSpacingExtra">3sp</item>
+    </style>
+</resources>

@@ -1,4 +1,2 @@
-* [*] [internal] Bump Aztec version to `1.6.3` [https://github.com/wordpress-mobile/WordPress-Android/pull/17852]
-* [**] [Jetpack-only] Blogging Prompts: add the ability to answer previous prompts, disable prompts, and other minor enhancements. [https://github.com/wordpress-mobile/WordPress-Android/pull/17882]
-* [*] Reader: Removes the option to block and report reader users for self-hosted sites [https://github.com/wordpress-mobile/WordPress-Android/pull/17866]
+* [**] [Jetpack-only] Jetpack individual plugin support: Warns user about sites with only individual plugins not supporting all features of the app yet and gives the ability to install the full Jetpack plugin. [https://github.com/wordpress-mobile/WordPress-Android/pull/17983]
 

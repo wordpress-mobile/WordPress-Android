@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.blaze.BlazeStatusModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
@@ -51,9 +52,12 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.jpfullplugininstall.GetShowJetpackFullPluginInstallOnboardingUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
@@ -115,6 +119,8 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
+import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
+import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -267,6 +273,12 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper
 
     @Mock
+    lateinit var bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper
+
+    @Mock
+    lateinit var getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase
+
+    @Mock
     lateinit var contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker
 
     @Mock
@@ -301,6 +313,15 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+
+    @Mock
+    lateinit var jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder
+
+    @Mock
+    lateinit var jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker
+
+    @Mock
+    lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
@@ -346,7 +367,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val currentAvatar = MutableLiveData(CurrentAvatarUrl(""))
     private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
     private val activeTask = MutableLiveData<QuickStartTask>()
-    private val quickStartTabStep = MutableLiveData<QuickStartTabStep>()
+    private val quickStartTabStep = MutableLiveData<QuickStartTabStep?>()
     private val dynamicCards = MutableLiveData(
         DynamicCardsUpdate(
             cards = listOf(
@@ -370,6 +391,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onBloggingPromptViewMoreClicked: (() -> Unit)? = null
     private var onBloggingPromptViewAnswersClicked: ((promptId: Int) -> Unit)? = null
     private var onBloggingPromptRemoveClicked: (() -> Unit)? = null
+    private var onPromoteWithBlazeCardClick: (() -> Unit) = {}
+    private var onPromoteWithBlazeCardMenuClicked: (() -> Unit) = {}
+    private var onPromoteWithBlazeCardHideThisClick: (() -> Unit) = {}
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
             taskType = QuickStartTaskType.CUSTOMIZE,
@@ -512,6 +536,11 @@ class MySiteViewModelTest : BaseUnitTest() {
             jetpackFeatureRemovalOverlayUtil,
             jetpackFeatureCardHelper,
             bloggingPromptsSettingsHelper,
+            jetpackInstallFullPluginCardBuilder,
+            bloggingPromptsCardTrackHelper,
+            getShowJetpackFullPluginInstallOnboardingUseCase,
+            jetpackInstallFullPluginShownTracker,
+            blazeFeatureUtils
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -842,29 +871,23 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* ON RESUME */
     @Test
     fun `given not first resume, when on resume is triggered, then mySiteSourceManager onResume is invoked`() {
-        whenever(quickStartRepository.currentTab).thenReturn(mock())
+        viewModel.onResume(mock()) // first call
 
-        viewModel.onResume() // first call
-
-        viewModel.onResume() // second call
+        viewModel.onResume(mock()) // second call
 
         verify(mySiteSourceManager).onResume(false)
     }
 
     @Test
     fun `given first resume, when on resume is triggered, then mySiteSourceManager onResume is invoked`() {
-        whenever(quickStartRepository.currentTab).thenReturn(mock())
-
-        viewModel.onResume()
+        viewModel.onResume(mock())
 
         verify(mySiteSourceManager).onResume(true)
     }
 
     @Test
     fun `when first onResume is triggered, then checkAndShowQuickStartNotice is invoked`() {
-        whenever(quickStartRepository.currentTab).thenReturn(mock())
-
-        viewModel.onResume()
+        viewModel.onResume(mock())
 
         verify(quickStartRepository).checkAndShowQuickStartNotice()
     }
@@ -1569,7 +1592,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* DASHBOARD TODAYS STATS CARD */
-
     @Test
     fun `given todays stat card, when card item is clicked, then stats page is opened`() =
         test {
@@ -1753,6 +1775,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.bloggingPrompt != null
             },
             any(),
+            any(),
             any()
         )
     }
@@ -1766,6 +1789,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             argWhere {
                 it.bloggingPromptCardBuilderParams.bloggingPrompt == null
             },
+            any(),
             any(),
             any()
         )
@@ -1782,6 +1806,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.showViewMoreAction == true
             },
             any(),
+            any(),
             any()
         )
     }
@@ -1796,6 +1821,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             argWhere {
                 it.bloggingPromptCardBuilderParams.showViewMoreAction == false
             },
+            any(),
             any(),
             any()
         )
@@ -1812,6 +1838,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.showViewAnswersAction == true
             },
             any(),
+            any(),
             any()
         )
     }
@@ -1826,6 +1853,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             argWhere {
                 it.bloggingPromptCardBuilderParams.showViewAnswersAction == false
             },
+            any(),
             any(),
             any()
         )
@@ -1842,6 +1870,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 it.bloggingPromptCardBuilderParams.showRemoveAction == true
             },
             any(),
+            any(),
             any()
         )
     }
@@ -1856,6 +1885,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             argWhere {
                 it.bloggingPromptCardBuilderParams.showRemoveAction == false
             },
+            any(),
             any(),
             any()
         )
@@ -2022,48 +2052,66 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given blogging prompt card, when resuming dashboard, then track card viewed`() = test {
+    fun `given blogging prompt card, when resuming dashboard, then tracker helper called as expected`() = test {
         initSelectedSite(
             isMySiteDashboardTabsEnabled = true,
             isBloggingPromptsEnabled = true,
         )
 
-        whenever(quickStartRepository.currentTab).thenReturn(MySiteTabType.DASHBOARD)
-        viewModel.onResume()
+        verify(bloggingPromptsCardTrackHelper, atLeastOnce()).onSiteChanged(siteLocalId)
 
-        advanceUntilIdle()
+        viewModel.onResume(MySiteTabType.DASHBOARD)
 
-        verify(bloggingPromptsCardAnalyticsTracker).trackMySiteCardViewed()
+        verify(bloggingPromptsCardTrackHelper).onResume(MySiteTabType.DASHBOARD)
+        verify(bloggingPromptsCardTrackHelper, atLeastOnce())
+            .onDashboardCardsUpdated(
+                any(),
+                argWhere {
+                    it.cards.any { card -> card is DashboardCard.BloggingPromptCard }
+                }
+            )
     }
 
     @Test
-    fun `given no blogging prompt card, when resuming dashboard, then don't track card viewed`() = test {
+    fun `given no blogging prompt card, when resuming dashboard, then tracker helper called as expected`() = test {
         initSelectedSite(
             isMySiteDashboardTabsEnabled = true,
             isBloggingPromptsEnabled = false,
         )
 
-        whenever(quickStartRepository.currentTab).thenReturn(MySiteTabType.DASHBOARD)
-        viewModel.onResume()
+        verify(bloggingPromptsCardTrackHelper, atLeastOnce()).onSiteChanged(siteLocalId)
 
-        advanceUntilIdle()
+        viewModel.onResume(MySiteTabType.DASHBOARD)
 
-        verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed()
+        verify(bloggingPromptsCardTrackHelper).onResume(MySiteTabType.DASHBOARD)
+        verify(bloggingPromptsCardTrackHelper, never())
+            .onDashboardCardsUpdated(
+                any(),
+                argWhere {
+                    it.cards.any { card -> card is DashboardCard.BloggingPromptCard }
+                }
+            )
     }
 
     @Test
-    fun `given blogging prompt card, when resuming menu, then don't track card viewed`() = test {
+    fun `given blogging prompt card, when resuming menu, then tracker helper called as expected`() = test {
         initSelectedSite(
             isMySiteDashboardTabsEnabled = true,
             isBloggingPromptsEnabled = true,
         )
 
-        whenever(quickStartRepository.currentTab).thenReturn(MySiteTabType.SITE_MENU)
-        viewModel.onResume()
+        verify(bloggingPromptsCardTrackHelper, atLeastOnce()).onSiteChanged(siteLocalId)
 
-        advanceUntilIdle()
+        viewModel.onResume(MySiteTabType.SITE_MENU)
 
-        verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed()
+        verify(bloggingPromptsCardTrackHelper).onResume(MySiteTabType.SITE_MENU)
+        verify(bloggingPromptsCardTrackHelper, atLeastOnce())
+            .onDashboardCardsUpdated(
+                any(),
+                argWhere {
+                    it.cards.any { card -> card is DashboardCard.BloggingPromptCard }
+                }
+            )
     }
 
     /* DASHBOARD ERROR SNACKBAR */
@@ -3189,6 +3237,41 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(jetpackFeatureCardHelper).setJetpackFeatureCardLastShownTimeStamp(any())
     }
 
+    /* Promote with Blaze */
+    @Test
+    fun `when promote with blaze card is tapped, then blaze card tapped is tracked`() = test {
+        initSelectedSite()
+
+        onPromoteWithBlazeCardClick.invoke()
+
+        verify(blazeFeatureUtils).track(
+            Stat.BLAZE_FEATURE_TAPPED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
+    }
+    @Test
+    fun `when promote with blaze card menu is accessed, then blaze card menu is accessed is tracked`() = test {
+        initSelectedSite()
+
+        onPromoteWithBlazeCardMenuClicked.invoke()
+
+        verify(blazeFeatureUtils).track(
+            Stat.BLAZE_FEATURE_MENU_ACCESSED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
+    }
+
+    @Test
+    fun `when promote with blaze hide this is tapped, then blaze card hide this tapped is tracked`() = test {
+        initSelectedSite()
+
+        onPromoteWithBlazeCardHideThisClick.invoke()
+
+        verify(blazeFeatureUtils).track(
+            Stat.BLAZE_FEATURE_HIDE_TAPPED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
+    }
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
@@ -3262,7 +3345,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         isBloggingPromptsListEnabled: Boolean = true,
         isBloggingPromptsEnhancementsEnabled: Boolean = true,
         isBloggingPromptsSocialEnabled: Boolean = true,
-        shouldShowJetpackBranding: Boolean = true
+        shouldShowJetpackBranding: Boolean = true,
+        isBlazeEnabled: Boolean = true,
     ) {
         setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled)
         whenever(
@@ -3279,6 +3363,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsSocialEnabled)
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsEnabled)
         whenever(jetpackBrandingUtils.shouldShowJetpackBranding()).thenReturn(shouldShowJetpackBranding)
+        whenever(blazeFeatureUtils.shouldShowPromoteWithBlazeCard(any())).thenReturn(isBlazeEnabled)
         if (isSiteUsingWpComRestApi) {
             site.setIsWPCom(true)
             site.setIsJetpackConnected(true)
@@ -3316,6 +3401,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             quickStartCardBuilderParams = any(),
             dashboardCardsBuilderParams = any(),
             quickLinkRibbonBuilderParams = any(),
+            jetpackInstallFullPluginCardBuilderParams = any(),
             isMySiteTabsEnabled = any()
         )
 
@@ -3450,6 +3536,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                     add(initPostCard(mockInvocation))
                     add(initTodaysStatsCard(mockInvocation))
                     if (bloggingPromptsFeatureConfig.isEnabled()) add(initBloggingPromptCard(mockInvocation))
+                    if (blazeFeatureUtils.shouldShowPromoteWithBlazeCard(BlazeStatusModel(1, true))) add(
+                        initPromoteWithBlazeCard(mockInvocation)
+                    )
                 }
             }
         )
@@ -3527,6 +3616,20 @@ class MySiteViewModelTest : BaseUnitTest() {
             onViewMoreClick = onBloggingPromptViewMoreClicked!!,
             onViewAnswersClick = onBloggingPromptViewAnswersClicked!!,
             onRemoveClick = onBloggingPromptRemoveClicked!!,
+        )
+    }
+
+    private fun initPromoteWithBlazeCard(mockInvocation: InvocationOnMock): DashboardCard.PromoteWithBlazeCard {
+        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
+        onPromoteWithBlazeCardClick = params.promoteWithBlazeCardBuilderParams.onClick
+        onPromoteWithBlazeCardMenuClicked = params.promoteWithBlazeCardBuilderParams.onMoreMenuClick
+        onPromoteWithBlazeCardHideThisClick = params.promoteWithBlazeCardBuilderParams.onHideMenuItemClick
+        return DashboardCard.PromoteWithBlazeCard(
+            title = UiStringRes(0),
+            subtitle = UiStringRes(0),
+            onClick = ListItemInteraction.create { onPromoteWithBlazeCardClick },
+            onMoreMenuClick = ListItemInteraction.create { onPromoteWithBlazeCardMenuClicked },
+            onHideMenuItemClick = ListItemInteraction.create { onPromoteWithBlazeCardHideThisClick }
         )
     }
 

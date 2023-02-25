@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.plans.PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
 import org.wordpress.android.ui.plans.PlansConstants.BLOGGER_PLAN_TWO_YEARS_ID
@@ -29,6 +30,9 @@ class SiteUtilsTest {
     @Mock
     private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
+    @Mock
+    private lateinit var siteStore: SiteStore
+
     @Test
     fun `onFreePlan returns true when site is on free plan`() {
         val site = SiteModel()
@@ -38,6 +42,20 @@ class SiteUtilsTest {
 
         site.planId = PREMIUM_PLAN_ID
         assertFalse(SiteUtils.onFreePlan(site))
+    }
+
+    @Test
+    fun `hasSiteWithPaidPlan returns true when site is on a paid plan`() {
+        val site1 = SiteModel()
+        val site2 = SiteModel()
+        whenever(siteStore.sites).thenReturn(listOf(site1, site2))
+
+        site1.hasFreePlan = true
+        site2.hasFreePlan = true
+        assertFalse(SiteUtils.hasSiteWithPaidPlan(siteStore))
+
+        site2.hasFreePlan = false
+        assertTrue(SiteUtils.hasSiteWithPaidPlan(siteStore))
     }
 
     @Test
