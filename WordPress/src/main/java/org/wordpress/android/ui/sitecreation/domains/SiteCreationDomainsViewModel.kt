@@ -289,8 +289,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 domain.domainName,
                 cost = if (domain.isFree) Cost.Free else Cost.Paid(domain.cost), // TODO: Apply discounts
                 variant = when (index) {
-                    0 -> New.DomainUiState.Variation.Recommended
-                    1 -> New.DomainUiState.Variation.BestAlternative
+                    0 -> New.DomainUiState.Variant.Recommended
+                    1 -> New.DomainUiState.Variant.BestAlternative
                     else -> null
                 },
                 onClick = { onDomainSelected(domain) },
@@ -430,31 +430,31 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 val domainName: String,
                 val cost: Cost,
                 val onClick: () -> Unit,
-                val variant: Variation? = null,
+                val variant: Variant? = null,
             ) : New(Type.DOMAIN_V2) {
-                sealed class Variation(
+                sealed class Variant(
                     @ColorRes val dotColor: Int,
                     @ColorRes val subtitleColor: Int? = null,
                     val subtitle: UiString,
                 ) {
                     constructor(@ColorRes color: Int, subtitle: UiString) : this(color, color, subtitle)
 
-                    object Unavailable : Variation(
+                    object Unavailable : Variant(
                         dotColor = R.color.red_50,
                         subtitle = UiStringRes(R.string.site_creation_domain_tag_unavailable),
                     )
 
-                    object Recommended : Variation(
+                    object Recommended : Variant(
                         color = R.color.jetpack_green_50,
                         subtitle = UiStringRes(R.string.site_creation_domain_tag_recommended),
                     )
 
-                    object BestAlternative : Variation(
+                    object BestAlternative : Variant(
                         color = R.color.purple_50,
                         subtitle = UiStringRes(R.string.site_creation_domain_tag_best_alternative),
                     )
 
-                    object Sale : Variation(
+                    object Sale : Variant(
                         color = R.color.yellow_50,
                         subtitle = UiStringRes(R.string.site_creation_domain_tag_sale),
                     )
