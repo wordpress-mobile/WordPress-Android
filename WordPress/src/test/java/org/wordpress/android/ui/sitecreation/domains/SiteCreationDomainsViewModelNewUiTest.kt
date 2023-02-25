@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionRespo
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import kotlin.test.assertIs
 
@@ -49,12 +50,12 @@ class SiteCreationDomainsViewModelNewUiTest : BaseUnitTest() {
         viewModel.onQueryChanged(query)
         advanceUntilIdle()
 
-        val uiDomains = assertIs<List<DomainUiState>>(viewModel.uiState.value!!.contentState.items)
+        val uiDomains = assertIs<List<DomainUiState>>(viewModel.uiState.value?.contentState?.items)
         assertThat(uiDomains).hasSameSizeAs(results)
     }
 
     @Test
-    fun `free domain results from api should be with 'Free' cost`() = testWithSuccessResult { (query, results) ->
+    fun `cost of free domain results from api should be 'Free'`() = testWithSuccessResult { (query, results) ->
         val apiFreeDomains = results.filter { it.is_free }
         viewModel.start()
 
@@ -67,7 +68,7 @@ class SiteCreationDomainsViewModelNewUiTest : BaseUnitTest() {
     }
 
     @Test
-    fun `paid domain results from api should be with 'Paid' cost`() = testWithSuccessResult { (query, results) ->
+    fun `cost of paid domain results from api should be 'Paid'`() = testWithSuccessResult { (query, results) ->
         val apiPaidDomains = results.filter { !it.is_free }
         viewModel.start()
 
@@ -77,6 +78,28 @@ class SiteCreationDomainsViewModelNewUiTest : BaseUnitTest() {
         val uiPaidDomains = viewModel.uiState.value?.contentState?.items
             ?.filter { (it as DomainUiState).cost is Cost.Paid }
         assertThat(uiPaidDomains).hasSameSizeAs(apiPaidDomains)
+    }
+
+    @Test
+    fun `only 1st domain result from api should be 'Recommended'`() = testWithSuccessResult { (query) ->
+        viewModel.start()
+
+        viewModel.onQueryChanged(query)
+        advanceUntilIdle()
+
+        val uiDomains = assertIs<List<DomainUiState>>(viewModel.uiState.value?.contentState?.items)
+        assertThat(uiDomains.map { it.variant }).containsOnlyOnce(Variant.Recommended)
+    }
+
+    @Test
+    fun `only 2nd domain result from api should be 'BestAlternative'`() = testWithSuccessResult { (query) ->
+        viewModel.start()
+
+        viewModel.onQueryChanged(query)
+        advanceUntilIdle()
+
+        val uiDomains = assertIs<List<DomainUiState>>(viewModel.uiState.value?.contentState?.items)
+        assertThat(uiDomains.map { it.variant }).containsOnlyOnce(Variant.BestAlternative)
     }
 
     private fun <T> testWithSuccessResult(
