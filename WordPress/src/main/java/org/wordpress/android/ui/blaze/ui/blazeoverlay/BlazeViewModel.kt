@@ -36,20 +36,21 @@ class BlazeViewModel @Inject constructor(private val blazeFeatureUtils: BlazeFea
         }
     }
 
-   // to do: tracking logic and logic for done state
-    fun showNextScreen(currentBlazeUiState: BlazeUiState) {
+    // to do: tracking logic and logic for done state - this might not be where we want to track
+    private fun showNextScreen(currentBlazeUiState: BlazeUiState) {
         when (currentBlazeUiState) {
-            is BlazeUiState.PromoteScreen.Site -> _uiState.value = BlazeUiState.PostSelectionScreen
-            is BlazeUiState.PromoteScreen.PromotePost -> _uiState.value = BlazeUiState.AppearanceScreen
-            is BlazeUiState.PostSelectionScreen -> _uiState.value = BlazeUiState.AppearanceScreen
-            is BlazeUiState.AppearanceScreen -> _uiState.value = BlazeUiState.AudienceScreen
-            is BlazeUiState.AudienceScreen -> _uiState.value = BlazeUiState.PaymentGateway
-            is BlazeUiState.PaymentGateway -> _uiState.value = BlazeUiState.Done
+            is BlazeUiState.PromoteScreen.Site -> _uiState.value = BlazeUiState.WebViewScreen
+            is BlazeUiState.PromoteScreen.PromotePost -> _uiState.value = BlazeUiState.WebViewScreen
+            is BlazeUiState.PromoteScreen.Page -> _uiState.value = BlazeUiState.WebViewScreen
+            is BlazeUiState.WebViewScreen -> _uiState.value = BlazeUiState.Done
             else -> {}
         }
     }
 
     fun onPromoteWithBlazeClicked() {
         blazeFeatureUtils.trackPromoteWithBlazeClicked()
+        uiState.value?.let { showNextScreen(it) }
     }
+
+    fun getSource() = blazeFlowSource
 }
