@@ -20,10 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.asString
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState
@@ -70,7 +72,18 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
                 }
             }
             if (variant !is Unavailable) {
-                Price(cost.uiString.asString(), modifier = Modifier.padding(start = 16.dp))
+                if (cost is Cost.OnSale) {
+                    SalePrince(
+                        cost.title.asString(),
+                        cost.subtitle.asString(),
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                } else {
+                    Price(
+                        cost.title.asString(),
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
             }
         }
         Divider(thickness = 0.5.dp)
@@ -87,19 +100,34 @@ private fun DotIndicator(color: Color) {
     )
 }
 
-@Suppress("ForbiddenComment")
 @Composable
 private fun Price(text: String, modifier: Modifier = Modifier) {
-    // TODO: Style price:
-    //  - Free: "Free"
-    //  - Paid: "$cost/yr"
-    //  - Sale: "$costDiscounted/yr" [JP Green 50, 17 regular] + \n + "$cost/yr" [strikethrough, 13 regular]
     Text(
-        text = text,
+        text,
         color = SecondaryTextColor,
         fontSize = 17.sp,
         modifier = modifier
     )
+}
+
+@Composable
+private fun SalePrince(title: String, subtitle: String, modifier: Modifier = Modifier) {
+    Column(
+        modifier,
+        horizontalAlignment = Alignment.End,
+    ) {
+        Text(
+            title,
+            color = AppColor.JetpackGreen50,
+            fontSize = 17.sp,
+        )
+        Text(
+            subtitle,
+            color = SecondaryTextColor,
+            fontSize = 13.sp,
+            textDecoration = TextDecoration.LineThrough,
+        )
+    }
 }
 
 @Preview
@@ -109,10 +137,14 @@ private fun DomainItemPreview() {
     val uiStates = MutableList(9) {
         DomainUiState(
             domainName = buildString {
-                repeat(25) { index -> append('a' + it + index) }
+                repeat(5) { index -> append('a' + it + index) }
                 append(".domain.com")
             },
-            cost = if (it % 3 == 0) Cost.Paid("$${it * 5}") else Cost.Free,
+            cost = when {
+                it % 3 == 0 -> Cost.Paid("$${it * 5}")
+                it == 5 -> Cost.OnSale("$${it * 2}", "$${it * 3}")
+                else -> Cost.Free
+            },
             variant = when (it) {
                 0 -> Unavailable
                 1 -> Recommended
