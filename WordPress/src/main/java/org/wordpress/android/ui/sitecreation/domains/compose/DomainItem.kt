@@ -149,7 +149,7 @@ private fun DomainItemPreview() {
                 0 -> Unavailable
                 1 -> Recommended
                 2 -> BestAlternative
-                4 -> Sale
+                5 -> Sale
                 else -> null
             },
             onClick = {}
