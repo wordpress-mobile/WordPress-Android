@@ -336,7 +336,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         test {
             val (query, size) = queryToSize
 
-            val suggestions = (0 until size).map {
+            val suggestions = List(size) {
                 DomainSuggestionResponse().apply {
                     domain_name = "$query-$it.com"
                     is_free = it % 2 == 0
