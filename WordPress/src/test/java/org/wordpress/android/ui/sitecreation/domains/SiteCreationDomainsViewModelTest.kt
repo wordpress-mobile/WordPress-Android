@@ -296,22 +296,6 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun verifyFetchFreeAndPaidDomainsWhenPurchasingFeatureConfigIsEnabled() = testWithSuccessResponse {
-        whenever(purchasingFeatureConfig.isEnabledOrManuallyOverridden()).thenReturn(true)
-        viewModel.start()
-
-        viewModel.onQueryChanged(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
-        advanceUntilIdle()
-
-        verify(fetchDomainsUseCase).fetchDomains(
-            eq(MULTI_RESULT_DOMAIN_FETCH_QUERY.first),
-            eq(FETCH_DOMAINS_VENDOR_MOBILE),
-            eq(false),
-            eq(MULTI_RESULT_DOMAIN_FETCH_QUERY.second),
-        )
-    }
-
-    @Test
     fun verifyFetchFreeDomainsWhenPurchasingFeatureConfigIsDisabled() = testWithSuccessResponse {
         viewModel.start()
 
@@ -351,6 +335,22 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     }
 
     private val uiDomains get () = assertIs<List<New.DomainUiState>>(viewModel.uiState.value?.contentState?.items)
+
+    @Test
+    fun verifyFetchFreeAndPaidDomainsWhenPurchasingFeatureConfigIsEnabled() = testWithSuccessResultNewUi { (query, results) ->
+        whenever(purchasingFeatureConfig.isEnabledOrManuallyOverridden()).thenReturn(true)
+        viewModel.start()
+
+        viewModel.onQueryChanged(query)
+        advanceUntilIdle()
+
+        verify(fetchDomainsUseCase).fetchDomains(
+            eq(query),
+            eq(FETCH_DOMAINS_VENDOR_MOBILE),
+            eq(false),
+            eq(results.size),
+        )
+    }
 
     @Test
     fun `verify all domain results from api are visible`() = testWithSuccessResultNewUi { (query, results) ->
