@@ -7,6 +7,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeOverlayFragment
 import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeViewModel
+import org.wordpress.android.ui.blaze.ui.blazewebview.BlazeWebViewFragment
 
 const val ARG_EXTRA_POST_ID = "post_id"
 const val ARG_BLAZE_FLOW_SOURCE = "blaze_flow_source"
@@ -28,6 +29,11 @@ class BlazeParentActivity : AppCompatActivity() {
                 is BlazeUiState.PromoteScreen -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, BlazeOverlayFragment.newInstance())
+                        .commitNow()
+                }
+                is BlazeUiState.WebViewScreen -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, BlazeWebViewFragment.newInstance())
                         .commitNow()
                 }
                 else -> {}
