@@ -1,46 +1,143 @@
 package org.wordpress.android.ui.blaze.ui.blazewebview
 
-import android.util.Log
+import android.text.TextUtils
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import org.wordpress.android.R
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.WPWebViewActivity.getAuthenticationPostData
+import org.wordpress.android.ui.blaze.BlazeActionEvent
+import org.wordpress.android.ui.blaze.BlazeFlowSource
+import org.wordpress.android.ui.blaze.BlazeUiState
+import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState
+import org.wordpress.android.ui.blaze.BlazeWebViewContentUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.utils.UiString
 import javax.inject.Inject
 
+@Suppress("ForbiddenComment")
 @HiltViewModel
 class BlazeWebViewViewModel @Inject constructor(
     private val accountStore: AccountStore,
-    private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val siteRepository: SelectedSiteRepository
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val siteStore: SiteStore
 ) : ViewModel() {
-    // todo: fill in the state
-    private val _screenState = MutableStateFlow<ScreenState>(ScreenState.Loading())
-    val screenState: StateFlow<ScreenState> = _screenState
+    // todo: enhance this and add a way to identify start/end steps
+    // This may be difficult, if at the end of the creation flow, we are sending the user to browse campaigns
+    private val hideCancelSteps = listOf("#step-3", "#step-4")
+    private lateinit var blazeFlowSource: BlazeFlowSource
 
-    fun start() {
-        // todo: these are here just to use the values to pass compile, probably an annotation for this too!
-        Log.i(javaClass.simpleName, "Username ${accountStore.account.userName}")
-        Log.i(javaClass.simpleName, "SiteId ${siteRepository.getSelectedSite()?.siteId}")
-        Log.i(javaClass.simpleName, "Hide Promote with blaze ${blazeFeatureUtils.hidePromoteWithBlazeCard()}")
+    private val _actionEvents = Channel<BlazeActionEvent>(Channel.BUFFERED)
+    val actionEvents = _actionEvents.receiveAsFlow()
+
+    private val _blazeHeaderState = MutableStateFlow<BlazeWebViewHeaderUiState>(BlazeWebViewHeaderUiState.ShowAction())
+    val blazeHeaderState: StateFlow<BlazeWebViewHeaderUiState> = _blazeHeaderState
+
+    private val _model = MutableStateFlow(BlazeWebViewContentUiState())
+    val model: StateFlow<BlazeWebViewContentUiState> = _model
+
+    fun start(promoteScreen: BlazeUiState.PromoteScreen?, source: BlazeFlowSource) {
+        blazeFlowSource = source
+        val url = buildUrl(promoteScreen)
+        postScreenState(model.value.copy(url = url, addressToLoad = prepareUrl(url)))
     }
-}
 
-// todo: annmarie move this to a new file
-sealed class ScreenState {
-    val title: UiString = UiString.UiStringRes(R.string.blaze_activity_title)
-  //  val actionText: UiString = UiString.UiStringRes(R.string.cancel)
-    open val actionVisible: Boolean = true
+    // todo: implement "page" flow
+    // todo: implement validation checks for site url
+    private fun buildUrl(promoteScreen: BlazeUiState.PromoteScreen?): String {
+        val siteUrl = selectedSiteRepository.getSelectedSite()?.url?.replace("https://", "")
+        val url = promoteScreen?.let {
+            when (it) {
+                is BlazeUiState.PromoteScreen.PromotePost -> {
+                    BLAZE_CREATION_FLOW_POST.format(siteUrl, it.postUIModel.postId, blazeFlowSource.trackingName)
+                }
+                is BlazeUiState.PromoteScreen.Site -> BLAZE_CREATION_FLOW_SITE.format(
+                    siteUrl,
+                    blazeFlowSource.trackingName
+                )
+                is BlazeUiState.PromoteScreen.Page -> BLAZE_CREATION_FLOW_SITE.format(
+                    siteUrl,
+                    blazeFlowSource.trackingName
+                )
+            }
+        } ?: BLAZE_CREATION_FLOW_SITE.format(siteUrl, blazeFlowSource.trackingName)
+        return url
+    }
 
-    data class Loading(
-        override val actionVisible: Boolean = true
-    ): ScreenState()
+    fun onHeaderActionClick() {
+        // todo: Track the cancel click blazeFeatureUtils.track()
+        // blaze_flow_canceled	Webview: Blaze flow canceled	Entry point source (when possible)
+        postActionEvent(BlazeActionEvent.FinishActivity)
+    }
 
-    data class HiddenStep(
-        override val actionVisible: Boolean = false
-    ): ScreenState()
+    // todo: implement validation checks
+    private fun prepareUrl(url: String): String {
+        val username = accountStore.account.userName
+        val accessToken = accountStore.accessToken
+        var addressToLoad = url
+
+        // Custom domains are not properly authenticated due to a server side(?) issue, so this gets around that
+        if (!addressToLoad.contains(WPCOM_DOMAIN)) {
+            val wpComSites: List<SiteModel> = siteStore.wPComSites
+            for (siteModel in wpComSites) {
+                // Only replace the url if we know the unmapped url and if it's a custom domain
+                if (!TextUtils.isEmpty(siteModel.unmappedUrl)
+                    && !siteModel.url.contains(WPCOM_DOMAIN)
+                ) {
+                    addressToLoad = addressToLoad.replace(siteModel.url, siteModel.unmappedUrl)
+                }
+            }
+        }
+        // Call the public static method in WPWebViewActivity - no need to recreate functionality with a copy/paste
+        return getAuthenticationPostData(WPCOM_LOGIN_URL, addressToLoad, username, "", accessToken)
+    }
+
+    private fun postHeaderUiState(state: BlazeWebViewHeaderUiState) {
+        viewModelScope.launch {
+            _blazeHeaderState.value = state
+        }
+    }
+
+    private fun postScreenState(state: BlazeWebViewContentUiState) {
+        viewModelScope.launch {
+            _model.value = state
+        }
+
+    }
+    private fun postActionEvent(actionEvent: BlazeActionEvent) {
+        viewModelScope.launch {
+            _actionEvents.send(actionEvent)
+        }
+    }
+
+    fun hideOrShowCancelAction(url: String) {
+        if (hideCancelSteps.any { url.contains(it) }) {
+            postHeaderUiState(BlazeWebViewHeaderUiState.HideAction())
+        } else {
+            postHeaderUiState(BlazeWebViewHeaderUiState.ShowAction())
+        }
+    }
+
+    // todo Track blaze_flow_error	event with Entry point source (when possible)
+    // todo An error was received within the webview - What is the proper action? finish the activity?
+    fun onWebViewReceivedError() {
+        postActionEvent(BlazeActionEvent.FinishActivity)
+    }
+
+    companion object {
+        const val WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php"
+        const val WPCOM_DOMAIN = ".wordpress.com"
+
+        private const val BASE_URL = "https://wordpress.com/advertising/"
+
+        const val BLAZE_CREATION_FLOW_POST = "$BASE_URL%s?blazepress-widget=post-%d&_source=%s"
+      // todo: future  const val BLAZE_CREATION_FLOW_PAGE = "$BASE_URL%s?blazepress-widget=page-%d&_source=%s"
+        const val BLAZE_CREATION_FLOW_SITE = "$BASE_URL%s?_source=%s"
+    }
 }
