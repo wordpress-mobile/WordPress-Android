@@ -353,7 +353,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     private val uiDomains get () = assertIs<List<New.DomainUiState>>(viewModel.uiState.value?.contentState?.items)
 
     @Test
-    fun `verify all domain results from api visible`() = testWithSuccessResultNewUi { (query, results) ->
+    fun `verify all domain results from api are visible`() = testWithSuccessResultNewUi { (query, results) ->
         viewModel.start()
 
         viewModel.onQueryChanged(query)
