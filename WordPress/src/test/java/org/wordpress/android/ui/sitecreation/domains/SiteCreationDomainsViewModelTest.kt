@@ -90,6 +90,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             domainSanitizer = mSiteCreationDomainSanitizer,
             dispatcher = dispatcher,
             fetchDomainsUseCase = fetchDomainsUseCase,
+            productsStore = mock(),
             purchasingFeatureConfig = purchasingFeatureConfig,
             tracker = tracker,
             bgDispatcher = testDispatcher(),

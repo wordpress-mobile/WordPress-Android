@@ -15,7 +15,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.products.Product
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
+import org.wordpress.android.fluxc.store.ProductsStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType
 import org.wordpress.android.models.networkresource.ListState
@@ -41,6 +43,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -58,6 +61,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val domainSanitizer: SiteCreationDomainSanitizer,
     private val fetchDomainsUseCase: FetchDomainsUseCase,
+    private val productsStore: ProductsStore,
     private val purchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig,
     private val tracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -72,6 +76,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
     val uiState: LiveData<DomainsUiState> = _uiState
 
+    private var products: List<Product>? = null
     private var currentQuery: DomainSuggestionsQuery? = null
     private var listState: ListState<DomainModel> = ListState.Init()
     private var selectedDomain by Delegates.observable<DomainModel?>(null) { _, old, new ->
@@ -103,7 +108,24 @@ class SiteCreationDomainsViewModel @Inject constructor(
         isStarted = true
         tracker.trackDomainsAccessed()
         resetUiState()
+        if (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) fetchAndCacheProducts()
     }
+
+    private fun fetchAndCacheProducts() {
+        launch {
+            val result = productsStore.fetchProducts("domains")
+            when {
+                result.isError -> {
+                    AppLog.e(AppLog.T.DOMAIN_REGISTRATION, "Error while fetching domain products: ${result.error}")
+                }
+                else -> {
+                    AppLog.d(AppLog.T.DOMAIN_REGISTRATION, result.products.toString())
+                    products = result.products
+                }
+            }
+        }
+    }
+
 
     fun onCreateSiteBtnClicked() {
         val domain = requireNotNull(selectedDomain) {
