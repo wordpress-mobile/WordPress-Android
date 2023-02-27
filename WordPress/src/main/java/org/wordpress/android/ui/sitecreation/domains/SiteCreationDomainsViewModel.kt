@@ -308,7 +308,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
         return items
     }
 
-    @Suppress("ForbiddenComment")
     private fun createAvailableItemUiState(domain: DomainModel, index: Int): ListItemUiState {
         return when (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
             true -> {
