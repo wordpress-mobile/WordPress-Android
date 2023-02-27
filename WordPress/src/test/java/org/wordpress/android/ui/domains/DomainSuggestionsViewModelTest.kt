@@ -8,7 +8,9 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
@@ -119,6 +121,17 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         viewModel.isIntroVisible.value?.let { isIntroVisible ->
             assert(isIntroVisible)
         }
+    }
+
+    @Test
+    fun `domain products are fetched only at first start`() = test {
+        whenever(productsStore.fetchProducts(any())).thenReturn(mock())
+
+        viewModel.start(site, domainRegistrationPurpose)
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+
+        verify(productsStore).fetchProducts(eq("domains"))
     }
 
     @Test
