@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_POSTS_LIST
+import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
@@ -109,7 +110,7 @@ fun handlePostListAction(
             NativeNotificationsUtils.dismissNotification(action.pushId, activity)
         }
         is PostListAction.ShowPromoteWithBlaze -> {
-            ActivityLauncher.openPromoteWithBlaze(activity, action.post)
+            ActivityLauncher.openPromoteWithBlaze(activity, action.post, BlazeFlowSource.POSTS_LIST)
         }
         is PostListAction.CopyUrl -> {
             try {

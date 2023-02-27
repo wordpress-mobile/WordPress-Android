@@ -20,12 +20,12 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '2.0.0'
     automatticTracksVersion = '2.2.0'
-    gutenbergMobileVersion = 'v1.89.0'
+    gutenbergMobileVersion = 'v1.90.0-alpha1'
     wordPressAztecVersion = 'v1.6.3'
-    wordPressFluxCVersion = 'trunk-87643105f7470e8e5e51c858ff189ce00be1670a'
+    wordPressFluxCVersion = 'trunk-1f7ac469a04ae792fbc67fa29b64056cc9aaefd0'
     wordPressLoginVersion = '1.0.0'
     wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressUtilsVersion = '3.2.0'
+    wordPressUtilsVersion = 'trunk-457c978681c743506c728784ab7cd31d77a8296a'
 
     // debug
     stethoVersion = '1.6.0'
@@ -40,6 +40,7 @@ ext {
     androidxComposeLifecycleVersion = '2.5.1'
     androidxCardviewVersion = '1.0.0'
     androidxConstraintlayoutVersion = '1.1.3'
+    androidxConstraintlayoutComposeVersion = '1.0.1'
     androidxCoreVersion = '1.8.0'
     androidxActivityVersion = '1.5.1'
     androidxFragmentVersion = '1.5.5'

@@ -38,7 +38,7 @@ class BlazeFeatureUtils @Inject constructor(
                 !isPromoteWithBlazeCardHiddenByUser()
     }
 
-    fun track(stat: AnalyticsTracker.Stat, source: BlazeEntryPointSource) {
+    fun track(stat: AnalyticsTracker.Stat, source: BlazeFlowSource) {
         analyticsTrackerWrapper.track(
             stat,
             mapOf(SOURCE to source.trackingName)
@@ -56,9 +56,13 @@ class BlazeFeatureUtils @Inject constructor(
     companion object {
         const val SOURCE = "source"
     }
-    enum class BlazeEntryPointSource(val trackingName: String) {
-        DASHBOARD_CARD("dashboard_card"),
-    //    MENU_ITEM("menu_item"),
-    //    POSTS_LIST("posts_list")
+
+    @Suppress("UNUSED_PARAMETER")
+    fun trackOverlayDisplayed(trackingName: BlazeFlowSource) {
+        // add the logic to track the overlay displayed event
+    }
+
+    fun trackPromoteWithBlazeClicked() {
+        // add the logic to track the promote with blaze clicked event
     }
 }

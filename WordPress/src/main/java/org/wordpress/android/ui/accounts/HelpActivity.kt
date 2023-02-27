@@ -211,15 +211,12 @@ class HelpActivity : LocaleAwareActivity() {
     private fun HelpActivityBinding.showSupportForum() {
         contactUsButton.isVisible = false
         ticketsButton.isVisible = false
-        emailContainerTopDivider.isVisible = false
         contactEmailContainer.isVisible = false
-        emailContainerBottomDivider.isVisible = false
 
         forumContainer.run {
             isVisible = true
             setOnClickListener { openWpSupportForum() }
         }
-        forumContainerBottomDivider.isVisible = true
     }
 
     private fun HelpActivityBinding.refreshContactEmailText() {
@@ -339,7 +336,6 @@ class HelpActivity : LocaleAwareActivity() {
         LOGIN_SITE_ADDRESS("origin:login-site-address"),
         LOGIN_SOCIAL("origin:login-social"),
         LOGIN_USERNAME_PASSWORD("origin:login-username-password"),
-        RELEASE_NOTES("origin:release-notes"),
         SIGNUP_EMAIL("origin:signup-email"),
         SIGNUP_MAGIC_LINK("origin:signup-magic-link"),
         SIGNUP_CONFIRMATION("origin:signup-confirmation"),

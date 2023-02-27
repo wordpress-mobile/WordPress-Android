@@ -32,6 +32,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 
@@ -1351,9 +1352,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
         mUploadingMediaProgressMax.remove(localMediaId);
+
+        WritableNativeMap metadata = new WritableNativeMap();
+        if (mediaFile.getVideoPressGuid() != null) {
+            metadata.putString("videopressGUID", mediaFile.getVideoPressGuid());
+        }
+
         getGutenbergContainerFragment()
                 .mediaFileUploadSucceeded(Integer.parseInt(localMediaId), mediaFile.getOptimalFileURL(),
-                Integer.parseInt(mediaFile.getMediaId()));
+                Integer.parseInt(mediaFile.getMediaId()), metadata);
     }
 
     @Override
