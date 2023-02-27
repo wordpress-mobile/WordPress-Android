@@ -72,7 +72,7 @@ class BlazeWebViewViewModel @Inject constructor(
 
     fun onHeaderActionClick() {
         // todo: Track the cancel click blazeFeatureUtils.track()
-        // blaze_flow_canceled	Webview: Blaze flow canceled	Entry point source (when possible)
+        // blaze_flow_canceled
         postActionEvent(BlazeActionEvent.FinishActivity)
     }
 
@@ -108,8 +108,8 @@ class BlazeWebViewViewModel @Inject constructor(
         viewModelScope.launch {
             _model.value = state
         }
-
     }
+    
     private fun postActionEvent(actionEvent: BlazeActionEvent) {
         viewModelScope.launch {
             _actionEvents.send(actionEvent)

@@ -130,8 +130,8 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
     }
     override fun onWebViewPageLoaded(url: String) {
         // todo Track events for started/completed
-        // blaze_flow_started	Webview: Blaze flow started	Entry point source
-        // blaze_flow_completed	Webview: Blaze flow completed	Entry point source (when possible)
+        // blaze_flow_started
+        // blaze_flow_completed
         blazeWebViewViewModel.hideOrShowCancelAction(url)
     }
 
@@ -183,7 +183,7 @@ private fun TopAppBar(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                //withFullContentAlpha { I don't think I can use this here
+                // withFullContentAlpha { I don't think I can use this here
                 Text(
                     stringResource(id = state.headerTitle),
                     color = MaterialTheme.colors.onSurface
