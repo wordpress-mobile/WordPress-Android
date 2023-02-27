@@ -2539,6 +2539,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blaze_feature_menu_accessed";
             case BLAZE_FEATURE_HIDE_TAPPED:
                 return "blaze_feature_hide_tapped";
+            case BLAZE_FEATURE_OVERLAY_DISPLAYED:
+                return "blaze_feature_overlay_displayed";
+            case BLAZE_FEATURE_OVERLAY_PROMOTE_CLICKED:
+                return "blaze_overlay_button_tapped";
         }
         return null;
     }

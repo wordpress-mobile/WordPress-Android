@@ -65,6 +65,6 @@ class BlazeViewModel @Inject constructor(
     }
 
     fun onPromoteWithBlazeClicked() {
-        blazeFeatureUtils.trackPromoteWithBlazeClicked()
+        blazeFeatureUtils.trackPromoteWithBlazeClicked(blazeFlowSource)
     }
 }

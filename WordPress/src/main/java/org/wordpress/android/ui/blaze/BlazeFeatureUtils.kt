@@ -58,11 +58,17 @@ class BlazeFeatureUtils @Inject constructor(
     }
 
     @Suppress("UNUSED_PARAMETER")
-    fun trackOverlayDisplayed(trackingName: BlazeFlowSource) {
-        // add the logic to track the overlay displayed event
+    fun trackOverlayDisplayed(blazeFlowSource: BlazeFlowSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FEATURE_OVERLAY_DISPLAYED,
+            mapOf(SOURCE to blazeFlowSource.trackingName)
+        )
     }
 
-    fun trackPromoteWithBlazeClicked() {
-        // add the logic to track the promote with blaze clicked event
+    fun trackPromoteWithBlazeClicked(blazeFlowSource: BlazeFlowSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FEATURE_OVERLAY_PROMOTE_CLICKED,
+            mapOf(SOURCE to blazeFlowSource.trackingName)
+        )
     }
 }
