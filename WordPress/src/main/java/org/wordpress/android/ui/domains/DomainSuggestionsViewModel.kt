@@ -188,8 +188,8 @@ class DomainSuggestionsViewModel @Inject constructor(
                 DomainSuggestionItem(
                     domainName = it.domain_name,
                     cost = it.cost,
-                    isOnSale = product?.isSaleDomain() ?: false,
-                    saleCost = product?.saleCostForDisplay().toString(),
+                    isOnSale = product.isSaleDomain(),
+                    saleCost = product.saleCostForDisplay(),
                     isFree = it.is_free,
                     supportsPrivacy = it.supports_privacy,
                     productId = it.product_id,

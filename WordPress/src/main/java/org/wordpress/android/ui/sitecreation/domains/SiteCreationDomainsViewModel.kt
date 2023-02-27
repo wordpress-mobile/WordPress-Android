@@ -317,7 +317,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
                     domain.domainName,
                     cost = when {
                         domain.isFree -> Cost.Free
-                        product.isSaleDomain() -> Cost.OnSale(product?.saleCostForDisplay().toString(), domain.cost)
+                        product.isSaleDomain() -> Cost.OnSale(product.saleCostForDisplay(), domain.cost)
                         else -> Cost.Paid(domain.cost)
                     },
                     onClick = { onDomainSelected(domain) },
