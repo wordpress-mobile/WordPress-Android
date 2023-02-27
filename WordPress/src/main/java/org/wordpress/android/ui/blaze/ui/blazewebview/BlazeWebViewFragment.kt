@@ -9,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.OnBackPressedCallback
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -19,8 +17,6 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +40,7 @@ import org.wordpress.android.ui.blaze.BlazeWebViewContentUiState
 import org.wordpress.android.ui.blaze.OnBlazeWebViewClientListener
 import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeViewModel
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.utils.withFullContentAlpha
 
 @Suppress("ForbiddenComment")
 @AndroidEntryPoint
@@ -188,18 +185,8 @@ private fun TopAppBar(
         backgroundColor = MaterialTheme.colors.surface,
         contentColor = MaterialTheme.colors.onSurface,
         elevation = 0.dp,
-        title = {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                // withFullContentAlpha { I don't think I can use this here
-                Text(
-                    stringResource(id = state.headerTitle),
-                    color = MaterialTheme.colors.onSurface
-                )
-                // }
-            }
+        title = withFullContentAlpha {
+            Text(stringResource(id = state.headerTitle))
         },
         actions = {
             if (state.headerActionVisible) {
