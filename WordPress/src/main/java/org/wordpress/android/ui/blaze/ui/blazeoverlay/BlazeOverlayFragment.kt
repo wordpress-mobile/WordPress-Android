@@ -115,7 +115,7 @@ class BlazeOverlayFragment : Fragment() {
                 navigationIcon = {},
                 onNavigationIconClick = {},
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { viewModel.dismissOverlay() }) {
                         Icon(
                             modifier = modifier
                                 .align(Alignment.Top)
@@ -128,10 +128,10 @@ class BlazeOverlayFragment : Fragment() {
                     }
                 }
             )
-        }?: MainTopAppBar(
-                title = stringResource(R.string.blaze_activity_title),
-                navigationIcon = NavigationIcons.BackIcon,
-                onNavigationIconClick = {}
+        } ?: MainTopAppBar(
+            title = stringResource(R.string.blaze_activity_title),
+            navigationIcon = NavigationIcons.BackIcon,
+            onNavigationIconClick = { viewModel.dismissOverlay() }
         )
     }
 

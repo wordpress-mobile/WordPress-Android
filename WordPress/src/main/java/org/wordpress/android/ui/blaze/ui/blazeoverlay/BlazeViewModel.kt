@@ -67,4 +67,9 @@ class BlazeViewModel @Inject constructor(
     fun onPromoteWithBlazeClicked() {
         blazeFeatureUtils.trackPromoteWithBlazeClicked(blazeFlowSource)
     }
+
+    fun dismissOverlay() {
+        _uiState.postValue(BlazeUiState.Done)
+        blazeFeatureUtils.trackOverlayDismissed(blazeFlowSource)
+    }
 }

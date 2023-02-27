@@ -71,4 +71,8 @@ class BlazeFeatureUtils @Inject constructor(
             mapOf(SOURCE to blazeFlowSource.trackingName)
         )
     }
+
+    fun trackOverlayDismissed(blazeFlowSource: BlazeFlowSource) {
+        //todo: add tracking logic
+    }
 }
