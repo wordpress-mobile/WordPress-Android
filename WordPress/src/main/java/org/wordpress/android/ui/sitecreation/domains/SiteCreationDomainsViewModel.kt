@@ -31,6 +31,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
@@ -46,6 +47,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
+import org.wordpress.android.util.extensions.isSaleDomain
+import org.wordpress.android.util.extensions.saleCostForDisplay
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -76,7 +79,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
     val uiState: LiveData<DomainsUiState> = _uiState
 
-    private var products: List<Product>? = null
+    private var products: Map<Int?, Product> = mapOf()
     private var currentQuery: DomainSuggestionsQuery? = null
     private var listState: ListState<DomainModel> = ListState.Init()
     private var selectedDomain by Delegates.observable<DomainModel?>(null) { _, old, new ->
@@ -120,7 +123,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 }
                 else -> {
                     AppLog.d(AppLog.T.DOMAIN_REGISTRATION, result.products.toString())
-                    products = result.products
+                    products = result.products.orEmpty().associateBy { it.productId }
                 }
             }
         }
@@ -308,22 +311,32 @@ class SiteCreationDomainsViewModel @Inject constructor(
     @Suppress("ForbiddenComment")
     private fun createAvailableItemUiState(domain: DomainModel, index: Int): ListItemUiState {
         return when (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
-            true -> New.DomainUiState(
-                domain.domainName,
-                cost = if (domain.isFree) Cost.Free else Cost.Paid(domain.cost), // TODO: Apply discounts
-                variant = when (index) {
-                    0 -> New.DomainUiState.Variant.Recommended
-                    1 -> New.DomainUiState.Variant.BestAlternative
-                    else -> null
-                },
-                onClick = { onDomainSelected(domain) },
-            )
-            else -> Old.DomainUiState.AvailableDomain(
-                domainSanitizer.getName(domain.domainName),
-                domainSanitizer.getDomain(domain.domainName),
-                checked = domain == selectedDomain,
-                onClick = { onDomainSelected(domain) }
-            )
+            true -> {
+                val product = products[domain.productId]
+                New.DomainUiState(
+                    domain.domainName,
+                    cost = when {
+                        domain.isFree -> Cost.Free
+                        product.isSaleDomain() -> Cost.OnSale(product?.saleCostForDisplay().toString(), domain.cost)
+                        else -> Cost.Paid(domain.cost)
+                    },
+                    onClick = { onDomainSelected(domain) },
+                    variant = when {
+                        index == 0 -> Variant.Recommended
+                        index == 1 -> Variant.BestAlternative
+                        product.isSaleDomain() -> Variant.Sale
+                        else -> null
+                    },
+                )
+            }
+            else -> {
+                Old.DomainUiState.AvailableDomain(
+                    domainSanitizer.getName(domain.domainName),
+                    domainSanitizer.getDomain(domain.domainName),
+                    checked = domain == selectedDomain,
+                    onClick = { onDomainSelected(domain) }
+                )
+            }
         }
     }
 
