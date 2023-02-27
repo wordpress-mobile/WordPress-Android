@@ -183,7 +183,11 @@ class BlazeOverlayFragment : Fragment() {
             PostTitle(title = postUIModel.title, modifier = Modifier.constrainAs(title) {
                 top.linkTo(postContainer.top, 15.dp)
                 start.linkTo(postContainer.start, 20.dp)
-                end.linkTo(featuredImage.start, margin = 20.dp)
+                postUIModel.featuredImageUrl?.run {
+                    end.linkTo(featuredImage.start, margin = 20.dp)
+                } ?: run {
+                    end.linkTo(postContainer.end, margin = 20.dp)
+                }
                 width = Dimension.fillToConstraints
                 height = Dimension.wrapContent
             })
@@ -191,7 +195,11 @@ class BlazeOverlayFragment : Fragment() {
             PostUrl(url = postUIModel.url, modifier = Modifier.constrainAs(url) {
                 top.linkTo(title.bottom, 5.dp)
                 start.linkTo(postContainer.start, 20.dp)
-                end.linkTo(featuredImage.start, margin = 20.dp)
+                postUIModel.featuredImageUrl?.run {
+                    end.linkTo(featuredImage.start, margin = 20.dp)
+                } ?: run {
+                    end.linkTo(postContainer.end, margin = 20.dp)
+                }
                 bottom.linkTo(postContainer.bottom, 15.dp)
                 width = Dimension.fillToConstraints
                 height = Dimension.wrapContent
