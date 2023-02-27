@@ -49,9 +49,12 @@ class BlazeWebViewViewModel @Inject constructor(
     }
 
     // todo: implement "page" flow
-    // todo: implement validation checks for site url
     private fun buildUrl(promoteScreen: BlazeUiState.PromoteScreen?): String {
-        val siteUrl = selectedSiteRepository.getSelectedSite()?.url?.replace("https://", "")
+        val siteUrl = extractAndSanitizeSiteUrl()
+        if (siteUrl.isEmpty()) {
+            postActionEvent(BlazeActionEvent.FinishActivity)
+        }
+
         val url = promoteScreen?.let {
             when (it) {
                 is BlazeUiState.PromoteScreen.PromotePost -> {
@@ -109,11 +112,15 @@ class BlazeWebViewViewModel @Inject constructor(
             _model.value = state
         }
     }
-    
+
     private fun postActionEvent(actionEvent: BlazeActionEvent) {
         viewModelScope.launch {
             _actionEvents.send(actionEvent)
         }
+    }
+
+    private fun extractAndSanitizeSiteUrl(): String {
+        return selectedSiteRepository.getSelectedSite()?.url?.replace(Regex(PATTERN), "")?:""
     }
 
     fun hideOrShowCancelAction(url: String) {
@@ -139,5 +146,6 @@ class BlazeWebViewViewModel @Inject constructor(
         const val BLAZE_CREATION_FLOW_POST = "$BASE_URL%s?blazepress-widget=post-%d&_source=%s"
       // todo: future  const val BLAZE_CREATION_FLOW_PAGE = "$BASE_URL%s?blazepress-widget=page-%d&_source=%s"
         const val BLAZE_CREATION_FLOW_SITE = "$BASE_URL%s?_source=%s"
+        const val PATTERN = "(https?://)"
     }
 }
