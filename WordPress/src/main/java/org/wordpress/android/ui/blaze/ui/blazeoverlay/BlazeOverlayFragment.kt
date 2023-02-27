@@ -109,7 +109,7 @@ class BlazeOverlayFragment : Fragment() {
 
     @Composable
     fun OverlayTopBar(postUIModel: PostUIModel?, modifier: Modifier = Modifier) {
-        postUIModel?.let {
+        postUIModel?.also {
             MainTopAppBar(
                 title = null,
                 navigationIcon = {},
@@ -128,13 +128,11 @@ class BlazeOverlayFragment : Fragment() {
                     }
                 }
             )
-        }?: run {
-            MainTopAppBar(
+        }?: MainTopAppBar(
                 title = stringResource(R.string.blaze_activity_title),
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = {}
-            )
-        }
+        )
     }
 
     @Composable
