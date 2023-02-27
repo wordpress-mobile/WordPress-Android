@@ -206,24 +206,6 @@ class BlazeOverlayFragment : Fragment() {
             ?: R.string.blaze_overlay_site_promotional_button
     }
 
-    @Preview
-    @Composable
-    private fun PreviewBlazeOverlayScreen() {
-        AppTheme {
-            BlazeOverlayScreen(
-                postModelState = BlazeUiState.PromoteScreen.PromotePost(
-                    PostUIModel(
-                        postId = 119,
-                        title = "Post title check if this is long enough to be truncated",
-                        url = "https://www.google.long.ttiiitititititiit.com",
-                        imageUrl = 0,
-                        featuredImageUrl = null
-                    )
-                )
-            )
-        }
-    }
-
     @Composable
     fun PostThumbnailView(postUIModel: PostUIModel, modifier: Modifier = Modifier, isInDarkTheme: Boolean) {
         ConstraintLayout(
@@ -354,6 +336,32 @@ class BlazeOverlayFragment : Fragment() {
                 fontWeight = FontWeight.Light,
                 color = bulletedTextColor
             )
+        }
+    }
+
+    @Preview
+    @Composable
+    private fun PreviewBlazeOverlayScreenPostFlow() {
+        AppTheme {
+            BlazeOverlayScreen(
+                postModelState = BlazeUiState.PromoteScreen.PromotePost(
+                    PostUIModel(
+                        postId = 119,
+                        title = "Post title check if this is long enough to be truncated",
+                        url = "https://www.google.long.ttiiitititititiit.com",
+                        imageUrl = 0,
+                        featuredImageUrl = null
+                    )
+                )
+            )
+        }
+    }
+
+    @Preview
+    @Composable
+    private fun PreviewBlazeOverlayScreenSiteFlow() {
+        AppTheme {
+            BlazeOverlayScreen(BlazeUiState.PromoteScreen.Site)
         }
     }
 }
