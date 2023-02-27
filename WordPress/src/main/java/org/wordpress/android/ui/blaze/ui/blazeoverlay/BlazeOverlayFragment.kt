@@ -258,11 +258,10 @@ class BlazeOverlayFragment : Fragment() {
     }
 
     private fun getThumbnailBackground(isInDarkTheme: Boolean): Color {
-        if (isInDarkTheme) return AppColor.DarkGray
-        else return lightModePostThumbnailBackground
+        return if (isInDarkTheme) AppColor.DarkGray
+        else lightModePostThumbnailBackground
     }
 
-    // todo the logic for showing the featured image is not implemented yet
     @Composable
     private fun PostFeaturedImage(url: String?, modifier: Modifier = Modifier) {
         val painter = rememberImagePainter(url) {
