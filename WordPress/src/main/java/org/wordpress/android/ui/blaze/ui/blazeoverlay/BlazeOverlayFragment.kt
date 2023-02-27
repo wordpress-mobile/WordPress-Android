@@ -21,7 +21,10 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -50,6 +53,8 @@ import org.wordpress.android.ui.blaze.BlazeUiState
 import org.wordpress.android.ui.blaze.PostUIModel
 import org.wordpress.android.ui.compose.components.Drawable
 import org.wordpress.android.ui.compose.components.ImageButton
+import org.wordpress.android.ui.compose.components.MainTopAppBar
+import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
@@ -80,14 +85,14 @@ class BlazeOverlayFragment : Fragment() {
         setContent {
             AppTheme {
                 val postModel by viewModel.promoteUiState.observeAsState(BlazeUiState.PromoteScreen.Site)
-                BlazeOverlayContent(postModel)
+                BlazeOverlayScreen(postModel)
             }
         }
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Composable
-    fun BlazeOverlayContent(
+    fun BlazeOverlayScreen(
         postModelState: BlazeUiState.PromoteScreen,
         isDarkTheme: Boolean = isSystemInDarkTheme()
     ) {
@@ -95,6 +100,48 @@ class BlazeOverlayFragment : Fragment() {
             is BlazeUiState.PromoteScreen.PromotePost -> postModelState.postUIModel
             else -> null
         }
+        Scaffold(
+            topBar = { OverlayTopBar(post) },
+        ) {
+            BlazeOverlayContent(post, isDarkTheme)
+        }
+    }
+
+    @Composable
+    fun OverlayTopBar(postUIModel: PostUIModel?, modifier: Modifier = Modifier) {
+        postUIModel?.let {
+            MainTopAppBar(
+                title = null,
+                navigationIcon = {},
+                onNavigationIconClick = {},
+                actions = {
+                    IconButton(onClick = {}) {
+                        Icon(
+                            modifier = modifier
+                                .align(Alignment.Top)
+                                .padding(end = 8.dp),
+                            painter = painterResource(R.drawable.ic_close_white_24dp),
+                            contentDescription = stringResource(
+                                R.string.jetpack_full_plugin_install_onboarding_dismiss_button_content_description
+                            ),
+                        )
+                    }
+                }
+            )
+        }?: run {
+            MainTopAppBar(
+                title = stringResource(R.string.blaze_activity_title),
+                navigationIcon = NavigationIcons.BackIcon,
+                onNavigationIconClick = {}
+            )
+        }
+    }
+
+    @Composable
+    private fun BlazeOverlayContent(
+        post: PostUIModel?,
+        isDarkTheme: Boolean
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(
@@ -150,7 +197,7 @@ class BlazeOverlayFragment : Fragment() {
     }
 
     private fun getPrimaryButtonColor(isInDarkTheme: Boolean): Color {
-        return if(isInDarkTheme) darkModePrimaryButtonColor
+        return if (isInDarkTheme) darkModePrimaryButtonColor
         else AppColor.Black
     }
 
@@ -161,9 +208,9 @@ class BlazeOverlayFragment : Fragment() {
 
     @Preview
     @Composable
-    private fun PreviewThumbnailView() {
+    private fun PreviewBlazeOverlayScreen() {
         AppTheme {
-            BlazeOverlayContent(
+            BlazeOverlayScreen(
                 postModelState = BlazeUiState.PromoteScreen.PromotePost(
                     PostUIModel(
                         postId = 119,
@@ -231,7 +278,7 @@ class BlazeOverlayFragment : Fragment() {
     }
 
     private fun getThumbnailBackground(isInDarkTheme: Boolean): Color {
-        if(isInDarkTheme) return AppColor.DarkGray
+        if (isInDarkTheme) return AppColor.DarkGray
         else return lightModePostThumbnailBackground
     }
 
