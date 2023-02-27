@@ -211,15 +211,12 @@ class HelpActivity : LocaleAwareActivity() {
     private fun HelpActivityBinding.showSupportForum() {
         contactUsButton.isVisible = false
         myTicketsButton.isVisible = false
-        emailContainerTopDivider.isVisible = false
         contactEmailContainer.isVisible = false
-        emailContainerBottomDivider.isVisible = false
 
         forumContainer.run {
             isVisible = true
             setOnClickListener { openWpSupportForum() }
         }
-        forumContainerBottomDivider.isVisible = true
     }
 
     private fun HelpActivityBinding.refreshContactEmailText() {

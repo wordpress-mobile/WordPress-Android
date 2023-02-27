@@ -115,14 +115,6 @@
                         android:textAppearance="?attr/textAppearanceCaption" />
                 </LinearLayout>
 
-                <View
-                    android:id="@+id/forumContainerBottomDivider"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_size"
-                    android:background="?android:attr/listDivider"
-                    android:visibility="gone"
-                    tools:visibility="visible"/>
-
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/faq_button"
                     style="@style/HelpActivitySingleText"
@@ -132,12 +124,6 @@
                     android:id="@+id/my_tickets_button"
                     style="@style/HelpActivitySingleText"
                     android:text="@string/my_tickets" />
-
-                <View
-                    android:id="@+id/emailContainerTopDivider"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_size"
-                    android:background="?android:attr/listDivider" />
 
                 <LinearLayout
                     android:id="@+id/contactEmailContainer"
