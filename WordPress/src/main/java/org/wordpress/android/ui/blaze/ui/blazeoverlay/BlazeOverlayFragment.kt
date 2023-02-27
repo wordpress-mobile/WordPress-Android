@@ -90,7 +90,6 @@ class BlazeOverlayFragment : Fragment() {
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
     @Composable
     fun BlazeOverlayScreen(
         postModelState: BlazeUiState.PromoteScreen,
