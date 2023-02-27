@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.ComponentDialog
+import androidx.activity.addCallback
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -59,12 +61,13 @@ class JetpackFullPluginInstallOnboardingDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        object : Dialog(requireContext(), theme) {
-            override fun onBackPressed() {
+        super.onCreateDialog(savedInstanceState).apply {
+            val componentDialog = dialog as ComponentDialog
+            componentDialog.onBackPressedDispatcher.addCallback(this@JetpackFullPluginInstallOnboardingDialogFragment) {
                 viewModel.onDismissScreenClick()
-                super.onBackPressed()
+                isEnabled = false
+                componentDialog.onBackPressedDispatcher.onBackPressed()
             }
-        }.apply {
             setStatusBarAsSurfaceColor()
         }
 
