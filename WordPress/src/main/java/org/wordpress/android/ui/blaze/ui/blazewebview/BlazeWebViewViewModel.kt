@@ -131,7 +131,7 @@ class BlazeWebViewViewModel @Inject constructor(
         }
     }
 
-    // todo Track blaze_flow_error	event with Entry point source (when possible)
+    // todo Track blaze_flow_error event with Entry point source (when possible)
     // todo An error was received within the webview - What is the proper action? finish the activity?
     fun onWebViewReceivedError() {
         postActionEvent(BlazeActionEvent.FinishActivity)
