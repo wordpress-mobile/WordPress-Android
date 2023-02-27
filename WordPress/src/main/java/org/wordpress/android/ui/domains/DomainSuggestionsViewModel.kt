@@ -134,7 +134,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private fun fetchProducts() {
         launch {
-            val result = productsStore.fetchProducts()
+            val result = productsStore.fetchProducts("domains")
             when {
                 result.isError -> {
                     AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching site domains")
