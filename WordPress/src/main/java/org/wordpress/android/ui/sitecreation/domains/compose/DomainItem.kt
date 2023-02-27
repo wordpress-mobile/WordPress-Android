@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.asString
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
@@ -44,12 +45,12 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .clickable { onClick.invoke() }
-                .padding(vertical = 16.dp)
-                .padding(end = 16.dp)
+                .padding(vertical = Margin.ExtraLarge.value)
+                .padding(end = Margin.ExtraLarge.value)
         ) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.width(24.dp)
+                modifier = Modifier.width(Margin.ExtraMediumLarge.value)
             ) {
                 variant?.dotColor?.let {
                     DotIndicator(colorResource(it))
@@ -76,12 +77,12 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
                     SalePrince(
                         cost.title.asString(),
                         cost.subtitle.asString(),
-                        modifier = Modifier.padding(start = 16.dp)
+                        modifier = Modifier.padding(start = Margin.ExtraLarge.value)
                     )
                 } else {
                     Price(
                         cost.title.asString(),
-                        modifier = Modifier.padding(start = 16.dp)
+                        modifier = Modifier.padding(start = Margin.ExtraLarge.value)
                     )
                 }
             }
