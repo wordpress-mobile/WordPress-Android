@@ -362,7 +362,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `domain products are fetched only at first start`() = testNewUi {
+    fun `verify domain products are fetched only at first start`() = testNewUi {
         viewModel.start()
         viewModel.start()
 
