@@ -32,6 +32,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old.DomainUiState.UnavailableDomain
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -393,7 +394,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         viewModel.onQueryChanged(query)
         advanceUntilIdle()
 
-        assertThat(uiDomains.map { it.variant }).containsOnlyOnce(New.DomainUiState.Variant.Recommended)
+        assertThat(uiDomains.map { it.variant }).containsOnlyOnce(Variant.Recommended)
     }
 
     @Test
@@ -403,7 +404,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         viewModel.onQueryChanged(query)
         advanceUntilIdle()
 
-        assertThat(uiDomains.map { it.variant }).containsOnlyOnce(New.DomainUiState.Variant.BestAlternative)
+        assertThat(uiDomains.map { it.variant }).containsOnlyOnce(Variant.BestAlternative)
     }
 
     // endregion
