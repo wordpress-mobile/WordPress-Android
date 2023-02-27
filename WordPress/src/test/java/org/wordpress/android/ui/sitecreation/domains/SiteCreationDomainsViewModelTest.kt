@@ -25,6 +25,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
+import org.wordpress.android.fluxc.store.ProductsStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainModel
@@ -56,6 +57,9 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var fetchDomainsUseCase: FetchDomainsUseCase
+
+    @Mock
+    private lateinit var productsStore: ProductsStore
 
     @Mock
     lateinit var purchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig
@@ -90,7 +94,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             domainSanitizer = mSiteCreationDomainSanitizer,
             dispatcher = dispatcher,
             fetchDomainsUseCase = fetchDomainsUseCase,
-            productsStore = mock(),
+            productsStore = productsStore,
             purchasingFeatureConfig = purchasingFeatureConfig,
             tracker = tracker,
             bgDispatcher = testDispatcher(),
@@ -316,6 +320,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
     private fun testNewUi(block: suspend CoroutineScope.() -> Unit) = test {
         whenever(purchasingFeatureConfig.isEnabledOrManuallyOverridden()).thenReturn(true)
+        whenever(productsStore.fetchProducts(any())).thenReturn(mock())
         block()
     }
 
@@ -354,6 +359,14 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             eq(false),
             eq(size),
         )
+    }
+
+    @Test
+    fun `domain products are fetched only at first start`() = testNewUi {
+        viewModel.start()
+        viewModel.start()
+
+        verify(productsStore).fetchProducts(eq("domains"))
     }
 
     @Test
