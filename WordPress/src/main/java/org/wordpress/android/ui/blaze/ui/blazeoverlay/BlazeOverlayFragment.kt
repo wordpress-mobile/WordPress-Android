@@ -243,6 +243,8 @@ class BlazeOverlayFragment : Fragment() {
         Text(
             text = title,
             style = MaterialTheme.typography.body1,
+            fontSize = FontSize.Large.value,
+            fontWeight = FontWeight.Bold,
             maxLines = 2,
             modifier = modifier
         )
@@ -288,7 +290,7 @@ class BlazeOverlayFragment : Fragment() {
                 text = stringResource(id = stringResource),
                 fontSize = FontSize.Large.value,
                 fontWeight = FontWeight.Light,
-                color = Color.Gray
+                color = AppColor.Gray80
             )
         }
     }
