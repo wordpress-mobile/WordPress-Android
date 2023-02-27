@@ -18,8 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class BlazeViewModel @Inject constructor(
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val dispatcher: Dispatcher,
-    private val mediaStore: MediaStore,
+    dispatcher: Dispatcher,
+    mediaStore: MediaStore,
     private val siteSelectedSiteRepository: SelectedSiteRepository
 ) : ViewModel() {
     private lateinit var blazeFlowSource: BlazeFlowSource
