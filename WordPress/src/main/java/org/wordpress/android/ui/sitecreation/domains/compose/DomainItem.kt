@@ -37,6 +37,8 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant.Unavailable
 
 private val SecondaryTextColor @Composable get() = MaterialTheme.colors.onSurface.copy(alpha = 0.46f)
+private val SecondaryFontSize = 13.sp
+private val PrimaryFontSize = 17.sp
 
 @Composable
 fun DomainItem(uiState: DomainUiState) = with(uiState) {
@@ -60,7 +62,7 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
                 Text(
                     text = domainName,
                     color = MaterialTheme.colors.onSurface.takeIf { variant !is Unavailable } ?: SecondaryTextColor,
-                    fontSize = 17.sp,
+                    fontSize = PrimaryFontSize,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                 )
@@ -68,7 +70,7 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
                     Text(
                         text = subtitle.asString(),
                         color = subtitleColor?.let { colorResource(it) } ?: SecondaryTextColor,
-                        fontSize = 13.sp,
+                        fontSize = SecondaryFontSize,
                     )
                 }
             }
@@ -106,7 +108,7 @@ private fun Price(text: String, modifier: Modifier = Modifier) {
     Text(
         text,
         color = SecondaryTextColor,
-        fontSize = 17.sp,
+        fontSize = PrimaryFontSize,
         modifier = modifier
     )
 }
@@ -120,12 +122,12 @@ private fun SalePrince(title: String, subtitle: String, modifier: Modifier = Mod
         Text(
             title,
             color = AppColor.JetpackGreen50,
-            fontSize = 17.sp,
+            fontSize = PrimaryFontSize,
         )
         Text(
             subtitle,
             color = SecondaryTextColor,
-            fontSize = 13.sp,
+            fontSize = SecondaryFontSize,
             textDecoration = TextDecoration.LineThrough,
         )
     }
