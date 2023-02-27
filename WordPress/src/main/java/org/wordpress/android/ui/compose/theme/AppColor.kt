@@ -23,18 +23,6 @@ object AppColor {
     @Stable
     val Gray40 = Color(0xFF787c82)
 
-    @Stable
-    val Gray50 = Color(0x0D000000)
-
-    @Stable
-    val Gray60 = Color(0xFF1C1C1E)
-
-    @Stable
-    val Gray70 = Color(0xD000000)
-
-    @Stable
-    val Gray80 = Color(0xFF666666)
-
     // Blues (Automattic Color Studio)
     @Stable
     val Blue30 = Color(0xFF399CE3)

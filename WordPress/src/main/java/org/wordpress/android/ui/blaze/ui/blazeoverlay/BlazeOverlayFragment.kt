@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -54,6 +55,15 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.utils.UiString
+
+@Stable
+private val darkModePrimaryButtonColor = Color(0xFF1C1C1E)
+
+@Stable
+private val lightModePostThumbnailBackground = Color(0xD000000)
+
+@Stable
+private val bulletedTextColor = Color(0xFF666666)
 
 @AndroidEntryPoint
 class BlazeOverlayFragment : Fragment() {
@@ -140,7 +150,7 @@ class BlazeOverlayFragment : Fragment() {
     }
 
     private fun getPrimaryButtonColor(isInDarkTheme: Boolean): Color {
-        return if(isInDarkTheme) AppColor.Gray60
+        return if(isInDarkTheme) darkModePrimaryButtonColor
         else AppColor.Black
     }
 
@@ -217,7 +227,7 @@ class BlazeOverlayFragment : Fragment() {
 
     private fun getThumbnailBackground(isInDarkTheme: Boolean): Color {
         if(isInDarkTheme) return AppColor.DarkGray
-        else return AppColor.Gray70
+        else return lightModePostThumbnailBackground
     }
 
     // todo the logic for showing the featured image is not implemented yet
@@ -290,7 +300,7 @@ class BlazeOverlayFragment : Fragment() {
                 text = stringResource(id = stringResource),
                 fontSize = FontSize.Large.value,
                 fontWeight = FontWeight.Light,
-                color = AppColor.Gray80
+                color = bulletedTextColor
             )
         }
     }
