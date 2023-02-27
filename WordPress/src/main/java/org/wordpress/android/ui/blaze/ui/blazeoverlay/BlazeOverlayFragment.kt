@@ -142,7 +142,7 @@ class BlazeOverlayFragment : Fragment() {
                         getPrimaryButtonColor(isDarkTheme),
                         shape = RoundedCornerShape(15.dp)
                     ),
-                buttonText = UiString.UiStringRes(R.string.blaze_post_promotional_button),
+                buttonText = UiString.UiStringRes(getPrimaryButtonText(post)),
                 drawableRight = Drawable(R.drawable.ic_promote_with_blaze),
                 onClick = { viewModel.onPromoteWithBlazeClicked() },
             )
@@ -152,6 +152,11 @@ class BlazeOverlayFragment : Fragment() {
     private fun getPrimaryButtonColor(isInDarkTheme: Boolean): Color {
         return if(isInDarkTheme) darkModePrimaryButtonColor
         else AppColor.Black
+    }
+
+    private fun getPrimaryButtonText(postUIModel: PostUIModel?): Int {
+        return postUIModel?.let { R.string.blaze_overlay_post_promotional_button }
+            ?: R.string.blaze_overlay_site_promotional_button
     }
 
     @Preview

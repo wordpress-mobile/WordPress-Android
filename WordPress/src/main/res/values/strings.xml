@@ -4418,5 +4418,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blaze_promotional_subtitle_1">Promote any post or page in only a few minutes for just a few dollars a day.</string>
     <string name="blaze_promotional_subtitle_2">Your content will appear on millions of WordPress and Tumblr sites.</string>
     <string name="blaze_promotional_subtitle_3">Track performance, start, and stop your Blaze at any time.</string>
-    <string name="blaze_post_promotional_button">Blaze this Post</string>
+    <string name="blaze_overlay_post_promotional_button">Blaze this Post</string>
+    <string name="blaze_overlay_site_promotional_button">Blaze a Post now</string>
 </resources>
