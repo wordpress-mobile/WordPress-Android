@@ -1355,7 +1355,7 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE);
     }
 
-    public static void viewHelpAndSupportInNewStack(@NonNull Context context, @NonNull Origin origin,
+    public static void viewHelpInNewStack(@NonNull Context context, @NonNull Origin origin,
                                           @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags) {
         Map<String, String> properties = new HashMap<>();
         properties.put("origin", origin.name());
@@ -1374,8 +1374,8 @@ public class ActivityLauncher {
         taskStackBuilder.startActivities();
     }
 
-    public static void viewHelpAndSupport(@NonNull Context context, @NonNull Origin origin,
-                                          @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags) {
+    public static void viewHelp(@NonNull Context context, @NonNull Origin origin, @Nullable SiteModel selectedSite,
+                                @Nullable List<String> extraSupportTags) {
         Map<String, String> properties = new HashMap<>();
         properties.put("origin", origin.name());
         AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);
@@ -1384,7 +1384,7 @@ public class ActivityLauncher {
 
     public static void viewZendeskTickets(@NonNull Context context,
                                           @Nullable SiteModel selectedSite) {
-        viewHelpAndSupportInNewStack(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
+        viewHelpInNewStack(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {

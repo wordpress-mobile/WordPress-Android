@@ -14,7 +14,7 @@ object EditPostCustomerSupportHelper {
     }
 
     fun onGotoCustomerSupportOptions(context: Context, site: SiteModel) {
-        ActivityLauncher.viewHelpAndSupport(context, EDITOR_HELP, site, getTagsList(site))
+        ActivityLauncher.viewHelp(context, EDITOR_HELP, site, getTagsList(site))
     }
 
     private fun getTagsList(site: SiteModel): List<String>? =

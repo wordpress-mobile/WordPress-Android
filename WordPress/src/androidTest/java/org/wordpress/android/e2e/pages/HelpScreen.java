@@ -15,20 +15,20 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
 
-public class HelpAndSupportScreen {
+public class HelpScreen {
     static ViewInteraction contactUsButton = onView(withId(R.id.contact_us_button));
     static ViewInteraction faqButton = onView(withId(R.id.faq_button));
-    static ViewInteraction myTicketsButton = onView(withId(R.id.my_tickets_button));
-    static ViewInteraction applicationLogButton = onView(withId(R.id.application_log_button));
+    static ViewInteraction ticketsButton = onView(withId(R.id.tickets_button));
+    static ViewInteraction logsButton = onView(withId(R.id.logs_button));
     static ViewInteraction applicationVersionText = onView(withId(R.id.applicationVersion));
     static ViewInteraction emailAddressText = onView(withId(R.id.contactEmailAddress));
 
 
-    public HelpAndSupportScreen assertHelpAndSupportScreenLoaded() {
+    public HelpScreen assertHelpScreenLoaded() {
         contactUsButton.check(matches(isCompletelyDisplayed()));
         faqButton.check(matches(isCompletelyDisplayed()));
-        myTicketsButton.check(matches(isCompletelyDisplayed()));
-        applicationLogButton.check(matches(isCompletelyDisplayed()));
+        ticketsButton.check(matches(isCompletelyDisplayed()));
+        logsButton.check(matches(isCompletelyDisplayed()));
         applicationVersionText.check(matches(isCompletelyDisplayed()));
         emailAddressText.check(matches(isCompletelyDisplayed()));
         return this;

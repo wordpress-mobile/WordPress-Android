@@ -96,7 +96,7 @@ class JetpackFullPluginInstallActivity : AppCompatActivity() {
     private fun handleActionEvents(actionEvent: ActionEvent) {
         when (actionEvent) {
             is ActionEvent.ContactSupport -> {
-                ActivityLauncher.viewHelpAndSupport(
+                ActivityLauncher.viewHelp(
                     this,
                     actionEvent.origin,
                     actionEvent.selectedSite,
