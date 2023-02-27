@@ -312,33 +312,35 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
     // region New UI
 
+    private fun testNewUi(block: suspend CoroutineScope.() -> Unit) = test {
+        whenever(purchasingFeatureConfig.isEnabledOrManuallyOverridden()).thenReturn(true)
+        block()
+    }
+
     private fun <T> testWithSuccessResultNewUi(
         queryToSize: Pair<String, Int> = MULTI_RESULT_DOMAIN_FETCH_QUERY,
         block: suspend CoroutineScope.(OnSuggestedDomains) -> T
-    ) {
-        whenever(purchasingFeatureConfig.isEnabledOrManuallyOverridden()).thenReturn(true)
-        test {
-            val (query, size) = queryToSize
+    ) = testNewUi {
+        val (query, size) = queryToSize
 
-            val suggestions = List(size) {
-                DomainSuggestionResponse().apply {
-                    domain_name = "$query-$it.com"
-                    is_free = it % 2 == 0
-                    cost = if (is_free) "Free" else "$$it.00"
-                }
+        val suggestions = List(size) {
+            DomainSuggestionResponse().apply {
+                domain_name = "$query-$it.com"
+                is_free = it % 2 == 0
+                cost = if (is_free) "Free" else "$$it.00"
             }
-
-            val event = OnSuggestedDomains(query, suggestions)
-            whenever(fetchDomainsUseCase.fetchDomains(any(), any(), any(), any())).thenReturn(event)
-            block(event)
         }
+
+        val event = OnSuggestedDomains(query, suggestions)
+        whenever(fetchDomainsUseCase.fetchDomains(any(), any(), any(), any())).thenReturn(event)
+        block(event)
     }
 
-    private val uiDomains get () = assertIs<List<New.DomainUiState>>(viewModel.uiState.value?.contentState?.items)
+    private val uiDomains get() = assertIs<List<New.DomainUiState>>(viewModel.uiState.value?.contentState?.items)
 
     @Test
-    fun verifyFetchFreeAndPaidDomainsWhenPurchasingFeatureConfigIsEnabled() = testWithSuccessResultNewUi { (query, results) ->
-        whenever(purchasingFeatureConfig.isEnabledOrManuallyOverridden()).thenReturn(true)
+    fun verifyFetchFreeAndPaidDomainsWhenPurchasingFeatureConfigIsEnabled() = testNewUi {
+        val (query, size) = MULTI_RESULT_DOMAIN_FETCH_QUERY
         viewModel.start()
 
         viewModel.onQueryChanged(query)
@@ -348,7 +350,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             eq(query),
             eq(FETCH_DOMAINS_VENDOR_MOBILE),
             eq(false),
-            eq(results.size),
+            eq(size),
         )
     }
 
