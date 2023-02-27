@@ -221,6 +221,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             domainName = domain_name,
             isFree = is_free,
             cost = cost.orEmpty(),
+            productId = product_id,
         )
     }
 
@@ -378,6 +379,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         val domainName: String,
         val isFree: Boolean,
         val cost: String,
+        val productId: Int,
     )
 
     data class DomainsUiState(
