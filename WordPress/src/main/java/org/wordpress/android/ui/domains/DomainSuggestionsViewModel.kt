@@ -27,6 +27,8 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteDomainsFeatureConfig
+import org.wordpress.android.util.extensions.isSaleDomain
+import org.wordpress.android.util.extensions.saleCostForDisplay
 import org.wordpress.android.util.helpers.Debouncer
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -164,6 +166,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     // Network Callback
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDomainSuggestionsFetched(event: OnSuggestedDomains) {
         if (searchQuery != event.query) {
@@ -234,10 +237,6 @@ class DomainSuggestionsViewModel @Inject constructor(
             initializeDefaultSuggestions()
         }
     }
-
-    internal fun Product.isSaleDomain(): Boolean = this.saleCost?.let { it.compareTo(0.0) > 0 } == true
-
-    internal fun Product.saleCostForDisplay(): String = this.currencyCode + "%.2f".format(this.saleCost)
 
     private fun createCart(selectedSuggestion: DomainSuggestionItem) = launch {
         AppLog.d(T.DOMAIN_REGISTRATION, "Creating cart: $selectedSuggestion")
