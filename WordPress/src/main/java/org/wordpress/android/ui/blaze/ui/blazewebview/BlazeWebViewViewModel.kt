@@ -137,6 +137,10 @@ class BlazeWebViewViewModel @Inject constructor(
         postActionEvent(BlazeActionEvent.FinishActivity)
     }
 
+    fun onRedirectToExternalBrowser(url: String) {
+        postActionEvent(BlazeActionEvent.LaunchExternalBrowser(url))
+    }
+
     companion object {
         const val WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php"
         const val WPCOM_DOMAIN = ".wordpress.com"

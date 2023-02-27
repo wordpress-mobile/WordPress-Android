@@ -34,6 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebChromeClientWithFileChooser
 import org.wordpress.android.ui.WPWebViewActivity.WPCOM_LOGIN_URL
 import org.wordpress.android.ui.blaze.BlazeActionEvent
@@ -82,6 +83,10 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
     private fun handleActionEvents(actionEvent: BlazeActionEvent) {
         when (actionEvent) {
             is BlazeActionEvent.FinishActivity -> requireActivity().finish()
+            is BlazeActionEvent.LaunchExternalBrowser -> ActivityLauncher.openUrlExternal(
+                requireContext(),
+                actionEvent.url
+            )
         }
     }
 
@@ -128,6 +133,7 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
             }
         })
     }
+
     override fun onWebViewPageLoaded(url: String) {
         // todo Track events for started/completed
         // blaze_flow_started
@@ -137,6 +143,10 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
 
     override fun onWebViewReceivedError() {
         blazeWebViewViewModel.onWebViewReceivedError()
+    }
+
+    override fun onRedirectToExternalBrowser(url: String) {
+        blazeWebViewViewModel.onRedirectToExternalBrowser(url)
     }
 
     @Suppress("DEPRECATION")
