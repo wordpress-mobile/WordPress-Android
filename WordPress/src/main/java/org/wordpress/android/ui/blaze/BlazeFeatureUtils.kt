@@ -57,7 +57,6 @@ class BlazeFeatureUtils @Inject constructor(
         const val SOURCE = "source"
     }
 
-    @Suppress("UNUSED_PARAMETER")
     fun trackOverlayDisplayed(blazeFlowSource: BlazeFlowSource) {
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.BLAZE_FEATURE_OVERLAY_DISPLAYED,
@@ -73,6 +72,9 @@ class BlazeFeatureUtils @Inject constructor(
     }
 
     fun trackOverlayDismissed(blazeFlowSource: BlazeFlowSource) {
-        //todo: add tracking logic
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FEATURE_OVERLAY_DISMISSED,
+            mapOf(SOURCE to blazeFlowSource.trackingName)
+        )
     }
 }

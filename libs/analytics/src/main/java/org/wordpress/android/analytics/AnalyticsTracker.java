@@ -1024,7 +1024,8 @@ public final class AnalyticsTracker {
         BLAZE_FEATURE_MENU_ACCESSED,
         BLAZE_FEATURE_HIDE_TAPPED,
         BLAZE_FEATURE_OVERLAY_DISPLAYED,
-        BLAZE_FEATURE_OVERLAY_PROMOTE_CLICKED
+        BLAZE_FEATURE_OVERLAY_PROMOTE_CLICKED,
+        BLAZE_FEATURE_OVERLAY_DISMISSED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
