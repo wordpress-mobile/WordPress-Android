@@ -47,9 +47,24 @@ class BlazeWebViewClient(
         errorReceived = true
         blazeWebViewClientListener.onWebViewReceivedError()
     }
+
+    @Suppress("DEPRECATION")
+    override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+        if (url.startsWith(WORDPRESS_ADVERTISING_PATH))
+            return false
+
+        blazeWebViewClientListener.onRedirectToExternalBrowser(url)
+        return true
+    }
+
+    companion object {
+        private const val WORDPRESS_ADVERTISING_PATH = "https://wordpress.com/advertising/"
+    }
 }
+
 
 interface OnBlazeWebViewClientListener {
     fun onWebViewPageLoaded(url: String)
     fun onWebViewReceivedError()
+    fun onRedirectToExternalBrowser(url: String)
 }
