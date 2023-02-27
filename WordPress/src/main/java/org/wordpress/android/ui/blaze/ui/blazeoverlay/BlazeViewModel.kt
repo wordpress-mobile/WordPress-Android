@@ -12,7 +12,6 @@ import org.wordpress.android.ui.blaze.BlazeUiState
 import org.wordpress.android.ui.blaze.PostUIModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.PostListFeaturedImageTracker
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
