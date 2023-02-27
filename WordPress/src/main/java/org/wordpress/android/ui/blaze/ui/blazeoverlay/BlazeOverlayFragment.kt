@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -78,7 +79,7 @@ class BlazeOverlayFragment : Fragment() {
     @Composable
     fun BlazeOverlayContent(
         postModelState: BlazeUiState.PromoteScreen,
-        isDarkTheme: Boolean = false
+        isDarkTheme: Boolean = isSystemInDarkTheme()
     ) {
         val post = when (postModelState) {
             is BlazeUiState.PromoteScreen.PromotePost -> postModelState.postUIModel
@@ -114,7 +115,9 @@ class BlazeOverlayFragment : Fragment() {
             )
             post?.let {
                 PostThumbnailView(
-                    it, modifier = Modifier
+                    it,
+                    isInDarkTheme = isDarkTheme,
+                    modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
                 )
@@ -126,14 +129,19 @@ class BlazeOverlayFragment : Fragment() {
                     .height(48.dp)
                     .padding(start = 20.dp, end = 20.dp)
                     .background(
-                        Color.Black,
+                        getPrimaryButtonColor(isDarkTheme),
                         shape = RoundedCornerShape(15.dp)
                     ),
                 buttonText = UiString.UiStringRes(R.string.blaze_post_promotional_button),
                 drawableRight = Drawable(R.drawable.ic_promote_with_blaze),
-                onClick = { viewModel.onPromoteWithBlazeClicked() }
+                onClick = { viewModel.onPromoteWithBlazeClicked() },
             )
         }
+    }
+
+    private fun getPrimaryButtonColor(isInDarkTheme: Boolean): Color {
+        return if(isInDarkTheme) AppColor.Gray60
+        else AppColor.Black
     }
 
     @Preview
@@ -155,7 +163,7 @@ class BlazeOverlayFragment : Fragment() {
     }
 
     @Composable
-    fun PostThumbnailView(postUIModel: PostUIModel, modifier: Modifier = Modifier) {
+    fun PostThumbnailView(postUIModel: PostUIModel, modifier: Modifier = Modifier, isInDarkTheme: Boolean) {
         ConstraintLayout(
             modifier = modifier
                 .padding(horizontal = 20.dp, vertical = 15.dp)
@@ -170,7 +178,7 @@ class BlazeOverlayFragment : Fragment() {
                     width = Dimension.fillToConstraints
                     height = Dimension.fillToConstraints
                 }
-                .background(color = AppColor.Gray60, shape = RoundedCornerShape(15.dp))
+                .background(color = getThumbnailBackground(isInDarkTheme), shape = RoundedCornerShape(15.dp))
             )
             PostFeaturedImage(url = postUIModel.featuredImageUrl, modifier = Modifier
                 .constrainAs(featuredImage) {
@@ -205,6 +213,11 @@ class BlazeOverlayFragment : Fragment() {
                 height = Dimension.wrapContent
             })
         }
+    }
+
+    private fun getThumbnailBackground(isInDarkTheme: Boolean): Color {
+        if(isInDarkTheme) return AppColor.DarkGray
+        else return AppColor.Gray70
     }
 
     // todo the logic for showing the featured image is not implemented yet
