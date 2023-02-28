@@ -6,6 +6,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import org.wordpress.android.util.UriWrapper
 
 class BlazeWebViewClient(
     private val blazeWebViewClientListener: OnBlazeWebViewClientListener
@@ -34,7 +35,7 @@ class BlazeWebViewClient(
         // > Thus, it is recommended to perform minimum required work in this callback.
         if (request?.isForMainFrame == true && requestedUrl == request.url.toString()) {
             errorReceived = true
-            blazeWebViewClientListener.onWebViewReceivedError()
+            blazeWebViewClientListener.onWebViewReceivedError(request.url.toString())
         }
     }
 
@@ -45,16 +46,20 @@ class BlazeWebViewClient(
     ) {
         super.onReceivedHttpError(view, request, errorResponse)
         errorReceived = true
-        blazeWebViewClientListener.onWebViewReceivedError()
+        blazeWebViewClientListener.onWebViewReceivedError(request?.url.toString())
     }
 
-    @Suppress("DEPRECATION")
-    override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-        if (url.startsWith(WORDPRESS_ADVERTISING_PATH))
-            return false
-
-        blazeWebViewClientListener.onRedirectToExternalBrowser(url)
-        return true
+    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+        request?.let {
+            val uri = UriWrapper(it.url)
+            return if (uri.toString().startsWith(WORDPRESS_ADVERTISING_PATH)) {
+                false
+            } else {
+                blazeWebViewClientListener.onRedirectToExternalBrowser(uri.toString())
+                true
+            }
+        }
+        return false
     }
 
     companion object {
@@ -62,9 +67,8 @@ class BlazeWebViewClient(
     }
 }
 
-
 interface OnBlazeWebViewClientListener {
     fun onWebViewPageLoaded(url: String)
-    fun onWebViewReceivedError()
+    fun onWebViewReceivedError(url: String?)
     fun onRedirectToExternalBrowser(url: String)
 }
