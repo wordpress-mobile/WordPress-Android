@@ -54,3 +54,24 @@ data class BlazeWebViewContentUiState(
     val addressToLoad: String = "",
     val url: String = ""
 )
+
+enum class BlazeFlowStep(val trackingName: String) {
+    CAMPAIGNS_LIST("campaigns_list"),
+    POSTS_LIST("posts_list"),
+    STEP_1("step_1"),
+    STEP_2("step_2"),
+    STEP_3("step_3"),
+    STEP_4("step_4"),
+    STEP_5("step_5"),
+    UNSPECIFIED("unspecified");
+
+    override fun toString() = trackingName
+
+    companion object {
+        @JvmStatic
+        fun fromString(strSource: String?): BlazeFlowStep =
+            strSource?.let { source ->
+                values().firstOrNull { it.name.equals(source, ignoreCase = true) }
+            } ?: UNSPECIFIED
+    }
+}
