@@ -16,15 +16,25 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
 fun PrimaryButton(
     text: String,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     isInProgress: Boolean = false,
-    modifier: Modifier = Modifier
+    useDefaultMargins: Boolean = true,
 ) {
+    val paddedModifier = if (useDefaultMargins) {
+        modifier
+            .padding(top = 20.dp, bottom = 10.dp)
+            .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
+    } else {
+        modifier
+    }
+
     Button(
         onClick = onClick,
         enabled = !isInProgress,
@@ -33,12 +43,10 @@ fun PrimaryButton(
             pressedElevation = 0.dp,
         ),
         colors = ButtonDefaults.buttonColors(
+            contentColor = AppColor.White,
             disabledBackgroundColor = colorResource(R.color.jetpack_green_70),
         ),
-        modifier = modifier
-            .padding(top = 20.dp, bottom = 10.dp)
-            .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
-            .fillMaxWidth(),
+        modifier = paddedModifier.fillMaxWidth(),
     ) {
         if (isInProgress) {
             CircularProgressIndicator(

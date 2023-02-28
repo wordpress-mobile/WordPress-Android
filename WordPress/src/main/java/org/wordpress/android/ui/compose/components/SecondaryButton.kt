@@ -18,8 +18,17 @@ fun SecondaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    useDefaultMargins: Boolean = true,
 ) {
+    val paddedModifier = if (useDefaultMargins) {
+        modifier
+            .padding(bottom = 10.dp)
+            .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
+    } else {
+        modifier
+    }
+
     Button(
         onClick = onClick,
         enabled = enabled,
@@ -33,10 +42,7 @@ fun SecondaryButton(
             disabledBackgroundColor = Color.Transparent,
             disabledContentColor = MaterialTheme.colors.primary,
         ),
-        modifier = modifier
-            .padding(bottom = 10.dp)
-            .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
-            .fillMaxWidth()
+        modifier = paddedModifier.fillMaxWidth()
     ) {
         Text(text = text)
     }
