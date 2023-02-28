@@ -230,16 +230,14 @@ class BlazeOverlayFragment : Fragment() {
                 .constrainAs(featuredImage) {
                     top.linkTo(postContainer.top, 15.dp)
                     bottom.linkTo(postContainer.bottom, 15.dp)
-                    end.linkTo(postContainer.end, 20.dp)
-                }
-                .width(80.dp)
-                .height(80.dp))
+                    end.linkTo(postContainer.end, 15.dp)
+                })
             PostTitle(
                 title = postUIModel.title, modifier = Modifier.constrainAs(title) {
                     top.linkTo(postContainer.top, 15.dp)
                     start.linkTo(postContainer.start, 20.dp)
                     postUIModel.featuredImageUrl?.run {
-                        end.linkTo(featuredImage.start, margin = 20.dp)
+                        end.linkTo(featuredImage.start, margin = 15.dp)
                     } ?: run {
                         end.linkTo(postContainer.end, margin = 20.dp)
                     }
@@ -251,7 +249,7 @@ class BlazeOverlayFragment : Fragment() {
                 top.linkTo(title.bottom)
                 start.linkTo(postContainer.start, 20.dp)
                 postUIModel.featuredImageUrl?.run {
-                    end.linkTo(featuredImage.start, margin = 20.dp)
+                    end.linkTo(featuredImage.start, margin = 15.dp)
                 } ?: run {
                     end.linkTo(postContainer.end, margin = 20.dp)
                 }
@@ -277,7 +275,7 @@ class BlazeOverlayFragment : Fragment() {
             painter = painter,
             contentDescription = stringResource(R.string.blavatar_desc),
             modifier = modifier
-                .size(dimensionResource(R.dimen.jp_migration_site_icon_size))
+                .size(80.dp)
                 .clip(RoundedCornerShape(3.dp))
         )
     }
