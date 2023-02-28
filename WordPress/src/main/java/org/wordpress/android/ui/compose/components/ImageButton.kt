@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.utils.UiString
 
 @Preview
@@ -72,13 +73,7 @@ fun ImageButton(
             }
             .clickable { onClick.invoke() }
         ) {
-            val buttonTextValue: String = when (button.text) {
-                is UiString.UiStringText -> button.text.toString()
-                is UiString.UiStringRes -> stringResource(id = button.text.stringRes)
-                is UiString.UiStringResWithParams -> stringResource(id = button.text.stringRes)
-                else -> ""
-            }
-
+            val buttonTextValue: String = uiStringText(button.text)
             Text(
                 text = buttonTextValue,
                 fontSize = button.fontSize,
