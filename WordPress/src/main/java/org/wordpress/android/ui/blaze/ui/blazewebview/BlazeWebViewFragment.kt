@@ -42,7 +42,6 @@ import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeViewModel
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.withFullContentAlpha
 
-@Suppress("ForbiddenComment")
 @AndroidEntryPoint
 class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
     WPWebChromeClientWithFileChooser.OnShowFileChooserListener {
@@ -80,17 +79,17 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
     private fun handleActionEvents(actionEvent: BlazeActionEvent) {
         when (actionEvent) {
             is BlazeActionEvent.FinishActivity -> requireActivity().finish()
-            is BlazeActionEvent.LaunchExternalBrowser -> ActivityLauncher.openUrlExternal(
-                requireContext(),
-                actionEvent.url
-            )
+            is BlazeActionEvent.LaunchExternalBrowser -> {
+                ActivityLauncher.openUrlExternal(
+                    requireContext(),
+                    actionEvent.url
+                )
+            }
         }
     }
 
     // The next 2 Composable(s) live in the fragment because they need access to the chromeClient outside of the fun
     // Also the clients needs access to activity and we are not holding on to that elsewhere
-    // (1) Should the title be centered? The mocks only show iOS and not Android???
-    // (2) withFullContentAlpha wrapped around the text, but this is hard to do if wrapped in another composable?
     @Composable
     private fun BlazeWebViewScreen(
         viewModel: BlazeWebViewViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
@@ -98,7 +97,6 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
         val data by viewModel.model.collectAsState()
         val blazeHeaderState by viewModel.blazeHeaderState.collectAsState()
         Scaffold(
-            // todo: Move onClick into state possibly
             topBar = { TopAppBar(blazeHeaderState, viewModel::onHeaderActionClick) },
             content = { BlazeWebViewContent(data) }
         )
@@ -135,10 +133,12 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
         // todo Track events for started/completed
         // blaze_flow_started
         // blaze_flow_completed
+        blazeWebViewViewModel.updateCurrentStep(url)
         blazeWebViewViewModel.hideOrShowCancelAction(url)
     }
 
-    override fun onWebViewReceivedError() {
+    override fun onWebViewReceivedError(url: String?) {
+        blazeWebViewViewModel.updateCurrentStep(url)
         blazeWebViewViewModel.onWebViewReceivedError()
     }
 
@@ -146,12 +146,12 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
         blazeWebViewViewModel.onRedirectToExternalBrowser(url)
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun startActivityForFileChooserResult(intent: Intent?, requestCode: Int) {
         startActivityForResult(intent, requestCode)
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         chromeClient?.onActivityResult(requestCode, resultCode, data)
@@ -170,9 +170,6 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
 
     companion object {
         fun newInstance() = BlazeWebViewFragment()
-
-        // todo - add the arguments needed OR potentially get them from the parentViewModel
-        const val POST_ID = "post_id"
     }
 }
 
