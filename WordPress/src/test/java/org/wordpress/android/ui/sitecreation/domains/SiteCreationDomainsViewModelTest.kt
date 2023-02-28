@@ -408,104 +408,106 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     }
 
     // endregion
-}
 
-/**
- * Helper function to verify a [DomainsUiState] with [DomainsUiContentState.Initial] content state.
- */
-private fun verifyInitialContentUiState(
-    uiState: DomainsUiState,
-    showProgress: Boolean = false,
-    showClearButton: Boolean = false
-) {
-    assertThat(uiState.searchInputUiState.showProgress).isEqualTo(showProgress)
-    assertThat(uiState.searchInputUiState.showClearButton).isEqualTo(showClearButton)
-    assertThat(uiState.contentState).isInstanceOf(DomainsUiContentState.Initial::class.java)
-    assertThat(uiState.createSiteButtonContainerVisibility).isEqualTo(false)
-}
-
-/**
- * Helper function to verify a [DomainsUiState] with [DomainsUiContentState.VisibleItems] content state.
- */
-private fun verifyVisibleItemsContentUiState(
-    uiState: DomainsUiState,
-    showClearButton: Boolean = false,
-    numberOfItems: Int = MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
-) {
-    assertThat(uiState.searchInputUiState.showProgress).isEqualTo(false)
-    assertThat(uiState.searchInputUiState.showClearButton).isEqualTo(showClearButton)
-    assertThat(uiState.contentState).isInstanceOf(DomainsUiContentState.VisibleItems::class.java)
-    assertThat(uiState.contentState.items.size).isEqualTo(numberOfItems)
-}
-
-/**
- * Helper function to verify a [UnavailableDomain] Ui State.
- */
-private fun verifyContentAndDomainValidityUiStatesAreVisible(
-    uiState: DomainsUiState
-) {
-    assertThat(uiState.contentState.items.first())
-        .isInstanceOf(UnavailableDomain::class.java)
-}
-
-/**
- * Helper function to verify a [DomainsUiState] with [DomainsUiContentState.Empty] content state.
- */
-private fun verifyEmptyItemsContentUiState(
-    uiState: DomainsUiState,
-    showClearButton: Boolean = false,
-    isInvalidQuery: Boolean = false
-) {
-    assertThat(uiState.searchInputUiState.showProgress).isEqualTo(false)
-    assertThat(uiState.searchInputUiState.showClearButton).isEqualTo(showClearButton)
-    assertThat(uiState.contentState).isInstanceOf(DomainsUiContentState.Empty::class.java)
-    val contentStateAsEmpty = uiState.contentState as DomainsUiContentState.Empty
-    assertThat(contentStateAsEmpty.message).isInstanceOf(UiStringRes::class.java)
-    val expectedEmptyListTextMessage = if (isInvalidQuery) {
-        R.string.new_site_creation_empty_domain_list_message_invalid_query
-    } else {
-        R.string.new_site_creation_empty_domain_list_message
+    // region Helpers
+    /**
+     * Helper function to verify a [DomainsUiState] with [DomainsUiContentState.Initial] content state.
+     */
+    private fun verifyInitialContentUiState(
+        uiState: DomainsUiState,
+        showProgress: Boolean = false,
+        showClearButton: Boolean = false
+    ) {
+        assertThat(uiState.searchInputUiState.showProgress).isEqualTo(showProgress)
+        assertThat(uiState.searchInputUiState.showClearButton).isEqualTo(showClearButton)
+        assertThat(uiState.contentState).isInstanceOf(DomainsUiContentState.Initial::class.java)
+        assertThat(uiState.createSiteButtonContainerVisibility).isEqualTo(false)
     }
-    assertThat((contentStateAsEmpty.message as UiStringRes).stringRes).isEqualTo(expectedEmptyListTextMessage)
-    assertThat(uiState.contentState.items.size).isEqualTo(0)
-}
 
-/**
- * Helper function that creates an [OnSuggestedDomains] event for the given query and number of results pair.
- */
-private fun createSuccessfulOnSuggestedDomains(queryResultSizePair: Pair<String, Int>): OnSuggestedDomains {
-    val suggestions = (0 until queryResultSizePair.second).map {
-        val response = DomainSuggestionResponse()
-        response.domain_name = "${queryResultSizePair.first}-$it.wordpress.com"
-        response
+    /**
+     * Helper function to verify a [DomainsUiState] with [DomainsUiContentState.VisibleItems] content state.
+     */
+    private fun verifyVisibleItemsContentUiState(
+        uiState: DomainsUiState,
+        showClearButton: Boolean = false,
+        numberOfItems: Int = MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
+    ) {
+        assertThat(uiState.searchInputUiState.showProgress).isEqualTo(false)
+        assertThat(uiState.searchInputUiState.showClearButton).isEqualTo(showClearButton)
+        assertThat(uiState.contentState).isInstanceOf(DomainsUiContentState.VisibleItems::class.java)
+        assertThat(uiState.contentState.items.size).isEqualTo(numberOfItems)
     }
-    return OnSuggestedDomains(queryResultSizePair.first, suggestions)
-}
 
-/**
- * Helper function that creates an error [OnSuggestedDomains] event.
- */
-private fun createFailedOnSuggestedDomains(queryResultErrorPair: Pair<String, String>): OnSuggestedDomains {
-    return OnSuggestedDomains(queryResultErrorPair.first, emptyList())
-        .apply {
-            error = SuggestDomainError(queryResultErrorPair.second, "test")
+    /**
+     * Helper function to verify a [UnavailableDomain] Ui State.
+     */
+    private fun verifyContentAndDomainValidityUiStatesAreVisible(
+        uiState: DomainsUiState
+    ) {
+        assertThat(uiState.contentState.items.first())
+            .isInstanceOf(UnavailableDomain::class.java)
+    }
+
+    /**
+     * Helper function to verify a [DomainsUiState] with [DomainsUiContentState.Empty] content state.
+     */
+    private fun verifyEmptyItemsContentUiState(
+        uiState: DomainsUiState,
+        showClearButton: Boolean = false,
+        isInvalidQuery: Boolean = false
+    ) {
+        assertThat(uiState.searchInputUiState.showProgress).isEqualTo(false)
+        assertThat(uiState.searchInputUiState.showClearButton).isEqualTo(showClearButton)
+        assertThat(uiState.contentState).isInstanceOf(DomainsUiContentState.Empty::class.java)
+        val contentStateAsEmpty = uiState.contentState as DomainsUiContentState.Empty
+        assertThat(contentStateAsEmpty.message).isInstanceOf(UiStringRes::class.java)
+        val expectedEmptyListTextMessage = if (isInvalidQuery) {
+            R.string.new_site_creation_empty_domain_list_message_invalid_query
+        } else {
+            R.string.new_site_creation_empty_domain_list_message
         }
-}
-
-/**
- * Helper function that creates the current sanitized query being used to generate the domain suggestions.
- * It returns a test domain that's based on the test suggestions being used so that the app can behave in it's
- * normal [Old.DomainUiState.AvailableDomain] state. It also returns an unavailable domain query so that the
- *  [Old.DomainUiState.UnavailableDomain] state is activated.
- */
-private fun createSanitizedDomainResult(isDomainAvailableInSuggestions: Boolean) =
-    if (isDomainAvailableInSuggestions) {
-        "${MULTI_RESULT_DOMAIN_FETCH_QUERY.first}-1"
-    } else {
-        "invaliddomain"
+        assertThat((contentStateAsEmpty.message as UiStringRes).stringRes).isEqualTo(expectedEmptyListTextMessage)
+        assertThat(uiState.contentState.items.size).isEqualTo(0)
     }
 
-private fun mockDomain(name: String = "", free: Boolean = true) = mock<DomainModel> {
-    on { domainName } doReturn name
-    on { isFree } doReturn free
+    /**
+     * Helper function that creates an [OnSuggestedDomains] event for the given query and number of results pair.
+     */
+    private fun createSuccessfulOnSuggestedDomains(queryResultSizePair: Pair<String, Int>): OnSuggestedDomains {
+        val suggestions = (0 until queryResultSizePair.second).map {
+            val response = DomainSuggestionResponse()
+            response.domain_name = "${queryResultSizePair.first}-$it.wordpress.com"
+            response
+        }
+        return OnSuggestedDomains(queryResultSizePair.first, suggestions)
+    }
+
+    /**
+     * Helper function that creates an error [OnSuggestedDomains] event.
+     */
+    private fun createFailedOnSuggestedDomains(queryResultErrorPair: Pair<String, String>): OnSuggestedDomains {
+        return OnSuggestedDomains(queryResultErrorPair.first, emptyList())
+            .apply {
+                error = SuggestDomainError(queryResultErrorPair.second, "test")
+            }
+    }
+
+    /**
+     * Helper function that creates the current sanitized query being used to generate the domain suggestions.
+     * It returns a test domain that's based on the test suggestions being used so that the app can behave in it's
+     * normal [Old.DomainUiState.AvailableDomain] state. It also returns an unavailable domain query so that the
+     *  [Old.DomainUiState.UnavailableDomain] state is activated.
+     */
+    private fun createSanitizedDomainResult(isDomainAvailableInSuggestions: Boolean) =
+        if (isDomainAvailableInSuggestions) {
+            "${MULTI_RESULT_DOMAIN_FETCH_QUERY.first}-1"
+        } else {
+            "invaliddomain"
+        }
+
+    private fun mockDomain(name: String = "", free: Boolean = true) = mock<DomainModel> {
+        on { domainName } doReturn name
+        on { isFree } doReturn free
+    }
+    // endregion
 }
