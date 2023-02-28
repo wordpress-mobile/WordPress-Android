@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.compose.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
@@ -61,22 +62,26 @@ object NavigationIcons {
  * [NavigationIcons]. It can be an composable function providing an [Icon] as well, since it is used inside an
  * [IconButton]. Note that leaving this field null will cause the navigation icon to not be shown.
  * @param onNavigationIconClick The lambda to be invoked when the navigation icon is pressed.
+ * @param actions The actions displayed at the end of the TopAppBar. This should typically be IconButtons
  */
 @Composable
 fun MainTopAppBar(
-    title: String,
+    title: String?,
     modifier: Modifier = Modifier,
     navigationIcon: NavigationIcon? = null,
     onNavigationIconClick: () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
         modifier = modifier,
         backgroundColor = MaterialTheme.colors.surface,
         contentColor = MaterialTheme.colors.onSurface,
         elevation = 0.dp,
-        title = withFullContentAlpha {
-            Text(title)
-        },
+        title = title?.let {
+            withFullContentAlpha {
+                Text(title)
+            }
+        } ?: { },
         navigationIcon = navigationIcon?.let {
             withFullContentAlpha {
                 IconButton(onClick = onNavigationIconClick) {
@@ -84,6 +89,7 @@ fun MainTopAppBar(
                 }
             }
         },
+        actions = actions
     )
 }
 
