@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -273,6 +274,7 @@ class BlazeOverlayFragment : Fragment() {
         }
         Image(
             painter = painter,
+            contentScale = ContentScale.Crop,
             contentDescription = stringResource(R.string.blavatar_desc),
             modifier = modifier
                 .size(80.dp)
@@ -348,10 +350,11 @@ class BlazeOverlayFragment : Fragment() {
                 postModelState = BlazeUiState.PromoteScreen.PromotePost(
                     PostUIModel(
                         postId = 119,
-                        title = "Post title check if this is long enough to be truncated",
-                        url = "https://www.google.long.ttiiitititititiit.com",
-                        imageUrl = 0,
-                        featuredImageUrl = null
+                        title = "Post title long enough to be truncated and this is not just a test to see " +
+                                "how it looks",
+                        url = "www.google.long.ttiiitititititiit.com/blog./24/2021/05/12/this-is-a-test-post/trucncation is happeniding",
+                        imageUrl = 357,
+                        featuredImageUrl = "https://ajeshrpai.in/wp-content/uploads/2023/02/wp-1677490974228.jpg"
                     )
                 )
             )
