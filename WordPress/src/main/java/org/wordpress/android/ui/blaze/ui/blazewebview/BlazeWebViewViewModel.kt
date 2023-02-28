@@ -45,6 +45,7 @@ class BlazeWebViewViewModel @Inject constructor(
 
     fun start(promoteScreen: BlazeUiState.PromoteScreen?, source: BlazeFlowSource) {
         blazeFlowSource = source
+        blazeFeatureUtils.trackBlazeFlowStarted(source)
         val url = buildUrl(promoteScreen)
         blazeFlowStep = blazeFeatureUtils.extractCurrentStep(url)
         validateAndFinishIfNeeded()
