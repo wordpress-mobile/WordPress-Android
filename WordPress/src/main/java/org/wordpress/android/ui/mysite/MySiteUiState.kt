@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.blaze.BlazeStatusModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -28,7 +29,8 @@ data class MySiteUiState(
     val pinnedDynamicCard: DynamicCardType? = null,
     val visibleDynamicCards: List<DynamicCardType> = listOf(),
     val cardsUpdate: CardsUpdate? = null,
-    val bloggingPromptsUpdate: BloggingPromptUpdate? = null
+    val bloggingPromptsUpdate: BloggingPromptUpdate? = null,
+    val promoteWithBlazeUpdate: PartialState.PromoteWithBlazeUpdate? = null
 ) {
     sealed class PartialState {
         data class CurrentAvatarUrl(val url: String) : PartialState()
@@ -56,6 +58,10 @@ data class MySiteUiState(
         data class BloggingPromptUpdate(
             val promptModel: BloggingPromptModel?
         ) : PartialState()
+
+        data class PromoteWithBlazeUpdate(
+            val blazeStatusModel: BlazeStatusModel?
+        ) : PartialState()
     }
 
     fun update(partialState: PartialState): MySiteUiState {
@@ -80,6 +86,7 @@ data class MySiteUiState(
             )
             is CardsUpdate -> uiState.copy(cardsUpdate = partialState)
             is BloggingPromptUpdate -> uiState.copy(bloggingPromptsUpdate = partialState)
+            is PartialState.PromoteWithBlazeUpdate -> uiState.copy(promoteWithBlazeUpdate = partialState)
         }
     }
 

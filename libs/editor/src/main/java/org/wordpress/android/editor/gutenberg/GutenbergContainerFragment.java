@@ -8,6 +8,8 @@ import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 
+import com.facebook.react.bridge.WritableNativeMap;
+
 import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.R;
@@ -215,7 +217,12 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void mediaFileUploadSucceeded(final int mediaId, final String mediaUrl, final int serverMediaId) {
-        mWPAndroidGlueCode.mediaFileUploadSucceeded(mediaId, mediaUrl, serverMediaId);
+        mWPAndroidGlueCode.mediaFileUploadSucceeded(mediaId, mediaUrl, serverMediaId, new WritableNativeMap());
+    }
+
+    public void mediaFileUploadSucceeded(final int mediaId, final String mediaUrl, final int serverMediaId, final
+                                         WritableNativeMap metadata) {
+        mWPAndroidGlueCode.mediaFileUploadSucceeded(mediaId, mediaUrl, serverMediaId, metadata);
     }
 
     public void clearMediaFileURL(final int mediaId) {

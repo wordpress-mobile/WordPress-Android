@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-31 16:54:08+0000
+Translation-Revision-Date: 2023-02-15 12:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_CN
 -->
 <resources>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">释放站点的全部潜力。 使用 Jetpack，获得统计信息、通知等功能。</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">您的站点已安装 Jetpack 插件</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack 移动应用程序旨在与 Jetpack 插件配合使用。 立即切换，访问统计信息、通知、阅读器以及更多功能。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">接收有关新评论、点赞、查看等内容的通知。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">查找并关注您喜欢的站点和社区，并分享您的内容。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">借助有用的数据分析和全面的统计信息，观察您的流量增长情况。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">统计信息与数据分析</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">有了 Jetpack，您可以通过自己的 WordPress 站点做更多事情。 切换免费，只需一会儿。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">借助Jetpack，进一步提升 WordPress 体验</string>
+    <string name="blogging_prompts_onboarding_content_note_content">您随时可以访问“我的站点”&gt;“设置”&gt;“博客”，控制博客提示和提醒。</string>
+    <string name="blogging_reminders_prompt_subtitle">通知会包括可提供灵感的单词或短语</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">访问&lt;b&gt;站点设置&lt;/b&gt;以重新打开</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">已隐藏博客提示</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">关闭提示</string>
+    <string name="support_forum_caption">获取我们的志愿者团队提供的帮助。</string>
+    <string name="support_forum_title">社区论坛</string>
+    <string name="site_settings_blogging_reminders_notification_title">博客提醒</string>
+    <string name="site_settings_blogging_prompts_title">显示提示</string>
+    <string name="site_settings_blogging">撰写博客</string>
     <string name="install_play_store_to_get_jetpack">请安装 Google Play 商店获取 Jetpack 应用程序</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">以后再说</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">切换至 Jetpack </string>
@@ -304,7 +323,9 @@ Language: zh_CN
     <string name="blogging_prompts_onboarding_content_note_title">注意：</string>
     <string name="blogging_prompts_onboarding_content_bottom">我们每天会在您的仪表盘上显示新提示，助力您获取源源不断的创作灵感！</string>
     <string name="blogging_prompts_onboarding_content_top">优秀作家的良好养成方式是形成写作习惯并与他人共享 - 这正是提示功能的用武之处！</string>
+    <string name="blogging_prompts_onboarding_header_title">简介\n博客提示</string>
     <string name="blogging_prompt_set_reminders">设置提醒</string>
+    <string name="blogging_reminders_prompt_title">推出博客提示功能</string>
     <string name="post_publishing_set_up_blogging_prompts_message">定期发布，吸引新读者。 告诉我们您什么时候想写作，我们会给您发提醒！</string>
     <string name="set_your_blogging_prompts_title">养成习惯，成为优秀的作家</string>
     <string name="site_creation_intent_writing_poetry">写作和诗歌</string>
@@ -610,6 +631,7 @@ Language: zh_CN
     <string name="support_ticket_subject">Android 版 WordPress 支持</string>
     <string name="site_settings_categories_hint">管理您的站点分类</string>
     <string name="site_settings_categories_title">分类</string>
+    <string name="site_settings_blogging_reminders_title">提醒</string>
     <string name="page_is_posts_page_warning">最新文章页面的内容是自动生成的，无法编辑。</string>
     <string name="gutenberg_native_border_settings">边框设置</string>
     <string name="storage_utils_dialog_dont_show_button">不再显示</string>

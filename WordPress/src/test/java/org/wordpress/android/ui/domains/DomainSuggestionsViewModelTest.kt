@@ -143,7 +143,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         assertThat(payload.onlyWordpressCom).isNull()
         assertThat(payload.includeWordpressCom).isNull()
         assertThat(payload.includeDotBlogSubdomain).isNull()
-        assertThat(payload.includeVendorDot).isFalse()
+        assertThat(payload.vendor).isNull()
     }
 
     @Test
@@ -165,7 +165,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         assertThat(payload.onlyWordpressCom).isFalse()
         assertThat(payload.includeWordpressCom).isFalse()
         assertThat(payload.includeDotBlogSubdomain).isTrue()
-        assertThat(payload.includeVendorDot).isFalse()
+        assertThat(payload.vendor).isNull()
         assertThat(payload.tlds).isNull()
     }
 

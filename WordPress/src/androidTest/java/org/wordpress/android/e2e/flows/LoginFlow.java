@@ -11,7 +11,7 @@ import androidx.test.espresso.ViewInteraction;
 import org.hamcrest.Matchers;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
-import org.wordpress.android.e2e.pages.HelpAndSupportScreen;
+import org.wordpress.android.e2e.pages.HelpScreen;
 import org.wordpress.android.e2e.pages.LandingPage;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
@@ -126,9 +126,9 @@ public class LoginFlow {
         return this;
     }
 
-    public HelpAndSupportScreen tapHelp() {
+    public HelpScreen tapHelp() {
         clickOn(onView(withId(R.id.help)));
-        return new HelpAndSupportScreen();
+        return new HelpScreen();
     }
 
     public static void dismissNewFeaturesDialogIfDisplayed() {

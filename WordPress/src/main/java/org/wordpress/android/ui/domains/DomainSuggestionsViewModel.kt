@@ -153,7 +153,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         val suggestDomainsPayload = if (SiteUtils.onBloggerPlan(site)) {
             SuggestDomainsPayload(searchQuery, SUGGESTIONS_REQUEST_COUNT, BLOG_DOMAIN_TLDS)
         } else {
-            SuggestDomainsPayload(searchQuery, false, false, true, SUGGESTIONS_REQUEST_COUNT, false)
+            SuggestDomainsPayload(searchQuery, false, false, true, SUGGESTIONS_REQUEST_COUNT)
         }
 
         dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(suggestDomainsPayload))

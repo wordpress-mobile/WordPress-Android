@@ -1,88 +1,80 @@
 package org.wordpress.android.ui.sitecreation.domains
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
-import android.widget.TextView
-import androidx.annotation.LayoutRes
+import androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
 import androidx.core.content.ContextCompat
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import org.wordpress.android.R
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
+import org.wordpress.android.databinding.SiteCreationDomainsItemBinding
+import org.wordpress.android.databinding.SiteCreationDomainsItemV2Binding
+import org.wordpress.android.databinding.SiteCreationSuggestionsErrorItemBinding
+import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old.DomainUiState.AvailableDomain
+import org.wordpress.android.ui.sitecreation.domains.compose.DomainItem
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.extensions.viewBinding
 
-sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
-    RecyclerView.ViewHolder(
-        LayoutInflater.from(parent.context).inflate(
-            layout,
-            parent,
-            false
-        )
-    ) {
-    abstract fun onBind(uiState: DomainsListItemUiState)
-
-    class DomainSuggestionItemViewHolder(
-        parentView: ViewGroup,
-        private val uiHelpers: UiHelpers
-    ) : SiteCreationDomainViewHolder(parentView, R.layout.site_creation_domains_item) {
-        private val container = itemView.findViewById<ViewGroup>(R.id.container)
-        private val nameSuggestion = itemView.findViewById<TextView>(R.id.name_suggestion)
-        private val domainSuggestion = itemView.findViewById<TextView>(R.id.domain_suggestion)
-        private val suggestionRadioButton = itemView.findViewById<RadioButton>(R.id.domain_suggestion_radio_button)
-        private val domainUnavailability = itemView.findViewById<TextView>(R.id.domain_unavailability)
-        private var onDomainSelected: (() -> Unit)? = null
-
-        init {
-            suggestionRadioButton.buttonTintList = ContextCompat.getColorStateList(
-                parentView.context,
-                R.color.neutral_10_primary_40_selector
-            )
-            container.setOnClickListener {
-                onDomainSelected?.invoke()
-            }
-        }
-
-        override fun onBind(uiState: DomainsListItemUiState) {
-            uiState as DomainsModelUiState
-            if (uiState.clickable) {
-                onDomainSelected = requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
-            }
+sealed class SiteCreationDomainViewHolder<T : ViewBinding>(protected val binding: T) :
+    RecyclerView.ViewHolder(binding.root) {
+    class OldDomainViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
+        SiteCreationDomainViewHolder<SiteCreationDomainsItemBinding>(
+            parentView.viewBinding(SiteCreationDomainsItemBinding::inflate)
+        ) {
+        fun onBind(uiState: Old.DomainUiState) = with(binding) {
             nameSuggestion.text = uiState.name
             domainSuggestion.text = uiState.domain
-            suggestionRadioButton.isChecked = uiState.checked
-            suggestionRadioButton.visibility = if (uiState.radioButtonVisibility) View.VISIBLE else View.INVISIBLE
-            container.isEnabled = uiState.clickable
+            domainSuggestionRadioButton.apply {
+                isChecked = uiState.checked
+                isInvisible = !uiState.radioButtonVisibility
+                buttonTintList = ContextCompat.getColorStateList(context, R.color.neutral_10_primary_40_selector)
+            }
+            container.apply {
+                val onClick = (uiState as? AvailableDomain)?.onClick
+                isEnabled = onClick != null
+                setOnClickListener { onClick?.invoke() }
+            }
             uiHelpers.setTextOrHide(domainUnavailability, uiState.subTitle)
         }
     }
 
-    class DomainSuggestionErrorViewHolder(
-        parentView: ViewGroup
-    ) : SiteCreationDomainViewHolder(parentView, R.layout.site_creation_suggestions_error_item) {
-        private val text = itemView.findViewById<TextView>(R.id.error_text)
-        private val retry = itemView.findViewById<TextView>(R.id.retry)
+    class OldDomainErrorViewHolder(parentView: ViewGroup) :
+        SiteCreationDomainViewHolder<SiteCreationSuggestionsErrorItemBinding>(
+            parentView.viewBinding(SiteCreationSuggestionsErrorItemBinding::inflate)
+        ) {
+        fun onBind(uiState: Old.ErrorItemUiState) = with(binding) {
+            errorText.text = root.context.getText(uiState.messageResId)
+            retry.apply {
+                text = context.getText(uiState.retryButtonResId)
+                val drawable = ContextCompat.getDrawable(context, R.drawable.retry_icon)?.apply {
+                    setTint(ContextCompat.getColor(context, R.color.primary))
+                }
+                setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+            }
+            container.setOnClickListener { uiState.onClick.invoke() }
+        }
+    }
+
+    @Suppress("ForbiddenComment")
+    class NewDomainViewHolder(parentView: ViewGroup) :
+        SiteCreationDomainViewHolder<SiteCreationDomainsItemV2Binding>(
+            parentView.viewBinding(SiteCreationDomainsItemV2Binding::inflate)
+        ) {
+        val composeView = binding.composeView
 
         init {
-            addRetryCompoundDrawable()
+            // TODO: Remove this for Compose 1.2.0-beta02+ and RecyclerView 1.3.0-alpha02+
+            binding.composeView.setViewCompositionStrategy(DisposeOnViewTreeLifecycleDestroyed)
         }
 
-        private fun addRetryCompoundDrawable() {
-            itemView.context.getDrawable(R.drawable.retry_icon)?.let { drawable ->
-                drawable.setTint(ContextCompat.getColor(itemView.context, R.color.primary))
-                retry.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
-            }
-        }
-
-        override fun onBind(uiState: DomainsListItemUiState) {
-            uiState as DomainsFetchSuggestionsErrorUiState
-            text.text = itemView.context.getText(uiState.messageResId)
-            retry.text = itemView.context.getText(uiState.retryButtonResId)
-            requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
-            itemView.setOnClickListener {
-                uiState.onItemTapped!!.invoke()
+        fun onBind(uiState: New.DomainUiState) = with(binding) {
+            composeView.setContent {
+                AppTheme {
+                    DomainItem(uiState)
+                }
             }
         }
     }

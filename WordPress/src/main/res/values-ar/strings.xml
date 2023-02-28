@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-31 21:54:27+0000
+Translation-Revision-Date: 2023-02-15 13:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.3
 Language: ar
 -->
 <resources>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">افتح إمكانات موقعك بالكامل. احصل على ميزات الإحصاءات والتنبيهات والمزيد من خلال Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">يتضمن موقعك إضافة Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">تم تصميم تطبيق Jetpack للهاتف المحمول للعمل إلى جانب إضافة Jetpack. قم بالتبديل الآن لكي تحظى بإمكانية الوصول إلى ميزات الإحصاءات والتنبيهات والقارئ والمزيد.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">تلقَّ تنبيهات بالتعليقات والإعجابات والمشاهدات الجديدة، والمزيد.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">اعثر على الموقع والمجتمعات التي تفضّلها وتابعها، ثم شارك محتواك.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">راقب الزيادة في حركة المرور لديك من خلال الرؤى المفيدة والإحصاءات الشاملة.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">الإحصاءات والرؤى</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">يتيح لك Jetpack القيام بالمزيد من خلال موقع ووردبريس الخاص بك. التبديل مجاني، ولا يستغرق سوى بضع دقائق.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">تعزيز ووردبريس من خلال Jetpack</string>
+    <string name="blogging_prompts_onboarding_content_note_content">يمكنك التحكم في مطالبات التدوين والتذكيرات في أي وقت ضمن موقعي &gt; الإعدادات &gt; التدوين</string>
+    <string name="blogging_reminders_prompt_subtitle">سيتضمن التنبيه كلمة أو عبارة مختصرة كمصدر للإلهام</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">زيارة &lt;b&gt;إعدادات الموقع&lt;/b&gt; لإعادة التشغيل</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">تم إخفاء مطالبات التدوين</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">إيقاف تشغيل المطالبات</string>
+    <string name="support_forum_caption">احصل على المساعدة من مجموعة المتطوعين لدينا.</string>
+    <string name="support_forum_title">المنتديات الاجتماعية</string>
+    <string name="site_settings_blogging_reminders_notification_title">تذكيرات التدوين</string>
+    <string name="site_settings_blogging_prompts_title">إظهار المطالبات</string>
+    <string name="site_settings_blogging">التدوين</string>
     <string name="install_play_store_to_get_jetpack">يرجى تثبيت متجر Google Play للحصول على تطبيق Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">القيام بهذا لاحقًا</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">التبديل إلى Jetpack </string>
@@ -310,6 +329,8 @@ Language: ar
     <string name="blogging_prompts_onboarding_content_top">تتمثَّل أفضل طريقة لتصبح كاتبًا أفضل في إنشاء عادة كتابة والمشاركة مع الآخرين — حيث تتوافر المطالبات!</string>
     <string name="blogging_prompt_set_reminders">تعيين التذكيرات</string>
     <string name="post_publishing_set_up_blogging_prompts_message">يجذب النشر بانتظام قراء جدد. أخبرنا متى تريد الكتابة وسنرسل إليك تذكيرًا!</string>
+    <string name="blogging_prompts_onboarding_header_title">تقديم\nمطالبات التدوين</string>
+    <string name="blogging_reminders_prompt_title">تضمين مطالبة التدوين</string>
     <string name="set_your_blogging_prompts_title">يمكنك أن تصبح كاتبًا أفضل عن طريق إنشاء عادة</string>
     <string name="site_creation_intent_writing_poetry">الكتابة والشعر</string>
     <string name="site_creation_intent_travel">السفر</string>
@@ -615,6 +636,7 @@ Language: ar
     <string name="site_settings_categories_hint">إدارة تصنيفات موقعك</string>
     <string name="site_settings_categories_title">التصنيفات</string>
     <string name="page_is_posts_page_warning">تم إنشاء محتوى صفحة أحدث المقالات تلقائيًّا ولا يمكن تحريره.</string>
+    <string name="site_settings_blogging_reminders_title">التذكيرات</string>
     <string name="gutenberg_native_border_settings">إعدادات الحدود</string>
     <string name="storage_utils_dialog_dont_show_button">عدم العرض مرة أخرى</string>
     <string name="storage_utils_dialog_ok_button">عرض مساحة التخزين</string>

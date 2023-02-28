@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-08 16:13:19+0000
+Translation-Revision-Date: 2023-02-15 11:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: es
 -->
 <resources>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Libera todo el potencial de tu sitio Obtén estadísticas, notificaciones y más con Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Tu sitio tiene el plugin de Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">La aplicación móvil Jetpack está diseñada para funcionar junto con el plugin de Jetpack. Haz el cambio ahora y obtén acceso a estadísticas, notificaciones o el lector, entre otras funciones.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Recibe notificaciones por nuevos comentarios, Me gusta, visualizaciones, etc.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Comparte tu contenido y busca tus comunidades y sitios favoritos para seguirlos.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Consulta el crecimiento del tráfico a tu sitio con información útil y estadísticas completas.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Estadísticas y datos clave</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Con Jetpack sacarás más partido de tu sitio de WordPress. El cambio es gratuito y solo te llevará un minuto.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Dale un impulso a WordPress con Jetpack</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Puedes gestionar los recordatorios y estímulos para bloguear en cualquier momento desde Mi sitio &gt; Ajustes &gt; Bloguear.</string>
+    <string name="blogging_reminders_prompt_subtitle">Cada notificación incluirá una palabra o una breve frase inspiradora.</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Ve a &lt;b&gt;Ajustes del sitio&lt;/b&gt; para reactivarlos.</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Se han ocultado los estímulos para bloguear.</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Desactivar estímulos</string>
+    <string name="support_forum_caption">Recibe ayuda de nuestro grupo de voluntarios.</string>
+    <string name="support_forum_title">Foros de la comunidad</string>
+    <string name="site_settings_blogging_reminders_notification_title">Recordatorios de blogueo</string>
+    <string name="site_settings_blogging_prompts_title">Mostrar estímulos</string>
+    <string name="site_settings_blogging">Bloguear</string>
     <string name="install_play_store_to_get_jetpack">Por favor, instala la Google Play Store para obener al app Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Hacerlo más tarde</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Cambiar a Jetpack </string>

@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-31 16:54:08+0000
+Translation-Revision-Date: 2023-02-15 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_TW
 -->
 <resources>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">充分發揮網站的潛能。 透過 Jetpack 取得統計資料、通知等功能。</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">你的網站已安裝 Jetpack 外掛程式</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">接收新留言、按讚、瀏覽次數等內容的通知。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">尋找並追蹤你喜愛的網站和社群，並分享你的內容。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">取得實用洞察報告和全面的統計資料，帶你見證流量成長。</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack 行動應用程式設計為可搭配 Jetpack 外掛程式運作。 立即切換以取得統計資料、通知、閱讀器等功能。</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">統計資料和洞察報告</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">透過 Jetpack 提升 WordPress 成效</string>
+    <string name="blogging_prompts_onboarding_content_note_content">你可以隨時前往「我的網站」&gt;「設定」&gt;「撰寫網誌」控制網誌提示和提醒</string>
+    <string name="blogging_reminders_prompt_subtitle">通知會包含可啟發靈感的字詞或短語</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">前往「&lt;b&gt;網站設定&lt;/b&gt;」以重新啟用</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">已隱藏網誌提示</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack 讓你更充分發揮 WordPress 網站潛能。 切換完全免費，只要 1 分鐘就能完成。</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">關閉提示</string>
+    <string name="support_forum_caption">從我們的志工團隊取得協助。</string>
+    <string name="support_forum_title">社群論壇</string>
+    <string name="site_settings_blogging_reminders_notification_title">網誌提醒</string>
+    <string name="site_settings_blogging_prompts_title">顯示提示</string>
+    <string name="site_settings_blogging">撰寫網誌</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">稍後進行</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">切換至 Jetpack </string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">WordPress 應用程式已移除「統計資料」、「閱讀器」、「通知」和其他 Jetpack 提供的功能。</string>
@@ -310,6 +329,8 @@ Language: zh_TW
     <string name="blogging_prompts_onboarding_content_top">想成為更好的撰稿人，最佳方法是養成寫作習慣並與他人分享 - 這就是「提示」的功用！</string>
     <string name="blogging_prompt_set_reminders">設定提醒</string>
     <string name="post_publishing_set_up_blogging_prompts_message">定期張貼文章能夠吸引新讀者。 告訴我們你想寫作的時間，我們將傳送提醒給你！</string>
+    <string name="blogging_prompts_onboarding_header_title">簡介\n網誌提示</string>
+    <string name="blogging_reminders_prompt_title">包含網誌提示</string>
     <string name="set_your_blogging_prompts_title">養成寫作習慣，成為更好的撰稿人</string>
     <string name="site_creation_intent_writing_poetry">寫作和詩歌</string>
     <string name="site_creation_intent_travel">旅遊</string>
@@ -615,6 +636,7 @@ Language: zh_TW
     <string name="site_settings_categories_hint">管理你的網站分類</string>
     <string name="site_settings_categories_title">分類</string>
     <string name="page_is_posts_page_warning">最新文章頁面的內容由系統自動產生，無法編輯。</string>
+    <string name="site_settings_blogging_reminders_title">提醒</string>
     <string name="gutenberg_native_border_settings">框線設定</string>
     <string name="storage_utils_dialog_dont_show_button">不要再顯示</string>
     <string name="storage_utils_dialog_ok_button">檢視儲存空間</string>

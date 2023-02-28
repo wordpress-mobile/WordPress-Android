@@ -1,2 +1,1 @@
-We made some tweaks to blogging prompts so you can answer old prompts or disable new ones. (Although we can’t imagine why you would.)
-While we were making updates, we removed the option to block and report authors on self-hosted sites.
+We’ve added a little extra support for sites with individual plugins. These plugins don’t support all app features yet, but you can always install the full Jetpack plugin instead. Ready to launch?

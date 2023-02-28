@@ -12,7 +12,8 @@ import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
-private const val FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR = false
+const val FETCH_DOMAINS_VENDOR_DOT = "dot"
+const val FETCH_DOMAINS_VENDOR_MOBILE = "mobile"
 private const val FETCH_DOMAINS_SIZE = 20
 
 /**
@@ -33,23 +34,17 @@ class FetchDomainsUseCase @Inject constructor(
 
     suspend fun fetchDomains(
         query: String,
-        segmentId: Long? = null,
-        includeVendorDot: Boolean = FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR,
-        includeDotBlog: Boolean = false,
+        vendor: String,
+        onlyWordpressCom: Boolean,
         size: Int = FETCH_DOMAINS_SIZE
     ): OnSuggestedDomains {
-        /**
-         * Depending on the payload the server may override the following values. Setting this values here to get
-         * reasonable results in case SKIP button is pressed ("default" template)
-         */
         val payload = SuggestDomainsPayload(
-            query = query,
-            segmentId = segmentId,
-            quantity = size,
-            includeVendorDot = includeVendorDot,
+            query,
+            size,
+            vendor,
+            onlyWordpressCom,
             includeWordpressCom = true,
-            onlyWordpressCom = true,
-            includeDotBlogSubdomain = includeDotBlog
+            includeDotBlogSubdomain = true
         )
 
         return suspendCancellableCoroutine { cont ->

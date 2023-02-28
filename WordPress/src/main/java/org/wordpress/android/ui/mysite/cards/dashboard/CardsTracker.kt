@@ -23,7 +23,8 @@ class CardsTracker @Inject constructor(
         QUICK_START("quick_start"),
         STATS("stats"),
         POST("post"),
-        BLOGGING_PROMPT("blogging_prompt")
+        BLOGGING_PROMPT("blogging_prompt"),
+        PROMOTE_WITH_BLAZE("promote_with_blaze")
     }
 
     enum class QuickStartSubtype(val label: String) {
@@ -117,6 +118,7 @@ fun DashboardCardType.toTypeValue(): Type {
         DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS -> Type.POST
         DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST
         DashboardCardType.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
+        DashboardCardType.PROMOTE_WITH_BLAZE_CARD -> Type.PROMOTE_WITH_BLAZE
     }
 }
 

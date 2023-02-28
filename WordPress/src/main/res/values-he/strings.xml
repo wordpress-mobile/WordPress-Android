@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-01 17:54:09+0000
+Translation-Revision-Date: 2023-02-15 16:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: he_IL
 -->
 <resources>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">להתחיל לממש את מלוא הפוטנציאל של האתר. לראות נתונים סטטיסטיים, לקרוא הודעות ועוד בעזרת Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">באתר שלך מותקן תוסף של Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">האפליקציה לנייד של Jetpack נועדה לעבוד בשילוב עם התוסף של Jetpack. כדאי להחליף עכשיו כדי לגשת לנתונים סטטיסטיים, להודעות, ל-Reader ועוד.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">לקבל הודעות על תגובות חדשות, לייקים, צפיות ועוד.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">למצוא את האתרים והקהילות המועדפים עליך, לעקוב אחריהם ולשתף את התוכן שלך.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">להגדיל את התעבורה לאתר בעזרת גישה לתובנות שימושיות ולנתונים סטטיסטיים מקיפים.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">נתונים סטטיסטיים ותובנות</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">השירות של Jetpack מאפשר לך להפיק את המרב מהאתר שלך ב-WordPress. ההחלפה היא חינמית ואורכת דקה בלבד.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">לשפר את השירות של WordPress עם Jetpack</string>
+    <string name="blogging_prompts_onboarding_content_note_content">אפשר לשלוט ב\'הצעות כתיבה בבלוג\' וב\'תזכורות\' בכל עת דרך \'האתר שלי\' &gt; \'הגדרות\' &gt; \'פרסום בבלוג\'</string>
+    <string name="blogging_reminders_prompt_subtitle">ההודעה תכלול מילה או ביטוי קצר להשראה</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">יש לעבור אל &lt;b&gt;הגדרות האתר&lt;/b&gt; כדי להפעיל אותן בחזרה</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">הצעות הכתיבה בבלוג מוסתרות</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">להשבית הצעות כתיבה</string>
+    <string name="support_forum_caption">לקבל עזרה מקבוצת המתנדבים שלנו.</string>
+    <string name="support_forum_title">פורומי הקהילה</string>
+    <string name="site_settings_blogging_reminders_notification_title">תזכורת לכתיבה בבלוג</string>
+    <string name="site_settings_blogging_prompts_title">להציג הצעות כתיבה</string>
+    <string name="site_settings_blogging">פרסום בבלוג</string>
     <string name="install_play_store_to_get_jetpack">יש להתקין את Google Play Store כדי להוריד את האפליקציה של Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">אפשר לחכות עם זה</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">לעבור ל-Jetpack </string>
@@ -309,7 +328,9 @@ Language: he_IL
     <string name="blogging_prompts_onboarding_content_note_title">הערה:</string>
     <string name="blogging_prompts_onboarding_content_bottom">נציג לך הצעה חדשה כל יום בלוח הבקרה כדי לעזור לתהליך היצירתי להתחיל לנוע!</string>
     <string name="blogging_prompts_onboarding_content_top">הדרך הטובה ביותר לשפר את יכולת הכתיבה היא ליצור הרגל לכתיבה ולשתף עם אחרים – כאן בדיוק נכנסות ההצעות!</string>
+    <string name="blogging_prompts_onboarding_header_title">שמחים להציג\nהצעות כתיבה בבלוג</string>
     <string name="blogging_prompt_set_reminders">הגדרת תזכורות</string>
+    <string name="blogging_reminders_prompt_title">לכלול \'הצעות כתיבה בבלוג\'</string>
     <string name="post_publishing_set_up_blogging_prompts_message">פרסום פוסטים באופן קבוע מושך קוראים חדשים. אפשר לספר לנו מתי ברצונך לכתוב, ואנחנו נשלח לך תזכורת!</string>
     <string name="set_your_blogging_prompts_title">לשפר את הכתיבה על ידי יצירת הרגל</string>
     <string name="site_creation_intent_writing_poetry">כתיבה ושירה</string>
@@ -615,6 +636,7 @@ Language: he_IL
     <string name="support_ticket_subject">תמיכה ב-WordPress ל-Android</string>
     <string name="site_settings_categories_hint">לנהל את הקטגוריות באתר שלך</string>
     <string name="site_settings_categories_title">קטגוריות</string>
+    <string name="site_settings_blogging_reminders_title">תזכורות</string>
     <string name="page_is_posts_page_warning">התוכן בעמוד \'הפוסטים האחרונים\' מיוצר באופן אוטומטי ולא ניתן לערוך אותו.</string>
     <string name="gutenberg_native_border_settings">הגדרות גבול</string>
     <string name="storage_utils_dialog_dont_show_button">לא להציג שוב</string>

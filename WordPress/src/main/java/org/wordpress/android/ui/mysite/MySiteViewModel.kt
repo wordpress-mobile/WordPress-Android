@@ -39,6 +39,8 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.blaze.BlazeFlowSource
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -61,6 +63,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
@@ -70,6 +73,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStat
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PromoteWithBlazeUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
@@ -123,6 +127,7 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BlazeFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsListFeatureConfig
@@ -196,7 +201,8 @@ class MySiteViewModel @Inject constructor(
     private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
-    private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker
+    private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker,
+    private val blazeFeatureUtils: BlazeFeatureUtils
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -326,7 +332,8 @@ class MySiteViewModel @Inject constructor(
                     backupAvailable,
                     scanAvailable,
                     cardsUpdate,
-                    bloggingPromptsUpdate
+                    bloggingPromptsUpdate,
+                    promoteWithBlazeUpdate
                 )
                 selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
@@ -371,7 +378,8 @@ class MySiteViewModel @Inject constructor(
         backupAvailable: Boolean,
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
-        bloggingPromptUpdate: BloggingPromptUpdate?
+        bloggingPromptUpdate: BloggingPromptUpdate?,
+        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
             site,
@@ -383,7 +391,8 @@ class MySiteViewModel @Inject constructor(
             backupAvailable,
             scanAvailable,
             cardsUpdate,
-            bloggingPromptUpdate
+            bloggingPromptUpdate,
+            promoteWithBlazeUpdate
         )
 
         val siteInfoCardBuilderParams = SiteInfoCardBuilderParams(
@@ -471,7 +480,8 @@ class MySiteViewModel @Inject constructor(
         backupAvailable: Boolean,
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?,
-        bloggingPromptUpdate: BloggingPromptUpdate?
+        bloggingPromptUpdate: BloggingPromptUpdate?,
+        promoteWithBlazeUpdate: PromoteWithBlazeUpdate?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
             InfoItemBuilderParams(
@@ -563,6 +573,14 @@ class MySiteViewModel @Inject constructor(
                     onViewMoreClick = this::onBloggingPromptViewMoreClick,
                     onViewAnswersClick = this::onBloggingPromptViewAnswersClick,
                     onRemoveClick = this::onBloggingPromptRemoveClick
+                ),
+                promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
+                    isEligible = blazeFeatureUtils.shouldShowPromoteWithBlazeCard(
+                        promoteWithBlazeUpdate?.blazeStatusModel
+                    ),
+                    onClick = this::onPromoteWithBlazeCardClick,
+                    onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
+                    onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
                 )
             ),
             QuickLinkRibbonBuilderParams(
@@ -1475,6 +1493,31 @@ class MySiteViewModel @Inject constructor(
     private fun onJetpackInstallFullPluginLearnMoreClick() {
         trackWithTabSourceIfNeeded(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_TAPPED)
         _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
+    }
+
+    private fun onPromoteWithBlazeCardMoreMenuClick() {
+        blazeFeatureUtils.track(
+            Stat.BLAZE_FEATURE_MENU_ACCESSED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
+    }
+
+    private fun onPromoteWithBlazeCardClick() {
+        blazeFeatureUtils.track(
+            Stat.BLAZE_FEATURE_TAPPED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
+        _onNavigation.value =
+            Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
+    }
+
+    private fun onPromoteWithBlazeCardHideMenuItemClick() {
+        blazeFeatureUtils.track(
+            Stat.BLAZE_FEATURE_HIDE_TAPPED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
+        blazeFeatureUtils.hidePromoteWithBlazeCard()
+        refresh()
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()

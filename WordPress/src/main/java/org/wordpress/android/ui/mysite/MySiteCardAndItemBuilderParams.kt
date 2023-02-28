@@ -61,7 +61,8 @@ sealed class MySiteCardAndItemBuilderParams {
         val onErrorRetryClick: () -> Unit,
         val todaysStatsCardBuilderParams: TodaysStatsCardBuilderParams,
         val postCardBuilderParams: PostCardBuilderParams,
-        val bloggingPromptCardBuilderParams: BloggingPromptCardBuilderParams
+        val bloggingPromptCardBuilderParams: BloggingPromptCardBuilderParams,
+        val promoteWithBlazeCardBuilderParams: PromoteWithBlazeCardBuilderParams
     ) : MySiteCardAndItemBuilderParams()
 
     data class TodaysStatsCardBuilderParams(
@@ -104,6 +105,13 @@ sealed class MySiteCardAndItemBuilderParams {
         val onViewMoreClick: () -> Unit,
         val onViewAnswersClick: (promptId: Int) -> Unit,
         val onRemoveClick: () -> Unit
+    ) : MySiteCardAndItemBuilderParams()
+
+    data class PromoteWithBlazeCardBuilderParams(
+        val isEligible: Boolean = false,
+        val onClick: () -> Unit,
+        val onHideMenuItemClick: () -> Unit,
+        val onMoreMenuClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
     data class SingleActionCardParams(

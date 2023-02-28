@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType
 import org.wordpress.android.models.networkresource.ListState
@@ -24,19 +25,20 @@ import org.wordpress.android.models.networkresource.ListState.Success
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelAvailableUiState
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelUnavailabilityUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_DOT
+import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_MOBILE
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -52,6 +54,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val domainSanitizer: SiteCreationDomainSanitizer,
     private val fetchDomainsUseCase: FetchDomainsUseCase,
+    private val purchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig,
     private val tracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
@@ -66,8 +69,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
     val uiState: LiveData<DomainsUiState> = _uiState
 
     private var currentQuery: DomainSuggestionsQuery? = null
-    private var listState: ListState<String> = ListState.Init()
-    private var selectedDomain by Delegates.observable<String?>(null) { _, old, new ->
+    private var listState: ListState<DomainModel> = ListState.Init()
+    private var selectedDomain by Delegates.observable<DomainModel?>(null) { _, old, new ->
         if (old != new) {
             updateUiStateToContent(currentQuery, listState)
         }
@@ -92,59 +95,45 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     fun start() {
-        if (isStarted) {
-            return
-        }
+        if (isStarted) return
         isStarted = true
         tracker.trackDomainsAccessed()
         resetUiState()
     }
 
-    fun createSiteBtnClicked() {
+    fun onCreateSiteBtnClicked() {
         val domain = requireNotNull(selectedDomain) {
             "Create site button should not be visible if a domain is not selected"
         }
-        tracker.trackDomainSelected(domain, currentQuery?.value ?: "")
-        _createSiteBtnClicked.value = domain
+        tracker.trackDomainSelected(domain.domainName, currentQuery?.value ?: "")
+        _createSiteBtnClicked.value = domain.domainName
     }
 
-    fun onClearTextBtnClicked() {
-        _clearBtnClicked.call()
-    }
+    fun onClearTextBtnClicked() = _clearBtnClicked.call()
 
-    fun onHelpClicked() {
-        _onHelpClicked.call()
-    }
+    fun onHelpClicked() = _onHelpClicked.call()
 
-    fun updateQuery(query: String) {
-        updateQueryInternal(UserQuery(query))
-    }
+    fun onQueryChanged(query: String) = updateQuery(UserQuery(query))
 
-    private fun updateQueryInternal(query: DomainSuggestionsQuery?) {
+    private fun updateQuery(query: DomainSuggestionsQuery?) {
         currentQuery = query
         selectedDomain = null
         fetchDomainsJob?.cancel() // cancel any previous requests
-        if (query != null && !query.value.isBlank()) {
+        if (query != null && query.value.isNotBlank()) {
             fetchDomains(query)
         } else {
             resetUiState()
         }
     }
 
-    private fun resetUiState() {
-        updateUiStateToContent(null, Ready(emptyList()))
-    }
+    private fun resetUiState() = updateUiStateToContent(null, Ready(emptyList()))
 
     private fun fetchDomains(query: DomainSuggestionsQuery) {
         if (networkUtils.isNetworkAvailable()) {
             updateUiStateToContent(query, Loading(Ready(emptyList()), false))
             fetchDomainsJob = launch {
                 delay(THROTTLE_DELAY)
-                val onSuggestedDomains: OnSuggestedDomains = fetchDomainsUseCase.fetchDomains(
-                    query.value,
-                    includeVendorDot = true,
-                    includeDotBlog = true
-                )
+                val onSuggestedDomains: OnSuggestedDomains = fetchDomainsByPurchasingFeatureConfig(query.value)
 
                 withContext(mainDispatcher) {
                     onDomainsFetched(query, onSuggestedDomains)
@@ -157,6 +146,13 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 Error(listState, errorMessageResId = R.string.no_network_message)
             )
         }
+    }
+
+    private suspend fun fetchDomainsByPurchasingFeatureConfig(query: String): OnSuggestedDomains {
+        val onlyWordpressCom = !purchasingFeatureConfig.isEnabledOrManuallyOverridden()
+        val vendor = if (onlyWordpressCom) FETCH_DOMAINS_VENDOR_DOT else FETCH_DOMAINS_VENDOR_MOBILE
+
+        return fetchDomainsUseCase.fetchDomains(query, vendor, onlyWordpressCom)
     }
 
     private fun onDomainsFetched(query: DomainSuggestionsQuery, event: OnSuggestedDomains) {
@@ -177,62 +173,67 @@ class SiteCreationDomainsViewModel @Inject constructor(
         } else {
             /**
              * We would like to show the domains that matches the current query at the top. For this, we split the
-             * domain names into two, one part for the domain names that start with the current query plus `.` and the
+             * domains into two, one part for the domain names that start with the current query plus `.` and the
              * other part for the others. We then combine them back again into a single list.
              */
-            val domainNames = event.suggestions.map { it.domain_name }
-                .partition { it.startsWith("${query.value}.") }
+            val domains = event.suggestions.map(::parseSuggestion)
+                .partition { it.domainName.startsWith("${query.value}.") }
                 .toList().flatten()
 
-            // We inform the user when the search query contains non-alphanumeric characters
-            val emptyListMessage = if (event.isError && event.error.type == SuggestDomainErrorType.INVALID_QUERY) {
-                UiStringRes(R.string.new_site_creation_empty_domain_list_message_invalid_query)
-            } else {
-                UiStringRes(R.string.new_site_creation_empty_domain_list_message)
-            }
+            val isInvalidQuery = event.isError && event.error.type == SuggestDomainErrorType.INVALID_QUERY
+            val emptyListMessage = UiStringRes(
+                if (isInvalidQuery) R.string.new_site_creation_empty_domain_list_message_invalid_query
+                else R.string.new_site_creation_empty_domain_list_message
+            )
 
-            updateUiStateToContent(query, Success(domainNames), emptyListMessage)
+            updateUiStateToContent(query, Success(domains), emptyListMessage)
         }
+    }
+
+    private fun parseSuggestion(response: DomainSuggestionResponse): DomainModel = with(response) {
+        DomainModel(
+            domainName = domain_name,
+            isFree = is_free,
+            cost = cost.orEmpty(),
+        )
     }
 
     private fun updateUiStateToContent(
         query: DomainSuggestionsQuery?,
-        state: ListState<String>,
+        state: ListState<DomainModel>,
         emptyListMessage: UiString? = null
     ) {
         listState = state
         val isNonEmptyUserQuery = isNonEmptyUserQuery(query)
-        updateUiState(
-            DomainsUiState(
-                headerUiState = createHeaderUiState(
-                    !isNonEmptyUserQuery
-                ),
-                searchInputUiState = createSearchInputUiState(
-                    showProgress = state is Loading,
-                    showClearButton = isNonEmptyUserQuery,
-                    showDivider = state.data.isNotEmpty(),
-                    showKeyboard = true
-                ),
-                contentState = createDomainsUiContentState(query, state, emptyListMessage),
-                createSiteButtonContainerVisibility = selectedDomain != null
-            )
+
+        _uiState.value = DomainsUiState(
+            headerUiState = createHeaderUiState(
+                !isNonEmptyUserQuery
+            ),
+            searchInputUiState = createSearchInputUiState(
+                showProgress = state is Loading,
+                showClearButton = isNonEmptyUserQuery,
+                showDivider = state.data.isNotEmpty()
+            ),
+            contentState = createDomainsUiContentState(query, state, emptyListMessage),
+            createSiteButtonContainerVisibility = getCreateSiteButtonState()
         )
     }
 
-    private fun updateUiState(uiState: DomainsUiState) {
-        _uiState.value = uiState
+    private fun getCreateSiteButtonState(): Boolean {
+        return selectedDomain?.isFree ?: false
     }
 
     private fun createDomainsUiContentState(
         query: DomainSuggestionsQuery?,
-        state: ListState<String>,
+        state: ListState<DomainModel>,
         emptyListMessage: UiString?
     ): DomainsUiContentState {
         // Only treat it as an error if the search is user initiated
         val isError = isNonEmptyUserQuery(query) && state is Error
 
         val items = createSuggestionsUiStates(
-            onRetry = { updateQueryInternal(query) },
+            onRetry = { updateQuery(query) },
             query = query?.value,
             data = state.data,
             errorFetchingSuggestions = isError,
@@ -250,17 +251,17 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private fun createSuggestionsUiStates(
         onRetry: () -> Unit,
         query: String?,
-        data: List<String>,
+        data: List<DomainModel>,
         errorFetchingSuggestions: Boolean,
         @StringRes errorResId: Int?
-    ): List<DomainsListItemUiState> {
-        val items: ArrayList<DomainsListItemUiState> = ArrayList()
+    ): List<ListItemUiState> {
+        val items: ArrayList<ListItemUiState> = ArrayList()
         if (errorFetchingSuggestions) {
-            val errorUiState = DomainsFetchSuggestionsErrorUiState(
+            val errorUiState = Old.ErrorItemUiState(
                 messageResId = errorResId ?: R.string.site_creation_fetch_suggestions_error_unknown,
-                retryButtonResId = R.string.button_retry
+                retryButtonResId = R.string.button_retry,
+                onClick = onRetry,
             )
-            errorUiState.onItemTapped = onRetry
             items.add(errorUiState)
         } else {
             query?.let { value ->
@@ -269,42 +270,46 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 }
             }
 
-            data.forEach { domainName ->
-                val itemUiState = DomainsModelAvailableUiState(
-                    domainSanitizer.getName(domainName),
-                    domainSanitizer.getDomain(domainName),
-                    checked = domainName == selectedDomain
-                )
-                itemUiState.onItemTapped = { setSelectedDomainName(domainName) }
+            data.forEach { domain ->
+                val itemUiState = createAvailableItemUiState(domain)
                 items.add(itemUiState)
             }
         }
         return items
     }
 
+    private fun createAvailableItemUiState(domain: DomainModel): ListItemUiState {
+        return when (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
+            true -> New.DomainUiState(
+                domain.domainName,
+                domain.cost,
+                onClick = { onDomainSelected(domain) },
+            )
+            else -> Old.DomainUiState.AvailableDomain(
+                domainSanitizer.getName(domain.domainName),
+                domainSanitizer.getDomain(domain.domainName),
+                checked = domain == selectedDomain,
+                onClick = { onDomainSelected(domain) }
+            )
+        }
+    }
+
+    @Suppress("ForbiddenComment", "ReturnCount")
     private fun getDomainUnavailableUiState(
         query: String,
-        domains: List<String>
-    ): DomainsModelUiState? {
-        if (domains.isEmpty()) {
-            return null
-        }
-
+        domains: List<DomainModel>
+    ): ListItemUiState? {
+        if (domains.isEmpty()) return null
+        if (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) return null // TODO: Add FQDN availability check
         val sanitizedQuery = domainSanitizer.sanitizeDomainQuery(query)
-
-        val isDomainUnavailable = (domains.find { domain ->
-            domain.startsWith("$sanitizedQuery.")
-        }).isNullOrEmpty()
-
+        val isDomainUnavailable = domains.none { it.domainName.startsWith("$sanitizedQuery.") }
         return if (isDomainUnavailable) {
-            DomainsModelUnavailabilityUiState(
+            Old.DomainUiState.UnavailableDomain(
                 sanitizedQuery,
                 ".wordpress.com",
                 UiStringRes(R.string.new_site_creation_unavailable_domain)
             )
-        } else {
-            null
-        }
+        } else null
     }
 
     private fun createHeaderUiState(
@@ -320,24 +325,28 @@ class SiteCreationDomainsViewModel @Inject constructor(
         showProgress: Boolean,
         showClearButton: Boolean,
         showDivider: Boolean,
-        showKeyboard: Boolean
     ): SiteCreationSearchInputUiState {
         return SiteCreationSearchInputUiState(
             hint = UiStringRes(R.string.new_site_creation_search_domain_input_hint),
             showProgress = showProgress,
             showClearButton = showClearButton,
             showDivider = showDivider,
-            showKeyboard = showKeyboard
+            showKeyboard = true
         )
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun setSelectedDomainName(domainName: String) {
-        selectedDomain = domainName
+    fun onDomainSelected(domain: DomainModel) {
+        selectedDomain = domain.takeIf { it.isFree }
     }
 
-    private fun isNonEmptyUserQuery(query: DomainSuggestionsQuery?): Boolean =
-        query is UserQuery && !query.value.isBlank()
+    private fun isNonEmptyUserQuery(query: DomainSuggestionsQuery?) = query is UserQuery && query.value.isNotBlank()
+
+    data class DomainModel(
+        val domainName: String,
+        val isFree: Boolean,
+        val cost: String,
+    )
 
     data class DomainsUiState(
         val headerUiState: SiteCreationHeaderUiState?,
@@ -348,7 +357,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         sealed class DomainsUiContentState(
             val emptyViewVisibility: Boolean,
             val exampleViewVisibility: Boolean,
-            val items: List<DomainsListItemUiState>
+            val items: List<ListItemUiState>
         ) {
             object Initial : DomainsUiContentState(
                 emptyViewVisibility = false,
@@ -362,7 +371,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 items = emptyList()
             )
 
-            class VisibleItems(items: List<DomainsListItemUiState>) : DomainsUiContentState(
+            class VisibleItems(items: List<ListItemUiState>) : DomainsUiContentState(
                 emptyViewVisibility = false,
                 exampleViewVisibility = false,
                 items = items
@@ -370,35 +379,49 @@ class SiteCreationDomainsViewModel @Inject constructor(
         }
     }
 
-    sealed class DomainsListItemUiState {
-        var onItemTapped: (() -> Unit)? = null
-        open val clickable: Boolean = false
-
-        sealed class DomainsModelUiState(
-            open val name: String,
-            open val domain: String,
-            open val checked: Boolean,
-            val radioButtonVisibility: Boolean,
-            open val subTitle: UiString? = null,
-            override val clickable: Boolean
-        ) : DomainsListItemUiState() {
-            data class DomainsModelAvailableUiState(
-                override val name: String,
-                override val domain: String,
-                override val checked: Boolean
-            ) : DomainsModelUiState(name, domain, checked, true, clickable = true)
-
-            data class DomainsModelUnavailabilityUiState(
-                override val name: String,
-                override val domain: String,
-                override val subTitle: UiString
-            ) : DomainsModelUiState(name, domain, false, false, subTitle, false)
+    sealed class ListItemUiState(open val type: Type) {
+        enum class Type {
+            DOMAIN_V1,
+            DOMAIN_V2,
+            ERROR_V1,
         }
 
-        data class DomainsFetchSuggestionsErrorUiState(
-            @StringRes val messageResId: Int,
-            @StringRes val retryButtonResId: Int
-        ) : DomainsListItemUiState()
+        sealed class Old(override val type: Type) : ListItemUiState(type) {
+            sealed class DomainUiState(
+                open val name: String,
+                open val domain: String,
+                open val checked: Boolean,
+                val radioButtonVisibility: Boolean,
+                open val subTitle: UiString? = null,
+            ) : Old(Type.DOMAIN_V1) {
+                data class AvailableDomain(
+                    override val name: String,
+                    override val domain: String,
+                    override val checked: Boolean,
+                    val onClick: () -> Unit,
+                ) : DomainUiState(name, domain, checked, true)
+
+                data class UnavailableDomain(
+                    override val name: String,
+                    override val domain: String,
+                    override val subTitle: UiString,
+                ) : DomainUiState(name, domain, false, false, subTitle)
+            }
+
+            data class ErrorItemUiState(
+                @StringRes val messageResId: Int,
+                @StringRes val retryButtonResId: Int,
+                val onClick: () -> Unit,
+            ) : Old(Type.ERROR_V1)
+        }
+
+        sealed class New(override val type: Type) : ListItemUiState(type) {
+            data class DomainUiState(
+                val domainName: String,
+                val cost: String,
+                val onClick: () -> Unit,
+            ) : New(Type.DOMAIN_V2)
+        }
     }
 
     /**

@@ -321,6 +321,12 @@ class AppPrefsWrapper @Inject constructor() {
         isShown: Boolean
     ) = AppPrefs.setShouldShowJetpackFullPluginInstallOnboarding(siteId, isShown)
 
+    fun getShouldHidePromoteWithBlazeCard(): Boolean =
+        AppPrefs.getShouldHidePromoteWithBlazeCard()
+
+    fun setShouldHidePromoteWithBlazeCard(isHidden: Boolean) =
+        AppPrefs.setShouldHidePromoteWithBlazeCard(isHidden)
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {

@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-02 08:54:09+0000
+Translation-Revision-Date: 2023-02-15 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: it
 -->
 <resources>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Sblocca tutto il potenziale del tuo sito web. Ottieni statistiche, notifiche e altro con Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Il tuo sito ha il plugin Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">L\'app mobile Jetpack è progettata per funzionare insieme al plugin Jetpack. Passa ora per accedere a statistiche, notifiche, reader e altro ancora.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Ricevi notifiche per nuovi commenti, Mi piace, visualizzazioni e altro ancora.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Trova e segui i tuoi siti e le community preferiti e condividi i tuoi contenuti.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Osserva la crescita del tuo traffico con informazioni utili e statistiche complete.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistiche e panoramica</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack ti permette di fare di più con il tuo sito WordPress. Il passaggio è gratuito e richiede solo un minuto.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Dai una spinta a WordPress con Jetpack</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Puoi controllare le richieste di blog e i promemoria in qualsiasi momento in Il mio sito &gt; Impostazioni &gt; Blog</string>
+    <string name="blogging_reminders_prompt_subtitle">La notifica includerà una parola o una breve frase da cui trarre ispirazione</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Visita le &lt;b&gt;Impostazioni del sito&lt;/b&gt; per riattivare</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Richieste di blog nascoste</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Disattiva richieste</string>
+    <string name="support_forum_caption">Ottieni supporto dal nostro gruppo di volontari.</string>
+    <string name="support_forum_title">Forum della community</string>
+    <string name="site_settings_blogging_reminders_notification_title">Promemoria relativi al blog</string>
+    <string name="site_settings_blogging_prompts_title">Mostra richieste</string>
+    <string name="site_settings_blogging">Creazione di un blog</string>
     <string name="install_play_store_to_get_jetpack">Installa Google Play Store per ottenere l\'app Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Fallo più tardi</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Passa a Jetpack </string>
@@ -309,7 +328,9 @@ Language: it
     <string name="blogging_prompts_onboarding_content_note_title">Nota:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Ti mostreremo una nuova richiesta ogni giorno sulla tua bacheca per aiutarti a mantenere viva la tua vena creativa.</string>
     <string name="blogging_prompts_onboarding_content_top">Il modo migliore per diventare uno scrittore o una scrittrice migliore è abituarsi a scrivere e condividere questa abitudine con gli altri. È qui che entrano in gioco le Richieste.</string>
+    <string name="blogging_prompts_onboarding_header_title">Introduzione\nRichieste di blog</string>
     <string name="blogging_prompt_set_reminders">Imposta promemoria</string>
+    <string name="blogging_reminders_prompt_title">Include una Richiesta di blog</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Pubblicare attrae regolarmente nuovi lettori. Dicci quando vuoi scrivere e ti invieremo un promemoria.</string>
     <string name="set_your_blogging_prompts_title">Diventa uno scrittore o una scrittrice migliore costruendoti un\'abitudine</string>
     <string name="site_creation_intent_writing_poetry">Poesia e scrivere</string>
@@ -615,6 +636,7 @@ Language: it
     <string name="support_ticket_subject">Supporto WordPress per Android</string>
     <string name="site_settings_categories_hint">Gestisci le categorie del tuo sito</string>
     <string name="site_settings_categories_title">Categorie</string>
+    <string name="site_settings_blogging_reminders_title">Promemoria</string>
     <string name="page_is_posts_page_warning">Il contenuto della pagina degli articoli recenti viene generato automaticamente e non può essere modificato.</string>
     <string name="gutenberg_native_border_settings">Impostazioni del bordo</string>
     <string name="storage_utils_dialog_dont_show_button">Non mostrare nuovamente</string>

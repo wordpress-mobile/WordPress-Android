@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-08 12:21:32+0000
+Translation-Revision-Date: 2023-02-15 09:54:11+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ru
 -->
 <resources>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Используйте возможности сайта максимально эффективно. Установите Jetpack и получите доступ к статистике, уведомлениям и многим другим функциям.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">На вашем сайте есть плагин Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Мобильное приложение Jetpack создано работать в паре с плагином Jetpack. Перейдите в приложение, чтобы использовать статистику, уведомления, Чтиво и другие возможности.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Получайте уведомления о новых комментариях, отметках «Нравится», просмотрах и других событиях.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Находите интересные сайты и сообщества и подписывайтесь на них, а также публикуйте своё содержимое.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Увеличивайте посещаемость с помощью полезной статистики и аналитики.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Статистика и обзор</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack открывает дополнительные возможности для сайтов WordPress. Переход бесплатен и занимает всего минуту.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Расширьте возможности WordPress с помощью Jetpack</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Настроить подсказки по ведению блога и напоминания можно в любое время в разделе Мой сайт &gt; Настройки &gt; Ведение блога.</string>
+    <string name="blogging_reminders_prompt_subtitle">Напоминание будет содержать слово или короткую вдохновляющую фразу</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Перейдите в &lt;b&gt;настройки сайта&lt;/b&gt;, чтобы снова включить</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_title">Подсказки для ведения блога скрыты</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Отключить подсказки</string>
+    <string name="support_forum_caption">Обратитесь за помощью к нашим волонтерам.</string>
     <string name="support_forum_title">Форумы сообщества</string>
+    <string name="site_settings_blogging_reminders_notification_title">Напоминания блогинга</string>
     <string name="site_settings_blogging_prompts_title">Показать подсказки</string>
+    <string name="site_settings_blogging">Ведение блога</string>
     <string name="install_play_store_to_get_jetpack">Пожалуйста, установите Google Play Store, чтобы получить приложение Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Позже</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Перейти на Jetpack </string>
