@@ -229,30 +229,30 @@ class BlazeOverlayFragment : Fragment() {
                 }
                 .width(80.dp)
                 .height(80.dp))
-            PostTitle(title = postUIModel.title, modifier = Modifier.constrainAs(title) {
-                top.linkTo(postContainer.top, 15.dp)
-                start.linkTo(postContainer.start, 20.dp)
-                postUIModel.featuredImageUrl?.run {
-                    end.linkTo(featuredImage.start, margin = 20.dp)
-                } ?: run {
-                    end.linkTo(postContainer.end, margin = 20.dp)
-                }
-                width = Dimension.fillToConstraints
-                height = Dimension.wrapContent
-            })
+            PostTitle(
+                title = postUIModel.title, modifier = Modifier.constrainAs(title) {
+                    top.linkTo(postContainer.top, 15.dp)
+                    start.linkTo(postContainer.start, 20.dp)
+                    postUIModel.featuredImageUrl?.run {
+                        end.linkTo(featuredImage.start, margin = 20.dp)
+                    } ?: run {
+                        end.linkTo(postContainer.end, margin = 20.dp)
+                    }
+                    width = Dimension.fillToConstraints
+                }.wrapContentHeight()
+            )
             val url = createRef()
             PostUrl(url = postUIModel.url, modifier = Modifier.constrainAs(url) {
-                top.linkTo(title.bottom, 5.dp)
+                top.linkTo(title.bottom)
                 start.linkTo(postContainer.start, 20.dp)
                 postUIModel.featuredImageUrl?.run {
                     end.linkTo(featuredImage.start, margin = 20.dp)
                 } ?: run {
                     end.linkTo(postContainer.end, margin = 20.dp)
                 }
-                bottom.linkTo(postContainer.bottom, 15.dp)
                 width = Dimension.fillToConstraints
                 height = Dimension.wrapContent
-            })
+            }.padding(bottom = 15.dp))
         }
     }
 
@@ -286,7 +286,8 @@ class BlazeOverlayFragment : Fragment() {
             fontSize = FontSize.Large.value,
             fontWeight = FontWeight.Bold,
             maxLines = 2,
-            modifier = modifier
+            overflow = TextOverflow.Ellipsis,
+            modifier = modifier.wrapContentHeight()
         )
     }
 
@@ -296,6 +297,7 @@ class BlazeOverlayFragment : Fragment() {
             text = url,
             style = MaterialTheme.typography.body2,
             maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
             modifier = modifier
         )
     }
