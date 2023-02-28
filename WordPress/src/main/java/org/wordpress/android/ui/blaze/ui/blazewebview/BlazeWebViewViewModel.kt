@@ -47,7 +47,15 @@ class BlazeWebViewViewModel @Inject constructor(
         blazeFlowSource = source
         val url = buildUrl(promoteScreen)
         blazeFlowStep = blazeFeatureUtils.extractCurrentStep(url)
+        validateAndFinishIfNeeded()
         postScreenState(model.value.copy(url = url, addressToLoad = prepareUrl(url)))
+    }
+
+    private fun validateAndFinishIfNeeded() {
+        if (accountStore.account.userName.isNullOrEmpty() || accountStore.accessToken.isNullOrEmpty()) {
+            blazeFeatureUtils.trackFlowError(blazeFlowSource, blazeFlowStep)
+            postActionEvent(BlazeActionEvent.FinishActivity)
+        }
     }
 
     private fun buildUrl(promoteScreen: BlazeUiState.PromoteScreen?): String {
@@ -82,6 +90,7 @@ class BlazeWebViewViewModel @Inject constructor(
     private fun prepareUrl(url: String): String {
         val username = accountStore.account.userName
         val accessToken = accountStore.accessToken
+
         var addressToLoad = url
 
         // Custom domains are not properly authenticated due to a server side(?) issue, so this gets around that
