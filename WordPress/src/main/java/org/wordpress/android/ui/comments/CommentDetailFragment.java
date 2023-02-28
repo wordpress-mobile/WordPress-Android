@@ -94,7 +94,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -102,10 +101,11 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.config.UnifiedCommentsCommentEditFeatureConfig;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -446,7 +446,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (result != null) {
             mEditReply.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY));
             mEditReply.setSelection(result.getInt(
-                    CommentFullScreenDialogFragment.RESULT_SELECTION_START),
+                            CommentFullScreenDialogFragment.RESULT_SELECTION_START),
                     result.getInt(CommentFullScreenDialogFragment.RESULT_SELECTION_END));
             mEditReply.requestFocus();
         }
@@ -539,6 +539,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private SiteModel createDummyWordPressComSite(long siteId) {
         SiteModel site = new SiteModel();
         site.setIsWPCom(true);
+        site.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
         site.setSiteId(siteId);
         return site;
     }

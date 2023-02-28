@@ -6,6 +6,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
+import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
@@ -29,6 +30,7 @@ class MySiteSourceManager @Inject constructor(
     cardsSource: CardsSource,
     siteIconProgressSource: SiteIconProgressSource,
     private val bloggingPromptCardSource: BloggingPromptCardSource,
+    promoteWithBlazeCardSource: PromoteWithBlazeCardSource,
     private val selectedSiteRepository: SelectedSiteRepository
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
@@ -40,7 +42,8 @@ class MySiteSourceManager @Inject constructor(
         scanAndBackupSource,
         dynamicCardsSource,
         cardsSource,
-        bloggingPromptCardSource
+        bloggingPromptCardSource,
+        promoteWithBlazeCardSource
     )
 
     private val showDashboardCards: Boolean

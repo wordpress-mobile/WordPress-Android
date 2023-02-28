@@ -4,10 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -17,6 +15,7 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.bloggingprompts.promptslist.compose.BloggingPromptsListScreen
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.posts.PostUtils
+import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
 class BloggingPromptsListActivity : LocaleAwareActivity() {
@@ -42,12 +41,6 @@ class BloggingPromptsListActivity : LocaleAwareActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.onScreenShown()
-    }
-
-    // TODO it might be safer bringing in the androidx.activity:activity-compose lib
-    private fun setContent(content: @Composable () -> Unit) {
-        val composeView = ComposeView(this).apply { setContent(content) }
-        setContentView(composeView)
     }
 
     private fun observeActions() {

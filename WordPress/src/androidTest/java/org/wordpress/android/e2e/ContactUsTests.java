@@ -23,7 +23,7 @@ public class ContactUsTests extends BaseTest {
             new LoginFlow()
                 .chooseContinueWithWpCom(super.mComposeTestRule)
                 .tapHelp()
-                .assertHelpAndSupportScreenLoaded()
+                .assertHelpScreenLoaded()
                 .openContactUs()
                 .assertContactSupportScreenLoaded()
                 .assertSendButtonDisabled()
@@ -41,7 +41,7 @@ public class ContactUsTests extends BaseTest {
         new LoginFlow()
                 .chooseContinueWithWpCom(super.mComposeTestRule)
                 .tapHelp()
-                .assertHelpAndSupportScreenLoaded();
+                .assertHelpScreenLoaded();
     }
 
     @Test
@@ -50,6 +50,6 @@ public class ContactUsTests extends BaseTest {
                 .chooseContinueWithWpCom(super.mComposeTestRule)
                 .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                 .tapHelp()
-                .assertHelpAndSupportScreenLoaded();
+                .assertHelpScreenLoaded();
     }
 }

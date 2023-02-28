@@ -9,10 +9,12 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -187,7 +189,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                     setOf(DayOfWeek.MONDAY, DayOfWeek.SUNDAY),
                     hour,
                     minute,
-                    false
+                    isPromptIncluded = false,
+                    isPromptsCardEnabled = true,
                 )
             )
         ).thenReturn(dayLabel)
@@ -370,6 +373,22 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `clicking primary button on selection screen updates the reminders store`() = test {
+        val model = BloggingRemindersModel(siteId, setOf(MONDAY, WEDNESDAY, FRIDAY), isPromptsCardEnabled = false)
+        whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(flowOf(model))
+        initDaySelectionBuilder()
+        whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
+
+        viewModel.onBlogSettingsItemClicked(siteId)
+
+        clickPrimaryButton()
+
+        verifyBlocking(bloggingRemindersStore) {
+            updateBloggingReminders(model)
+        }
+    }
+
+    @Test
     fun `clicking primary button on empty selection screen cancel reminders`() = test {
         initEmptyStore()
         initDaySelectionBuilder()
@@ -381,6 +400,23 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
         verify(reminderScheduler).cancelBySiteId(siteId)
     }
+
+    @Suppress("SimplifyBooleanWithConstants")
+    @Test
+    fun `clicking primary button on empty selection screen updates the reminders store`() = test {
+        initEmptyStore(isPromptsCardEnabled = false)
+        initDaySelectionBuilder()
+        whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
+
+        viewModel.onBlogSettingsItemClicked(siteId)
+
+        clickPrimaryButton()
+
+        verifyBlocking(bloggingRemindersStore) {
+            updateBloggingReminders(argWhere { it.isPromptsCardEnabled == false })
+        }
+    }
+
 
     @Test
     fun `onPublishingPost shows prologue when publishing for the first time and prompt was not shown before`() {
@@ -436,10 +472,16 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         assertDaySelection()
     }
 
-    private fun initEmptyStore(): BloggingRemindersUiModel {
-        val emptyModel = BloggingRemindersModel(siteId)
+    private fun initEmptyStore(isPromptsCardEnabled: Boolean = true): BloggingRemindersUiModel {
+        val emptyModel = BloggingRemindersModel(siteId, isPromptsCardEnabled = isPromptsCardEnabled)
         whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(flowOf(emptyModel))
-        return BloggingRemindersUiModel(siteId, hour = hour, minute = minute, isPromptIncluded = false)
+        return BloggingRemindersUiModel(
+            siteId,
+            hour = hour,
+            minute = minute,
+            isPromptIncluded = false,
+            isPromptsCardEnabled = isPromptsCardEnabled,
+        )
     }
 
     private fun assertPrologue() {

@@ -19,6 +19,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -35,6 +36,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.U
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
@@ -57,6 +59,7 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BlazeFeatureConfig
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 import java.util.Date
 
@@ -111,6 +114,12 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
+    @Mock
+    private lateinit var blazeFeatureConfig: BlazeFeatureConfig
+
+    @Mock
+    private lateinit var blazeStore: BlazeStore
 
     private val featureAnnouncement = FeatureAnnouncement(
         "14.7",
@@ -173,7 +182,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             bloggingPromptsSettingsHelper,
             bloggingPromptsStore,
             NoDelayCoroutineDispatcher(),
-            jetpackFeatureRemovalPhaseHelper
+            jetpackFeatureRemovalPhaseHelper,
+            blazeFeatureConfig,
+            blazeStore
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
             onFeatureAnnouncementRequestedObserver
@@ -444,14 +455,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMPT }
         assertThat(hasBloggingPromptAction).isTrue()
-    }
-
-    @Test
-    fun `bottom sheet does not show prompt card when site is self-hosted`() = test {
-        whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(true)
-        startViewModelWithDefaultParameters(isWpcomOrJpSite = false)
-        val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMPT }
-        assertThat(hasBloggingPromptAction).isFalse()
     }
 
     @Test
@@ -861,13 +864,35 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             verify(analyticsTrackerWrapper).track(Stat.BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED)
         }
 
+    @Test
+    fun `given blaze enabled, when my site page is resumed, then blaze status is fetched`() = test {
+        startViewModelWithDefaultParameters()
+        val site = initSite()
+
+        viewModel.onResume(isOnMySitePageWithValidSite = true, site = site)
+
+        verify(blazeStore).fetchBlazeStatus(site)
+    }
+
+    @Test
+    fun `given blaze not enabled, when my site page is resumed, then blaze status is not fetched`() = test {
+        startViewModelWithDefaultParameters(isBlazeEnabled = false)
+        val site = initSite()
+
+        viewModel.onResume(isOnMySitePageWithValidSite = true, site = site)
+
+        verifyNoInteractions(blazeStore)
+    }
+
     private fun startViewModelWithDefaultParameters(
         isWhatsNewFeatureEnabled: Boolean = true,
         isCreateFabEnabled: Boolean = true,
-        isWpcomOrJpSite: Boolean = true
+        isWpcomOrJpSite: Boolean = true,
+        isBlazeEnabled: Boolean = true
     ) {
         whenever(buildConfigWrapper.isWhatsNewFeatureEnabled).thenReturn(isWhatsNewFeatureEnabled)
         whenever(buildConfigWrapper.isCreateFabEnabled).thenReturn(isCreateFabEnabled)
+        whenever(blazeFeatureConfig.isEnabled()).thenReturn(isBlazeEnabled)
         viewModel.start(site = initSite(hasFullAccessToContent = true, isWpcomOrJpSite = isWpcomOrJpSite))
     }
 

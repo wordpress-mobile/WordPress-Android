@@ -81,7 +81,7 @@ class BloggingRemindersViewModel @Inject constructor(
                 Screen.SELECTION -> daySelectionBuilder.buildPrimaryButton(
                     bloggingRemindersModel,
                     isFirstTimeFlow == true,
-                    this::showEpilogue
+                    this::onSelectionButtonClick
                 )
                 Screen.EPILOGUE -> epilogueBuilder.buildPrimaryButton(finish)
             }
@@ -173,7 +173,7 @@ class BloggingRemindersViewModel @Inject constructor(
         return Pair(currentState.hour, currentState.minute)
     }
 
-    private fun showEpilogue(bloggingRemindersModel: BloggingRemindersUiModel?) {
+    private fun onSelectionButtonClick(bloggingRemindersModel: BloggingRemindersUiModel?) {
         analyticsTracker.trackPrimaryButtonPressed(Screen.SELECTION)
         if (bloggingRemindersModel != null) {
             launch {
@@ -212,6 +212,7 @@ class BloggingRemindersViewModel @Inject constructor(
             outState.putInt(SELECTED_HOUR, model.hour)
             outState.putInt(SELECTED_MINUTE, model.minute)
             outState.putBoolean(IS_BLOGGING_PROMPT_INCLUDED, model.isPromptIncluded)
+            outState.putBoolean(IS_PROMPTS_CARD_ENABLED, model.isPromptsCardEnabled)
         }
         _isFirstTimeFlow.value?.let {
             outState.putBoolean(IS_FIRST_TIME_FLOW, it)
@@ -228,12 +229,14 @@ class BloggingRemindersViewModel @Inject constructor(
             val selectedHour = state.getInt(SELECTED_HOUR)
             val selectedMinute = state.getInt(SELECTED_MINUTE)
             val isPromptIncluded = state.getBoolean(IS_BLOGGING_PROMPT_INCLUDED)
+            val isPromptsCardEnabled = state.getBoolean(IS_PROMPTS_CARD_ENABLED)
             _bloggingRemindersModel.value = BloggingRemindersUiModel(
                 siteId,
                 enabledDays,
                 selectedHour,
                 selectedMinute,
-                isPromptIncluded
+                isPromptIncluded,
+                isPromptsCardEnabled,
             )
         }
         _isFirstTimeFlow.value = state.getBoolean(IS_FIRST_TIME_FLOW)
@@ -298,6 +301,7 @@ class BloggingRemindersViewModel @Inject constructor(
         private const val SELECTED_HOUR = "key_selected_hour"
         private const val SELECTED_MINUTE = "key_selected_minute"
         private const val IS_BLOGGING_PROMPT_INCLUDED = "key_is_blogging_prompt_included"
+        private const val IS_PROMPTS_CARD_ENABLED = "key_is_prompts_card_enabled"
         private const val IS_FIRST_TIME_FLOW = "is_first_time_flow"
         private const val SITE_ID = "key_site_id"
     }

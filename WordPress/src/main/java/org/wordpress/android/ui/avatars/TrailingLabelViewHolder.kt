@@ -15,7 +15,7 @@ class TrailingLabelViewHolder(
     private val uiHelpers: UiHelpers
 ) : TrainOfAvatarsViewHolder<TrailingLabelItemBinding>(parent.viewBinding(TrailingLabelItemBinding::inflate)) {
     fun bind(textItem: TrailingLabelTextItem) = with(binding) {
-        val position = adapterPosition
+        val position = bindingAdapterPosition
 
         if (position >= 0) {
             itemView.post {
