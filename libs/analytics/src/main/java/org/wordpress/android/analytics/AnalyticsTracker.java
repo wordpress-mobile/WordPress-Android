@@ -1025,7 +1025,11 @@ public final class AnalyticsTracker {
         BLAZE_FEATURE_HIDE_TAPPED,
         BLAZE_FEATURE_OVERLAY_DISPLAYED,
         BLAZE_FEATURE_OVERLAY_PROMOTE_CLICKED,
-        BLAZE_FEATURE_OVERLAY_DISMISSED
+        BLAZE_FEATURE_OVERLAY_DISMISSED,
+        BLAZE_FLOW_STARTED,
+        BLAZE_FLOW_COMPLETED,
+        BLAZE_FLOW_CANCELED,
+        BLAZE_FLOW_ERROR
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
