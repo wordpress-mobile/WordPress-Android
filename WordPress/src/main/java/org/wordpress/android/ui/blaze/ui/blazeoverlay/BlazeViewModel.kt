@@ -12,6 +12,7 @@ import org.wordpress.android.ui.blaze.BlazeUiState
 import org.wordpress.android.ui.blaze.PostUIModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.PostListFeaturedImageTracker
+import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,15 +41,20 @@ class BlazeViewModel @Inject constructor(
     fun initialize(postModel: PostUIModel?) {
         blazeFeatureUtils.trackOverlayDisplayed(blazeFlowSource)
         postModel?.let {
-            val featuredImage =
-                featuredImageTracker.getFeaturedImageUrl(siteSelectedSiteRepository.getSelectedSite()!!, it.imageUrl)
-            val updatedPostModel = postModel.copy(featuredImageUrl = featuredImage)
+            val updatedPostModel = updatePostModel(it)
             _uiState.value = BlazeUiState.PromoteScreen.PromotePost(updatedPostModel)
             _promoteUiState.value = BlazeUiState.PromoteScreen.PromotePost(updatedPostModel)
         } ?: run {
             _uiState.value = BlazeUiState.PromoteScreen.Site
             _promoteUiState.value = BlazeUiState.PromoteScreen.Site
         }
+    }
+
+    private fun updatePostModel(postModel: PostUIModel): PostUIModel {
+        val featuredImage =
+            featuredImageTracker.getFeaturedImageUrl(siteSelectedSiteRepository.getSelectedSite()!!, postModel.imageUrl)
+        val updatedUrl = UrlUtils.removeScheme(postModel.url)
+        return postModel.copy(url = updatedUrl, featuredImageUrl = featuredImage)
     }
 
     // to do: tracking logic and logic for done state
