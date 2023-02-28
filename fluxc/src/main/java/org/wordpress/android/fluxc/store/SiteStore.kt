@@ -73,11 +73,11 @@ import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordDeletionResult
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsManager
+import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
@@ -2046,6 +2046,20 @@ open class SiteStore @Inject constructor(
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch domain price") {
             when (val response =
                 siteRestClient.fetchDomainPrice(domainName)) {
+                is Success -> {
+                    WPAPIResponse.Success(response.data)
+                }
+                is Error -> {
+                    WPAPIResponse.Error(WPAPINetworkError(response.error))
+                }
+            }
+        }
+    }
+
+    suspend fun launchSite(site: SiteModel): WPAPIResponse<Unit> {
+        return coroutineEngine.withDefaultContext(T.API, this, "Launch site") {
+            when (val response =
+                siteRestClient.launchSite(site)) {
                 is Success -> {
                     WPAPIResponse.Success(response.data)
                 }
