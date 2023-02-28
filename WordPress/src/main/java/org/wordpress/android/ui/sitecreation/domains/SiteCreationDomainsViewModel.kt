@@ -462,6 +462,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
                 sealed class Cost(val title: UiString) {
                     object Free : Cost(UiStringRes(R.string.free))
+
                     data class Paid(val cost: String) : Cost(
                         UiStringResWithParams(R.string.site_creation_domain_cost, UiStringText(cost))
                     )
