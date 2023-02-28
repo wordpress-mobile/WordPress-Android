@@ -179,8 +179,9 @@ class BlazeOverlayFragment : Fragment() {
                         .wrapContentHeight()
                 )
             }
-            Spacer(modifier = Modifier
-                .padding(top = 15.dp)
+            Spacer(
+                modifier = Modifier
+                    .padding(top = 15.dp)
             )
             ImageButton(
                 modifier = Modifier
@@ -355,9 +356,10 @@ class BlazeOverlayFragment : Fragment() {
                         postId = 119,
                         title = "Post title long enough to be truncated and this is not just a test to see " +
                                 "how it looks",
-                        url = "www.google.long.ttiiitititititiit.com/blog./24/2021/05/12/this-is-a-test-post/trucncation is happeniding",
+                        url = "www.google.long.ttiiitititititiit.com/blog./24/2021/05/12" +
+                                "/this-is-a-test-post/trucncation is happeniding",
                         imageUrl = 357,
-                        featuredImageUrl = "https://ajeshrpai.in/wp-content/uploads/2023/02/wp-1677490974228.jpg"
+                        featuredImageUrl = null
                     )
                 )
             )
