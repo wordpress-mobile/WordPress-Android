@@ -22,6 +22,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.Constants.TYPE_DOMAINS_PRODUCT
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.products.Product
@@ -370,7 +371,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         viewModel.start()
         viewModel.start()
 
-        verify(productsStore).fetchProducts(eq("domains"))
+        verify(productsStore).fetchProducts(eq(TYPE_DOMAINS_PRODUCT))
     }
 
     @Test

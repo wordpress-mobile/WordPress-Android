@@ -16,6 +16,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.Constants.TYPE_DOMAINS_PRODUCT
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
@@ -131,7 +132,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         viewModel.start(site, domainRegistrationPurpose)
         advanceUntilIdle()
 
-        verify(productsStore).fetchProducts(eq("domains"))
+        verify(productsStore).fetchProducts(eq(TYPE_DOMAINS_PRODUCT))
     }
 
     @Test
