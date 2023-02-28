@@ -25,8 +25,8 @@ sealed class UiState(
         toolbarTitle = R.string.jetpack,
         image = R.drawable.ic_jetpack_logo_green_24dp,
         imageContentDescription = R.string.jetpack_full_plugin_install_jp_logo_content_description,
-        title = R.string.jetpack_full_plugin_install_installing_title,
-        description = R.string.jetpack_full_plugin_install_installing_description,
+        title = R.string.jetpack_full_plugin_install_initial_title,
+        description = R.string.jetpack_full_plugin_install_initial_description,
     )
 
     data class Done(

@@ -31,8 +31,8 @@ class JetpackFullPluginInstallUiStateMapperTest {
             assertThat(imageContentDescription).isEqualTo(
                 R.string.jetpack_full_plugin_install_jp_logo_content_description
             )
-            assertThat(title).isEqualTo(R.string.jetpack_full_plugin_install_installing_title)
-            assertThat(description).isEqualTo(R.string.jetpack_full_plugin_install_installing_description)
+            assertThat(title).isEqualTo(R.string.jetpack_full_plugin_install_initial_title)
+            assertThat(description).isEqualTo(R.string.jetpack_full_plugin_install_initial_description)
         }
     }
 
