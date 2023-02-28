@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-16 21:54:08+0000
+Translation-Revision-Date: 2023-02-28 04:19:21+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">Menu blok</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Tutup</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Ikon eror</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Maksimalkan potensi situs Anda. Dapatkan statistik, pemberitahuan, dan lainnya dengan Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Situs Anda memiliki plugin Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Aplikasi seluler Jetpack didesain agar terintegrasi dengan plugin Jetpack. Beralih sekarang untuk mengakses statistik, pemberitahuan, pembaca dan lainnya.</string>
