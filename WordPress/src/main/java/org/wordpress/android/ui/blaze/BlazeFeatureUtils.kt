@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.model.blaze.BlazeStatusModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BlazeFeatureConfig
 import javax.inject.Inject
@@ -53,10 +54,6 @@ class BlazeFeatureUtils @Inject constructor(
         return appPrefsWrapper.getShouldHidePromoteWithBlazeCard()
     }
 
-    companion object {
-        const val SOURCE = "source"
-    }
-
     fun trackOverlayDisplayed(blazeFlowSource: BlazeFlowSource) {
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.BLAZE_FEATURE_OVERLAY_DISPLAYED,
@@ -76,5 +73,68 @@ class BlazeFeatureUtils @Inject constructor(
             AnalyticsTracker.Stat.BLAZE_FEATURE_OVERLAY_DISMISSED,
             mapOf(SOURCE to blazeFlowSource.trackingName)
         )
+    }
+
+    fun trackFlowError(blazeFlowSource: BlazeFlowSource, blazeFlowStep: BlazeFlowStep) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FLOW_ERROR,
+            mapOf(
+                SOURCE to blazeFlowSource.trackingName, CURRENT_STEP to blazeFlowStep.trackingName
+            )
+        )
+    }
+
+    fun trackFlowCanceled(blazeFlowSource: BlazeFlowSource, blazeFlowStep: BlazeFlowStep) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FLOW_CANCELED,
+            mapOf(
+                SOURCE to blazeFlowSource.trackingName, CURRENT_STEP to blazeFlowStep.trackingName
+            )
+        )
+    }
+
+    @Suppress("ReturnCount")
+    fun extractCurrentStep(url: String?): BlazeFlowStep {
+        url?.let {
+            val uri = UriWrapper(url)
+            uri.fragment?.let { return BlazeFlowStep.fromString(it) }
+
+            if (findQueryParameter(uri.toString(), BLAZEPRESS_WIDGET) != null) {
+                return BlazeFlowStep.STEP_1
+            } else if (isAdvertisingCampaign(uri.toString())) {
+                return BlazeFlowStep.CAMPAIGNS_LIST
+            } else if (matchAdvertisingPath(uri.uri.path)) {
+                return BlazeFlowStep.POSTS_LIST
+            }
+        }
+        return BlazeFlowStep.UNSPECIFIED
+    }
+
+    private fun findQueryParameter(uri: String, parameterName: String): String? {
+        val queryParams = uri.split("\\?".toRegex()).drop(1).joinToString("")
+        val parameterRegex = "(^|&)${parameterName}=([^&]*)".toRegex()
+
+        val parameterMatchResult = parameterRegex.find(queryParams)
+
+        return parameterMatchResult?.groupValues?.getOrNull(2)
+    }
+
+    private fun isAdvertisingCampaign(uri: String): Boolean {
+        val pattern = "https://wordpress.com/advertising/\\w+/campaigns$".toRegex()
+        return pattern.matches(uri)
+    }
+
+    private fun matchAdvertisingPath(path: String?): Boolean {
+        path?.let {
+            val advertisingRegex = "^/advertising/[^/]+(/posts)?$".toRegex()
+            return advertisingRegex.matches(it)
+
+        }?: return false
+    }
+
+    companion object {
+        const val SOURCE = "source"
+        const val CURRENT_STEP = "current_step"
+        const val BLAZEPRESS_WIDGET = "blazepress-widget"
     }
 }
