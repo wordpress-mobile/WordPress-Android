@@ -13,6 +13,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.Constants.TYPE_DOMAINS_PRODUCT
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.products.Product
@@ -116,7 +117,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
     private fun fetchAndCacheProducts() {
         launch {
-            val result = productsStore.fetchProducts("domains")
+            val result = productsStore.fetchProducts(TYPE_DOMAINS_PRODUCT)
             when {
                 result.isError -> {
                     AppLog.e(AppLog.T.DOMAIN_REGISTRATION, "Error while fetching domain products: ${result.error}")
