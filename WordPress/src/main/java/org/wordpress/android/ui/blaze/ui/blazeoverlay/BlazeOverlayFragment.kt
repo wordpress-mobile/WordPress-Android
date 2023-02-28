@@ -323,7 +323,7 @@ class BlazeOverlayFragment : Fragment() {
                 .padding(start = 4.dp, top = 12.dp)
                 .size(6.dp),
                 onDraw = {
-                    drawCircle(Color.LightGray)
+                    drawCircle(color = bulletedTextColor)
                 })
             Text(
                 modifier = Modifier.padding(start = Margin.ExtraLarge.value),
