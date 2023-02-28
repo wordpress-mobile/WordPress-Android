@@ -130,7 +130,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
         }
     }
 
-
     fun onCreateSiteBtnClicked() {
         val domain = requireNotNull(selectedDomain) {
             "Create site button should not be visible if a domain is not selected"
