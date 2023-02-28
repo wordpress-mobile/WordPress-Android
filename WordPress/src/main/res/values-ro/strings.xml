@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-09 07:15:55+0000
+Translation-Revision-Date: 2023-02-22 22:24:36+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ro
 -->
 <resources>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Prin inițializarea Jetpack ești de acord cu </string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Termeni și condiții</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Instalează modulul complet</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contactează suportul</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Închide</string>
+    <string name="promote_blaze_card_title">Promovează-ți conținutul cu Blaze</string>
+    <string name="promote_blaze_card_sub_title">Afișează conținutul pe milioane de site-uri.</string>
+    <string name="promote_blaze_card_menu_hide_this">Ascunde asta</string>
+    <string name="gutenberg_native_blocks_menu">Meniu blocuri</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s folosește %2$s, care încă nu suportă toate funcționalitățile aplicației. \n\nTe rog instalează %3$s pentru a folosi aplicația cu acest site.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">modulul %1$s</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">module individuale Jetpack</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">modulul complet Jetpack</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Icon eroare</string>
+    <string name="jetpack_full_plugin_install_error_title">A fost o problemă</string>
+    <string name="jetpack_full_plugin_install_error_description">Jetpack nu a putut fi instalat în acest moment.</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">Reîncearcă</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">Contactează suportul</string>
+    <string name="my_site_jp_install_full_plugin_card_content">Acest site folosește un modul individual, care încă nu suportă toate funcționalitățile aplicației. Te rog instalează modulul complet Jetpack.</string>
+    <string name="only_one_primary_site_message">Este disponibil un singur site, așadar nu poți modifica site-ul principal.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Te rog instalează modulul complet Jetpack</string>
+    <string name="button_promote_with_blaze">Promovează cu Blaze</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Icon Jetpack</string>
+    <string name="jetpack_full_plugin_install_initial_title">Instalează Jetpack</string>
+    <string name="jetpack_full_plugin_install_initial_description">Datele de conectare ale site-ului tău web nu vor fi stocate și sunt folosite numai în scopul de a instala Jetpack.</string>
+    <string name="jetpack_full_plugin_install_initial_button">Continuă</string>
+    <string name="jetpack_full_plugin_install_installing_title">Instalez Jetpack</string>
+    <string name="jetpack_full_plugin_install_installing_description">Instalez Jetpack pe site-ul tău. Poate dura câteva minute până la finalizare.</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack a fost instalat</string>
+    <string name="jetpack_full_plugin_install_done_description">Gata pentru a folosi acest site în aplicație.</string>
+    <string name="jetpack_full_plugin_install_done_button">Gata</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Deblochează întregul potențial al site-ului tău. Cu Jetpack, ai statistici, notificări și multe altele.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Urmărești creșterea traficului cu informații generale utile și statistici comprehensive.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Găsește, urmărește site-urile și comunitățile preferate și partajează conținutul tău.</string>
