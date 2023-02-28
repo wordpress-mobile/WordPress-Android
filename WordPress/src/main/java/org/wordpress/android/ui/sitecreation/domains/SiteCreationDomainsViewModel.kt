@@ -465,23 +465,15 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 ) {
                     object Free : Cost(UiStringRes(R.string.free))
                     data class Paid(val cost: String) : Cost(
-                        UiStringResWithParams(
-                            R.string.site_creation_domain_cost,
-                            listOf(UiStringText(cost))
-                        )
+                        UiStringResWithParams(R.string.site_creation_domain_cost, UiStringText(cost))
                     )
-                    data class OnSale(
-                        val titleCost: String,
-                        val subtitleCost: String,
-                    ) : Cost(
-                        UiStringResWithParams(
-                            R.string.site_creation_domain_cost,
-                            listOf(UiStringText(titleCost))
-                        )
+
+                    data class OnSale(val titleCost: String, val subtitleCost: String) : Cost(
+                        UiStringResWithParams(R.string.site_creation_domain_cost, UiStringText(titleCost))
                     ) {
                         val subtitle = UiStringResWithParams(
                             R.string.site_creation_domain_cost,
-                            listOf(UiStringText(subtitleCost))
+                            UiStringText(subtitleCost)
                         )
                     }
                 }
