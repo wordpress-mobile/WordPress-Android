@@ -440,29 +440,27 @@ class SiteCreationDomainsViewModel @Inject constructor(
                     constructor(@ColorRes color: Int, subtitle: UiString) : this(color, color, subtitle)
 
                     object Unavailable : Variant(
-                        dotColor = R.color.red_50,
-                        subtitle = UiStringRes(R.string.site_creation_domain_tag_unavailable),
+                        R.color.red_50,
+                        UiStringRes(R.string.site_creation_domain_tag_unavailable),
                     )
 
                     object Recommended : Variant(
-                        color = R.color.jetpack_green_50,
-                        subtitle = UiStringRes(R.string.site_creation_domain_tag_recommended),
+                        R.color.jetpack_green_50,
+                        UiStringRes(R.string.site_creation_domain_tag_recommended),
                     )
 
                     object BestAlternative : Variant(
-                        color = R.color.purple_50,
-                        subtitle = UiStringRes(R.string.site_creation_domain_tag_best_alternative),
+                        R.color.purple_50,
+                        UiStringRes(R.string.site_creation_domain_tag_best_alternative),
                     )
 
                     object Sale : Variant(
-                        color = R.color.yellow_50,
-                        subtitle = UiStringRes(R.string.site_creation_domain_tag_sale),
+                        R.color.yellow_50,
+                        UiStringRes(R.string.site_creation_domain_tag_sale)
                     )
                 }
 
-                sealed class Cost(
-                    val title: UiString,
-                ) {
+                sealed class Cost(val title: UiString) {
                     object Free : Cost(UiStringRes(R.string.free))
                     data class Paid(val cost: String) : Cost(
                         UiStringResWithParams(R.string.site_creation_domain_cost, UiStringText(cost))
