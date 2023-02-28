@@ -139,7 +139,7 @@ class BlazeWebViewViewModel @Inject constructor(
         postActionEvent(BlazeActionEvent.LaunchExternalBrowser(url))
     }
 
-    fun updateCurrentStep(url: String?) {
+    fun updateBlazeFlowStep(url: String?) {
         url?.let {
             blazeFlowStep = blazeFeatureUtils.extractCurrentStep(it)
         }

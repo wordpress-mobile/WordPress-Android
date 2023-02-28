@@ -133,12 +133,12 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
         // todo Track events for started/completed
         // blaze_flow_started
         // blaze_flow_completed
-        blazeWebViewViewModel.updateCurrentStep(url)
+        blazeWebViewViewModel.updateBlazeFlowStep(url)
         blazeWebViewViewModel.hideOrShowCancelAction(url)
     }
 
     override fun onWebViewReceivedError(url: String?) {
-        blazeWebViewViewModel.updateCurrentStep(url)
+        blazeWebViewViewModel.updateBlazeFlowStep(url)
         blazeWebViewViewModel.onWebViewReceivedError()
     }
 
