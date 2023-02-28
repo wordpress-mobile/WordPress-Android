@@ -14,24 +14,25 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.WPWebViewActivity.getAuthenticationPostData
 import org.wordpress.android.ui.blaze.BlazeActionEvent
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
+import org.wordpress.android.ui.blaze.BlazeFlowStep
 import org.wordpress.android.ui.blaze.BlazeUiState
 import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState
 import org.wordpress.android.ui.blaze.BlazeWebViewContentUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import javax.inject.Inject
 
-@Suppress("ForbiddenComment")
 @HiltViewModel
 class BlazeWebViewViewModel @Inject constructor(
     private val accountStore: AccountStore,
+    private val blazeFeatureUtils: BlazeFeatureUtils,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteStore: SiteStore
 ) : ViewModel() {
-    // todo: enhance this and add a way to identify start/end steps
-    // This may be difficult, if at the end of the creation flow, we are sending the user to browse campaigns
-    private val hideCancelSteps = listOf("#step-3", "#step-4")
+    private val hideCancelSteps = listOf(BLAZE_NON_DISMISSABLE_HASH)
     private lateinit var blazeFlowSource: BlazeFlowSource
+    private lateinit var blazeFlowStep: BlazeFlowStep
 
     private val _actionEvents = Channel<BlazeActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
@@ -45,10 +46,10 @@ class BlazeWebViewViewModel @Inject constructor(
     fun start(promoteScreen: BlazeUiState.PromoteScreen?, source: BlazeFlowSource) {
         blazeFlowSource = source
         val url = buildUrl(promoteScreen)
+        blazeFlowStep = blazeFeatureUtils.extractCurrentStep(url)
         postScreenState(model.value.copy(url = url, addressToLoad = prepareUrl(url)))
     }
 
-    // todo: implement "page" flow
     private fun buildUrl(promoteScreen: BlazeUiState.PromoteScreen?): String {
         val siteUrl = extractAndSanitizeSiteUrl()
         if (siteUrl.isEmpty()) {
@@ -74,12 +75,10 @@ class BlazeWebViewViewModel @Inject constructor(
     }
 
     fun onHeaderActionClick() {
-        // todo: Track the cancel click blazeFeatureUtils.track()
-        // blaze_flow_canceled
+        blazeFeatureUtils.trackFlowCanceled(blazeFlowSource, blazeFlowStep)
         postActionEvent(BlazeActionEvent.FinishActivity)
     }
 
-    // todo: implement validation checks
     private fun prepareUrl(url: String): String {
         val username = accountStore.account.userName
         val accessToken = accountStore.accessToken
@@ -120,7 +119,7 @@ class BlazeWebViewViewModel @Inject constructor(
     }
 
     private fun extractAndSanitizeSiteUrl(): String {
-        return selectedSiteRepository.getSelectedSite()?.url?.replace(Regex(PATTERN), "")?:""
+        return selectedSiteRepository.getSelectedSite()?.url?.replace(Regex(HTTP_PATTERN), "")?:""
     }
 
     fun hideOrShowCancelAction(url: String) {
@@ -131,14 +130,19 @@ class BlazeWebViewViewModel @Inject constructor(
         }
     }
 
-    // todo Track blaze_flow_error event with Entry point source (when possible)
-    // todo An error was received within the webview - What is the proper action? finish the activity?
     fun onWebViewReceivedError() {
+        blazeFeatureUtils.trackFlowError(blazeFlowSource, blazeFlowStep)
         postActionEvent(BlazeActionEvent.FinishActivity)
     }
 
     fun onRedirectToExternalBrowser(url: String) {
         postActionEvent(BlazeActionEvent.LaunchExternalBrowser(url))
+    }
+
+    fun updateCurrentStep(url: String?) {
+        url?.let {
+            blazeFlowStep = blazeFeatureUtils.extractCurrentStep(it)
+        }
     }
 
     companion object {
@@ -148,8 +152,11 @@ class BlazeWebViewViewModel @Inject constructor(
         private const val BASE_URL = "https://wordpress.com/advertising/"
 
         const val BLAZE_CREATION_FLOW_POST = "$BASE_URL%s?blazepress-widget=post-%d&_source=%s"
-      // todo: future  const val BLAZE_CREATION_FLOW_PAGE = "$BASE_URL%s?blazepress-widget=page-%d&_source=%s"
         const val BLAZE_CREATION_FLOW_SITE = "$BASE_URL%s?_source=%s"
-        const val PATTERN = "(https?://)"
+
+        const val HTTP_PATTERN = "(https?://)"
+
+        const val BLAZE_NON_DISMISSABLE_HASH = "step-4"
+        const val BLAZE_COMPLETED_STEP_HASH = "step-5"
     }
 }
