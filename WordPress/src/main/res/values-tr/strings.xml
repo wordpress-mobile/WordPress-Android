@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-15 18:54:08+0000
+Translation-Revision-Date: 2023-02-22 22:17:54+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">Bloklar menüsü</string>
+    <string name="promote_blaze_card_menu_hide_this">Bunu gizle</string>
+    <string name="promote_blaze_card_sub_title">Çalışmalarınızı milyonlarca sitede sergileyin.</string>
+    <string name="promote_blaze_card_title">İçeriğinizi Blaze ile öne çıkarın</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Kapat</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Destek ile iletişim kur</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Eklentinin tamamını kurun</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Şartlar ve koşullar</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Jetpack\'i kurarak aşağıdakileri kabul etmiş olursunuz </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">tam Jetpack eklentisi</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">bireysel Jetpack eklentileri</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">%1$s eklentisi</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s, uygulamanın tüm özelliklerini henüz desteklemeyen %2$s kullanıyor.\n\nUygulamayı bu siteyle birlikte kullanmak için lütfen %3$s yükleyin.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Lütfen Jetpack eklentisinin tamamını yükleyin</string>
+    <string name="only_one_primary_site_message">Yalnızca bir site kullanılabilir, bu nedenle birincil sitenizi değiştiremezsiniz.</string>
+    <string name="my_site_jp_install_full_plugin_card_content">Bu site, uygulamanın tüm özelliklerini henüz desteklemeyen ayrı bir eklenti kullanmaktadır. Lütfen Jetpack eklentisinin tamamını kurun.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">Destek ile iletişim kur</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">Yeniden dene</string>
+    <string name="jetpack_full_plugin_install_error_description">Jetpack şu anda kurulamıyor.</string>
+    <string name="jetpack_full_plugin_install_error_title">Bir sorun vardı</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Hata simgesi</string>
+    <string name="jetpack_full_plugin_install_done_button">Bitti</string>
+    <string name="jetpack_full_plugin_install_done_description">Bu siteyi uygulama ile kullanmaya hazır.</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack kuruldu</string>
+    <string name="jetpack_full_plugin_install_installing_description">Sitenize Jetpack kuruluyor. Bu işlemin tamamlanması birkaç dakika sürebilir.</string>
+    <string name="jetpack_full_plugin_install_installing_title">Jetpack kuruluyor</string>
+    <string name="jetpack_full_plugin_install_initial_button">Devam et</string>
+    <string name="jetpack_full_plugin_install_initial_description">Web sitesi kimlik bilgileriniz depolanmayacak ve yalnızca Jetpack\'i kurma amacıyla kullanılacak</string>
+    <string name="jetpack_full_plugin_install_initial_title">Jetpack\'i kur</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack simgesi</string>
+    <string name="button_promote_with_blaze">Blaze ile Tanıt</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Sitenizin potansiyelinin tamamını ortaya çıkarın. Jetpack ile istatistikler, bildirimler ve daha fazlasını elde edin.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Sitenizde Jetpack eklentisi var</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack mobil uygulaması, Jetpack eklentisi ile birlikte çalışacak şekilde tasarlanmıştır. İstatistikler, okuyucu, bildirimler ve daha fazlasına erişmek için şimdi geçiş yapın.</string>

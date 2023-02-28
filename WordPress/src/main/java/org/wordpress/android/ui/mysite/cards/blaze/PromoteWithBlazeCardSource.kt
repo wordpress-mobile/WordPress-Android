@@ -93,10 +93,20 @@ class PromoteWithBlazeCardSource @Inject constructor(
             val error = result.error
             when {
                 error != null -> postErrorState()
-                model != null -> onRefreshedBackgroundThread()
-                else -> onRefreshedBackgroundThread()
+                model != null -> postLastState()
+                else -> postLastState()
             }
         }
+    }
+
+    /**
+     * This function is used to make sure the [refresh] information is propagated and processed correctly even though
+     * the previous status is still the current one. This avoids issues like the loading progress indicator being shown
+     * indefinitely.
+     */
+    private fun MediatorLiveData<PromoteWithBlazeUpdate>.postLastState() {
+        val lastStatus = value?.blazeStatusModel
+        postState(PromoteWithBlazeUpdate(lastStatus))
     }
 
     private fun MediatorLiveData<PromoteWithBlazeUpdate>.postErrorState() {

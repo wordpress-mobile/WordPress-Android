@@ -218,7 +218,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     }
 
     override fun onHelpClicked(origin: Origin) {
-        ActivityLauncher.viewHelpAndSupport(this, origin, null, null)
+        ActivityLauncher.viewHelp(this, origin, null, null)
     }
 
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {

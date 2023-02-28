@@ -29,6 +29,7 @@ data class PostUIModel(
     val title: String,
     val url: String,
     val imageUrl: Long,
+    val featuredImageUrl: String?
 ) : Parcelable
 
 sealed class BlazeWebViewHeaderUiState {

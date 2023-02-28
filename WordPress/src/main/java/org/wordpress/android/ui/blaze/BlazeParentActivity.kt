@@ -36,6 +36,9 @@ class BlazeParentActivity : AppCompatActivity() {
                         .replace(R.id.container, BlazeWebViewFragment.newInstance())
                         .commitNow()
                 }
+                is BlazeUiState.Done -> {
+                    finish()
+                }
                 else -> {}
             }
         }

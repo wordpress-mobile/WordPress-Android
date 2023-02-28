@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-15 12:54:08+0000
+Translation-Revision-Date: 2023-02-25 21:49:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sv_SE
 -->
 <resources>
+    <string name="promote_blaze_card_menu_hide_this">Dölj detta</string>
+    <string name="promote_blaze_card_sub_title">Visa ditt arbete på miljontals webbplatser.</string>
+    <string name="promote_blaze_card_title">Marknadsför ditt innehåll med Blaze</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Stäng</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Kontakta supporten</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Villkor</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">tillägget %1$s</string>
+    <string name="only_one_primary_site_message">Endast en webbplats är tillgänglig så du kan inte ändra din primära webbplats.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">Kontakta supporten</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">Försök igen</string>
+    <string name="jetpack_full_plugin_install_error_description">Jetpack kunde inte installeras just nu.</string>
+    <string name="jetpack_full_plugin_install_error_title">Det var ett problem</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Felikon</string>
+    <string name="jetpack_full_plugin_install_done_button">Klar</string>
+    <string name="jetpack_full_plugin_install_done_description">Redo att använda denna webbplats med appen.</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack har installerats</string>
+    <string name="jetpack_full_plugin_install_installing_description">Installerar Jetpack på din webbplats. Detta kan ta upp till några minuter att slutföra.</string>
+    <string name="jetpack_full_plugin_install_installing_title">Installerar Jetpack</string>
+    <string name="jetpack_full_plugin_install_initial_button">Fortsätt</string>
+    <string name="jetpack_full_plugin_install_initial_title">Installera Jetpack</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack-ikon</string>
+    <string name="button_promote_with_blaze">Marknadsför med Blaze</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Lås upp din webbplats fulla potential. Få statistik, aviseringar och mer med Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Din webbplats har Jetpack-tillägget</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpacks mobilapp är designad för att fungera tillsammans med tillägget Jetpack. Byt nu för att få åtkomst till statistik, aviseringar, läsare och mer.</string>
@@ -750,7 +772,7 @@ Language: sv_SE
     <string name="gutenberg_native_add_button_text">Lägg till knapptext</string>
     <string name="reader_title_interests">Följ ämnen</string>
     <string name="stories_intro_main_subtitle">Ett nytt sätt att skapa och publicera engagerande innehåll på din webbplats.</string>
-    <string name="activity_log_backup_download_notice_dismiss_action">Stäng</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Avfärda</string>
     <string name="activity_log_backup_download_notice_download_action">Ladda ner</string>
     <string name="threat_fix_all_status_success_message_plural">Hoten har åtgärdats utan problem.</string>
     <string name="threat_fix_all_confirmation_message_plural">Bekräfta att du vill åtgärda alla %s aktiva hot.</string>
