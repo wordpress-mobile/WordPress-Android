@@ -87,12 +87,20 @@ class BlazeWebViewViewModel @Inject constructor(
         return url
     }
 
-    fun onHeaderCancelActionClick() {
+    fun onHeaderActionClick(state: BlazeWebViewHeaderUiState) {
+        when (state) {
+            is DoneAction -> onHeaderDoneActionClick()
+            is EnabledCancelAction -> onHeaderCancelActionClick()
+            else -> {}
+        }
+    }
+
+    private fun onHeaderCancelActionClick() {
         blazeFeatureUtils.trackFlowCanceled(blazeFlowSource, blazeFlowStep)
         postActionEvent(BlazeActionEvent.FinishActivity)
     }
 
-    fun onHeaderDoneActionClick() {
+    private fun onHeaderDoneActionClick() {
         blazeFeatureUtils.trackBlazeFlowCompleted(blazeFlowSource)
         postActionEvent(BlazeActionEvent.FinishActivity)
     }
@@ -182,6 +190,7 @@ class BlazeWebViewViewModel @Inject constructor(
         return BlazeFlowStep.UNSPECIFIED
     }
 
+    @Suppress("SameParameterValue")
     private fun findQueryParameter(uri: String, parameterName: String): String? {
         val queryParams = uri.split("\\?".toRegex()).drop(1).joinToString("")
         val parameterRegex = "(^|&)${parameterName}=([^&]*)".toRegex()

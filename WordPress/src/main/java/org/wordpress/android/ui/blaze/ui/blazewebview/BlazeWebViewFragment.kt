@@ -113,15 +113,7 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
             },
             actions = {
                 TextButton(
-                    onClick = {
-                        when (state) {
-                            is BlazeWebViewHeaderUiState.DoneAction ->
-                                blazeWebViewViewModel.onHeaderDoneActionClick()
-                            is BlazeWebViewHeaderUiState.EnabledCancelAction ->
-                                blazeWebViewViewModel.onHeaderCancelActionClick()
-                            else -> {}
-                        }
-                    },
+                    onClick = { blazeWebViewViewModel.onHeaderActionClick(state) },
                     enabled = state.headerActionEnabled
                 ) {
                     Text(
