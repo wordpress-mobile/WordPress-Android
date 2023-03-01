@@ -44,7 +44,6 @@ import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.BlazeFeatureConfig
 import org.wordpress.android.util.map
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.merge
