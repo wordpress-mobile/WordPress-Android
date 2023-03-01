@@ -12,6 +12,7 @@ import androidx.paging.PagedList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.isActive
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
@@ -27,6 +28,7 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescrip
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.AuthorFilterSelection
@@ -71,7 +73,8 @@ class PostListViewModel @Inject constructor(
     private val uploadUtilsWrapper: UploadUtilsWrapper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    connectionStatus: LiveData<ConnectionStatus>
+    connectionStatus: LiveData<ConnectionStatus>,
+    private val blazeStore: BlazeStore
 ) : ScopedViewModel(uiDispatcher) {
     private val isStatsSupported: Boolean by lazy {
         SiteUtils.isAccessedViaWPComRest(connector.site) && connector.site.hasCapabilityViewStats
@@ -86,6 +89,8 @@ class PostListViewModel @Inject constructor(
 
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
+
+    private var isSiteBlazeEligible = false
 
     private val dataSource: PostListItemDataSource by lazy {
         PostListItemDataSource(
@@ -195,7 +200,22 @@ class PostListViewModel @Inject constructor(
         }
 
         this.pagedListWrapper = pagedListWrapper
+        checkBlazeEligibility()
         fetchFirstPage()
+    }
+
+    private fun checkBlazeEligibility() {
+        val selectedSite = connector.site
+        // If the user is not an admin, we don't need to check for Blaze eligibility
+        if(!selectedSite.isAdmin)
+            return
+        launch {
+             blazeStore.getBlazeStatus(selectedSite.siteId)
+                    .map { it.model?.firstOrNull() }
+                    .collect {
+                        isSiteBlazeEligible = it?.isEligible?:false
+                    }
+        }
     }
 
     private fun clearLiveDataSources() {
@@ -381,7 +401,8 @@ class PostListViewModel @Inject constructor(
                 connector.postActionHandler.handlePostButton(buttonType, postModel, hasAutoSave)
             },
             uploadStatusTracker = connector.uploadStatusTracker,
-            isSearch = connector.postListType == SEARCH
+            isSearch = connector.postListType == SEARCH,
+            isSiteBlazeEligible = isSiteBlazeEligible
         )
     }
 

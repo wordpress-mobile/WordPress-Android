@@ -91,7 +91,8 @@ class PostListItemUiStateHelper @Inject constructor(
         performingCriticalAction: Boolean,
         isSearch: Boolean,
         uploadStatusTracker: PostModelUploadStatusTracker,
-        onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
+        onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit,
+        isSiteBlazeEligible: Boolean
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
         val uploadUiState = uploadUiStateUseCase.createUploadUiState(post, site, uploadStatusTracker)
