@@ -30,6 +30,9 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainModel
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old.DomainUiState.UnavailableDomain
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -39,6 +42,7 @@ import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
+import kotlin.test.assertIs
 
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = "multi_result_query" to MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
@@ -293,22 +297,6 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun verifyFetchFreeAndPaidDomainsWhenPurchasingFeatureConfigIsEnabled() = testWithSuccessResponse {
-        whenever(purchasingFeatureConfig.isEnabledOrManuallyOverridden()).thenReturn(true)
-        viewModel.start()
-
-        viewModel.onQueryChanged(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
-        advanceUntilIdle()
-
-        verify(fetchDomainsUseCase).fetchDomains(
-            eq(MULTI_RESULT_DOMAIN_FETCH_QUERY.first),
-            eq(FETCH_DOMAINS_VENDOR_MOBILE),
-            eq(false),
-            eq(MULTI_RESULT_DOMAIN_FETCH_QUERY.second),
-        )
-    }
-
-    @Test
     fun verifyFetchFreeDomainsWhenPurchasingFeatureConfigIsDisabled() = testWithSuccessResponse {
         viewModel.start()
 
@@ -323,6 +311,105 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         )
     }
 
+    // region New UI
+
+    private fun testNewUi(block: suspend CoroutineScope.() -> Unit) = test {
+        whenever(purchasingFeatureConfig.isEnabledOrManuallyOverridden()).thenReturn(true)
+        block()
+    }
+
+    private fun <T> testWithSuccessResultNewUi(
+        queryToSize: Pair<String, Int> = MULTI_RESULT_DOMAIN_FETCH_QUERY,
+        block: suspend CoroutineScope.(OnSuggestedDomains) -> T
+    ) = testNewUi {
+        val (query, size) = queryToSize
+
+        val suggestions = List(size) {
+            DomainSuggestionResponse().apply {
+                domain_name = "$query-$it.com"
+                is_free = it % 2 == 0
+                cost = if (is_free) "Free" else "$$it.00"
+            }
+        }
+
+        val event = OnSuggestedDomains(query, suggestions)
+        whenever(fetchDomainsUseCase.fetchDomains(any(), any(), any(), any())).thenReturn(event)
+        block(event)
+    }
+
+    private val uiDomains get() = assertIs<List<New.DomainUiState>>(viewModel.uiState.value?.contentState?.items)
+
+    @Test
+    fun verifyFetchFreeAndPaidDomainsWhenPurchasingFeatureConfigIsEnabled() = testNewUi {
+        val (query, size) = MULTI_RESULT_DOMAIN_FETCH_QUERY
+        viewModel.start()
+
+        viewModel.onQueryChanged(query)
+        advanceUntilIdle()
+
+        verify(fetchDomainsUseCase).fetchDomains(
+            eq(query),
+            eq(FETCH_DOMAINS_VENDOR_MOBILE),
+            eq(false),
+            eq(size),
+        )
+    }
+
+    @Test
+    fun `verify all domain results from api are visible`() = testWithSuccessResultNewUi { (query, results) ->
+        viewModel.start()
+
+        viewModel.onQueryChanged(query)
+        advanceUntilIdle()
+
+        assertThat(uiDomains).hasSameSizeAs(results)
+    }
+
+    @Test
+    fun `verify cost of free domain results from api is 'Free'`() = testWithSuccessResultNewUi { (query, results) ->
+        val apiFreeDomains = results.filter { it.is_free }
+        viewModel.start()
+
+        viewModel.onQueryChanged(query)
+        advanceUntilIdle()
+
+        assertThat(uiDomains).filteredOn { it.cost is Cost.Free }.hasSameSizeAs(apiFreeDomains)
+    }
+
+    @Test
+    fun `verify cost of paid domain results from api is 'Paid'`() = testWithSuccessResultNewUi { (query, results) ->
+        val apiPaidDomains = results.filter { !it.is_free }
+        viewModel.start()
+
+        viewModel.onQueryChanged(query)
+        advanceUntilIdle()
+
+        assertThat(uiDomains).filteredOn { it.cost is Cost.Paid }.hasSameSizeAs(apiPaidDomains)
+    }
+
+    @Test
+    fun `verify only 1st domain result from api is 'Recommended'`() = testWithSuccessResultNewUi { (query) ->
+        viewModel.start()
+
+        viewModel.onQueryChanged(query)
+        advanceUntilIdle()
+
+        assertThat(uiDomains.map { it.variant }).containsOnlyOnce(Variant.Recommended)
+    }
+
+    @Test
+    fun `verify only 2nd domain result from api is 'BestAlternative'`() = testWithSuccessResultNewUi { (query) ->
+        viewModel.start()
+
+        viewModel.onQueryChanged(query)
+        advanceUntilIdle()
+
+        assertThat(uiDomains.map { it.variant }).containsOnlyOnce(Variant.BestAlternative)
+    }
+
+    // endregion
+
+    // region Helpers
     /**
      * Helper function to verify a [DomainsUiState] with [DomainsUiContentState.Initial] content state.
      */
@@ -422,4 +509,5 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         on { domainName } doReturn name
         on { isFree } doReturn free
     }
+    // endregion
 }

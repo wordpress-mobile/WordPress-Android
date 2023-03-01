@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation.domains
 
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
@@ -27,6 +28,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
@@ -37,6 +39,8 @@ import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_MOBIL
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -270,19 +274,25 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 }
             }
 
-            data.forEach { domain ->
-                val itemUiState = createAvailableItemUiState(domain)
+            data.forEachIndexed { index, domain ->
+                val itemUiState = createAvailableItemUiState(domain, index)
                 items.add(itemUiState)
             }
         }
         return items
     }
 
-    private fun createAvailableItemUiState(domain: DomainModel): ListItemUiState {
+    @Suppress("ForbiddenComment")
+    private fun createAvailableItemUiState(domain: DomainModel, index: Int): ListItemUiState {
         return when (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
             true -> New.DomainUiState(
                 domain.domainName,
-                domain.cost,
+                cost = if (domain.isFree) Cost.Free else Cost.Paid(domain.cost), // TODO: Apply discounts
+                variant = when (index) {
+                    0 -> New.DomainUiState.Variant.Recommended
+                    1 -> New.DomainUiState.Variant.BestAlternative
+                    else -> null
+                },
                 onClick = { onDomainSelected(domain) },
             )
             else -> Old.DomainUiState.AvailableDomain(
@@ -418,9 +428,55 @@ class SiteCreationDomainsViewModel @Inject constructor(
         sealed class New(override val type: Type) : ListItemUiState(type) {
             data class DomainUiState(
                 val domainName: String,
-                val cost: String,
+                val cost: Cost,
                 val onClick: () -> Unit,
-            ) : New(Type.DOMAIN_V2)
+                val variant: Variant? = null,
+            ) : New(Type.DOMAIN_V2) {
+                sealed class Variant(
+                    @ColorRes val dotColor: Int,
+                    @ColorRes val subtitleColor: Int? = null,
+                    val subtitle: UiString,
+                ) {
+                    constructor(@ColorRes color: Int, subtitle: UiString) : this(color, color, subtitle)
+
+                    object Unavailable : Variant(
+                        R.color.red_50,
+                        UiStringRes(R.string.site_creation_domain_tag_unavailable),
+                    )
+
+                    object Recommended : Variant(
+                        R.color.jetpack_green_50,
+                        UiStringRes(R.string.site_creation_domain_tag_recommended),
+                    )
+
+                    object BestAlternative : Variant(
+                        R.color.purple_50,
+                        UiStringRes(R.string.site_creation_domain_tag_best_alternative),
+                    )
+
+                    object Sale : Variant(
+                        R.color.yellow_50,
+                        UiStringRes(R.string.site_creation_domain_tag_sale)
+                    )
+                }
+
+                sealed class Cost(val title: UiString) {
+                    object Free : Cost(UiStringRes(R.string.free))
+
+                    data class Paid(val cost: String) : Cost(
+                        UiStringResWithParams(R.string.site_creation_domain_cost, UiStringText(cost))
+                    )
+
+                    data class OnSale(val titleCost: String, val subtitleCost: String) : Cost(
+                        UiStringResWithParams(R.string.site_creation_domain_cost, UiStringText(titleCost))
+                    ) {
+                        val subtitle = UiStringResWithParams(
+                            R.string.site_creation_domain_cost,
+                            UiStringText(subtitleCost)
+                        )
+                    }
+                }
+            }
         }
     }
 
