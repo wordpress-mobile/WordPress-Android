@@ -30,6 +30,9 @@ class BlazeParentActivity : AppCompatActivity() {
                         .replace(R.id.container, BlazeOverlayFragment.newInstance())
                         .commitNow()
                 }
+                is BlazeUiState.Done -> {
+                    finish()
+                }
                 else -> {}
             }
         }

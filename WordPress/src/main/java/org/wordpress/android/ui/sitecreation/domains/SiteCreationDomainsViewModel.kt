@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation.domains
 
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
@@ -12,9 +13,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.Constants.TYPE_DOMAINS_PRODUCT
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.products.Product
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
+import org.wordpress.android.fluxc.store.ProductsStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType
 import org.wordpress.android.models.networkresource.ListState
@@ -27,6 +31,8 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
@@ -37,8 +43,13 @@ import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_MOBIL
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
+import org.wordpress.android.util.extensions.isOnSale
+import org.wordpress.android.util.extensions.saleCostForDisplay
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -54,6 +65,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val domainSanitizer: SiteCreationDomainSanitizer,
     private val fetchDomainsUseCase: FetchDomainsUseCase,
+    private val productsStore: ProductsStore,
     private val purchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig,
     private val tracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -68,6 +80,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
     val uiState: LiveData<DomainsUiState> = _uiState
 
+    private var products: Map<Int?, Product> = mapOf()
     private var currentQuery: DomainSuggestionsQuery? = null
     private var listState: ListState<DomainModel> = ListState.Init()
     private var selectedDomain by Delegates.observable<DomainModel?>(null) { _, old, new ->
@@ -99,6 +112,22 @@ class SiteCreationDomainsViewModel @Inject constructor(
         isStarted = true
         tracker.trackDomainsAccessed()
         resetUiState()
+        if (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) fetchAndCacheProducts()
+    }
+
+    private fun fetchAndCacheProducts() {
+        launch {
+            val result = productsStore.fetchProducts(TYPE_DOMAINS_PRODUCT)
+            when {
+                result.isError -> {
+                    AppLog.e(AppLog.T.DOMAIN_REGISTRATION, "Error while fetching domain products: ${result.error}")
+                }
+                else -> {
+                    AppLog.d(AppLog.T.DOMAIN_REGISTRATION, result.products.toString())
+                    products = result.products.orEmpty().associateBy { it.productId }
+                }
+            }
+        }
     }
 
     fun onCreateSiteBtnClicked() {
@@ -195,6 +224,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             domainName = domain_name,
             isFree = is_free,
             cost = cost.orEmpty(),
+            productId = product_id,
         )
     }
 
@@ -270,27 +300,42 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 }
             }
 
-            data.forEach { domain ->
-                val itemUiState = createAvailableItemUiState(domain)
+            data.forEachIndexed { index, domain ->
+                val itemUiState = createAvailableItemUiState(domain, index)
                 items.add(itemUiState)
             }
         }
         return items
     }
 
-    private fun createAvailableItemUiState(domain: DomainModel): ListItemUiState {
+    private fun createAvailableItemUiState(domain: DomainModel, index: Int): ListItemUiState {
         return when (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
-            true -> New.DomainUiState(
-                domain.domainName,
-                domain.cost,
-                onClick = { onDomainSelected(domain) },
-            )
-            else -> Old.DomainUiState.AvailableDomain(
-                domainSanitizer.getName(domain.domainName),
-                domainSanitizer.getDomain(domain.domainName),
-                checked = domain == selectedDomain,
-                onClick = { onDomainSelected(domain) }
-            )
+            true -> {
+                val product = products[domain.productId]
+                New.DomainUiState(
+                    domain.domainName,
+                    cost = when {
+                        domain.isFree -> Cost.Free
+                        product.isOnSale() -> Cost.OnSale(product.saleCostForDisplay(), domain.cost)
+                        else -> Cost.Paid(domain.cost)
+                    },
+                    onClick = { onDomainSelected(domain) },
+                    variant = when {
+                        index == 0 -> Variant.Recommended
+                        index == 1 -> Variant.BestAlternative
+                        product.isOnSale() -> Variant.Sale
+                        else -> null
+                    },
+                )
+            }
+            else -> {
+                Old.DomainUiState.AvailableDomain(
+                    domainSanitizer.getName(domain.domainName),
+                    domainSanitizer.getDomain(domain.domainName),
+                    checked = domain == selectedDomain,
+                    onClick = { onDomainSelected(domain) }
+                )
+            }
         }
     }
 
@@ -346,6 +391,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         val domainName: String,
         val isFree: Boolean,
         val cost: String,
+        val productId: Int,
     )
 
     data class DomainsUiState(
@@ -418,9 +464,55 @@ class SiteCreationDomainsViewModel @Inject constructor(
         sealed class New(override val type: Type) : ListItemUiState(type) {
             data class DomainUiState(
                 val domainName: String,
-                val cost: String,
+                val cost: Cost,
                 val onClick: () -> Unit,
-            ) : New(Type.DOMAIN_V2)
+                val variant: Variant? = null,
+            ) : New(Type.DOMAIN_V2) {
+                sealed class Variant(
+                    @ColorRes val dotColor: Int,
+                    @ColorRes val subtitleColor: Int? = null,
+                    val subtitle: UiString,
+                ) {
+                    constructor(@ColorRes color: Int, subtitle: UiString) : this(color, color, subtitle)
+
+                    object Unavailable : Variant(
+                        R.color.red_50,
+                        UiStringRes(R.string.site_creation_domain_tag_unavailable),
+                    )
+
+                    object Recommended : Variant(
+                        R.color.jetpack_green_50,
+                        UiStringRes(R.string.site_creation_domain_tag_recommended),
+                    )
+
+                    object BestAlternative : Variant(
+                        R.color.purple_50,
+                        UiStringRes(R.string.site_creation_domain_tag_best_alternative),
+                    )
+
+                    object Sale : Variant(
+                        R.color.yellow_50,
+                        UiStringRes(R.string.site_creation_domain_tag_sale)
+                    )
+                }
+
+                sealed class Cost(val title: UiString) {
+                    object Free : Cost(UiStringRes(R.string.free))
+
+                    data class Paid(val cost: String) : Cost(
+                        UiStringResWithParams(R.string.site_creation_domain_cost, UiStringText(cost))
+                    )
+
+                    data class OnSale(val titleCost: String, val subtitleCost: String) : Cost(
+                        UiStringResWithParams(R.string.site_creation_domain_cost, UiStringText(titleCost))
+                    ) {
+                        val subtitle = UiStringResWithParams(
+                            R.string.site_creation_domain_cost,
+                            UiStringText(subtitleCost)
+                        )
+                    }
+                }
+            }
         }
     }
 

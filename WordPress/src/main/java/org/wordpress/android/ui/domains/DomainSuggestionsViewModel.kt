@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import kotlinx.coroutines.CoroutineDispatcher
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.Constants.TYPE_DOMAINS_PRODUCT
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -23,6 +24,8 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.config.SiteDomainsFeatureConfig
+import org.wordpress.android.util.extensions.isOnSale
+import org.wordpress.android.util.extensions.saleCostForDisplay
 import org.wordpress.android.util.helpers.Debouncer
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -128,7 +131,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private fun fetchProducts() {
         launch {
-            val result = productsStore.fetchProducts()
+            val result = productsStore.fetchProducts(TYPE_DOMAINS_PRODUCT)
             when {
                 result.isError -> {
                     AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching site domains")
@@ -160,6 +163,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     // Network Callback
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDomainSuggestionsFetched(event: OnSuggestedDomains) {
         if (searchQuery != event.query) {
@@ -181,8 +185,8 @@ class DomainSuggestionsViewModel @Inject constructor(
                 DomainSuggestionItem(
                     domainName = it.domain_name,
                     cost = it.cost,
-                    isOnSale = product?.isSaleDomain() ?: false,
-                    saleCost = product?.saleCostForDisplay().toString(),
+                    isOnSale = product.isOnSale(),
+                    saleCost = product.saleCostForDisplay(),
                     isFree = it.is_free,
                     supportsPrivacy = it.supports_privacy,
                     productId = it.product_id,
@@ -230,10 +234,6 @@ class DomainSuggestionsViewModel @Inject constructor(
             initializeDefaultSuggestions()
         }
     }
-
-    internal fun Product.isSaleDomain(): Boolean = this.saleCost?.let { it.compareTo(0.0) > 0 } == true
-
-    internal fun Product.saleCostForDisplay(): String = this.currencyCode + "%.2f".format(this.saleCost)
 
     private fun createCart(selectedSuggestion: DomainSuggestionItem) = launch {
         AppLog.d(T.DOMAIN_REGISTRATION, "Creating cart: $selectedSuggestion")

@@ -136,7 +136,7 @@
 
         <activity
             android:name=".ui.accounts.HelpActivity"
-            android:label="@string/help_screen_title"
+            android:label="@string/help_buttons_screen_title"
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
