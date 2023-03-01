@@ -140,7 +140,6 @@ class BlazeFeatureUtils @Inject constructor(
         path?.let {
             val advertisingRegex = "^/advertising/[^/]+(/posts)?$".toRegex()
             return advertisingRegex.matches(it)
-
         }?: return false
     }
 
