@@ -226,11 +226,11 @@ public class Authenticator {
         params.put("scheme", scheme.toString());
 
         if (payload.flow != null) {
-            params.put("flow", payload.flow.toString());
+            params.put("flow", payload.flow.getName());
         }
 
         if (payload.source != null) {
-            params.put("source", payload.source.toString());
+            params.put("source", payload.source.getName());
         }
 
         if (payload.signupFlowName != null && !TextUtils.isEmpty(payload.signupFlowName)) {
