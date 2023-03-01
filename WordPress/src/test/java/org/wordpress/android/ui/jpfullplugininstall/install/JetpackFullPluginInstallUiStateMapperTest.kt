@@ -19,6 +19,7 @@ class JetpackFullPluginInstallUiStateMapperTest {
             )
             assertThat(title).isEqualTo(R.string.jetpack_full_plugin_install_initial_title)
             assertThat(description).isEqualTo(R.string.jetpack_full_plugin_install_initial_description)
+            assertThat(showCloseButton).isTrue
         }
     }
 
@@ -33,6 +34,7 @@ class JetpackFullPluginInstallUiStateMapperTest {
             )
             assertThat(title).isEqualTo(R.string.jetpack_full_plugin_install_initial_title)
             assertThat(description).isEqualTo(R.string.jetpack_full_plugin_install_initial_description)
+            assertThat(showCloseButton).isFalse
         }
     }
 
@@ -48,6 +50,7 @@ class JetpackFullPluginInstallUiStateMapperTest {
             )
             assertThat(title).isEqualTo(R.string.jetpack_full_plugin_install_done_title)
             assertThat(description).isEqualTo(R.string.jetpack_full_plugin_install_done_description)
+            assertThat(showCloseButton).isFalse
         }
     }
 
@@ -66,6 +69,7 @@ class JetpackFullPluginInstallUiStateMapperTest {
             )
             assertThat(title).isEqualTo(R.string.jetpack_full_plugin_install_error_title)
             assertThat(description).isEqualTo(R.string.jetpack_full_plugin_install_error_description)
+            assertThat(showCloseButton).isTrue
         }
     }
 }

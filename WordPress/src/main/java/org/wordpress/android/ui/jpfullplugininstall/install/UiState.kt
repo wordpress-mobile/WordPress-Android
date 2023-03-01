@@ -10,6 +10,7 @@ sealed class UiState(
     @StringRes val imageContentDescription: Int,
     @StringRes val title: Int,
     @StringRes val description: Int,
+    val showCloseButton: Boolean = true,
 ) {
     data class Initial(
         @StringRes val buttonText: Int
@@ -27,6 +28,7 @@ sealed class UiState(
         imageContentDescription = R.string.jetpack_full_plugin_install_jp_logo_content_description,
         title = R.string.jetpack_full_plugin_install_initial_title,
         description = R.string.jetpack_full_plugin_install_initial_description,
+        showCloseButton = false,
     )
 
     data class Done(
@@ -37,6 +39,7 @@ sealed class UiState(
         imageContentDescription = R.string.jetpack_full_plugin_install_jp_logo_content_description,
         title = R.string.jetpack_full_plugin_install_done_title,
         description = R.string.jetpack_full_plugin_install_done_description,
+        showCloseButton = false,
     )
 
     data class Error(
