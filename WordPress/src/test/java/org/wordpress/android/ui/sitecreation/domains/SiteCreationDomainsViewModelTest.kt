@@ -464,7 +464,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         assertThat(uiState.searchInputUiState.showProgress).isEqualTo(showProgress)
         assertThat(uiState.searchInputUiState.showClearButton).isEqualTo(showClearButton)
         assertThat(uiState.contentState).isInstanceOf(DomainsUiContentState.Initial::class.java)
-        assertThat(uiState.createSiteButtonContainerVisibility).isEqualTo(false)
+        assertThat(uiState.createSiteButtonState).isNull()
     }
 
     /**

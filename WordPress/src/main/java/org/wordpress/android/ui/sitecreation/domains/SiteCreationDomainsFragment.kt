@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -88,8 +89,8 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                 searchInputWithHeader?.updateHeader(requireActivity(), uiState.headerUiState)
                 searchInputWithHeader?.updateSearchInput(requireActivity(), uiState.searchInputUiState)
                 updateContentUiState(uiState.contentState)
-                uiHelpers.updateVisibility(createSiteButtonContainer, uiState.createSiteButtonContainerVisibility)
-                uiHelpers.updateVisibility(createSiteButtonShadow, uiState.createSiteButtonContainerVisibility)
+                createSiteButtonContainer.isVisible = uiState.createSiteButtonState != null
+                createSiteButton.text = uiState.createSiteButtonState?.stringRes?.let(::getString)
                 updateTitleVisibility(uiState.headerUiState == null)
             }
         })
