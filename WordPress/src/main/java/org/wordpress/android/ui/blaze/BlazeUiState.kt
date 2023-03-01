@@ -32,18 +32,26 @@ data class PostUIModel(
     val featuredImageUrl: String?
 ) : Parcelable
 
-sealed class BlazeWebViewHeaderUiState {
+sealed class BlazeWebViewHeaderUiState(
+    @StringRes open val headerActionText: Int,
+    open val headerActionEnabled: Boolean = true
+) {
     @StringRes val headerTitle = R.string.blaze_activity_title
-    @StringRes val headerActionText = R.string.cancel
-    open val headerActionVisible: Boolean = true
 
-    data class ShowAction(
-        override val headerActionVisible: Boolean = true
-    ): BlazeWebViewHeaderUiState()
+    data class EnabledCancelAction(
+        @StringRes override val headerActionText: Int = R.string.cancel,
+        override val headerActionEnabled: Boolean = true
+    ): BlazeWebViewHeaderUiState(headerActionText, headerActionEnabled)
 
-    data class HideAction(
-        override val headerActionVisible: Boolean = false
-    ): BlazeWebViewHeaderUiState()
+    data class DisabledCancelAction(
+        @StringRes override val headerActionText: Int = R.string.cancel,
+        override val headerActionEnabled: Boolean = false
+    ): BlazeWebViewHeaderUiState(headerActionText, headerActionEnabled)
+
+    data class DoneAction(
+        @StringRes override val headerActionText: Int = R.string.done,
+        override val headerActionEnabled: Boolean = true
+    ): BlazeWebViewHeaderUiState(headerActionText, headerActionEnabled)
 }
 
 data class BlazeWebViewContentUiState(
@@ -55,23 +63,23 @@ data class BlazeWebViewContentUiState(
     val url: String = ""
 )
 
-enum class BlazeFlowStep(val trackingName: String) {
-    CAMPAIGNS_LIST("campaigns_list"),
-    POSTS_LIST("posts_list"),
-    STEP_1("step_1"),
-    STEP_2("step_2"),
-    STEP_3("step_3"),
-    STEP_4("step_4"),
-    STEP_5("step_5"),
-    UNSPECIFIED("unspecified");
+enum class BlazeFlowStep(val label: String, val trackingName: String) {
+    CAMPAIGNS_LIST("campaigns_list", "campaigns_list"),
+    POSTS_LIST("posts_list", "posts_list"),
+    STEP_1("step-1", "step_1"),
+    STEP_2("step-2","step_2"),
+    STEP_3("step-3","step_3"),
+    STEP_4("step-4","step_4"),
+    STEP_5("step-5","step_5"),
+    UNSPECIFIED("unspecified", "unspecified");
 
-    override fun toString() = trackingName
+    override fun toString() = label
 
     companion object {
         @JvmStatic
         fun fromString(strSource: String?): BlazeFlowStep =
             strSource?.let { source ->
-                values().firstOrNull { it.name.equals(source, ignoreCase = true) }
+                values().firstOrNull { it.label.equals(source, ignoreCase = true) }
             } ?: UNSPECIFIED
     }
 }
