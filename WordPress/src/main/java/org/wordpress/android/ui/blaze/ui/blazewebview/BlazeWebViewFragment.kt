@@ -8,17 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.OnBackPressedCallback
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -37,8 +34,8 @@ import org.wordpress.android.ui.blaze.BlazeWebViewClient
 import org.wordpress.android.ui.blaze.BlazeWebViewContentUiState
 import org.wordpress.android.ui.blaze.OnBlazeWebViewClientListener
 import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeViewModel
+import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.compose.utils.withFullContentAlpha
 
 @AndroidEntryPoint
 class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
@@ -104,27 +101,19 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
     private fun TopAppBar(
         state: BlazeWebViewHeaderUiState
     ) {
-        TopAppBar(
-            backgroundColor = MaterialTheme.colors.surface,
-            contentColor = MaterialTheme.colors.onSurface,
-            elevation = 0.dp,
-            title = withFullContentAlpha {
-                Text(stringResource(id = state.headerTitle))
-            },
+        MainTopAppBar(
+            title = stringResource(id = state.headerTitle),
+            onNavigationIconClick = {},
             actions = {
                 TextButton(
                     onClick = { blazeWebViewViewModel.onHeaderActionClick(state) },
                     enabled = state.headerActionEnabled
                 ) {
-                    Text(
-                        stringResource(id = state.headerActionText),
-                        color = MaterialTheme.colors.onSurface
-                    )
+                    Text(stringResource(id = state.headerActionText))
                 }
             }
-        ) // TopAppBar
+        )
     }
-
     @SuppressLint("SetJavaScriptEnabled")
     @Composable
     private fun BlazeWebViewContent(model: BlazeWebViewContentUiState) {
