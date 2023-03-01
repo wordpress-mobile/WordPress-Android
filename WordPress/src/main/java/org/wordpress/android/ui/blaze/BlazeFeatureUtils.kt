@@ -39,8 +39,7 @@ class BlazeFeatureUtils @Inject constructor(
 
     fun shouldShowPromoteWithBlazeCard(blazeStatusModel: BlazeStatusModel?): Boolean {
         val isEligible = blazeStatusModel?.isEligible == true
-        return buildConfigWrapper.isJetpackApp &&
-                blazeFeatureConfig.isEnabled() &&
+        return isBlazeEnabled() &&
                 isEligible &&
                 !isPromoteWithBlazeCardHiddenByUser()
     }
