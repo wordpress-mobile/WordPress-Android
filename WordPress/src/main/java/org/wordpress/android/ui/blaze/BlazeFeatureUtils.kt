@@ -99,6 +99,12 @@ class BlazeFeatureUtils @Inject constructor(
         )
     }
 
+    fun trackBlazeFlowCompleted(blazeFlowSource: BlazeFlowSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FLOW_COMPLETED, mapOf(SOURCE to blazeFlowSource.trackingName)
+        )
+    }
+
     @Suppress("ReturnCount")
     fun extractCurrentStep(url: String?): BlazeFlowStep {
         url?.let {
