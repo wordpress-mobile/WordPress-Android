@@ -107,6 +107,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteErrorType.INVALID_S
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityErrorType.INVALID_DOMAIN_NAME
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType.INVALID_COUNTRY_CODE
 import org.wordpress.android.fluxc.store.SiteStore.ExportSiteErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.SiteStore.LaunchStoreErrorType.ALREADY_LAUNCHED
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType.NOT_AVAILABLE
 import org.wordpress.android.fluxc.store.SiteStore.SelfHostedErrorType.NOT_SET
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.DUPLICATE_SITE
@@ -743,6 +744,23 @@ open class SiteStore @Inject constructor(
         constructor(site: SiteModel, error: BaseNetworkError): this(site) {
             this.error = OnApplicationPasswordDeleteError(error)
         }
+    }
+
+    class LaunchStorePayload() : Payload<LaunchStoreError>() {
+        constructor(error: LaunchStoreError) : this() {
+            this.error = error
+        }
+    }
+
+    data class LaunchStoreError internal constructor(
+        @JvmField val type: LaunchStoreErrorType?,
+        @JvmField val message: String
+    ) : OnChangedError
+
+    enum class LaunchStoreErrorType {
+        GENERIC_ERROR,
+        ALREADY_LAUNCHED,
+        UNAUTHORIZED
     }
 
     class OnApplicationPasswordDeleteError(error: BaseNetworkError) : OnChangedError {
@@ -2056,15 +2074,19 @@ open class SiteStore @Inject constructor(
         }
     }
 
-    suspend fun launchSite(site: SiteModel): WPAPIResponse<Unit> {
+    suspend fun launchSite(site: SiteModel): LaunchStorePayload {
         return coroutineEngine.withDefaultContext(T.API, this, "Launch site") {
             when (val response =
                 siteRestClient.launchSite(site)) {
-                is Success -> {
-                    WPAPIResponse.Success(response.data)
-                }
+                is Success -> LaunchStorePayload()
                 is Error -> {
-                    WPAPIResponse.Error(WPAPINetworkError(response.error))
+                    val errorType = when (response.error.apiError) {
+                        "unauthorized" -> LaunchStoreErrorType.UNAUTHORIZED
+                        "already-launched" -> ALREADY_LAUNCHED
+                        else -> LaunchStoreErrorType.GENERIC_ERROR
+                    }
+                    val error = LaunchStoreError(errorType, response.error.message)
+                    LaunchStorePayload(error)
                 }
             }
         }
