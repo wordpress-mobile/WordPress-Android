@@ -18,6 +18,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.T
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VARIATION
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VERTICAL_SLUG
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,7 +32,10 @@ private const val SITE_CREATION_LOCATION = "site_creation"
 private const val SITE_CREATION_SOURCE = "source"
 
 @Singleton
-class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapper) : LayoutPickerTracker {
+class SiteCreationTracker @Inject constructor(
+    val tracker: AnalyticsTrackerWrapper,
+    private val purchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig,
+) : LayoutPickerTracker {
     private enum class PROPERTY(val key: String) {
         TEMPLATE("template"),
         CHOSEN_DOMAIN("chosen_domain"),
@@ -62,14 +66,24 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
     }
 
     fun trackDomainSelected(chosenDomain: String, searchTerm: String, domainCost: String = "free") {
-        tracker.track(
-            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_SELECTED,
-            mapOf(
-                CHOSEN_DOMAIN.key to chosenDomain,
-                SEARCH_TERM.key to searchTerm,
-                PROPERTY.DOMAIN_COST.key to domainCost.lowercase(), // Homogenize data (e.g. "Free" will turn to "free")
+        if(purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
+            tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_SELECTED,
+                mapOf(
+                    CHOSEN_DOMAIN.key to chosenDomain,
+                    SEARCH_TERM.key to searchTerm,
+                    PROPERTY.DOMAIN_COST.key to domainCost.lowercase(), // Homogenize data (e.g. "Free" becomes "free")
+                )
             )
-        )
+        } else {
+            tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_SELECTED,
+                mapOf(
+                    CHOSEN_DOMAIN.key to chosenDomain,
+                    SEARCH_TERM.key to searchTerm,
+                )
+            )
+        }
     }
 
     fun trackPreviewLoading(template: String?) {
