@@ -29,6 +29,7 @@ import org.wordpress.android.models.networkresource.ListState.Success
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.CreateSiteButtonState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
@@ -246,12 +247,15 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 showDivider = state.data.isNotEmpty()
             ),
             contentState = createDomainsUiContentState(query, state, emptyListMessage),
-            createSiteButtonContainerVisibility = getCreateSiteButtonState()
+            createSiteButtonState = getCreateSiteButtonState()
         )
     }
 
-    private fun getCreateSiteButtonState(): Boolean {
-        return selectedDomain?.isFree ?: false
+    private fun getCreateSiteButtonState() = selectedDomain?.run {
+        when (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
+            true -> if (isFree) CreateSiteButtonState.Free else CreateSiteButtonState.Paid
+            else -> CreateSiteButtonState.Old
+        }
     }
 
     private fun createDomainsUiContentState(
@@ -382,7 +386,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun onDomainSelected(domain: DomainModel) {
-        selectedDomain = domain.takeIf { it.isFree }
+        selectedDomain = domain
     }
 
     private fun isNonEmptyUserQuery(query: DomainSuggestionsQuery?) = query is UserQuery && query.value.isNotBlank()
@@ -398,7 +402,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         val headerUiState: SiteCreationHeaderUiState?,
         val searchInputUiState: SiteCreationSearchInputUiState,
         val contentState: DomainsUiContentState = DomainsUiContentState.Initial,
-        val createSiteButtonContainerVisibility: Boolean
+        val createSiteButtonState: CreateSiteButtonState?
     ) {
         sealed class DomainsUiContentState(
             val emptyViewVisibility: Boolean,
@@ -422,6 +426,12 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 exampleViewVisibility = false,
                 items = items
             )
+        }
+
+        sealed class CreateSiteButtonState(@StringRes val stringRes: Int) {
+            object Old : CreateSiteButtonState(R.string.site_creation_domain_finish_button)
+            object Free : CreateSiteButtonState(R.string.site_creation_domain_button_continue_with_subdomain)
+            object Paid : CreateSiteButtonState(R.string.site_creation_domain_button_purchase_domain)
         }
     }
 

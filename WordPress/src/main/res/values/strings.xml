@@ -3340,6 +3340,8 @@
     <string name="site_creation_domain_tag_recommended">Recommended</string>
     <string name="site_creation_domain_tag_sale">Sale</string>
     <string name="site_creation_domain_tag_unavailable">This domain is already registered</string>
+    <string name="site_creation_domain_button_purchase_domain">Purchase domain</string>
+    <string name="site_creation_domain_button_continue_with_subdomain">Continue with subdomain</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
