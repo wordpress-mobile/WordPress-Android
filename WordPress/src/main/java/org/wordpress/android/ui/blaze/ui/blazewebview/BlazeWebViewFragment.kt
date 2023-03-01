@@ -2,7 +2,6 @@ package org.wordpress.android.ui.blaze.ui.blazewebview
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +18,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.Fragment
@@ -97,7 +95,7 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
         val data by viewModel.model.collectAsState()
         val blazeHeaderState by viewModel.blazeHeaderState.collectAsState()
         Scaffold(
-            topBar = { TopAppBar(blazeHeaderState, viewModel::onHeaderActionClick) },
+            topBar = { TopAppBar(blazeHeaderState) },
             content = { BlazeWebViewContent(data) }
         )
     }
@@ -129,12 +127,44 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
         })
     }
 
+    @Composable
+    private fun TopAppBar(
+        state: BlazeWebViewHeaderUiState
+    ) {
+        TopAppBar(
+            backgroundColor = MaterialTheme.colors.surface,
+            contentColor = MaterialTheme.colors.onSurface,
+            elevation = 0.dp,
+            title = withFullContentAlpha {
+                Text(stringResource(id = state.headerTitle))
+            },
+            actions = {
+                TextButton(
+                    onClick = {
+                        when (state) {
+                            is BlazeWebViewHeaderUiState.DoneAction ->
+                                blazeWebViewViewModel.onHeaderDoneActionClick()
+                            is BlazeWebViewHeaderUiState.EnabledCancelAction ->
+                                blazeWebViewViewModel.onHeaderCancelActionClick()
+                            else -> {}
+                        }
+                    },
+                    enabled = state.headerActionEnabled
+                ) {
+                    Text(
+                        stringResource(id = state.headerActionText),
+                        color = MaterialTheme.colors.onSurface
+                    )
+                }
+            }
+        ) // TopAppBar
+    }
+
+
+
     override fun onWebViewPageLoaded(url: String) {
-        // todo Track events for started/completed
-        // blaze_flow_started
-        // blaze_flow_completed
         blazeWebViewViewModel.updateBlazeFlowStep(url)
-        blazeWebViewViewModel.hideOrShowCancelAction(url)
+        blazeWebViewViewModel.updateHeaderActionUiState()
     }
 
     override fun onWebViewReceivedError(url: String?) {
@@ -172,40 +202,3 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
         fun newInstance() = BlazeWebViewFragment()
     }
 }
-
-@Composable
-private fun TopAppBar(
-    state: BlazeWebViewHeaderUiState,
-    onHeaderActionClick: () -> Unit
-) {
-    TopAppBar(
-        backgroundColor = MaterialTheme.colors.surface,
-        contentColor = MaterialTheme.colors.onSurface,
-        elevation = 0.dp,
-        title = withFullContentAlpha {
-            Text(stringResource(id = state.headerTitle))
-        },
-        actions = {
-            if (state.headerActionVisible) {
-                TextButton(
-                    onClick = { onHeaderActionClick() }
-                ) {
-                    Text(
-                        stringResource(id = state.headerActionText),
-                        color = MaterialTheme.colors.onSurface
-                    )
-                }
-            }
-        }
-    ) // TopAppBar
-}
-
-@Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun TopAppBarPreview() {
-    val  onClick : () -> Unit = {}
-    TopAppBar(BlazeWebViewHeaderUiState.ShowAction(), onClick )
-}
-
-
