@@ -4428,4 +4428,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blaze_promotional_subtitle_3">Track performance, start, and stop your Blaze at any time.</string>
     <string name="blaze_overlay_post_promotional_button">Blaze this Post</string>
     <string name="blaze_overlay_site_promotional_button">Blaze a Post now</string>
+
+    <!-- Blaze -->
+    <string name="blaze_header_done_label" translatable="false">@string/label_done_button</string>
 </resources>

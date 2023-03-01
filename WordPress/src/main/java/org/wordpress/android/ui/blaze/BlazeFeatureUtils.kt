@@ -53,10 +53,6 @@ class BlazeFeatureUtils @Inject constructor(
         return appPrefsWrapper.getShouldHidePromoteWithBlazeCard()
     }
 
-    companion object {
-        const val SOURCE = "source"
-    }
-
     fun trackOverlayDisplayed(blazeFlowSource: BlazeFlowSource) {
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.BLAZE_FEATURE_OVERLAY_DISPLAYED,
@@ -76,5 +72,40 @@ class BlazeFeatureUtils @Inject constructor(
             AnalyticsTracker.Stat.BLAZE_FEATURE_OVERLAY_DISMISSED,
             mapOf(SOURCE to blazeFlowSource.trackingName)
         )
+    }
+
+    fun trackFlowError(blazeFlowSource: BlazeFlowSource, blazeFlowStep: BlazeFlowStep) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FLOW_ERROR,
+            mapOf(
+                SOURCE to blazeFlowSource.trackingName, CURRENT_STEP to blazeFlowStep.trackingName
+            )
+        )
+    }
+
+    fun trackFlowCanceled(blazeFlowSource: BlazeFlowSource, blazeFlowStep: BlazeFlowStep) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FLOW_CANCELED,
+            mapOf(
+                SOURCE to blazeFlowSource.trackingName, CURRENT_STEP to blazeFlowStep.trackingName
+            )
+        )
+    }
+
+    fun trackBlazeFlowStarted(blazeFlowSource: BlazeFlowSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FLOW_STARTED, mapOf(SOURCE to blazeFlowSource.trackingName)
+        )
+    }
+
+    fun trackBlazeFlowCompleted(blazeFlowSource: BlazeFlowSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FLOW_COMPLETED, mapOf(SOURCE to blazeFlowSource.trackingName)
+        )
+    }
+
+    companion object {
+        const val SOURCE = "source"
+        const val CURRENT_STEP = "current_step"
     }
 }
