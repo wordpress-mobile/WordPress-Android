@@ -38,7 +38,7 @@ data class Domain(
     @SerializedName("current_user_can_manage")
     val currentUserCanManage: Boolean = false,
     @SerializedName("current_user_cannot_add_email_reason")
-    val currentUserCannotAddEmailReason: String? = null,
+    val currentUserCannotAddEmailReason: JsonElement? = null,
     @SerializedName("domain")
     val domain: String? = null,
     @SerializedName("domain_locking_available")
