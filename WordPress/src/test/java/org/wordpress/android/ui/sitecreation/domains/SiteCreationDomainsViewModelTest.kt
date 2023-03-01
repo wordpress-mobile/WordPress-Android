@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainModel
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.CreateSiteButtonState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
@@ -320,6 +321,15 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         )
     }
 
+    @Test
+    fun `verify create site button text is not changed when purchasing feature is OFF`() = testWithSuccessResponse {
+        viewModel.start()
+
+        viewModel.onDomainSelected(mock())
+
+        assertIs<CreateSiteButtonState.Old>(viewModel.uiState.value?.createSiteButtonState)
+    }
+
     // region New UI
 
     private fun testNewUi(block: suspend CoroutineScope.() -> Unit) = test {
@@ -373,6 +383,25 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
         verify(productsStore).fetchProducts(eq(TYPE_DOMAINS_PRODUCT))
     }
+
+    @Test
+    fun `verify create site button text changes when selecting a free domain`() = testNewUi {
+        viewModel.start()
+
+        viewModel.onDomainSelected(mockDomain(free = true))
+
+        assertIs<CreateSiteButtonState.Free>(viewModel.uiState.value?.createSiteButtonState)
+    }
+
+    @Test
+    fun `verify create site button text changes when selecting a non-free domain`() = testNewUi {
+        viewModel.start()
+
+        viewModel.onDomainSelected(mockDomain(free = false))
+
+        assertIs<CreateSiteButtonState.Paid>(viewModel.uiState.value?.createSiteButtonState)
+    }
+
 
     @Test
     fun `verify all domain results from api are visible`() = testWithSuccessResultNewUi { (query, results) ->
