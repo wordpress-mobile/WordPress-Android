@@ -100,33 +100,6 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
         )
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    @Composable
-    private fun BlazeWebViewContent(model: BlazeWebViewContentUiState) {
-        AndroidView(factory = {
-            WebView(it).apply {
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
-                scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
-                settings.userAgentString = model.userAgent
-                settings.javaScriptEnabled = model.enableJavascript
-                settings.domStorageEnabled = model.enableDomStorage
-                webViewClient = BlazeWebViewClient(this@BlazeWebViewFragment)
-                chromeClient = WPWebChromeClientWithFileChooser(
-                    activity,
-                    this,
-                    R.drawable.media_movieclip,
-                    null,
-                    this@BlazeWebViewFragment
-                )
-                webChromeClient = chromeClient
-                postUrl(WPCOM_LOGIN_URL, model.addressToLoad.toByteArray())
-            }
-        })
-    }
-
     @Composable
     private fun TopAppBar(
         state: BlazeWebViewHeaderUiState
@@ -160,7 +133,32 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
         ) // TopAppBar
     }
 
-
+    @SuppressLint("SetJavaScriptEnabled")
+    @Composable
+    private fun BlazeWebViewContent(model: BlazeWebViewContentUiState) {
+        AndroidView(factory = {
+            WebView(it).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+                scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
+                settings.userAgentString = model.userAgent
+                settings.javaScriptEnabled = model.enableJavascript
+                settings.domStorageEnabled = model.enableDomStorage
+                webViewClient = BlazeWebViewClient(this@BlazeWebViewFragment)
+                chromeClient = WPWebChromeClientWithFileChooser(
+                    activity,
+                    this,
+                    R.drawable.media_movieclip,
+                    null,
+                    this@BlazeWebViewFragment
+                )
+                webChromeClient = chromeClient
+                postUrl(WPCOM_LOGIN_URL, model.addressToLoad.toByteArray())
+            }
+        })
+    }
 
     override fun onWebViewPageLoaded(url: String) {
         blazeWebViewViewModel.updateBlazeFlowStep(url)
