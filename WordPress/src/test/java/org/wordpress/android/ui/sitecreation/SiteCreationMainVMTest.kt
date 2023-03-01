@@ -31,6 +31,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
+import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
@@ -47,7 +48,7 @@ import org.wordpress.android.viewmodel.helpers.DialogHolder
 private const val LOCAL_SITE_ID = 1
 private const val SEGMENT_ID = 1L
 private const val VERTICAL = "Test Vertical"
-private const val DOMAIN = "test.domain.com"
+private val DOMAIN = DomainModel("test.domain.com", true, "$0", 1)
 private const val STEP_COUNT = 20
 private const val FIRST_STEP_INDEX = 1
 private const val LAST_STEP_INDEX = STEP_COUNT
@@ -135,7 +136,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun siteCreationStateUpdatedWithSelectedDomain() {
         viewModel.onDomainsScreenFinished(DOMAIN)
-        assertThat(currentWizardState(viewModel).domain).isEqualTo(DOMAIN)
+        assertThat(currentWizardState(viewModel).domain).isEqualTo(DOMAIN.domainName)
     }
 
     @Test

@@ -90,8 +90,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
         }
     }
 
-    private val _createSiteBtnClicked = SingleLiveEvent<String>()
-    val createSiteBtnClicked: LiveData<String> = _createSiteBtnClicked
+    private val _createSiteBtnClicked = SingleLiveEvent<DomainModel>()
+    val createSiteBtnClicked: LiveData<DomainModel> = _createSiteBtnClicked
 
     private val _clearBtnClicked = SingleLiveEvent<Unit>()
     val clearBtnClicked = _clearBtnClicked
@@ -136,7 +136,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             "Create site button should not be visible if a domain is not selected"
         }
         tracker.trackDomainSelected(domain.domainName, currentQuery?.value ?: "")
-        _createSiteBtnClicked.value = domain.domainName
+        _createSiteBtnClicked.value = domain
     }
 
     fun onClearTextBtnClicked() = _clearBtnClicked.call()
@@ -390,13 +390,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     private fun isNonEmptyUserQuery(query: DomainSuggestionsQuery?) = query is UserQuery && query.value.isNotBlank()
-
-    data class DomainModel(
-        val domainName: String,
-        val isFree: Boolean,
-        val cost: String,
-        val productId: Int,
-    )
 
     data class DomainsUiState(
         val headerUiState: SiteCreationHeaderUiState?,
