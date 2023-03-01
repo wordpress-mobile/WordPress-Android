@@ -251,6 +251,7 @@ class PostListMainViewModel @Inject constructor(
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.CREATED
     }
 
+    @Suppress("LongMethod")
     fun start(
         site: SiteModel,
         initPreviewState: PostListRemotePreviewState,
