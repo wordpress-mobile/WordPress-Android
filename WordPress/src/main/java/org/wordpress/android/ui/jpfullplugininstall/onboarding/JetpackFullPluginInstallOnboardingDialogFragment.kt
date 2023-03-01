@@ -62,15 +62,14 @@ class JetpackFullPluginInstallOnboardingDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         super.onCreateDialog(savedInstanceState).apply {
-            val componentDialog = dialog as ComponentDialog
-            componentDialog.onBackPressedDispatcher.addCallback(this@JetpackFullPluginInstallOnboardingDialogFragment) {
-                viewModel.onDismissScreenClick()
-                isEnabled = false
-                componentDialog.onBackPressedDispatcher.onBackPressed()
-            }
+            (this as ComponentDialog).onBackPressedDispatcher
+                .addCallback(this@JetpackFullPluginInstallOnboardingDialogFragment) {
+                    viewModel.onDismissScreenClick()
+                    isEnabled = false
+                    onBackPressedDispatcher.onBackPressed()
+                }
             setStatusBarAsSurfaceColor()
         }
-
 
     @Composable
     private fun JetpackFullPluginInstallOnboardingScreen(
