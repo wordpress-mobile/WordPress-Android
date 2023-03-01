@@ -49,7 +49,7 @@ sealed class BlazeWebViewHeaderUiState(
     ): BlazeWebViewHeaderUiState(headerActionText, headerActionEnabled)
 
     data class DoneAction(
-        @StringRes override val headerActionText: Int = R.string.done,
+        @StringRes override val headerActionText: Int = R.string.blaze_header_done_label,
         override val headerActionEnabled: Boolean = true
     ): BlazeWebViewHeaderUiState(headerActionText, headerActionEnabled)
 }
