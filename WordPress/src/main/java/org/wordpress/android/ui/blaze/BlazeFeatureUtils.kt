@@ -2,7 +2,6 @@ package org.wordpress.android.ui.blaze
 
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeStatusModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -17,17 +16,14 @@ class BlazeFeatureUtils @Inject constructor(
     private val blazeFeatureConfig: BlazeFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
 ) {
-    fun shouldShowPromoteWithBlaze(
+    fun isPostBlazeEligible(
         postStatus: PostStatus,
-        siteModel: SiteModel,
         postModel: PostModel
     ): Boolean {
-        // add the logic to check whether the site is eligible for blaze
         return buildConfigWrapper.isJetpackApp &&
                 blazeFeatureConfig.isEnabled() &&
                 postStatus == PostStatus.PUBLISHED &&
-                postModel.password.isEmpty() &&
-                siteModel.isAdmin
+                postModel.password.isEmpty()
     }
 
     fun shouldShowPromoteWithBlazeCard(blazeStatusModel: BlazeStatusModel?): Boolean {

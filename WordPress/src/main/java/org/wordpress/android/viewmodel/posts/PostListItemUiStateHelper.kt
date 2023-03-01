@@ -108,7 +108,10 @@ class PostListItemUiStateHelper @Inject constructor(
             siteHasCapabilitiesToPublish = capabilitiesToPublish,
             statsSupported = statsSupported,
             shouldRemoveJetpackFeatures = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures(),
-            shouldShowPromoteWithBlaze = blazeFeatureUtils.shouldShowPromoteWithBlaze(postStatus, site, post),
+            shouldShowPromoteWithBlaze = isSiteBlazeEligible && blazeFeatureUtils.isPostBlazeEligible(
+                postStatus,
+                post
+            ),
         )
         val defaultActions = createDefaultViewActions(buttonTypes, onButtonClicked)
         val compactActions = createCompactViewActions(buttonTypes, onButtonClicked)
