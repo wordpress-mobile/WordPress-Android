@@ -2,6 +2,7 @@ package org.wordpress.android.ui.blaze
 
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeStatusModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -16,6 +17,16 @@ class BlazeFeatureUtils @Inject constructor(
     private val blazeFeatureConfig: BlazeFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
 ) {
+    private fun isBlazeEnabled(): Boolean {
+        return buildConfigWrapper.isJetpackApp &&
+                blazeFeatureConfig.isEnabled()
+    }
+
+    fun isBlazeEligibleForUser(siteModel: SiteModel): Boolean {
+        return siteModel.isAdmin &&
+                isBlazeEnabled()
+    }
+
     fun isPostBlazeEligible(
         postStatus: PostStatus,
         postModel: PostModel
