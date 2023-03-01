@@ -22,6 +22,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
+import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
@@ -230,8 +231,8 @@ class SiteCreationMainVM @Inject constructor(
         }
     }
 
-    fun onDomainsScreenFinished(domain: String) {
-        siteCreationState = siteCreationState.copy(domain = domain)
+    fun onDomainsScreenFinished(domain: DomainModel) {
+        siteCreationState = siteCreationState.copy(domain = domain.domainName)
         wizardManager.showNextStep()
     }
 

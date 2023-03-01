@@ -11,9 +11,9 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.firstValue
 import org.mockito.kotlin.lastValue
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.secondValue
@@ -31,7 +31,6 @@ import org.wordpress.android.fluxc.store.ProductsStore
 import org.wordpress.android.fluxc.store.ProductsStore.OnProductsFetched
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainModel
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.CreateSiteButtonState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
@@ -76,7 +75,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     private lateinit var uiStateObserver: Observer<DomainsUiState>
 
     @Mock
-    private lateinit var createSiteBtnObserver: Observer<String>
+    private lateinit var createSiteBtnObserver: Observer<DomainModel>
 
     @Mock
     private lateinit var clearBtnObserver: Observer<Unit>
@@ -293,17 +292,14 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         verify(clearBtnObserver, times(1)).onChanged(captor.capture())
     }
 
-    /**
-     * Verifies that create site button is properly propagated when a domain is selected.
-     */
     @Test
-    fun verifyCreateSiteBtnClickedPropagated() = testWithSuccessResponse {
-        val domainName = "test.domain"
-        viewModel.onDomainSelected(mockDomain(domainName))
+    fun `verify click on the create site button emits the selected domain`() = testWithSuccessResponse {
+        val selectedDomain = mockDomain("test.domain")
+        viewModel.onDomainSelected(selectedDomain)
+
         viewModel.onCreateSiteBtnClicked()
-        val captor = ArgumentCaptor.forClass(String::class.java)
-        verify(createSiteBtnObserver, times(1)).onChanged(captor.capture())
-        assertThat(captor.firstValue).isEqualTo(domainName)
+
+        verify(createSiteBtnObserver).onChanged(argWhere { it == selectedDomain })
     }
 
     @Test

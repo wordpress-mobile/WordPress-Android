@@ -31,6 +31,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.INTENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_DESIGNS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_NAME
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
+import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
@@ -205,7 +206,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         ActivityUtils.hideKeyboard(this)
     }
 
-    override fun onDomainSelected(domain: String) {
+    override fun onDomainSelected(domain: DomainModel) {
         mainViewModel.onDomainsScreenFinished(domain)
     }
 
