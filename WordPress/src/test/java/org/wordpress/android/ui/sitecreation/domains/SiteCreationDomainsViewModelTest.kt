@@ -22,9 +22,13 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.Constants.TYPE_DOMAINS_PRODUCT
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.products.Product
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
+import org.wordpress.android.fluxc.store.ProductsStore
+import org.wordpress.android.fluxc.store.ProductsStore.OnProductsFetched
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainModel
@@ -47,6 +51,7 @@ import kotlin.test.assertIs
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = "multi_result_query" to MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
 private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = "empty_result_query" to 0
+private val SALE_PRODUCTS = listOf(Product(productId = 3, saleCost = 1.0, currencyCode = "EUR"))
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -56,6 +61,9 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var fetchDomainsUseCase: FetchDomainsUseCase
+
+    @Mock
+    private lateinit var productsStore: ProductsStore
 
     @Mock
     lateinit var purchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig
@@ -90,6 +98,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             domainSanitizer = mSiteCreationDomainSanitizer,
             dispatcher = dispatcher,
             fetchDomainsUseCase = fetchDomainsUseCase,
+            productsStore = productsStore,
             purchasingFeatureConfig = purchasingFeatureConfig,
             tracker = tracker,
             bgDispatcher = testDispatcher(),
@@ -315,6 +324,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
     private fun testNewUi(block: suspend CoroutineScope.() -> Unit) = test {
         whenever(purchasingFeatureConfig.isEnabledOrManuallyOverridden()).thenReturn(true)
+        whenever(productsStore.fetchProducts(any())).thenReturn(mock())
         block()
     }
 
@@ -329,6 +339,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
                 domain_name = "$query-$it.com"
                 is_free = it % 2 == 0
                 cost = if (is_free) "Free" else "$$it.00"
+                product_id = it
             }
         }
 
@@ -353,6 +364,14 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             eq(false),
             eq(size),
         )
+    }
+
+    @Test
+    fun `verify domain products are fetched only at first start`() = testNewUi {
+        viewModel.start()
+        viewModel.start()
+
+        verify(productsStore).fetchProducts(eq(TYPE_DOMAINS_PRODUCT))
     }
 
     @Test
@@ -385,6 +404,30 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(uiDomains).filteredOn { it.cost is Cost.Paid }.hasSameSizeAs(apiPaidDomains)
+    }
+
+    @Test
+    fun `verify cost of sale domain results from api is 'OnSale'`() = testWithSuccessResultNewUi { (query) ->
+        whenever(productsStore.fetchProducts(any())).thenReturn(OnProductsFetched(SALE_PRODUCTS))
+
+        viewModel.start()
+
+        viewModel.onQueryChanged(query)
+        advanceUntilIdle()
+
+        assertThat(uiDomains).filteredOn { it.cost is Cost.OnSale }.hasSameSizeAs(SALE_PRODUCTS)
+    }
+
+    @Test
+    fun `verify sale domain results from api have variant 'Sale'`() = testWithSuccessResultNewUi { (query) ->
+        whenever(productsStore.fetchProducts(any())).thenReturn(OnProductsFetched(SALE_PRODUCTS))
+
+        viewModel.start()
+
+        viewModel.onQueryChanged(query)
+        advanceUntilIdle()
+
+        assertThat(uiDomains).filteredOn { it.variant is Variant.Sale }.hasSameSizeAs(SALE_PRODUCTS)
     }
 
     @Test
