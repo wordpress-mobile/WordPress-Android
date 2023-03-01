@@ -65,9 +65,7 @@ class PostListViewModelTest : BaseUnitTest() {
             connectionStatus = mock(),
             uploadUtilsWrapper = mock(),
             uiDispatcher = testDispatcher(),
-            bgDispatcher = testDispatcher(),
-            blazeFeatureUtils = mock(),
-            blazeStore = mock()
+            bgDispatcher = testDispatcher()
         )
     }
 
