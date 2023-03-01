@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.OnBackPressedCallback
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -104,16 +106,27 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
         MainTopAppBar(
             title = stringResource(id = state.headerTitle),
             onNavigationIconClick = {},
-            actions = {
-                TextButton(
-                    onClick = { blazeWebViewViewModel.onHeaderActionClick(state) },
-                    enabled = state.headerActionEnabled
-                ) {
-                    Text(stringResource(id = state.headerActionText))
-                }
-            }
+            actions = { TopAppBarActions(state = state) }
         )
     }
+
+    @Composable
+    private fun TopAppBarActions(state: BlazeWebViewHeaderUiState) {
+            TextButton(
+                onClick = { blazeWebViewViewModel.onHeaderActionClick(state) },
+                enabled = state.headerActionEnabled,
+            ) {
+                    Text(
+                        stringResource(id = state.headerActionText),
+                        color = if (state.headerActionEnabled) {
+                            MaterialTheme.colors.onSurface
+                        } else {
+                            MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
+                        }
+                    )
+              }
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     @Composable
     private fun BlazeWebViewContent(model: BlazeWebViewContentUiState) {
