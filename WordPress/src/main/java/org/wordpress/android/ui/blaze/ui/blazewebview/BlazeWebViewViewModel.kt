@@ -18,8 +18,11 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.BlazeFlowStep
 import org.wordpress.android.ui.blaze.BlazeUiState
-import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState
+import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState.DisabledCancelAction
+import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState.EnabledCancelAction
+import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState.DoneAction
 import org.wordpress.android.ui.blaze.BlazeWebViewContentUiState
+import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import javax.inject.Inject
 
@@ -30,14 +33,14 @@ class BlazeWebViewViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteStore: SiteStore
 ) : ViewModel() {
-    private val hideCancelSteps = listOf(BLAZE_NON_DISMISSABLE_HASH)
     private lateinit var blazeFlowSource: BlazeFlowSource
     private lateinit var blazeFlowStep: BlazeFlowStep
 
     private val _actionEvents = Channel<BlazeActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
-    private val _blazeHeaderState = MutableStateFlow<BlazeWebViewHeaderUiState>(BlazeWebViewHeaderUiState.ShowAction())
+    private val _blazeHeaderState =
+        MutableStateFlow<BlazeWebViewHeaderUiState>(EnabledCancelAction())
     val blazeHeaderState: StateFlow<BlazeWebViewHeaderUiState> = _blazeHeaderState
 
     private val _model = MutableStateFlow(BlazeWebViewContentUiState())
@@ -83,8 +86,13 @@ class BlazeWebViewViewModel @Inject constructor(
         return url
     }
 
-    fun onHeaderActionClick() {
+    fun onHeaderCancelActionClick() {
         blazeFeatureUtils.trackFlowCanceled(blazeFlowSource, blazeFlowStep)
+        postActionEvent(BlazeActionEvent.FinishActivity)
+    }
+
+    fun onHeaderDoneActionClick() {
+        blazeFeatureUtils.trackBlazeFlowCompleted(blazeFlowSource)
         postActionEvent(BlazeActionEvent.FinishActivity)
     }
 
@@ -132,11 +140,12 @@ class BlazeWebViewViewModel @Inject constructor(
         return selectedSiteRepository.getSelectedSite()?.url?.replace(Regex(HTTP_PATTERN), "")?:""
     }
 
-    fun hideOrShowCancelAction(url: String) {
-        if (hideCancelSteps.any { url.contains(it) }) {
-            postHeaderUiState(BlazeWebViewHeaderUiState.HideAction())
-        } else {
-            postHeaderUiState(BlazeWebViewHeaderUiState.ShowAction())
+    fun updateHeaderActionUiState() {
+        when (blazeFlowStep) {
+            BlazeFlowStep.STEP_4 -> postHeaderUiState(DisabledCancelAction())
+            BlazeFlowStep.STEP_5,
+            BlazeFlowStep.CAMPAIGNS_LIST -> postHeaderUiState(DoneAction())
+            else -> postHeaderUiState(EnabledCancelAction())
         }
     }
 
@@ -155,6 +164,7 @@ class BlazeWebViewViewModel @Inject constructor(
         }
     }
 
+
     companion object {
         const val WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php"
         const val WPCOM_DOMAIN = ".wordpress.com"
@@ -165,8 +175,5 @@ class BlazeWebViewViewModel @Inject constructor(
         const val BLAZE_CREATION_FLOW_SITE = "$BASE_URL%s?_source=%s"
 
         const val HTTP_PATTERN = "(https?://)"
-
-        const val BLAZE_NON_DISMISSABLE_HASH = "step-4"
-        const val BLAZE_COMPLETED_STEP_HASH = "step-5"
     }
 }
