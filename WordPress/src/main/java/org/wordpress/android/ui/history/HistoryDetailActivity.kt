@@ -21,7 +21,11 @@ class HistoryDetailActivity : LocaleAwareActivity() {
             setSupportActionBar(toolbarMain)
         }
 
-        onBackPressedDispatcher.addCallback(this) { AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED) }
+        onBackPressedDispatcher.addCallback(this) {
+            AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED)
+            isEnabled = false
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

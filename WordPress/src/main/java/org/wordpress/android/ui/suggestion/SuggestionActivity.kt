@@ -43,7 +43,11 @@ class SuggestionActivity : LocaleAwareActivity() {
             binding = this
         }
 
-        onBackPressedDispatcher.addCallback(this) { viewModel.trackExit(false) }
+        onBackPressedDispatcher.addCallback(this) {
+            viewModel.trackExit(false)
+            isEnabled = false
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         val siteModel = intent.getSerializableExtra(INTENT_KEY_SITE_MODEL) as? SiteModel
         val suggestionType = intent.getSerializableExtra(INTENT_KEY_SUGGESTION_TYPE) as? SuggestionType
