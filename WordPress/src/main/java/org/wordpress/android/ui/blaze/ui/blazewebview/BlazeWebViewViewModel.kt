@@ -24,6 +24,7 @@ import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState.DoneAction
 import org.wordpress.android.ui.blaze.BlazeWebViewContentUiState
 import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,7 +51,7 @@ class BlazeWebViewViewModel @Inject constructor(
         blazeFlowSource = source
         blazeFeatureUtils.trackBlazeFlowStarted(source)
         val url = buildUrl(promoteScreen)
-        blazeFlowStep = blazeFeatureUtils.extractCurrentStep(url)
+        blazeFlowStep = extractCurrentStep(url)
         validateAndFinishIfNeeded()
         postScreenState(model.value.copy(url = url, addressToLoad = prepareUrl(url)))
     }
@@ -160,10 +161,47 @@ class BlazeWebViewViewModel @Inject constructor(
 
     fun updateBlazeFlowStep(url: String?) {
         url?.let {
-            blazeFlowStep = blazeFeatureUtils.extractCurrentStep(it)
+            blazeFlowStep = extractCurrentStep(it)
         }
     }
 
+    @Suppress("ReturnCount")
+    fun extractCurrentStep(url: String?): BlazeFlowStep {
+        url?.let {
+            val uri = UriWrapper(url)
+            uri.fragment?.let { return BlazeFlowStep.fromString(it) }
+
+            if (findQueryParameter(uri.toString(), BLAZEPRESS_WIDGET) != null) {
+                return BlazeFlowStep.STEP_1
+            } else if (isAdvertisingCampaign(uri.toString())) {
+                return BlazeFlowStep.CAMPAIGNS_LIST
+            } else if (matchAdvertisingPath(uri.uri.path)) {
+                return BlazeFlowStep.POSTS_LIST
+            }
+        }
+        return BlazeFlowStep.UNSPECIFIED
+    }
+
+    private fun findQueryParameter(uri: String, parameterName: String): String? {
+        val queryParams = uri.split("\\?".toRegex()).drop(1).joinToString("")
+        val parameterRegex = "(^|&)${parameterName}=([^&]*)".toRegex()
+
+        val parameterMatchResult = parameterRegex.find(queryParams)
+
+        return parameterMatchResult?.groupValues?.getOrNull(2)
+    }
+
+    private fun isAdvertisingCampaign(uri: String): Boolean {
+        val pattern = "https://wordpress.com/advertising/\\w+/campaigns$".toRegex()
+        return pattern.matches(uri)
+    }
+
+    private fun matchAdvertisingPath(path: String?): Boolean {
+        path?.let {
+            val advertisingRegex = "^/advertising/[^/]+(/posts)?$".toRegex()
+            return advertisingRegex.matches(it)
+        }?: return false
+    }
 
     companion object {
         const val WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php"
@@ -175,5 +213,6 @@ class BlazeWebViewViewModel @Inject constructor(
         const val BLAZE_CREATION_FLOW_SITE = "$BASE_URL%s?_source=%s"
 
         const val HTTP_PATTERN = "(https?://)"
+        const val BLAZEPRESS_WIDGET = "blazepress-widget"
     }
 }
