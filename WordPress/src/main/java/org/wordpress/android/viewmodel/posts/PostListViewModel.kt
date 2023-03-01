@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
@@ -74,6 +75,7 @@ class PostListViewModel @Inject constructor(
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     connectionStatus: LiveData<ConnectionStatus>,
+    private val blazeFeatureUtils: BlazeFeatureUtils,
     private val blazeStore: BlazeStore
 ) : ScopedViewModel(uiDispatcher) {
     private val isStatsSupported: Boolean by lazy {
@@ -207,14 +209,13 @@ class PostListViewModel @Inject constructor(
     private fun checkBlazeEligibility() {
         val selectedSite = connector.site
         // If the user is not an admin, we don't need to check for Blaze eligibility
-        if(!selectedSite.isAdmin)
-            return
+        if (!blazeFeatureUtils.isBlazeEligibleForUser(selectedSite)) return
         launch {
-             blazeStore.getBlazeStatus(selectedSite.siteId)
-                    .map { it.model?.firstOrNull() }
-                    .collect {
-                        isSiteBlazeEligible = it?.isEligible?:false
-                    }
+            blazeStore.getBlazeStatus(selectedSite.siteId)
+                .map { it.model?.firstOrNull() }
+                .collect {
+                    isSiteBlazeEligible = it?.isEligible ?: false
+                }
         }
     }
 
