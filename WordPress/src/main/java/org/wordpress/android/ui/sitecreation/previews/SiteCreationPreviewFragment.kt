@@ -308,17 +308,11 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         return spannableTitle
     }
 
-    override fun onWebViewPageLoaded() {
-        viewModel.onUrlLoaded()
-    }
+    override fun onWebViewPageLoaded() = viewModel.onUrlLoaded()
 
-    override fun onWebViewReceivedError() {
-        viewModel.onWebViewError()
-    }
+    override fun onWebViewReceivedError() = viewModel.onWebViewError()
 
-    override fun onHelp() {
-        viewModel.onHelpClicked()
-    }
+    override fun onHelp() = viewModel.onHelpClicked()
 
     private fun SiteCreationPreviewScreenDefaultBinding.animateContentTransition() {
         contentLayout.addOnLayoutChangeListener(
