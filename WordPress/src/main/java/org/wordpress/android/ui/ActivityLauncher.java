@@ -69,6 +69,7 @@ import org.wordpress.android.ui.jetpack.restore.RestoreActivity;
 import org.wordpress.android.ui.jetpack.scan.ScanActivity;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsActivity;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryActivity;
+import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallActivity;
 import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
