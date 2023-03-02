@@ -54,6 +54,13 @@ class BlazeFeatureUtils @Inject constructor(
         appPrefsWrapper.setShouldHidePromoteWithBlazeCard(true)
     }
 
+    fun trackEntryPointTapped(blazeFlowSource: BlazeFlowSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FEATURE_TAPPED,
+            mapOf(SOURCE to blazeFlowSource.trackingName)
+        )
+    }
+
     private fun isPromoteWithBlazeCardHiddenByUser(): Boolean {
         return appPrefsWrapper.getShouldHidePromoteWithBlazeCard()
     }
