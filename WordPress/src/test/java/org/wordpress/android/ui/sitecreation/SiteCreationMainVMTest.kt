@@ -112,8 +112,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     fun setUp() {
         whenever(wizardManager.navigatorLiveData).thenReturn(wizardManagerNavigatorLiveData)
         whenever(wizardManager.showNextStep()).then {
-            wizardManagerNavigatorLiveData.value = siteCreationStep
-            Unit
+            run { wizardManagerNavigatorLiveData.value = siteCreationStep }
         }
         viewModel = getNewViewModel()
         viewModel.start(null, SiteCreationSource.UNSPECIFIED)
