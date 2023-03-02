@@ -114,10 +114,8 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
             observeSiteCreationService()
             observeHelpClicks(requireActivity() as OnHelpClickedListener)
             observePreviewClicks(requireActivity() as SitePreviewScreenListener)
-            initOkButton()
-            fullscreenErrorWithRetry.initRetryButton()
-            fullscreenErrorWithRetry.initCancelWizardButton()
-            fullscreenErrorWithRetry.initContactSupportButton()
+            fullscreenErrorWithRetry.setOnClickListeners()
+            okButton.setOnClickListener { viewModel.onOkButtonClicked() }
         }
     }
 
@@ -199,19 +197,9 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         }
     }
 
-    private fun FullscreenErrorWithRetryBinding.initRetryButton() {
+    private fun FullscreenErrorWithRetryBinding.setOnClickListeners() {
         errorRetry.setOnClickListener { viewModel.retry() }
-    }
-
-    private fun SiteCreationPreviewScreenDefaultBinding.initOkButton() {
-        okButton.setOnClickListener { viewModel.onOkButtonClicked() }
-    }
-
-    private fun FullscreenErrorWithRetryBinding.initCancelWizardButton() {
         cancelWizardButton.setOnClickListener { viewModel.onCancelWizardClicked() }
-    }
-
-    private fun FullscreenErrorWithRetryBinding.initContactSupportButton() {
         contactSupport.setOnClickListener { viewModel.onHelpClicked() }
     }
 
