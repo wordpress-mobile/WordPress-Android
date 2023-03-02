@@ -97,7 +97,7 @@ class PromoteWithBlazeCardSource @Inject constructor(
             val error = result.error
             when {
                 error != null -> postErrorState()
-                model != null -> postLastState()
+                model != null -> postState(PromoteWithBlazeUpdate(model[0]))
                 else -> postLastState()
             }
         }
