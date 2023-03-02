@@ -101,8 +101,18 @@ public class AccountStore extends Store {
         }
 
         public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
-                                AuthEmailPayloadSource source) {
+                                AuthEmailPayloadSource source, AuthEmailPayloadScheme scheme) {
+            this(emailOrUsername, isSignup, (AuthEmailFlow) flow, (AuthEmailSource) source, scheme);
+        }
+
+        public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailFlow flow,
+                                AuthEmailSource source) {
             this(emailOrUsername, isSignup, flow, source, null);
+        }
+
+        public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
+                                AuthEmailPayloadSource source) {
+            this(emailOrUsername, isSignup, (AuthEmailFlow) flow, (AuthEmailSource) source);
         }
     }
 
