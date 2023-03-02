@@ -157,7 +157,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         }
     }
 
-    private fun observePreview(webView:  NestedWebView) {
+    private fun observePreview(webView: NestedWebView) {
         viewModel.preloadPreview.observe(this) { url ->
             url?.let { urlString ->
                 webView.webViewClient = URLFilteredWebViewClient(urlString, this)
@@ -400,16 +400,12 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     companion object {
         const val TAG = "site_creation_preview_fragment_tag"
 
-        fun newInstance(
-            screenTitle: String,
-            siteCreationData: SiteCreationState
-        ): SiteCreationPreviewFragment {
-            val fragment = SiteCreationPreviewFragment()
-            val bundle = Bundle()
-            bundle.putString(EXTRA_SCREEN_TITLE, screenTitle)
-            bundle.putParcelable(ARG_DATA, siteCreationData)
-            fragment.arguments = bundle
-            return fragment
-        }
+        fun newInstance(screenTitle: String, siteCreationData: SiteCreationState) = SiteCreationPreviewFragment()
+            .apply {
+                arguments = Bundle().apply {
+                    putString(EXTRA_SCREEN_TITLE, screenTitle)
+                    putParcelable(ARG_DATA, siteCreationData)
+                }
+            }
     }
 }
