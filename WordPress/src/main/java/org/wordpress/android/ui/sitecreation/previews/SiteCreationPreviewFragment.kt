@@ -63,15 +63,10 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private var binding: SiteCreationPreviewScreenBinding? = null
     private val viewModel: SitePreviewViewModel by viewModels()
 
-    @Suppress("UseCheckOrError")
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context !is SitePreviewScreenListener) {
-            throw IllegalStateException("Parent activity must implement SitePreviewScreenListener.")
-        }
-        if (context !is OnHelpClickedListener) {
-            throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
-        }
+        check(context is SitePreviewScreenListener) { "Parent activity must implement SitePreviewScreenListener." }
+        check(context is OnHelpClickedListener) { "Parent activity must implement OnHelpClickedListener." }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
