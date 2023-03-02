@@ -3303,9 +3303,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun findScanListItem() = getLastItems().filterIsInstance(ListItem::class.java)
         .firstOrNull { it.primaryText == UiStringRes(R.string.scan) }
 
-    private fun findBlazeListItem() = getLastItems().filterIsInstance(ListItem::class.java)
-        .firstOrNull { it.primaryText == UiStringRes(R.string.blaze_menu_item_label) }
-
     private fun getLastItems() = (uiModels.last().state as SiteSelected).cardAndItems
 
     private fun getDashboardTabLastItems() = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
