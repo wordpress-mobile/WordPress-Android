@@ -2,7 +2,7 @@
 
 21.9
 -----
-* [**] [Jetpack-only] Help: Display Migration FAQ card on Help screen when WP to JP migration is complete. [https://github.com/wordpress-mobile/WordPress-Android/pull/18032]
+* [**] [Jetpack-only] Help: Display the Jetpack app FAQ card on Help screen when switching from the WordPress app to the Jetpack app is complete. [https://github.com/wordpress-mobile/WordPress-Android/pull/18032]
 
 21.8
 -----
