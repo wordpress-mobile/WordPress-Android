@@ -471,7 +471,8 @@ class PageListViewModel @Inject constructor(
             listType,
             uploadUiState,
             pagesViewModel.site,
-            pageModel.remoteId
+            pageModel.remoteId,
+            pageModel.post
         )
         val subtitle = when {
             pageModel.isHomepage -> R.string.site_settings_homepage

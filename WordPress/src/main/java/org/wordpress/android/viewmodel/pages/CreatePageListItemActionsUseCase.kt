@@ -1,7 +1,9 @@
 package org.wordpress.android.viewmodel.pages
 
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
@@ -9,6 +11,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PageItem.Action.PROMOTE_WTIH_BLAZE
 import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
@@ -24,12 +27,13 @@ import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostU
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadWaitingForConnection
 import javax.inject.Inject
 
-class CreatePageListItemActionsUseCase @Inject constructor() {
+class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeatureUtils: BlazeFeatureUtils) {
     fun setupPageActions(
         listType: PageListType,
         uploadUiState: PostUploadUiState,
         siteModel: SiteModel,
-        remoteId: Long
+        remoteId: Long,
+        postModel: PostModel? = null
     ): Set<Action> {
         return when (listType) {
             SCHEDULED -> mutableSetOf(
@@ -69,6 +73,10 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
 
                     if (canCancelPendingAutoUpload(uploadUiState)) {
                         add(CANCEL_AUTO_UPLOAD)
+                    }
+
+                    if(postModel !=null && blazeFeatureUtils.isBlazeEligibleForPage(postModel)) {
+                        add(PROMOTE_WTIH_BLAZE)
                     }
                 }
             }
