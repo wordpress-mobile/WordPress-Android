@@ -17,23 +17,28 @@ class BlazeFeatureUtils @Inject constructor(
     private val blazeFeatureConfig: BlazeFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
 ) {
-    fun shouldShowPromoteWithBlaze(
+    private fun isBlazeEnabled(): Boolean {
+        return buildConfigWrapper.isJetpackApp &&
+                blazeFeatureConfig.isEnabled()
+    }
+
+    fun isBlazeEligibleForUser(siteModel: SiteModel): Boolean {
+        return siteModel.isAdmin &&
+                isBlazeEnabled()
+    }
+
+    fun isPostBlazeEligible(
         postStatus: PostStatus,
-        siteModel: SiteModel,
         postModel: PostModel
     ): Boolean {
-        // add the logic to check whether the site is eligible for blaze
-        return buildConfigWrapper.isJetpackApp &&
-                blazeFeatureConfig.isEnabled() &&
+        return isBlazeEnabled() &&
                 postStatus == PostStatus.PUBLISHED &&
-                postModel.password.isEmpty() &&
-                siteModel.isAdmin
+                postModel.password.isEmpty()
     }
 
     fun shouldShowPromoteWithBlazeCard(blazeStatusModel: BlazeStatusModel?): Boolean {
         val isEligible = blazeStatusModel?.isEligible == true
-        return buildConfigWrapper.isJetpackApp &&
-                blazeFeatureConfig.isEnabled() &&
+        return isBlazeEnabled() &&
                 isEligible &&
                 !isPromoteWithBlazeCardHiddenByUser()
     }

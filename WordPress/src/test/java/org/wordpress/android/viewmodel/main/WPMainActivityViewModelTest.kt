@@ -39,6 +39,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
@@ -59,7 +60,6 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.BlazeFeatureConfig
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 import java.util.Date
 
@@ -116,7 +116,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Mock
-    private lateinit var blazeFeatureConfig: BlazeFeatureConfig
+    private lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
     @Mock
     private lateinit var blazeStore: BlazeStore
@@ -183,7 +183,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             bloggingPromptsStore,
             NoDelayCoroutineDispatcher(),
             jetpackFeatureRemovalPhaseHelper,
-            blazeFeatureConfig,
+            blazeFeatureUtils,
             blazeStore
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
@@ -866,8 +866,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given blaze enabled, when my site page is resumed, then blaze status is fetched`() = test {
-        startViewModelWithDefaultParameters()
         val site = initSite()
+        whenever(blazeFeatureUtils.isBlazeEligibleForUser(site)).thenReturn(true)
 
         viewModel.onResume(isOnMySitePageWithValidSite = true, site = site)
 
@@ -876,8 +876,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given blaze not enabled, when my site page is resumed, then blaze status is not fetched`() = test {
-        startViewModelWithDefaultParameters(isBlazeEnabled = false)
         val site = initSite()
+        whenever(blazeFeatureUtils.isBlazeEligibleForUser(site)).thenReturn(false)
+        startViewModelWithDefaultParameters()
 
         viewModel.onResume(isOnMySitePageWithValidSite = true, site = site)
 
@@ -887,12 +888,10 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     private fun startViewModelWithDefaultParameters(
         isWhatsNewFeatureEnabled: Boolean = true,
         isCreateFabEnabled: Boolean = true,
-        isWpcomOrJpSite: Boolean = true,
-        isBlazeEnabled: Boolean = true
+        isWpcomOrJpSite: Boolean = true
     ) {
         whenever(buildConfigWrapper.isWhatsNewFeatureEnabled).thenReturn(isWhatsNewFeatureEnabled)
         whenever(buildConfigWrapper.isCreateFabEnabled).thenReturn(isCreateFabEnabled)
-        whenever(blazeFeatureConfig.isEnabled()).thenReturn(isBlazeEnabled)
         viewModel.start(site = initSite(hasFullAccessToContent = true, isWpcomOrJpSite = isWpcomOrJpSite))
     }
 
