@@ -203,6 +203,15 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         contactSupport.setOnClickListener { viewModel.onHelpClicked() }
     }
 
+    private fun FullscreenErrorWithRetryBinding.updateErrorLayout(errorUiState: SitePreviewFullscreenErrorUiState) {
+        errorUiState.apply {
+            uiHelpers.setTextOrHide(errorTitle, titleResId)
+            uiHelpers.setTextOrHide(errorSubtitle, subtitleResId)
+            uiHelpers.updateVisibility(contactSupport, errorUiState.showContactSupport)
+            uiHelpers.updateVisibility(cancelWizardButton, errorUiState.showCancelWizardButton)
+        }
+    }
+
     private fun SiteCreationPreviewScreenDefaultBinding.updateContentLayout(sitePreviewData: SitePreviewData) {
         sitePreviewData.apply {
             siteCreationPreviewWebViewContainer.sitePreviewWebUrlTitle.text = createSpannableUrl(
@@ -264,17 +273,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         animatorSet = AnimatorSet().apply {
             playSequentially(fadeOut, fadeIn)
             start()
-        }
-    }
-
-    private fun FullscreenErrorWithRetryBinding.updateErrorLayout(
-        errorUiStateState: SitePreviewFullscreenErrorUiState
-    ) {
-        errorUiStateState.apply {
-            uiHelpers.setTextOrHide(errorTitle, titleResId)
-            uiHelpers.setTextOrHide(errorSubtitle, subtitleResId)
-            uiHelpers.updateVisibility(contactSupport, errorUiStateState.showContactSupport)
-            uiHelpers.updateVisibility(cancelWizardButton, errorUiStateState.showCancelWizardButton)
         }
     }
 
