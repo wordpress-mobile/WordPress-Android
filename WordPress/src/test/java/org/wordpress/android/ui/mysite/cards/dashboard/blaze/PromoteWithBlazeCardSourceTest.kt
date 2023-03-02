@@ -140,7 +140,7 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
             it?.let { result.add(it) }
         }
 
-        assertThat(result).isEqualTo(emptyList<PromoteWithBlazeUpdate>())
+        assertThat(result.first()).isEqualTo(PromoteWithBlazeUpdate(blazeStatusModel = null))
     }
 
     @Test
@@ -155,7 +155,8 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
         }
         advanceUntilIdle()
 
-        assertThat(result).isEqualTo(emptyList<PromoteWithBlazeUpdate>())
+        assertThat(result.size).isEqualTo(1)
+        assertThat(result.first()).isEqualTo(PromoteWithBlazeUpdate(blazeStatusModel = null))
     }
 
     @Test
