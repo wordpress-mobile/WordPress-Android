@@ -190,7 +190,7 @@ class HelpActivity : LocaleAwareActivity() {
     private fun showMigrationFaq() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://jetpack.com/support/switch-to-the-jetpack-app/"))
         startActivity(intent)
-        AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_VIEWED)
+        AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_TAPPED)
     }
 
     private fun HelpActivityBinding.showContactUs() {
@@ -198,6 +198,7 @@ class HelpActivity : LocaleAwareActivity() {
                 if (jetpackMigrationStore.migrationComplete() == MigrationCompleteFetchedPayload.Success) {
                     JpFaqContainer.isVisible = true
                     JpFaqContainerBottomDivider.isVisible = true
+                    AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_VIEWED)
                     JpFaqContainer.setOnClickListener { showMigrationFaq() }
                 }
         }
