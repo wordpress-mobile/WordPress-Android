@@ -136,7 +136,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun siteCreationStateUpdatedWithSelectedDomain() {
         viewModel.onDomainsScreenFinished(DOMAIN)
-        assertThat(currentWizardState(viewModel).domain).isEqualTo(DOMAIN.domainName)
+        assertThat(currentWizardState(viewModel).domain).isEqualTo(DOMAIN)
     }
 
     @Test

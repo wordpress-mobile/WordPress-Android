@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
 import org.wordpress.android.ui.sitecreation.SiteCreationState
+import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
@@ -47,11 +48,11 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
 
 private const val SUB_DOMAIN = "test"
-private const val DOMAIN = ".wordpress.com"
-private const val URL = "$SUB_DOMAIN$DOMAIN"
+private const val URL = "$SUB_DOMAIN.wordpress.com"
+private val DOMAIN = DomainModel(URL, true, "", 1)
 private const val REMOTE_SITE_ID = 1L
 private const val LOCAL_SITE_ID = 2
-private val SITE_CREATION_STATE = SiteCreationState(segmentId = 1, siteDesign = defaultTemplateSlug, domain = URL)
+private val SITE_CREATION_STATE = SiteCreationState(segmentId = 1, siteDesign = defaultTemplateSlug, domain = DOMAIN)
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.sitecreation
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
@@ -49,13 +48,12 @@ const val KEY_SITE_CREATION_COMPLETED = "key_site_creation_completed"
 const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 
 @Parcelize
-@SuppressLint("ParcelCreator")
 data class SiteCreationState(
     val siteIntent: String? = null,
     val siteName: String? = null,
     val segmentId: Long? = null,
     val siteDesign: String? = null,
-    val domain: String? = null
+    val domain: DomainModel? = null
 ) : WizardState, Parcelable
 
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
@@ -232,7 +230,7 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun onDomainsScreenFinished(domain: DomainModel) {
-        siteCreationState = siteCreationState.copy(domain = domain.domainName)
+        siteCreationState = siteCreationState.copy(domain = domain)
         wizardManager.showNextStep()
     }
 
