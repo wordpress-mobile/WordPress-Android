@@ -73,11 +73,11 @@ import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordDeletionResult
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsManager
+import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
@@ -107,6 +107,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteErrorType.INVALID_S
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityErrorType.INVALID_DOMAIN_NAME
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType.INVALID_COUNTRY_CODE
 import org.wordpress.android.fluxc.store.SiteStore.ExportSiteErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.SiteStore.LaunchSiteErrorType.ALREADY_LAUNCHED
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType.NOT_AVAILABLE
 import org.wordpress.android.fluxc.store.SiteStore.SelfHostedErrorType.NOT_SET
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.DUPLICATE_SITE
@@ -743,6 +744,23 @@ open class SiteStore @Inject constructor(
         constructor(site: SiteModel, error: BaseNetworkError): this(site) {
             this.error = OnApplicationPasswordDeleteError(error)
         }
+    }
+
+    class OnSiteLaunched() : OnChanged<LaunchSiteError>() {
+        constructor(error: LaunchSiteError) : this() {
+            this.error = error
+        }
+    }
+
+    data class LaunchSiteError internal constructor(
+        @JvmField val type: LaunchSiteErrorType?,
+        @JvmField val message: String
+    ) : OnChangedError
+
+    enum class LaunchSiteErrorType {
+        GENERIC_ERROR,
+        ALREADY_LAUNCHED,
+        UNAUTHORIZED
     }
 
     class OnApplicationPasswordDeleteError(error: BaseNetworkError) : OnChangedError {
@@ -2051,6 +2069,24 @@ open class SiteStore @Inject constructor(
                 }
                 is Error -> {
                     WPAPIResponse.Error(WPAPINetworkError(response.error))
+                }
+            }
+        }
+    }
+
+    suspend fun launchSite(site: SiteModel): OnSiteLaunched {
+        return coroutineEngine.withDefaultContext(T.API, this, "Launch site") {
+            when (val response =
+                siteRestClient.launchSite(site)) {
+                is Success -> OnSiteLaunched()
+                is Error -> {
+                    val errorType = when (response.error.apiError) {
+                        "unauthorized" -> LaunchSiteErrorType.UNAUTHORIZED
+                        "already-launched" -> ALREADY_LAUNCHED
+                        else -> LaunchSiteErrorType.GENERIC_ERROR
+                    }
+                    val error = LaunchSiteError(errorType, response.error.message)
+                    OnSiteLaunched(error)
                 }
             }
         }
