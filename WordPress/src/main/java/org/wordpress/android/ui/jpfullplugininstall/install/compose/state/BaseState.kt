@@ -81,7 +81,7 @@ fun BaseState(
                     modifier = Modifier.padding(top = Margin.Medium.value),
                 )
             }
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.weight(1.5f))
             content()
         }
     }
