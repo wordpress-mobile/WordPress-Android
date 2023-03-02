@@ -746,7 +746,7 @@ open class SiteStore @Inject constructor(
         }
     }
 
-    class LaunchSitePayload() : Payload<LaunchSiteError>() {
+    class OnSiteLaunched() : OnChanged<LaunchSiteError>() {
         constructor(error: LaunchSiteError) : this() {
             this.error = error
         }
@@ -2074,11 +2074,11 @@ open class SiteStore @Inject constructor(
         }
     }
 
-    suspend fun launchSite(site: SiteModel): LaunchSitePayload {
+    suspend fun launchSite(site: SiteModel): OnSiteLaunched {
         return coroutineEngine.withDefaultContext(T.API, this, "Launch site") {
             when (val response =
                 siteRestClient.launchSite(site)) {
-                is Success -> LaunchSitePayload()
+                is Success -> OnSiteLaunched()
                 is Error -> {
                     val errorType = when (response.error.apiError) {
                         "unauthorized" -> LaunchSiteErrorType.UNAUTHORIZED
@@ -2086,7 +2086,7 @@ open class SiteStore @Inject constructor(
                         else -> LaunchSiteErrorType.GENERIC_ERROR
                     }
                     val error = LaunchSiteError(errorType, response.error.message)
-                    LaunchSitePayload(error)
+                    OnSiteLaunched(error)
                 }
             }
         }
