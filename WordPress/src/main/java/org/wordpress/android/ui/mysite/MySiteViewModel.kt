@@ -611,7 +611,9 @@ class MySiteViewModel @Inject constructor(
                 enableStatsFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 enablePagesFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
-                onClick = this::onItemClick
+                onClick = this::onItemClick,
+                isBlazeEligible =
+                    blazeFeatureUtils.shouldShowPromoteWithBlazeCard(promoteWithBlazeUpdate?.blazeStatusModel)
             )
         )
 
@@ -874,6 +876,10 @@ class MySiteViewModel @Inject constructor(
                     SiteNavigationAction.OpenSite(selectedSite)
                 }
                 ListItemAction.JETPACK_SETTINGS -> SiteNavigationAction.OpenJetpackSettings(selectedSite)
+                ListItemAction.BLAZE -> {
+                    blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.MENU_ITEM)
+                    SiteNavigationAction.OpenPromoteWithBlazeOverlay(BlazeFlowSource.MENU_ITEM)
+                }
             }
             _onNavigation.postValue(Event(navigationAction))
         } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
@@ -1502,10 +1508,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onPromoteWithBlazeCardClick() {
-        blazeFeatureUtils.track(
-            Stat.BLAZE_FEATURE_TAPPED,
-            BlazeFlowSource.DASHBOARD_CARD
-        )
+        blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.DASHBOARD_CARD)
         _onNavigation.value =
             Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
     }
