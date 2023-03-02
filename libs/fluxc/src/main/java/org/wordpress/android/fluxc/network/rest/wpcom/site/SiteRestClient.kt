@@ -276,6 +276,17 @@ class SiteRestClient @Inject constructor(
         }
     }
 
+    suspend fun launchSite(site: SiteModel) : Response<Unit>{
+        val url = WPCOMV2.sites.site(site.siteId).launch.url
+        return wpComGsonRequestBuilder.syncPostRequest(
+            restClient = this,
+            url = url,
+            params = mapOf(),
+            body = mapOf("site" to site.siteId),
+            Unit::class.java
+        )
+    }
+
     fun fetchSiteEditors(site: SiteModel) {
         val params = mutableMapOf<String, String>()
         val url = WPCOMV2.sites.site(site.siteId).gutenberg.url
