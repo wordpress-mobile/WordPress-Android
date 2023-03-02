@@ -47,6 +47,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
+import org.wordpress.android.ui.pages.PageItem.Action.PROMOTE_WITH_BLAZE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PagesAuthorFilterUIState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -638,6 +639,7 @@ class PagesViewModel
             DELETE_PERMANENTLY -> "delete_permanently"
             MOVE_TO_TRASH -> "move_to_bin"
             COPY_LINK -> "copy_link"
+            PROMOTE_WITH_BLAZE -> "promote_with_blaze"
         }
         val properties = mutableMapOf("option_name" to menu as Any)
         AnalyticsUtils.trackWithSiteDetails(PAGES_OPTIONS_PRESSED, site, properties)

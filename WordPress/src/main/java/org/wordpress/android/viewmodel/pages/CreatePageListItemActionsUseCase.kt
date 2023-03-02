@@ -11,7 +11,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
-import org.wordpress.android.ui.pages.PageItem.Action.PROMOTE_WTIH_BLAZE
+import org.wordpress.android.ui.pages.PageItem.Action.PROMOTE_WITH_BLAZE
 import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
@@ -76,7 +76,7 @@ class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeat
                     }
 
                     if(postModel !=null && blazeFeatureUtils.isBlazeEligibleForPage(postModel)) {
-                        add(PROMOTE_WTIH_BLAZE)
+                        add(PROMOTE_WITH_BLAZE)
                     }
                 }
             }

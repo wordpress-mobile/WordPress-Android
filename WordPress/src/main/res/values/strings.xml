@@ -3225,6 +3225,7 @@
     <string name="pages_set_as_homepage">Set as Homepage</string>
     <string name="pages_set_as_posts_page">Set as Posts Page</string>
     <string name="pages_publish_now" translatable="false">@string/publish_now</string>
+    <string name="pages_promote_with_blaze" translatable="false">@string/button_promote_with_blaze</string>
     <string name="pages_move_to_draft">Move to Draft</string>
     <string name="pages_move_to_trash">Move to Trash</string>
     <string name="pages_delete_permanently">Delete Permanently</string>
