@@ -10,7 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.LocalContentColor
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
@@ -19,15 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.ContentAlphaProvider
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.jpfullplugininstall.install.UiState
 import org.wordpress.android.util.extensions.fixWidows
@@ -35,19 +34,14 @@ import org.wordpress.android.util.extensions.fixWidows
 private val TitleTextStyle
     @ReadOnlyComposable
     @Composable
-    get() = TextStyle(
-        fontSize = 22.sp,
-        letterSpacing = 0.35.sp,
+    get() = MaterialTheme.typography.h6.copy(
         textAlign = TextAlign.Center,
     )
 
 private val DescriptionTextStyle
     @ReadOnlyComposable
     @Composable
-    get() = TextStyle(
-        color = LocalContentColor.current.copy(alpha = 0.6f),
-        fontSize = FontSize.Large.value,
-        lineHeight = 21.sp,
+    get() = MaterialTheme.typography.body1.copy(
         textAlign = TextAlign.Center,
     )
 
@@ -73,16 +67,20 @@ fun BaseState(
                 modifier = Modifier
                     .size(dimensionResource(R.dimen.jetpack_new_remote_install_icon_size))
             )
-            Text(
-                text = stringResource(title),
-                style = TitleTextStyle,
-                modifier = Modifier.padding(top = Margin.ExtraMediumLarge.value),
-            )
-            Text(
-                text = stringResource(description).fixWidows(),
-                style = DescriptionTextStyle,
-                modifier = Modifier.padding(top = Margin.Medium.value),
-            )
+            ContentAlphaProvider(ContentAlpha.high) {
+                Text(
+                    text = stringResource(title),
+                    style = TitleTextStyle,
+                    modifier = Modifier.padding(top = Margin.ExtraMediumLarge.value),
+                )
+            }
+            ContentAlphaProvider(ContentAlpha.medium) {
+                Text(
+                    text = stringResource(description).fixWidows(),
+                    style = DescriptionTextStyle,
+                    modifier = Modifier.padding(top = Margin.Medium.value),
+                )
+            }
             Spacer(modifier = Modifier.weight(1f))
             content()
         }

@@ -10,11 +10,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.material.ContentAlpha
-import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -74,9 +72,7 @@ fun EmptyContent(
             }
 
             // To match text color in ActionableEmptyView we need to provide the "medium" content alpha from Material
-            CompositionLocalProvider(
-                LocalContentAlpha provides ContentAlpha.medium,
-            ) {
+            ContentAlphaProvider(ContentAlpha.medium) {
                 title?.let {
                     Text(
                         it,
