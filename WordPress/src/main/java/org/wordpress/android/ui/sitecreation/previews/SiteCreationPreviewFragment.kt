@@ -41,6 +41,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener
 import org.wordpress.android.util.URLFilteredWebViewClient
+import org.wordpress.android.widgets.NestedWebView
 import javax.inject.Inject
 
 private const val ARG_DATA = "arg_site_creation_data"
@@ -108,7 +109,11 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     override fun setupContent() {
         binding?.siteCreationPreviewScreenDefault?.run {
-            initViewModel()
+            observeState()
+            observePreview(siteCreationPreviewWebViewContainer.sitePreviewWebView)
+            observeSiteCreationService()
+            observeHelpClicks(requireActivity() as OnHelpClickedListener)
+            observePreviewClicks(requireActivity() as SitePreviewScreenListener)
             initOkButton()
             fullscreenErrorWithRetry.initRetryButton()
             fullscreenErrorWithRetry.initCancelWizardButton()
@@ -116,7 +121,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         }
     }
 
-    private fun SiteCreationPreviewScreenDefaultBinding.initViewModel() {
+    private fun SiteCreationPreviewScreenDefaultBinding.observeState() {
         viewModel.uiState.observe(this@SiteCreationPreviewFragment) { uiState ->
             uiState?.let {
                 when (uiState) {
@@ -152,18 +157,20 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 )
             }
         }
+    }
 
-        viewModel.preloadPreview.observe(this@SiteCreationPreviewFragment) { url ->
+    private fun observePreview(webView:  NestedWebView) {
+        viewModel.preloadPreview.observe(this) { url ->
             url?.let { urlString ->
-                siteCreationPreviewWebViewContainer.sitePreviewWebView.webViewClient =
-                    URLFilteredWebViewClient(urlString, this@SiteCreationPreviewFragment)
-                siteCreationPreviewWebViewContainer.sitePreviewWebView.settings.userAgentString =
-                    WordPress.getUserAgent()
-                siteCreationPreviewWebViewContainer.sitePreviewWebView.loadUrl(urlString)
+                webView.webViewClient = URLFilteredWebViewClient(urlString, this)
+                webView.settings.userAgentString = WordPress.getUserAgent()
+                webView.loadUrl(urlString)
             }
         }
+    }
 
-        viewModel.startCreateSiteService.observe(this@SiteCreationPreviewFragment) { startServiceData ->
+    private fun observeSiteCreationService() {
+        viewModel.startCreateSiteService.observe(this) { startServiceData ->
             startServiceData?.let {
                 SiteCreationService.createSite(
                     requireNotNull(activity),
@@ -172,26 +179,23 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 )
             }
         }
-
-        initClickObservers()
     }
 
-    private fun initClickObservers() {
+    private fun observeHelpClicks(listener: OnHelpClickedListener) {
         viewModel.onHelpClicked.observe(this) {
-            (requireActivity() as OnHelpClickedListener).onHelpClicked(HelpActivity.Origin.SITE_CREATION_CREATING)
+            listener.onHelpClicked(HelpActivity.Origin.SITE_CREATION_CREATING)
         }
+    }
+
+    private fun observePreviewClicks(listener: SitePreviewScreenListener) {
         viewModel.onSiteCreationCompleted.observe(this) {
-            (requireActivity() as SitePreviewScreenListener).onSiteCreationCompleted()
+            listener.onSiteCreationCompleted()
         }
         viewModel.onOkButtonClicked.observe(this) { createSiteState ->
-            createSiteState?.let {
-                (requireActivity() as SitePreviewScreenListener).onSitePreviewScreenDismissed(createSiteState)
-            }
+            createSiteState?.let { listener.onSitePreviewScreenDismissed(it) }
         }
         viewModel.onCancelWizardClicked.observe(this) { createSiteState ->
-            createSiteState?.let {
-                (requireActivity() as SitePreviewScreenListener).onSitePreviewScreenDismissed(createSiteState)
-            }
+            createSiteState?.let { listener.onSitePreviewScreenDismissed(it) }
         }
     }
 
