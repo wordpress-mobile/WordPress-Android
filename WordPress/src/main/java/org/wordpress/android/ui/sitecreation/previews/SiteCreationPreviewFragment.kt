@@ -107,11 +107,13 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     override fun setupContent() {
-        binding?.siteCreationPreviewScreenDefault?.initViewModel()
-        binding?.siteCreationPreviewScreenDefault?.fullscreenErrorWithRetry?.initRetryButton()
-        binding?.siteCreationPreviewScreenDefault?.initOkButton()
-        binding?.siteCreationPreviewScreenDefault?.fullscreenErrorWithRetry?.initCancelWizardButton()
-        binding?.siteCreationPreviewScreenDefault?.fullscreenErrorWithRetry?.initContactSupportButton()
+        binding?.siteCreationPreviewScreenDefault?.run {
+            initViewModel()
+            fullscreenErrorWithRetry.initRetryButton()
+            initOkButton()
+            fullscreenErrorWithRetry.initCancelWizardButton()
+            fullscreenErrorWithRetry.initContactSupportButton()
+        }
     }
 
     private fun SiteCreationPreviewScreenDefaultBinding.initViewModel() {
