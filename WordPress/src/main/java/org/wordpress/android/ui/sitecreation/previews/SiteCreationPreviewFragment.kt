@@ -95,9 +95,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         viewModel.start(requireArguments()[ARG_DATA] as SiteCreationState, savedInstanceState)
     }
 
-    override fun getContentLayout(): Int {
-        return R.layout.site_creation_preview_screen
-    }
+    override fun getContentLayout() = R.layout.site_creation_preview_screen
 
     @Suppress("UseCheckOrError")
     override val screenTitle: String
