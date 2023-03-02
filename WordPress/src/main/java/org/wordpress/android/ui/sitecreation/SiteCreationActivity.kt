@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.activity.addCallback
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -79,11 +79,17 @@ class SiteCreationActivity : LocaleAwareActivity(),
     @Inject internal lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
     @Inject internal lateinit var activityLauncherWrapper: ActivityLauncherWrapper
 
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            mainViewModel.onBackPressed()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.site_creation_activity)
 
-        onBackPressedDispatcher.addCallback(this) { mainViewModel.onBackPressed() }
+        onBackPressedDispatcher.addCallback(this, backPressedCallback)
 
         mainViewModel.start(savedInstanceState, getSiteCreationSource())
         mainViewModel.preloadThumbnails(this)
@@ -132,7 +138,9 @@ class SiteCreationActivity : LocaleAwareActivity(),
         }
         mainViewModel.onBackPressedObservable.observe(this) {
             ActivityUtils.hideKeyboard(this)
+            backPressedCallback.isEnabled = false
             onBackPressedDispatcher.onBackPressed()
+            backPressedCallback.isEnabled = true
         }
         siteCreationIntentsViewModel.onBackButtonPressed.observe(this) {
             mainViewModel.onBackPressed()
