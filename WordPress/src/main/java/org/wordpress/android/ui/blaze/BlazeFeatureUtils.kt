@@ -31,8 +31,7 @@ class BlazeFeatureUtils @Inject constructor(
         postStatus: PostStatus,
         postModel: PostModel
     ): Boolean {
-        return buildConfigWrapper.isJetpackApp &&
-                blazeFeatureConfig.isEnabled() &&
+        return isBlazeEnabled() &&
                 postStatus == PostStatus.PUBLISHED &&
                 postModel.password.isEmpty()
     }
