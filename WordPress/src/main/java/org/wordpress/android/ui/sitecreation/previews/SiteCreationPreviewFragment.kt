@@ -97,10 +97,8 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     override fun getContentLayout() = R.layout.site_creation_preview_screen
 
-    @Suppress("UseCheckOrError")
     override val screenTitle: String
-        get() = arguments?.getString(EXTRA_SCREEN_TITLE)
-            ?: throw IllegalStateException("Required argument screen title is missing.")
+        get() = requireNotNull(arguments?.getString(EXTRA_SCREEN_TITLE)) { "Missing required argument 'screenTitle'." }
 
     override fun setBindingViewStubListener(parentBinding: SiteCreationFormScreenBinding) {
         parentBinding.siteCreationFormContentStub.setOnInflateListener { _, inflated ->
