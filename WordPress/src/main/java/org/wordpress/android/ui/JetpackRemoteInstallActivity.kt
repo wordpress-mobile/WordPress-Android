@@ -2,12 +2,14 @@ package org.wordpress.android.ui
 
 import android.os.Bundle
 import android.view.MenuItem
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.INSTALL_JETPACK_CANCELLED
 import org.wordpress.android.databinding.JetpackRemoteInstallActivityBinding
 import org.wordpress.android.ui.JetpackConnectionUtils.trackWithSource
 import org.wordpress.android.ui.JetpackRemoteInstallFragment.Companion.TRACKING_SOURCE_KEY
 
+@AndroidEntryPoint
 class JetpackRemoteInstallActivity : LocaleAwareActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
