@@ -78,7 +78,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         }
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
