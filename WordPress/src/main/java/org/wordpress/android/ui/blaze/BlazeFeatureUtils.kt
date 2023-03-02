@@ -36,7 +36,7 @@ class BlazeFeatureUtils @Inject constructor(
                 postModel.password.isEmpty()
     }
 
-    fun shouldShowPromoteWithBlazeCard(blazeStatusModel: BlazeStatusModel?): Boolean {
+    fun shouldShowBlazeEntryPoint(blazeStatusModel: BlazeStatusModel?): Boolean {
         val isEligible = blazeStatusModel?.isEligible == true
         return isBlazeEnabled() &&
                 isEligible &&
