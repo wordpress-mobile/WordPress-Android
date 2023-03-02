@@ -1,6 +1,7 @@
-package org.wordpress.android.ui.compose.components
+package org.wordpress.android.ui.compose.components.buttons
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,13 +27,18 @@ fun PrimaryButton(
     modifier: Modifier = Modifier,
     isInProgress: Boolean = false,
     useDefaultMargins: Boolean = true,
+    buttonSize: ButtonSize = ButtonSize.NORMAL,
 ) {
-    val paddedModifier = if (useDefaultMargins) {
-        modifier
+    var computedModifier: Modifier = modifier
+
+    if (useDefaultMargins) {
+        computedModifier = computedModifier
             .padding(top = 20.dp, bottom = 10.dp)
             .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
-    } else {
-        modifier
+    }
+
+    buttonSize.height?.let {
+        computedModifier = computedModifier.defaultMinSize(minHeight = it)
     }
 
     Button(
@@ -46,7 +52,8 @@ fun PrimaryButton(
             contentColor = AppColor.White,
             disabledBackgroundColor = colorResource(R.color.jetpack_green_70),
         ),
-        modifier = paddedModifier.fillMaxWidth(),
+        modifier = computedModifier
+            .fillMaxWidth(),
     ) {
         if (isInProgress) {
             CircularProgressIndicator(
@@ -75,5 +82,23 @@ private fun PrimaryButtonPreview() {
 private fun PrimaryButtonInProgressPreview() {
     AppTheme {
         PrimaryButton(text = "Continue", onClick = {}, isInProgress = true)
+    }
+}
+
+@Preview
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun PrimaryButtonNoDefaultMarginsPreview() {
+    AppTheme {
+        PrimaryButton(text = "Continue", onClick = {}, useDefaultMargins = false)
+    }
+}
+
+@Preview
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun PrimaryButtonLargePreview() {
+    AppTheme {
+        PrimaryButton(text = "Continue", onClick = {}, buttonSize = ButtonSize.LARGE)
     }
 }
