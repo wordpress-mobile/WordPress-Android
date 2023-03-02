@@ -117,7 +117,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     private fun SiteCreationPreviewScreenDefaultBinding.initViewModel() {
-        viewModel.uiState.observe(this@SiteCreationPreviewFragment, { uiState ->
+        viewModel.uiState.observe(this@SiteCreationPreviewFragment) { uiState ->
             uiState?.let {
                 when (uiState) {
                     is SitePreviewContentUiState -> updateContentLayout(uiState.data)
@@ -151,9 +151,9 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                     uiState.fullscreenErrorLayoutVisibility
                 )
             }
-        })
+        }
 
-        viewModel.preloadPreview.observe(this@SiteCreationPreviewFragment, { url ->
+        viewModel.preloadPreview.observe(this@SiteCreationPreviewFragment) { url ->
             url?.let { urlString ->
                 siteCreationPreviewWebViewContainer.sitePreviewWebView.webViewClient =
                     URLFilteredWebViewClient(urlString, this@SiteCreationPreviewFragment)
@@ -161,9 +161,9 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                     WordPress.getUserAgent()
                 siteCreationPreviewWebViewContainer.sitePreviewWebView.loadUrl(urlString)
             }
-        })
+        }
 
-        viewModel.startCreateSiteService.observe(this@SiteCreationPreviewFragment, { startServiceData ->
+        viewModel.startCreateSiteService.observe(this@SiteCreationPreviewFragment) { startServiceData ->
             startServiceData?.let {
                 SiteCreationService.createSite(
                     requireNotNull(activity),
@@ -171,28 +171,28 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                     startServiceData.serviceData
                 )
             }
-        })
+        }
 
         initClickObservers()
     }
 
     private fun initClickObservers() {
-        viewModel.onHelpClicked.observe(this, {
+        viewModel.onHelpClicked.observe(this) {
             (requireActivity() as OnHelpClickedListener).onHelpClicked(HelpActivity.Origin.SITE_CREATION_CREATING)
-        })
-        viewModel.onSiteCreationCompleted.observe(this, {
+        }
+        viewModel.onSiteCreationCompleted.observe(this) {
             (requireActivity() as SitePreviewScreenListener).onSiteCreationCompleted()
-        })
-        viewModel.onOkButtonClicked.observe(this, { createSiteState ->
+        }
+        viewModel.onOkButtonClicked.observe(this) { createSiteState ->
             createSiteState?.let {
                 (requireActivity() as SitePreviewScreenListener).onSitePreviewScreenDismissed(createSiteState)
             }
-        })
-        viewModel.onCancelWizardClicked.observe(this, { createSiteState ->
+        }
+        viewModel.onCancelWizardClicked.observe(this) { createSiteState ->
             createSiteState?.let {
                 (requireActivity() as SitePreviewScreenListener).onSitePreviewScreenDismissed(createSiteState)
             }
-        })
+        }
     }
 
     private fun FullscreenErrorWithRetryBinding.initRetryButton() {
