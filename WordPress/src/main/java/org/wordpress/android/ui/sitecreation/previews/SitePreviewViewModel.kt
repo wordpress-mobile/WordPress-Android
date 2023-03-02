@@ -134,7 +134,7 @@ class SitePreviewViewModel @Inject constructor(
         }
         isStarted = true
         this.siteCreationState = siteCreationState
-        urlWithoutScheme = siteCreationState.domain
+        urlWithoutScheme = siteCreationState.domain?.domainName
         siteTitle = siteCreationState.siteName
 
         val restoredState = savedState?.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE)
