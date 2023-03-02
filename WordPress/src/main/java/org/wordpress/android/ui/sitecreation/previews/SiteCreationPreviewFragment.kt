@@ -109,8 +109,8 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     override fun setupContent() {
         binding?.siteCreationPreviewScreenDefault?.run {
             initViewModel()
-            fullscreenErrorWithRetry.initRetryButton()
             initOkButton()
+            fullscreenErrorWithRetry.initRetryButton()
             fullscreenErrorWithRetry.initCancelWizardButton()
             fullscreenErrorWithRetry.initContactSupportButton()
         }
