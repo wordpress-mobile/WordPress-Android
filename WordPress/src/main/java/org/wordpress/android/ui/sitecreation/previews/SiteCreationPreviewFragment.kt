@@ -5,7 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Context
-import android.content.res.Configuration
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -53,16 +53,15 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
      * We need to connect to the service, so the service knows when the app is in the background. The service
      * automatically shows system notifications when site creation is in progress and the app is in the background.
      */
-    private var serviceEventConnection: ServiceEventConnection? = null
-    private val viewModel: SitePreviewViewModel by viewModels()
-    private var animatorSet: AnimatorSet? = null
-    private val isLandscape: Boolean
-        get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-
     @Inject
     internal lateinit var uiHelpers: UiHelpers
 
+    private var serviceEventConnection: ServiceEventConnection? = null
+    private var animatorSet: AnimatorSet? = null
+    private val isLandscape get() = resources.configuration.orientation == ORIENTATION_LANDSCAPE
+
     private var binding: SiteCreationPreviewScreenBinding? = null
+    private val viewModel: SitePreviewViewModel by viewModels()
 
     @Suppress("UseCheckOrError")
     override fun onAttach(context: Context) {
