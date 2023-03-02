@@ -32,9 +32,9 @@ class PromoteWithBlazeCardSource @Inject constructor(
         val result = MediatorLiveData<PromoteWithBlazeUpdate>()
         if (shouldFetchBlazeEligibility(siteLocalId)) {
             result.getData(coroutineScope, siteLocalId)
-            result.addSource(refresh) { result.refreshData(coroutineScope, siteLocalId, refresh.value) }
-            refresh()
         }
+        result.addSource(refresh) { result.refreshData(coroutineScope, siteLocalId, refresh.value) }
+        refresh()
         return result
     }
 
@@ -79,7 +79,7 @@ class PromoteWithBlazeCardSource @Inject constructor(
         siteLocalId: Int
     ) {
         val selectedSite = selectedSiteRepository.getSelectedSite()
-        if (selectedSite != null && selectedSite.id == siteLocalId) {
+        if (selectedSite != null && selectedSite.id == siteLocalId && shouldFetchBlazeEligibility(siteLocalId)) {
             fetchBlazeStatusAndPostErrorIfAvailable(coroutineScope, selectedSite)
         } else {
             postErrorState()
