@@ -168,14 +168,14 @@ public class FullScreenDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         initBuilderArguments();
 
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        ComponentDialog dialog = (ComponentDialog) super.onCreateDialog(savedInstanceState);
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
                 onDismissClicked();
             }
         };
-        ((ComponentDialog) dialog).getOnBackPressedDispatcher().addCallback(this, callback);
+        dialog.getOnBackPressedDispatcher().addCallback(this, callback);
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         return dialog;
