@@ -87,6 +87,51 @@
                     android:text="@string/wordpress_help_center_button"
                     android:visibility="gone"/>
 
+                <LinearLayout
+                    android:id="@+id/JpFaqContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="vertical"
+                    android:padding="@dimen/margin_extra_large"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/illustration_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_medium"
+                        android:scaleType="centerCrop"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:lottie_rawRes="@raw/wp2jp_left"
+                        app:lottie_enableMergePathsForKitKatAndAbove="true"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="false" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_extra_large"
+                        android:text="@string/support_faq_title"
+                        android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/support_faq_caption"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/JpFaqContainerBottomDivider"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_size"
+                    android:background="?android:attr/listDivider"
+                    tools:visibility="visible"/>
+
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/contact_us_button"
                     style="@style/HelpActivitySingleText"
