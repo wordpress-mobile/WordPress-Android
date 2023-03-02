@@ -1805,7 +1805,7 @@ Language: nl
     <string name="domain_suggestions_search_hint">Type een trefwoord voor meer ideeën</string>
     <string name="domains_suggestions_empty_list">Geen suggesties gevonden</string>
     <string name="register_domain">Registreer domein</string>
-    <string name="jetpack_installed_message">Nu Jetpack is geïnstalleerd, hoeven we er alleen nog voor te zorgen dat alles goed ingesteld is. Dit duurt maar heel even.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Nu Jetpack is geïnstalleerd, hoeven we er alleen nog voor te zorgen dat alles goed ingesteld is. Dit duurt maar heel even.</string>
     <string name="stats_menu_remove">Verwijderen uit inzichten</string>
     <string name="stats_menu_move_down">Omlaag verplaatsen</string>
     <string name="stats_menu_move_up">Omhoog verplaatsen</string>
@@ -2072,7 +2072,7 @@ Language: nl
     <string name="reader_empty_followed_tags_subtitle">Voeg hier onderwerpen toe om berichten te vinden over je favoriete onderwerpen</string>
     <string name="login_to_to_connect_jetpack">Log in op het WordPress.com-account dat je gebruikte om verbinding te maken met Jetpack.</string>
     <string name="install_jetpack_retry">Opnieuw proberen</string>
-    <string name="install_jetpack_continue">Instellen</string>
+    <string name="jetpack_plugin_install_remote_plugin_button">Instellen</string>
     <string name="jetpack_installation_problem_message">Jetpack kan momenteel niet geïnstalleerd worden.</string>
     <string name="jetpack_installation_problem">Er is een probleem opgetreden</string>
     <string name="jetpack_installed">Jetpack geïnstalleerd</string>

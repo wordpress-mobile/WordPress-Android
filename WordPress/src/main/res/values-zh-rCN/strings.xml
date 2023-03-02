@@ -1832,7 +1832,7 @@ Language: zh_CN
     <string name="domain_suggestions_search_hint">请输入关键字以获取更多想法</string>
     <string name="domains_suggestions_empty_list">未找到任何建议</string>
     <string name="register_domain">注册域</string>
-    <string name="jetpack_installed_message">安装 Jetpack 后，我们只需进行设置即可。这只需要一分钟时间。</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">安装 Jetpack 后，我们只需进行设置即可。这只需要一分钟时间。</string>
     <string name="stats_menu_remove">从见解中删除</string>
     <string name="stats_menu_move_down">下移</string>
     <string name="stats_menu_move_up">上移</string>
@@ -2099,7 +2099,7 @@ Language: zh_CN
     <string name="reader_empty_followed_tags_subtitle">在此处添加主题，以查找有关您喜爱的主题的博文</string>
     <string name="login_to_to_connect_jetpack">登录用于关联 Jetpack 的 WordPress.com 账户。</string>
     <string name="install_jetpack_retry">重试</string>
-    <string name="install_jetpack_continue">设置</string>
+    <string name="jetpack_plugin_install_remote_plugin_button">设置</string>
     <string name="jetpack_installation_problem_message">目前无法安装 Jetpack。</string>
     <string name="jetpack_installation_problem">出现问题</string>
     <string name="jetpack_installed">已安装 Jetpack</string>

@@ -1836,7 +1836,7 @@ Language: zh_TW
     <string name="domain_suggestions_search_hint">輸入關鍵字尋找更多想法</string>
     <string name="domains_suggestions_empty_list">找不到任何建議</string>
     <string name="register_domain">註冊網域</string>
-    <string name="jetpack_installed_message">現在 Jetpack 已安裝完成，我們只需要協助你完成設定即可。這只需要一分鐘左右。</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">現在 Jetpack 已安裝完成，我們只需要協助你完成設定即可。這只需要一分鐘左右。</string>
     <string name="stats_menu_remove">從洞察報告中移除</string>
     <string name="stats_menu_move_down">向下移動</string>
     <string name="stats_menu_move_up">向上移動</string>
@@ -2103,7 +2103,7 @@ Language: zh_TW
     <string name="reader_empty_followed_tags_subtitle">請在此處新增主題，以尋找你最愛的主題文章</string>
     <string name="login_to_to_connect_jetpack">請登入你用來連結 Jetpack 的 WordPress.com 帳號。</string>
     <string name="install_jetpack_retry">重試</string>
-    <string name="install_jetpack_continue">設定</string>
+    <string name="jetpack_plugin_install_remote_plugin_button">設定</string>
     <string name="jetpack_installation_problem_message">目前無法安裝 Jetpack。</string>
     <string name="jetpack_installation_problem">發生問題</string>
     <string name="jetpack_installed">已安裝 Jetpack</string>

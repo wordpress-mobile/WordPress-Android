@@ -35,7 +35,8 @@ fun DoneState(
 private fun PreviewDoneState() {
     AppTheme {
         val uiState = UiState.Done(
-            buttonText = R.string.jetpack_full_plugin_install_done_button,
+            descriptionText = R.string.jetpack_plugin_install_full_plugin_done_description,
+            buttonText = R.string.jetpack_plugin_install_full_plugin_done_button,
         )
         DoneState(uiState, {})
     }

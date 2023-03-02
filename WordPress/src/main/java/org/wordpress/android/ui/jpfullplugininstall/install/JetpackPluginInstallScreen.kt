@@ -11,13 +11,13 @@ import org.wordpress.android.ui.jpfullplugininstall.install.compose.state.Initia
 import org.wordpress.android.ui.jpfullplugininstall.install.compose.state.InstallingState
 
 @Composable
-fun JetpackFullPluginInstallScreen(
+fun JetpackPluginInstallScreen(
     uiState: UiState,
     onDismissScreenClick: () -> Unit,
-    onContinueClick: () -> Unit,
-    onDoneClick: () -> Unit,
-    onRetryClick: () -> Unit,
-    onContactSupportClick: () -> Unit,
+    onInitialButtonClick: () -> Unit,
+    onDoneButtonClick: () -> Unit,
+    onRetryButtonClick: () -> Unit,
+    onContactSupportButtonClick: () -> Unit,
     onInitialShown: () -> Unit = {},
     onInstallingShown: () -> Unit = {},
     onErrorShown: () -> Unit = {},
@@ -36,7 +36,7 @@ fun JetpackFullPluginInstallScreen(
                 is UiState.Initial -> {
                     InitialState(
                         uiState = this,
-                        onContinueClick = onContinueClick,
+                        onContinueClick = onInitialButtonClick,
                     )
                     onInitialShown()
                 }
@@ -51,15 +51,15 @@ fun JetpackFullPluginInstallScreen(
                 is UiState.Done -> {
                     DoneState(
                         uiState = this,
-                        onDoneClick = onDoneClick,
+                        onDoneClick = onDoneButtonClick,
                     )
                 }
 
                 is UiState.Error -> {
                     ErrorState(
                         uiState = this,
-                        onRetryClick = onRetryClick,
-                        onContactSupportClick = onContactSupportClick,
+                        onRetryClick = onRetryButtonClick,
+                        onContactSupportClick = onContactSupportButtonClick,
                     )
                     onErrorShown()
                 }

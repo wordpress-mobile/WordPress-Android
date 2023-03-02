@@ -1830,7 +1830,7 @@ Language: sq_AL
     <string name="domain_suggestions_search_hint">Për më tepër ide, shtypni një fjalëkyç</string>
     <string name="domains_suggestions_empty_list">S’u gjetën sugjerime</string>
     <string name="register_domain">Regjistroni Përkatësi</string>
-    <string name="jetpack_installed_message">Tani që Jetpack-u është instaluar, na duhet vetëm t’ju bëjmë gati. Kjo do të hajë vetëm një minutë.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Tani që Jetpack-u është instaluar, na duhet vetëm t’ju bëjmë gati. Kjo do të hajë vetëm një minutë.</string>
     <string name="stats_menu_remove">Hiqe prej tendencave</string>
     <string name="stats_menu_move_down">Ule poshtë</string>
     <string name="stats_menu_move_up">Ngjite sipër</string>
@@ -2097,7 +2097,7 @@ Language: sq_AL
     <string name="reader_empty_followed_tags_subtitle">Shtoni këtu tema që të gjeni postime rreth temave tuaja të parapëlqyera</string>
     <string name="login_to_to_connect_jetpack">Bëni hyrjen te llogaria WordPress.com që përdorët për t’ia përshoqëruar Jetpack-ut.</string>
     <string name="install_jetpack_retry">Riprovoni</string>
-    <string name="install_jetpack_continue">Ujdise</string>
+    <string name="jetpack_plugin_install_remote_plugin_button">Ujdise</string>
     <string name="jetpack_installation_problem_message">Jetpack-u s’u instalua dot këtë herë.</string>
     <string name="jetpack_installation_problem">Pati një problem</string>
     <string name="jetpack_installed">Jetpack-u u instalua</string>

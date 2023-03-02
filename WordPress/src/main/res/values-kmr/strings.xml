@@ -795,7 +795,7 @@ Language: ku_TR
     <string name="domain_suggestions_fetch_error">Pêşniyarên navperê(domain) nehatin barkirin</string>
     <string name="domain_suggestions_search_hint">Ji bo fikrên zêdetir, peyvkilîdekê binivîse</string>
     <string name="register_domain">Domain\'ê Tomar Bike</string>
-    <string name="jetpack_installed_message">Va ye Jetpack hate sazkirin, îja divê em sazkariyên te temam bikin. Ev ê tenê xulekekê bigire.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Va ye Jetpack hate sazkirin, îja divê em sazkariyên te temam bikin. Ev ê tenê xulekekê bigire.</string>
     <string name="post_restored">Şandî hat vegerandin</string>
     <string name="post_restoring">Şandî tê vegerandin</string>
     <string name="post_trashing">Şandî tê jêbirin</string>
@@ -1046,7 +1046,7 @@ Language: ku_TR
     <string name="reader_empty_followed_tags_title">Mijarên şopandî tune ye</string>
     <string name="reader_empty_followed_tags_subtitle">Ji bo ku tu şandiyên têkildarî mijarên xwe yên favorî bibinî, mijaran tevlî vir bike</string>
     <string name="install_jetpack_retry">Dîsa Biceribîne</string>
-    <string name="install_jetpack_continue">Bidomîne</string>
+    <string name="jetpack_plugin_install_remote_plugin_button">Bidomîne</string>
     <string name="jetpack_installation_problem">Pirsgirêkek hebû</string>
     <string name="installing_jetpack">Jetpack tê sazkirin</string>
     <string name="jetpack">Jetpack</string>

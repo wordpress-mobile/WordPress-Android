@@ -48,8 +48,8 @@ fun ErrorState(
 private fun PreviewErrorState() {
     AppTheme {
         val uiState = UiState.Error(
-            retryButtonText = R.string.jetpack_full_plugin_install_error_button_retry,
-            contactSupportButtonText = R.string.jetpack_full_plugin_install_error_button_contact_support,
+            retryButtonText = R.string.jetpack_plugin_install_error_button_retry,
+            contactSupportButtonText = R.string.jetpack_plugin_install_error_button_contact_support,
         )
         ErrorState(uiState, {}, {})
     }

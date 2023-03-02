@@ -1838,7 +1838,7 @@ Language: ru
     <string name="domain_suggestions_search_hint">Напишите ключевое слово для получения предложений</string>
     <string name="domains_suggestions_empty_list">Нет предложений</string>
     <string name="register_domain">Зарегистрировать домен</string>
-    <string name="jetpack_installed_message">Теперь, когда Jetpack установлен, нам нужно настроить, это займет всего минуту.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Теперь, когда Jetpack установлен, нам нужно настроить, это займет всего минуту.</string>
     <string name="stats_menu_remove">Удалить с вкладки</string>
     <string name="stats_menu_move_down">Вниз</string>
     <string name="stats_menu_move_up">Вверх</string>
@@ -2105,7 +2105,7 @@ Language: ru
     <string name="reader_empty_followed_tags_subtitle">Добавьте любимые темы здесь, чтобы найти по ним записи</string>
     <string name="login_to_to_connect_jetpack">Войдите в учетную запись WordPress.com, с которой был подключен Jetpack.</string>
     <string name="install_jetpack_retry">Повторить</string>
-    <string name="install_jetpack_continue">Продолжить установку</string>
+    <string name="jetpack_plugin_install_remote_plugin_button">Продолжить установку</string>
     <string name="jetpack_installation_problem_message">Сейчас Jetpack не может быть установлен.</string>
     <string name="jetpack_installation_problem">Возникла проблема</string>
     <string name="jetpack_installed">Jetpack установлен</string>

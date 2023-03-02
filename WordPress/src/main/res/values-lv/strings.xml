@@ -1800,7 +1800,7 @@ Language: lv
     <string name="domain_suggestions_search_hint">Ierakstiet atslēgvārdu, lai iegūtu vairāk ideju</string>
     <string name="domains_suggestions_empty_list">Ieteikumi netika atrasti</string>
     <string name="register_domain">Reģistrēt domēnu</string>
-    <string name="jetpack_installed_message">Tagad, kad Jetpack ir instalēts, mums ir jāveic iestatīšana. Tas prasīs tikai minūti.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Tagad, kad Jetpack ir instalēts, mums ir jāveic iestatīšana. Tas prasīs tikai minūti.</string>
     <string name="stats_menu_remove">Noņemt no ieskatiem</string>
     <string name="stats_menu_move_down">Pārvietojieties uz leju</string>
     <string name="stats_menu_move_up">Pārvietojieties uz augšu</string>
@@ -2067,7 +2067,7 @@ Language: lv
     <string name="reader_empty_followed_tags_subtitle">Pievienojiet tematus šeit, lai atrastu ziņas par iecienītākajām tēmām</string>
     <string name="login_to_to_connect_jetpack">Piesakieties WordPress.com kontā, kuru izmantojāt, lai izveidotu savienojumu ar Jetpack.</string>
     <string name="install_jetpack_retry">Mēģiniet vēlreiz</string>
-    <string name="install_jetpack_continue">Uzstādīt</string>
+    <string name="jetpack_plugin_install_remote_plugin_button">Uzstādīt</string>
     <string name="jetpack_installation_problem_message">Jetpack pašlaik nebija iespējams instalēt.</string>
     <string name="jetpack_installation_problem">Radās problēma</string>
     <string name="jetpack_installed">Jetpack uzstādīts</string>

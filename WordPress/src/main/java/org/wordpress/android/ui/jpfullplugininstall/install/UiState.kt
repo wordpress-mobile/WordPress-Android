@@ -17,28 +17,29 @@ sealed class UiState(
     ) : UiState(
         toolbarTitle = R.string.jetpack,
         image = R.drawable.ic_jetpack_logo_green_24dp,
-        imageContentDescription = R.string.jetpack_full_plugin_install_jp_logo_content_description,
-        title = R.string.jetpack_full_plugin_install_initial_title,
-        description = R.string.jetpack_full_plugin_install_initial_description,
+        imageContentDescription = R.string.jetpack_plugin_install_jp_logo_content_description,
+        title = R.string.jetpack_plugin_install_initial_title,
+        description = R.string.jetpack_plugin_install_initial_description,
     )
 
     object Installing : UiState(
         toolbarTitle = R.string.jetpack,
         image = R.drawable.ic_jetpack_logo_green_24dp,
-        imageContentDescription = R.string.jetpack_full_plugin_install_jp_logo_content_description,
-        title = R.string.jetpack_full_plugin_install_initial_title,
-        description = R.string.jetpack_full_plugin_install_initial_description,
+        imageContentDescription = R.string.jetpack_plugin_install_jp_logo_content_description,
+        title = R.string.jetpack_plugin_install_installing_title,
+        description = R.string.jetpack_plugin_install_installing_description,
         showCloseButton = false,
     )
 
     data class Done(
+        @StringRes val descriptionText: Int,
         @StringRes val buttonText: Int,
     ) : UiState(
         toolbarTitle = R.string.jetpack,
         image = R.drawable.ic_jetpack_logo_green_24dp,
-        imageContentDescription = R.string.jetpack_full_plugin_install_jp_logo_content_description,
-        title = R.string.jetpack_full_plugin_install_done_title,
-        description = R.string.jetpack_full_plugin_install_done_description,
+        imageContentDescription = R.string.jetpack_plugin_install_jp_logo_content_description,
+        title = R.string.jetpack_plugin_install_done_title,
+        description = descriptionText,
         showCloseButton = false,
     )
 
@@ -48,8 +49,8 @@ sealed class UiState(
     ) : UiState(
         toolbarTitle = R.string.jetpack,
         image = R.drawable.ic_warning,
-        imageContentDescription = R.string.jetpack_full_plugin_install_error_image_content_description,
-        title = R.string.jetpack_full_plugin_install_error_title,
-        description = R.string.jetpack_full_plugin_install_error_description,
+        imageContentDescription = R.string.jetpack_plugin_install_error_image_content_description,
+        title = R.string.jetpack_plugin_install_error_title,
+        description = R.string.jetpack_plugin_install_error_description,
     )
 }

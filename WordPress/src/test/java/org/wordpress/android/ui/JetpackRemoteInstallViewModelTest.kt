@@ -25,10 +25,7 @@ import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallErrorType
 import org.wordpress.android.fluxc.store.JetpackStore.OnJetpackInstalled
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData
-import org.wordpress.android.ui.JetpackRemoteInstallViewState.Error
-import org.wordpress.android.ui.JetpackRemoteInstallViewState.Installed
-import org.wordpress.android.ui.JetpackRemoteInstallViewState.Installing
-import org.wordpress.android.ui.JetpackRemoteInstallViewState.Start
+import org.wordpress.android.ui.jpfullplugininstall.install.UiState
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -51,7 +48,7 @@ class JetpackRemoteInstallViewModelTest : BaseUnitTest() {
     private val siteId = 1
 
     private lateinit var viewModel: JetpackRemoteInstallViewModel
-    private val viewStates = mutableListOf<JetpackRemoteInstallViewState>()
+    private val viewStates = mutableListOf<UiState>()
     private var jetpackResultActionData: JetpackResultActionData? = null
 
     @Before
@@ -67,16 +64,16 @@ class JetpackRemoteInstallViewModelTest : BaseUnitTest() {
 
     @Test
     fun `on click starts jetpack install`() = test {
-        viewModel.start(site, null)
+        viewModel.initialize(site, null)
 
-        val startState = viewStates[0]
-        assertStartState(startState)
+        val initialState = viewStates[0]
+        initialState.assertInitialState()
 
         // Trigger install
-        startState.onClick()
+        viewModel.onInitialButtonClick()
 
         val installingState = viewStates[1]
-        assertInstallingState(installingState)
+        installingState.assertInstallingState()
 
         verify(dispatcher).dispatch(actionCaptor.capture())
         assertThat(actionCaptor.lastValue.type).isEqualTo(JetpackAction.INSTALL_JETPACK)
@@ -88,17 +85,17 @@ class JetpackRemoteInstallViewModelTest : BaseUnitTest() {
         val updatedSite = mock<SiteModel>()
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(updatedSite)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        viewModel.start(site, null)
+        viewModel.initialize(site, null)
 
-        val startState = viewStates[0]
-        assertStartState(startState)
+        val initialState = viewStates[0]
+        initialState.assertInitialState()
 
         viewModel.onEventsUpdated(OnJetpackInstalled(true, JetpackAction.INSTALL_JETPACK))
         val installedState = viewStates[1]
-        assertInstalledState(installedState)
+        installedState.assertDoneState()
 
         // Continue after Jetpack is installed
-        installedState.onClick()
+        viewModel.onDoneButtonClick()
 
         val connectionData = jetpackResultActionData!!
         assertThat(connectionData.loggedIn).isTrue
@@ -109,17 +106,17 @@ class JetpackRemoteInstallViewModelTest : BaseUnitTest() {
     @Test
     fun `on error result shows failure`() = test {
         val installError = JetpackInstallError(JetpackInstallErrorType.GENERIC_ERROR, "error")
-        viewModel.start(site, null)
+        viewModel.initialize(site, null)
 
-        val startState = viewStates[0]
-        assertStartState(startState)
+        val initialState = viewStates[0]
+        initialState.assertInitialState()
 
         viewModel.onEventsUpdated(OnJetpackInstalled(installError, JetpackAction.INSTALL_JETPACK))
 
         val errorState = viewStates[1]
-        assertErrorState(errorState)
+        errorState.assertErrorState()
 
-        errorState.onClick()
+        viewModel.onRetryButtonClick()
 
         verify(dispatcher).dispatch(actionCaptor.capture())
         assertThat(actionCaptor.lastValue.type).isEqualTo(JetpackAction.INSTALL_JETPACK)
@@ -133,10 +130,10 @@ class JetpackRemoteInstallViewModelTest : BaseUnitTest() {
             "INVALID_CREDENTIALS",
             message = "msg"
         )
-        viewModel.start(site, null)
+        viewModel.initialize(site, null)
 
-        val startState = viewStates[0]
-        assertStartState(startState)
+        val initialState = viewStates[0]
+        initialState.assertInitialState()
 
         viewModel.onEventsUpdated(OnJetpackInstalled(installError, JetpackAction.INSTALL_JETPACK))
 
@@ -160,43 +157,34 @@ class JetpackRemoteInstallViewModelTest : BaseUnitTest() {
         assertThat(connectionData.site == updatedSite).isTrue
     }
 
-    private fun assertStartState(state: JetpackRemoteInstallViewState) {
-        assertThat(state).isInstanceOf(Start::class.java)
-        assertThat(state.type).isEqualTo(JetpackRemoteInstallViewState.Type.START)
-        assertThat(state.titleResource).isEqualTo(R.string.install_jetpack)
-        assertThat(state.messageResource).isEqualTo(R.string.install_jetpack_message)
-        assertThat(state.icon).isEqualTo(R.drawable.ic_plans_white_24dp)
-        assertThat(state.buttonResource).isEqualTo(R.string.install_jetpack_continue)
-        assertThat(state.progressBarVisible).isEqualTo(false)
+    private fun UiState.assertInitialState() {
+        assertThat(this).isInstanceOf(UiState.Initial::class.java)
+
+        with(this as UiState.Initial) {
+            assertThat(buttonText).isEqualTo(R.string.jetpack_plugin_install_remote_plugin_button)
+        }
     }
 
-    private fun assertInstallingState(state: JetpackRemoteInstallViewState) {
-        assertThat(state).isInstanceOf(Installing::class.java)
-        assertThat(state.type).isEqualTo(JetpackRemoteInstallViewState.Type.INSTALLING)
-        assertThat(state.titleResource).isEqualTo(R.string.installing_jetpack)
-        assertThat(state.messageResource).isEqualTo(R.string.installing_jetpack_message)
-        assertThat(state.icon).isEqualTo(R.drawable.ic_plans_white_24dp)
-        assertThat(state.buttonResource).isNull()
-        assertThat(state.progressBarVisible).isEqualTo(true)
+    private fun UiState.assertInstallingState() {
+        assertThat(this).isInstanceOf(UiState.Installing::class.java)
     }
 
-    private fun assertInstalledState(state: JetpackRemoteInstallViewState) {
-        assertThat(state).isInstanceOf(Installed::class.java)
-        assertThat(state.type).isEqualTo(JetpackRemoteInstallViewState.Type.INSTALLED)
-        assertThat(state.titleResource).isEqualTo(R.string.jetpack_installed)
-        assertThat(state.messageResource).isEqualTo(R.string.jetpack_installed_message)
-        assertThat(state.icon).isEqualTo(R.drawable.ic_plans_white_24dp)
-        assertThat(state.buttonResource).isEqualTo(R.string.install_jetpack_continue)
-        assertThat(state.progressBarVisible).isEqualTo(false)
+    private fun UiState.assertDoneState() {
+        assertThat(this).isInstanceOf(UiState.Done::class.java)
+
+        with(this as UiState.Done) {
+            assertThat(description).isEqualTo(R.string.jetpack_plugin_install_remote_plugin_done_description)
+            assertThat(buttonText).isEqualTo(R.string.jetpack_plugin_install_remote_plugin_button)
+        }
     }
 
-    private fun assertErrorState(state: JetpackRemoteInstallViewState) {
-        assertThat(state).isInstanceOf(Error::class.java)
-        assertThat(state.type).isEqualTo(JetpackRemoteInstallViewState.Type.ERROR)
-        assertThat(state.titleResource).isEqualTo(R.string.jetpack_installation_problem)
-        assertThat(state.messageResource).isEqualTo(R.string.jetpack_installation_problem_message)
-        assertThat(state.icon).isEqualTo(R.drawable.ic_warning)
-        assertThat(state.buttonResource).isEqualTo(R.string.install_jetpack_retry)
-        assertThat(state.progressBarVisible).isEqualTo(false)
+    private fun UiState.assertErrorState() {
+        assertThat(this).isInstanceOf(UiState.Error::class.java)
+
+        with(this as UiState.Error) {
+            assertThat(retryButtonText).isEqualTo(R.string.jetpack_plugin_install_error_button_retry)
+            assertThat(contactSupportButtonText)
+                .isEqualTo(R.string.jetpack_plugin_install_error_button_contact_support)
+        }
     }
 }

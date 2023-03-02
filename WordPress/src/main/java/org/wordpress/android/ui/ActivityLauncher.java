@@ -289,7 +289,7 @@ public class ActivityLauncher {
     public static void startJetpackInstall(Context context, JetpackConnectionSource source, SiteModel site) {
         Intent intent = new Intent(context, JetpackRemoteInstallActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(JetpackRemoteInstallFragment.TRACKING_SOURCE_KEY, source);
+        intent.putExtra(JetpackRemoteInstallActivity.TRACKING_SOURCE_KEY, source);
         context.startActivity(intent);
     }
 

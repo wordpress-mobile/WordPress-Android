@@ -25,13 +25,13 @@ class JetpackFullPluginInstallActivity : AppCompatActivity() {
         setContent {
             AppTheme {
                 val uiState by viewModel.uiState.collectAsState()
-                JetpackFullPluginInstallScreen(
+                JetpackPluginInstallScreen(
                     uiState = uiState,
                     onDismissScreenClick = viewModel::onDismissScreenClick,
-                    onContinueClick = viewModel::onContinueClick,
-                    onDoneClick = viewModel::onDoneClick,
-                    onRetryClick = viewModel::onRetryClick,
-                    onContactSupportClick = viewModel::onContactSupportClick,
+                    onInitialButtonClick = viewModel::onContinueClick,
+                    onDoneButtonClick = viewModel::onDoneClick,
+                    onRetryButtonClick = viewModel::onRetryClick,
+                    onContactSupportButtonClick = viewModel::onContactSupportClick,
                     onInitialShown = viewModel::onInitialShown,
                     onInstallingShown = viewModel::onInstallingShown,
                     onErrorShown = viewModel::onErrorShown,
