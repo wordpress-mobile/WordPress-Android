@@ -27,6 +27,7 @@ import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostU
 import javax.inject.Inject
 
 class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeatureUtils: BlazeFeatureUtils) {
+    @SuppressWarnings("ReturnCount")
     fun setupPageActions(
         listType: PageListType,
         uploadUiState: PostUploadUiState,
