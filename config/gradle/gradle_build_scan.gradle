@@ -1,8 +1,11 @@
 
-buildScan {
-    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-    termsOfServiceAgree = 'yes'
-    if (System.getenv('CI')) tag 'CI' else tag 'LOCAL'
-    publishAlways()
-    if (System.getenv('CI')) uploadInBackground = false else uploadInBackground = true
+// Only run build scan on CI builds.
+if (System.getenv('CI')) {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'yes'
+        tag 'CI'
+        publishAlways()
+        uploadInBackground = false
+    }
 }
