@@ -56,7 +56,7 @@ class BlazeFeatureUtils @Inject constructor(
 
     fun trackEntryPointTapped(blazeFlowSource: BlazeFlowSource) {
         analyticsTrackerWrapper.track(
-            AnalyticsTracker.Stat.BLAZE_FEATURE_TAPPED,
+            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_TAPPED,
             mapOf(SOURCE to blazeFlowSource.trackingName)
         )
     }
