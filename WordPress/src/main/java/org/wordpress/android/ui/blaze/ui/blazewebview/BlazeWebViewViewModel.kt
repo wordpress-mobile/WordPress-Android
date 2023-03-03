@@ -78,10 +78,8 @@ class BlazeWebViewViewModel @Inject constructor(
                     siteUrl,
                     blazeFlowSource.trackingName
                 )
-                is BlazeUiState.PromoteScreen.Page -> BLAZE_CREATION_FLOW_SITE.format(
-                    siteUrl,
-                    blazeFlowSource.trackingName
-                )
+                is BlazeUiState.PromoteScreen.PromotePage ->
+                    BLAZE_CREATION_FLOW_PAGE.format(siteUrl, it.pagesUIModel.pageId, blazeFlowSource.trackingName)
             }
         } ?: BLAZE_CREATION_FLOW_SITE.format(siteUrl, blazeFlowSource.trackingName)
         return url
@@ -219,6 +217,7 @@ class BlazeWebViewViewModel @Inject constructor(
         private const val BASE_URL = "https://wordpress.com/advertising/"
 
         const val BLAZE_CREATION_FLOW_POST = "$BASE_URL%s?blazepress-widget=post-%d&_source=%s"
+        const val BLAZE_CREATION_FLOW_PAGE = "$BASE_URL%s?blazepress-widget=post-%d&_source=%s"
         const val BLAZE_CREATION_FLOW_SITE = "$BASE_URL%s?_source=%s"
 
         const val HTTP_PATTERN = "(https?://)"

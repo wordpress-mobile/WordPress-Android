@@ -17,7 +17,7 @@ class BlazeFeatureUtils @Inject constructor(
     private val blazeFeatureConfig: BlazeFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
 ) {
-    private fun isBlazeEnabled(): Boolean {
+    fun isBlazeEnabled(): Boolean {
         return buildConfigWrapper.isJetpackApp &&
                 blazeFeatureConfig.isEnabled()
     }

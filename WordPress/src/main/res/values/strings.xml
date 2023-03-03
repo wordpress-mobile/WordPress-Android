@@ -3226,6 +3226,7 @@
     <string name="pages_set_as_homepage">Set as Homepage</string>
     <string name="pages_set_as_posts_page">Set as Posts Page</string>
     <string name="pages_publish_now" translatable="false">@string/publish_now</string>
+    <string name="pages_promote_with_blaze" translatable="false">@string/button_promote_with_blaze</string>
     <string name="pages_move_to_draft">Move to Draft</string>
     <string name="pages_move_to_trash">Move to Trash</string>
     <string name="pages_delete_permanently">Delete Permanently</string>
@@ -4427,6 +4428,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blaze_promotional_subtitle_2">Your content will appear on millions of WordPress and Tumblr sites.</string>
     <string name="blaze_promotional_subtitle_3">Track performance, start, and stop your Blaze at any time.</string>
     <string name="blaze_overlay_post_promotional_button">Blaze this Post</string>
+    <string name="blaze_overlay_page_promotional_button">Blaze this Page</string>
     <string name="blaze_overlay_site_promotional_button">Blaze a Post now</string>
 
     <!-- Blaze -->
