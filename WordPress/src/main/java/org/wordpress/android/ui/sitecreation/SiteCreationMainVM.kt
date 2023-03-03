@@ -267,7 +267,7 @@ class SiteCreationMainVM @Inject constructor(
         _exitFlowObservable.call()
     }
 
-    fun onSitePreviewScreenFinished(createSiteState: CreateSiteState) {
+    fun onProgressOrPreviewFinished(createSiteState: CreateSiteState) {
         _wizardFinishedObservable.value = createSiteState
     }
 
