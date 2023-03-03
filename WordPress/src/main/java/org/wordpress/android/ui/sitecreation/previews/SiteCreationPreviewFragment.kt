@@ -61,7 +61,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private var animatorSet: AnimatorSet? = null
     private val isLandscape get() = resources.configuration.orientation == ORIENTATION_LANDSCAPE
 
-    private var binding: SiteCreationPreviewScreenBinding? = null
+    private lateinit var binding: SiteCreationPreviewScreenBinding
     private val viewModel: SitePreviewViewModel by viewModels()
 
     override fun onAttach(context: Context) {
@@ -108,7 +108,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     override fun setupContent() {
-        binding?.siteCreationPreviewScreenDefault?.run {
+        binding.siteCreationPreviewScreenDefault.run {
             observeState()
             observePreview(siteCreationPreviewWebViewContainer.sitePreviewWebView)
             observeSiteCreationService(requireActivity() as SitePreviewScreenListener)
