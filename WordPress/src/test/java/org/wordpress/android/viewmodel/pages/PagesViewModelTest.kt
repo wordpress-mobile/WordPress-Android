@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.pages
 import android.content.Intent
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -25,6 +26,7 @@ import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.PAGE
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.blaze.BlazeStatusModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient
@@ -39,7 +41,9 @@ import org.wordpress.android.fluxc.store.SiteOptionsStore.HomepageUpdatedPayload
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsError
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsErrorType.INVALID_PARAMETERS
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
 import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
@@ -103,12 +107,20 @@ class PagesViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var postSqlUtils: PostSqlUtils
+
+    @Mock
+    lateinit var blazeFeatureUtils: BlazeFeatureUtils
+
+    @Mock
+    lateinit var blazeStore: BlazeStore
+
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
     private lateinit var searchPages: MutableList<SortedMap<PageListType, List<PageModel>>>
     private lateinit var authorSelectionUpdated: MutableLiveData<AuthorFilterSelection>
     private lateinit var authorUIState: MutableLiveData<PagesAuthorFilterUIState>
+    private lateinit var blazeSiteEligibility: MutableLiveData<Boolean>
     private lateinit var postStore: PostStore
 
     private val mockedPageId = 1
@@ -141,18 +153,22 @@ class PagesViewModelTest : BaseUnitTest() {
             appLogWrapper = appLogWrapper,
             siteStore = siteStore,
             accountStore = accountStore,
-            prefs = appPrefsWrapper
+            prefs = appPrefsWrapper,
+            blazeFeatureUtils = blazeFeatureUtils,
+            blazeStore = blazeStore
         )
         listStates = mutableListOf()
         pages = mutableListOf()
         searchPages = mutableListOf()
         authorSelectionUpdated = MutableLiveData<AuthorFilterSelection>()
         authorUIState = MutableLiveData<PagesAuthorFilterUIState>()
+        blazeSiteEligibility = MutableLiveData<Boolean>()
         viewModel.listState.observeForever { if (it != null) listStates.add(it) }
         viewModel.pages.observeForever { if (it != null) pages.add(it) }
         viewModel.searchPages.observeForever { if (it != null) searchPages.add(it) }
         viewModel.authorSelectionUpdated.observeForever { if (it != null) authorSelectionUpdated.value = it }
         viewModel.authorUIState.observeForever { if (it != null) authorUIState.value = it }
+        viewModel.blazeSiteEligibility.observeForever { if (it != null) blazeSiteEligibility.value = it }
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
         whenever(postSqlUtils.insertPostForResult(any())).thenAnswer { invocation ->
             (invocation.arguments[0] as PostModel).apply { setId(copyPageId) }
