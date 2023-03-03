@@ -36,11 +36,11 @@ class BlazeFeatureUtils @Inject constructor(
                 postModel.password.isEmpty()
     }
 
-    fun shouldShowBlazeEntryPoint(blazeStatusModel: BlazeStatusModel?): Boolean {
+    fun shouldShowBlazeEntryPoint(blazeStatusModel: BlazeStatusModel?, siteId: Long): Boolean {
         val isEligible = blazeStatusModel?.isEligible == true
         return isBlazeEnabled() &&
                 isEligible &&
-                !isPromoteWithBlazeCardHiddenByUser()
+                !isPromoteWithBlazeCardHiddenByUser(siteId)
     }
 
     fun track(stat: AnalyticsTracker.Stat, source: BlazeFlowSource) {
@@ -50,8 +50,8 @@ class BlazeFeatureUtils @Inject constructor(
         )
     }
 
-    fun hidePromoteWithBlazeCard() {
-        appPrefsWrapper.setShouldHidePromoteWithBlazeCard(true)
+    fun hidePromoteWithBlazeCard(siteId: Long) {
+        appPrefsWrapper.setShouldHidePromoteWithBlazeCard(siteId,true)
     }
 
     fun trackEntryPointTapped(blazeFlowSource: BlazeFlowSource) {
@@ -61,8 +61,8 @@ class BlazeFeatureUtils @Inject constructor(
         )
     }
 
-    private fun isPromoteWithBlazeCardHiddenByUser(): Boolean {
-        return appPrefsWrapper.getShouldHidePromoteWithBlazeCard()
+    private fun isPromoteWithBlazeCardHiddenByUser(siteId: Long): Boolean {
+        return appPrefsWrapper.getShouldHidePromoteWithBlazeCard(siteId)
     }
 
     fun trackOverlayDisplayed(blazeFlowSource: BlazeFlowSource) {

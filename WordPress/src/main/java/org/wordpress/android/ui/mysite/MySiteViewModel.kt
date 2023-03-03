@@ -575,7 +575,8 @@ class MySiteViewModel @Inject constructor(
                 ),
                 promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
                     isEligible = blazeFeatureUtils.shouldShowBlazeEntryPoint(
-                        promoteWithBlazeUpdate?.blazeStatusModel
+                        promoteWithBlazeUpdate?.blazeStatusModel,
+                        site.siteId
                     ),
                     onClick = this::onPromoteWithBlazeCardClick,
                     onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
@@ -613,7 +614,7 @@ class MySiteViewModel @Inject constructor(
                 enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 onClick = this::onItemClick,
                 isBlazeEligible =
-                    blazeFeatureUtils.shouldShowBlazeEntryPoint(promoteWithBlazeUpdate?.blazeStatusModel)
+                    blazeFeatureUtils.shouldShowBlazeEntryPoint(promoteWithBlazeUpdate?.blazeStatusModel, site.siteId)
             )
         )
 
@@ -1518,7 +1519,9 @@ class MySiteViewModel @Inject constructor(
             Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
             BlazeFlowSource.DASHBOARD_CARD
         )
-        blazeFeatureUtils.hidePromoteWithBlazeCard()
+        selectedSiteRepository.getSelectedSite()?.let {
+            blazeFeatureUtils.hidePromoteWithBlazeCard(it.siteId)
+        }
         refresh()
     }
 
