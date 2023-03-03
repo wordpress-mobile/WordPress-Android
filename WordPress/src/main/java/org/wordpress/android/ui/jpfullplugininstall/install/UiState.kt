@@ -47,7 +47,7 @@ sealed class UiState(
         @StringRes val contactSupportButtonText: Int,
     ) : UiState(
         toolbarTitle = R.string.jetpack,
-        image = R.drawable.img_illustration_info_outline_88dp,
+        image = R.drawable.ic_warning,
         imageContentDescription = R.string.jetpack_full_plugin_install_error_image_content_description,
         title = R.string.jetpack_full_plugin_install_error_title,
         description = R.string.jetpack_full_plugin_install_error_description,

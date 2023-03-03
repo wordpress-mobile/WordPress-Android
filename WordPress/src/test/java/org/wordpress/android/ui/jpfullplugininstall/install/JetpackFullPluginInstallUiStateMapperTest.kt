@@ -63,7 +63,7 @@ class JetpackFullPluginInstallUiStateMapperTest {
                 R.string.jetpack_full_plugin_install_error_button_contact_support
             )
             assertThat(toolbarTitle).isEqualTo(R.string.jetpack)
-            assertThat(image).isEqualTo(R.drawable.img_illustration_info_outline_88dp)
+            assertThat(image).isEqualTo(R.drawable.ic_warning)
             assertThat(imageContentDescription).isEqualTo(
                 R.string.jetpack_full_plugin_install_error_image_content_description
             )
