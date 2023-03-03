@@ -25,6 +25,8 @@ import org.wordpress.android.ui.blaze.BlazeWebViewContentUiState
 import org.wordpress.android.ui.blaze.BlazeWebViewHeaderUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.config.BlazeCompletedStepHashConfig
+import org.wordpress.android.util.config.BlazeNonDismissableHashConfig
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,7 +34,9 @@ class BlazeWebViewViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val siteStore: SiteStore
+    private val siteStore: SiteStore,
+    private val nonDismissableHashConfig: BlazeNonDismissableHashConfig,
+    private val completedStepHashConfig: BlazeCompletedStepHashConfig
 ) : ViewModel() {
     private lateinit var blazeFlowSource: BlazeFlowSource
     private lateinit var blazeFlowStep: BlazeFlowStep
@@ -148,11 +152,15 @@ class BlazeWebViewViewModel @Inject constructor(
     }
 
     fun updateHeaderActionUiState() {
-        when (blazeFlowStep) {
-            BlazeFlowStep.STEP_4 -> postHeaderUiState(DisabledCancelAction())
-            BlazeFlowStep.STEP_5,
-            BlazeFlowStep.CAMPAIGNS_LIST -> postHeaderUiState(DoneAction())
-            else -> postHeaderUiState(EnabledCancelAction())
+        val nonDismissableStep = nonDismissableHashConfig.getValue<String>()
+        val completedStep = completedStepHashConfig.getValue<String>()
+
+        if (blazeFlowStep.label == nonDismissableStep) {
+            postHeaderUiState(DisabledCancelAction())
+        } else if (blazeFlowStep.label == completedStep || blazeFlowStep == BlazeFlowStep.CAMPAIGNS_LIST) {
+            postHeaderUiState(DoneAction())
+        } else {
+            postHeaderUiState(EnabledCancelAction())
         }
     }
 
