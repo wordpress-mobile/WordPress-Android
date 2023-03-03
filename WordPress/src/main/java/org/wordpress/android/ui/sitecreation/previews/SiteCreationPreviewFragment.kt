@@ -113,7 +113,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
             observePreview(siteCreationPreviewWebViewContainer.sitePreviewWebView)
             observeSiteCreationService(requireActivity() as SitePreviewScreenListener)
             observeHelpClicks(requireActivity() as OnHelpClickedListener)
-            observePreviewClicks(requireActivity() as SitePreviewScreenListener)
+            observeDismissClicks(requireActivity() as SitePreviewScreenListener)
             fullscreenErrorWithRetry.setOnClickListeners()
             okButton.setOnClickListener { viewModel.onOkButtonClicked() }
         }
@@ -188,7 +188,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         }
     }
 
-    private fun observePreviewClicks(listener: SitePreviewScreenListener) {
+    private fun observeDismissClicks(listener: SitePreviewScreenListener) {
         viewModel.onOkButtonClicked.observe(this) { createSiteState ->
             createSiteState?.let { listener.onSitePreviewScreenDismissed(it) }
         }
