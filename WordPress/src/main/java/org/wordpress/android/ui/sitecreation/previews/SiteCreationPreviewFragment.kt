@@ -190,10 +190,10 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private fun observeDismissClicks(listener: SitePreviewScreenListener) {
         viewModel.onOkButtonClicked.observe(this) { createSiteState ->
-            createSiteState?.let { listener.onSitePreviewScreenDismissed(it) }
+            createSiteState?.let { listener.onPreviewScreenDismissed(it) }
         }
         viewModel.onCancelWizardClicked.observe(this) { createSiteState ->
-            createSiteState?.let { listener.onSitePreviewScreenDismissed(it) }
+            createSiteState?.let { listener.onPreviewScreenDismissed(it) }
         }
     }
 
