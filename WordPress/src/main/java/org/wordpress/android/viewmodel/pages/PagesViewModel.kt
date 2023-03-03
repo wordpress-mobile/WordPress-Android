@@ -170,7 +170,7 @@ class PagesViewModel
     private val _publishAction = SingleLiveEvent<PageModel>()
     val publishAction = _publishAction
 
-    private val _navigateToBlazeOverlay = SingleLiveEvent<PostModel>()
+    private val _navigateToBlazeOverlay = SingleLiveEvent<PageModel>()
     val navigateToBlazeOverlay = _navigateToBlazeOverlay
 
     private var isInitialized = false
@@ -460,8 +460,7 @@ class PagesViewModel
 
     private fun navigateToBlazeOverlay(remoteId: Long) {
         val page = pageMap[remoteId]
-        val postModel = page?.post?: return
-        _navigateToBlazeOverlay.postValue(postModel)
+        page?.let { _navigateToBlazeOverlay.postValue(it) }
     }
 
     private fun deletePage(page: Page) {

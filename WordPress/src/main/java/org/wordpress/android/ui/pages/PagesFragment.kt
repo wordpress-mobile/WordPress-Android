@@ -501,10 +501,10 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         })
 
         viewModel.navigateToBlazeOverlay.observe(viewLifecycleOwner) {
-            it?.let { post ->
+            it?.let { page ->
                 ActivityLauncher.openPromoteWithBlaze(
                     activity,
-                    post,
+                    page,
                     BlazeFlowSource.PAGES_LIST
                 )
             }
