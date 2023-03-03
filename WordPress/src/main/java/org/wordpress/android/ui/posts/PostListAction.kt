@@ -57,7 +57,7 @@ sealed class PostListAction {
     class ShowPromoteWithBlaze(val post: PostModel) : PostListAction()
 }
 
-@Suppress("TooGenericExceptionCaught", "LongMethod", "ComplexMethod")
+@Suppress("TooGenericExceptionCaught", "LongMethod", "ComplexMethod", "LongParameterList")
 fun handlePostListAction(
     activity: FragmentActivity,
     action: PostListAction,
