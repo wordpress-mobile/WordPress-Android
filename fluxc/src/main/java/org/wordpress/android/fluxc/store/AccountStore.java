@@ -85,14 +85,14 @@ public class AccountStore extends Store {
 
     public static class AuthEmailPayload extends Payload<BaseNetworkError> {
         public AuthEmailPayloadScheme scheme;
-        public AuthEmailPayloadFlow flow;
-        public AuthEmailPayloadSource source;
+        public AuthEmailFlow flow;
+        public AuthEmailSource source;
         public String emailOrUsername;
         public String signupFlowName;
         public boolean isSignup;
 
-        public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
-                                AuthEmailPayloadSource source, AuthEmailPayloadScheme scheme) {
+        public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailFlow flow,
+                                AuthEmailSource source, AuthEmailPayloadScheme scheme) {
             this.emailOrUsername = emailOrUsername;
             this.isSignup = isSignup;
             this.flow = flow;
@@ -101,8 +101,18 @@ public class AccountStore extends Store {
         }
 
         public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
-                                AuthEmailPayloadSource source) {
+                                AuthEmailPayloadSource source, AuthEmailPayloadScheme scheme) {
+            this(emailOrUsername, isSignup, (AuthEmailFlow) flow, (AuthEmailSource) source, scheme);
+        }
+
+        public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailFlow flow,
+                                AuthEmailSource source) {
             this(emailOrUsername, isSignup, flow, source, null);
+        }
+
+        public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
+                                AuthEmailPayloadSource source) {
+            this(emailOrUsername, isSignup, (AuthEmailFlow) flow, (AuthEmailSource) source);
         }
     }
 
@@ -123,34 +133,46 @@ public class AccountStore extends Store {
         }
     }
 
-    public enum AuthEmailPayloadFlow {
+    public interface AuthEmailFlow {
+        @NonNull
+        String getName();
+    }
+
+    public enum AuthEmailPayloadFlow implements AuthEmailFlow {
         JETPACK("jetpack");
 
-        private final String mString;
+        private final String mName;
 
-        AuthEmailPayloadFlow(final String s) {
-            mString = s;
+        AuthEmailPayloadFlow(final String name) {
+            mName = name;
         }
 
         @Override
-        public String toString() {
-            return mString;
+        @NonNull
+        public String getName() {
+            return mName;
         }
     }
 
-    public enum AuthEmailPayloadSource {
+    public interface AuthEmailSource {
+        @NonNull
+        String getName();
+    }
+
+    public enum AuthEmailPayloadSource implements AuthEmailSource {
         NOTIFICATIONS("notifications"),
         STATS("stats");
 
-        private final String mString;
+        private final String mName;
 
-        AuthEmailPayloadSource(final String s) {
-            mString = s;
+        AuthEmailPayloadSource(final String name) {
+            mName = name;
         }
 
         @Override
-        public String toString() {
-            return mString;
+        @NonNull
+        public String getName() {
+            return mName;
         }
     }
 
