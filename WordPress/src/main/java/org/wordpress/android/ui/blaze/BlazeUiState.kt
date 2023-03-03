@@ -20,7 +20,8 @@ enum class BlazeFlowSource(val trackingName: String) {
     DASHBOARD_CARD("dashboard_card"),
     MENU_ITEM("menu_item"),
     POSTS_LIST("posts_list"),
-    STATS_POST("stats_post")
+    STATS_POST("stats_post"),
+    PAGES_LIST("pages_list")
 }
 
 @Parcelize
