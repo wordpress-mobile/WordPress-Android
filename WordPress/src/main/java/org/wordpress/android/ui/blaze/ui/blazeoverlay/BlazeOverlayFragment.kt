@@ -50,7 +50,9 @@ import androidx.fragment.app.activityViewModels
 import coil.compose.rememberImagePainter
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.ui.blaze.BlazeUIModel
 import org.wordpress.android.ui.blaze.BlazeUiState
+import org.wordpress.android.ui.blaze.PageUIModel
 import org.wordpress.android.ui.blaze.PostUIModel
 import org.wordpress.android.ui.compose.components.Button
 import org.wordpress.android.ui.compose.components.Drawable
@@ -94,23 +96,24 @@ class BlazeOverlayFragment : Fragment() {
 
     @Composable
     fun BlazeOverlayScreen(
-        postModelState: BlazeUiState.PromoteScreen,
+        content: BlazeUiState.PromoteScreen,
         isDarkTheme: Boolean = isSystemInDarkTheme()
     ) {
-        val post = when (postModelState) {
-            is BlazeUiState.PromoteScreen.PromotePost -> postModelState.postUIModel
+        val blazeUIModel = when (content) {
+            is BlazeUiState.PromoteScreen.PromotePost -> content.postUIModel
+            is BlazeUiState.PromoteScreen.PromotePage -> content.pagesUIModel
             else -> null
         }
         Scaffold(
-            topBar = { OverlayTopBar(post) },
+            topBar = { OverlayTopBar(blazeUIModel) },
         ) {
-            BlazeOverlayContent(post, isDarkTheme)
+            BlazeOverlayContent(blazeUIModel, isDarkTheme)
         }
     }
 
     @Composable
-    fun OverlayTopBar(postUIModel: PostUIModel?, modifier: Modifier = Modifier) {
-        postUIModel?.also {
+    fun OverlayTopBar(uiModel: BlazeUIModel?, modifier: Modifier = Modifier) {
+        uiModel?.also {
             MainTopAppBar(
                 title = null,
                 navigationIcon = {},
@@ -138,7 +141,7 @@ class BlazeOverlayFragment : Fragment() {
 
     @Composable
     private fun BlazeOverlayContent(
-        post: PostUIModel?,
+        uiModel: BlazeUIModel?,
         isDarkTheme: Boolean
     ) {
         Column(
@@ -169,7 +172,7 @@ class BlazeOverlayFragment : Fragment() {
                 ),
                 modifier = Modifier.padding(start = 20.dp, end = 20.dp)
             )
-            post?.let {
+            uiModel?.let {
                 PostThumbnailView(
                     it,
                     isInDarkTheme = isDarkTheme,
@@ -192,7 +195,7 @@ class BlazeOverlayFragment : Fragment() {
                         shape = RoundedCornerShape(15.dp)
                     ),
                 button = Button(
-                    text = UiString.UiStringRes(getPrimaryButtonText(post)),
+                    text = UiString.UiStringRes(getPrimaryButtonText(uiModel)),
                     color = AppColor.White,
                     fontWeight = FontWeight.Normal,
                 ),
@@ -207,13 +210,17 @@ class BlazeOverlayFragment : Fragment() {
         else AppColor.Black
     }
 
-    private fun getPrimaryButtonText(postUIModel: PostUIModel?): Int {
-        return postUIModel?.let { R.string.blaze_overlay_post_promotional_button }
-            ?: R.string.blaze_overlay_site_promotional_button
+    private fun getPrimaryButtonText(blazeUIModel: BlazeUIModel?): Int {
+        return (blazeUIModel?.let { uiModel ->
+            return when (uiModel) {
+                is PostUIModel -> R.string.blaze_overlay_post_promotional_button
+                is PageUIModel -> R.string.blaze_overlay_page_promotional_button
+            }
+        }?: R.string.blaze_overlay_site_promotional_button)
     }
 
     @Composable
-    fun PostThumbnailView(postUIModel: PostUIModel, modifier: Modifier = Modifier, isInDarkTheme: Boolean) {
+    fun PostThumbnailView(uiModel: BlazeUIModel, modifier: Modifier = Modifier, isInDarkTheme: Boolean) {
         ConstraintLayout(
             modifier = modifier
                 .padding(horizontal = 20.dp, vertical = 15.dp)
@@ -230,17 +237,17 @@ class BlazeOverlayFragment : Fragment() {
                 }
                 .background(color = getThumbnailBackground(isInDarkTheme), shape = RoundedCornerShape(15.dp))
             )
-            PostFeaturedImage(url = postUIModel.featuredImageUrl, modifier = Modifier
+            PostFeaturedImage(url = uiModel.featuredImageUrl, modifier = Modifier
                 .constrainAs(featuredImage) {
                     top.linkTo(postContainer.top, 15.dp)
                     bottom.linkTo(postContainer.bottom, 15.dp)
                     end.linkTo(postContainer.end, 15.dp)
                 })
             PostTitle(
-                title = postUIModel.title, modifier = Modifier.constrainAs(title) {
+                title = uiModel.title, modifier = Modifier.constrainAs(title) {
                     top.linkTo(postContainer.top, 15.dp)
                     start.linkTo(postContainer.start, 20.dp)
-                    postUIModel.featuredImageUrl?.run {
+                    uiModel.featuredImageUrl?.run {
                         end.linkTo(featuredImage.start, margin = 15.dp)
                     } ?: run {
                         end.linkTo(postContainer.end, margin = 20.dp)
@@ -249,10 +256,10 @@ class BlazeOverlayFragment : Fragment() {
                 }.wrapContentHeight()
             )
             val url = createRef()
-            PostUrl(url = postUIModel.url, modifier = Modifier.constrainAs(url) {
+            PostUrl(url = uiModel.url, modifier = Modifier.constrainAs(url) {
                 top.linkTo(title.bottom)
                 start.linkTo(postContainer.start, 20.dp)
-                postUIModel.featuredImageUrl?.run {
+                uiModel.featuredImageUrl?.run {
                     end.linkTo(featuredImage.start, margin = 15.dp)
                 } ?: run {
                     end.linkTo(postContainer.end, margin = 20.dp)
@@ -350,7 +357,7 @@ class BlazeOverlayFragment : Fragment() {
     private fun PreviewBlazeOverlayScreenPostFlow() {
         AppTheme {
             BlazeOverlayScreen(
-                postModelState = BlazeUiState.PromoteScreen.PromotePost(
+                content = BlazeUiState.PromoteScreen.PromotePost(
                     PostUIModel(
                         postId = 119,
                         title = "Post title long enough to be truncated and this is not just a test to see " +
