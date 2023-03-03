@@ -120,39 +120,22 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     private fun SiteCreationPreviewScreenDefaultBinding.observeState() {
-        viewModel.uiState.observe(this@SiteCreationPreviewFragment) { uiState ->
-            uiState?.let {
-                when (uiState) {
-                    is SitePreviewContentUiState -> updateContentLayout(uiState.data)
-                    is SitePreviewWebErrorUiState -> updateContentLayout(uiState.data)
-                    is SitePreviewLoadingShimmerState -> updateContentLayout(uiState.data)
-                    is SitePreviewFullscreenProgressUiState ->
-                        siteCreationProgressCreatingSite.updateLoadingLayout(uiState)
-                    is SitePreviewFullscreenErrorUiState ->
-                        fullscreenErrorWithRetry.updateErrorLayout(uiState)
+        viewModel.uiState.observe(this@SiteCreationPreviewFragment) {
+            it?.run {
+                when (val ui = this@run) {
+                    is SitePreviewContentUiState -> updateContentLayout(ui.data)
+                    is SitePreviewWebErrorUiState -> updateContentLayout(ui.data)
+                    is SitePreviewLoadingShimmerState -> updateContentLayout(ui.data)
+                    is SitePreviewFullscreenProgressUiState -> siteCreationProgressCreatingSite.updateLoadingLayout(ui)
+                    is SitePreviewFullscreenErrorUiState -> fullscreenErrorWithRetry.updateErrorLayout(ui)
                 }
-                uiHelpers.updateVisibility(
-                    siteCreationProgressCreatingSite.progressLayout,
-                    uiState.fullscreenProgressLayoutVisibility
-                )
-
-                uiHelpers.updateVisibility(contentLayout, uiState.contentLayoutVisibility)
-                uiHelpers.updateVisibility(
-                    siteCreationPreviewWebViewContainer.sitePreviewWebView,
-                    uiState.webViewVisibility
-                )
-                uiHelpers.updateVisibility(
-                    siteCreationPreviewWebViewContainer.sitePreviewWebError,
-                    uiState.webViewErrorVisibility
-                )
-                uiHelpers.updateVisibility(
-                    siteCreationPreviewWebViewContainer.sitePreviewWebViewShimmerLayout,
-                    uiState.shimmerVisibility
-                )
-                uiHelpers.updateVisibility(
-                    fullscreenErrorWithRetry.errorLayout,
-                    uiState.fullscreenErrorLayoutVisibility
-                )
+                uiHelpers.updateVisibility(contentLayout, contentLayoutVisibility)
+                uiHelpers.updateVisibility(fullscreenErrorWithRetry.errorLayout, fullscreenErrorLayoutVisibility)
+                siteCreationPreviewWebViewContainer.apply {
+                    uiHelpers.updateVisibility(sitePreviewWebView, webViewVisibility)
+                    uiHelpers.updateVisibility(sitePreviewWebError, webViewErrorVisibility)
+                    uiHelpers.updateVisibility(sitePreviewWebViewShimmerLayout, shimmerVisibility)
+                }
             }
         }
     }
