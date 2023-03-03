@@ -2531,14 +2531,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jp_install_full_plugin_flow_success";
             case JETPACK_INSTALL_FULL_PLUGIN_FLOW_DONE_TAPPED:
                 return "jp_install_full_plugin_flow_done_tapped";
-            case BLAZE_FEATURE_DISPLAYED:
-                return "blaze_feature_displayed";
-            case BLAZE_FEATURE_TAPPED:
-                return "blaze_feature_tapped";
-            case BLAZE_FEATURE_MENU_ACCESSED:
-                return "blaze_feature_menu_accessed";
-            case BLAZE_FEATURE_HIDE_TAPPED:
-                return "blaze_feature_hide_tapped";
+            case BLAZE_ENTRY_POINT_DISPLAYED:
+                return "blaze_entry_point_displayed";
+            case BLAZE_ENTRY_POINT_TAPPED:
+                return "blaze_entry_point_tapped";
+            case BLAZE_ENTRY_POINT_MENU_ACCESSED:
+                return "blaze_entry_point_menu_accessed";
+            case BLAZE_ENTRY_POINT_HIDE_TAPPED:
+                return "blaze_entry_point_hide_tapped";
             case BLAZE_FEATURE_OVERLAY_DISPLAYED:
                 return "blaze_overlay_displayed";
             case BLAZE_FEATURE_OVERLAY_PROMOTE_CLICKED:

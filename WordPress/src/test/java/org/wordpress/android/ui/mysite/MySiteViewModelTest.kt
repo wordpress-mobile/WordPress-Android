@@ -3267,7 +3267,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onPromoteWithBlazeCardMenuClicked.invoke()
 
         verify(blazeFeatureUtils).track(
-            Stat.BLAZE_FEATURE_MENU_ACCESSED,
+            Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
             BlazeFlowSource.DASHBOARD_CARD
         )
     }
@@ -3279,7 +3279,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onPromoteWithBlazeCardHideThisClick.invoke()
 
         verify(blazeFeatureUtils).track(
-            Stat.BLAZE_FEATURE_HIDE_TAPPED,
+            Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
             BlazeFlowSource.DASHBOARD_CARD
         )
     }
