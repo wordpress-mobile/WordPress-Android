@@ -53,7 +53,7 @@ class BlazeViewModel @Inject constructor(
             url = UrlUtils.removeScheme(postModel.url),
             featuredImageUrl = featuredImageTracker.getFeaturedImageUrl(
                 siteSelectedSiteRepository.getSelectedSite()!!,
-                postModel.imageUrl
+                postModel.featuredImageId
             )
         )
         _uiState.value = BlazeUiState.PromoteScreen.PromotePost(updatedPostModel)
@@ -65,7 +65,7 @@ class BlazeViewModel @Inject constructor(
             url = UrlUtils.removeScheme(pageModel.url),
             featuredImageUrl = featuredImageTracker.getFeaturedImageUrl(
                 siteSelectedSiteRepository.getSelectedSite()!!,
-                pageModel.imageUrl
+                pageModel.featuredImageId
             )
         )
         _uiState.value = BlazeUiState.PromoteScreen.PromotePage(updatedPageModel)

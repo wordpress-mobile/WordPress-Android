@@ -34,7 +34,7 @@ data class PostUIModel(
     val postId: Long,
     override val title: String,
     override val url: String,
-    val imageUrl: Long,
+    val featuredImageId: Long,
     override val featuredImageUrl: String?
 ) : BlazeUIModel
 
@@ -43,7 +43,7 @@ data class PageUIModel(
     val pageId: Long,
     override val title: String,
     override val url: String,
-    val imageUrl: Long,
+    val featuredImageId: Long,
     override val featuredImageUrl: String?
 ) : BlazeUIModel
 

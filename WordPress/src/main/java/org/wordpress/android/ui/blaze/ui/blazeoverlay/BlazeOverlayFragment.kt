@@ -364,7 +364,7 @@ class BlazeOverlayFragment : Fragment() {
                                 "how it looks",
                         url = "www.google.long.ttiiitititititiit.com/blog./24/2021/05/12" +
                                 "/this-is-a-test-post/trucncation is happeniding",
-                        imageUrl = 357,
+                        featuredImageId = 357,
                         featuredImageUrl = "https://ajeshrpai.in/wp-content/uploads/2023/02/wp-1677490974228.jpg"
                     )
                 )
