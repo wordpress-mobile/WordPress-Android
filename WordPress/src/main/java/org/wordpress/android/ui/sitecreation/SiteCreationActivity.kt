@@ -210,13 +210,9 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.onDomainsScreenFinished(domain)
     }
 
-    override fun onSiteCreationCompleted() {
-        mainViewModel.onSiteCreationCompleted()
-    }
+    override fun onSiteCreationCompleted() = mainViewModel.onSiteCreationCompleted()
 
-    override fun onSitePreviewScreenDismissed(createSiteState: CreateSiteState) {
-        mainViewModel.onSitePreviewScreenFinished(createSiteState)
-    }
+    override fun onPreviewScreenDismissed(state: CreateSiteState) = mainViewModel.onProgressOrPreviewFinished(state)
 
     override fun onHelpClicked(origin: Origin) {
         ActivityLauncher.viewHelp(this, origin, null, null)
