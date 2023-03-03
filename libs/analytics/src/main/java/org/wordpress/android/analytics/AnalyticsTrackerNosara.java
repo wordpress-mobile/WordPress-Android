@@ -2545,6 +2545,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blaze_overlay_button_tapped";
             case BLAZE_FEATURE_OVERLAY_DISMISSED:
                 return "blaze_overlay_dismissed";
+            case BLAZE_FLOW_STARTED:
+                return "blaze_flow_started";
+            case BLAZE_FLOW_COMPLETED:
+                return "blaze_flow_completed";
+            case BLAZE_FLOW_CANCELED:
+                return "blaze_flow_canceled";
+            case BLAZE_FLOW_ERROR:
+                return "blaze_flow_error";
         }
         return null;
     }
