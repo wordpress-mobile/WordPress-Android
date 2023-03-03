@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem
@@ -43,7 +44,6 @@ import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.BlazeFeatureConfig
 import org.wordpress.android.util.map
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.merge
@@ -72,7 +72,7 @@ class WPMainActivityViewModel @Inject constructor(
     private val bloggingPromptsStore: BloggingPromptsStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val blazeFeatureConfig: BlazeFeatureConfig,
+    private val blazeFeatureUtils: BlazeFeatureUtils,
     private val blazeStore: BlazeStore
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -337,7 +337,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun fetchBlazeStatusIfNeeded(site: SiteModel?) {
-        if (blazeFeatureConfig.isEnabled() && site != null) {
+        if (site != null && blazeFeatureUtils.isBlazeEligibleForUser(site)) {
             launch {
                blazeStore.fetchBlazeStatus(site)
             }

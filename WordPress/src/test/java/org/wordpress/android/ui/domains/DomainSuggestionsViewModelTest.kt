@@ -8,12 +8,15 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.Constants.TYPE_DOMAINS_PRODUCT
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
@@ -27,7 +30,6 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistr
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.ui.plans.PlansConstants
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 import org.wordpress.android.util.helpers.Debouncer
 
@@ -40,7 +42,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     lateinit var debouncer: Debouncer
 
     @Mock
-    lateinit var tracker: AnalyticsTrackerWrapper
+    lateinit var tracker: DomainsRegistrationTracker
 
     @Mock
     lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
@@ -119,6 +121,17 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         viewModel.isIntroVisible.value?.let { isIntroVisible ->
             assert(isIntroVisible)
         }
+    }
+
+    @Test
+    fun `domain products are fetched only at first start`() = test {
+        whenever(productsStore.fetchProducts(any())).thenReturn(mock())
+
+        viewModel.start(site, domainRegistrationPurpose)
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+
+        verify(productsStore).fetchProducts(eq(TYPE_DOMAINS_PRODUCT))
     }
 
     @Test
