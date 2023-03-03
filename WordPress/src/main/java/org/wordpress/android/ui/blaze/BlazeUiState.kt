@@ -10,7 +10,7 @@ sealed class BlazeUiState {
     sealed class PromoteScreen : BlazeUiState() {
         data class PromotePost(val postUIModel: PostUIModel) : PromoteScreen()
         object Site : PromoteScreen()
-        object Page : PromoteScreen()
+        data class PromotePage(val pagesUIModel: PageUIModel) : PromoteScreen()
     }
     object WebViewScreen : BlazeUiState()
     object Done : BlazeUiState()
@@ -23,6 +23,7 @@ enum class BlazeFlowSource(val trackingName: String) {
     STATS_POST("stats_post"),
     PAGES_LIST("pages_list")
 }
+sealed interface BlazeUIModel: Parcelable
 
 @Parcelize
 data class PostUIModel(
@@ -31,7 +32,16 @@ data class PostUIModel(
     val url: String,
     val imageUrl: Long,
     val featuredImageUrl: String?
-) : Parcelable
+) : BlazeUIModel
+
+@Parcelize
+data class PageUIModel(
+    val postId: Long,
+    val title: String,
+    val url: String,
+    val imageUrl: Long,
+    val featuredImageUrl: String?
+) : BlazeUIModel
 
 sealed class BlazeWebViewHeaderUiState(
     @StringRes open val headerActionText: Int,
