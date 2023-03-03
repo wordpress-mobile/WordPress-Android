@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel;
+import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
@@ -46,6 +47,7 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.blaze.BlazeFlowSource;
 import org.wordpress.android.ui.blaze.BlazeParentActivity;
+import org.wordpress.android.ui.blaze.PageUIModel;
 import org.wordpress.android.ui.blaze.PostUIModel;
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
@@ -147,7 +149,7 @@ import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.blaze.BlazeParentActivityKt.ARG_BLAZE_FLOW_SOURCE;
-import static org.wordpress.android.ui.blaze.BlazeParentActivityKt.ARG_EXTRA_POST_ID;
+import static org.wordpress.android.ui.blaze.BlazeParentActivityKt.ARG_EXTRA_BLAZE_UI_MODEL;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
@@ -1827,8 +1829,23 @@ public class ActivityLauncher {
                     postModel.getLink(),
                     postModel.getFeaturedImageId(),
                     null);
-            intent.putExtra(ARG_EXTRA_POST_ID, postUIModel);
+            intent.putExtra(ARG_EXTRA_BLAZE_UI_MODEL, postUIModel);
         }
+        intent.putExtra(ARG_BLAZE_FLOW_SOURCE, source);
+        context.startActivity(intent);
+    }
+
+    public static void openPromoteWithBlaze(@NonNull Context context,
+                                            @NonNull PageModel page,
+                                            @NonNull BlazeFlowSource source) {
+        Intent intent = new Intent(context, BlazeParentActivity.class);
+        PageUIModel pageUIModel = new PageUIModel(
+                page.getPost().getRemotePostId(),
+                page.getPost().getTitle(),
+                page.getPost().getLink(),
+                page.getPost().getFeaturedImageId(),
+                null);
+        intent.putExtra(ARG_EXTRA_BLAZE_UI_MODEL, pageUIModel);
         intent.putExtra(ARG_BLAZE_FLOW_SOURCE, source);
         context.startActivity(intent);
     }
