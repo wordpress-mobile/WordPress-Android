@@ -170,6 +170,9 @@ class PagesViewModel
     private val _publishAction = SingleLiveEvent<PageModel>()
     val publishAction = _publishAction
 
+    private val _navigateToBlazeOverlay = SingleLiveEvent<PostModel>()
+    val navigateToBlazeOverlay = _navigateToBlazeOverlay
+
     private var isInitialized = false
     private var scrollToPageId: Long? = null
 
@@ -450,8 +453,15 @@ class PagesViewModel
             SET_AS_POSTS_PAGE -> setPostsPage(page.remoteId)
             COPY -> onCopyPage(page)
             COPY_LINK -> context?.let { copyPageLink(page, it) }
+            PROMOTE_WITH_BLAZE -> navigateToBlazeOverlay(page.remoteId)
         }
         return true
+    }
+
+    private fun navigateToBlazeOverlay(remoteId: Long) {
+        val page = pageMap[remoteId]
+        val postModel = page?.post?: return
+        _navigateToBlazeOverlay.postValue(postModel)
     }
 
     private fun deletePage(page: Page) {
