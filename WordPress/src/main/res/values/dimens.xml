@@ -488,8 +488,6 @@
 
     <dimen name="jetpack_terms_and_conditions_width">250dp</dimen>
     <dimen name="jetpack_text_width">290dp</dimen>
-    <dimen name="jetpack_remote_install_container_padding">30dp</dimen>
-    <dimen name="jetpack_remote_install_icon_size">88dp</dimen>
     <dimen name="jetpack_new_remote_install_icon_size">64dp</dimen>
 
     <!-- pages -->

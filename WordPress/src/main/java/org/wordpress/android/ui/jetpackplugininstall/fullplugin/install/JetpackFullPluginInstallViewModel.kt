@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.accounts.HelpActivity
