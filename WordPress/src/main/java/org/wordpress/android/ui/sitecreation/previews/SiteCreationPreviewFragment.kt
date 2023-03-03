@@ -50,13 +50,13 @@ private const val SLIDE_IN_ANIMATION_DURATION = 450L
 @AndroidEntryPoint
 class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     ErrorManagedWebViewClientListener {
+    @Inject
+    internal lateinit var uiHelpers: UiHelpers
+
     /**
      * We need to connect to the service, so the service knows when the app is in the background. The service
      * automatically shows system notifications when site creation is in progress and the app is in the background.
      */
-    @Inject
-    internal lateinit var uiHelpers: UiHelpers
-
     private var serviceEventConnection: ServiceEventConnection? = null
     private var animatorSet: AnimatorSet? = null
     private val isLandscape get() = resources.configuration.orientation == ORIENTATION_LANDSCAPE
