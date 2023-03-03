@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel.pages
 
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
@@ -33,63 +32,85 @@ class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeat
         uploadUiState: PostUploadUiState,
         siteModel: SiteModel,
         remoteId: Long,
-        isPageEligibleForBlaze:Boolean = false
+        isPageEligibleForBlaze: Boolean = false
     ): Set<Action> {
         return when (listType) {
-            SCHEDULED -> mutableSetOf(
-                VIEW_PAGE,
-                SET_PARENT,
-                COPY_LINK,
-                MOVE_TO_DRAFT,
-                MOVE_TO_TRASH
-            ).apply {
-                if (canCancelPendingAutoUpload(uploadUiState)) {
-                    add(CANCEL_AUTO_UPLOAD)
-                }
-            }
-            PUBLISHED -> {
-                mutableSetOf(
-                    VIEW_PAGE,
-                    COPY,
-                    COPY_LINK,
-                    SET_PARENT
-                ).apply {
-                    if (siteModel.isUsingWpComRestApi &&
-                        siteModel.showOnFront == ShowOnFront.PAGE.value &&
-                        remoteId > 0
-                    ) {
-                        if (siteModel.pageOnFront != remoteId) {
-                            add(SET_AS_HOMEPAGE)
-                        }
-                        if (siteModel.pageForPosts != remoteId) {
-                            add(SET_AS_POSTS_PAGE)
-                        }
-                    }
-
-                    if (siteModel.pageOnFront != remoteId && listType == PUBLISHED) {
-                        add(MOVE_TO_DRAFT)
-                        add(MOVE_TO_TRASH)
-                    }
-
-                    if (canCancelPendingAutoUpload(uploadUiState)) {
-                        add(CANCEL_AUTO_UPLOAD)
-                    }
-
-                    if(isPageEligibleForBlaze && blazeFeatureUtils.isBlazeEnabled()) {
-                        add(PROMOTE_WITH_BLAZE)
-                    }
-                }
-            }
-            DRAFTS -> mutableSetOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, COPY_LINK).apply {
-                if (canCancelPendingAutoUpload(uploadUiState)) {
-                    add(CANCEL_AUTO_UPLOAD)
-                }
-            }
+            SCHEDULED -> return getScheduledPageActions(uploadUiState)
+            PUBLISHED -> return getPublishedPageActions(
+                siteModel,
+                remoteId,
+                listType,
+                uploadUiState,
+                isPageEligibleForBlaze
+            )
+            DRAFTS -> getDraftsPageActions(uploadUiState)
             TRASHED -> setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY)
+        }
+    }
+
+    private fun getScheduledPageActions(uploadUiState: PostUploadUiState): MutableSet<Action> {
+        return mutableSetOf(
+            VIEW_PAGE,
+            SET_PARENT,
+            COPY_LINK,
+            MOVE_TO_DRAFT,
+            MOVE_TO_TRASH
+        ).apply {
+            if (canCancelPendingAutoUpload(uploadUiState)) {
+                add(CANCEL_AUTO_UPLOAD)
+            }
         }
     }
 
     private fun canCancelPendingAutoUpload(uploadUiState: PostUploadUiState) =
         (uploadUiState is UploadWaitingForConnection ||
                 (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload))
+
+    private fun getPublishedPageActions(
+        siteModel: SiteModel,
+        remoteId: Long,
+        listType: PageListType,
+        uploadUiState: PostUploadUiState,
+        isPageEligibleForBlaze: Boolean
+    ): MutableSet<Action> {
+        return mutableSetOf(
+            VIEW_PAGE,
+            COPY,
+            COPY_LINK,
+            SET_PARENT
+        ).apply {
+            if (siteModel.isUsingWpComRestApi &&
+                siteModel.showOnFront == ShowOnFront.PAGE.value &&
+                remoteId > 0
+            ) {
+                if (siteModel.pageOnFront != remoteId) {
+                    add(SET_AS_HOMEPAGE)
+                }
+                if (siteModel.pageForPosts != remoteId) {
+                    add(SET_AS_POSTS_PAGE)
+                }
+            }
+
+            if (siteModel.pageOnFront != remoteId && listType == PUBLISHED) {
+                add(MOVE_TO_DRAFT)
+                add(MOVE_TO_TRASH)
+            }
+
+            if (canCancelPendingAutoUpload(uploadUiState)) {
+                add(CANCEL_AUTO_UPLOAD)
+            }
+
+            if (isPageEligibleForBlaze && blazeFeatureUtils.isBlazeEnabled()) {
+                add(PROMOTE_WITH_BLAZE)
+            }
+        }
+    }
+
+    private fun getDraftsPageActions(uploadUiState: PostUploadUiState): MutableSet<Action> {
+        return mutableSetOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, COPY_LINK).apply {
+            if (canCancelPendingAutoUpload(uploadUiState)) {
+                add(CANCEL_AUTO_UPLOAD)
+            }
+        }
+    }
 }
