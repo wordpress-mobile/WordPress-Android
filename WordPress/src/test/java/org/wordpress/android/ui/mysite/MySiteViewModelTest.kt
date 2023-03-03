@@ -3375,7 +3375,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsSocialEnabled)
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsEnabled)
         whenever(jetpackBrandingUtils.shouldShowJetpackBranding()).thenReturn(shouldShowJetpackBranding)
-        whenever(blazeFeatureUtils.shouldShowBlazeEntryPoint(any())).thenReturn(isBlazeEnabled)
+        whenever(blazeFeatureUtils.shouldShowBlazeEntryPoint(any(), any())).thenReturn(isBlazeEnabled)
         if (isSiteUsingWpComRestApi) {
             site.setIsWPCom(true)
             site.setIsJetpackConnected(true)
@@ -3548,7 +3548,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                     add(initPostCard(mockInvocation))
                     add(initTodaysStatsCard(mockInvocation))
                     if (bloggingPromptsFeatureConfig.isEnabled()) add(initBloggingPromptCard(mockInvocation))
-                    if (blazeFeatureUtils.shouldShowBlazeEntryPoint(BlazeStatusModel(1, true))) add(
+                    if (blazeFeatureUtils.shouldShowBlazeEntryPoint(
+                            BlazeStatusModel(1, true), 1)
+                    ) add(
                         initPromoteWithBlazeCard(mockInvocation)
                     )
                 }
