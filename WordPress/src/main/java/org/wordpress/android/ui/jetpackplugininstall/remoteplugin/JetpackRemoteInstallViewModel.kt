@@ -59,7 +59,7 @@ class JetpackRemoteInstallViewModel
     private val dispatcher: Dispatcher,
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
-    //JetpackStore needs to be injected here as otherwise FluxC doesn't accept emitted events.
+    // JetpackStore needs to be injected here as otherwise FluxC doesn't accept emitted events.
     @Suppress("unused") private val jetpackStore: JetpackStore
 ) : ViewModel() {
     private val mutableViewState = MutableLiveData<UiState>()

@@ -12,7 +12,10 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PluginActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.store.PluginStore
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.install.JetpackFullPluginInstallAnalyticsTracker.Status
@@ -97,7 +100,7 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSitePluginInstalled(event: PluginStore.OnSitePluginInstalled) {
+    fun onSitePluginInstalled(event: OnSitePluginInstalled) {
         if (event.isError) {
             AppLog.d(
                 AppLog.T.PLUGINS,
@@ -113,7 +116,7 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSitePluginConfigured(event: PluginStore.OnSitePluginConfigured) {
+    fun onSitePluginConfigured(event: OnSitePluginConfigured) {
         if (event.isError) {
             AppLog.d(
                 AppLog.T.PLUGINS,
@@ -129,7 +132,7 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSiteChanged(event: SiteStore.OnSiteChanged) {
+    fun onSiteChanged(event: OnSiteChanged) {
         val success = if (event.isError) {
             AppLog.d(
                 AppLog.T.PLUGINS,
