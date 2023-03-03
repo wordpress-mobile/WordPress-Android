@@ -23,24 +23,28 @@ enum class BlazeFlowSource(val trackingName: String) {
     STATS_POST("stats_post"),
     PAGES_LIST("pages_list")
 }
-sealed interface BlazeUIModel: Parcelable
+sealed interface BlazeUIModel: Parcelable {
+    val title: String
+    val url: String
+    val featuredImageUrl: String?
+}
 
 @Parcelize
 data class PostUIModel(
     val postId: Long,
-    val title: String,
-    val url: String,
+    override val title: String,
+    override val url: String,
     val imageUrl: Long,
-    val featuredImageUrl: String?
+    override val featuredImageUrl: String?
 ) : BlazeUIModel
 
 @Parcelize
 data class PageUIModel(
-    val postId: Long,
-    val title: String,
-    val url: String,
+    val pageId: Long,
+    override val title: String,
+    override val url: String,
     val imageUrl: Long,
-    val featuredImageUrl: String?
+    override val featuredImageUrl: String?
 ) : BlazeUIModel
 
 sealed class BlazeWebViewHeaderUiState(

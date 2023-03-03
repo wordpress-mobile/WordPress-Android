@@ -8,7 +8,9 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
+import org.wordpress.android.ui.blaze.BlazeUIModel
 import org.wordpress.android.ui.blaze.BlazeUiState
+import org.wordpress.android.ui.blaze.PageUIModel
 import org.wordpress.android.ui.blaze.PostUIModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.PostListFeaturedImageTracker
@@ -33,28 +35,47 @@ class BlazeViewModel @Inject constructor(
     private val featuredImageTracker =
         PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
 
-    fun start(source: BlazeFlowSource, postId: PostUIModel?) {
+    fun start(source: BlazeFlowSource, blazeUIModel: BlazeUIModel?) {
         blazeFlowSource = source
-        initialize(postId)
+        blazeUIModel?.let { initializePromoteContentUIState(it) } ?: run { initializePromoteSiteUIState() }
     }
 
-    fun initialize(postModel: PostUIModel?) {
+    private fun initializePromoteContentUIState(blazeUIModel: BlazeUIModel) {
         blazeFeatureUtils.trackOverlayDisplayed(blazeFlowSource)
-        postModel?.let {
-            val updatedPostModel = updatePostModel(it)
-            _uiState.value = BlazeUiState.PromoteScreen.PromotePost(updatedPostModel)
-            _promoteUiState.value = BlazeUiState.PromoteScreen.PromotePost(updatedPostModel)
-        } ?: run {
-            _uiState.value = BlazeUiState.PromoteScreen.Site
-            _promoteUiState.value = BlazeUiState.PromoteScreen.Site
+        when(blazeUIModel) {
+            is PostUIModel -> initializePromotePostUIState(blazeUIModel)
+            is PageUIModel -> initializePromotePageUIState(blazeUIModel)
         }
     }
 
-    private fun updatePostModel(postModel: PostUIModel): PostUIModel {
-        val featuredImage =
-            featuredImageTracker.getFeaturedImageUrl(siteSelectedSiteRepository.getSelectedSite()!!, postModel.imageUrl)
-        val updatedUrl = UrlUtils.removeScheme(postModel.url)
-        return postModel.copy(url = updatedUrl, featuredImageUrl = featuredImage)
+    private fun initializePromotePostUIState(postModel: PostUIModel) {
+        val updatedPostModel = postModel.copy(
+            url = UrlUtils.removeScheme(postModel.url),
+            featuredImageUrl = featuredImageTracker.getFeaturedImageUrl(
+                siteSelectedSiteRepository.getSelectedSite()!!,
+                postModel.imageUrl
+            )
+        )
+        _uiState.value = BlazeUiState.PromoteScreen.PromotePost(updatedPostModel)
+        _promoteUiState.value = BlazeUiState.PromoteScreen.PromotePost(updatedPostModel)
+    }
+
+    private fun initializePromotePageUIState(pageModel: PageUIModel) {
+        val updatedPageModel = pageModel.copy(
+            url = UrlUtils.removeScheme(pageModel.url),
+            featuredImageUrl = featuredImageTracker.getFeaturedImageUrl(
+                siteSelectedSiteRepository.getSelectedSite()!!,
+                pageModel.imageUrl
+            )
+        )
+        _uiState.value = BlazeUiState.PromoteScreen.PromotePage(updatedPageModel)
+        _promoteUiState.value = BlazeUiState.PromoteScreen.PromotePage(updatedPageModel)
+    }
+
+    private fun initializePromoteSiteUIState() {
+        blazeFeatureUtils.trackOverlayDisplayed(blazeFlowSource)
+        _uiState.value = BlazeUiState.PromoteScreen.Site
+        _promoteUiState.value = BlazeUiState.PromoteScreen.Site
     }
 
     // to do: tracking logic and logic for done state - this might not be where we want to track
@@ -62,7 +83,7 @@ class BlazeViewModel @Inject constructor(
         when (currentBlazeUiState) {
             is BlazeUiState.PromoteScreen.Site -> _uiState.value = BlazeUiState.WebViewScreen
             is BlazeUiState.PromoteScreen.PromotePost -> _uiState.value = BlazeUiState.WebViewScreen
-            is BlazeUiState.PromoteScreen.Page -> _uiState.value = BlazeUiState.WebViewScreen
+            is BlazeUiState.PromoteScreen.PromotePage -> _uiState.value = BlazeUiState.WebViewScreen
             is BlazeUiState.WebViewScreen -> _uiState.value = BlazeUiState.Done
             else -> {}
         }
