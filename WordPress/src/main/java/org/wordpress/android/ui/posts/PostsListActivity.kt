@@ -37,6 +37,7 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_POSTS_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils.observeBottomSheet
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
@@ -120,6 +121,9 @@ class PostsListActivity : LocaleAwareActivity(),
 
     @Inject
     internal lateinit var bloggingRemindersViewModel: BloggingRemindersViewModel
+
+    @Inject
+    internal lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
     private lateinit var site: SiteModel
     private lateinit var binding: PostListActivityBinding
@@ -324,7 +328,8 @@ class PostsListActivity : LocaleAwareActivity(),
                     action,
                     remotePreviewLogicHelper,
                     previewStateHelper,
-                    mediaPickerLauncher
+                    mediaPickerLauncher,
+                    blazeFeatureUtils
                 )
             }
         })
