@@ -11,7 +11,6 @@ import android.text.TextUtils
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -29,8 +28,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.mobile.JetpackMigrationStore
-import org.wordpress.android.fluxc.store.mobile.MigrationCompleteFetchedPayload
 import org.wordpress.android.support.SupportHelper
 import org.wordpress.android.support.ZendeskExtraTags
 import org.wordpress.android.support.ZendeskHelper
@@ -40,6 +37,7 @@ import org.wordpress.android.ui.AppLogViewerActivity
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.SiteUtils
@@ -63,7 +61,7 @@ class HelpActivity : LocaleAwareActivity() {
     lateinit var supportHelper: SupportHelper
 
     @Inject
-    lateinit var jetpackMigrationStore: JetpackMigrationStore
+    lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Inject
     lateinit var zendeskHelper: ZendeskHelper
@@ -194,13 +192,11 @@ class HelpActivity : LocaleAwareActivity() {
     }
 
     private fun HelpActivityBinding.showContactUs() {
-        lifecycleScope.launchWhenStarted {
-                if (jetpackMigrationStore.migrationComplete() == MigrationCompleteFetchedPayload.Success) {
-                    JpFaqContainer.isVisible = true
-                    JpFaqContainerBottomDivider.isVisible = true
-                    AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_VIEWED)
-                    JpFaqContainer.setOnClickListener { showMigrationFaq() }
-                }
+        if (appPrefsWrapper.isJetpackMigrationCompleted()) {
+            JpFaqContainer.isVisible = true
+            JpFaqContainerBottomDivider.isVisible = true
+            AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_VIEWED)
+            JpFaqContainer.setOnClickListener { showMigrationFaq() }
         }
 
         contactUsButton.setOnClickListener { createNewZendeskTicket() }
