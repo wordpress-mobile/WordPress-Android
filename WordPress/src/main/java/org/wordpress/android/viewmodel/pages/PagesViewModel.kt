@@ -38,6 +38,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
@@ -482,6 +483,7 @@ class PagesViewModel
     }
 
     private fun navigateToBlazeOverlay(remoteId: Long) {
+        blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.PAGES_LIST)
         val page = pageMap[remoteId]
         page?.let { _navigateToBlazeOverlay.postValue(it) }
     }
