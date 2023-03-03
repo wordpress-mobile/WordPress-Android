@@ -12,6 +12,7 @@ class MySiteListItemViewHolder(
     private val uiHelpers: UiHelpers
 ) : MySiteCardAndItemViewHolder<MySiteItemBlockBinding>(parent.viewBinding(MySiteItemBlockBinding::inflate)) {
     fun bind(cardAndItem: ListItem) = with(binding) {
+        if (cardAndItem.disablePrimaryIconTint) mySiteItemPrimaryIcon.imageTintList = null
         uiHelpers.setImageOrHide(mySiteItemPrimaryIcon, cardAndItem.primaryIcon)
         uiHelpers.setImageOrHide(mySiteItemSecondaryIcon, cardAndItem.secondaryIcon)
         uiHelpers.setTextOrHide(mySiteItemPrimaryText, cardAndItem.primaryText)
