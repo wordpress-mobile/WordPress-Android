@@ -97,23 +97,16 @@
                     android:visibility="gone"
                     tools:visibility="visible">
 
-                    <com.airbnb.lottie.LottieAnimationView
-                        android:id="@+id/illustration_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_medium"
-                        android:scaleType="centerCrop"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:lottie_rawRes="@raw/wp2jp_left"
-                        app:lottie_enableMergePathsForKitKatAndAbove="true"
-                        app:lottie_autoPlay="true"
-                        app:lottie_loop="false" />
+                    <ImageView
+                        android:id="@+id/wp_jp_logo"
+                        android:layout_width="@dimen/margin_64dp"
+                        android:layout_height="@dimen/margin_64dp"
+                        android:contentDescription="@string/support_faq_caption"
+                        android:src="@drawable/ic_wordpress_jetpack_logo" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_extra_large"
                         android:text="@string/support_faq_title"
                         android:textAppearance="?attr/textAppearanceSubtitle1" />
 
