@@ -574,7 +574,7 @@ class MySiteViewModel @Inject constructor(
                     onRemoveClick = this::onBloggingPromptRemoveClick
                 ),
                 promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
-                    isEligible = blazeFeatureUtils.shouldShowPromoteWithBlazeCard(
+                    isEligible = blazeFeatureUtils.shouldShowBlazeEntryPoint(
                         promoteWithBlazeUpdate?.blazeStatusModel
                     ),
                     onClick = this::onPromoteWithBlazeCardClick,
@@ -611,7 +611,9 @@ class MySiteViewModel @Inject constructor(
                 enableStatsFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 enablePagesFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
-                onClick = this::onItemClick
+                onClick = this::onItemClick,
+                isBlazeEligible =
+                    blazeFeatureUtils.shouldShowBlazeEntryPoint(promoteWithBlazeUpdate?.blazeStatusModel)
             )
         )
 
@@ -874,6 +876,10 @@ class MySiteViewModel @Inject constructor(
                     SiteNavigationAction.OpenSite(selectedSite)
                 }
                 ListItemAction.JETPACK_SETTINGS -> SiteNavigationAction.OpenJetpackSettings(selectedSite)
+                ListItemAction.BLAZE -> {
+                    blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.MENU_ITEM)
+                    SiteNavigationAction.OpenPromoteWithBlazeOverlay(BlazeFlowSource.MENU_ITEM)
+                }
             }
             _onNavigation.postValue(Event(navigationAction))
         } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
@@ -1496,23 +1502,20 @@ class MySiteViewModel @Inject constructor(
 
     private fun onPromoteWithBlazeCardMoreMenuClick() {
         blazeFeatureUtils.track(
-            Stat.BLAZE_FEATURE_MENU_ACCESSED,
+            Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
             BlazeFlowSource.DASHBOARD_CARD
         )
     }
 
     private fun onPromoteWithBlazeCardClick() {
-        blazeFeatureUtils.track(
-            Stat.BLAZE_FEATURE_TAPPED,
-            BlazeFlowSource.DASHBOARD_CARD
-        )
+        blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.DASHBOARD_CARD)
         _onNavigation.value =
             Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
     }
 
     private fun onPromoteWithBlazeCardHideMenuItemClick() {
         blazeFeatureUtils.track(
-            Stat.BLAZE_FEATURE_HIDE_TAPPED,
+            Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
             BlazeFlowSource.DASHBOARD_CARD
         )
         blazeFeatureUtils.hidePromoteWithBlazeCard()

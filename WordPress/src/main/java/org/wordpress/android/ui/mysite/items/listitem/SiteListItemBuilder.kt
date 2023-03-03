@@ -10,6 +10,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModel
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.BACKUP
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.BLAZE
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.DOMAINS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.JETPACK_SETTINGS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PAGES
@@ -191,6 +192,17 @@ class SiteListItemBuilder @Inject constructor(
                 R.drawable.ic_cog_white_24dp,
                 UiStringRes(R.string.my_site_btn_site_settings),
                 onClick = ListItemInteraction.create(SITE_SETTINGS, onClick)
+            )
+        } else null
+    }
+
+    fun buildBlazeItemIfAvailable(isBlazeEligible: Boolean = false, onClick: (ListItemAction) -> Unit): ListItem? {
+        return if (isBlazeEligible) {
+            ListItem(
+                R.drawable.ic_promote_with_blaze,
+                UiStringRes(R.string.blaze_menu_item_label),
+                onClick = ListItemInteraction.create(BLAZE, onClick),
+                disablePrimaryIconTint = true
             )
         } else null
     }

@@ -36,7 +36,7 @@ class BlazeFeatureUtils @Inject constructor(
                 postModel.password.isEmpty()
     }
 
-    fun shouldShowPromoteWithBlazeCard(blazeStatusModel: BlazeStatusModel?): Boolean {
+    fun shouldShowBlazeEntryPoint(blazeStatusModel: BlazeStatusModel?): Boolean {
         val isEligible = blazeStatusModel?.isEligible == true
         return isBlazeEnabled() &&
                 isEligible &&
@@ -52,6 +52,13 @@ class BlazeFeatureUtils @Inject constructor(
 
     fun hidePromoteWithBlazeCard() {
         appPrefsWrapper.setShouldHidePromoteWithBlazeCard(true)
+    }
+
+    fun trackEntryPointTapped(blazeFlowSource: BlazeFlowSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_TAPPED,
+            mapOf(SOURCE to blazeFlowSource.trackingName)
+        )
     }
 
     private fun isPromoteWithBlazeCardHiddenByUser(): Boolean {
