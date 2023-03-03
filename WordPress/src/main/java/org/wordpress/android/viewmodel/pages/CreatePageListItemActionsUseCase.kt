@@ -33,7 +33,7 @@ class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeat
         uploadUiState: PostUploadUiState,
         siteModel: SiteModel,
         remoteId: Long,
-        postModel: PostModel? = null
+        isPageEligibleForBlaze:Boolean = false
     ): Set<Action> {
         return when (listType) {
             SCHEDULED -> mutableSetOf(
@@ -75,7 +75,7 @@ class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeat
                         add(CANCEL_AUTO_UPLOAD)
                     }
 
-                    if(postModel !=null && blazeFeatureUtils.isBlazeEligibleForPage(postModel)) {
+                    if(isPageEligibleForBlaze && blazeFeatureUtils.isBlazeEnabled()) {
                         add(PROMOTE_WITH_BLAZE)
                     }
                 }

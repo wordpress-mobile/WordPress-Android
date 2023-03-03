@@ -17,7 +17,7 @@ class BlazeFeatureUtils @Inject constructor(
     private val blazeFeatureConfig: BlazeFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
 ) {
-    private fun isBlazeEnabled(): Boolean {
+    fun isBlazeEnabled(): Boolean {
         return buildConfigWrapper.isJetpackApp &&
                 blazeFeatureConfig.isEnabled()
     }
@@ -33,11 +33,6 @@ class BlazeFeatureUtils @Inject constructor(
     ): Boolean {
         return isBlazeEnabled() &&
                 postStatus == PostStatus.PUBLISHED &&
-                postModel.password.isEmpty()
-    }
-
-    fun isBlazeEligibleForPage(postModel: PostModel): Boolean {
-        return isBlazeEnabled() &&
                 postModel.password.isEmpty()
     }
 

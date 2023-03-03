@@ -269,21 +269,22 @@ class CreatePageListItemActionsUseCaseTest {
         // Arrange
         val expectedActions = setOf(
             VIEW_PAGE,
-            SET_PARENT,
-            MOVE_TO_DRAFT,
-            MOVE_TO_TRASH,
             COPY,
             COPY_LINK,
+            SET_PARENT,
+            SET_AS_HOMEPAGE,
+            SET_AS_POSTS_PAGE,
+            MOVE_TO_DRAFT,
+            MOVE_TO_TRASH,
             PROMOTE_WITH_BLAZE
         )
-        val postModel = mock<PostModel>()
         site.showOnFront = ShowOnFront.PAGE.value
         site.setIsWPCom(true)
         site.setIsJetpackConnected(true)
-        whenever(blazeFeatureUtils.isBlazeEligibleForPage(postModel)).thenReturn(true)
+        whenever(blazeFeatureUtils.isBlazeEnabled()).thenReturn(true)
 
         // Act
-        val publishedActions = useCase.setupPageActions(PUBLISHED, mock(), site, defaultRemoteId, postModel)
+        val publishedActions = useCase.setupPageActions(PUBLISHED, mock(), site, defaultRemoteId, true)
 
         // Assert
         assertThat(publishedActions).isEqualTo(expectedActions)
