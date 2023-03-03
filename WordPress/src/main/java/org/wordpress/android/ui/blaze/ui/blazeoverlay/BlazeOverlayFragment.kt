@@ -237,13 +237,13 @@ class BlazeOverlayFragment : Fragment() {
                 }
                 .background(color = getThumbnailBackground(isInDarkTheme), shape = RoundedCornerShape(15.dp))
             )
-            PostFeaturedImage(url = uiModel.featuredImageUrl, modifier = Modifier
+            FeaturedImage(url = uiModel.featuredImageUrl, modifier = Modifier
                 .constrainAs(featuredImage) {
                     top.linkTo(postContainer.top, 15.dp)
                     bottom.linkTo(postContainer.bottom, 15.dp)
                     end.linkTo(postContainer.end, 15.dp)
                 })
-            PostTitle(
+            Title(
                 title = uiModel.title, modifier = Modifier.constrainAs(title) {
                     top.linkTo(postContainer.top, 15.dp)
                     start.linkTo(postContainer.start, 20.dp)
@@ -256,7 +256,7 @@ class BlazeOverlayFragment : Fragment() {
                 }.wrapContentHeight()
             )
             val url = createRef()
-            PostUrl(url = uiModel.url, modifier = Modifier.constrainAs(url) {
+            Url(url = uiModel.url, modifier = Modifier.constrainAs(url) {
                 top.linkTo(title.bottom)
                 start.linkTo(postContainer.start, 20.dp)
                 uiModel.featuredImageUrl?.run {
@@ -276,7 +276,7 @@ class BlazeOverlayFragment : Fragment() {
     }
 
     @Composable
-    private fun PostFeaturedImage(url: String?, modifier: Modifier = Modifier) {
+    private fun FeaturedImage(url: String?, modifier: Modifier = Modifier) {
         val painter = rememberImagePainter(url) {
             placeholder(R.drawable.bg_rectangle_placeholder_globe_margin_8dp)
             error(R.drawable.bg_rectangle_placeholder_globe_margin_8dp)
@@ -294,7 +294,7 @@ class BlazeOverlayFragment : Fragment() {
 
 
     @Composable
-    private fun PostTitle(title: String, modifier: Modifier = Modifier) {
+    private fun Title(title: String, modifier: Modifier = Modifier) {
         Text(
             text = title,
             style = MaterialTheme.typography.body1,
@@ -307,7 +307,7 @@ class BlazeOverlayFragment : Fragment() {
     }
 
     @Composable
-    private fun PostUrl(url: String, modifier: Modifier = Modifier) {
+    private fun Url(url: String, modifier: Modifier = Modifier) {
         Text(
             text = url,
             style = MaterialTheme.typography.body2,
