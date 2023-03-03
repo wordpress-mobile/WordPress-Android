@@ -501,8 +501,12 @@ class PageListViewModel @Inject constructor(
         )
     }
 
-    private fun isPageBlazeEligible(pageModel: PageModel) =
-        listType == PUBLISHED && pagesViewModel.blazeSiteEligibility.value ?: false && pageModel.post.password.isEmpty()
+    private fun isPageBlazeEligible(pageModel: PageModel): Boolean {
+        val pageStatus = PageStatus.fromPost(pageModel.post)
+
+       return listType == PUBLISHED && pageStatus != PageStatus.PRIVATE
+                && pagesViewModel.blazeSiteEligibility.value ?: false && pageModel.post.password.isEmpty()
+    }
 
     private data class ItemUiStateData(
         val labels: List<UiString>,
