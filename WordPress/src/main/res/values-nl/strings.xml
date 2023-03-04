@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-15 20:54:08+0000
+Translation-Revision-Date: 2023-03-01 11:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">Blokkenmenu</string>
+    <string name="promote_blaze_card_menu_hide_this">Dit verbergen</string>
+    <string name="promote_blaze_card_sub_title">Stel je werk tentoon op miljoenen sites.</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Neem contact op met de ondersteuning</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">De volledige plug-in installeren</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Door Jetpack in te stellen, ga je akkoord met onze </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">volledige Jetpack-plug-in</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">individuele Jetpack-plug-ins</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">de %1$s-plug-in</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s gebruikt %2$s. Deze ondersteunen nog niet alle functies van de app.\n\nInstalleer de %3$s om de app met deze site te gebruiken.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Installeer de volledige Jetpack-plug-in</string>
+    <string name="my_site_jp_install_full_plugin_card_content">Deze site gebruikt een afzonderlijke plug-in. Deze plug-in ondersteunt nog niet alle functies van de app. Installeer de volledige Jetpack-plug-in.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">Neem contact op met de ondersteuning</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">Opnieuw proberen</string>
+    <string name="jetpack_full_plugin_install_error_title">Er is een probleem opgetreden</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Foutpictogram</string>
+    <string name="jetpack_full_plugin_install_done_button">Gereed</string>
+    <string name="jetpack_full_plugin_install_done_description">Gereed om deze site met de app te gebruiken.</string>
+    <string name="jetpack_full_plugin_install_installing_title">Jetpack installeren</string>
+    <string name="jetpack_full_plugin_install_initial_button">Doorgaan</string>
+    <string name="jetpack_full_plugin_install_initial_description">De inloggegevens voor je website zullen niet worden opgeslagen en worden alleen gebruikt om Jetpack te installeren.</string>
+    <string name="jetpack_full_plugin_install_initial_title">Jetpack installeren</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack-pictogram</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Ontgrendel de volledige functionaliteit van je site. Krijg statistieken, meldingen en meer met Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Je site heeft de Jetpack-plugin</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">De Jetpack mobiele app is ontworpen om samen met de Jetpack-plugin te werken. Stap nu over om toegang te krijgen tot Statistieken, Meldingen, Reader en meer.</string>

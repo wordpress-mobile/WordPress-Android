@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-08 18:34:25+0000
+Translation-Revision-Date: 2023-02-28 16:22:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">Menu blloqesh</string>
+    <string name="promote_blaze_card_menu_hide_this">Fshihe këtë</string>
+    <string name="promote_blaze_card_sub_title">Shfaqeni punën tuaj nëpër miliona sajte.</string>
+    <string name="promote_blaze_card_title">Promovoni lëndën tuaj përmes Blaze-i</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Mbylle</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Lidhuni me asistencën</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Instaloni shtojcën e plotë</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Terma dhe kushte</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Duke instaluar Jetpack-un, pajtoheni me </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">shtojcë Jetpack e plotë</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">shtojca individuale Jetpack</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">shtojca %1$s</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s po përdor %2$s, që s’mbulon ende krejt veçoritë e aplikacionit.\n\nQë të përdorni aplikacionin në këtë sajt, ju lutemi, instaloni %3$s.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Ju lutemi, instaloni të plotë shtojcën Jetpack</string>
+    <string name="only_one_primary_site_message">Ka vetëm një sajt, ndaj s’mund të ndryshoni sajtin tuaj parësor.</string>
+    <string name="my_site_jp_install_full_plugin_card_content">Ky sajt përdor një shtojcë individuale, e cila s’mbulon ende krejt veçoritë e aplikacionit. Ju lutemi, instaloni të plotë shtojcën Jetpack.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">Lidhuni me Asistencën</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">Riprovoni</string>
+    <string name="jetpack_full_plugin_install_error_description">Jetpack-u s’u instalua dot këtë herë.</string>
+    <string name="jetpack_full_plugin_install_error_title">Pati një problem</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Ikonë gabimi</string>
+    <string name="jetpack_full_plugin_install_done_button">U bë</string>
+    <string name="jetpack_full_plugin_install_done_description">Gati për përdorim të këtij sajti me aplikacionin.</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack-u u instalua</string>
+    <string name="jetpack_full_plugin_install_installing_description">Po instalohet Jetpack-u në sajtin tuaj. Kjo mund të marrë ca minuta për t’u plotësuar.</string>
+    <string name="jetpack_full_plugin_install_installing_title">Instalim i Jetpack-ut</string>
+    <string name="jetpack_full_plugin_install_initial_button">Vazhdo</string>
+    <string name="jetpack_full_plugin_install_initial_description">Kredencialet tuaja për në sajt nuk do të depozitohen dhe përdoren vetëm për qëllimin e instalimit të Jetpack-ut.</string>
+    <string name="jetpack_full_plugin_install_initial_title">Instaloni Jetpack-un</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Ikonë Jetpack</string>
+    <string name="button_promote_with_blaze">Promovojeni me Blaze</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Çlironi potencialin e plotë të sajtit tuaj. Merrni statistika, njoftime, etj me Jetpack-un.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Sajti juaj e ka shtojcën Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Aplikacioni Jetpack për celular është menduar të punojë tok me shtojcën Jetpack. Kaloni që tani në të, që të mund të përdorni statistikat, njoftimet, lexuesin, etj.</string>
