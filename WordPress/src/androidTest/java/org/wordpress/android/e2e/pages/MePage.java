@@ -55,7 +55,7 @@ public class MePage {
     }
 
     public boolean isSelfHosted() {
-        waitForElementToBeDisplayed(R.id.row_logout);
+        waitForElementToBeDisplayed(R.id.row_app_settings);
         return isElementDisplayed(onView(withText(R.string.sign_in_wpcom)));
     }
 
@@ -67,7 +67,6 @@ public class MePage {
         ViewInteraction logOutButton = onView(allOf(
                 withId(R.id.me_login_logout_text_view),
                 withText(getCurrentActivity().getString(R.string.me_disconnect_from_wordpress_com))));
-        waitForElementToBeDisplayed(logOutButton);
         while (!isElementDisplayed(android.R.id.button1)) {
             scrollToThenClickOn(logOutButton);
         }

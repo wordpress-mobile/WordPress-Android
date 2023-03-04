@@ -2531,6 +2531,28 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jp_install_full_plugin_flow_success";
             case JETPACK_INSTALL_FULL_PLUGIN_FLOW_DONE_TAPPED:
                 return "jp_install_full_plugin_flow_done_tapped";
+            case BLAZE_ENTRY_POINT_DISPLAYED:
+                return "blaze_entry_point_displayed";
+            case BLAZE_ENTRY_POINT_TAPPED:
+                return "blaze_entry_point_tapped";
+            case BLAZE_ENTRY_POINT_MENU_ACCESSED:
+                return "blaze_entry_point_menu_accessed";
+            case BLAZE_ENTRY_POINT_HIDE_TAPPED:
+                return "blaze_entry_point_hide_tapped";
+            case BLAZE_FEATURE_OVERLAY_DISPLAYED:
+                return "blaze_overlay_displayed";
+            case BLAZE_FEATURE_OVERLAY_PROMOTE_CLICKED:
+                return "blaze_overlay_button_tapped";
+            case BLAZE_FEATURE_OVERLAY_DISMISSED:
+                return "blaze_overlay_dismissed";
+            case BLAZE_FLOW_STARTED:
+                return "blaze_flow_started";
+            case BLAZE_FLOW_COMPLETED:
+                return "blaze_flow_completed";
+            case BLAZE_FLOW_CANCELED:
+                return "blaze_flow_canceled";
+            case BLAZE_FLOW_ERROR:
+                return "blaze_flow_error";
         }
         return null;
     }

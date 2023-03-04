@@ -14,12 +14,11 @@ import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.Finis
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationDetails
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationResult
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainSuggestions
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
 class DomainRegistrationMainViewModelTest : BaseUnitTest() {
     @Mock
-    lateinit var tracker: AnalyticsTrackerWrapper
+    lateinit var tracker: DomainsRegistrationTracker
 
     @Mock
     lateinit var site: SiteModel

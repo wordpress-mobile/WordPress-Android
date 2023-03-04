@@ -17,8 +17,10 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteT
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem
@@ -69,7 +71,9 @@ class WPMainActivityViewModel @Inject constructor(
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
     private val bloggingPromptsStore: BloggingPromptsStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
+    private val blazeFeatureUtils: BlazeFeatureUtils,
+    private val blazeStore: BlazeStore
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -309,6 +313,8 @@ class WPMainActivityViewModel @Inject constructor(
         setMainFabUiState(showFab, site)
 
         checkAndShowFeatureAnnouncement()
+
+        fetchBlazeStatusIfNeeded(site)
     }
 
     private fun checkAndShowFeatureAnnouncement() {
@@ -326,6 +332,14 @@ class WPMainActivityViewModel @Inject constructor(
                 } else {
                     appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
                 }
+            }
+        }
+    }
+
+    private fun fetchBlazeStatusIfNeeded(site: SiteModel?) {
+        if (site != null && blazeFeatureUtils.isBlazeEligibleForUser(site)) {
+            launch {
+               blazeStore.fetchBlazeStatus(site)
             }
         }
     }

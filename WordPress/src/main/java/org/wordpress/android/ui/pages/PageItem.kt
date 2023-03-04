@@ -205,6 +205,7 @@ sealed class PageItem(open val type: Type) {
         COPY(R.id.copy),
         COPY_LINK(R.id.copy_page_link),
         PUBLISH_NOW(R.id.publish_now),
+        PROMOTE_WITH_BLAZE(R.id.promote_with_blaze),
         MOVE_TO_DRAFT(R.id.move_to_draft),
         DELETE_PERMANENTLY(R.id.delete_permanently),
         MOVE_TO_TRASH(R.id.move_to_trash);

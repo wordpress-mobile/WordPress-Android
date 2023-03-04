@@ -66,7 +66,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                 rootView = it.root as ViewGroup,
                 onClear = { viewModel.onClearTextBtnClicked() }
             )
-            it.createSiteButton.setOnClickListener { viewModel.createSiteBtnClicked() }
+            it.createSiteButton.setOnClickListener { viewModel.onCreateSiteBtnClicked() }
             it.initRecyclerView()
             it.initViewModel()
         }
@@ -131,7 +131,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         super.onViewStateRestored(savedInstanceState)
         // we need to set the `onTextChanged` after the viewState has been restored otherwise the viewModel.updateQuery
         // is called when the system sets the restored value to the EditText which results in an unnecessary request
-        searchInputWithHeader?.onTextChanged = { viewModel.updateQuery(it) }
+        searchInputWithHeader?.onTextChanged = { viewModel.onQueryChanged(it) }
     }
 
     override fun onDestroyView() {

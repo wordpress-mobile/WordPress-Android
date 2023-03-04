@@ -213,9 +213,8 @@
                     android:src="@drawable/ic_help_white_24dp" />
 
                 <org.wordpress.android.util.widgets.AutoResizeTextView
-                    android:id="@+id/me_support_text_view"
                     style="@style/MeListRowTextView"
-                    android:text="@string/me_btn_support" />
+                    android:text="@string/me_btn_help" />
 
             </LinearLayout>
 

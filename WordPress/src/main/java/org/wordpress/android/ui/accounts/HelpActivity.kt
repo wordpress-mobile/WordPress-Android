@@ -109,7 +109,7 @@ class HelpActivity : LocaleAwareActivity() {
 
             faqButton.setOnClickListener { showFaq() }
             applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
-            applicationLogButton.setOnClickListener { v ->
+            logsButton.setOnClickListener { v ->
                 startActivity(Intent(v.context, AppLogViewerActivity::class.java))
             }
 
@@ -183,7 +183,7 @@ class HelpActivity : LocaleAwareActivity() {
 
     private fun HelpActivityBinding.showContactUs() {
         contactUsButton.setOnClickListener { createNewZendeskTicket() }
-        myTicketsButton.setOnClickListener { showZendeskTickets() }
+        ticketsButton.setOnClickListener { showZendeskTickets() }
 
         contactEmailContainer.setOnClickListener {
             var emailSuggestion = AppPrefs.getSupportEmail()
@@ -210,16 +210,13 @@ class HelpActivity : LocaleAwareActivity() {
 
     private fun HelpActivityBinding.showSupportForum() {
         contactUsButton.isVisible = false
-        myTicketsButton.isVisible = false
-        emailContainerTopDivider.isVisible = false
+        ticketsButton.isVisible = false
         contactEmailContainer.isVisible = false
-        emailContainerBottomDivider.isVisible = false
 
         forumContainer.run {
             isVisible = true
             setOnClickListener { openWpSupportForum() }
         }
-        forumContainerBottomDivider.isVisible = true
     }
 
     private fun HelpActivityBinding.refreshContactEmailText() {
@@ -239,7 +236,7 @@ class HelpActivity : LocaleAwareActivity() {
             setOnClickListener { showFaq() }
         }
         applicationVersion.isVisible = false
-        applicationLogButton.isVisible = false
+        logsButton.isVisible = false
 
         if (accountStore.hasAccessToken()) {
             val defaultAccount = accountStore.account
@@ -339,7 +336,6 @@ class HelpActivity : LocaleAwareActivity() {
         LOGIN_SITE_ADDRESS("origin:login-site-address"),
         LOGIN_SOCIAL("origin:login-social"),
         LOGIN_USERNAME_PASSWORD("origin:login-username-password"),
-        RELEASE_NOTES("origin:release-notes"),
         SIGNUP_EMAIL("origin:signup-email"),
         SIGNUP_MAGIC_LINK("origin:signup-magic-link"),
         SIGNUP_CONFIRMATION("origin:signup-confirmation"),

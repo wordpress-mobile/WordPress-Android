@@ -39,6 +39,8 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.blaze.BlazeFlowSource
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -125,7 +127,6 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.BlazeFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsListFeatureConfig
@@ -196,11 +197,11 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil,
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
-    private val blazeFeatureConfig: BlazeFeatureConfig,
     private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
-    private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker
+    private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker,
+    private val blazeFeatureUtils: BlazeFeatureUtils
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -573,8 +574,10 @@ class MySiteViewModel @Inject constructor(
                     onRemoveClick = this::onBloggingPromptRemoveClick
                 ),
                 promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
-                    isEligible = blazeFeatureConfig.isEnabled() &&
-                            (promoteWithBlazeUpdate?.blazeStatusModel?.isEligible == true),
+                    isEligible = blazeFeatureUtils.shouldShowBlazeEntryPoint(
+                        promoteWithBlazeUpdate?.blazeStatusModel,
+                        site.siteId
+                    ),
                     onClick = this::onPromoteWithBlazeCardClick,
                     onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
                     onMoreMenuClick = this::onPromoteWithBlazeCardMoreMenuClick
@@ -609,7 +612,9 @@ class MySiteViewModel @Inject constructor(
                 enableStatsFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 enablePagesFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
-                onClick = this::onItemClick
+                onClick = this::onItemClick,
+                isBlazeEligible =
+                    blazeFeatureUtils.shouldShowBlazeEntryPoint(promoteWithBlazeUpdate?.blazeStatusModel, site.siteId)
             )
         )
 
@@ -872,6 +877,10 @@ class MySiteViewModel @Inject constructor(
                     SiteNavigationAction.OpenSite(selectedSite)
                 }
                 ListItemAction.JETPACK_SETTINGS -> SiteNavigationAction.OpenJetpackSettings(selectedSite)
+                ListItemAction.BLAZE -> {
+                    blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.MENU_ITEM)
+                    SiteNavigationAction.OpenPromoteWithBlazeOverlay(BlazeFlowSource.MENU_ITEM)
+                }
             }
             _onNavigation.postValue(Event(navigationAction))
         } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
@@ -1492,20 +1501,27 @@ class MySiteViewModel @Inject constructor(
         _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
     }
 
-    @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardMoreMenuClick() {
-        // todo: implement tracking the event for More Menu tapped
+        blazeFeatureUtils.track(
+            Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
     }
 
-    @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardClick() {
-        // todo: implement tracking the event for on card tapped
-        //  todo: add the navigation action and post value to _onNavigation.value
+        blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.DASHBOARD_CARD)
+        _onNavigation.value =
+            Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
     }
 
-    @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardHideMenuItemClick() {
-        // todo: implement the hide logic into appPrefs
+        blazeFeatureUtils.track(
+            Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
+            BlazeFlowSource.DASHBOARD_CARD
+        )
+        selectedSiteRepository.getSelectedSite()?.let {
+            blazeFeatureUtils.hidePromoteWithBlazeCard(it.siteId)
+        }
         refresh()
     }
 
