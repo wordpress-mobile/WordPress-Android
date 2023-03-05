@@ -164,7 +164,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                         getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
 
                 if (fragment != null) {
-                    fragment.onBackPressed();
+                    fragment.collapse();
                 } else {
                     setEnabled(false);
                     getOnBackPressedDispatcher().onBackPressed();

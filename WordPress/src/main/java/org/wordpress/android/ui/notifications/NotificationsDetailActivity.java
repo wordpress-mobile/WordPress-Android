@@ -121,7 +121,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                         getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
 
                 if (fragment != null) {
-                    fragment.onBackPressed();
+                    fragment.collapse();
                 } else {
                     setEnabled(false);
                     getOnBackPressedDispatcher().onBackPressed();

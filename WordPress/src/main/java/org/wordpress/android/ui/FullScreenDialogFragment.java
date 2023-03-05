@@ -333,12 +333,6 @@ public class FullScreenDialogFragment extends DialogFragment {
         }
     }
 
-    public void onBackPressed() {
-        if (isAdded()) {
-            onDismissClicked();
-        }
-    }
-
     protected void onConfirmClicked() {
         boolean isConsumed = ((FullScreenDialogContent) mFragment).onConfirmClicked(mController);
 

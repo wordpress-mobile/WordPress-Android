@@ -90,7 +90,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
                         getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
 
                 if (fragment != null) {
-                    fragment.onBackPressed();
+                    fragment.collapse();
                 } else {
                     setEnabled(false);
                     getOnBackPressedDispatcher().onBackPressed();

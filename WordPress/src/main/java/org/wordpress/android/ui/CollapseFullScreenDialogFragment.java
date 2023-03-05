@@ -301,7 +301,7 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
         }
     }
 
-    public void onBackPressed() {
+    public void collapse() {
         if (isAdded()) {
             onCollapseClicked();
         }
