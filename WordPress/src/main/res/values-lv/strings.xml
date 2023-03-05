@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-26 21:59:24+0000
+Translation-Revision-Date: 2023-03-03 09:26:43+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: lv
 -->
 <resources>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack ļauj paveikt vairāk savā WordPress vietnē. Pārslēgšanās ir bezmaksas un aizņem tikai minūti.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Sniedziet atbalstu WordPress ar Jetpack</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Emuāru rakstīšanas uzvednes un atgādinājumus varat kontrolēt katrā laikā sadaļā Mana vietne &gt; Iestatījumi &gt; Emuāri</string>
+    <string name="blogging_reminders_prompt_subtitle">Paziņojumā būs iekļauts vārds vai īsa frāze iedvesmai</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Apmeklējiet &lt;b&gt;Vietnes iestatījumi&lt;/b&gt;, lai tos ieslēgtu atkal</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Emuāru rakstīšanas pamudinājumi slēpti</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Izslēgt uzvednes</string>
+    <string name="support_forum_caption">Saņemiet palīdzību no mūsu brīvprātīgo grupas.</string>
+    <string name="support_forum_title">Kopienas forumi</string>
+    <string name="site_settings_blogging_reminders_notification_title">Emuāru rakstīšanas atgādinājumi</string>
+    <string name="site_settings_blogging_prompts_title">Rādīt uzvednes</string>
+    <string name="site_settings_blogging">Emuāru rakstīšana</string>
     <string name="install_play_store_to_get_jetpack">Lūdzu, instalējiet Google Play veikalu, lai iegūtu lietotni Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Dariet to vēlāk</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Pārslēdzieties uz Jetpack </string>
@@ -30,6 +42,7 @@ Language: lv
     <string name="my_site_blogging_prompt_card_attribution_dayone">No &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Slēpt šo</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Atgādināt vēlāk</string>
+    <string name="jetpack_feature_card_content_phase_three">Statistika, Lasītājs, Paziņojumi un citi līdzekļi drīzumā tiks pārvietoti uz Jetpack mobilo lietotni.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Pārslēdzieties uz Jetpack lietotni</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Uzziniet vairāk vietnē jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Pārslēgšanās ir bezmaksas un aizņem tikai minūti.</string>
@@ -309,7 +322,9 @@ Language: lv
     <string name="blogging_prompts_onboarding_content_note_title">Piezīme:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Katru dienu uz vadības paneļa parādīsim jums jaunu pamudinājumu, lai palīdzētu iedarbināt radošos spēkus!</string>
     <string name="blogging_prompts_onboarding_content_top">Labākais veids, kā kļūt par labāku rakstnieku, ir izveidot rakstīšanas ieradumu un dalīties ar citiem — tieši šeit parādās uzvednes!</string>
+    <string name="blogging_prompts_onboarding_header_title">Iepazīstinām↵ Emuāru rakstīšanas uzvednes</string>
     <string name="blogging_prompt_set_reminders">Iestatiet atgādinājumus</string>
+    <string name="blogging_reminders_prompt_title">Iekļaut emuāru rakstīšanas uzvedni</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Regulāra publicēšana piesaista jaunus lasītājus. Pastāstiet mums, kad vēlaties rakstīt, un mēs jums nosūtīsim atgādinājumu!</string>
     <string name="set_your_blogging_prompts_title">Kļūsti par labāku rakstnieku, veidojot ieradumu</string>
     <string name="site_creation_intent_writing_poetry">Rakstniecība un dzeja</string>
@@ -615,6 +630,7 @@ Language: lv
     <string name="support_ticket_subject">WordPress atbalsts Android ierīcēm</string>
     <string name="site_settings_categories_hint">Pārvaldiet savas vietnes kategorijas</string>
     <string name="site_settings_categories_title">Kategorijas</string>
+    <string name="site_settings_blogging_reminders_title">Atgādinājumi</string>
     <string name="page_is_posts_page_warning">Jaunāko ziņu lapas saturs tiek izveidots automātiski, un to nevar rediģēt.</string>
     <string name="gutenberg_native_border_settings">Apmales iestatījumi</string>
     <string name="storage_utils_dialog_dont_show_button">Nerādīt vēlreiz</string>

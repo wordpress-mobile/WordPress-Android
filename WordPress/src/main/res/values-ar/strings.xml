@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-15 13:54:07+0000
+Translation-Revision-Date: 2023-02-28 15:54:11+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">قائمة المكوّنات</string>
+    <string name="promote_blaze_card_menu_hide_this">إخفاء هذا</string>
+    <string name="promote_blaze_card_sub_title">اعرض عملك عبر ملايين المواقع.</string>
+    <string name="promote_blaze_card_title">الترويج لمحتواك من خلال Blaze</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">إغلاق</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">الاتصال بالدعم</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">تثبيت الإضافة الكاملة</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">الشروط والأحكام</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">يعني إعداد Jetpack موافقتك على </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">إضافة Jetpack الكاملة</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">إضافات Jetpack الفردية</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">إضافة ⁦%1$s⁩</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">يستخدم ⁦%1$s⁩ ⁦%2$s⁩، التي لا تدعم كل ميزات التطبيق حتى الآن.\n\nيرجى تثبيت ⁦%3$s⁩ لاستخدام التطبيق من خلال هذا الموقع.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">يرجى تثبيت إضافة Jetpack الكاملة</string>
+    <string name="only_one_primary_site_message">لا يتوافر سوى موقع واحد، لذا يتعذر عليك تغيير موقعك الأساسي.</string>
+    <string name="my_site_jp_install_full_plugin_card_content">يستخدم هذا الموقع إضافة فردية، لا تدعم كل ميزات التطبيق حتى الآن. يرجى تثبيت إضافة Jetpack الكاملة.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">الاتصال بالدعم</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">إعادة المحاولة</string>
+    <string name="jetpack_full_plugin_install_error_description">يتعذر تنصيب Jetpack في الوقت الحالي.</string>
+    <string name="jetpack_full_plugin_install_error_title">حدثت مشكلة</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">أيقونة الخطأ</string>
+    <string name="jetpack_full_plugin_install_done_button">تم</string>
+    <string name="jetpack_full_plugin_install_done_description">مستعد لاستخدام هذا الموقع من خلال التطبيق.</string>
+    <string name="jetpack_full_plugin_install_done_title">تم تثبيت Jetpack</string>
+    <string name="jetpack_full_plugin_install_installing_description">تثبيت Jetpack على موقعك. قد يستغرق هذا الأمر بضع دقائق حتى يكتمل.</string>
+    <string name="jetpack_full_plugin_install_installing_title">تثبيت Jetpack</string>
+    <string name="jetpack_full_plugin_install_initial_button">متابعة</string>
+    <string name="jetpack_full_plugin_install_initial_description">لن يتم تخزين بيانات اعتمادك وستُستخدم فقط بغرض تنصيب Jetpack.</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">أيقونة Jetpack</string>
+    <string name="button_promote_with_blaze">الترويج مع الإبراز</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">افتح إمكانات موقعك بالكامل. احصل على ميزات الإحصاءات والتنبيهات والمزيد من خلال Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">يتضمن موقعك إضافة Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">تم تصميم تطبيق Jetpack للهاتف المحمول للعمل إلى جانب إضافة Jetpack. قم بالتبديل الآن لكي تحظى بإمكانية الوصول إلى ميزات الإحصاءات والتنبيهات والقارئ والمزيد.</string>
