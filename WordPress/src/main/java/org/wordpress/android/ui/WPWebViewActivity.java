@@ -61,6 +61,7 @@ import org.wordpress.android.util.URLFilteredWebViewClient;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.WPWebViewClient;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.NavBarUiState;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewModeSelectorStatus;
@@ -170,8 +171,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                     mWebView.goBack();
                     refreshBackForwardNavButtons();
                 } else {
-                    setEnabled(false);
-                    getOnBackPressedDispatcher().onBackPressed();
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
                     mViewModel.track(Stat.WEBVIEW_DISMISSED);
                     setResultIfNeeded();
                 }

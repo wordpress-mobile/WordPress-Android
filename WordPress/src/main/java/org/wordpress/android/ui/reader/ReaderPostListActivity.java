@@ -42,6 +42,7 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 import javax.inject.Inject;
 
@@ -73,8 +74,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
             public void handleOnBackPressed() {
                 ReaderPostListFragment fragment = getListFragment();
                 if (fragment == null || !fragment.onActivityBackPressed()) {
-                    setEnabled(false);
-                    getOnBackPressedDispatcher().onBackPressed();
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
                 }
             }
         };

@@ -15,6 +15,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 public class PostSettingsTagsActivity extends LocaleAwareActivity implements TagsSelectedListener {
     public static final String KEY_TAGS = "KEY_TAGS";
@@ -30,8 +31,7 @@ public class PostSettingsTagsActivity extends LocaleAwareActivity implements Tag
             @Override
             public void handleOnBackPressed() {
                 saveAndFinish();
-                setEnabled(false);
-                getOnBackPressedDispatcher().onBackPressed();
+                CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
             }
         };
         getOnBackPressedDispatcher().addCallback(this, callback);

@@ -21,6 +21,7 @@ import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.PackageManagerWrapper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UriWrapper;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 import javax.inject.Inject;
 
@@ -54,8 +55,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                setEnabled(false);
-                getOnBackPressedDispatcher().onBackPressed();
+                CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
                 finish();
             }
         };

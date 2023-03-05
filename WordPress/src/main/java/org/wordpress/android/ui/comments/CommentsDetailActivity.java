@@ -39,6 +39,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 
@@ -92,8 +93,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
                 if (fragment != null) {
                     fragment.collapse();
                 } else {
-                    setEnabled(false);
-                    getOnBackPressedDispatcher().onBackPressed();
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
                 }
             }
         };

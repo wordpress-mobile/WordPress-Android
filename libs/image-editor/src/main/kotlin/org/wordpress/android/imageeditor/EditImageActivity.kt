@@ -11,6 +11,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.navigateUp
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorCancelled
+import org.wordpress.android.imageeditor.utils.onBackPressedCompat
 
 class EditImageActivity : AppCompatActivity() {
     private lateinit var viewModel: EditImageViewModel
@@ -27,8 +28,7 @@ class EditImageActivity : AppCompatActivity() {
         setContentView(R.layout.activity_edit_image)
 
         onBackPressedDispatcher.addCallback(this) {
-            isEnabled = false
-            onBackPressedDispatcher.onBackPressed()
+            onBackPressedDispatcher.onBackPressedCompat(this)
             if (hostFragment.childFragmentManager.backStackEntryCount == 0) {
                 ImageEditor.instance.onEditorAction(EditorCancelled)
             }

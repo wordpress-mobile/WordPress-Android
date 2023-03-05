@@ -55,6 +55,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 
@@ -101,8 +102,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                     EventBus.getDefault().postSticky(new ReaderEvents.TagAdded(mLastAddedTagName));
                 }
                 mReaderTracker.track(Stat.READER_MANAGE_VIEW_DISMISSED);
-                setEnabled(false);
-                getOnBackPressedDispatcher().onBackPressed();
+                CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
             }
         };
         getOnBackPressedDispatcher().addCallback(this, callback);

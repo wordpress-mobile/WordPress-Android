@@ -151,6 +151,7 @@ import org.wordpress.android.util.analytics.service.InstallationReferrerServiceS
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig;
 import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig;
 import org.wordpress.android.util.config.QRCodeAuthFlowFeatureConfig;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
@@ -510,8 +511,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (isTaskRoot() && DeviceUtils.getInstance().isChromebook(WPMainActivity.this)) {
                     return; // don't close app in Main Activity
                 }
-                setEnabled(false);
-                getOnBackPressedDispatcher().onBackPressed();
+                CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
             }
         };
         getOnBackPressedDispatcher().addCallback(this, callback);

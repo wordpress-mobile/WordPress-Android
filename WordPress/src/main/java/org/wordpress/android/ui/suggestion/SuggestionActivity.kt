@@ -24,6 +24,7 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.widgets.SuggestionAutoCompleteText
 import javax.inject.Inject
 
@@ -45,8 +46,7 @@ class SuggestionActivity : LocaleAwareActivity() {
 
         onBackPressedDispatcher.addCallback(this) {
             viewModel.trackExit(false)
-            isEnabled = false
-            onBackPressedDispatcher.onBackPressed()
+            onBackPressedDispatcher.onBackPressedCompat(this)
         }
 
         val siteModel = intent.getSerializableExtra(INTENT_KEY_SITE_MODEL) as? SiteModel

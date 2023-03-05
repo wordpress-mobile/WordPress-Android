@@ -32,6 +32,7 @@ import org.wordpress.android.ui.jpfullplugininstall.onboarding.JetpackFullPlugin
 import org.wordpress.android.ui.jpfullplugininstall.onboarding.compose.state.LoadedState
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.extensions.exhaustive
+import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 
 @AndroidEntryPoint
@@ -65,8 +66,7 @@ class JetpackFullPluginInstallOnboardingDialogFragment : DialogFragment() {
             (this as ComponentDialog).onBackPressedDispatcher
                 .addCallback(this@JetpackFullPluginInstallOnboardingDialogFragment) {
                     viewModel.onDismissScreenClick()
-                    isEnabled = false
-                    onBackPressedDispatcher.onBackPressed()
+                    onBackPressedDispatcher.onBackPressedCompat(this)
                 }
             setStatusBarAsSurfaceColor()
         }

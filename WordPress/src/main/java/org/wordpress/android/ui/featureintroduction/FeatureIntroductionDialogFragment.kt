@@ -15,6 +15,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.FeatureIntroductionDialogFragmentBinding
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 import javax.inject.Inject
 
@@ -36,8 +37,7 @@ abstract class FeatureIntroductionDialogFragment : DialogFragment() {
         super.onCreateDialog(savedInstanceState).apply {
             (this as ComponentDialog).onBackPressedDispatcher.addCallback(this@FeatureIntroductionDialogFragment) {
                 viewModel.onBackButtonClick()
-                isEnabled = false
-                onBackPressedDispatcher.onBackPressed()
+                onBackPressedDispatcher.onBackPressedCompat(this)
             }
             setStatusBarAsSurfaceColor()
         }

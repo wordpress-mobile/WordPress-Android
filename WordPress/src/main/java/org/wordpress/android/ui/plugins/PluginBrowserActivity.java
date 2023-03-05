@@ -47,6 +47,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -88,8 +89,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
                     // update the lift on scroll target id when we return to the root fragment
                     AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBar, R.id.scroll_view);
                 }
-                setEnabled(false);
-                getOnBackPressedDispatcher().onBackPressed();
+                CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
             }
         };
         getOnBackPressedDispatcher().addCallback(this, callback);

@@ -36,6 +36,7 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.util.helpers.ListScrollPositionManager;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
@@ -75,8 +76,7 @@ public class SelectCategoriesActivity extends LocaleAwareActivity {
             @Override
             public void handleOnBackPressed() {
                 saveAndFinish();
-                setEnabled(false);
-                getOnBackPressedDispatcher().onBackPressed();
+                CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
             }
         };
         getOnBackPressedDispatcher().addCallback(this, callback);

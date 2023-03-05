@@ -42,6 +42,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 import javax.inject.Inject;
 
@@ -81,8 +82,7 @@ public class EditCommentActivity extends LocaleAwareActivity {
                 if (isCommentEdited()) {
                     cancelEditCommentConfirmation();
                 } else {
-                    setEnabled(false);
-                    getOnBackPressedDispatcher().onBackPressed();
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
                 }
             }
         };

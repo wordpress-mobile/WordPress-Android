@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 import java.util.Map;
 
@@ -47,8 +48,7 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
                     mWebView.goBack();
                 } else {
                     cancel();
-                    setEnabled(false);
-                    getOnBackPressedDispatcher().onBackPressed();
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
                 }
             }
         };

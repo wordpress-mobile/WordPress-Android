@@ -79,6 +79,7 @@ import org.wordpress.android.util.UrlUtilsWrapper;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
@@ -189,8 +190,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     if (fragment != null && fragment.goBackInPostHistory()) {
                         // noop - fragment moved back to a previous post
                     } else {
-                        setEnabled(false);
-                        getOnBackPressedDispatcher().onBackPressed();
+                        CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
                     }
                 }
             }

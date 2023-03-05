@@ -33,6 +33,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 import java.util.List;
 
@@ -105,8 +106,7 @@ public class PeopleManagementActivity extends LocaleAwareActivity
             @Override
             public void handleOnBackPressed() {
                 if (!navigateBackToPeopleListFragment()) {
-                    setEnabled(false);
-                    getOnBackPressedDispatcher().onBackPressed();
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
                 }
             }
         };

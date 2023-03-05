@@ -48,6 +48,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.widgets.HeaderGridView;
 
 import java.util.HashMap;
@@ -101,8 +102,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
                 if (fm.getBackStackEntryCount() > 0) {
                     fm.popBackStack();
                 } else {
-                    setEnabled(false);
-                    getOnBackPressedDispatcher().onBackPressed();
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
                 }
             }
         };

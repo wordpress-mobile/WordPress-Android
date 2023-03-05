@@ -53,6 +53,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.config.SiteNameFeatureConfig
 import org.wordpress.android.util.extensions.exhaustive
+import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -138,9 +139,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         }
         mainViewModel.onBackPressedObservable.observe(this) {
             ActivityUtils.hideKeyboard(this)
-            backPressedCallback.isEnabled = false
-            onBackPressedDispatcher.onBackPressed()
-            backPressedCallback.isEnabled = true
+            onBackPressedDispatcher.onBackPressedCompat(backPressedCallback)
         }
         siteCreationIntentsViewModel.onBackButtonPressed.observe(this) {
             mainViewModel.onBackPressed()

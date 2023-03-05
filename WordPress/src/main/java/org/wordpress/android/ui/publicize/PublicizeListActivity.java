@@ -39,6 +39,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,8 +75,7 @@ public class PublicizeListActivity extends LocaleAwareActivity
                 if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                     getSupportFragmentManager().popBackStack();
                 } else {
-                    setEnabled(false);
-                    getOnBackPressedDispatcher().onBackPressed();
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
                 }
             }
         };
