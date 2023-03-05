@@ -1783,6 +1783,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_scan_error";
             case SUPPORT_HELP_CENTER_VIEWED:
                 return "support_help_center_viewed";
+            case SUPPORT_MIGRATION_FAQ_VIEWED:
+                return "support_migration_faq_viewed";
+            case SUPPORT_MIGRATION_FAQ_TAPPED:
+                return "support_migration_faq_tapped";
             case SUPPORT_NEW_REQUEST_VIEWED:
                 return "support_new_request_viewed";
             case SUPPORT_TICKET_LIST_VIEWED:

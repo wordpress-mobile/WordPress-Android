@@ -37,6 +37,7 @@ import org.wordpress.android.ui.AppLogViewerActivity
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.SiteUtils
@@ -58,6 +59,9 @@ class HelpActivity : LocaleAwareActivity() {
 
     @Inject
     lateinit var supportHelper: SupportHelper
+
+    @Inject
+    lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Inject
     lateinit var zendeskHelper: ZendeskHelper
@@ -181,7 +185,20 @@ class HelpActivity : LocaleAwareActivity() {
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
     }
 
+    private fun showMigrationFaq() {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://jetpack.com/support/switch-to-the-jetpack-app/"))
+        startActivity(intent)
+        AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_TAPPED)
+    }
+
     private fun HelpActivityBinding.showContactUs() {
+        if (appPrefsWrapper.isJetpackMigrationCompleted()) {
+            JpFaqContainer.isVisible = true
+            JpFaqContainerBottomDivider.isVisible = true
+            AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_VIEWED)
+            JpFaqContainer.setOnClickListener { showMigrationFaq() }
+        }
+
         contactUsButton.setOnClickListener { createNewZendeskTicket() }
         ticketsButton.setOnClickListener { showZendeskTickets() }
 

@@ -2254,6 +2254,8 @@
     <string name="contact_fragment_title" translatable="false" tools:ignore="UnusedResources">@string/contact_support</string>
     <string name="support_forum_title">Community forums</string>
     <string name="support_forum_caption">Get help from our group of volunteers.</string>
+    <string name="support_faq_title">Thank you for switching to the Jetpack app!</string>
+    <string name="support_faq_caption">See our FAQ for answers to common questions you may have.</string>
 
     <!-- Contact us -->
     <string name="support_ticket_subject">WordPress for Android Support</string>
