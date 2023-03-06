@@ -320,8 +320,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                             contentHeight
                         )
 
-                        // OK button should slide in if the container exists and fade in otherwise
-                        // difference between land & portrait
+                        // OK button slides in if the container exists else it fades in the diff between land & portrait
                         val okAnim = if (isLandscape) {
                             createFadeInAnimator(okButton)
                         } else {
