@@ -113,6 +113,9 @@ public class AppPrefs {
         // list of last time a notification has been created for a draft
         PENDING_DRAFTS_NOTIFICATION_LAST_NOTIFICATION_DATES,
 
+        // App Icon setting
+        APP_ICON,
+
         // Optimize Image and Video settings
         IMAGE_OPTIMIZE_ENABLED,
         IMAGE_OPTIMIZE_WIDTH,
@@ -720,6 +723,14 @@ public class AppPrefs {
         SharedPreferences.Editor editor = prefs().edit();
         editor.putLong(key, timestamp);
         editor.apply();
+    }
+
+    public static boolean isAppIconSet() {
+        return getBoolean(DeletablePrefKey.APP_ICON, false);
+    }
+
+    public static void setAppIcon(boolean isSet) {
+        setBoolean(DeletablePrefKey.APP_ICON, isSet);
     }
 
     public static boolean isImageOptimize() {

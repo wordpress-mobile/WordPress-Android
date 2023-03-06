@@ -17,6 +17,7 @@
     <string name="pref_key_experimental_section" translatable="false">wp_pref_app_experimental_section</string>
     <string name="pref_key_language" translatable="false">wp_pref_language</string>
     <string name="pref_key_app_theme" translatable="false">wp_pref_app_theme</string>
+    <string name="pref_key_app_icon" translatable="false">wp_pref_app_icon</string>
     <string name="pref_key_whats_new" translatable="false">wp_pref_whats_new</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notification_blogs_followed" translatable="false">pref_notification_blogs_followed</string>

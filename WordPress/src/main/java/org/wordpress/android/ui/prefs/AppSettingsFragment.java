@@ -43,6 +43,8 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
+import org.wordpress.android.launch.AppIconHelper;
+import org.wordpress.android.launch.AppIconHelper.IconType;
 import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.ui.debug.DebugSettingsActivity;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
@@ -87,6 +89,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private ListPreference mInitialScreenPreference;
 
     // This Device settings
+    private WPSwitchPreference mAppIconPref;
     private WPSwitchPreference mOptimizedImage;
     private DetailListPreference mImageMaxSizePref;
     private DetailListPreference mImageQualityPref;
@@ -112,6 +115,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mOpenWebLinksWithJetpackHelper;
     @Inject UiHelpers mUiHelpers;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject AppIconHelper mAppIconHelper;
 
     private static final String TRACK_STYLE = "style";
     private static final String TRACK_ENABLED = "enabled";
@@ -165,6 +169,8 @@ public class AppSettingsFragment extends PreferenceFragment
         findPreference(getString(R.string.pref_key_debug_settings))
                 .setOnPreferenceClickListener(this);
 
+        mAppIconPref = (WPSwitchPreference) WPPrefUtils
+                .getPrefAndSetChangeListener(this, R.string.pref_key_app_icon, this);
         mOptimizedImage =
                 (WPSwitchPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_image, this);
@@ -197,6 +203,7 @@ public class AppSettingsFragment extends PreferenceFragment
                         .getPrefAndSetChangeListener(this, R.string.pref_key_open_web_links_with_jetpack, this);
 
         // Set Local settings
+        mAppIconPref.setChecked(AppPrefs.isAppIconSet());
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
         setDetailListPreferenceValue(mImageMaxSizePref,
                 String.valueOf(AppPrefs.getImageOptimizeMaxSize()),
@@ -439,6 +446,11 @@ public class AppSettingsFragment extends PreferenceFragment
         if (preference == mLanguagePreference) {
             changeLanguage(newValue.toString());
             return false;
+        } else if (preference == mAppIconPref) {
+            Boolean value = (Boolean) newValue;
+            AppIconHelper.IconType iconType = value ? IconType.RED : IconType.DEFAULT;
+            mAppIconHelper.enableSelectedType(iconType);
+            AppPrefs.setAppIcon(value);
         } else if (preference == mOptimizedImage) {
             AppPrefs.setImageOptimize((Boolean) newValue);
             mImageMaxSizePref.setEnabled((Boolean) newValue);
