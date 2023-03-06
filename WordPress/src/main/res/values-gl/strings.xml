@@ -20,7 +20,7 @@ Language: gl_ES
     <string name="jetpack_plugin_install_done_title">Jetpack instalado</string>
     <string name="jetpack_plugin_install_installing_description">Instalando Jetpack no teu sitio. Isto pode levar uns minutos completarse.</string>
     <string name="jetpack_plugin_install_installing_title">Instalando Jetpack</string>
-    <string name="jetpack_plugin_install_full_plugin_initial_button">Continuar</string>
+    <string name="jetpack_plugin_install_initial_button">Continuar</string>
     <string name="jetpack_plugin_install_initial_description">As credenciais da túa web non se almacenarán, e só se utilizan para instalar Jetpack.</string>
     <string name="jetpack_plugin_install_initial_title">Instala Jetpack</string>
     <string name="jetpack_plugin_install_jp_logo_content_description">Icona de Jetpack</string>
@@ -2093,7 +2093,7 @@ Language: gl_ES
     <string name="reader_empty_followed_tags_subtitle">Engade aquí temas para descubrir entradas sobre as túas temáticas favoritas</string>
     <string name="login_to_to_connect_jetpack">Accede á conta de WordPress.com que usaches para conectar con Jetpack.</string>
     <string name="install_jetpack_retry">Reintentar</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">Configurar</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Configurar</string>
     <string name="jetpack_installation_problem_message">Jetpack non se puido instalar neste momento.</string>
     <string name="jetpack_installation_problem">Houbo un problema</string>
     <string name="jetpack_installed">Jetpack instalado</string>

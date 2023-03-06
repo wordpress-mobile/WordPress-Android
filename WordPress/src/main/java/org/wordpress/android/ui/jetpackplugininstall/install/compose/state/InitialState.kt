@@ -35,7 +35,7 @@ fun InitialState(
 private fun PreviewInitialState() {
     AppTheme {
         val uiState = UiState.Initial(
-            buttonText = R.string.jetpack_plugin_install_full_plugin_initial_button,
+            buttonText = R.string.jetpack_plugin_install_initial_button,
         )
         InitialState(uiState, {})
     }

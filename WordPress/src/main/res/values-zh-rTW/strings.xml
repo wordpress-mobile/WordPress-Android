@@ -2103,7 +2103,7 @@ Language: zh_TW
     <string name="reader_empty_followed_tags_subtitle">請在此處新增主題，以尋找你最愛的主題文章</string>
     <string name="login_to_to_connect_jetpack">請登入你用來連結 Jetpack 的 WordPress.com 帳號。</string>
     <string name="install_jetpack_retry">重試</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">設定</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">設定</string>
     <string name="jetpack_installation_problem_message">目前無法安裝 Jetpack。</string>
     <string name="jetpack_installation_problem">發生問題</string>
     <string name="jetpack_installed">已安裝 Jetpack</string>

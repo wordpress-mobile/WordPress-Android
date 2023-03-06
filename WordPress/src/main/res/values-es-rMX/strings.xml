@@ -1127,7 +1127,7 @@ Language: es_MX
     <string name="install_jetpack">Instala Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ de Jetpack</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">Configurar</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Configurar</string>
     <string name="jetpack_installation_problem_message">Jetpack no se pudo instalar en este momento.</string>
     <string name="installing_jetpack_message">Instalando Jetpack en tu sitio. Esto puede llevar unos minutos completarse.</string>
     <string name="install_jetpack_message">Las credenciales de tu web no se almacenarán, y solo se utilizan para instalar Jetpack.</string>

@@ -1899,7 +1899,7 @@ Language: es_CO
     <string name="reader_empty_followed_tags_subtitle">Añade aquí temas para descubrir entradas sobre tus temáticas favoritas</string>
     <string name="login_to_to_connect_jetpack">Accede a la cuenta de WordPress.com que usaste para conectar Jetpack.</string>
     <string name="install_jetpack_retry">Reintentar</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">Configurar</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Configurar</string>
     <string name="jetpack_installation_problem_message">Jetpack no se pudo instalar en este momento.</string>
     <string name="jetpack_installation_problem">Hubo un problema</string>
     <string name="jetpack_installed">Jetpack instalado</string>

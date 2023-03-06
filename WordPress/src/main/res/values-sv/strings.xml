@@ -32,7 +32,7 @@ Language: sv_SE
     <string name="jetpack_plugin_install_done_title">Jetpack har installerats</string>
     <string name="jetpack_plugin_install_installing_description">Installerar Jetpack på din webbplats. Detta kan ta upp till några minuter att slutföra.</string>
     <string name="jetpack_plugin_install_installing_title">Installerar Jetpack</string>
-    <string name="jetpack_plugin_install_full_plugin_initial_button">Fortsätt</string>
+    <string name="jetpack_plugin_install_initial_button">Fortsätt</string>
     <string name="jetpack_full_plugin_install_initial_description">Din webbplats autentiseringsuppgifter används bara för att installera Jetpack säkert och kommer inte att sparas</string>
     <string name="jetpack_plugin_install_initial_title">Installera Jetpack</string>
     <string name="jetpack_plugin_install_jp_logo_content_description">Jetpack-ikon</string>
@@ -2105,7 +2105,7 @@ Language: sv_SE
     <string name="reader_empty_followed_tags_subtitle">Lägg till ämnen här för att hitta inlägg om dina favoritämnen</string>
     <string name="login_to_to_connect_jetpack">Logga in på WordPress.com-kontot du använde för att ansluta Jetpack.</string>
     <string name="install_jetpack_retry">Försök igen</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">Konfigurera</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Konfigurera</string>
     <string name="jetpack_installation_problem_message">Jetpack kunde inte installeras just nu.</string>
     <string name="jetpack_installation_problem">Det var ett problem</string>
     <string name="jetpack_installed">Jetpack installerat</string>

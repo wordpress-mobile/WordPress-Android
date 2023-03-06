@@ -91,15 +91,12 @@ class JetpackRemoteInstallViewModel
     }
 
     private fun Type?.toState(): UiState {
-        if (this == null) {
-            return UiState.Initial(R.string.jetpack_plugin_install_remote_plugin_button)
-        }
         return when (this) {
-            START -> UiState.Initial(R.string.jetpack_plugin_install_remote_plugin_button)
+            null, START -> UiState.Initial(R.string.jetpack_plugin_install_initial_button)
             INSTALLING -> UiState.Installing
             INSTALLED -> UiState.Done(
                 R.string.jetpack_plugin_install_remote_plugin_done_description,
-                R.string.jetpack_plugin_install_remote_plugin_button
+                R.string.jetpack_plugin_install_remote_plugin_done_button
             )
 
             ERROR -> UiState.Error(

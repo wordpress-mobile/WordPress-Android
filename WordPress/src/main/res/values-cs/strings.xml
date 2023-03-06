@@ -2055,7 +2055,7 @@ Language: cs_CZ
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="install_jetpack">Instalovat Jetpack</string>
     <string name="install_jetpack_retry">Odpověď</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">Pokračovat</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Pokračovat</string>
     <string name="installing_jetpack">Instalování Jetpacku</string>
     <string name="jetpack_installation_problem">Vyskytl se problém</string>
     <string name="jetpack_installed">Jetpack nainstalován</string>

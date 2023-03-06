@@ -1878,7 +1878,7 @@ Language: vi_VN
     <string name="reader_empty_followed_tags_subtitle">Thêm thẻ ở đây để tìm bài viết liên quan những đề tài mà bạn yêu thích</string>
     <string name="login_to_to_connect_jetpack">Đăng nhập tài khoản WordPress.com mà bạn có kết nối Jetpack.</string>
     <string name="install_jetpack_retry">Thử lại</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">Cài ngay</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Cài ngay</string>
     <string name="jetpack_installation_problem_message">Không thể cài đặt Jetpack vào lúc này.</string>
     <string name="jetpack_installation_problem">Đã xảy ra lỗi</string>
     <string name="jetpack_installed">Đã cài đặt Jetpack</string>

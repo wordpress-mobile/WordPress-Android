@@ -7,7 +7,7 @@ import javax.inject.Inject
 class JetpackFullPluginInstallUiStateMapper @Inject constructor() {
     fun mapInitial(): UiState.Initial =
         UiState.Initial(
-            buttonText = R.string.jetpack_plugin_install_full_plugin_initial_button,
+            buttonText = R.string.jetpack_plugin_install_initial_button,
         )
 
     fun mapInstalling(): UiState.Installing = UiState.Installing

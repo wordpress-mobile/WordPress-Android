@@ -2110,7 +2110,7 @@ Language: ja_JP
     <string name="install_jetpack">Jetpack をインストール</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack よくある質問</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">設定</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">設定</string>
     <string name="jetpack_installation_problem_message">Jetpack は現在インストールできません。</string>
     <string name="installing_jetpack_message">サイトに Jetpack をインストールしています。完了まで数分かかることがあります。</string>
     <string name="install_jetpack_message">サイトのログイン情報は保存されず、Jetpack インストールのためのみに使用されます。</string>

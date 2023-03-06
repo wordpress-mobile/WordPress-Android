@@ -39,7 +39,7 @@ class JetpackRemoteInstallActivity : LocaleAwareActivity() {
             AppTheme {
                 val uiState by viewModel.liveViewState.observeAsState()
                 JetpackPluginInstallScreen(
-                    uiState = uiState ?: UiState.Initial(R.string.jetpack_plugin_install_remote_plugin_button),
+                    uiState = uiState ?: UiState.Initial(R.string.jetpack_plugin_install_initial_button),
                     onDismissScreenClick = ::onBackPressed,
                     onInitialButtonClick = viewModel::onInitialButtonClick,
                     onDoneButtonClick = viewModel::onDoneButtonClick,

@@ -2105,7 +2105,7 @@ Language: id
     <string name="reader_empty_followed_tags_subtitle">Tambahkan topik di sini untuk menemukan pos tentang topik favorit Anda.</string>
     <string name="login_to_to_connect_jetpack">Login ke akun WordPress.com yang Anda gunakan untuk menghubungkan Jetpack.</string>
     <string name="install_jetpack_retry">Coba lagi</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">Siapkan</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Siapkan</string>
     <string name="jetpack_installation_problem_message">Jetpack tidak dapat diinstal untuk saat ini.</string>
     <string name="jetpack_installation_problem">Ada masalah</string>
     <string name="jetpack_installed">Jetpack sudah diinstal</string>

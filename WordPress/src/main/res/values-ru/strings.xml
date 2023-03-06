@@ -2105,7 +2105,7 @@ Language: ru
     <string name="reader_empty_followed_tags_subtitle">Добавьте любимые темы здесь, чтобы найти по ним записи</string>
     <string name="login_to_to_connect_jetpack">Войдите в учетную запись WordPress.com, с которой был подключен Jetpack.</string>
     <string name="install_jetpack_retry">Повторить</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">Продолжить установку</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Продолжить установку</string>
     <string name="jetpack_installation_problem_message">Сейчас Jetpack не может быть установлен.</string>
     <string name="jetpack_installation_problem">Возникла проблема</string>
     <string name="jetpack_installed">Jetpack установлен</string>

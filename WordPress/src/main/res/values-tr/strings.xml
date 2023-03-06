@@ -52,7 +52,7 @@ Language: tr
     <string name="jetpack_plugin_install_done_title">Jetpack kuruldu</string>
     <string name="jetpack_plugin_install_installing_description">Sitenize Jetpack kuruluyor. Bu işlemin tamamlanması birkaç dakika sürebilir.</string>
     <string name="jetpack_plugin_install_installing_title">Jetpack kuruluyor</string>
-    <string name="jetpack_plugin_install_full_plugin_initial_button">Devam et</string>
+    <string name="jetpack_plugin_install_initial_button">Devam et</string>
     <string name="jetpack_plugin_install_initial_description">Web sitesi kimlik bilgileriniz depolanmayacak ve yalnızca Jetpack\'i kurma amacıyla kullanılacak</string>
     <string name="jetpack_plugin_install_initial_title">Jetpack\'i kur</string>
     <string name="jetpack_plugin_install_jp_logo_content_description">Jetpack simgesi</string>
@@ -2125,7 +2125,7 @@ Language: tr
     <string name="reader_empty_followed_tags_subtitle">En sevdiğiniz konularla ilgili yazıları bulmak için buraya konu ekleyin</string>
     <string name="login_to_to_connect_jetpack">Jetpack\'i bağlamak için kullandığınız WordPress.com hesabına giriş yapın.</string>
     <string name="install_jetpack_retry">Tekrar dene</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">Devam et</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Devam et</string>
     <string name="jetpack_installation_problem_message">Jetpack şu anda yüklenemedi.</string>
     <string name="jetpack_installation_problem">Bir sorun vardı</string>
     <string name="jetpack_installed">Jetpack kuruldu</string>

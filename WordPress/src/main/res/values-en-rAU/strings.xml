@@ -464,7 +464,7 @@ Language: en_AU
     <string name="installing_jetpack">Installing Jetpack</string>
     <string name="install_jetpack">Install Jetpack</string>
     <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack.</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">Set up</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Set up</string>
     <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time.</string>
     <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete.</string>
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>

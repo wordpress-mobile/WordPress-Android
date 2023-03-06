@@ -2104,7 +2104,7 @@ Language: he_IL
     <string name="reader_empty_followed_tags_subtitle">אפשר להוסיף כאן נושאים כדי למצוא פוסטים על הנושאים המועדפים עליך</string>
     <string name="login_to_to_connect_jetpack">יש להיכנס לחשבון WordPress.com שדרכו חיברת את Jetpack.</string>
     <string name="install_jetpack_retry">יש לנסות שנית</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">הגדר</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">הגדר</string>
     <string name="jetpack_installation_problem_message">אין אפשרות להתקין את Jetpack כעת.</string>
     <string name="jetpack_installation_problem">הייתה בעיה</string>
     <string name="jetpack_installed">Jetpack מותקן</string>

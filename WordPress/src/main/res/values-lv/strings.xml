@@ -2067,7 +2067,7 @@ Language: lv
     <string name="reader_empty_followed_tags_subtitle">Pievienojiet tematus šeit, lai atrastu ziņas par iecienītākajām tēmām</string>
     <string name="login_to_to_connect_jetpack">Piesakieties WordPress.com kontā, kuru izmantojāt, lai izveidotu savienojumu ar Jetpack.</string>
     <string name="install_jetpack_retry">Mēģiniet vēlreiz</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">Uzstādīt</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Uzstādīt</string>
     <string name="jetpack_installation_problem_message">Jetpack pašlaik nebija iespējams instalēt.</string>
     <string name="jetpack_installation_problem">Radās problēma</string>
     <string name="jetpack_installed">Jetpack uzstādīts</string>

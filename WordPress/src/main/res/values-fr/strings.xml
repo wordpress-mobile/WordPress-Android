@@ -2100,7 +2100,7 @@ Language: fr
     <string name="install_jetpack">Installer Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">Configurer</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Configurer</string>
     <string name="jetpack_installation_problem_message">Impossible d\'installer Jetpack pour le moment.</string>
     <string name="installing_jetpack_message">Installation de Jetpack en cours sur votre site. Cette opération peut prendre quelques minutes.</string>
     <string name="install_jetpack_message">Vos informations d\'identification sur le site Web ne seront pas conservées. Elles sont utilisées uniquement pour installer Jetpack.</string>

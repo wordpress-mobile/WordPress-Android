@@ -51,7 +51,7 @@ Language: ro
     <string name="jetpack_plugin_install_jp_logo_content_description">Icon Jetpack</string>
     <string name="jetpack_plugin_install_initial_title">Instalează Jetpack</string>
     <string name="jetpack_plugin_install_initial_description">Datele de conectare ale site-ului tău web nu vor fi stocate și sunt folosite numai în scopul de a instala Jetpack.</string>
-    <string name="jetpack_plugin_install_full_plugin_initial_button">Continuă</string>
+    <string name="jetpack_plugin_install_initial_button">Continuă</string>
     <string name="jetpack_plugin_install_installing_title">Instalez Jetpack</string>
     <string name="jetpack_plugin_install_installing_description">Instalez Jetpack pe site-ul tău. Poate dura câteva minute până la finalizare.</string>
     <string name="jetpack_plugin_install_done_title">Jetpack a fost instalat</string>
@@ -2131,7 +2131,7 @@ Language: ro
     <string name="jetpack_installation_problem">A fost o problemă</string>
     <string name="install_jetpack_retry">Reîncearcă</string>
     <string name="login_to_to_connect_jetpack">Autentifică-te în contul WordPress.com pe care l-ai folosit pentru a conecta Jetpack.</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">Inițializează</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Inițializează</string>
     <string name="jetpack_installation_problem_message">Jetpack nu a putut fi instalat în acest moment.</string>
     <string name="installing_jetpack_message">Instalez Jetpack pe site-ul tău. Poate dura câteva minute până la finalizare.</string>
     <string name="install_jetpack_message">Datele de conectare ale site-ului tău web nu vor fi stocate și vor fi folosite numai pentru instalarea Jetpack.</string>

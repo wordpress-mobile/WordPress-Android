@@ -161,7 +161,7 @@ class JetpackRemoteInstallViewModelTest : BaseUnitTest() {
         assertThat(this).isInstanceOf(UiState.Initial::class.java)
 
         with(this as UiState.Initial) {
-            assertThat(buttonText).isEqualTo(R.string.jetpack_plugin_install_remote_plugin_button)
+            assertThat(buttonText).isEqualTo(R.string.jetpack_plugin_install_initial_button)
         }
     }
 

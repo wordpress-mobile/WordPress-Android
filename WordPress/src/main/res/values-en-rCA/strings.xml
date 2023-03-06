@@ -2051,7 +2051,7 @@ Language: en_CA
     <string name="reader_empty_followed_tags_subtitle">Add topics here to find posts about your favourite topics</string>
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="install_jetpack_retry">Retry</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">Set up</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Set up</string>
     <string name="jetpack_installation_problem">There was a problem</string>
     <string name="jetpack_installed">Jetpack installed</string>
     <string name="installing_jetpack">Installing Jetpack</string>

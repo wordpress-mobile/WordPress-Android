@@ -2111,7 +2111,7 @@ Language: ar
     <string name="jetpack_installation_problem_message">يتعذر تنصيب Jetpack في الوقت الحالي.</string>
     <string name="installing_jetpack_message">تنصيب Jetpack على موقعك. قد يستغرق هذا الأمر وقتًا يصل إلى بضع دقائق لاكتماله.</string>
     <string name="install_jetpack_message">لن يتم تخزين بيانات اعتمادك وستُستخدم فقط بغرض تنصيب Jetpack.</string>
-    <string name="jetpack_plugin_install_remote_plugin_button">الإعداد</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">الإعداد</string>
     <string name="stats_jetpack_connection_setup_info">لاستخدام الإحصاءات على موقع ووردبريس الخاص بك، سيتعين عليك تنصيب إضافة Jetpack.</string>
     <string name="themes_empty_list">لا توجد سمات مطابقة لبحثك</string>
     <string name="reader_label_post_search_explainer">ما الذي ترغب في إيجاده؟</string>
