@@ -72,7 +72,7 @@ private val darkModePrimaryButtonColor = Color(0xFF1C1C1E)
 private val lightModePostThumbnailBackground = Color(0xD000000)
 
 @Stable
-private val bulletedTextColor = Color(0xFF666666)
+private val bulletedTextColor = Color(0x99FFFFFF)
 
 @AndroidEntryPoint
 class BlazeOverlayFragment : Fragment() {
@@ -346,7 +346,6 @@ class BlazeOverlayFragment : Fragment() {
                 modifier = Modifier.padding(start = Margin.ExtraLarge.value),
                 text = stringResource(id = stringResource),
                 fontSize = FontSize.Large.value,
-                fontWeight = FontWeight.Light,
                 color = bulletedTextColor
             )
         }
