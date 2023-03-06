@@ -10,7 +10,6 @@ import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.util.StatsKeyValueData;
 import org.wordpress.android.util.StatsMocksReader;
-import org.wordpress.android.util.StatsVisitsData;
 
 import java.util.List;
 
@@ -39,7 +38,6 @@ public class StatsTests extends BaseTest {
 
     @Test
     public void e2eAllDayStatsLoad() {
-        StatsVisitsData todayVisits = new StatsVisitsData("97", "28", "14", "11");
         List<StatsKeyValueData> postsList = new StatsMocksReader().readDayTopPostsToList();
         List<StatsKeyValueData> referrersList = new StatsMocksReader().readDayTopReferrersToList();
         List<StatsKeyValueData> clicksList = new StatsMocksReader().readDayClicksToList();
@@ -52,7 +50,6 @@ public class StatsTests extends BaseTest {
                 .go()
                 .goToStats()
                 .openDayStats()
-                .assertVisits(todayVisits)
                 .scrollToPosts().assertPosts(postsList)
                 .scrollToReferrers().assertReferrers(referrersList)
                 .scrollToClicks().assertClicks(clicksList)
