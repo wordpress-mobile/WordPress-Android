@@ -117,8 +117,7 @@ class JetpackRemoteInstallActivity : LocaleAwareActivity() {
     private fun onContactSupportResultAction(
         result: JetpackRemoteInstallViewModel.JetpackResultActionData
     ) {
-        // TODO thomashorta confirm this is the correct tracking origin
-        val origin = HelpActivity.Origin.JETPACK_INSTALL_FULL_PLUGIN_ERROR
+        val origin = HelpActivity.Origin.JETPACK_REMOTE_INSTALL_PLUGIN_ERROR
         ActivityLauncher.viewHelp(
             this,
             origin,
