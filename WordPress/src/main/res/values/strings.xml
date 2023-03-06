@@ -2351,8 +2351,6 @@
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d answers</string>
     <string name="my_site_blogging_prompt_card_view_answers">View all responses</string>
 
-    <string name="my_site_jp_install_full_plugin_card_content">This site is using an individual plugin, which doesn\'t support all features of the app yet. Please install the full Jetpack plugin.</string>
-
     <!-- My Site - Jetpack migration success card -->
     <string name="jp_migration_success_card_message">Please delete the WordPress app</string>
 
@@ -4390,9 +4388,14 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jetpack_individual_plugin_support_onboarding_title">Please install the full Jetpack plugin</string>
     <!-- translators:
         %1$s = the current site address (e.g. "https://wordpress.com/"),
-        %2$s = can be either "the <plugin name> plugin" (e.g. "the Jetpack Backup plugin") OR "individual plugins"
+        %2$s = the text "the <plugin name> plugin" (e.g. "the Jetpack Backup plugin")
         %3$s = the text "full Jetpack plugin" -->
-    <string name="jetpack_full_plugin_install_onboarding_description">%1$s is using %2$s, which don’t support all features of the app yet.\n\nPlease install the %3$s to use the app with this site.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s is using %2$s, which doesn’t support all features of the app yet.\n\nPlease install the %3$s to use the app with this site.</string>
+    <!-- translators:
+        %1$s = the current site address (e.g. "https://wordpress.com/"),
+        %2$s = the text "individual plugins"
+        %3$s = the text "full Jetpack plugin" -->
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s is using %2$s, which don’t support all features of the app yet.\n\nPlease install the %3$s to use the app with this site.</string>
     <!-- translators: %1$s = a plugin name (e.g. "Jetpack Search") -->
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">the %1$s plugin</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">individual Jetpack plugins</string>
