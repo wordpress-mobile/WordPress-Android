@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -51,30 +50,31 @@ fun LoadedState(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            IconButton(
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(20.dp),
+                onClick = onDismissScreenClick,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_close_white_24dp),
+                    contentDescription = stringResource(
+                        R.string.jetpack_full_plugin_install_onboarding_dismiss_button_content_description
+                    ),
+                )
+            }
+
             val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier
                     .verticalScroll(scrollState)
                     .weight(1f)
             ) {
-                Row(
+                JPInstallFullPluginAnimation(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 30.dp)
-                        .padding(top = 34.dp),
-                ) {
-                    JPInstallFullPluginAnimation()
-                    Spacer(Modifier.weight(1f))
-                    IconButton(onClick = onDismissScreenClick) {
-                        Icon(
-                            modifier = Modifier.align(Alignment.Top),
-                            painter = painterResource(R.drawable.ic_close_white_24dp),
-                            contentDescription = stringResource(
-                                R.string.jetpack_full_plugin_install_onboarding_dismiss_button_content_description
-                            ),
-                        )
-                    }
-                }
+                        .align(Alignment.Start)
+                        .padding(start = 30.dp)
+                )
                 Title(text = stringResource(R.string.jetpack_individual_plugin_support_onboarding_title))
                 PluginDescription(
                     modifier = Modifier
