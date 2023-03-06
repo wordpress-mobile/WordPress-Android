@@ -153,7 +153,7 @@ class BlazeOverlayFragment : Fragment() {
             )
         ) {
             Image(
-                painterResource(id = R.drawable.ic_blaze_promotional_image),
+                painterResource(id = R.drawable.ic_blaze_overlay_image),
                 contentDescription = stringResource(id = R.string.blaze_activity_title),
                 modifier = Modifier.size(100.dp)
             )
@@ -346,7 +346,6 @@ class BlazeOverlayFragment : Fragment() {
                 modifier = Modifier.padding(start = Margin.ExtraLarge.value),
                 text = stringResource(id = stringResource),
                 fontSize = FontSize.Large.value,
-                fontWeight = FontWeight.Light,
                 color = bulletedTextColor
             )
         }
