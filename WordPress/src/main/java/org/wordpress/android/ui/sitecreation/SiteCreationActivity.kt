@@ -228,9 +228,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
                 mainViewModel.preloadingJob?.cancel("Preload did not complete before theme picker was shown.")
                 HomePagePickerFragment.newInstance(target.wizardState.siteIntent)
             }
-            DOMAINS -> SiteCreationDomainsFragment.newInstance(
-                screenTitle
-            )
+            DOMAINS -> SiteCreationDomainsFragment.newInstance(screenTitle)
             SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState)
         }
         slideInFragment(fragment, target.wizardStep.toString())
