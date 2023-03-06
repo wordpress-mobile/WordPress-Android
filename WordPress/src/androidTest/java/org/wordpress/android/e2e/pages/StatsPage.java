@@ -23,7 +23,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.allOf;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.wordpress.android.support.WPSupportUtils.scrollIntoView;
-import static org.wordpress.android.support.WPSupportUtils.sleep;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class StatsPage {
@@ -49,15 +48,18 @@ public class StatsPage {
                 withText("Days")
         ));
 
-        ViewInteraction postsAndPagesCard = onView(allOf(
+        ViewInteraction statsCardStructure = onView(allOf(
                 isDescendantOfA(visibleCoordinatorLayout),
-                withText("Posts and Pages")
+                withId(R.id.stats_block_list),
+                hasDescendant(withText("Views")),
+                hasDescendant(withText("Visitors")),
+                hasDescendant(withText("Likes")),
+                hasDescendant(withText("Comments"))
         ));
 
         waitForElementToBeDisplayed(daysStatsTab);
         daysStatsTab.perform(ViewActions.click());
-        waitForElementToBeDisplayed(postsAndPagesCard);
-        sleep(5000);
+        waitForElementToBeDisplayed(statsCardStructure);
         return this;
     }
 
