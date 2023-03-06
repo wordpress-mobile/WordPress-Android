@@ -174,7 +174,7 @@ class JetpackRemoteInstallViewModelTest : BaseUnitTest() {
 
         with(this as UiState.Done) {
             assertThat(description).isEqualTo(R.string.jetpack_plugin_install_remote_plugin_done_description)
-            assertThat(buttonText).isEqualTo(R.string.jetpack_plugin_install_remote_plugin_button)
+            assertThat(buttonText).isEqualTo(R.string.jetpack_plugin_install_remote_plugin_done_button)
         }
     }
 

@@ -11,7 +11,7 @@ class JetpackFullPluginInstallUiStateMapperTest {
     fun `Should map Initial state correctly`() {
         val actual = classToTest.mapInitial()
         with(actual) {
-            assertThat(buttonText).isEqualTo(R.string.jetpack_plugin_install_full_plugin_initial_button)
+            assertThat(buttonText).isEqualTo(R.string.jetpack_plugin_install_initial_button)
             assertThat(toolbarTitle).isEqualTo(R.string.jetpack)
             assertThat(image).isEqualTo(R.drawable.ic_jetpack_logo_green_24dp)
             assertThat(imageContentDescription).isEqualTo(
