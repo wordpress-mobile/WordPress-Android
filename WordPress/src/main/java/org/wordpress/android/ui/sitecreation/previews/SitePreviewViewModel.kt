@@ -313,11 +313,8 @@ class SitePreviewViewModel @Inject constructor(
         val url = urlWithoutScheme ?: ""
         val subDomain = urlUtils.extractSubDomain(url)
         val fullUrl = urlUtils.addUrlSchemeIfNeeded(url, true)
-        val subDomainIndices: Pair<Int, Int> = Pair(0, subDomain.length)
-        val domainIndices: Pair<Int, Int> = Pair(
-            Math.min(subDomainIndices.second, url.length),
-            url.length
-        )
+        val subDomainIndices = 0 to subDomain.length
+        val domainIndices = subDomainIndices.second.coerceAtMost(url.length) to url.length
         return SitePreviewData(
             fullUrl,
             url,
