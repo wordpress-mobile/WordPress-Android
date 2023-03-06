@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -60,6 +61,7 @@ import org.wordpress.android.util.URLFilteredWebViewClient;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.WPWebViewClient;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.NavBarUiState;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewModeSelectorStatus;
@@ -161,6 +163,21 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public void onCreate(Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (mWebView.canGoBack()) {
+                    mWebView.goBack();
+                    refreshBackForwardNavButtons();
+                } else {
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                    mViewModel.track(Stat.WEBVIEW_DISMISSED);
+                    setResultIfNeeded();
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     @Override
@@ -914,18 +931,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private void setResultIfNeededAndFinish() {
         setResultIfNeeded();
         finish();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mWebView.canGoBack()) {
-            mWebView.goBack();
-            refreshBackForwardNavButtons();
-        } else {
-            super.onBackPressed();
-            mViewModel.track(Stat.WEBVIEW_DISMISSED);
-            setResultIfNeeded();
-        }
     }
 
     @Override

@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
@@ -41,6 +42,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 import javax.inject.Inject;
 
@@ -73,6 +75,19 @@ public class EditCommentActivity extends LocaleAwareActivity {
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.comment_edit_activity);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (isCommentEdited()) {
+                    cancelEditCommentConfirmation();
+                } else {
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -194,7 +209,7 @@ public class EditCommentActivity extends LocaleAwareActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else if (i == R.id.menu_save_comment) {
             saveComment();
@@ -291,15 +306,6 @@ public class EditCommentActivity extends LocaleAwareActivity {
 
         progress.setVisibility(progressVisible ? View.VISIBLE : View.GONE);
         editContainer.setVisibility(progressVisible ? View.GONE : View.VISIBLE);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (isCommentEdited()) {
-            cancelEditCommentConfirmation();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     private void cancelEditCommentConfirmation() {

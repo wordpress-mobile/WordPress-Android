@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -41,12 +40,7 @@ public class ReaderUserListActivity extends LocaleAwareActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
+            toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         }
 
         ActionBar actionBar = getSupportActionBar();

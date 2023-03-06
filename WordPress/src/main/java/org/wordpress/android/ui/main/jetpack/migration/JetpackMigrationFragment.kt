@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
@@ -127,15 +127,7 @@ class JetpackMigrationFragment : Fragment() {
 
     private fun initBackPressHandler(showDeleteWpState: Boolean) {
         if (showDeleteWpState) return
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(
-                true
-            ) {
-                override fun handleOnBackPressed() {
-                    viewModel.logoutAndFallbackToLogin()
-                }
-            })
+        requireActivity().onBackPressedDispatcher.addCallback(this) { viewModel.logoutAndFallbackToLogin() }
     }
 
     companion object {

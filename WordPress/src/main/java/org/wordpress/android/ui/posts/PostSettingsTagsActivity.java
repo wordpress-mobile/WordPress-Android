@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -14,6 +15,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 public class PostSettingsTagsActivity extends LocaleAwareActivity implements TagsSelectedListener {
     public static final String KEY_TAGS = "KEY_TAGS";
@@ -24,6 +26,15 @@ public class PostSettingsTagsActivity extends LocaleAwareActivity implements Tag
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                saveAndFinish();
+                CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -75,12 +86,6 @@ public class PostSettingsTagsActivity extends LocaleAwareActivity implements Tag
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        saveAndFinish();
-        super.onBackPressed();
     }
 
     private void saveAndFinish() {

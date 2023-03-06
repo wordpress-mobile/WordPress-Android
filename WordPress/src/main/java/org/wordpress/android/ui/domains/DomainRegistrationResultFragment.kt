@@ -2,7 +2,7 @@ package org.wordpress.android.ui.domains
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 import androidx.core.text.parseAsHtml
@@ -49,8 +49,8 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
 
         with(DomainRegistrationResultFragmentBinding.bind(view)) {
             setupViews(domainName, email)
-            setupObservers(domainName, email)
         }
+        requireActivity().onBackPressedDispatcher.addCallback(this) { finishRegistration(domainName, email) }
     }
 
     private fun setupWindow() = with(requireAppCompatActivity()) {
@@ -76,14 +76,6 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
             R.string.domain_registration_result_description,
             domainName
         ).parseAsHtml(FROM_HTML_MODE_COMPACT)
-    }
-
-    private fun setupObservers(domainName: String, email: String) = with(requireActivity()) {
-        onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                finishRegistration(domainName, email)
-            }
-        })
     }
 
     private fun finishRegistration(domainName: String, email: String) {

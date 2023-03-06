@@ -532,7 +532,7 @@ class PostsListActivity : LocaleAwareActivity(),
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
             return true
         } else if (item.itemId == R.id.toggle_post_list_item_layout) {
             viewModel.toggleViewLayout()

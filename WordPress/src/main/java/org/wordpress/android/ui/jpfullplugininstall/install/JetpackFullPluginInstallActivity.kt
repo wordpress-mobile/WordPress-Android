@@ -3,6 +3,7 @@ package org.wordpress.android.ui.jpfullplugininstall.install
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.Scaffold
@@ -36,11 +37,10 @@ class JetpackFullPluginInstallActivity : AppCompatActivity() {
                 JetpackFullPluginInstallScreen()
             }
         }
-        observeActionEvents()
-    }
 
-    override fun onBackPressed() {
-        viewModel.onBackPressed()
+        onBackPressedDispatcher.addCallback(this) { viewModel.onBackPressed() }
+
+        observeActionEvents()
     }
 
     @Composable

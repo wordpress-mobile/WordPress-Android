@@ -400,7 +400,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             toolBar.setTitle(R.string.reader_title_related_post_detail)
         } else {
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-            toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+            toolBar.setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         }
     }
 

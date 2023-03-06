@@ -60,7 +60,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
         android.R.id.home -> {
-            activity?.onBackPressed()
+            activity?.onBackPressedDispatcher?.onBackPressed()
             true
         }
         R.id.save_parent -> {
@@ -87,7 +87,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
         result.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, pageId)
         result.putExtra(EXTRA_PAGE_PARENT_ID_KEY, viewModel.currentParent.id)
         activity?.setResult(Activity.RESULT_OK, result)
-        activity?.onBackPressed()
+        activity?.onBackPressedDispatcher?.onBackPressed()
     }
 
     private fun PageParentFragmentBinding.initializeSearchView() {

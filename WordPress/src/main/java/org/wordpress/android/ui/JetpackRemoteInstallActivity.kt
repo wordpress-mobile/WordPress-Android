@@ -2,11 +2,13 @@ package org.wordpress.android.ui
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.addCallback
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.INSTALL_JETPACK_CANCELLED
 import org.wordpress.android.databinding.JetpackRemoteInstallActivityBinding
 import org.wordpress.android.ui.JetpackConnectionUtils.trackWithSource
 import org.wordpress.android.ui.JetpackRemoteInstallFragment.Companion.TRACKING_SOURCE_KEY
+import org.wordpress.android.util.extensions.onBackPressedCompat
 
 class JetpackRemoteInstallActivity : LocaleAwareActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,6 +16,14 @@ class JetpackRemoteInstallActivity : LocaleAwareActivity() {
         with(JetpackRemoteInstallActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
             setSupportActionBar(toolbarLayout.toolbarMain)
+        }
+
+        onBackPressedDispatcher.addCallback(this) {
+            trackWithSource(
+                INSTALL_JETPACK_CANCELLED,
+                intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
+            )
+            onBackPressedDispatcher.onBackPressedCompat(this)
         }
 
         supportActionBar?.let {
@@ -25,17 +35,9 @@ class JetpackRemoteInstallActivity : LocaleAwareActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed() {
-        trackWithSource(
-            INSTALL_JETPACK_CANCELLED,
-            intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
-        )
-        super.onBackPressed()
     }
 }
