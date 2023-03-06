@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+22.0
+-----
+
+
 21.9
 -----
 * [**] [Jetpack-only] Help: Display the Jetpack app FAQ card on Help screen when switching from the WordPress app to the Jetpack app is complete. [https://github.com/wordpress-mobile/WordPress-Android/pull/18032]
