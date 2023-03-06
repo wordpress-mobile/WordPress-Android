@@ -3,9 +3,12 @@ package org.wordpress.android.ui.jpfullplugininstall.install.compose.state
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -52,37 +55,42 @@ fun BaseState(
 ) {
     val scrollState = rememberScrollState()
     with(uiState) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(horizontal = 32.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+        BoxWithConstraints(
+            modifier = Modifier.fillMaxSize(),
         ) {
-            Spacer(modifier = Modifier.weight(1f))
-            Image(
-                painter = painterResource(image),
-                contentDescription = stringResource(imageContentDescription),
+            val height = this.maxHeight
+            Column(
                 modifier = Modifier
-                    .size(dimensionResource(R.dimen.jetpack_new_remote_install_icon_size))
-            )
-            ContentAlphaProvider(ContentAlpha.high) {
-                Text(
-                    text = stringResource(title),
-                    style = TitleTextStyle,
-                    modifier = Modifier.padding(top = Margin.ExtraMediumLarge.value),
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(horizontal = 32.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(modifier = Modifier.height(height * 0.25f))
+                Image(
+                    painter = painterResource(image),
+                    contentDescription = stringResource(imageContentDescription),
+                    modifier = Modifier
+                        .size(dimensionResource(R.dimen.jetpack_new_remote_install_icon_size))
                 )
+                ContentAlphaProvider(ContentAlpha.high) {
+                    Text(
+                        text = stringResource(title),
+                        style = TitleTextStyle,
+                        modifier = Modifier.padding(top = Margin.ExtraMediumLarge.value),
+                    )
+                }
+                ContentAlphaProvider(ContentAlpha.medium) {
+                    Text(
+                        text = stringResource(description).fixWidows(),
+                        style = DescriptionTextStyle,
+                        modifier = Modifier.padding(top = Margin.Medium.value),
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                content()
             }
-            ContentAlphaProvider(ContentAlpha.medium) {
-                Text(
-                    text = stringResource(description).fixWidows(),
-                    style = DescriptionTextStyle,
-                    modifier = Modifier.padding(top = Margin.Medium.value),
-                )
-            }
-            Spacer(modifier = Modifier.weight(1.5f))
-            content()
         }
     }
 }
