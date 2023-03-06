@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-15 12:54:08+0000
+Translation-Revision-Date: 2023-03-01 09:54:13+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">区块菜单</string>
+    <string name="promote_blaze_card_menu_hide_this">隐藏此内容</string>
+    <string name="promote_blaze_card_sub_title">在数以百万计的站点上展示您的作品。</string>
+    <string name="promote_blaze_card_title">使用 Blaze 推广您的内容</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">关闭</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">联系支持人员</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">安装完整的插件</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">条款和条件</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">设置 Jetpack 即表示，您同意我们的 </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">完整的 Jetpack 插件</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">独立的 Jetpack 插件</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">%1$s 插件</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s 使用 %2$s 插件，尚不支持该应用程序的全部功能。\n\n请安装 %3$s，通过此站点使用该应用程序。</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">请安装完整的 Jetpack 插件</string>
+    <string name="only_one_primary_site_message">只有一个站点可用，因此您不能更改您的主站点。</string>
+    <string name="my_site_jp_install_full_plugin_card_content">此站点使用独立插件，尚不支持该应用程序的全部功能。 请安装完整的 Jetpack 插件。</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">联系支持人员</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">重试</string>
+    <string name="jetpack_full_plugin_install_error_description">目前无法安装 Jetpack</string>
+    <string name="jetpack_full_plugin_install_error_title">出现问题</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">错误图标</string>
+    <string name="jetpack_full_plugin_install_done_button">完成</string>
+    <string name="jetpack_full_plugin_install_done_description">已准备好通过应用程序使用此站点。</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack 已安装</string>
+    <string name="jetpack_full_plugin_install_installing_description">正在您的站点上安装 Jetpack。 这将花费几分钟的时间才能完成。</string>
+    <string name="jetpack_full_plugin_install_installing_title">正在安装 Jetpack</string>
+    <string name="jetpack_full_plugin_install_initial_button">继续</string>
+    <string name="jetpack_full_plugin_install_initial_description">系统将不会存储您的网站凭据，并且仅将其用于安装 Jetpack。</string>
+    <string name="jetpack_full_plugin_install_initial_title">安装 Jetpack</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack 图标</string>
+    <string name="button_promote_with_blaze">大力宣传并推广</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">释放站点的全部潜力。 使用 Jetpack，获得统计信息、通知等功能。</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">您的站点已安装 Jetpack 插件</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack 移动应用程序旨在与 Jetpack 插件配合使用。 立即切换，访问统计信息、通知、阅读器以及更多功能。</string>

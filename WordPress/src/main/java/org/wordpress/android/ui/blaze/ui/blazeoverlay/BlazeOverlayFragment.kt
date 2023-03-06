@@ -7,34 +7,40 @@ import android.view.ViewGroup
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -44,15 +50,29 @@ import androidx.fragment.app.activityViewModels
 import coil.compose.rememberImagePainter
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.ui.blaze.BlazeUIModel
 import org.wordpress.android.ui.blaze.BlazeUiState
+import org.wordpress.android.ui.blaze.PageUIModel
 import org.wordpress.android.ui.blaze.PostUIModel
+import org.wordpress.android.ui.compose.components.Button
 import org.wordpress.android.ui.compose.components.Drawable
 import org.wordpress.android.ui.compose.components.ImageButton
+import org.wordpress.android.ui.compose.components.MainTopAppBar
+import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.utils.UiString
+
+@Stable
+private val darkModePrimaryButtonColor = Color(0xFF1C1C1E)
+
+@Stable
+private val lightModePostThumbnailBackground = Color(0xD000000)
+
+@Stable
+private val bulletedTextColor = Color(0xFF666666)
 
 @AndroidEntryPoint
 class BlazeOverlayFragment : Fragment() {
@@ -69,21 +89,61 @@ class BlazeOverlayFragment : Fragment() {
         setContent {
             AppTheme {
                 val postModel by viewModel.promoteUiState.observeAsState(BlazeUiState.PromoteScreen.Site)
-                BlazeOverlayContent(postModel)
+                BlazeOverlayScreen(postModel)
             }
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
     @Composable
-    fun BlazeOverlayContent(
-        postModelState: BlazeUiState.PromoteScreen,
-        isDarkTheme: Boolean = false
+    fun BlazeOverlayScreen(
+        content: BlazeUiState.PromoteScreen,
+        isDarkTheme: Boolean = isSystemInDarkTheme()
     ) {
-        val post = when (postModelState) {
-            is BlazeUiState.PromoteScreen.PromotePost -> postModelState.postUIModel
+        val blazeUIModel = when (content) {
+            is BlazeUiState.PromoteScreen.PromotePost -> content.postUIModel
+            is BlazeUiState.PromoteScreen.PromotePage -> content.pagesUIModel
             else -> null
         }
+        Scaffold(
+            topBar = { OverlayTopBar(blazeUIModel) },
+        ) {
+            BlazeOverlayContent(blazeUIModel, isDarkTheme)
+        }
+    }
+
+    @Composable
+    fun OverlayTopBar(uiModel: BlazeUIModel?, modifier: Modifier = Modifier) {
+        uiModel?.also {
+            MainTopAppBar(
+                title = null,
+                navigationIcon = {},
+                onNavigationIconClick = {},
+                actions = {
+                    IconButton(onClick = { viewModel.dismissOverlay() }) {
+                        Icon(
+                            modifier = modifier
+                                .align(Alignment.Top)
+                                .padding(end = 8.dp),
+                            painter = painterResource(R.drawable.ic_close_white_24dp),
+                            contentDescription = stringResource(
+                                R.string.jetpack_full_plugin_install_onboarding_dismiss_button_content_description
+                            ),
+                        )
+                    }
+                }
+            )
+        } ?: MainTopAppBar(
+            title = stringResource(R.string.blaze_activity_title),
+            navigationIcon = NavigationIcons.BackIcon,
+            onNavigationIconClick = { viewModel.dismissOverlay() }
+        )
+    }
+
+    @Composable
+    private fun BlazeOverlayContent(
+        uiModel: BlazeUIModel?,
+        isDarkTheme: Boolean
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(
@@ -93,7 +153,7 @@ class BlazeOverlayFragment : Fragment() {
             )
         ) {
             Image(
-                painterResource(id = R.drawable.ic_blaze_promotional_image),
+                painterResource(id = R.drawable.ic_blaze_overlay_image),
                 contentDescription = stringResource(id = R.string.blaze_activity_title),
                 modifier = Modifier.size(100.dp)
             )
@@ -112,49 +172,55 @@ class BlazeOverlayFragment : Fragment() {
                 ),
                 modifier = Modifier.padding(start = 20.dp, end = 20.dp)
             )
-            post?.let {
+            uiModel?.let {
                 PostThumbnailView(
-                    it, modifier = Modifier
+                    it,
+                    isInDarkTheme = isDarkTheme,
+                    modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
                 )
             }
-
+            Spacer(
+                modifier = Modifier
+                    .padding(top = 15.dp)
+            )
             ImageButton(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
                     .padding(start = 20.dp, end = 20.dp)
                     .background(
-                        Color.Black,
+                        getPrimaryButtonColor(isDarkTheme),
                         shape = RoundedCornerShape(15.dp)
                     ),
-                buttonText = UiString.UiStringRes(R.string.blaze_post_promotional_button),
+                button = Button(
+                    text = UiString.UiStringRes(getPrimaryButtonText(uiModel)),
+                    color = AppColor.White,
+                    fontWeight = FontWeight.Normal,
+                ),
                 drawableRight = Drawable(R.drawable.ic_promote_with_blaze),
-                onClick = { viewModel.onPromoteWithBlazeClicked() }
+                onClick = { viewModel.onPromoteWithBlazeClicked() },
             )
         }
     }
 
-    @Preview
-    @Composable
-    private fun PreviewThumbnailView() {
-        AppTheme {
-            BlazeOverlayContent(
-                postModelState = BlazeUiState.PromoteScreen.PromotePost(
-                    PostUIModel(
-                        postId = 119,
-                        title = "Post title check if this is long enough to be truncated",
-                        url = "https://www.google.long.ttiiitititititiit.com",
-                        imageUrl = 0
-                    )
-                )
-            )
-        }
+    private fun getPrimaryButtonColor(isInDarkTheme: Boolean): Color {
+        return if (isInDarkTheme) darkModePrimaryButtonColor
+        else AppColor.Black
+    }
+
+    private fun getPrimaryButtonText(blazeUIModel: BlazeUIModel?): Int {
+        return (blazeUIModel?.let { uiModel ->
+            return when (uiModel) {
+                is PostUIModel -> R.string.blaze_overlay_post_promotional_button
+                is PageUIModel -> R.string.blaze_overlay_page_promotional_button
+            }
+        }?: R.string.blaze_overlay_site_promotional_button)
     }
 
     @Composable
-    fun PostThumbnailView(postUIModel: PostUIModel, modifier: Modifier = Modifier) {
+    fun PostThumbnailView(uiModel: BlazeUIModel, modifier: Modifier = Modifier, isInDarkTheme: Boolean) {
         ConstraintLayout(
             modifier = modifier
                 .padding(horizontal = 20.dp, vertical = 15.dp)
@@ -169,38 +235,48 @@ class BlazeOverlayFragment : Fragment() {
                     width = Dimension.fillToConstraints
                     height = Dimension.fillToConstraints
                 }
-                .background(color = AppColor.Gray60, shape = RoundedCornerShape(15.dp))
+                .background(color = getThumbnailBackground(isInDarkTheme), shape = RoundedCornerShape(15.dp))
             )
-            PostFeaturedImage(url = "", modifier = Modifier
+            FeaturedImage(url = uiModel.featuredImageUrl, modifier = Modifier
                 .constrainAs(featuredImage) {
                     top.linkTo(postContainer.top, 15.dp)
                     bottom.linkTo(postContainer.bottom, 15.dp)
-                    end.linkTo(postContainer.end, 20.dp)
-                }
-                .width(80.dp)
-                .height(80.dp))
-            PostTitle(title = postUIModel.title, modifier = Modifier.constrainAs(title) {
-                top.linkTo(postContainer.top, 15.dp)
-                start.linkTo(postContainer.start, 20.dp)
-                end.linkTo(featuredImage.start, margin = 20.dp)
-                width = Dimension.fillToConstraints
-                height = Dimension.wrapContent
-            })
+                    end.linkTo(postContainer.end, 15.dp)
+                })
+            Title(
+                title = uiModel.title, modifier = Modifier.constrainAs(title) {
+                    top.linkTo(postContainer.top, 15.dp)
+                    start.linkTo(postContainer.start, 20.dp)
+                    uiModel.featuredImageUrl?.run {
+                        end.linkTo(featuredImage.start, margin = 15.dp)
+                    } ?: run {
+                        end.linkTo(postContainer.end, margin = 20.dp)
+                    }
+                    width = Dimension.fillToConstraints
+                }.wrapContentHeight()
+            )
             val url = createRef()
-            PostUrl(url = postUIModel.url, modifier = Modifier.constrainAs(url) {
-                top.linkTo(title.bottom, 5.dp)
+            Url(url = uiModel.url, modifier = Modifier.constrainAs(url) {
+                top.linkTo(title.bottom)
                 start.linkTo(postContainer.start, 20.dp)
-                end.linkTo(featuredImage.start, margin = 20.dp)
-                bottom.linkTo(postContainer.bottom, 15.dp)
+                uiModel.featuredImageUrl?.run {
+                    end.linkTo(featuredImage.start, margin = 15.dp)
+                } ?: run {
+                    end.linkTo(postContainer.end, margin = 20.dp)
+                }
                 width = Dimension.fillToConstraints
                 height = Dimension.wrapContent
-            })
+            }.padding(bottom = 15.dp))
         }
     }
 
-    // todo the logic for showing the featured image is not implemented yet
+    private fun getThumbnailBackground(isInDarkTheme: Boolean): Color {
+        return if (isInDarkTheme) AppColor.DarkGray
+        else lightModePostThumbnailBackground
+    }
+
     @Composable
-    private fun PostFeaturedImage(url: String, modifier: Modifier = Modifier) {
+    private fun FeaturedImage(url: String?, modifier: Modifier = Modifier) {
         val painter = rememberImagePainter(url) {
             placeholder(R.drawable.bg_rectangle_placeholder_globe_margin_8dp)
             error(R.drawable.bg_rectangle_placeholder_globe_margin_8dp)
@@ -208,30 +284,35 @@ class BlazeOverlayFragment : Fragment() {
         }
         Image(
             painter = painter,
+            contentScale = ContentScale.Crop,
             contentDescription = stringResource(R.string.blavatar_desc),
             modifier = modifier
-                .size(dimensionResource(R.dimen.jp_migration_site_icon_size))
+                .size(80.dp)
                 .clip(RoundedCornerShape(3.dp))
         )
     }
 
 
     @Composable
-    private fun PostTitle(title: String, modifier: Modifier = Modifier) {
+    private fun Title(title: String, modifier: Modifier = Modifier) {
         Text(
             text = title,
             style = MaterialTheme.typography.body1,
+            fontSize = FontSize.Large.value,
+            fontWeight = FontWeight.Bold,
             maxLines = 2,
-            modifier = modifier
+            overflow = TextOverflow.Ellipsis,
+            modifier = modifier.wrapContentHeight()
         )
     }
 
     @Composable
-    private fun PostUrl(url: String, modifier: Modifier = Modifier) {
+    private fun Url(url: String, modifier: Modifier = Modifier) {
         Text(
             text = url,
             style = MaterialTheme.typography.body2,
             maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
             modifier = modifier
         )
     }
@@ -259,15 +340,42 @@ class BlazeOverlayFragment : Fragment() {
                 .padding(start = 4.dp, top = 12.dp)
                 .size(6.dp),
                 onDraw = {
-                    drawCircle(Color.LightGray)
+                    drawCircle(color = bulletedTextColor)
                 })
             Text(
                 modifier = Modifier.padding(start = Margin.ExtraLarge.value),
                 text = stringResource(id = stringResource),
                 fontSize = FontSize.Large.value,
-                fontWeight = FontWeight.Light,
-                color = Color.Gray
+                color = bulletedTextColor
             )
+        }
+    }
+
+    @Preview
+    @Composable
+    private fun PreviewBlazeOverlayScreenPostFlow() {
+        AppTheme {
+            BlazeOverlayScreen(
+                content = BlazeUiState.PromoteScreen.PromotePost(
+                    PostUIModel(
+                        postId = 119,
+                        title = "Post title long enough to be truncated and this is not just a test to see " +
+                                "how it looks",
+                        url = "www.google.long.ttiiitititititiit.com/blog./24/2021/05/12" +
+                                "/this-is-a-test-post/trucncation is happeniding",
+                        featuredImageId = 357,
+                        featuredImageUrl = "https://ajeshrpai.in/wp-content/uploads/2023/02/wp-1677490974228.jpg"
+                    )
+                )
+            )
+        }
+    }
+
+    @Preview
+    @Composable
+    private fun PreviewBlazeOverlayScreenSiteFlow() {
+        AppTheme {
+            BlazeOverlayScreen(BlazeUiState.PromoteScreen.Site)
         }
     }
 }

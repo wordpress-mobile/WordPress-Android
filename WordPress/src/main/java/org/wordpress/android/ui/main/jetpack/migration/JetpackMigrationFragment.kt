@@ -117,7 +117,7 @@ class JetpackMigrationFragment : Fragment() {
     }
 
     private fun launchHelpScreen() {
-        ActivityLauncher.viewHelpAndSupport(
+        ActivityLauncher.viewHelp(
             requireContext(),
             JETPACK_MIGRATION_HELP,
             null,

@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-15 16:54:08+0000
+Translation-Revision-Date: 2023-03-01 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">תפריט בלוקים</string>
+    <string name="promote_blaze_card_menu_hide_this">להסתיר את המידע</string>
+    <string name="promote_blaze_card_sub_title">להציג את העבודה שלך במיליוני אתרים.</string>
+    <string name="promote_blaze_card_title">לקדם את התוכן שלך עם Blaze</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">לסגור</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">לפנות לתמיכה</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">להתקין את התוסף המלא</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">תנאים והתניות</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">ההגדרה של Jetpack מהווה את ההסכמה שלך אל </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">התוסף המלא של Jetpack</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">תוספים יחידים של Jetpack</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">התוסף ⁦%1$s⁩</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">האתר ⁦%1$s⁩ משתמש ב-⁦%2$s⁩ שעדיין לא תומכים בכל האפשרויות של האפליקציה.\n\nיש להתקין את ⁦%3$s⁩ כדי להשתמש באפליקציה עם האתר הזה.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">יש להתקין את התוסף המלא של Jetpack</string>
+    <string name="only_one_primary_site_message">יש רק אתר אחד זמין ולכן אין אפשרות לשנות את האתר הראשי שלך.</string>
+    <string name="my_site_jp_install_full_plugin_card_content">האתר משתמש בתוסף יחיד שעדיין לא תומך בכל האפשרויות של האפליקציה. יש להתקין את התוסף המלא של Jetpack.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">לפנות לתמיכה</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">יש לנסות שנית</string>
+    <string name="jetpack_full_plugin_install_error_description">אין אפשרות להתקין את Jetpack כעת.</string>
+    <string name="jetpack_full_plugin_install_error_title">הייתה בעיה</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">סמל שגיאה</string>
+    <string name="jetpack_full_plugin_install_done_button">הושלם</string>
+    <string name="jetpack_full_plugin_install_done_description">הכול מוכן לשימוש באתר הזה עם האפליקציה.</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack מותקן</string>
+    <string name="jetpack_full_plugin_install_installing_description">אנחנו מתקינים את Jetpack באתר שלך. להשלמת השלב הזה יידרשו מספר דקות.</string>
+    <string name="jetpack_full_plugin_install_installing_title">התקנת Jetpack</string>
+    <string name="jetpack_full_plugin_install_initial_button">המשך</string>
+    <string name="jetpack_full_plugin_install_initial_description">פרטי הכניסה שלך לאתר לא יאוחסנו. אנחנו משתמשים בהם כדי להתקין את Jetpack בלבד.</string>
+    <string name="jetpack_full_plugin_install_initial_title">להתקין את Jetpack</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">סמל Jetpack</string>
+    <string name="button_promote_with_blaze">לקדם עם Blaze</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">להתחיל לממש את מלוא הפוטנציאל של האתר. לראות נתונים סטטיסטיים, לקרוא הודעות ועוד בעזרת Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">באתר שלך מותקן תוסף של Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">האפליקציה לנייד של Jetpack נועדה לעבוד בשילוב עם התוסף של Jetpack. כדאי להחליף עכשיו כדי לגשת לנתונים סטטיסטיים, להודעות, ל-Reader ועוד.</string>

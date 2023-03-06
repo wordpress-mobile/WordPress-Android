@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-15 09:54:10+0000
+Translation-Revision-Date: 2023-03-01 11:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">區塊選單</string>
+    <string name="promote_blaze_card_sub_title">在數百萬個網站中展示你的作品。</string>
+    <string name="promote_blaze_card_title">使用 Blaze 宣傳你的內容</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">關閉</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">聯絡支援團隊</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">安裝完整外掛程式</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">條款與條件</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">設定 Jetpack 即代表你同意我們的 </string>
+    <string name="promote_blaze_card_menu_hide_this">隱藏此訊息</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">完整 Jetpack 外掛程式</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">個別 Jetpack 外掛程式</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">%1$s 外掛程式</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s 正在使用 %2$s，目前尚未支援應用程式的所有功能。\n\n若要在此網站使用應用程式，請安裝 %3$s。</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">請安裝完整 Jetpack 外掛程式</string>
+    <string name="only_one_primary_site_message">只有一個網站可用，因此你無法變更主要網站。</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">聯絡支援團隊</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">重試</string>
+    <string name="jetpack_full_plugin_install_error_description">目前無法安裝 Jetpack。</string>
+    <string name="jetpack_full_plugin_install_error_title">發生問題</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">錯誤圖示</string>
+    <string name="my_site_jp_install_full_plugin_card_content">此網站正在使用個別外掛程式，該外掛程式目前尚未支援應用程式的所有功能。 請安裝完整 Jetpack 外掛程式。</string>
+    <string name="jetpack_full_plugin_install_done_button">完成</string>
+    <string name="jetpack_full_plugin_install_done_title">已安裝 Jetpack</string>
+    <string name="jetpack_full_plugin_install_installing_description">正在你的網站上安裝 Jetpack。 這可能需要幾分鐘才能完成。</string>
+    <string name="jetpack_full_plugin_install_installing_title">正在安裝 Jetpack</string>
+    <string name="jetpack_full_plugin_install_initial_button">繼續</string>
+    <string name="jetpack_full_plugin_install_initial_description">我們不會儲存你的網站憑證，而且只會將其用於安裝 Jetpack。</string>
+    <string name="jetpack_full_plugin_install_initial_title">安裝 Jetpack</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack 圖示</string>
+    <string name="button_promote_with_blaze">使用 Blaze 進行宣傳</string>
+    <string name="jetpack_full_plugin_install_done_description">準備好透過應用程式使用此網站了。</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">充分發揮網站的潛能。 透過 Jetpack 取得統計資料、通知等功能。</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">你的網站已安裝 Jetpack 外掛程式</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">接收新留言、按讚、瀏覽次數等內容的通知。</string>

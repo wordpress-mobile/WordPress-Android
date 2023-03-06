@@ -370,7 +370,8 @@ public class SiteUtils {
 
     public static boolean hasSiteWithPaidPlan(SiteStore siteStore) {
         for (SiteModel site : siteStore.getSites()) {
-            if (!site.getHasFreePlan()) {
+            if (site.getPlanId() != 0 && !site.getHasFreePlan()) {
+                // The plan id is 0 if a self-hosted site is added without logging in.
                 return true;
             }
         }

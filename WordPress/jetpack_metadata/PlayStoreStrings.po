@@ -10,6 +10,18 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Jetpack - Apps - Android - Release Notes\n"
 
+msgctxt "release_note_218"
+msgid ""
+"21.8:\n"
+"We’ve added a little extra support for sites with individual plugins. These plugins don’t support all app features yet, but you can always install the full Jetpack plugin instead. Ready to launch?\n"
+msgstr ""
+
+msgctxt "release_note_217"
+msgid ""
+"21.7:\n"
+"Say hello to our shiny new in-app landing screen! It almost makes you want to look at it all day and not publish anything new. Almost.\n"
+msgstr ""
+
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 #. translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!
 msgctxt "play_store_app_title"

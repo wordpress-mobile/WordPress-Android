@@ -107,7 +107,7 @@ class JetpackFullPluginInstallOnboardingDialogFragment : DialogFragment() {
                 dismiss()
             }
             is ContactSupport -> {
-                ActivityLauncher.viewHelpAndSupport(
+                ActivityLauncher.viewHelp(
                     requireContext(),
                     actionEvent.origin,
                     actionEvent.selectedSite,

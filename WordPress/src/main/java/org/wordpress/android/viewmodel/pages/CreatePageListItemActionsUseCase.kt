@@ -2,6 +2,7 @@ package org.wordpress.android.viewmodel.pages
 
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
@@ -9,6 +10,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PageItem.Action.PROMOTE_WITH_BLAZE
 import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
@@ -24,64 +26,92 @@ import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostU
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadWaitingForConnection
 import javax.inject.Inject
 
-class CreatePageListItemActionsUseCase @Inject constructor() {
+class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeatureUtils: BlazeFeatureUtils) {
+    @SuppressWarnings("ReturnCount")
     fun setupPageActions(
         listType: PageListType,
         uploadUiState: PostUploadUiState,
         siteModel: SiteModel,
-        remoteId: Long
+        remoteId: Long,
+        isPageEligibleForBlaze: Boolean = false
     ): Set<Action> {
         return when (listType) {
-            SCHEDULED -> mutableSetOf(
-                VIEW_PAGE,
-                SET_PARENT,
-                COPY_LINK,
-                MOVE_TO_DRAFT,
-                MOVE_TO_TRASH
-            ).apply {
-                if (canCancelPendingAutoUpload(uploadUiState)) {
-                    add(CANCEL_AUTO_UPLOAD)
-                }
-            }
-            PUBLISHED -> {
-                mutableSetOf(
-                    VIEW_PAGE,
-                    COPY,
-                    COPY_LINK,
-                    SET_PARENT
-                ).apply {
-                    if (siteModel.isUsingWpComRestApi &&
-                        siteModel.showOnFront == ShowOnFront.PAGE.value &&
-                        remoteId > 0
-                    ) {
-                        if (siteModel.pageOnFront != remoteId) {
-                            add(SET_AS_HOMEPAGE)
-                        }
-                        if (siteModel.pageForPosts != remoteId) {
-                            add(SET_AS_POSTS_PAGE)
-                        }
-                    }
-
-                    if (siteModel.pageOnFront != remoteId && listType == PUBLISHED) {
-                        add(MOVE_TO_DRAFT)
-                        add(MOVE_TO_TRASH)
-                    }
-
-                    if (canCancelPendingAutoUpload(uploadUiState)) {
-                        add(CANCEL_AUTO_UPLOAD)
-                    }
-                }
-            }
-            DRAFTS -> mutableSetOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, COPY_LINK).apply {
-                if (canCancelPendingAutoUpload(uploadUiState)) {
-                    add(CANCEL_AUTO_UPLOAD)
-                }
-            }
+            SCHEDULED -> return getScheduledPageActions(uploadUiState)
+            PUBLISHED -> return getPublishedPageActions(
+                siteModel,
+                remoteId,
+                listType,
+                uploadUiState,
+                isPageEligibleForBlaze
+            )
+            DRAFTS -> getDraftsPageActions(uploadUiState)
             TRASHED -> setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY)
+        }
+    }
+
+    private fun getScheduledPageActions(uploadUiState: PostUploadUiState): MutableSet<Action> {
+        return mutableSetOf(
+            VIEW_PAGE,
+            SET_PARENT,
+            COPY_LINK,
+            MOVE_TO_DRAFT,
+            MOVE_TO_TRASH
+        ).apply {
+            if (canCancelPendingAutoUpload(uploadUiState)) {
+                add(CANCEL_AUTO_UPLOAD)
+            }
         }
     }
 
     private fun canCancelPendingAutoUpload(uploadUiState: PostUploadUiState) =
         (uploadUiState is UploadWaitingForConnection ||
                 (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload))
+
+    private fun getPublishedPageActions(
+        siteModel: SiteModel,
+        remoteId: Long,
+        listType: PageListType,
+        uploadUiState: PostUploadUiState,
+        isPageEligibleForBlaze: Boolean
+    ): MutableSet<Action> {
+        return mutableSetOf(
+            VIEW_PAGE,
+            COPY,
+            COPY_LINK,
+            SET_PARENT
+        ).apply {
+            if (siteModel.isUsingWpComRestApi &&
+                siteModel.showOnFront == ShowOnFront.PAGE.value &&
+                remoteId > 0
+            ) {
+                if (siteModel.pageOnFront != remoteId) {
+                    add(SET_AS_HOMEPAGE)
+                }
+                if (siteModel.pageForPosts != remoteId) {
+                    add(SET_AS_POSTS_PAGE)
+                }
+            }
+
+            if (siteModel.pageOnFront != remoteId && listType == PUBLISHED) {
+                add(MOVE_TO_DRAFT)
+                add(MOVE_TO_TRASH)
+            }
+
+            if (canCancelPendingAutoUpload(uploadUiState)) {
+                add(CANCEL_AUTO_UPLOAD)
+            }
+
+            if (isPageEligibleForBlaze && blazeFeatureUtils.isBlazeEnabled()) {
+                add(PROMOTE_WITH_BLAZE)
+            }
+        }
+    }
+
+    private fun getDraftsPageActions(uploadUiState: PostUploadUiState): MutableSet<Action> {
+        return mutableSetOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, COPY_LINK).apply {
+            if (canCancelPendingAutoUpload(uploadUiState)) {
+                add(CANCEL_AUTO_UPLOAD)
+            }
+        }
+    }
 }

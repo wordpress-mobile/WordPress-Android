@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -32,9 +33,12 @@ import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteOptionsStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
@@ -42,6 +46,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PageItem.Action.PROMOTE_WITH_BLAZE
 import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
@@ -118,6 +123,8 @@ class PagesViewModel
     private val appLogWrapper: AppLogWrapper,
     private val accountStore: AccountStore,
     private val prefs: AppPrefsWrapper,
+    private val blazeFeatureUtils: BlazeFeatureUtils,
+    private val blazeStore: BlazeStore,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -169,6 +176,9 @@ class PagesViewModel
     private val _publishAction = SingleLiveEvent<PageModel>()
     val publishAction = _publishAction
 
+    private val _navigateToBlazeOverlay = SingleLiveEvent<PageModel>()
+    val navigateToBlazeOverlay = _navigateToBlazeOverlay
+
     private var isInitialized = false
     private var scrollToPageId: Long? = null
 
@@ -218,6 +228,9 @@ class PagesViewModel
     private val _authorUIState = MutableLiveData<PagesAuthorFilterUIState>()
     val authorUIState: LiveData<PagesAuthorFilterUIState> = _authorUIState
 
+    private val _blazeSiteEligibility = MutableLiveData(false)
+    val blazeSiteEligibility: LiveData<Boolean> = _blazeSiteEligibility
+
     data class BrowsePreview(
         val post: PostModel,
         val previewType: RemotePreviewType
@@ -228,6 +241,7 @@ class PagesViewModel
         if (_site == null) {
             _site = site
 
+            checkBlazeEligibility()
             loadPagesAsync()
             uploadStarter.queueUploadFromSite(site)
         }
@@ -262,6 +276,20 @@ class PagesViewModel
     override fun onCleared() {
         actionPerformer.onCleanup()
         pageListEventListener.onDestroy()
+    }
+
+    private fun checkBlazeEligibility() {
+        // If the user is not an admin, we don't need to check for Blaze eligibility
+        if (!blazeFeatureUtils.isBlazeEligibleForUser(site)) return
+        launch {
+            blazeStore.getBlazeStatus(site.siteId)
+                .map { status -> status.model?.firstOrNull() }
+                .collect {
+                    it?.let {
+                        _blazeSiteEligibility.postValue(it.isEligible)
+                    }
+                }
+        }
     }
 
     private fun loadPagesAsync() = launch(defaultDispatcher) {
@@ -449,8 +477,15 @@ class PagesViewModel
             SET_AS_POSTS_PAGE -> setPostsPage(page.remoteId)
             COPY -> onCopyPage(page)
             COPY_LINK -> context?.let { copyPageLink(page, it) }
+            PROMOTE_WITH_BLAZE -> navigateToBlazeOverlay(page.remoteId)
         }
         return true
+    }
+
+    private fun navigateToBlazeOverlay(remoteId: Long) {
+        blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.PAGES_LIST)
+        val page = pageMap[remoteId]
+        page?.let { _navigateToBlazeOverlay.postValue(it) }
     }
 
     private fun deletePage(page: Page) {
@@ -638,6 +673,7 @@ class PagesViewModel
             DELETE_PERMANENTLY -> "delete_permanently"
             MOVE_TO_TRASH -> "move_to_bin"
             COPY_LINK -> "copy_link"
+            PROMOTE_WITH_BLAZE -> "promote_with_blaze"
         }
         val properties = mutableMapOf("option_name" to menu as Any)
         AnalyticsUtils.trackWithSiteDetails(PAGES_OPTIONS_PRESSED, site, properties)

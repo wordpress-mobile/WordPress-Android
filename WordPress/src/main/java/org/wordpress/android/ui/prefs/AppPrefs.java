@@ -1601,11 +1601,15 @@ public class AppPrefs {
         return DeletablePrefKey.SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING.name() + siteId;
     }
 
-    public static Boolean getShouldHidePromoteWithBlazeCard() {
-        return getBoolean(DeletablePrefKey.SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD, false);
+    public static Boolean getShouldHidePromoteWithBlazeCard(long siteId) {
+        return prefs().getBoolean(getSiteIdHideBlazeKey(siteId), false);
     }
 
-    public static void setShouldHidePromoteWithBlazeCard(final boolean isHidden) {
-        setBoolean(DeletablePrefKey.SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD, isHidden);
+    public static void setShouldHidePromoteWithBlazeCard(long siteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHideBlazeKey(siteId), isHidden).apply();
+    }
+
+    @NonNull private static String getSiteIdHideBlazeKey(long siteId) {
+        return DeletablePrefKey.SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD.name() + siteId;
     }
 }

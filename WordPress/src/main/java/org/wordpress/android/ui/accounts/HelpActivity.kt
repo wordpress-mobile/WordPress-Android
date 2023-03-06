@@ -37,6 +37,7 @@ import org.wordpress.android.ui.AppLogViewerActivity
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.SiteUtils
@@ -58,6 +59,9 @@ class HelpActivity : LocaleAwareActivity() {
 
     @Inject
     lateinit var supportHelper: SupportHelper
+
+    @Inject
+    lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Inject
     lateinit var zendeskHelper: ZendeskHelper
@@ -109,7 +113,7 @@ class HelpActivity : LocaleAwareActivity() {
 
             faqButton.setOnClickListener { showFaq() }
             applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
-            applicationLogButton.setOnClickListener { v ->
+            logsButton.setOnClickListener { v ->
                 startActivity(Intent(v.context, AppLogViewerActivity::class.java))
             }
 
@@ -181,9 +185,22 @@ class HelpActivity : LocaleAwareActivity() {
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
     }
 
+    private fun showMigrationFaq() {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://jetpack.com/support/switch-to-the-jetpack-app/"))
+        startActivity(intent)
+        AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_TAPPED)
+    }
+
     private fun HelpActivityBinding.showContactUs() {
+        if (appPrefsWrapper.isJetpackMigrationCompleted()) {
+            JpFaqContainer.isVisible = true
+            JpFaqContainerBottomDivider.isVisible = true
+            AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_VIEWED)
+            JpFaqContainer.setOnClickListener { showMigrationFaq() }
+        }
+
         contactUsButton.setOnClickListener { createNewZendeskTicket() }
-        myTicketsButton.setOnClickListener { showZendeskTickets() }
+        ticketsButton.setOnClickListener { showZendeskTickets() }
 
         contactEmailContainer.setOnClickListener {
             var emailSuggestion = AppPrefs.getSupportEmail()
@@ -210,16 +227,13 @@ class HelpActivity : LocaleAwareActivity() {
 
     private fun HelpActivityBinding.showSupportForum() {
         contactUsButton.isVisible = false
-        myTicketsButton.isVisible = false
-        emailContainerTopDivider.isVisible = false
+        ticketsButton.isVisible = false
         contactEmailContainer.isVisible = false
-        emailContainerBottomDivider.isVisible = false
 
         forumContainer.run {
             isVisible = true
             setOnClickListener { openWpSupportForum() }
         }
-        forumContainerBottomDivider.isVisible = true
     }
 
     private fun HelpActivityBinding.refreshContactEmailText() {
@@ -239,7 +253,7 @@ class HelpActivity : LocaleAwareActivity() {
             setOnClickListener { showFaq() }
         }
         applicationVersion.isVisible = false
-        applicationLogButton.isVisible = false
+        logsButton.isVisible = false
 
         if (accountStore.hasAccessToken()) {
             val defaultAccount = accountStore.account

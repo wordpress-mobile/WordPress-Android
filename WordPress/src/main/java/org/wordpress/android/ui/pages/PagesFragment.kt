@@ -40,6 +40,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
@@ -498,6 +499,16 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                 uploadUtilsWrapper.publishPost(activity, it.post, it.site)
             }
         })
+
+        viewModel.navigateToBlazeOverlay.observe(viewLifecycleOwner) {
+            it?.let { page ->
+                ActivityLauncher.openPromoteWithBlaze(
+                    activity,
+                    page,
+                    BlazeFlowSource.PAGES_LIST
+                )
+            }
+        }
 
         viewModel.uploadFinishedAction.observe(viewLifecycleOwner, {
             it?.let { (page, isError, isFirstTimePublish) ->

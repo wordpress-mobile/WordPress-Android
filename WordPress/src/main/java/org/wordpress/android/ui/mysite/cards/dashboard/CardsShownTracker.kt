@@ -115,7 +115,7 @@ class CardsShownTracker @Inject constructor(
     private fun trackBlazeCardShownIfNeeded(cardType: String) {
         if (cardType == Type.PROMOTE_WITH_BLAZE.label) {
             analyticsTrackerWrapper.track(
-                Stat.BLAZE_FEATURE_DISPLAYED,
+                Stat.BLAZE_ENTRY_POINT_DISPLAYED,
                 mapOf("source" to BlazeFlowSource.DASHBOARD_CARD.trackingName)
             )
         }

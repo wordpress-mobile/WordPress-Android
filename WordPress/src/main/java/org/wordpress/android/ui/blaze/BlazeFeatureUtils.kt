@@ -17,25 +17,30 @@ class BlazeFeatureUtils @Inject constructor(
     private val blazeFeatureConfig: BlazeFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
 ) {
-    fun shouldShowPromoteWithBlaze(
-        postStatus: PostStatus,
-        siteModel: SiteModel,
-        postModel: PostModel
-    ): Boolean {
-        // add the logic to check whether the site is eligible for blaze
+    fun isBlazeEnabled(): Boolean {
         return buildConfigWrapper.isJetpackApp &&
-                blazeFeatureConfig.isEnabled() &&
-                postStatus == PostStatus.PUBLISHED &&
-                postModel.password.isEmpty() &&
-                siteModel.isAdmin
+                blazeFeatureConfig.isEnabled()
     }
 
-    fun shouldShowPromoteWithBlazeCard(blazeStatusModel: BlazeStatusModel?): Boolean {
+    fun isBlazeEligibleForUser(siteModel: SiteModel): Boolean {
+        return siteModel.isAdmin &&
+                isBlazeEnabled()
+    }
+
+    fun isPostBlazeEligible(
+        postStatus: PostStatus,
+        postModel: PostModel
+    ): Boolean {
+        return isBlazeEnabled() &&
+                postStatus == PostStatus.PUBLISHED &&
+                postModel.password.isEmpty()
+    }
+
+    fun shouldShowBlazeEntryPoint(blazeStatusModel: BlazeStatusModel?, siteId: Long): Boolean {
         val isEligible = blazeStatusModel?.isEligible == true
-        return buildConfigWrapper.isJetpackApp &&
-                blazeFeatureConfig.isEnabled() &&
+        return isBlazeEnabled() &&
                 isEligible &&
-                !isPromoteWithBlazeCardHiddenByUser()
+                !isPromoteWithBlazeCardHiddenByUser(siteId)
     }
 
     fun track(stat: AnalyticsTracker.Stat, source: BlazeFlowSource) {
@@ -45,24 +50,74 @@ class BlazeFeatureUtils @Inject constructor(
         )
     }
 
-    fun hidePromoteWithBlazeCard() {
-        appPrefsWrapper.setShouldHidePromoteWithBlazeCard(true)
+    fun hidePromoteWithBlazeCard(siteId: Long) {
+        appPrefsWrapper.setShouldHidePromoteWithBlazeCard(siteId,true)
     }
 
-    private fun isPromoteWithBlazeCardHiddenByUser(): Boolean {
-        return appPrefsWrapper.getShouldHidePromoteWithBlazeCard()
+    fun trackEntryPointTapped(blazeFlowSource: BlazeFlowSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_ENTRY_POINT_TAPPED,
+            mapOf(SOURCE to blazeFlowSource.trackingName)
+        )
+    }
+
+    private fun isPromoteWithBlazeCardHiddenByUser(siteId: Long): Boolean {
+        return appPrefsWrapper.getShouldHidePromoteWithBlazeCard(siteId)
+    }
+
+    fun trackOverlayDisplayed(blazeFlowSource: BlazeFlowSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FEATURE_OVERLAY_DISPLAYED,
+            mapOf(SOURCE to blazeFlowSource.trackingName)
+        )
+    }
+
+    fun trackPromoteWithBlazeClicked(blazeFlowSource: BlazeFlowSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FEATURE_OVERLAY_PROMOTE_CLICKED,
+            mapOf(SOURCE to blazeFlowSource.trackingName)
+        )
+    }
+
+    fun trackOverlayDismissed(blazeFlowSource: BlazeFlowSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FEATURE_OVERLAY_DISMISSED,
+            mapOf(SOURCE to blazeFlowSource.trackingName)
+        )
+    }
+
+    fun trackFlowError(blazeFlowSource: BlazeFlowSource, blazeFlowStep: BlazeFlowStep) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FLOW_ERROR,
+            mapOf(
+                SOURCE to blazeFlowSource.trackingName, CURRENT_STEP to blazeFlowStep.trackingName
+            )
+        )
+    }
+
+    fun trackFlowCanceled(blazeFlowSource: BlazeFlowSource, blazeFlowStep: BlazeFlowStep) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FLOW_CANCELED,
+            mapOf(
+                SOURCE to blazeFlowSource.trackingName, CURRENT_STEP to blazeFlowStep.trackingName
+            )
+        )
+    }
+
+    fun trackBlazeFlowStarted(blazeFlowSource: BlazeFlowSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FLOW_STARTED, mapOf(SOURCE to blazeFlowSource.trackingName)
+        )
+    }
+
+    fun trackBlazeFlowCompleted(blazeFlowSource: BlazeFlowSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_FLOW_COMPLETED, mapOf(SOURCE to blazeFlowSource.trackingName)
+        )
     }
 
     companion object {
         const val SOURCE = "source"
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    fun trackOverlayDisplayed(trackingName: BlazeFlowSource) {
-        // add the logic to track the overlay displayed event
-    }
-
-    fun trackPromoteWithBlazeClicked() {
-        // add the logic to track the promote with blaze clicked event
+        const val CURRENT_STEP = "current_step"
     }
 }

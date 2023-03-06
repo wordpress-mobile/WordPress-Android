@@ -322,7 +322,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             @DrawableRes val secondaryIcon: Int? = null,
             val secondaryText: UiString? = null,
             val showFocusPoint: Boolean = false,
-            val onClick: ListItemInteraction
+            val onClick: ListItemInteraction,
+            val disablePrimaryIconTint: Boolean = false
         ) : Item(LIST_ITEM, activeQuickStartItem = showFocusPoint)
     }
 
