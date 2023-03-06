@@ -69,6 +69,18 @@
             android:name=".ui.WPLaunchActivity"
             android:noHistory="true"
             android:theme="@style/NoDisplay"
+            android:icon="@mipmap/app_icon"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <activity-alias
+            android:name=".launch.WPLaunchActivityDefault"
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:icon="@mipmap/app_icon"
+            android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -79,7 +91,24 @@
 
             <meta-data android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
-        </activity>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".launch.WPLaunchActivityRed"
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:icon="@mipmap/app_icon_red"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!-- Samsung multiwindow support -->
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
 
         <!-- Main tab activity -->
         <activity
