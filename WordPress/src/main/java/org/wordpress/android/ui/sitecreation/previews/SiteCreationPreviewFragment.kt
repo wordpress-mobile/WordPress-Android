@@ -382,12 +382,14 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     companion object {
         const val TAG = "site_creation_preview_fragment_tag"
 
-        fun newInstance(screenTitle: String, siteCreationData: SiteCreationState) = SiteCreationPreviewFragment()
-            .apply {
-                arguments = Bundle().apply {
-                    putString(EXTRA_SCREEN_TITLE, screenTitle)
-                    putParcelable(ARG_DATA, siteCreationData)
-                }
+        fun newInstance(
+            screenTitle: String,
+            siteCreationData: SiteCreationState,
+        ) = SiteCreationPreviewFragment().apply {
+            arguments = Bundle().apply {
+                putString(EXTRA_SCREEN_TITLE, screenTitle)
+                putParcelable(ARG_DATA, siteCreationData)
             }
+        }
     }
 }
