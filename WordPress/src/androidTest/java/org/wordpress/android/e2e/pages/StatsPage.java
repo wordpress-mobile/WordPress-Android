@@ -23,6 +23,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.allOf;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.wordpress.android.support.WPSupportUtils.scrollIntoView;
+import static org.wordpress.android.support.WPSupportUtils.sleep;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class StatsPage {
@@ -56,6 +57,7 @@ public class StatsPage {
         waitForElementToBeDisplayed(daysStatsTab);
         daysStatsTab.perform(ViewActions.click());
         waitForElementToBeDisplayed(postsAndPagesCard);
+        sleep(5000);
         return this;
     }
 
