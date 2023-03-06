@@ -188,9 +188,7 @@ class SitePreviewViewModel @Inject constructor(
         _onHelpClicked.call()
     }
 
-    fun onCancelWizardClicked() {
-        _onCancelWizardClicked.value = createSiteState
-    }
+    fun onHelpClicked() = _onHelpClicked.call()
 
     fun onOkButtonClicked() {
         tracker.trackPreviewOkButtonTapped()
