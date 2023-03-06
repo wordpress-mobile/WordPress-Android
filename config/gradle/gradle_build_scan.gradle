@@ -1,0 +1,11 @@
+
+// Only run build scan on CI builds.
+if (System.getenv('CI')) {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'yes'
+        tag 'CI'
+        publishAlways()
+        uploadInBackground = false
+    }
+}
