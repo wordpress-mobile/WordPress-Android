@@ -238,7 +238,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
             PROGRESS -> SiteCreationProgressFragment.newInstance(target.wizardState)
             SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState, mainViewModel.result)
         }
-        slideInFragment(fragment, target.wizardStep.toString())
+        slideInFragment(fragment, target.wizardStep.toString(), target.wizardStep != SITE_PREVIEW)
     }
 
     private fun getScreenTitle(step: SiteCreationStep): String {
@@ -253,14 +253,20 @@ class SiteCreationActivity : LocaleAwareActivity(),
         }
     }
 
-    private fun slideInFragment(fragment: Fragment, tag: String) {
+    private fun slideInFragment(fragment: Fragment, tag: String, animate: Boolean = true) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         if (supportFragmentManager.findFragmentById(R.id.fragment_container) != null) {
             // add to back stack and animate all screen except of the first one
-            fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
-            )
+            fragmentTransaction.addToBackStack(null).apply {
+                if (animate) {
+                    setCustomAnimations(
+                        R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+                        R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
+                    )
+                } else {
+                    setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                }
+            }
         }
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
         fragmentTransaction.commit()
