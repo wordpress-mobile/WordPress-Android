@@ -36,6 +36,8 @@
 
 /sites/$site/blaze/status
 
+/sites/$site/launch
+
 /users/username/suggestions/
 
 /segments
