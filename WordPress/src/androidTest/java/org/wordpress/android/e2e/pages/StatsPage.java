@@ -48,6 +48,8 @@ public class StatsPage {
                 withText("Days")
         ));
 
+        // Using a complex matcher to be sure
+        // that all parts of card were loaded.
         ViewInteraction statsCardStructure = onView(allOf(
                 isDescendantOfA(visibleCoordinatorLayout),
                 withId(R.id.stats_block_list),
