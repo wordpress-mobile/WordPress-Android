@@ -17,8 +17,6 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewWebErrorUiState
-import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
-import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState
 import org.wordpress.android.ui.sitecreation.usecases.isWordPressComSubDomain
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -174,10 +172,5 @@ class SitePreviewViewModel @Inject constructor(
         val shortUrl: String,
         val domainIndices: Pair<Int, Int>,
         val subDomainIndices: Pair<Int, Int>
-    )
-
-    data class SitePreviewStartServiceData(
-        val serviceData: SiteCreationServiceData,
-        val previousState: SiteCreationServiceState?
     )
 }
