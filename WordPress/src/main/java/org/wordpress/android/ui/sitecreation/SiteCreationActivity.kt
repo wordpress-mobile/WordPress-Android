@@ -38,10 +38,10 @@ import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewScreenListener
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteNotCreated
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
+import org.wordpress.android.ui.sitecreation.misc.CreateSiteState
+import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteCreationCompleted
+import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotCreated
+import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotInLocalDb
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameFragment
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewModel
 import org.wordpress.android.ui.sitecreation.sitename.SiteNameScreenListener
