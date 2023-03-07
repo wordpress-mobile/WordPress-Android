@@ -90,7 +90,7 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
     }
 
     private fun PagesListFragmentBinding.initializeViewModels(activity: FragmentActivity) {
-        val pagesViewModel = ViewModelProvider(activity, viewModelFactory).get(PagesViewModel::class.java)
+        val pagesViewModel = ViewModelProvider(activity, viewModelFactory)[PagesViewModel::class.java]
 
         val listType = requireNotNull(arguments?.getSerializableCompat<PageListType>(typeKey))
         viewModel =

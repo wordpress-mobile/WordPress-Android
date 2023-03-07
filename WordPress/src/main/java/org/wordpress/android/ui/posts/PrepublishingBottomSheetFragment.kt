@@ -135,8 +135,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this, viewModelFactory)
-            .get(PrepublishingViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[PrepublishingViewModel::class.java]
 
         viewModel.navigationTarget.observeEvent(this, { navigationState ->
             navigateToScreen(navigationState)

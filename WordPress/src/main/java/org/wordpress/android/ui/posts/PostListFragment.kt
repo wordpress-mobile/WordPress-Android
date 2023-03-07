@@ -105,8 +105,7 @@ class PostListFragment : ViewPagerFragment() {
             recyclerView?.id = R.id.posts_search_recycler_view_id
         }
 
-        mainViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
-            .get(PostListMainViewModel::class.java)
+        mainViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)[PostListMainViewModel::class.java]
 
         mainViewModel.viewLayoutType.observe(viewLifecycleOwner, Observer { optionaLayoutType ->
             optionaLayoutType?.let { layoutType ->
@@ -140,7 +139,7 @@ class PostListFragment : ViewPagerFragment() {
 
         val postListViewModelConnector = mainViewModel.getPostListViewModelConnector(postListType)
 
-        viewModel = ViewModelProvider(this, viewModelFactory).get(PostListViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[PostListViewModel::class.java]
 
         val displayWidth = DisplayUtils.getWindowPixelWidth(requireContext())
         val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)

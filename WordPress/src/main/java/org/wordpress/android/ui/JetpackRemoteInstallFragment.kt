@@ -52,7 +52,7 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
                 savedInstanceState?.getSerializableCompat<JetpackRemoteInstallViewState.Type>(VIEW_STATE)
             viewModel = ViewModelProvider(
                 this@JetpackRemoteInstallFragment, viewModelFactory
-            ).get(JetpackRemoteInstallViewModel::class.java)
+            )[JetpackRemoteInstallViewModel::class.java]
             viewModel.start(site, retrievedState)
 
             initLiveViewStateObserver()

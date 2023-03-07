@@ -71,11 +71,11 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(UnifiedCommentListViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[UnifiedCommentListViewModel::class.java]
         activityViewModel = ViewModelProvider(
             requireActivity(),
             viewModelFactory
-        ).get(UnifiedCommentActivityViewModel::class.java)
+        )[UnifiedCommentActivityViewModel::class.java]
         arguments?.let {
             commentListFilter = requireNotNull(it.getSerializableCompat(KEY_COMMENT_LIST_FILTER))
         }

@@ -117,10 +117,12 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     }
 
     private fun PrepublishingCategoriesFragmentBinding.initViewModel() {
-        viewModel = ViewModelProvider(this@PrepublishingCategoriesFragment, viewModelFactory)
-            .get(PrepublishingCategoriesViewModel::class.java)
-        parentViewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
-            .get(PrepublishingViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this@PrepublishingCategoriesFragment,
+            viewModelFactory
+        )[PrepublishingCategoriesViewModel::class.java]
+        parentViewModel =
+            ViewModelProvider(requireParentFragment(), viewModelFactory)[PrepublishingViewModel::class.java]
         startObserving()
         val siteModel = requireNotNull(arguments?.getSerializableCompat<SiteModel>(WordPress.SITE))
         val addCategoryRequest = arguments?.getSerializableCompat<PrepublishingAddCategoryRequest>(ADD_CATEGORY_REQUEST)

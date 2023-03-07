@@ -24,10 +24,14 @@ class PostDatePickerDialogFragment : DialogFragment() {
         )
 
         viewModel = when (publishSettingsFragmentType) {
-            PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(EditPostPublishSettingsViewModel::class.java)
-            PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(PrepublishingPublishSettingsViewModel::class.java)
+            PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(
+                requireActivity(),
+                viewModelFactory
+            )[EditPostPublishSettingsViewModel::class.java]
+            PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(
+                requireActivity(),
+                viewModelFactory
+            )[PrepublishingPublishSettingsViewModel::class.java]
             null -> error("PublishSettingsViewModel not initialized")
         }
 

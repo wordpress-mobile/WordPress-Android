@@ -75,7 +75,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         viewModel = ViewModelProvider(
             this@ActivityLogListFragment,
             viewModelFactory
-        ).get(ActivityLogViewModel::class.java)
+        )[ActivityLogViewModel::class.java]
 
         with(ActivityLogListFragmentBinding.bind(view)) {
             listView = logListView

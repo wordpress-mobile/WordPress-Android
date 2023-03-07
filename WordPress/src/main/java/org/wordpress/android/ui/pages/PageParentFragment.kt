@@ -180,8 +180,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), MenuProvider
         pageId: Long,
         isFirstStart: Boolean
     ) {
-        viewModel = ViewModelProvider(activity, viewModelFactory)
-            .get(PageParentViewModel::class.java)
+        viewModel = ViewModelProvider(activity, viewModelFactory)[PageParentViewModel::class.java]
 
         setupObservers()
 

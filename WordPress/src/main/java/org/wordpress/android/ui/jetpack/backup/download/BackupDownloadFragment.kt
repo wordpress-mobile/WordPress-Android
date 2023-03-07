@@ -76,7 +76,7 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
         viewModel = ViewModelProvider(
             this@BackupDownloadFragment,
             viewModelFactory
-        ).get(BackupDownloadViewModel::class.java)
+        )[BackupDownloadViewModel::class.java]
 
         val (site, activityId) = when {
             requireActivity().intent?.extras != null -> {

@@ -234,8 +234,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             PostEditorAnalyticsSession.fromBundle(bundle, STATE_KEY_EDITOR_SESSION_DATA, analyticsTrackerWrapper)
         }
 
-        viewModel = ViewModelProvider(this, viewModelFactory)
-            .get(StoryComposerViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[StoryComposerViewModel::class.java]
 
         site?.let {
             val postInitialized = viewModel.start(

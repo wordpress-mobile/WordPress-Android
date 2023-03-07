@@ -85,7 +85,7 @@ class HistoryListFragment : Fragment(R.layout.history_list_fragment) {
 
             (nonNullActivity.application as WordPress).component().inject(this@HistoryListFragment)
 
-            viewModel = ViewModelProvider(this@HistoryListFragment, viewModelFactory).get(HistoryViewModel::class.java)
+            viewModel = ViewModelProvider(this@HistoryListFragment, viewModelFactory)[HistoryViewModel::class.java]
             val site = requireNotNull(arguments?.getSerializableCompat<SiteModel>(KEY_SITE))
             viewModel.create(
                 localPostId = arguments?.getInt(KEY_POST_LOCAL_ID) ?: 0,

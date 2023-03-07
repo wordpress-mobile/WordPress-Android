@@ -48,7 +48,7 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
     private fun setupViewModel() {
         val intent = requireActivity().intent
         val site = requireNotNull(intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(DomainsDashboardViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[DomainsDashboardViewModel::class.java]
         viewModel.start(site)
     }
 

@@ -70,7 +70,7 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
     }
 
     private fun JetpackBackupRestoreFragmentBinding.initViewModel(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this@RestoreFragment, viewModelFactory).get(RestoreViewModel::class.java)
+        viewModel = ViewModelProvider(this@RestoreFragment, viewModelFactory)[RestoreViewModel::class.java]
 
         val (site, activityId) = when {
             requireActivity().intent?.extras != null -> {

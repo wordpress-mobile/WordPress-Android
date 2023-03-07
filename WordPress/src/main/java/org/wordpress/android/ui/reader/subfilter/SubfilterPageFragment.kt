@@ -84,7 +84,7 @@ class SubfilterPageFragment : DaggerFragment() {
         val category = requireNotNull(arguments?.getSerializableCompat<SubfilterCategory>(CATEGORY_KEY))
         val subfilterVmKey = requireArguments().getString(SUBFILTER_VIEW_MODEL_KEY)!!
 
-        viewModel = ViewModelProvider(this, viewModelFactory).get(SubfilterPageViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[SubfilterPageViewModel::class.java]
         viewModel.start(category)
 
         recyclerView = view.findViewById(R.id.content_recycler_view)

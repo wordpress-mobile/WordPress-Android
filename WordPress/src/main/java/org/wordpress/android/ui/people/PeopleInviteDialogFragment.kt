@@ -44,7 +44,7 @@ class PeopleInviteDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewModel = ViewModelProvider(
             targetFragment as ViewModelStoreOwner, viewModelFactory
-        ).get(PeopleInviteViewModel::class.java)
+        )[PeopleInviteViewModel::class.java]
 
         val dialogMode = arguments?.getSerializableCompat<DialogMode>(ARG_DIALOG_MODE)
         val roles = arguments?.getStringArray(ARG_ROLES)

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts
 
 import android.app.Dialog
 import android.app.TimePickerDialog
-import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -27,25 +26,26 @@ class PostTimePickerDialogFragment : DialogFragment() {
         )
 
         viewModel = when (publishSettingsFragmentType) {
-            PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(EditPostPublishSettingsViewModel::class.java)
-            PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(PrepublishingPublishSettingsViewModel::class.java)
+            PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(
+                requireActivity(),
+                viewModelFactory
+            )[EditPostPublishSettingsViewModel::class.java]
+            PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(
+                requireActivity(),
+                viewModelFactory
+            )[PrepublishingPublishSettingsViewModel::class.java]
             null -> error("PublishSettingsViewModel not initialized")
         }
 
         val is24HrFormat = DateFormat.is24HourFormat(activity)
         val context = ContextThemeWrapper(activity, style.PostSettingsCalendar)
-        val timePickerDialog = TimePickerDialog(
+        return TimePickerDialog(
             context,
-            OnTimeSetListener { _, selectedHour, selectedMinute ->
-                viewModel.onTimeSelected(selectedHour, selectedMinute)
-            },
+            { _, selectedHour, selectedMinute -> viewModel.onTimeSelected(selectedHour, selectedMinute) },
             viewModel.hour ?: 0,
             viewModel.minute ?: 0,
             is24HrFormat
         )
-        return timePickerDialog
     }
 
     override fun onAttach(context: Context) {

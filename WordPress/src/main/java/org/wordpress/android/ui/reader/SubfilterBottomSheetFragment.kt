@@ -71,8 +71,10 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             requireArguments().getParcelableArrayListCompat<SubfilterCategory>(SUBFILTER_CATEGORIES_KEY)
         )
 
-        viewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory)
-            .get(subfilterVmKey, SubFilterViewModel::class.java)
+        viewModel = ViewModelProvider(
+            parentFragment as ViewModelStoreOwner,
+            viewModelFactory
+        )[subfilterVmKey, SubFilterViewModel::class.java]
 
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
