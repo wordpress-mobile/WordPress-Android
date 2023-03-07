@@ -16,7 +16,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.JetpackCapability;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
-import org.wordpress.android.launch.AppIcon;
+import org.wordpress.android.ui.prefs.appicon.AppIcon;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;

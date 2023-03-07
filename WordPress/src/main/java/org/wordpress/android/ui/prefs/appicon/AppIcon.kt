@@ -1,4 +1,4 @@
-package org.wordpress.android.launch
+package org.wordpress.android.ui.prefs.appicon
 
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R

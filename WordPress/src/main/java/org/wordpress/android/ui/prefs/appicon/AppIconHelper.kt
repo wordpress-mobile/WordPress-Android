@@ -1,4 +1,4 @@
-package org.wordpress.android.launch
+package org.wordpress.android.ui.prefs.appicon
 
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.PackageManagerWrapper
