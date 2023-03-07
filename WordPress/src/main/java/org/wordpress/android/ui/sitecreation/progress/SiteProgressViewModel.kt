@@ -83,8 +83,8 @@ class SiteProgressViewModel @Inject constructor(
     private val _uiState: MutableLiveData<SiteProgressUiState> = MutableLiveData()
     val uiState: LiveData<SiteProgressUiState> = _uiState
 
-    private val _startCreateSiteService: SingleLiveEvent<SitePreviewStartServiceData> = SingleLiveEvent()
-    val startCreateSiteService: LiveData<SitePreviewStartServiceData> = _startCreateSiteService
+    private val _startCreateSiteService: SingleLiveEvent<StartServiceData> = SingleLiveEvent()
+    val startCreateSiteService: LiveData<StartServiceData> = _startCreateSiteService
 
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
@@ -149,7 +149,7 @@ class SiteProgressViewModel @Inject constructor(
                     urlWithoutScheme,
                     siteTitle
                 )
-                _startCreateSiteService.value = SitePreviewStartServiceData(serviceData, previousState)
+                _startCreateSiteService.value = StartServiceData(serviceData, previousState)
             }
         } else {
             showFullscreenErrorWithDelay()
@@ -290,9 +290,8 @@ class SiteProgressViewModel @Inject constructor(
         }
     }
 
-    data class SitePreviewStartServiceData(
+    data class StartServiceData(
         val serviceData: SiteCreationServiceData,
         val previousState: SiteCreationServiceState?
     )
-
 }
