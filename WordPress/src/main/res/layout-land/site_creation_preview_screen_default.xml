@@ -10,11 +10,6 @@
         layout="@layout/fullscreen_error_with_retry"
         tools:visibility="gone" />
 
-    <include
-        android:id="@+id/site_creation_progress_creating_site"
-        layout="@layout/site_creation_progress_creating_site"
-        tools:visibility="gone"/>
-
     <RelativeLayout
         android:id="@+id/content_layout"
         android:layout_width="match_parent"
