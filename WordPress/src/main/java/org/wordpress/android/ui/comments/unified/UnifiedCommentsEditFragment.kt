@@ -34,6 +34,8 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -61,9 +63,9 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
         super.onViewCreated(view, savedInstanceState)
         requireActivity().addMenuProvider(this, viewLifecycleOwner)
 
-        val site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
+        val site = requireNotNull(arguments?.getSerializableCompat<SiteModel>(WordPress.SITE))
         val commentIdentifier = requireNotNull(
-            requireArguments().getParcelable<CommentIdentifier>(
+            requireArguments().getParcelableCompat<CommentIdentifier>(
                 KEY_COMMENT_IDENTIFIER
             )
         )

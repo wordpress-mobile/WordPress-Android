@@ -22,6 +22,8 @@ import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActio
 import org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN
 import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fragment) {
@@ -44,9 +46,10 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
     private fun JetpackRemoteInstallFragmentBinding.initViewModel(savedInstanceState: Bundle?) {
         requireActivity().let { activity ->
             val intent = activity.intent
-            val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-            val source = intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
-            val retrievedState = savedInstanceState?.getSerializable(VIEW_STATE) as? JetpackRemoteInstallViewState.Type
+            val site = requireNotNull(intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
+            val source = requireNotNull(intent.getSerializableExtraCompat<JetpackConnectionSource>(TRACKING_SOURCE_KEY))
+            val retrievedState =
+                savedInstanceState?.getSerializableCompat<JetpackRemoteInstallViewState.Type>(VIEW_STATE)
             viewModel = ViewModelProvider(
                 this@JetpackRemoteInstallFragment, viewModelFactory
             ).get(JetpackRemoteInstallViewModel::class.java)
@@ -139,7 +142,7 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == JETPACK_LOGIN && resultCode == Activity.RESULT_OK) {
-            val site = requireActivity().intent!!.getSerializableExtra(WordPress.SITE) as SiteModel
+            val site = requireNotNull(activity?.intent?.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
             viewModel.onLogin(site.id)
         }
     }

@@ -6,6 +6,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.extensions.getSerializableCompat
 import javax.inject.Inject
 
 class StoriesTrackerHelper @Inject constructor() {
@@ -33,7 +34,7 @@ class StoriesTrackerHelper @Inject constructor() {
         val properties = getCommonProperties(event)
         var siteModel: SiteModel? = null
         event.metadata?.let {
-            siteModel = it.getSerializable(WordPress.SITE) as SiteModel
+            siteModel = it.getSerializableCompat(WordPress.SITE)
         }
 
         siteModel?.let {

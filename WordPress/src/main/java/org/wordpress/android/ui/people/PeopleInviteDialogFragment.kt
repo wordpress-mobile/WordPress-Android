@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.people.PeopleInviteDialogFragment.DialogMode.DISABLE_INVITE_LINKS_CONFIRMATION
 import org.wordpress.android.ui.people.PeopleInviteDialogFragment.DialogMode.INVITE_LINKS_ROLE_SELECTION
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
@@ -45,7 +46,7 @@ class PeopleInviteDialogFragment : DialogFragment() {
             targetFragment as ViewModelStoreOwner, viewModelFactory
         ).get(PeopleInviteViewModel::class.java)
 
-        val dialogMode = arguments?.getSerializable(ARG_DIALOG_MODE) as? DialogMode
+        val dialogMode = arguments?.getSerializableCompat<DialogMode>(ARG_DIALOG_MODE)
         val roles = arguments?.getStringArray(ARG_ROLES)
         val builder = MaterialAlertDialogBuilder(requireActivity())
 

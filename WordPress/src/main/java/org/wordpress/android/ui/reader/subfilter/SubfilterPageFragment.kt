@@ -35,6 +35,7 @@ import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.widgets.WPTextView
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -80,7 +81,7 @@ class SubfilterPageFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val category = requireArguments().getSerializable(CATEGORY_KEY) as SubfilterCategory
+        val category = requireNotNull(arguments?.getSerializableCompat<SubfilterCategory>(CATEGORY_KEY))
         val subfilterVmKey = requireArguments().getString(SUBFILTER_VIEW_MODEL_KEY)!!
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(SubfilterPageViewModel::class.java)

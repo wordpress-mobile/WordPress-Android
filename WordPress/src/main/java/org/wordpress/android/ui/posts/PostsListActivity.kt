@@ -60,6 +60,8 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.observeEvent
@@ -165,7 +167,7 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     private fun restartWhenSiteHasChanged(intent: Intent) {
-        val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+        val site = requireNotNull(intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
         if (site.id != this.site.id) {
             finish()
             startActivity(intent)
@@ -180,14 +182,14 @@ class PostsListActivity : LocaleAwareActivity(),
             setContentView(root)
             binding = this
 
-            site = if (savedInstanceState == null) {
-                checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
-                    "SiteModel cannot be null, check the PendingIntent starting PostsListActivity"
+            site = requireNotNull(
+                if (savedInstanceState == null) {
+                    intent.getSerializableExtraCompat(WordPress.SITE)
+                } else {
+                    restorePreviousSearch = true
+                    savedInstanceState.getSerializableCompat(WordPress.SITE)
                 }
-            } else {
-                restorePreviousSearch = true
-                savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-            }
+            ) { "SiteModel cannot be null, check the PendingIntent starting PostsListActivity" }
 
             val initPreviewState = if (savedInstanceState == null) {
                 PostListRemotePreviewState.NONE
@@ -477,8 +479,9 @@ class PostsListActivity : LocaleAwareActivity(),
 
     private fun loadIntentData(intent: Intent) {
         if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
-            val notificationType: NotificationType =
-                intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
+            val notificationType = requireNotNull(
+                intent.getSerializableExtraCompat<NotificationType>(ARG_NOTIFICATION_TYPE)
+            )
             systemNotificationTracker.trackTappedNotification(notificationType)
         }
 

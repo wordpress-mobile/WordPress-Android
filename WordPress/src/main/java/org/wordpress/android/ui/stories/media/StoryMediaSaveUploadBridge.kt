@@ -36,6 +36,7 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
 import javax.inject.Named
@@ -239,7 +240,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
         storiesTrackerHelper.trackStorySaveResultEvent(event)
 
         event.metadata?.let {
-            val site = it.getSerializable(WordPress.SITE) as SiteModel
+            val site = requireNotNull(it.getSerializableCompat<SiteModel>(WordPress.SITE))
             val story = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)
             saveStoryGutenbergBlockUseCase.saveNewLocalFilesToStoriesPrefsTempSlides(
                 site,

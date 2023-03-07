@@ -11,13 +11,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ScanActivityBinding
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.models.JetpackPoweredScreen
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -87,7 +87,7 @@ class ScanActivity : AppCompatActivity(), ScrollableViewInitializedListener {
             return true
         } else if (item.itemId == R.id.menu_scan_history) {
             // todo malinjir is it worth introducing a vm?
-            ActivityLauncher.viewScanHistory(this, intent.getSerializableExtra(WordPress.SITE) as SiteModel)
+            ActivityLauncher.viewScanHistory(this, intent.getSerializableExtraCompat(WordPress.SITE))
         }
         return super.onOptionsItemSelected(item)
     }

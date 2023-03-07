@@ -13,6 +13,7 @@ import org.wordpress.android.R.style
 import org.wordpress.android.WordPress
 
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel
+import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 
 class PostTimePickerDialogFragment : DialogFragment() {
@@ -21,7 +22,7 @@ class PostTimePickerDialogFragment : DialogFragment() {
     private lateinit var viewModel: PublishSettingsViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val publishSettingsFragmentType = arguments?.getParcelable<PublishSettingsFragmentType>(
+        val publishSettingsFragmentType = arguments?.getParcelableCompat<PublishSettingsFragmentType>(
             ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE
         )
 

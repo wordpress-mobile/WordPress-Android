@@ -15,6 +15,7 @@ import org.wordpress.android.databinding.StoriesIntroDialogFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 import javax.inject.Inject
 
@@ -59,7 +60,7 @@ class StoriesIntroDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
+        val site = requireArguments().getSerializableCompat<SiteModel>(WordPress.SITE)
         with(StoriesIntroDialogFragmentBinding.bind(view)) {
             createStoryIntroButton.setOnClickListener { viewModel.onCreateStoryButtonPressed() }
             storiesIntroBackButton.setOnClickListener { viewModel.onBackButtonPressed() }

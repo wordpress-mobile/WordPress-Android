@@ -28,6 +28,8 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettings
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.KeyboardResizeViewUtil
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -152,11 +154,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             ActivityUtils.hideKeyboardForced(view)
         })
 
-        val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(
+        val prepublishingScreenState = savedInstanceState?.getParcelableCompat<PrepublishingScreen>(
             KEY_SCREEN_STATE
         )
-        val site = arguments?.getSerializable(SITE) as SiteModel
-
+        val site = requireNotNull(arguments?.getSerializableCompat<SiteModel>(SITE))
         viewModel.start(site, prepublishingScreenState)
     }
 

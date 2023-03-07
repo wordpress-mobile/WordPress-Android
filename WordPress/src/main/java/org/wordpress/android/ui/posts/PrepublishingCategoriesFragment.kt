@@ -24,6 +24,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.AD
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -121,9 +122,8 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         parentViewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
             .get(PrepublishingViewModel::class.java)
         startObserving()
-        val siteModel = requireArguments().getSerializable(WordPress.SITE) as SiteModel
-        val addCategoryRequest: PrepublishingAddCategoryRequest? =
-            arguments?.getSerializable(ADD_CATEGORY_REQUEST) as? PrepublishingAddCategoryRequest
+        val siteModel = requireNotNull(arguments?.getSerializableCompat<SiteModel>(WordPress.SITE))
+        val addCategoryRequest = arguments?.getSerializableCompat<PrepublishingAddCategoryRequest>(ADD_CATEGORY_REQUEST)
         val selectedCategoryIds: List<Long> =
             arguments?.getLongArray(SELECTED_CATEGORY_IDS)?.toList() ?: listOf()
 

@@ -39,6 +39,7 @@ import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.observeEvent
@@ -93,11 +94,11 @@ class EngagedPeopleListFragment : Fragment() {
         loadingView = view.findViewById(R.id.loading_view)
         emptyView = view.findViewById(R.id.actionable_empty_view)
 
-        val listScenario = requireArguments().getParcelable<ListScenario>(KEY_LIST_SCENARIO)
+        val listScenario = requireNotNull(arguments?.getParcelableCompat<ListScenario>(KEY_LIST_SCENARIO))
 
         val layoutManager = LinearLayoutManager(activity)
 
-        savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
+        savedInstanceState?.getParcelableCompat<Parcelable>(KEY_LIST_STATE)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 
@@ -144,7 +145,7 @@ class EngagedPeopleListFragment : Fragment() {
             manageServiceRequest(serviceRequest)
         })
 
-        viewModel.start(listScenario!!)
+        viewModel.start(listScenario)
     }
 
     @Suppress("ForbiddenComment")

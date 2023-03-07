@@ -33,6 +33,7 @@ import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.config.UnifiedCommentsDetailFeatureConfig
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
 
@@ -76,7 +77,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
             viewModelFactory
         ).get(UnifiedCommentActivityViewModel::class.java)
         arguments?.let {
-            commentListFilter = it.getSerializable(KEY_COMMENT_LIST_FILTER) as CommentFilter
+            commentListFilter = requireNotNull(it.getSerializableCompat(KEY_COMMENT_LIST_FILTER))
         }
     }
 

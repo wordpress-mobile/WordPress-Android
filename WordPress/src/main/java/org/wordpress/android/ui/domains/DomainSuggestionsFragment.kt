@@ -18,6 +18,7 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.DOMAIN_REGISTRATION_PURPOSE_KEY
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -46,9 +47,10 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
 
         with(DomainSuggestionsFragmentBinding.bind(view)) {
             val intent = requireActivity().intent
-            val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-            val domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
-                    as DomainRegistrationPurpose
+            val site = requireNotNull(intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
+            val domainRegistrationPurpose = requireNotNull(
+                intent.getSerializableExtraCompat<DomainRegistrationPurpose>(DOMAIN_REGISTRATION_PURPOSE_KEY)
+            )
 
             setupViews()
             setupObservers()

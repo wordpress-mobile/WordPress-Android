@@ -47,6 +47,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.Domai
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 class DomainRegistrationDetailsFragment : Fragment() {
@@ -100,7 +101,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
             val domainProductDetails = requireNotNull(
                 arguments?.getParcelable<DomainProductDetails?>(EXTRA_DOMAIN_PRODUCT_DETAILS)
             )
-            val site = requireActivity().intent?.getSerializableExtra(WordPress.SITE) as SiteModel
+            val site = requireNotNull(activity?.intent?.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
 
             viewModel.start(site, domainProductDetails)
 

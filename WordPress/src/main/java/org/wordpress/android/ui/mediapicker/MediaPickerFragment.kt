@@ -74,6 +74,9 @@ import org.wordpress.android.util.WPLinkMovementMethod
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.extensions.getParcelableArrayListCompat
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -224,13 +227,13 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         requireActivity().addMenuProvider(this, viewLifecycleOwner)
 
         val mediaPickerSetup = MediaPickerSetup.fromBundle(requireArguments())
-        val site = requireArguments().getSerializable(WordPress.SITE) as? SiteModel
+        val site = requireArguments().getSerializableCompat<SiteModel>(WordPress.SITE)
         var selectedIds: List<Identifier>? = null
         var lastTappedIcon: MediaPickerIcon? = null
         if (savedInstanceState != null) {
             lastTappedIcon = MediaPickerIcon.fromBundle(savedInstanceState)
             if (savedInstanceState.containsKey(KEY_SELECTED_IDS)) {
-                selectedIds = savedInstanceState.getParcelableArrayList<Identifier>(KEY_SELECTED_IDS)?.map { it }
+                selectedIds = savedInstanceState.getParcelableArrayListCompat<Identifier>(KEY_SELECTED_IDS)?.map { it }
             }
         }
 
@@ -239,7 +242,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
             NUM_COLUMNS
         )
 
-        savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
+        savedInstanceState?.getParcelableCompat<Parcelable>(KEY_LIST_STATE)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
         with(MediaPickerFragmentBinding.bind(view)) {
