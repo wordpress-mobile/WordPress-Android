@@ -34,6 +34,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.CreateSiteState
 import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteCreationCompleted
+import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotCreated
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
@@ -327,6 +328,29 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         getNewViewModel().start(null, SiteCreationSource.UNSPECIFIED)
 
         verify(tracker).trackSiteCreationDomainPurchasingExperimentVariation(isA<Treatment>())
+    }
+
+    @Test
+    fun `initial createSiteResult is SiteNotCreated`() {
+        assertThat(viewModel.createSiteResult).isEqualTo(SiteNotCreated)
+    }
+
+    @Test
+    fun `createSiteResult is updated by onSiteCreationCompleted`() {
+        val expectedState = SiteCreationCompleted(LOCAL_SITE_ID, false, DOMAIN.domainName)
+
+        viewModel.onSiteCreationCompleted(expectedState)
+
+        assertThat(viewModel.createSiteResult).isEqualTo(expectedState)
+    }
+
+    @Test
+    fun `next step is shown by onSiteCreationCompleted`() {
+        val expectedState = SiteCreationCompleted(LOCAL_SITE_ID, false, DOMAIN.domainName)
+
+        viewModel.onSiteCreationCompleted(expectedState)
+
+        verify(wizardManager).showNextStep()
     }
 
     private fun currentWizardState(vm: SiteCreationMainVM) =
