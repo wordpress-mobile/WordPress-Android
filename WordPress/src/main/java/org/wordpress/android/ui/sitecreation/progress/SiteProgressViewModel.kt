@@ -231,20 +231,14 @@ class SiteProgressViewModel @Inject constructor(
     private fun runLoadingAnimationUi() {
         loadingAnimationJob?.cancel()
         loadingAnimationJob = launch(mainDispatcher) {
-            var i = 0
-            val listSize = loadingTexts.size
-            repeat(listSize) {
+            loadingTexts.forEachIndexed { i, uiString ->
                 updateUiState(
                     SiteProgressLoadingUiState(
                         animate = i != 0, // the first text should appear without an animation
-                        loadingTextResId = loadingTexts[i++ % listSize]
+                        loadingTextResId = uiString
                     )
                 )
                 delay(LOADING_STATE_TEXT_ANIMATION_DELAY)
-            }
-
-            check(createSiteState !is SiteNotCreated) {
-                "Site should have been created by now."
             }
 
             _onSiteCreationCompleted.postValue(createSiteState)
