@@ -96,18 +96,15 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
 
     private fun getSiteScreen() = arguments?.getSerializableCompat<JetpackFeatureOverlayScreenType>(OVERLAY_SCREEN_TYPE)
 
-    private fun getIfSiteCreationOverlay() =
-        arguments?.getSerializable(IS_SITE_CREATION_OVERLAY) as Boolean
+    private fun getIfSiteCreationOverlay() = arguments?.getBoolean(IS_SITE_CREATION_OVERLAY) ?: false
 
-    private fun getIfDeepLinkOverlay() =
-        arguments?.getSerializable(IS_DEEP_LINK_OVERLAY) as Boolean
+    private fun getIfDeepLinkOverlay() = arguments?.getBoolean(IS_DEEP_LINK_OVERLAY) ?: false
 
     private fun getSiteCreationSource() = requireNotNull(
         arguments?.getSerializableCompat<SiteCreationSource>(SITE_CREATION_OVERLAY_SOURCE)
     )
 
-    private fun getIfFeatureCollectionOverlay() =
-        arguments?.getSerializable(IS_FEATURE_COLLECTION_OVERLAY) as Boolean
+    private fun getIfFeatureCollectionOverlay() = arguments?.getBoolean(IS_FEATURE_COLLECTION_OVERLAY) ?: false
 
     private fun getFeatureCollectionOverlaysSource() = requireNotNull(
         arguments?.getSerializableCompat<JetpackFeatureCollectionOverlaySource>(FEATURE_COLLECTION_OVERLAY_SOURCE)
