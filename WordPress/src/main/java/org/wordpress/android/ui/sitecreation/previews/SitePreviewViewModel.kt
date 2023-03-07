@@ -26,9 +26,9 @@ import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteNotCreated
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
+import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteCreationCompleted
+import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotCreated
+import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotInLocalDb
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewConnectionErrorUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewGenericErrorUiState
@@ -393,8 +393,6 @@ class SitePreviewViewModel @Inject constructor(
             object SitePreviewGenericErrorUiState :
                 SitePreviewFullscreenErrorUiState(
                     R.string.site_creation_error_generic_title,
-                    R.string.site_creation_error_generic_subtitle,
-                    showContactSupport = true
                 )
 
             object SitePreviewConnectionErrorUiState : SitePreviewFullscreenErrorUiState(
