@@ -188,7 +188,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
         mainViewModel.showJetpackOverlay.observeEvent(this) {
             if (mainViewModel.siteCreationDisabled)
-                slideInFragment(fragment, JetpackFeatureFullScreenOverlayFragment.TAG)
+                showFragment(fragment, JetpackFeatureFullScreenOverlayFragment.TAG)
             else fragment.show(supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
         }
     }
@@ -238,7 +238,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
             PROGRESS -> SiteCreationProgressFragment.newInstance(target.wizardState)
             SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState, mainViewModel.result)
         }
-        slideInFragment(fragment, target.wizardStep.toString(), target.wizardStep != SITE_PREVIEW)
+        showFragment(fragment, target.wizardStep.toString(), target.wizardStep != SITE_PREVIEW)
     }
 
     private fun getScreenTitle(step: SiteCreationStep): String {
@@ -253,12 +253,12 @@ class SiteCreationActivity : LocaleAwareActivity(),
         }
     }
 
-    private fun slideInFragment(fragment: Fragment, tag: String, animate: Boolean = true) {
+    private fun showFragment(fragment: Fragment, tag: String, slideIn: Boolean = true) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         if (supportFragmentManager.findFragmentById(R.id.fragment_container) != null) {
             // add to back stack and animate all screen except of the first one
             fragmentTransaction.addToBackStack(null).apply {
-                if (animate) {
+                if (slideIn) {
                     setCustomAnimations(
                         R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
                         R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
