@@ -127,13 +127,13 @@ class PostListFragment : ViewPagerFragment() {
             }
         })
 
-        mainViewModel.authorSelectionUpdated.observe(viewLifecycleOwner, Observer {
+        mainViewModel.authorSelectionUpdated.observe(viewLifecycleOwner) {
             if (it != null) {
                 if (viewModel.updateAuthorFilterIfNotSearch(it)) {
                     recyclerView?.scrollToPosition(0)
                 }
             }
-        })
+        }
 
         actionableEmptyView?.updateLayoutForSearch(postListType == SEARCH, 0)
 

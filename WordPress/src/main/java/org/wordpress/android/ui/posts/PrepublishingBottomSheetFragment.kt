@@ -137,21 +137,21 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     private fun initViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this, viewModelFactory)[PrepublishingViewModel::class.java]
 
-        viewModel.navigationTarget.observeEvent(this, { navigationState ->
+        viewModel.navigationTarget.observeEvent(this) { navigationState ->
             navigateToScreen(navigationState)
-        })
+        }
 
-        viewModel.dismissBottomSheet.observeEvent(this, {
+        viewModel.dismissBottomSheet.observeEvent(this) {
             dismiss()
-        })
+        }
 
-        viewModel.triggerOnSubmitButtonClickedListener.observeEvent(this, { publishPost ->
+        viewModel.triggerOnSubmitButtonClickedListener.observeEvent(this) { publishPost ->
             prepublishingBottomSheetListener?.onSubmitButtonClicked(publishPost)
-        })
+        }
 
-        viewModel.dismissKeyboard.observeEvent(this, {
+        viewModel.dismissKeyboard.observeEvent(this) {
             ActivityUtils.hideKeyboardForced(view)
-        })
+        }
 
         val prepublishingScreenState = savedInstanceState?.getParcelableCompat<PrepublishingScreen>(
             KEY_SCREEN_STATE

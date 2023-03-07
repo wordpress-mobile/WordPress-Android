@@ -16,7 +16,6 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -100,7 +99,7 @@ class SubfilterPageFragment : DaggerFragment() {
             viewModelFactory
         ).get(subfilterVmKey, SubFilterViewModel::class.java)
 
-        subFilterViewModel.subFilters.observe(viewLifecycleOwner, Observer {
+        subFilterViewModel.subFilters.observe(viewLifecycleOwner) {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->
                 var items = it?.filter { it.type == category.type } ?: listOf()
 
@@ -117,9 +116,9 @@ class SubfilterPageFragment : DaggerFragment() {
                 adapter.update(items)
                 subFilterViewModel.onSubfilterPageUpdated(category, items.size)
             }
-        })
+        }
 
-        viewModel.emptyState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.emptyState.observe(viewLifecycleOwner) { uiState ->
             if (isAdded) {
                 when (uiState) {
                     HiddenEmptyUiState -> emptyStateContainer.visibility = View.GONE
@@ -133,7 +132,7 @@ class SubfilterPageFragment : DaggerFragment() {
                     }
                 }
             }
-        })
+        }
     }
 
     fun setNestedScrollBehavior(enable: Boolean) {

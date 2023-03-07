@@ -57,7 +57,7 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
 
             initLiveViewStateObserver()
 
-            viewModel.liveActionOnResult.observe(viewLifecycleOwner, Observer { result ->
+            viewModel.liveActionOnResult.observe(viewLifecycleOwner) { result ->
                 if (result != null) {
                     when (result.action) {
                         MANUAL_INSTALL -> onManualInstallResultAction(activity, source, result)
@@ -65,7 +65,7 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
                         CONNECT -> onConnectResultAction(activity, source, result)
                     }
                 }
-            })
+            }
         }
     }
 
