@@ -43,8 +43,8 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
+import org.wordpress.android.launch.AppIcon;
 import org.wordpress.android.launch.AppIconHelper;
-import org.wordpress.android.launch.AppIconHelper.IconType;
 import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.ui.debug.DebugSettingsActivity;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
@@ -202,8 +202,12 @@ public class AppSettingsFragment extends PreferenceFragment
                 (WPSwitchPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_open_web_links_with_jetpack, this);
 
+        // icon pref
+        AppIcon icon = mAppIconHelper.getCurrentIcon();
+        mAppIconPref.setChecked(icon != AppIcon.DEFAULT);
+        mAppIconPref.setSummary(icon.getDisplayName());
+
         // Set Local settings
-        mAppIconPref.setChecked(AppPrefs.isAppIconSet());
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
         setDetailListPreferenceValue(mImageMaxSizePref,
                 String.valueOf(AppPrefs.getImageOptimizeMaxSize()),
@@ -448,9 +452,9 @@ public class AppSettingsFragment extends PreferenceFragment
             return false;
         } else if (preference == mAppIconPref) {
             Boolean value = (Boolean) newValue;
-            AppIconHelper.IconType iconType = value ? IconType.RED : IconType.DEFAULT;
-            mAppIconHelper.enableSelectedType(iconType);
-            AppPrefs.setAppIcon(value);
+            AppIcon appIcon = value ? AppIcon.RED : AppIcon.DEFAULT;
+            mAppIconHelper.setCurrentIcon(appIcon);
+            mAppIconPref.setSummary(appIcon.getDisplayName());
         } else if (preference == mOptimizedImage) {
             AppPrefs.setImageOptimize((Boolean) newValue);
             mImageMaxSizePref.setEnabled((Boolean) newValue);

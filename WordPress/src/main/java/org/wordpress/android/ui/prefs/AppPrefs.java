@@ -16,6 +16,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.JetpackCapability;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
+import org.wordpress.android.launch.AppIcon;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
@@ -725,12 +726,12 @@ public class AppPrefs {
         editor.apply();
     }
 
-    public static boolean isAppIconSet() {
-        return getBoolean(DeletablePrefKey.APP_ICON, false);
+    public static String getCurrentAppIconId() {
+        return getString(DeletablePrefKey.APP_ICON, AppIcon.DEFAULT.getId());
     }
 
-    public static void setAppIcon(boolean isSet) {
-        setBoolean(DeletablePrefKey.APP_ICON, isSet);
+    public static void setCurrentAppIconId(String id) {
+        setString(DeletablePrefKey.APP_ICON, id);
     }
 
     public static boolean isImageOptimize() {

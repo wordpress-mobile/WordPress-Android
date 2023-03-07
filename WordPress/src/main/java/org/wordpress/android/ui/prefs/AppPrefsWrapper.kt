@@ -86,6 +86,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.shouldScheduleCreateSiteNotification()
         set(shouldSchedule) = AppPrefs.setShouldScheduleCreateSiteNotification(shouldSchedule)
 
+    var currentAppIconId: String
+        get() = AppPrefs.getCurrentAppIconId()
+        set(id) = AppPrefs.setCurrentAppIconId(id)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
