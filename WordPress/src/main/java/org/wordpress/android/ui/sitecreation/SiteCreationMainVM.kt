@@ -84,6 +84,7 @@ class SiteCreationMainVM @Inject constructor(
     private var siteCreationCompleted = false
 
     private lateinit var siteCreationState: SiteCreationState
+    lateinit var result: CreateSiteState
 
     internal var preloadingJob: Job? = null
 
@@ -250,8 +251,10 @@ class SiteCreationMainVM @Inject constructor(
         }
     }
 
-    fun onSiteCreationCompleted() {
+    fun onSiteCreationCompleted(state: CreateSiteState) {
+        result = state
         siteCreationCompleted = true
+        wizardManager.showNextStep()
     }
 
     /**

@@ -28,6 +28,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.INTENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.PROGRESS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_DESIGNS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_NAME
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
@@ -42,6 +43,8 @@ import org.wordpress.android.ui.sitecreation.misc.CreateSiteState
 import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteCreationCompleted
 import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotCreated
 import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotInLocalDb
+import org.wordpress.android.ui.sitecreation.progress.ProgressScreenListener
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressFragment
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameFragment
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewModel
 import org.wordpress.android.ui.sitecreation.sitename.SiteNameScreenListener
@@ -63,6 +66,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     IntentsScreenListener,
     SiteNameScreenListener,
     DomainsScreenListener,
+    ProgressScreenListener,
     SitePreviewScreenListener,
     OnHelpClickedListener,
     BasicDialogPositiveClickInterface,
@@ -210,7 +214,9 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.onDomainsScreenFinished(domain)
     }
 
-    override fun onSiteCreationCompleted() = mainViewModel.onSiteCreationCompleted()
+    override fun onSiteCreationCompleted(state: CreateSiteState) = mainViewModel.onSiteCreationCompleted(state)
+
+    override fun onProgressScreenDismissed(state: CreateSiteState) = mainViewModel.onProgressOrPreviewFinished(state)
 
     override fun onPreviewScreenDismissed(state: CreateSiteState) = mainViewModel.onProgressOrPreviewFinished(state)
 
@@ -229,7 +235,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
                 HomePagePickerFragment.newInstance(target.wizardState.siteIntent)
             }
             DOMAINS -> SiteCreationDomainsFragment.newInstance(screenTitle)
-            SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState)
+            PROGRESS -> SiteCreationProgressFragment.newInstance(target.wizardState)
+            SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState, mainViewModel.result)
         }
         slideInFragment(fragment, target.wizardStep.toString())
     }

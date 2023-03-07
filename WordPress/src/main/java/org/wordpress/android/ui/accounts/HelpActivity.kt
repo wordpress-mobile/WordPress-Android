@@ -354,6 +354,7 @@ class HelpActivity : LocaleAwareActivity() {
         SIGNUP_MAGIC_LINK("origin:signup-magic-link"),
         SIGNUP_CONFIRMATION("origin:signup-confirmation"),
         SITE_CREATION_CREATING("origin:site-create-creating"),
+        SITE_CREATION_CREATED("origin:site-create-created"),
         SITE_CREATION_SEGMENTS("origin:site-create-site-segments"),
         SITE_CREATION_VERTICALS("origin:site-create-site-verticals"),
         SITE_CREATION_DOMAINS("origin:site-create-domains"),
