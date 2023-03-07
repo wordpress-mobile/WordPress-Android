@@ -25,6 +25,7 @@ import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.misc.CreateSiteState
+import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotCreated
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
@@ -84,7 +85,7 @@ class SiteCreationMainVM @Inject constructor(
     private var siteCreationCompleted = false
 
     private lateinit var siteCreationState: SiteCreationState
-    lateinit var result: CreateSiteState
+    var createSiteResult: CreateSiteState = SiteNotCreated
 
     internal var preloadingJob: Job? = null
 
@@ -252,7 +253,7 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun onSiteCreationCompleted(state: CreateSiteState) {
-        result = state
+        createSiteResult = state
         siteCreationCompleted = true
         wizardManager.showNextStep()
     }

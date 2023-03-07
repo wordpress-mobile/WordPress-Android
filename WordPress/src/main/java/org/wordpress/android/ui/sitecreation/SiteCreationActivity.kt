@@ -236,7 +236,11 @@ class SiteCreationActivity : LocaleAwareActivity(),
             }
             DOMAINS -> SiteCreationDomainsFragment.newInstance(screenTitle)
             PROGRESS -> SiteCreationProgressFragment.newInstance(target.wizardState)
-            SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState, mainViewModel.result)
+            SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(
+                screenTitle,
+                target.wizardState,
+                mainViewModel.createSiteResult,
+            )
         }
         showFragment(fragment, target.wizardStep.toString(), target.wizardStep != SITE_PREVIEW)
     }
