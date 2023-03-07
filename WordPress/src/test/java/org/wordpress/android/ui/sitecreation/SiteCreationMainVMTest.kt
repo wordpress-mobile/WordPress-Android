@@ -32,10 +32,10 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
+import org.wordpress.android.ui.sitecreation.misc.CreateSiteState
+import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteCreationCompleted
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
@@ -140,7 +140,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
     @Test
     fun wizardFinishedInvokedOnSitePreviewCompleted() {
-        val state = SiteCreationCompleted(LOCAL_SITE_ID, false)
+        val state = SiteCreationCompleted(LOCAL_SITE_ID, false, DOMAIN.domainName)
         viewModel.onProgressOrPreviewFinished(state)
 
         val captor = ArgumentCaptor.forClass(CreateSiteState::class.java)
@@ -192,7 +192,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun flowExitedOnBackPressedWhenLastStepAndSiteCreationCompleted() {
         whenever(wizardManager.isLastStep()).thenReturn(true)
-        viewModel.onSiteCreationCompleted()
+        viewModel.onSiteCreationCompleted(mock())
         viewModel.onBackPressed()
         verify(wizardExitedObserver).onChanged(anyOrNull())
     }
