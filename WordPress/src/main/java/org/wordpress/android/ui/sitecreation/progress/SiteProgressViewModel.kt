@@ -246,16 +246,12 @@ class SiteProgressViewModel @Inject constructor(
     }
 
     private fun updateUiState(uiState: SiteProgressUiState) {
-        if (uiState !is SiteProgressLoadingUiState) {
-            loadingAnimationJob?.cancel()
-        }
+        if (uiState !is SiteProgressLoadingUiState) loadingAnimationJob?.cancel()
         _uiState.value = uiState
     }
 
     private fun updateUiStateAsync(uiState: SiteProgressUiState) {
-        if (uiState !is SiteProgressLoadingUiState) {
-            loadingAnimationJob?.cancel()
-        }
+        if (uiState !is SiteProgressLoadingUiState) loadingAnimationJob?.cancel()
         _uiState.postValue(uiState)
     }
 
