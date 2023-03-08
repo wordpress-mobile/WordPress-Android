@@ -20,8 +20,9 @@ class UnifiedCommentsEditActivity : LocaleAwareActivity() {
         }
 
         val site = requireNotNull(intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
-        val commentIdentifier =
-            requireNotNull(intent.getParcelableExtraCompat<CommentIdentifier>(KEY_COMMENT_IDENTIFIER))
+        val commentIdentifier = requireNotNull(
+            intent.getParcelableExtraCompat<CommentIdentifier>(KEY_COMMENT_IDENTIFIER)
+        )
 
         val fm = supportFragmentManager
         var editCommentFragment = fm.findFragmentByTag(

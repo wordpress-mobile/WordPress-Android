@@ -65,9 +65,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
 
         val site = requireNotNull(arguments?.getSerializableCompat<SiteModel>(WordPress.SITE))
         val commentIdentifier = requireNotNull(
-            requireArguments().getParcelableCompat<CommentIdentifier>(
-                KEY_COMMENT_IDENTIFIER
-            )
+            requireArguments().getParcelableCompat<CommentIdentifier>(KEY_COMMENT_IDENTIFIER)
         )
 
         UnifiedCommentsEditFragmentBinding.bind(view).apply {
