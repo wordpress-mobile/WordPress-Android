@@ -51,10 +51,8 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFra
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.prefs.appicon.AppIcon;
 import org.wordpress.android.ui.prefs.appicon.AppIconHelper;
-import org.wordpress.android.ui.prefs.appicon.AppIconSelector;
-import org.wordpress.android.ui.prefs.appicon.AppIconSelector.Callback;
-import org.wordpress.android.ui.prefs.appicon.AppIconSelectorScreen;
-import org.wordpress.android.ui.prefs.appicon.AppIconSelectorScreen.Callback;
+import org.wordpress.android.ui.prefs.appicon.AppIconSelectorBottomSheet;
+import org.wordpress.android.ui.prefs.appicon.AppIconSelectorBottomSheet.AppIconSelectorCallback;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet.LocalePickerCallback;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
@@ -719,8 +717,14 @@ public class AppSettingsFragment extends PreferenceFragment
 
     private boolean handleAppIconClick() {
         if (getActivity() instanceof AppCompatActivity) {
-            AppIconSelectorScreen.showBottomSheet(getActivity(), mAppIconHelper,
-                    (Callback) appIcon -> onPreferenceChange(mAppIconPref, appIcon));
+//            AppIconSelectorScreen.showBottomSheet(getActivity(), mAppIconHelper,
+//                    (Callback) appIcon -> onPreferenceChange(mAppIconPref, appIcon));
+            AppIconSelectorBottomSheet bottomSheet = new AppIconSelectorBottomSheet();
+            bottomSheet.setAppIconSelectorCallback(
+                    (AppIconSelectorCallback) appIcon -> onPreferenceChange(mAppIconPref, appIcon)
+            );
+            bottomSheet.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                    AppIconSelectorBottomSheet.TAG);
             return true;
         } else {
             throw new IllegalArgumentException(
