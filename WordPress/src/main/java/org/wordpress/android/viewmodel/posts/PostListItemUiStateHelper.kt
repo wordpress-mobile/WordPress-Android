@@ -91,7 +91,8 @@ class PostListItemUiStateHelper @Inject constructor(
         performingCriticalAction: Boolean,
         isSearch: Boolean,
         uploadStatusTracker: PostModelUploadStatusTracker,
-        onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
+        onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit,
+        isSiteBlazeEligible: Boolean
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
         val uploadUiState = uploadUiStateUseCase.createUploadUiState(post, site, uploadStatusTracker)
@@ -107,7 +108,10 @@ class PostListItemUiStateHelper @Inject constructor(
             siteHasCapabilitiesToPublish = capabilitiesToPublish,
             statsSupported = statsSupported,
             shouldRemoveJetpackFeatures = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures(),
-            shouldShowPromoteWithBlaze = blazeFeatureUtils.shouldShowPromoteWithBlaze(postStatus, site, post),
+            shouldShowPromoteWithBlaze = isSiteBlazeEligible && blazeFeatureUtils.isPostBlazeEligible(
+                postStatus,
+                post
+            ),
         )
         val defaultActions = createDefaultViewActions(buttonTypes, onButtonClicked)
         val compactActions = createCompactViewActions(buttonTypes, onButtonClicked)

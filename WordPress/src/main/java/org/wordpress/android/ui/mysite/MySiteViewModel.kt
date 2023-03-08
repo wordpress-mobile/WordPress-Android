@@ -39,6 +39,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
@@ -62,10 +63,10 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
@@ -518,7 +519,7 @@ class MySiteViewModel @Inject constructor(
             isJetpackApp && isMigrationCompleted && isWordPressInstalled
         }
 
-val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderParams(
+        val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderParams(
             site = site,
             onLearnMoreClick = ::onJetpackInstallFullPluginLearnMoreClick,
             onHideMenuItemClick = ::onJetpackInstallFullPluginHideMenuItemClick,
@@ -573,8 +574,9 @@ val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderPara
                     onRemoveClick = this::onBloggingPromptRemoveClick
                 ),
                 promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
-                    isEligible = blazeFeatureUtils.shouldShowPromoteWithBlazeCard(
-                        promoteWithBlazeUpdate?.blazeStatusModel
+                    isEligible = blazeFeatureUtils.shouldShowBlazeEntryPoint(
+                        promoteWithBlazeUpdate?.blazeStatusModel,
+                        site.siteId
                     ),
                     onClick = this::onPromoteWithBlazeCardClick,
                     onHideMenuItemClick = this::onPromoteWithBlazeCardHideMenuItemClick,
@@ -610,7 +612,9 @@ val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderPara
                 enableStatsFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 enablePagesFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
-                onClick = this::onItemClick
+                onClick = this::onItemClick,
+                isBlazeEligible =
+                    blazeFeatureUtils.shouldShowBlazeEntryPoint(promoteWithBlazeUpdate?.blazeStatusModel, site.siteId)
             )
         )
 
@@ -873,6 +877,10 @@ val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderPara
                     SiteNavigationAction.OpenSite(selectedSite)
                 }
                 ListItemAction.JETPACK_SETTINGS -> SiteNavigationAction.OpenJetpackSettings(selectedSite)
+                ListItemAction.BLAZE -> {
+                    blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.MENU_ITEM)
+                    SiteNavigationAction.OpenPromoteWithBlazeOverlay(BlazeFlowSource.MENU_ITEM)
+                }
             }
             _onNavigation.postValue(Event(navigationAction))
         } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
@@ -1495,26 +1503,25 @@ val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderPara
 
     private fun onPromoteWithBlazeCardMoreMenuClick() {
         blazeFeatureUtils.track(
-            Stat.BLAZE_FEATURE_MENU_ACCESSED,
-            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+            Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
+            BlazeFlowSource.DASHBOARD_CARD
         )
     }
 
-    @Suppress("ForbiddenComment")
     private fun onPromoteWithBlazeCardClick() {
-        blazeFeatureUtils.track(
-            Stat.BLAZE_FEATURE_TAPPED,
-            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
-        )
-        //  todo: add the navigation action and post value to _onNavigation.value
+        blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.DASHBOARD_CARD)
+        _onNavigation.value =
+            Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
     }
 
     private fun onPromoteWithBlazeCardHideMenuItemClick() {
         blazeFeatureUtils.track(
-            Stat.BLAZE_FEATURE_HIDE_TAPPED,
-            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+            Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
+            BlazeFlowSource.DASHBOARD_CARD
         )
-        blazeFeatureUtils.hidePromoteWithBlazeCard()
+        selectedSiteRepository.getSelectedSite()?.let {
+            blazeFeatureUtils.hidePromoteWithBlazeCard(it.siteId)
+        }
         refresh()
     }
 

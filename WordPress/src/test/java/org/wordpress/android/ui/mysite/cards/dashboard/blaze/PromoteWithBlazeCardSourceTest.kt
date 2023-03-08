@@ -17,10 +17,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeStatusError
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeStatusErrorType
 import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.fluxc.store.blaze.BlazeStore.BlazeStatusResult
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PromoteWithBlazeUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardSource
-import org.wordpress.android.util.config.BlazeFeatureConfig
 
 /* SITE */
 
@@ -46,7 +46,8 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
     private lateinit var siteModel: SiteModel
 
     @Mock
-    private lateinit var blazeFeatureConfig: BlazeFeatureConfig
+    private lateinit var blazeFeatureUtils: BlazeFeatureUtils
+
     private lateinit var blazeCardSource: PromoteWithBlazeCardSource
 
     private val data = BlazeStatusResult(
@@ -69,7 +70,7 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
         blazeCardSource = PromoteWithBlazeCardSource(
             selectedSiteRepository,
             blazeStore,
-            blazeFeatureConfig,
+            blazeFeatureUtils,
             testDispatcher()
         )
     }
@@ -139,7 +140,6 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
             it?.let { result.add(it) }
         }
 
-        assertThat(result.size).isEqualTo(1)
         assertThat(result.first()).isEqualTo(PromoteWithBlazeUpdate(blazeStatusModel = null))
     }
 
@@ -155,6 +155,7 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
         }
         advanceUntilIdle()
 
+        assertThat(result.size).isEqualTo(1)
         assertThat(result.first()).isEqualTo(PromoteWithBlazeUpdate(blazeStatusModel = null))
     }
 
@@ -192,8 +193,8 @@ class PromoteWithBlazeCardSourceTest : BaseUnitTest() {
     }
 
     private fun setUpMocks(isBlazeEnabled: Boolean) {
-        whenever(blazeFeatureConfig.isEnabled()).thenReturn(isBlazeEnabled)
         whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
+        whenever(blazeFeatureUtils.isBlazeEligibleForUser(siteModel)).thenReturn(isBlazeEnabled)
     }
 }

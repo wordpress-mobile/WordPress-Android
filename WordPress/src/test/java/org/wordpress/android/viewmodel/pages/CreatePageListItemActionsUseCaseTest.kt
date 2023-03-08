@@ -4,17 +4,21 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SiteModel.ORIGIN_WPCOM_REST
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
 import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PageItem.Action.PROMOTE_WITH_BLAZE
 import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
@@ -29,13 +33,16 @@ import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostU
 
 @RunWith(MockitoJUnitRunner::class)
 class CreatePageListItemActionsUseCaseTest {
+    @Mock
+    private lateinit var blazeFeatureUtils: BlazeFeatureUtils
+
     private lateinit var site: SiteModel
     private lateinit var useCase: CreatePageListItemActionsUseCase
     private val defaultRemoteId: Long = 1
 
     @Before
     fun setUp() {
-        useCase = CreatePageListItemActionsUseCase()
+        useCase = CreatePageListItemActionsUseCase(blazeFeatureUtils)
         site = SiteModel()
     }
 
@@ -254,5 +261,31 @@ class CreatePageListItemActionsUseCaseTest {
     fun `CANCEL_AUTO_UPLOAD is not added to DraftPage Actions if auto upload is not pending`() {
         val actions = useCase.setupPageActions(DRAFTS, UploadingPost(true), site, defaultRemoteId)
         assertThat(actions).doesNotContain(CANCEL_AUTO_UPLOAD)
+    }
+
+    @Test
+    fun `verify PUBLISHED actions contains PROMOTE_WITH_BLAZE when feature enabled`() {
+        // Arrange
+        val expectedActions = setOf(
+            VIEW_PAGE,
+            COPY,
+            COPY_LINK,
+            SET_PARENT,
+            SET_AS_HOMEPAGE,
+            SET_AS_POSTS_PAGE,
+            MOVE_TO_DRAFT,
+            MOVE_TO_TRASH,
+            PROMOTE_WITH_BLAZE
+        )
+        site.showOnFront = ShowOnFront.PAGE.value
+        site.setIsWPCom(true)
+        site.setIsJetpackConnected(true)
+        whenever(blazeFeatureUtils.isBlazeEnabled()).thenReturn(true)
+
+        // Act
+        val publishedActions = useCase.setupPageActions(PUBLISHED, mock(), site, defaultRemoteId, true)
+
+        // Assert
+        assertThat(publishedActions).isEqualTo(expectedActions)
     }
 }

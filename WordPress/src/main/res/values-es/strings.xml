@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-15 11:54:11+0000
+Translation-Revision-Date: 2023-03-02 18:16:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">Menú de bloques</string>
+    <string name="promote_blaze_card_menu_hide_this">Ocultar esto</string>
+    <string name="promote_blaze_card_sub_title">Muestra tu trabajo en millones de sitios</string>
+    <string name="promote_blaze_card_title">Promociona tu contenido con Blaze</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Cerrar</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contactar con el soporte técnico</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Instalar el plugin completo</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Términos y condiciones</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Al configurar Jetpack, aceptas nuestros </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">plugin completo de Jetpack</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">plugins individuales de Jetpack</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">el plugin %1$s</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s usa %2$s, que todavía no es compatible con todas las funciones de la aplicación.\n\nInstala el %3$s para usar la aplicación con este sitio.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Instala el plugin completo de Jetpack</string>
+    <string name="only_one_primary_site_message">Solo hay un sitio disponible, por lo que no puedes cambiar tu sitio principal.</string>
+    <string name="my_site_jp_install_full_plugin_card_content">Este sitio usa un plugin individual que todavía no es compatible con todas las funciones de la aplicación. Instala el plugin completo de Jetpack.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">Contactar con el soporte técnico</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">Reintentar</string>
+    <string name="jetpack_full_plugin_install_error_description">En estos momentos, no se puede instalar Jetpack.</string>
+    <string name="jetpack_full_plugin_install_error_title">Se ha producido un problema</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Icono de error</string>
+    <string name="jetpack_full_plugin_install_done_button">Hecho</string>
+    <string name="jetpack_full_plugin_install_done_description">Todo listo para usar este sitio con la aplicación.</string>
+    <string name="jetpack_full_plugin_install_done_title">Se ha instalado Jetpack</string>
+    <string name="jetpack_full_plugin_install_installing_description">Instala Jetpack en tu sitio. Esto puede llevar unos minutos completarse.</string>
+    <string name="jetpack_full_plugin_install_installing_title">Instalando Jetpack</string>
+    <string name="jetpack_full_plugin_install_initial_button">Continuar</string>
+    <string name="jetpack_full_plugin_install_initial_description">Las credenciales de tu sitio web no se almacenan; solo se usan para poder instalar Jetpack de forma segura.</string>
+    <string name="jetpack_full_plugin_install_initial_title">Instalar Jetpack</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Icono de Jetpack</string>
+    <string name="button_promote_with_blaze">Promocionar con Blaze</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Libera todo el potencial de tu sitio Obtén estadísticas, notificaciones y más con Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Tu sitio tiene el plugin de Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">La aplicación móvil Jetpack está diseñada para funcionar junto con el plugin de Jetpack. Haz el cambio ahora y obtén acceso a estadísticas, notificaciones o el lector, entre otras funciones.</string>

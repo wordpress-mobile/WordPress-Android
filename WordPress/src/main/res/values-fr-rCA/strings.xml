@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-15 11:54:12+0000
+Translation-Revision-Date: 2023-03-01 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">Menu Blocs</string>
+    <string name="promote_blaze_card_menu_hide_this">Masquer ceci</string>
+    <string name="promote_blaze_card_sub_title">Diffusez votre contenu sur des millions de sites.</string>
+    <string name="promote_blaze_card_title">Promouvoir du contenu avec Blaze</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Fermer</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contacter l’assistance</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Installer l’extension complète</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Conditions générales</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">En configurant Jetpack, vous acceptez nos\n </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">extension Jetpack complète</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">extensions Jetpack individuelles</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">l’extension %1$s</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s utilise des %2$s, qui ne prennent pas encore en charge toutes les fonctionnalités de l’application.\n\nInstallez l’%3$s pour utiliser l’application avec ce site.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Installez l’extension Jetpack complète</string>
+    <string name="only_one_primary_site_message">Un seul site est disponible. Vous ne pouvez donc pas changer de site principal.</string>
+    <string name="my_site_jp_install_full_plugin_card_content">Ce site utilise une extension individuelle, qui ne prend pas encore en charge toutes les fonctionnalités de l’application. Installez l’extension Jetpack complète.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">Contacter l’assistance</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">Réessayer</string>
+    <string name="jetpack_full_plugin_install_error_description">Impossible d’installer Jetpack pour le moment.</string>
+    <string name="jetpack_full_plugin_install_error_title">Un problème est survenu</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Icône d\'erreur</string>
+    <string name="jetpack_full_plugin_install_done_button">Terminé</string>
+    <string name="jetpack_full_plugin_install_done_description">Vous pouvez désormais utiliser ce site avec l’application.</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack installé</string>
+    <string name="jetpack_full_plugin_install_installing_description">Installation de Jetpack sur votre site… Ce processus peut prendre quelques minutes.</string>
+    <string name="jetpack_full_plugin_install_installing_title">Installation de Jetpack</string>
+    <string name="jetpack_full_plugin_install_initial_button">Continuer</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Icône Jetpack</string>
+    <string name="button_promote_with_blaze">Promouvoir avec Blaze</string>
+    <string name="jetpack_full_plugin_install_initial_description">Les identifiants de connexion de votre site Web servent uniquement à l’installation de Jetpack et ne seront pas enregistrés.</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Libérez tout le potentiel de votre site. Profitez des statistiques, des notifications et de bien plus encore avec Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Votre site comporte l’extension Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">L’application mobile Jetpack est conçue pour compléter l’extension Jetpack. Effectuez le changement dès maintenant pour accéder aux statistiques, aux notifications, au lecteur et bien plus encore.</string>

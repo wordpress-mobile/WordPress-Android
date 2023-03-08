@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-14 15:54:10+0000
+Translation-Revision-Date: 2023-03-02 18:07:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">Block-Menü</string>
+    <string name="promote_blaze_card_menu_hide_this">Ausblenden</string>
+    <string name="promote_blaze_card_sub_title">Präsentiere deine Werke auf Millionen von Websites.</string>
+    <string name="promote_blaze_card_title">Bewirb deine Inhalte mit Blaze</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Schließen</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Support kontaktieren</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Vollständiges Plugin installieren</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Geschäftsbedingungen</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Mit der Einrichtung von Jetpack erhalten wir deine Zustimmung zu unseren </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">vollständige Jetpack-Plugin</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">individuelle Jetpack-Plugins</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">das %1$s-Plugin</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s verwendet %2$s, das noch nicht alle Funktionen der App unterstützt.\n\nBitte installiere das %3$s, um die App mit dieser Website zu verwenden.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Bitte installiere das vollständige Jetpack-Plugin</string>
+    <string name="only_one_primary_site_message">Es ist nur eine Website verfügbar, du kannst deine Haupt-Website also nicht ändern.</string>
+    <string name="my_site_jp_install_full_plugin_card_content">Diese Website verwendet ein individuelles Plugin, das noch nicht alle Funktionen der App unterstützt. Bitte installiere das vollständige Jetpack-Plugin.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">Support kontaktieren</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">Erneut versuchen</string>
+    <string name="jetpack_full_plugin_install_error_description">Jetpack kann zurzeit nicht installiert werden.</string>
+    <string name="jetpack_full_plugin_install_error_title">Es ist ein Problem aufgetreten</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Fehler-Icon</string>
+    <string name="jetpack_full_plugin_install_done_button">Fertig</string>
+    <string name="jetpack_full_plugin_install_done_description">Diese Website kann jetzt mit der App verwendet werden.</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack installiert</string>
+    <string name="jetpack_full_plugin_install_installing_description">Jetpack wird auf deiner Website installiert. Dieser Vorgang kann einige Minuten dauern.</string>
+    <string name="jetpack_full_plugin_install_installing_title">Jetpack wird installiert</string>
+    <string name="jetpack_full_plugin_install_initial_button">Weiter</string>
+    <string name="jetpack_full_plugin_install_initial_description">Deine Website-Anmeldedaten werden nicht gespeichert und werden nur verwendet, um Jetpack zu installieren.</string>
+    <string name="jetpack_full_plugin_install_initial_title">Jetpack installieren</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack-Icon</string>
+    <string name="button_promote_with_blaze">Mit Blaze bewerben</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Entfalte das volle Potenzial deiner Website. Erhalte Statistiken, Benachrichtigungen und vieles mehr mit Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Deine Website hat das Jetpack-Plugin</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Die Jetpack-Mobil-App wurde entwickelt, um mit dem Jetpack-Plugin zusammenzuarbeiten. Wechsle jetzt, um u. a. Zugang zu Statistiken, Benachrichtigungen und dem Reader zu erhalten.</string>
@@ -2185,15 +2216,15 @@ Language: de
     <string name="preference_privacy_settings">Datenschutzeinstellungen</string>
     <string name="preference_collect_information">Informationen erfassen</string>
     <string name="post_submitted">Beitrag übermittelt</string>
-    <string name="plugin_install_site_ineligible_site_graylisted">Für das Plugin-Feature ist eine einwandfreie Historie der Website erforderlich.</string>
-    <string name="plugin_install_site_ineligible_not_domain_owner">Für das Plugin-Feature muss dieser Benutzer dem Abonnement für die Hauptdomain zugeordnet sein.</string>
-    <string name="plugin_install_site_ineligible_non_admin_user">Das Plugin-Feature erfordert Administratorrechte.</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Für die Plugin-Funktion ist eine einwandfreie Historie der Website erforderlich.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Für die Plugin-Funktion muss dieser Benutzer dem Abonnement für die Hauptdomain zugeordnet sein.</string>
+    <string name="plugin_install_site_ineligible_non_admin_user">Die Plugin-Funktion erfordert Administratorrechte.</string>
     <string name="plugin_install_site_ineligible_no_vip_sites">Das Plugin kann nicht auf VIP-Websites installiert werden.</string>
     <string name="plugin_install_site_ineligible_excessive_disk_space">Das Plugin kann aufgrund von begrenztem Speicherplatz nicht installiert werden.</string>
-    <string name="plugin_install_site_ineligible_email_unverified">DasPlugin-Feature erfordert eine bestätigte E-Mail-Adresse.</string>
-    <string name="plugin_install_site_ineligible_site_private">Für das Plugin-Feature muss die Website öffentlich sein.</string>
-    <string name="plugin_install_site_ineligible_no_business_plan">Für das Plugin-Feature ist ein Business-Tarif erforderlich.</string>
-    <string name="plugin_install_site_ineligible_not_using_custom_domain">Für das Plugin-Feature ist eine individuelle Domain erforderlich.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">Die Plugin-Funktion erfordert eine bestätigte E-Mail-Adresse.</string>
+    <string name="plugin_install_site_ineligible_site_private">Für die Plugin-Funktion muss die Website öffentlich sein.</string>
+    <string name="plugin_install_site_ineligible_no_business_plan">Für die Plugin-Funktion ist ein Business-Tarif erforderlich.</string>
+    <string name="plugin_install_site_ineligible_not_using_custom_domain">Für die Plugin-Funktion ist eine individuelle Domain erforderlich.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Die finale Einrichtung läuft – fast fertig …</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Plugin wird installiert …</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installieren</string>
@@ -2403,7 +2434,7 @@ Language: de
     <string name="my_site_btn_site_pages">Seiten</string>
     <string name="site_settings_tags_hint">Verwalte deine Website-Schlagwörter</string>
     <string name="dlg_saving_tag">Wird gespeichert …</string>
-    <string name="dlg_deleting_tag">Wird gelöscht …</string>
+    <string name="dlg_deleting_tag">Wird gelöscht</string>
     <string name="dlg_confirm_delete_tag">Schlagwort „%s“ dauerhaft löschen?</string>
     <string name="error_tag_exists">Ein Schlagwort mit diesem Namen ist bereits vorhanden.</string>
     <string name="add_new_tag">Neues Schlagwort hinzufügen</string>
@@ -2507,7 +2538,7 @@ Language: de
     <string name="share_action_post">Zu neuem Beitrag hinzufügen</string>
     <string name="share_media_permission_required">Berechtigungen zum Teilen von Bildern oder Videos erforderlich</string>
     <string name="invalid_ip_or_range">Ungültige IP-Adresse oder IP-Adressenbereich</string>
-    <string name="deleting_media_dlg">Löschvorgang läuft</string>
+    <string name="deleting_media_dlg">Wird gelöscht</string>
     <string name="confirm_delete_media_video">Dieses Video löschen?</string>
     <string name="confirm_delete_media_image">Dieses Bild löschen?</string>
     <string name="media_title_document_details">Dokument-Details</string>
@@ -2740,7 +2771,7 @@ Language: de
     <string name="media_upload_state_uploaded">Hochgeladen</string>
     <string name="media_upload_state_failed">Hochladen fehlgeschlagen</string>
     <string name="media_upload_state_deleted">Gelöscht</string>
-    <string name="media_upload_state_deleting">Lösche</string>
+    <string name="media_upload_state_deleting">Wird gelöscht</string>
     <string name="media_upload_state_uploading">Lade hoch</string>
     <string name="media_upload_state_queued">In Warteschlange</string>
     <string name="image_quality">Bildqualität</string>

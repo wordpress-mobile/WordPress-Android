@@ -53,6 +53,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -2338,6 +2339,21 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(siteItemsTracker).trackSiteItemClicked(ListItemAction.POSTS)
     }
 
+    @Test
+    fun `when blaze item click, then emits navigation event`() {
+        invokeItemClickAction(ListItemAction.BLAZE)
+
+        assertThat(navigationActions).containsExactly(
+            SiteNavigationAction.OpenPromoteWithBlazeOverlay(BlazeFlowSource.MENU_ITEM))
+    }
+
+    @Test
+    fun `when blaze item click, then event is tracked`() {
+        invokeItemClickAction(ListItemAction.BLAZE)
+
+        verify(blazeFeatureUtils).trackEntryPointTapped(BlazeFlowSource.MENU_ITEM)
+    }
+
     /* ITEM VISIBILITY */
 
     @Test
@@ -2378,7 +2394,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         assertThat(findBackupListItem()).isNotNull
     }
-
     /* ADD SITE ICON DIALOG */
 
     @Test
@@ -3238,15 +3253,12 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* Promote with Blaze */
     @Test
-    fun `when promote with blaze card is tapped, then blaze card tapped is tracked`() = test {
+    fun `when promote with blaze card is tapped, then blaze entry point tapped is tracked`() = test {
         initSelectedSite()
 
         onPromoteWithBlazeCardClick.invoke()
 
-        verify(blazeFeatureUtils).track(
-            Stat.BLAZE_FEATURE_TAPPED,
-            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
-        )
+        verify(blazeFeatureUtils).trackEntryPointTapped(BlazeFlowSource.DASHBOARD_CARD)
     }
     @Test
     fun `when promote with blaze card menu is accessed, then blaze card menu is accessed is tracked`() = test {
@@ -3255,8 +3267,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         onPromoteWithBlazeCardMenuClicked.invoke()
 
         verify(blazeFeatureUtils).track(
-            Stat.BLAZE_FEATURE_MENU_ACCESSED,
-            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+            Stat.BLAZE_ENTRY_POINT_MENU_ACCESSED,
+            BlazeFlowSource.DASHBOARD_CARD
         )
     }
 
@@ -3267,10 +3279,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         onPromoteWithBlazeCardHideThisClick.invoke()
 
         verify(blazeFeatureUtils).track(
-            Stat.BLAZE_FEATURE_HIDE_TAPPED,
-            BlazeFeatureUtils.BlazeEntryPointSource.DASHBOARD_CARD
+            Stat.BLAZE_ENTRY_POINT_HIDE_TAPPED,
+            BlazeFlowSource.DASHBOARD_CARD
         )
     }
+
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
@@ -3362,7 +3375,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsSocialEnabled)
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsEnabled)
         whenever(jetpackBrandingUtils.shouldShowJetpackBranding()).thenReturn(shouldShowJetpackBranding)
-        whenever(blazeFeatureUtils.shouldShowPromoteWithBlazeCard(any())).thenReturn(isBlazeEnabled)
+        whenever(blazeFeatureUtils.shouldShowBlazeEntryPoint(any(), any())).thenReturn(isBlazeEnabled)
         if (isSiteUsingWpComRestApi) {
             site.setIsWPCom(true)
             site.setIsJetpackConnected(true)
@@ -3535,7 +3548,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                     add(initPostCard(mockInvocation))
                     add(initTodaysStatsCard(mockInvocation))
                     if (bloggingPromptsFeatureConfig.isEnabled()) add(initBloggingPromptCard(mockInvocation))
-                    if (blazeFeatureUtils.shouldShowPromoteWithBlazeCard(BlazeStatusModel(1, true))) add(
+                    if (blazeFeatureUtils.shouldShowBlazeEntryPoint(
+                            BlazeStatusModel(1, true), 1)
+                    ) add(
                         initPromoteWithBlazeCard(mockInvocation)
                     )
                 }
@@ -3660,6 +3675,17 @@ class MySiteViewModelTest : BaseUnitTest() {
                 )
             )
         }
+        if (params.isBlazeEligible) {
+            items.add(
+                ListItem(
+                    0,
+                    UiStringRes(R.string.blaze_menu_item_label),
+                    onClick = mock(),
+                    disablePrimaryIconTint = true
+               )
+            )
+        }
+
         return items
     }
 

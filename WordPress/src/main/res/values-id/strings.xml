@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-16 21:54:08+0000
+Translation-Revision-Date: 2023-02-28 09:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">Menu blok</string>
+    <string name="promote_blaze_card_menu_hide_this">Sembunyikan</string>
+    <string name="promote_blaze_card_sub_title">Tunjukkan karya Anda di jutaan situs.</string>
+    <string name="promote_blaze_card_title">Promosikan konten Anda dengan Blaze</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Tutup</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Hubungi dukungan</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Pasang plugin versi lengkap</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Syarat dan ketentuan</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Dengan menyiapkan Jetpack, Anda menyetujui </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">plugin Jetpack lengkap</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">plugin Jetpack versi individual</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">Plugin %1$s</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s ini menggunakan %2$s yang belum mendukung semua fitur aplikasi.\n\nSilakan instal %3$s untuk menggunakan aplikasi dengan situs ini.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Silakan pasang plugin Jetpack versi lengkap</string>
+    <string name="only_one_primary_site_message">Hanya ada satu situs, sehingga Anda tidak bisa memilih situs yang utama.</string>
+    <string name="my_site_jp_install_full_plugin_card_content">Situs ini menggunakan plugin versi individual yang belum mendukung semua fitur aplikasi. Silakan pasang plugin Jetpack versi lengkap.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">Hubungi Dukungan</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">Coba lagi</string>
+    <string name="jetpack_full_plugin_install_error_description">Jetpack tidak dapat diinstal untuk saat ini.</string>
+    <string name="jetpack_full_plugin_install_error_title">Terjadi kendala</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Ikon eror</string>
+    <string name="jetpack_full_plugin_install_done_button">Selesai</string>
+    <string name="jetpack_full_plugin_install_done_description">Situs ini siap digunakan dengan aplikasi.</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack sudah diinstal</string>
+    <string name="jetpack_full_plugin_install_installing_description">Menginstal Jetpack di situs Anda. Mungkin perlu waktu beberapa menit untuk menyelesaikan proses ini.</string>
+    <string name="jetpack_full_plugin_install_installing_title">Menginstal Jetpack</string>
+    <string name="jetpack_full_plugin_install_initial_button">Lanjutkan</string>
+    <string name="jetpack_full_plugin_install_initial_description">Kredensial situs web Anda tidak akan disimpan dan hanya akan digunakan untuk tujuan penginstalan Jetpack.</string>
+    <string name="jetpack_full_plugin_install_initial_title">Instal Jetpack</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Ikon Jetpack</string>
+    <string name="button_promote_with_blaze">Promosikan dengan Blaze</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Maksimalkan potensi situs Anda. Dapatkan statistik, pemberitahuan, dan lainnya dengan Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Situs Anda memiliki plugin Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Aplikasi seluler Jetpack didesain agar terintegrasi dengan plugin Jetpack. Beralih sekarang untuk mengakses statistik, pemberitahuan, pembaca dan lainnya.</string>
@@ -48,17 +79,27 @@ Language: id
     <string name="weeks_quantity_one">1 minggu</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Dari &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Tutup</string>
+    <string name="jetpack_feature_card_menu_item_remind_me_later">Ingatkan saya nanti</string>
+    <string name="jetpack_feature_card_content_phase_three">Statistik, Reader, Pemberitahuan, dan berbagai fitur lain akan segera berpindah ke aplikasi ponsel Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Ganti ke aplikasi Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Baca selengkapnya di jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Bergantilah ke aplikasi—gratis dan prosesnya cepat!</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Statistik, Reader, Pemberitahuan, dan beragam fitur lain berbasis Jetpack akan segera dihapus dari aplikasi WordPress.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statistik, Reader, Pemberitahuan, dan beragam fitur lain berbasis Jetpack akan dihapus dari aplikasi WordPress pada %s.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Beragam fitur Jetpack akan segera berpindah.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Pemberitahuan akan berpindah ke Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader akan berpindah ke aplikasi Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statistik Anda akan berpindah ke aplikasi Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Beralih ke aplikasi Jetpack baru</string>
     <string name="blogging_prompts_list_error_network_subtitle">Periksa koneksi internet Anda dan coba lagi.</string>
     <string name="blogging_prompts_list_error_network_title">Tidak dapat memuat konten ini sekarang</string>
+    <string name="blogging_prompts_list_error_fetch_subtitle">Terjadi eror saat memuat prompt.</string>
     <string name="blogging_prompts_list_error_fetch_title">Waduh</string>
     <string name="blogging_prompts_list_no_prompts">Belum ada prompt</string>
+    <string name="blogging_prompts_list_number_of_answers_other">%d jawaban</string>
+    <string name="blogging_prompts_list_number_of_answers_one">1 jawaban</string>
+    <string name="blogging_prompts_list_number_of_answers_zero">0 jawaban</string>
+    <string name="blogging_prompts_list_answered_prompt">✓ Terjawab</string>
     <string name="blogging_prompts_list_title">Prompt</string>
     <string name="close_desc">tutup</string>
     <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Selain itu, blok ini bisa dilepas lalu disunting secara terpisah dengan mengetuk \"Ubah ke blok reguler.\"</string>

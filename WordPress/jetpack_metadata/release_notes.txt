@@ -1,2 +1,2 @@
-* [**] [Jetpack-only] Jetpack individual plugin support: Warns user about sites with only individual plugins not supporting all features of the app yet and gives the ability to install the full Jetpack plugin. [https://github.com/wordpress-mobile/WordPress-Android/pull/17983]
-
+* [**] [Jetpack-only] Help: Display the Jetpack app FAQ card on Help screen when switching from the WordPress app to the Jetpack app is complete. [https://github.com/wordpress-mobile/WordPress-Android/pull/18032]
+* [**] [Jetpack-only] Blaze: We added support for Blaze in the app. The user can now promote a post or page from the app to reach new audiences.

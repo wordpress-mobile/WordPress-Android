@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-15 10:54:16+0000
+Translation-Revision-Date: 2023-03-03 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">ブロックのメニュー</string>
+    <string name="promote_blaze_card_menu_hide_this">非表示</string>
+    <string name="promote_blaze_card_sub_title">何百万ものサイトに作品を表示しましょう。</string>
+    <string name="promote_blaze_card_title">Blaze を使ってコンテンツを宣伝</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">閉じる</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">サポートに連絡</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">完全なプラグインをインストール</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">利用規約</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Jetpack を設定すると、以下に同意したものとみなされます </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">完全な Jetpack プラグイン</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">個々の Jetpack プラグイン</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">%1$s プラグイン</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。\n\nアプリをこのサイトと一緒に使用するには、%3$s をインストールしてください。</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">完全な Jetpack プラグインをインストールしてください</string>
+    <string name="only_one_primary_site_message">1つのサイトのみを利用できるため、主要サイトを変更できません。</string>
+    <string name="my_site_jp_install_full_plugin_card_content">このサイトが使用している個別のプラグインは、まだアプリのすべての機能をサポートしていません。 完全な Jetpack プラグインをインストールしてください。</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">サポートに連絡</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">再試行</string>
+    <string name="jetpack_full_plugin_install_error_description">Jetpack は現在インストールできません。</string>
+    <string name="jetpack_full_plugin_install_error_title">問題が発生しました</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">エラーアイコン</string>
+    <string name="jetpack_full_plugin_install_done_button">完了</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack がインストールされています</string>
+    <string name="jetpack_full_plugin_install_installing_description">サイトに Jetpack をインストールしています。 完了まで数分かかります。</string>
+    <string name="jetpack_full_plugin_install_installing_title">Jetpack をインストールしています</string>
+    <string name="jetpack_full_plugin_install_initial_button">続行</string>
+    <string name="jetpack_full_plugin_install_initial_description">サイトの証明書は保存されず、Jetpack インストールの目的のみに使用されます。</string>
+    <string name="jetpack_full_plugin_install_initial_title">Jetpack をインストール</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack アイコン</string>
+    <string name="button_promote_with_blaze">Blaze を使って宣伝</string>
+    <string name="jetpack_full_plugin_install_done_description">アプリでこのサイトを使用する準備ができました。</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">サイトの可能性を十分に引き出すことができます。 Jetpack で統計、通知などを利用できます。</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">ご利用のサイトには Jetpack プラグインが設定されています</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack モバイルアプリは、Jetpack プラグインと連携させて利用できます。 今すぐ乗り換えて、統計、通知、Reader などをご利用ください。</string>

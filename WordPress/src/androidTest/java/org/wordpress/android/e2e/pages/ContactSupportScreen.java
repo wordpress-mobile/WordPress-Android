@@ -50,7 +50,7 @@ public class ContactSupportScreen {
         return this;
     }
 
-    public HelpAndSupportScreen goBackAndDeleteUnsentMessageIfNeeded() {
+    public HelpScreen goBackAndDeleteUnsentMessageIfNeeded() {
         Espresso.pressBack();
 
         ViewInteraction unsentMessageAlert = onView(
@@ -63,7 +63,7 @@ public class ContactSupportScreen {
                     .perform(ViewActions.click());
         }
 
-        return new HelpAndSupportScreen();
+        return new HelpScreen();
     }
 
     // Assertions:
