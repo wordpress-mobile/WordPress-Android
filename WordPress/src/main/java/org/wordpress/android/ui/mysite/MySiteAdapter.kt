@@ -14,6 +14,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsViewHolder
 import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonViewHolder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
 import org.wordpress.android.ui.mysite.dynamiccards.quickstart.QuickStartDynamicCardViewHolder
+import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemEmptyViewHolder
 import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemViewHolder
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemViewHolder
 import org.wordpress.android.ui.mysite.items.listitem.MySiteListItemViewHolder
@@ -62,6 +64,7 @@ class MySiteAdapter(
             )
             MySiteCardAndItem.Type.INFO_ITEM.ordinal -> MySiteInfoItemViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM.ordinal -> MySiteCategoryItemViewHolder(parent, uiHelpers)
+            MySiteCardAndItem.Type.CATEGORY_EMPTY_HEADER_ITEM.ordinal -> MySiteCategoryItemEmptyViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.DASHBOARD_CARDS.ordinal -> CardsViewHolder(
                 parent,
@@ -93,6 +96,7 @@ class MySiteAdapter(
             is QuickStartDynamicCardViewHolder -> holder.bind(getItem(position) as QuickStartDynamicCard)
             is MySiteInfoItemViewHolder -> holder.bind(getItem(position) as InfoItem)
             is MySiteCategoryItemViewHolder -> holder.bind(getItem(position) as CategoryHeaderItem)
+            is MySiteCategoryItemEmptyViewHolder -> holder.bind(getItem(position) as CategoryEmptyHeaderItem)
             is MySiteListItemViewHolder -> holder.bind(getItem(position) as ListItem)
             is MySiteJetpackBadgeViewHolder -> holder.bind(getItem(position) as JetpackBadge)
             is CardsViewHolder -> holder.bind(getItem(position) as DashboardCards)

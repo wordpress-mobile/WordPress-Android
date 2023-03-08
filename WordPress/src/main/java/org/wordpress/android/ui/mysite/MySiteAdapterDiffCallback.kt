@@ -11,6 +11,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackSwitchMenu
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
@@ -27,6 +28,7 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
             oldItem is QuickStartDynamicCard && updatedItem is QuickStartDynamicCard -> oldItem.id == updatedItem.id
             oldItem is InfoItem && updatedItem is InfoItem -> oldItem.title == updatedItem.title
             oldItem is CategoryHeaderItem && updatedItem is CategoryHeaderItem -> oldItem.title == updatedItem.title
+            oldItem is CategoryEmptyHeaderItem && updatedItem is CategoryEmptyHeaderItem -> oldItem.title == updatedItem.title
             oldItem is ListItem && updatedItem is ListItem -> oldItem.primaryText == updatedItem.primaryText
             oldItem is DashboardCards && updatedItem is DashboardCards -> true
             oldItem is JetpackBadge && updatedItem is JetpackBadge -> true

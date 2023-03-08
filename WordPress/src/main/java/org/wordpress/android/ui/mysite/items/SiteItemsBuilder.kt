@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
@@ -97,12 +98,12 @@ class SiteItemsBuilder @Inject constructor(
         val backup = siteListItemBuilder.buildBackupItemIfAvailable(params.onClick, params.backupAvailable)
         val scan = siteListItemBuilder.buildScanItemIfAvailable(params.onClick, params.scanAvailable)
 
-        val emptyHeaderItem1 = CategoryHeaderItem(UiString.UiStringText(""))
+        val emptyHeaderItem1 = CategoryEmptyHeaderItem(UiString.UiStringText(""))
         val jetpackConfiguration = buildJetpackDependantConfigurationItemsIfNeeded(params)
         val lookAndFeel = getLookAndFeelSiteItems(params)
         val nonJetpackConfiguration = buildNonJetpackDependantConfigurationItemsIfNeeded(params)
 
-        val emptyHeaderItem2 = CategoryHeaderItem(UiString.UiStringText(""))
+        val emptyHeaderItem2 = CategoryEmptyHeaderItem(UiString.UiStringText(""))
         val admin = siteListItemBuilder.buildAdminItemIfAvailable(params.site, params.onClick)
         return listOfNotNull(header) +
                 listOfNotNull(activityLog) +
