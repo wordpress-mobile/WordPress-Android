@@ -21,26 +21,33 @@ import androidx.fragment.app.Fragment
 import kotlinx.coroutines.launch
 
 // Extension for Activity
-fun Activity.showAsBottomSheet(content: @Composable BottomSheetScope.() -> Unit) {
+fun Activity.showAsBottomSheet(
+    skipHalfExpanded: Boolean = true,
+    content: @Composable BottomSheetScope.() -> Unit,
+) {
     val viewGroup = this.findViewById(android.R.id.content) as ViewGroup
-    addContentToView(viewGroup, content)
+    addContentToView(viewGroup, skipHalfExpanded, content)
 }
 
 // Extension for Fragment
 @Suppress("unused")
-fun Fragment.showAsBottomSheet(content: @Composable BottomSheetScope.() -> Unit) {
-    requireActivity().showAsBottomSheet(content)
+fun Fragment.showAsBottomSheet(
+    skipHalfExpanded: Boolean = true,
+    content: @Composable BottomSheetScope.() -> Unit,
+) {
+    requireActivity().showAsBottomSheet(skipHalfExpanded, content)
 }
 
 // Helper method
 private fun addContentToView(
     viewGroup: ViewGroup,
+    skipHalfExpanded: Boolean = true,
     content: @Composable BottomSheetScope.() -> Unit
 ) {
     viewGroup.addView(
         ComposeView(viewGroup.context).apply {
             setContent {
-                BottomSheetWrapper(viewGroup, this, content)
+                BottomSheetWrapper(viewGroup, this, skipHalfExpanded, content)
             }
         }
     )
@@ -55,10 +62,14 @@ interface BottomSheetScope {
 private fun BottomSheetWrapper(
     parent: ViewGroup,
     composeView: ComposeView,
+    skipHalfExpanded: Boolean = true,
     content: @Composable BottomSheetScope.() -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val modalBottomSheetState = rememberModalBottomSheetState(
+        ModalBottomSheetValue.Hidden,
+        confirmStateChange = { new -> !(skipHalfExpanded && new == ModalBottomSheetValue.HalfExpanded) }
+    )
     var isSheetOpened by remember { mutableStateOf(false) }
 
     val bottomSheetScope = object : BottomSheetScope {
