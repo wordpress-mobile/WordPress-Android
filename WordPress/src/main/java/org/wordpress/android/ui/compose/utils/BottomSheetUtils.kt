@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.prefs.appicon
+package org.wordpress.android.ui.compose.utils
 
 import android.app.Activity
 import android.view.ViewGroup
@@ -19,7 +19,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.launch
-import org.wordpress.android.ui.prefs.appicon.compose.AppIconSelector
 
 // Extension for Activity
 fun Activity.showAsBottomSheet(content: @Composable BottomSheetScope.() -> Unit) {
@@ -28,9 +27,9 @@ fun Activity.showAsBottomSheet(content: @Composable BottomSheetScope.() -> Unit)
 }
 
 // Extension for Fragment
+@Suppress("unused")
 fun Fragment.showAsBottomSheet(content: @Composable BottomSheetScope.() -> Unit) {
-    val viewGroup = requireActivity().findViewById(android.R.id.content) as ViewGroup
-    addContentToView(viewGroup, content)
+    requireActivity().showAsBottomSheet(content)
 }
 
 // Helper method
@@ -95,29 +94,9 @@ private fun BottomSheetWrapper(
                 }
             }
 
-            else -> { /* do nothing */
+            else -> {
+                // Do nothing
             }
         }
-    }
-}
-
-object AppIconSelectorScreen {
-    @JvmStatic
-    fun showBottomSheet(activity: Activity, appIconHelper: AppIconHelper, callback: Callback) {
-        activity.showAsBottomSheet {
-            AppIconSelector(
-                icons = appIconHelper.appIcons,
-                currentIcon = appIconHelper.getCurrentIcon(),
-                onIconSelected = { appIcon ->
-                    callback.onAppIconSelected(appIcon)
-                    hideBottomSheet()
-                },
-                onDismiss = this::hideBottomSheet
-            )
-        }
-    }
-
-    interface Callback {
-        fun onAppIconSelected(appIcon: AppIcon)
     }
 }

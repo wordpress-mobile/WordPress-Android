@@ -63,7 +63,4 @@ class AppIconSelectorBottomSheet : BottomSheetDialogFragment() {
         const val TAG = "APP_ICON_SELECTOR_BOTTOM_SHEET"
     }
 
-    interface AppIconSelectorCallback {
-        fun onAppIconSelected(appIcon: AppIcon)
-    }
 }
