@@ -64,7 +64,9 @@ class MySiteAdapter(
             )
             MySiteCardAndItem.Type.INFO_ITEM.ordinal -> MySiteInfoItemViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM.ordinal -> MySiteCategoryItemViewHolder(parent, uiHelpers)
-            MySiteCardAndItem.Type.CATEGORY_EMPTY_HEADER_ITEM.ordinal -> MySiteCategoryItemEmptyViewHolder(parent, uiHelpers)
+            MySiteCardAndItem.Type.CATEGORY_EMPTY_HEADER_ITEM.ordinal -> {
+                MySiteCategoryItemEmptyViewHolder(parent, uiHelpers)
+            }
             MySiteCardAndItem.Type.LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.DASHBOARD_CARDS.ordinal -> CardsViewHolder(
                 parent,

@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.items
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.DOMAINS
@@ -13,7 +14,7 @@ val SITE_ITEM_ACTION: (ListItemAction) -> Unit = {}
 val CONTENT_HEADER = CategoryHeaderItem(UiStringRes(R.string.my_site_header_content))
 val TRAFFIC_HEADER = CategoryHeaderItem(UiStringRes(R.string.my_site_header_traffic))
 val MANAGE_HEADER = CategoryHeaderItem(UiStringRes(R.string.my_site_header_manage))
-val EMPTY_HEADER = CategoryHeaderItem(UiStringText(""))
+val EMPTY_HEADER = CategoryEmptyHeaderItem(UiStringText(""))
 const val PLAN_NAME = "plan_name"
 val PLAN_ITEM = ListItem(
     R.drawable.ic_plans_white_24dp,
