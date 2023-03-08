@@ -4437,4 +4437,14 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Blaze -->
     <string name="blaze_header_done_label" translatable="false">@string/label_done_button</string>
     <string name="blaze_menu_item_label" translatable="false">@string/blaze_activity_title</string>
+
+    <!-- App Icon setting -->
+    <string name="app_icon_setting_title">App icon</string>
+    <string name="app_icon_setting_selector_description">Put your stamp on it: Customize your app icon to match your style.</string>
+    <string name="app_icon_setting_selector_warning">The app might restart to update your icon</string>
+    <string name="app_icon_setting_selector_button_update">Update</string>
+    <string name="app_icon_setting_selector_button_cancel">@string/cancel</string>
+
+    <string name="app_icon_default_name">Default</string>
+    <string name="app_icon_red_name">Default</string>
 </resources>

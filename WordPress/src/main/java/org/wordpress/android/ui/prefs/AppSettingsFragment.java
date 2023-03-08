@@ -172,7 +172,7 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mAppIconPref = (WPPreference) findPreference(getString(R.string.pref_key_app_icon));
         mAppIconPref.setOnPreferenceClickListener(this);
-        mAppIconPref.setSummary(mAppIconHelper.getCurrentIcon().getDisplayName());
+        mAppIconPref.setSummary(mAppIconHelper.getCurrentIcon().getNameRes());
 
         mOptimizedImage =
                 (WPSwitchPreference) WPPrefUtils
@@ -453,7 +453,7 @@ public class AppSettingsFragment extends PreferenceFragment
         } else if (preference == mAppIconPref) {
             final AppIcon icon = (AppIcon) newValue;
             mAppIconHelper.setCurrentIcon(icon);
-            mAppIconPref.setSummary(icon.getDisplayName());
+            mAppIconPref.setSummary(icon.getNameRes());
         } else if (preference == mOptimizedImage) {
             AppPrefs.setImageOptimize((Boolean) newValue);
             mImageMaxSizePref.setEnabled((Boolean) newValue);
