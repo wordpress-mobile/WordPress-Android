@@ -22,7 +22,7 @@ class JetpackRemoteInstallActivity : LocaleAwareActivity() {
         onBackPressedDispatcher.addCallback(this) {
             trackWithSource(
                 INSTALL_JETPACK_CANCELLED,
-                intent.getSerializableExtraCompat(TRACKING_SOURCE_KEY)
+                requireNotNull(intent.getSerializableExtraCompat(TRACKING_SOURCE_KEY))
             )
             onBackPressedDispatcher.onBackPressedCompat(this)
         }
