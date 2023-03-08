@@ -437,6 +437,7 @@ dependencies {
     implementation "androidx.compose.material:material:$androidxComposeVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$androidxComposeLifecycleVersion"
     implementation "io.coil-kt:coil-compose:$coilComposeVersion"
+    implementation "androidx.activity:activity-compose:$androidxActivityVersion"
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
     implementation (group: 'com.zendesk', name: 'support', version: "$zendeskVersion") {
         exclude group: 'com.google.dagger'

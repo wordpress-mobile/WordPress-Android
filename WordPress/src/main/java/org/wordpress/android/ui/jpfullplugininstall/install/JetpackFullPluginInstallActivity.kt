@@ -3,6 +3,7 @@ package org.wordpress.android.ui.jpfullplugininstall.install
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.Scaffold
@@ -23,7 +24,6 @@ import org.wordpress.android.ui.jpfullplugininstall.install.compose.state.ErrorS
 import org.wordpress.android.ui.jpfullplugininstall.install.compose.state.InitialState
 import org.wordpress.android.ui.jpfullplugininstall.install.compose.state.InstallingState
 import org.wordpress.android.util.extensions.exhaustive
-import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
 class JetpackFullPluginInstallActivity : AppCompatActivity() {

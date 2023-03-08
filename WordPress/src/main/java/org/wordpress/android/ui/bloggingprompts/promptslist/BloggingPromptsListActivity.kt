@@ -3,6 +3,7 @@ package org.wordpress.android.ui.bloggingprompts.promptslist
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -15,7 +16,6 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.bloggingprompts.promptslist.compose.BloggingPromptsListScreen
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.posts.PostUtils
-import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
 class BloggingPromptsListActivity : LocaleAwareActivity() {
