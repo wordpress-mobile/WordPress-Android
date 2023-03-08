@@ -10,17 +10,10 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 val SITE_ITEM_ACTION: (ListItemAction) -> Unit = {}
-val JETPACK_HEADER = CategoryHeaderItem(
-    UiStringRes(R.string.my_site_header_jetpack)
-)
-val PUBLISH_HEADER = CategoryHeaderItem(UiStringRes(R.string.my_site_header_publish))
-val LOOK_AND_FEEL_HEADER = CategoryHeaderItem(
-    UiStringRes(R.string.my_site_header_look_and_feel)
-)
-val CONFIGURATION_HEADER = CategoryHeaderItem(
-    UiStringRes(R.string.my_site_header_configuration)
-)
-val EXTERNAL_HEADER = CategoryHeaderItem(UiStringRes(R.string.my_site_header_external))
+val CONTENT_HEADER = CategoryHeaderItem(UiStringRes(R.string.my_site_header_content))
+val TRAFFIC_HEADER = CategoryHeaderItem(UiStringRes(R.string.my_site_header_traffic))
+val MANAGE_HEADER = CategoryHeaderItem(UiStringRes(R.string.my_site_header_manage))
+val EMPTY_HEADER = CategoryHeaderItem(UiStringText(""))
 const val PLAN_NAME = "plan_name"
 val PLAN_ITEM = ListItem(
     R.drawable.ic_plans_white_24dp,
@@ -75,7 +68,7 @@ val COMMENTS_ITEM = ListItem(
 )
 val ADMIN_ITEM = ListItem(
     R.drawable.ic_wordpress_white_24dp,
-    UiStringRes(R.string.my_site_btn_view_admin),
+    UiStringRes(R.string.my_site_btn_wp_admin),
     secondaryIcon = R.drawable.ic_external_white_24dp,
     onClick = ListItemInteraction.create(ListItemAction.ADMIN, SITE_ITEM_ACTION)
 )
@@ -103,12 +96,6 @@ val THEMES_ITEM = ListItem(
     R.drawable.ic_themes_white_24dp,
     UiStringRes(R.string.themes),
     onClick = ListItemInteraction.create(ListItemAction.THEMES, SITE_ITEM_ACTION)
-)
-val VIEW_SITE_ITEM = ListItem(
-    R.drawable.ic_globe_white_24dp,
-    UiStringRes(R.string.my_site_btn_view_site),
-    secondaryIcon = R.drawable.ic_external_white_24dp,
-    onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, SITE_ITEM_ACTION)
 )
 val DOMAINS_ITEM = ListItem(
     R.drawable.ic_domains_white_24dp,
