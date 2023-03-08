@@ -97,7 +97,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     @Suppress("UseCheckOrError")
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        arguments?.let { dialogType = requireNotNull(it.getSerializableCompat(KEY_DIALOG_TYPE)) }
+        arguments?.let { dialogType = requireNotNull(it.getSerializableCompat<DialogType>(KEY_DIALOG_TYPE)) }
         (requireActivity().applicationContext as WordPress).component().inject(this)
         if (dialogType == ONBOARDING && context !is BloggingPromptsReminderSchedulerListener) {
             throw IllegalStateException(

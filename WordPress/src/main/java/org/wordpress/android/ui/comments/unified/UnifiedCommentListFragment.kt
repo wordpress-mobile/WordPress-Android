@@ -77,7 +77,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
             viewModelFactory
         )[UnifiedCommentActivityViewModel::class.java]
         arguments?.let {
-            commentListFilter = requireNotNull(it.getSerializableCompat(KEY_COMMENT_LIST_FILTER))
+            commentListFilter = requireNotNull(it.getSerializableCompat<CommentFilter>(KEY_COMMENT_LIST_FILTER))
         }
     }
 

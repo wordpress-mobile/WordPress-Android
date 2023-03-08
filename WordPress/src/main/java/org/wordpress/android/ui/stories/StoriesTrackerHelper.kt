@@ -34,7 +34,7 @@ class StoriesTrackerHelper @Inject constructor() {
         val properties = getCommonProperties(event)
         var siteModel: SiteModel? = null
         event.metadata?.let {
-            siteModel = it.getSerializableCompat(WordPress.SITE)
+            siteModel = it.getSerializableCompat<SiteModel>(WordPress.SITE)
         }
 
         siteModel?.let {

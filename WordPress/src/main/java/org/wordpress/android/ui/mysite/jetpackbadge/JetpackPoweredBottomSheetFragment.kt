@@ -84,7 +84,7 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
 
     private fun setupFullScreenViews(view: View) {
         with(JetpackPoweredExpandedBottomSheetBinding.bind(view)) {
-            when (arguments?.getSerializableCompat(KEY_SITE_SCREEN) ?: MY_SITE) {
+            when (arguments?.getSerializableCompat<PageType>(KEY_SITE_SCREEN) ?: MY_SITE) {
                 MY_SITE -> {
                     val animRes = if (rtlLayout(view)) R.raw.jp_stats_rtl else R.raw.jp_stats_left
                     illustrationView.setAnimation(animRes)
