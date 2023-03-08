@@ -90,8 +90,10 @@ class DomainRegistrationDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainViewModel =
-            ViewModelProvider(requireActivity(), viewModelFactory)[DomainRegistrationMainViewModel::class.java]
+        mainViewModel = ViewModelProvider(
+            requireActivity(),
+            viewModelFactory
+        )[DomainRegistrationMainViewModel::class.java]
         viewModel = ViewModelProvider(this, viewModelFactory)[DomainRegistrationDetailsViewModel::class.java]
         with(DomainRegistrationDetailsFragmentBinding.bind(view)) {
             binding = this

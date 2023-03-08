@@ -142,8 +142,10 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
             this@PrepublishingAddCategoryFragment,
             viewModelFactory
         )[PrepublishingAddCategoryViewModel::class.java]
-        parentViewModel =
-            ViewModelProvider(requireParentFragment(), viewModelFactory)[PrepublishingViewModel::class.java]
+        parentViewModel = ViewModelProvider(
+            requireParentFragment(),
+            viewModelFactory
+        )[PrepublishingViewModel::class.java]
 
         startObserving()
 

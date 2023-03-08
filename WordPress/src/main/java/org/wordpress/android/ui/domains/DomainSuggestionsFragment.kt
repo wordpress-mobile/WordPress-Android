@@ -39,8 +39,10 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
         super.onViewCreated(view, savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
 
-        mainViewModel =
-            ViewModelProvider(requireActivity(), viewModelFactory)[DomainRegistrationMainViewModel::class.java]
+        mainViewModel = ViewModelProvider(
+            requireActivity(),
+            viewModelFactory
+        )[DomainRegistrationMainViewModel::class.java]
 
         viewModel = ViewModelProvider(this, viewModelFactory)[DomainSuggestionsViewModel::class.java]
 

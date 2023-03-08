@@ -55,8 +55,10 @@ class HomepageSettingsDialog : DialogFragment() {
             }
             builder.setView(root)
 
-            viewModel =
-                ViewModelProvider(this@HomepageSettingsDialog, viewModelFactory)[HomepageSettingsViewModel::class.java]
+            viewModel = ViewModelProvider(
+                this@HomepageSettingsDialog,
+                viewModelFactory
+            )[HomepageSettingsViewModel::class.java]
             viewModel.uiState.observe(this@HomepageSettingsDialog) { uiState ->
                 uiState?.let {
                     loadingPages.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
