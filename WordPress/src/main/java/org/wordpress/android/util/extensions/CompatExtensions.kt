@@ -57,7 +57,7 @@ inline fun <reified T : Parcelable> Bundle.getParcelableCompat(key: String): T? 
     }
 
 /**
- * TODO: Remove this when stable androidx.core 1.10 is released. Use IntentCompat instead.
+ * TODO: Remove this when stable androidx.core 1.10 is released. Use BundleCompat instead.
  */
 @Suppress("ForbiddenComment")
 inline fun <reified T : Parcelable> Bundle.getParcelableArrayListCompat(key: String): ArrayList<T>? =
