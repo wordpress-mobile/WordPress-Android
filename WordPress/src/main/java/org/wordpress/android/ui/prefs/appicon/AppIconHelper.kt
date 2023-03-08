@@ -10,7 +10,7 @@ class AppIconHelper @Inject constructor(
     private val packageManagerWrapper: PackageManagerWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
 ) {
-    private val appIcons = AppIcon.values()
+    val appIcons = AppIcon.values()
 
     fun getCurrentIcon(): AppIcon = AppIcon.fromId(appPrefsWrapper.currentAppIconId)
 

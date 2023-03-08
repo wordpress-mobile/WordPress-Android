@@ -76,6 +76,11 @@
         android:summary="%s"
         android:title="@string/initial_screen" />
 
+    <org.wordpress.android.ui.prefs.WPPreference
+        android:id="@+id/pref_app_icon"
+        android:key="@string/pref_key_app_icon"
+        android:title="App Icon" />
+
     <org.wordpress.android.ui.prefs.WPSwitchPreference
         android:id="@+id/pref_open_web_links_with_jetpack"
         android:defaultValue="false"
@@ -85,12 +90,6 @@
     <Preference
         android:key="@string/pref_key_whats_new"
         android:title="@string/whats_new_in_version_title" />
-
-    <org.wordpress.android.ui.prefs.WPSwitchPreference
-        android:id="@+id/pref_app_icon"
-        android:key="@string/pref_key_app_icon"
-        android:title="App Icon"
-        android:summary="Enable to use red app icon" />
 
     <Preference
         android:key="@string/pref_key_debug_settings"

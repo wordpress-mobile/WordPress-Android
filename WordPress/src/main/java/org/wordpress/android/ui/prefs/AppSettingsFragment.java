@@ -43,14 +43,16 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
-import org.wordpress.android.ui.prefs.appicon.AppIcon;
-import org.wordpress.android.ui.prefs.appicon.AppIconHelper;
 import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.ui.debug.DebugSettingsActivity;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
+import org.wordpress.android.ui.prefs.appicon.AppIcon;
+import org.wordpress.android.ui.prefs.appicon.AppIconHelper;
+import org.wordpress.android.ui.prefs.appicon.AppIconSelector;
+import org.wordpress.android.ui.prefs.appicon.AppIconSelector.Callback;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet.LocalePickerCallback;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
@@ -89,7 +91,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private ListPreference mInitialScreenPreference;
 
     // This Device settings
-    private WPSwitchPreference mAppIconPref;
+    private WPPreference mAppIconPref;
     private WPSwitchPreference mOptimizedImage;
     private DetailListPreference mImageMaxSizePref;
     private DetailListPreference mImageQualityPref;
@@ -169,8 +171,10 @@ public class AppSettingsFragment extends PreferenceFragment
         findPreference(getString(R.string.pref_key_debug_settings))
                 .setOnPreferenceClickListener(this);
 
-        mAppIconPref = (WPSwitchPreference) WPPrefUtils
-                .getPrefAndSetChangeListener(this, R.string.pref_key_app_icon, this);
+        mAppIconPref = (WPPreference) findPreference(getString(R.string.pref_key_app_icon));
+        mAppIconPref.setOnPreferenceClickListener(this);
+        mAppIconPref.setSummary(mAppIconHelper.getCurrentIcon().getDisplayName());
+
         mOptimizedImage =
                 (WPSwitchPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_image, this);
@@ -201,11 +205,6 @@ public class AppSettingsFragment extends PreferenceFragment
         mOpenWebLinksWithJetpack =
                 (WPSwitchPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_open_web_links_with_jetpack, this);
-
-        // icon pref
-        AppIcon icon = mAppIconHelper.getCurrentIcon();
-        mAppIconPref.setChecked(icon != AppIcon.DEFAULT);
-        mAppIconPref.setSummary(icon.getDisplayName());
 
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
@@ -436,6 +435,8 @@ public class AppSettingsFragment extends PreferenceFragment
             return handleFeatureAnnouncementClick();
         } else if (preference == mLanguagePreference) {
             return handleAppLocalePickerClick();
+        } else if (preference == mAppIconPref) {
+            return handleAppIconClick();
         }
 
         return false;
@@ -451,10 +452,9 @@ public class AppSettingsFragment extends PreferenceFragment
             changeLanguage(newValue.toString());
             return false;
         } else if (preference == mAppIconPref) {
-            Boolean value = (Boolean) newValue;
-            AppIcon appIcon = value ? AppIcon.RED : AppIcon.DEFAULT;
-            mAppIconHelper.setCurrentIcon(appIcon);
-            mAppIconPref.setSummary(appIcon.getDisplayName());
+            final AppIcon icon = (AppIcon) newValue;
+            mAppIconHelper.setCurrentIcon(icon);
+            mAppIconPref.setSummary(icon.getDisplayName());
         } else if (preference == mOptimizedImage) {
             AppPrefs.setImageOptimize((Boolean) newValue);
             mImageMaxSizePref.setEnabled((Boolean) newValue);
@@ -712,6 +712,18 @@ public class AppSettingsFragment extends PreferenceFragment
                             : R.string.preference_open_links_in_jetpack_setting_change_disable_error),
                     ToastUtils.Duration.LONG);
             AppLog.e(AppLog.T.UTILS, "Unable to enable or disable open with Jetpack components ", e);
+        }
+    }
+
+    private boolean handleAppIconClick() {
+        if (getActivity() instanceof AppCompatActivity) {
+            AppIconSelector.showBottomSheet(getActivity(), mAppIconHelper,
+                    (Callback) appIcon -> onPreferenceChange(mAppIconPref, appIcon));
+            return true;
+        } else {
+            throw new IllegalArgumentException(
+                    "Parent activity is not AppCompatActivity. AppIconSelector must be called "
+                    + "using support fragment manager from AppCompatActivity.");
         }
     }
 }

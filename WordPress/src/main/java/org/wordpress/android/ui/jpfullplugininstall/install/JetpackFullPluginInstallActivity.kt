@@ -64,18 +64,21 @@ class JetpackFullPluginInstallActivity : AppCompatActivity() {
                         )
                         viewModel.onInitialShown()
                     }
+
                     is UiState.Installing -> {
                         InstallingState(
                             uiState = this,
                         )
                         viewModel.onInstallingShown()
                     }
+
                     is UiState.Done -> {
                         DoneState(
                             uiState = this,
                             onDoneClick = viewModel::onDoneClick,
                         )
                     }
+
                     is UiState.Error -> {
                         ErrorState(
                             uiState = this,
@@ -103,6 +106,7 @@ class JetpackFullPluginInstallActivity : AppCompatActivity() {
                     null
                 )
             }
+
             is ActionEvent.Dismiss -> {
                 ActivityLauncher.showMainActivity(this)
                 finish()
