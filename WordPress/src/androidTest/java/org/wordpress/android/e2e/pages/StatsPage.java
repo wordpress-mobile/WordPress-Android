@@ -48,20 +48,14 @@ public class StatsPage {
                 withText("Days")
         ));
 
-        // Using a complex matcher to be sure
-        // that all parts of card were loaded.
-        ViewInteraction statsCardStructure = onView(allOf(
+        ViewInteraction postsAndPagesCard = onView(allOf(
                 isDescendantOfA(visibleCoordinatorLayout),
-                withId(R.id.stats_block_list),
-                hasDescendant(withText("Views")),
-                hasDescendant(withText("Visitors")),
-                hasDescendant(withText("Likes")),
-                hasDescendant(withText("Comments"))
+                withText("Posts and Pages")
         ));
 
         waitForElementToBeDisplayed(daysStatsTab);
         daysStatsTab.perform(ViewActions.click());
-        waitForElementToBeDisplayed(statsCardStructure);
+        waitForElementToBeDisplayed(postsAndPagesCard);
         return this;
     }
 

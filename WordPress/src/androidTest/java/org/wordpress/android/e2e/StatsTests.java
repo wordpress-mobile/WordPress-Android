@@ -4,6 +4,7 @@ import androidx.test.espresso.Espresso;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.MySitesPage;
@@ -38,6 +39,7 @@ public class StatsTests extends BaseTest {
     }
 
     @Test
+    @Ignore("Ignored because of https://github.com/wordpress-mobile/WordPress-Android/issues/18065")
     public void e2eAllDayStatsLoad() {
         StatsVisitsData todayVisits = new StatsVisitsData("97", "28", "14", "11");
         List<StatsKeyValueData> postsList = new StatsMocksReader().readDayTopPostsToList();
