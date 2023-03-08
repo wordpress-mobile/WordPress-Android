@@ -130,7 +130,7 @@ class SiteListItemBuilder @Inject constructor(
         return if (shouldShowWPAdmin(site)) {
             ListItem(
                 R.drawable.ic_wordpress_white_24dp,
-                UiStringRes(R.string.my_site_btn_wp_admin),
+                UiStringRes(R.string.my_site_btn_view_admin),
                 secondaryIcon = R.drawable.ic_external_white_24dp,
                 onClick = ListItemInteraction.create(ADMIN, onClick)
             )

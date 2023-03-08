@@ -2264,7 +2264,6 @@
     <string name="my_site_header_content">Content</string>
     <string name="my_site_header_traffic">Traffic</string>
     <string name="my_site_header_manage">Manage</string>
-    <string name="my_site_btn_wp_admin">Admin</string>
 
     <string name="my_site_header_external">External</string>
     <string name="my_site_header_configuration">Configuration</string>
