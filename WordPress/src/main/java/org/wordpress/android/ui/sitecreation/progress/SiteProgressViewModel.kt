@@ -142,7 +142,7 @@ class SiteProgressViewModel @Inject constructor(
             siteCreationState.apply {
                 // A non-null [segmentId] may invalidate the [siteDesign] selection
                 // https://github.com/wordpress-mobile/WordPress-Android/issues/13749
-                val segmentIdentifier = if (siteDesign != null) null else segmentId
+                val segmentIdentifier = segmentId.takeIf { siteDesign != null }
                 val serviceData = SiteCreationServiceData(
                     segmentIdentifier,
                     siteDesign,
