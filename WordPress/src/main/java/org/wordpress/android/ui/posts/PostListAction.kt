@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_POSTS_LIST
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -56,13 +57,14 @@ sealed class PostListAction {
     class ShowPromoteWithBlaze(val post: PostModel) : PostListAction()
 }
 
-@Suppress("TooGenericExceptionCaught", "LongMethod", "ComplexMethod")
+@Suppress("TooGenericExceptionCaught", "LongMethod", "ComplexMethod", "LongParameterList")
 fun handlePostListAction(
     activity: FragmentActivity,
     action: PostListAction,
     remotePreviewLogicHelper: RemotePreviewLogicHelper,
     previewStateHelper: PreviewStateHelper,
-    mediaPickerLauncher: MediaPickerLauncher
+    mediaPickerLauncher: MediaPickerLauncher,
+    blazeFeatureUtils: BlazeFeatureUtils
 ) {
     when (action) {
         is PostListAction.EditPost -> {
@@ -110,6 +112,7 @@ fun handlePostListAction(
             NativeNotificationsUtils.dismissNotification(action.pushId, activity)
         }
         is PostListAction.ShowPromoteWithBlaze -> {
+            blazeFeatureUtils.trackEntryPointTapped(BlazeFlowSource.POSTS_LIST)
             ActivityLauncher.openPromoteWithBlaze(activity, action.post, BlazeFlowSource.POSTS_LIST)
         }
         is PostListAction.CopyUrl -> {

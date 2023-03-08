@@ -91,7 +91,7 @@ public class WPWebChromeClientWithFileChooser extends WPWebChromeClient {
         return true;
     }
 
-    void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         Uri[] selectedUris = null;
 
         if (intent != null && resultCode == RESULT_OK && requestCode == WEB_CHROME_CLIENT_FILE_PICKER) {
@@ -117,7 +117,7 @@ public class WPWebChromeClientWithFileChooser extends WPWebChromeClient {
         }
     }
 
-    interface OnShowFileChooserListener {
+    public interface OnShowFileChooserListener {
         void startActivityForFileChooserResult(Intent intent, int requestCode);
     }
 }

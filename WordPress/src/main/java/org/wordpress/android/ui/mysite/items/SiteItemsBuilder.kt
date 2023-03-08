@@ -57,6 +57,7 @@ class SiteItemsBuilder @Inject constructor(
                             showFocusPoint = showStatsFocusPoint
                     ),
                     siteListItemBuilder.buildActivityLogItemIfAvailable(params.site, params.onClick),
+                    siteListItemBuilder.buildBlazeItemIfAvailable(params.isBlazeEligible, params.onClick),
                     siteListItemBuilder.buildBackupItemIfAvailable(params.onClick, params.backupAvailable),
                     siteListItemBuilder.buildScanItemIfAvailable(params.onClick, params.scanAvailable),
                     siteListItemBuilder.buildJetpackItemIfAvailable(params.site, params.onClick)

@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.pages.PageItem
@@ -111,6 +112,9 @@ class PageListViewModelTest : BaseUnitTest() {
         whenever(pagesViewModel.authorUIState).thenReturn(authorFilterState)
         val accountModel = AccountModel()
         accountModel.userId = 4
+
+        val blazeSiteEligibility = MutableLiveData<Boolean>()
+        whenever(pagesViewModel.blazeSiteEligibility).thenReturn(blazeSiteEligibility)
     }
 
     @Test
@@ -243,8 +247,8 @@ class PageListViewModelTest : BaseUnitTest() {
 
         viewModel.pages.observeForever { result.add(it) }
 
-        val firstPage = buildPageModel(0, pageTitle = "ab")
-        val secondPage = buildPageModel(0, pageTitle = "Ac")
+        val firstPage = buildPageModel(0, pageTitle = "ab", postStatus = PostStatus.PUBLISHED.toString())
+        val secondPage = buildPageModel(0, pageTitle = "Ac", postStatus = PostStatus.PUBLISHED.toString())
 
         val pageModels = mutableListOf<PageModel>()
         pageModels += secondPage
@@ -313,7 +317,15 @@ class PageListViewModelTest : BaseUnitTest() {
         // Arrange
         val actions = setOf(mock<PageItem.Action>())
 
-        whenever(pageListItemActionsUseCase.setupPageActions(anyOrNull(), anyOrNull(), anyOrNull(), any())).thenReturn(
+        whenever(
+            pageListItemActionsUseCase.setupPageActions(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                any(),
+                any()
+            )
+        ).thenReturn(
             actions
         )
 
@@ -470,7 +482,8 @@ class PageListViewModelTest : BaseUnitTest() {
         pageTitle: String? = null,
         status: PageStatus = PageStatus.PUBLISHED,
         authorId: Long? = null,
-        authorDisplayName: String? = null
+        authorDisplayName: String? = null,
+        postStatus: String? = PostStatus.PUBLISHED.toString()
     ): PageModel {
         val title = pageTitle ?: if (id < 10) "Title 0$id" else "Title $id"
         return PageModel(
@@ -478,6 +491,7 @@ class PageListViewModelTest : BaseUnitTest() {
                 this.setId(id)
                 this.setAuthorId(authorId ?: 0)
                 this.setAuthorDisplayName(authorDisplayName)
+                this.setStatus(postStatus)
             },
             site, id, title, status, date, false, id.toLong(),
             parent, id.toLong()

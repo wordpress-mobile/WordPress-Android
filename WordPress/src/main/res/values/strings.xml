@@ -110,6 +110,7 @@
     <string name="publish_now">Publish Now</string>
     <string name="update_now">Update Now</string>
     <string name="status_and_visibility">Status &amp; Visibility</string>
+    <string name="free">Free</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>
@@ -2251,6 +2252,8 @@
     <string name="contact_fragment_title" translatable="false" tools:ignore="UnusedResources">@string/contact_support</string>
     <string name="support_forum_title">Community forums</string>
     <string name="support_forum_caption">Get help from our group of volunteers.</string>
+    <string name="support_faq_title">Thank you for switching to the Jetpack app!</string>
+    <string name="support_faq_caption">See our FAQ for answers to common questions you may have.</string>
 
     <!-- Contact us -->
     <string name="support_ticket_subject">WordPress for Android Support</string>
@@ -3221,6 +3224,7 @@
     <string name="pages_set_as_homepage">Set as Homepage</string>
     <string name="pages_set_as_posts_page">Set as Posts Page</string>
     <string name="pages_publish_now" translatable="false">@string/publish_now</string>
+    <string name="pages_promote_with_blaze" translatable="false">@string/button_promote_with_blaze</string>
     <string name="pages_move_to_draft">Move to Draft</string>
     <string name="pages_move_to_trash">Move to Trash</string>
     <string name="pages_delete_permanently">Delete Permanently</string>
@@ -3324,6 +3328,13 @@
     <!-- translators: Give your Photography website a name -->
     <string name="new_site_creation_site_name_header_title">Give your %s website a name</string>
     <string name="new_site_creation_site_name_header_subtitle">A good name is short and memorable.\nYou can change it later.</string>
+
+    <!-- Site Creation : Domains -->
+    <string name="site_creation_domain_cost">%s/yr</string>
+    <string name="site_creation_domain_tag_best_alternative">Best Alternative</string>
+    <string name="site_creation_domain_tag_recommended">Recommended</string>
+    <string name="site_creation_domain_tag_sale">Sale</string>
+    <string name="site_creation_domain_tag_unavailable">This domain is already registered</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
@@ -4420,5 +4431,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blaze_promotional_subtitle_2">Your content will appear on millions of WordPress and Tumblr sites.</string>
     <string name="blaze_promotional_subtitle_3">Track performance, start, and stop your Blaze at any time.</string>
     <string name="blaze_overlay_post_promotional_button">Blaze this Post</string>
+    <string name="blaze_overlay_page_promotional_button">Blaze this Page</string>
     <string name="blaze_overlay_site_promotional_button">Blaze a Post now</string>
+
+    <!-- Blaze -->
+    <string name="blaze_header_done_label" translatable="false">@string/label_done_button</string>
+    <string name="blaze_menu_item_label" translatable="false">@string/blaze_activity_title</string>
 </resources>

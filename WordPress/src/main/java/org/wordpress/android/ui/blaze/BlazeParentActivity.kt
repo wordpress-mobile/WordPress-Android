@@ -7,8 +7,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeOverlayFragment
 import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeViewModel
+import org.wordpress.android.ui.blaze.ui.blazewebview.BlazeWebViewFragment
 
-const val ARG_EXTRA_POST_ID = "post_id"
+const val ARG_EXTRA_BLAZE_UI_MODEL = "blaze_ui_model"
 const val ARG_BLAZE_FLOW_SOURCE = "blaze_flow_source"
 
 @AndroidEntryPoint
@@ -18,7 +19,7 @@ class BlazeParentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_blaze_parent)
-        viewModel.start(getSource(), getPostModel())
+        viewModel.start(getSource(), getBlazeUiModel())
         observe()
     }
 
@@ -28,6 +29,11 @@ class BlazeParentActivity : AppCompatActivity() {
                 is BlazeUiState.PromoteScreen -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, BlazeOverlayFragment.newInstance())
+                        .commitNow()
+                }
+                is BlazeUiState.WebViewScreen -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, BlazeWebViewFragment.newInstance())
                         .commitNow()
                 }
                 is BlazeUiState.Done -> {
@@ -42,7 +48,7 @@ class BlazeParentActivity : AppCompatActivity() {
         return intent.getSerializableExtra(ARG_BLAZE_FLOW_SOURCE) as BlazeFlowSource
     }
 
-    private fun getPostModel(): PostUIModel? {
-        return intent.getParcelableExtra<PostUIModel>(ARG_EXTRA_POST_ID)
+    private fun getBlazeUiModel(): BlazeUIModel? {
+        return intent.getParcelableExtra(ARG_EXTRA_BLAZE_UI_MODEL)
     }
 }

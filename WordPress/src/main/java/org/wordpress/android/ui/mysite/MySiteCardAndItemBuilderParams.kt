@@ -91,7 +91,8 @@ sealed class MySiteCardAndItemBuilderParams {
         val enableStatsFocusPoint: Boolean = false,
         val enablePagesFocusPoint: Boolean = false,
         val enableMediaFocusPoint: Boolean = false,
-        val onClick: (ListItemAction) -> Unit
+        val onClick: (ListItemAction) -> Unit,
+        val isBlazeEligible: Boolean = false
     ) : MySiteCardAndItemBuilderParams()
 
     data class BloggingPromptCardBuilderParams(
