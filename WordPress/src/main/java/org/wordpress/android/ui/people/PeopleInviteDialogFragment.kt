@@ -43,7 +43,8 @@ class PeopleInviteDialogFragment : DialogFragment() {
     @Suppress("DEPRECATION")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewModel = ViewModelProvider(
-            targetFragment as ViewModelStoreOwner, viewModelFactory
+            targetFragment as ViewModelStoreOwner,
+            viewModelFactory
         )[PeopleInviteViewModel::class.java]
 
         val dialogMode = arguments?.getSerializableCompat<DialogMode>(ARG_DIALOG_MODE)
