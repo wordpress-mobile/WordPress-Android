@@ -20,17 +20,10 @@ object PostsListPage {
 
     // Workaround for cases when recyclerview id missing
     private val recyclerView: RecyclerView?
-        private get() {
+        get() {
             val pager = WPSupportUtils.getCurrentActivity().findViewById<ViewPager>(R.id.postPager)
             var recyclerView = pager.getChildAt(pager.currentItem)
                 .findViewById<View>(R.id.recycler_view) as RecyclerView
-            if (recyclerView == null) {
-                // Workaround for cases when recyclerview id missing
-                recyclerView = ((pager.getChildAt(pager.currentItem)
-                    .findViewById<View>(R.id.ptr_layout) as ViewGroup).getChildAt(0) as ViewGroup).getChildAt(
-                    0
-                ) as RecyclerView
-            }
             return recyclerView
         }
 
