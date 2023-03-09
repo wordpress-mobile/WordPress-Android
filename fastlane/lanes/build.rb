@@ -277,7 +277,7 @@ platform :android do
 
     if ENV['BUILDKITE']
       message = "#{product} Installable Build: [#{filename}](#{install_url})"
-      sh('buildkite-agent', 'annotate', message, '--style', 'info', '--context', "installable-build-#{product}")
+      buildkite_annotate(style: 'info', context: "installable-build-#{product}", message: message)
     end
   end
 
