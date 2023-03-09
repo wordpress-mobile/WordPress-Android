@@ -531,7 +531,7 @@
     </style>
 
     <style name="UpdatedMySiteListRowIcon">
-        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="tint">?attr/wpColorOnSurfaceHigh</item>
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentStart">true</item>
