@@ -19,7 +19,9 @@ import org.wordpress.android.util.StatsVisitsData
 class StatsTests : BaseTest() {
     @Before
     fun setUp() {
-        org.junit.Assume.assumeTrue("jetpack" in BuildConfig.FLAVOR)
+        // Ignore the test for JP because of the bug with stats card load.
+        // See https://github.com/wordpress-mobile/WordPress-Android/issues/18065
+        org.junit.Assume.assumeTrue(!BuildConfig.IS_JETPACK_APP)
         logoutIfNecessary()
         wpLogin()
     }
