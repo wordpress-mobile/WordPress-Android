@@ -25,13 +25,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.PrimaryButton
-import org.wordpress.android.ui.compose.components.SecondaryButton
+import org.wordpress.android.ui.compose.components.buttons.ButtonSize
+import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
+import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.prefs.appicon.AppIcon
 import org.wordpress.android.ui.prefs.appicon.AppIconSet
 
-// TODO thomashorta update some UI stuff after #18040 is merged
+private fun Modifier.contentPadding() = padding(horizontal = 16.dp)
+
+private fun Modifier.buttonPadding() = padding(horizontal = 20.dp)
+
 @Composable
 fun AppIconSelector(
     icons: List<AppIcon>,
@@ -47,8 +51,7 @@ fun AppIconSelector(
         Text(
             text = stringResource(R.string.app_icon_setting_title),
             style = MaterialTheme.typography.h6,
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
+            modifier = Modifier.contentPadding()
         )
 
         Spacer(Modifier.height(10.dp))
@@ -57,8 +60,7 @@ fun AppIconSelector(
             Text(
                 text = stringResource(R.string.app_icon_setting_selector_description),
                 style = MaterialTheme.typography.body2,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                modifier = Modifier.contentPadding()
             )
         }
 
@@ -97,7 +99,7 @@ fun AppIconSelector(
                 text = stringResource(R.string.app_icon_setting_selector_warning),
                 style = MaterialTheme.typography.body2,
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                    .contentPadding()
                     .align(Alignment.CenterHorizontally)
             )
         }
@@ -106,7 +108,11 @@ fun AppIconSelector(
 
         PrimaryButton(
             text = stringResource(R.string.app_icon_setting_selector_button_update),
-            modifier = Modifier.fillMaxWidth(),
+            useDefaultMargins = false,
+            buttonSize = ButtonSize.LARGE,
+            modifier = Modifier
+                .buttonPadding()
+                .fillMaxWidth(),
             onClick = {
                 if (selectedIcon == currentIcon) return@PrimaryButton
                 onIconSelected(selectedIcon)
@@ -114,7 +120,11 @@ fun AppIconSelector(
         )
         SecondaryButton(
             text = stringResource(R.string.app_icon_setting_selector_button_cancel),
-            modifier = Modifier.fillMaxWidth(),
+            useDefaultMargins = false,
+            buttonSize = ButtonSize.LARGE,
+            modifier = Modifier
+                .buttonPadding()
+                .fillMaxWidth(),
             onClick = onDismiss
         )
     }
