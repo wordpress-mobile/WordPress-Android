@@ -56,7 +56,7 @@ fun CharSequence.fixWidows(): CharSequence {
     val lastSpace = toString().lastIndexOf(' ')
     if (lastSpace != -1 && lastSpace < length - 1) {
         // Replace last space character by a non breaking space.
-        val tmpText: CharSequence = replaceRange(lastSpace, lastSpace+1, "\u00A0")
+        val tmpText: CharSequence = replaceRange(lastSpace, lastSpace + 1, "\u00A0")
         out = SpannableString(tmpText)
         // Restore spans if text is an instance of Spanned
         (this as? Spanned)?.let {
@@ -75,7 +75,7 @@ fun String.fixWidows(): String {
     val lastSpace = lastIndexOf(' ')
     return if (lastSpace != -1 && lastSpace < length - 1) {
         // Replace last space character by a non breaking space.
-        replaceRange(lastSpace, lastSpace+1, "\u00A0")
+        replaceRange(lastSpace, lastSpace + 1, "\u00A0")
     } else {
         this
     }
