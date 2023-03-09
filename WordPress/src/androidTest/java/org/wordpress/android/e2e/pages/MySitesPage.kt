@@ -249,7 +249,7 @@ class MySitesPage {
 
         fun setChecked(checked: Boolean, id: Int): ViewAction {
             return object : ViewAction {
-                override fun getConstraints(): BaseMatcher<View> {
+                override fun getConstraints(): BaseMatcher<View?> {
                     return object : BaseMatcher<View?>() {
                         override fun matches(item: Any): Boolean {
                             return Matchers.isA<Any>(Checkable::class.java).matches(item)
@@ -265,7 +265,7 @@ class MySitesPage {
                     }
                 }
 
-                override fun getDescription(): String {
+                override fun getDescription(): String? {
                     return null
                 }
 
