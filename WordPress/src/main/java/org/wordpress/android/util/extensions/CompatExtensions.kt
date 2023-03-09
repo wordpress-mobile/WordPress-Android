@@ -1,5 +1,8 @@
 package org.wordpress.android.util.extensions
 
+import android.os.Build
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
 
@@ -17,4 +20,22 @@ fun OnBackPressedDispatcher.onBackPressedCompat(onBackPressedCallback: OnBackPre
     onBackPressedCallback.isEnabled = false
     onBackPressed()
     onBackPressedCallback.isEnabled = true
+}
+
+inline fun <reified T : Parcelable> Parcel.readParcelableCompat(loader: ClassLoader?): T? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        readParcelable(loader, T::class.java)
+    } else {
+        @Suppress("DEPRECATION")
+        readParcelable(loader)
+    }
+}
+
+inline fun <reified T> Parcel.readListCompat(outVal: MutableList<T?>, loader: ClassLoader?) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        readList(outVal, loader, T::class.java)
+    } else {
+        @Suppress("DEPRECATION")
+        readList(outVal, loader)
+    }
 }
