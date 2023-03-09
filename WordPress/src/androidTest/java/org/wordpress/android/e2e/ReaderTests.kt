@@ -11,8 +11,9 @@ import org.wordpress.android.support.BaseTest
 
 @HiltAndroidTest
 class ReaderTests : BaseTest() {
-    @Rule
+    @JvmField @Rule
     var mRuntimeImageAccessRule = GrantPermissionRule.grant(permission.WRITE_EXTERNAL_STORAGE)
+
     @Before
     fun setUp() {
         logoutIfNecessary()
