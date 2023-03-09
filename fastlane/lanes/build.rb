@@ -265,7 +265,7 @@ platform :android do
       app_display_name: product,
       app_icon: ":#{product.downcase}:", # Use Buildkite emoji based on product name
       download_url: install_url,
-      metadata: { Flavor: PROTOTYPE_BUILD_FLAVOR, 'Build Type': PROTOTYPE_BUILD_TYPE },
+      metadata: { Flavor: PROTOTYPE_BUILD_FLAVOR, 'Build Type': PROTOTYPE_BUILD_TYPE, 'Version': versionName },
       footnote: '<em>Note: Google Login is not supported on these builds.</em>',
       fold: true
     )
