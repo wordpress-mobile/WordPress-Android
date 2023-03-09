@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.ui.compose.components.ButtonsColumn
-import org.wordpress.android.ui.compose.components.PrimaryButton
-import org.wordpress.android.ui.compose.components.SecondaryButton
+import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
+import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
 import org.wordpress.android.ui.compose.components.text.Message
 import org.wordpress.android.ui.compose.components.text.Subtitle
 import org.wordpress.android.ui.compose.components.text.Title
