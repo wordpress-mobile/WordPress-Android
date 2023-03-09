@@ -4446,5 +4446,4 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="app_icon_setting_selector_button_cancel">@string/cancel</string>
 
     <string name="app_icon_default_name">Default</string>
-    <string name="app_icon_red_name">Default</string>
 </resources>

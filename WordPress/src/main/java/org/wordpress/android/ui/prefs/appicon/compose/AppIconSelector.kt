@@ -29,6 +29,7 @@ import org.wordpress.android.ui.compose.components.PrimaryButton
 import org.wordpress.android.ui.compose.components.SecondaryButton
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.prefs.appicon.AppIcon
+import org.wordpress.android.ui.prefs.appicon.AppIconSet
 
 // TODO thomashorta update some UI stuff after #18040 is merged
 @Composable
@@ -124,7 +125,7 @@ fun AppIconSelector(
 private fun AppIconSelectorPreview() {
     AppTheme {
         AppIconSelector(
-            icons = AppIcon.values().toList(),
+            icons = AppIconSet().appIcons,
             currentIcon = AppIcon.DEFAULT,
             onDismiss = {},
             onIconSelected = {},

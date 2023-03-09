@@ -45,4 +45,7 @@
 
     <!-- Share button in Me -->
     <string name="me_btn_share">Share Jetpack with a friend</string>
+
+    <!-- App Icon settings -->
+    <string name="app_icon_red_name">Jetpack Red</string>
 </resources>

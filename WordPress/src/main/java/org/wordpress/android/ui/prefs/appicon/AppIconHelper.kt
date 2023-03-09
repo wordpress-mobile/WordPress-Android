@@ -9,10 +9,11 @@ import javax.inject.Singleton
 class AppIconHelper @Inject constructor(
     private val packageManagerWrapper: PackageManagerWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val appIconSet: AppIconSet,
 ) {
-    val appIcons = AppIcon.values().toList()
+    val appIcons get() = appIconSet.appIcons
 
-    fun getCurrentIcon(): AppIcon = AppIcon.fromId(appPrefsWrapper.currentAppIconId)
+    fun getCurrentIcon(): AppIcon = iconFromId(appPrefsWrapper.currentAppIconId)
 
     fun setCurrentIcon(icon: AppIcon) {
         enableSelectedIcon(icon)
@@ -28,4 +29,6 @@ class AppIconHelper @Inject constructor(
             }
         }
     }
+
+    private fun iconFromId(id: String): AppIcon = appIcons.firstOrNull { it.id == id } ?: AppIcon.DEFAULT
 }
