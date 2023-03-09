@@ -51,7 +51,7 @@ class JetpackFullPluginInstallActivity : AppCompatActivity() {
                 topBar = {
                     MainTopAppBar(
                         title = stringResource(toolbarTitle),
-                        navigationIcon = NavigationIcons.BackIcon,
+                        navigationIcon = NavigationIcons.CloseIcon.takeIf { uiState.showCloseButton },
                         onNavigationIconClick = viewModel::onDismissScreenClick
                     )
                 },
