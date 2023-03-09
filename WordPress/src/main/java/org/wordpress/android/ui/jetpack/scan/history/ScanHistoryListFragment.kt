@@ -17,6 +17,9 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.Sc
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.EmptyUiState.EmptyHistory
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -78,14 +81,17 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
     }
 
     private fun getSite(savedInstanceState: Bundle?): SiteModel {
-        return if (savedInstanceState == null) {
-            requireActivity().intent.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
+        val site = requireNotNull(
+            if (savedInstanceState == null) {
+                requireActivity().intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+            } else {
+                savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)
+            }
+        )
+        return site
     }
 
-    private fun getTabType(): ScanHistoryTabType = requireNotNull(arguments?.getParcelable(ARG_TAB_TYPE))
+    private fun getTabType() = requireNotNull(arguments?.getParcelableCompat<ScanHistoryTabType>(ARG_TAB_TYPE))
 
     override fun getScrollableViewForUniqueIdProvision(): View? = binding?.recyclerView
 

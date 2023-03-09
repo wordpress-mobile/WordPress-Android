@@ -8,6 +8,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeOverlayFragment
 import org.wordpress.android.ui.blaze.ui.blazeoverlay.BlazeViewModel
 import org.wordpress.android.ui.blaze.ui.blazewebview.BlazeWebViewFragment
+import org.wordpress.android.util.extensions.getParcelableExtraCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
 const val ARG_EXTRA_BLAZE_UI_MODEL = "blaze_ui_model"
 const val ARG_BLAZE_FLOW_SOURCE = "blaze_flow_source"
@@ -45,10 +47,10 @@ class BlazeParentActivity : AppCompatActivity() {
     }
 
     private fun getSource(): BlazeFlowSource {
-        return intent.getSerializableExtra(ARG_BLAZE_FLOW_SOURCE) as BlazeFlowSource
+        return requireNotNull(intent.getSerializableExtraCompat(ARG_BLAZE_FLOW_SOURCE))
     }
 
     private fun getBlazeUiModel(): BlazeUIModel? {
-        return intent.getParcelableExtra(ARG_EXTRA_BLAZE_UI_MODEL)
+        return intent.getParcelableExtraCompat(ARG_EXTRA_BLAZE_UI_MODEL)
     }
 }

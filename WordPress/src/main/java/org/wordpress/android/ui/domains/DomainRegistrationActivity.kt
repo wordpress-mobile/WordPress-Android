@@ -17,6 +17,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenD
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationDetails
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationResult
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainSuggestions
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -50,9 +51,10 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
             setContentView(root)
             binding = this
 
-            val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-            val domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
-                    as DomainRegistrationPurpose
+            val site = requireNotNull(intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
+            val domainRegistrationPurpose = requireNotNull(
+                intent.getSerializableExtraCompat<DomainRegistrationPurpose>(DOMAIN_REGISTRATION_PURPOSE_KEY)
+            )
 
             setupToolbar()
             setupViewModel(site, domainRegistrationPurpose)

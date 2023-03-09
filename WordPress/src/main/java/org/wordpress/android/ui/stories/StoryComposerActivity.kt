@@ -86,6 +86,10 @@ import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getParcelableExtraCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
@@ -197,10 +201,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     private fun initSite(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null) {
-            site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+        site = if (savedInstanceState == null) {
+            intent.getSerializableExtraCompat(WordPress.SITE)
         } else {
-            site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            savedInstanceState.getSerializableCompat(WordPress.SITE)
         }
     }
 
@@ -211,10 +215,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
         if (savedInstanceState == null) {
             localPostId = getBackingPostIdFromIntent()
-            originalStorySaveResult = intent.getParcelableExtra(KEY_STORY_SAVE_RESULT) as StorySaveResult?
+            originalStorySaveResult = intent.getParcelableExtraCompat(KEY_STORY_SAVE_RESULT)
 
             if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
-                notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
+                notificationType = intent.getSerializableExtraCompat(ARG_NOTIFICATION_TYPE)
             }
         } else {
             if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
@@ -222,7 +226,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             }
             if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_STORY_SAVE_RESULT)) {
                 originalStorySaveResult =
-                    savedInstanceState.getParcelable(STATE_KEY_ORIGINAL_STORY_SAVE_RESULT) as StorySaveResult?
+                    savedInstanceState.getParcelableCompat(STATE_KEY_ORIGINAL_STORY_SAVE_RESULT)
             }
         }
 
@@ -230,8 +234,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             PostEditorAnalyticsSession.fromBundle(bundle, STATE_KEY_EDITOR_SESSION_DATA, analyticsTrackerWrapper)
         }
 
-        viewModel = ViewModelProvider(this, viewModelFactory)
-            .get(StoryComposerViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[StoryComposerViewModel::class.java]
 
         site?.let {
             val postInitialized = viewModel.start(
@@ -370,8 +373,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         var localPostId = intent.getIntExtra(KEY_POST_LOCAL_ID, 0)
         if (localPostId == 0) {
             if (intent.hasExtra(KEY_STORY_SAVE_RESULT)) {
-                val storySaveResult =
-                    intent.getParcelableExtra(KEY_STORY_SAVE_RESULT) as StorySaveResult?
+                val storySaveResult = intent.getParcelableExtraCompat<StorySaveResult>(KEY_STORY_SAVE_RESULT)
                 storySaveResult?.let {
                     localPostId = it.metadata?.getInt(KEY_POST_LOCAL_ID, 0) ?: 0
                 }

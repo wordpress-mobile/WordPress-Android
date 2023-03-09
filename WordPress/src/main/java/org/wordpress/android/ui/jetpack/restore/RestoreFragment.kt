@@ -27,6 +27,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
@@ -69,11 +70,11 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
     }
 
     private fun JetpackBackupRestoreFragmentBinding.initViewModel(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this@RestoreFragment, viewModelFactory).get(RestoreViewModel::class.java)
+        viewModel = ViewModelProvider(this@RestoreFragment, viewModelFactory)[RestoreViewModel::class.java]
 
         val (site, activityId) = when {
             requireActivity().intent?.extras != null -> {
-                val site = requireNotNull(requireActivity().intent.extras).getSerializable(WordPress.SITE) as SiteModel
+                val site = requireNotNull(activity?.intent?.extras?.getSerializableCompat<SiteModel>(WordPress.SITE))
                 val activityId = requireNotNull(requireActivity().intent.extras).getString(
                     KEY_RESTORE_ACTIVITY_ID_KEY
                 ) as String

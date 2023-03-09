@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.Schedul
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.TEN_MINUTES
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.WHEN_PUBLISHED
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel
+import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 
 class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
@@ -23,15 +24,19 @@ class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
     private lateinit var viewModel: PublishSettingsViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val publishSettingsFragmentType = arguments?.getParcelable<PublishSettingsFragmentType>(
+        val publishSettingsFragmentType = arguments?.getParcelableCompat<PublishSettingsFragmentType>(
             ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE
         )
 
         viewModel = when (publishSettingsFragmentType) {
-            PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(EditPostPublishSettingsViewModel::class.java)
-            PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(PrepublishingPublishSettingsViewModel::class.java)
+            PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(
+                requireActivity(),
+                viewModelFactory
+            )[EditPostPublishSettingsViewModel::class.java]
+            PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(
+                requireActivity(),
+                viewModelFactory
+            )[PrepublishingPublishSettingsViewModel::class.java]
             null -> error("PublishSettingsViewModel not initialized")
         }
 

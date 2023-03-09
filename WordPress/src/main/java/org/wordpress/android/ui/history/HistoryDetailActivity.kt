@@ -8,6 +8,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.HistoryDetailActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.history.HistoryListItem.Revision
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.onBackPressedCompat
 
 class HistoryDetailActivity : LocaleAwareActivity() {
@@ -30,7 +31,7 @@ class HistoryDetailActivity : LocaleAwareActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val extras = requireNotNull(intent.extras)
-        val revision = extras.getParcelable<Revision>(HistoryDetailContainerFragment.EXTRA_CURRENT_REVISION)
+        val revision = extras.getParcelableCompat<Revision>(HistoryDetailContainerFragment.EXTRA_CURRENT_REVISION)
         val previousRevisionsIds =
             extras.getLongArray(HistoryDetailContainerFragment.EXTRA_PREVIOUS_REVISIONS_IDS)
         val postId = extras.getLong(HistoryDetailContainerFragment.EXTRA_POST_ID)
