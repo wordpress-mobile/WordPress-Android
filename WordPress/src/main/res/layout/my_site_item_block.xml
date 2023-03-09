@@ -10,7 +10,7 @@
         android:id="@+id/my_site_item_primary_icon"
         style="@style/UpdatedMySiteListRowIcon"
         android:layout_marginBottom="@dimen/margin_large"
-        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_small_large"
         android:layout_marginTop="@dimen/margin_large"
         android:importantForAccessibility="no"
         app:layout_constraintBottom_toBottomOf="parent"
