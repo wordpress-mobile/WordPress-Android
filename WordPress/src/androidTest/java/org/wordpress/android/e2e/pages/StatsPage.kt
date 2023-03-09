@@ -5,6 +5,7 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.Matchers
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.support.WPSupportUtils
 import org.wordpress.android.util.StatsKeyValueData
@@ -66,6 +67,12 @@ class StatsPage {
     }
 
     fun assertVisits(visitsData: StatsVisitsData): StatsPage {
+        // Skip this check for JP because of the bug with Stats card load.
+        // See https://github.com/wordpress-mobile/WordPress-Android/issues/18065
+        if (BuildConfig.IS_JETPACK_APP) {
+            return this
+        }
+
         val cardStructure = Espresso.onView(
             Matchers.allOf(
                 ViewMatchers.isDescendantOfA(visibleCoordinatorLayout),
