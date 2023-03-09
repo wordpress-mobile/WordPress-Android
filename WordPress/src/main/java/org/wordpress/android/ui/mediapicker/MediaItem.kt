@@ -4,7 +4,6 @@ import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.Creator
-import androidx.core.os.ParcelCompat
 import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.GIF_MEDIA_IDENTIFIER
 import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.LOCAL_ID
 import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.LOCAL_URI
@@ -83,15 +82,7 @@ data class MediaItem(
                     return when (type) {
                         LOCAL_URI -> {
                             LocalUri(
-                                UriWrapper(
-                                    requireNotNull(
-                                        ParcelCompat.readParcelable(
-                                            parcel,
-                                            Uri::class.java.classLoader,
-                                            Uri::class.java
-                                        )
-                                    )
-                                ),
+                                UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))),
                                 parcel.readInt() != 0
                             )
                         }
@@ -106,15 +97,7 @@ data class MediaItem(
                         }
                         GIF_MEDIA_IDENTIFIER -> {
                             GifMediaIdentifier(
-                                UriWrapper(
-                                    requireNotNull(
-                                        ParcelCompat.readParcelable(
-                                            parcel,
-                                            Uri::class.java.classLoader,
-                                            Uri::class.java
-                                        )
-                                    )
-                                ),
+                                UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))),
                                 parcel.readString()
                             )
                         }

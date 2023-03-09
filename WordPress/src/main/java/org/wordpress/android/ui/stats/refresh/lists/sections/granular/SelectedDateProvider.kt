@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.core.os.ParcelCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.parcelize.Parceler
@@ -224,7 +223,7 @@ class SelectedDateProvider
                     null
                 }
                 val availableTimeStamps = mutableListOf<Any?>()
-                ParcelCompat.readList(parcel, availableTimeStamps, null, Any::class.java)
+                parcel.readList(availableTimeStamps, null)
                 val availableDates = availableTimeStamps.map { Date(it as Long) }
                 val loading = parcel.readValue(null) as Boolean
                 val error = parcel.readValue(null) as Boolean
