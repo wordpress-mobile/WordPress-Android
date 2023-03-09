@@ -37,9 +37,7 @@ fun PrimaryButton(
             .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
     }
 
-    buttonSize.height?.let {
-        computedModifier = computedModifier.defaultMinSize(minHeight = it)
-    }
+    computedModifier = computedModifier.defaultMinSize(minHeight = buttonSize.height)
 
     Button(
         onClick = onClick,
