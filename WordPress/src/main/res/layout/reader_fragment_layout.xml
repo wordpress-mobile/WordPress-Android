@@ -15,6 +15,7 @@
             style="@style/WordPress.CollapsedToolbarLayout"
             android:layout_width="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:expandedTitleTextAppearance="@style/TextAppearance.App.Toolbar.Title"
             android:layout_height="@dimen/prominent_toolbar_height">
 
             <com.google.android.material.appbar.MaterialToolbar
