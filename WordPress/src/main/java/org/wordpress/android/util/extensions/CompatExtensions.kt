@@ -1,6 +1,10 @@
 package org.wordpress.android.util.extensions
 
+import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
@@ -108,3 +112,19 @@ inline fun <reified T> Parcel.readListCompat(outVal: MutableList<T?>, loader: Cl
         readList(outVal, loader)
     }
 }
+
+fun PackageManager.getActivityInfoCompat(componentName: ComponentName, flags: Int): ActivityInfo =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        getActivityInfo(componentName, PackageManager.ComponentInfoFlags.of(flags.toLong()))
+    } else {
+        @Suppress("DEPRECATION")
+        getActivityInfo(componentName, flags)
+    }
+
+fun PackageManager.getPackageInfoCompat(packageName: String, flags: Int): PackageInfo? =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(flags.toLong()))
+    } else {
+        @Suppress("DEPRECATION")
+        getPackageInfo(packageName, flags)
+    }
