@@ -14,8 +14,9 @@ import java.time.Instant
 
 @HiltAndroidTest
 class BlockEditorTests : BaseTest() {
-    @Rule
+    @JvmField @Rule
     var mRuntimeImageAccessRule = GrantPermissionRule.grant(permission.WRITE_EXTERNAL_STORAGE)
+
     @Before
     fun setUp() {
         logoutIfNecessary()
