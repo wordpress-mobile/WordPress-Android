@@ -3,6 +3,7 @@ package org.wordpress.android.util.extensions
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcel
 import android.os.Parcelable
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
@@ -81,3 +82,29 @@ inline fun <reified T : Serializable?> Bundle.getSerializableCompat(key: String)
         @Suppress("DEPRECATION")
         getSerializable(key) as T
     }
+
+/**
+ * TODO: Remove this when upgrading to androidx.core 1.9.0. Use ParcelCompat instead.
+ */
+@Suppress("ForbiddenComment")
+inline fun <reified T : Parcelable> Parcel.readParcelableCompat(loader: ClassLoader?): T? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        readParcelable(loader, T::class.java)
+    } else {
+        @Suppress("DEPRECATION")
+        readParcelable(loader)
+    }
+}
+
+/**
+ * TODO: Remove this when upgrading to androidx.core 1.9.0. Use ParcelCompat instead.
+ */
+@Suppress("ForbiddenComment")
+inline fun <reified T> Parcel.readListCompat(outVal: MutableList<T?>, loader: ClassLoader?) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        readList(outVal, loader, T::class.java)
+    } else {
+        @Suppress("DEPRECATION")
+        readList(outVal, loader)
+    }
+}
