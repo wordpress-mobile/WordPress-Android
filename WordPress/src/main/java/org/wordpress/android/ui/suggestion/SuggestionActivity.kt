@@ -24,6 +24,7 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.widgets.SuggestionAutoCompleteText
 import javax.inject.Inject
@@ -49,8 +50,8 @@ class SuggestionActivity : LocaleAwareActivity() {
             onBackPressedDispatcher.onBackPressedCompat(this)
         }
 
-        val siteModel = intent.getSerializableExtra(INTENT_KEY_SITE_MODEL) as? SiteModel
-        val suggestionType = intent.getSerializableExtra(INTENT_KEY_SUGGESTION_TYPE) as? SuggestionType
+        val siteModel = intent.getSerializableExtraCompat<SiteModel>(INTENT_KEY_SITE_MODEL)
+        val suggestionType = intent.getSerializableExtraCompat<SuggestionType>(INTENT_KEY_SUGGESTION_TYPE)
         when {
             siteModel == null -> abortDueToMissingIntentExtra(INTENT_KEY_SITE_MODEL)
             suggestionType == null -> abortDueToMissingIntentExtra(INTENT_KEY_SUGGESTION_TYPE)

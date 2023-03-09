@@ -22,6 +22,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartD
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.viewBinding
 
 private const val Y_BUFFER = 10
@@ -90,7 +91,7 @@ class QuickStartDynamicCardViewHolder(
 
     private fun restoreScrollState(recyclerView: RecyclerView, key: String) {
         recyclerView.layoutManager?.apply {
-            val scrollState = nestedScrollStates.getParcelable<Parcelable>(key)
+            val scrollState = nestedScrollStates.getParcelableCompat<Parcelable>(key)
             if (scrollState != null) {
                 onRestoreInstanceState(scrollState)
             } else {

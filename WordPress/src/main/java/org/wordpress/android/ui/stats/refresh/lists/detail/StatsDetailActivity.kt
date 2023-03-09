@@ -20,6 +20,8 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.extensions.getSerializableCompat
+import java.io.Serializable
 
 const val POST_ID = "POST_ID"
 const val POST_TYPE = "POST_TYPE"
@@ -33,7 +35,7 @@ class StatsDetailActivity : LocaleAwareActivity() {
         val binding = StatsDetailActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val listType = intent.extras?.get(StatsListFragment.LIST_TYPE)
+        val listType = intent.extras?.getSerializableCompat<Serializable>(StatsListFragment.LIST_TYPE)
 
         if (savedInstanceState == null) {
             supportFragmentManager.commit {

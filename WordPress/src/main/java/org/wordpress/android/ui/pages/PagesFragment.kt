@@ -56,6 +56,8 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -316,13 +318,15 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         setupActions(activity)
         setupMlpObservers(activity)
 
-        val site = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
-            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            restorePreviousSearch = true
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
+        val site = requireNotNull(
+            if (savedInstanceState == null) {
+                val nonNullIntent = checkNotNull(activity.intent)
+                nonNullIntent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+            } else {
+                restorePreviousSearch = true
+                savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)
+            }
+        )
 
         viewModel.authorUIState.observe(activity, Observer { state ->
             state?.let {

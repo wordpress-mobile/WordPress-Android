@@ -42,6 +42,7 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -426,7 +427,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     private fun startViewModelForProgress() {
         whenever(savedInstanceState.getInt(KEY_BACKUP_DOWNLOAD_CURRENT_STEP))
             .thenReturn(BackupDownloadStep.PROGRESS.id)
-        whenever(savedInstanceState.getParcelable<BackupDownloadState>(KEY_BACKUP_DOWNLOAD_STATE))
+        whenever(savedInstanceState.getParcelableCompat<BackupDownloadState>(KEY_BACKUP_DOWNLOAD_STATE))
             .thenReturn(backupDownloadState)
         whenever(percentFormatter.format(30))
             .thenReturn("30%")
@@ -439,7 +440,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     private fun startViewModelForComplete(backupDownloadState: BackupDownloadState? = null) {
         whenever(savedInstanceState.getInt(KEY_BACKUP_DOWNLOAD_CURRENT_STEP))
             .thenReturn(BackupDownloadStep.COMPLETE.id)
-        whenever(savedInstanceState.getParcelable<BackupDownloadState>(KEY_BACKUP_DOWNLOAD_STATE))
+        whenever(savedInstanceState.getParcelableCompat<BackupDownloadState>(KEY_BACKUP_DOWNLOAD_STATE))
             .thenReturn(backupDownloadState)
         startViewModel(savedInstanceState)
     }
@@ -447,7 +448,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     private fun startViewModelForError() {
         whenever(savedInstanceState.getInt(KEY_BACKUP_DOWNLOAD_CURRENT_STEP))
             .thenReturn(BackupDownloadStep.ERROR.id)
-        whenever(savedInstanceState.getParcelable<BackupDownloadState>(KEY_BACKUP_DOWNLOAD_STATE))
+        whenever(savedInstanceState.getParcelableCompat<BackupDownloadState>(KEY_BACKUP_DOWNLOAD_STATE))
             .thenReturn(backupDownloadState)
         startViewModel(savedInstanceState)
     }

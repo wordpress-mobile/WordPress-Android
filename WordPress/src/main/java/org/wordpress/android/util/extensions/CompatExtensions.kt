@@ -1,10 +1,13 @@
 package org.wordpress.android.util.extensions
 
+import android.content.Intent
 import android.os.Build
+import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
+import java.io.Serializable
 
 /**
  * This is a temporary workaround for the issue described here: https://issuetracker.google.com/issues/247982487
@@ -21,6 +24,64 @@ fun OnBackPressedDispatcher.onBackPressedCompat(onBackPressedCallback: OnBackPre
     onBackPressed()
     onBackPressedCallback.isEnabled = true
 }
+
+/**
+ * TODO: Remove this when stable androidx.core 1.10 is released. Use IntentCompat instead.
+ */
+@Suppress("ForbiddenComment")
+inline fun <reified T : Parcelable> Intent.getParcelableExtraCompat(key: String): T? =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        getParcelableExtra(key, T::class.java)
+    } else {
+        @Suppress("DEPRECATION")
+        getParcelableExtra(key) as T?
+    }
+
+/**
+ * This is an Android 13 compatibility function that is not included in IntentCompat.
+ */
+inline fun <reified T : Serializable> Intent.getSerializableExtraCompat(key: String): T? =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        getSerializableExtra(key, T::class.java)
+    } else {
+        @Suppress("DEPRECATION")
+        getSerializableExtra(key) as T?
+    }
+
+/**
+ * TODO: Remove this when stable androidx.core 1.10 is released. Use BundleCompat instead.
+ */
+@Suppress("ForbiddenComment")
+inline fun <reified T : Parcelable> Bundle.getParcelableCompat(key: String): T? =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        getParcelable(key, T::class.java)
+    } else {
+        @Suppress("DEPRECATION")
+        getParcelable(key)
+    }
+
+/**
+ * TODO: Remove this when stable androidx.core 1.10 is released. Use BundleCompat instead.
+ */
+@Suppress("ForbiddenComment")
+inline fun <reified T : Parcelable> Bundle.getParcelableArrayListCompat(key: String): ArrayList<T>? =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        getParcelableArrayList(key, T::class.java)
+    } else {
+        @Suppress("DEPRECATION")
+        getParcelableArrayList(key)
+    }
+
+/**
+ * This is an Android 13 compatibility function that is not included in BundleCompat.
+ */
+inline fun <reified T : Serializable?> Bundle.getSerializableCompat(key: String): T? =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        getSerializable(key, T::class.java)
+    } else {
+        @Suppress("DEPRECATION")
+        getSerializable(key) as T
+    }
 
 /**
  * TODO: Remove this when upgrading to androidx.core 1.9.0. Use ParcelCompat instead.
