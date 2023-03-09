@@ -250,6 +250,10 @@ public class AppSettingsFragment extends PreferenceFragment
         if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
             removeInitialScreen();
         }
+
+        if (!mAppIconHelper.shouldShowAppIconSetting()) {
+            removeAppIcon();
+        }
     }
 
     @Override
@@ -330,6 +334,14 @@ public class AppSettingsFragment extends PreferenceFragment
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(openWebLinksWithJetpackPreference);
+    }
+
+    private void removeAppIcon() {
+        Preference appIconPreference =
+                findPreference(getString(R.string.pref_key_app_icon));
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.removePreference(appIconPreference);
     }
 
     @Override

@@ -2,16 +2,20 @@ package org.wordpress.android.ui.prefs.appicon
 
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.PackageManagerWrapper
+import org.wordpress.android.util.config.AppIconSettingFeatureConfig
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AppIconHelper @Inject constructor(
+    private val appIconSettingFeatureConfig: AppIconSettingFeatureConfig,
     private val packageManagerWrapper: PackageManagerWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val appIconSet: AppIconSet,
 ) {
     val appIcons get() = appIconSet.appIcons
+
+    fun shouldShowAppIconSetting(): Boolean = appIconSettingFeatureConfig.isEnabled()
 
     fun getCurrentIcon(): AppIcon = iconFromId(appPrefsWrapper.currentAppIconId)
 
