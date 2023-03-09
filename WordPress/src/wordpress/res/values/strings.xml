@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Icon settings -->
-    <string name="app_icon_purple_name">WordPress Purple</string>
+    <string name="app_icon_black_name">Black</string>
+    <string name="app_icon_blue_name">Blue</string>
+    <string name="app_icon_celadon_name">Celadon</string>
+    <string name="app_icon_pink_name">Pink</string>
 </resources>
