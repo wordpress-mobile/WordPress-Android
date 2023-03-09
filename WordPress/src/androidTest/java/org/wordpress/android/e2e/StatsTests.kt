@@ -6,6 +6,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.e2e.pages.MySitesPage
 import org.wordpress.android.support.BaseTest
@@ -18,6 +19,7 @@ import org.wordpress.android.util.StatsVisitsData
 class StatsTests : BaseTest() {
     @Before
     fun setUp() {
+        org.junit.Assume.assumeTrue("jetpack" in BuildConfig.FLAVOR)
         logoutIfNecessary()
         wpLogin()
     }
@@ -41,6 +43,7 @@ class StatsTests : BaseTest() {
         val countriesList: List<StatsKeyValueData> = StatsMocksReader().readDayCountriesToList()
         val videosList: List<StatsKeyValueData> = StatsMocksReader().readDayVideoPlaysToList()
         val downloadsList: List<StatsKeyValueData> = StatsMocksReader().readDayFileDownloadsToList()
+
         MySitesPage()
             .go()
             .goToStats()
