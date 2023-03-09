@@ -36,6 +36,9 @@ inline fun <reified T : Parcelable> Intent.getParcelableExtraCompat(key: String)
         getParcelableExtra(key) as T?
     }
 
+/**
+ * This is an Android 13 compatibility function that is not included in IntentCompat.
+ */
 inline fun <reified T : Serializable> Intent.getSerializableExtraCompat(key: String): T? =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         getSerializableExtra(key, T::class.java)
@@ -68,6 +71,9 @@ inline fun <reified T : Parcelable> Bundle.getParcelableArrayListCompat(key: Str
         getParcelableArrayList(key)
     }
 
+/**
+ * This is an Android 13 compatibility function that is not included in BundleCompat.
+ */
 inline fun <reified T : Serializable?> Bundle.getSerializableCompat(key: String): T? =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         getSerializable(key, T::class.java)
