@@ -22,6 +22,10 @@ fun OnBackPressedDispatcher.onBackPressedCompat(onBackPressedCallback: OnBackPre
     onBackPressedCallback.isEnabled = true
 }
 
+/**
+ * TODO: Remove this when upgrading to androidx.core 1.9.0. Use ParcelCompat instead.
+ */
+@Suppress("ForbiddenComment")
 inline fun <reified T : Parcelable> Parcel.readParcelableCompat(loader: ClassLoader?): T? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         readParcelable(loader, T::class.java)
@@ -31,6 +35,10 @@ inline fun <reified T : Parcelable> Parcel.readParcelableCompat(loader: ClassLoa
     }
 }
 
+/**
+ * TODO: Remove this when upgrading to androidx.core 1.9.0. Use ParcelCompat instead.
+ */
+@Suppress("ForbiddenComment")
 inline fun <reified T> Parcel.readListCompat(outVal: MutableList<T?>, loader: ClassLoader?) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         readList(outVal, loader, T::class.java)
