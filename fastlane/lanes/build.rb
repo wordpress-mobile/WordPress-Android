@@ -146,14 +146,15 @@ platform :android do
   lane :build_and_upload_wordpress_installable_build do
     UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
 
+    versionName = generate_installable_build_number
     gradle(
       task: 'assemble',
       flavor: "WordPress#{INSTALLABLE_BUILD_FLAVOR}",
       build_type: INSTALLABLE_BUILD_TYPE,
-      properties: { installableBuildVersionName: generate_installable_build_number }
+      properties: { installableBuildVersionName: versionName }
     )
 
-    upload_installable_build(product: 'WordPress')
+    upload_installable_build(product: 'WordPress', versionName: versionName)
   end
 
   #####################################################################################
@@ -168,14 +169,15 @@ platform :android do
   lane :build_and_upload_jetpack_installable_build do
     UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
 
+    versionName = generate_installable_build_number
     gradle(
       task: 'assemble',
       flavor: "Jetpack#{INSTALLABLE_BUILD_FLAVOR}",
       build_type: INSTALLABLE_BUILD_TYPE,
-      properties: { installableBuildVersionName: generate_installable_build_number }
+      properties: { installableBuildVersionName: versionName }
     )
 
-    upload_installable_build(product: 'Jetpack')
+    upload_installable_build(product: 'Jetpack', versionName: versionName)
   end
 
   #####################################################################################
@@ -246,7 +248,7 @@ platform :android do
   #
   # @param [String] product the display name of the app to upload to S3. 'WordPress' or 'Jetpack'
   #
-  def upload_installable_build(product:)
+  def upload_installable_build(product:, versionName:)
     filename = "#{product.downcase}-installable-build-#{generate_installable_build_number}.apk"
 
     upload_path = upload_to_s3(
@@ -278,6 +280,7 @@ platform :android do
     if ENV['BUILDKITE']
       message = "#{product} Installable Build: [#{filename}](#{install_url})"
       buildkite_annotate(style: 'info', context: "installable-build-#{product}", message: message)
+      buildkite_metadata(set: { versionName: versionName, 'build:flavor': INSTALLABLE_BUILD_FLAVOR, 'build:type': INSTALLABLE_BUILD_TYPE })
     end
   end
 
