@@ -81,12 +81,14 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
     }
 
     private fun getSite(savedInstanceState: Bundle?): SiteModel {
-        val site: SiteModel? = if (savedInstanceState == null) {
-            requireActivity().intent.getSerializableExtraCompat(WordPress.SITE)
-        } else {
-            savedInstanceState.getSerializableCompat(WordPress.SITE)
-        }
-        return requireNotNull(site)
+        val site = requireNotNull(
+            if (savedInstanceState == null) {
+                requireActivity().intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+            } else {
+                savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)
+            }
+        )
+        return site
     }
 
     private fun getTabType() = requireNotNull(arguments?.getParcelableCompat<ScanHistoryTabType>(ARG_TAB_TYPE))

@@ -89,12 +89,12 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
                 }
             }
 
-            val site: SiteModel = requireNotNull(
+            val site = requireNotNull(
                 if (savedInstanceState == null) {
                     val nonNullIntent = checkNotNull(nonNullActivity.intent)
-                    nonNullIntent.getSerializableExtraCompat(WordPress.SITE)
+                    nonNullIntent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
                 } else {
-                    savedInstanceState.getSerializableCompat(WordPress.SITE)
+                    savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)
                 }
             )
             val rewindableOnly = nonNullActivity.intent.getBooleanExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)

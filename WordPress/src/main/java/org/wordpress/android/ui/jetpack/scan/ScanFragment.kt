@@ -177,12 +177,14 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     }
 
     private fun getSite(savedInstanceState: Bundle?): SiteModel {
-        val site: SiteModel? = if (savedInstanceState == null) {
-            requireActivity().intent.getSerializableExtraCompat(WordPress.SITE)
-        } else {
-            savedInstanceState.getSerializableCompat(WordPress.SITE)
-        }
-        return requireNotNull(site)
+        val site = requireNotNull(
+            if (savedInstanceState == null) {
+                requireActivity().intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+            } else {
+                savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)
+            }
+        )
+        return site
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

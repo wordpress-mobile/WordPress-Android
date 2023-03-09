@@ -157,11 +157,11 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         savedInstanceState: Bundle?
     ) {
         val nonNullIntent = checkNotNull(activity.intent)
-        val type: StatsViewType = requireNotNull(
+        val type = requireNotNull(
             if (savedInstanceState == null) {
-                nonNullIntent.getSerializableExtraCompat(ARGS_VIEW_TYPE)
+                nonNullIntent.getSerializableExtraCompat<StatsViewType>(ARGS_VIEW_TYPE)
             } else {
-                savedInstanceState.getSerializableCompat(ARGS_VIEW_TYPE)
+                savedInstanceState.getSerializableCompat<StatsViewType>(ARGS_VIEW_TYPE)
             }
         )
 

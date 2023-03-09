@@ -318,13 +318,13 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         setupActions(activity)
         setupMlpObservers(activity)
 
-        val site: SiteModel = requireNotNull(
+        val site = requireNotNull(
             if (savedInstanceState == null) {
                 val nonNullIntent = checkNotNull(activity.intent)
-                nonNullIntent.getSerializableExtraCompat(WordPress.SITE)
+                nonNullIntent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
             } else {
                 restorePreviousSearch = true
-                savedInstanceState.getSerializableCompat(WordPress.SITE)
+                savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)
             }
         )
 
