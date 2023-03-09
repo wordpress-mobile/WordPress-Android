@@ -135,49 +135,49 @@ platform :android do
   end
 
   #####################################################################################
-  # build_and_upload_installable_build
+  # build_and_upload_wordpress_prototype_build
   # -----------------------------------------------------------------------------------
-  # Build a WordPress Installable Build and make it available for download
+  # Build a WordPress Prototype Build and make it available for download
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_installable_build
+  # bundle exec fastlane build_and_upload_wordpress_prototype_build
   #####################################################################################
-  desc 'Build an Installable Build and make it available for download'
-  lane :build_and_upload_wordpress_installable_build do
+  desc 'Build a WordPress Prototype Build and make it available for download'
+  lane :build_and_upload_wordpress_prototype_build do
     UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
 
-    versionName = generate_installable_build_number
+    versionName = generate_prototype_build_number
     gradle(
       task: 'assemble',
-      flavor: "WordPress#{INSTALLABLE_BUILD_FLAVOR}",
-      build_type: INSTALLABLE_BUILD_TYPE,
-      properties: { installableBuildVersionName: versionName }
+      flavor: "WordPress#{PROTOTYPE_BUILD_FLAVOR}",
+      build_type: PROTOTYPE_BUILD_TYPE,
+      properties: { prototypeBuildVersionName: versionName }
     )
 
-    upload_installable_build(product: 'WordPress', versionName: versionName)
+    upload_prototype_build(product: 'WordPress', versionName: versionName)
   end
 
   #####################################################################################
-  # build_and_upload_jetpack_installable_build
+  # build_and_upload_jetpack_prototype_build
   # -----------------------------------------------------------------------------------
-  # Build a Jetpack Installable Build and make it available for download
+  # Build a Jetpack Prototype Build and make it available for download
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_installable_build
+  # bundle exec fastlane build_and_upload_jetpack_prototype_build
   #####################################################################################
-  desc 'Build an Installable Build and make it available for download'
-  lane :build_and_upload_jetpack_installable_build do
+  desc 'Build a Jetpack Prototype Build and make it available for download'
+  lane :build_and_upload_jetpack_prototype_build do
     UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
 
-    versionName = generate_installable_build_number
+    versionName = generate_prototype_build_number
     gradle(
       task: 'assemble',
-      flavor: "Jetpack#{INSTALLABLE_BUILD_FLAVOR}",
-      build_type: INSTALLABLE_BUILD_TYPE,
-      properties: { installableBuildVersionName: versionName }
+      flavor: "Jetpack#{PROTOTYPE_BUILD_FLAVOR}",
+      build_type: PROTOTYPE_BUILD_TYPE,
+      properties: { prototypeBuildVersionName: versionName }
     )
 
-    upload_installable_build(product: 'Jetpack', versionName: versionName)
+    upload_prototype_build(product: 'Jetpack', versionName: versionName)
   end
 
   #####################################################################################
@@ -248,8 +248,8 @@ platform :android do
   #
   # @param [String] product the display name of the app to upload to S3. 'WordPress' or 'Jetpack'
   #
-  def upload_installable_build(product:, versionName:)
-    filename = "#{product.downcase}-installable-build-#{generate_installable_build_number}.apk"
+  def upload_prototype_build(product:, versionName:)
+    filename = "#{product.downcase}-prototype-build-#{versionName}.apk"
 
     upload_path = upload_to_s3(
       bucket: 'a8c-apps-public-artifacts',
@@ -260,12 +260,12 @@ platform :android do
 
     return if ENV['BUILDKITE_PULL_REQUEST'].nil?
 
-    install_url = "#{INSTALLABLE_BUILD_DOMAIN}/#{upload_path}"
+    install_url = "#{PROTOTYPE_BUILD_DOMAIN}/#{upload_path}"
     comment_body = prototype_build_details_comment(
       app_display_name: product,
       app_icon: ":#{product.downcase}:", # Use Buildkite emoji based on product name
       download_url: install_url,
-      metadata: { Flavor: INSTALLABLE_BUILD_FLAVOR, 'Build Type': INSTALLABLE_BUILD_TYPE },
+      metadata: { Flavor: PROTOTYPE_BUILD_FLAVOR, 'Build Type': PROTOTYPE_BUILD_TYPE },
       footnote: '<em>Note: Google Login is not supported on these builds.</em>',
       fold: true
     )
@@ -273,19 +273,19 @@ platform :android do
     comment_on_pr(
       project: GHHELPER_REPO,
       pr_number: Integer(ENV['BUILDKITE_PULL_REQUEST']),
-      reuse_identifier: "#{product.downcase}-installable-build-link",
+      reuse_identifier: "#{product.downcase}-prototype-build-link",
       body: comment_body
     )
 
     if ENV['BUILDKITE']
-      message = "#{product} Installable Build: [#{filename}](#{install_url})"
-      buildkite_annotate(style: 'info', context: "installable-build-#{product}", message: message)
-      buildkite_metadata(set: { versionName: versionName, 'build:flavor': INSTALLABLE_BUILD_FLAVOR, 'build:type': INSTALLABLE_BUILD_TYPE })
+      message = "#{product} Prototype Build: [#{filename}](#{install_url})"
+      buildkite_annotate(style: 'info', context: "prototype-build-#{product}", message: message)
+      buildkite_metadata(set: { versionName: versionName, 'build:flavor': PROTOTYPE_BUILD_FLAVOR, 'build:type': PROTOTYPE_BUILD_TYPE })
     end
   end
 
   # This function is Buildkite-specific
-  def generate_installable_build_number
+  def generate_prototype_build_number
     if ENV['BUILDKITE']
       commit = ENV['BUILDKITE_COMMIT'][0, 7]
       branch = ENV['BUILDKITE_BRANCH'].parameterize

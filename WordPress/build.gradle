@@ -71,7 +71,7 @@ android {
         applicationId "org.wordpress.android"
         archivesBaseName = "$applicationId"
 
-        versionName project.findProperty("installableBuildVersionName") ?: versionProperties.getProperty("versionName")
+        versionName project.findProperty("prototypeBuildVersionName") ?: versionProperties.getProperty("versionName")
         versionCode versionProperties.getProperty("versionCode").toInteger()
 
         minSdkVersion rootProject.minSdkVersion
@@ -220,8 +220,7 @@ android {
             dimension "buildType"
         }
 
-        // Used for CI builds on PRs (aka "Installable Builds"). Can be used locally when a developer needs
-        // to install multiple versions of the app on the same device.
+        // Used for CI builds on PRs (aka "Prototype Builds"). Can be used locally when a developer needs to install multiple versions of the app on the same device.
         // AppName: WordPress Pre-Alpha/Jetpack Pre-Alpha
         jalapeno {
             isDefault true
