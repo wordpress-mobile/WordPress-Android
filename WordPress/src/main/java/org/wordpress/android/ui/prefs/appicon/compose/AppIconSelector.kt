@@ -113,10 +113,7 @@ fun AppIconSelector(
             modifier = Modifier
                 .buttonPadding()
                 .fillMaxWidth(),
-            onClick = {
-                if (selectedIcon == currentIcon) return@PrimaryButton
-                onIconSelected(selectedIcon)
-            },
+            onClick = { onIconSelected(selectedIcon) },
         )
         SecondaryButton(
             text = stringResource(R.string.app_icon_setting_selector_button_cancel),
