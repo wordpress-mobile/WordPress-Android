@@ -2157,8 +2157,6 @@ Language: sv_SE
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Inte angivet</string>
     <string name="support_contact_email">E-postadress för kontakt</string>
-    <string name="application_log_button">Logg för applikationen</string>
-    <string name="my_tickets">Mina ärenden</string>
     <string name="activity_log_currently_restoring_message_no_dates">Återställning pågår</string>
     <string name="activity_log_currently_restoring_message">Återställer till %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Din webbplats återställs just nu</string>
@@ -2320,8 +2318,6 @@ Language: sv_SE
     <string name="me_section_screen_title">Jag</string>
     <string name="my_site_section_screen_title">Min webbplats</string>
     <string name="notif_settings_screen_title">Aviseringsinställningar</string>
-    <string name="help_screen_title">Hjälp och support</string>
-    <string name="release_notes_screen_title">Release-uppgifter</string>
     <string name="signup_epilogue_error_avatar_view">Din profilbild har laddats upp och kommer snart att vara tillgänglig.</string>
     <string name="permissions_denied_message">Det verkar som du har stängt av behörigheterna som krävs för denna funktion.&lt;br/&gt;&lt;br/&gt;Redigera behörigheterna för att ändra detta och se till att &lt;strong&gt;%s&lt;/strong&gt; är aktiverat.</string>
     <string name="permissions_denied_title">Behörigheter</string>
@@ -2677,7 +2673,6 @@ Language: sv_SE
     <string name="site_settings_optimize_video_summary">Aktivera för att storleksändra och komprimera videoklipp</string>
     <string name="site_settings_optimize_videos">Optimera videoklipp</string>
     <string name="draft_uploaded">Utkastet uppladdat</string>
-    <string name="report_bug">Rapportera ett fel</string>
     <string name="video_quality">Videokvalitet</string>
     <string name="permission_camera">Kamera</string>
     <string name="permission_storage">Lagring</string>
@@ -3188,7 +3183,6 @@ Language: sv_SE
     <string name="me_disconnect_from_wordpress_com">Logga ut från WordPress.com </string>
     <string name="me_connect_to_wordpress_com">Logga in på WordPress.com</string>
     <string name="me_btn_login_logout">Logga in/Logga ut</string>
-    <string name="me_btn_support">Hjälp och support</string>
     <string name="account_settings">Kontoinställningar</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" kunde inte döljas eftersom den är den nuvarande webbplatsen</string>
     <string name="site_picker_create_wpcom">Skapa en webbplats på WordPress.com</string>

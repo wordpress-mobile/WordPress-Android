@@ -2145,8 +2145,6 @@ Language: gl_ES
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Non establecido</string>
     <string name="support_contact_email">Correo electrónico de contacto</string>
-    <string name="application_log_button">Rexistro da aplicación</string>
-    <string name="my_tickets">Os meus tickets</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restauración en progreso</string>
     <string name="activity_log_currently_restoring_message">Restaurando a %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Actualmente restaurando o teu sitio</string>
@@ -2308,8 +2306,6 @@ Language: gl_ES
     <string name="me_section_screen_title">Eu</string>
     <string name="my_site_section_screen_title">O meu sitio</string>
     <string name="notif_settings_screen_title">Axustes de avisos</string>
-    <string name="help_screen_title">Axuda e soporte</string>
-    <string name="release_notes_screen_title">Notas da versión</string>
     <string name="signup_epilogue_error_avatar_view">O teu avatar subiuse e estará dispoñible en breve.</string>
     <string name="permissions_denied_message">Parece que desactivaches os permisos necesarios para esta característica.&lt;br/&gt;&lt;br/&gt;Para cambialo, edita os teus permisos e asegúrate de que &lt;strong&gt;%s&lt;/strong&gt; estea activado.</string>
     <string name="permissions_denied_title">Permisos</string>
@@ -2665,7 +2661,6 @@ Language: gl_ES
     <string name="site_settings_optimize_video_summary">Activa o redimensionado e a compresión de vídeos</string>
     <string name="site_settings_optimize_videos">Optimizar vídeos</string>
     <string name="draft_uploaded">Borrador subido</string>
-    <string name="report_bug">Informar de fallo</string>
     <string name="video_quality">Calidade do vídeo</string>
     <string name="permission_camera">Cámara</string>
     <string name="permission_storage">Almacenamento</string>
@@ -3176,7 +3171,6 @@ Language: gl_ES
     <string name="me_disconnect_from_wordpress_com">Desconectarse de WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Conectarse a WordPress.com</string>
     <string name="me_btn_login_logout">Entrar/Saír</string>
-    <string name="me_btn_support">Axuda e soporte</string>
     <string name="account_settings">Configuración da conta</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" non foi ocultado porque é o sitio actual</string>
     <string name="site_picker_create_wpcom">Crear un sitio en WordPress.com</string>

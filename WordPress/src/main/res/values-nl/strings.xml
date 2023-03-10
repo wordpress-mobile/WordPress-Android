@@ -2124,8 +2124,6 @@ Language: nl
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Niet ingesteld</string>
     <string name="support_contact_email">E-mail voor contact</string>
-    <string name="application_log_button">Toepassingslog</string>
-    <string name="my_tickets">Mijn tickets</string>
     <string name="activity_log_currently_restoring_message_no_dates">Terugzetten in bewerking</string>
     <string name="activity_log_currently_restoring_message">Terugzetten naar %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Je site wordt momenteel hersteld</string>
@@ -2287,8 +2285,6 @@ Language: nl
     <string name="me_section_screen_title">Ik</string>
     <string name="my_site_section_screen_title">Mijn site</string>
     <string name="notif_settings_screen_title">Notificatie instellingen</string>
-    <string name="help_screen_title">Hulp en ondersteuning</string>
-    <string name="release_notes_screen_title">Releaselog</string>
     <string name="signup_epilogue_error_avatar_view">Je avatar is geüpload en binnenkort beschikbaar.</string>
     <string name="permissions_denied_message">Het lijkt erop dat je de vereiste machtigingen voor deze functie hebt uitgeschakeld.&lt;br/&gt;&lt;br/&gt;Om dit te wijzigen, moet je je machtigingen bewerken en zorgen dat &lt;strong&gt;%s&lt;/strong&gt; is ingeschakeld.</string>
     <string name="permissions_denied_title">Machtigingen</string>
@@ -2644,7 +2640,6 @@ Language: nl
     <string name="site_settings_optimize_video_summary">Het aanpassen van de grootte en het comprimeren van video\'s inschakelen</string>
     <string name="site_settings_optimize_videos">Optimaliseer video\'s</string>
     <string name="draft_uploaded">Concept toegevoegd</string>
-    <string name="report_bug">Bug rapporteren</string>
     <string name="video_quality">Videokwaliteit</string>
     <string name="permission_camera">Camera</string>
     <string name="permission_storage">Opslag</string>
@@ -3155,7 +3150,6 @@ Language: nl
     <string name="me_disconnect_from_wordpress_com">Uitloggen van WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Inloggen op WordPress.com</string>
     <string name="me_btn_login_logout">Inloggen/uitloggen</string>
-    <string name="me_btn_support">Help &amp; ondersteuning</string>
     <string name="account_settings">Accountinstellingen</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" was niet verborgen omdat het de huidige site is</string>
     <string name="site_picker_create_wpcom">WordPress.com site maken</string>

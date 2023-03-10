@@ -2149,8 +2149,6 @@ Language: sq_AL
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">S’është caktuar</string>
     <string name="support_contact_email">Email kontaktesh</string>
-    <string name="application_log_button">Regjistër aplikacioni</string>
-    <string name="my_tickets">Çështjet e Mia</string>
     <string name="activity_log_currently_restoring_message_no_dates">Rikthim në ecuri e sipër</string>
     <string name="activity_log_currently_restoring_message">Po rikthehet te %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Sajti juaj po rikthehet</string>
@@ -2312,8 +2310,6 @@ Language: sq_AL
     <string name="me_section_screen_title">Unë</string>
     <string name="my_site_section_screen_title">Sajti Im</string>
     <string name="notif_settings_screen_title">Rregullime njoftimesh</string>
-    <string name="help_screen_title">Ndihmë dhe Asistencë</string>
-    <string name="release_notes_screen_title">Shënime hedhjeje në qarkullim</string>
     <string name="signup_epilogue_error_avatar_view">Avatari juaj u ngarkua dhe do të jetë gati për përdorim pas pak.</string>
     <string name="permissions_denied_message">Duket se i keni çaktivizuar lejet e domosdoshme për funksionimin e kësaj veçorie.&lt;br/&gt;&lt;br/&gt;Për ta ndryshuar këtë, përpunoni lejet tuaja dhe sigurohuni që &lt;strong&gt;%s&lt;/strong&gt; është e aktivizuar.</string>
     <string name="permissions_denied_title">Leje</string>
@@ -2669,7 +2665,6 @@ Language: sq_AL
     <string name="site_settings_optimize_video_summary">Aktivizojeni që të ripërmasohen dhe ngjeshen video</string>
     <string name="site_settings_optimize_videos">Optimizoni Video</string>
     <string name="draft_uploaded">Skica u ngarkua</string>
-    <string name="report_bug">Njoftoni një të metë</string>
     <string name="video_quality">Cilësi Video</string>
     <string name="permission_camera">Kamerë</string>
     <string name="permission_storage">Hapësirë Depozitimi</string>
@@ -3180,7 +3175,6 @@ Language: sq_AL
     <string name="me_disconnect_from_wordpress_com">Dil nga WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Hyni te WordPress.com</string>
     <string name="me_btn_login_logout">Hyrje/Dalje</string>
-    <string name="me_btn_support">Ndihmë &amp; Asistencë</string>
     <string name="account_settings">Rregullime Llogarie</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" s’u fsheh, ngaqë është sajti i tanishëm</string>
     <string name="site_picker_create_wpcom">Ndërtoni një sajt te WordPress.com</string>
