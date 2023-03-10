@@ -108,7 +108,6 @@ class BlazeOverlayFragment : Fragment() {
             topBar = { OverlayTopBar(blazeUIModel) },
         ) {
             ScrollableBox(blazeUIModel, isDarkTheme)
-         //   BlazeOverlayContent(blazeUIModel, isDarkTheme)
         }
     }
 
