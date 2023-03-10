@@ -92,8 +92,8 @@ class SiteProgressViewModel @Inject constructor(
     private val _onCancelWizardClicked = SingleLiveEvent<CreateSiteState>()
     val onCancelWizardClicked: LiveData<CreateSiteState> = _onCancelWizardClicked
 
-    private val _onSiteCreationCompleted = SingleLiveEvent<CreateSiteState>()
-    val onSiteCreationCompleted: LiveData<CreateSiteState> = _onSiteCreationCompleted
+    private val _onSiteCreationCompleted = SingleLiveEvent<SiteCreationCompleted>()
+    val onSiteCreationCompleted: LiveData<SiteCreationCompleted> = _onSiteCreationCompleted
 
     init {
         dispatcher.register(fetchWpComSiteUseCase)
@@ -197,8 +197,6 @@ class SiteProgressViewModel @Inject constructor(
                 createSiteState = SiteNotInLocalDb(remoteSiteId, !siteTitle.isNullOrBlank())
                 launch {
                     createSiteState = fetchNewlyCreatedSiteModel(remoteSiteId)
-                    // move @ end of animation with if
-                    // _onSiteCreationCompleted.postValue(createSiteState)
                 }
             }
             FAILURE -> {
@@ -240,8 +238,7 @@ class SiteProgressViewModel @Inject constructor(
                 )
                 delay(LOADING_STATE_TEXT_ANIMATION_DELAY)
             }
-
-            _onSiteCreationCompleted.postValue(createSiteState)
+            (createSiteState as? SiteCreationCompleted)?.let { _onSiteCreationCompleted.postValue(it) }
         }
     }
 
