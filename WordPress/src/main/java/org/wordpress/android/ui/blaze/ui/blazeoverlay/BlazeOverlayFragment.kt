@@ -19,8 +19,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -106,9 +107,7 @@ class BlazeOverlayFragment : Fragment() {
         }
         Scaffold(
             topBar = { OverlayTopBar(blazeUIModel) },
-        ) {
-            ScrollableBox(blazeUIModel, isDarkTheme)
-        }
+        ) { BlazeOverlayContent(blazeUIModel, isDarkTheme) }
     }
 
     @Composable
@@ -146,11 +145,10 @@ class BlazeOverlayFragment : Fragment() {
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(
-                top = Margin.ExtraLarge.value,
-                start = Margin.ExtraLarge.value,
-                end = Margin.ExtraLarge.value
-            )
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(Margin.ExtraLarge.value)
         ) {
             Image(
                 painterResource(id = R.drawable.ic_blaze_overlay_image),
@@ -202,18 +200,6 @@ class BlazeOverlayFragment : Fragment() {
                 drawableRight = Drawable(R.drawable.ic_promote_with_blaze),
                 onClick = { viewModel.onPromoteWithBlazeClicked() },
             )
-        }
-    }
-
-    @Composable
-    fun ScrollableBox(uiModel: BlazeUIModel?,
-                      isDarkTheme: Boolean) {
-        Box(Modifier.fillMaxSize()) {
-            LazyColumn(Modifier.fillMaxSize()) {
-                items(1) {
-                    BlazeOverlayContent(uiModel, isDarkTheme)
-                }
-            }
         }
     }
 
