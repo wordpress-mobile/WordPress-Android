@@ -103,8 +103,7 @@ class HelpActivity : LocaleAwareActivity() {
                 actionBar.elevation = 0f // remove shadow
             }
 
-            if (wpSupportForumFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP
-            ) {
+            if (wpSupportForumFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
                 showSupportForum()
             } else {
                 showContactUs()
@@ -197,10 +196,6 @@ class HelpActivity : LocaleAwareActivity() {
             AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_VIEWED)
             JpFaqContainer.setOnClickListener { showMigrationFaq() }
         }
-        showContactSupport()
-    }
-
-    private fun HelpActivityBinding.showContactSupport() {
         contactUsButton.setOnClickListener { createNewZendeskTicket() }
         ticketsButton.setOnClickListener { showZendeskTickets() }
 
@@ -228,13 +223,9 @@ class HelpActivity : LocaleAwareActivity() {
     }
 
     private fun HelpActivityBinding.showSupportForum() {
-        if (SiteUtils.hasSiteWithPaidPlan(siteStore)) {
-            showContactSupport()
-        } else {
-            contactUsButton.isVisible = false
-            ticketsButton.isVisible = false
-            contactEmailContainer.isVisible = false
-        }
+        contactUsButton.isVisible = false
+        ticketsButton.isVisible = false
+        contactEmailContainer.isVisible = false
 
         forumContainer.run {
             isVisible = true
