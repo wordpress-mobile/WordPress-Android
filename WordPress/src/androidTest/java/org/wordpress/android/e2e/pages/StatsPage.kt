@@ -69,41 +69,39 @@ class StatsPage {
     fun assertVisits(visitsData: StatsVisitsData): StatsPage {
         // Skip this check for JP because of the bug with Stats card load.
         // See https://github.com/wordpress-mobile/WordPress-Android/issues/18065
-        if (BuildConfig.IS_JETPACK_APP) {
-            return this
-        }
-
-        val cardStructure = Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.isDescendantOfA(visibleCoordinatorLayout),
-                ViewMatchers.withId(R.id.stats_block_list),
-                ViewMatchers.hasDescendant(
-                    Matchers.allOf(
-                        ViewMatchers.withText("Views"),
-                        ViewMatchers.hasSibling(ViewMatchers.withText(visitsData.views))
-                    )
-                ),
-                ViewMatchers.hasDescendant(
-                    Matchers.allOf(
-                        ViewMatchers.withText("Visitors"),
-                        ViewMatchers.hasSibling(ViewMatchers.withText(visitsData.visitors))
-                    )
-                ),
-                ViewMatchers.hasDescendant(
-                    Matchers.allOf(
-                        ViewMatchers.withText("Likes"),
-                        ViewMatchers.hasSibling(ViewMatchers.withText(visitsData.likes))
-                    )
-                ),
-                ViewMatchers.hasDescendant(
-                    Matchers.allOf(
-                        ViewMatchers.withText("Comments"),
-                        ViewMatchers.hasSibling(ViewMatchers.withText(visitsData.comments))
+        if (!BuildConfig.IS_JETPACK_APP) {
+            val cardStructure = Espresso.onView(
+                Matchers.allOf(
+                    ViewMatchers.isDescendantOfA(visibleCoordinatorLayout),
+                    ViewMatchers.withId(R.id.stats_block_list),
+                    ViewMatchers.hasDescendant(
+                        Matchers.allOf(
+                            ViewMatchers.withText("Views"),
+                            ViewMatchers.hasSibling(ViewMatchers.withText(visitsData.views))
+                        )
+                    ),
+                    ViewMatchers.hasDescendant(
+                        Matchers.allOf(
+                            ViewMatchers.withText("Visitors"),
+                            ViewMatchers.hasSibling(ViewMatchers.withText(visitsData.visitors))
+                        )
+                    ),
+                    ViewMatchers.hasDescendant(
+                        Matchers.allOf(
+                            ViewMatchers.withText("Likes"),
+                            ViewMatchers.hasSibling(ViewMatchers.withText(visitsData.likes))
+                        )
+                    ),
+                    ViewMatchers.hasDescendant(
+                        Matchers.allOf(
+                            ViewMatchers.withText("Comments"),
+                            ViewMatchers.hasSibling(ViewMatchers.withText(visitsData.comments))
+                        )
                     )
                 )
             )
-        )
-        cardStructure.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+            cardStructure.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+        }
         return this
     }
 
