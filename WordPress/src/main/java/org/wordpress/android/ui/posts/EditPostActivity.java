@@ -2378,7 +2378,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     false,
                     true,
                     false,
-                    false,
+                    !isFreeWPCom,
                     shouldUseFastImage,
                     false,
                     wpcomLocaleSlug,
