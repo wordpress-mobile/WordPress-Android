@@ -13,13 +13,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -107,7 +107,8 @@ class BlazeOverlayFragment : Fragment() {
         Scaffold(
             topBar = { OverlayTopBar(blazeUIModel) },
         ) {
-            BlazeOverlayContent(blazeUIModel, isDarkTheme)
+            ScrollableBox(blazeUIModel, isDarkTheme)
+         //   BlazeOverlayContent(blazeUIModel, isDarkTheme)
         }
     }
 
@@ -205,6 +206,18 @@ class BlazeOverlayFragment : Fragment() {
         }
     }
 
+    @Composable
+    fun ScrollableBox(uiModel: BlazeUIModel?,
+                      isDarkTheme: Boolean) {
+        Box(Modifier.fillMaxSize()) {
+            LazyColumn(Modifier.fillMaxSize()) {
+                items(1) {
+                    BlazeOverlayContent(uiModel, isDarkTheme)
+                }
+            }
+        }
+    }
+
     private fun getPrimaryButtonColor(isInDarkTheme: Boolean): Color {
         return if (isInDarkTheme) darkModePrimaryButtonColor
         else AppColor.Black
@@ -244,8 +257,23 @@ class BlazeOverlayFragment : Fragment() {
                     end.linkTo(postContainer.end, 15.dp)
                 })
             Title(
-                title = uiModel.title, modifier = Modifier.constrainAs(title) {
-                    top.linkTo(postContainer.top, 15.dp)
+                title = uiModel.title, modifier = Modifier
+                    .constrainAs(title) {
+                        top.linkTo(postContainer.top, 15.dp)
+                        start.linkTo(postContainer.start, 20.dp)
+                        uiModel.featuredImageUrl?.run {
+                            end.linkTo(featuredImage.start, margin = 15.dp)
+                        } ?: run {
+                            end.linkTo(postContainer.end, margin = 20.dp)
+                        }
+                        width = Dimension.fillToConstraints
+                    }
+                    .wrapContentHeight()
+            )
+            val url = createRef()
+            Url(url = uiModel.url, modifier = Modifier
+                .constrainAs(url) {
+                    top.linkTo(title.bottom)
                     start.linkTo(postContainer.start, 20.dp)
                     uiModel.featuredImageUrl?.run {
                         end.linkTo(featuredImage.start, margin = 15.dp)
@@ -253,20 +281,9 @@ class BlazeOverlayFragment : Fragment() {
                         end.linkTo(postContainer.end, margin = 20.dp)
                     }
                     width = Dimension.fillToConstraints
-                }.wrapContentHeight()
-            )
-            val url = createRef()
-            Url(url = uiModel.url, modifier = Modifier.constrainAs(url) {
-                top.linkTo(title.bottom)
-                start.linkTo(postContainer.start, 20.dp)
-                uiModel.featuredImageUrl?.run {
-                    end.linkTo(featuredImage.start, margin = 15.dp)
-                } ?: run {
-                    end.linkTo(postContainer.end, margin = 20.dp)
+                    height = Dimension.wrapContent
                 }
-                width = Dimension.fillToConstraints
-                height = Dimension.wrapContent
-            }.padding(bottom = 15.dp))
+                .padding(bottom = 15.dp))
         }
     }
 
@@ -320,16 +337,14 @@ class BlazeOverlayFragment : Fragment() {
 
     @Composable
     fun Subtitles(list: List<Int>, modifier: Modifier = Modifier) {
-        LazyColumn(
+        Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = modifier.padding(
                 top = Margin.ExtraLarge.value,
                 bottom = Margin.ExtraLarge.value
             )
         ) {
-            items(list) {
-                BulletedText(it)
-            }
+            list.forEach { BulletedText(it) }
         }
     }
 
