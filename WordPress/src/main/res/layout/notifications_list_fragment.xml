@@ -19,15 +19,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/prominent_toolbar_with_tabs_height">
-
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
-            style="@style/WordPress.CollapsedToolbarLayout"
-            android:layout_width="match_parent"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-            app:expandedTitleTextAppearance="@style/TextAppearance.App.Toolbar.Title"
-            android:layout_height="@dimen/prominent_toolbar_height">
+        android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar_main"
@@ -35,8 +27,6 @@
                 android:layout_height="@dimen/toolbar_height"
                 app:layout_collapseMode="pin"
                 app:theme="@style/WordPress.ActionBar" />
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
