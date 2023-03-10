@@ -47,5 +47,13 @@
     <string name="me_btn_share">Share Jetpack with a friend</string>
 
     <!-- App Icon settings -->
-    <string name="app_icon_red_name">Jetpack Red</string>
+    <string name="app_icon_black_name">Black</string>
+    <string name="app_icon_white_on_black_name">White on Black</string>
+    <string name="app_icon_white_on_green_name">White on Green</string>
+    <string name="app_icon_celadon_name">Celadon</string>
+    <string name="app_icon_green_name">Green</string>
+    <string name="app_icon_pink_blue_name">Pink Blue</string>
+    <string name="app_icon_pride_name">Pride</string>
+    <string name="app_icon_neu_dark_name">Neu Dark</string>
+    <string name="app_icon_neu_light_name">Neu Light</string>
 </resources>

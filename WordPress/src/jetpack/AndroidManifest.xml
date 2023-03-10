@@ -74,10 +74,155 @@
                 android:resource="@xml/stats_week_views_widget_info"/>
         </receiver>
 
+        <!-- Black launcher -->
         <activity-alias
-            android:name=".launch.WPLaunchActivityRed"
+            android:name=".launch.WPLaunchActivityBlack"
             android:targetActivity=".ui.WPLaunchActivity"
-            android:icon="@mipmap/app_icon_red"
+            android:icon="@mipmap/app_icon_black"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!-- Samsung multiwindow support -->
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <!-- White on Black launcher -->
+        <activity-alias
+            android:name=".launch.WPLaunchActivityWhiteOnBlack"
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:icon="@mipmap/app_icon_white_on_black"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!-- Samsung multiwindow support -->
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <!-- White on Green launcher -->
+        <activity-alias
+            android:name=".launch.WPLaunchActivityWhiteOnGreen"
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:icon="@mipmap/app_icon_white_on_green"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!-- Samsung multiwindow support -->
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <!-- Celadon launcher -->
+        <activity-alias
+            android:name=".launch.WPLaunchActivityCeladon"
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:icon="@mipmap/app_icon_celadon"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!-- Samsung multiwindow support -->
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <!-- Green launcher -->
+        <activity-alias
+            android:name=".launch.WPLaunchActivityGreen"
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:icon="@mipmap/app_icon_green"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!-- Samsung multiwindow support -->
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <!-- Pink Blue launcher -->
+        <activity-alias
+            android:name=".launch.WPLaunchActivityPinkBlue"
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:icon="@mipmap/app_icon_pink_blue"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!-- Samsung multiwindow support -->
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <!-- Pride launcher -->
+        <activity-alias
+            android:name=".launch.WPLaunchActivityPride"
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:icon="@mipmap/app_icon_pride"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!-- Samsung multiwindow support -->
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <!-- Neu Dark launcher -->
+        <activity-alias
+            android:name=".launch.WPLaunchActivityNeuDark"
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:icon="@mipmap/app_icon_neu_dark"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!-- Samsung multiwindow support -->
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <!-- Neu Light launcher -->
+        <activity-alias
+            android:name=".launch.WPLaunchActivityNeuLight"
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:icon="@mipmap/app_icon_neu_light"
             android:enabled="false"
             android:exported="true">
             <intent-filter>
