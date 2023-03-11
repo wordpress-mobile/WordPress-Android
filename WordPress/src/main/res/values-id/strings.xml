@@ -2157,8 +2157,6 @@ Language: id
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Tidak ditentukan</string>
     <string name="support_contact_email">Email kontak</string>
-    <string name="application_log_button">Log aplikasi</string>
-    <string name="my_tickets">Tiket Saya</string>
     <string name="activity_log_currently_restoring_message_no_dates">Pemulihan sedang berlangsung</string>
     <string name="activity_log_currently_restoring_message">Memulihkan ke %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Sedang memulihkan situs Anda</string>
@@ -2320,8 +2318,6 @@ Language: id
     <string name="me_section_screen_title">Saya</string>
     <string name="my_site_section_screen_title">Situs Saya</string>
     <string name="notif_settings_screen_title">Pengaturan pemberitahuan</string>
-    <string name="help_screen_title">Bantuan dan Dukungan</string>
-    <string name="release_notes_screen_title">Catatan rilis</string>
     <string name="signup_epilogue_error_avatar_view">Avatar Anda telah diunggah dan akan tersedia sesaat lagi.</string>
     <string name="permissions_denied_message">Tampaknya Anda mematikan izin wajib untuk fitur ini.&lt;br/&gt;&lt;br/&gt;Untuk mengubahnya, edit izin Anda dan pastikan &lt;strong&gt;%s&lt;/strong&gt; telah aktif.</string>
     <string name="permissions_denied_title">Izin</string>
@@ -2677,7 +2673,6 @@ Language: id
     <string name="site_settings_optimize_video_summary">Memungkinkan pengubahan ukuran dan kompresi video</string>
     <string name="site_settings_optimize_videos">Optimalkan Video</string>
     <string name="draft_uploaded">Konsep diunggah</string>
-    <string name="report_bug">Laporkan bug</string>
     <string name="video_quality">Kualitas Video</string>
     <string name="permission_camera">Kamera</string>
     <string name="permission_storage">Penyimpanan</string>
@@ -3188,7 +3183,6 @@ Language: id
     <string name="me_disconnect_from_wordpress_com">Logout dari WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Log in ke WordPress.com</string>
     <string name="me_btn_login_logout">Log masuk/keluar</string>
-    <string name="me_btn_support">Bantuan &amp; Dukungan</string>
     <string name="account_settings">Pengaturan Akun</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" tidak tersembunyi karena itu adalah situs saat ini</string>
     <string name="site_picker_create_wpcom">Buat situs WordPress.com</string>

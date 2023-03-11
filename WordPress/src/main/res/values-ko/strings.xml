@@ -2153,8 +2153,6 @@ Language: ko_KR
     <string name="support_push_notification_title">워드프레스</string>
     <string name="support_contact_email_not_set">설정되지 않음</string>
     <string name="support_contact_email">연락처 이메일</string>
-    <string name="application_log_button">애플리케이션 로그</string>
-    <string name="my_tickets">내 티켓</string>
     <string name="activity_log_currently_restoring_message_no_dates">되돌리기 진행 중</string>
     <string name="activity_log_currently_restoring_message">%1$s %2$s(으)로 되돌리는 중</string>
     <string name="activity_log_currently_restoring_title">현재 사이트 복원 중</string>
@@ -2315,8 +2313,6 @@ Language: ko_KR
     <string name="reader_screen_title">리더</string>
     <string name="me_section_screen_title">나</string>
     <string name="notif_settings_screen_title">알림 설정</string>
-    <string name="help_screen_title">도움말 및 지원</string>
-    <string name="release_notes_screen_title">릴리스 노트</string>
     <string name="my_site_section_screen_title">내 사이트</string>
     <string name="signup_epilogue_error_avatar_view">고객님의 아바타가 업로드되었으며 곧 사용할 수 있습니다.</string>
     <string name="permissions_denied_message">이 기능에 대한 필수 권한이 해제되어 있는 것 같습니다.&lt;br/&gt;&lt;br/&gt;변경하려면 권한을 편집하고 &lt;strong&gt;%s&lt;/strong&gt;이(가) 활성화되어 있는지 확인하세요.</string>
@@ -2673,7 +2669,6 @@ Language: ko_KR
     <string name="site_settings_optimize_video_summary">비디오 크기 조정 및 압축</string>
     <string name="site_settings_optimize_videos">비디오 최적화</string>
     <string name="draft_uploaded">임시글이 업로드됨</string>
-    <string name="report_bug">버그 보고하기</string>
     <string name="video_quality">비디오 품질</string>
     <string name="permission_camera">카메라</string>
     <string name="permission_storage">저장 공간</string>
@@ -3184,7 +3179,6 @@ Language: ko_KR
     <string name="me_disconnect_from_wordpress_com">WordPress.com에서 로그아웃</string>
     <string name="me_btn_login_logout">로그인/로그아웃</string>
     <string name="me_connect_to_wordpress_com">WordPress.com에 로그인</string>
-    <string name="me_btn_support">도움 및 지원</string>
     <string name="site_picker_cant_hide_current_site">\"%s\"은(는) 현재 사이트이기 때문에 숨길 수 없습니다.</string>
     <string name="account_settings">계정 설정</string>
     <string name="site_picker_create_wpcom">워드프레스닷컴 사이트 생성</string>

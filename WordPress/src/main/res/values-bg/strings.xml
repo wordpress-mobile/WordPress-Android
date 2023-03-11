@@ -161,7 +161,6 @@ Language: bg
     <string name="site_settings_optimize_videos">Оптимизиране на видео файловете</string>
     <string name="draft_uploaded">Черновата е качена</string>
     <string name="video_quality">Качество на видеото</string>
-    <string name="report_bug">Докладване на бъг</string>
     <string name="permission_camera">Камера</string>
     <string name="permission_storage">Съхранение</string>
     <string name="button_edit_permissions">Редактиране на разрешенията</string>
@@ -608,7 +607,6 @@ Language: bg
     <string name="me_disconnect_from_wordpress_com">Излизане от WordPress.com</string>
     <string name="me_btn_login_logout">Вход/Изход</string>
     <string name="me_connect_to_wordpress_com">Влизане в WordPress.com</string>
-    <string name="me_btn_support">Помощ и поддръжка</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" не беше скрит защото е текущият уебсайт</string>
     <string name="account_settings">Настройки на профила</string>
     <string name="site_picker_edit_visibility">Показване/скриване на сайтовете</string>

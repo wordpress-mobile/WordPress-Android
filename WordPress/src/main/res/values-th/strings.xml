@@ -151,7 +151,6 @@ Language: th
     <string name="stats_insights">แบบละเอียด</string>
     <string name="me_btn_login_logout">เข้าสู่ระบบ/ออกจากระบบ</string>
     <string name="me_connect_to_wordpress_com">เชื่อมต่อกับ WordPress.com</string>
-    <string name="me_btn_support">ช่วยเหลือและสนับสนุน</string>
     <string name="site_picker_cant_hide_current_site">ไม่ได้ซ่อน \"%s\" เพราะว่ามันเป็นเว็บปัจจุบัน</string>
     <string name="account_settings">ตั้งค่าบัญชี</string>
     <string name="site_picker_add_self_hosted">เพิ่มเว็บไซต์บนโฮสท์ติดตั้งเอง</string>

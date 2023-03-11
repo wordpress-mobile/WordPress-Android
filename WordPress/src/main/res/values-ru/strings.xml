@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-01 15:54:09+0000
+Translation-Revision-Date: 2023-03-06 07:07:44+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ru
@@ -15,6 +15,8 @@ Language: ru
     <string name="jetpack_full_plugin_install_onboarding_install_button">Установить полнофункциональный плагин</string>
     <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Правила и условия</string>
     <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Устанавливая Jetpack, вы принимаете наши </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">Полнофункциональный плагин Jetpack</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">Отдельные плагины Jetpack</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">плагин %1$s</string>
     <string name="jetpack_full_plugin_install_onboarding_description">На %1$s используется плагин %2$s, который пока поддерживает не все функции приложения.\n\nУстановите %3$s, чтобы использовать приложение с этим сайтом.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">Установите полнофункциональный плагин Jetpack</string>
@@ -2155,8 +2157,6 @@ Language: ru
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Не установлен</string>
     <string name="support_contact_email">Контактный адрес эл.почты</string>
-    <string name="application_log_button">Журнал приложения</string>
-    <string name="my_tickets">Мои тикеты</string>
     <string name="activity_log_currently_restoring_message_no_dates">Откат в процессе</string>
     <string name="activity_log_currently_restoring_message">Откат на %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Ваш сайт в процессе восстановления</string>
@@ -2318,8 +2318,6 @@ Language: ru
     <string name="me_section_screen_title">Профиль</string>
     <string name="my_site_section_screen_title">Мой сайт</string>
     <string name="notif_settings_screen_title">Настройки уведомления</string>
-    <string name="help_screen_title">Помощь и поддержка</string>
-    <string name="release_notes_screen_title">Заметки о выпуске</string>
     <string name="signup_epilogue_error_avatar_view">Ваш аватар загружен и скоро станет доступен.</string>
     <string name="permissions_denied_message">Похоже что были отключены разрешения, требуемые данной возможостью.&lt;br/&gt;&lt;br/&gt;Отредактируйте разрешения и убедитесь что &lt;strong&gt;%s&lt;/strong&gt; включено.</string>
     <string name="permissions_denied_title">Права доступа</string>
@@ -2675,7 +2673,6 @@ Language: ru
     <string name="site_settings_optimize_video_summary">Включить функцию изменения размера и сжатия видео</string>
     <string name="site_settings_optimize_videos">Оптимизировать видеофайлы</string>
     <string name="draft_uploaded">Черновик загружен</string>
-    <string name="report_bug">Сообщить об ошибке</string>
     <string name="video_quality">Качество видео</string>
     <string name="permission_camera">Камера</string>
     <string name="permission_storage">Хранилище</string>
@@ -3186,7 +3183,6 @@ Language: ru
     <string name="me_disconnect_from_wordpress_com">Отключение от WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Подключение к WordPress.com</string>
     <string name="me_btn_login_logout">Вход/выход</string>
-    <string name="me_btn_support">Помощь и техническая поддержка</string>
     <string name="account_settings">Настройки учётной записи</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" не был скрыт, так как это текущий сайт.</string>
     <string name="site_picker_create_wpcom">Создать сайт на WordPress.com</string>

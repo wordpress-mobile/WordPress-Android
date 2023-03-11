@@ -48,7 +48,6 @@ Language: gd_GB
     <string name="stats_insights_all_time">Puist, seallaidhean is aoighean air fad</string>
     <string name="stats_insights">Insights</string>
     <string name="me_btn_login_logout">Clàraich a-steach/a-mach</string>
-    <string name="me_btn_support">Cobhair ⁊ taic</string>
     <string name="site_picker_cant_hide_current_site">Cha deach “%s” a chur am falach a chionn ’s gur e sin an làrach làithreach</string>
     <string name="account_settings">Roghainnean a\' chunntais</string>
     <string name="site_picker_add_self_hosted">Cuir làrach air fèin-òstaireachd ris</string>
