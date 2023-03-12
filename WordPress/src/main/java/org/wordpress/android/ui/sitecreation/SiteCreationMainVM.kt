@@ -59,19 +59,19 @@ data class SiteCreationState(
 
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
 
-sealed class SiteCreationResult : Parcelable {
+sealed interface SiteCreationResult : Parcelable {
     @Parcelize
-    object NotCreated : SiteCreationResult()
+    object NotCreated : SiteCreationResult
 
     @Parcelize
-    data class NotInLocalDb(val remoteSiteId: Long, val isSiteTitleTaskComplete: Boolean) : SiteCreationResult()
+    data class NotInLocalDb(val remoteSiteId: Long, val isSiteTitleTaskComplete: Boolean) : SiteCreationResult
 
     @Parcelize
     data class Completed(
         val localSiteId: Int,
         val isSiteTitleTaskComplete: Boolean,
         val url: String,
-    ) : SiteCreationResult()
+    ) : SiteCreationResult
 }
 
 @HiltViewModel

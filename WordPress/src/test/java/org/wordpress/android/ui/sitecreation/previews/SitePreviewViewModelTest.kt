@@ -9,12 +9,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.mock
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
-import org.wordpress.android.ui.sitecreation.SiteCreationResult
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState
@@ -45,7 +45,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     private lateinit var onHelpedClickedObserver: Observer<Unit>
 
     @Mock
-    private lateinit var onOkClickedObserver: Observer<SiteCreationResult>
+    private lateinit var onOkClickedObserver: Observer<Unit>
 
     @Mock
     private lateinit var preloadPreviewObserver: Observer<String>
@@ -70,16 +70,16 @@ class SitePreviewViewModelTest : BaseUnitTest() {
 
     @Test
     fun `show content on UrlLoaded`() {
-        initViewModel()
+        startViewModel()
         viewModel.onUrlLoaded()
         assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewContentUiState::class.java)
     }
 
     @Test
     fun `displaying content cancels the progress animation job`() = test {
-        initViewModel()
+        startViewModel()
         viewModel.onUrlLoaded()
-        (1..100).forEach {
+        repeat(100) {
             advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
             assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewContentUiState::class.java)
         }
@@ -87,22 +87,26 @@ class SitePreviewViewModelTest : BaseUnitTest() {
 
     @Test
     fun `show webview empty screen on WebViewError`() {
-        initViewModel()
+        startViewModel()
         viewModel.onWebViewError()
         assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewWebErrorUiState::class.java)
     }
 
     @Test
-    fun `start pre-loading WebView when restoring from SiteCreationCompleted state`() {
-        initViewModel(result = Completed(2, false, URL))
+    fun `on start preloads the preview when result is Completed`() {
+        startViewModel(SITE_CREATION_STATE.copy(result = Completed(2, false, URL)))
 
         assertThat(viewModel.preloadPreview.value).isEqualTo(URL)
     }
 
-    private fun initViewModel(
-        siteCreationState: SiteCreationState = SITE_CREATION_STATE,
-        result: SiteCreationResult = mock(),
-    ) {
-        viewModel.start(siteCreationState, result)
+    @Test
+    fun `on ok button click is propagated`() {
+        viewModel.onOkButtonClicked()
+
+        verify(onOkClickedObserver).onChanged(anyOrNull())
+    }
+
+    private fun startViewModel(siteCreationState: SiteCreationState = SITE_CREATION_STATE) {
+        viewModel.start(siteCreationState)
     }
 }
