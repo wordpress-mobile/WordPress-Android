@@ -21,6 +21,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
@@ -44,7 +45,6 @@ import javax.inject.Inject
 
 const val TAG_WARNING_DIALOG = "back_pressed_warning_dialog"
 const val KEY_CURRENT_STEP = "key_current_step"
-const val KEY_SITE_CREATION_COMPLETED = "key_site_creation_completed"
 const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 
 @Parcelize
@@ -97,7 +97,6 @@ class SiteCreationMainVM @Inject constructor(
 
     var siteCreationDisabled: Boolean = false
     private var isStarted = false
-    private var siteCreationCompleted = false
 
     private lateinit var siteCreationState: SiteCreationState
 
@@ -142,7 +141,6 @@ class SiteCreationMainVM @Inject constructor(
             else
                 showSiteCreationNextStep()
         } else {
-            siteCreationCompleted = savedInstanceState.getBoolean(KEY_SITE_CREATION_COMPLETED, false)
             siteCreationState = requireNotNull(savedInstanceState.getParcelable(KEY_SITE_CREATION_STATE))
             val currentStepIndex = savedInstanceState.getInt(KEY_CURRENT_STEP)
             wizardManager.setCurrentStepIndex(currentStepIndex)
@@ -184,7 +182,6 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun writeToBundle(outState: Bundle) {
-        outState.putBoolean(KEY_SITE_CREATION_COMPLETED, siteCreationCompleted)
         outState.putInt(KEY_CURRENT_STEP, wizardManager.currentStep)
         outState.putParcelable(KEY_SITE_CREATION_STATE, siteCreationState)
     }
@@ -216,7 +213,7 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onBackPressed() {
         return if (wizardManager.isLastStep()) {
-            if (siteCreationCompleted) {
+            if (siteCreationState.result is Completed) {
                 exitFlow(false)
             } else {
                 _dialogAction.value = DialogHolder(
@@ -268,7 +265,6 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onSiteCreationCompleted(result: SiteCreationResult) {
         siteCreationState = siteCreationState.copy(result = result)
-        siteCreationCompleted = true
         wizardManager.showNextStep()
     }
 
