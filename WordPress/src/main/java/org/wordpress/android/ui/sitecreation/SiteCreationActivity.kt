@@ -42,8 +42,8 @@ import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewScreenListener
-import org.wordpress.android.ui.sitecreation.progress.ProgressScreenListener
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressFragment
+import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameFragment
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewModel
 import org.wordpress.android.ui.sitecreation.sitename.SiteNameScreenListener
@@ -65,7 +65,6 @@ class SiteCreationActivity : LocaleAwareActivity(),
     IntentsScreenListener,
     SiteNameScreenListener,
     DomainsScreenListener,
-    ProgressScreenListener,
     SitePreviewScreenListener,
     OnHelpClickedListener,
     BasicDialogPositiveClickInterface,
@@ -80,6 +79,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private val siteCreationIntentsViewModel: SiteCreationIntentsViewModel by viewModels()
     private val siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel by viewModels()
     private val jetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel by viewModels()
+    private val progressViewModel: SiteProgressViewModel by viewModels()
     @Inject
     internal lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
     @Inject
@@ -162,7 +162,12 @@ class SiteCreationActivity : LocaleAwareActivity(),
         hppViewModel.onDesignActionPressed.observe(this, Observer { design ->
             mainViewModel.onSiteDesignSelected(design.template)
         })
-
+        progressViewModel.onCancelWizardClicked.observe(this) { result ->
+            mainViewModel.onProgressOrPreviewFinished(result)
+        }
+        progressViewModel.onSiteCreationCompleted.observe(this) { result ->
+            mainViewModel.onSiteCreationCompleted(result)
+        }
         observeOverlayEvents()
     }
 
@@ -214,10 +219,6 @@ class SiteCreationActivity : LocaleAwareActivity(),
     override fun onDomainSelected(domain: DomainModel) {
         mainViewModel.onDomainsScreenFinished(domain)
     }
-
-    override fun onProgressCompleted(result: SiteCreationResult) = mainViewModel.onSiteCreationCompleted(result)
-
-    override fun onProgressStopped(result: SiteCreationResult) = mainViewModel.onProgressOrPreviewFinished(result)
 
     override fun onPreviewScreenClosed() = mainViewModel.onProgressOrPreviewFinished()
 
