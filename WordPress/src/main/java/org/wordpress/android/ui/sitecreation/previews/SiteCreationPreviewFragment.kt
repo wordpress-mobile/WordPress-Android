@@ -21,6 +21,7 @@ import org.wordpress.android.databinding.SiteCreationFormScreenBinding
 import org.wordpress.android.databinding.SiteCreationPreviewScreenBinding
 import org.wordpress.android.databinding.SiteCreationPreviewScreenDefaultBinding
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
+import org.wordpress.android.ui.sitecreation.SiteCreationActivity.Companion.ARG_STATE
 import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
@@ -34,7 +35,6 @@ import org.wordpress.android.util.URLFilteredWebViewClient
 import org.wordpress.android.widgets.NestedWebView
 import javax.inject.Inject
 
-private const val ARG_STATE = "arg_site_creation_state"
 private const val SLIDE_IN_ANIMATION_DURATION = 450L
 
 @AndroidEntryPoint
@@ -73,8 +73,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     override fun getContentLayout() = R.layout.site_creation_preview_screen
 
-    override val screenTitle: String
-        get() = requireNotNull(arguments?.getString(EXTRA_SCREEN_TITLE)) { "Missing required argument 'screenTitle'." }
+    override val screenTitle get() = requireArguments()[EXTRA_SCREEN_TITLE] as String
 
     override fun setBindingViewStubListener(parentBinding: SiteCreationFormScreenBinding) {
         parentBinding.siteCreationFormContentStub.setOnInflateListener { _, inflated ->
