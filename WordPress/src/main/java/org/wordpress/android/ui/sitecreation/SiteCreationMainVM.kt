@@ -21,11 +21,10 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotCreated
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
@@ -54,10 +53,25 @@ data class SiteCreationState(
     val siteName: String? = null,
     val segmentId: Long? = null,
     val siteDesign: String? = null,
-    val domain: DomainModel? = null
+    val domain: DomainModel? = null,
 ) : WizardState, Parcelable
 
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
+
+sealed class SiteCreationResult : Parcelable {
+    @Parcelize
+    object NotCreated : SiteCreationResult()
+
+    @Parcelize
+    data class NotInLocalDb(val remoteSiteId: Long, val isSiteTitleTaskComplete: Boolean) : SiteCreationResult()
+
+    @Parcelize
+    data class Completed(
+        val localSiteId: Int,
+        val isSiteTitleTaskComplete: Boolean,
+        val url: String,
+    ) : SiteCreationResult()
+}
 
 @HiltViewModel
 class SiteCreationMainVM @Inject constructor(
@@ -85,7 +99,7 @@ class SiteCreationMainVM @Inject constructor(
     private var siteCreationCompleted = false
 
     private lateinit var siteCreationState: SiteCreationState
-    var createSiteResult: CreateSiteState = SiteNotCreated
+    var result: SiteCreationResult = NotCreated
 
     internal var preloadingJob: Job? = null
 
@@ -101,8 +115,8 @@ class SiteCreationMainVM @Inject constructor(
     private val _dialogAction = SingleLiveEvent<DialogHolder>()
     val dialogActionObservable: LiveData<DialogHolder> = _dialogAction
 
-    private val _wizardFinishedObservable = SingleLiveEvent<CreateSiteState>()
-    val wizardFinishedObservable: LiveData<CreateSiteState> = _wizardFinishedObservable
+    private val _wizardFinishedObservable = SingleLiveEvent<SiteCreationResult>()
+    val wizardFinishedObservable: LiveData<SiteCreationResult> = _wizardFinishedObservable
 
     private val _exitFlowObservable = SingleLiveEvent<Unit>()
     val exitFlowObservable: LiveData<Unit> = _exitFlowObservable
@@ -252,8 +266,8 @@ class SiteCreationMainVM @Inject constructor(
         }
     }
 
-    fun onSiteCreationCompleted(state: CreateSiteState) {
-        createSiteResult = state
+    fun onSiteCreationCompleted(result: SiteCreationResult) {
+        this.result = result
         siteCreationCompleted = true
         wizardManager.showNextStep()
     }
@@ -268,8 +282,8 @@ class SiteCreationMainVM @Inject constructor(
         _exitFlowObservable.call()
     }
 
-    fun onProgressOrPreviewFinished(createSiteState: CreateSiteState) {
-        _wizardFinishedObservable.value = createSiteState
+    fun onProgressOrPreviewFinished(result: SiteCreationResult) {
+        _wizardFinishedObservable.value = result
     }
 
     fun onPositiveDialogButtonClicked(instanceTag: String) {

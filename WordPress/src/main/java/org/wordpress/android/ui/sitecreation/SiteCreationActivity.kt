@@ -26,6 +26,9 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotInLocalDb
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.INTENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.PROGRESS
@@ -39,10 +42,6 @@ import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewScreenListener
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteCreationCompleted
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotCreated
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotInLocalDb
 import org.wordpress.android.ui.sitecreation.progress.ProgressScreenListener
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressFragment
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameFragment
@@ -81,8 +80,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private val siteCreationIntentsViewModel: SiteCreationIntentsViewModel by viewModels()
     private val siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel by viewModels()
     private val jetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel by viewModels()
-    @Inject internal lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
-    @Inject internal lateinit var activityLauncherWrapper: ActivityLauncherWrapper
+    @Inject
+    internal lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+    @Inject
+    internal lateinit var activityLauncherWrapper: ActivityLauncherWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,16 +108,16 @@ class SiteCreationActivity : LocaleAwareActivity(),
                 val intent = Intent()
                 val (siteCreated, localSiteId, titleTaskComplete) = when (createSiteState) {
                     // site creation flow was canceled
-                    is SiteNotCreated -> Triple(false, null, false)
-                    is SiteNotInLocalDb -> {
+                    is NotCreated -> Triple(false, null, false)
+                    is NotInLocalDb -> {
                         // Site was created, but we haven't been able to fetch it, let `SitePickerActivity` handle
                         // this with a Snackbar message.
                         intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
                         Triple(true, null, createSiteState.isSiteTitleTaskComplete)
                     }
-                    is SiteCreationCompleted -> Triple(
-                            true, createSiteState.localSiteId,
-                            createSiteState.isSiteTitleTaskComplete
+                    is Completed -> Triple(
+                        true, createSiteState.localSiteId,
+                        createSiteState.isSiteTitleTaskComplete
                     )
                 }
                 intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, localSiteId)
@@ -167,10 +168,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     private fun observeOverlayEvents() {
         val fragment = JetpackFeatureFullScreenOverlayFragment
-                .newInstance(
-                        isSiteCreationOverlay = true,
-                        siteCreationSource = getSiteCreationSource()
-                )
+            .newInstance(
+                isSiteCreationOverlay = true,
+                siteCreationSource = getSiteCreationSource()
+            )
 
         jetpackFullScreenViewModel.action.observe(this) { action ->
             if (mainViewModel.siteCreationDisabled) finish()
@@ -214,11 +215,11 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.onDomainsScreenFinished(domain)
     }
 
-    override fun onSiteCreationCompleted(state: CreateSiteState) = mainViewModel.onSiteCreationCompleted(state)
+    override fun onProgressCompleted(result: SiteCreationResult) = mainViewModel.onSiteCreationCompleted(result)
 
-    override fun onProgressScreenDismissed(state: CreateSiteState) = mainViewModel.onProgressOrPreviewFinished(state)
+    override fun onProgressStopped(result: SiteCreationResult) = mainViewModel.onProgressOrPreviewFinished(result)
 
-    override fun onPreviewScreenDismissed(state: CreateSiteState) = mainViewModel.onProgressOrPreviewFinished(state)
+    override fun onPreviewScreenClosed(result: SiteCreationResult) = mainViewModel.onProgressOrPreviewFinished(result)
 
     override fun onHelpClicked(origin: Origin) {
         ActivityLauncher.viewHelp(this, origin, null, null)
@@ -239,7 +240,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
             SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(
                 screenTitle,
                 target.wizardState,
-                mainViewModel.createSiteResult,
+                mainViewModel.result,
             )
         }
         showFragment(fragment, target.wizardStep.toString(), target.wizardStep != SITE_PREVIEW)

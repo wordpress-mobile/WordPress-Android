@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.sitecreation.progress
 
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState
+import org.wordpress.android.ui.sitecreation.SiteCreationResult
 
 interface ProgressScreenListener {
-    fun onProgressScreenDismissed(state: CreateSiteState)
-    fun onSiteCreationCompleted(state: CreateSiteState)
+    fun onProgressStopped(result: SiteCreationResult)
+    fun onProgressCompleted(result: SiteCreationResult)
 }
