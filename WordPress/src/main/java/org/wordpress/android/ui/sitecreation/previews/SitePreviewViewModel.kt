@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.SiteCreationState
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState
+import org.wordpress.android.ui.sitecreation.SiteCreationResult
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
@@ -44,7 +44,7 @@ class SitePreviewViewModel @Inject constructor(
 
     private lateinit var siteCreationState: SiteCreationState
     private var urlWithoutScheme: String? = null
-    private lateinit var createSiteState: CreateSiteState
+    private lateinit var result: SiteCreationResult
 
     private val _uiState: MutableLiveData<SitePreviewUiState> = MutableLiveData()
     val uiState: LiveData<SitePreviewUiState> = _uiState
@@ -55,20 +55,20 @@ class SitePreviewViewModel @Inject constructor(
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
-    private val _onOkButtonClicked = SingleLiveEvent<CreateSiteState>()
-    val onOkButtonClicked: LiveData<CreateSiteState> = _onOkButtonClicked
+    private val _onOkButtonClicked = SingleLiveEvent<SiteCreationResult>()
+    val onOkButtonClicked: LiveData<SiteCreationResult> = _onOkButtonClicked
 
     override fun onCleared() {
         super.onCleared()
         job.cancel()
     }
 
-    fun start(siteCreationState: SiteCreationState, createSiteState: CreateSiteState) {
+    fun start(siteCreationState: SiteCreationState, result: SiteCreationResult) {
         if (isStarted) return
         isStarted = true
         this.siteCreationState = siteCreationState
         this.urlWithoutScheme = siteCreationState.domain?.domainName
-        this.createSiteState = createSiteState
+        this.result = result
         startPreLoadingWebView()
     }
 
@@ -76,7 +76,7 @@ class SitePreviewViewModel @Inject constructor(
 
     fun onOkButtonClicked() {
         tracker.trackPreviewOkButtonTapped()
-        _onOkButtonClicked.value = createSiteState
+        _onOkButtonClicked.value = result
     }
 
     private fun startPreLoadingWebView() {

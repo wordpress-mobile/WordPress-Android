@@ -18,10 +18,10 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.SiteCreationState
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteCreationCompleted
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotCreated
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotInLocalDb
+import org.wordpress.android.ui.sitecreation.SiteCreationResult
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotInLocalDb
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -78,7 +78,7 @@ class SiteProgressViewModel @Inject constructor(
     private var siteTitle: String? = null
     private var lastReceivedServiceState: SiteCreationServiceState? = null
     private var serviceStateForRetry: SiteCreationServiceState? = null
-    private var createSiteState: CreateSiteState = SiteNotCreated
+    private var result: SiteCreationResult = NotCreated
 
     private val _uiState: MutableLiveData<SiteProgressUiState> = MutableLiveData()
     val uiState: LiveData<SiteProgressUiState> = _uiState
@@ -89,11 +89,11 @@ class SiteProgressViewModel @Inject constructor(
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
-    private val _onCancelWizardClicked = SingleLiveEvent<CreateSiteState>()
-    val onCancelWizardClicked: LiveData<CreateSiteState> = _onCancelWizardClicked
+    private val _onCancelWizardClicked = SingleLiveEvent<SiteCreationResult>()
+    val onCancelWizardClicked: LiveData<SiteCreationResult> = _onCancelWizardClicked
 
-    private val _onSiteCreationCompleted = SingleLiveEvent<CreateSiteState>()
-    val onSiteCreationCompleted: LiveData<CreateSiteState> = _onSiteCreationCompleted
+    private val _onSiteCreationCompleted = SingleLiveEvent<SiteCreationResult>()
+    val onSiteCreationCompleted: LiveData<SiteCreationResult> = _onSiteCreationCompleted
 
     init {
         dispatcher.register(fetchWpComSiteUseCase)
@@ -106,7 +106,7 @@ class SiteProgressViewModel @Inject constructor(
         loadingAnimationJob?.cancel()
     }
 
-    fun writeToBundle(outState: Bundle) = outState.putParcelable(KEY_CREATE_SITE_STATE, createSiteState)
+    fun writeToBundle(outState: Bundle) = outState.putParcelable(KEY_CREATE_SITE_STATE, result)
 
     fun start(siteCreationState: SiteCreationState, savedState: Bundle?) {
         if (isStarted) return
@@ -115,25 +115,25 @@ class SiteProgressViewModel @Inject constructor(
         urlWithoutScheme = siteCreationState.domain?.domainName
         siteTitle = siteCreationState.siteName
 
-        val restoredState = savedState?.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE)
+        val restoredState = savedState?.getParcelable<SiteCreationResult>(KEY_CREATE_SITE_STATE)
 
-        init(restoredState ?: SiteNotCreated)
+        init(restoredState ?: NotCreated)
     }
 
-    private fun init(state: CreateSiteState) {
-        createSiteState = state
+    private fun init(state: SiteCreationResult) {
+        result = state
         when (state) {
-            SiteNotCreated -> {
+            NotCreated -> {
                 runLoadingAnimationUi()
                 startCreateSiteService()
             }
-            is SiteNotInLocalDb -> {
+            is NotInLocalDb -> {
                 runLoadingAnimationUi()
                 launch {
-                    createSiteState = fetchNewlyCreatedSiteModel(state.remoteSiteId)
+                    result = fetchNewlyCreatedSiteModel(state.remoteSiteId)
                 }
             }
-            is SiteCreationCompleted -> Unit
+            is Completed -> Unit
         }
     }
 
@@ -164,7 +164,7 @@ class SiteProgressViewModel @Inject constructor(
     fun onHelpClicked() = _onHelpClicked.call()
 
     fun onCancelWizardClicked() {
-        _onCancelWizardClicked.value = createSiteState
+        _onCancelWizardClicked.value = result
     }
 
     private fun showFullscreenErrorWithDelay() {
@@ -194,9 +194,9 @@ class SiteProgressViewModel @Inject constructor(
             SUCCESS -> {
                 val remoteSiteId = (event.payload as Pair<*, *>).first as Long
                 urlWithoutScheme = urlUtils.removeScheme(event.payload.second as String).trimEnd('/')
-                createSiteState = SiteNotInLocalDb(remoteSiteId, !siteTitle.isNullOrBlank())
+                result = NotInLocalDb(remoteSiteId, !siteTitle.isNullOrBlank())
                 launch {
-                    createSiteState = fetchNewlyCreatedSiteModel(remoteSiteId)
+                    result = fetchNewlyCreatedSiteModel(remoteSiteId)
                 }
             }
             FAILURE -> {
@@ -214,15 +214,15 @@ class SiteProgressViewModel @Inject constructor(
     /**
      * Fetch newly created site model - supports retry with linear backoff.
      */
-    private suspend fun fetchNewlyCreatedSiteModel(remoteSiteId: Long): CreateSiteState {
+    private suspend fun fetchNewlyCreatedSiteModel(remoteSiteId: Long): SiteCreationResult {
         val onSiteFetched = fetchWpComSiteUseCase.fetchSiteWithRetry(remoteSiteId)
         return if (!onSiteFetched.isError) {
             val siteBySiteId = requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
                 "Site successfully fetched but has not been found in the local db."
             }
-            SiteCreationCompleted(siteBySiteId.id, !siteTitle.isNullOrBlank(), siteBySiteId.url)
+            Completed(siteBySiteId.id, !siteTitle.isNullOrBlank(), siteBySiteId.url)
         } else {
-            SiteNotInLocalDb(remoteSiteId, !siteTitle.isNullOrBlank())
+            NotInLocalDb(remoteSiteId, !siteTitle.isNullOrBlank())
         }
     }
 
@@ -238,7 +238,7 @@ class SiteProgressViewModel @Inject constructor(
                 )
                 delay(LOADING_STATE_TEXT_ANIMATION_DELAY)
             }
-            _onSiteCreationCompleted.postValue(createSiteState)
+            _onSiteCreationCompleted.postValue(result)
         }
     }
 

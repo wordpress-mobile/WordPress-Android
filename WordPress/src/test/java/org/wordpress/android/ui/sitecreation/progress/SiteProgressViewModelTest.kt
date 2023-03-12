@@ -30,9 +30,9 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotCreated
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotInLocalDb
+import org.wordpress.android.ui.sitecreation.SiteCreationResult
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotInLocalDb
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.KEY_CREATE_SITE_STATE
 import org.wordpress.android.ui.sitecreation.previews.LOADING_STATE_TEXT_ANIMATION_DELAY
@@ -55,7 +55,7 @@ import kotlin.test.assertNotNull
 
 private const val siteUrl = "test.wordpress.com"
 private const val siteRemoteId = 1L
-private val siteNotInLocalDb = SiteNotInLocalDb(siteRemoteId, false)
+private val siteNotInLocalDb = NotInLocalDb(siteRemoteId, false)
 private val successServiceState = SiteCreationServiceState(SUCCESS, Pair(siteRemoteId, siteUrl))
 private val errorServiceState = SiteCreationServiceState(FAILURE, SiteCreationServiceState(CREATE_SITE))
 private val successResponse = OnSiteChanged(1)
@@ -74,8 +74,8 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     private val uiStateObserver = mock<Observer<SiteProgressUiState>>()
     private val startServiceObserver = mock<Observer<StartServiceData>>()
     private val onHelpedClickedObserver = mock<Observer<Unit>>()
-    private val onCancelWizardClickedObserver = mock<Observer<CreateSiteState>>()
-    private val onSiteCreationCompletedObserver = mock<Observer<CreateSiteState>>()
+    private val onCancelWizardClickedObserver = mock<Observer<SiteCreationResult>>()
+    private val onSiteCreationCompletedObserver = mock<Observer<SiteCreationResult>>()
 
     private val bundle = mock<Bundle>()
 
@@ -112,7 +112,7 @@ class SiteProgressViewModelTest : BaseUnitTest() {
 
     @Test
     fun `on start shows progress when restoring SiteNotCreated`() = testWith(successResponse) {
-        startViewModel(SiteNotCreated)
+        startViewModel(NotCreated)
         assertIs<SiteProgressUiState>(viewModel.uiState.value)
     }
 
@@ -130,7 +130,7 @@ class SiteProgressViewModelTest : BaseUnitTest() {
 
     @Test
     fun `on start emits service event when restoring from SiteNotCreated`() {
-        startViewModel(SiteNotCreated)
+        startViewModel(NotCreated)
         assertNotNull(viewModel.startCreateSiteService.value)
     }
 
@@ -190,7 +190,7 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     @Test
     fun `on cancel wizard click is propagated`() {
         viewModel.onCancelWizardClicked()
-        assertEquals(viewModel.onCancelWizardClicked.value, SiteNotCreated)
+        assertEquals(viewModel.onCancelWizardClicked.value, NotCreated)
     }
 
     @Test
@@ -237,7 +237,7 @@ class SiteProgressViewModelTest : BaseUnitTest() {
         block()
     }
 
-    private fun startViewModel(restoredState: CreateSiteState? = null) {
+    private fun startViewModel(restoredState: SiteCreationResult? = null) {
         viewModel.start(
             SiteCreationState(
                 segmentId = 1,
@@ -245,7 +245,7 @@ class SiteProgressViewModelTest : BaseUnitTest() {
                 domain = DomainModel(siteUrl, true, "", 1)
             ),
             bundle.apply {
-                restoredState?.let { whenever(getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE)) doReturn it }
+                restoredState?.let { whenever(getParcelable<SiteCreationResult>(KEY_CREATE_SITE_STATE)) doReturn it }
             }
         )
     }

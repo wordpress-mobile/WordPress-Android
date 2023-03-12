@@ -32,9 +32,8 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteCreationCompleted
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotCreated
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
@@ -64,7 +63,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     lateinit var navigationTargetObserver: Observer<NavigationTarget>
 
     @Mock
-    lateinit var wizardFinishedObserver: Observer<CreateSiteState>
+    lateinit var wizardFinishedObserver: Observer<SiteCreationResult>
 
     @Mock
     lateinit var wizardExitedObserver: Observer<Unit>
@@ -141,10 +140,10 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
     @Test
     fun wizardFinishedInvokedOnSitePreviewCompleted() {
-        val state = SiteCreationCompleted(LOCAL_SITE_ID, false, DOMAIN.domainName)
+        val state = Completed(LOCAL_SITE_ID, false, DOMAIN.domainName)
         viewModel.onProgressOrPreviewFinished(state)
 
-        val captor = ArgumentCaptor.forClass(CreateSiteState::class.java)
+        val captor = ArgumentCaptor.forClass(SiteCreationResult::class.java)
         verify(wizardFinishedObserver).onChanged(captor.capture())
 
         assertThat(captor.value).isEqualTo(state)
@@ -332,21 +331,21 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
     @Test
     fun `initial createSiteResult is SiteNotCreated`() {
-        assertThat(viewModel.createSiteResult).isEqualTo(SiteNotCreated)
+        assertThat(viewModel.result1).isEqualTo(NotCreated)
     }
 
     @Test
     fun `createSiteResult is updated by onSiteCreationCompleted`() {
-        val expectedState = SiteCreationCompleted(LOCAL_SITE_ID, false, DOMAIN.domainName)
+        val expectedState = Completed(LOCAL_SITE_ID, false, DOMAIN.domainName)
 
         viewModel.onSiteCreationCompleted(expectedState)
 
-        assertThat(viewModel.createSiteResult).isEqualTo(expectedState)
+        assertThat(viewModel.result1).isEqualTo(expectedState)
     }
 
     @Test
     fun `next step is shown by onSiteCreationCompleted`() {
-        val expectedState = SiteCreationCompleted(LOCAL_SITE_ID, false, DOMAIN.domainName)
+        val expectedState = Completed(LOCAL_SITE_ID, false, DOMAIN.domainName)
 
         viewModel.onSiteCreationCompleted(expectedState)
 

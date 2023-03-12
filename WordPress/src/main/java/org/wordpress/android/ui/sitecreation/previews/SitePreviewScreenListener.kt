@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.sitecreation.previews
 
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState
+import org.wordpress.android.ui.sitecreation.SiteCreationResult
 
 interface SitePreviewScreenListener {
-    fun onPreviewScreenDismissed(state: CreateSiteState)
+    fun onPreviewScreenClosed(result: SiteCreationResult)
 }
