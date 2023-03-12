@@ -79,7 +79,7 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
     private fun init(savedInstanceState: Bundle?) {
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
-        viewModel.start(requireArguments()[ARG_DATA] as SiteCreationState, savedInstanceState)
+        viewModel.start(requireArguments()[ARG_STATE] as SiteCreationState, savedInstanceState)
     }
 
     private fun SiteCreationProgressScreenBinding.observeState() {
@@ -204,12 +204,12 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
 
     companion object {
         const val TAG = "site_creation_progress_fragment_tag"
-        private const val ARG_DATA = "arg_site_creation_data"
+        private const val ARG_STATE = "arg_site_creation_state"
 
-        fun newInstance(siteCreationData: SiteCreationState) = SiteCreationProgressFragment()
+        fun newInstance(siteCreationState: SiteCreationState) = SiteCreationProgressFragment()
             .apply {
                 arguments = Bundle().apply {
-                    putParcelable(ARG_DATA, siteCreationData)
+                    putParcelable(ARG_STATE, siteCreationState)
                 }
             }
     }
