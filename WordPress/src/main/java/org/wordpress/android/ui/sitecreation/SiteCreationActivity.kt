@@ -295,5 +295,6 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     companion object {
         const val ARG_CREATE_SITE_SOURCE = "ARG_CREATE_SITE_SOURCE"
+        const val ARG_STATE = "ARG_SITE_CREATION_STATE"
     }
 }

@@ -16,6 +16,7 @@ import org.wordpress.android.databinding.FullscreenErrorWithRetryBinding
 import org.wordpress.android.databinding.SiteCreationProgressCreatingSiteBinding
 import org.wordpress.android.databinding.SiteCreationProgressScreenBinding
 import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.ui.sitecreation.SiteCreationActivity.Companion.ARG_STATE
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Error
@@ -204,7 +205,6 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
 
     companion object {
         const val TAG = "site_creation_progress_fragment_tag"
-        private const val ARG_STATE = "arg_site_creation_state"
 
         fun newInstance(siteCreationState: SiteCreationState) = SiteCreationProgressFragment()
             .apply {
