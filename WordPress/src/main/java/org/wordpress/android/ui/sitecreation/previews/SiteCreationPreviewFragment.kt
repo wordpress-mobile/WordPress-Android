@@ -20,7 +20,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteCreationFormScreenBinding
 import org.wordpress.android.databinding.SiteCreationPreviewScreenBinding
 import org.wordpress.android.databinding.SiteCreationPreviewScreenDefaultBinding
-import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
@@ -87,7 +87,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
             observeState()
             observePreview(siteCreationPreviewWebViewContainer.sitePreviewWebView)
             observeHelpClicks(requireActivity() as OnHelpClickedListener)
-            observeDismissClicks(requireActivity() as SitePreviewScreenListener)
+            observeOkClicks(requireActivity() as SitePreviewScreenListener)
             okButton.setOnClickListener { viewModel.onOkButtonClicked() }
         }
     }
@@ -122,15 +122,11 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     private fun observeHelpClicks(listener: OnHelpClickedListener) {
-        viewModel.onHelpClicked.observe(this) {
-            listener.onHelpClicked(HelpActivity.Origin.SITE_CREATION_CREATED)
-        }
+        viewModel.onHelpClicked.observe(this) { listener.onHelpClicked(Origin.SITE_CREATION_CREATED) }
     }
 
-    private fun observeDismissClicks(listener: SitePreviewScreenListener) {
-        viewModel.onOkButtonClicked.observe(this) { createSiteState ->
-            createSiteState?.let { listener.onPreviewScreenClosed() }
-        }
+    private fun observeOkClicks(listener: SitePreviewScreenListener) {
+        viewModel.onOkButtonClicked.observe(this) { listener.onPreviewScreenClosed() }
     }
 
     private fun SiteCreationPreviewScreenDefaultBinding.updateContentLayout(
