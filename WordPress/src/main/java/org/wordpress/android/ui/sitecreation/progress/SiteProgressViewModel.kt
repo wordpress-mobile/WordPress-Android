@@ -92,8 +92,8 @@ class SiteProgressViewModel @Inject constructor(
     private val _onCancelWizardClicked = SingleLiveEvent<CreateSiteState>()
     val onCancelWizardClicked: LiveData<CreateSiteState> = _onCancelWizardClicked
 
-    private val _onSiteCreationCompleted = SingleLiveEvent<SiteCreationCompleted>()
-    val onSiteCreationCompleted: LiveData<SiteCreationCompleted> = _onSiteCreationCompleted
+    private val _onSiteCreationCompleted = SingleLiveEvent<CreateSiteState>()
+    val onSiteCreationCompleted: LiveData<CreateSiteState> = _onSiteCreationCompleted
 
     init {
         dispatcher.register(fetchWpComSiteUseCase)
@@ -238,7 +238,7 @@ class SiteProgressViewModel @Inject constructor(
                 )
                 delay(LOADING_STATE_TEXT_ANIMATION_DELAY)
             }
-            (createSiteState as? SiteCreationCompleted)?.let { _onSiteCreationCompleted.postValue(it) }
+            _onSiteCreationCompleted.postValue(createSiteState)
         }
     }
 
