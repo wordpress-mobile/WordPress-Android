@@ -41,7 +41,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewScreenListener
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressFragment
 import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameFragment
@@ -65,7 +65,6 @@ class SiteCreationActivity : LocaleAwareActivity(),
     IntentsScreenListener,
     SiteNameScreenListener,
     DomainsScreenListener,
-    SitePreviewScreenListener,
     OnHelpClickedListener,
     BasicDialogPositiveClickInterface,
     BasicDialogNegativeClickInterface {
@@ -80,6 +79,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private val siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel by viewModels()
     private val jetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel by viewModels()
     private val progressViewModel: SiteProgressViewModel by viewModels()
+    private val previewViewModel: SitePreviewViewModel by viewModels()
     @Inject
     internal lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
     @Inject
@@ -168,6 +168,9 @@ class SiteCreationActivity : LocaleAwareActivity(),
         progressViewModel.onSiteCreationCompleted.observe(this) { result ->
             mainViewModel.onSiteCreationCompleted(result)
         }
+        previewViewModel.onOkButtonClicked.observe(this) {
+            mainViewModel.onProgressOrPreviewFinished()
+        }
         observeOverlayEvents()
     }
 
@@ -219,8 +222,6 @@ class SiteCreationActivity : LocaleAwareActivity(),
     override fun onDomainSelected(domain: DomainModel) {
         mainViewModel.onDomainsScreenFinished(domain)
     }
-
-    override fun onPreviewScreenClosed() = mainViewModel.onProgressOrPreviewFinished()
 
     override fun onHelpClicked(origin: Origin) {
         ActivityLauncher.viewHelp(this, origin, null, null)
