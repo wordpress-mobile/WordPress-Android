@@ -7,14 +7,15 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
+import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.isA
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -32,8 +33,6 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
@@ -139,14 +138,20 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     @Test
-    fun wizardFinishedInvokedOnSitePreviewCompleted() {
-        val state = Completed(LOCAL_SITE_ID, false, DOMAIN.domainName)
-        viewModel.onProgressOrPreviewFinished(state)
+    fun `on preview emits completion result to wizardFinishedObservable`() {
+        val result = SiteCreationResult.Completed(LOCAL_SITE_ID, false, DOMAIN.domainName)
+        viewModel.onSiteCreationCompleted(result)
 
-        val captor = ArgumentCaptor.forClass(SiteCreationResult::class.java)
-        verify(wizardFinishedObserver).onChanged(captor.capture())
+        viewModel.onProgressOrPreviewFinished()
 
-        assertThat(captor.value).isEqualTo(state)
+        verify(wizardFinishedObserver).onChanged(eq(result))
+    }
+
+    @Test
+    fun `on progress finished emits result to wizardFinishedObservable`() {
+        val result = SiteCreationResult.Completed(LOCAL_SITE_ID, false, DOMAIN.domainName)
+        viewModel.onProgressOrPreviewFinished(result)
+        verify(wizardFinishedObserver).onChanged(eq(result))
     }
 
     @Test
@@ -309,6 +314,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
         verify(tracker, never()).trackSiteCreationDomainPurchasingExperimentVariation(any())
     }
+
     @Test
     fun `given domain purchasing experiment on, when start in control variation, then experiment is tracked`() {
         whenever(domainPurchasingFeatureConfig.isEnabledState()).thenReturn(true)
@@ -330,30 +336,24 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     @Test
-    fun `initial createSiteResult is SiteNotCreated`() {
-        assertThat(viewModel.result1).isEqualTo(NotCreated)
+    fun `on site creation completed propagates result to state`() {
+        val expected = mock<SiteCreationResult>()
+
+        viewModel.onSiteCreationCompleted(expected)
+
+        val bundle = mock<Bundle>()
+        viewModel.writeToBundle(bundle) // used this to assert on the private siteCreationState field
+        verify(bundle).putParcelable(eq(KEY_SITE_CREATION_STATE), argWhere<SiteCreationState> { it.result == expected })
+
     }
 
     @Test
-    fun `createSiteResult is updated by onSiteCreationCompleted`() {
-        val expectedState = Completed(LOCAL_SITE_ID, false, DOMAIN.domainName)
-
-        viewModel.onSiteCreationCompleted(expectedState)
-
-        assertThat(viewModel.result1).isEqualTo(expectedState)
-    }
-
-    @Test
-    fun `next step is shown by onSiteCreationCompleted`() {
-        val expectedState = Completed(LOCAL_SITE_ID, false, DOMAIN.domainName)
-
-        viewModel.onSiteCreationCompleted(expectedState)
-
+    fun `on site creation completed shows next step`() {
+        viewModel.onSiteCreationCompleted(mock())
         verify(wizardManager).showNextStep()
     }
 
-    private fun currentWizardState(vm: SiteCreationMainVM) =
-        vm.navigationTargetObservable.lastEvent!!.wizardState
+    private fun currentWizardState(vm: SiteCreationMainVM) = vm.navigationTargetObservable.lastEvent!!.wizardState
 
     private fun getNewViewModel() = SiteCreationMainVM(
         tracker,
