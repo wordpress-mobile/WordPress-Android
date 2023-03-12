@@ -26,10 +26,11 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
+import org.wordpress.android.fluxc.store.SiteStore.SiteError
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.CreateSiteState
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteCreationCompleted
 import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotCreated
 import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotInLocalDb
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -57,7 +58,8 @@ private const val REMOTE_SITE_ID = 1L
 private val SITE_NOT_IN_LOCAL_DB = SiteNotInLocalDb(REMOTE_SITE_ID, false)
 private val SERVICE_STATE_SUCCESS = SiteCreationServiceState(SUCCESS, Pair(REMOTE_SITE_ID, URL))
 private val SERVICE_STATE_ERROR = SiteCreationServiceState(FAILURE, SiteCreationServiceState(CREATE_SITE))
-private val RESPONSE_SUCCESS = OnSiteChanged(1)
+private val errorResponse = OnSiteChanged(1)
+private val successResponse = OnSiteChanged(0).apply { error = SiteError(SiteErrorType.GENERIC_ERROR) }
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -73,7 +75,7 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     private val startServiceObserver = mock<Observer<StartServiceData>>()
     private val onHelpedClickedObserver = mock<Observer<Unit>>()
     private val onCancelWizardClickedObserver = mock<Observer<CreateSiteState>>()
-    private val onSiteCreationCompletedObserver = mock<Observer<SiteCreationCompleted>>()
+    private val onSiteCreationCompletedObserver = mock<Observer<CreateSiteState>>()
 
     private val bundle = mock<Bundle>()
 
@@ -109,13 +111,13 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on start shows progress when restoring SiteNotCreated`() = testWithSuccessResponse {
+    fun `on start shows progress when restoring SiteNotCreated`() = testWith(successResponse) {
         startViewModel(SiteNotCreated)
         assertIs<SiteProgressUiState>(viewModel.uiState.value)
     }
 
     @Test
-    fun `on start shows progress when restoring SiteNotInLocalDb`() = testWithSuccessResponse {
+    fun `on start shows progress when restoring SiteNotInLocalDb`() = testWith(errorResponse) {
         startViewModel(SITE_NOT_IN_LOCAL_DB)
         assertIs<SiteProgressLoadingUiState>(viewModel.uiState.value)
     }
@@ -199,14 +201,22 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on service success fetches site by remote id`() = testWithSuccessResponse {
+    fun `on service success fetches site by remote id`() = testWith(successResponse) {
         startViewModel()
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_STATE_SUCCESS)
         verify(fetchWpComSiteUseCase).fetchSiteWithRetry(REMOTE_SITE_ID)
     }
 
     @Test
-    fun `on service success will emit completion event after loading texts animation`() = testWithSuccessResponse {
+    fun `on service success will emit completion event when animations end`() = testWith(successResponse) {
+        startViewModel()
+        viewModel.onSiteCreationServiceStateUpdated(SERVICE_STATE_SUCCESS)
+        advanceUntilIdle()
+        verify(onSiteCreationCompletedObserver).onChanged(any())
+    }
+
+    @Test
+    fun `on service failure will emit completion event when animations end`() = testWith(errorResponse) {
         startViewModel()
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_STATE_SUCCESS)
         advanceUntilIdle()
@@ -222,8 +232,8 @@ class SiteProgressViewModelTest : BaseUnitTest() {
 
     // region Helpers
 
-    private fun testWithSuccessResponse(block: suspend CoroutineScope.() -> Unit) = test {
-        whenever(fetchWpComSiteUseCase.fetchSiteWithRetry(REMOTE_SITE_ID)).thenReturn(RESPONSE_SUCCESS)
+    private fun testWith(response: OnSiteChanged, block: suspend CoroutineScope.() -> Unit) = test {
+        whenever(fetchWpComSiteUseCase.fetchSiteWithRetry(REMOTE_SITE_ID)).thenReturn(response)
         block()
     }
 
