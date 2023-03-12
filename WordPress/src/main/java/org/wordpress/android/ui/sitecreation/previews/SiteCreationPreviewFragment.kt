@@ -13,7 +13,7 @@ import android.view.View.OnLayoutChangeListener
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -46,11 +46,10 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private val isLandscape get() = resources.configuration.orientation == ORIENTATION_LANDSCAPE
 
     private lateinit var binding: SiteCreationPreviewScreenBinding
-    private val viewModel: SitePreviewViewModel by viewModels()
+    private val viewModel: SitePreviewViewModel by activityViewModels()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        check(context is SitePreviewScreenListener) { "Parent activity must implement SitePreviewScreenListener." }
         check(context is OnHelpClickedListener) { "Parent activity must implement OnHelpClickedListener." }
     }
 
@@ -86,7 +85,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
             observeState()
             observePreview(siteCreationPreviewWebViewContainer.sitePreviewWebView)
             observeHelpClicks(requireActivity() as OnHelpClickedListener)
-            observeOkClicks(requireActivity() as SitePreviewScreenListener)
             okButton.setOnClickListener { viewModel.onOkButtonClicked() }
         }
     }
@@ -122,10 +120,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private fun observeHelpClicks(listener: OnHelpClickedListener) {
         viewModel.onHelpClicked.observe(this) { listener.onHelpClicked(Origin.SITE_CREATION_CREATED) }
-    }
-
-    private fun observeOkClicks(listener: SitePreviewScreenListener) {
-        viewModel.onOkButtonClicked.observe(this) { listener.onPreviewScreenClosed() }
     }
 
     private fun SiteCreationPreviewScreenDefaultBinding.updateContentLayout(
