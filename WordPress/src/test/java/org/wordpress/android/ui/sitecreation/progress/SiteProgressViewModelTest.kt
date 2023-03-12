@@ -143,7 +143,7 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on start fetches site by remote id when restoring SiteNotInLocalDb`() = test {
+    fun `on start fetches site by remote id when restoring SiteNotInLocalDb`() = testWith(successResponse) {
         startViewModel(siteNotInLocalDb)
         verify(fetchWpComSiteUseCase).fetchSiteWithRetry(siteRemoteId)
     }
