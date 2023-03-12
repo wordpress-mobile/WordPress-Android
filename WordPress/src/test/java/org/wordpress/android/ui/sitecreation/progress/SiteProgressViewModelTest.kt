@@ -37,9 +37,9 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.KEY_CREATE_SITE_STATE
 import org.wordpress.android.ui.sitecreation.previews.LOADING_STATE_TEXT_ANIMATION_DELAY
 import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.SiteProgressErrorUiState.SiteProgressConnectionErrorUiState
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.SiteProgressErrorUiState.SiteProgressGenericErrorUiState
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.SiteProgressLoadingUiState
+import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Error.ConnectionError
+import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Error.GenericError
+import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Loading
 import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.StartServiceData
 import org.wordpress.android.ui.sitecreation.services.FetchWpComSiteUseCase
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState
@@ -119,7 +119,7 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     @Test
     fun `on start shows progress when restoring SiteNotInLocalDb`() = testWith(errorResponse) {
         startViewModel(siteNotInLocalDb)
-        assertIs<SiteProgressLoadingUiState>(viewModel.uiState.value)
+        assertIs<Loading>(viewModel.uiState.value)
     }
 
     @Test
@@ -139,7 +139,7 @@ class SiteProgressViewModelTest : BaseUnitTest() {
         whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
         startViewModel()
         advanceUntilIdle()
-        assertIs<SiteProgressConnectionErrorUiState>(viewModel.uiState.value)
+        assertIs<ConnectionError>(viewModel.uiState.value)
     }
 
     @Test
@@ -151,20 +151,20 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     @Test
     fun `on start shows first loading text without animation`() = test {
         startViewModel()
-        verify(uiStateObserver).onChanged(check<SiteProgressLoadingUiState> { !it.animate })
+        verify(uiStateObserver).onChanged(check<Loading> { !it.animate })
     }
 
     @Test
     fun `on start changes the loading text with delayed animation`() = test {
         startViewModel()
         advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
-        verify(uiStateObserver).onChanged(check<SiteProgressLoadingUiState> { it.animate })
+        verify(uiStateObserver).onChanged(check<Loading> { it.animate })
     }
 
     @Test
     fun `on start changes the loading text with delayed animation only 4 times`() = test {
         startViewModel()
-        val captor = argumentCaptor<SiteProgressLoadingUiState>()
+        val captor = argumentCaptor<Loading>()
         (1..9).forEach {
             verify(uiStateObserver, atMost(it)).onChanged(captor.capture())
             advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
@@ -227,7 +227,7 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     fun `on service failure shows error`() {
         startViewModel()
         viewModel.onSiteCreationServiceStateUpdated(errorServiceState)
-        assertIs<SiteProgressGenericErrorUiState>(viewModel.uiState.value)
+        assertIs<GenericError>(viewModel.uiState.value)
     }
 
     // region Helpers
