@@ -14,8 +14,8 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState
-import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteCreationCompleted
+import org.wordpress.android.ui.sitecreation.SiteCreationResult
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
@@ -45,7 +45,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     private lateinit var onHelpedClickedObserver: Observer<Unit>
 
     @Mock
-    private lateinit var onOkClickedObserver: Observer<CreateSiteState>
+    private lateinit var onOkClickedObserver: Observer<SiteCreationResult>
 
     @Mock
     private lateinit var preloadPreviewObserver: Observer<String>
@@ -94,15 +94,15 @@ class SitePreviewViewModelTest : BaseUnitTest() {
 
     @Test
     fun `start pre-loading WebView when restoring from SiteCreationCompleted state`() {
-        initViewModel(createSiteState = SiteCreationCompleted(2, false, URL))
+        initViewModel(result = Completed(2, false, URL))
 
         assertThat(viewModel.preloadPreview.value).isEqualTo(URL)
     }
 
     private fun initViewModel(
         siteCreationState: SiteCreationState = SITE_CREATION_STATE,
-        createSiteState: CreateSiteState = mock(),
+        result: SiteCreationResult = mock(),
     ) {
-        viewModel.start(siteCreationState, createSiteState)
+        viewModel.start(siteCreationState, result)
     }
 }

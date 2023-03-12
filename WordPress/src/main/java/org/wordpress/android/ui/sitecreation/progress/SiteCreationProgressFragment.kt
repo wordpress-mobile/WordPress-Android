@@ -103,13 +103,13 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
         }
         viewModel.onSiteCreationCompleted.observe(viewLifecycleOwner) {
             view?.announceForAccessibility(getString(R.string.new_site_creation_preview_title))
-            listener.onSiteCreationCompleted(it)
+            listener.onProgressCompleted(it)
         }
     }
 
     private fun observeDismissClicks(listener: ProgressScreenListener) {
         viewModel.onCancelWizardClicked.observe(viewLifecycleOwner) { createSiteState ->
-            createSiteState?.let { listener.onProgressScreenDismissed(it) }
+            createSiteState?.let { listener.onProgressStopped(it) }
         }
     }
 
