@@ -197,7 +197,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun flowExitedOnBackPressedWhenLastStepAndSiteCreationCompleted() {
         whenever(wizardManager.isLastStep()).thenReturn(true)
-        viewModel.onSiteCreationCompleted(mock())
+        viewModel.onSiteCreationCompleted(mock<SiteCreationResult.Completed>())
         viewModel.onBackPressed()
         verify(wizardExitedObserver).onChanged(anyOrNull())
     }
