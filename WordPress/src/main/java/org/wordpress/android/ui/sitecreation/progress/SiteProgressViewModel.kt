@@ -25,9 +25,9 @@ import org.wordpress.android.ui.sitecreation.misc.CreateSiteState.SiteNotInLocal
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.SiteProgressErrorUiState.SiteProgressConnectionErrorUiState
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.SiteProgressErrorUiState.SiteProgressGenericErrorUiState
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.SiteProgressLoadingUiState
+import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Error.ConnectionError
+import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Error.GenericError
+import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Loading
 import org.wordpress.android.ui.sitecreation.services.FetchWpComSiteUseCase
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState
@@ -173,7 +173,7 @@ class SiteProgressViewModel @Inject constructor(
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
             tracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR)
-            updateUiState(SiteProgressConnectionErrorUiState)
+            updateUiState(ConnectionError)
         }
     }
 
@@ -206,7 +206,7 @@ class SiteProgressViewModel @Inject constructor(
                     UNKNOWN,
                     "SiteCreation service failed"
                 )
-                updateUiStateAsync(SiteProgressGenericErrorUiState)
+                updateUiStateAsync(GenericError)
             }
         }
     }
@@ -231,7 +231,7 @@ class SiteProgressViewModel @Inject constructor(
         loadingAnimationJob = launch(mainDispatcher) {
             loadingTexts.forEachIndexed { i, uiString ->
                 updateUiState(
-                    SiteProgressLoadingUiState(
+                    Loading(
                         animate = i != 0, // the first text should appear without an animation
                         loadingTextResId = uiString
                     )
@@ -243,12 +243,12 @@ class SiteProgressViewModel @Inject constructor(
     }
 
     private fun updateUiState(uiState: SiteProgressUiState) {
-        if (uiState !is SiteProgressLoadingUiState) loadingAnimationJob?.cancel()
+        if (uiState !is Loading) loadingAnimationJob?.cancel()
         _uiState.value = uiState
     }
 
     private fun updateUiStateAsync(uiState: SiteProgressUiState) {
-        if (uiState !is SiteProgressLoadingUiState) loadingAnimationJob?.cancel()
+        if (uiState !is Loading) loadingAnimationJob?.cancel()
         _uiState.postValue(uiState)
     }
 
@@ -256,22 +256,22 @@ class SiteProgressViewModel @Inject constructor(
         val progressLayoutVisibility: Boolean = false,
         val errorLayoutVisibility: Boolean = false
     ) {
-        data class SiteProgressLoadingUiState(val loadingTextResId: UiString, val animate: Boolean) :
+        data class Loading(val loadingTextResId: UiString, val animate: Boolean) :
             SiteProgressUiState(progressLayoutVisibility = true)
 
-        sealed class SiteProgressErrorUiState constructor(
+        sealed class Error constructor(
             val titleResId: Int,
             val subtitleResId: Int? = null,
             val showContactSupport: Boolean = false,
             val showCancelWizardButton: Boolean = true
         ) : SiteProgressUiState(errorLayoutVisibility = true) {
-            object SiteProgressGenericErrorUiState : SiteProgressErrorUiState(
+            object GenericError : Error(
                 R.string.site_creation_error_generic_title,
                 R.string.site_creation_error_generic_subtitle,
                 showContactSupport = true
             )
 
-            object SiteProgressConnectionErrorUiState : SiteProgressErrorUiState(
+            object ConnectionError : Error(
                 R.string.no_network_message
             )
         }
