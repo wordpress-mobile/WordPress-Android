@@ -18,8 +18,8 @@ import org.wordpress.android.databinding.SiteCreationProgressScreenBinding
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.SiteProgressErrorUiState
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.SiteProgressLoadingUiState
+import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Error
+import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Loading
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
@@ -86,8 +86,8 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             uiState?.run {
                 when (val ui = this@run) {
-                    is SiteProgressLoadingUiState -> siteCreationProgressCreatingSite.updateLoadingLayout(ui)
-                    is SiteProgressErrorUiState -> fullscreenErrorWithRetry.updateErrorLayout(ui)
+                    is Loading -> siteCreationProgressCreatingSite.updateLoadingLayout(ui)
+                    is Error -> fullscreenErrorWithRetry.updateErrorLayout(ui)
                 }
                 siteCreationProgressCreatingSite.progressLayout.isVisible = progressLayoutVisibility
                 fullscreenErrorWithRetry.errorLayout.isVisible = errorLayoutVisibility
@@ -125,7 +125,7 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
         contactSupport.setOnClickListener { viewModel.onHelpClicked() }
     }
 
-    private fun FullscreenErrorWithRetryBinding.updateErrorLayout(errorUiState: SiteProgressErrorUiState) {
+    private fun FullscreenErrorWithRetryBinding.updateErrorLayout(errorUiState: Error) {
         errorUiState.run {
             uiHelpers.setTextOrHide(errorTitle, titleResId)
             uiHelpers.setTextOrHide(errorSubtitle, subtitleResId)
@@ -135,7 +135,7 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
     }
 
     private fun SiteCreationProgressCreatingSiteBinding.updateLoadingLayout(
-        progressUiState: SiteProgressLoadingUiState
+        progressUiState: Loading
     ) {
         progressUiState.apply {
             val newText = uiHelpers.getTextOfUiString(progressText.context, loadingTextResId)
