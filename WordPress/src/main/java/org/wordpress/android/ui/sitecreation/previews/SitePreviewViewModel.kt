@@ -12,7 +12,6 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.SiteCreationState
-import org.wordpress.android.ui.sitecreation.SiteCreationResult
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
@@ -44,7 +43,6 @@ class SitePreviewViewModel @Inject constructor(
 
     private lateinit var siteCreationState: SiteCreationState
     private var urlWithoutScheme: String? = null
-    private lateinit var result: SiteCreationResult
 
     private val _uiState: MutableLiveData<SitePreviewUiState> = MutableLiveData()
     val uiState: LiveData<SitePreviewUiState> = _uiState
@@ -55,20 +53,19 @@ class SitePreviewViewModel @Inject constructor(
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
-    private val _onOkButtonClicked = SingleLiveEvent<SiteCreationResult>()
-    val onOkButtonClicked: LiveData<SiteCreationResult> = _onOkButtonClicked
+    private val _onOkButtonClicked = SingleLiveEvent<Unit>()
+    val onOkButtonClicked: LiveData<Unit> = _onOkButtonClicked
 
     override fun onCleared() {
         super.onCleared()
         job.cancel()
     }
 
-    fun start(siteCreationState: SiteCreationState, result: SiteCreationResult) {
+    fun start(siteCreationState: SiteCreationState) {
         if (isStarted) return
         isStarted = true
         this.siteCreationState = siteCreationState
         this.urlWithoutScheme = siteCreationState.domain?.domainName
-        this.result = result
         startPreLoadingWebView()
     }
 
@@ -76,7 +73,7 @@ class SitePreviewViewModel @Inject constructor(
 
     fun onOkButtonClicked() {
         tracker.trackPreviewOkButtonTapped()
-        _onOkButtonClicked.value = result
+        _onOkButtonClicked.call()
     }
 
     private fun startPreLoadingWebView() {

@@ -219,7 +219,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     override fun onProgressStopped(result: SiteCreationResult) = mainViewModel.onProgressOrPreviewFinished(result)
 
-    override fun onPreviewScreenClosed(result: SiteCreationResult) = mainViewModel.onProgressOrPreviewFinished(result)
+    override fun onPreviewScreenClosed() = mainViewModel.onProgressOrPreviewFinished()
 
     override fun onHelpClicked(origin: Origin) {
         ActivityLauncher.viewHelp(this, origin, null, null)
@@ -240,7 +240,6 @@ class SiteCreationActivity : LocaleAwareActivity(),
             SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(
                 screenTitle,
                 target.wizardState,
-                mainViewModel.result,
             )
         }
         showFragment(fragment, target.wizardStep.toString(), target.wizardStep != SITE_PREVIEW)

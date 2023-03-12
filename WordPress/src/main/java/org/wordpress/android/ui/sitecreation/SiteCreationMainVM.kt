@@ -54,6 +54,7 @@ data class SiteCreationState(
     val segmentId: Long? = null,
     val siteDesign: String? = null,
     val domain: DomainModel? = null,
+    val result: SiteCreationResult = NotCreated,
 ) : WizardState, Parcelable
 
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
@@ -99,7 +100,6 @@ class SiteCreationMainVM @Inject constructor(
     private var siteCreationCompleted = false
 
     private lateinit var siteCreationState: SiteCreationState
-    var result: SiteCreationResult = NotCreated
 
     internal var preloadingJob: Job? = null
 
@@ -267,7 +267,7 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun onSiteCreationCompleted(result: SiteCreationResult) {
-        this.result = result
+        siteCreationState = siteCreationState.copy(result = result)
         siteCreationCompleted = true
         wizardManager.showNextStep()
     }
@@ -282,8 +282,8 @@ class SiteCreationMainVM @Inject constructor(
         _exitFlowObservable.call()
     }
 
-    fun onProgressOrPreviewFinished(result: SiteCreationResult) {
-        _wizardFinishedObservable.value = result
+    fun onProgressOrPreviewFinished(result: SiteCreationResult? = null) {
+        _wizardFinishedObservable.value = result ?: siteCreationState.result
     }
 
     fun onPositiveDialogButtonClicked(instanceTag: String) {
