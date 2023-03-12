@@ -9,7 +9,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.FullscreenErrorWithRetryBinding
@@ -41,11 +41,10 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
     private var animatorSet: AnimatorSet? = null
 
     private lateinit var binding: SiteCreationProgressScreenBinding
-    private val viewModel: SiteProgressViewModel by viewModels()
+    private val viewModel: SiteProgressViewModel by activityViewModels()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        check(context is ProgressScreenListener) { "Parent activity must implement ProgressScreenListener." }
         check(context is OnHelpClickedListener) { "Parent activity must implement OnHelpClickedListener." }
     }
 
@@ -69,8 +68,7 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
         binding = SiteCreationProgressScreenBinding.bind(view).apply {
             observeState()
             observeHelpClicks(requireActivity() as OnHelpClickedListener)
-            observeDismissClicks(requireActivity() as ProgressScreenListener)
-            observeSiteCreationService(requireActivity() as ProgressScreenListener)
+            observeSiteCreationService()
             fullscreenErrorWithRetry.setOnClickListeners()
         }
 
@@ -96,7 +94,7 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
         }
     }
 
-    private fun observeSiteCreationService(listener: ProgressScreenListener) {
+    private fun observeSiteCreationService() {
         viewModel.startCreateSiteService.observe(viewLifecycleOwner) { startServiceData ->
             startServiceData?.let {
                 SiteCreationService.createSite(requireNotNull(activity), it.previousState, it.serviceData)
@@ -104,13 +102,6 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
         }
         viewModel.onSiteCreationCompleted.observe(viewLifecycleOwner) {
             view?.announceForAccessibility(getString(R.string.new_site_creation_preview_title))
-            listener.onProgressCompleted(it)
-        }
-    }
-
-    private fun observeDismissClicks(listener: ProgressScreenListener) {
-        viewModel.onCancelWizardClicked.observe(viewLifecycleOwner) { createSiteState ->
-            createSiteState?.let { listener.onProgressStopped(it) }
         }
     }
 
