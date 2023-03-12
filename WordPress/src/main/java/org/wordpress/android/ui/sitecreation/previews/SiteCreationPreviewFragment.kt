@@ -28,7 +28,6 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SiteP
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewWebErrorUiState
-import org.wordpress.android.ui.sitecreation.SiteCreationResult
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener
 import org.wordpress.android.util.URLFilteredWebViewClient
@@ -36,7 +35,6 @@ import org.wordpress.android.widgets.NestedWebView
 import javax.inject.Inject
 
 private const val ARG_STATE = "arg_site_creation_state"
-private const val ARG_RESULT = "arg_site_creation_result"
 private const val SLIDE_IN_ANIMATION_DURATION = 450L
 
 @AndroidEntryPoint
@@ -70,10 +68,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private fun init() {
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
-        viewModel.start(
-            requireArguments()[ARG_STATE] as SiteCreationState,
-            requireArguments()[ARG_RESULT] as SiteCreationResult,
-        )
+        viewModel.start(requireArguments()[ARG_STATE] as SiteCreationState)
     }
 
     override fun getContentLayout() = R.layout.site_creation_preview_screen
@@ -134,7 +129,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private fun observeDismissClicks(listener: SitePreviewScreenListener) {
         viewModel.onOkButtonClicked.observe(this) { createSiteState ->
-            createSiteState?.let { listener.onPreviewScreenClosed(it) }
+            createSiteState?.let { listener.onPreviewScreenClosed() }
         }
     }
 
@@ -260,12 +255,10 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         fun newInstance(
             screenTitle: String,
             siteCreationState: SiteCreationState,
-            creationResult: SiteCreationResult,
         ) = SiteCreationPreviewFragment().apply {
             arguments = Bundle().apply {
                 putString(EXTRA_SCREEN_TITLE, screenTitle)
                 putParcelable(ARG_STATE, siteCreationState)
-                putParcelable(ARG_RESULT, creationResult)
             }
         }
     }
