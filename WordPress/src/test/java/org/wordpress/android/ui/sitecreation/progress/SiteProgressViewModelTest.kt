@@ -53,13 +53,13 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 
-private const val url = "test.wordpress.com"
+private const val siteUrl = "test.wordpress.com"
 private const val siteRemoteId = 1L
 private val siteNotInLocalDb = SiteNotInLocalDb(siteRemoteId, false)
-private val successServiceState = SiteCreationServiceState(SUCCESS, Pair(siteRemoteId, url))
+private val successServiceState = SiteCreationServiceState(SUCCESS, Pair(siteRemoteId, siteUrl))
 private val errorServiceState = SiteCreationServiceState(FAILURE, SiteCreationServiceState(CREATE_SITE))
-private val errorResponse = OnSiteChanged(1)
-private val successResponse = OnSiteChanged(0).apply { error = SiteError(SiteErrorType.GENERIC_ERROR) }
+private val successResponse = OnSiteChanged(1)
+private val errorResponse = OnSiteChanged(0).apply { error = SiteError(SiteErrorType.GENERIC_ERROR) }
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -100,8 +100,8 @@ class SiteProgressViewModelTest : BaseUnitTest() {
         viewModel.onSiteCreationCompleted.observeForever(onSiteCreationCompletedObserver)
 
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
-        whenever(urlUtils.removeScheme(url)).thenReturn(url)
-        whenever(siteStore.getSiteBySiteId(siteRemoteId)).thenReturn(SiteModel().apply { id = 1; url = url })
+        whenever(urlUtils.removeScheme(siteUrl)).thenReturn(siteUrl)
+        whenever(siteStore.getSiteBySiteId(siteRemoteId)).thenReturn(SiteModel().apply { id = 1; url = siteUrl })
     }
 
     @Test
@@ -242,7 +242,7 @@ class SiteProgressViewModelTest : BaseUnitTest() {
             SiteCreationState(
                 segmentId = 1,
                 siteDesign = defaultTemplateSlug,
-                domain = DomainModel(url, true, "", 1)
+                domain = DomainModel(siteUrl, true, "", 1)
             ),
             bundle.apply {
                 restoredState?.let { whenever(getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE)) doReturn it }
