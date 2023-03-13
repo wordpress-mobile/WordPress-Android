@@ -16,7 +16,8 @@
         android:gravity="center"
         android:orientation="vertical"
         android:paddingStart="@dimen/margin_large"
-        android:paddingEnd="@dimen/margin_large">
+        android:paddingEnd="@dimen/margin_large"
+        tools:ignore="InconsistentLayout">
 
         <include
             android:id="@+id/site_creation_preview_header_item"
