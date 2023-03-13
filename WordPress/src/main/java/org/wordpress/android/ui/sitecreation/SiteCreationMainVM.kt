@@ -65,14 +65,10 @@ sealed interface SiteCreationResult : Parcelable {
     object NotCreated : SiteCreationResult
 
     @Parcelize
-    data class NotInLocalDb(val remoteSiteId: Long, val isSiteTitleTaskComplete: Boolean) : SiteCreationResult
+    data class NotInLocalDb(val remoteId: Long, val isSiteTitleTaskComplete: Boolean) : SiteCreationResult
 
     @Parcelize
-    data class Completed(
-        val localSiteId: Int,
-        val isSiteTitleTaskComplete: Boolean,
-        val url: String,
-    ) : SiteCreationResult
+    data class Completed(val localId: Int, val isSiteTitleTaskComplete: Boolean, val url: String) : SiteCreationResult
 }
 
 @HiltViewModel
