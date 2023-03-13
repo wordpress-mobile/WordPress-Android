@@ -192,7 +192,8 @@ class SiteStoreTest {
                         payload.visibility,
                         null,
                         null,
-                        payload.dryRun
+                        payload.dryRun,
+                        payload.additionalOptions
                 )
         ).thenReturn(response)
 
@@ -218,7 +219,8 @@ class SiteStoreTest {
                         payload.visibility,
                         null,
                         null,
-                        payload.dryRun
+                        payload.dryRun,
+                        payload.additionalOptions
                 )
         ).thenReturn(response)
 

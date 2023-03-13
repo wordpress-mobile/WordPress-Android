@@ -208,7 +208,8 @@ class SiteRestClientTest {
             visibility,
             segmentId,
             siteDesign,
-            dryRun
+            dryRun,
+            emptyMap()
         )
 
         assertThat(result.newSiteRemoteId).isEqualTo(siteId)
@@ -264,7 +265,8 @@ class SiteRestClientTest {
             visibility,
             segmentId,
             siteDesign,
-            dryRun
+            dryRun,
+            emptyMap()
         )
 
         assertThat(result.newSiteRemoteId).isEqualTo(siteId)
@@ -322,7 +324,8 @@ class SiteRestClientTest {
             visibility,
             segmentId,
             siteDesign,
-            dryRun
+            dryRun,
+            emptyMap()
         )
 
         assertThat(result.newSiteRemoteId).isEqualTo(siteId)
@@ -377,7 +380,8 @@ class SiteRestClientTest {
             visibility,
             null,
             null,
-            dryRun
+            dryRun,
+            emptyMap()
         )
 
         assertThat(result.newSiteRemoteId).isEqualTo(siteId)
