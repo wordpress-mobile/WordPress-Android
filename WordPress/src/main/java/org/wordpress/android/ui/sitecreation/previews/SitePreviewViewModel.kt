@@ -82,6 +82,16 @@ class SitePreviewViewModel @Inject constructor(
         startPreLoadingWebView()
     }
 
+    private fun fetchSite() {
+        (result as? NotInLocalDb)?.let {
+            launch {
+                fetchNewlyCreatedSiteModel(it.remoteSiteId)?.let { fetchResult ->
+                    result = fetchResult
+                }
+            }
+        } ?: AppLog.e(T.SITE_CREATION, "type of siteCreationResult should be NotInLocalDb before fetching")
+    }
+
     fun onOkButtonClicked() {
         tracker.trackPreviewOkButtonTapped()
         _onOkButtonClicked.postValue(result)
@@ -110,16 +120,6 @@ class SitePreviewViewModel @Inject constructor(
             AppLog.v(T.SITE_CREATION, "Site preview will load for url: $urlToLoad")
             _preloadPreview.postValue(urlToLoad)
         }
-    }
-
-    private fun fetchSite() {
-        (result as? NotInLocalDb)?.let {
-            launch {
-                fetchNewlyCreatedSiteModel(it.remoteSiteId)?.let { fetchResult ->
-                    result = fetchResult
-                }
-            }
-        } ?: AppLog.e(T.SITE_CREATION, "type of siteCreationResult should be NotInLocalDb before fetching")
     }
 
     /**
