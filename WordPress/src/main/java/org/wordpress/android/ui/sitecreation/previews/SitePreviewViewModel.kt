@@ -41,7 +41,9 @@ class SitePreviewViewModel @Inject constructor(
     private var isStarted = false
     private var webviewFullyLoadedTracked = false
 
-    private lateinit var siteCreationState: SiteCreationState
+    private var siteTitle: String? = null
+    private var siteDesign: String? = null
+    private lateinit var result: SiteCreationResult
     private var urlWithoutScheme: String? = null
 
     private val _uiState: MutableLiveData<SitePreviewUiState> = MutableLiveData()
@@ -61,8 +63,10 @@ class SitePreviewViewModel @Inject constructor(
     fun start(siteCreationState: SiteCreationState) {
         if (isStarted) return
         isStarted = true
-        this.siteCreationState = siteCreationState
-        this.urlWithoutScheme = siteCreationState.domain?.domainName
+        siteDesign = siteCreationState.siteDesign
+        urlWithoutScheme = siteCreationState.domain?.domainName
+        siteTitle = siteCreationState.siteName
+        result = siteCreationState.result
         startPreLoadingWebView()
     }
 
@@ -72,7 +76,7 @@ class SitePreviewViewModel @Inject constructor(
     }
 
     private fun startPreLoadingWebView() {
-        tracker.trackPreviewLoading(siteCreationState.siteDesign)
+        tracker.trackPreviewLoading(siteDesign)
         launch {
             /**
              * If the webview is still not loaded after some delay, we'll show the loading shimmer animation instead
@@ -80,7 +84,7 @@ class SitePreviewViewModel @Inject constructor(
              */
             withContext(mainDispatcher) {
                 if (uiState.value !is SitePreviewContentUiState) {
-                    tracker.trackPreviewWebviewShown(siteCreationState.siteDesign)
+                    tracker.trackPreviewWebviewShown(siteDesign)
                     updateUiState(SitePreviewLoadingShimmerState(createSitePreviewData()))
                 }
             }
@@ -99,7 +103,7 @@ class SitePreviewViewModel @Inject constructor(
     fun onUrlLoaded() {
         if (!webviewFullyLoadedTracked) {
             webviewFullyLoadedTracked = true
-            tracker.trackPreviewWebviewFullyLoaded(siteCreationState.siteDesign)
+            tracker.trackPreviewWebviewFullyLoaded(siteDesign)
         }
         /**
          * Update the ui state if the loading or error screen is being shown.
