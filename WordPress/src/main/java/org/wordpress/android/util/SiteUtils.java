@@ -368,16 +368,6 @@ public class SiteUtils {
         return site.getPlanId() == PlansConstants.FREE_PLAN_ID;
     }
 
-    public static boolean hasSiteWithPaidPlan(SiteStore siteStore) {
-        for (SiteModel site : siteStore.getSites()) {
-            if (site.getPlanId() != 0 && !site.getHasFreePlan()) {
-                // The plan id is 0 if a self-hosted site is added without logging in.
-                return true;
-            }
-        }
-        return false;
-    }
-
     public static boolean onBloggerPlan(@NonNull SiteModel site) {
         return site.getPlanId() == PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
                || site.getPlanId() == PlansConstants.BLOGGER_PLAN_TWO_YEARS_ID;
