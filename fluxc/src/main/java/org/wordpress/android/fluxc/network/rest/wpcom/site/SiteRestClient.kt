@@ -213,7 +213,8 @@ class SiteRestClient @Inject constructor(
         visibility: SiteVisibility,
         segmentId: Long?,
         siteDesign: String?,
-        dryRun: Boolean
+        dryRun: Boolean,
+        additionalOptions: Map<String, String>
     ): NewSiteResponsePayload {
         val url = WPCOMREST.sites.new_.urlV1_1
         val body = mutableMapOf<String, Any>()
@@ -243,6 +244,8 @@ class SiteRestClient @Inject constructor(
         if (timeZoneId != null) {
             options["timezone_string"] = timeZoneId
         }
+
+        options += additionalOptions
 
         // Add site options if available
         if (options.isNotEmpty()) {
