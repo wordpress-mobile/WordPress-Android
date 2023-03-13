@@ -53,13 +53,13 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 
-private const val siteUrl = "test.wordpress.com"
-private const val siteRemoteId = 1L
-private val siteNotInLocalDb = NotInLocalDb(siteRemoteId, false)
-private val successServiceState = SiteCreationServiceState(SUCCESS, Pair(siteRemoteId, siteUrl))
-private val errorServiceState = SiteCreationServiceState(FAILURE, SiteCreationServiceState(CREATE_SITE))
-private val successResponse = OnSiteChanged(1)
-private val errorResponse = OnSiteChanged(0).apply { error = SiteError(SiteErrorType.GENERIC_ERROR) }
+private const val URL = "test.wordpress.com"
+private const val SITE_REMOTE_ID = 1L
+private val RESULT_NOT_IN_LOCAL_DB = NotInLocalDb(SITE_REMOTE_ID, false)
+private val SUCCESS_SERVICE_STATE = SiteCreationServiceState(SUCCESS, Pair(SITE_REMOTE_ID, URL))
+private val ERROR_SERVICE_STATE = SiteCreationServiceState(FAILURE, SiteCreationServiceState(CREATE_SITE))
+private val SUCCESS_RESPONSE = OnSiteChanged(1)
+private val ERROR_RESPONSE = OnSiteChanged(0).apply { error = SiteError(SiteErrorType.GENERIC_ERROR) }
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -100,8 +100,8 @@ class SiteProgressViewModelTest : BaseUnitTest() {
         viewModel.onSiteCreationCompleted.observeForever(onSiteCreationCompletedObserver)
 
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
-        whenever(urlUtils.removeScheme(siteUrl)).thenReturn(siteUrl)
-        whenever(siteStore.getSiteBySiteId(siteRemoteId)).thenReturn(SiteModel().apply { id = 1; url = siteUrl })
+        whenever(urlUtils.removeScheme(URL)).thenReturn(URL)
+        whenever(siteStore.getSiteBySiteId(SITE_REMOTE_ID)).thenReturn(SiteModel().apply { id = 1; url = URL })
     }
 
     @Test
@@ -111,14 +111,14 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on start shows progress when restoring SiteNotCreated`() = testWith(successResponse) {
+    fun `on start shows progress when restoring SiteNotCreated`() = testWith(SUCCESS_RESPONSE) {
         startViewModel(NotCreated)
         assertIs<SiteProgressUiState>(viewModel.uiState.value)
     }
 
     @Test
-    fun `on start shows progress when restoring SiteNotInLocalDb`() = testWith(errorResponse) {
-        startViewModel(siteNotInLocalDb)
+    fun `on start shows progress when restoring SiteNotInLocalDb`() = testWith(ERROR_RESPONSE) {
+        startViewModel(RESULT_NOT_IN_LOCAL_DB)
         assertIs<Loading>(viewModel.uiState.value)
     }
 
@@ -143,9 +143,9 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on start fetches site by remote id when restoring SiteNotInLocalDb`() = testWith(successResponse) {
-        startViewModel(siteNotInLocalDb)
-        verify(fetchWpComSiteUseCase).fetchSiteWithRetry(siteRemoteId)
+    fun `on start fetches site by remote id when restoring SiteNotInLocalDb`() = testWith(SUCCESS_RESPONSE) {
+        startViewModel(RESULT_NOT_IN_LOCAL_DB)
+        verify(fetchWpComSiteUseCase).fetchSiteWithRetry(SITE_REMOTE_ID)
     }
 
     @Test
@@ -175,9 +175,9 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     @Test
     fun `on retry click emits service event with the previous result`() {
         startViewModel()
-        viewModel.onSiteCreationServiceStateUpdated(errorServiceState)
+        viewModel.onSiteCreationServiceStateUpdated(ERROR_SERVICE_STATE)
         viewModel.retry()
-        assertEquals(viewModel.startCreateSiteService.value?.previousState, errorServiceState.payload)
+        assertEquals(viewModel.startCreateSiteService.value?.previousState, ERROR_SERVICE_STATE.payload)
     }
 
     @Test
@@ -201,24 +201,24 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on service success fetches site by remote id`() = testWith(successResponse) {
+    fun `on service success fetches site by remote id`() = testWith(SUCCESS_RESPONSE) {
         startViewModel()
-        viewModel.onSiteCreationServiceStateUpdated(successServiceState)
-        verify(fetchWpComSiteUseCase).fetchSiteWithRetry(siteRemoteId)
+        viewModel.onSiteCreationServiceStateUpdated(SUCCESS_SERVICE_STATE)
+        verify(fetchWpComSiteUseCase).fetchSiteWithRetry(SITE_REMOTE_ID)
     }
 
     @Test
-    fun `on service success will emit completion event when animations end`() = testWith(successResponse) {
+    fun `on service success will emit completion event when animations end`() = testWith(SUCCESS_RESPONSE) {
         startViewModel()
-        viewModel.onSiteCreationServiceStateUpdated(successServiceState)
+        viewModel.onSiteCreationServiceStateUpdated(SUCCESS_SERVICE_STATE)
         advanceUntilIdle()
         verify(onSiteCreationCompletedObserver).onChanged(any())
     }
 
     @Test
-    fun `on service failure will emit completion event when animations end`() = testWith(errorResponse) {
+    fun `on service failure will emit completion event when animations end`() = testWith(ERROR_RESPONSE) {
         startViewModel()
-        viewModel.onSiteCreationServiceStateUpdated(successServiceState)
+        viewModel.onSiteCreationServiceStateUpdated(SUCCESS_SERVICE_STATE)
         advanceUntilIdle()
         verify(onSiteCreationCompletedObserver).onChanged(any())
     }
@@ -226,14 +226,14 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     @Test
     fun `on service failure shows error`() {
         startViewModel()
-        viewModel.onSiteCreationServiceStateUpdated(errorServiceState)
+        viewModel.onSiteCreationServiceStateUpdated(ERROR_SERVICE_STATE)
         assertIs<GenericError>(viewModel.uiState.value)
     }
 
     // region Helpers
 
     private fun testWith(response: OnSiteChanged, block: suspend CoroutineScope.() -> Unit) = test {
-        whenever(fetchWpComSiteUseCase.fetchSiteWithRetry(siteRemoteId)).thenReturn(response)
+        whenever(fetchWpComSiteUseCase.fetchSiteWithRetry(SITE_REMOTE_ID)).thenReturn(response)
         block()
     }
 
@@ -242,7 +242,7 @@ class SiteProgressViewModelTest : BaseUnitTest() {
             SiteCreationState(
                 segmentId = 1,
                 siteDesign = defaultTemplateSlug,
-                domain = DomainModel(siteUrl, true, "", 1)
+                domain = DomainModel(URL, true, "", 1)
             ),
             bundle.apply {
                 restoredState?.let { whenever(getParcelable<SiteCreationResult>(KEY_CREATE_SITE_STATE)) doReturn it }
