@@ -9,13 +9,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.sitecreation.SiteCreationResult
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotInLocalDb
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewWebErrorUiState
+import org.wordpress.android.ui.sitecreation.services.FetchWpComSiteUseCase
 import org.wordpress.android.ui.sitecreation.usecases.isWordPressComSubDomain
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -25,16 +31,20 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
-const val KEY_CREATE_SITE_STATE = "CREATE_SITE_STATE"
-const val LOADING_STATE_TEXT_ANIMATION_DELAY = 2000L
-
 @HiltViewModel
 class SitePreviewViewModel @Inject constructor(
+    private val dispatcher: Dispatcher,
+    private val siteStore: SiteStore,
+    private val fetchWpComSiteUseCase: FetchWpComSiteUseCase,
     private val urlUtils: UrlUtilsWrapper,
     private val tracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
+    init {
+        dispatcher.register(fetchWpComSiteUseCase)
+    }
+
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + job
@@ -52,11 +62,12 @@ class SitePreviewViewModel @Inject constructor(
     private val _preloadPreview: MutableLiveData<String> = MutableLiveData()
     val preloadPreview: LiveData<String> = _preloadPreview
 
-    private val _onOkButtonClicked = SingleLiveEvent<Unit>()
-    val onOkButtonClicked: LiveData<Unit> = _onOkButtonClicked
+    private val _onOkButtonClicked = SingleLiveEvent<SiteCreationResult>()
+    val onOkButtonClicked: LiveData<SiteCreationResult> = _onOkButtonClicked
 
     override fun onCleared() {
         super.onCleared()
+        dispatcher.unregister(fetchWpComSiteUseCase)
         job.cancel()
     }
 
@@ -67,12 +78,13 @@ class SitePreviewViewModel @Inject constructor(
         urlWithoutScheme = siteCreationState.domain?.domainName
         siteTitle = siteCreationState.siteName
         result = siteCreationState.result
+        fetchSite()
         startPreLoadingWebView()
     }
 
     fun onOkButtonClicked() {
         tracker.trackPreviewOkButtonTapped()
-        _onOkButtonClicked.call()
+        _onOkButtonClicked.postValue(result)
     }
 
     private fun startPreLoadingWebView() {
@@ -97,6 +109,31 @@ class SitePreviewViewModel @Inject constructor(
             )
             AppLog.v(T.SITE_CREATION, "Site preview will load for url: $urlToLoad")
             _preloadPreview.postValue(urlToLoad)
+        }
+    }
+
+    private fun fetchSite() {
+        (result as? NotInLocalDb)?.let {
+            launch {
+                fetchNewlyCreatedSiteModel(it.remoteSiteId)?.let { fetchResult ->
+                    result = fetchResult
+                }
+            }
+        } ?: AppLog.e(T.SITE_CREATION, "type of siteCreationResult should be NotInLocalDb before fetching")
+    }
+
+    /**
+     * Fetch newly created site model - supports retry with linear backoff.
+     */
+    private suspend fun fetchNewlyCreatedSiteModel(remoteSiteId: Long): SiteCreationResult? {
+        val onSiteFetched = fetchWpComSiteUseCase.fetchSiteWithRetry(remoteSiteId)
+        return if (!onSiteFetched.isError) {
+            val siteBySiteId = requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
+                "Site successfully fetched but has not been found in the local db."
+            }
+            Completed(siteBySiteId.id, !siteTitle.isNullOrBlank(), siteBySiteId.url)
+        } else {
+            null
         }
     }
 
