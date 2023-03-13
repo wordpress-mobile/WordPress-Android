@@ -22,8 +22,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.ui.sitecreation.ERROR_RESPONSE
-import org.wordpress.android.ui.sitecreation.RESULT_COMPLETED
-import org.wordpress.android.ui.sitecreation.RESULT_NOT_IN_LOCAL_DB
 import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE
 import org.wordpress.android.ui.sitecreation.SITE_REMOTE_ID
 import org.wordpress.android.ui.sitecreation.SUB_DOMAIN
@@ -85,13 +83,13 @@ class SitePreviewViewModelTest : BaseUnitTest() {
 
     @Test
     fun `on start fetches site by remote id`() = testWith(SUCCESS_RESPONSE) {
-        startViewModel(SITE_CREATION_STATE.copy(result = RESULT_NOT_IN_LOCAL_DB))
+        startViewModel()
         verify(fetchWpComSiteUseCase).fetchSiteWithRetry(SITE_REMOTE_ID)
     }
 
     @Test
     fun `on start does not show preview when fetching fails`() = testWith(ERROR_RESPONSE) {
-        startViewModel(SITE_CREATION_STATE.copy(result = RESULT_NOT_IN_LOCAL_DB))
+        startViewModel()
         verify(siteStore, never()).getSiteBySiteId(SITE_REMOTE_ID)
         viewModel.onOkButtonClicked()
         verify(uiStateObserver, never()).onChanged(isA<SitePreviewContentUiState>())
@@ -123,7 +121,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
 
     @Test
     fun `on start preloads the preview when result is Completed`() {
-        startViewModel(SITE_CREATION_STATE.copy(result = RESULT_COMPLETED))
+        startViewModel(SITE_CREATION_STATE)
         assertThat(viewModel.preloadPreview.value).isEqualTo(URL)
     }
 
