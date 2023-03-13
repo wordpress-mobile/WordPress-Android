@@ -41,9 +41,6 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     private lateinit var uiStateObserver: Observer<SitePreviewUiState>
 
     @Mock
-    private lateinit var onHelpedClickedObserver: Observer<Unit>
-
-    @Mock
     private lateinit var onOkClickedObserver: Observer<Unit>
 
     @Mock
@@ -60,7 +57,6 @@ class SitePreviewViewModelTest : BaseUnitTest() {
             testDispatcher()
         )
         viewModel.uiState.observeForever(uiStateObserver)
-        viewModel.onHelpClicked.observeForever(onHelpedClickedObserver)
         viewModel.onOkButtonClicked.observeForever(onOkClickedObserver)
         viewModel.preloadPreview.observeForever(preloadPreviewObserver)
         whenever(urlUtils.extractSubDomain(URL)).thenReturn(SUB_DOMAIN)

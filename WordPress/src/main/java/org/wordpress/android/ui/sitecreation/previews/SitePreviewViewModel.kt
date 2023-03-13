@@ -50,9 +50,6 @@ class SitePreviewViewModel @Inject constructor(
     private val _preloadPreview: MutableLiveData<String> = MutableLiveData()
     val preloadPreview: LiveData<String> = _preloadPreview
 
-    private val _onHelpClicked = SingleLiveEvent<Unit>()
-    val onHelpClicked: LiveData<Unit> = _onHelpClicked
-
     private val _onOkButtonClicked = SingleLiveEvent<Unit>()
     val onOkButtonClicked: LiveData<Unit> = _onOkButtonClicked
 
@@ -68,8 +65,6 @@ class SitePreviewViewModel @Inject constructor(
         this.urlWithoutScheme = siteCreationState.domain?.domainName
         startPreLoadingWebView()
     }
-
-    fun onHelpClicked() = _onHelpClicked.call()
 
     fun onOkButtonClicked() {
         tracker.trackPreviewOkButtonTapped()
