@@ -103,10 +103,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private fun observeVMState() {
         mainViewModel.navigationTargetObservable
             .observe(this, Observer { target -> target?.let { showStep(target) } })
-        mainViewModel.wizardFinishedObservable.observe(this, Observer { createSiteState ->
-            createSiteState?.let {
+        mainViewModel.wizardFinishedObservable.observe(this, Observer { result ->
+            result?.run {
                 val intent = Intent()
-                val (siteCreated, localSiteId, titleTaskComplete) = when (createSiteState) {
+                val (siteCreated, localSiteId, titleTaskComplete) = when (this@run) {
                     // site creation flow was canceled
                     is NotCreated -> {
                         Triple(false, null, false)
@@ -115,10 +115,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
                         // Site was created, but we haven't been able to fetch it, let `SitePickerActivity` handle
                         // this with a Snackbar message.
                         intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
-                        Triple(true, null, createSiteState.isSiteTitleTaskComplete)
+                        Triple(true, null, isSiteTitleTaskComplete)
                     }
                     is Completed -> {
-                        Triple(true, createSiteState.localSiteId, createSiteState.isSiteTitleTaskComplete)
+                        Triple(true, localId, isSiteTitleTaskComplete)
                     }
                 }
                 intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, localSiteId)
