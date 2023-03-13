@@ -43,6 +43,8 @@ class JetpackFullPluginInstallActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        if (!viewModel.uiState.value.showCloseButton) return
+
         viewModel.onBackPressed()
     }
 

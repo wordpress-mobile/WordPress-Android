@@ -52,6 +52,8 @@ class JetpackRemoteInstallActivity : LocaleAwareActivity() {
     }
 
     override fun onBackPressed() {
+        if (viewModel.liveViewState.value?.showCloseButton == false) return
+
         trackWithSource(
             INSTALL_JETPACK_CANCELLED,
             intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
