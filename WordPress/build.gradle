@@ -439,9 +439,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$androidxComposeLifecycleVersion"
     implementation "io.coil-kt:coil-compose:$coilComposeVersion"
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
-    implementation (group: 'com.zendesk', name: 'support', version: "$zendeskVersion") {
-        exclude group: 'com.google.dagger'
-    }
+    implementation (group: 'com.zendesk', name: 'support', version: "$zendeskVersion")
     implementation (name:'tenor-android-core-jetified', ext:'aar') // Jetified Tenor Gif library
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
