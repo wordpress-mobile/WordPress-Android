@@ -185,7 +185,8 @@ open class SiteStore @Inject constructor(
         @JvmField val visibility: SiteVisibility,
         @JvmField val segmentId: Long? = null,
         @JvmField val siteDesign: String? = null,
-        @JvmField val dryRun: Boolean
+        @JvmField val dryRun: Boolean,
+        @JvmField val additionalOptions: Map<String, String> = emptyMap()
     ) : Payload<BaseNetworkError>() {
         constructor(
             siteName: String?,
@@ -1595,7 +1596,8 @@ open class SiteStore @Inject constructor(
                 payload.visibility,
                 payload.segmentId,
                 payload.siteDesign,
-                payload.dryRun
+                payload.dryRun,
+                payload.additionalOptions
         )
         return handleCreateNewSiteCompleted(
                 payload = result
