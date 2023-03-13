@@ -413,6 +413,7 @@ dependencies {
     implementation "org.greenrobot:eventbus:$eventBusVersion"
     implementation "org.greenrobot:eventbus-java:$eventBusVersion"
     implementation "com.squareup.okio:okio:$squareupOkioVersion"
+    implementation "com.squareup.retrofit2:retrofit:$squareupRetrofitVersion"
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation "com.airbnb.android:lottie-compose:$lottieVersion"
