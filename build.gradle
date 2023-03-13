@@ -78,7 +78,7 @@ ext {
     squareupOkioVersion = '2.8.0'
     squareupRetrofitVersion = '2.9.0'
     uCropVersion = '2.2.4'
-    zendeskVersion = '5.0.2'
+    zendeskVersion = '5.1.1'
 
     // test
     assertjVersion = '3.23.1'
