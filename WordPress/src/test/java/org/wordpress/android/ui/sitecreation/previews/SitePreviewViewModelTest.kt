@@ -29,7 +29,6 @@ import org.wordpress.android.ui.sitecreation.SITE_REMOTE_ID
 import org.wordpress.android.ui.sitecreation.SUB_DOMAIN
 import org.wordpress.android.ui.sitecreation.SUCCESS_RESPONSE
 import org.wordpress.android.ui.sitecreation.SiteCreationResult
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.URL
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
