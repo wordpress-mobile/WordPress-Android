@@ -11,8 +11,6 @@
     <dimen name="me_menu_width">64dp</dimen>
     <dimen name="me_menu_avatar_end_offset">11dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
-    <dimen name="prominent_toolbar_height">112dp</dimen>
-    <dimen name="prominent_toolbar_with_tabs_height">168dp</dimen>
     <dimen name="toolbar_content_offset">72dp</dimen>
     <dimen name="toolbar_content_offset_end">0dp</dimen>
     <dimen name="collapsible_toolbar_expanded_bottom_margin">28dp</dimen>
