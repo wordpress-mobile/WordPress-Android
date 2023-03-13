@@ -19,8 +19,8 @@ import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity.Companion.ARG_STATE
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Error
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Loading
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Loading
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
@@ -41,7 +41,7 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
     private var animatorSet: AnimatorSet? = null
 
     private lateinit var binding: SiteCreationProgressScreenBinding
-    private val viewModel: SiteProgressViewModel by activityViewModels()
+    private val viewModel: SiteCreationProgressViewModel by activityViewModels()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
