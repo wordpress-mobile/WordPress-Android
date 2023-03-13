@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.sitecreation.progress
 
-import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,9 +13,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.sitecreation.SiteCreationResult
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotInLocalDb
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
@@ -33,13 +29,11 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.S
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
-const val KEY_RESULT = "KEY_RESULT"
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
 const val LOADING_STATE_TEXT_ANIMATION_DELAY = 2000L
 private const val ERROR_CONTEXT = "site_preview"
@@ -54,7 +48,6 @@ private val loadingTexts = listOf(
 @HiltViewModel
 class SiteProgressViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
-    private val urlUtils: UrlUtilsWrapper,
     private val tracker: SiteCreationTracker,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
@@ -64,7 +57,6 @@ class SiteProgressViewModel @Inject constructor(
     private var loadingAnimationJob: Job? = null
 
     private lateinit var siteCreationState: SiteCreationState
-    private lateinit var result: SiteCreationResult
 
     private var urlWithoutScheme: String? = null
     private var siteTitle: String? = null
@@ -80,11 +72,11 @@ class SiteProgressViewModel @Inject constructor(
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
-    private val _onCancelWizardClicked = SingleLiveEvent<SiteCreationResult>()
-    val onCancelWizardClicked: LiveData<SiteCreationResult> = _onCancelWizardClicked
+    private val _onCancelWizardClicked = SingleLiveEvent<Unit>()
+    val onCancelWizardClicked: LiveData<Unit> = _onCancelWizardClicked
 
-    private val _onSiteCreationCompleted = SingleLiveEvent<SiteCreationResult>()
-    val onSiteCreationCompleted: LiveData<SiteCreationResult> = _onSiteCreationCompleted
+    private val _onRemoteSiteCreated = SingleLiveEvent<Long>()
+    val onRemoteSiteCreated: LiveData<Long> = _onRemoteSiteCreated
 
     override fun onCleared() {
         super.onCleared()
@@ -92,28 +84,15 @@ class SiteProgressViewModel @Inject constructor(
         loadingAnimationJob?.cancel()
     }
 
-    fun writeToBundle(outState: Bundle) = outState.putParcelable(KEY_RESULT, result)
-
-    fun start(siteCreationState: SiteCreationState, savedState: Bundle?) {
+    fun start(siteCreationState: SiteCreationState) {
         if (isStarted) return
         isStarted = true
         this.siteCreationState = siteCreationState
         urlWithoutScheme = siteCreationState.domain?.domainName
         siteTitle = siteCreationState.siteName
 
-        val restoredResult = savedState?.getParcelable<SiteCreationResult>(KEY_RESULT)
-        result = restoredResult ?: NotCreated
-        when (result) {
-            NotCreated -> {
-                runLoadingAnimationUi()
-                startCreateSiteService()
-            }
-            is NotInLocalDb -> {
-                runLoadingAnimationUi()
-                _onSiteCreationCompleted.postValue(result)
-            }
-            else -> Unit
-        }
+        runLoadingAnimationUi()
+        startCreateSiteService()
     }
 
     private fun startCreateSiteService(previousState: SiteCreationServiceState? = null) {
@@ -142,9 +121,7 @@ class SiteProgressViewModel @Inject constructor(
 
     fun onHelpClicked() = _onHelpClicked.call()
 
-    fun onCancelWizardClicked() {
-        _onCancelWizardClicked.value = result
-    }
+    fun onCancelWizardClicked() = _onCancelWizardClicked.call()
 
     private fun showFullscreenErrorWithDelay() {
         runLoadingAnimationUi()
@@ -172,9 +149,7 @@ class SiteProgressViewModel @Inject constructor(
             IDLE, CREATE_SITE -> Unit
             SUCCESS -> {
                 val remoteSiteId = (event.payload as Pair<*, *>).first as Long
-                urlWithoutScheme = urlUtils.removeScheme(event.payload.second as String).trimEnd('/')
-                result = NotInLocalDb(remoteSiteId, !siteTitle.isNullOrBlank())
-                _onSiteCreationCompleted.postValue(result)
+                _onRemoteSiteCreated.postValue(remoteSiteId)
             }
             FAILURE -> {
                 serviceStateForRetry = event.payload as SiteCreationServiceState

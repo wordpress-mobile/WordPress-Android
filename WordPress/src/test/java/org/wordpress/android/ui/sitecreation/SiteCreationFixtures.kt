@@ -16,10 +16,15 @@ const val SUB_DOMAIN = "test"
 const val URL = "$SUB_DOMAIN.wordpress.com"
 val DOMAIN = DomainModel(URL, true, "", 1)
 
-val SITE_CREATION_STATE = SiteCreationState(segmentId = 1, siteDesign = defaultTemplateSlug, domain = DOMAIN)
-
 const val SITE_REMOTE_ID = 1L
 private const val SITE_LOCAL_ID = 1
+
+val SITE_CREATION_STATE = SiteCreationState(
+    segmentId = 1,
+    siteDesign = defaultTemplateSlug,
+    domain = DOMAIN,
+    remoteSiteId = SITE_REMOTE_ID,
+)
 
 val SUCCESS_RESPONSE = OnSiteChanged(1)
 val ERROR_RESPONSE = OnSiteChanged(0).apply { error = SiteError(GENERIC_ERROR) }

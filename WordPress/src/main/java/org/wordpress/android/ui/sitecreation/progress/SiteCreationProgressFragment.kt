@@ -56,12 +56,6 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
         }
     }
 
-    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        init(savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -72,13 +66,9 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
             fullscreenErrorWithRetry.setOnClickListeners()
         }
 
-        init(savedInstanceState)
-    }
-
-    private fun init(savedInstanceState: Bundle?) {
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
-        viewModel.start(requireArguments()[ARG_STATE] as SiteCreationState, savedInstanceState)
+        viewModel.start(requireArguments()[ARG_STATE] as SiteCreationState)
     }
 
     private fun SiteCreationProgressScreenBinding.observeState() {
@@ -100,7 +90,7 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
                 SiteCreationService.createSite(requireNotNull(activity), it.previousState, it.serviceData)
             }
         }
-        viewModel.onSiteCreationCompleted.observe(viewLifecycleOwner) {
+        viewModel.onRemoteSiteCreated.observe(viewLifecycleOwner) {
             view?.announceForAccessibility(getString(R.string.new_site_creation_preview_title))
         }
     }
@@ -175,11 +165,6 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
     override fun onResume() {
         super.onResume()
         serviceEventConnection = ServiceEventConnection(context, SiteCreationService::class.java, viewModel)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        viewModel.writeToBundle(outState)
     }
 
     override fun onPause() {

@@ -108,17 +108,18 @@ class SiteCreationActivity : LocaleAwareActivity(),
                 val intent = Intent()
                 val (siteCreated, localSiteId, titleTaskComplete) = when (createSiteState) {
                     // site creation flow was canceled
-                    is NotCreated -> Triple(false, null, false)
+                    is NotCreated -> {
+                        Triple(false, null, false)
+                    }
                     is NotInLocalDb -> {
                         // Site was created, but we haven't been able to fetch it, let `SitePickerActivity` handle
                         // this with a Snackbar message.
                         intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
                         Triple(true, null, createSiteState.isSiteTitleTaskComplete)
                     }
-                    is Completed -> Triple(
-                        true, createSiteState.localSiteId,
-                        createSiteState.isSiteTitleTaskComplete
-                    )
+                    is Completed -> {
+                        Triple(true, createSiteState.localSiteId, createSiteState.isSiteTitleTaskComplete)
+                    }
                 }
                 intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, localSiteId)
                 intent.putExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, titleTaskComplete)
@@ -162,14 +163,14 @@ class SiteCreationActivity : LocaleAwareActivity(),
         hppViewModel.onDesignActionPressed.observe(this, Observer { design ->
             mainViewModel.onSiteDesignSelected(design.template)
         })
-        progressViewModel.onCancelWizardClicked.observe(this) { result ->
-            mainViewModel.onProgressOrPreviewFinished(result)
+        progressViewModel.onCancelWizardClicked.observe(this) {
+            mainViewModel.onWizardCancelled()
         }
-        progressViewModel.onSiteCreationCompleted.observe(this) { result ->
-            mainViewModel.onSiteCreationCompleted(result)
+        progressViewModel.onRemoteSiteCreated.observe(this) { remoteSiteId ->
+            mainViewModel.onProgressScreenFinished(remoteSiteId)
         }
         previewViewModel.onOkButtonClicked.observe(this) { result ->
-            mainViewModel.onProgressOrPreviewFinished(result)
+            mainViewModel.onWizardFinished(result)
         }
         observeOverlayEvents()
     }

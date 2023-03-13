@@ -53,8 +53,10 @@ class SitePreviewViewModel @Inject constructor(
 
     private var siteTitle: String? = null
     private var siteDesign: String? = null
-    private lateinit var result: SiteCreationResult
+    private var remoteSiteId: Long = 0
     private var urlWithoutScheme: String? = null
+
+    private lateinit var result: SiteCreationResult
 
     private val _uiState: MutableLiveData<SitePreviewUiState> = MutableLiveData()
     val uiState: LiveData<SitePreviewUiState> = _uiState
@@ -75,21 +77,13 @@ class SitePreviewViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
         siteDesign = siteCreationState.siteDesign
-        urlWithoutScheme = siteCreationState.domain?.domainName
+        urlWithoutScheme = requireNotNull(siteCreationState.domain) { "domain required for preview" }.domainName
         siteTitle = siteCreationState.siteName
-        result = siteCreationState.result
-        fetchSite()
+        remoteSiteId = requireNotNull(siteCreationState.remoteSiteId) { "remoteSiteId required for preview" }
+        launch {
+            result = fetchNewlyCreatedSiteModel(remoteSiteId)
+        }
         startPreLoadingWebView()
-    }
-
-    private fun fetchSite() {
-        (result as? NotInLocalDb)?.let {
-            launch {
-                fetchNewlyCreatedSiteModel(it.remoteSiteId)?.let { fetchResult ->
-                    result = fetchResult
-                }
-            }
-        } ?: AppLog.e(T.SITE_CREATION, "type of siteCreationResult should be NotInLocalDb before fetching")
     }
 
     fun onOkButtonClicked() {
@@ -125,15 +119,16 @@ class SitePreviewViewModel @Inject constructor(
     /**
      * Fetch newly created site model - supports retry with linear backoff.
      */
-    private suspend fun fetchNewlyCreatedSiteModel(remoteSiteId: Long): SiteCreationResult? {
+    private suspend fun fetchNewlyCreatedSiteModel(remoteSiteId: Long): SiteCreationResult {
         val onSiteFetched = fetchWpComSiteUseCase.fetchSiteWithRetry(remoteSiteId)
+        val isSiteTitleTaskComplete = !siteTitle.isNullOrBlank()
         return if (!onSiteFetched.isError) {
             val siteBySiteId = requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
                 "Site successfully fetched but has not been found in the local db."
             }
-            Completed(siteBySiteId.id, !siteTitle.isNullOrBlank(), siteBySiteId.url)
+            Completed(siteBySiteId.id, isSiteTitleTaskComplete, siteBySiteId.url)
         } else {
-            null
+            NotInLocalDb(remoteSiteId, isSiteTitleTaskComplete)
         }
     }
 

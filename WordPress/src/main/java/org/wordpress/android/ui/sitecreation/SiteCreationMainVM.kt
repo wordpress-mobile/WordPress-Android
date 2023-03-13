@@ -54,6 +54,7 @@ data class SiteCreationState(
     val segmentId: Long? = null,
     val siteDesign: String? = null,
     val domain: DomainModel? = null,
+    val remoteSiteId: Long? = null,
     val result: SiteCreationResult = NotCreated,
 ) : WizardState, Parcelable
 
@@ -263,9 +264,18 @@ class SiteCreationMainVM @Inject constructor(
         }
     }
 
-    fun onSiteCreationCompleted(result: SiteCreationResult) {
-        siteCreationState = siteCreationState.copy(result = result)
+    fun onProgressScreenFinished(remoteSiteId: Long) {
+        siteCreationState = siteCreationState.copy(remoteSiteId = remoteSiteId)
         wizardManager.showNextStep()
+    }
+
+    fun onWizardCancelled() {
+        _wizardFinishedObservable.value = NotCreated
+    }
+
+    fun onWizardFinished(result: SiteCreationResult) {
+        siteCreationState = siteCreationState.copy(result = result)
+        _wizardFinishedObservable.value = result
     }
 
     /**
@@ -276,10 +286,6 @@ class SiteCreationMainVM @Inject constructor(
             tracker.trackFlowExited()
         }
         _exitFlowObservable.call()
-    }
-
-    fun onProgressOrPreviewFinished(result: SiteCreationResult? = null) {
-        _wizardFinishedObservable.value = result ?: siteCreationState.result
     }
 
     fun onPositiveDialogButtonClicked(instanceTag: String) {
