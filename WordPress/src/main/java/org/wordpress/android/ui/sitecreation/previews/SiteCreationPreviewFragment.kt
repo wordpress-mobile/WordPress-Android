@@ -20,11 +20,9 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteCreationFormScreenBinding
 import org.wordpress.android.databinding.SiteCreationPreviewScreenBinding
 import org.wordpress.android.databinding.SiteCreationPreviewScreenDefaultBinding
-import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity.Companion.ARG_STATE
 import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.SiteCreationState
-import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewData
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
@@ -47,11 +45,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private lateinit var binding: SiteCreationPreviewScreenBinding
     private val viewModel: SitePreviewViewModel by activityViewModels()
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        check(context is OnHelpClickedListener) { "Parent activity must implement OnHelpClickedListener." }
-    }
 
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -84,7 +77,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         binding.siteCreationPreviewScreenDefault.run {
             observeState()
             observePreview(siteCreationPreviewWebViewContainer.sitePreviewWebView)
-            observeHelpClicks(requireActivity() as OnHelpClickedListener)
             okButton.setOnClickListener { viewModel.onOkButtonClicked() }
         }
     }
@@ -116,10 +108,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 webView.loadUrl(urlString)
             }
         }
-    }
-
-    private fun observeHelpClicks(listener: OnHelpClickedListener) {
-        viewModel.onHelpClicked.observe(this) { listener.onHelpClicked(Origin.SITE_CREATION_CREATED) }
     }
 
     private fun SiteCreationPreviewScreenDefaultBinding.updateContentLayout(
@@ -176,7 +164,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     override fun onWebViewReceivedError() = viewModel.onWebViewError()
 
-    override fun onHelp() = viewModel.onHelpClicked()
+    override fun onHelp() = Unit // noop
 
     private fun SiteCreationPreviewScreenDefaultBinding.animateContentTransition() {
         contentLayout.addOnLayoutChangeListener(
