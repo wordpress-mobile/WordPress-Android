@@ -89,14 +89,14 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on start changes the loading text with delayed animation`() = test {
+    fun `on start changes the loading text with animation after delay`() = test {
         startViewModel()
         advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
         verify(uiStateObserver).onChanged(check<Loading> { it.animate })
     }
 
     @Test
-    fun `on start changes the loading text with delayed animation only 4 times`() = test {
+    fun `on start changes the loading text with animation after delay 4 times`() = test {
         startViewModel()
         val captor = argumentCaptor<Loading>()
         (1..9).forEach {
