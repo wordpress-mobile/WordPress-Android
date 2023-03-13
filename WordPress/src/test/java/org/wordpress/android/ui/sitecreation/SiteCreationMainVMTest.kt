@@ -32,7 +32,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
-import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
@@ -44,10 +43,8 @@ import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 
-private const val LOCAL_SITE_ID = 1
 private const val SEGMENT_ID = 1L
 private const val VERTICAL = "Test Vertical"
-private val DOMAIN = DomainModel("test.domain.com", true, "$0", 1)
 private const val STEP_COUNT = 20
 private const val FIRST_STEP_INDEX = 1
 private const val LAST_STEP_INDEX = STEP_COUNT
@@ -139,19 +136,17 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
     @Test
     fun `on preview emits completion result to wizardFinishedObservable`() {
-        val result = SiteCreationResult.Completed(LOCAL_SITE_ID, false, DOMAIN.domainName)
-        viewModel.onSiteCreationCompleted(result)
+        viewModel.onSiteCreationCompleted(RESULT_COMPLETED)
 
         viewModel.onProgressOrPreviewFinished()
 
-        verify(wizardFinishedObserver).onChanged(eq(result))
+        verify(wizardFinishedObserver).onChanged(eq(RESULT_COMPLETED))
     }
 
     @Test
     fun `on progress finished emits result to wizardFinishedObservable`() {
-        val result = SiteCreationResult.Completed(LOCAL_SITE_ID, false, DOMAIN.domainName)
-        viewModel.onProgressOrPreviewFinished(result)
-        verify(wizardFinishedObserver).onChanged(eq(result))
+        viewModel.onProgressOrPreviewFinished(RESULT_COMPLETED)
+        verify(wizardFinishedObserver).onChanged(eq(RESULT_COMPLETED))
     }
 
     @Test
