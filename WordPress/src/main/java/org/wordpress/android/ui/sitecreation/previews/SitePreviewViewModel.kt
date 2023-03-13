@@ -10,6 +10,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -58,9 +59,7 @@ class SitePreviewViewModel @Inject constructor(
     private var webviewFullyLoadedTracked = false
 
     private var siteDesign: String? = null
-    private var siteTitle: String? = null
     private var urlWithoutScheme: String? = null
-    private var remoteSiteId: Long = 0
 
     private lateinit var result: SiteCreationResult
 
@@ -78,13 +77,18 @@ class SitePreviewViewModel @Inject constructor(
         isStarted = true
 
         siteDesign = siteCreationState.siteDesign
-        siteTitle = siteCreationState.siteName
         urlWithoutScheme = requireNotNull(siteCreationState.domain) { "url required for preview" }.domainName
-        remoteSiteId = requireNotNull(siteCreationState.remoteSiteId) { "remoteSiteId required for preview" }
+
+        val remoteSiteId = requireNotNull(siteCreationState.remoteSiteId) { "remoteSiteId required for preview" }
+        val isTitleCustomized = siteCreationState.isSiteTitleStepCompleted()
 
         startPreLoadingWebView()
+
+        result = NotInLocalDb(siteCreationState.remoteSiteId, isTitleCustomized)
         launch {
-            result = fetchNewlyCreatedSiteModel(remoteSiteId)
+            fetchNewlyCreatedSiteModel(remoteSiteId)?.run {
+                result = Completed(id, isTitleCustomized, url)
+            }
         }
     }
 
@@ -121,16 +125,14 @@ class SitePreviewViewModel @Inject constructor(
     /**
      * Fetch newly created site model - supports retry with linear backoff.
      */
-    private suspend fun fetchNewlyCreatedSiteModel(remoteSiteId: Long): SiteCreationResult {
+    private suspend fun fetchNewlyCreatedSiteModel(remoteSiteId: Long): SiteModel? {
         val onSiteFetched = fetchWpComSiteUseCase.fetchSiteWithRetry(remoteSiteId)
-        val isSiteTitleTaskComplete = !siteTitle.isNullOrBlank()
         return if (!onSiteFetched.isError) {
-            val siteBySiteId = requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
+            return requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
                 "Site successfully fetched but has not been found in the local db."
             }
-            Completed(siteBySiteId.id, isSiteTitleTaskComplete, siteBySiteId.url)
         } else {
-            NotInLocalDb(remoteSiteId, isSiteTitleTaskComplete)
+            null
         }
     }
 
