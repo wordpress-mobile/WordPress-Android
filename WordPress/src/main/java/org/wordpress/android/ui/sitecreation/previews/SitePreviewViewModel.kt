@@ -78,16 +78,14 @@ class SitePreviewViewModel @Inject constructor(
 
         siteDesign = siteCreationState.siteDesign
         urlWithoutScheme = requireNotNull(siteCreationState.domain) { "url required for preview" }.domainName
-
-        val remoteSiteId = requireNotNull(siteCreationState.remoteSiteId) { "remoteSiteId required for preview" }
-        val isTitleCustomized = siteCreationState.isSiteTitleStepCompleted()
-
         startPreLoadingWebView()
-
-        result = NotInLocalDb(siteCreationState.remoteSiteId, isTitleCustomized)
-        launch {
-            fetchNewlyCreatedSiteModel(remoteSiteId)?.run {
-                result = Completed(id, isTitleCustomized, url)
+        result = siteCreationState.result.also {
+            if (it is NotInLocalDb) {
+                launch {
+                    fetchNewlyCreatedSiteModel(it.remoteId)?.run {
+                        result = Completed(id, siteCreationState.isSiteTitleStepCompleted(), url)
+                    }
+                }
             }
         }
     }

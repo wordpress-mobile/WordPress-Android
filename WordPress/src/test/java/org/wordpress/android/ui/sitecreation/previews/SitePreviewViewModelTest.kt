@@ -22,10 +22,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.ui.sitecreation.FETCH_ERROR
+import org.wordpress.android.ui.sitecreation.FETCH_SUCCESS
+import org.wordpress.android.ui.sitecreation.RESULT_CREATED
 import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE
 import org.wordpress.android.ui.sitecreation.SITE_REMOTE_ID
 import org.wordpress.android.ui.sitecreation.SUB_DOMAIN
-import org.wordpress.android.ui.sitecreation.FETCH_SUCCESS
 import org.wordpress.android.ui.sitecreation.SiteCreationResult
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.URL
@@ -82,8 +83,8 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on start fetches site by remote id`() = testWith(FETCH_SUCCESS) {
-        startViewModel()
+    fun `on start fetches site by remote id when result is created`() = testWith(FETCH_SUCCESS) {
+        startViewModel(SITE_CREATION_STATE.copy(result = RESULT_CREATED))
         verify(fetchWpComSiteUseCase).fetchSiteWithRetry(SITE_REMOTE_ID)
     }
 
