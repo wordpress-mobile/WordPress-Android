@@ -22,11 +22,11 @@ import org.wordpress.android.ui.sitecreation.SERVICE_SUCCESS
 import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE
 import org.wordpress.android.ui.sitecreation.SITE_REMOTE_ID
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Error.ConnectionError
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Error.GenericError
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Loading
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.StartServiceData
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.ConnectionError
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.GenericError
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Loading
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.StartServiceData
 import org.wordpress.android.util.NetworkUtilsWrapper
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -34,7 +34,7 @@ import kotlin.test.assertNotNull
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class SiteProgressViewModelTest : BaseUnitTest() {
+class SiteCreationProgressViewModelTest : BaseUnitTest() {
     private var networkUtils = mock<NetworkUtilsWrapper>()
     private var tracker = mock<SiteCreationTracker>()
 
@@ -44,11 +44,11 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     private val onCancelWizardClickedObserver = mock<Observer<Unit>>()
     private val onRemoteSiteCreatedObserver = mock<Observer<Long>>()
 
-    private lateinit var viewModel: SiteProgressViewModel
+    private lateinit var viewModel: SiteCreationProgressViewModel
 
     @Before
     fun setUp() {
-        viewModel = SiteProgressViewModel(
+        viewModel = SiteCreationProgressViewModel(
             networkUtils,
             tracker,
             testDispatcher(),

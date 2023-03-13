@@ -17,9 +17,9 @@ import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Error.ConnectionError
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Error.GenericError
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Loading
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.ConnectionError
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.GenericError
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Loading
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.CREATE_SITE
@@ -46,7 +46,7 @@ private val loadingTexts = listOf(
 )
 
 @HiltViewModel
-class SiteProgressViewModel @Inject constructor(
+class SiteCreationProgressViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val tracker: SiteCreationTracker,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher

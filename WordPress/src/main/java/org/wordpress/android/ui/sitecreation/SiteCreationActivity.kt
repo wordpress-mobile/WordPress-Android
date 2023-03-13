@@ -43,7 +43,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressFragment
-import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel
+import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameFragment
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewModel
 import org.wordpress.android.ui.sitecreation.sitename.SiteNameScreenListener
@@ -78,7 +78,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private val siteCreationIntentsViewModel: SiteCreationIntentsViewModel by viewModels()
     private val siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel by viewModels()
     private val jetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel by viewModels()
-    private val progressViewModel: SiteProgressViewModel by viewModels()
+    private val progressViewModel: SiteCreationProgressViewModel by viewModels()
     private val previewViewModel: SitePreviewViewModel by viewModels()
     @Inject
     internal lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
