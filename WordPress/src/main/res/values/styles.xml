@@ -1441,6 +1441,7 @@
         <item name="strokeColor">@color/on_surface_divider</item>
         <item name="strokeWidth">@dimen/unelevated_card_stroke_width</item>
         <item name="contentPadding">@dimen/unelevated_card_stroke_width</item>
+        <item name="cardCornerRadius">@dimen/quick_start_task_card_view_corner_radius</item>
     </style>
 
     <style name="FullScreenDialogFragmentAnimation" parent="@android:style/Theme.Panel">
@@ -1840,7 +1841,7 @@
         <item name="android:paddingStart">@dimen/quick_link_ribbon_padding_start</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
-        <item name="android:fontFamily">serif</item>
+        <item name="android:fontFamily">san-serif</item>
         <item name="android:letterSpacing">0</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">?attr/colorOnSurface</item>

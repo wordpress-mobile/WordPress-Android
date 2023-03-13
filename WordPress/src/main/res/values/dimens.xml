@@ -727,7 +727,7 @@
     <!-- quick link ribbon -->
     <dimen name="quick_link_ribbon_padding_start">18dp</dimen>
     <dimen name="quick_link_ribbon_icon_size">24dp</dimen>
-    <dimen name="quick_link_ribbon_corner_radius">4dp</dimen>
+    <dimen name="quick_link_ribbon_corner_radius">10dp</dimen>
     <dimen name="quick_link_ribbon_icon_padding">16dp</dimen>
 
     <!-- Jetpack Migration Flow -->
