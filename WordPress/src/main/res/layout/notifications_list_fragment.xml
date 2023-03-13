@@ -25,7 +25,7 @@
                 android:id="@+id/toolbar_main"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_height"
-                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:theme="@style/WordPress.ActionBar" />
 
         <com.google.android.material.tabs.TabLayout
