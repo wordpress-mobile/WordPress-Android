@@ -13,7 +13,7 @@ import org.wordpress.android.ui.sitecreation.theme.defaultTemplateSlug
 
 const val SUB_DOMAIN = "test"
 const val URL = "$SUB_DOMAIN.wordpress.com"
-val DOMAIN = DomainModel(URL, true, "", 1)
+val FREE_DOMAIN = DomainModel(URL, true, "", 1)
 
 const val SITE_REMOTE_ID = 1L
 private const val SITE_LOCAL_ID = 1
@@ -21,12 +21,12 @@ private const val SITE_LOCAL_ID = 1
 val SITE_CREATION_STATE = SiteCreationState(
     segmentId = 1,
     siteDesign = defaultTemplateSlug,
-    domain = DOMAIN,
+    domain = FREE_DOMAIN,
     remoteSiteId = SITE_REMOTE_ID,
 )
 
-val SUCCESS_RESPONSE = OnSiteChanged(1)
-val ERROR_RESPONSE = OnSiteChanged(0).apply { error = SiteError(GENERIC_ERROR) }
+val FETCH_SUCCESS = OnSiteChanged(1)
+val FETCH_ERROR = OnSiteChanged(0).apply { error = SiteError(GENERIC_ERROR) }
 
 val RESULT_COMPLETED = Completed(SITE_LOCAL_ID, false, URL)
 

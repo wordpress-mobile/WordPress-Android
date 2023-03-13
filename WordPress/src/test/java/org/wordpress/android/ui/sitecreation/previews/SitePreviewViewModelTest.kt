@@ -21,11 +21,11 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
-import org.wordpress.android.ui.sitecreation.ERROR_RESPONSE
+import org.wordpress.android.ui.sitecreation.FETCH_ERROR
 import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE
 import org.wordpress.android.ui.sitecreation.SITE_REMOTE_ID
 import org.wordpress.android.ui.sitecreation.SUB_DOMAIN
-import org.wordpress.android.ui.sitecreation.SUCCESS_RESPONSE
+import org.wordpress.android.ui.sitecreation.FETCH_SUCCESS
 import org.wordpress.android.ui.sitecreation.SiteCreationResult
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.URL
@@ -82,13 +82,13 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on start fetches site by remote id`() = testWith(SUCCESS_RESPONSE) {
+    fun `on start fetches site by remote id`() = testWith(FETCH_SUCCESS) {
         startViewModel()
         verify(fetchWpComSiteUseCase).fetchSiteWithRetry(SITE_REMOTE_ID)
     }
 
     @Test
-    fun `on start does not show preview when fetching fails`() = testWith(ERROR_RESPONSE) {
+    fun `on start does not show preview when fetching fails`() = testWith(FETCH_ERROR) {
         startViewModel()
         verify(siteStore, never()).getSiteBySiteId(SITE_REMOTE_ID)
         viewModel.onOkButtonClicked()
@@ -126,7 +126,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on ok button click is propagated`() = testWith(SUCCESS_RESPONSE) {
+    fun `on ok button click is propagated`() = testWith(FETCH_SUCCESS) {
         startViewModel()
         viewModel.onOkButtonClicked()
         verify(onOkClickedObserver).onChanged(anyOrNull())
