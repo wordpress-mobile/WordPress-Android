@@ -389,6 +389,7 @@ dependencies {
     implementation "androidx.cardview:cardview:$androidxCardviewVersion"
     implementation "androidx.recyclerview:recyclerview:$androidxRecyclerviewVersion"
     implementation "com.google.android.material:material:$googleMaterialVersion"
+    implementation "com.google.android.flexbox:flexbox:$googleFlexboxlayoutVersion"
     implementation "androidx.percentlayout:percentlayout:$androidxPercentlayoutVersion"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidxSwipeToRefreshVersion"
     implementation "androidx.preference:preference:$androidxPreferenceVersion"
