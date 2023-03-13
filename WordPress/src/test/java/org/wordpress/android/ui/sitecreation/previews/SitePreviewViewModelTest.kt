@@ -128,7 +128,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on ok button click is propagated`() {
+    fun `on ok button click is propagated`() = testWith(SUCCESS_RESPONSE) {
         startViewModel()
         viewModel.onOkButtonClicked()
         verify(onOkClickedObserver).onChanged(anyOrNull())

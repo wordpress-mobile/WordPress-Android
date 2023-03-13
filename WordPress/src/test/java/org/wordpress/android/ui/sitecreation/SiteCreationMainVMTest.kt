@@ -12,7 +12,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
-import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.eq
@@ -135,18 +134,21 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on preview emits completion result to wizardFinishedObservable`() {
-        viewModel.onSiteCreationCompleted(RESULT_COMPLETED)
-
-        viewModel.onProgressOrPreviewFinished()
-
+    fun `on wizard finished is propagated`() {
+        viewModel.onWizardFinished(RESULT_COMPLETED)
         verify(wizardFinishedObserver).onChanged(eq(RESULT_COMPLETED))
     }
 
     @Test
-    fun `on progress finished emits result to wizardFinishedObservable`() {
-        viewModel.onProgressOrPreviewFinished(RESULT_COMPLETED)
-        verify(wizardFinishedObserver).onChanged(eq(RESULT_COMPLETED))
+    fun `on progress screen finished updates state with remote id`() {
+        viewModel.onProgressScreenFinished(SITE_REMOTE_ID)
+        assertThat(currentWizardState(viewModel).remoteSiteId).isEqualTo(SITE_REMOTE_ID)
+    }
+
+    @Test
+    fun `on progress screen finished shows next step`() {
+        viewModel.onProgressScreenFinished(SITE_REMOTE_ID)
+        verify(wizardManager).showNextStep()
     }
 
     @Test
@@ -185,6 +187,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun dialogShownOnBackPressedWhenLastStepAndSiteCreationNotCompleted() {
         whenever(wizardManager.isLastStep()).thenReturn(true)
+        viewModel.onWizardCancelled()
         viewModel.onBackPressed()
         verify(dialogActionsObserver).onChanged(any())
     }
@@ -192,7 +195,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun flowExitedOnBackPressedWhenLastStepAndSiteCreationCompleted() {
         whenever(wizardManager.isLastStep()).thenReturn(true)
-        viewModel.onSiteCreationCompleted(mock<SiteCreationResult.Completed>())
+        viewModel.onWizardFinished(RESULT_COMPLETED)
         viewModel.onBackPressed()
         verify(wizardExitedObserver).onChanged(anyOrNull())
     }
@@ -328,23 +331,6 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         getNewViewModel().start(null, SiteCreationSource.UNSPECIFIED)
 
         verify(tracker).trackSiteCreationDomainPurchasingExperimentVariation(isA<Treatment>())
-    }
-
-    @Test
-    fun `on site creation completed propagates result to state`() {
-        val expected = mock<SiteCreationResult>()
-
-        viewModel.onSiteCreationCompleted(expected)
-
-        val bundle = mock<Bundle>()
-        viewModel.writeToBundle(bundle) // used this to assert on the private siteCreationState field
-        verify(bundle).putParcelable(eq(KEY_SITE_CREATION_STATE), argWhere<SiteCreationState> { it.result == expected })
-    }
-
-    @Test
-    fun `on site creation completed shows next step`() {
-        viewModel.onSiteCreationCompleted(mock())
-        verify(wizardManager).showNextStep()
     }
 
     private fun currentWizardState(vm: SiteCreationMainVM) = vm.navigationTargetObservable.lastEvent!!.wizardState

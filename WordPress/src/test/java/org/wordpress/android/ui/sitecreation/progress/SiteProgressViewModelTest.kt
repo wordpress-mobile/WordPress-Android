@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.sitecreation.progress
 
-import android.os.Bundle
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceTimeBy
@@ -13,31 +12,22 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atMost
 import org.mockito.kotlin.check
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.isA
 import org.mockito.kotlin.isNull
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.notNull
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.ui.sitecreation.RESULT_NOT_IN_LOCAL_DB
 import org.wordpress.android.ui.sitecreation.SERVICE_ERROR
 import org.wordpress.android.ui.sitecreation.SERVICE_SUCCESS
-import org.wordpress.android.ui.sitecreation.SiteCreationResult
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotInLocalDb
-import org.wordpress.android.ui.sitecreation.SiteCreationState
-import org.wordpress.android.ui.sitecreation.URL
-import org.wordpress.android.ui.sitecreation.domains.DomainModel
+import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE
+import org.wordpress.android.ui.sitecreation.SITE_REMOTE_ID
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState
 import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Error.ConnectionError
 import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Error.GenericError
 import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Loading
 import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.StartServiceData
-import org.wordpress.android.ui.sitecreation.theme.defaultTemplateSlug
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.UrlUtilsWrapper
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
@@ -46,16 +36,13 @@ import kotlin.test.assertNotNull
 @RunWith(MockitoJUnitRunner::class)
 class SiteProgressViewModelTest : BaseUnitTest() {
     private var networkUtils = mock<NetworkUtilsWrapper>()
-    private var urlUtils = mock<UrlUtilsWrapper>()
     private var tracker = mock<SiteCreationTracker>()
 
     private val uiStateObserver = mock<Observer<SiteProgressUiState>>()
     private val startServiceObserver = mock<Observer<StartServiceData>>()
     private val onHelpClickedObserver = mock<Observer<Unit>>()
-    private val onCancelWizardClickedObserver = mock<Observer<SiteCreationResult>>()
-    private val onSiteCreationCompletedObserver = mock<Observer<SiteCreationResult>>()
-
-    private val bundle = mock<Bundle>()
+    private val onCancelWizardClickedObserver = mock<Observer<Unit>>()
+    private val onRemoteSiteCreatedObserver = mock<Observer<Long>>()
 
     private lateinit var viewModel: SiteProgressViewModel
 
@@ -63,7 +50,6 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     fun setUp() {
         viewModel = SiteProgressViewModel(
             networkUtils,
-            urlUtils,
             tracker,
             testDispatcher(),
         )
@@ -71,10 +57,9 @@ class SiteProgressViewModelTest : BaseUnitTest() {
         viewModel.startCreateSiteService.observeForever(startServiceObserver)
         viewModel.onHelpClicked.observeForever(onHelpClickedObserver)
         viewModel.onCancelWizardClicked.observeForever(onCancelWizardClickedObserver)
-        viewModel.onSiteCreationCompleted.observeForever(onSiteCreationCompletedObserver)
+        viewModel.onRemoteSiteCreated.observeForever(onRemoteSiteCreatedObserver)
 
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
-        whenever(urlUtils.removeScheme(URL)).thenReturn(URL)
     }
 
     @Test
@@ -84,33 +69,9 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on start shows progress when restoring from SiteNotCreated`() {
-        startViewModel(NotCreated)
-        assertIs<SiteProgressUiState>(viewModel.uiState.value)
-    }
-
-    @Test
-    fun `on start shows progress when restoring from SiteNotInLocalDb`() {
-        startViewModel(RESULT_NOT_IN_LOCAL_DB)
-        assertIs<Loading>(viewModel.uiState.value)
-    }
-
-    @Test
     fun `on start emits service event`() = test {
         startViewModel()
         assertNotNull(viewModel.startCreateSiteService.value)
-    }
-
-    @Test
-    fun `on start emits service event when restoring from SiteNotCreated`() {
-        startViewModel(NotCreated)
-        assertNotNull(viewModel.startCreateSiteService.value)
-    }
-
-    @Test
-    fun `on start emits completion when restoring from NotInLocalDb`() {
-        startViewModel(RESULT_NOT_IN_LOCAL_DB)
-        verify(onSiteCreationCompletedObserver).onChanged(isA<NotInLocalDb>())
     }
 
     @Test
@@ -154,7 +115,7 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on help click is propagate`() {
+    fun `on help click is propagated`() {
         startViewModel()
         viewModel.onHelpClicked()
         verify(onHelpClickedObserver).onChanged(isNull())
@@ -164,21 +125,14 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     fun `on cancel wizard click is propagated`() {
         startViewModel()
         viewModel.onCancelWizardClicked()
-        assertEquals(viewModel.onCancelWizardClicked.value, NotCreated)
+        verify(onCancelWizardClickedObserver).onChanged(isNull())
     }
 
     @Test
-    fun `on write to bundle saves result`() {
-        startViewModel()
-        viewModel.writeToBundle(bundle)
-        verify(bundle).putParcelable(eq(KEY_RESULT), notNull())
-    }
-
-    @Test
-    fun `on service success emits completion`() {
+    fun `on service success propagates remote id`() {
         startViewModel()
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
-        verify(onSiteCreationCompletedObserver).onChanged(isA<NotInLocalDb>())
+        verify(onRemoteSiteCreatedObserver).onChanged(SITE_REMOTE_ID)
     }
 
     @Test
@@ -197,17 +151,8 @@ class SiteProgressViewModelTest : BaseUnitTest() {
 
     // region Helpers
 
-    private fun startViewModel(restoredState: SiteCreationResult? = null) {
-        viewModel.start(
-            SiteCreationState(
-                segmentId = 1,
-                siteDesign = defaultTemplateSlug,
-                domain = DomainModel(URL, true, "", 1)
-            ),
-            bundle.apply {
-                restoredState?.let { whenever(getParcelable<SiteCreationResult>(KEY_RESULT)).thenReturn(it) }
-            }
-        )
+    private fun startViewModel() {
+        viewModel.start( SITE_CREATION_STATE)
     }
 
     // endregion
