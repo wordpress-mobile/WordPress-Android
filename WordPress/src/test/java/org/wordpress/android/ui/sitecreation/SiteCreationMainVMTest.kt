@@ -123,14 +123,14 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
     @Test
     fun domainSelectedResultsInNextStep() {
-        viewModel.onDomainsScreenFinished(DOMAIN)
+        viewModel.onDomainsScreenFinished(FREE_DOMAIN)
         verify(wizardManager).showNextStep()
     }
 
     @Test
     fun siteCreationStateUpdatedWithSelectedDomain() {
-        viewModel.onDomainsScreenFinished(DOMAIN)
-        assertThat(currentWizardState(viewModel).domain).isEqualTo(DOMAIN)
+        viewModel.onDomainsScreenFinished(FREE_DOMAIN)
+        assertThat(currentWizardState(viewModel).domain).isEqualTo(FREE_DOMAIN)
     }
 
     @Test
