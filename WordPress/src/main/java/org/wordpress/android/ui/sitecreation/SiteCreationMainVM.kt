@@ -23,6 +23,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
+import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotInLocalDb
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -56,7 +57,9 @@ data class SiteCreationState(
     val domain: DomainModel? = null,
     val remoteSiteId: Long? = null,
     val result: SiteCreationResult = NotCreated,
-) : WizardState, Parcelable
+) : WizardState, Parcelable {
+    fun isSiteTitleStepCompleted() = !siteName.isNullOrBlank()
+}
 
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
 
@@ -261,7 +264,10 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun onProgressScreenFinished(remoteSiteId: Long) {
-        siteCreationState = siteCreationState.copy(remoteSiteId = remoteSiteId)
+        siteCreationState = siteCreationState.copy(
+            remoteSiteId = remoteSiteId,
+            result = NotInLocalDb(remoteSiteId, siteCreationState.isSiteTitleStepCompleted())
+        )
         wizardManager.showNextStep()
     }
 
