@@ -344,7 +344,6 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         val bundle = mock<Bundle>()
         viewModel.writeToBundle(bundle) // used this to assert on the private siteCreationState field
         verify(bundle).putParcelable(eq(KEY_SITE_CREATION_STATE), argWhere<SiteCreationState> { it.result == expected })
-
     }
 
     @Test

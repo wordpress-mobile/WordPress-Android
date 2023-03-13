@@ -31,7 +31,6 @@ private val SITE_CREATION_STATE = SiteCreationState(segmentId = 1, siteDesign = 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SitePreviewViewModelTest : BaseUnitTest() {
-
     @Mock
     private lateinit var urlUtils: UrlUtilsWrapper
 
