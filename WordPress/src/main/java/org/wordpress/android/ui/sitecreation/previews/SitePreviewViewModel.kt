@@ -45,6 +45,12 @@ class SitePreviewViewModel @Inject constructor(
         dispatcher.register(fetchWpComSiteUseCase)
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        dispatcher.unregister(fetchWpComSiteUseCase)
+        job.cancel()
+    }
+
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + job
@@ -66,12 +72,6 @@ class SitePreviewViewModel @Inject constructor(
 
     private val _onOkButtonClicked = SingleLiveEvent<SiteCreationResult>()
     val onOkButtonClicked: LiveData<SiteCreationResult> = _onOkButtonClicked
-
-    override fun onCleared() {
-        super.onCleared()
-        dispatcher.unregister(fetchWpComSiteUseCase)
-        job.cancel()
-    }
 
     fun start(siteCreationState: SiteCreationState) {
         if (isStarted) return
