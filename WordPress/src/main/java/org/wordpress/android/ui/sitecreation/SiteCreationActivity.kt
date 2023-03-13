@@ -168,8 +168,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
         progressViewModel.onSiteCreationCompleted.observe(this) { result ->
             mainViewModel.onSiteCreationCompleted(result)
         }
-        previewViewModel.onOkButtonClicked.observe(this) {
-            mainViewModel.onProgressOrPreviewFinished()
+        previewViewModel.onOkButtonClicked.observe(this) { result ->
+            mainViewModel.onProgressOrPreviewFinished(result)
         }
         observeOverlayEvents()
     }

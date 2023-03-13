@@ -13,22 +13,18 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.SiteCreationResult
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotInLocalDb
+import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Error.ConnectionError
 import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Error.GenericError
 import org.wordpress.android.ui.sitecreation.progress.SiteProgressViewModel.SiteProgressUiState.Loading
-import org.wordpress.android.ui.sitecreation.services.FetchWpComSiteUseCase
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.CREATE_SITE
@@ -44,7 +40,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
-const val KEY_CREATE_SITE_STATE = "CREATE_SITE_STATE"
+const val KEY_RESULT = "KEY_RESULT"
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
 const val LOADING_STATE_TEXT_ANIMATION_DELAY = 2000L
 private const val ERROR_CONTEXT = "site_preview"
@@ -58,9 +54,6 @@ private val loadingTexts = listOf(
 
 @HiltViewModel
 class SiteProgressViewModel @Inject constructor(
-    private val dispatcher: Dispatcher,
-    private val siteStore: SiteStore,
-    private val fetchWpComSiteUseCase: FetchWpComSiteUseCase,
     private val networkUtils: NetworkUtilsWrapper,
     private val urlUtils: UrlUtilsWrapper,
     private val tracker: SiteCreationTracker,
@@ -74,11 +67,12 @@ class SiteProgressViewModel @Inject constructor(
     private var loadingAnimationJob: Job? = null
 
     private lateinit var siteCreationState: SiteCreationState
+    private lateinit var result: SiteCreationResult
+
     private var urlWithoutScheme: String? = null
     private var siteTitle: String? = null
     private var lastReceivedServiceState: SiteCreationServiceState? = null
     private var serviceStateForRetry: SiteCreationServiceState? = null
-    private var result: SiteCreationResult = NotCreated
 
     private val _uiState: MutableLiveData<SiteProgressUiState> = MutableLiveData()
     val uiState: LiveData<SiteProgressUiState> = _uiState
@@ -95,18 +89,13 @@ class SiteProgressViewModel @Inject constructor(
     private val _onSiteCreationCompleted = SingleLiveEvent<SiteCreationResult>()
     val onSiteCreationCompleted: LiveData<SiteCreationResult> = _onSiteCreationCompleted
 
-    init {
-        dispatcher.register(fetchWpComSiteUseCase)
-    }
-
     override fun onCleared() {
         super.onCleared()
-        dispatcher.unregister(fetchWpComSiteUseCase)
         job.cancel()
         loadingAnimationJob?.cancel()
     }
 
-    fun writeToBundle(outState: Bundle) = outState.putParcelable(KEY_CREATE_SITE_STATE, result)
+    fun writeToBundle(outState: Bundle) = outState.putParcelable(KEY_RESULT, result)
 
     fun start(siteCreationState: SiteCreationState, savedState: Bundle?) {
         if (isStarted) return
@@ -115,25 +104,18 @@ class SiteProgressViewModel @Inject constructor(
         urlWithoutScheme = siteCreationState.domain?.domainName
         siteTitle = siteCreationState.siteName
 
-        val restoredState = savedState?.getParcelable<SiteCreationResult>(KEY_CREATE_SITE_STATE)
-
-        init(restoredState ?: NotCreated)
-    }
-
-    private fun init(state: SiteCreationResult) {
-        result = state
-        when (state) {
+        val restoredResult = savedState?.getParcelable<SiteCreationResult>(KEY_RESULT)
+        result = restoredResult ?: NotCreated
+        when (result) {
             NotCreated -> {
                 runLoadingAnimationUi()
                 startCreateSiteService()
             }
             is NotInLocalDb -> {
                 runLoadingAnimationUi()
-                launch {
-                    result = fetchNewlyCreatedSiteModel(state.remoteSiteId)
-                }
+                _onSiteCreationCompleted.postValue(result)
             }
-            is Completed -> Unit
+            else -> Unit
         }
     }
 
@@ -195,9 +177,7 @@ class SiteProgressViewModel @Inject constructor(
                 val remoteSiteId = (event.payload as Pair<*, *>).first as Long
                 urlWithoutScheme = urlUtils.removeScheme(event.payload.second as String).trimEnd('/')
                 result = NotInLocalDb(remoteSiteId, !siteTitle.isNullOrBlank())
-                launch {
-                    result = fetchNewlyCreatedSiteModel(remoteSiteId)
-                }
+                _onSiteCreationCompleted.postValue(result)
             }
             FAILURE -> {
                 serviceStateForRetry = event.payload as SiteCreationServiceState
@@ -208,21 +188,6 @@ class SiteProgressViewModel @Inject constructor(
                 )
                 updateUiStateAsync(GenericError)
             }
-        }
-    }
-
-    /**
-     * Fetch newly created site model - supports retry with linear backoff.
-     */
-    private suspend fun fetchNewlyCreatedSiteModel(remoteSiteId: Long): SiteCreationResult {
-        val onSiteFetched = fetchWpComSiteUseCase.fetchSiteWithRetry(remoteSiteId)
-        return if (!onSiteFetched.isError) {
-            val siteBySiteId = requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
-                "Site successfully fetched but has not been found in the local db."
-            }
-            Completed(siteBySiteId.id, !siteTitle.isNullOrBlank(), siteBySiteId.url)
-        } else {
-            NotInLocalDb(remoteSiteId, !siteTitle.isNullOrBlank())
         }
     }
 
@@ -238,7 +203,6 @@ class SiteProgressViewModel @Inject constructor(
                 )
                 delay(LOADING_STATE_TEXT_ANIMATION_DELAY)
             }
-            _onSiteCreationCompleted.postValue(result)
         }
     }
 
