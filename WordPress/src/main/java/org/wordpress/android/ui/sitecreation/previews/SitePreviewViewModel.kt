@@ -135,26 +135,21 @@ class SitePreviewViewModel @Inject constructor(
     }
 
     sealed class SitePreviewUiState(
-        val contentLayoutVisibility: Boolean = false,
         val webViewVisibility: Boolean = false,
         val webViewErrorVisibility: Boolean = false,
         val shimmerVisibility: Boolean = false,
-        val fullscreenErrorLayoutVisibility: Boolean = false
     ) {
         data class SitePreviewContentUiState(val data: SitePreviewData) : SitePreviewUiState(
-            contentLayoutVisibility = true,
             webViewVisibility = true,
             webViewErrorVisibility = false
         )
 
         data class SitePreviewWebErrorUiState(val data: SitePreviewData) : SitePreviewUiState(
-            contentLayoutVisibility = true,
             webViewVisibility = false,
             webViewErrorVisibility = true
         )
 
         data class SitePreviewLoadingShimmerState(val data: SitePreviewData) : SitePreviewUiState(
-            contentLayoutVisibility = true,
             shimmerVisibility = true
         )
     }

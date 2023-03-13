@@ -89,8 +89,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                     is SitePreviewWebErrorUiState -> updateContentLayout(ui.data)
                     is SitePreviewLoadingShimmerState -> updateContentLayout(ui.data, isFirstContent = true)
                 }
-                uiHelpers.updateVisibility(contentLayout, contentLayoutVisibility)
-                uiHelpers.updateVisibility(fullscreenErrorWithRetry.errorLayout, fullscreenErrorLayoutVisibility)
                 siteCreationPreviewWebViewContainer.apply {
                     uiHelpers.updateVisibility(sitePreviewWebView, webViewVisibility)
                     uiHelpers.updateVisibility(sitePreviewWebError, webViewErrorVisibility)
