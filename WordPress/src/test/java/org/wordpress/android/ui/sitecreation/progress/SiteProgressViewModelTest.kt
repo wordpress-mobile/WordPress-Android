@@ -62,11 +62,10 @@ class SiteProgressViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = SiteProgressViewModel(
-            networkUtils = networkUtils,
-            urlUtils = urlUtils,
-            tracker = tracker,
-            bgDispatcher = testDispatcher(),
-            mainDispatcher = testDispatcher()
+            networkUtils,
+            urlUtils,
+            tracker,
+            testDispatcher(),
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.startCreateSiteService.observeForever(startServiceObserver)
