@@ -57,10 +57,10 @@ class SitePreviewViewModel @Inject constructor(
     private var isStarted = false
     private var webviewFullyLoadedTracked = false
 
-    private var siteTitle: String? = null
     private var siteDesign: String? = null
-    private var remoteSiteId: Long = 0
+    private var siteTitle: String? = null
     private var urlWithoutScheme: String? = null
+    private var remoteSiteId: Long = 0
 
     private lateinit var result: SiteCreationResult
 
@@ -76,14 +76,16 @@ class SitePreviewViewModel @Inject constructor(
     fun start(siteCreationState: SiteCreationState) {
         if (isStarted) return
         isStarted = true
+
         siteDesign = siteCreationState.siteDesign
-        urlWithoutScheme = requireNotNull(siteCreationState.domain) { "domain required for preview" }.domainName
         siteTitle = siteCreationState.siteName
+        urlWithoutScheme = requireNotNull(siteCreationState.domain) { "url required for preview" }.domainName
         remoteSiteId = requireNotNull(siteCreationState.remoteSiteId) { "remoteSiteId required for preview" }
+
+        startPreLoadingWebView()
         launch {
             result = fetchNewlyCreatedSiteModel(remoteSiteId)
         }
-        startPreLoadingWebView()
     }
 
     fun onOkButtonClicked() {

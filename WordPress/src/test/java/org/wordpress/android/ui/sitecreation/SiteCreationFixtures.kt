@@ -4,7 +4,6 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
-import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotInLocalDb
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.CREATE_SITE
@@ -29,7 +28,6 @@ val SITE_CREATION_STATE = SiteCreationState(
 val SUCCESS_RESPONSE = OnSiteChanged(1)
 val ERROR_RESPONSE = OnSiteChanged(0).apply { error = SiteError(GENERIC_ERROR) }
 
-val RESULT_NOT_IN_LOCAL_DB = NotInLocalDb(SITE_REMOTE_ID, false)
 val RESULT_COMPLETED = Completed(SITE_LOCAL_ID, false, URL)
 
 val SERVICE_SUCCESS = SiteCreationServiceState(SUCCESS, Pair(SITE_REMOTE_ID, URL))
