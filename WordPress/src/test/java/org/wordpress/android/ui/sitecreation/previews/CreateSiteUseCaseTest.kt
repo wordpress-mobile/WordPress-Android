@@ -9,6 +9,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -22,13 +23,15 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.usecases.CreateSiteUseCase
 import org.wordpress.android.util.UrlUtilsWrapper
+import kotlin.test.assertFalse
 
 private const val SITE_TITLE = "site title"
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
     123,
     "slug",
     "domain",
-    SITE_TITLE
+    SITE_TITLE,
+    false,
 )
 private const val LANGUAGE_ID = "lang_id"
 private const val TIMEZONE_ID = "timezone_id"
@@ -75,6 +78,14 @@ class CreateSiteUseCaseTest : BaseUnitTest() {
         assertThat(payload.siteName).isEqualTo(DUMMY_SITE_DATA.domain)
         assertThat(payload.segmentId).isEqualTo(DUMMY_SITE_DATA.segmentId)
         assertThat(payload.siteTitle).isEqualTo(SITE_TITLE)
+        assertFalse(payload.findAvailableUrl!!)
+    }
+
+    @Test
+    fun verifySiteDataWhenFreePropagatesNoFindAvailableUrl() = test {
+        whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
+        useCase.createSite(DUMMY_SITE_DATA.copy(isFree = true), LANGUAGE_ID, TIMEZONE_ID)
+        verify(dispatcher).dispatch(argWhere { (it.payload as NewSitePayload).findAvailableUrl == null })
     }
 
     @Test
