@@ -83,16 +83,16 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private fun SiteCreationPreviewScreenDefaultBinding.observeState() {
         viewModel.uiState.observe(this@SiteCreationPreviewFragment) {
-            it?.run {
-                when (val ui = this@run) {
+            it?.let { ui ->
+                when (ui) {
                     is SitePreviewContentUiState -> updateContentLayout(ui.data)
                     is SitePreviewWebErrorUiState -> updateContentLayout(ui.data)
                     is SitePreviewLoadingShimmerState -> updateContentLayout(ui.data, isFirstContent = true)
                 }
                 siteCreationPreviewWebViewContainer.apply {
-                    uiHelpers.updateVisibility(sitePreviewWebView, webViewVisibility)
-                    uiHelpers.updateVisibility(sitePreviewWebError, webViewErrorVisibility)
-                    uiHelpers.updateVisibility(sitePreviewWebViewShimmerLayout, shimmerVisibility)
+                    uiHelpers.updateVisibility(sitePreviewWebView, ui.webViewVisibility)
+                    uiHelpers.updateVisibility(sitePreviewWebError, ui.webViewErrorVisibility)
+                    uiHelpers.updateVisibility(sitePreviewWebViewShimmerLayout, ui.shimmerVisibility)
                 }
             }
         }
