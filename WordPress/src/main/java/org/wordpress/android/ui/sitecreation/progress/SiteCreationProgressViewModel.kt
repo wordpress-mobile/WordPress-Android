@@ -2,13 +2,10 @@ package org.wordpress.android.ui.sitecreation.progress
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -29,10 +26,10 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.S
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.CoroutineContext
 
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
 const val LOADING_STATE_TEXT_ANIMATION_DELAY = 2000L
@@ -49,10 +46,8 @@ private val loadingTexts = listOf(
 class SiteCreationProgressViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val tracker: SiteCreationTracker,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : ViewModel(), CoroutineScope {
-    private val job = Job()
-    override val coroutineContext: CoroutineContext get() = mainDispatcher + job
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private var loadingAnimationJob: Job? = null
 
@@ -80,7 +75,6 @@ class SiteCreationProgressViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        job.cancel()
         loadingAnimationJob?.cancel()
     }
 
@@ -125,7 +119,7 @@ class SiteCreationProgressViewModel @Inject constructor(
 
     private fun showFullscreenErrorWithDelay() {
         runLoadingAnimationUi()
-        launch(mainDispatcher) {
+        launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
             tracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR)
@@ -165,7 +159,7 @@ class SiteCreationProgressViewModel @Inject constructor(
 
     private fun runLoadingAnimationUi() {
         loadingAnimationJob?.cancel()
-        loadingAnimationJob = launch(mainDispatcher) {
+        loadingAnimationJob = launch {
             loadingTexts.forEachIndexed { i, uiString ->
                 updateUiState(
                     Loading(
