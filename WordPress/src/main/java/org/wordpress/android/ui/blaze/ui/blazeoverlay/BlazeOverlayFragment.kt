@@ -73,6 +73,9 @@ private val darkModePrimaryButtonColor = Color(0xFF1C1C1E)
 private val lightModePostThumbnailBackground = Color(0xD000000)
 
 @Stable
+private val darkModePostThumbnailBackground = Color(0xDFFFFFF)
+
+@Stable
 private val bulletedTextColor = Color(0xFF666666)
 
 @AndroidEntryPoint
@@ -273,7 +276,7 @@ class BlazeOverlayFragment : Fragment() {
     }
 
     private fun getThumbnailBackground(isInDarkTheme: Boolean): Color {
-        return if (isInDarkTheme) AppColor.DarkGray
+        return if (isInDarkTheme) darkModePostThumbnailBackground
         else lightModePostThumbnailBackground
     }
 
