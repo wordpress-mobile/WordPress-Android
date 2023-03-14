@@ -1596,7 +1596,8 @@ open class SiteStore @Inject constructor(
                 payload.visibility,
                 payload.segmentId,
                 payload.siteDesign,
-                payload.dryRun
+                payload.findAvailableUrl,
+                payload.dryRun,
         )
         return handleCreateNewSiteCompleted(
                 payload = result
