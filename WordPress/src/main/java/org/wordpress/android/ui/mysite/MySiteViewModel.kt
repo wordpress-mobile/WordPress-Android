@@ -574,7 +574,7 @@ class MySiteViewModel @Inject constructor(
                     onRemoveClick = this::onBloggingPromptRemoveClick
                 ),
                 promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
-                    isEligible = blazeFeatureUtils.shouldShowBlazeEntryPoint(
+                    isEligible = blazeFeatureUtils.shouldShowBlazeCardEntryPoint(
                         promoteWithBlazeUpdate?.blazeStatusModel,
                         site.siteId
                     ),
@@ -614,7 +614,7 @@ class MySiteViewModel @Inject constructor(
                 enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
                 onClick = this::onItemClick,
                 isBlazeEligible =
-                    blazeFeatureUtils.shouldShowBlazeEntryPoint(promoteWithBlazeUpdate?.blazeStatusModel, site.siteId)
+                blazeFeatureUtils.shouldShowBlazeMenuEntryPoint(promoteWithBlazeUpdate?.blazeStatusModel)
             )
         )
 
