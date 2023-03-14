@@ -217,8 +217,9 @@ open class SiteStore @Inject constructor(
             language: String,
             timeZoneId: String,
             visibility: SiteVisibility,
+            findAvailableUrl: Boolean?,
             dryRun: Boolean
-        ) : this(siteName, siteTitle, language, timeZoneId, visibility, null, null, dryRun)
+        ) : this(siteName, siteTitle, language, timeZoneId, visibility, null, null, dryRun, findAvailableUrl)
     }
 
     data class FetchedPostFormatsPayload(
