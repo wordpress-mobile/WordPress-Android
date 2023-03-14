@@ -60,7 +60,8 @@ class CreateSiteUseCase @Inject constructor(
                 siteVisibility,
                 siteData.segmentId,
                 siteData.siteDesign,
-                dryRun
+                dryRun,
+                findAvailableUrl = siteData.isFree.takeIf { !it }
             )
             continuation = cont
             dispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload))

@@ -99,7 +99,8 @@ class SiteCreationProgressViewModel @Inject constructor(
                     segmentIdentifier,
                     siteDesign,
                     urlWithoutScheme,
-                    siteTitle
+                    siteTitle,
+                    requireNotNull(siteCreationState.domain?.isFree) { "domain required to create a site" },
                 )
                 _startCreateSiteService.value = StartServiceData(serviceData, previousState)
             }
