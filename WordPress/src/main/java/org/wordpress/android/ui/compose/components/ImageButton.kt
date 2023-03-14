@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -49,7 +48,6 @@ fun PreviewDrawButton() {
     )
 }
 
-
 @Composable
 fun ImageButton(
     modifier: Modifier = Modifier,
@@ -60,7 +58,8 @@ fun ImageButton(
     button: Button,
     onClick: () -> Unit
 ) {
-    ConstraintLayout(modifier = modifier) {
+    ConstraintLayout(modifier = modifier
+        .clickable { onClick.invoke() }) {
         val (buttonTextRef) = createRefs()
         Box(modifier = Modifier
             .constrainAs(buttonTextRef) {
@@ -70,7 +69,6 @@ fun ImageButton(
                 end.linkTo(parent.end, drawableRight?.iconSize ?: 0.dp)
                 width = Dimension.wrapContent
             }
-            .clickable { onClick.invoke() }
         ) {
             val buttonTextValue: String = uiStringText(button.text)
             Text(
