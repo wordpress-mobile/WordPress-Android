@@ -184,7 +184,7 @@ class BlazeWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    // no op
+                    blazeWebViewViewModel.handleOnBackPressed()
                 }
             }
         )
