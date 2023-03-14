@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.compose.components
+package org.wordpress.android.ui.compose.components.buttons
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

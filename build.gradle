@@ -75,7 +75,7 @@ ext {
     philjayMpAndroidChartVersion = 'v3.1.0'
     squareupKotlinPoetVersion = '1.6.0'
     squareupOkioVersion = '2.8.0'
-    uCropVersion = '2.2.4'
+    uCropVersion = '2.2.8'
     zendeskVersion = '5.0.2'
 
     // test
@@ -95,7 +95,7 @@ ext {
     wiremockHttpClientVersion = '4.3.5.1'
 
     // other
-    androidDesugarVersion = '1.1.5'
+    androidDesugarVersion = '1.1.8'
     wordPressLintVersion = '1.1.0'
 }
 

@@ -1,6 +1,7 @@
 package org.wordpress.android.util.extensions
 
 import android.annotation.SuppressLint
+import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextUtils
@@ -43,4 +44,39 @@ fun CharSequence.enforceWesternArabicNumerals(): CharSequence {
     }
 
     return textWithArabicNumerals
+}
+
+/**
+ * Fix widows in a [CharSequence]. A widow is a single word on the last line of a paragraph. This method is similar to
+ * [String.fixWidows] but it also preserves spans if the CharSequence is an instance of [Spanned].
+ */
+@Suppress("Unused")
+fun CharSequence.fixWidows(): CharSequence {
+    val out: Spannable
+    val lastSpace = toString().lastIndexOf(' ')
+    if (lastSpace != -1 && lastSpace < length - 1) {
+        // Replace last space character by a non breaking space.
+        val tmpText: CharSequence = replaceRange(lastSpace, lastSpace + 1, "\u00A0")
+        out = SpannableString(tmpText)
+        // Restore spans if text is an instance of Spanned
+        (this as? Spanned)?.let {
+            TextUtils.copySpansFrom(this, 0, length, null, out, 0)
+        }
+    } else {
+        out = SpannableString(this)
+    }
+    return out
+}
+
+/**
+ * Fix widows in a [String]. A widow is a single word on the last line of a paragraph.
+ */
+fun String.fixWidows(): String {
+    val lastSpace = lastIndexOf(' ')
+    return if (lastSpace != -1 && lastSpace < length - 1) {
+        // Replace last space character by a non breaking space.
+        replaceRange(lastSpace, lastSpace + 1, "\u00A0")
+    } else {
+        this
+    }
 }

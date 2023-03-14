@@ -35,7 +35,7 @@ Language: ro
     <string name="promote_blaze_card_sub_title">Afișează conținutul pe milioane de site-uri.</string>
     <string name="promote_blaze_card_menu_hide_this">Ascunde asta</string>
     <string name="gutenberg_native_blocks_menu">Meniu blocuri</string>
-    <string name="jetpack_full_plugin_install_onboarding_description">%1$s folosește %2$s, care încă nu suportă toate funcționalitățile aplicației. \n\nTe rog instalează %3$s pentru a folosi aplicația cu acest site.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s folosește %2$s, care încă nu suportă toate funcționalitățile aplicației. \n\nTe rog instalează %3$s pentru a folosi aplicația cu acest site.</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">modulul %1$s</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">module individuale Jetpack</string>
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">modulul complet Jetpack</string>

@@ -38,7 +38,7 @@ Language: tr
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">tam Jetpack eklentisi</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">bireysel Jetpack eklentileri</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">%1$s eklentisi</string>
-    <string name="jetpack_full_plugin_install_onboarding_description">%1$s, uygulamanın tüm özelliklerini henüz desteklemeyen %2$s kullanıyor.\n\nUygulamayı bu siteyle birlikte kullanmak için lütfen %3$s yükleyin.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s, uygulamanın tüm özelliklerini henüz desteklemeyen %2$s kullanıyor.\n\nUygulamayı bu siteyle birlikte kullanmak için lütfen %3$s yükleyin.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">Lütfen Jetpack eklentisinin tamamını yükleyin</string>
     <string name="only_one_primary_site_message">Yalnızca bir site kullanılabilir, bu nedenle birincil sitenizi değiştiremezsiniz.</string>
     <string name="my_site_jp_install_full_plugin_card_content">Bu site, uygulamanın tüm özelliklerini henüz desteklemeyen ayrı bir eklenti kullanmaktadır. Lütfen Jetpack eklentisinin tamamını kurun.</string>

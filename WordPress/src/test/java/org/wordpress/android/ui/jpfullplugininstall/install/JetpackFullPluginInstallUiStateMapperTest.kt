@@ -19,6 +19,7 @@ class JetpackFullPluginInstallUiStateMapperTest {
             )
             assertThat(title).isEqualTo(R.string.jetpack_full_plugin_install_initial_title)
             assertThat(description).isEqualTo(R.string.jetpack_full_plugin_install_initial_description)
+            assertThat(showCloseButton).isTrue
         }
     }
 
@@ -31,8 +32,9 @@ class JetpackFullPluginInstallUiStateMapperTest {
             assertThat(imageContentDescription).isEqualTo(
                 R.string.jetpack_full_plugin_install_jp_logo_content_description
             )
-            assertThat(title).isEqualTo(R.string.jetpack_full_plugin_install_installing_title)
-            assertThat(description).isEqualTo(R.string.jetpack_full_plugin_install_installing_description)
+            assertThat(title).isEqualTo(R.string.jetpack_full_plugin_install_initial_title)
+            assertThat(description).isEqualTo(R.string.jetpack_full_plugin_install_initial_description)
+            assertThat(showCloseButton).isFalse
         }
     }
 
@@ -48,6 +50,7 @@ class JetpackFullPluginInstallUiStateMapperTest {
             )
             assertThat(title).isEqualTo(R.string.jetpack_full_plugin_install_done_title)
             assertThat(description).isEqualTo(R.string.jetpack_full_plugin_install_done_description)
+            assertThat(showCloseButton).isFalse
         }
     }
 
@@ -60,12 +63,13 @@ class JetpackFullPluginInstallUiStateMapperTest {
                 R.string.jetpack_full_plugin_install_error_button_contact_support
             )
             assertThat(toolbarTitle).isEqualTo(R.string.jetpack)
-            assertThat(image).isEqualTo(R.drawable.img_illustration_info_outline_88dp)
+            assertThat(image).isEqualTo(R.drawable.ic_warning)
             assertThat(imageContentDescription).isEqualTo(
                 R.string.jetpack_full_plugin_install_error_image_content_description
             )
             assertThat(title).isEqualTo(R.string.jetpack_full_plugin_install_error_title)
             assertThat(description).isEqualTo(R.string.jetpack_full_plugin_install_error_description)
+            assertThat(showCloseButton).isTrue
         }
     }
 }
