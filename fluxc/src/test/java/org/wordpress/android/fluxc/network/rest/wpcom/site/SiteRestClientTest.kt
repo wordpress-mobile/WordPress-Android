@@ -469,7 +469,7 @@ class SiteRestClientTest {
     }
 
     private suspend fun <T> initGetResponse(
-        kclass: Class<T>,
+        clazz: Class<T>,
         data: T,
         error: WPComGsonNetworkError? = null
     ): Response<T> {
@@ -479,7 +479,7 @@ class SiteRestClientTest {
                         eq(restClient),
                         urlCaptor.capture(),
                         paramsCaptor.capture(),
-                        eq(kclass),
+                        eq(clazz),
                         any(),
                         any(),
                         any()
@@ -490,7 +490,7 @@ class SiteRestClientTest {
     }
 
     private suspend fun <T> initPostResponse(
-        kclass: Class<T>,
+        clazz: Class<T>,
         data: T,
         error: WPComGsonNetworkError? = null
     ): Response<T> {
@@ -501,7 +501,7 @@ class SiteRestClientTest {
                         urlCaptor.capture(),
                         paramsCaptor.capture(),
                         bodyCaptor.capture(),
-                        eq(kclass),
+                        eq(clazz),
                         anyOrNull(),
                         anyOrNull(),
                 )
