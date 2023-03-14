@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
@@ -258,10 +259,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
     }
 
     private fun showFragment(fragment: Fragment, tag: String, slideIn: Boolean = true) {
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        if (supportFragmentManager.findFragmentById(R.id.fragment_container) != null) {
-            // add to back stack and animate all screen except of the first one
-            fragmentTransaction.addToBackStack(null).apply {
+        supportFragmentManager.commit {
+            if (supportFragmentManager.findFragmentById(R.id.fragment_container) != null) {
+                // add to back stack and animate all screen except of the first one
+                addToBackStack(null)
                 if (slideIn) {
                     setCustomAnimations(
                         R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
@@ -271,9 +272,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
                     setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
                 }
             }
+            replace(R.id.fragment_container, fragment, tag)
         }
-        fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
-        fragmentTransaction.commit()
     }
 
     override fun onPositiveClicked(instanceTag: String) {
