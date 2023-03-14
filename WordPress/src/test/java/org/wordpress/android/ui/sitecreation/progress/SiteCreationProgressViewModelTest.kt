@@ -17,10 +17,12 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.ui.sitecreation.PAID_DOMAIN
 import org.wordpress.android.ui.sitecreation.SERVICE_ERROR
 import org.wordpress.android.ui.sitecreation.SERVICE_SUCCESS
 import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE
 import org.wordpress.android.ui.sitecreation.SITE_REMOTE_ID
+import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.ConnectionError
@@ -29,8 +31,10 @@ import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewMo
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.StartServiceData
 import org.wordpress.android.util.NetworkUtilsWrapper
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -72,6 +76,20 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     fun `on start emits service event`() = test {
         startViewModel()
         assertNotNull(viewModel.startCreateSiteService.value)
+    }
+
+    @Test
+    fun `on start emits service event for free domains with isFree true`() = test {
+        startViewModel(SITE_CREATION_STATE)
+        val request = assertNotNull(viewModel.startCreateSiteService.value).serviceData
+        assertTrue(request.isFree)
+    }
+
+    @Test
+    fun `on start emits service event for paid domains with isFree false`() = test {
+        startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
+        val request = assertNotNull(viewModel.startCreateSiteService.value).serviceData
+        assertFalse(request.isFree)
     }
 
     @Test
@@ -151,8 +169,8 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
 
     // region Helpers
 
-    private fun startViewModel() {
-        viewModel.start( SITE_CREATION_STATE)
+    private fun startViewModel(state: SiteCreationState = SITE_CREATION_STATE) {
+        viewModel.start(state)
     }
 
     // endregion
