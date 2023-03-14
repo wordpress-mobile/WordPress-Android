@@ -104,7 +104,7 @@ class SiteRestClientTest {
         )
         val errorResponse = restClient.fetchSite(site)
 
-        assertThat(errorResponse.error).isNotNull()
+        assertNotNull(errorResponse.error)
         assertThat(errorResponse.error.type).isEqualTo(GenericErrorType.NETWORK_ERROR)
         assertThat(errorResponse.error.message).isEqualTo(errorMessage)
     }
@@ -173,7 +173,7 @@ class SiteRestClientTest {
         )
         val errorResponse = restClient.fetchSites(listOf(), false)
 
-        assertThat(errorResponse.error).isNotNull()
+        assertNotNull(errorResponse.error)
         assertThat(errorResponse.error.type).isEqualTo(GenericErrorType.NETWORK_ERROR)
         assertThat(errorResponse.error.message).isEqualTo(errorMessage)
     }
@@ -199,6 +199,7 @@ class SiteRestClientTest {
         val segmentId = 123L
         val siteDesign = "design"
         val timeZoneId = "Europe/London"
+        val findAvailableUrl = true
 
         val result = restClient.newSite(
             siteName,
@@ -208,6 +209,7 @@ class SiteRestClientTest {
             visibility,
             segmentId,
             siteDesign,
+            findAvailableUrl,
             dryRun
         )
 
@@ -223,6 +225,7 @@ class SiteRestClientTest {
                         "lang_id" to language,
                         "public" to "1",
                         "validate" to "0",
+                        "find_available_url" to findAvailableUrl.toString(),
                         "client_id" to appId,
                         "client_secret" to appSecret,
                         "options" to mapOf<String, Any>(
@@ -264,6 +267,7 @@ class SiteRestClientTest {
             visibility,
             segmentId,
             siteDesign,
+            null,
             dryRun
         )
 
@@ -322,6 +326,7 @@ class SiteRestClientTest {
             visibility,
             segmentId,
             siteDesign,
+            null,
             dryRun
         )
 
@@ -375,6 +380,7 @@ class SiteRestClientTest {
             language,
             timeZoneId,
             visibility,
+            null,
             null,
             null,
             dryRun
