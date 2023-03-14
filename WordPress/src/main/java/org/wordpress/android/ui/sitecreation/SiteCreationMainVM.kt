@@ -231,11 +231,10 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     private fun clearOldSiteCreationState(wizardStep: SiteCreationStep) {
-        when (wizardStep) {
-            SiteCreationStep.DOMAINS -> siteCreationState.domain?.let {
+        if (wizardStep == SiteCreationStep.DOMAINS) {
+            siteCreationState.domain?.let {
                 siteCreationState = siteCreationState.copy(domain = null)
             }
-            else -> Unit // Do nothing
         }
     }
 
