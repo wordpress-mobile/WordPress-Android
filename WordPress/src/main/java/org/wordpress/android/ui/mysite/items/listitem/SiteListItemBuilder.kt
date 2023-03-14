@@ -48,7 +48,7 @@ class SiteListItemBuilder @Inject constructor(
         ) || site.isJetpackConnected
         return if (site.hasCapabilityManageOptions && isWpComOrJetpack && !site.isWpForTeamsSite) {
             ListItem(
-                R.drawable.ic_gridicons_clipboard_white_24dp,
+                R.drawable.ic_history_white_24dp,
                 UiStringRes(R.string.activity_log),
                 onClick = ListItemInteraction.create(ACTIVITY_LOG, onClick)
             )
@@ -130,7 +130,7 @@ class SiteListItemBuilder @Inject constructor(
         return if (shouldShowWPAdmin(site)) {
             ListItem(
                 R.drawable.ic_wordpress_white_24dp,
-                UiStringRes(R.string.my_site_btn_view_admin),
+                UiStringRes(R.string.my_site_btn_wp_admin),
                 secondaryIcon = R.drawable.ic_external_white_24dp,
                 onClick = ListItemInteraction.create(ADMIN, onClick)
             )

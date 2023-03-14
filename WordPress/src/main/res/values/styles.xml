@@ -530,7 +530,7 @@
     </style>
 
     <style name="UpdatedMySiteListRowIcon">
-        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="tint">?attr/wpColorOnSurfaceHigh</item>
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentStart">true</item>
@@ -591,8 +591,18 @@
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingBottom">@dimen/my_site_margin_general</item>
-        <item name="android:paddingTop">@dimen/my_site_margin_general</item>
+        <item name="android:paddingBottom">@dimen/margin_medium</item>
+        <item name="android:paddingTop">@dimen/margin_extra_large</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
+    <style name="MySiteListEmptyHeader">
+        <item name="android:ellipsize">end</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_height">@dimen/margin_none</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
     </style>

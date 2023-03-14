@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_EMPTY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DASHBOARD_CARDS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
@@ -37,6 +38,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         QUICK_START_DYNAMIC_CARD,
         INFO_ITEM,
         CATEGORY_HEADER_ITEM,
+        CATEGORY_EMPTY_HEADER_ITEM,
         LIST_ITEM,
         DASHBOARD_CARDS,
         JETPACK_BADGE,
@@ -315,6 +317,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         ) : Item(SINGLE_ACTION_CARD)
 
         data class CategoryHeaderItem(val title: UiString) : Item(CATEGORY_HEADER_ITEM)
+
+        data class CategoryEmptyHeaderItem(val title: UiString) : Item(CATEGORY_EMPTY_HEADER_ITEM)
 
         data class ListItem(
             @DrawableRes val primaryIcon: Int,
