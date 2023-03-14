@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteFilter.WPCOM
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.test
+import kotlin.test.assertNotNull
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteRestClientTest {
@@ -435,7 +436,7 @@ class SiteRestClientTest {
         )
         val errorResponse = restClient.fetchPostFormats(site)
 
-        assertThat(errorResponse.error).isNotNull()
+        assertNotNull(errorResponse.error)
         assertThat(errorResponse.error.type).isEqualTo(PostFormatsErrorType.GENERIC_ERROR)
     }
 
