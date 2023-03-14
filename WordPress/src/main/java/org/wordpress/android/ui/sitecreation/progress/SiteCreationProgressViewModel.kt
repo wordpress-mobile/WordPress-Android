@@ -55,6 +55,7 @@ class SiteCreationProgressViewModel @Inject constructor(
 
     private var urlWithoutScheme: String? = null
     private var siteTitle: String? = null
+
     private var lastReceivedServiceState: SiteCreationServiceState? = null
     private var serviceStateForRetry: SiteCreationServiceState? = null
 
