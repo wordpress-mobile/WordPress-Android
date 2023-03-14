@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-01 15:54:09+0000
+Translation-Revision-Date: 2023-03-14 11:54:27+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: fr
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">Donner de la visibilité à un article avec Blaze maintenant</string>
+    <string name="blaze_overlay_page_promotional_button">Donner de la visibilité à cette page avec Blaze</string>
+    <string name="blaze_overlay_post_promotional_button">Donner de la visibilité à cet article avec Blaze</string>
+    <string name="blaze_promotional_subtitle_3">Suivez vos performances, et activez ou désactivez Blaze à tout moment.</string>
+    <string name="blaze_promotional_subtitle_2">Votre contenu s’affichera sur des millions de sites WordPress et Tumblr.</string>
+    <string name="blaze_promotional_subtitle_1">Promouvez n’importe quel article ou n’importe quelle page en quelques minutes et pour quelques dollars par jour seulement.</string>
+    <string name="blaze_promotional_text">Améliorer le trafic sur votre site avec Blaze</string>
+    <string name="site_creation_domain_tag_unavailable">Ce nom de domaine est déjà enregistré.</string>
+    <string name="site_creation_domain_tag_sale">Promo</string>
+    <string name="site_creation_domain_tag_recommended">Recommandé</string>
+    <string name="site_creation_domain_tag_best_alternative">Meilleure alternative</string>
+    <string name="site_creation_domain_cost">%s/an</string>
+    <string name="me_btn_help">Aide</string>
+    <string name="support_faq_caption">Notre FAQ comporte les réponses aux questions fréquentes que vous vous posez peut-être.</string>
+    <string name="support_faq_title">Merci d’être passé à l’application Jetpack !</string>
+    <string name="logs_button">Journaux</string>
+    <string name="free">Gratuit</string>
+    <string name="help_buttons_screen_title">Aide</string>
     <string name="gutenberg_native_blocks_menu">Menu Blocs</string>
     <string name="promote_blaze_card_menu_hide_this">Masquer ceci</string>
     <string name="promote_blaze_card_sub_title">Diffusez votre contenu sur des millions de sites.</string>

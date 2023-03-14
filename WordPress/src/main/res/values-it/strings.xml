@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-01 18:54:09+0000
+Translation-Revision-Date: 2023-03-14 09:54:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: it
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">Diffondi un articolo ora</string>
+    <string name="blaze_overlay_page_promotional_button">Diffondi questa pagina</string>
+    <string name="blaze_overlay_post_promotional_button">Diffondi questo articolo</string>
+    <string name="blaze_promotional_subtitle_3">Tieni traccia delle prestazioni, avvia e interrompi Blaze in qualsiasi momento.</string>
+    <string name="blaze_promotional_subtitle_2">I tuoi contenuti verranno mostrati su milioni di siti WordPress e Tumblr.</string>
+    <string name="blaze_promotional_subtitle_1">Promuovi qualsiasi articolo o pagina in pochi minuti per pochi dollari al giorno.</string>
+    <string name="blaze_promotional_text">Attira più traffico sul tuo sito con Blaze</string>
+    <string name="blaze_activity_title">Diffondi</string>
+    <string name="site_creation_domain_tag_unavailable">Questo dominio è già registrato</string>
+    <string name="site_creation_domain_tag_sale">Offerta</string>
+    <string name="site_creation_domain_tag_recommended">Consigliato</string>
+    <string name="site_creation_domain_tag_best_alternative">Alternativa migliore</string>
+    <string name="site_creation_domain_cost">%s/anno</string>
+    <string name="me_btn_help">Aiuto</string>
+    <string name="support_faq_title">Grazie per essere passato all\'app di Jetpack.</string>
+    <string name="logs_button">Log</string>
+    <string name="tickets">Biglietti</string>
+    <string name="free">Gratis</string>
+    <string name="help_buttons_screen_title">Aiuto</string>
     <string name="gutenberg_native_blocks_menu">Menu Blocchi</string>
     <string name="promote_blaze_card_menu_hide_this">Nascondi</string>
     <string name="promote_blaze_card_sub_title">Mostra il tuo lavoro su milioni di siti.</string>
@@ -80,6 +99,7 @@ Language: it
     <string name="my_site_blogging_prompt_card_attribution_dayone">Da &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Nascondi</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Ricordamelo più tardi</string>
+    <string name="jetpack_feature_card_content_phase_three">Statistiche, Reader, Notifiche e altre funzionalità passeranno presto all\'app mobile Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Passa all\'app Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Maggiori informazioni su jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Il passaggio è gratuito e richiede solo un minuto.</string>

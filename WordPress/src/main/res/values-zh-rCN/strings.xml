@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-01 09:54:13+0000
+Translation-Revision-Date: 2023-03-14 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_CN
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">立即通过 Blaze 宣传文章</string>
+    <string name="blaze_overlay_page_promotional_button">立即通过 Blaze 宣传此页面</string>
+    <string name="blaze_overlay_post_promotional_button">立即通过 Blaze 宣传此文章</string>
+    <string name="blaze_promotional_subtitle_3">随时跟踪表现、开始和停止您的 Blaze。</string>
+    <string name="blaze_promotional_subtitle_2">数百万个 WordPress 和 Tumblr 站点上都会显示您的内容。</string>
+    <string name="blaze_promotional_subtitle_1">每天只需几美元即可在几分钟内推广任意文章或页面。</string>
+    <string name="blaze_promotional_text">通过 Blaze 为您的站点吸引更多流量</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="site_creation_domain_tag_unavailable">此域名已注册</string>
+    <string name="site_creation_domain_tag_sale">销售</string>
+    <string name="site_creation_domain_tag_recommended">推荐</string>
+    <string name="site_creation_domain_tag_best_alternative">更好的替代方案</string>
+    <string name="site_creation_domain_cost">%s/年</string>
+    <string name="me_btn_help">帮助</string>
+    <string name="support_faq_caption">查看我们的常见问题解答，为您可能遇到的常见问题寻找答案。</string>
+    <string name="support_faq_title">感谢您切换至 Jetpack 应用程序！</string>
+    <string name="logs_button">日志</string>
+    <string name="tickets">票据</string>
+    <string name="free">免费</string>
+    <string name="help_buttons_screen_title">帮助</string>
     <string name="gutenberg_native_blocks_menu">区块菜单</string>
     <string name="promote_blaze_card_menu_hide_this">隐藏此内容</string>
     <string name="promote_blaze_card_sub_title">在数以百万计的站点上展示您的作品。</string>

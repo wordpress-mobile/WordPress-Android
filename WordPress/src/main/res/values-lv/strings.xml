@@ -1,11 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-03 09:26:43+0000
+Translation-Revision-Date: 2023-03-12 10:18:54+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: lv
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">Izgaismojiet šo ziņu tūlīt</string>
+    <string name="blaze_overlay_page_promotional_button">Izgaismojiet šo lapu</string>
+    <string name="blaze_overlay_post_promotional_button">Izgaismojiet šo ziņu</string>
+    <string name="blaze_promotional_subtitle_3">Sekojiet veiktspējai, iedarbiniet un apturiet savu Blaze jebkurā laikā.</string>
+    <string name="blaze_promotional_subtitle_2">Jūsu saturs parādīsies miljoniem WordPress un Tumblr vietņu.</string>
+    <string name="blaze_promotional_subtitle_1">Popularizējiet jebkuru ziņu vai lapu tikai dažu minūšu laikā par dažiem dolāriem dienā.</string>
+    <string name="blaze_promotional_text">Palieliniet datplūsmu uz savu vietni, izmantojot Blaze</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="site_creation_domain_tag_unavailable">Šis domēns jau ir reģistrēts</string>
+    <string name="site_creation_domain_tag_sale">Izpārdošana</string>
+    <string name="site_creation_domain_tag_recommended">Ieteicams</string>
+    <string name="site_creation_domain_tag_best_alternative">Labākā alternatīva</string>
+    <string name="site_creation_domain_cost">%s/gadā</string>
+    <string name="me_btn_help">Palīdzība</string>
+    <string name="support_faq_caption">Atbildes uz bieži uzdotajiem jautājumiem skatiet mūsu BUJ.</string>
+    <string name="support_faq_title">Paldies, ka pārslēdzāties uz Jetpack lietotni!</string>
+    <string name="logs_button">Žurnāli</string>
+    <string name="tickets">Biļetes</string>
+    <string name="free">Bezmaksas</string>
+    <string name="help_buttons_screen_title">Palīdzība</string>
+    <string name="gutenberg_native_blocks_menu">Bloku izvēlne</string>
+    <string name="promote_blaze_card_menu_hide_this">Slēpt šo</string>
+    <string name="promote_blaze_card_sub_title">Parādiet savu darbu miljoniem vietņu.</string>
+    <string name="promote_blaze_card_title">Reklamēt savu saturu, izmantojot Blaze</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Aizvērt</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Sazināties ar atbalsta dienestu</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Instalēt pilnu spraudni</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Noteikumi un nosacījumi</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Iestatot Jetpack, jūs piekrītat mūsu </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">pilns Jetpack spraudnis</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">atsevišķi Jetpack spraudņi</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">spraudnis %1$s</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s izmanto %2$s, kas vēl neatbalsta visas lietotnes funkcijas. Lūdzu, instalējiet %3$s, lai izmantotu lietotni šajā vietnē.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Lūdzu, instalējiet pilno Jetpack spraudņa versiju</string>
+    <string name="only_one_primary_site_message">Ir pieejama tikai viena vietne, tāpēc jūs nevarat mainīt savu galveno vietni.</string>
+    <string name="my_site_jp_install_full_plugin_card_content">Šī vietne izmanto atsevišķu spraudni, kas vēl neatbalsta visas lietotnes funkcijas. Lūdzu, instalējiet pilnu Jetpack spraudni.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">Sazinieties ar atbalsta dienestu</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">Mēģiniet vēlreiz</string>
+    <string name="jetpack_full_plugin_install_error_description">Jetpack pašlaik nevarēja instalēt.</string>
+    <string name="jetpack_full_plugin_install_error_title">Radās problēma</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Kļūdas ikona</string>
+    <string name="jetpack_full_plugin_install_done_button">Darīts</string>
+    <string name="jetpack_full_plugin_install_done_description">Gatavs šīs vietnes izmantošanai ar lietotni.</string>
+    <string name="jetpack_full_plugin_install_done_title">Instalēts Jetpack</string>
+    <string name="jetpack_full_plugin_install_installing_description">Jetpack instalēšana jūsu vietnē. Tas var ilgt dažas minūtes.</string>
+    <string name="jetpack_full_plugin_install_installing_title">Jetpack instalēšana</string>
+    <string name="jetpack_full_plugin_install_initial_button">Turpināt</string>
+    <string name="jetpack_full_plugin_install_initial_description">Jūsu vietnes akreditācijas dati netiks saglabāti un tiek izmantoti tikai Jetpack instalēšanai.</string>
+    <string name="jetpack_full_plugin_install_initial_title">Instalējiet Jetpack</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack ikona</string>
+    <string name="button_promote_with_blaze">Reklamējiet ar Blaze</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Atbrīvojiet visu savas vietnes potenciālu. Iegūstiet statistiku, paziņojumus un daudz ko citu, izmantojot Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Jūsu vietnei ir spraudnis Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack mobilā lietotne ir paredzēta darbam kopā ar Jetpack spraudni. Pārslēdziet tagad, lai piekļūtu statistikai, paziņojumiem, lasītājam un daudz kam citam.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Saņemiet paziņojumus par jauniem komentāriem, atzīmēm Patīk, skatījumiem un daudz ko citu.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Atrodiet un sekojiet savām iecienītākajām vietnēm un kopienām, kā arī kopīgojiet savu saturu.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Vērojiet, kā jūsu datplūsma pieaug, izmantojot noderīgus ieskatus un visaptverošu statistiku.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistika un ieskati</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack ļauj paveikt vairāk savā WordPress vietnē. Pārslēgšanās ir bezmaksas un aizņem tikai minūti.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_title">Sniedziet atbalstu WordPress ar Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Emuāru rakstīšanas uzvednes un atgādinājumus varat kontrolēt katrā laikā sadaļā Mana vietne &gt; Iestatījumi &gt; Emuāri</string>
