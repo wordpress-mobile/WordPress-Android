@@ -437,6 +437,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             null,
             action.source
         )
+        is SiteNavigationAction.ShowJetpackRemovalStaticPostersView -> {
+            // todo: JetpackFocus - implement when static posters fragment is ready
+            showSnackbar(SnackbarMessageHolder(
+                message = UiStringText("TODO: JetpackFeatureRemoval for stats"),
+                isImportant = true))
+        }
     }
 
     private fun showJetpackPoweredBottomSheet() {
