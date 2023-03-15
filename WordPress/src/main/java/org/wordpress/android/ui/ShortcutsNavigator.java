@@ -32,8 +32,13 @@ public class ShortcutsNavigator {
             case OPEN_STATS:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_STATS_CLICKED);
                 if (!mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
-                    ActivityLauncher.viewBlogStats(activity, currentSite);
-                } 
+                    if (mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+                        // todo: JetpackFocus - Send to static posters fragment when ready
+                        ActivityLauncher.viewBlogStats(activity, currentSite);
+                    } else {
+                        ActivityLauncher.viewBlogStats(activity, currentSite);
+                    }
+                }
                 break;
             case CREATE_NEW_POST:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_NEW_POST_CLICKED);
@@ -47,6 +52,8 @@ public class ShortcutsNavigator {
                 );
                 break;
             case OPEN_NOTIFICATIONS:
+                // todo: JetpackFocus - Send to static posters fragment when ready, but this
+                // will go through WPMainActivity.handleOpenPageIntent, so it doesn't have to be handled here
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_NOTIFICATIONS_CLICKED);
                 if (!mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
                     ActivityLauncher.viewNotifications(activity);
