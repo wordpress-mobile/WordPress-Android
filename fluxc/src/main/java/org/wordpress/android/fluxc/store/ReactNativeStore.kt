@@ -61,6 +61,11 @@ class ReactNativeStore @VisibleForTesting constructor(
             Uri::parse
     )
 
+    private enum class RequestMethod {
+        GET,
+        POST
+    }
+
     suspend fun executeGetRequest(
         site: SiteModel,
         pathWithParams: String,
@@ -68,13 +73,13 @@ class ReactNativeStore @VisibleForTesting constructor(
     ): ReactNativeFetchResponse =
             coroutineEngine.withDefaultContext(AppLog.T.API, this, "executeGetRequest") {
                 return@withDefaultContext if (site.isUsingWpComRestApi) {
-                    executeWPComRequest(site, pathWithParams, enableCaching)
+                    executeWPComGetRequest(site, pathWithParams, enableCaching)
                 } else {
-                    executeWPAPIRequest(site, pathWithParams, enableCaching)
+                    executeWPAPIGetRequest(site, pathWithParams, enableCaching)
                 }
             }
 
-    private suspend fun executeWPComRequest(
+    private suspend fun executeWPComGetRequest(
         site: SiteModel,
         path: String,
         enableCaching: Boolean
@@ -87,14 +92,22 @@ class ReactNativeStore @VisibleForTesting constructor(
         }
     }
 
-    private suspend fun executeWPAPIRequest(
+    private suspend fun executeWPAPIGetRequest(
         site: SiteModel,
         pathWithParams: String,
         enableCaching: Boolean
     ): ReactNativeFetchResponse {
+        return executeWPAPIRequest(site, pathWithParams, RequestMethod.GET, enableCaching)
+    }
+    private suspend fun executeWPAPIRequest(
+        site: SiteModel,
+        pathWithParams: String,
+        method: RequestMethod,
+        enableCaching: Boolean = true
+    ): ReactNativeFetchResponse {
         val (path, params) = parsePathAndParams(pathWithParams)
         return if (path != null) {
-            executeWPAPIRequest(site, path, params, enableCaching)
+            executeWPAPIRequest(site, path, method, params, enableCaching)
         } else {
             urlParseError(pathWithParams)
         }
@@ -111,6 +124,7 @@ class ReactNativeStore @VisibleForTesting constructor(
     private suspend fun executeWPAPIRequest(
         site: SiteModel,
         path: String,
+        method: RequestMethod,
         params: Map<String, String>,
         enableCaching: Boolean
     ): ReactNativeFetchResponse {
@@ -136,7 +150,9 @@ class ReactNativeStore @VisibleForTesting constructor(
             nonce = nonceRestClient.requestNonce(site)
         }
 
-        val response = executeFetch(fullRestUrl, params, nonce?.value, enableCaching)
+        val response = when (method) {
+            RequestMethod.GET -> executeGet(fullRestUrl, params, nonce?.value, enableCaching)
+        }
         return when (response) {
             is Success -> response
 
@@ -150,7 +166,7 @@ class ReactNativeStore @VisibleForTesting constructor(
                         // Try original call again if we have a new nonce
                         val nonceIsUpdated = newNonce != null && newNonce != previousNonce
                         if (nonceIsUpdated) {
-                            return executeFetch(fullRestUrl, params, newNonce, enableCaching)
+                            return executeGet(fullRestUrl, params, newNonce, enableCaching)
                         }
                     }
                     response
@@ -165,7 +181,7 @@ class ReactNativeStore @VisibleForTesting constructor(
                         // If we did the previous call with a saved rest url, try again by making
                         // recursive call. This time there is no saved rest url to use
                         // so the rest url will be retrieved using discovery
-                        executeWPAPIRequest(site, path, params, enableCaching)
+                        executeWPAPIRequest(site, path, method, params, enableCaching)
                     } else {
                         // Already used discovery to fetch the rest base url and still got 'not found', so
                         // just return the error response
@@ -180,7 +196,7 @@ class ReactNativeStore @VisibleForTesting constructor(
         }
     }
 
-    private suspend fun executeFetch(
+    private suspend fun executeGet(
         fullRestApiUrl: String,
         params: Map<String, String>,
         nonce: String?,
