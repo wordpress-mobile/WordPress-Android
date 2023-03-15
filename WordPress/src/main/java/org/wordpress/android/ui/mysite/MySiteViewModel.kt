@@ -45,6 +45,7 @@ import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.FEATURE_CARD
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jpfullplugininstall.GetShowJetpackFullPluginInstallOnboardingUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
@@ -201,7 +202,8 @@ class MySiteViewModel @Inject constructor(
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
     private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker,
-    private val blazeFeatureUtils: BlazeFeatureUtils
+    private val blazeFeatureUtils: BlazeFeatureUtils,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -722,24 +724,44 @@ class MySiteViewModel @Inject constructor(
     @Suppress("EmptyFunctionBlock")
     private fun onGetMoreViewsClick() {
         cardsTracker.trackTodaysStatsCardGetMoreViewsNudgeClicked()
-        _onNavigation.value = Event(
-            SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl(URL_GET_MORE_VIEWS_AND_TRAFFIC)
-        )
+        // todo: JetpackFocus
+        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView())
+        } else {
+            _onNavigation.value = Event(
+                SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl(URL_GET_MORE_VIEWS_AND_TRAFFIC)
+            )
+        }
     }
 
     private fun onTodaysStatsCardFooterLinkClick() {
         cardsTracker.trackTodaysStatsCardFooterLinkClicked()
-        navigateToTodaysStats()
+        // todo: JetpackFocus
+        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView())
+        } else {
+            navigateToTodaysStats()
+        }
     }
 
     private fun onTodaysStatsCardClick() {
         cardsTracker.trackTodaysStatsCardClicked()
-        navigateToTodaysStats()
+        // todo: JetpackFocus
+        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView())
+        } else {
+            navigateToTodaysStats()
+        }
     }
 
     private fun navigateToTodaysStats() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        _onNavigation.value = Event(SiteNavigationAction.OpenStatsInsights(selectedSite))
+        // todo: JetpackFocus
+        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView(selectedSite))
+        } else {
+            _onNavigation.value = Event(SiteNavigationAction.OpenStatsInsights(selectedSite))
+        }
     }
 
     private fun buildNoSiteState(): NoSites {
@@ -1224,15 +1246,19 @@ class MySiteViewModel @Inject constructor(
         return fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
     }
 
-    private fun getStatsNavigationActionForSite(site: SiteModel) = when {
-        // If the user is not logged in and the site is already connected to Jetpack, ask to login.
-        !accountStore.hasAccessToken() && site.isJetpackConnected -> SiteNavigationAction.StartWPComLoginForJetpackStats
+    // todo: JetpackFocus - We need to intercept this here for static posters
+    private fun getStatsNavigationActionForSite(site: SiteModel): SiteNavigationAction = when {
+            // if we are in static posters phase, then ignore the rest
+            jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage() -> SiteNavigationAction.ShowJetpackRemovalStaticPostersView(site)
 
-        // If it's a WordPress.com or Jetpack site, show the Stats screen.
-        site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected -> SiteNavigationAction.OpenStats(site)
+            // If the user is not logged in and the site is already connected to Jetpack, ask to login.
+            !accountStore.hasAccessToken() && site.isJetpackConnected -> SiteNavigationAction.StartWPComLoginForJetpackStats
 
-        // If it's a self-hosted site, ask to connect to Jetpack.
-        else -> SiteNavigationAction.ConnectJetpackForStats(site)
+            // If it's a WordPress.com or Jetpack site, show the Stats screen.
+            site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected -> SiteNavigationAction.OpenStats(site)
+
+            // If it's a self-hosted site, ask to connect to Jetpack.
+            else -> SiteNavigationAction.ConnectJetpackForStats(site)
     }
 
     fun onAvatarPressed() {
