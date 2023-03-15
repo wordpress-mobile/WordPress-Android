@@ -11,7 +11,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <androidx.legacy.widget.Space
+        <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />
@@ -43,7 +43,7 @@
             android:paddingBottom="10dp"
             android:text="@string/request_list_empty_start_conversation" />
 
-        <androidx.legacy.widget.Space
+        <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />
