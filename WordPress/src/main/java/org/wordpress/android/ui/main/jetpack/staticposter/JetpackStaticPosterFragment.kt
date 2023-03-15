@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main.jetpack.move
+package org.wordpress.android.ui.main.jetpack.staticposter
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,22 +11,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.main.jetpack.move.JetpackMoveViewModel.Event.Noop
-import org.wordpress.android.ui.main.jetpack.move.JetpackMoveViewModel.UiState.Content
-import org.wordpress.android.ui.main.jetpack.move.JetpackMoveViewModel.UiState.Loading
+import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.main.jetpack.staticposter.UiState.Content
+import org.wordpress.android.ui.main.jetpack.staticposter.UiState.Loading
 
 @AndroidEntryPoint
-class JetpackMoveFragment : Fragment() {
-    private val viewModel: JetpackMoveViewModel by viewModels()
+class JetpackStaticPosterFragment : Fragment() {
+    private val viewModel: JetpackStaticPosterViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +35,8 @@ class JetpackMoveFragment : Fragment() {
     ): View = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
-                JetpackMoveScreen()
+                val uiState by viewModel.uiState.collectAsState()
+                JetpackStaticPosterUi(uiState)
             }
         }
     }
@@ -50,16 +51,16 @@ class JetpackMoveFragment : Fragment() {
         viewModel.events.onEach(this::handleEvents).launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-    private fun handleEvents(event: JetpackMoveViewModel.Event) {
+    private fun handleEvents(event: Event) {
         when (event) {
-            is Noop -> error("Unhandled event: $event")
+            is Event.Noop -> error("Unhandled event: $event")
         }
     }
 
     companion object {
         private const val ARG_PARCEL = "ARG_PARCEL"
 
-        fun newInstance(parcel: JetpackMoveViewModel.Data) = JetpackMoveFragment().apply {
+        fun newInstance(parcel: UiData) = JetpackStaticPosterFragment().apply {
             arguments = Bundle().apply {
                 putParcelable(ARG_PARCEL, parcel)
             }
@@ -68,33 +69,32 @@ class JetpackMoveFragment : Fragment() {
 }
 
 @Composable
-private fun JetpackMoveScreen(viewModel: JetpackMoveViewModel = viewModel()) {
+private fun JetpackStaticPosterUi(uiState: UiState) {
     Box {
-        val uiState by viewModel.uiState.collectAsState()
-
-        when (val state = uiState) {
-            is Content -> ContentScreen(state)
-            is Loading -> LoadingScreen()
+        when (uiState) {
+            is Content -> Content(uiState)
+            is Loading -> Loading()
         }
     }
 }
 
 @Composable
-fun ContentScreen(uiState: Content) = with(uiState) {
-    Text(text = featureName)
+private fun Content(uiState: Content) = with(uiState) {
+    Text(text = uiStringText(featureName))
 }
 
 @Composable
-fun LoadingScreen() {
+private fun Loading() {
     CircularProgressIndicator()
 }
 
-@Preview()
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL)
 @Composable
-private fun JetpackMoveScreenPreview() {
+private fun PreviewJetpackMoveScreen() {
     AppTheme {
-        val vm = JetpackMoveViewModel()
-        vm.start(JetpackMoveViewModel.StatsData)
-        JetpackMoveScreen()
+        Box {
+            val uiState = UiData.STATS.toContentUiState()
+            JetpackStaticPosterUi(uiState)
+        }
     }
 }
