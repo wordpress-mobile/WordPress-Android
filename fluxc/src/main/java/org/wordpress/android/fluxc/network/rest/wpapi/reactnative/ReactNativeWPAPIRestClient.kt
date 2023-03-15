@@ -21,7 +21,7 @@ class ReactNativeWPAPIRestClient @Inject constructor(
     @Named("custom-ssl") requestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
-    suspend fun fetch(
+    suspend fun getRequest(
         url: String,
         params: Map<String, String>,
         successHandler: (data: JsonElement?) -> ReactNativeFetchResponse,

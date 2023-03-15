@@ -51,10 +51,10 @@ class ReactNativeStoreWpComTest {
         whenever(site.isUsingWpComRestApi).thenReturn(true)
 
         val expectedUrl = "https://public-api.wordpress.com/wp/v2/sites/${site.siteId}/media"
-        whenever(wpComRestClient.fetch(expectedUrl, mapOf("paramKey" to "paramValue"), ::Success, ::Error))
+        whenever(wpComRestClient.getRequest(expectedUrl, mapOf("paramKey" to "paramValue"), ::Success, ::Error))
                 .thenReturn(expectedResponse)
 
-        val actualResponse = store.executeRequest(site, "/wp/v2/media?paramKey=paramValue")
+        val actualResponse = store.executeGetRequest(site, "/wp/v2/media?paramKey=paramValue")
         assertEquals(expectedResponse, actualResponse)
     }
 
@@ -73,7 +73,7 @@ class ReactNativeStoreWpComTest {
                 initCoroutineEngine(),
                 uriParser = uriParser)
 
-        val response = store.executeRequest(mock(), "")
+        val response = store.executeGetRequest(mock(), "")
         val errorType = (response as? Error)?.error?.type
         assertEquals(UNKNOWN, errorType)
     }

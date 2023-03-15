@@ -42,7 +42,7 @@ class ReactNativeWPAPIRestClientTest {
     }
 
     @Test
-    fun `fetch handles successful response`() = test {
+    fun `GET request handles successful response`() = test {
         val errorHandler: (BaseNetworkError) -> ReactNativeFetchResponse = { _ ->
             throw AssertionFailedError("errorHandler should not have been called")
         }
@@ -55,11 +55,11 @@ class ReactNativeWPAPIRestClientTest {
         }
 
         val expectedRestCallResponse = Success(expectedJson)
-        verifyRestApi(successHandler, errorHandler, expectedRestCallResponse, expected)
+        verifyGETRequest(successHandler, errorHandler, expectedRestCallResponse, expected)
     }
 
     @Test
-    fun `fetch handles failure response`() = test {
+    fun `GET request handles failure response`() = test {
         val successHandler = { _: JsonElement? ->
             throw AssertionFailedError("successHandler should not have been called")
         }
@@ -72,9 +72,10 @@ class ReactNativeWPAPIRestClientTest {
         }
 
         val mockedRestCallResponse = Error<JsonElement>(expectedBaseNetworkError)
-        verifyRestApi(successHandler, errorHandler, mockedRestCallResponse, expected)
+        verifyGETRequest(successHandler, errorHandler, mockedRestCallResponse, expected)
     }
-    private suspend fun verifyRestApi(
+    
+    private suspend fun verifyGETRequest(
         successHandler: (JsonElement?) -> ReactNativeFetchResponse,
         errorHandler: (BaseNetworkError) -> ReactNativeFetchResponse,
         expectedRestCallResponse: WPAPIResponse<JsonElement>,
@@ -89,7 +90,7 @@ class ReactNativeWPAPIRestClientTest {
                 true)
         ).thenReturn(expectedRestCallResponse)
 
-        val actual = subject.fetch(url, params, successHandler, errorHandler)
+        val actual = subject.getRequest(url, params, successHandler, errorHandler)
         assertEquals(expected, actual)
     }
 }
