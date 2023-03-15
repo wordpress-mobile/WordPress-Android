@@ -16,6 +16,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.JetpackCapability;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
+import org.wordpress.android.ui.prefs.appicon.AppIcon;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
@@ -112,6 +113,9 @@ public class AppPrefs {
 
         // list of last time a notification has been created for a draft
         PENDING_DRAFTS_NOTIFICATION_LAST_NOTIFICATION_DATES,
+
+        // App Icon setting
+        APP_ICON,
 
         // Optimize Image and Video settings
         IMAGE_OPTIMIZE_ENABLED,
@@ -720,6 +724,14 @@ public class AppPrefs {
         SharedPreferences.Editor editor = prefs().edit();
         editor.putLong(key, timestamp);
         editor.apply();
+    }
+
+    public static String getCurrentAppIconId() {
+        return getString(DeletablePrefKey.APP_ICON, AppIcon.DEFAULT.getId());
+    }
+
+    public static void setCurrentAppIconId(String id) {
+        setString(DeletablePrefKey.APP_ICON, id);
     }
 
     public static boolean isImageOptimize() {

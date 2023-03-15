@@ -69,6 +69,18 @@
             android:name=".ui.WPLaunchActivity"
             android:noHistory="true"
             android:theme="@style/NoDisplay"
+            android:icon="@mipmap/app_icon"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <activity-alias
+            android:name=".launch.WPLaunchActivityDefault"
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:icon="@mipmap/app_icon"
+            android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -79,7 +91,7 @@
 
             <meta-data android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
-        </activity>
+        </activity-alias>
 
         <!-- Main tab activity -->
         <activity
