@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.store.SiteStore.FetchWPAPISitePayload
@@ -48,9 +47,7 @@ class SiteWPAPIRestClient @Inject constructor(
             password = payload.password
         ) { wpApiUrl, nonce ->
             if (nonce !is Available) {
-                val networkError = (nonce as? FailedRequest)?.networkError ?: WPAPINetworkError(
-                    BaseNetworkError(GenericErrorType.UNKNOWN)
-                )
+                val networkError = (nonce as? FailedRequest)?.networkError ?: BaseNetworkError(GenericErrorType.UNKNOWN)
 
                 return@makeAuthenticatedWPAPIRequest SiteModel().apply {
                     error = networkError
