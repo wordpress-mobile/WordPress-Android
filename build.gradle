@@ -45,7 +45,7 @@ ext {
     androidxActivityVersion = '1.5.1'
     androidxFragmentVersion = '1.5.5'
     androidxGridlayoutVersion = '1.0.0'
-    androidxLifecycleVersion = '2.5.1'
+    androidxLifecycleVersion = '2.6.0'
     androidxPercentlayoutVersion = '1.0.0'
     androidxPreferenceVersion = '1.2.0'
     androidxRecyclerviewVersion = '1.2.1'
