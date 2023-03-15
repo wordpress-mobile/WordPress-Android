@@ -185,7 +185,8 @@ open class SiteStore @Inject constructor(
         @JvmField val visibility: SiteVisibility,
         @JvmField val segmentId: Long? = null,
         @JvmField val siteDesign: String? = null,
-        @JvmField val dryRun: Boolean
+        @JvmField val dryRun: Boolean,
+        @JvmField val findAvailableUrl: Boolean? = null,
     ) : Payload<BaseNetworkError>() {
         constructor(
             siteName: String?,
@@ -216,8 +217,9 @@ open class SiteStore @Inject constructor(
             language: String,
             timeZoneId: String,
             visibility: SiteVisibility,
+            findAvailableUrl: Boolean?,
             dryRun: Boolean
-        ) : this(siteName, siteTitle, language, timeZoneId, visibility, null, null, dryRun)
+        ) : this(siteName, siteTitle, language, timeZoneId, visibility, null, null, dryRun, findAvailableUrl)
     }
 
     data class FetchedPostFormatsPayload(
@@ -1595,7 +1597,8 @@ open class SiteStore @Inject constructor(
                 payload.visibility,
                 payload.segmentId,
                 payload.siteDesign,
-                payload.dryRun
+                payload.findAvailableUrl,
+                payload.dryRun,
         )
         return handleCreateNewSiteCompleted(
                 payload = result
