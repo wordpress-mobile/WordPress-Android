@@ -21,6 +21,7 @@ import com.google.android.material.navigation.NavigationBarView.OnItemReselected
 import com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
@@ -49,6 +50,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     private var fragmentManager: FragmentManager? = null
     private lateinit var pageListener: OnPageListener
     private var prevPosition = -1
+    private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
     private val unselectedButtonAlpha = ResourcesCompat.getFloat(
         resources,
         R.dimen.material_emphasis_disabled
@@ -70,9 +72,10 @@ class WPMainNavigationView @JvmOverloads constructor(
         fun onNewPostButtonClicked(promptId: Int, origin: EntryPoint)
     }
 
-    fun init(fm: FragmentManager, listener: OnPageListener) {
+    fun init(fm: FragmentManager, listener: OnPageListener, helper: JetpackFeatureRemovalPhaseHelper) {
         fragmentManager = fm
         pageListener = listener
+        jetpackFeatureRemovalPhaseHelper = helper
 
         navAdapter = NavAdapter()
         assignNavigationListeners(true)
@@ -291,11 +294,15 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private inner class NavAdapter {
-        private fun createFragment(pageType: PageType): Fragment {
+        private fun createFragment(pageType: PageType, helper: JetpackFeatureRemovalPhaseHelper): Fragment {
+            val shouldUseStaticPostersFragment = helper.shouldShowStaticPage()
             val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
-                READER -> ReaderFragment()
-                NOTIFS -> NotificationsListFragment.newInstance()
+                // todo: JetpackFocus - use the static posters fragment when available
+                READER -> if (shouldUseStaticPostersFragment) ReaderFragment() else ReaderFragment()
+                NOTIFS -> if (shouldUseStaticPostersFragment)
+                    NotificationsListFragment.newInstance()
+                else NotificationsListFragment.newInstance()
             }
             fragmentManager?.beginTransaction()
                 ?.add(R.id.fragment_container, fragment, getTagForPageType(pageType))
@@ -305,7 +312,10 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         internal fun getFragment(position: Int): Fragment? {
             return pages().getOrNull(position)?.let { pageType ->
-                fragmentManager?.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(pageType)
+                fragmentManager?.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(
+                    pageType,
+                    jetpackFeatureRemovalPhaseHelper
+                )
             }
         }
 
