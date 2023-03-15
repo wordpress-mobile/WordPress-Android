@@ -23,7 +23,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.usecases.CreateSiteUseCase
 import org.wordpress.android.util.UrlUtilsWrapper
-import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 private const val SITE_TITLE = "site title"
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
@@ -78,7 +78,7 @@ class CreateSiteUseCaseTest : BaseUnitTest() {
         assertThat(payload.siteName).isEqualTo(DUMMY_SITE_DATA.domain)
         assertThat(payload.segmentId).isEqualTo(DUMMY_SITE_DATA.segmentId)
         assertThat(payload.siteTitle).isEqualTo(SITE_TITLE)
-        assertFalse(payload.findAvailableUrl!!)
+        assertTrue(payload.findAvailableUrl!!)
     }
 
     @Test
