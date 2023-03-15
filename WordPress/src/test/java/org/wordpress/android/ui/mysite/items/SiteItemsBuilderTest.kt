@@ -15,15 +15,11 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
-import org.wordpress.android.ui.mysite.items.categoryheader.SiteCategoryItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
 import org.wordpress.android.ui.quickstart.QuickStartType
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteItemsBuilderTest {
-    @Mock
-    lateinit var siteCategoryItemBuilder: SiteCategoryItemBuilder
-
     @Mock
     lateinit var siteListItemBuilder: SiteListItemBuilder
 
@@ -47,7 +43,6 @@ class SiteItemsBuilderTest {
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
             .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
         siteItemsBuilder = SiteItemsBuilder(
-            siteCategoryItemBuilder,
             siteListItemBuilder,
             quickStartRepository,
             jetpackFeatureRemovalOverlayUtil
@@ -55,8 +50,8 @@ class SiteItemsBuilderTest {
     }
 
     @Test
-    fun `always adds stats, publish, posts, media, comment, external and view site items`() {
-        setupHeaders(addJetpackHeader = false, addLookAndFeelHeader = false, addConfigurationHeader = false)
+    fun `always adds stats, publish, posts, media, comment, and view admin items`() {
+        setupHeaders()
 
         val buildSiteItems = siteItemsBuilder.build(
             SiteItemsBuilderParams(
@@ -66,23 +61,21 @@ class SiteItemsBuilderTest {
         )
 
         assertThat(buildSiteItems).containsExactly(
-            STATS_ITEM,
-            PUBLISH_HEADER,
+            CONTENT_HEADER,
             POSTS_ITEM,
             MEDIA_ITEM,
             COMMENTS_ITEM,
-            EXTERNAL_HEADER,
-            VIEW_SITE_ITEM
+            TRAFFIC_HEADER,
+            STATS_ITEM,
+            MANAGE_HEADER,
+            EMPTY_HEADER,
+            EMPTY_HEADER
         )
     }
 
     @Test
     fun `adds all the items in the correct order`() {
         setupHeaders(
-            addJetpackHeader = true,
-            addJetpackSettings = true,
-            addLookAndFeelHeader = true,
-            addConfigurationHeader = true,
             addActivityLogItem = true,
             addPlanItem = false,
             addPagesItem = true,
@@ -105,27 +98,25 @@ class SiteItemsBuilderTest {
         )
 
         assertThat(buildSiteItems).containsExactly(
-            JETPACK_HEADER,
+            CONTENT_HEADER,
+            POSTS_ITEM,
+            PAGES_ITEM,
+            MEDIA_ITEM,
+            COMMENTS_ITEM,
+            TRAFFIC_HEADER,
             STATS_ITEM,
+            MANAGE_HEADER,
             ACTIVITY_ITEM,
             BACKUP_ITEM,
             SCAN_ITEM,
-            JETPACK_ITEM,
-            PUBLISH_HEADER,
-            POSTS_ITEM,
-            MEDIA_ITEM,
-            PAGES_ITEM,
-            COMMENTS_ITEM,
-            LOOK_AND_FEEL_HEADER,
-            THEMES_ITEM,
-            CONFIGURATION_HEADER,
+            EMPTY_HEADER,
             PEOPLE_ITEM,
             PLUGINS_ITEM,
             SHARING_ITEM,
+            THEMES_ITEM,
             DOMAINS_ITEM,
             SITE_SETTINGS_ITEM,
-            EXTERNAL_HEADER,
-            VIEW_SITE_ITEM,
+            EMPTY_HEADER,
             ADMIN_ITEM
         )
     }
@@ -273,10 +264,6 @@ class SiteItemsBuilderTest {
 
     @Suppress("ComplexMethod", "LongMethod")
     private fun setupHeaders(
-        addJetpackHeader: Boolean = false,
-        addJetpackSettings: Boolean = false,
-        addLookAndFeelHeader: Boolean = false,
-        addConfigurationHeader: Boolean = false,
         addActivityLogItem: Boolean = false,
         addPlanItem: Boolean = false,
         addPagesItem: Boolean = false,
@@ -292,26 +279,6 @@ class SiteItemsBuilderTest {
         showPlansFocusPoint: Boolean = false,
         showPagesFocusPoint: Boolean = false
     ) {
-        if (addJetpackHeader) {
-            whenever(siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(siteModel)).thenReturn(
-                JETPACK_HEADER
-            )
-        }
-        if (addJetpackSettings) {
-            whenever(siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
-                JETPACK_ITEM
-            )
-        }
-        if (addLookAndFeelHeader) {
-            whenever(siteCategoryItemBuilder.buildLookAndFeelHeaderIfAvailable(siteModel)).thenReturn(
-                LOOK_AND_FEEL_HEADER
-            )
-        }
-        if (addConfigurationHeader) {
-            whenever(siteCategoryItemBuilder.buildConfigurationHeaderIfAvailable(siteModel)).thenReturn(
-                CONFIGURATION_HEADER
-            )
-        }
         if (addPlanItem) {
             whenever(
                 siteListItemBuilder.buildPlanItemIfAvailable(

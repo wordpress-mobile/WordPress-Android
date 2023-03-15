@@ -155,7 +155,6 @@ Language: hi_IN
     <string name="ignore">ध्यान न दें</string>
     <string name="stats_insights_today">आज के आँकड़े</string>
     <string name="account_settings">अकाउंट सेटिंग्स</string>
-    <string name="me_btn_support">मदद और सहायता</string>
     <string name="site_picker_add_self_hosted">सेल्फ-होस्टेड साइट डाले </string>
     <string name="site_picker_edit_visibility">साइट्स दिखाए या छिपाये</string>
     <string name="my_site_btn_view_site">साईट पर जाये</string>

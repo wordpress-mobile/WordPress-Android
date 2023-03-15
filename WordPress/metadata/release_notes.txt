@@ -1,2 +1,4 @@
-* [**] [Jetpack-only] Help: Display the Jetpack app FAQ card on Help screen when switching from the WordPress app to the Jetpack app is complete. [https://github.com/wordpress-mobile/WordPress-Android/pull/18032]
-* [**] [Jetpack-only] Blaze: We added support for Blaze in the app. The user can now promote a post or page from the app to reach new audiences.
+Good words are read
+The WordPress logo is blue
+There are no new updates
+Sorry to disappoint you

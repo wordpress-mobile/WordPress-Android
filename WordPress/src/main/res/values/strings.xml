@@ -2259,6 +2259,11 @@
     <string name="support_ticket_subject">WordPress for Android Support</string>
 
     <!--My Site-->
+    <string name="my_site_header_content">Content</string>
+    <string name="my_site_header_traffic">Traffic</string>
+    <string name="my_site_header_manage">Manage</string>
+    <string name="my_site_btn_wp_admin">WP Admin</string>
+
     <string name="my_site_header_external">External</string>
     <string name="my_site_header_configuration">Configuration</string>
     <string name="my_site_header_look_and_feel">Look and Feel</string>
