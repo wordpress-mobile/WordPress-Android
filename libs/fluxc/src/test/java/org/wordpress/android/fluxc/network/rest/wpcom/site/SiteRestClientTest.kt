@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteFilter.WPCOM
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.test
+import kotlin.test.assertNotNull
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteRestClientTest {
@@ -104,7 +105,7 @@ class SiteRestClientTest {
         )
         val errorResponse = restClient.fetchSite(site)
 
-        assertThat(errorResponse.error).isNotNull()
+        assertNotNull(errorResponse.error)
         assertThat(errorResponse.error.type).isEqualTo(GenericErrorType.NETWORK_ERROR)
         assertThat(errorResponse.error.message).isEqualTo(errorMessage)
     }
@@ -173,7 +174,7 @@ class SiteRestClientTest {
         )
         val errorResponse = restClient.fetchSites(listOf(), false)
 
-        assertThat(errorResponse.error).isNotNull()
+        assertNotNull(errorResponse.error)
         assertThat(errorResponse.error.type).isEqualTo(GenericErrorType.NETWORK_ERROR)
         assertThat(errorResponse.error.message).isEqualTo(errorMessage)
     }
@@ -199,6 +200,7 @@ class SiteRestClientTest {
         val segmentId = 123L
         val siteDesign = "design"
         val timeZoneId = "Europe/London"
+        val findAvailableUrl = true
 
         val result = restClient.newSite(
             siteName,
@@ -208,6 +210,7 @@ class SiteRestClientTest {
             visibility,
             segmentId,
             siteDesign,
+            findAvailableUrl,
             dryRun
         )
 
@@ -223,6 +226,7 @@ class SiteRestClientTest {
                         "lang_id" to language,
                         "public" to "1",
                         "validate" to "0",
+                        "find_available_url" to findAvailableUrl.toString(),
                         "client_id" to appId,
                         "client_secret" to appSecret,
                         "options" to mapOf<String, Any>(
@@ -264,6 +268,7 @@ class SiteRestClientTest {
             visibility,
             segmentId,
             siteDesign,
+            null,
             dryRun
         )
 
@@ -322,6 +327,7 @@ class SiteRestClientTest {
             visibility,
             segmentId,
             siteDesign,
+            null,
             dryRun
         )
 
@@ -377,6 +383,7 @@ class SiteRestClientTest {
             visibility,
             null,
             null,
+            null,
             dryRun
         )
 
@@ -429,7 +436,7 @@ class SiteRestClientTest {
         )
         val errorResponse = restClient.fetchPostFormats(site)
 
-        assertThat(errorResponse.error).isNotNull()
+        assertNotNull(errorResponse.error)
         assertThat(errorResponse.error.type).isEqualTo(PostFormatsErrorType.GENERIC_ERROR)
     }
 
@@ -462,7 +469,7 @@ class SiteRestClientTest {
     }
 
     private suspend fun <T> initGetResponse(
-        kclass: Class<T>,
+        clazz: Class<T>,
         data: T,
         error: WPComGsonNetworkError? = null
     ): Response<T> {
@@ -472,7 +479,7 @@ class SiteRestClientTest {
                         eq(restClient),
                         urlCaptor.capture(),
                         paramsCaptor.capture(),
-                        eq(kclass),
+                        eq(clazz),
                         any(),
                         any(),
                         any()
@@ -483,7 +490,7 @@ class SiteRestClientTest {
     }
 
     private suspend fun <T> initPostResponse(
-        kclass: Class<T>,
+        clazz: Class<T>,
         data: T,
         error: WPComGsonNetworkError? = null
     ): Response<T> {
@@ -494,7 +501,7 @@ class SiteRestClientTest {
                         urlCaptor.capture(),
                         paramsCaptor.capture(),
                         bodyCaptor.capture(),
-                        eq(kclass),
+                        eq(clazz),
                         anyOrNull(),
                         anyOrNull(),
                 )
