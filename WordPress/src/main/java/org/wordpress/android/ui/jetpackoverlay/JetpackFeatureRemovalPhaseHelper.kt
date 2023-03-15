@@ -56,7 +56,7 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
         val currentPhase = getCurrentPhase() ?: return null
         return when (currentPhase) {
             is PhaseOne, PhaseTwo, PhaseThree -> PHASE_ONE
-            is PhaseFour, PhaseStaticPosters,  PhaseNewUsers, PhaseSelfHostedUsers -> PHASE_TWO
+            is PhaseFour, PhaseStaticPosters, PhaseNewUsers, PhaseSelfHostedUsers -> PHASE_TWO
         }
     }
 
@@ -64,14 +64,14 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
         val currentPhase = getCurrentPhase() ?: return null
         return when (currentPhase) {
             is PhaseOne, PhaseTwo, PhaseThree, PhaseStaticPosters -> PHASE_ONE
-            is PhaseFour ,  PhaseNewUsers, PhaseSelfHostedUsers -> PHASE_TWO
+            is PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> PHASE_TWO
         }
     }
 
     fun shouldRemoveJetpackFeatures(): Boolean {
         val currentPhase = getCurrentPhase() ?: return false
         return when (currentPhase) {
-            is PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers-> true
+            is PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> true
             is PhaseOne, PhaseTwo, PhaseThree, PhaseStaticPosters -> false
         }
     }
@@ -79,8 +79,8 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
     fun shouldShowNotifications(): Boolean {
         val currentPhase = getCurrentPhase() ?: return true
         return when (currentPhase) {
-            is PhaseStaticPosters, PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> false
-            is PhaseOne, PhaseTwo, PhaseThree -> true
+            is PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> false
+            is PhaseOne, PhaseTwo, PhaseThree, PhaseStaticPosters -> true
         }
     }
 }
