@@ -39,4 +39,19 @@ class ReactNativeWPComRestClient @Inject constructor(
             is Error -> errorHandler(response.error)
         }
     }
+
+    suspend fun postRequest(
+        url: String,
+        params: Map<String, String>,
+        body: Map<String, String>,
+        successHandler: (data: JsonElement) -> ReactNativeFetchResponse,
+        errorHandler: (BaseNetworkError) -> ReactNativeFetchResponse
+    ): ReactNativeFetchResponse {
+        val response =
+            wpComGsonRequestBuilder.syncPostRequest(this, url, params, body, JsonElement::class.java)
+        return when (response) {
+            is Success -> successHandler(response.data)
+            is Error -> errorHandler(response.error)
+        }
+    }
 }
