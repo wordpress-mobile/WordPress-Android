@@ -32,6 +32,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
@@ -61,6 +62,7 @@ import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
+import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.UnsupportedBlock;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBlockTypeImpressionsEventListener;
@@ -397,7 +399,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
                 mTextWatcher::postTextChanged,
                 mEditorFragmentListener::onAuthHeaderRequested,
-                mEditorFragmentListener::onPerformFetch,
+                new RequestExecutor() {
+                    @Override
+                    public void performGetRequest(String path, boolean enableCaching, Consumer<String> onSuccess,
+                                                  Consumer<Bundle> onError) {
+                        mEditorFragmentListener.onPerformFetch(path, enableCaching, onSuccess, onError);
+                    }
+                    @Override
+                    public void performPostRequest(String path, ReadableMap data, Consumer<String> onSuccess, Consumer<Bundle> onError) {
+                        mEditorFragmentListener.onPerformPost(path, data.toHashMap(), onSuccess, onError);
+                    }
+                },
                 mEditorImagePreviewListener::onImagePreviewRequested,
                 mEditorEditMediaListener::onMediaEditorRequested,
                 new OnGutenbergDidRequestUnsupportedBlockFallbackListener() {
