@@ -61,12 +61,12 @@ class ReactNativeStore @VisibleForTesting constructor(
             Uri::parse
     )
 
-    suspend fun executeRequest(
+    suspend fun executeGetRequest(
         site: SiteModel,
         pathWithParams: String,
         enableCaching: Boolean = true
     ): ReactNativeFetchResponse =
-            coroutineEngine.withDefaultContext(AppLog.T.API, this, "executeRequest") {
+            coroutineEngine.withDefaultContext(AppLog.T.API, this, "executeGetRequest") {
                 return@withDefaultContext if (site.isUsingWpComRestApi) {
                     executeWPComRequest(site, pathWithParams, enableCaching)
                 } else {
@@ -81,7 +81,7 @@ class ReactNativeStore @VisibleForTesting constructor(
     ): ReactNativeFetchResponse {
         val (url, params) = parseUrlAndParamsForWPCom(path, site.siteId)
         return if (url != null) {
-            wpComRestClient.fetch(url, params, ::Success, ::Error, enableCaching)
+            wpComRestClient.getRequest(url, params, ::Success, ::Error, enableCaching)
         } else {
             urlParseError(path)
         }
@@ -186,7 +186,7 @@ class ReactNativeStore @VisibleForTesting constructor(
         nonce: String?,
         enableCaching: Boolean
     ): ReactNativeFetchResponse =
-            wpAPIRestClient.fetch(fullRestApiUrl, params, ::Success, ::Error, nonce, enableCaching)
+            wpAPIRestClient.getRequest(fullRestApiUrl, params, ::Success, ::Error, nonce, enableCaching)
 
     private fun parseUrlAndParamsForWPCom(
         pathWithParams: String,

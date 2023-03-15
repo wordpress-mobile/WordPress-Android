@@ -25,7 +25,7 @@ class ReactNativeWPComRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetch(
+    suspend fun getRequest(
         url: String,
         params: Map<String, String>,
         successHandler: (data: JsonElement) -> ReactNativeFetchResponse,
