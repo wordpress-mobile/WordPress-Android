@@ -13,7 +13,7 @@ class JetpackFeatureRemovalStaticPostersConfig @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
     appConfig,
-    BuildConfig.JETPACK_FEATURE_REMOVAL_NEW_USERS,
+    BuildConfig.JETPACK_FEATURE_REMOVAL_STATIC_POSTERS,
     JETPACK_FEATURE_REMOVAL_STATIC_POSTERS_REMOTE_FIELD
 ) {
     companion object {
