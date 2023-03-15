@@ -54,11 +54,11 @@ class CreateSiteUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = CreateSiteUseCase(dispatcher, store, urlUtilsWrapper)
         event = OnNewSiteCreated(newSiteRemoteId = 123)
+        whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
     }
 
     @Test
     fun coroutineResumedWhenResultEventDispatched() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
         val resultEvent = useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID)
 
         assertThat(resultEvent).isEqualTo(event)
@@ -66,7 +66,6 @@ class CreateSiteUseCaseTest : BaseUnitTest() {
 
     @Test
     fun verifySiteDataPropagated() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
         useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
@@ -83,14 +82,12 @@ class CreateSiteUseCaseTest : BaseUnitTest() {
 
     @Test
     fun verifySiteDataWhenFreePropagatesNoFindAvailableUrl() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
         useCase.createSite(DUMMY_SITE_DATA.copy(isFree = true), LANGUAGE_ID, TIMEZONE_ID)
         verify(dispatcher).dispatch(argWhere { (it.payload as NewSitePayload).findAvailableUrl == null })
     }
 
     @Test
     fun verifyDryRunIsFalse() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
         useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
@@ -102,7 +99,6 @@ class CreateSiteUseCaseTest : BaseUnitTest() {
 
     @Test
     fun verifyCreatesPublicSite() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
         useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
@@ -114,7 +110,6 @@ class CreateSiteUseCaseTest : BaseUnitTest() {
 
     @Test
     fun verifyPropagatesLanguageId() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
         useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
@@ -126,7 +121,6 @@ class CreateSiteUseCaseTest : BaseUnitTest() {
 
     @Test
     fun verifyPropagatesTimeZoneId() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
         useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
