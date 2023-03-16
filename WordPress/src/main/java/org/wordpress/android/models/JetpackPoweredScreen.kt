@@ -1,5 +1,7 @@
 package org.wordpress.android.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -10,6 +12,13 @@ sealed interface JetpackPoweredScreen {
     sealed interface JetpackPoweredScreenWithDynamicText : JetpackPoweredScreen {
         val featureName: UiString
         val isPlural: Boolean
+    }
+
+    @Parcelize
+    enum class WithStaticPoster(val screen: WithDynamicText) : Parcelable {
+        STATS(WithDynamicText.STATS),
+        READER(WithDynamicText.READER),
+        NOTIFICATIONS(WithDynamicText.NOTIFICATIONS);
     }
 
     enum class WithStaticText(
@@ -26,7 +35,7 @@ sealed interface JetpackPoweredScreen {
         override val trackingName: String,
         override val featureName: UiString,
         override val isPlural: Boolean,
-    ): JetpackPoweredScreenWithDynamicText {
+    ) : JetpackPoweredScreenWithDynamicText {
         ACTIVITY_LOG(
             trackingName = "activity_log",
             featureName = UiStringRes(R.string.activity_log),
