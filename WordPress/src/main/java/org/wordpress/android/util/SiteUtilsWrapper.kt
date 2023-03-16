@@ -28,7 +28,7 @@ class SiteUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun getSiteIconUrlOfResourceSize(site: SiteModel, @DimenRes sizeRes: Int): String {
         return SiteUtils.getSiteIconUrl(site, appContext.resources.getDimensionPixelSize(sizeRes))
     }
-    fun supportsStoriesFeature(site: SiteModel, helper: JetpackFeatureRemovalPhaseHelper): Boolean {
+    fun supportsStoriesFeature(site: SiteModel?, helper: JetpackFeatureRemovalPhaseHelper): Boolean {
         return SiteUtils.supportsStoriesFeature(site, helper)
     }
 }
