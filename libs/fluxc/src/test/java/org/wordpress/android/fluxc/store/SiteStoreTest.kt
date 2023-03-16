@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
+import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSitesDao
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload
@@ -47,6 +48,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
 
+// TODO hthomas create new tests for the jetpack CP connected sites interactions
 @RunWith(MockitoJUnitRunner::class)
 class SiteStoreTest {
     @Mock lateinit var dispatcher: Dispatcher
@@ -56,6 +58,7 @@ class SiteStoreTest {
     @Mock lateinit var siteWPAPIClient: SiteWPAPIRestClient
     @Mock lateinit var privateAtomicCookie: PrivateAtomicCookie
     @Mock lateinit var siteSqlUtils: SiteSqlUtils
+    @Mock lateinit var jetpackCPConnectedSitesDao: JetpackCPConnectedSitesDao
     @Mock lateinit var domainsSuccessResponse: Response.Success<DomainsResponse>
     @Mock lateinit var plansSuccessResponse: Response.Success<PlansResponse>
     @Mock lateinit var domainsErrorResponse: Response.Error<DomainsResponse>
@@ -72,6 +75,7 @@ class SiteStoreTest {
                 siteWPAPIClient,
                 privateAtomicCookie,
                 siteSqlUtils,
+                jetpackCPConnectedSitesDao,
                 initCoroutineEngine()
         )
     }
