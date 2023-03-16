@@ -19,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigation.NavigationBarView.OnItemReselectedListener
 import com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
@@ -26,6 +27,8 @@ import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
+import org.wordpress.android.ui.main.jetpack.staticposter.JetpackStaticPosterFragment
+import org.wordpress.android.ui.main.jetpack.staticposter.UiData
 import org.wordpress.android.ui.mysite.MySiteFragment
 import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
@@ -40,6 +43,7 @@ import org.wordpress.android.util.extensions.getColorStateListFromAttribute
  * four primary views - note that we ignore the built-in icons and labels and
  * insert our own custom views so we have more control over their appearance
  */
+@AndroidEntryPoint
 class WPMainNavigationView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -298,10 +302,11 @@ class WPMainNavigationView @JvmOverloads constructor(
             val shouldUseStaticPostersFragment = helper.shouldShowStaticPage()
             val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
-                // todo: JetpackFocus - use the static posters fragment when available
-                READER -> if (shouldUseStaticPostersFragment) ReaderFragment() else ReaderFragment()
+                READER -> if (shouldUseStaticPostersFragment)
+                    JetpackStaticPosterFragment.newInstance(UiData.READER)
+                else ReaderFragment()
                 NOTIFS -> if (shouldUseStaticPostersFragment)
-                    NotificationsListFragment.newInstance()
+                    JetpackStaticPosterFragment.newInstance(UiData.NOTIFICATIONS)
                 else NotificationsListFragment.newInstance()
             }
             fragmentManager?.beginTransaction()
@@ -312,10 +317,29 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         internal fun getFragment(position: Int): Fragment? {
             return pages().getOrNull(position)?.let { pageType ->
-                fragmentManager?.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(
-                    pageType,
-                    jetpackFeatureRemovalPhaseHelper
-                )
+                val fragment = fragmentManager?.findFragmentByTag(getTagForPageType(pageType))
+                if (fragment != null) {
+                    when(fragment){
+                        is ReaderFragment, is NotificationsListFragment -> {
+                            return if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+                                fragmentManager?.beginTransaction()?.remove(fragment)?.commitNow()
+                                createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
+                            } else {
+                                fragment
+                            }
+                        }
+                        is JetpackStaticPosterFragment -> {
+                            return if (!jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+                                fragmentManager?.beginTransaction()?.remove(fragment)?.commitNow()
+                                createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
+                            } else {
+                                fragment
+                            }
+                        }
+                    }
+                    return fragment
+                }
+                return createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
             }
         }
 
