@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpapi
 
+import androidx.core.text.HtmlCompat
 import com.android.volley.NoConnectionError
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
@@ -12,10 +13,14 @@ import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Unknown
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
+import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+
+private const val NOT_FOUND_STATUS_CODE = 404
 
 @Singleton
 class NonceRestClient @Inject constructor(
@@ -43,11 +48,12 @@ class NonceRestClient @Inject constructor(
      *  [rest-nonce endpoint](https://developer.wordpress.org/reference/functions/wp_ajax_rest_nonce/)
      *  that became available in WordPress 5.3.
      */
+    @Suppress("NestedBlockDepth")
     suspend fun requestNonce(siteUrl: String, username: String, password: String): Nonce {
         @Suppress("MagicNumber")
         fun Int.isRedirect(): Boolean = this in 300..399
-        val wpLoginUrl = slashJoin(siteUrl, "wp-login.php")
-        val redirectUrl = slashJoin(siteUrl, "wp-admin/admin-ajax.php?action=rest-nonce")
+        val wpLoginUrl = siteUrl.slashJoin("wp-login.php")
+        val redirectUrl = siteUrl.slashJoin("wp-admin/admin-ajax.php?action=rest-nonce")
         val body = mapOf(
             "log" to username,
             "pwd" to password,
@@ -58,16 +64,28 @@ class NonceRestClient @Inject constructor(
         val nonce = when (response) {
             is Success -> {
                 // A success means we got 200 from the wp-login.php call, which means
-                // an authentication issue: https://core.trac.wordpress.org/ticket/25446
+                // a login error: https://core.trac.wordpress.org/ticket/25446
                 // A successful login should result in a redirection to the redirect URL
+
+                // Let's try to extract the login error from the web page, and if we have it, then we'll assume
+                // that it's an authentication issue, otherwise we'll assume it's an invalid response
+                val errorMessage = extractErrorMessage(response.data.orEmpty())
+
+                val error = WPAPINetworkError(
+                    BaseNetworkError(
+                        if (errorMessage != null) GenericErrorType.NOT_AUTHENTICATED
+                        else GenericErrorType.INVALID_RESPONSE,
+                        errorMessage.orEmpty()
+                    )
+                )
+
                 FailedRequest(
                     timeOfResponse = currentTimeProvider.currentDate().time,
-                    networkError = WPAPINetworkError(
-                        BaseNetworkError(GenericErrorType.NOT_AUTHENTICATED)
-                    ),
+                    networkError = error,
                     username = username
                 )
             }
+
             is Error -> {
                 if (response.error.volleyError is NoConnectionError) {
                     // No connection, so we do not know if a nonce is available
@@ -77,10 +95,17 @@ class NonceRestClient @Inject constructor(
                     if (networkResponse?.statusCode?.isRedirect() == true) {
                         requestNonce(networkResponse.headers["Location"] ?: redirectUrl, username)
                     } else {
+                        val networkError = if (networkResponse?.statusCode == NOT_FOUND_STATUS_CODE) {
+                            WPAPINetworkError(
+                                baseError = response.error,
+                                errorCode = SiteStore.WPAPIErrorType.CUSTOM_LOGIN_URL.name
+                            )
+                        } else response.error
+
                         FailedRequest(
                             timeOfResponse = currentTimeProvider.currentDate().time,
                             username = username,
-                            networkError = response.error
+                            networkError = networkError
                         )
                     }
                 }
@@ -104,18 +129,32 @@ class NonceRestClient @Inject constructor(
             }
 
             is Error -> {
+                val statusCode = response.error.volleyError?.networkResponse?.statusCode
+                val networkError = if (statusCode == NOT_FOUND_STATUS_CODE) {
+                    WPAPINetworkError(
+                        baseError = response.error,
+                        errorCode = SiteStore.WPAPIErrorType.CUSTOM_ADMIN_URL.name
+                    )
+                } else response.error
+
                 FailedRequest(
                     timeOfResponse = currentTimeProvider.currentDate().time,
                     username = username,
-                    networkError = response.error
+                    networkError = networkError
                 )
             }
         }
     }
 
-    private fun slashJoin(begin: String, end: String): String {
-        val noSlashBegin = begin.replace("/$".toRegex(), "")
-        val noSlashEnd = end.replace("^/".toRegex(), "")
-        return "$noSlashBegin/$noSlashEnd"
+    private fun extractErrorMessage(htmlResponse: String): String? {
+        val regex = Regex("<div[^>]*id=\"login_error\"[^>]*>([\\s\\S]+?)</div>")
+        val loginErrorDiv = regex.find(htmlResponse)?.groupValues?.get(1) ?: return null
+        val urlRegex = Regex("<a[^>]*href=\".*\"[^>]*>[\\s\\S]+?</a>")
+
+        val errorHtml = loginErrorDiv.replace(urlRegex, "")
+        // Strip HTML tags
+        return HtmlCompat.fromHtml(errorHtml, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            .toString()
+            .trim(' ', '\n')
     }
 }
