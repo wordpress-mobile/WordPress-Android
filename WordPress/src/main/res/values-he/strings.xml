@@ -2156,8 +2156,6 @@ Language: he_IL
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">לא הוגדר</string>
     <string name="support_contact_email">אימייל ליצירת קשר</string>
-    <string name="application_log_button">יומן יישום</string>
-    <string name="my_tickets">הפנייה שלי</string>
     <string name="activity_log_currently_restoring_message_no_dates">שחזור בתהליך</string>
     <string name="activity_log_currently_restoring_message">משחזר אל ⁦%1$s⁩ %2$s</string>
     <string name="activity_log_currently_restoring_title">אנחנו משחזרים כעת את האתר שלך</string>
@@ -2319,8 +2317,6 @@ Language: he_IL
     <string name="me_section_screen_title">אני</string>
     <string name="my_site_section_screen_title">האתר שלי</string>
     <string name="notif_settings_screen_title">הגדרות הודעה</string>
-    <string name="help_screen_title">עזרה ותמיכה</string>
-    <string name="release_notes_screen_title">הערות לשחרור גרסה</string>
     <string name="signup_epilogue_error_avatar_view">תמונת הפרופיל שלך הועלתה ותהיה זמינה בקרוב.</string>
     <string name="permissions_denied_message">נראה שהשבתת את פעילות ההרשאות שנדרשות לתכונה זו.&lt;br/&gt;&lt;br/&gt;כדי לשנות זאת, יש לערוך את ההרשאות שלך ולוודא שהפעלת את &lt;strong&gt;%s&lt;/strong&gt;.</string>
     <string name="permissions_denied_title">הרשאות</string>
@@ -2676,7 +2672,6 @@ Language: he_IL
     <string name="site_settings_optimize_video_summary">הפעלת עריכה של גודל קובצי הווידאו ודחיסתם</string>
     <string name="site_settings_optimize_videos">מיטוב קובצי וידאו</string>
     <string name="draft_uploaded">הטיוטה הועלתה</string>
-    <string name="report_bug">דיווח על באג</string>
     <string name="video_quality">איכות וידאו</string>
     <string name="permission_camera">מצלמה</string>
     <string name="permission_storage">אחסון</string>
@@ -3187,7 +3182,6 @@ Language: he_IL
     <string name="me_disconnect_from_wordpress_com">התנתקות מוורדפרס.קום</string>
     <string name="me_connect_to_wordpress_com">התחברות לוורדפרס.קום</string>
     <string name="me_btn_login_logout">כניסה/יציאה</string>
-    <string name="me_btn_support">עזרה ותמיכה</string>
     <string name="account_settings">הגדרות חשבון</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" לא הוסתר מכיוון שזהו האתר הנוכחי</string>
     <string name="site_picker_create_wpcom">יצירת אתר וורדפרס.קום</string>

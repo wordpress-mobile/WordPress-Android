@@ -195,7 +195,7 @@ class JetpackRemoteInstallViewModelTest : BaseUnitTest() {
         assertThat(state.type).isEqualTo(JetpackRemoteInstallViewState.Type.ERROR)
         assertThat(state.titleResource).isEqualTo(R.string.jetpack_installation_problem)
         assertThat(state.messageResource).isEqualTo(R.string.jetpack_installation_problem_message)
-        assertThat(state.icon).isEqualTo(R.drawable.img_illustration_info_outline_88dp)
+        assertThat(state.icon).isEqualTo(R.drawable.ic_warning)
         assertThat(state.buttonResource).isEqualTo(R.string.install_jetpack_retry)
         assertThat(state.progressBarVisible).isEqualTo(false)
     }

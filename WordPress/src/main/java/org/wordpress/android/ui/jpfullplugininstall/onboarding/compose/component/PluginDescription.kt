@@ -36,6 +36,11 @@ private fun buildPluginDescriptionText(
     pluginNames: List<String>,
     siteName: String
 ) = buildAnnotatedString {
+    val onboardingText = if (pluginNames.size > 1) {
+        stringResource(R.string.jetpack_full_plugin_install_onboarding_description_multiple)
+    } else {
+        stringResource(R.string.jetpack_full_plugin_install_onboarding_description_single)
+    }
     val pluginText = if (pluginNames.size > 1) {
         stringResource(R.string.jetpack_full_plugin_install_onboarding_description_multiple_plugins)
     } else {
@@ -47,7 +52,7 @@ private fun buildPluginDescriptionText(
     val fullJpPluginText =
         stringResource(R.string.jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin)
     val text = String.format(
-        stringResource(R.string.jetpack_full_plugin_install_onboarding_description),
+        onboardingText,
         siteName,
         pluginText,
         fullJpPluginText,

@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-22 22:17:54+0000
+Translation-Revision-Date: 2023-03-08 18:08:06+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: tr
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">Şimdi bir yazı yaz</string>
+    <string name="blaze_overlay_page_promotional_button">Bu sayfayı Blazeleyin</string>
+    <string name="blaze_overlay_post_promotional_button">Bu yazıyı Blazeleyin</string>
+    <string name="blaze_promotional_subtitle_3">Performansı takip edin, Blaze\'inizi istediğiniz zaman başlatın ve durdurun.</string>
+    <string name="blaze_promotional_subtitle_2">İçeriğiniz milyonlarca WordPress ve Tumblr sitesinde görünecektir.</string>
+    <string name="blaze_promotional_subtitle_1">Günde sadece birkaç dolar karşılığında herhangi bir yazıyı veya sayfayı sadece birkaç dakika içinde tanıtın.</string>
+    <string name="blaze_promotional_text">Blaze ile sitenize daha fazla trafik çekin</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="site_creation_domain_tag_unavailable">Bu alan adı adresi zaten kayıtlı.</string>
+    <string name="site_creation_domain_tag_sale">İndirim</string>
+    <string name="site_creation_domain_tag_recommended">Önerilen</string>
+    <string name="site_creation_domain_tag_best_alternative">En İyi Alternatif</string>
+    <string name="site_creation_domain_cost">%s/y</string>
+    <string name="me_btn_help">Yardım</string>
+    <string name="support_faq_caption">Sık sorulan soruların yanıtları için SSS bölümümüze bakın.</string>
+    <string name="support_faq_title">Jetpack uygulamasına geçtiğiniz için teşekkür ederiz!</string>
+    <string name="logs_button">Günlükler</string>
+    <string name="tickets">Biletler</string>
+    <string name="free">Ücretsiz</string>
+    <string name="help_buttons_screen_title">Yardım</string>
     <string name="gutenberg_native_blocks_menu">Bloklar menüsü</string>
     <string name="promote_blaze_card_menu_hide_this">Bunu gizle</string>
     <string name="promote_blaze_card_sub_title">Çalışmalarınızı milyonlarca sitede sergileyin.</string>
@@ -18,7 +38,7 @@ Language: tr
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">tam Jetpack eklentisi</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">bireysel Jetpack eklentileri</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">%1$s eklentisi</string>
-    <string name="jetpack_full_plugin_install_onboarding_description">%1$s, uygulamanın tüm özelliklerini henüz desteklemeyen %2$s kullanıyor.\n\nUygulamayı bu siteyle birlikte kullanmak için lütfen %3$s yükleyin.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s, uygulamanın tüm özelliklerini henüz desteklemeyen %2$s kullanıyor.\n\nUygulamayı bu siteyle birlikte kullanmak için lütfen %3$s yükleyin.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">Lütfen Jetpack eklentisinin tamamını yükleyin</string>
     <string name="only_one_primary_site_message">Yalnızca bir site kullanılabilir, bu nedenle birincil sitenizi değiştiremezsiniz.</string>
     <string name="my_site_jp_install_full_plugin_card_content">Bu site, uygulamanın tüm özelliklerini henüz desteklemeyen ayrı bir eklenti kullanmaktadır. Lütfen Jetpack eklentisinin tamamını kurun.</string>
@@ -2157,8 +2177,6 @@ Language: tr
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Ayarlanmadı</string>
     <string name="support_contact_email">İletişim e-postası</string>
-    <string name="application_log_button">Uygulama kaydı</string>
-    <string name="my_tickets">Taleplerim</string>
     <string name="activity_log_currently_restoring_message_no_dates">Geri alma devam ediyor</string>
     <string name="activity_log_currently_restoring_message">%1$s %2$s durumuna geri alınıyor</string>
     <string name="activity_log_currently_restoring_title">Siteniz şuan geri alınıyor</string>
@@ -2320,8 +2338,6 @@ Language: tr
     <string name="me_section_screen_title">Ben</string>
     <string name="my_site_section_screen_title">Sitem</string>
     <string name="notif_settings_screen_title">Bildirim ayarları</string>
-    <string name="help_screen_title">Yardım ve destek</string>
-    <string name="release_notes_screen_title">Sürüm notları</string>
     <string name="signup_epilogue_error_avatar_view">Avatarınız yüklendi ve kısa süre içinde kullanılabilir olacak.</string>
     <string name="permissions_denied_message">Görünen o ki bu özellik için gerekli izinleri kapatmışsınız.&lt;br/&gt;&lt;br/&gt;Bunu değiştirmek için izinlerinizi düzenleyin ve &lt;strong&gt;%s&lt;/strong&gt; izninin etkin olduğundan emin olun.</string>
     <string name="permissions_denied_title">İzinler</string>
@@ -2677,7 +2693,6 @@ Language: tr
     <string name="site_settings_optimize_video_summary">Videoları yeniden boyutlandırmak ve sıkıştırmak için etkinleştirin</string>
     <string name="site_settings_optimize_videos">Videoları optimize et</string>
     <string name="draft_uploaded">Taslak yüklendi</string>
-    <string name="report_bug">Hata bildirin</string>
     <string name="video_quality">Video kalitesi</string>
     <string name="permission_camera">Kamera</string>
     <string name="permission_storage">Depolama</string>
@@ -3188,7 +3203,6 @@ Language: tr
     <string name="me_disconnect_from_wordpress_com">WordPress.com hesabından çıkış yap</string>
     <string name="me_connect_to_wordpress_com">WordPress.com hesabına giriş yap</string>
     <string name="me_btn_login_logout">Giriş/Çıkış</string>
-    <string name="me_btn_support">Yardım ve destek</string>
     <string name="account_settings">Hesap ayarları</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" şu anki site olduğundan gizlenmedi</string>
     <string name="site_picker_create_wpcom">WordPress.com sitesi oluştur</string>

@@ -2156,8 +2156,6 @@ Language: it
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Non impostato</string>
     <string name="support_contact_email">Email di contatto</string>
-    <string name="application_log_button">Registro applicazione</string>
-    <string name="my_tickets">I miei ticket</string>
     <string name="activity_log_currently_restoring_message_no_dates">Ripristino in corso</string>
     <string name="activity_log_currently_restoring_message">Ripristino al %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Al momento stiamo ripristinando il tuo sito</string>
@@ -2319,8 +2317,6 @@ Language: it
     <string name="me_section_screen_title">Profilo</string>
     <string name="my_site_section_screen_title">Il mio sito</string>
     <string name="notif_settings_screen_title">Impostazioni di notifica</string>
-    <string name="help_screen_title">Guida e Assistenza</string>
-    <string name="release_notes_screen_title">Note di rilascio</string>
     <string name="signup_epilogue_error_avatar_view">Il tuo avatar è stato caricato e sarà disponibile a breve.</string>
     <string name="permissions_denied_message">Sembra che tu abbia disattivato le autorizzazioni necessarie per questa funzionalità.&lt;br/&gt;&lt;br/&gt;Per cambiare, modifica le tue autorizzazioni e assicurati che sia attivo &lt;strong&gt;%s&lt;/strong&gt;.</string>
     <string name="permissions_denied_title">Autorizzazioni</string>
@@ -2676,7 +2672,6 @@ Language: it
     <string name="site_settings_optimize_video_summary">Consenti di ridimensionare e comprimere i video</string>
     <string name="site_settings_optimize_videos">Ottimizza video</string>
     <string name="draft_uploaded">Bozza caricata</string>
-    <string name="report_bug">Segnala un bug</string>
     <string name="video_quality">Qualità del video</string>
     <string name="permission_camera">Fotocamera</string>
     <string name="permission_storage">Archiviazione</string>
@@ -3187,7 +3182,6 @@ Language: it
     <string name="me_disconnect_from_wordpress_com">Disconnettiti da WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Connettiti a WordPress.com</string>
     <string name="me_btn_login_logout">Login/Logout</string>
-    <string name="me_btn_support">Aiuto e supporto</string>
     <string name="account_settings">Impostazioni account</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" non è stato nascosto perchè è il sito corrente</string>
     <string name="site_picker_create_wpcom">Crea un sito su WordPress.com</string>

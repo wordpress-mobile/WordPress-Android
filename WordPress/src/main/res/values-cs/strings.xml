@@ -2100,9 +2100,7 @@ Language: cs_CZ
     <string name="support_push_notification_message">Nová zpráva od \"Pomoc a Podpora\"</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Nezadán</string>
-    <string name="my_tickets">Moje konverzace</string>
     <string name="notification_channel_transient_title">Přechodný</string>
-    <string name="application_log_button">Aplikační log</string>
     <string name="support_identity_input_dialog_email_label">E-mail</string>
     <string name="support_identity_input_dialog_enter_email">Zadejte e-mailovou adresu</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Pro pokračování je třeba nejprve zadat e-mailovou adresu a jméno</string>
@@ -2261,8 +2259,6 @@ Language: cs_CZ
     <string name="comment_unapproved_talkback">Komentář nebyl schválen</string>
     <string name="my_site_section_screen_title">Mé stránky</string>
     <string name="notif_settings_screen_title">Nastavení upozornění</string>
-    <string name="help_screen_title">Podpora a pomoc</string>
-    <string name="release_notes_screen_title">Poznámky k vydání</string>
     <string name="login_epilogue_screen_title">Přihlášen jako</string>
     <string name="person_detail_screen_title">Osobní profil</string>
     <string name="media_settings_screen_title">Detail souboru</string>
@@ -2624,7 +2620,6 @@ Language: cs_CZ
     <string name="site_settings_video_width_hint">Změní velikost videí v příspěvcích na tuto velikost</string>
     <string name="site_settings_optimize_video_summary">Povolit změnu velikosti a kompresi videí</string>
     <string name="site_settings_optimize_videos">Optimalizovat videa</string>
-    <string name="report_bug">Nahlásit chybu</string>
     <string name="video_quality">Kvalita videa</string>
     <string name="draft_uploaded">Koncept byl nahrán</string>
     <string name="permission_camera">Foťák</string>
@@ -3137,7 +3132,6 @@ Language: cs_CZ
     <string name="me_connect_to_wordpress_com">Připojit k WordPress.com</string>
     <string name="me_btn_login_logout">Přihlášení/Odhlášení</string>
     <string name="account_settings">Uživatelské nastavení</string>
-    <string name="me_btn_support">Pomoc a podpora</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" nebyl skrytý, protože je to aktuální stránka</string>
     <string name="site_picker_create_wpcom">Vytvořit web na WordPress.com</string>
     <string name="site_picker_add_self_hosted">Přidat vlastní WordPress web</string>

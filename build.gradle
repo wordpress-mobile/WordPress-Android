@@ -65,6 +65,7 @@ ext {
     glideVolleyVersion = '4.6.1@aar'
     googleAutoServiceVersion = '1.0'
     googleExoPlayerVersion = '2.13.3'
+    googleFlexboxlayoutVersion = '3.0.0'
     googleGsonVersion = '2.6.2'
     googleMaterialVersion = '1.2.1'
     googleMLKitBarcodeScanningVersion = '17.0.0'
@@ -76,8 +77,9 @@ ext {
     philjayMpAndroidChartVersion = 'v3.1.0'
     squareupKotlinPoetVersion = '1.6.0'
     squareupOkioVersion = '2.8.0'
-    uCropVersion = '2.2.4'
-    zendeskVersion = '5.0.2'
+    squareupRetrofitVersion = '2.9.0'
+    uCropVersion = '2.2.8'
+    zendeskVersion = '5.1.1'
 
     // test
     assertjVersion = '3.23.1'
@@ -96,7 +98,7 @@ ext {
     wiremockHttpClientVersion = '4.3.5.1'
 
     // other
-    androidDesugarVersion = '1.1.5'
+    androidDesugarVersion = '1.1.8'
     wordPressLintVersion = '1.1.0'
 }
 

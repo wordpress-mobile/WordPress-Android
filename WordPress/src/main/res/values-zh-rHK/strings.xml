@@ -2155,8 +2155,6 @@ Language: zh_TW
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">未設定</string>
     <string name="support_contact_email">聯絡電子郵件</string>
-    <string name="application_log_button">應用程式記錄檔</string>
-    <string name="my_tickets">我的票證</string>
     <string name="activity_log_currently_restoring_message">正在還原至 %1$s %2$s</string>
     <string name="activity_log_currently_restoring_message_no_dates">正在還原</string>
     <string name="activity_log_currently_restoring_title">目前正在還原你的網站</string>
@@ -2317,8 +2315,6 @@ Language: zh_TW
     <string name="reader_screen_title">讀取器</string>
     <string name="me_section_screen_title">我</string>
     <string name="notif_settings_screen_title">通知設定</string>
-    <string name="help_screen_title">說明與支援</string>
-    <string name="release_notes_screen_title">版本備註</string>
     <string name="my_site_section_screen_title">我的網站</string>
     <string name="signup_epilogue_error_avatar_view">你的大頭貼已上傳，且稍後即可使用。</string>
     <string name="permissions_denied_message">你似乎已關閉此功能所需的權限。&lt;br/&gt;&lt;br/&gt;若要變更此設定，請編輯權限並確認已啟用 &lt;strong&gt;%s&lt;/strong&gt;。</string>
@@ -2675,7 +2671,6 @@ Language: zh_TW
     <string name="site_settings_optimize_video_summary">啟用即可調整影片大小和壓縮影片</string>
     <string name="site_settings_optimize_videos">最佳化影片</string>
     <string name="draft_uploaded">草稿已上傳</string>
-    <string name="report_bug">回報錯誤</string>
     <string name="video_quality">影片品質</string>
     <string name="permission_camera">相機</string>
     <string name="permission_storage">儲存空間</string>
@@ -3186,7 +3181,6 @@ Language: zh_TW
     <string name="me_disconnect_from_wordpress_com">中斷與 WordPress.com 的連線</string>
     <string name="me_connect_to_wordpress_com">連線 WordPress.com</string>
     <string name="me_btn_login_logout">登入/登出</string>
-    <string name="me_btn_support">說明與客戶服務</string>
     <string name="site_picker_cant_hide_current_site">由於「%s」是目前的網站，因此並未隱藏</string>
     <string name="account_settings">帳號設定</string>
     <string name="site_picker_create_wpcom">建立 WordPress.com 網站</string>

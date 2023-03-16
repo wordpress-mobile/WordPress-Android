@@ -2153,8 +2153,6 @@ Language: ar
     <string name="support_push_notification_message">رسالة جديدة من \"التعليمات والدعم\"</string>
     <string name="support_contact_email_not_set">لم يتم التعيين</string>
     <string name="support_contact_email">البريد الإلكتروني الخاص بجهة الاتصال</string>
-    <string name="application_log_button">سجل التطبيق</string>
-    <string name="my_tickets">تذاكري</string>
     <string name="support_push_notification_title">ووردبريس</string>
     <string name="activity_log_currently_restoring_message">الاستعادة إلى %1$s %2$s</string>
     <string name="activity_log_currently_restoring_message_no_dates">الاستعادة قيد التقدّم</string>
@@ -2316,8 +2314,6 @@ Language: ar
     <string name="me_section_screen_title">أنا</string>
     <string name="my_site_section_screen_title">موقعي</string>
     <string name="notif_settings_screen_title">إعدادات التنبيه</string>
-    <string name="help_screen_title">المساعدة والدعم</string>
-    <string name="release_notes_screen_title">ملاحظات الإصدار</string>
     <string name="notifications_screen_title">الإشعارات</string>
     <string name="signup_epilogue_error_avatar_view">تم رفع الصورة الرمزية الخاصة بك وستصبح متاحة قريبًا.</string>
     <string name="permissions_denied_message">يبدو أنك أوقفت الأذونات المطلوبة لهذه الميزة.&lt;br/&gt;&lt;br/&gt;لتغيير هذا، قم بتحرير أذوناتك وتأكد من تمكين &lt;strong&gt;%s&lt;/strong&gt;.</string>
@@ -2674,7 +2670,6 @@ Language: ar
     <string name="site_settings_optimize_video_summary">التمكين لتغيير حجم الفيديوهات وضغطها</string>
     <string name="site_settings_optimize_videos">تحسين مقاطع الفيديو</string>
     <string name="video_quality">جودة الفيديو</string>
-    <string name="report_bug">الإبلاغ عن خطأ</string>
     <string name="draft_uploaded">تم تحميل المسودّة</string>
     <string name="permission_camera">الكاميرا</string>
     <string name="permission_storage">مساحة التخزين</string>
@@ -3185,7 +3180,6 @@ Language: ar
     <string name="me_disconnect_from_wordpress_com">تسجيل الخروج من WordPress.com</string>
     <string name="me_btn_login_logout">تسجيل الدخول/تسجيل الخروج</string>
     <string name="me_connect_to_wordpress_com">تسجيل الدخول إلى WordPress.com</string>
-    <string name="me_btn_support">المساعدة والدعم</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" لم يكن مخفيًا لأنه الموقع الحالي</string>
     <string name="account_settings">إعدادات الحساب</string>
     <string name="site_picker_create_wpcom">إنشاء موقع WordPress.com</string>

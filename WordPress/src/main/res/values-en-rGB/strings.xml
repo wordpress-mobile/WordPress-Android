@@ -935,8 +935,8 @@ Language: en_GB
     <string name="suggestion_none">No %s suggestions available.</string>
     <string name="suggestion_problem">There was a problem loading suggestions.</string>
     <string name="suggestion_no_matching">No matching %s.</string>
-    <string name="threat_fix_current_not_fixable_description">Jetpack Scan cannot automatically fix this threat.\n        We suggest that you resolve the threat manually: ensure that WordPress, your theme, and all of your plugins are up to date, and remove the offending code, theme, or plugin from your site. \n \n\n        If you need more help to resolve this threat, we recommend &lt;b&gt;Codeable&lt;/b&gt;, a trusted freelancer marketplace of highly vetted WordPress experts.\n        They have identified a select group of security experts to help with these projects. Pricing ranges from $70–120/hour, and you can get a free estimate with no obligation to hire.\n    </string>
     <string name="threat_fix_fixable_replace">Jetpack Scan will replace the affected file or directory.</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan cannot automatically fix this threat.\n        We suggest that you resolve the threat manually: ensure that WordPress, your theme, and all of your plugins are up to date, and remove the offending code, theme, or plugin from your site. \n \n\n        If you need more help to resolve this threat, we recommend &lt;b&gt;Codeable&lt;/b&gt;, a trusted freelancer marketplace of highly vetted WordPress experts.\n        They have identified a select group of security experts to help with these projects. Pricing ranges from $70–120/hour, and you can get a free estimate with no obligation to hire.\n    </string>
     <string name="threat_problem_header">What was the problem?</string>
     <string name="threat_technical_details_header">The technical details</string>
     <string name="threat_file_description">Threat found in file:</string>
@@ -2095,10 +2095,8 @@ Language: en_GB
     <string name="theme_image_desc">theme image</string>
     <string name="button_discard">Discard</string>
     <string name="reader_avatar_desc">profile picture</string>
-    <string name="application_log_button">Application log</string>
     <string name="support_contact_email">Contact email</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
-    <string name="my_tickets">My Tickets</string>
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
     <string name="support_contact_email_not_set">Not set</string>
     <string name="support_identity_input_dialog_enter_email">Please enter your email address</string>
@@ -2257,7 +2255,6 @@ Language: en_GB
     <string name="edit_photo_screen_title">Edit Photo</string>
     <string name="share_intent_screen_title">Pick site</string>
     <string name="signup_epilogue_screen_title">New account</string>
-    <string name="release_notes_screen_title">Release notes</string>
     <string name="publicize_buttons_screen_title">Sharing buttons</string>
     <string name="login_epilogue_screen_title">Logged in as</string>
     <string name="person_detail_screen_title">Person detail</string>
@@ -2266,7 +2263,6 @@ Language: en_GB
     <string name="reader_screen_title">Reader</string>
     <string name="me_section_screen_title">Me</string>
     <string name="notif_settings_screen_title">Notification settings</string>
-    <string name="help_screen_title">Help and Support</string>
     <string name="my_site_section_screen_title">My Site</string>
     <string name="signup_epilogue_error_avatar_view">Your avatar has been uploaded and will be available shortly.</string>
     <string name="permissions_denied_message">It looks like you turned off permissions required for this feature.&lt;br/&gt;&lt;br/&gt;To change this, edit your permissions and make sure &lt;strong&gt;%s&lt;/strong&gt; is enabled.</string>
@@ -2623,7 +2619,6 @@ Language: en_GB
     <string name="site_settings_video_width_hint">Resizes videos in posts to this size</string>
     <string name="site_settings_optimize_videos">Optimise Videos</string>
     <string name="draft_uploaded">Draft uploaded</string>
-    <string name="report_bug">Report bug</string>
     <string name="video_quality">Video Quality</string>
     <string name="permission_camera">Camera</string>
     <string name="permission_storage">Storage</string>
@@ -3135,7 +3130,6 @@ Language: en_GB
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
     <string name="account_settings">Account Settings</string>
-    <string name="me_btn_support">Help &amp; Support</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
     <string name="site_picker_create_wpcom">Create WordPress.com site</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>

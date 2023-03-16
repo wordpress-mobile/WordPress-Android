@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-22 22:24:36+0000
+Translation-Revision-Date: 2023-03-08 04:52:20+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ro
 -->
 <resources>
+    <string name="blaze_promotional_subtitle_3">Urmărești performanța, pornești și oprești Blaze în orice moment.</string>
+    <string name="blaze_overlay_post_promotional_button">Promovează acest articol</string>
+    <string name="blaze_overlay_page_promotional_button">Promovează această pagină</string>
+    <string name="blaze_overlay_site_promotional_button">Promovează un articol acum</string>
+    <string name="help_buttons_screen_title">Ajutor</string>
+    <string name="free">Gratuit</string>
+    <string name="tickets">Tichete</string>
+    <string name="logs_button">Jurnale</string>
+    <string name="support_faq_title">Îți mulțumim că ai comutat la aplicația Jetpack!</string>
+    <string name="support_faq_caption">Vezi întrebările frecvente pentru răspunsuri la întrebările pe care le ai.</string>
+    <string name="me_btn_help">Ajutor</string>
+    <string name="site_creation_domain_cost">%s/an</string>
+    <string name="site_creation_domain_tag_best_alternative">Cea mai bună alternativă</string>
+    <string name="site_creation_domain_tag_recommended">Recomandat</string>
+    <string name="site_creation_domain_tag_sale">Reducere</string>
+    <string name="site_creation_domain_tag_unavailable">Acest domeniu este deja înregistrat</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="blaze_promotional_text">Cu Blaze, aduci mai mult trafic pe site</string>
+    <string name="blaze_promotional_subtitle_1">Promovezi orice articol sau pagină în numai câteva minute pentru câțiva dolari pe zi.</string>
+    <string name="blaze_promotional_subtitle_2">Conținutul tău va apărea pe milioane de site-uri WordPress și Tumblr.</string>
     <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Prin inițializarea Jetpack ești de acord cu </string>
     <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Termeni și condiții</string>
     <string name="jetpack_full_plugin_install_onboarding_install_button">Instalează modulul complet</string>
@@ -15,7 +35,7 @@ Language: ro
     <string name="promote_blaze_card_sub_title">Afișează conținutul pe milioane de site-uri.</string>
     <string name="promote_blaze_card_menu_hide_this">Ascunde asta</string>
     <string name="gutenberg_native_blocks_menu">Meniu blocuri</string>
-    <string name="jetpack_full_plugin_install_onboarding_description">%1$s folosește %2$s, care încă nu suportă toate funcționalitățile aplicației. \n\nTe rog instalează %3$s pentru a folosi aplicația cu acest site.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s folosește %2$s, care încă nu suportă toate funcționalitățile aplicației. \n\nTe rog instalează %3$s pentru a folosi aplicația cu acest site.</string>
     <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">modulul %1$s</string>
     <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">module individuale Jetpack</string>
     <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">modulul complet Jetpack</string>
@@ -2157,8 +2177,6 @@ Language: ro
     <string name="support_contact_email">Email de contact</string>
     <string name="notification_channel_transient_title">Tranzitoriu</string>
     <string name="support_push_notification_message">Mesaj nou de la „Ajutor și suport”</string>
-    <string name="application_log_button">Jurnal aplicații</string>
-    <string name="my_tickets">Tichetele mele</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restaurare în curs de desfășurare</string>
     <string name="activity_log_currently_restoring_message">Restaurez la %1$s %2$s</string>
     <string name="activity_log_button">Buton acțiune jurnal de activități</string>
@@ -2319,8 +2337,6 @@ Language: ro
     <string name="reader_screen_title">Cititor</string>
     <string name="me_section_screen_title">Eu</string>
     <string name="notif_settings_screen_title">Setări notificări</string>
-    <string name="help_screen_title">Ajutor și suport</string>
-    <string name="release_notes_screen_title">Note de lansare</string>
     <string name="my_site_section_screen_title">Site-ul meu</string>
     <string name="signup_epilogue_error_avatar_view">Avatarul tău a fost încărcat și va fi disponibil în scurt timp.</string>
     <string name="permissions_denied_title">Permisiuni</string>
@@ -2677,7 +2693,6 @@ Language: ro
     <string name="site_settings_optimize_video_summary">Activează pentru a redimensiona și comprima videourile</string>
     <string name="site_settings_optimize_videos">Optimizează videourile</string>
     <string name="draft_uploaded">Ciornă încărcată</string>
-    <string name="report_bug">Raportează o eroare</string>
     <string name="video_quality">Calitate video</string>
     <string name="permission_camera">Aparat foto</string>
     <string name="permission_storage">Stocare</string>
@@ -3189,7 +3204,6 @@ Language: ro
     <string name="me_btn_login_logout">Autentificare/Deautentificare</string>
     <string name="me_connect_to_wordpress_com">Autentifică-te în WordPress.com</string>
     <string name="account_settings">Setări cont</string>
-    <string name="me_btn_support">Ajutor și suport</string>
     <string name="site_picker_cant_hide_current_site">„%s” n-a fost ascuns pentru că este site-ul curent</string>
     <string name="site_picker_create_wpcom">Creează un site WordPress.com</string>
     <string name="site_picker_add_self_hosted">Adaugă site auto-găzduit</string>

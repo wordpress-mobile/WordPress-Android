@@ -2151,8 +2151,6 @@ Language: zh_CN
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">未设置</string>
     <string name="support_contact_email">联系电子邮箱地址</string>
-    <string name="application_log_button">应用程序日志</string>
-    <string name="my_tickets">我的工单</string>
     <string name="activity_log_currently_restoring_message_no_dates">恢复正在进行中</string>
     <string name="activity_log_currently_restoring_message">正在恢复至 %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">目前正在恢复您的站点</string>
@@ -2314,8 +2312,6 @@ Language: zh_CN
     <string name="me_section_screen_title">我</string>
     <string name="my_site_section_screen_title">我的站点</string>
     <string name="notif_settings_screen_title">通知设置</string>
-    <string name="help_screen_title">帮助与支持</string>
-    <string name="release_notes_screen_title">版本说明</string>
     <string name="signup_epilogue_error_avatar_view">您的头像已上传，很快便会显示。</string>
     <string name="permissions_denied_message">您似乎关闭了此功能所需的权限。&lt;br/&gt;&lt;br/&gt;要对此进行更改，请编辑您的权限并确保已启用&lt;strong&gt;%s&lt;/strong&gt;。</string>
     <string name="permissions_denied_title">权限</string>
@@ -2671,7 +2667,6 @@ Language: zh_CN
     <string name="site_settings_optimize_video_summary">启用可调整视频分辨率并压缩视频</string>
     <string name="site_settings_optimize_videos">优化视频</string>
     <string name="draft_uploaded">已上传草稿</string>
-    <string name="report_bug">报告 bug</string>
     <string name="video_quality">视频质量</string>
     <string name="permission_camera">照相机</string>
     <string name="permission_storage">存储</string>
@@ -3182,7 +3177,6 @@ Language: zh_CN
     <string name="me_disconnect_from_wordpress_com">退出 WordPress.com</string>
     <string name="me_connect_to_wordpress_com">登录 WordPress.com</string>
     <string name="me_btn_login_logout">登录/退出</string>
-    <string name="me_btn_support">帮助与支持</string>
     <string name="account_settings">账户设置</string>
     <string name="site_picker_cant_hide_current_site">「%s」未隐藏，因为它是当前站点</string>
     <string name="site_picker_create_wpcom">创建 WordPress.com 站点</string>

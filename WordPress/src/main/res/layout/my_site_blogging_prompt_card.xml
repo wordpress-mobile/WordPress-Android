@@ -14,28 +14,19 @@
         android:paddingEnd="@dimen/my_site_card_row_padding"
         android:paddingBottom="@dimen/margin_small">
 
-        <ImageView
-            android:id="@+id/title_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_outline_lightbulb_white_24dp"
-            android:tint="?attr/colorOnSurface"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/card_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_small_medium"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/my_site_blogging_prompt_card_title"
             android:textAlignment="viewStart"
             android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textSize="@dimen/text_sz_medium"
+            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/blogging_prompt_card_menu"
-            app:layout_constraintStart_toEndOf="@+id/title_icon"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
