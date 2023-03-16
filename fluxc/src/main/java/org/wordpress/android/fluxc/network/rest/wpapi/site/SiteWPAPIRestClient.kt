@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.store.SiteStore.FetchWPAPISitePayload
@@ -41,7 +42,9 @@ class SiteWPAPIRestClient @Inject constructor(
         val cleanedUrl = UrlUtils.addUrlSchemeIfNeeded(payload.url, false).let { urlWithScheme ->
             DiscoveryUtils.stripKnownPaths(urlWithScheme)
         }
-        return wpapiAuthenticator.makeAuthenticatedWPAPIRequest(
+        var discoveredWpApiUrl: String? = null
+
+        val result = wpapiAuthenticator.makeAuthenticatedWPAPIRequest(
             siteUrl = cleanedUrl,
             username = payload.username,
             password = payload.password
@@ -49,41 +52,40 @@ class SiteWPAPIRestClient @Inject constructor(
             if (nonce !is Available) {
                 val networkError = (nonce as? FailedRequest)?.networkError ?: BaseNetworkError(GenericErrorType.UNKNOWN)
 
-                return@makeAuthenticatedWPAPIRequest SiteModel().apply {
-                    error = networkError
-                }
+                return@makeAuthenticatedWPAPIRequest Error(WPAPINetworkError(networkError))
             }
 
-            val result = wpapiGsonRequestBuilder.syncGetRequest(
+            discoveredWpApiUrl = wpApiUrl
+            wpapiGsonRequestBuilder.syncGetRequest(
                 restClient = this,
                 url = wpApiUrl,
                 clazz = RootWPAPIRestResponse::class.java,
                 params = mapOf("_fields" to FETCH_API_CALL_FIELDS),
                 nonce = nonce.value
             )
+        }
 
-            return@makeAuthenticatedWPAPIRequest when (result) {
-                is Success -> {
-                    val response = result.data
-                    SiteModel().apply {
-                        name = response?.name
-                        description = response?.description
-                        timezone = response?.gmtOffset
-                        origin = SiteModel.ORIGIN_WPAPI
-                        hasWooCommerce = response?.namespaces?.any {
-                            it.startsWith(WOO_API_NAMESPACE_PREFIX)
-                        } ?: false
-                        wpApiRestUrl = wpApiUrl
-                        this.url = response?.url ?: cleanedUrl
-                        this.username = payload.username
-                        this.password = payload.password
-                    }
+        return when (result) {
+            is Success -> {
+                val response = result.data
+                SiteModel().apply {
+                    name = response?.name
+                    description = response?.description
+                    timezone = response?.gmtOffset
+                    origin = SiteModel.ORIGIN_WPAPI
+                    hasWooCommerce = response?.namespaces?.any {
+                        it.startsWith(WOO_API_NAMESPACE_PREFIX)
+                    } ?: false
+                    wpApiRestUrl = discoveredWpApiUrl
+                    this.url = response?.url ?: cleanedUrl
+                    this.username = payload.username
+                    this.password = payload.password
                 }
+            }
 
-                is Error -> {
-                    SiteModel().apply {
-                        error = result.error
-                    }
+            is Error -> {
+                SiteModel().apply {
+                    error = result.error
                 }
             }
         }

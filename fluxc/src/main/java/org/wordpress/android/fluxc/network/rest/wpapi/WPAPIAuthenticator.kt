@@ -1,9 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpapi
 
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
@@ -16,7 +14,7 @@ class WPAPIAuthenticator @Inject constructor(
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
     private val siteSqlUtils: SiteSqlUtils
 ) {
-    suspend fun <T : Payload<BaseNetworkError?>> makeAuthenticatedWPAPIRequest(
+    suspend fun <T : WPAPIResponse<*>> makeAuthenticatedWPAPIRequest(
         siteUrl: String,
         username: String,
         password: String,
@@ -35,7 +33,7 @@ class WPAPIAuthenticator @Inject constructor(
         )
     }
 
-    suspend fun <T : Payload<BaseNetworkError?>> makeAuthenticatedWPAPIRequest(
+    suspend fun <T : WPAPIResponse<*>> makeAuthenticatedWPAPIRequest(
         site: SiteModel,
         fetchMethod: suspend (Nonce) -> T
     ): T {
@@ -54,7 +52,8 @@ class WPAPIAuthenticator @Inject constructor(
             fetchMethod(nonce)
         }
 
-        return if (response.error?.volleyError?.networkResponse?.statusCode == STATUS_CODE_NOT_FOUND) {
+        return if (response is WPAPIResponse.Error<*> &&
+            response.error.volleyError?.networkResponse?.statusCode == STATUS_CODE_NOT_FOUND) {
             // call failed with 'not found' so clear the (failing) rest url
             site.wpApiRestUrl = null
             (siteSqlUtils::insertOrUpdateSite)(site)
@@ -72,7 +71,7 @@ class WPAPIAuthenticator @Inject constructor(
         } else response
     }
 
-    private suspend fun <T : Payload<BaseNetworkError?>> makeAuthenticatedWPAPIRequest(
+    private suspend fun <T : WPAPIResponse<*>> makeAuthenticatedWPAPIRequest(
         siteUrl: String,
         wpApiUrl: String,
         username: String,
@@ -87,9 +86,11 @@ class WPAPIAuthenticator @Inject constructor(
 
         val response = fetchMethod(wpApiUrl, nonce)
 
-        if (!response.isError) return response
-        val statusCode = response.error?.volleyError?.networkResponse?.statusCode
-        val errorCode = (response.error as? WPAPINetworkError)?.errorCode
+        if (response is WPAPIResponse.Success<*>) return response
+
+        val error = (response as WPAPIResponse.Error<*>).error
+        val statusCode = error.volleyError?.networkResponse?.statusCode
+        val errorCode = (error as? WPAPINetworkError)?.errorCode
         return when {
             statusCode == STATUS_CODE_UNAUTHORIZED ||
                 (statusCode == STATUS_CODE_FORBIDDEN && errorCode == "rest_cookie_invalid_nonce") -> {
