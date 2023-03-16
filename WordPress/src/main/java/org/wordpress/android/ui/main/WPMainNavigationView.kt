@@ -315,31 +315,35 @@ class WPMainNavigationView @JvmOverloads constructor(
             return fragment
         }
 
+
         internal fun getFragment(position: Int): Fragment? {
             return pages().getOrNull(position)?.let { pageType ->
-                val fragment = fragmentManager?.findFragmentByTag(getTagForPageType(pageType))
-                if (fragment != null) {
-                    when(fragment){
-                        is ReaderFragment, is NotificationsListFragment -> {
-                            return if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                                fragmentManager?.beginTransaction()?.remove(fragment)?.commitNow()
-                                createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
-                            } else {
-                                fragment
-                            }
-                        }
-                        is JetpackStaticPosterFragment -> {
-                            return if (!jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                                fragmentManager?.beginTransaction()?.remove(fragment)?.commitNow()
-                                createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
-                            } else {
-                                fragment
-                            }
-                        }
+                val currentFragment = fragmentManager?.findFragmentByTag(getTagForPageType(pageType))
+                return currentFragment?.let {
+                    when(it){
+                        is ReaderFragment, is NotificationsListFragment -> checkAndCreateForStaticPage(it, pageType)
+                        is JetpackStaticPosterFragment -> checkAndCreateForNonStaticPage(it, pageType)
+                        else -> { it}
                     }
-                    return fragment
-                }
-                return createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
+                } ?: createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
+            }
+        }
+
+        private fun checkAndCreateForStaticPage(fragment: Fragment, pageType: PageType) : Fragment {
+            return if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+                fragmentManager?.beginTransaction()?.remove(fragment)?.commitNow()
+                createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
+            } else {
+                fragment
+            }
+        }
+
+        private fun checkAndCreateForNonStaticPage(fragment: Fragment, pageType: PageType) : Fragment {
+            return if (!jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+                fragmentManager?.beginTransaction()?.remove(fragment)?.commitNow()
+                createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
+            } else {
+                fragment
             }
         }
 
