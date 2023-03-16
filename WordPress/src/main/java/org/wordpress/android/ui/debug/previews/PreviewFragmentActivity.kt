@@ -12,7 +12,6 @@ import org.wordpress.android.util.config.JetpackFeatureRemovalStaticPostersConfi
 
 @AndroidEntryPoint
 class PreviewFragmentActivity : FragmentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
