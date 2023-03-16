@@ -1236,7 +1236,8 @@ class MySiteViewModel @Inject constructor(
 
     private fun getStatsNavigationActionForSite(site: SiteModel): SiteNavigationAction = when {
         // if we are in static posters phase - we don't want to show any connection/login messages
-        jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage() -> SiteNavigationAction.ShowJetpackRemovalStaticPostersView
+        jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage() ->
+            SiteNavigationAction.ShowJetpackRemovalStaticPostersView
 
         // If the user is not logged in and the site is already connected to Jetpack, ask to login.
         !accountStore.hasAccessToken() && site.isJetpackConnected -> SiteNavigationAction.StartWPComLoginForJetpackStats
