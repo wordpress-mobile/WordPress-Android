@@ -366,13 +366,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         launchWithNoteId();
                     }
                 } else if (openedFromShortcut) {
-                    // todo: JetpackFocus - We need to intercept this here for static posters
                     initSelectedSite();
-                    Toast.makeText(this, "JetpackFocus via shortcut", Toast.LENGTH_LONG).show();
-                    mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
-                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
-                    showJetpackOverlayIfNeeded(getIntent().getStringExtra(
-                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
+                        mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
+                                ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
+                        showJetpackOverlayIfNeeded(getIntent().getStringExtra(
+                                ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
                 } else if (isQuickStartRequestedFromPush) {
@@ -506,8 +504,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         Map<String, String> trackingProperties = new HashMap<>();
         trackingProperties.put("calling_function", "shortcut_" + shortcut.name());
 
-        // todo: JetpackFocus - I don't believe we need a change here, since static posters
-        // won't get past the first check since they are not considered part of shouldHideJetpackFeatures
         switch (shortcut) {
             case CREATE_NEW_POST:
                 break;
@@ -833,8 +829,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
                         break;
                     }
-                    // todo: JetpackFocus - if we reuse the "NOTIFS" and "READER" then
-                    // remembering parts will stay the same, we just need to switch out the fragment
                     if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.NOTIFS);
                     break;
                 case ARG_READER:
@@ -845,8 +839,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
                         break;
                     }
-                    // todo: JetpackFocus -  this shouldn't need to change, if the fragment is not reader, it
-                    // will move forward with navigation to "READER"
                     if (intent.getBooleanExtra(ARG_READER_BOOKMARK_TAB, false) && mBottomNav != null && mBottomNav
                             .getActiveFragment() instanceof ReaderFragment) {
                         ((ReaderFragment) mBottomNav.getActiveFragment()).requestBookmarkTab();
@@ -873,10 +865,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         break;
                     }
                     if (mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                        // todo: JetpackFocus - redirect to the static poster fragment when ready
-                        Toast.makeText(this,
-                                "todo: JetpackFocus - redirect to the static poster fragment when ready",
-                                LENGTH_LONG).show();
+                        ActivityLauncher.showJetpackStaticPoster(this);
                         break;
                     }
                     if (intent.hasExtra(ARG_STATS_TIMEFRAME)) {
