@@ -23,15 +23,15 @@ class JetpackFullPluginInstallOnboardingViewModelTest : BaseUnitTest() {
     private val analyticsTracker: JetpackFullPluginInstallOnboardingAnalyticsTracker = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
 
-    private val siteName = "Site Name"
+    private val siteUrl = "wordpress.com"
     private val pluginNames = listOf("jetpack-search", "jetpack-backup")
     private val selectedSite = SiteModel().apply {
         id = 1
-        name = siteName
+        url = siteUrl
         activeJetpackConnectionPlugins = pluginNames.joinToString(",")
     }
     private val loadedUiState = UiState.Loaded(
-        siteName = siteName,
+        siteUrl = siteUrl,
         pluginNames = pluginNames,
     )
     private val classToTest = JetpackFullPluginInstallOnboardingViewModel(
@@ -52,7 +52,7 @@ class JetpackFullPluginInstallOnboardingViewModelTest : BaseUnitTest() {
         mockUiStateMapper()
         classToTest.onScreenShown()
         val loadedUiState = classToTest.uiState.value as UiState.Loaded
-        assertThat(loadedUiState.siteName).isEqualTo(siteName)
+        assertThat(loadedUiState.siteUrl).isEqualTo(siteUrl)
         assertThat(loadedUiState.pluginNames).isEqualTo(pluginNames)
     }
 

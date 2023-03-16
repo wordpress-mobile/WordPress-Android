@@ -83,7 +83,7 @@ class JetpackFullPluginInstallOnboardingViewModel @Inject constructor(
     sealed class UiState {
         object None : UiState()
         data class Loaded(
-            val siteName: String,
+            val siteUrl: String,
             val pluginNames: List<String>,
         ) : UiState()
     }
