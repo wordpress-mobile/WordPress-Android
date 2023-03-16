@@ -84,7 +84,7 @@ inline fun <reified T : Serializable?> Bundle.getSerializableCompat(key: String)
         getSerializable(key, T::class.java)
     } else {
         @Suppress("DEPRECATION")
-        getSerializable(key) as T
+        getSerializable(key) as T?
     }
 
 /**
