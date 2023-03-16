@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
+import org.wordpress.android.ui.sitecreation.FREE_DOMAIN
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.usecases.CreateSiteUseCase
 import org.wordpress.android.util.UrlUtilsWrapper
@@ -28,9 +29,9 @@ private const val SITE_TITLE = "site title"
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
     123,
     "slug",
-    "domain",
+    FREE_DOMAIN.domainName,
     SITE_TITLE,
-    false,
+    FREE_DOMAIN.isFree,
 )
 private const val LANGUAGE_ID = "lang_id"
 private const val TIMEZONE_ID = "timezone_id"
