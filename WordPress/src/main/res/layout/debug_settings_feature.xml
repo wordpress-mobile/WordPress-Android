@@ -43,8 +43,8 @@
         android:layout_marginEnd="@dimen/margin_medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/unknown_icon"
-        app:layout_constraintStart_toEndOf="@+id/feature_title"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible"/>
 
     <ImageView
         android:id="@+id/unknown_icon"
@@ -55,7 +55,7 @@
         android:contentDescription="@string/unknown"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/feature_enabled"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
