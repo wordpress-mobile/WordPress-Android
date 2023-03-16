@@ -175,6 +175,7 @@ class DebugSettingsViewModel
 
             enum class State { ENABLED, DISABLED, UNKNOWN }
 
+            @Suppress("DataClassShouldBeImmutable") // We're not in prod code or diffing here, the rule is moot
             var preview: (() -> Unit)? = null
         }
 
