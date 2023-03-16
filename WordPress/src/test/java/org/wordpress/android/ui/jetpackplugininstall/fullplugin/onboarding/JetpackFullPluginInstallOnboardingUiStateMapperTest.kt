@@ -13,10 +13,10 @@ import kotlin.test.assertEquals
 @ExperimentalCoroutinesApi
 class JetpackFullPluginInstallOnboardingUiStateMapperTest : BaseUnitTest() {
     private val selectedSiteRepository: SelectedSiteRepository = mock()
-    private val selectedSiteName = "Site name"
+    private val selectedSiteUrl = "wordpress.com"
     private val selectedPluginNames = "jetpack-search,jetpack-backup"
     private val selectedSiteModel: SiteModel = SiteModel().apply {
-        name = selectedSiteName
+        url = selectedSiteUrl
         activeJetpackConnectionPlugins = selectedPluginNames
     }
     private val classToTest = JetpackFullPluginInstallOnboardingUiStateMapper(
@@ -27,7 +27,7 @@ class JetpackFullPluginInstallOnboardingUiStateMapperTest : BaseUnitTest() {
     fun `Should return correct Loaded state when mapLoaded is called`() {
         mockSelectedSite()
         val expected = UiState.Loaded(
-            siteName = selectedSiteName,
+            siteUrl = selectedSiteUrl,
             pluginNames = listOf("Jetpack Search", "Jetpack VaultPress Backup")
         )
         val actual = classToTest.mapLoaded()

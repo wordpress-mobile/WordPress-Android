@@ -80,7 +80,7 @@ fun LoadedState(
                     modifier = Modifier
                         .padding(horizontal = 30.dp)
                         .padding(top = 20.dp),
-                    siteName = siteName,
+                    siteString = siteUrl,
                     pluginNames = pluginNames,
                 )
                 Spacer(Modifier.weight(1f))
@@ -115,7 +115,7 @@ fun LoadedState(
 private fun PreviewLoadedState() {
     AppTheme {
         val uiState = UiState.Loaded(
-            siteName = "wordpress.com",
+            siteUrl = "wordpress.com",
             pluginNames = listOf("Jetpack Search"),
         )
         LoadedState(uiState, {}, {}, {}, {})
