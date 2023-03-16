@@ -11,19 +11,36 @@ import java.util.List;
 public class SitesModel extends Payload<BaseNetworkError> {
     private List<SiteModel> mSites;
 
+    private List<SiteModel> mJetpackCPSites;
+
     public SitesModel() {
         mSites = new ArrayList<>();
+        mJetpackCPSites = new ArrayList<>();
     }
 
     public SitesModel(@NonNull List<SiteModel> sites) {
         mSites = sites;
+        mJetpackCPSites = new ArrayList<>();
+    }
+
+    public SitesModel(@NonNull List<SiteModel> sites, @NonNull List<SiteModel> jetpackCPSites) {
+        mSites = sites;
+        mJetpackCPSites = jetpackCPSites;
     }
 
     public List<SiteModel> getSites() {
         return mSites;
     }
 
+    public List<SiteModel> getJetpackCPSites() {
+        return mJetpackCPSites;
+    }
+
     public void setSites(List<SiteModel> sites) {
         this.mSites = sites;
+    }
+
+    public void setJetpackCPSites(List<SiteModel> jetpackCPSites) {
+        mJetpackCPSites = jetpackCPSites;
     }
 }
