@@ -42,7 +42,6 @@ class SiteItemsBuilder @Inject constructor(
         return jetpackSiteItems + publishSiteItems + lookAndFeelSiteItems + configurationSiteItems + externalSiteItems
     }
 
-    // todo: JetpackFocus - should we be showing the quick start for static posters?
     private fun getJetpackDependantSiteItems(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
         return if (!jetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
             val checkStatsTask = quickStartRepository.quickStartType
