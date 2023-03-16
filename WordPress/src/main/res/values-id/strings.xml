@@ -26,7 +26,7 @@ Language: id
     <string name="jetpack_full_plugin_install_error_button_retry">Coba lagi</string>
     <string name="jetpack_full_plugin_install_error_description">Jetpack tidak dapat diinstal untuk saat ini.</string>
     <string name="jetpack_full_plugin_install_error_title">Terjadi kendala</string>
-    <string name="jetpack_full_plugin_install_error_image_content_description">Ikon eror</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Ikon eror</string>
     <string name="jetpack_full_plugin_install_done_button">Selesai</string>
     <string name="jetpack_full_plugin_install_done_description">Situs ini siap digunakan dengan aplikasi.</string>
     <string name="jetpack_full_plugin_install_done_title">Jetpack sudah diinstal</string>
@@ -1838,7 +1838,7 @@ Language: id
     <string name="domain_suggestions_search_hint">Ketikkan kata kunci untuk mendapatkan lebih banyak ide</string>
     <string name="domains_suggestions_empty_list">Saran tidak ditemukan</string>
     <string name="register_domain">Daftarkan Domain</string>
-    <string name="jetpack_installed_message">Sekarang Jetpack telah terinstal, kami hanya perlu Anda menyiapkannya. Ini hanya memerlukan waktu satu menit.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Sekarang Jetpack telah terinstal, kami hanya perlu Anda menyiapkannya. Ini hanya memerlukan waktu satu menit.</string>
     <string name="stats_menu_remove">Hapus dari wawasan</string>
     <string name="stats_menu_move_down">Geser bawah</string>
     <string name="stats_menu_move_up">Geser atas</string>
@@ -2105,7 +2105,7 @@ Language: id
     <string name="reader_empty_followed_tags_subtitle">Tambahkan topik di sini untuk menemukan pos tentang topik favorit Anda.</string>
     <string name="login_to_to_connect_jetpack">Login ke akun WordPress.com yang Anda gunakan untuk menghubungkan Jetpack.</string>
     <string name="install_jetpack_retry">Coba lagi</string>
-    <string name="install_jetpack_continue">Siapkan</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Siapkan</string>
     <string name="jetpack_installation_problem_message">Jetpack tidak dapat diinstal untuk saat ini.</string>
     <string name="jetpack_installation_problem">Ada masalah</string>
     <string name="jetpack_installed">Jetpack sudah diinstal</string>

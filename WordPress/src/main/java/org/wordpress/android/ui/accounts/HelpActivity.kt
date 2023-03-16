@@ -362,7 +362,8 @@ class HelpActivity : LocaleAwareActivity() {
         SCAN_SCREEN_HELP("origin:scan-screen-help"),
         JETPACK_MIGRATION_HELP("origin:jetpack-migration-help"),
         JETPACK_INSTALL_FULL_PLUGIN_ONBOARDING("origin:jp-install-full-plugin-overlay"),
-        JETPACK_INSTALL_FULL_PLUGIN_ERROR("origin:jp-install-full-plugin-error");
+        JETPACK_INSTALL_FULL_PLUGIN_ERROR("origin:jp-install-full-plugin-error"),
+        JETPACK_REMOTE_INSTALL_PLUGIN_ERROR("origin:jp-remote-install-plugin-error");
 
         override fun toString(): String {
             return stringValue

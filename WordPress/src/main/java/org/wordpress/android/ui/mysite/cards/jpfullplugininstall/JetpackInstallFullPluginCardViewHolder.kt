@@ -7,7 +7,7 @@ import androidx.compose.ui.res.stringResource
 import org.wordpress.android.R
 import org.wordpress.android.databinding.JpInstallFullPluginCardBinding
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.jpfullplugininstall.onboarding.compose.component.PluginDescription
+import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.compose.component.PluginDescription
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction

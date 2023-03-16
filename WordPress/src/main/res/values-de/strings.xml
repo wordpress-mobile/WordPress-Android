@@ -1841,7 +1841,7 @@ Language: de
     <string name="domain_suggestions_search_hint">Gib ein Stichwort ein, um weitere Ideen zu erhalten</string>
     <string name="domains_suggestions_empty_list">Keine Vorschläge gefunden</string>
     <string name="register_domain">Domain registrieren</string>
-    <string name="jetpack_installed_message">Jetpack ist installiert. Jetzt müssen wir nur noch die Einrichtung abschließen. Dies dauert nur eine Minute.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Jetpack ist installiert. Jetzt müssen wir nur noch die Einrichtung abschließen. Dies dauert nur eine Minute.</string>
     <string name="stats_menu_remove">Aus Einsichten entfernen</string>
     <string name="stats_menu_move_down">Nach unten verschieben</string>
     <string name="stats_menu_move_up">Nach oben verschieben</string>
@@ -2117,7 +2117,7 @@ Language: de
     <string name="install_jetpack">Jetpack installieren</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Häufige Fragen zu Jetpack</string>
-    <string name="install_jetpack_continue">Einrichten</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Einrichten</string>
     <string name="stats_jetpack_connection_setup_info">Wenn du Statistiken zu deiner WordPress-Website erhalten möchtest, musst du das Jetpack-Plugin installieren.</string>
     <string name="themes_empty_list">Keine Themes entsprechen deiner Suche</string>
     <string name="reader_label_post_search_explainer">Was möchtest du finden?</string>

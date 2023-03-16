@@ -1780,10 +1780,10 @@ Language: en_CA
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
     <string name="register_domain">Register Domain</string>
-    <string name="jetpack_installed_message">Now that Jetpack is installed, we just need to get you set up. This will only take a minute.</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Now that Jetpack is installed, we just need to get you set up. This will only take a minute.</string>
     <string name="stats_view_follower_totals">Follower Totals</string>
     <string name="stats_menu_remove">Remove from insights</string>
     <string name="stats_menu_move_down">Move down</string>
@@ -2051,13 +2051,13 @@ Language: en_CA
     <string name="reader_empty_followed_tags_subtitle">Add topics here to find posts about your favourite topics</string>
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="install_jetpack_retry">Retry</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Set up</string>
     <string name="jetpack_installation_problem">There was a problem</string>
     <string name="jetpack_installed">Jetpack installed</string>
     <string name="installing_jetpack">Installing Jetpack</string>
     <string name="install_jetpack">Install Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
-    <string name="install_jetpack_continue">Set up</string>
     <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time.</string>
     <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete.</string>
     <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack.</string>
