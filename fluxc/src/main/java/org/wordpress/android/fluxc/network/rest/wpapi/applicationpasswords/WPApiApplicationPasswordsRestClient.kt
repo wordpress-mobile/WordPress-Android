@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.generated.endpoint.WPAPI
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
@@ -33,19 +32,17 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
         AppLog.d(T.MAIN, "Create an application password using Cookie Authentication")
         val path = WPAPI.users.me.application_passwords.urlV2
 
-        val payload = wpApiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
-            APIResponseWrapper(
+        val response = wpApiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
                 wpApiGsonRequestBuilder.syncPostRequest(
                     restClient = this,
                     url = site.buildUrl(path),
                     body = mapOf("name" to applicationName),
                     clazz = ApplicationPasswordCreationResponse::class.java,
-                    nonce = nonce?.value
+                    nonce = nonce.value
                 )
-            )
         }
 
-        return when (val response = payload.response) {
+        return when (response) {
             is WPAPIResponse.Success<ApplicationPasswordCreationResponse> -> {
                 response.data?.let {
                     ApplicationPasswordCreationPayload(it.password, it.uuid)
@@ -68,18 +65,16 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
     ): ApplicationPasswordUUIDFetchPayload {
         AppLog.d(T.MAIN, "Fetch application password UUID using Cookie authentication")
         val path = WPAPI.users.me.application_passwords.urlV2
-        val payload = wpApiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
-            APIResponseWrapper(
-                wpApiGsonRequestBuilder.syncGetRequest(
-                    restClient = this,
-                    url = site.buildUrl(path),
-                    clazz = Array<ApplicationPasswordsFetchResponse>::class.java,
-                    nonce = nonce?.value
-                )
+        val response = wpApiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+            wpApiGsonRequestBuilder.syncGetRequest(
+                restClient = this,
+                url = site.buildUrl(path),
+                clazz = Array<ApplicationPasswordsFetchResponse>::class.java,
+                nonce = nonce.value
             )
         }
 
-        return when (val response = payload.response) {
+        return when (response) {
             is WPAPIResponse.Success -> {
                 response.data?.firstOrNull { it.name == applicationName }?.let {
                     ApplicationPasswordUUIDFetchPayload(it.uuid)
@@ -102,18 +97,16 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
         AppLog.d(T.MAIN, "Delete application password using Cookie Authentication")
 
         val path = WPAPI.users.me.application_passwords.uuid(uuid).urlV2
-        val payload = wpApiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
-            APIResponseWrapper(
-                wpApiGsonRequestBuilder.syncDeleteRequest(
-                    restClient = this,
-                    url = site.buildUrl(path),
-                    clazz = ApplicationPasswordDeleteResponse::class.java,
-                    nonce = nonce?.value
-                )
+        val response = wpApiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+            wpApiGsonRequestBuilder.syncDeleteRequest(
+                restClient = this,
+                url = site.buildUrl(path),
+                clazz = ApplicationPasswordDeleteResponse::class.java,
+                nonce = nonce.value
             )
         }
 
-        return when (val response = payload.response) {
+        return when (response) {
             is WPAPIResponse.Success<ApplicationPasswordDeleteResponse> -> {
                 response.data?.let {
                     ApplicationPasswordDeletionPayload(it.deleted)
@@ -134,13 +127,5 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
     private fun SiteModel.buildUrl(path: String): String {
         val baseUrl = wpApiRestUrl ?: "${url}/wp-json"
         return "${baseUrl.trimEnd('/')}/${path.trimStart('/')}"
-    }
-
-    private data class APIResponseWrapper<T>(val response: WPAPIResponse<T>) : Payload<BaseNetworkError?>() {
-        init {
-            if (response is WPAPIResponse.Error) {
-                this.error = response.error
-            }
-        }
     }
 }

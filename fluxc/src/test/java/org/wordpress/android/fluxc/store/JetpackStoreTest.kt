@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.action.JetpackAction.ACTIVATE_STATS_MODULE
 import org.wordpress.android.fluxc.action.JetpackAction.INSTALL_JETPACK
 import org.wordpress.android.fluxc.generated.JetpackActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.jetpack.JetpackWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient
 import org.wordpress.android.fluxc.store.JetpackStore.ActivateStatsModuleError
@@ -37,7 +36,6 @@ import org.wordpress.android.fluxc.tools.initCoroutineEngine
 class JetpackStoreTest {
     @Mock private lateinit var jetpackRestClient: JetpackRestClient
     @Mock private lateinit var jetpackWPAPIRestClient: JetpackWPAPIRestClient
-    @Mock private lateinit var wpApiAuthenticator: WPAPIAuthenticator
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var site: SiteModel
@@ -50,7 +48,6 @@ class JetpackStoreTest {
             jetpackWPAPIRestClient,
             siteStore,
             initCoroutineEngine(),
-            wpApiAuthenticator,
             dispatcher
         )
         val siteId = 1
