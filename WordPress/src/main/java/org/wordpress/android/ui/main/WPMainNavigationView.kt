@@ -320,10 +320,10 @@ class WPMainNavigationView @JvmOverloads constructor(
             return pages().getOrNull(position)?.let { pageType ->
                 val currentFragment = fragmentManager?.findFragmentByTag(getTagForPageType(pageType))
                 return currentFragment?.let {
-                    when(it){
+                    when (it) {
                         is ReaderFragment, is NotificationsListFragment -> checkAndCreateForStaticPage(it, pageType)
                         is JetpackStaticPosterFragment -> checkAndCreateForNonStaticPage(it, pageType)
-                        else -> { it}
+                        else -> it
                     }
                 } ?: createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
             }
