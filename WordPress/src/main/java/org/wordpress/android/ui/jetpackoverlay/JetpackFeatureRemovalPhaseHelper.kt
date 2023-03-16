@@ -84,6 +84,14 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
         }
     }
 
+    fun shouldShowStoryPost(): Boolean {
+        val currentPhase = getCurrentPhase() ?: return true
+        return when (currentPhase) {
+            is PhaseStaticPosters, PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> false
+            else -> true
+        }
+    }
+
     @Suppress("Unused")
     fun shouldShowStaticPage(): Boolean {
         val currentPhase = getCurrentPhase() ?: return false
