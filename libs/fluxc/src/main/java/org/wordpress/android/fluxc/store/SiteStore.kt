@@ -1291,7 +1291,6 @@ open class SiteStore @Inject constructor(
         return siteSqlUtils.getUserRoles(site!!)
     }
 
-    // TODO hthomas, make them suspend?
     suspend fun getJetpackCPConnectedSites(): List<JetpackCPConnectedSiteModel> {
         return jetpackCPConnectedSitesDao.getAll().map { it.toJetpackCPConnectedSite() }
     }
@@ -1328,7 +1327,9 @@ open class SiteStore @Inject constructor(
             EXPORT_SITE -> exportSite(action.payload as SiteModel)
             EXPORTED_SITE -> handleExportedSite(action.payload as ExportSiteResponsePayload)
             REMOVE_SITE -> removeSite(action.payload as SiteModel)
-            REMOVE_ALL_SITES -> removeAllSites()
+            REMOVE_ALL_SITES -> coroutineEngine.launch(T.MAIN, this, "Remove all sites") {
+                removeAllSites()
+            }
             REMOVE_WPCOM_AND_JETPACK_SITES -> coroutineEngine.launch(T.MAIN, this, "Remove WPCom and Jetpack sites") {
                 removeWPComAndJetpackSites()
             }
@@ -1596,9 +1597,13 @@ open class SiteStore @Inject constructor(
         emitChange(OnSiteRemoved(rowsAffected))
     }
 
-    private fun removeAllSites() {
+    private suspend fun removeAllSites() {
         val rowsAffected = siteSqlUtils.deleteAllSites()
         val event = OnAllSitesRemoved(rowsAffected)
+
+        // also drop everything from the Jetpack CP connected sites table, no change needs to be emitted for this
+        jetpackCPConnectedSitesDao.deleteAll()
+
         emitChange(event)
     }
 
