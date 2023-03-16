@@ -9,24 +9,22 @@ import androidx.compose.runtime.livedata.observeAsState
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.INSTALL_JETPACK_CANCELLED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.LoginMode
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.JetpackConnectionSource
-import org.wordpress.android.ui.JetpackConnectionUtils.trackWithSource
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.ui.accounts.LoginActivity
+import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.jetpackplugininstall.install.UiState
+import org.wordpress.android.ui.jetpackplugininstall.install.compose.JetpackPluginInstallScreen
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.CONNECT
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.CONTACT_SUPPORT
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.LOGIN
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.MANUAL_INSTALL
-import org.wordpress.android.ui.accounts.HelpActivity
-import org.wordpress.android.ui.accounts.LoginActivity
-import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.jetpackplugininstall.install.compose.JetpackPluginInstallScreen
-import org.wordpress.android.ui.jetpackplugininstall.install.UiState
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
@@ -52,12 +50,11 @@ class JetpackRemoteInstallActivity : LocaleAwareActivity() {
     }
 
     override fun onBackPressed() {
-        if (viewModel.liveViewState.value?.showCloseButton == false) return
+        if (!viewModel.isBackButtonEnabled()) return
 
-        trackWithSource(
-            INSTALL_JETPACK_CANCELLED,
-            intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
-        )
+        val source = intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
+        viewModel.onBackPressed(source)
+
         super.onBackPressed()
     }
 

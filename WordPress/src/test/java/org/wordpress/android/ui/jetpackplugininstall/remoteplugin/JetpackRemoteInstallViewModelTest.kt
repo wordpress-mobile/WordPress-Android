@@ -6,6 +6,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.argumentCaptor
@@ -14,6 +15,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.JetpackAction
 import org.wordpress.android.fluxc.annotations.action.Action
@@ -24,8 +26,10 @@ import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallError
 import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallErrorType
 import org.wordpress.android.fluxc.store.JetpackStore.OnJetpackInstalled
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData
+import org.wordpress.android.ui.JetpackConnectionSource
+import org.wordpress.android.ui.JetpackConnectionUtils
 import org.wordpress.android.ui.jetpackplugininstall.install.UiState
+import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -155,6 +159,40 @@ class JetpackRemoteInstallViewModelTest : BaseUnitTest() {
         val connectionData = jetpackResultActionData!!
         assertThat(connectionData.loggedIn).isTrue
         assertThat(connectionData.site == updatedSite).isTrue
+    }
+
+    @Test
+    fun `calling isBackButtonEnabled corresponds to expectations`() {
+        // for START type, back button should be enabled
+        val type = JetpackRemoteInstallViewModel.Type.START
+        viewModel.initialize(site, type)
+        assertThat(viewModel.isBackButtonEnabled()).isTrue
+
+        // for INSTALLING type, back button should be disabled
+        viewModel.onInitialButtonClick()
+        assertThat(viewModel.isBackButtonEnabled()).isFalse
+
+        // for ERROR type, back button should be enabled
+        viewModel.onEventsUpdated(
+            OnJetpackInstalled(
+                JetpackInstallError(JetpackInstallErrorType.GENERIC_ERROR, "error"),
+                JetpackAction.INSTALL_JETPACK
+            )
+        )
+        assertThat(viewModel.isBackButtonEnabled()).isTrue
+
+        // for INSTALLED type, back button should be disabled
+        viewModel.onRetryButtonClick()
+        assertThat(viewModel.isBackButtonEnabled()).isFalse
+    }
+
+    @Test
+    fun `calling onBackPressed tracks install cancellation`() {
+        val mockUtils = Mockito.mockStatic(JetpackConnectionUtils::class.java)
+
+        val source = JetpackConnectionSource.STATS
+        viewModel.onBackPressed(source)
+        mockUtils.verify { JetpackConnectionUtils.trackWithSource(Stat.INSTALL_JETPACK_CANCELLED, source) }
     }
 
     private fun UiState.assertInitialState() {

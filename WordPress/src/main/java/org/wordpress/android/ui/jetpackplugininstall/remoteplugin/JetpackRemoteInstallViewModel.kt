@@ -8,6 +8,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_RESTART
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_START
 import org.wordpress.android.fluxc.Dispatcher
@@ -17,6 +18,9 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.JetpackStore
 import org.wordpress.android.fluxc.store.JetpackStore.OnJetpackInstalled
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.JetpackConnectionSource
+import org.wordpress.android.ui.JetpackConnectionUtils
+import org.wordpress.android.ui.jetpackplugininstall.install.UiState
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.CONNECT
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.CONTACT_SUPPORT
@@ -26,7 +30,6 @@ import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteI
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.Type.INSTALLED
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.Type.INSTALLING
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.Type.START
-import org.wordpress.android.ui.jetpackplugininstall.install.UiState
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
@@ -119,10 +122,10 @@ class JetpackRemoteInstallViewModel
     fun onDoneButtonClick(siteId: Int = siteModel.id) {
         val hasAccessToken = accountStore.hasAccessToken()
         val action = if (hasAccessToken) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_CONNECT)
+            AnalyticsTracker.track(Stat.INSTALL_JETPACK_REMOTE_CONNECT)
             CONNECT
         } else {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_LOGIN)
+            AnalyticsTracker.track(Stat.INSTALL_JETPACK_REMOTE_LOGIN)
             LOGIN
         }
         triggerResultAction(siteId, action, hasAccessToken)
@@ -135,6 +138,15 @@ class JetpackRemoteInstallViewModel
                 accountStore.hasAccessToken(),
                 CONTACT_SUPPORT
             )
+        )
+    }
+
+    fun isBackButtonEnabled() = mutableViewState.value?.showCloseButton != false
+
+    fun onBackPressed(source: JetpackConnectionSource) {
+        JetpackConnectionUtils.trackWithSource(
+            Stat.INSTALL_JETPACK_CANCELLED,
+            source
         )
     }
 
@@ -164,19 +176,19 @@ class JetpackRemoteInstallViewModel
         val site = siteModel
         if (event.isError) {
             AnalyticsTracker.track(
-                AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_FAILED,
+                Stat.INSTALL_JETPACK_REMOTE_FAILED,
                 CONTEXT,
                 event.error?.apiError ?: EMPTY_TYPE,
                 event.error?.message ?: EMPTY_MESSAGE
             )
             when {
                 event.error?.apiError == SITE_IS_JETPACK -> {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_COMPLETED)
+                    AnalyticsTracker.track(Stat.INSTALL_JETPACK_REMOTE_COMPLETED)
                     mutableViewState.postValue(INSTALLED.toState())
                 }
 
                 BLOCKING_FAILURES.contains(event.error?.apiError) -> {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_START_MANUAL_FLOW)
+                    AnalyticsTracker.track(Stat.INSTALL_JETPACK_REMOTE_START_MANUAL_FLOW)
                     triggerResultAction(site.id, MANUAL_INSTALL)
                 }
 
@@ -185,10 +197,10 @@ class JetpackRemoteInstallViewModel
             return
         }
         if (event.success) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_COMPLETED)
+            AnalyticsTracker.track(Stat.INSTALL_JETPACK_REMOTE_COMPLETED)
             mutableViewState.postValue(INSTALLED.toState())
         } else {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_FAILED)
+            AnalyticsTracker.track(Stat.INSTALL_JETPACK_REMOTE_FAILED)
             mutableViewState.postValue(ERROR.toState())
         }
     }
