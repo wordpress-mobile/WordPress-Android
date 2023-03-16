@@ -331,7 +331,6 @@ public class SiteUtils {
         return VersionUtils.checkMinimalVersion(site.getSoftwareVersion(), minVersion);
     }
 
-    // todo: annmarie
     public static boolean supportsStoriesFeature(SiteModel site, JetpackFeatureRemovalPhaseHelper helper) {
        return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_STORIES_JETPACK_VERSION))
                && helper.shouldShowStoryPost();
