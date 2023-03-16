@@ -12,15 +12,17 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-internal class ApplicationPasswordsStore @Inject constructor(
-    private val context: Context,
-    private val configuration: ApplicationPasswordsConfiguration
+class ApplicationPasswordsStore @Inject constructor(
+    private val context: Context
 ) {
     companion object {
         private const val USERNAME_PREFERENCE_KEY_PREFIX = "username_"
         private const val PASSWORD_PREFERENCE_KEY_PREFIX = "app_password_"
         private const val UUID_PREFERENCE_KEY_PREFIX = "app_password_uuid_"
     }
+
+    @Inject
+    internal lateinit var configuration: ApplicationPasswordsConfiguration
 
     private val applicationName: String
         get() = configuration.applicationName
@@ -30,7 +32,7 @@ internal class ApplicationPasswordsStore @Inject constructor(
     }
 
     @Synchronized
-    fun getCredentials(site: SiteModel): ApplicationPasswordCredentials? {
+    internal fun getCredentials(site: SiteModel): ApplicationPasswordCredentials? {
         val username = encryptedPreferences.getString(site.usernamePrefKey, null)
         val password = encryptedPreferences.getString(site.passwordPrefKey, null)
         val uuid = encryptedPreferences.getString(site.uuidPrefKey, null)
