@@ -165,7 +165,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import static android.widget.Toast.LENGTH_LONG;
 import static androidx.lifecycle.Lifecycle.State.STARTED;
 import static org.wordpress.android.WordPress.SITE;
 import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID;
