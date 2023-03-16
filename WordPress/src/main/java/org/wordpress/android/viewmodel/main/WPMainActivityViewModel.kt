@@ -41,8 +41,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.FluxCUtils
-import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.map
 import org.wordpress.android.util.mapNullable
@@ -73,7 +73,8 @@ class WPMainActivityViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val blazeStore: BlazeStore
+    private val blazeStore: BlazeStore,
+    private val siteUtilsWrapper: SiteUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -186,7 +187,7 @@ class WPMainActivityViewModel @Inject constructor(
                 onClickAction = null
             )
         )
-        if (SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
+        if (siteUtilsWrapper.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
             actionsList.add(
                 CreateAction(
                     actionType = CREATE_NEW_STORY,
@@ -269,7 +270,7 @@ class WPMainActivityViewModel @Inject constructor(
 
         _showQuickStarInBottomSheet.postValue(quickStartRepository.activeTask.value == PUBLISH_POST)
 
-        if (SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper) || hasFullAccessToContent(site)) {
+        if (siteUtilsWrapper.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper) || hasFullAccessToContent(site)) {
             launch {
                 // The user has at least two create options available for this site (pages and/or story posts),
                 // so we should show a bottom sheet.
@@ -355,7 +356,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun getCreateContentMessageId(site: SiteModel?): Int {
-        return if (SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
+        return if (siteUtilsWrapper.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
             getCreateContentMessageIdStoriesFlagOn(hasFullAccessToContent(site))
         } else {
             getCreateContentMessageIdStoriesFlagOff(hasFullAccessToContent(site))
