@@ -3,7 +3,7 @@ package org.wordpress.android.ui.main.jetpack.staticposter.compose
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -63,7 +63,7 @@ private fun Content(uiState: Content) = with(uiState) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .padding(horizontal = 30.dp)
-            .fillMaxWidth()
+            .fillMaxSize()
     ) {
         Text(
             text = uiStringText(featureName),
