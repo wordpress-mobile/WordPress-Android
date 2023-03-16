@@ -1777,7 +1777,7 @@ Language: cs_CZ
     <string name="post_uploading_draft">Nahrávám koncept</string>
     <string name="post_list_tab_drafts">Koncepty</string>
     <string name="error_restoring_post">Při obnovování příspěvku došlo k chybě</string>
-    <string name="jetpack_installed_message">Nyní, když je nainstalován Jetpack, musíme vás ho nechat nastavit. Bude to trvat jen minutu.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Nyní, když je nainstalován Jetpack, musíme vás ho nechat nastavit. Bude to trvat jen minutu.</string>
     <string name="register_domain">Registrovat doménu</string>
     <string name="domains_suggestions_empty_list">Nebyly nalezeny žádné návrhy</string>
     <string name="domain_suggestions_search_hint">Napište klíčové slovo pro více nápadů</string>
@@ -2055,7 +2055,7 @@ Language: cs_CZ
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="install_jetpack">Instalovat Jetpack</string>
     <string name="install_jetpack_retry">Odpověď</string>
-    <string name="install_jetpack_continue">Pokračovat</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Pokračovat</string>
     <string name="installing_jetpack">Instalování Jetpacku</string>
     <string name="jetpack_installation_problem">Vyskytl se problém</string>
     <string name="jetpack_installed">Jetpack nainstalován</string>

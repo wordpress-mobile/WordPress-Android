@@ -869,7 +869,7 @@ Language: es_MX
     <string name="stats_insights_annual_site_stats">Estadísticas anuales del sitio</string>
     <string name="stats_view_follower_totals">Seguidores totales</string>
     <string name="register_domain">Registrar dominio</string>
-    <string name="jetpack_installed_message">Ahora que está instalado Jetpack, solo necesitamos que lo configures. Esto solo te llevará un minuto.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Ahora que está instalado Jetpack, solo necesitamos que lo configures. Esto solo te llevará un minuto.</string>
     <string name="stats_menu_move_down">Mover abajo</string>
     <string name="stats_menu_move_up">Mover arriba</string>
     <string name="stats_item_settings">Ajustes de los parámetros de las estadísticas</string>
@@ -1127,7 +1127,7 @@ Language: es_MX
     <string name="install_jetpack">Instala Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ de Jetpack</string>
-    <string name="install_jetpack_continue">Configurar</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Configurar</string>
     <string name="jetpack_installation_problem_message">Jetpack no se pudo instalar en este momento.</string>
     <string name="installing_jetpack_message">Instalando Jetpack en tu sitio. Esto puede llevar unos minutos completarse.</string>
     <string name="install_jetpack_message">Las credenciales de tu web no se almacenarán, y solo se utilizan para instalar Jetpack.</string>

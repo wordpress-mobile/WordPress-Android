@@ -1837,7 +1837,7 @@ Language: he_IL
     <string name="domain_suggestions_search_hint">יש להקליד מילת מפתח לרעיונות נוספים</string>
     <string name="domains_suggestions_empty_list">לא נמצאו הצעות</string>
     <string name="register_domain">רישום דומיין</string>
-    <string name="jetpack_installed_message">כעת, לאחר ההתקנה של Jetpack, צריך להגדיר את החשבון. התהליך יארך כדקה.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">כעת, לאחר ההתקנה של Jetpack, צריך להגדיר את החשבון. התהליך יארך כדקה.</string>
     <string name="stats_menu_remove">הסרה מהתובנות</string>
     <string name="stats_menu_move_down">העברה למטה</string>
     <string name="stats_menu_move_up">העברה למעלה</string>
@@ -2104,7 +2104,7 @@ Language: he_IL
     <string name="reader_empty_followed_tags_subtitle">אפשר להוסיף כאן נושאים כדי למצוא פוסטים על הנושאים המועדפים עליך</string>
     <string name="login_to_to_connect_jetpack">יש להיכנס לחשבון WordPress.com שדרכו חיברת את Jetpack.</string>
     <string name="install_jetpack_retry">יש לנסות שנית</string>
-    <string name="install_jetpack_continue">הגדר</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">הגדר</string>
     <string name="jetpack_installation_problem_message">אין אפשרות להתקין את Jetpack כעת.</string>
     <string name="jetpack_installation_problem">הייתה בעיה</string>
     <string name="jetpack_installed">Jetpack מותקן</string>
