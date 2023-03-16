@@ -735,7 +735,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onTodaysStatsCardFooterLinkClick() {
         cardsTracker.trackTodaysStatsCardFooterLinkClicked()
-         navigateToTodaysStats()
+        navigateToTodaysStats()
     }
 
     private fun onTodaysStatsCardClick() {
