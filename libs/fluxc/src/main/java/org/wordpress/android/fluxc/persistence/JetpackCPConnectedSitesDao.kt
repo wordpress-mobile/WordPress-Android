@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import org.wordpress.android.fluxc.model.SiteModel
 
-// TODO hthomas make everything suspend?
 @Dao
 interface JetpackCPConnectedSitesDao {
     @Query("SELECT COUNT(*) FROM JetpackCPConnectedSites")
