@@ -23,9 +23,9 @@ import org.wordpress.android.ui.main.jetpack.staticposter.UiState.Loading
 import org.wordpress.android.ui.main.jetpack.staticposter.toContentUiState
 
 @Composable
-fun JetpackStaticPoster(uiState: UiState) {
+fun JetpackStaticPoster(uiState: UiState, onBackClick: () -> Unit = {}) {
     Scaffold(
-        topBar = topBar(),
+        topBar = topBar(onBackClick),
     ) {
         when (uiState) {
             is Content -> Content(uiState)
@@ -34,11 +34,11 @@ fun JetpackStaticPoster(uiState: UiState) {
     }
 }
 
-private fun topBar() = @Composable {
+private fun topBar(onBackClick: () -> Unit) = @Composable {
     MainTopAppBar(
         title = null,
         navigationIcon = NavigationIcons.BackIcon,
-        onNavigationIconClick = { TODO("Not Implemented") }
+        onNavigationIconClick = onBackClick,
     )
 }
 

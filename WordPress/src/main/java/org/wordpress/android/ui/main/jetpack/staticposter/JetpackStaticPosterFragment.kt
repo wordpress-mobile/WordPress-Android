@@ -28,7 +28,7 @@ class JetpackStaticPosterFragment : Fragment() {
         setContent {
             AppTheme {
                 val uiState by viewModel.uiState.collectAsState()
-                JetpackStaticPoster(uiState)
+                JetpackStaticPoster(uiState, onBackClick = requireActivity()::onBackPressed)
             }
         }
     }
