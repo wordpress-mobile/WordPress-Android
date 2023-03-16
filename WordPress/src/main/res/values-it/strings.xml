@@ -1837,7 +1837,7 @@ Language: it
     <string name="domain_suggestions_search_hint">Digita una parola chiave per ulteriori idee</string>
     <string name="domains_suggestions_empty_list">Nessun suggerimento trovato</string>
     <string name="register_domain">Registra dominio</string>
-    <string name="jetpack_installed_message">Ora che Jetpack è installato, manca solo la configurazione. Ci vorrà soltanto un minuto.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Ora che Jetpack è installato, manca solo la configurazione. Ci vorrà soltanto un minuto.</string>
     <string name="stats_menu_remove">Rimuovi da Panoramica</string>
     <string name="stats_menu_move_down">Sposta in basso</string>
     <string name="stats_menu_move_up">Sposta in alto</string>
@@ -2104,7 +2104,7 @@ Language: it
     <string name="reader_empty_followed_tags_subtitle">Aggiungi qui gli argomenti per trovare gli articoli con i tuoi temi preferiti</string>
     <string name="login_to_to_connect_jetpack">Accedi all\'account WordPress.com che hai utilizzato per connettere Jetpack.</string>
     <string name="install_jetpack_retry">Riprova</string>
-    <string name="install_jetpack_continue">Continua</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Continua</string>
     <string name="jetpack_installation_problem_message">Jetpack non può essere installato in questo momento</string>
     <string name="jetpack_installation_problem">Si è verificato un problema</string>
     <string name="jetpack_installed">Jetpack installato</string>

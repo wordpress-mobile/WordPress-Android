@@ -865,7 +865,7 @@ Language: sr_RS
     <string name="jetpack_installation_problem_message">Jetpack није могуће инсталирати у овом тренутку.</string>
     <string name="installing_jetpack_message">Jetpack се инсталира на Ваш сајт. Ово може да потраје неколико минута.</string>
     <string name="login_to_to_connect_jetpack">Пријавите се на WordPress.com налог који сте користили за повезивање Jetpack-а.</string>
-    <string name="install_jetpack_continue">Постави</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Постави</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Одјавите се из Вордпреса?</string>
     <string name="site_settings_tags_empty_button">Направити ознаку</string>
     <string name="site_settings_tags_empty_title">Немате ниједну ознаку</string>

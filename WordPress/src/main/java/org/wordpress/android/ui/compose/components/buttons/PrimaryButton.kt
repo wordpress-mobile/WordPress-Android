@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -55,7 +55,7 @@ fun PrimaryButton(
     ) {
         if (isInProgress) {
             CircularProgressIndicator(
-                color = MaterialTheme.colors.onPrimary,
+                color = LocalContentColor.current,
                 strokeWidth = 2.dp,
                 modifier = Modifier.size(20.dp),
             )

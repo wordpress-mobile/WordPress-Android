@@ -12,15 +12,6 @@
         <item name="android:paddingStart">@dimen/margin_extra_medium_large</item>
     </style>
 
-    <style name="JetpackInstallTitleText" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-    </style>
-
-    <style name="JetpackInstallMessageText" parent="TextAppearance.MaterialComponents.Body1">
-        <item name="android:layout_marginTop">@dimen/margin_medium</item>
-        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
-    </style>
-
     <style name="JetpackFaqButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
         <item name="android:fontFamily">sans-serif-medium</item>
