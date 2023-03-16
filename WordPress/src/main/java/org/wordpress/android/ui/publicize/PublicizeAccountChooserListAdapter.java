@@ -57,7 +57,7 @@ public class PublicizeAccountChooserListAdapter
         if (!mAreAccountsConnected) {
             holder.mView.setOnClickListener(view -> {
                 if (mListener != null) {
-                    mSelectedPosition = holder.getAdapterPosition();
+                    mSelectedPosition = holder.getBindingAdapterPosition();
                     mListener.onAccountSelected(mSelectedPosition);
                 }
             });

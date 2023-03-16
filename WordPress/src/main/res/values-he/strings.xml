@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-01 17:54:09+0000
+Translation-Revision-Date: 2023-03-01 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">תפריט בלוקים</string>
+    <string name="promote_blaze_card_menu_hide_this">להסתיר את המידע</string>
+    <string name="promote_blaze_card_sub_title">להציג את העבודה שלך במיליוני אתרים.</string>
+    <string name="promote_blaze_card_title">לקדם את התוכן שלך עם Blaze</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">לסגור</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">לפנות לתמיכה</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">להתקין את התוסף המלא</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">תנאים והתניות</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">ההגדרה של Jetpack מהווה את ההסכמה שלך אל </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">התוסף המלא של Jetpack</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">תוספים יחידים של Jetpack</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">התוסף ⁦%1$s⁩</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">האתר ⁦%1$s⁩ משתמש ב-⁦%2$s⁩ שעדיין לא תומכים בכל האפשרויות של האפליקציה.\n\nיש להתקין את ⁦%3$s⁩ כדי להשתמש באפליקציה עם האתר הזה.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">יש להתקין את התוסף המלא של Jetpack</string>
+    <string name="only_one_primary_site_message">יש רק אתר אחד זמין ולכן אין אפשרות לשנות את האתר הראשי שלך.</string>
+    <string name="my_site_jp_install_full_plugin_card_content">האתר משתמש בתוסף יחיד שעדיין לא תומך בכל האפשרויות של האפליקציה. יש להתקין את התוסף המלא של Jetpack.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">לפנות לתמיכה</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">יש לנסות שנית</string>
+    <string name="jetpack_full_plugin_install_error_description">אין אפשרות להתקין את Jetpack כעת.</string>
+    <string name="jetpack_full_plugin_install_error_title">הייתה בעיה</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">סמל שגיאה</string>
+    <string name="jetpack_full_plugin_install_done_button">הושלם</string>
+    <string name="jetpack_full_plugin_install_done_description">הכול מוכן לשימוש באתר הזה עם האפליקציה.</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack מותקן</string>
+    <string name="jetpack_full_plugin_install_installing_description">אנחנו מתקינים את Jetpack באתר שלך. להשלמת השלב הזה יידרשו מספר דקות.</string>
+    <string name="jetpack_full_plugin_install_installing_title">התקנת Jetpack</string>
+    <string name="jetpack_full_plugin_install_initial_button">המשך</string>
+    <string name="jetpack_full_plugin_install_initial_description">פרטי הכניסה שלך לאתר לא יאוחסנו. אנחנו משתמשים בהם כדי להתקין את Jetpack בלבד.</string>
+    <string name="jetpack_full_plugin_install_initial_title">להתקין את Jetpack</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">סמל Jetpack</string>
+    <string name="button_promote_with_blaze">לקדם עם Blaze</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">להתחיל לממש את מלוא הפוטנציאל של האתר. לראות נתונים סטטיסטיים, לקרוא הודעות ועוד בעזרת Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">באתר שלך מותקן תוסף של Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">האפליקציה לנייד של Jetpack נועדה לעבוד בשילוב עם התוסף של Jetpack. כדאי להחליף עכשיו כדי לגשת לנתונים סטטיסטיים, להודעות, ל-Reader ועוד.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">לקבל הודעות על תגובות חדשות, לייקים, צפיות ועוד.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">למצוא את האתרים והקהילות המועדפים עליך, לעקוב אחריהם ולשתף את התוכן שלך.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">להגדיל את התעבורה לאתר בעזרת גישה לתובנות שימושיות ולנתונים סטטיסטיים מקיפים.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">נתונים סטטיסטיים ותובנות</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">השירות של Jetpack מאפשר לך להפיק את המרב מהאתר שלך ב-WordPress. ההחלפה היא חינמית ואורכת דקה בלבד.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">לשפר את השירות של WordPress עם Jetpack</string>
+    <string name="blogging_prompts_onboarding_content_note_content">אפשר לשלוט ב\'הצעות כתיבה בבלוג\' וב\'תזכורות\' בכל עת דרך \'האתר שלי\' &gt; \'הגדרות\' &gt; \'פרסום בבלוג\'</string>
+    <string name="blogging_reminders_prompt_subtitle">ההודעה תכלול מילה או ביטוי קצר להשראה</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">יש לעבור אל &lt;b&gt;הגדרות האתר&lt;/b&gt; כדי להפעיל אותן בחזרה</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">הצעות הכתיבה בבלוג מוסתרות</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">להשבית הצעות כתיבה</string>
+    <string name="support_forum_caption">לקבל עזרה מקבוצת המתנדבים שלנו.</string>
+    <string name="support_forum_title">פורומי הקהילה</string>
+    <string name="site_settings_blogging_reminders_notification_title">תזכורת לכתיבה בבלוג</string>
+    <string name="site_settings_blogging_prompts_title">להציג הצעות כתיבה</string>
+    <string name="site_settings_blogging">פרסום בבלוג</string>
     <string name="install_play_store_to_get_jetpack">יש להתקין את Google Play Store כדי להוריד את האפליקציה של Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">אפשר לחכות עם זה</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">לעבור ל-Jetpack </string>
@@ -30,7 +80,6 @@ Language: he_IL
     <string name="my_site_blogging_prompt_card_attribution_dayone">מתוך &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">להסתיר את המידע</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">הזכירו לי מאוחר יותר</string>
-    <string name="jetpack_feature_card_content">האפשרויות של נתונים סטטיסטיים, Reader, הודעות ואפשרויות אחרות יועברו בקרוב אל האפליקציה של Jetpack לנייד.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">החלפה לאפליקציה של Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">מידע נוסף באתר Jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">ההחלפה היא חינמית ואורכת דקה בלבד.</string>
@@ -307,14 +356,12 @@ Language: he_IL
     <string name="blogging_prompts_onboarding_card_prompt">לשדר את הסרט של חייך.</string>
     <string name="blogging_prompts_onboarding_remind_me">אני רוצה לקבל תזכורת</string>
     <string name="blogging_prompts_onboarding_try_it_now">כדאי לנסות עכשיו</string>
-    <string name="blogging_prompts_onboarding_content_note_content">אפשר לקבל מידע נוסף ולהגדיר תזכורות בכל עת דרך \'האתר שלי\' &gt; \'הגדרות\' &gt; \'תזכורות לכתיבת בלוג\'</string>
     <string name="blogging_prompts_onboarding_content_note_title">הערה:</string>
     <string name="blogging_prompts_onboarding_content_bottom">נציג לך הצעה חדשה כל יום בלוח הבקרה כדי לעזור לתהליך היצירתי להתחיל לנוע!</string>
     <string name="blogging_prompts_onboarding_content_top">הדרך הטובה ביותר לשפר את יכולת הכתיבה היא ליצור הרגל לכתיבה ולשתף עם אחרים – כאן בדיוק נכנסות ההצעות!</string>
-    <string name="blogging_prompts_onboarding_header_title">שמחים להציג את האפשרות \'הצעות\'</string>
+    <string name="blogging_prompts_onboarding_header_title">שמחים להציג\nהצעות כתיבה בבלוג</string>
     <string name="blogging_prompt_set_reminders">הגדרת תזכורות</string>
-    <string name="blogging_reminders_prompt_subtitle">התזכורת תכלות הצעה יומית</string>
-    <string name="blogging_reminders_prompt_title">כולל הצעה יומית</string>
+    <string name="blogging_reminders_prompt_title">לכלול \'הצעות כתיבה בבלוג\'</string>
     <string name="post_publishing_set_up_blogging_prompts_message">פרסום פוסטים באופן קבוע מושך קוראים חדשים. אפשר לספר לנו מתי ברצונך לכתוב, ואנחנו נשלח לך תזכורת!</string>
     <string name="set_your_blogging_prompts_title">לשפר את הכתיבה על ידי יצירת הרגל</string>
     <string name="site_creation_intent_writing_poetry">כתיבה ושירה</string>
@@ -350,7 +397,6 @@ Language: he_IL
     <string name="new_site_creation_intents_input_hint">לדוגמה, אופנה, שירה ופוליטיקה</string>
     <string name="new_site_creation_intents_title">נושא האתר</string>
     <string name="quick_start_site_menu_tab_message_short">יש להקיש &lt;b&gt;%1$s&lt;/b&gt; להמשך.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">להסיר מלוח הבקרה</string>
     <string name="my_site_blogging_prompt_card_menu_skip">לדלג להיום</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">להציג הצעות נוספות</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d תשובות</string>
@@ -359,7 +405,6 @@ Language: he_IL
     <string name="my_site_blogging_prompt_card_answer_prompt">הצעה לתשובה</string>
     <string name="my_site_blogging_prompt_card_title">הצעות</string>
     <string name="my_site_all_tab_title">הכול</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">תזכורות והצעות</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">ייתכן ששילוב הצבעים הזה יהיה מאתגר לקריאה עבור אנשים מסוימים. אנחנו ממליצים לנסות צבע רקע בהיר יותר ו/או צבע טקסט כהה יותר.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">ייתכן ששילוב הצבעים הזה יהיה מאתגר לקריאה עבור אנשים מסוימים. אנחנו ממליצים לנסות צבע רקע כהה יותר ו/או צבע טקסט בהיר יותר.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">ההוספה של המדיה נכשלה.\nיש להקיש לפרטים נוספים.</string>
@@ -622,7 +667,7 @@ Language: he_IL
     <string name="support_ticket_subject">תמיכה ב-WordPress ל-Android</string>
     <string name="site_settings_categories_hint">לנהל את הקטגוריות באתר שלך</string>
     <string name="site_settings_categories_title">קטגוריות</string>
-    <string name="site_settings_blogging_reminders_title">תזכורת לכתיבת בלוג</string>
+    <string name="site_settings_blogging_reminders_title">תזכורות</string>
     <string name="page_is_posts_page_warning">התוכן בעמוד \'הפוסטים האחרונים\' מיוצר באופן אוטומטי ולא ניתן לערוך אותו.</string>
     <string name="gutenberg_native_border_settings">הגדרות גבול</string>
     <string name="storage_utils_dialog_dont_show_button">לא להציג שוב</string>
@@ -2111,8 +2156,6 @@ Language: he_IL
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">לא הוגדר</string>
     <string name="support_contact_email">אימייל ליצירת קשר</string>
-    <string name="application_log_button">יומן יישום</string>
-    <string name="my_tickets">הפנייה שלי</string>
     <string name="activity_log_currently_restoring_message_no_dates">שחזור בתהליך</string>
     <string name="activity_log_currently_restoring_message">משחזר אל ⁦%1$s⁩ %2$s</string>
     <string name="activity_log_currently_restoring_title">אנחנו משחזרים כעת את האתר שלך</string>
@@ -2274,8 +2317,6 @@ Language: he_IL
     <string name="me_section_screen_title">אני</string>
     <string name="my_site_section_screen_title">האתר שלי</string>
     <string name="notif_settings_screen_title">הגדרות הודעה</string>
-    <string name="help_screen_title">עזרה ותמיכה</string>
-    <string name="release_notes_screen_title">הערות לשחרור גרסה</string>
     <string name="signup_epilogue_error_avatar_view">תמונת הפרופיל שלך הועלתה ותהיה זמינה בקרוב.</string>
     <string name="permissions_denied_message">נראה שהשבתת את פעילות ההרשאות שנדרשות לתכונה זו.&lt;br/&gt;&lt;br/&gt;כדי לשנות זאת, יש לערוך את ההרשאות שלך ולוודא שהפעלת את &lt;strong&gt;%s&lt;/strong&gt;.</string>
     <string name="permissions_denied_title">הרשאות</string>
@@ -2631,7 +2672,6 @@ Language: he_IL
     <string name="site_settings_optimize_video_summary">הפעלת עריכה של גודל קובצי הווידאו ודחיסתם</string>
     <string name="site_settings_optimize_videos">מיטוב קובצי וידאו</string>
     <string name="draft_uploaded">הטיוטה הועלתה</string>
-    <string name="report_bug">דיווח על באג</string>
     <string name="video_quality">איכות וידאו</string>
     <string name="permission_camera">מצלמה</string>
     <string name="permission_storage">אחסון</string>
@@ -3142,7 +3182,6 @@ Language: he_IL
     <string name="me_disconnect_from_wordpress_com">התנתקות מוורדפרס.קום</string>
     <string name="me_connect_to_wordpress_com">התחברות לוורדפרס.קום</string>
     <string name="me_btn_login_logout">כניסה/יציאה</string>
-    <string name="me_btn_support">עזרה ותמיכה</string>
     <string name="account_settings">הגדרות חשבון</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" לא הוסתר מכיוון שזהו האתר הנוכחי</string>
     <string name="site_picker_create_wpcom">יצירת אתר וורדפרס.קום</string>

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-11-09 19:17:00+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: sk
 -->
 <resources>
@@ -229,9 +229,7 @@ Language: sk
     <string name="support_identity_input_dialog_enter_email">Vložte, prosím, Vašu emailovú adresu</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="activity_log_currently_restoring_message_no_dates">Prebieha obnovenie</string>
-    <string name="application_log_button">Aplikačný záznam</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Ak chcete pokračovať, zadajte svoju e-mailovú adresu a meno</string>
-    <string name="my_tickets">Moje tickety</string>
     <string name="activity_log_currently_restoring_message">Obnovovanie na %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Prebieha obnovenie Vašej webovej stránky</string>
     <string name="activity_log_button">tlačidlo Záznamu aktivít</string>
@@ -392,8 +390,6 @@ Language: sk
     <string name="me_section_screen_title">Ja</string>
     <string name="my_site_section_screen_title">Moja webová stránka</string>
     <string name="notif_settings_screen_title">Nastavenia upozornení</string>
-    <string name="help_screen_title">Pomoc a podpora</string>
-    <string name="release_notes_screen_title">Poznámky k verzii</string>
     <string name="signup_epilogue_error_avatar_view">Váš avatar bol nahraný a zakrátko bude dostupný.</string>
     <string name="version_with_name_param">Verzia %s</string>
     <string name="permissions_denied_message">Zdá sa, že ste vypli oprávnenia požadované pre túto funkciu.&lt;br/&gt;&lt;br/&gt;Ak to chcete zmeniť, upravte svoje oprávnenia a uistite sa, že je povolené &lt;strong&gt;%s&lt;/strong&gt;.</string>
@@ -748,7 +744,6 @@ Language: sk
     <string name="site_settings_optimize_video_summary">Povolené meniť veľkosť a komprimovať videá</string>
     <string name="site_settings_optimize_videos">Optimalizovať videá</string>
     <string name="draft_uploaded">Nahraný koncept</string>
-    <string name="report_bug">Nahlásiť chybu</string>
     <string name="video_quality">Kvalita videa </string>
     <string name="permission_camera">Fotoaparát</string>
     <string name="permission_storage">Úložisko</string>
@@ -1256,7 +1251,6 @@ Language: sk
     <string name="me_disconnect_from_wordpress_com">Odhláste sa z WordPress.com</string>
     <string name="me_btn_login_logout">Prihlásiť/Odhlásiť</string>
     <string name="me_connect_to_wordpress_com">Prihláste sa na WordPress.com</string>
-    <string name="me_btn_support">Pomoc a podpora</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" nebola skrytá, pretože to je aktuálna webová stránka</string>
     <string name="account_settings">Nastavenia účtu</string>
     <string name="site_picker_create_wpcom">Vytvorte webovú stránku WordPress.com</string>

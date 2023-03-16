@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2021-08-01 11:11:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: da_DK
 -->
 <resources>
@@ -85,7 +85,6 @@ Language: da_DK
     <string name="me_connect_to_wordpress_com">Forbind til WordPress.com</string>
     <string name="me_btn_login_logout">Log ind/ud</string>
     <string name="account_settings">Kontoindstillinger</string>
-    <string name="me_btn_support">Hjælp &amp; Support</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" blev ikke skjult, fordi det er det aktuelle websted</string>
     <string name="site_picker_create_wpcom">Opret WordPress.com websted</string>
     <string name="site_picker_edit_visibility">Vis/skjul websteder</string>

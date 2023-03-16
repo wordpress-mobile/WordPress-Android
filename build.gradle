@@ -20,12 +20,12 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '2.0.0'
     automatticTracksVersion = '2.2.0'
-    gutenbergMobileVersion = 'v1.88.0'
+    gutenbergMobileVersion = 'v1.90.0'
     wordPressAztecVersion = 'v1.6.3'
-    wordPressFluxCVersion = '2.14.0'
+    wordPressFluxCVersion = '2.17.0'
     wordPressLoginVersion = '1.0.0'
     wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressUtilsVersion = '3.2.0'
+    wordPressUtilsVersion = '3.3.0'
 
     // debug
     stethoVersion = '1.6.0'
@@ -40,16 +40,15 @@ ext {
     androidxComposeLifecycleVersion = '2.5.1'
     androidxCardviewVersion = '1.0.0'
     androidxConstraintlayoutVersion = '1.1.3'
+    androidxConstraintlayoutComposeVersion = '1.0.1'
     androidxCoreVersion = '1.8.0'
     androidxActivityVersion = '1.5.1'
     androidxFragmentVersion = '1.5.5'
     androidxGridlayoutVersion = '1.0.0'
     androidxLifecycleVersion = '2.5.1'
-    androidxMediaVersion = '1.0.1'
     androidxPercentlayoutVersion = '1.0.0'
-    androidxPreferenceVersion = '1.1.0'
-    androidxRecyclerviewVersion = '1.0.0'
-    androidxRoomVersion = '2.3.0'
+    androidxPreferenceVersion = '1.2.0'
+    androidxRecyclerviewVersion = '1.2.1'
     androidxSwipeToRefreshVersion = '1.1.0'
     androidxViewpager2Version = '1.0.0'
     androidxWorkManagerVersion = "2.7.1"
@@ -65,18 +64,21 @@ ext {
     glideVolleyVersion = '4.6.1@aar'
     googleAutoServiceVersion = '1.0'
     googleExoPlayerVersion = '2.18.1'
+    googleFlexboxlayoutVersion = '3.0.0'
     googleGsonVersion = '2.6.2'
     googleMaterialVersion = '1.2.1'
-    googlePlayServicesAuthVersion = '20.3.0'
-    googlePlayServicesCodeScannerVersion = '16.0.0-beta1'
+    googleMLKitBarcodeScanningVersion = '17.0.0'
+    googlePlayServicesAuthVersion = '20.4.1'
+    googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
     jsoupVersion = '1.10.3'
     kotlinxCoroutinesVersion = '1.6.4'
     lottieVersion = '5.2.0'
     philjayMpAndroidChartVersion = 'v3.1.0'
     squareupKotlinPoetVersion = '1.6.0'
     squareupOkioVersion = '2.8.0'
-    uCropVersion = '2.2.4'
-    zendeskVersion = '5.0.2'
+    squareupRetrofitVersion = '2.9.0'
+    uCropVersion = '2.2.8'
+    zendeskVersion = '5.1.1'
 
     // test
     assertjVersion = '3.23.1'
@@ -95,7 +97,7 @@ ext {
     wiremockHttpClientVersion = '4.3.5.1'
 
     // other
-    androidDesugarVersion = '1.1.5'
+    androidDesugarVersion = '1.1.8'
     wordPressLintVersion = '1.1.0'
 }
 
@@ -230,3 +232,5 @@ tasks.register("configureApply") {
 dependencies {
     detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$gradle.ext.detektVersion"
 }
+
+apply from: './config/gradle/gradle_build_scan.gradle'

@@ -133,6 +133,7 @@ class PageListViewModel @Inject constructor(
             pagesViewModel.pages.observeForever(pagesObserver)
             pagesViewModel.invalidateUploadStatus.observeForever(uploadStatusObserver)
             pagesViewModel.authorSelectionUpdated.observeForever(authorSelectionChangedObserver)
+            pagesViewModel.blazeSiteEligibility.observeForever(blazeSiteEligibilityObserver)
 
             dispatcher.register(this)
         }
@@ -142,6 +143,7 @@ class PageListViewModel @Inject constructor(
         pagesViewModel.pages.removeObserver(pagesObserver)
         pagesViewModel.invalidateUploadStatus.removeObserver(uploadStatusObserver)
         pagesViewModel.authorSelectionUpdated.removeObserver(authorSelectionChangedObserver)
+        pagesViewModel.blazeSiteEligibility.removeObserver(blazeSiteEligibilityObserver)
 
         dispatcher.unregister(this)
     }
@@ -186,6 +188,10 @@ class PageListViewModel @Inject constructor(
         authorSelection?.let {
             pagesViewModel.pages.value?.let { loadPagesAsync(it) }
         }
+    }
+
+    private val blazeSiteEligibilityObserver = Observer<Boolean> { _ ->
+            pagesViewModel.pages.value?.let { loadPagesAsync(it) }
     }
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
@@ -471,7 +477,8 @@ class PageListViewModel @Inject constructor(
             listType,
             uploadUiState,
             pagesViewModel.site,
-            pageModel.remoteId
+            pageModel.remoteId,
+            isPageBlazeEligible(pageModel)
         )
         val subtitle = when {
             pageModel.isHomepage -> R.string.site_settings_homepage
@@ -492,6 +499,13 @@ class PageListViewModel @Inject constructor(
             subtitle,
             icon
         )
+    }
+
+    private fun isPageBlazeEligible(pageModel: PageModel): Boolean {
+        val pageStatus = PageStatus.fromPost(pageModel.post)
+
+       return listType == PUBLISHED && pageStatus != PageStatus.PRIVATE
+                && pagesViewModel.blazeSiteEligibility.value ?: false && pageModel.post.password.isEmpty()
     }
 
     private data class ItemUiStateData(

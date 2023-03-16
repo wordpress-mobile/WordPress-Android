@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-31 13:54:08+0000
+Translation-Revision-Date: 2023-03-01 16:57:55+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">Block-meny</string>
+    <string name="promote_blaze_card_menu_hide_this">Dölj detta</string>
+    <string name="promote_blaze_card_sub_title">Visa ditt arbete på miljontals webbplatser.</string>
+    <string name="promote_blaze_card_title">Marknadsför ditt innehåll med Blaze</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Stäng</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Kontakta supporten</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Installera det fullständiga tillägget</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Villkor</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Genom att installera Jetpack godkänner du vår </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">fullständigt Jetpack-tillägg</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">enskilda Jetpack-tillägg</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">tillägget %1$s</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$sanvänder %2$s, som inte stöder alla funktioner i appen än.\n\nInstallera %3$s för att använda appen med den här webbplatsen.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Installera det fullständiga Jetpack-tillägget</string>
+    <string name="only_one_primary_site_message">Endast en webbplats är tillgänglig så du kan inte ändra din primära webbplats.</string>
+    <string name="my_site_jp_install_full_plugin_card_content">Den här webbplatsen använder ett enskilt tillägg, som inte stöder alla funktioner i appen än. Installera det fullständiga Jetpack-tillägget.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">Kontakta supporten</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">Försök igen</string>
+    <string name="jetpack_full_plugin_install_error_description">Jetpack kunde inte installeras just nu.</string>
+    <string name="jetpack_full_plugin_install_error_title">Det var ett problem</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Felikon</string>
+    <string name="jetpack_full_plugin_install_done_button">Klar</string>
+    <string name="jetpack_full_plugin_install_done_description">Redo att använda denna webbplats med appen.</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack har installerats</string>
+    <string name="jetpack_full_plugin_install_installing_description">Installerar Jetpack på din webbplats. Detta kan ta upp till några minuter att slutföra.</string>
+    <string name="jetpack_full_plugin_install_installing_title">Installerar Jetpack</string>
+    <string name="jetpack_full_plugin_install_initial_button">Fortsätt</string>
+    <string name="jetpack_full_plugin_install_initial_description">Din webbplats autentiseringsuppgifter används bara för att installera Jetpack säkert och kommer inte att sparas</string>
+    <string name="jetpack_full_plugin_install_initial_title">Installera Jetpack</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack-ikon</string>
+    <string name="button_promote_with_blaze">Marknadsför med Blaze</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Lås upp din webbplats fulla potential. Få statistik, aviseringar och mer med Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Din webbplats har Jetpack-tillägget</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpacks mobilapp är designad för att fungera tillsammans med tillägget Jetpack. Byt nu för att få åtkomst till statistik, aviseringar, läsare och mer.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Få aviseringar för nya kommentarer, gilla-markeringar, visningar och mer.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Hitta och följ dina favoritwebbplatser och -communities samt dela ditt innehåll.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Se din trafik öka med användbara insikter och omfattande statistik.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistik och insikter</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Med Jetpack kan du göra mer med din WordPress-webbplats. Att byta är gratis och tar bara en minut.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Förbättra WordPress med Jetpack</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Du kan kontrollera bloggningsförslag och påminnelser när som helst i Min webbplats &gt; Inställningar &gt; Bloggande</string>
+    <string name="blogging_reminders_prompt_subtitle">Aviseringen kommer att innehålla ett ord eller en kort fras för inspiration</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Gå till &lt;b&gt;Webbplatsinställningar&lt;/b&gt; för att aktivera igen</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Bloggningsförslag dolt</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Stäng av förslag</string>
+    <string name="support_forum_caption">Få hjälp från vår grupp av volontärer.</string>
+    <string name="support_forum_title">Community-forum</string>
+    <string name="site_settings_blogging_reminders_notification_title">Bloggningspåminnelser</string>
+    <string name="site_settings_blogging_prompts_title">Visa förslag</string>
+    <string name="site_settings_blogging">Bloggande</string>
     <string name="install_play_store_to_get_jetpack">Installera Google Play Store för att hämta Jetpack-appen</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Gör detta senare</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Byt till Jetpack </string>
@@ -30,7 +80,7 @@ Language: sv_SE
     <string name="my_site_blogging_prompt_card_attribution_dayone">Från &lt;b&gt;dag ett&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Dölj detta</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Påminn mig senare</string>
-    <string name="jetpack_feature_card_content">Statistik, läsare, aviseringar och andra funktioner kommer snart att flyttas till Jetpacks mobilapp.</string>
+    <string name="jetpack_feature_card_content_phase_three">Statistik, läsare, aviseringar och andra funktioner kommer snart att flyttas till Jetpacks mobilapp.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Byt till Jetpack-appen</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Läs mer på jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Bytet är gratis och tar bara en minut.</string>
@@ -307,14 +357,12 @@ Language: sv_SE
     <string name="blogging_prompts_onboarding_card_prompt">Välj skådespelarna för din drömfilm.</string>
     <string name="blogging_prompts_onboarding_remind_me">Påminn mig</string>
     <string name="blogging_prompts_onboarding_try_it_now">Prova nu</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Du kan när som helst ta reda på mer och konfigurera påminnelser under Min webbplats &gt; Inställningar &gt; Bloggningspåminnelser</string>
     <string name="blogging_prompts_onboarding_content_note_title">Obs:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Varje dag visar vi ett annorlunda förslag i din adminpanel för att hjälpa din kreativitet på traven!</string>
     <string name="blogging_prompts_onboarding_content_top">Det bästa sättet att bli en bättre skribent är att börja skriva regelbundet och visa det för andra – det är här bloggningspåminnelserna kommer in i bilden!</string>
-    <string name="blogging_prompts_onboarding_header_title">Inkluderar förslag</string>
+    <string name="blogging_prompts_onboarding_header_title">Introducerar\nBloggningsförslag</string>
     <string name="blogging_prompt_set_reminders">Ställ in påminnelser</string>
-    <string name="blogging_reminders_prompt_subtitle">Påminnelsen kommer att innehålla ett förslag för dagen</string>
-    <string name="blogging_reminders_prompt_title">Inkludera dagliga förslag</string>
+    <string name="blogging_reminders_prompt_title">Inkludera ett bloggningsförslag</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Om du regelbundet publicerar får du fler läsare. Berätta för oss när du vill skriva så skickar vi påminnelser!</string>
     <string name="set_your_blogging_prompts_title">Bli en bättre skribent genom att bygga upp en vana</string>
     <string name="site_creation_intent_writing_poetry">Skrivande och poesi</string>
@@ -350,7 +398,6 @@ Language: sv_SE
     <string name="new_site_creation_intents_input_hint">T.ex. mode, poesi, politik</string>
     <string name="new_site_creation_intents_title">Webbplatsämne</string>
     <string name="quick_start_site_menu_tab_message_short">Tryck &lt;b&gt;%1$s&lt;/b&gt; för att fortsätta.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Ta bort från adminpanelen</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Hoppa över för idag</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Visa fler förslag</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d svar</string>
@@ -359,7 +406,6 @@ Language: sv_SE
     <string name="my_site_blogging_prompt_card_answer_prompt">Svara på förslaget</string>
     <string name="my_site_blogging_prompt_card_title">Förslag</string>
     <string name="my_site_all_tab_title">Alla</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Påminnelser och förslag</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Denna färgkombination kan vara svår för människor att läsa. Försök använda en ljusare bakgrundsfärg och/eller en mörkare textfärg.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Denna färgkombination kan vara svår för människor att läsa. Försök använda en mörkare bakgrundsfärg och/eller en ljusare textfärg.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Misslyckades att infoga media.\nTryck för mer information.</string>
@@ -573,8 +619,8 @@ Language: sv_SE
     <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Vi jobbar hårt på att lägga till stöd för förhandsgranskning av %s. Tills dess kan du förhandsgranska det inbäddade innehållet i inlägget.</string>
     <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Vi jobbar hårt på att lägga till stöd för förhandsgranskningar av %s. Tills dess kan du förhandsgranska det inbäddade innehållet på sidan.</string>
     <string name="gutenberg_native_unable_to_embed_media">Kan inte bädda in media</string>
-    <string name="gutenberg_native_try_another_search_term"> Prova en annan sökterm</string>
-    <string name="gutenberg_native_no_blocks_found">Inga block hittades.</string>
+    <string name="gutenberg_native_try_another_search_term">Prova en annan sökterm</string>
+    <string name="gutenberg_native_no_blocks_found">Inga block hittades</string>
     <string name="gutenberg_native_s_previews_not_yet_available">Förhandsgranskning av %s är inte tillgängligt ännu</string>
     <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">Förhandsgranskningar av inbäddat block för %s kommer snart</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Dubbeltryck för att förhandsgranska inlägget.</string>
@@ -622,7 +668,7 @@ Language: sv_SE
     <string name="support_ticket_subject">Support för WordPress för Android</string>
     <string name="site_settings_categories_hint">Hantera kategorierna för din webbplats</string>
     <string name="site_settings_categories_title">Kategorier</string>
-    <string name="site_settings_blogging_reminders_title">Bloggningspåminnelser</string>
+    <string name="site_settings_blogging_reminders_title">Påminnelser</string>
     <string name="page_is_posts_page_warning">Innehållet på sidan med dina senaste inlägg genereras automatiskt och kan inte redigeras.</string>
     <string name="gutenberg_native_border_settings">Raminställningar</string>
     <string name="storage_utils_dialog_dont_show_button">Visa inte igen</string>
@@ -724,7 +770,7 @@ Language: sv_SE
     <string name="gutenberg_native_button_position">Knapposition</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s är %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Ett fel uppstod vid hämtningen av data för gilla-markeringar</string>
-    <string name="get_likes_unknown_error">Ett okänt fel uppstod vid hämtningen av gilla-markeringar</string>
+    <string name="get_likes_unknown_error">Ett okänt fel uppstod vid hämtningen av gilla-markeringar.</string>
     <string name="get_likes_no_network_error">Inget nätverk tillgängligt.</string>
     <string name="comments_empty_list_filtered_unreplied">Inga obesvarade kommentarer</string>
     <string name="comment_status_unreplied">Obesvarat</string>
@@ -735,7 +781,7 @@ Language: sv_SE
     <string name="gutenberg_native_add_button_text">Lägg till knapptext</string>
     <string name="reader_title_interests">Följ ämnen</string>
     <string name="stories_intro_main_subtitle">Ett nytt sätt att skapa och publicera engagerande innehåll på din webbplats.</string>
-    <string name="activity_log_backup_download_notice_dismiss_action">Stäng</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Avfärda</string>
     <string name="activity_log_backup_download_notice_download_action">Ladda ner</string>
     <string name="threat_fix_all_status_success_message_plural">Hoten har åtgärdats utan problem.</string>
     <string name="threat_fix_all_confirmation_message_plural">Bekräfta att du vill åtgärda alla %s aktiva hot.</string>
@@ -2111,8 +2157,6 @@ Language: sv_SE
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Inte angivet</string>
     <string name="support_contact_email">E-postadress för kontakt</string>
-    <string name="application_log_button">Logg för applikationen</string>
-    <string name="my_tickets">Mina ärenden</string>
     <string name="activity_log_currently_restoring_message_no_dates">Återställning pågår</string>
     <string name="activity_log_currently_restoring_message">Återställer till %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Din webbplats återställs just nu</string>
@@ -2274,8 +2318,6 @@ Language: sv_SE
     <string name="me_section_screen_title">Jag</string>
     <string name="my_site_section_screen_title">Min webbplats</string>
     <string name="notif_settings_screen_title">Aviseringsinställningar</string>
-    <string name="help_screen_title">Hjälp och support</string>
-    <string name="release_notes_screen_title">Release-uppgifter</string>
     <string name="signup_epilogue_error_avatar_view">Din profilbild har laddats upp och kommer snart att vara tillgänglig.</string>
     <string name="permissions_denied_message">Det verkar som du har stängt av behörigheterna som krävs för denna funktion.&lt;br/&gt;&lt;br/&gt;Redigera behörigheterna för att ändra detta och se till att &lt;strong&gt;%s&lt;/strong&gt; är aktiverat.</string>
     <string name="permissions_denied_title">Behörigheter</string>
@@ -2631,7 +2673,6 @@ Language: sv_SE
     <string name="site_settings_optimize_video_summary">Aktivera för att storleksändra och komprimera videoklipp</string>
     <string name="site_settings_optimize_videos">Optimera videoklipp</string>
     <string name="draft_uploaded">Utkastet uppladdat</string>
-    <string name="report_bug">Rapportera ett fel</string>
     <string name="video_quality">Videokvalitet</string>
     <string name="permission_camera">Kamera</string>
     <string name="permission_storage">Lagring</string>
@@ -3142,7 +3183,6 @@ Language: sv_SE
     <string name="me_disconnect_from_wordpress_com">Logga ut från WordPress.com </string>
     <string name="me_connect_to_wordpress_com">Logga in på WordPress.com</string>
     <string name="me_btn_login_logout">Logga in/Logga ut</string>
-    <string name="me_btn_support">Hjälp och support</string>
     <string name="account_settings">Kontoinställningar</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" kunde inte döljas eftersom den är den nuvarande webbplatsen</string>
     <string name="site_picker_create_wpcom">Skapa en webbplats på WordPress.com</string>

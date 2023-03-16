@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-11-12 12:10:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: ku_TR
 -->
 <resources>
@@ -1097,8 +1097,6 @@ Language: ku_TR
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_enter_email">Ji kerema xwe navnîşana emaila xwe bikevê</string>
     <string name="support_contact_email">Emaila têkiliyê</string>
-    <string name="application_log_button">Tomargeha sepanê</string>
-    <string name="my_tickets">Bilêtên Min</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Ji bo domandinê ji kerema xwe, email û navê xwe bikevê</string>
     <string name="support_push_notification_message">Peyameke nû ji \'Alîkarî û Piştgirî\'yê heye</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Malpera te bi serkeftî hat vegerandin</string>
@@ -1250,13 +1248,11 @@ Language: ku_TR
     <string name="comment_unapproved_talkback">Pejirandina şîroveyê hat rakirin</string>
     <string name="publicize_buttons_screen_title">Bişkokên parvekirinê</string>
     <string name="reader_screen_title">Xwîner</string>
-    <string name="help_screen_title">Alîkarî û Piştgirî</string>
     <string name="notifications_screen_title">Danezan</string>
     <string name="me_section_screen_title">Ez</string>
     <string name="my_site_section_screen_title">Malpera Min</string>
     <string name="media_settings_screen_title">Hûrgiliya dosyeyê</string>
     <string name="notif_settings_screen_title">Sazkariyên danezanan</string>
-    <string name="release_notes_screen_title">Notên guhertoyê</string>
     <string name="login_epilogue_screen_title">Bi vî hesabî têketî ye:</string>
     <string name="person_detail_screen_title">Hûrguliya şexsî</string>
     <string name="signup_epilogue_error_avatar_view">Avatara te hat hilxistin û di demeke nêzîk de ew ê berdest bibe.</string>
@@ -1605,7 +1601,6 @@ Language: ku_TR
     <string name="site_settings_optimize_videos">Vîdyoyan Optîmîze Bike</string>
     <string name="video_quality">Kalîteya Vîdyoyê</string>
     <string name="draft_uploaded">Reşnivîs hat hilxistin</string>
-    <string name="report_bug">Çewtiyekê ragihîne</string>
     <string name="permission_camera">Kamera</string>
     <string name="permission_storage">Bîrgeh</string>
     <string name="button_edit_permissions">Destûran sererast bike</string>
@@ -2106,7 +2101,6 @@ Language: ku_TR
     <string name="me_disconnect_from_wordpress_com">Ji WordPress.com\'ê derkeve</string>
     <string name="me_btn_login_logout">Têketin/Derketin</string>
     <string name="me_connect_to_wordpress_com">Têkeve WordPress.com\'ê</string>
-    <string name="me_btn_support">Alîkarî &amp; Piştgirî</string>
     <string name="account_settings">Sazkariyên Hesêb</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" nehat veşartin ji ber ku ew malpera niha ye</string>
     <string name="site_picker_create_wpcom">Malpera WordPress.com\'ê biafirîne</string>

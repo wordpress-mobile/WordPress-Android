@@ -348,6 +348,10 @@ public class SiteUtils {
         return site != null && site.isWPCom();
     }
 
+    public static boolean supportsVideoPressFeature(SiteModel site) {
+        return site != null && site.isWPCom();
+    }
+
     public static boolean supportsEmbedVariationFeature(SiteModel site, String minimalJetpackVersion) {
         return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, minimalJetpackVersion));
     }

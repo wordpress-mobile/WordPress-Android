@@ -23,11 +23,14 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.Qui
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
+import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -57,6 +60,9 @@ class CardsBuilderTest {
 
     @Mock
     lateinit var quickLinkRibbonBuilder: QuickLinkRibbonBuilder
+
+    @Mock
+    lateinit var jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder
 
     @Mock
     lateinit var site: SiteModel
@@ -211,7 +217,8 @@ class CardsBuilderTest {
                     mock(),
                     mock(),
                     mock(),
-                )
+                ),
+                promoteWithBlazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(true, mock(), mock(), mock())
             ),
             quickLinkRibbonBuilderParams = QuickLinkRibbonBuilderParams(
                 siteModel = mock(),
@@ -220,6 +227,11 @@ class CardsBuilderTest {
                 onMediaClick = mock(),
                 onStatsClick = mock(),
                 activeTask = activeTask
+            ),
+            jetpackInstallFullPluginCardBuilderParams = JetpackInstallFullPluginCardBuilderParams(
+                site = site,
+                onLearnMoreClick = mock(),
+                onHideMenuItemClick = mock(),
             ),
             isMySiteTabsEnabled
         )
@@ -256,7 +268,8 @@ class CardsBuilderTest {
             quickActionsCardBuilder,
             quickStartCardBuilder,
             quickLinkRibbonBuilder,
-            dashboardCardsBuilder
+            dashboardCardsBuilder,
+            jetpackInstallFullPluginCardBuilder,
         )
     }
 

@@ -80,23 +80,31 @@ steps:
   #################
   # Instrumented (aka UI) Tests
   #################
-  - label: "🔬 Instrumented tests"
-    command: ".buildkite/commands/instrumented-tests.sh"
-    plugins: *common_plugins
-    artifact_paths:
-      - "**/build/instrumented-tests/**/*"
+  - group: "🔬 Instrumented tests"
+    steps:
+      - label: ":wordpress: 🔬 Instrumented tests"
+        command: ".buildkite/commands/instrumented-tests.sh wordpress"
+        plugins: *common_plugins
+        artifact_paths:
+          - "**/build/instrumented-tests/**/*"
+
+      - label: ":jetpack: 🔬 Instrumented tests"
+        command: ".buildkite/commands/instrumented-tests.sh jetpack"
+        plugins: *common_plugins
+        artifact_paths:
+          - "**/build/instrumented-tests/**/*"
 
   #################
-  # Create Installable Builds for WP and JP
+  # Create Prototype Builds for WP and JP
   #################
-  - group: "📲 Installable Builds"
+  - group: "📲 Prototype Builds"
     steps:
-      - label: ":wordpress: :android: Installable Build"
-        command: ".buildkite/commands/installable-build.sh wordpress"
+      - label: ":wordpress: :android: Prototype Build"
+        command: ".buildkite/commands/prototype-build.sh wordpress"
         if: build.pull_request.id != null
         plugins: *common_plugins
 
-      - label: ":jetpack: :android: Installable Build"
-        command: ".buildkite/commands/installable-build.sh jetpack"
+      - label: ":jetpack: :android: Prototype Build"
+        command: ".buildkite/commands/prototype-build.sh jetpack"
         if: build.pull_request.id != null
         plugins: *common_plugins

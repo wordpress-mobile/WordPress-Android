@@ -29,7 +29,7 @@ class PreviewImageViewHolder(
 
     fun onBind(uiState: ImageUiState) {
         onItemClicked = uiState.onItemTapped
-        loadIntoImageViewWithResultListener.invoke(uiState.data, previewImageView, adapterPosition)
+        loadIntoImageViewWithResultListener.invoke(uiState.data, previewImageView, bindingAdapterPosition)
         UiHelpers.updateVisibility(progressBar, uiState.progressBarVisible)
         UiHelpers.updateVisibility(errorLayout, uiState.retryLayoutVisible)
     }

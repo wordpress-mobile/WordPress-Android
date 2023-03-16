@@ -365,7 +365,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (mIsMultiSelectEnabled || mSiteSelectedListener != null) {
             holder.itemView.setOnClickListener(view -> {
-                int clickedPosition = holder.getAdapterPosition();
+                int clickedPosition = holder.getBindingAdapterPosition();
                 if (isValidPosition(clickedPosition)) {
                     if (mIsMultiSelectEnabled) {
                         toggleSelection(clickedPosition);
@@ -385,7 +385,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             if (!mSitePickerMode.isReblogMode()) {
                 holder.itemView.setOnLongClickListener(view -> {
-                    int clickedPosition = holder.getAdapterPosition();
+                    int clickedPosition = holder.getBindingAdapterPosition();
                     if (isValidPosition(clickedPosition)) {
                         if (mIsMultiSelectEnabled) {
                             toggleSelection(clickedPosition);
@@ -408,7 +408,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else {
                 holder.mSelectedRadioButton.setVisibility(View.VISIBLE);
                 holder.mSelectedRadioButton.setChecked(mSelectedItemPos == position);
-                holder.mLayoutContainer.setOnClickListener(v -> selectSingleItem(holder.getAdapterPosition()));
+                holder.mLayoutContainer.setOnClickListener(v -> selectSingleItem(holder.getBindingAdapterPosition()));
             }
         } else {
             if (holder.mSelectedRadioButton != null) {

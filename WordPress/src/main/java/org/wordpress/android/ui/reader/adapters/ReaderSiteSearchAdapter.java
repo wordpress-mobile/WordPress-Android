@@ -150,7 +150,7 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
             mSearchResultView = (ReaderSiteSearchResultView) view;
             view.setOnClickListener(new OnClickListener() {
                 @Override public void onClick(View v) {
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     if (isValidPosition(position) && mListener != null) {
                         ReaderSiteModel site = mSites.get(position);
                         mListener.onSiteClicked(site);

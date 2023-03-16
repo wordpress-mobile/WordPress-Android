@@ -308,7 +308,7 @@ public class PluginListFragment extends Fragment {
                 mRatingBar = view.findViewById(R.id.rating_bar);
 
                 view.setOnClickListener(v -> {
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
                     if (plugin == null) {
                         return;

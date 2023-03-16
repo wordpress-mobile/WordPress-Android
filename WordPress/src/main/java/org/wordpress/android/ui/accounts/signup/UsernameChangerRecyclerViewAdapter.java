@@ -69,7 +69,7 @@ public class UsernameChangerRecyclerViewAdapter
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mSelectedItem = getAdapterPosition();
+                    mSelectedItem = getBindingAdapterPosition();
                     notifyItemRangeChanged(0, mItems.size());
 
                     if (mListener != null) {

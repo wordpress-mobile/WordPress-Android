@@ -16,7 +16,6 @@ class BloggingPromptsOnboardingNotificationHandler @Inject constructor(
     private val notificationsTracker: SystemNotificationsTracker,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) : LocalNotificationHandler {
-    // TODO @RenanLukas update with show notification business rule
     override fun shouldShowNotification(): Boolean {
         return accountStore.hasAccessToken() && jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()
     }

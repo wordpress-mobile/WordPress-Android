@@ -766,7 +766,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     if (mAdapter.isValidPosition(position)) {
                         mAdapter.toggleItemSelected(StockViewHolder.this, position);
                     }

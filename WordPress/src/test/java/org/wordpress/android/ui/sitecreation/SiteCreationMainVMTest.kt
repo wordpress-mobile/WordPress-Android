@@ -15,6 +15,9 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.isA
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
@@ -22,6 +25,8 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.experiments.Variation.Control
+import org.wordpress.android.fluxc.model.experiments.Variation.Treatment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
@@ -32,6 +37,8 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.Creat
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
+import org.wordpress.android.util.experiments.SiteCreationDomainPurchasingExperiment
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -89,6 +96,13 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
     @Mock
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+
+    @Mock
+    lateinit var domainPurchasingExperiment: SiteCreationDomainPurchasingExperiment
+
+    @Mock
+    lateinit var domainPurchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig
+
     private val wizardManagerNavigatorLiveData = SingleLiveEvent<SiteCreationStep>()
 
     private lateinit var viewModel: SiteCreationMainVM
@@ -286,6 +300,35 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         verify(tracker, times(1)).trackSiteCreationAccessed(SiteCreationSource.UNSPECIFIED)
     }
 
+    @Test
+    fun `given domain purchasing experiment off, when start, then experiment is not tracked`() {
+        whenever(domainPurchasingFeatureConfig.isEnabledState()).thenReturn(false)
+        whenever(domainPurchasingExperiment.getVariation()).thenReturn(mock())
+
+        getNewViewModel().start(null, SiteCreationSource.UNSPECIFIED)
+
+        verify(tracker, never()).trackSiteCreationDomainPurchasingExperimentVariation(any())
+    }
+    @Test
+    fun `given domain purchasing experiment on, when start in control variation, then experiment is tracked`() {
+        whenever(domainPurchasingFeatureConfig.isEnabledState()).thenReturn(true)
+        whenever(domainPurchasingExperiment.getVariation()).thenReturn(Control)
+
+        getNewViewModel().start(null, SiteCreationSource.UNSPECIFIED)
+
+        verify(tracker).trackSiteCreationDomainPurchasingExperimentVariation(Control)
+    }
+
+    @Test
+    fun `given domain purchasing experiment on, when start in treatment variation, then experiment is tracked`() {
+        whenever(domainPurchasingFeatureConfig.isEnabledState()).thenReturn(true)
+        whenever(domainPurchasingExperiment.getVariation()).thenReturn(mock<Treatment>())
+
+        getNewViewModel().start(null, SiteCreationSource.UNSPECIFIED)
+
+        verify(tracker).trackSiteCreationDomainPurchasingExperimentVariation(isA<Treatment>())
+    }
+
     private fun currentWizardState(vm: SiteCreationMainVM) =
         vm.navigationTargetObservable.lastEvent!!.wizardState
 
@@ -296,6 +339,8 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         dispatcher,
         fetchHomePageLayoutsUseCase,
         imageManager,
-        jetpackFeatureRemovalOverlayUtil
+        jetpackFeatureRemovalOverlayUtil,
+        domainPurchasingExperiment,
+        domainPurchasingFeatureConfig,
     )
 }

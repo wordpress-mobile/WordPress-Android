@@ -503,7 +503,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 holder.mCountLikes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int clickedPosition = holder.getAdapterPosition();
+                        int clickedPosition = holder.getBindingAdapterPosition();
                         toggleLike(v.getContext(), holder, clickedPosition);
                     }
                 });

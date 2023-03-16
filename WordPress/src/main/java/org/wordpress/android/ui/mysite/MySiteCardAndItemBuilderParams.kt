@@ -61,7 +61,8 @@ sealed class MySiteCardAndItemBuilderParams {
         val onErrorRetryClick: () -> Unit,
         val todaysStatsCardBuilderParams: TodaysStatsCardBuilderParams,
         val postCardBuilderParams: PostCardBuilderParams,
-        val bloggingPromptCardBuilderParams: BloggingPromptCardBuilderParams
+        val bloggingPromptCardBuilderParams: BloggingPromptCardBuilderParams,
+        val promoteWithBlazeCardBuilderParams: PromoteWithBlazeCardBuilderParams
     ) : MySiteCardAndItemBuilderParams()
 
     data class TodaysStatsCardBuilderParams(
@@ -90,7 +91,8 @@ sealed class MySiteCardAndItemBuilderParams {
         val enableStatsFocusPoint: Boolean = false,
         val enablePagesFocusPoint: Boolean = false,
         val enableMediaFocusPoint: Boolean = false,
-        val onClick: (ListItemAction) -> Unit
+        val onClick: (ListItemAction) -> Unit,
+        val isBlazeEligible: Boolean = false
     ) : MySiteCardAndItemBuilderParams()
 
     data class BloggingPromptCardBuilderParams(
@@ -106,9 +108,22 @@ sealed class MySiteCardAndItemBuilderParams {
         val onRemoveClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
+    data class PromoteWithBlazeCardBuilderParams(
+        val isEligible: Boolean = false,
+        val onClick: () -> Unit,
+        val onHideMenuItemClick: () -> Unit,
+        val onMoreMenuClick: () -> Unit
+    ) : MySiteCardAndItemBuilderParams()
+
     data class SingleActionCardParams(
         @StringRes val textResource: Int,
         @DrawableRes val imageResource: Int,
         val onActionClick: () -> Unit
+    )
+
+    data class JetpackInstallFullPluginCardBuilderParams(
+        val site: SiteModel,
+        val onLearnMoreClick: () -> Unit,
+        val onHideMenuItemClick: () -> Unit,
     )
 }

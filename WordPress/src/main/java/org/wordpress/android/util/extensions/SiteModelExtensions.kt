@@ -25,7 +25,34 @@ val SiteModel.stateLogInformation: String
         }
     }
 
+/**
+ * @return a List of the active Jetpack connection plugins values
+ * (e.g. [jetpack-search, jetpack-backup]) or null if there are no active Jetpack connection plugins.
+ */
+fun SiteModel.activeJetpackConnectionPluginValues(): List<String>? =
+    activeJetpackConnectionPlugins?.split(",")
+
+/**
+ * @return a List of the active Jetpack connection plugins names
+ * (e.g. [Jetpack Search, Jetpack VaultPress Backup]) or null if there are no active Jetpack connection plugins.
+ */
+fun SiteModel.activeJetpackConnectionPluginNames(): List<String>? =
+    activeJetpackConnectionPluginValues()?.filter { it.startsWith("jetpack-") }
+        ?.map {
+            when (it) {
+                "jetpack-search" -> "Jetpack Search"
+                "jetpack-backup" -> "Jetpack VaultPress Backup"
+                "jetpack-protect" -> "Jetpack Protect"
+                "jetpack-videopress" -> "Jetpack VideoPress"
+                "jetpack-social" -> "Jetpack Social"
+                "jetpack-boost" -> "Jetpack Boost"
+                else -> ""
+            }
+        }
+        ?.filter { it.isNotEmpty() }
+
+
 fun SiteModel.isJetpackConnectedWithoutFullPlugin(): Boolean =
-    activeJetpackConnectionPlugins?.split(",")?.run {
+    activeJetpackConnectionPluginValues()?.run {
         isNotEmpty() && !contains("jetpack") && firstOrNull { it.startsWith("jetpack-") } != null
     } ?: false

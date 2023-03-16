@@ -53,7 +53,14 @@ class EpilogueBuilderTest {
 
     @Test
     fun `builds UI model with no selected days`() {
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(), hour, minute, false)
+        val bloggingRemindersModel = BloggingRemindersUiModel(
+            1,
+            setOf(),
+            hour,
+            minute,
+            isPromptIncluded = false,
+            isPromptsCardEnabled = false,
+        )
         val uiModel = epilogueBuilder.buildUiItems(bloggingRemindersModel)
 
         assertModelWithNoSelection(uiModel)
@@ -66,7 +73,8 @@ class EpilogueBuilderTest {
             setOf(DayOfWeek.WEDNESDAY, DayOfWeek.SUNDAY),
             hour,
             minute,
-            false
+            isPromptIncluded = false,
+            isPromptsCardEnabled = false,
         )
         val dayLabel = "twice"
         whenever(dayLabelUtils.buildLowercaseNTimesLabel(bloggingRemindersModel))
@@ -97,7 +105,8 @@ class EpilogueBuilderTest {
             DayOfWeek.values().toSet(),
             hour,
             minute,
-            false
+            isPromptIncluded = false,
+            isPromptsCardEnabled = false,
         )
         val message = "You'll get reminders to blog <b>everyday</b> at <b>10:00 am</b>."
         whenever(

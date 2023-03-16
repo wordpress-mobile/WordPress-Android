@@ -1,8 +1,19 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+22.0
+-----
+
+
+21.9
+-----
+* [**] [Jetpack-only] Help: Display the Jetpack app FAQ card on Help screen when switching from the WordPress app to the Jetpack app is complete. [https://github.com/wordpress-mobile/WordPress-Android/pull/18032]
+* [**] [Jetpack-only] Blaze: We added support for Blaze in the app. The user can now promote a post or page from the app to reach new audiences.
 21.8
 -----
 * [*] [WordPress-only] We have redesigned the landing screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17871]
+* [**] [internal][WordPress-only] Help & Support: replaces Contact Support with new Community forums. [https://github.com/wordpress-mobile/WordPress-Android/pull/17820]
+* [**] [Jetpack-only] Jetpack individual plugin support: Warns user about sites with only individual plugins not supporting all features of the app yet and gives the ability to install the full Jetpack plugin. [https://github.com/wordpress-mobile/WordPress-Android/pull/17983]
+* [*] Fix inaccessible block settings within the unsupported block editor [https://github.com/WordPress/gutenberg/pull/48435]
 
 21.7
 -----

@@ -1,11 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-29 15:24:35+0000
+Translation-Revision-Date: 2023-03-08 18:08:06+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: tr
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">Şimdi bir yazı yaz</string>
+    <string name="blaze_overlay_page_promotional_button">Bu sayfayı Blazeleyin</string>
+    <string name="blaze_overlay_post_promotional_button">Bu yazıyı Blazeleyin</string>
+    <string name="blaze_promotional_subtitle_3">Performansı takip edin, Blaze\'inizi istediğiniz zaman başlatın ve durdurun.</string>
+    <string name="blaze_promotional_subtitle_2">İçeriğiniz milyonlarca WordPress ve Tumblr sitesinde görünecektir.</string>
+    <string name="blaze_promotional_subtitle_1">Günde sadece birkaç dolar karşılığında herhangi bir yazıyı veya sayfayı sadece birkaç dakika içinde tanıtın.</string>
+    <string name="blaze_promotional_text">Blaze ile sitenize daha fazla trafik çekin</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="site_creation_domain_tag_unavailable">Bu alan adı adresi zaten kayıtlı.</string>
+    <string name="site_creation_domain_tag_sale">İndirim</string>
+    <string name="site_creation_domain_tag_recommended">Önerilen</string>
+    <string name="site_creation_domain_tag_best_alternative">En İyi Alternatif</string>
+    <string name="site_creation_domain_cost">%s/y</string>
+    <string name="me_btn_help">Yardım</string>
+    <string name="support_faq_caption">Sık sorulan soruların yanıtları için SSS bölümümüze bakın.</string>
+    <string name="support_faq_title">Jetpack uygulamasına geçtiğiniz için teşekkür ederiz!</string>
+    <string name="logs_button">Günlükler</string>
+    <string name="tickets">Biletler</string>
+    <string name="free">Ücretsiz</string>
+    <string name="help_buttons_screen_title">Yardım</string>
+    <string name="gutenberg_native_blocks_menu">Bloklar menüsü</string>
+    <string name="promote_blaze_card_menu_hide_this">Bunu gizle</string>
+    <string name="promote_blaze_card_sub_title">Çalışmalarınızı milyonlarca sitede sergileyin.</string>
+    <string name="promote_blaze_card_title">İçeriğinizi Blaze ile öne çıkarın</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Kapat</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Destek ile iletişim kur</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Eklentinin tamamını kurun</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Şartlar ve koşullar</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Jetpack\'i kurarak aşağıdakileri kabul etmiş olursunuz </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">tam Jetpack eklentisi</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">bireysel Jetpack eklentileri</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">%1$s eklentisi</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple">%1$s, uygulamanın tüm özelliklerini henüz desteklemeyen %2$s kullanıyor.\n\nUygulamayı bu siteyle birlikte kullanmak için lütfen %3$s yükleyin.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Lütfen Jetpack eklentisinin tamamını yükleyin</string>
+    <string name="only_one_primary_site_message">Yalnızca bir site kullanılabilir, bu nedenle birincil sitenizi değiştiremezsiniz.</string>
+    <string name="my_site_jp_install_full_plugin_card_content">Bu site, uygulamanın tüm özelliklerini henüz desteklemeyen ayrı bir eklenti kullanmaktadır. Lütfen Jetpack eklentisinin tamamını kurun.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">Destek ile iletişim kur</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">Yeniden dene</string>
+    <string name="jetpack_full_plugin_install_error_description">Jetpack şu anda kurulamıyor.</string>
+    <string name="jetpack_full_plugin_install_error_title">Bir sorun vardı</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Hata simgesi</string>
+    <string name="jetpack_full_plugin_install_done_button">Bitti</string>
+    <string name="jetpack_full_plugin_install_done_description">Bu siteyi uygulama ile kullanmaya hazır.</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack kuruldu</string>
+    <string name="jetpack_full_plugin_install_installing_description">Sitenize Jetpack kuruluyor. Bu işlemin tamamlanması birkaç dakika sürebilir.</string>
+    <string name="jetpack_full_plugin_install_installing_title">Jetpack kuruluyor</string>
+    <string name="jetpack_full_plugin_install_initial_button">Devam et</string>
+    <string name="jetpack_full_plugin_install_initial_description">Web sitesi kimlik bilgileriniz depolanmayacak ve yalnızca Jetpack\'i kurma amacıyla kullanılacak</string>
+    <string name="jetpack_full_plugin_install_initial_title">Jetpack\'i kur</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack simgesi</string>
+    <string name="button_promote_with_blaze">Blaze ile Tanıt</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Sitenizin potansiyelinin tamamını ortaya çıkarın. Jetpack ile istatistikler, bildirimler ve daha fazlasını elde edin.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Sitenizde Jetpack eklentisi var</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack mobil uygulaması, Jetpack eklentisi ile birlikte çalışacak şekilde tasarlanmıştır. İstatistikler, okuyucu, bildirimler ve daha fazlasına erişmek için şimdi geçiş yapın.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Yeni yorumlar, beğeniler, görüntülemeler ve daha fazlası için bildirim alın.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Favori sitelerinizi ve topluluklarınızı bulup takip edin ve içeriğinizi paylaşın.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Yararlı bilgiler ve kapsamlı istatistiklerle trafiğinizin büyümesini izleyin.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">İstatistikler ve Tek Bakışta</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack, WordPress sitenizle daha fazlasını yapmanıza olanak sağlar. Geçiş ücretsizdir ve yalnızca bir dakika sürer.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Jetpack ile WordPress\'e destek verin</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Blog Taleplerini ve Hatırlatıcılarını istediğiniz zaman Sitem &gt; Ayarlar &gt; Blog Yazma bölümünden kontrol edebilirsiniz.</string>
+    <string name="blogging_reminders_prompt_subtitle">Bildirim, ilham almak için bir kelime veya kısa bir kelime öbeği içerecektir</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Tekrar açmak için &lt;b&gt;Site Ayarlarını&lt;/b&gt; ziyaret edin</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Blog Talepleri gizlendi</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Talepleri kapat</string>
+    <string name="support_forum_caption">Gönüllü grubumuzdan yardım alın.</string>
+    <string name="support_forum_title">Topluluk forumları</string>
+    <string name="site_settings_blogging_reminders_notification_title">Blog hatırlatıcıları</string>
+    <string name="site_settings_blogging_prompts_title">Talepleri göster</string>
+    <string name="site_settings_blogging">Blog Yazma</string>
     <string name="install_play_store_to_get_jetpack">Jetpack uygulamasını edinmek için lütfen Google Play mağazasını yükleyin</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Bunu daha sonra yap</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Jetpack\'e geç </string>
@@ -30,7 +100,7 @@ Language: tr
     <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt; tarafından</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Bunu gizle</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Daha sonra hatırlat</string>
-    <string name="jetpack_feature_card_content">İstatistikler, Okuyucu, Bildirimler ve diğer özellikler, yakında Jetpack mobil uygulamasına taşınacaktır.</string>
+    <string name="jetpack_feature_card_content_phase_three">İstatistikler, Okuyucu, Bildirimler ve diğer özellikler yakında Jetpack mobil uygulamasına taşınacak.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Jetpack uygulamasına geçiş yapın</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Jetpack.com\'da daha fazla bilgi edinin</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Geçiş ücretsizdir ve yalnızca bir dakika sürer.</string>
@@ -307,14 +377,12 @@ Language: tr
     <string name="blogging_prompts_onboarding_card_prompt">Hayatınızın filmini oynayın.</string>
     <string name="blogging_prompts_onboarding_remind_me">Bana hatırlat</string>
     <string name="blogging_prompts_onboarding_try_it_now">Şimdi deneyin</string>
-    <string name="blogging_prompts_onboarding_content_note_content">İstediğiniz zaman Sitem &gt; Ayarlar &gt; Blog Hatırlatıcıları bölümünden daha fazla bilgi edinebilir ve hatırlatıcı oluşturabilirsiniz.</string>
     <string name="blogging_prompts_onboarding_content_note_title">Not:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Yaratıcı fikirlerin fışkırmasına yardımcı olmak için her gün size panonuzda yeni bir bilgi göstereceğiz!</string>
     <string name="blogging_prompts_onboarding_content_top">Daha iyi bir yazar olmanın en iyi yolu, yazma alışkanlığı kazanmak ve başkalarıyla paylaşmaktır - işte burada Bilgiler devreye girer!</string>
-    <string name="blogging_prompts_onboarding_header_title">Bilgilerle Tanışın</string>
+    <string name="blogging_prompts_onboarding_header_title">Tanıtım\nBlog Talepleri</string>
     <string name="blogging_prompt_set_reminders">Hatırlatıcı ayarla</string>
-    <string name="blogging_reminders_prompt_subtitle">Hatırlatıcı, günlük bir bilgi içerecektir</string>
-    <string name="blogging_reminders_prompt_title">Günlük bilgiyi dahil et</string>
+    <string name="blogging_reminders_prompt_title">Blog Talebi Dahil Etme</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Düzenli olarak yayın yapmak yeni okuyucuları cezbeder. Ne zaman yazmak istediğinizi bize söyleyin, size hatırlatalım!</string>
     <string name="set_your_blogging_prompts_title">Bir alışkanlık kazanarak daha iyi bir yazar olun</string>
     <string name="site_creation_intent_writing_poetry">Yazı ve Şiir</string>
@@ -350,7 +418,6 @@ Language: tr
     <string name="new_site_creation_intents_input_hint">Örn. Moda, Şiir, Politika</string>
     <string name="new_site_creation_intents_title">Site Konusu</string>
     <string name="quick_start_site_menu_tab_message_short">Devam etmek için &lt;b&gt;%1$s&lt;/b&gt; öğesine dokunun.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Panodan kaldır</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Bugünlük atla</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Daha fazla bilgi görüntüle</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d yanıt</string>
@@ -359,7 +426,6 @@ Language: tr
     <string name="my_site_blogging_prompt_card_answer_prompt">Yanıt istemi</string>
     <string name="my_site_blogging_prompt_card_title">İstemler</string>
     <string name="my_site_all_tab_title">Tümü</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Hatırlatıcılar ve istemler</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Bu renk birleşiminde insanların okuması zor olabilir. Daha parlak bir arka plan ve/veya daha koyu bir metin rengi kullanmayı deneyin.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Bu renk birleşimi insanların okuması zor olabilir. Daha parlak bir arka plan ve/veya daha koyu bir metin rengi kullanmayı deneyin.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Medya eklenemedi.\nDaha fazla bilgi için dokunun.</string>
@@ -622,7 +688,7 @@ Language: tr
     <string name="support_ticket_subject">Android için WordPress Desteği</string>
     <string name="site_settings_categories_hint">Sitenizin kategorilerini yönetin</string>
     <string name="site_settings_categories_title">Kategoriler</string>
-    <string name="site_settings_blogging_reminders_title">Blog hatırlatıcıları</string>
+    <string name="site_settings_blogging_reminders_title">Hatırlatıcılar</string>
     <string name="page_is_posts_page_warning">Güncel paylaşımlar sayfanızın içeriği, otomatik olarak oluşturulur ve düzenlenemez.</string>
     <string name="gutenberg_native_border_settings">Kenarlık Ayarları</string>
     <string name="storage_utils_dialog_dont_show_button">Tekrar Gösterme</string>
@@ -2111,8 +2177,6 @@ Language: tr
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Ayarlanmadı</string>
     <string name="support_contact_email">İletişim e-postası</string>
-    <string name="application_log_button">Uygulama kaydı</string>
-    <string name="my_tickets">Taleplerim</string>
     <string name="activity_log_currently_restoring_message_no_dates">Geri alma devam ediyor</string>
     <string name="activity_log_currently_restoring_message">%1$s %2$s durumuna geri alınıyor</string>
     <string name="activity_log_currently_restoring_title">Siteniz şuan geri alınıyor</string>
@@ -2274,8 +2338,6 @@ Language: tr
     <string name="me_section_screen_title">Ben</string>
     <string name="my_site_section_screen_title">Sitem</string>
     <string name="notif_settings_screen_title">Bildirim ayarları</string>
-    <string name="help_screen_title">Yardım ve destek</string>
-    <string name="release_notes_screen_title">Sürüm notları</string>
     <string name="signup_epilogue_error_avatar_view">Avatarınız yüklendi ve kısa süre içinde kullanılabilir olacak.</string>
     <string name="permissions_denied_message">Görünen o ki bu özellik için gerekli izinleri kapatmışsınız.&lt;br/&gt;&lt;br/&gt;Bunu değiştirmek için izinlerinizi düzenleyin ve &lt;strong&gt;%s&lt;/strong&gt; izninin etkin olduğundan emin olun.</string>
     <string name="permissions_denied_title">İzinler</string>
@@ -2631,7 +2693,6 @@ Language: tr
     <string name="site_settings_optimize_video_summary">Videoları yeniden boyutlandırmak ve sıkıştırmak için etkinleştirin</string>
     <string name="site_settings_optimize_videos">Videoları optimize et</string>
     <string name="draft_uploaded">Taslak yüklendi</string>
-    <string name="report_bug">Hata bildirin</string>
     <string name="video_quality">Video kalitesi</string>
     <string name="permission_camera">Kamera</string>
     <string name="permission_storage">Depolama</string>
@@ -3142,7 +3203,6 @@ Language: tr
     <string name="me_disconnect_from_wordpress_com">WordPress.com hesabından çıkış yap</string>
     <string name="me_connect_to_wordpress_com">WordPress.com hesabına giriş yap</string>
     <string name="me_btn_login_logout">Giriş/Çıkış</string>
-    <string name="me_btn_support">Yardım ve destek</string>
     <string name="account_settings">Hesap ayarları</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" şu anki site olduğundan gizlenmedi</string>
     <string name="site_picker_create_wpcom">WordPress.com sitesi oluştur</string>

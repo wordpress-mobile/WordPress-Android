@@ -500,7 +500,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
                 mTxtCount = view.findViewById(R.id.text_count);
                 view.setOnClickListener(view1 -> {
                     if (!isDetailFragmentShowing()) {
-                        int position = getAdapterPosition();
+                        int position = getBindingAdapterPosition();
                         showDetailFragment(mFilteredTags.get(position));
                     }
                 });

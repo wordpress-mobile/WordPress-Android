@@ -322,7 +322,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             itemView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     doAdapterItemClicked(position, false);
                 }
             });
@@ -330,7 +330,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     doAdapterItemClicked(position, true);
                     return true;
                 }
@@ -340,7 +340,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             mSelectionCountContainer.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     if (canSelectPosition(position)) {
                         setInMultiSelect(true);
                         toggleItemSelected(GridViewHolder.this, position);
@@ -351,7 +351,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             mImgRetry.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     if (isValidPosition(position) && mCallback != null) {
                         mCallback.onAdapterRequestRetry(position);
                     }
@@ -361,7 +361,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             mImgTrash.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     if (isValidPosition(position) && mCallback != null) {
                         mCallback.onAdapterRequestDelete(position);
                     }
@@ -374,7 +374,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         private void addImageSelectedToAccessibilityFocusedEvent(ImageView imageView) {
             AccessibilityUtils.addPopulateAccessibilityEventFocusedListener(imageView, event -> {
-                int position = getAdapterPosition();
+                int position = getBindingAdapterPosition();
                 if (isValidPosition(position)) {
                     if (isItemSelectedByPosition(position)) {
                         final String imageSelectedText = imageView.getContext().getString(

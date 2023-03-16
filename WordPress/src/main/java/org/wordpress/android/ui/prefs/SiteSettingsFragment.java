@@ -38,7 +38,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.SparseArrayCompat;
@@ -99,7 +98,6 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
-import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig;
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig;
 import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.util.config.ManageCategoriesFeatureConfig;
@@ -189,7 +187,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
     @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
-    @Inject BloggingPromptsEnhancementsFeatureConfig mBloggingPromptsEnhancementFeatureConfig;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
@@ -502,12 +499,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         mDispatcher.register(this);
 
         return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        initBloggingSection();
     }
 
     private AppCompatActivity getAppCompatActivity() {
@@ -1081,6 +1072,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_performance_more_settings,
                     R.string.pref_key_jetpack_performance_media_settings);
         }
+
+        initBloggingSection();
     }
 
     private void updateHomepageSummary() {
@@ -1273,8 +1266,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void initBloggingPrompts() {
-        if (!mPromptsSettingsHelper.isPromptsFeatureAvailable()
-            || !mBloggingPromptsEnhancementFeatureConfig.isEnabled()) {
+        if (!mPromptsSettingsHelper.shouldShowPromptsSetting()) {
             removeBloggingPromptsSettings();
             return;
         }
@@ -1283,7 +1275,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 .getPromptsCardEnabledLiveData(mSite.getId())
                 .observe(getAppCompatActivity(), isEnabled -> {
                     if (mBloggingPromptsPref != null) {
-                        mBloggingPromptsPref.setDefaultValue(isEnabled);
+                        mBloggingPromptsPref.setChecked(isEnabled);
                     }
                 });
     }

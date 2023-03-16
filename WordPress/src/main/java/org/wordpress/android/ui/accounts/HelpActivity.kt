@@ -37,6 +37,7 @@ import org.wordpress.android.ui.AppLogViewerActivity
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.SiteUtils
@@ -58,6 +59,9 @@ class HelpActivity : LocaleAwareActivity() {
 
     @Inject
     lateinit var supportHelper: SupportHelper
+
+    @Inject
+    lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Inject
     lateinit var zendeskHelper: ZendeskHelper
@@ -105,8 +109,9 @@ class HelpActivity : LocaleAwareActivity() {
                 showContactUs()
             }
 
+            faqButton.setOnClickListener { showFaq() }
             applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
-            applicationLogButton.setOnClickListener { v ->
+            logsButton.setOnClickListener { v ->
                 startActivity(Intent(v.context, AppLogViewerActivity::class.java))
             }
 
@@ -178,12 +183,21 @@ class HelpActivity : LocaleAwareActivity() {
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
     }
 
+    private fun showMigrationFaq() {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://jetpack.com/support/switch-to-the-jetpack-app/"))
+        startActivity(intent)
+        AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_TAPPED)
+    }
+
     private fun HelpActivityBinding.showContactUs() {
+        if (appPrefsWrapper.isJetpackMigrationCompleted()) {
+            JpFaqContainer.isVisible = true
+            JpFaqContainerBottomDivider.isVisible = true
+            AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_VIEWED)
+            JpFaqContainer.setOnClickListener { showMigrationFaq() }
+        }
         contactUsButton.setOnClickListener { createNewZendeskTicket() }
-
-        faqButton.setOnClickListener { showFaq() }
-
-        myTicketsButton.setOnClickListener { showZendeskTickets() }
+        ticketsButton.setOnClickListener { showZendeskTickets() }
 
         contactEmailContainer.setOnClickListener {
             var emailSuggestion = AppPrefs.getSupportEmail()
@@ -210,17 +224,13 @@ class HelpActivity : LocaleAwareActivity() {
 
     private fun HelpActivityBinding.showSupportForum() {
         contactUsButton.isVisible = false
-        faqButton.isVisible = false
-        myTicketsButton.isVisible = false
-        emailContainerTopDivider.isVisible = false
+        ticketsButton.isVisible = false
         contactEmailContainer.isVisible = false
-        emailContainerBottomDivider.isVisible = false
 
         forumContainer.run {
             isVisible = true
             setOnClickListener { openWpSupportForum() }
         }
-        forumContainerBottomDivider.isVisible = true
     }
 
     private fun HelpActivityBinding.refreshContactEmailText() {
@@ -240,7 +250,7 @@ class HelpActivity : LocaleAwareActivity() {
             setOnClickListener { showFaq() }
         }
         applicationVersion.isVisible = false
-        applicationLogButton.isVisible = false
+        logsButton.isVisible = false
 
         if (accountStore.hasAccessToken()) {
             val defaultAccount = accountStore.account
@@ -340,7 +350,6 @@ class HelpActivity : LocaleAwareActivity() {
         LOGIN_SITE_ADDRESS("origin:login-site-address"),
         LOGIN_SOCIAL("origin:login-social"),
         LOGIN_USERNAME_PASSWORD("origin:login-username-password"),
-        RELEASE_NOTES("origin:release-notes"),
         SIGNUP_EMAIL("origin:signup-email"),
         SIGNUP_MAGIC_LINK("origin:signup-magic-link"),
         SIGNUP_CONFIRMATION("origin:signup-confirmation"),
@@ -351,7 +360,9 @@ class HelpActivity : LocaleAwareActivity() {
         SITE_CREATION_SITE_INFO("origin:site-create-site-info"),
         EDITOR_HELP("origin:editor-help"),
         SCAN_SCREEN_HELP("origin:scan-screen-help"),
-        JETPACK_MIGRATION_HELP("origin:jetpack-migration-help");
+        JETPACK_MIGRATION_HELP("origin:jetpack-migration-help"),
+        JETPACK_INSTALL_FULL_PLUGIN_ONBOARDING("origin:jp-install-full-plugin-overlay"),
+        JETPACK_INSTALL_FULL_PLUGIN_ERROR("origin:jp-install-full-plugin-error");
 
         override fun toString(): String {
             return stringValue

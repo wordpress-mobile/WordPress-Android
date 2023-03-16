@@ -213,6 +213,14 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 canShowDialog = state.canShowChoosePrimarySiteDialog
                 setDetails(state.homeURLOrHostNames)
                 refreshAdapter()
+                 // Add click listener to show toast
+                setOnPreferenceClickListener {
+                    if (state.sites?.size == 1) {
+                        val message = getString(R.string.only_one_primary_site_message)
+                        showToastMessage(message)
+                    }
+                    true
+                }
             }
         } ?: run {
             primarySitePreference.apply {

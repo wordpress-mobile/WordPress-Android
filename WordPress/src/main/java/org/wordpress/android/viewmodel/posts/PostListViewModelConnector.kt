@@ -15,7 +15,8 @@ class PostListViewModelConnector(
     val hasAutoSave: (PostModel) -> Boolean,
     val postFetcher: PostFetcher,
     val uploadStatusTracker: PostModelUploadStatusTracker,
-    private val getFeaturedImageUrl: (site: SiteModel, featuredImageId: Long) -> String?
+    private val getFeaturedImageUrl: (site: SiteModel, featuredImageId: Long) -> String?,
+    val isSiteBlazeEligible: Boolean = false
 ) {
     fun getFeaturedImageUrl(featuredImageId: Long): String? {
         return getFeaturedImageUrl.invoke(site, featuredImageId)

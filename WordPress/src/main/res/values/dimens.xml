@@ -11,8 +11,6 @@
     <dimen name="me_menu_width">64dp</dimen>
     <dimen name="me_menu_avatar_end_offset">11dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
-    <dimen name="prominent_toolbar_height">112dp</dimen>
-    <dimen name="prominent_toolbar_with_tabs_height">168dp</dimen>
     <dimen name="toolbar_content_offset">72dp</dimen>
     <dimen name="toolbar_content_offset_end">0dp</dimen>
     <dimen name="collapsible_toolbar_expanded_bottom_margin">28dp</dimen>
@@ -111,6 +109,7 @@
     <dimen name="margin_medium_large">10dp</dimen>
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_extra_large">16dp</dimen>
+    <dimen name="margin_extra_small_large">20dp</dimen>
     <dimen name="margin_extra_medium_large">24dp</dimen>
     <dimen name="margin_extra_extra_medium_large">32dp</dimen>
     <dimen name="margin_extra_extra_large">48dp</dimen>
@@ -303,7 +302,6 @@
     <!-- my site -->
     <dimen name="my_site_list_row_icon_margin_right">28dp</dimen>
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
-    <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_blavatar_container_corner_radius">4dp</dimen>
     <dimen name="my_site_blavatar_container_border_width">0.5dp</dimen>
     <dimen name="my_site_blavatar_corner_radius">2dp</dimen>
@@ -492,6 +490,7 @@
     <dimen name="jetpack_text_width">290dp</dimen>
     <dimen name="jetpack_remote_install_container_padding">30dp</dimen>
     <dimen name="jetpack_remote_install_icon_size">88dp</dimen>
+    <dimen name="jetpack_new_remote_install_icon_size">64dp</dimen>
 
     <!-- pages -->
     <dimen name="page_item_horizontal_padding">16dp</dimen>
@@ -726,7 +725,7 @@
     <!-- quick link ribbon -->
     <dimen name="quick_link_ribbon_padding_start">18dp</dimen>
     <dimen name="quick_link_ribbon_icon_size">24dp</dimen>
-    <dimen name="quick_link_ribbon_corner_radius">4dp</dimen>
+    <dimen name="quick_link_ribbon_corner_radius">10dp</dimen>
     <dimen name="quick_link_ribbon_icon_padding">16dp</dimen>
 
     <!-- Jetpack Migration Flow -->
@@ -745,5 +744,6 @@
     <dimen name="jetpack_full_screen_overlay_new_users_content_margin">32dp</dimen>
     <dimen name="jetpack_full_screen_overlay_new_users_content_margin_land">16dp</dimen>
     <dimen name="jetpack_full_screen_overlay_new_users_content_text_size">15sp</dimen>
+    <dimen name="menu_item_icon_size">24dp</dimen>
 
 </resources>

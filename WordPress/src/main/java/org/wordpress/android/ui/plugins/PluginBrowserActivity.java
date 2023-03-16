@@ -448,7 +448,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
                 mStatusIcon = mStatusContainer.findViewById(R.id.plugin_status_icon);
 
                 view.setOnClickListener(v -> {
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
                     if (plugin == null) {
                         return;

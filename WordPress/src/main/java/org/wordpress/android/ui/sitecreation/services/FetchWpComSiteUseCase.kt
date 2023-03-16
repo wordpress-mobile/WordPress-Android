@@ -53,6 +53,7 @@ class FetchWpComSiteUseCase @Inject constructor(
         val siteModel = SiteModel()
         siteModel.siteId = siteId
         siteModel.setIsWPCom(true)
+        siteModel.origin = SiteModel.ORIGIN_WPCOM_REST
         return siteModel
     }
 

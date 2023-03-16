@@ -1,11 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-01 16:54:09+0000
+Translation-Revision-Date: 2023-02-28 15:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">블록 메뉴</string>
+    <string name="promote_blaze_card_menu_hide_this">숨기기</string>
+    <string name="promote_blaze_card_sub_title">수백만 개 사이트에 작업을 표시하세요.</string>
+    <string name="promote_blaze_card_title">Blaze로 콘텐츠 홍보</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">닫기</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">지원 문의</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">전체 플러그인 설치</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">이용 약관</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">젯팩을 설정하면 다음에 동의하는 것입니다. </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">전체 젯팩 플러그인</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">개별 젯팩 플러그인</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">%1$s 플러그인</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s에서는 %2$s 플러그인을 사용하고 있어서 아직 앱의 모든 기능이 지원되지 않습니다.\n\n이 사이트에서 %3$s 앱을 사용하려면 을(를) 설치하세요.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">전체 젯팩 플러그인을 설치하세요.</string>
+    <string name="only_one_primary_site_message">하나의 사이트만 이용할 수 있어서 기본 사이트를 변경할 수 없습니다.</string>
+    <string name="my_site_jp_install_full_plugin_card_content">이 사이트에서는 개별 플러그인을 사용하고 있어서 아직 앱의 모든 기능이 지원되지 않습니다. 전체 젯팩 플러그인을 설치하세요.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">지원 문의</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">다시 시도</string>
+    <string name="jetpack_full_plugin_install_error_description">지금은 젯팩을 설치할 수 없습니다</string>
+    <string name="jetpack_full_plugin_install_error_title">문제가 발생했습니다.</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">오류 아이콘</string>
+    <string name="jetpack_full_plugin_install_done_button">완료</string>
+    <string name="jetpack_full_plugin_install_done_description">앱에서 이 사이트를 이용할 준비가 되었습니다.</string>
+    <string name="jetpack_full_plugin_install_done_title">젯팩 설치됨</string>
+    <string name="jetpack_full_plugin_install_installing_description">사이트에 젯팩을 설치하는 중입니다. 완료하는 데 몇 분 정도 걸릴 수 있습니다.</string>
+    <string name="jetpack_full_plugin_install_installing_title">젯팩 설치하기</string>
+    <string name="jetpack_full_plugin_install_initial_button">계속</string>
+    <string name="jetpack_full_plugin_install_initial_description">웹사이트 자격 증명은 저장되지 않으며 젯팩을 설치하는 용도로만 사용됩니다.</string>
+    <string name="jetpack_full_plugin_install_initial_title">젯팩 설치</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">젯팩 아이콘</string>
+    <string name="button_promote_with_blaze">Blaze로 홍보</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">사이트의 전체 잠재력을 잠금 해제하세요. 젯팩으로 통계, 알림 등을 받으세요.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">사이트에 젯팩 플러그인 있음</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">젯팩 모바일 앱은 젯팩 플러그인과 연동하도록 설계되었습니다. 지금 전환하여 통계, 알림, 리더 등에 대한 접근 권한을 받으세요.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">새 댓글, 좋아요, 조회수 등에 대한 알림을 받으세요.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">즐겨 찾는 사이트와 커뮤니티를 찾아서 팔로우하고, 자신의 콘텐츠를 공유하세요.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">유용한 인사이트와 포괄적인 통계를 통해 트래픽 증가를 지켜보세요.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">통계 및 인사이트</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">젯팩을 통해 워드프레스 사이트에서 더 많은 작업을 수행할 수 있습니다. 전환은 무료이며 1분밖에 걸리지 않습니다.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">젯팩으로 워드프레스 성능 향상</string>
+    <string name="blogging_prompts_onboarding_content_note_content">언제든지 내 사이트 &gt; 설정 &gt; 블로깅에서 블로깅 프롬프트와 알림을 관리할 수 있습니다.</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">&lt;b&gt;사이트 설정&lt;/b&gt;으로 이동하여 다시 켜기</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">블로깅 프롬프트 숨김</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">프롬프트 끄기</string>
+    <string name="support_forum_caption">자원봉사자 그룹의 도움말 받기</string>
+    <string name="site_settings_blogging_prompts_title">프롬프트 표시</string>
+    <string name="site_settings_blogging">블로깅</string>
     <string name="install_play_store_to_get_jetpack">젯팩 앱을 이용하려면 Google Play 스토어를 설치하세요.</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">나중에 하겠습니다.</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">젯팩으로 전환 </string>
@@ -30,7 +77,6 @@ Language: ko_KR
     <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt;부터</string>
     <string name="jetpack_feature_card_menu_item_hide_this">숨기기</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">나중에 다시 알림</string>
-    <string name="jetpack_feature_card_content">곧 통계, 리더, 알림 및 기타 기능이 젯팩 모바일 앱으로 이동됩니다.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">젯팩 앱으로 전환</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">jetpack.com에서 더 알아보기</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">전환은 무료이며 1분밖에 걸리지 않습니다.</string>
@@ -307,15 +353,13 @@ Language: ko_KR
     <string name="blogging_prompts_onboarding_card_prompt">자신의 인생을 영화로 만들어 보세요.</string>
     <string name="blogging_prompts_onboarding_remind_me">나에게 알림</string>
     <string name="blogging_prompts_onboarding_try_it_now">지금 시도하기</string>
-    <string name="blogging_prompts_onboarding_content_note_content">내 사이트 &gt; 설정 &gt; 블로깅 알림에서 언제든지 자세히 알아보고 알림을 설정할 수 있습니다.</string>
     <string name="blogging_prompts_onboarding_content_note_title">참고:</string>
     <string name="blogging_prompts_onboarding_content_bottom">영감을 발휘할 수 있도록 알림판에 매일 새로운 프롬프트가 표시됩니다!</string>
     <string name="blogging_prompts_onboarding_content_top">더 좋은 작가가 되는 가장 좋은 방법은 글쓰기를 습관화하고 다른 사람과 공유하는 것입니다. 그래서 프롬프트가 필요합니다!</string>
-    <string name="blogging_prompts_onboarding_header_title">프롬프트 소개</string>
     <string name="blogging_prompt_set_reminders">알림 설정</string>
-    <string name="blogging_reminders_prompt_subtitle">알림에는 일일 프롬프트가 포함됩니다</string>
-    <string name="blogging_reminders_prompt_title">일일 프롬프트 포함</string>
     <string name="post_publishing_set_up_blogging_prompts_message">정기적으로 글을 작성하여 신규 독자를 유치하세요. 글을 쓰고 싶을 때 알려주시면 알림을 보내드리겠습니다!</string>
+    <string name="blogging_prompts_onboarding_header_title">소개\n블로깅 프롬프트</string>
+    <string name="blogging_reminders_prompt_title">블로깅 프롬프트 포함</string>
     <string name="set_your_blogging_prompts_title">습관화하여 더 좋은 작가 되기</string>
     <string name="site_creation_intent_writing_poetry">글쓰기 및 시</string>
     <string name="site_creation_intent_travel">여행</string>
@@ -350,7 +394,6 @@ Language: ko_KR
     <string name="new_site_creation_intents_input_hint">예: 패션, 시, 정치</string>
     <string name="new_site_creation_intents_title">사이트 주제</string>
     <string name="quick_start_site_menu_tab_message_short">계속하려면 &lt;b&gt;%1$s&lt;/b&gt;을(를) 누르세요.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">알림판에서 제거</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">더 많은 프롬프트 보기</string>
     <string name="my_site_blogging_prompt_card_menu_skip">오늘 건너뛰기</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d개 답변</string>
@@ -359,7 +402,6 @@ Language: ko_KR
     <string name="my_site_blogging_prompt_card_answer_prompt">답변 프롬프트</string>
     <string name="my_site_blogging_prompt_card_title">프롬프트</string>
     <string name="my_site_all_tab_title">전체</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">알림 및 프롬프트</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">이 색상 조합은 사람들이 읽기 힘들 수 있습니다. 더 밝은 배경 색상 및/또는 더 어두운 텍스트 색상을 사용해 보세요.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">이 색상 조합은 사람들이 읽기 힘들 수 있습니다. 더 어두운 배경 색상 및/또는 더 밝은 텍스트 색상을 사용해 보세요.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">미디어를 삽입하지 못했습니다.\n자세히 알아보려면 누르세요.</string>
@@ -623,7 +665,7 @@ Language: ko_KR
     <string name="site_settings_categories_hint">사이트의 카테고리 관리</string>
     <string name="site_settings_categories_title">카테고리</string>
     <string name="page_is_posts_page_warning">최신 글 페이지의 콘텐츠는 자동으로 생성되며 편집할 수 없습니다.</string>
-    <string name="site_settings_blogging_reminders_title">블로깅 알림</string>
+    <string name="site_settings_blogging_reminders_title">알림</string>
     <string name="gutenberg_native_border_settings">경계선 설정</string>
     <string name="storage_utils_dialog_dont_show_button">다시 보지 않음</string>
     <string name="storage_utils_dialog_ok_button">저장 공간 보기</string>
@@ -2111,8 +2153,6 @@ Language: ko_KR
     <string name="support_push_notification_title">워드프레스</string>
     <string name="support_contact_email_not_set">설정되지 않음</string>
     <string name="support_contact_email">연락처 이메일</string>
-    <string name="application_log_button">애플리케이션 로그</string>
-    <string name="my_tickets">내 티켓</string>
     <string name="activity_log_currently_restoring_message_no_dates">되돌리기 진행 중</string>
     <string name="activity_log_currently_restoring_message">%1$s %2$s(으)로 되돌리는 중</string>
     <string name="activity_log_currently_restoring_title">현재 사이트 복원 중</string>
@@ -2273,8 +2313,6 @@ Language: ko_KR
     <string name="reader_screen_title">리더</string>
     <string name="me_section_screen_title">나</string>
     <string name="notif_settings_screen_title">알림 설정</string>
-    <string name="help_screen_title">도움말 및 지원</string>
-    <string name="release_notes_screen_title">릴리스 노트</string>
     <string name="my_site_section_screen_title">내 사이트</string>
     <string name="signup_epilogue_error_avatar_view">고객님의 아바타가 업로드되었으며 곧 사용할 수 있습니다.</string>
     <string name="permissions_denied_message">이 기능에 대한 필수 권한이 해제되어 있는 것 같습니다.&lt;br/&gt;&lt;br/&gt;변경하려면 권한을 편집하고 &lt;strong&gt;%s&lt;/strong&gt;이(가) 활성화되어 있는지 확인하세요.</string>
@@ -2631,7 +2669,6 @@ Language: ko_KR
     <string name="site_settings_optimize_video_summary">비디오 크기 조정 및 압축</string>
     <string name="site_settings_optimize_videos">비디오 최적화</string>
     <string name="draft_uploaded">임시글이 업로드됨</string>
-    <string name="report_bug">버그 보고하기</string>
     <string name="video_quality">비디오 품질</string>
     <string name="permission_camera">카메라</string>
     <string name="permission_storage">저장 공간</string>
@@ -3142,7 +3179,6 @@ Language: ko_KR
     <string name="me_disconnect_from_wordpress_com">WordPress.com에서 로그아웃</string>
     <string name="me_btn_login_logout">로그인/로그아웃</string>
     <string name="me_connect_to_wordpress_com">WordPress.com에 로그인</string>
-    <string name="me_btn_support">도움 및 지원</string>
     <string name="site_picker_cant_hide_current_site">\"%s\"은(는) 현재 사이트이기 때문에 숨길 수 없습니다.</string>
     <string name="account_settings">계정 설정</string>
     <string name="site_picker_create_wpcom">워드프레스닷컴 사이트 생성</string>

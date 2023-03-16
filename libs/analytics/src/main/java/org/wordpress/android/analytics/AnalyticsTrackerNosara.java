@@ -1387,12 +1387,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_social_to_login";
             case ENHANCED_SITE_CREATION_ACCESSED:
                 return "enhanced_site_creation_accessed";
-            case ENHANCED_SITE_CREATION_SEGMENTS_VIEWED:
-                return "enhanced_site_creation_segments_viewed";
-            case ENHANCED_SITE_CREATION_SEGMENTS_SELECTED:
-                return "enhanced_site_creation_segments_selected";
             case ENHANCED_SITE_CREATION_DOMAINS_ACCESSED:
                 return "enhanced_site_creation_domains_accessed";
+            case ENHANCED_SITE_CREATION_DOMAIN_PURCHASING_EXPERIMENT:
+                return "enhanced_site_creation_domain_purchasing_experiment";
             case ENHANCED_SITE_CREATION_DOMAINS_SELECTED:
                 return "enhanced_site_creation_domains_selected";
             case ENHANCED_SITE_CREATION_SUCCESS_LOADING:
@@ -1785,6 +1783,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_scan_error";
             case SUPPORT_HELP_CENTER_VIEWED:
                 return "support_help_center_viewed";
+            case SUPPORT_MIGRATION_FAQ_VIEWED:
+                return "support_migration_faq_viewed";
+            case SUPPORT_MIGRATION_FAQ_TAPPED:
+                return "support_migration_faq_tapped";
             case SUPPORT_NEW_REQUEST_VIEWED:
                 return "support_new_request_viewed";
             case SUPPORT_TICKET_LIST_VIEWED:
@@ -2509,6 +2511,52 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "remove_feature_card_remind_later_tapped";
             case JETPACK_FEATURE_INCORRECTLY_ACCESSED:
                 return "jetpack_feature_incorrectly_accessed";
+            case JETPACK_INSTALL_FULL_PLUGIN_CARD_VIEWED:
+                return "jp_install_full_plugin_card_viewed";
+            case JETPACK_INSTALL_FULL_PLUGIN_CARD_TAPPED:
+                return "jp_install_full_plugin_card_tapped";
+            case JETPACK_INSTALL_FULL_PLUGIN_CARD_DISMISSED:
+                return "jp_install_full_plugin_card_dismissed";
+            case JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING_SCREEN_SHOWN:
+                return "jp_install_full_plugin_onboarding_modal_viewed";
+            case JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING_SCREEN_DISMISSED:
+                return "jp_install_full_plugin_onboarding_modal_dismissed";
+            case JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING_INSTALL_TAPPED:
+                return "jp_install_full_plugin_onboarding_modal_install_tapped";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_VIEWED:
+                return "jp_install_full_plugin_flow_viewed";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_CANCEL_TAPPED:
+                return "jp_install_full_plugin_flow_cancel_tapped";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_INSTALL_TAPPED:
+                return "jp_install_full_plugin_flow_install_tapped";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_RETRY_TAPPED:
+                return "jp_install_full_plugin_flow_retry_tapped";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_SUCCESS:
+                return "jp_install_full_plugin_flow_success";
+            case JETPACK_INSTALL_FULL_PLUGIN_FLOW_DONE_TAPPED:
+                return "jp_install_full_plugin_flow_done_tapped";
+            case BLAZE_ENTRY_POINT_DISPLAYED:
+                return "blaze_entry_point_displayed";
+            case BLAZE_ENTRY_POINT_TAPPED:
+                return "blaze_entry_point_tapped";
+            case BLAZE_ENTRY_POINT_MENU_ACCESSED:
+                return "blaze_entry_point_menu_accessed";
+            case BLAZE_ENTRY_POINT_HIDE_TAPPED:
+                return "blaze_entry_point_hide_tapped";
+            case BLAZE_FEATURE_OVERLAY_DISPLAYED:
+                return "blaze_overlay_displayed";
+            case BLAZE_FEATURE_OVERLAY_PROMOTE_CLICKED:
+                return "blaze_overlay_button_tapped";
+            case BLAZE_FEATURE_OVERLAY_DISMISSED:
+                return "blaze_overlay_dismissed";
+            case BLAZE_FLOW_STARTED:
+                return "blaze_flow_started";
+            case BLAZE_FLOW_COMPLETED:
+                return "blaze_flow_completed";
+            case BLAZE_FLOW_CANCELED:
+                return "blaze_flow_canceled";
+            case BLAZE_FLOW_ERROR:
+                return "blaze_flow_error";
         }
         return null;
     }

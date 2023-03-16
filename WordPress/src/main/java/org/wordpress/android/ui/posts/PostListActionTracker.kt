@@ -22,6 +22,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_PROMOTE_WITH_BLAZE
 
 fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postData: PostModel, statsEvent: Stat) {
     val properties = HashMap<String, Any?>()
@@ -51,6 +52,7 @@ fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postDat
         BUTTON_CANCEL_PENDING_AUTO_UPLOAD -> "cancel_pending_auto_upload"
         BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG -> "show_move_trashed_post_to_draft_post_dialog"
         BUTTON_COPY_URL -> "copy_url"
+        BUTTON_PROMOTE_WITH_BLAZE -> "promote_with_blaze"
     }
 
     AnalyticsUtils.trackWithSiteDetails(statsEvent, site, properties)

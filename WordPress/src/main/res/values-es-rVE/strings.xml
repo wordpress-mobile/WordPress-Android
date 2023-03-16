@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-08-22 17:29:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: es_VE
 -->
 <resources>
@@ -185,14 +185,10 @@ Language: es_VE
     <string name="blogging_prompts_onboarding_card_prompt">Haz la película de tu vida.</string>
     <string name="blogging_prompts_onboarding_remind_me">Recordármelo</string>
     <string name="blogging_prompts_onboarding_try_it_now">Pruébalo ahora</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Puedes aprender más y configurar recordatorios en cualquier momento en «Mi sitio &gt; Ajustes &gt; Recordatorios de bloguear».</string>
     <string name="blogging_prompts_onboarding_content_note_title">Nota:</string>
     <string name="blogging_prompts_onboarding_content_bottom">¡Te mostraremos un nuevo estímulo cada día en tu escritorio para ayudarte a que fluyan esos fluidos creativos!</string>
     <string name="blogging_prompts_onboarding_content_top">El mejor modo de convertirte en un mejor escritor es crear un hábito de escritura y compartir con otros - ¡aquí es donde entran los estímulos! </string>
-    <string name="blogging_prompts_onboarding_header_title">Presentando los estímulos</string>
     <string name="blogging_prompt_set_reminders">Configurar recordatorios</string>
-    <string name="blogging_reminders_prompt_subtitle">El recordatorio incluirá un estímulo diario</string>
-    <string name="blogging_reminders_prompt_title">Incluir el estímulo diario</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Publicar con regularidad atrae nuevos lectores. ¡Cuéntanos cuándo quieres escribir y te enviaremos un recordatorio!</string>
     <string name="set_your_blogging_prompts_title">Conviértete en un mejor escritor creando un hábito</string>
     <string name="site_creation_intent_writing_poetry">Escritura y poesía</string>
@@ -228,14 +224,12 @@ Language: es_VE
     <string name="new_site_creation_intents_input_hint">Ej.: Moda, poesía, política</string>
     <string name="new_site_creation_intents_title">Temática del sitio</string>
     <string name="quick_start_site_menu_tab_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para continuar.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Quitar del escritorio</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Ver más estímulos</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Comparte el estímulo de bloguear</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Respondido</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Responder estímulo</string>
     <string name="my_site_blogging_prompt_card_title">Estímulos</string>
     <string name="my_site_all_tab_title">Todos</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Recordatorios y estímulos</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Esta combinación de color puede ser difícil de leer para la gente. Intenta usar un color de fondo más claro y/o un color de texto más oscuro.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Esta combinación de color puede ser difícil de leer para la gente. Intenta usar un color de fondo más oscuro y/o un color de texto más claro.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Fallo al insertar los medios.\nToca para más información.</string>
@@ -497,7 +491,6 @@ Language: es_VE
     <string name="support_ticket_subject">Soporte de WordPress para Android</string>
     <string name="site_settings_categories_hint">Gestiona las categorías de tu sitio</string>
     <string name="site_settings_categories_title">Categorías</string>
-    <string name="site_settings_blogging_reminders_title">Recordatorios de blogueo</string>
     <string name="page_is_posts_page_warning">El contenido de la página de tus últimas entradas se genera automáticamente y no se puede editar.</string>
     <string name="gutenberg_native_border_settings">Ajustes del borde</string>
     <string name="storage_utils_dialog_dont_show_button">No mostrar de nuevo</string>
@@ -1978,8 +1971,6 @@ Language: es_VE
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">No establecido</string>
     <string name="support_contact_email">Correo electrónico de contacto</string>
-    <string name="application_log_button">Registro de la aplicación</string>
-    <string name="my_tickets">Mis tickets</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restauración en progreso</string>
     <string name="activity_log_currently_restoring_message">Restaurando a %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Actualmente restaurando tu sitio</string>
@@ -2141,8 +2132,6 @@ Language: es_VE
     <string name="me_section_screen_title">Yo</string>
     <string name="my_site_section_screen_title">Mi sitio</string>
     <string name="notif_settings_screen_title">Ajustes de avisos</string>
-    <string name="help_screen_title">Ayuda y soporte</string>
-    <string name="release_notes_screen_title">Notas de la versión</string>
     <string name="signup_epilogue_error_avatar_view">Tu avatar se ha subido y estará disponible en breve.</string>
     <string name="permissions_denied_message">Parece que has desactivado los permisos necesarios para esta característica.&lt;br/&gt;&lt;br/&gt;Para cambiarlo, edita tus permisos y asegúrate de que &lt;strong&gt;%s&lt;/strong&gt; está activado.</string>
     <string name="permissions_denied_title">Permisos</string>
@@ -2498,7 +2487,6 @@ Language: es_VE
     <string name="site_settings_optimize_video_summary">Activar para redimensionar y comprimir los videos</string>
     <string name="site_settings_optimize_videos">Optimizar videos</string>
     <string name="draft_uploaded">Borrador subido</string>
-    <string name="report_bug">Informar de fallo</string>
     <string name="video_quality">Calidad del video</string>
     <string name="permission_camera">Cámara</string>
     <string name="permission_storage">Almacenamiento</string>
@@ -3009,7 +2997,6 @@ Language: es_VE
     <string name="me_disconnect_from_wordpress_com">Salir de WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Acceder a WordPress.com</string>
     <string name="me_btn_login_logout">Iniciar/Cerrar sesión</string>
-    <string name="me_btn_support">Ayuda y soporte</string>
     <string name="account_settings">Ajustes de la cuenta</string>
     <string name="site_picker_cant_hide_current_site">«%s» no se ha ocultado porque es el sitio actual</string>
     <string name="site_picker_create_wpcom">Crear sitio en WordPress.com</string>

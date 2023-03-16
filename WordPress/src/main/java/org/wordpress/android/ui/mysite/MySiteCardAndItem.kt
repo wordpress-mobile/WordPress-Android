@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_EMPTY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DASHBOARD_CARDS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
@@ -37,12 +38,14 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         QUICK_START_DYNAMIC_CARD,
         INFO_ITEM,
         CATEGORY_HEADER_ITEM,
+        CATEGORY_EMPTY_HEADER_ITEM,
         LIST_ITEM,
         DASHBOARD_CARDS,
         JETPACK_BADGE,
         SINGLE_ACTION_CARD,
         JETPACK_FEATURE_CARD,
-        JETPACK_SWITCH_CARD
+        JETPACK_SWITCH_CARD,
+        JETPACK_INSTALL_FULL_PLUGIN_CARD
     }
 
     enum class DashboardCardType {
@@ -53,7 +56,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         POST_CARD_ERROR,
         POST_CARD_WITHOUT_POST_ITEMS,
         POST_CARD_WITH_POST_ITEMS,
-        BLOGGING_PROMPT_CARD
+        BLOGGING_PROMPT_CARD,
+        PROMOTE_WITH_BLAZE_CARD
     }
 
     data class SiteInfoHeaderCard(
@@ -144,6 +148,13 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onHideMenuItemClick: ListItemInteraction,
             val onMoreMenuClick: ListItemInteraction
         ) : Card(Type.JETPACK_SWITCH_CARD)
+
+        data class JetpackInstallFullPluginCard(
+            val siteName: String,
+            val pluginNames: List<String>,
+            val onLearnMoreClick: ListItemInteraction,
+            val onHideMenuItemClick: ListItemInteraction,
+        ) : Card(Type.JETPACK_INSTALL_FULL_PLUGIN_CARD)
 
         data class DashboardCards(
             val cards: List<DashboardCard>
@@ -252,6 +263,14 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val onRemoveClick: () -> Unit,
                     ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD)
                 }
+
+                data class PromoteWithBlazeCard(
+                    val title: UiString?,
+                    val subtitle: UiString?,
+                    val onClick: ListItemInteraction,
+                    val onHideMenuItemClick: ListItemInteraction,
+                    val onMoreMenuClick: ListItemInteraction,
+                ): DashboardCard(dashboardCardType = DashboardCardType.PROMOTE_WITH_BLAZE_CARD)
             }
         }
     }
@@ -299,13 +318,16 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
         data class CategoryHeaderItem(val title: UiString) : Item(CATEGORY_HEADER_ITEM)
 
+        data class CategoryEmptyHeaderItem(val title: UiString) : Item(CATEGORY_EMPTY_HEADER_ITEM)
+
         data class ListItem(
             @DrawableRes val primaryIcon: Int,
             val primaryText: UiString,
             @DrawableRes val secondaryIcon: Int? = null,
             val secondaryText: UiString? = null,
             val showFocusPoint: Boolean = false,
-            val onClick: ListItemInteraction
+            val onClick: ListItemInteraction,
+            val disablePrimaryIconTint: Boolean = false
         ) : Item(LIST_ITEM, activeQuickStartItem = showFocusPoint)
     }
 

@@ -6,9 +6,7 @@ import androidx.lifecycle.Transformations
 import kotlinx.coroutines.CoroutineDispatcher
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_PURCHASE_WEBVIEW_VIEWED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_SEARCH_SELECT_DOMAIN_TAPPED
+import org.wordpress.android.Constants.TYPE_DOMAINS_PRODUCT
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -25,8 +23,9 @@ import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteDomainsFeatureConfig
+import org.wordpress.android.util.extensions.isOnSale
+import org.wordpress.android.util.extensions.saleCostForDisplay
 import org.wordpress.android.util.helpers.Debouncer
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -37,7 +36,7 @@ import kotlin.properties.Delegates
 
 class DomainSuggestionsViewModel @Inject constructor(
     private val productsStore: ProductsStore,
-    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val domainsRegistrationTracker: DomainsRegistrationTracker,
     private val dispatcher: Dispatcher,
     private val debouncer: Debouncer,
     private val siteDomainsFeatureConfig: SiteDomainsFeatureConfig,
@@ -79,7 +78,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         if (newValue != oldValue) {
             if (isStarted && !isQueryTrackingCompleted) {
                 isQueryTrackingCompleted = true
-                analyticsTracker.track(Stat.DOMAIN_CREDIT_SUGGESTION_QUERIED)
+                domainsRegistrationTracker.trackDomainCreditSuggestionQueried()
             }
 
             debouncer.debounce(Void::class.java, {
@@ -132,7 +131,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private fun fetchProducts() {
         launch {
-            val result = productsStore.fetchProducts()
+            val result = productsStore.fetchProducts(TYPE_DOMAINS_PRODUCT)
             when {
                 result.isError -> {
                     AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching site domains")
@@ -153,7 +152,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         val suggestDomainsPayload = if (SiteUtils.onBloggerPlan(site)) {
             SuggestDomainsPayload(searchQuery, SUGGESTIONS_REQUEST_COUNT, BLOG_DOMAIN_TLDS)
         } else {
-            SuggestDomainsPayload(searchQuery, false, false, true, SUGGESTIONS_REQUEST_COUNT, false)
+            SuggestDomainsPayload(searchQuery, false, false, true, SUGGESTIONS_REQUEST_COUNT)
         }
 
         dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(suggestDomainsPayload))
@@ -164,6 +163,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     // Network Callback
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDomainSuggestionsFetched(event: OnSuggestedDomains) {
         if (searchQuery != event.query) {
@@ -185,8 +185,8 @@ class DomainSuggestionsViewModel @Inject constructor(
                 DomainSuggestionItem(
                     domainName = it.domain_name,
                     cost = it.cost,
-                    isOnSale = product?.isSaleDomain() ?: false,
-                    saleCost = product?.saleCostForDisplay().toString(),
+                    isOnSale = product.isOnSale(),
+                    saleCost = product.saleCostForDisplay(),
                     isFree = it.is_free,
                     supportsPrivacy = it.supports_privacy,
                     productId = it.product_id,
@@ -221,7 +221,7 @@ class DomainSuggestionsViewModel @Inject constructor(
             else -> selectDomain(selectedSuggestion)
         }
 
-        analyticsTracker.track(DOMAINS_SEARCH_SELECT_DOMAIN_TAPPED, site)
+        domainsRegistrationTracker.trackDomainsSearchSelectDomainTapped(site)
     }
 
     fun updateSearchQuery(query: String) {
@@ -234,10 +234,6 @@ class DomainSuggestionsViewModel @Inject constructor(
             initializeDefaultSuggestions()
         }
     }
-
-    internal fun Product.isSaleDomain(): Boolean = this.saleCost?.let { it.compareTo(0.0) > 0 } == true
-
-    internal fun Product.saleCostForDisplay(): String = this.currencyCode + "%.2f".format(this.saleCost)
 
     private fun createCart(selectedSuggestion: DomainSuggestionItem) = launch {
         AppLog.d(T.DOMAIN_REGISTRATION, "Creating cart: $selectedSuggestion")
@@ -266,7 +262,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     private fun selectDomain(selectedSuggestion: DomainSuggestionItem) {
         val domainProductDetails = DomainProductDetails(selectedSuggestion.productId, selectedSuggestion.domainName)
         _onDomainSelected.postValue(Event(domainProductDetails))
-        analyticsTracker.track(DOMAINS_PURCHASE_WEBVIEW_VIEWED, site)
+        domainsRegistrationTracker.trackDomainsPurchaseWebviewViewed(site, isSiteCreation = false)
     }
 
     private fun showLoadingButton(isLoading: Boolean) {

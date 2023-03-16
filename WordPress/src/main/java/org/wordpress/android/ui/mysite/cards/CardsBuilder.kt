@@ -4,10 +4,12 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder
+import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -22,7 +24,8 @@ class CardsBuilder @Inject constructor(
     private val quickActionsCardBuilder: QuickActionsCardBuilder,
     private val quickStartCardBuilder: QuickStartCardBuilder,
     private val quickLinkRibbonBuilder: QuickLinkRibbonBuilder,
-    private val dashboardCardsBuilder: CardsBuilder
+    private val dashboardCardsBuilder: CardsBuilder,
+    private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
 ) {
     @Suppress("LongParameterList")
     fun build(
@@ -31,6 +34,7 @@ class CardsBuilder @Inject constructor(
         quickStartCardBuilderParams: QuickStartCardBuilderParams,
         dashboardCardsBuilderParams: DashboardCardsBuilderParams,
         quickLinkRibbonBuilderParams: QuickLinkRibbonBuilderParams,
+        jetpackInstallFullPluginCardBuilderParams: JetpackInstallFullPluginCardBuilderParams,
         isMySiteTabsEnabled: Boolean
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
@@ -39,6 +43,9 @@ class CardsBuilder @Inject constructor(
         }
         if (shouldShowQuickActionsCard(isMySiteTabsEnabled)) {
             cards.add(quickActionsCardBuilder.build(quickActionsCardBuilderParams))
+        }
+        jetpackInstallFullPluginCardBuilder.build(jetpackInstallFullPluginCardBuilderParams)?.let {
+            cards.add(it)
         }
         if (domainRegistrationCardBuilderParams.isDomainCreditAvailable) {
             cards.add(trackAndBuildDomainRegistrationCard(domainRegistrationCardBuilderParams))

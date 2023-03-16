@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel;
+import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
@@ -44,6 +45,10 @@ import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
+import org.wordpress.android.ui.blaze.BlazeFlowSource;
+import org.wordpress.android.ui.blaze.BlazeParentActivity;
+import org.wordpress.android.ui.blaze.PageUIModel;
+import org.wordpress.android.ui.blaze.PostUIModel;
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
@@ -143,6 +148,8 @@ import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
+import static org.wordpress.android.ui.blaze.BlazeParentActivityKt.ARG_BLAZE_FLOW_SOURCE;
+import static org.wordpress.android.ui.blaze.BlazeParentActivityKt.ARG_EXTRA_BLAZE_UI_MODEL;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
@@ -1350,7 +1357,7 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE);
     }
 
-    public static void viewHelpAndSupportInNewStack(@NonNull Context context, @NonNull Origin origin,
+    public static void viewHelpInNewStack(@NonNull Context context, @NonNull Origin origin,
                                           @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags) {
         Map<String, String> properties = new HashMap<>();
         properties.put("origin", origin.name());
@@ -1369,8 +1376,8 @@ public class ActivityLauncher {
         taskStackBuilder.startActivities();
     }
 
-    public static void viewHelpAndSupport(@NonNull Context context, @NonNull Origin origin,
-                                          @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags) {
+    public static void viewHelp(@NonNull Context context, @NonNull Origin origin, @Nullable SiteModel selectedSite,
+                                @Nullable List<String> extraSupportTags) {
         Map<String, String> properties = new HashMap<>();
         properties.put("origin", origin.name());
         AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);
@@ -1379,7 +1386,7 @@ public class ActivityLauncher {
 
     public static void viewZendeskTickets(@NonNull Context context,
                                           @Nullable SiteModel selectedSite) {
-        viewHelpAndSupportInNewStack(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
+        viewHelpInNewStack(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {
@@ -1808,6 +1815,38 @@ public class ActivityLauncher {
         intent.setData(uri.getUri());
         intent.putExtra(ARG_BYPASS_MIGRATION, bypassMigration);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    public static void openPromoteWithBlaze(@NonNull Context context,
+                                            @Nullable PostModel postModel,
+                                            @NonNull BlazeFlowSource source) {
+        Intent intent = new Intent(context, BlazeParentActivity.class);
+        if (postModel != null) {
+            PostUIModel postUIModel = new PostUIModel(
+                    postModel.getRemotePostId(),
+                    postModel.getTitle(),
+                    postModel.getLink(),
+                    postModel.getFeaturedImageId(),
+                    null);
+            intent.putExtra(ARG_EXTRA_BLAZE_UI_MODEL, postUIModel);
+        }
+        intent.putExtra(ARG_BLAZE_FLOW_SOURCE, source);
+        context.startActivity(intent);
+    }
+
+    public static void openPromoteWithBlaze(@NonNull Context context,
+                                            @NonNull PageModel page,
+                                            @NonNull BlazeFlowSource source) {
+        Intent intent = new Intent(context, BlazeParentActivity.class);
+        PageUIModel pageUIModel = new PageUIModel(
+                page.getPost().getRemotePostId(),
+                page.getPost().getTitle(),
+                page.getPost().getLink(),
+                page.getPost().getFeaturedImageId(),
+                null);
+        intent.putExtra(ARG_EXTRA_BLAZE_UI_MODEL, pageUIModel);
+        intent.putExtra(ARG_BLAZE_FLOW_SOURCE, source);
         context.startActivity(intent);
     }
 }

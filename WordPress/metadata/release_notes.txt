@@ -1,4 +1,4 @@
-* [*] [internal] Bump Aztec version to `1.6.3` [https://github.com/wordpress-mobile/WordPress-Android/pull/17852]
-* [**] [Jetpack-only] Blogging Prompts: add the ability to answer previous prompts, disable prompts, and other minor enhancements. [https://github.com/wordpress-mobile/WordPress-Android/pull/17882]
-* [*] Reader: Removes the option to block and report reader users for self-hosted sites [https://github.com/wordpress-mobile/WordPress-Android/pull/17866]
-
+Good words are read
+The WordPress logo is blue
+There are no new updates
+Sorry to disappoint you

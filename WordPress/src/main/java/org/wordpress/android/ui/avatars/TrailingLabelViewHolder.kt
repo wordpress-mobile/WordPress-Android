@@ -16,7 +16,7 @@ class TrailingLabelViewHolder(
 ) : TrainOfAvatarsViewHolder<TrailingLabelItemBinding>(parent.viewBinding(TrailingLabelItemBinding::inflate)) {
     @Suppress("DEPRECATION")
     fun bind(textItem: TrailingLabelTextItem) = with(binding) {
-        val position = adapterPosition
+        val position = bindingAdapterPosition
 
         if (position >= 0) {
             itemView.post {

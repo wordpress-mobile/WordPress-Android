@@ -104,7 +104,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given prompts FF is off and site is potential blog, when isPromptsFeatureAvailable, then returns false`() {
+    fun `given prompts FF is off and site is wpcom site, when isPromptsFeatureAvailable, then returns false`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
 
@@ -114,9 +114,9 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given prompts FF is on and site is not potential blog, when isPromptsFeatureAvailable, then returns false`() {
+    fun `given prompts FF is on and site is not wpcom site, when isPromptsFeatureAvailable, then returns false`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel(isPotentialBloggingSite = false))
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel(isWpComSite = false))
 
         val result = helper.isPromptsFeatureAvailable()
 
@@ -133,7 +133,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given prompts FF is on and site is potential blog, when isPromptsFeatureAvailable, then returns true`() {
+    fun `given prompts FF is on and site is wpcom site, when isPromptsFeatureAvailable, then returns true`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
 
@@ -271,6 +271,45 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
             )
     }
 
+    @Test
+    fun `given prompts feature is not available, when shouldShowPromptsSetting, then returns false`() {
+        // prompts available
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel(isWpComSite = false))
+
+        val result = helper.shouldShowPromptsSetting()
+
+        assertThat(result).isFalse
+    }
+
+    @Suppress("MaxLineLength")
+    @Test
+    fun `given prompts feature is available and enhancements FF is off, when shouldShowPromptsSetting, then returns false`() {
+        // prompts available
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
+
+        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(false)
+
+        val result = helper.shouldShowPromptsSetting()
+
+        assertThat(result).isFalse
+    }
+
+    @Suppress("MaxLineLength")
+    @Test
+    fun `given prompts feature is available and enhancements FF is on, when shouldShowPromptsSetting, then returns true`() {
+        // prompts available
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
+
+        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
+
+        val result = helper.shouldShowPromptsSetting()
+
+        assertThat(result).isTrue()
+    }
+
     companion object {
         private fun createRemindersModel(
             isPromptsCardEnabled: Boolean,
@@ -280,10 +319,10 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
         )
 
         private fun createSiteModel(
-            isPotentialBloggingSite: Boolean = true
+            isWpComSite: Boolean = true
         ) = SiteModel().apply {
             this.id = 123
-            setIsPotentialBloggingSite(isPotentialBloggingSite)
+            setIsWPCom(isWpComSite)
         }
     }
 }

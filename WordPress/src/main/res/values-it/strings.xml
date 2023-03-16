@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-02 08:54:09+0000
+Translation-Revision-Date: 2023-03-01 18:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.3
+Generator: GlotPress/4.0.0-alpha.4
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_blocks_menu">Menu Blocchi</string>
+    <string name="promote_blaze_card_menu_hide_this">Nascondi</string>
+    <string name="promote_blaze_card_sub_title">Mostra il tuo lavoro su milioni di siti.</string>
+    <string name="promote_blaze_card_title">Promuovi i tuoi contenuti con Blaze</string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Chiudi</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contatta il supporto</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Installa il plugin completo</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Termini e condizioni</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">Impostando Jetpack accetti </string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">plugin Jetpack completo</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">plugin Jetpack individuali</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">il plugin %1$s</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s utilizza %2$s, che non supportano ancora tutte le funzionalità dell\'app.\n\nInstalla %3$s per usare l\'app coon questo sito.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Installa il plugin Jetpack completo</string>
+    <string name="only_one_primary_site_message">È disponibile un solo sito, quindi non puoi modificare il sito principale.</string>
+    <string name="my_site_jp_install_full_plugin_card_content">Questo sito utilizza un plugin individuale, che non supportano ancora tutte le funzionalità dell\'app. Installa il plugin Jetpack completo.</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">Contatta il supporto</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">Riprova</string>
+    <string name="jetpack_full_plugin_install_error_description">Jetpack non può essere installato in questo momento.</string>
+    <string name="jetpack_full_plugin_install_error_title">Si è verificato un problema</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Icona Errore</string>
+    <string name="jetpack_full_plugin_install_done_button">Fatto</string>
+    <string name="jetpack_full_plugin_install_done_description">Pronto per utilizzare questo sito con l\'app.</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack installato</string>
+    <string name="jetpack_full_plugin_install_installing_description">Installa Jetpack sul tuo sito. Il completamento può richiedere alcuni minuti.</string>
+    <string name="jetpack_full_plugin_install_installing_title">Installazione di Jetpack</string>
+    <string name="jetpack_full_plugin_install_initial_button">Continua</string>
+    <string name="jetpack_full_plugin_install_initial_description">Le credenziali del tuo sito web non verranno archiviate e saranno utilizzate per installare Jetpack.</string>
+    <string name="jetpack_full_plugin_install_initial_title">Installa Jetpack</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Icona Jetpack</string>
+    <string name="button_promote_with_blaze">Promuovi con la diffusione</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Sblocca tutto il potenziale del tuo sito web. Ottieni statistiche, notifiche e altro con Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Il tuo sito ha il plugin Jetpack</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">L\'app mobile Jetpack è progettata per funzionare insieme al plugin Jetpack. Passa ora per accedere a statistiche, notifiche, reader e altro ancora.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Ricevi notifiche per nuovi commenti, Mi piace, visualizzazioni e altro ancora.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Trova e segui i tuoi siti e le community preferiti e condividi i tuoi contenuti.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Osserva la crescita del tuo traffico con informazioni utili e statistiche complete.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistiche e panoramica</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack ti permette di fare di più con il tuo sito WordPress. Il passaggio è gratuito e richiede solo un minuto.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Dai una spinta a WordPress con Jetpack</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Puoi controllare le richieste di blog e i promemoria in qualsiasi momento in Il mio sito &gt; Impostazioni &gt; Blog</string>
+    <string name="blogging_reminders_prompt_subtitle">La notifica includerà una parola o una breve frase da cui trarre ispirazione</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Visita le &lt;b&gt;Impostazioni del sito&lt;/b&gt; per riattivare</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Richieste di blog nascoste</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Disattiva richieste</string>
+    <string name="support_forum_caption">Ottieni supporto dal nostro gruppo di volontari.</string>
+    <string name="support_forum_title">Forum della community</string>
+    <string name="site_settings_blogging_reminders_notification_title">Promemoria relativi al blog</string>
+    <string name="site_settings_blogging_prompts_title">Mostra richieste</string>
+    <string name="site_settings_blogging">Creazione di un blog</string>
     <string name="install_play_store_to_get_jetpack">Installa Google Play Store per ottenere l\'app Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Fallo più tardi</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Passa a Jetpack </string>
@@ -30,7 +80,6 @@ Language: it
     <string name="my_site_blogging_prompt_card_attribution_dayone">Da &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_hide_this">Nascondi</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Ricordamelo più tardi</string>
-    <string name="jetpack_feature_card_content">Statistiche, Reader, Notifiche e altre funzionalità passeranno presto all\'app mobile Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Passa all\'app Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Maggiori informazioni su jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Il passaggio è gratuito e richiede solo un minuto.</string>
@@ -307,14 +356,12 @@ Language: it
     <string name="blogging_prompts_onboarding_card_prompt">Trasmetti il film della tua vita.</string>
     <string name="blogging_prompts_onboarding_remind_me">Ricordamelo</string>
     <string name="blogging_prompts_onboarding_try_it_now">Prova ora</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Puoi saperne di più e impostare i promemoria in qualsiasi momento in Il mio sito &gt; Impostazioni &gt; Promemoria relativi al blog</string>
     <string name="blogging_prompts_onboarding_content_note_title">Nota:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Ti mostreremo una nuova richiesta ogni giorno sulla tua bacheca per aiutarti a mantenere viva la tua vena creativa.</string>
     <string name="blogging_prompts_onboarding_content_top">Il modo migliore per diventare uno scrittore o una scrittrice migliore è abituarsi a scrivere e condividere questa abitudine con gli altri. È qui che entrano in gioco le Richieste.</string>
-    <string name="blogging_prompts_onboarding_header_title">Presentazione di Richieste</string>
+    <string name="blogging_prompts_onboarding_header_title">Introduzione\nRichieste di blog</string>
     <string name="blogging_prompt_set_reminders">Imposta promemoria</string>
-    <string name="blogging_reminders_prompt_subtitle">Il promemoria includerà una richiesta di blogging ogni giorno</string>
-    <string name="blogging_reminders_prompt_title">Includi richiesta quotidiana</string>
+    <string name="blogging_reminders_prompt_title">Include una Richiesta di blog</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Pubblicare attrae regolarmente nuovi lettori. Dicci quando vuoi scrivere e ti invieremo un promemoria.</string>
     <string name="set_your_blogging_prompts_title">Diventa uno scrittore o una scrittrice migliore costruendoti un\'abitudine</string>
     <string name="site_creation_intent_writing_poetry">Poesia e scrivere</string>
@@ -350,7 +397,6 @@ Language: it
     <string name="new_site_creation_intents_input_hint">Ad esempio Moda, poesia, politica</string>
     <string name="new_site_creation_intents_title">Tema del sito</string>
     <string name="quick_start_site_menu_tab_message_short">Tocca &lt;b&gt;%1$s&lt;/b&gt; per continuare.</string>
-    <string name="my_site_blogging_prompt_card_menu_remove">Rimuovi dalla bacheca</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Ignora per oggi</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Visualizza altre richieste</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d risposte</string>
@@ -359,7 +405,6 @@ Language: it
     <string name="my_site_blogging_prompt_card_answer_prompt">Rispondi alla richiesta</string>
     <string name="my_site_blogging_prompt_card_title">Richiesta</string>
     <string name="my_site_all_tab_title">Tutti</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Promemoria e richieste</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Questa combinazione di colori può essere difficile da leggere per le persone. Prova a usare un colore di sfondo più brillante e/o un colore di testo più scuro.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Questa combinazione di colori può essere difficile da leggere per le persone. Prova a usare un colore di sfondo più scuro e/o un colore di testo più brillante.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Impossibile inserire elementi multimediali.\nTocca per ulteriori informazioni.</string>
@@ -622,7 +667,7 @@ Language: it
     <string name="support_ticket_subject">Supporto WordPress per Android</string>
     <string name="site_settings_categories_hint">Gestisci le categorie del tuo sito</string>
     <string name="site_settings_categories_title">Categorie</string>
-    <string name="site_settings_blogging_reminders_title">Promemoria relativi al blog</string>
+    <string name="site_settings_blogging_reminders_title">Promemoria</string>
     <string name="page_is_posts_page_warning">Il contenuto della pagina degli articoli recenti viene generato automaticamente e non può essere modificato.</string>
     <string name="gutenberg_native_border_settings">Impostazioni del bordo</string>
     <string name="storage_utils_dialog_dont_show_button">Non mostrare nuovamente</string>
@@ -2111,8 +2156,6 @@ Language: it
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Non impostato</string>
     <string name="support_contact_email">Email di contatto</string>
-    <string name="application_log_button">Registro applicazione</string>
-    <string name="my_tickets">I miei ticket</string>
     <string name="activity_log_currently_restoring_message_no_dates">Ripristino in corso</string>
     <string name="activity_log_currently_restoring_message">Ripristino al %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Al momento stiamo ripristinando il tuo sito</string>
@@ -2274,8 +2317,6 @@ Language: it
     <string name="me_section_screen_title">Profilo</string>
     <string name="my_site_section_screen_title">Il mio sito</string>
     <string name="notif_settings_screen_title">Impostazioni di notifica</string>
-    <string name="help_screen_title">Guida e Assistenza</string>
-    <string name="release_notes_screen_title">Note di rilascio</string>
     <string name="signup_epilogue_error_avatar_view">Il tuo avatar è stato caricato e sarà disponibile a breve.</string>
     <string name="permissions_denied_message">Sembra che tu abbia disattivato le autorizzazioni necessarie per questa funzionalità.&lt;br/&gt;&lt;br/&gt;Per cambiare, modifica le tue autorizzazioni e assicurati che sia attivo &lt;strong&gt;%s&lt;/strong&gt;.</string>
     <string name="permissions_denied_title">Autorizzazioni</string>
@@ -2631,7 +2672,6 @@ Language: it
     <string name="site_settings_optimize_video_summary">Consenti di ridimensionare e comprimere i video</string>
     <string name="site_settings_optimize_videos">Ottimizza video</string>
     <string name="draft_uploaded">Bozza caricata</string>
-    <string name="report_bug">Segnala un bug</string>
     <string name="video_quality">Qualità del video</string>
     <string name="permission_camera">Fotocamera</string>
     <string name="permission_storage">Archiviazione</string>
@@ -3142,7 +3182,6 @@ Language: it
     <string name="me_disconnect_from_wordpress_com">Disconnettiti da WordPress.com</string>
     <string name="me_connect_to_wordpress_com">Connettiti a WordPress.com</string>
     <string name="me_btn_login_logout">Login/Logout</string>
-    <string name="me_btn_support">Aiuto e supporto</string>
     <string name="account_settings">Impostazioni account</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" non è stato nascosto perchè è il sito corrente</string>
     <string name="site_picker_create_wpcom">Crea un sito su WordPress.com</string>

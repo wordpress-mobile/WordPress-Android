@@ -52,7 +52,7 @@ sealed class JetpackRemoteInstallViewState(
         ERROR,
         R.string.jetpack_installation_problem,
         R.string.jetpack_installation_problem_message,
-        icon = R.drawable.img_illustration_info_outline_88dp,
+        icon = R.drawable.ic_warning,
         buttonResource = R.string.install_jetpack_retry,
         onClick = onClick
     )
