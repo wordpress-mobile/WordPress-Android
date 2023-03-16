@@ -248,7 +248,7 @@ class MySiteViewModel @Inject constructor(
     val isMySiteTabsEnabled: Boolean
         get() = isMySiteDashboardTabsEnabled &&
                 buildConfigWrapper.isMySiteTabsEnabled &&
-                !jetpackFeatureRemovalUtils.shouldHideJetpackFeatures() &&
+                jetpackFeatureRemovalPhaseHelper.shouldShowDashboard() &&
                 selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi ?: true
 
     val orderedTabTypes: List<MySiteTabType>
@@ -528,7 +528,7 @@ class MySiteViewModel @Inject constructor(
         )
         val jetpackInstallFullPluginCard = jetpackInstallFullPluginCardBuilder.build(jetpackInstallFullPluginCardParams)
 
-        val cardsResult = if (jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()) emptyList()
+        val cardsResult = if (!jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()) emptyList()
         else cardsBuilder.build(
             QuickActionsCardBuilderParams(
                 siteModel = site,
