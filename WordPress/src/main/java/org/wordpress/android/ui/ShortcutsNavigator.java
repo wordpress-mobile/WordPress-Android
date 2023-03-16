@@ -33,8 +33,7 @@ public class ShortcutsNavigator {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_STATS_CLICKED);
                 if (!mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
                     if (mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                        // todo: JetpackFocus - Send to static posters fragment when ready
-                        ActivityLauncher.viewBlogStats(activity, currentSite);
+                        ActivityLauncher.showJetpackStaticPoster(activity);
                     } else {
                         ActivityLauncher.viewBlogStats(activity, currentSite);
                     }
