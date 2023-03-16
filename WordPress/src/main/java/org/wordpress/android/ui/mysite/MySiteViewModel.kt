@@ -724,9 +724,8 @@ class MySiteViewModel @Inject constructor(
     @Suppress("EmptyFunctionBlock")
     private fun onGetMoreViewsClick() {
         cardsTracker.trackTodaysStatsCardGetMoreViewsNudgeClicked()
-        // todo: JetpackFocus
         if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView())
+            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
         } else {
             _onNavigation.value = Event(
                 SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl(URL_GET_MORE_VIEWS_AND_TRAFFIC)
@@ -736,29 +735,18 @@ class MySiteViewModel @Inject constructor(
 
     private fun onTodaysStatsCardFooterLinkClick() {
         cardsTracker.trackTodaysStatsCardFooterLinkClicked()
-        // todo: JetpackFocus
-        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView())
-        } else {
-            navigateToTodaysStats()
-        }
+         navigateToTodaysStats()
     }
 
     private fun onTodaysStatsCardClick() {
         cardsTracker.trackTodaysStatsCardClicked()
-        // todo: JetpackFocus
-        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView())
-        } else {
-            navigateToTodaysStats()
-        }
+        navigateToTodaysStats()
     }
 
     private fun navigateToTodaysStats() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        // todo: JetpackFocus
         if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView(selectedSite))
+            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
         } else {
             _onNavigation.value = Event(SiteNavigationAction.OpenStatsInsights(selectedSite))
         }
@@ -1246,19 +1234,18 @@ class MySiteViewModel @Inject constructor(
         return fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
     }
 
-    // todo: JetpackFocus - We need to intercept this here for static posters
     private fun getStatsNavigationActionForSite(site: SiteModel): SiteNavigationAction = when {
-            // if we are in static posters phase, then ignore the rest
-            jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage() -> SiteNavigationAction.ShowJetpackRemovalStaticPostersView(site)
+        // if we are in static posters phase - we don't want to show any connection/login messages
+        jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage() -> SiteNavigationAction.ShowJetpackRemovalStaticPostersView
 
-            // If the user is not logged in and the site is already connected to Jetpack, ask to login.
-            !accountStore.hasAccessToken() && site.isJetpackConnected -> SiteNavigationAction.StartWPComLoginForJetpackStats
+        // If the user is not logged in and the site is already connected to Jetpack, ask to login.
+        !accountStore.hasAccessToken() && site.isJetpackConnected -> SiteNavigationAction.StartWPComLoginForJetpackStats
 
-            // If it's a WordPress.com or Jetpack site, show the Stats screen.
-            site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected -> SiteNavigationAction.OpenStats(site)
+        // If it's a WordPress.com or Jetpack site, show the Stats screen.
+        site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected -> SiteNavigationAction.OpenStats(site)
 
-            // If it's a self-hosted site, ask to connect to Jetpack.
-            else -> SiteNavigationAction.ConnectJetpackForStats(site)
+        // If it's a self-hosted site, ask to connect to Jetpack.
+        else -> SiteNavigationAction.ConnectJetpackForStats(site)
     }
 
     fun onAvatarPressed() {
