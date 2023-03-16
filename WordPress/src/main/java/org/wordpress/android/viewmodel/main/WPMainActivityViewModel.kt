@@ -270,7 +270,11 @@ class WPMainActivityViewModel @Inject constructor(
 
         _showQuickStarInBottomSheet.postValue(quickStartRepository.activeTask.value == PUBLISH_POST)
 
-        if (siteUtilsWrapper.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper) || hasFullAccessToContent(site)) {
+        if (siteUtilsWrapper.supportsStoriesFeature(
+            site,
+            jetpackFeatureRemovalPhaseHelper) ||
+            hasFullAccessToContent(site)
+        ) {
             launch {
                 // The user has at least two create options available for this site (pages and/or story posts),
                 // so we should show a bottom sheet.
