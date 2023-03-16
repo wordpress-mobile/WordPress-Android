@@ -173,7 +173,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(false)
         whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(bloggingPrompt))
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
         whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(true)
         viewModel = WPMainActivityViewModel(
             featureAnnouncementProvider,
