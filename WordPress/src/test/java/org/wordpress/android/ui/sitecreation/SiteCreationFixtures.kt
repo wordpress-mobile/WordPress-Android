@@ -14,8 +14,9 @@ import org.wordpress.android.ui.sitecreation.theme.defaultTemplateSlug
 
 const val SUB_DOMAIN = "test"
 const val URL = "$SUB_DOMAIN.wordpress.com"
+const val URL_CUSTOM = "$SUB_DOMAIN.host.com"
 val FREE_DOMAIN = DomainModel(URL, true, "", 1)
-val PAID_DOMAIN = DomainModel(URL, false, "$1", 2)
+val PAID_DOMAIN = DomainModel(URL_CUSTOM, false, "$1", 2)
 
 const val SITE_REMOTE_ID = 1L
 private const val SITE_LOCAL_ID = 1
