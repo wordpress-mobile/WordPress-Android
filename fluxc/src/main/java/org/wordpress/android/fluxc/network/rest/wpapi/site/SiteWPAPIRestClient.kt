@@ -31,6 +31,7 @@ class SiteWPAPIRestClient @Inject constructor(
         private const val WOO_API_NAMESPACE_PREFIX = "wc/"
         private const val FETCH_API_CALL_FIELDS =
             "name,description,gmt_offset,url,authentication,namespaces"
+        private const val APPLICATION_PASSWORDS_URL_SUFFIX = "authorize-application.php"
     }
 
     suspend fun fetchWPAPISite(
@@ -61,6 +62,15 @@ class SiteWPAPIRestClient @Inject constructor(
                     hasWooCommerce = response?.namespaces?.any {
                         it.startsWith(WOO_API_NAMESPACE_PREFIX)
                     } ?: false
+
+                    applicationPasswordsAuthorizeUrl = response?.authentication?.applicationPasswords
+                        ?.endpoints?.authorization
+                    if (!applicationPasswordsAuthorizeUrl.isNullOrEmpty() &&
+                        applicationPasswordsAuthorizeUrl.contains(APPLICATION_PASSWORDS_URL_SUFFIX)) {
+                        // Infer the admin URL from the application passwords authorization URL
+                        adminUrl = applicationPasswordsAuthorizeUrl.substringBefore(APPLICATION_PASSWORDS_URL_SUFFIX)
+                    }
+
                     wpApiRestUrl = discoveredWpApiUrl
                     this.url = response?.url ?: cleanedUrl.replaceBefore("://", urlScheme)
                     this.username = payload.username
