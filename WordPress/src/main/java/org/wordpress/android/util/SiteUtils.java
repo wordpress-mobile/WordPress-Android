@@ -332,8 +332,8 @@ public class SiteUtils {
     }
 
     public static boolean supportsStoriesFeature(SiteModel site, JetpackFeatureRemovalPhaseHelper helper) {
-        return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_STORIES_JETPACK_VERSION))
-               && !helper.shouldRemoveJetpackFeatures();
+       return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_STORIES_JETPACK_VERSION))
+               && helper.shouldShowStoryPost();
     }
 
     public static boolean supportsContactInfoFeature(SiteModel site) {

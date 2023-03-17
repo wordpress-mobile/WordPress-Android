@@ -49,6 +49,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayVi
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -93,6 +94,9 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+
+import static org.wordpress.android.ui.main.WPMainActivity.ARG_OPEN_PAGE;
+import static org.wordpress.android.ui.main.WPMainActivity.ARG_READER;
 
 /*
  * shows reader post detail fragments in a ViewPager - primarily used for easy swiping between
@@ -299,12 +303,22 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             host = uri.getHost();
         }
 
-        if (uri == null || mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+        if (uri == null
+            || mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
+            || mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
             mReaderTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action, host, uri);
             // invalid uri so, just show the entry screen
-            Intent intent = new Intent(this, WPLaunchActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            if (mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+                Intent intent = new Intent(this, WPMainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(ARG_OPEN_PAGE, ARG_READER);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(this, WPLaunchActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(ARG_OPEN_PAGE, ARG_READER);
+                startActivity(intent);
+            }
             finish();
             return;
         }

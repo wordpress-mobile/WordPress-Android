@@ -57,6 +57,7 @@ import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jpfullplugininstall.GetShowJetpackFullPluginInstallOnboardingUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
@@ -323,6 +324,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
+    @Mock
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -489,6 +493,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL))
             .thenReturn(QuickStartNewSiteTask.VIEW_SITE)
         whenever(jetpackBrandingUtils.getBrandingTextForScreen(any())).thenReturn(mock())
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()).thenReturn(true)
         viewModel = MySiteViewModel(
             networkUtilsWrapper,
             testDispatcher(),
@@ -540,7 +545,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             bloggingPromptsCardTrackHelper,
             getShowJetpackFullPluginInstallOnboardingUseCase,
             jetpackInstallFullPluginShownTracker,
-            blazeFeatureUtils
+            blazeFeatureUtils,
+            jetpackFeatureRemovalPhaseHelper
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()

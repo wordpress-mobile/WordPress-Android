@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_ST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
@@ -36,13 +38,16 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
+    @Mock lateinit var siteUtilsWrapper: SiteUtilsWrapper
+
     @Before
     fun setUp() {
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
+        whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(true)
         viewModel = PostListCreateMenuViewModel(
             appPrefsWrapper,
             analyticsTrackerWrapper,
-            jetpackFeatureRemovalPhaseHelper
+            jetpackFeatureRemovalPhaseHelper,
+            siteUtilsWrapper
         )
     }
 
@@ -132,8 +137,6 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
 
     @Test
     fun `start set expected content message`() {
-        whenever(site.isWPCom).thenReturn(true)
-
         viewModel.start(site, false)
         Assertions.assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
             .isEqualTo(R.string.create_post_story_fab_tooltip)

@@ -328,7 +328,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         boolean canShowAppRatingPrompt = savedInstanceState != null;
 
         mBottomNav = findViewById(R.id.bottom_navigation);
-        mBottomNav.init(getSupportFragmentManager(), this);
+        mBottomNav.init(getSupportFragmentManager(), this, mJetpackFeatureRemovalPhaseHelper);
 
         if (savedInstanceState == null) {
             if (!AppPrefs.isInstallationReferrerObtained()) {
@@ -366,10 +366,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     }
                 } else if (openedFromShortcut) {
                     initSelectedSite();
-                    mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
-                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
-                    showJetpackOverlayIfNeeded(getIntent().getStringExtra(
-                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
+                        mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
+                                ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
+                        showJetpackOverlayIfNeeded(getIntent().getStringExtra(
+                                ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
                 } else if (isQuickStartRequestedFromPush) {
@@ -861,6 +861,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_stats");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
+                        break;
+                    }
+                    if (mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+                        ActivityLauncher.showJetpackStaticPoster(this);
                         break;
                     }
                     if (intent.hasExtra(ARG_STATS_TIMEFRAME)) {
