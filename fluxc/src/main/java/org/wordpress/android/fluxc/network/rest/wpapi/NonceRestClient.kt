@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.network.rest.wpapi
 
-import androidx.core.text.HtmlCompat
 import com.android.volley.NoConnectionError
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
@@ -13,6 +12,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
+import org.wordpress.android.util.HtmlUtils
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -141,8 +141,7 @@ class NonceRestClient @Inject constructor(
 
         val errorHtml = loginErrorDiv.replace(urlRegex, "")
         // Strip HTML tags
-        return HtmlCompat.fromHtml(errorHtml, HtmlCompat.FROM_HTML_MODE_LEGACY)
-            .toString()
+        return HtmlUtils.fastStripHtml(errorHtml)
             .trim(' ', '\n')
     }
 }
