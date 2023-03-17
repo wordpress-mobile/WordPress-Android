@@ -11,7 +11,7 @@ import org.wordpress.android.fluxc.network.discovery.RootWPAPIRestResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
+import org.wordpress.android.fluxc.network.rest.wpapi.CookieNonceAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
@@ -24,7 +24,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SiteWPAPIRestClient @Inject constructor(
-    private val wpapiAuthenticator: WPAPIAuthenticator,
+    private val cookieNonceAuthenticator: CookieNonceAuthenticator,
     private val wpapiGsonRequestBuilder: WPAPIGsonRequestBuilder,
     dispatcher: Dispatcher,
     @Named("custom-ssl") requestQueue: RequestQueue,
@@ -44,7 +44,7 @@ class SiteWPAPIRestClient @Inject constructor(
         }
         var discoveredWpApiUrl: String? = null
 
-        val result = wpapiAuthenticator.makeAuthenticatedWPAPIRequest(
+        val result = cookieNonceAuthenticator.makeAuthenticatedWPAPIRequest(
             siteUrl = cleanedUrl,
             username = payload.username,
             password = payload.password

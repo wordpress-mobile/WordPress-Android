@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 
-class WPAPIAuthenticator @Inject constructor(
+class CookieNonceAuthenticator @Inject constructor(
     private val nonceRestClient: NonceRestClient,
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
     private val siteSqlUtils: SiteSqlUtils
