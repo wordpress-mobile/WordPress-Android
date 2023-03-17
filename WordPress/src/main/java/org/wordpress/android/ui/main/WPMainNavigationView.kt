@@ -19,7 +19,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigation.NavigationBarView.OnItemReselectedListener
 import com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener
-import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
@@ -43,7 +42,6 @@ import org.wordpress.android.util.extensions.getColorStateListFromAttribute
  * four primary views - note that we ignore the built-in icons and labels and
  * insert our own custom views so we have more control over their appearance
  */
-@AndroidEntryPoint
 class WPMainNavigationView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
