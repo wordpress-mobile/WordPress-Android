@@ -1548,6 +1548,8 @@ open class SiteStore @Inject constructor(
                 siteInList?.let { fetchedSites.jetpackCPSites[i] = it }
             }
 
+            // clear all Jetpack CP connected sites and insert the new ones (to remove old stale sites)
+            jetpackCPConnectedSitesDao.deleteAll()
             jetpackCPConnectedSitesDao.insert(
                 fetchedSites.jetpackCPSites.mapNotNull(JetpackCPConnectedSiteEntity::from)
             )
