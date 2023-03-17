@@ -155,6 +155,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private boolean mIsBloggingReminderOnSunday;
     @Column private int mBloggingReminderHour;
     @Column private int mBloggingReminderMinute;
+    @Column private String mApplicationPasswordsAuthorizeUrl;
 
     @Override
     public int getId() {
@@ -947,5 +948,17 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setBloggingReminderMinute(int bloggingReminderMinute) {
         mBloggingReminderMinute = bloggingReminderMinute;
+    }
+
+    public String getApplicationPasswordsAuthorizeUrl() {
+        return mApplicationPasswordsAuthorizeUrl;
+    }
+
+    public void setApplicationPasswordsAuthorizeUrl(String applicationPasswordsAuthorizeUrl) {
+        mApplicationPasswordsAuthorizeUrl = applicationPasswordsAuthorizeUrl;
+    }
+
+    public boolean isApplicationPasswordsSupported() {
+        return mApplicationPasswordsAuthorizeUrl != null && !mApplicationPasswordsAuthorizeUrl.isEmpty();
     }
 }
