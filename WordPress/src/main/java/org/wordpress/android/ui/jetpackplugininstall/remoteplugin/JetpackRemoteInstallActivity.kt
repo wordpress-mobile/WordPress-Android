@@ -3,6 +3,7 @@ package org.wordpress.android.ui.jetpackplugininstall.remoteplugin
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -27,6 +28,7 @@ import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteI
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.MANUAL_INSTALL
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
+import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
@@ -40,7 +42,7 @@ class JetpackRemoteInstallActivity : LocaleAwareActivity() {
                 val uiState by viewModel.liveViewState.observeAsState()
                 JetpackPluginInstallScreen(
                     uiState = uiState ?: UiState.Initial(R.string.jetpack_plugin_install_initial_button),
-                    onDismissScreenClick = ::onBackPressed,
+                    onDismissScreenClick = onBackPressedDispatcher::onBackPressed,
                     onInitialButtonClick = viewModel::onInitialButtonClick,
                     onDoneButtonClick = viewModel::onDoneButtonClick,
                     onRetryButtonClick = viewModel::onRetryButtonClick,
@@ -49,15 +51,14 @@ class JetpackRemoteInstallActivity : LocaleAwareActivity() {
             }
         }
         initViewModel(savedInstanceState)
-    }
+        onBackPressedDispatcher.addCallback(this) {
+            if (!viewModel.isBackButtonEnabled()) return@addCallback
 
-    override fun onBackPressed() {
-        if (!viewModel.isBackButtonEnabled()) return
+            val source = requireNotNull(intent.getSerializableExtraCompat<JetpackConnectionSource>(TRACKING_SOURCE_KEY))
+            viewModel.onBackPressed(source)
 
-        val source = requireNotNull(intent.getSerializableExtraCompat<JetpackConnectionSource>(TRACKING_SOURCE_KEY))
-        viewModel.onBackPressed(source)
-
-        super.onBackPressed()
+            onBackPressedDispatcher.onBackPressedCompat(this)
+        }
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
