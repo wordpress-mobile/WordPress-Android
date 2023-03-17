@@ -6,12 +6,10 @@ import com.google.gson.reflect.TypeToken
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -21,6 +19,8 @@ import org.wordpress.android.fluxc.model.plugin.SitePluginModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.android.fluxc.network.rest.wpapi.CookieNonceAuthenticator
+import org.wordpress.android.fluxc.network.rest.wpapi.Nonce
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
@@ -31,19 +31,32 @@ import org.wordpress.android.fluxc.network.rest.wpapi.plugin.PluginResponseModel
 import org.wordpress.android.fluxc.test
 import java.lang.reflect.Type
 
-@RunWith(MockitoJUnitRunner::class)
 class PluginWPApiRestClientTest {
-    @Mock private lateinit var dispatcher: Dispatcher
-    @Mock private lateinit var wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder
-    @Mock private lateinit var requestQueue: RequestQueue
-    @Mock private lateinit var userAgent: UserAgent
+    private val dispatcher: Dispatcher = mock()
+    private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder = mock()
+    private val requestQueue: RequestQueue = mock()
+    private val userAgent: UserAgent = mock()
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var bodyCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var restClient: PluginWPAPIRestClient
-    private lateinit var site: SiteModel
-    private val siteId: Long = 12
+
     private val siteUrl = "http://site.com"
+    val site = SiteModel().apply {
+        url = siteUrl
+        username = "username"
+    }
+
+    private val cookieNonceAuthenticator: CookieNonceAuthenticator = mock {
+        onBlocking {
+            makeAuthenticatedWPAPIRequest(
+                eq(site),
+                any<suspend (Nonce) -> WPAPIResponse<*>>()
+            )
+        } doSuspendableAnswer   {
+            it.getArgument<suspend (Nonce) -> WPAPIResponse<*>>(1).invoke(Available("nonce", site.username))
+        }
+    }
 
     @Before
     fun setUp() {
@@ -51,24 +64,22 @@ class PluginWPApiRestClientTest {
         paramsCaptor = argumentCaptor()
         bodyCaptor = argumentCaptor()
         restClient = PluginWPAPIRestClient(
-                wpApiGsonRequestBuilder,
-                dispatcher,
-                requestQueue,
-                userAgent
+            wpApiGsonRequestBuilder,
+            cookieNonceAuthenticator,
+            dispatcher,
+            requestQueue,
+            userAgent
         )
-        site = SiteModel()
-        site.url = siteUrl
-        site.username = "username"
     }
 
     @Test
     fun `fetches plugins`() = test {
         initFetchPluginsResponse(listOf(testPlugin))
-        val responseModel = restClient.fetchPlugins(site, Available("nonce", site.username), false)
+        val responseModel = restClient.fetchPlugins(site, false)
         assertThat(responseModel.data).isNotNull()
         assertMappedPlugin(responseModel.data!![0], testPlugin)
         assertThat(urlCaptor.lastValue)
-                .isEqualTo("http://site.com/wp-json/wp/v2/plugins")
+            .isEqualTo("http://site.com/wp-json/wp/v2/plugins")
         assertThat(paramsCaptor.lastValue).isEqualTo(emptyMap<String, String>())
         assertThat(bodyCaptor.lastValue).isEqualTo(emptyMap<String, String>())
     }
@@ -86,7 +97,7 @@ class PluginWPApiRestClientTest {
         initFetchPluginsResponse(
             error = error
         )
-        val responseModel = restClient.fetchPlugins(site, Available("nonce", site.username), false)
+        val responseModel = restClient.fetchPlugins(site, false)
         assertThat(responseModel.error).isEqualTo(error)
     }
 
@@ -94,10 +105,10 @@ class PluginWPApiRestClientTest {
     fun `installs a plugin`() = test {
         initInstallPluginResponse(testPlugin)
         val installedPluginSlug = "plugin_slug"
-        val responseModel = restClient.installPlugin(site, Available("nonce", site.username), installedPluginSlug)
+        val responseModel = restClient.installPlugin(site, installedPluginSlug)
         assertMappedPlugin(responseModel.data!!, testPlugin)
         assertThat(urlCaptor.lastValue)
-                .isEqualTo("http://site.com/wp-json/wp/v2/plugins")
+            .isEqualTo("http://site.com/wp-json/wp/v2/plugins")
         assertThat(bodyCaptor.lastValue).isEqualTo(mapOf("slug" to installedPluginSlug))
     }
 
@@ -106,11 +117,10 @@ class PluginWPApiRestClientTest {
         initConfigurePluginResponse(testPlugin)
         val installedPluginSlug = "plugin_slug"
         val active = true
-        val nonce = Available("nonce", site.username)
-        val responseModel = restClient.updatePlugin(site, nonce, installedPluginSlug, active)
+        val responseModel = restClient.updatePlugin(site, installedPluginSlug, active)
         assertMappedPlugin(responseModel.data!!, testPlugin)
         assertThat(urlCaptor.lastValue)
-                .isEqualTo("http://site.com/wp-json/wp/v2/plugins/$installedPluginSlug")
+            .isEqualTo("http://site.com/wp-json/wp/v2/plugins/$installedPluginSlug")
         assertThat(bodyCaptor.lastValue).isEqualTo(mapOf("status" to "active"))
     }
 
@@ -119,11 +129,10 @@ class PluginWPApiRestClientTest {
         initConfigurePluginResponse(testPlugin)
         val installedPluginSlug = "plugin_slug"
         val active = false
-        val nonce = Available("nonce", site.username)
-        val responseModel = restClient.updatePlugin(site, nonce, installedPluginSlug, active)
+        val responseModel = restClient.updatePlugin(site, installedPluginSlug, active)
         assertMappedPlugin(responseModel.data!!, testPlugin)
         assertThat(urlCaptor.lastValue)
-                .isEqualTo("http://site.com/wp-json/wp/v2/plugins/$installedPluginSlug")
+            .isEqualTo("http://site.com/wp-json/wp/v2/plugins/$installedPluginSlug")
         assertThat(bodyCaptor.lastValue).isEqualTo(mapOf("status" to "inactive"))
     }
 
@@ -131,10 +140,10 @@ class PluginWPApiRestClientTest {
     fun `deletes a plugin`() = test {
         initDeletePluginResponse(testPlugin)
         val installedPluginSlug = "plugin_slug"
-        val responseModel = restClient.deletePlugin(site, Available("nonce", site.username), installedPluginSlug)
+        val responseModel = restClient.deletePlugin(site, installedPluginSlug)
         assertMappedPlugin(responseModel.data!!, testPlugin)
         assertThat(urlCaptor.lastValue)
-                .isEqualTo("http://site.com/wp-json/wp/v2/plugins/$installedPluginSlug")
+            .isEqualTo("http://site.com/wp-json/wp/v2/plugins/$installedPluginSlug")
         assertThat(bodyCaptor.lastValue).isEqualTo(emptyMap<String, String>())
     }
 
@@ -169,18 +178,17 @@ class PluginWPApiRestClientTest {
     ): WPAPIResponse<T> {
         val response = if (error != null) WPAPIResponse.Error(error) else WPAPIResponse.Success(data)
         whenever(
-                wpApiGsonRequestBuilder.syncGetRequest<T>(
-                        eq(restClient),
-                        urlCaptor.capture(),
-                        paramsCaptor.capture(),
-                        bodyCaptor.capture(),
-                        eq(type),
-                        eq(cachingEnabled),
-                        any(),
-                        any()
-                )
+            wpApiGsonRequestBuilder.syncGetRequest<T>(
+                eq(restClient),
+                urlCaptor.capture(),
+                paramsCaptor.capture(),
+                bodyCaptor.capture(),
+                eq(type),
+                eq(cachingEnabled),
+                any(),
+                any()
+            )
         ).thenReturn(response)
-        site.siteId = siteId
         return response
     }
 
@@ -190,15 +198,14 @@ class PluginWPApiRestClientTest {
     ): WPAPIResponse<PluginResponseModel> {
         val response = if (error != null) Error(error) else Success(data ?: mock())
         whenever(
-                wpApiGsonRequestBuilder.syncPostRequest(
-                        eq(restClient),
-                        urlCaptor.capture(),
-                        bodyCaptor.capture(),
-                        eq(PluginResponseModel::class.java),
-                        any()
-                )
+            wpApiGsonRequestBuilder.syncPostRequest(
+                eq(restClient),
+                urlCaptor.capture(),
+                bodyCaptor.capture(),
+                eq(PluginResponseModel::class.java),
+                any()
+            )
         ).thenReturn(response)
-        site.siteId = siteId
         return response
     }
 
@@ -208,15 +215,14 @@ class PluginWPApiRestClientTest {
     ): WPAPIResponse<PluginResponseModel> {
         val response = if (error != null) Error(error) else Success(data ?: mock())
         whenever(
-                wpApiGsonRequestBuilder.syncPutRequest(
-                        eq(restClient),
-                        urlCaptor.capture(),
-                        bodyCaptor.capture(),
-                        eq(PluginResponseModel::class.java),
-                        any()
-                )
+            wpApiGsonRequestBuilder.syncPutRequest(
+                eq(restClient),
+                urlCaptor.capture(),
+                bodyCaptor.capture(),
+                eq(PluginResponseModel::class.java),
+                any()
+            )
         ).thenReturn(response)
-        site.siteId = siteId
         return response
     }
 
@@ -226,32 +232,31 @@ class PluginWPApiRestClientTest {
     ): WPAPIResponse<PluginResponseModel> {
         val response = if (error != null) Error(error) else Success(data ?: mock())
         whenever(
-                wpApiGsonRequestBuilder.syncDeleteRequest(
-                        eq(restClient),
-                        urlCaptor.capture(),
-                        bodyCaptor.capture(),
-                        eq(PluginResponseModel::class.java),
-                        any()
-                )
+            wpApiGsonRequestBuilder.syncDeleteRequest(
+                eq(restClient),
+                urlCaptor.capture(),
+                bodyCaptor.capture(),
+                eq(PluginResponseModel::class.java),
+                any()
+            )
         ).thenReturn(response)
-        site.siteId = siteId
         return response
     }
 
     companion object {
         private val testPlugin = PluginResponseModel(
-                "test-plugin/test-plugin",
-                "status",
-                "name",
-                "pluginUri",
-                "author",
-                "authorUri",
-                Description("raw", "renderd"),
-                "1.2.3",
-                false,
-                "",
-                "",
-                "plugin"
+            "test-plugin/test-plugin",
+            "status",
+            "name",
+            "pluginUri",
+            "author",
+            "authorUri",
+            Description("raw", "renderd"),
+            "1.2.3",
+            false,
+            "",
+            "",
+            "plugin"
         )
     }
 }
