@@ -6,7 +6,6 @@
 package org.wordpress.android.ui.notifications
 
 import android.annotation.SuppressLint
-import android.os.AsyncTask
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Gravity
@@ -62,6 +61,7 @@ import org.wordpress.android.ui.reader.services.comment.ReaderCommentService
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
+import org.wordpress.android.util.KotlinAsyncTask
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.getRangeIdOrZero
 import org.wordpress.android.util.image.ImageManager
@@ -194,7 +194,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
     @Suppress("DEPRECATION")
     private fun reloadNoteBlocks() {
-        LoadNoteBlocksTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+        LoadNoteBlocksTask().execute()
+        //.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
     fun setFooterView(footerView: ViewGroup?) {
@@ -324,7 +325,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     // TODO replace this inner async task with a coroutine
     @Suppress("DEPRECATION")
     @SuppressLint("StaticFieldLeak")
-    private inner class LoadNoteBlocksTask : AsyncTask<Void, Void, List<NoteBlock>?>() {
+    private inner class LoadNoteBlocksTask : KotlinAsyncTask<Void, Void, List<NoteBlock>?>() {
         private var mIsBadgeView = false
 
         private fun addHeaderNoteBlock(note: Note, noteList: MutableList<NoteBlock>) {
@@ -519,18 +520,18 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             )
         }
 
-        override fun onPostExecute(noteList: List<NoteBlock>?) {
-            if (!isAdded || noteList == null) {
+        override fun onPostExecute(result: List<NoteBlock>?) {
+            if (!isAdded || result == null) {
                 return
             }
             if (mIsBadgeView) {
                 rootLayout!!.gravity = Gravity.CENTER_VERTICAL
             }
             if (noteBlockAdapter == null) {
-                noteBlockAdapter = NoteBlockAdapter(activity, noteList)
+                noteBlockAdapter = NoteBlockAdapter(activity, result)
                 listAdapter = noteBlockAdapter
             } else {
-                noteBlockAdapter!!.setNoteList(noteList)
+                noteBlockAdapter!!.setNoteList(result)
             }
             if (restoredListPosition > 0) {
                 listView.setSelectionFromTop(restoredListPosition, 0)

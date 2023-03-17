@@ -27,6 +27,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.BuildConfigWrapper;
+import org.wordpress.android.util.KotlinAsyncTask;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -656,7 +657,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @SuppressWarnings("deprecation")
     void loadSites() {
-        new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadSitesTask().execute();
+        //.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private SiteList filteredSitesByTextIfInSearchMode(SiteList sites) {
@@ -713,7 +715,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
-    private class LoadSitesTask extends AsyncTask<Void, Void, SiteList[]> {
+    private class LoadSitesTask extends KotlinAsyncTask<Void, Void, SiteList[]> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();

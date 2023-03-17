@@ -26,6 +26,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.KotlinAsyncTask;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -96,7 +97,8 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             AppLog.w(T.READER, "load blogs task is already running");
             return;
         }
-        new LoadBlogsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadBlogsTask().execute();
+       //.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private ReaderBlogType getBlogType() {
@@ -266,7 +268,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
-    private class LoadBlogsTask extends AsyncTask<Void, Void, Boolean> {
+    private class LoadBlogsTask extends KotlinAsyncTask<Void, Void, Boolean> {
         private ReaderBlogList mTmpFollowedBlogs;
 
         @Override

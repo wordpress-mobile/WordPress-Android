@@ -45,6 +45,7 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.KotlinAsyncTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.SqlUtils;
@@ -177,7 +178,8 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                 if (sQueuedPostsList.size() > 0) {
                     sCurrentUploadingPost = sQueuedPostsList.remove(0);
                     mCurrentTask = new UploadPostTask();
-                    mCurrentTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, sCurrentUploadingPost);
+                    mCurrentTask.execute(sCurrentUploadingPost);
+                    //.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, sCurrentUploadingPost);
                 } else {
                     AppLog.i(T.POSTS, "PostUploadHandler > Completed");
                 }
@@ -200,7 +202,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
 
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
-    private class UploadPostTask extends AsyncTask<PostModel, Boolean, UploadPostTaskResult> {
+    private class UploadPostTask extends KotlinAsyncTask<PostModel, Boolean, UploadPostTaskResult> {
         private Context mContext;
 
         private PostModel mPost;
@@ -234,6 +236,8 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                     break;
                 case PUSH_POST_DISPATCHED:
                     // will be handled in OnPostChanged
+                    break;
+                case AUTO_SAVE_OR_UPDATE_DRAFT:
                     break;
             }
         }

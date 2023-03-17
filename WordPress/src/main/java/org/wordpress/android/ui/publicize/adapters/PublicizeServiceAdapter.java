@@ -22,6 +22,7 @@ import org.wordpress.android.models.PublicizeConnectionList;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.models.PublicizeServiceList;
 import org.wordpress.android.ui.publicize.PublicizeConstants;
+import org.wordpress.android.util.KotlinAsyncTask;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -75,7 +76,8 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     @SuppressWarnings("deprecation")
     public void refresh() {
         if (!mIsTaskRunning) {
-            new LoadServicesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadServicesTask().execute();
+            //.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -176,7 +178,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
 
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
-    private class LoadServicesTask extends AsyncTask<Void, Void, Boolean> {
+    private class LoadServicesTask extends KotlinAsyncTask<Void, Void, Boolean> {
         private final PublicizeServiceList mTmpServices = new PublicizeServiceList();
         private final PublicizeConnectionList mTmpConnections = new PublicizeConnectionList();
 

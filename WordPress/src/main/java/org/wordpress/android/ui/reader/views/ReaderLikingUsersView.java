@@ -14,6 +14,7 @@ import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
+import org.wordpress.android.util.KotlinAsyncTask;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -110,7 +111,7 @@ public class ReaderLikingUsersView extends LinearLayout {
     }
 
     @SuppressWarnings("deprecation")
-    private static class LoadAvatarsTask extends AsyncTask<ReaderPost, Void, ArrayList<String>> {
+    private static class LoadAvatarsTask extends KotlinAsyncTask<ReaderPost, Void, ArrayList<String>> {
         private final WeakReference<ReaderLikingUsersView> mViewReference;
         private final long mCurrentUserId;
         private final int mLikeAvatarSize;

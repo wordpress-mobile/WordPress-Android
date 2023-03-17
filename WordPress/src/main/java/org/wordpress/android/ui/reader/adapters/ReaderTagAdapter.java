@@ -24,6 +24,7 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.KotlinAsyncTask;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
@@ -72,7 +73,8 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             AppLog.w(T.READER, "tag task is already running");
             return;
         }
-        new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadTagsTask().execute();
+        //.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -156,7 +158,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
 
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
-    private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
+    private class LoadTagsTask extends KotlinAsyncTask<Void, Void, ReaderTagList> {
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;

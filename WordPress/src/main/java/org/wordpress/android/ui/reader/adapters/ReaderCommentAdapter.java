@@ -49,6 +49,7 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.KotlinAsyncTask;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -237,7 +238,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "reader comment adapter > Load comments task already running");
         }
-        new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadCommentsTask().execute();
+        //.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -661,7 +663,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
-    private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
+    private class LoadCommentsTask extends KotlinAsyncTask<Void, Void, Boolean> {
         private ReaderCommentList mTmpComments;
         private boolean mTmpMoreCommentsExist;
 

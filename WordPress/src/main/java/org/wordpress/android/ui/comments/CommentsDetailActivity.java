@@ -216,7 +216,8 @@ public class CommentsDetailActivity extends LocaleAwareActivity
                         showCommentList(commentList);
                     }
                 }
-            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }).execute();
+            //.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 

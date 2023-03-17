@@ -3,7 +3,7 @@ package org.wordpress.android.ui.notifications.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.AsyncTask.Status;
+//import android.os.AsyncTask.Status;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -27,6 +27,8 @@ import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
+import org.wordpress.android.util.KotlinAsyncTask;
+import org.wordpress.android.util.KotlinAsyncTask.Status;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.RtlUtils;
@@ -353,12 +355,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     public void reloadNotesFromDBAsync() {
         cancelReloadNotesTask();
         mReloadNotesFromDBTask = new ReloadNotesFromDBTask();
-        mReloadNotesFromDBTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mReloadNotesFromDBTask.execute();
+        //.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
-    private class ReloadNotesFromDBTask extends AsyncTask<Void, Void, ArrayList<Note>> {
+    private class ReloadNotesFromDBTask extends KotlinAsyncTask<Void, Void, ArrayList<Note>> {
         @Override
         protected ArrayList<Note> doInBackground(Void... voids) {
             return NotificationsTable.getLatestNotes();

@@ -13,6 +13,7 @@ import android.util.DisplayMetrics;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.KotlinAsyncTask;
 import org.wordpress.aztec.Html;
 
 import java.io.File;
@@ -48,7 +49,7 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
     }
 
     @SuppressWarnings("deprecation")
-    private static class LoadAztecVideoTask extends AsyncTask<Void, Void, Bitmap> {
+    private static class LoadAztecVideoTask extends KotlinAsyncTask<Void, Void, Bitmap> {
         final String mUrl;
         final int mMaxWidth;
         final Html.VideoThumbnailGetter.Callbacks mCallbacks;

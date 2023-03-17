@@ -57,6 +57,7 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
+import org.wordpress.android.util.KotlinAsyncTask;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -639,7 +640,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             AppLog.w(AppLog.T.READER, "reader posts task already running");
             return;
         }
-        new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadPostsTask().execute();
+        //.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private ReaderPost getItem(int position) {
@@ -751,7 +753,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
-    private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
+    private class LoadPostsTask extends KotlinAsyncTask<Void, Void, Boolean> {
         private ReaderPostList mAllPosts;
 
         private boolean mCanRequestMorePostsTemp;

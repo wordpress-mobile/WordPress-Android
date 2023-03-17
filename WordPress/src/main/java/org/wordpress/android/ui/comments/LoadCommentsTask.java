@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
+import org.wordpress.android.util.KotlinAsyncTask;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
  * features or modifying this class, please ping develric or klymyam
  */
 @Deprecated
-class LoadCommentsTask extends AsyncTask<Void, Void, CommentList> {
+class LoadCommentsTask extends KotlinAsyncTask<Void, Void, CommentList> {
     interface LoadingCallback {
         void isLoading(boolean loading);
 
