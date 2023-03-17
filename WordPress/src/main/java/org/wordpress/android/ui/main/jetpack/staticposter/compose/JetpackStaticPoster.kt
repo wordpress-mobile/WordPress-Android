@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.ButtonDefaults
@@ -79,7 +78,7 @@ fun JetpackStaticPoster(
             ) {
                 val animRes = if (LocalContext.current.isRtl()) animResLtrToRtl.second else animResLtrToRtl.first
                 val lottieComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(animRes))
-                LottieAnimation(lottieComposition, Modifier.height(65.dp))
+                LottieAnimation(lottieComposition)
                 Text(
                     stringResource(
                         if (showPluralTitle)
