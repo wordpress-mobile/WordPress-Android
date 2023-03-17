@@ -2405,6 +2405,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_powered_banner_tapped";
             case JETPACK_POWERED_BADGE_TAPPED:
                 return "jetpack_powered_badge_tapped";
+            case JETPACK_STATIC_POSTER_DISPLAYED:
+                return "jetpack_static_poster_displayed";
+            case JETPACK_STATIC_POSTER_GET_JETPACK_TAPPED:
+                return "jetpack_static_poster_get_jetpack_tapped";
+            case JETPACK_STATIC_POSTER_LINK_TAPPED:
+                return "jetpack_static_poster_link_tapped";
             case JETPACK_POWERED_BOTTOM_SHEET_GET_JETPACK_APP_TAPPED:
                 return "jetpack_powered_bottom_sheet_get_jetpack_app_tapped";
             case JETPACK_POWERED_BOTTOM_SHEET_CONTINUE_TAPPED:
