@@ -2360,7 +2360,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         String hostAppNamespace = mBuildConfigWrapper.isJetpackApp() ? "Jetpack" : "WordPress";
 
         // Disable Jetpack-powered editor features in WordPress app based on Jetpack Features Removal Phase helper
-        boolean jetpackFeaturesRemoved = mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures();
+        boolean jetpackFeaturesRemoved = !mJetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures();
         if (jetpackFeaturesRemoved) {
             return new GutenbergPropsBuilder(
                     false,

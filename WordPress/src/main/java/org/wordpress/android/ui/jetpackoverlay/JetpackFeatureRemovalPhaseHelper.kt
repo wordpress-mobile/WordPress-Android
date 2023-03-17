@@ -92,6 +92,14 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
         }
     }
 
+    fun shouldShowJetpackPoweredEditorFeatures(): Boolean {
+        val currentPhase = getCurrentPhase() ?: return true
+        return when (currentPhase) {
+            is PhaseStaticPosters, PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> false
+            else -> true
+        }
+    }
+
     fun shouldShowTemplateSelectionInPages(): Boolean {
         val currentPhase = getCurrentPhase() ?: return true
         return when (currentPhase) {
