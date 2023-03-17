@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.RawRequest
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
+import org.wordpress.android.fluxc.network.rest.wpapi.CookieNonceAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIEncodedBodyRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
@@ -26,7 +26,7 @@ import kotlin.coroutines.resume
 class JetpackWPAPIRestClient @Inject constructor(
     private val wpApiEncodedBodyRequestBuilder: WPAPIEncodedBodyRequestBuilder,
     private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
-    private val wpapiAuthenticator: WPAPIAuthenticator,
+    private val cookieNonceAuthenticator: CookieNonceAuthenticator,
     dispatcher: Dispatcher,
     @Named("custom-ssl") requestQueue: RequestQueue,
     @Named("no-redirects") private val noRedirectsRequestQueue: RequestQueue,
@@ -38,7 +38,7 @@ class JetpackWPAPIRestClient @Inject constructor(
         val baseUrl = site.wpApiRestUrl ?: "${site.url}/wp-json"
         val url = "${baseUrl.trimEnd('/')}/${JPAPI.connection.url.pathV4.trimStart('/')}"
 
-        val response = wpapiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+        val response = cookieNonceAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
             wpApiEncodedBodyRequestBuilder.syncGetRequest(
                 restClient = this,
                 url = url,
@@ -93,7 +93,7 @@ class JetpackWPAPIRestClient @Inject constructor(
     ): JetpackWPAPIPayload<JetpackUser> {
         val url = site.buildUrl(JPAPI.connection.data.pathV4)
 
-        val response = wpapiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+        val response = cookieNonceAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
             wpApiGsonRequestBuilder.syncGetRequest(
                 restClient = this,
                 url = url,
