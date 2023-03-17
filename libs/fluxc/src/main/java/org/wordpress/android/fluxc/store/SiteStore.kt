@@ -155,9 +155,9 @@ open class SiteStore @Inject constructor(
     ) : Payload<BaseNetworkError>()
 
     data class FetchWPAPISitePayload(
-        @JvmField val username: String = "",
-        @JvmField val password: String = "",
-        @JvmField val url: String = ""
+        val url: String,
+        val username: String? = null,
+        val password: String? = null,
     ) : Payload<BaseNetworkError>()
 
     data class FetchSitesPayload @JvmOverloads constructor(
