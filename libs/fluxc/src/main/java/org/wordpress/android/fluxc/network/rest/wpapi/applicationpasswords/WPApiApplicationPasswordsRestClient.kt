@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
+import org.wordpress.android.fluxc.network.rest.wpapi.CookieNonceAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.util.AppLog
@@ -20,7 +20,7 @@ import javax.inject.Singleton
 @Singleton
 internal class WPApiApplicationPasswordsRestClient @Inject constructor(
     private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
-    private val wpApiAuthenticator: WPAPIAuthenticator,
+    private val wpApiAuthenticator: CookieNonceAuthenticator,
     dispatcher: Dispatcher,
     @Named("regular") requestQueue: RequestQueue,
     userAgent: UserAgent
