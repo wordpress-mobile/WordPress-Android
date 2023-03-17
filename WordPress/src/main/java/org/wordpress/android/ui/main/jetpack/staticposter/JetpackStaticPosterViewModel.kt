@@ -36,10 +36,12 @@ class JetpackStaticPosterViewModel @Inject constructor(
 
     fun onPrimaryClick() {
         trackPrimaryClick()
+        _events.tryEmit(Event.PrimaryButtonClick)
     }
 
     fun onSecondaryClick() {
         trackSecondaryClick()
+        _events.tryEmit(Event.SecondaryButtonClick)
     }
 
     private fun trackStart() {
@@ -68,7 +70,8 @@ sealed class UiState {
 }
 
 sealed class Event {
-    object Noop : Event()
+    object PrimaryButtonClick : Event()
+    object SecondaryButtonClick : Event()
 }
 
 typealias UiData = JetpackPoweredScreen.WithStaticPoster

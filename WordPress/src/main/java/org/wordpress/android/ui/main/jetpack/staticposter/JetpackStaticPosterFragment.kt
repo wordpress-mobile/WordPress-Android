@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.main.jetpack.staticposter.compose.JetpackStaticPoster
+import org.wordpress.android.util.AppLog
 
 @AndroidEntryPoint
 class JetpackStaticPosterFragment : Fragment() {
@@ -54,7 +55,8 @@ class JetpackStaticPosterFragment : Fragment() {
 
     private fun handleEvents(event: Event) {
         when (event) {
-            is Event.Noop -> error("Unhandled event: $event")
+            is Event.PrimaryButtonClick -> AppLog.d(AppLog.T.MAIN, "Primary button clicked")
+            is Event.SecondaryButtonClick -> AppLog.d(AppLog.T.MAIN, "Secondary button clicked")
         }
     }
 
