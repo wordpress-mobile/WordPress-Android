@@ -21,8 +21,7 @@ class ApplicationPasswordsStore @Inject constructor(
         private const val UUID_PREFERENCE_KEY_PREFIX = "app_password_uuid_"
     }
 
-    @Inject
-    internal lateinit var configuration: ApplicationPasswordsConfiguration
+    @Inject internal lateinit var configuration: ApplicationPasswordsConfiguration
 
     private val applicationName: String
         get() = configuration.applicationName
