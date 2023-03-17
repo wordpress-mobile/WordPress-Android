@@ -78,7 +78,11 @@ fun JetpackStaticPoster(
                     Modifier.height(65.dp)
                 )
                 Text(
-                    stringResource(R.string.wp_jp_static_poster_title, uiStringText(featureName)),
+                    stringResource(
+                        if (showPluralTitle)
+                            R.string.wp_jp_static_poster_title_plural else R.string.wp_jp_static_poster_title,
+                        uiStringText(featureName)
+                    ),
                     style = MaterialTheme.typography.h1.copy(fontSize = 34.sp, fontWeight = FontWeight.Bold),
                 )
                 Text(
