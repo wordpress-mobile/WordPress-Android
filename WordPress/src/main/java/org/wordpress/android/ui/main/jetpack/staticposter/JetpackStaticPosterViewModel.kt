@@ -11,6 +11,8 @@ import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
+private const val KEY_SOURCE = "source"
+
 @HiltViewModel
 class JetpackStaticPosterViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
@@ -40,19 +42,21 @@ class JetpackStaticPosterViewModel @Inject constructor(
         trackSecondaryClick()
     }
 
-    private fun trackStart() = analyticsTrackerWrapper.track(
-        AnalyticsTracker.Stat.JETPACK_STATIC_POSTER_DISPLAYED,
-        mapOf("source" to data.screen.trackingName)
-    )
+    private fun trackStart() {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.JETPACK_STATIC_POSTER_DISPLAYED,
+            mapOf(KEY_SOURCE to data.screen.trackingName)
+        )
+    }
 
     private fun trackPrimaryClick() = analyticsTrackerWrapper.track(
         AnalyticsTracker.Stat.JETPACK_STATIC_POSTER_GET_JETPACK_TAPPED,
-        mapOf("source" to data.screen.trackingName)
+        mapOf(KEY_SOURCE to data.screen.trackingName)
     )
 
     private fun trackSecondaryClick() = analyticsTrackerWrapper.track(
         AnalyticsTracker.Stat.JETPACK_STATIC_POSTER_LINK_TAPPED,
-        mapOf("source" to data.screen.trackingName)
+        mapOf(KEY_SOURCE to data.screen.trackingName)
     )
 }
 
