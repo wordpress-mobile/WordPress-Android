@@ -52,17 +52,17 @@ class JetpackStaticPosterViewModel @Inject constructor(
     }
 
     private fun trackStart(source: String) = analyticsTrackerWrapper.track(
-        AnalyticsTracker.Stat.JETPACK_STATIC_POSTER_DISPLAYED,
+        AnalyticsTracker.Stat.REMOVE_STATIC_POSTER_DISPLAYED,
         mapOf(KEY_SOURCE to source)
     )
 
     private fun trackPrimaryClick() = analyticsTrackerWrapper.track(
-        AnalyticsTracker.Stat.JETPACK_STATIC_POSTER_GET_JETPACK_TAPPED,
+        AnalyticsTracker.Stat.REMOVE_STATIC_POSTER_GET_JETPACK_TAPPED,
         mapOf(KEY_SOURCE to data.screen.trackingName)
     )
 
     private fun trackSecondaryClick() = analyticsTrackerWrapper.track(
-        AnalyticsTracker.Stat.JETPACK_STATIC_POSTER_LINK_TAPPED,
+        AnalyticsTracker.Stat.REMOVE_STATIC_POSTER_LINK_TAPPED,
         mapOf(KEY_SOURCE to data.screen.trackingName)
     )
 }
