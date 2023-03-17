@@ -8,9 +8,6 @@ import com.android.volley.VolleyError
 import junit.framework.TestCase
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.Dispatcher
@@ -26,13 +23,12 @@ import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import java.util.Date
 
-@RunWith(MockitoJUnitRunner::class)
 class NonceRestClientTest {
-    @Mock lateinit var wpApiEncodedRequestBuilder: WPAPIEncodedBodyRequestBuilder
-    @Mock lateinit var currentTimeProvider: CurrentTimeProvider
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var requestQueue: RequestQueue
-    @Mock lateinit var userAgent: UserAgent
+    private val wpApiEncodedRequestBuilder: WPAPIEncodedBodyRequestBuilder = mock()
+    private val currentTimeProvider: CurrentTimeProvider = mock()
+    private val dispatcher: Dispatcher = mock()
+    private val requestQueue: RequestQueue = mock()
+    private val userAgent: UserAgent = mock()
 
     private lateinit var subject: NonceRestClient
     private val time = 123456L
@@ -77,9 +73,9 @@ class NonceRestClientTest {
         val expectedNonce = "1expectedNONCE"
         val successResponse = Success(expectedNonce)
         whenever(wpApiEncodedRequestBuilder.syncPostRequest(subject, "${site.url}/wp-login.php", body = body))
-                .thenReturn(redirectResponse)
+            .thenReturn(redirectResponse)
         whenever(wpApiEncodedRequestBuilder.syncGetRequest(subject, redirectUrl))
-                .thenReturn(successResponse)
+            .thenReturn(successResponse)
 
         val actual = subject.requestNonce(site)
 
@@ -125,7 +121,7 @@ class NonceRestClientTest {
             .thenReturn(response)
 
         val actual = subject.requestNonce(site)
-        TestCase.assertEquals(FailedRequest(time, site.username), actual)
+        TestCase.assertEquals(FailedRequest(time, site.username, Nonce.CookieNonceErrorType.INVALID_NONCE), actual)
     }
 
     @Test
@@ -142,14 +138,28 @@ class NonceRestClientTest {
             "redirect_to" to "${site.url}/wp-admin/admin-ajax.php?action=rest-nonce"
         )
 
-        val baseNetworkError = mock<WPAPINetworkError>()
-        baseNetworkError.message = "an_error_message"
+        val baseNetworkError = WPAPINetworkError(
+            BaseNetworkError(
+                VolleyError(
+                    NetworkResponse(400, byteArrayOf(), false, System.currentTimeMillis(), listOf())
+                )
+            )
+        )
         val response = Error<String>(baseNetworkError)
         whenever(wpApiEncodedRequestBuilder.syncPostRequest(subject, "${site.url}/wp-login.php", body = body))
-                .thenReturn(response)
+            .thenReturn(response)
 
         val actual = subject.requestNonce(site)
-        TestCase.assertEquals(FailedRequest(time, site.username, baseNetworkError), actual)
+        TestCase.assertEquals(
+            FailedRequest(
+                time,
+                site.username,
+                Nonce.CookieNonceErrorType.GENERIC_ERROR,
+                baseNetworkError,
+                ""
+            ),
+            actual
+        )
     }
 
     @Test
@@ -161,16 +171,16 @@ class NonceRestClientTest {
         }
 
         val body = mapOf(
-                "log" to site.username,
-                "pwd" to site.password,
-                "redirect_to" to "${site.url}/wp-admin/admin-ajax.php?action=rest-nonce"
+            "log" to site.username,
+            "pwd" to site.password,
+            "redirect_to" to "${site.url}/wp-admin/admin-ajax.php?action=rest-nonce"
         )
 
         val baseNetworkError = mock<WPAPINetworkError>()
         baseNetworkError.volleyError = NoConnectionError()
         val response = Error<String>(baseNetworkError)
         whenever(wpApiEncodedRequestBuilder.syncPostRequest(subject, "${site.url}/wp-login.php", body = body))
-                .thenReturn(response)
+            .thenReturn(response)
 
         val actual = subject.requestNonce(site)
         TestCase.assertEquals(Unknown(site.username), actual)
