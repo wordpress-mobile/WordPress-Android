@@ -1335,8 +1335,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (helpMenuItem != null) {
             // Support section will be disabled in WordPress app when Jetpack-powered features are removed.
             // Therefore, we have to update the Help menu item accordingly.
-            boolean jetpackFeaturesRemoved = mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures();
-            int helpMenuTitle = jetpackFeaturesRemoved ? R.string.help : R.string.help_and_support;
+            boolean showHelpAndSupport = mJetpackFeatureRemovalPhaseHelper.shouldShowHelpAndSupportOnEditor();
+            int helpMenuTitle = showHelpAndSupport ? R.string.help_and_support : R.string.help;
             helpMenuItem.setTitle(helpMenuTitle);
 
             if (mEditorFragment instanceof GutenbergEditorFragment
@@ -2272,7 +2272,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 gutenbergWebViewAuthorizationData,
                                 gutenbergPropsBuilder,
                                 RequestCodes.EDIT_STORY,
-                                !mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
+                                mJetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures()
                         );
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
