@@ -14,13 +14,20 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.wordpress.android.ui.ActivityLauncherWrapper
+import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.main.jetpack.staticposter.compose.JetpackStaticPoster
-import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.UrlUtils
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class JetpackStaticPosterFragment : Fragment() {
     private val viewModel: JetpackStaticPosterViewModel by viewModels()
+
+    @Inject
+    lateinit var activityLauncher: ActivityLauncherWrapper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,13 +57,15 @@ class JetpackStaticPosterFragment : Fragment() {
     }
 
     private fun observeEvents() {
-        viewModel.events.onEach(this::handleEvents).launchIn(viewLifecycleOwner.lifecycleScope)
+        viewModel.events.onEach(this::handleEvents).launchIn(lifecycleScope)
     }
 
     private fun handleEvents(event: Event) {
         when (event) {
-            is Event.PrimaryButtonClick -> AppLog.d(AppLog.T.MAIN, "Primary button clicked")
-            is Event.SecondaryButtonClick -> AppLog.d(AppLog.T.MAIN, "Secondary button clicked")
+            is Event.PrimaryButtonClick -> activityLauncher.openPlayStoreLink(requireActivity(), JETPACK_PACKAGE_NAME)
+            is Event.SecondaryButtonClick -> event.url?.let {
+                WPWebViewActivity.openURL(requireContext(), UrlUtils.addUrlSchemeIfNeeded(it, true))
+            }
         }
     }
 

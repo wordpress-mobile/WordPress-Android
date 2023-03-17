@@ -1,22 +1,28 @@
 package org.wordpress.android.ui.main.jetpack.staticposter
 
-import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.JetpackPoweredScreen
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
+import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
+import javax.inject.Named
 
 private const val KEY_SOURCE = "source"
 
 @HiltViewModel
 class JetpackStaticPosterViewModel @Inject constructor(
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
-) : ViewModel() {
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val phaseThreeBlogPostLinkConfig: PhaseThreeBlogPostLinkConfig,
+) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
     private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
@@ -36,12 +42,12 @@ class JetpackStaticPosterViewModel @Inject constructor(
 
     fun onPrimaryClick() {
         trackPrimaryClick()
-        _events.tryEmit(Event.PrimaryButtonClick)
+        launch { _events.emit(Event.PrimaryButtonClick) }
     }
 
     fun onSecondaryClick() {
         trackSecondaryClick()
-        _events.tryEmit(Event.SecondaryButtonClick)
+        launch { _events.emit(Event.SecondaryButtonClick(phaseThreeBlogPostLinkConfig.getValue())) }
     }
 
     private fun trackStart() {
@@ -71,7 +77,7 @@ sealed class UiState {
 
 sealed class Event {
     object PrimaryButtonClick : Event()
-    object SecondaryButtonClick : Event()
+    data class SecondaryButtonClick(val url: String?) : Event()
 }
 
 typealias UiData = JetpackPoweredScreen.WithStaticPoster
