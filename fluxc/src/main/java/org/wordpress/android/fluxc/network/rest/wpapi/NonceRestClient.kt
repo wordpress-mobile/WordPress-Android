@@ -5,15 +5,12 @@ import com.android.volley.NoConnectionError
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Unknown
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import javax.inject.Inject
@@ -71,18 +68,12 @@ class NonceRestClient @Inject constructor(
                 // that it's an authentication issue, otherwise we'll assume it's an invalid response
                 val errorMessage = extractErrorMessage(response.data.orEmpty())
 
-                val error = WPAPINetworkError(
-                    BaseNetworkError(
-                        if (errorMessage != null) GenericErrorType.NOT_AUTHENTICATED
-                        else GenericErrorType.INVALID_RESPONSE,
-                        errorMessage.orEmpty()
-                    )
-                )
-
                 FailedRequest(
                     timeOfResponse = currentTimeProvider.currentDate().time,
-                    networkError = error,
-                    username = username
+                    username = username,
+                    type = if (errorMessage != null) Nonce.CookieNonceErrorType.NOT_AUTHENTICATED
+                    else Nonce.CookieNonceErrorType.INVALID_RESPONSE,
+                    errorMessage = errorMessage
                 )
             }
 
@@ -95,17 +86,14 @@ class NonceRestClient @Inject constructor(
                     if (networkResponse?.statusCode?.isRedirect() == true) {
                         requestNonce(networkResponse.headers["Location"] ?: redirectUrl, username)
                     } else {
-                        val networkError = if (networkResponse?.statusCode == NOT_FOUND_STATUS_CODE) {
-                            WPAPINetworkError(
-                                baseError = response.error,
-                                errorCode = SiteStore.WPAPIErrorType.CUSTOM_LOGIN_URL.name
-                            )
-                        } else response.error
-
                         FailedRequest(
                             timeOfResponse = currentTimeProvider.currentDate().time,
                             username = username,
-                            networkError = networkError
+                            type = if (networkResponse?.statusCode == NOT_FOUND_STATUS_CODE) {
+                                Nonce.CookieNonceErrorType.CUSTOM_LOGIN_URL
+                            } else Nonce.CookieNonceErrorType.GENERIC_ERROR,
+                            networkError = response.error,
+                            errorMessage = response.error.message,
                         )
                     }
                 }
@@ -124,23 +112,23 @@ class NonceRestClient @Inject constructor(
                 if (response.data?.matches("[0-9a-zA-Z]{2,}".toRegex()) == true) {
                     Available(value = response.data, username = username)
                 } else {
-                    FailedRequest(timeOfResponse = currentTimeProvider.currentDate().time, username = username)
+                    FailedRequest(
+                        timeOfResponse = currentTimeProvider.currentDate().time,
+                        username = username,
+                        type = Nonce.CookieNonceErrorType.INVALID_NONCE
+                    )
                 }
             }
 
             is Error -> {
                 val statusCode = response.error.volleyError?.networkResponse?.statusCode
-                val networkError = if (statusCode == NOT_FOUND_STATUS_CODE) {
-                    WPAPINetworkError(
-                        baseError = response.error,
-                        errorCode = SiteStore.WPAPIErrorType.CUSTOM_ADMIN_URL.name
-                    )
-                } else response.error
-
                 FailedRequest(
                     timeOfResponse = currentTimeProvider.currentDate().time,
                     username = username,
-                    networkError = networkError
+                    type = if (statusCode == NOT_FOUND_STATUS_CODE) Nonce.CookieNonceErrorType.CUSTOM_ADMIN_URL
+                    else Nonce.CookieNonceErrorType.GENERIC_ERROR,
+                    networkError = response.error,
+                    errorMessage = response.error.message,
                 )
             }
         }
