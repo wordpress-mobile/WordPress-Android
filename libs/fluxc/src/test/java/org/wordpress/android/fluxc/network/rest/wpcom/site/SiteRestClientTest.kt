@@ -234,7 +234,8 @@ class SiteRestClientTest {
                         "options" to mapOf<String, Any>(
                                 "site_segment" to segmentId,
                                 "template" to siteDesign,
-                                "timezone_string" to timeZoneId
+                                "timezone_string" to timeZoneId,
+                                "wpcom_public_coming_soon" to "0"
                         )
                 )
         )
@@ -296,7 +297,8 @@ class SiteRestClientTest {
                     "site_segment" to segmentId,
                     "template" to siteDesign,
                     "site_creation_flow" to "with-design-picker",
-                    "timezone_string" to timeZoneId
+                    "timezone_string" to timeZoneId,
+                    "wpcom_public_coming_soon" to "0"
                 )
             )
         )
@@ -356,7 +358,8 @@ class SiteRestClientTest {
                     "site_segment" to segmentId,
                     "template" to siteDesign,
                     "site_creation_flow" to "with-design-picker",
-                    "timezone_string" to timeZoneId
+                    "timezone_string" to timeZoneId,
+                    "wpcom_public_coming_soon" to "0"
                 )
             )
         )
@@ -409,7 +412,10 @@ class SiteRestClientTest {
                         "validate" to "1",
                         "client_id" to appId,
                         "client_secret" to appSecret,
-                        "options" to mapOf<String, Any>("timezone_string" to timeZoneId)
+                        "options" to mapOf<String, Any>(
+                            "timezone_string" to timeZoneId,
+                            "wpcom_public_coming_soon" to "0"
+                        )
                 )
         )
     }
