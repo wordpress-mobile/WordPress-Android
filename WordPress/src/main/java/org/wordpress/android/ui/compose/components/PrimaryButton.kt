@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.compose.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -22,8 +24,17 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 fun PrimaryButton(
     text: String,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     isInProgress: Boolean = false,
-    modifier: Modifier = Modifier
+    colors: ButtonColors = ButtonDefaults.buttonColors(
+        disabledBackgroundColor = colorResource(R.color.jetpack_green_70),
+    ),
+    padding: PaddingValues = PaddingValues(
+        start = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal),
+        top = 20.dp,
+        end = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal),
+        bottom = 10.dp
+    ),
 ) {
     Button(
         onClick = onClick,
@@ -32,12 +43,9 @@ fun PrimaryButton(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
         ),
-        colors = ButtonDefaults.buttonColors(
-            disabledBackgroundColor = colorResource(R.color.jetpack_green_70),
-        ),
+        colors = colors,
         modifier = modifier
-            .padding(top = 20.dp, bottom = 10.dp)
-            .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
+            .padding(padding)
             .fillMaxWidth(),
     ) {
         if (isInProgress) {
