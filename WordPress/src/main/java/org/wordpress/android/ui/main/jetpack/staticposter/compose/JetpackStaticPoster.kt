@@ -52,7 +52,7 @@ fun JetpackStaticPoster(
             if (showTopBar) {
                 MainTopAppBar(
                     title = null,
-                    navigationIcon = NavigationIcons.BackIcon.takeIf { showTopBar },
+                    navigationIcon = NavigationIcons.BackIcon,
                     onNavigationIconClick = onBackClick,
                 )
             }
