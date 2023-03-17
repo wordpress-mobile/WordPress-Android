@@ -107,7 +107,12 @@ class WPMainNavigationView @JvmOverloads constructor(
             itemView.addView(customView)
         }
 
-        currentPosition = AppPrefs.getMainPageIndex(numPages() - 1)
+        currentPosition = getMainPageIndex()
+    }
+
+    private fun getMainPageIndex(): Int {
+        return if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) 0
+        else AppPrefs.getMainPageIndex(numPages() - 1)
     }
 
     private fun hideReaderTab() {
@@ -169,7 +174,9 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         setImageViewSelected(position, true)
 
-        AppPrefs.setMainPageIndex(position)
+        if(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures())
+            AppPrefs.setMainPageIndex(0)
+        else AppPrefs.setMainPageIndex(position)
 
         // temporarily disable the nav listeners so they don't fire when we change the selected page
         assignNavigationListeners(false)
@@ -327,7 +334,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             }
         }
 
-        private fun checkAndCreateForStaticPage(fragment: Fragment, pageType: PageType) : Fragment {
+        private fun checkAndCreateForStaticPage(fragment: Fragment, pageType: PageType): Fragment {
             return if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
                 fragmentManager?.beginTransaction()?.remove(fragment)?.commitNow()
                 createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
@@ -336,7 +343,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             }
         }
 
-        private fun checkAndCreateForNonStaticPage(fragment: Fragment, pageType: PageType) : Fragment {
+        private fun checkAndCreateForNonStaticPage(fragment: Fragment, pageType: PageType): Fragment {
             return if (!jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
                 fragmentManager?.beginTransaction()?.remove(fragment)?.commitNow()
                 createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
