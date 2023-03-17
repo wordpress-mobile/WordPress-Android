@@ -98,7 +98,7 @@ fun JetpackStaticPoster(
                     backgroundColor = JpColorPalette().primary,
                     contentColor = JpColorPalette().onPrimary,
                 ),
-                padding = PaddingValues(0.dp),
+                padding = PaddingValues(bottom = 15.dp),
             )
             SecondaryButton(
                 stringResource(R.string.wp_jp_static_poster_button_secondary),
@@ -108,7 +108,6 @@ fun JetpackStaticPoster(
                     contentColor = JpColorPalette().primary,
                 ),
                 padding = PaddingValues(0.dp),
-                modifier = Modifier.offset(y = (-5).dp)
             ) {
                 Spacer(modifier = Modifier.width(10.dp))
                 Icon(
