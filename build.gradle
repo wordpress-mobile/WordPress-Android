@@ -65,7 +65,7 @@ ext {
     googleAutoServiceVersion = '1.0'
     googleExoPlayerVersion = '2.13.3'
     googleFlexboxlayoutVersion = '3.0.0'
-    googleGsonVersion = '2.6.2'
+    googleGsonVersion = '2.10.1'
     googleMaterialVersion = '1.2.1'
     googleMLKitBarcodeScanningVersion = '17.0.0'
     googlePlayServicesAuthVersion = '20.4.1'
