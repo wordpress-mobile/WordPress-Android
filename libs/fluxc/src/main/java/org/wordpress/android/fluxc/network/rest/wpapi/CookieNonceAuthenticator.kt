@@ -9,38 +9,43 @@ import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Unknown
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
+import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 
 class CookieNonceAuthenticator @Inject constructor(
     private val nonceRestClient: NonceRestClient,
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
-    private val siteSqlUtils: SiteSqlUtils
+    private val siteSqlUtils: SiteSqlUtils,
+    private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun authenticate(
         siteUrl: String,
         username: String,
         password: String
     ): CookieNonceAuthenticationResult {
-        val siteUrlWithScheme = if (!URLUtil.isNetworkUrl(siteUrl)) {
-            // If the URL is missing a scheme, try inferring it from the API endpoint
-            val wpApiUrl = discoverApiEndpoint(siteUrl)
-            val scheme = wpApiUrl.toHttpUrl().scheme
-            UrlUtils.addUrlSchemeIfNeeded(UrlUtils.removeScheme(siteUrl), scheme == "https")
-        } else siteUrl
+        return coroutineEngine.withDefaultContext(AppLog.T.API, this, "authenticate") {
+            val siteUrlWithScheme = if (!URLUtil.isNetworkUrl(siteUrl)) {
+                // If the URL is missing a scheme, try inferring it from the API endpoint
+                val wpApiUrl = discoverApiEndpoint(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false))
+                val scheme = wpApiUrl.toHttpUrl().scheme
+                UrlUtils.addUrlSchemeIfNeeded(UrlUtils.removeScheme(siteUrl), scheme == "https")
+            } else siteUrl
 
-        return when (val nonce = nonceRestClient.requestNonce(siteUrlWithScheme, username, password)) {
-            is Available -> CookieNonceAuthenticationResult.Success
-            is FailedRequest -> {
-                CookieNonceAuthenticationResult.Error(
-                    type = nonce.type,
-                    message = nonce.errorMessage,
-                    networkError = nonce.networkError
-                )
+            when (val nonce = nonceRestClient.requestNonce(siteUrlWithScheme, username, password)) {
+                is Available -> CookieNonceAuthenticationResult.Success
+                is FailedRequest -> {
+                    CookieNonceAuthenticationResult.Error(
+                        type = nonce.type,
+                        message = nonce.errorMessage,
+                        networkError = nonce.networkError
+                    )
+                }
+
+                is Unknown -> CookieNonceAuthenticationResult.Error(type = Nonce.CookieNonceErrorType.UNKNOWN)
             }
-
-            is Unknown -> CookieNonceAuthenticationResult.Error(type = Nonce.CookieNonceErrorType.UNKNOWN)
         }
     }
 
