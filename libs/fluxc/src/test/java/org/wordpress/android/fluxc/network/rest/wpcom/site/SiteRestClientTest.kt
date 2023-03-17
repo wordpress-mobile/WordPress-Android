@@ -201,6 +201,7 @@ class SiteRestClientTest {
         val siteDesign = "design"
         val timeZoneId = "Europe/London"
         val findAvailableUrl = true
+        val isComingSoon = false
 
         val result = restClient.newSite(
             siteName,
@@ -211,6 +212,7 @@ class SiteRestClientTest {
             segmentId,
             siteDesign,
             findAvailableUrl,
+            isComingSoon,
             dryRun
         )
 
@@ -259,6 +261,8 @@ class SiteRestClientTest {
         val segmentId = 123L
         val siteDesign = "design"
         val timeZoneId = "Europe/London"
+        val isComingSoon = false
+
 
         val result = restClient.newSite(
             siteName,
@@ -269,6 +273,7 @@ class SiteRestClientTest {
             segmentId,
             siteDesign,
             null,
+            isComingSoon,
             dryRun
         )
 
@@ -318,6 +323,7 @@ class SiteRestClientTest {
         val segmentId = 123L
         val siteDesign = "design"
         val timeZoneId = "Europe/London"
+        val isComingSoon = false
 
         val result = restClient.newSite(
             siteName,
@@ -328,6 +334,7 @@ class SiteRestClientTest {
             segmentId,
             siteDesign,
             null,
+            isComingSoon,
             dryRun
         )
 
@@ -374,6 +381,7 @@ class SiteRestClientTest {
         val language = "CZ"
         val visibility = SiteVisibility.PRIVATE
         val timeZoneId = "Europe/London"
+        val isComingSoon = false
 
         val result = restClient.newSite(
             siteName,
@@ -384,6 +392,7 @@ class SiteRestClientTest {
             null,
             null,
             null,
+            isComingSoon,
             dryRun
         )
 

@@ -196,6 +196,7 @@ class SiteStoreTest {
                         null,
                         null,
                         null,
+                        false,
                         payload.dryRun,
                 )
         ).thenReturn(response)
@@ -224,6 +225,7 @@ class SiteStoreTest {
                         null,
                         null,
                         null,
+                        false,
                         payload.dryRun
                 )
         ).thenReturn(response)
