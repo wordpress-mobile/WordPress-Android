@@ -72,8 +72,9 @@ sealed class UiState {
     data class Content(
         val showTopBar: Boolean,
         val featureName: UiString,
-        val showPluralTitle: Boolean
-    ) : UiState()
+        val showPluralTitle: Boolean,
+        val animResLtrToRtl: Pair<Int, Int>,
+        ) : UiState()
 }
 
 sealed class Event {
@@ -86,5 +87,6 @@ typealias UiData = JetpackPoweredScreen.WithStaticPoster
 fun UiData.toContentUiState() = UiState.Content(
     showTopBar = this == UiData.STATS,
     featureName = screen.featureName,
-    showPluralTitle = screen == JetpackPoweredScreen.WithDynamicText.READER
+    showPluralTitle = screen.isPlural,
+    animResLtrToRtl = animResLtr to animResRtl,
 )

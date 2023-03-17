@@ -1,6 +1,7 @@
 package org.wordpress.android.models
 
 import android.os.Parcelable
+import androidx.annotation.AnimRes
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
@@ -15,10 +16,26 @@ sealed interface JetpackPoweredScreen {
     }
 
     @Parcelize
-    enum class WithStaticPoster(val screen: WithDynamicText) : Parcelable {
-        STATS(WithDynamicText.STATS),
-        READER(WithDynamicText.READER),
-        NOTIFICATIONS(WithDynamicText.NOTIFICATIONS);
+    enum class WithStaticPoster(
+        val screen: WithDynamicText,
+        @AnimRes val animResLtr: Int,
+        @AnimRes val animResRtl: Int,
+    ) : Parcelable {
+        STATS(
+            screen = WithDynamicText.STATS,
+            animResLtr = R.raw.jp_stats_left,
+            animResRtl = R.raw.jp_stats_rtl,
+        ),
+        READER(
+            screen = WithDynamicText.READER,
+            animResLtr = R.raw.jp_reader_left,
+            animResRtl = R.raw.jp_reader_rtl,
+        ),
+        NOTIFICATIONS(
+            screen = WithDynamicText.NOTIFICATIONS,
+            animResLtr = R.raw.jp_notifications_left,
+            animResRtl = R.raw.jp_notifications_rtl,
+        ),
     }
 
     enum class WithStaticText(

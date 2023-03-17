@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.main.jetpack.staticposter.compose
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,9 +16,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,6 +29,9 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
@@ -39,6 +43,7 @@ import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.staticposter.UiData
 import org.wordpress.android.ui.main.jetpack.staticposter.UiState
 import org.wordpress.android.ui.main.jetpack.staticposter.toContentUiState
+import org.wordpress.android.util.extensions.isRtl
 
 @Composable
 fun JetpackStaticPoster(
@@ -72,11 +77,9 @@ fun JetpackStaticPoster(
                     .padding(bottom = 20.dp)
                     .fillMaxWidth(),
             ) {
-                Image(
-                    painterResource(R.drawable.ic_wordpress_jetpack_logo),
-                    stringResource(R.string.icon_desc),
-                    Modifier.height(65.dp)
-                )
+                val animRes = if (LocalContext.current.isRtl()) animResLtrToRtl.second else animResLtrToRtl.first
+                val lottieComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(animRes))
+                LottieAnimation(lottieComposition, Modifier.height(65.dp))
                 Text(
                     stringResource(
                         if (showPluralTitle)
