@@ -1406,6 +1406,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given dynamic cards enabled + new site, when check & start QS triggered, then new site QS starts`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = true)
 
@@ -1422,6 +1423,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given dynamic cards enabled + existing site, when check & start QS triggered, then existing site QS starts`() {
         whenever(quickStartRepository.quickStartType).thenReturn(ExistingSiteQuickStartType)
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = false)
 
@@ -1438,6 +1440,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given no selected site, when check and start QS is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = false)
 
@@ -1449,6 +1452,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = true)
 
@@ -1460,6 +1464,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = false)
 
@@ -1471,6 +1476,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = true)
 
@@ -1489,6 +1495,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = false)
 

@@ -377,7 +377,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
         viewModel.createNewPage.observe(viewLifecycleOwner, {
             if (mlpViewModel.canShowModalLayoutPicker()
-                && !jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                && jetpackFeatureRemovalPhaseHelper.shouldShowTemplateSelectionInPages()) {
                 mlpViewModel.createPageFlowTriggered()
             } else {
                 createNewPage()

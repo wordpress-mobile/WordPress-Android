@@ -1322,6 +1322,7 @@ class MySiteViewModel @Inject constructor(
         isSiteTitleTaskCompleted: Boolean,
         isNewSite: Boolean
     ) {
+        if (!jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()) return
         quickStartRepository.checkAndSetQuickStartType(isNewSite = isNewSite)
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
             startQuickStart(siteLocalId, isSiteTitleTaskCompleted)

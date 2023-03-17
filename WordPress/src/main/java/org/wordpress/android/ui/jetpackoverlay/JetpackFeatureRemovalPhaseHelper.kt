@@ -92,6 +92,22 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
         }
     }
 
+    fun shouldShowJetpackPoweredEditorFeatures(): Boolean {
+        val currentPhase = getCurrentPhase() ?: return true
+        return when (currentPhase) {
+            is PhaseStaticPosters, PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> false
+            else -> true
+        }
+    }
+
+    fun shouldShowTemplateSelectionInPages(): Boolean {
+        val currentPhase = getCurrentPhase() ?: return true
+        return when (currentPhase) {
+            is PhaseStaticPosters, PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> false
+            else -> true
+        }
+    }
+
     @Suppress("Unused")
     fun shouldShowStaticPage(): Boolean {
         val currentPhase = getCurrentPhase() ?: return false
@@ -106,6 +122,22 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
         return when (currentPhase) {
             is PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> false
             is PhaseOne, PhaseTwo, PhaseThree, PhaseStaticPosters -> true
+        }
+    }
+
+    fun shouldShowQuickStart(): Boolean {
+        val currentPhase = getCurrentPhase() ?: return true
+        return when (currentPhase) {
+            is PhaseStaticPosters, PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> false
+            else -> true
+        }
+    }
+
+    fun shouldShowHelpAndSupportOnEditor(): Boolean {
+        val currentPhase = getCurrentPhase() ?: return true
+        return when (currentPhase) {
+            is PhaseStaticPosters, PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> false
+            else -> true
         }
     }
 }
