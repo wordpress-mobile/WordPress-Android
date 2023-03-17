@@ -9,12 +9,14 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -35,6 +37,7 @@ fun PrimaryButton(
         end = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal),
         bottom = 10.dp
     ),
+    textStyle: TextStyle = LocalTextStyle.current,
 ) {
     Button(
         onClick = onClick,
@@ -55,7 +58,7 @@ fun PrimaryButton(
                 modifier = Modifier.size(20.dp),
             )
         } else {
-            Text(text = text)
+            Text(text, style = textStyle)
         }
     }
 }

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.ButtonDefaults
@@ -99,6 +98,7 @@ fun JetpackStaticPoster(
                     contentColor = JpColorPalette().onPrimary,
                 ),
                 padding = PaddingValues(bottom = 15.dp),
+                textStyle = MaterialTheme.typography.body1.copy(fontSize = 17.sp, fontWeight = FontWeight.SemiBold),
             )
             SecondaryButton(
                 stringResource(R.string.wp_jp_static_poster_button_secondary),
@@ -108,6 +108,7 @@ fun JetpackStaticPoster(
                     contentColor = JpColorPalette().primary,
                 ),
                 padding = PaddingValues(0.dp),
+                textStyle = MaterialTheme.typography.body1.copy(fontSize = 17.sp),
             ) {
                 Spacer(modifier = Modifier.width(10.dp))
                 Icon(
