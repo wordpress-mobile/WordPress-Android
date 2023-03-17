@@ -66,9 +66,9 @@ interface JetpackCPConnectedSitesDao {
                         remoteSiteId = remoteId().value,
                         localSiteId = localId().value,
                         url = url,
-                        name = name,
-                        description = description,
-                        activeJetpackConnectionPlugins = activeJetpackConnectionPlugins
+                        name = name.orEmpty(),
+                        description = description.orEmpty(),
+                        activeJetpackConnectionPlugins = activeJetpackConnectionPlugins.orEmpty()
                     )
                 }
         }
