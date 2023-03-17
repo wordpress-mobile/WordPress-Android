@@ -1,12 +1,12 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 
+import com.android.volley.NetworkResponse
+import com.android.volley.VolleyError
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.ApplicationPasswordsClientId
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
-import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordCreationResult.Created
-import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordCreationResult.NotSupported
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
@@ -14,6 +14,7 @@ import org.wordpress.android.util.AppLog.T.MAIN
 import java.util.Optional
 import javax.inject.Inject
 
+private const val UNAUTHORIZED = 401
 private const val CONFLICT = 409
 private const val NOT_FOUND = 404
 private const val APPLICATION_PASSWORDS_DISABLED_ERROR_CODE = "application_passwords_disabled"
@@ -91,9 +92,14 @@ internal class ApplicationPasswordsManager @Inject constructor(
             return ApplicationPasswordCreationResult.Failure(
                 WPAPINetworkError(
                     BaseNetworkError(
-                        GenericErrorType.UNKNOWN,
+                        GenericErrorType.NOT_AUTHENTICATED,
                         "Site password is missing. " +
-                            "The application password was probably authorized using the Web flow"
+                            "The application password was probably authorized using the Web flow",
+                        VolleyError(
+                            NetworkResponse(
+                                UNAUTHORIZED, null, true, System.currentTimeMillis(), emptyList()
+                            )
+                        )
                     )
                 )
             )
@@ -108,7 +114,7 @@ internal class ApplicationPasswordsManager @Inject constructor(
         payload: ApplicationPasswordCreationPayload,
     ): ApplicationPasswordCreationResult {
         return when {
-            !payload.isError -> Created(
+            !payload.isError -> ApplicationPasswordCreationResult.Created(
                 ApplicationPasswordCredentials(
                     userName = username,
                     password = payload.password,
@@ -144,7 +150,7 @@ internal class ApplicationPasswordsManager @Inject constructor(
                             "Application Password feature not supported, " +
                                 "status code: $statusCode, errorCode: $errorCode"
                         )
-                        NotSupported(payload.error)
+                        ApplicationPasswordCreationResult.NotSupported(payload.error)
                     }
 
                     else -> {
