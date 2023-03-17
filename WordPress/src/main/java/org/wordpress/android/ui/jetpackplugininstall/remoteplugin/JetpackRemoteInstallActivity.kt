@@ -25,6 +25,8 @@ import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteI
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.CONTACT_SUPPORT
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.LOGIN
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.MANUAL_INSTALL
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
@@ -52,17 +54,16 @@ class JetpackRemoteInstallActivity : LocaleAwareActivity() {
     override fun onBackPressed() {
         if (!viewModel.isBackButtonEnabled()) return
 
-        val source = intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
+        val source = requireNotNull(intent.getSerializableExtraCompat<JetpackConnectionSource>(TRACKING_SOURCE_KEY))
         viewModel.onBackPressed(source)
 
         super.onBackPressed()
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
-        val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-        val source = intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
-        val retrievedState = savedInstanceState
-            ?.getSerializable(VIEW_STATE) as? JetpackRemoteInstallViewModel.Type
+        val site = requireNotNull(intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
+        val source = requireNotNull(intent.getSerializableExtraCompat<JetpackConnectionSource>(TRACKING_SOURCE_KEY))
+        val retrievedState = savedInstanceState?.getSerializableCompat<JetpackRemoteInstallViewModel.Type>(VIEW_STATE)
         viewModel.initialize(site, retrievedState)
 
         viewModel.liveActionOnResult.observe(this) { result ->
