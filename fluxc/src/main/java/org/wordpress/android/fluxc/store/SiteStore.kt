@@ -469,8 +469,7 @@ open class SiteStore @Inject constructor(
     data class SiteError @JvmOverloads constructor(
         @JvmField val type: SiteErrorType,
         @JvmField val message: String? = null,
-        @JvmField val selfHostedErrorType: SelfHostedErrorType = NOT_SET,
-        @JvmField val wpApiError: WPAPIError? = null
+        @JvmField val selfHostedErrorType: SelfHostedErrorType = NOT_SET
     ) : OnChangedError
 
     data class SiteEditorsError internal constructor(
@@ -921,23 +920,6 @@ open class SiteStore @Inject constructor(
         NOT_SET,
         XML_RPC_SERVICES_DISABLED,
         UNABLE_TO_READ_SITE
-    }
-
-    data class WPAPIError(
-        val errorType: WPAPIErrorType?,
-        val statusCode: Int?
-    )
-
-    enum class WPAPIErrorType {
-        CUSTOM_LOGIN_URL,
-        CUSTOM_ADMIN_URL;
-
-        companion object {
-            fun fromString(type: String?): WPAPIErrorType? {
-                return if (type.isNullOrEmpty()) null
-                else WPAPIErrorType.values().firstOrNull { it.name == type }
-            }
-        }
     }
 
     enum class DeleteSiteErrorType {
