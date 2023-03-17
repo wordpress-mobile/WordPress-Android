@@ -35,10 +35,10 @@ class JetpackStaticPosterViewModel @Inject constructor(
     private lateinit var data: UiData
 
     fun start(uiData: UiData) {
+        if (!isStarted || uiData != data) trackStart(uiData.screen.trackingName)
         if (isStarted) return else isStarted = true
         data = uiData
         _uiState.value = data.toContentUiState()
-        trackStart()
     }
 
     fun onPrimaryClick() {
@@ -51,10 +51,10 @@ class JetpackStaticPosterViewModel @Inject constructor(
         launch { _events.emit(Event.SecondaryButtonClick(phaseThreeBlogPostLinkConfig.getValue())) }
     }
 
-    private fun trackStart() {
+    private fun trackStart(source: String) {
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.JETPACK_STATIC_POSTER_DISPLAYED,
-            mapOf(KEY_SOURCE to data.screen.trackingName)
+            mapOf(KEY_SOURCE to source)
         )
     }
 
