@@ -10,10 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.WPWebViewActivity
@@ -57,14 +54,15 @@ class JetpackStaticPosterFragment : Fragment() {
     }
 
     private fun observeEvents() {
-        viewModel.events.onEach(this::handleEvents).launchIn(lifecycleScope)
-    }
-
-    private fun handleEvents(event: Event) {
-        when (event) {
-            is Event.PrimaryButtonClick -> activityLauncher.openPlayStoreLink(requireActivity(), JETPACK_PACKAGE_NAME)
-            is Event.SecondaryButtonClick -> event.url?.let {
-                WPWebViewActivity.openURL(requireContext(), UrlUtils.addUrlSchemeIfNeeded(it, true))
+        viewModel.events.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is Event.PrimaryButtonClick -> activityLauncher.openPlayStoreLink(
+                    requireActivity(),
+                    JETPACK_PACKAGE_NAME
+                )
+                is Event.SecondaryButtonClick -> event.url?.let {
+                    WPWebViewActivity.openURL(requireContext(), UrlUtils.addUrlSchemeIfNeeded(it, true))
+                }
             }
         }
     }

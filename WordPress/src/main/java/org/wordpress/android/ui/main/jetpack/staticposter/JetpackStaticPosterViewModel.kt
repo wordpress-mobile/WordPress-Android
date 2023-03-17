@@ -1,10 +1,9 @@
 package org.wordpress.android.ui.main.jetpack.staticposter
 
+import androidx.lifecycle.LiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.JetpackPoweredScreen
@@ -13,6 +12,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
 import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -29,8 +29,8 @@ class JetpackStaticPosterViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
     val uiState = _uiState.asStateFlow()
 
-    private val _events = MutableSharedFlow<Event>()
-    val events = _events.asSharedFlow()
+    private val _events = SingleLiveEvent<Event>()
+    val events = _events as LiveData<Event>
 
     private lateinit var data: UiData
 
@@ -43,12 +43,12 @@ class JetpackStaticPosterViewModel @Inject constructor(
 
     fun onPrimaryClick() {
         trackPrimaryClick()
-        launch { _events.emit(Event.PrimaryButtonClick) }
+        launch { _events.value = Event.PrimaryButtonClick }
     }
 
     fun onSecondaryClick() {
         trackSecondaryClick()
-        launch { _events.emit(Event.SecondaryButtonClick(phaseThreeBlogPostLinkConfig.getValue())) }
+        launch { _events.value = Event.SecondaryButtonClick(phaseThreeBlogPostLinkConfig.getValue()) }
     }
 
     private fun trackStart(source: String) {
