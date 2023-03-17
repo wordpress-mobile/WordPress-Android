@@ -51,12 +51,10 @@ class JetpackStaticPosterViewModel @Inject constructor(
         launch { _events.value = Event.SecondaryButtonClick(phaseThreeBlogPostLinkConfig.getValue()) }
     }
 
-    private fun trackStart(source: String) {
-        analyticsTrackerWrapper.track(
-            AnalyticsTracker.Stat.JETPACK_STATIC_POSTER_DISPLAYED,
-            mapOf(KEY_SOURCE to source)
-        )
-    }
+    private fun trackStart(source: String) = analyticsTrackerWrapper.track(
+        AnalyticsTracker.Stat.JETPACK_STATIC_POSTER_DISPLAYED,
+        mapOf(KEY_SOURCE to source)
+    )
 
     private fun trackPrimaryClick() = analyticsTrackerWrapper.track(
         AnalyticsTracker.Stat.JETPACK_STATIC_POSTER_GET_JETPACK_TAPPED,
