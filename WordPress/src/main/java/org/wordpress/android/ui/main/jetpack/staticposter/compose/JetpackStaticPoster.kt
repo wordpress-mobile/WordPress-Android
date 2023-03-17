@@ -36,6 +36,7 @@ import org.wordpress.android.ui.compose.components.PrimaryButton
 import org.wordpress.android.ui.compose.components.SecondaryButton
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.theme.JpColorPalette
+import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.staticposter.UiData
 import org.wordpress.android.ui.main.jetpack.staticposter.UiState
 import org.wordpress.android.ui.main.jetpack.staticposter.toContentUiState
@@ -78,7 +79,7 @@ fun JetpackStaticPoster(
                     Modifier.height(65.dp)
                 )
                 Text(
-                    stringResource(R.string.wp_jp_static_poster_title),
+                    stringResource(R.string.wp_jp_static_poster_title, uiStringText(featureName)),
                     style = MaterialTheme.typography.h1.copy(fontSize = 34.sp, fontWeight = FontWeight.Bold),
                 )
                 Text(

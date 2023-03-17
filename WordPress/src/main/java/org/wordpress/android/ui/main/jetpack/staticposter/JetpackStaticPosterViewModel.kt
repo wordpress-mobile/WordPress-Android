@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -72,6 +73,7 @@ sealed class UiState {
     object Loading : UiState()
     data class Content(
         val showTopBar: Boolean,
+        val featureName: UiString,
     ) : UiState()
 }
 
@@ -84,4 +86,5 @@ typealias UiData = JetpackPoweredScreen.WithStaticPoster
 
 fun UiData.toContentUiState() = UiState.Content(
     showTopBar = this == UiData.STATS,
+    featureName = screen.featureName,
 )
