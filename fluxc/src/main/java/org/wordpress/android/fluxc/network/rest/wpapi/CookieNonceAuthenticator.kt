@@ -1,9 +1,13 @@
 package org.wordpress.android.fluxc.network.rest.wpapi
 
+import android.webkit.URLUtil
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
+import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
+import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Unknown
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.UrlUtils
@@ -14,23 +18,30 @@ class CookieNonceAuthenticator @Inject constructor(
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
     private val siteSqlUtils: SiteSqlUtils
 ) {
-    suspend fun <T : WPAPIResponse<*>> makeAuthenticatedWPAPIRequest(
+    suspend fun authenticate(
         siteUrl: String,
         username: String,
-        password: String,
-        fetchMethod: suspend (wpApiUrl: String, nonce: Nonce) -> T
-    ): T {
-        val wpApiUrl = discoverApiEndpoint(siteUrl)
-        val scheme = wpApiUrl.toHttpUrl().scheme
+        password: String
+    ): CookieNonceAuthenticationResult {
+        val siteUrlWithScheme = if (!URLUtil.isNetworkUrl(siteUrl)) {
+            // If the URL is missing a scheme, try inferring it from the API endpoint
+            val wpApiUrl = discoverApiEndpoint(siteUrl)
+            val scheme = wpApiUrl.toHttpUrl().scheme
+            UrlUtils.addUrlSchemeIfNeeded(UrlUtils.removeScheme(siteUrl), scheme == "https")
+        } else siteUrl
 
-        return makeAuthenticatedWPAPIRequest(
-            // Use the scheme from the discovered URL to avoid redirects
-            siteUrl = UrlUtils.addUrlSchemeIfNeeded(UrlUtils.removeScheme(siteUrl), scheme == "https"),
-            wpApiUrl = wpApiUrl,
-            username = username,
-            password = password,
-            fetchMethod = fetchMethod
-        )
+        return when (val nonce = nonceRestClient.requestNonce(siteUrlWithScheme, username, password)) {
+            is Available -> CookieNonceAuthenticationResult.Success
+            is FailedRequest -> {
+                CookieNonceAuthenticationResult.Error(
+                    type = nonce.type,
+                    message = nonce.errorMessage,
+                    networkError = nonce.networkError
+                )
+            }
+
+            is Unknown -> CookieNonceAuthenticationResult.Error(type = Nonce.CookieNonceErrorType.UNKNOWN)
+        }
     }
 
     suspend fun <T : WPAPIResponse<*>> makeAuthenticatedWPAPIRequest(
@@ -120,6 +131,15 @@ class CookieNonceAuthenticator @Inject constructor(
     ): String {
         return discoveryWPAPIRestClient.discoverWPAPIBaseURL(url) // discover rest api endpoint
             ?: url.slashJoin("wp-json/") // fallback to ".../wp-json/" if discovery fails
+    }
+
+    sealed interface CookieNonceAuthenticationResult {
+        object Success : CookieNonceAuthenticationResult
+        data class Error(
+            val type: Nonce.CookieNonceErrorType,
+            val message: String? = null,
+            val networkError: BaseNetworkError? = null,
+        ) : CookieNonceAuthenticationResult
     }
 
     companion object {
