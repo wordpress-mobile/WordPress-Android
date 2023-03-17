@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -28,7 +29,15 @@ class JetpackStaticPosterFragment : Fragment() {
         setContent {
             AppTheme {
                 val uiState by viewModel.uiState.collectAsState()
-                JetpackStaticPoster(uiState, onBackClick = requireActivity()::onBackPressed)
+                when (val state = uiState) {
+                    is UiState.Content -> JetpackStaticPoster(
+                        uiState = state,
+                        onPrimaryClick = viewModel::onPrimaryClick,
+                        onSecondaryClick = viewModel::onSecondaryClick,
+                        onBackClick = requireActivity()::onBackPressed,
+                    )
+                    is UiState.Loading -> CircularProgressIndicator()
+                }
             }
         }
     }

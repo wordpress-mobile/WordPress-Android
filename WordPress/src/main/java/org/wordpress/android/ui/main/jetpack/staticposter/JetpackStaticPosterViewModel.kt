@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.models.JetpackPoweredScreen
-import org.wordpress.android.ui.utils.UiString
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,12 +27,20 @@ class JetpackStaticPosterViewModel @Inject constructor(
         data = uiData
         _uiState.value = data.toContentUiState()
     }
+
+    fun onPrimaryClick() {
+        TODO("Not yet implemented")
+    }
+
+    fun onSecondaryClick() {
+        TODO("Not yet implemented")
+    }
 }
 
 sealed class UiState {
     object Loading : UiState()
     data class Content(
-        val featureName: UiString,
+        val showTopBar: Boolean,
     ) : UiState()
 }
 
@@ -44,5 +51,5 @@ sealed class Event {
 typealias UiData = JetpackPoweredScreen.WithStaticPoster
 
 fun UiData.toContentUiState() = UiState.Content(
-    featureName = screen.featureName,
+    showTopBar = this == UiData.STATS,
 )
