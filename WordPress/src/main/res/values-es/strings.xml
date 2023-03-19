@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-14 11:54:27+0000
+Translation-Revision-Date: 2023-03-15 15:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: es
@@ -9,17 +9,18 @@ Language: es
     <string name="blaze_overlay_site_promotional_button">Promocionar una entrada con Blaze ahora</string>
     <string name="blaze_overlay_page_promotional_button">Promocionar esta página con Blaze</string>
     <string name="blaze_overlay_post_promotional_button">Promocionar esta entrada con Blaze</string>
-    <string name="blaze_promotional_subtitle_3">Inicia y para la actividad promocional con Blaze, y haz un seguimiento del rendimiento de esta, en cualquier momento.</string>
+    <string name="blaze_promotional_subtitle_3">Inicia y detén la actividad promocional con Blaze y haz un seguimiento del rendimiento siempre que quieras.</string>
     <string name="blaze_promotional_subtitle_2">Tu contenido aparecerá en millones de sitios web de WordPress y Tumblr.</string>
     <string name="blaze_promotional_subtitle_1">Comienza a promocionar cualquier entrada o página en cuestión de minutos y a un precio muy asequible.</string>
     <string name="blaze_promotional_text">Genera más tráfico hacia tu sitio con Blaze</string>
+    <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Este dominio ya está registrado</string>
     <string name="site_creation_domain_tag_sale">Oferta</string>
     <string name="site_creation_domain_tag_recommended">Recomendado</string>
     <string name="site_creation_domain_tag_best_alternative">Mejor alternativa</string>
-    <string name="site_creation_domain_cost">%s/año</string>
+    <string name="site_creation_domain_cost">%s al año</string>
     <string name="me_btn_help">Ayuda</string>
-    <string name="support_faq_caption">Consulta nuestras preguntas frecuentes, que contienen respuestas a algunas de las dudas que podrías tener.</string>
+    <string name="support_faq_caption">Con nuestras preguntas frecuentes podrás resolver algunas de tus dudas.</string>
     <string name="support_faq_title">¡Gracias por cambiar a la aplicación Jetpack!</string>
     <string name="logs_button">Registros</string>
     <string name="tickets">Entradas</string>
