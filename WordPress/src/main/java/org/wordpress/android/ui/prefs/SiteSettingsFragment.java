@@ -558,8 +558,8 @@ public class SiteSettingsFragment extends PreferenceFragment
 
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_START_OVER_ACCESSED, mSite);
 
-            if (mSite.getHasFreePlan()) {
-                // Don't show the start over detail screen for free users, instead show the support page
+            if (!BuildConfig.IS_JETPACK_APP || mSite.getHasFreePlan()) {
+                // Don't show the start over detail screen for free users or WP app users, instead show the support page
                 dialog.dismiss();
                 WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(getActivity(), WORDPRESS_EMPTY_SITE_SUPPORT_URL);
             } else {
