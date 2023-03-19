@@ -96,6 +96,7 @@ class ApplicationPasswordManagerTests {
             val site = testSite.apply {
                 origin = SiteModel.ORIGIN_XMLRPC
                 username = testCredentials.userName
+                password = "password"
             }
 
             whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(null)
@@ -169,6 +170,7 @@ class ApplicationPasswordManagerTests {
             val site = testSite.apply {
                 origin = SiteModel.ORIGIN_XMLRPC
                 username = testCredentials.userName
+                password = "password"
             }
             val networkError = BaseNetworkError(VolleyError(NetworkResponse(404, null, true, 0, emptyList())))
 
@@ -189,6 +191,7 @@ class ApplicationPasswordManagerTests {
             val site = testSite.apply {
                 origin = SiteModel.ORIGIN_XMLRPC
                 username = testCredentials.userName
+                password = "password"
             }
             val networkError = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.SERVER_ERROR)).apply {
                 apiError = "application_passwords_disabled"
@@ -248,6 +251,7 @@ class ApplicationPasswordManagerTests {
             val site = testSite.apply {
                 origin = SiteModel.ORIGIN_XMLRPC
                 username = testCredentials.userName
+                password = "password"
             }
             val creationNetworkError = BaseNetworkError(VolleyError(NetworkResponse(409, null, true, 0, emptyList())))
             whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(null)
