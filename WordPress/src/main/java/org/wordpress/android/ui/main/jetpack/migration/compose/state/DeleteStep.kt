@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ButtonsColumn
-import org.wordpress.android.ui.compose.components.PrimaryButton
-import org.wordpress.android.ui.compose.components.SecondaryButton
+import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
+import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
 import org.wordpress.android.ui.compose.components.text.Subtitle
 import org.wordpress.android.ui.compose.components.text.Title
 import org.wordpress.android.ui.compose.theme.AppTheme

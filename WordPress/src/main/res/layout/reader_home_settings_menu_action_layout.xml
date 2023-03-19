@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_medium_large"
         android:layout_marginStart="@dimen/margin_medium_large"
-        android:src="@drawable/ic_cog_white_24dp"
+        android:src="@drawable/ic_reader_following_white_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

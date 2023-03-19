@@ -5,7 +5,6 @@ import com.automattic.android.tracks.crashlogging.CrashLogging;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.JetpackConnectionResultActivity;
-import org.wordpress.android.ui.JetpackRemoteInstallFragment;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -417,8 +416,6 @@ public interface AppComponent {
     void inject(PublicizeConnectionAdapter object);
 
     void inject(PublicizeServiceAdapter object);
-
-    void inject(JetpackRemoteInstallFragment jetpackRemoteInstallFragment);
 
     void inject(PlansListAdapter object);
 

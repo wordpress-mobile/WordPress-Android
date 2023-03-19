@@ -29,7 +29,6 @@ class SubfilterListItemMapperTest {
     lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
 
     private lateinit var listItemMapper: SubfilterListItemMapper
-    private val jsonTester = JsonParser()
 
     private val blog: ReaderBlog = ReaderBlog.fromJson(JSONObject(SITE_JSON_WITH_BLOG_ID))
     private val feed: ReaderBlog = ReaderBlog.fromJson(JSONObject(SITE_JSON_WITH_FEED_ID))
@@ -172,8 +171,8 @@ class SubfilterListItemMapperTest {
         val json = listItemMapper.toJson(item)
 
         // Then
-        val got = jsonTester.parse(json)
-        val exp = jsonTester.parse(SITE_ALL_JSON)
+        val got = JsonParser.parseString(json)
+        val exp = JsonParser.parseString(SITE_ALL_JSON)
 
         assertThat(got).isEqualTo(exp)
     }
@@ -191,8 +190,8 @@ class SubfilterListItemMapperTest {
         val json = listItemMapper.toJson(item)
 
         // Then
-        val got = jsonTester.parse(json)
-        val exp = jsonTester.parse(SITE_JSON)
+        val got = JsonParser.parseString(json)
+        val exp = JsonParser.parseString(SITE_JSON)
 
         assertThat(got).isEqualTo(exp)
     }
@@ -209,8 +208,8 @@ class SubfilterListItemMapperTest {
         val json = listItemMapper.toJson(item)
 
         // Then
-        val got = jsonTester.parse(json)
-        val exp = jsonTester.parse(TAG_JSON)
+        val got = JsonParser.parseString(json)
+        val exp = JsonParser.parseString(TAG_JSON)
 
         assertThat(got).isEqualTo(exp)
     }

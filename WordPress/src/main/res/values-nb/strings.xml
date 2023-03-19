@@ -975,7 +975,7 @@ Language: nb_NO
     <string name="domain_suggestions_search_hint">Skriv inn et nøkkelord for flere detaljer</string>
     <string name="domains_suggestions_empty_list">Ingen forslag funnet</string>
     <string name="register_domain">Registrer domene</string>
-    <string name="jetpack_installed_message">Nå som Jetpack er installert trenger vi bare å få satt deg opp. Dette vil bare ta et minutt.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Nå som Jetpack er installert trenger vi bare å få satt deg opp. Dette vil bare ta et minutt.</string>
     <string name="stats_menu_remove">Fjern fra innsikter</string>
     <string name="stats_menu_move_down">Flytt ned</string>
     <string name="stats_menu_move_up">Flytt opp</string>
@@ -1238,7 +1238,7 @@ Language: nb_NO
     <string name="reader_empty_followed_tags_subtitle">Legg til emner for å finne innlegg om dine favoritt-emner</string>
     <string name="login_to_to_connect_jetpack">Logg inn på dem WordPres.com-kontoen du brukte til koble til Jetpack.</string>
     <string name="install_jetpack_retry">Prøv på nytt</string>
-    <string name="install_jetpack_continue">Sett opp</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Sett opp</string>
     <string name="jetpack_installation_problem_message">Jetpack kunne ikke installeres nå.</string>
     <string name="jetpack_installation_problem">Det oppsto et problem</string>
     <string name="jetpack_installed">Jetpack installert</string>

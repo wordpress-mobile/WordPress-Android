@@ -44,7 +44,12 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
         }
     }
 
-    static void startManualFlow(Context context, JetpackConnectionSource source, SiteModel site, boolean authorized) {
+    public static void startManualFlow(
+            Context context,
+            JetpackConnectionSource source,
+            SiteModel site,
+            boolean authorized
+    ) {
         String url = "https://wordpress.com/jetpack/connect?"
                      + "url=" + site.getUrl()
                      + "&mobile_redirect=" + JETPACK_CONNECTION_DEEPLINK

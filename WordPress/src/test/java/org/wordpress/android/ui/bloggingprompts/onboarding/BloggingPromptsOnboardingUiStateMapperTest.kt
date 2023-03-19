@@ -16,12 +16,12 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
 import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
 
 @ExperimentalCoroutinesApi
 class BloggingPromptsOnboardingUiStateMapperTest : BaseUnitTest() {
     @Mock
-    lateinit var bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig
+    lateinit var bloggingPromptsSocialFeatureConfig: BloggingPromptsSocialFeatureConfig
 
     private lateinit var classToTest: BloggingPromptsOnboardingUiStateMapper
 
@@ -87,46 +87,46 @@ class BloggingPromptsOnboardingUiStateMapperTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        classToTest = BloggingPromptsOnboardingUiStateMapper(bloggingPromptsEnhancementsFeatureConfig)
+        classToTest = BloggingPromptsOnboardingUiStateMapper(bloggingPromptsSocialFeatureConfig)
     }
 
     @Test
     fun `Should return correct Ready state for ONBOARDING type dialog when enhancements are turned off`() {
-        val enhancementsEnabled = false
-        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(enhancementsEnabled)
+        val socialEnabled = false
+        whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(socialEnabled)
 
         val actual = classToTest.mapReady(ONBOARDING, primaryButtonListener, secondaryButtonListener)
-        val expected = expectedOnboardingDialogReadyState(enhancementsEnabled)
+        val expected = expectedOnboardingDialogReadyState(socialEnabled)
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `Should return correct Ready state for INFORMATION type dialog when enhancements are turned off`() {
-        val enhancementsEnabled = false
-        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(enhancementsEnabled)
+        val socialEnabled = false
+        whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(socialEnabled)
 
         val actual = classToTest.mapReady(INFORMATION, primaryButtonListener, secondaryButtonListener)
-        val expected = expectedInformationDialogReadyState(enhancementsEnabled)
+        val expected = expectedInformationDialogReadyState(socialEnabled)
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `Should return correct Ready state for ONBOARDING type dialog when enhancements are turned on`() {
-        val enhancementsEnabled = true
-        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(enhancementsEnabled)
+        val socialEnabled = true
+        whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(socialEnabled)
 
         val actual = classToTest.mapReady(ONBOARDING, primaryButtonListener, secondaryButtonListener)
-        val expected = expectedOnboardingDialogReadyState(enhancementsEnabled)
+        val expected = expectedOnboardingDialogReadyState(socialEnabled)
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `Should return correct Ready state for INFORMATION type dialog when enhancements are turned on`() {
-        val enhancementsEnabled = true
-        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(enhancementsEnabled)
+        val socialEnabled = true
+        whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(socialEnabled)
 
         val actual = classToTest.mapReady(INFORMATION, primaryButtonListener, secondaryButtonListener)
-        val expected = expectedInformationDialogReadyState(enhancementsEnabled)
+        val expected = expectedInformationDialogReadyState(socialEnabled)
         assertThat(actual).isEqualTo(expected)
     }
 }

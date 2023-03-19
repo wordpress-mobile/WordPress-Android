@@ -71,7 +71,7 @@ android {
         applicationId "org.wordpress.android"
         archivesBaseName = "$applicationId"
 
-        versionName project.findProperty("installableBuildVersionName") ?: versionProperties.getProperty("versionName")
+        versionName project.findProperty("prototypeBuildVersionName") ?: versionProperties.getProperty("versionName")
         versionCode versionProperties.getProperty("versionCode").toInteger()
 
         minSdkVersion rootProject.minSdkVersion
@@ -221,8 +221,7 @@ android {
             dimension "buildType"
         }
 
-        // Used for CI builds on PRs (aka "Installable Builds"). Can be used locally when a developer needs
-        // to install multiple versions of the app on the same device.
+        // Used for CI builds on PRs (aka "Prototype Builds"). Can be used locally when a developer needs to install multiple versions of the app on the same device.
         // AppName: WordPress Pre-Alpha/Jetpack Pre-Alpha
         jalapeno {
             isDefault true
@@ -391,6 +390,7 @@ dependencies {
     implementation "androidx.cardview:cardview:$androidxCardviewVersion"
     implementation "androidx.recyclerview:recyclerview:$androidxRecyclerviewVersion"
     implementation "com.google.android.material:material:$googleMaterialVersion"
+    implementation "com.google.android.flexbox:flexbox:$googleFlexboxlayoutVersion"
     implementation "androidx.percentlayout:percentlayout:$androidxPercentlayoutVersion"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidxSwipeToRefreshVersion"
     implementation "androidx.preference:preference:$androidxPreferenceVersion"
@@ -415,6 +415,7 @@ dependencies {
     implementation "org.greenrobot:eventbus:$eventBusVersion"
     implementation "org.greenrobot:eventbus-java:$eventBusVersion"
     implementation "com.squareup.okio:okio:$squareupOkioVersion"
+    implementation "com.squareup.retrofit2:retrofit:$squareupRetrofitVersion"
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation "com.airbnb.android:lottie-compose:$lottieVersion"
@@ -439,10 +440,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$androidxComposeLifecycleVersion"
     implementation "io.coil-kt:coil-compose:$coilComposeVersion"
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
-    implementation (group: 'com.zendesk', name: 'support', version: "$zendeskVersion") {
-        exclude group: 'com.google.dagger'
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
+    implementation "com.zendesk:support:$zendeskVersion"
     implementation (name:'tenor-android-core-jetified', ext:'aar') // Jetified Tenor Gif library
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
