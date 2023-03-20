@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.jetpackplugininstall.install.compose.state
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.buttons.ButtonSize
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
@@ -19,9 +21,9 @@ fun InitialState(
     with(uiState) {
         BaseState(this) {
             PrimaryButton(
-                useDefaultMargins = false,
                 text = stringResource(buttonText),
                 onClick = onContinueClick,
+                padding = PaddingValues(0.dp),
                 buttonSize = ButtonSize.LARGE,
             )
         }
