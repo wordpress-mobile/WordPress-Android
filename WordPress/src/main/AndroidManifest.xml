@@ -1068,6 +1068,7 @@
         <activity android:name=".ui.jetpackoverlay.JetpackStaticPosterActivity"
             android:exported="false"
             android:label="@string/stats"
+            android:screenOrientation="portrait"
             android:theme="@style/WordPress.NoActionBar"/>
 
     </application>
