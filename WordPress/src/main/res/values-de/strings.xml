@@ -2135,10 +2135,7 @@ Language: de
     <string name="install_jetpack">Jetpack installieren</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Häufige Fragen zu Jetpack</string>
-<<<<<<< HEAD
-=======
     <string name="jetpack_plugin_install_remote_plugin_done_button">Einrichten</string>
->>>>>>> origin/trunk
     <string name="stats_jetpack_connection_setup_info">Wenn du Statistiken zu deiner WordPress-Website erhalten möchtest, musst du das Jetpack-Plugin installieren.</string>
     <string name="themes_empty_list">Keine Themes entsprechen deiner Suche</string>
     <string name="reader_label_post_search_explainer">Was möchtest du finden?</string>
