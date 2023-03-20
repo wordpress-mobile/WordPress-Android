@@ -1,11 +1,8 @@
 package org.wordpress.android.ui.compose.components.buttons
 
 import android.content.res.Configuration
-<<<<<<< HEAD:WordPress/src/main/java/org/wordpress/android/ui/compose/components/PrimaryButton.kt
 import androidx.compose.foundation.layout.PaddingValues
-=======
 import androidx.compose.foundation.layout.defaultMinSize
->>>>>>> origin/trunk:WordPress/src/main/java/org/wordpress/android/ui/compose/components/buttons/PrimaryButton.kt
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,12 +10,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
-<<<<<<< HEAD:WordPress/src/main/java/org/wordpress/android/ui/compose/components/PrimaryButton.kt
-import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.MaterialTheme
-=======
 import androidx.compose.material.LocalContentColor
->>>>>>> origin/trunk:WordPress/src/main/java/org/wordpress/android/ui/compose/components/buttons/PrimaryButton.kt
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -37,8 +30,8 @@ fun PrimaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isInProgress: Boolean = false,
-<<<<<<< HEAD:WordPress/src/main/java/org/wordpress/android/ui/compose/components/PrimaryButton.kt
     colors: ButtonColors = ButtonDefaults.buttonColors(
+        contentColor = AppColor.White,
         disabledBackgroundColor = colorResource(R.color.jetpack_green_70),
     ),
     padding: PaddingValues = PaddingValues(
@@ -48,21 +41,8 @@ fun PrimaryButton(
         bottom = 10.dp
     ),
     textStyle: TextStyle = LocalTextStyle.current,
-=======
-    useDefaultMargins: Boolean = true,
     buttonSize: ButtonSize = ButtonSize.NORMAL,
->>>>>>> origin/trunk:WordPress/src/main/java/org/wordpress/android/ui/compose/components/buttons/PrimaryButton.kt
 ) {
-    var computedModifier: Modifier = modifier
-
-    if (useDefaultMargins) {
-        computedModifier = computedModifier
-            .padding(top = 20.dp, bottom = 10.dp)
-            .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
-    }
-
-    computedModifier = computedModifier.defaultMinSize(minHeight = buttonSize.height)
-
     Button(
         onClick = onClick,
         enabled = !isInProgress,
@@ -70,17 +50,10 @@ fun PrimaryButton(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
         ),
-<<<<<<< HEAD:WordPress/src/main/java/org/wordpress/android/ui/compose/components/PrimaryButton.kt
         colors = colors,
         modifier = modifier
             .padding(padding)
-=======
-        colors = ButtonDefaults.buttonColors(
-            contentColor = AppColor.White,
-            disabledBackgroundColor = colorResource(R.color.jetpack_green_70),
-        ),
-        modifier = computedModifier
->>>>>>> origin/trunk:WordPress/src/main/java/org/wordpress/android/ui/compose/components/buttons/PrimaryButton.kt
+            .defaultMinSize(minHeight = buttonSize.height)
             .fillMaxWidth(),
     ) {
         if (isInProgress) {
@@ -110,15 +83,6 @@ private fun PrimaryButtonPreview() {
 private fun PrimaryButtonInProgressPreview() {
     AppTheme {
         PrimaryButton(text = "Continue", onClick = {}, isInProgress = true)
-    }
-}
-
-@Preview
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun PrimaryButtonNoDefaultMarginsPreview() {
-    AppTheme {
-        PrimaryButton(text = "Continue", onClick = {}, useDefaultMargins = false)
     }
 }
 

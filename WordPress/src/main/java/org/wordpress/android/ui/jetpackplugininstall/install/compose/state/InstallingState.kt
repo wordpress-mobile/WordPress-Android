@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.jetpackplugininstall.install.compose.state
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import org.wordpress.android.ui.compose.components.buttons.ButtonSize
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
 import org.wordpress.android.ui.compose.theme.AppTheme
@@ -18,7 +20,7 @@ fun InstallingState(
             text = "",
             onClick = {},
             isInProgress = true,
-            useDefaultMargins = false,
+            padding = PaddingValues(0.dp),
             buttonSize = ButtonSize.LARGE,
         )
     }
