@@ -35,7 +35,7 @@ fun ErrorState(
             SecondaryButton(
                 text = stringResource(contactSupportButtonText),
                 onClick = onContactSupportClick,
-                useDefaultMargins = false,
+                padding = PaddingValues(0.dp),
                 buttonSize = ButtonSize.LARGE,
             )
         }

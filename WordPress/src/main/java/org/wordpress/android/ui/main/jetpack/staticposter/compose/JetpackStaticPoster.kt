@@ -35,7 +35,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
-import org.wordpress.android.ui.compose.components.SecondaryButton
+import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.theme.JpColorPalette
 import org.wordpress.android.ui.compose.utils.uiStringText
