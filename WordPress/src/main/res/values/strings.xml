@@ -4297,6 +4297,12 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="login">Check your email on this device!</string>
     <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">We just sent a magic link to</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link Rel</string>
+    <string name="wp_jp_static_poster_title">%s has moved to the Jetpack app.</string>
+    <string name="wp_jp_static_poster_title_plural">%s have moved to the Jetpack app.</string>
+    <string name="wp_jp_static_poster_button_primary">Switch to the Jetpack app</string>
+    <string name="wp_jp_static_poster_button_secondary">Learn more at Jetpack.com</string>
+    <string name="wp_jp_static_poster_message">Stats, Reader, Notifications and other Jetpack powered features have been removed from the WordPress app, and can now only be found in the Jetpack app.</string>
+    <string name="wp_jp_static_poster_footnote">Switching is free and only takes a minute.</string>
 
     <!-- Jetpack Welcome Screen -->
     <string name="jp_migration_welcome_title">Welcome to Jetpack!</string>
@@ -4365,6 +4371,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Get notifications for new comments, likes, views, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">The Jetpack mobile app is designed to work in companion with the Jetpack plugin. Switch now to get access to stats, notifications, reader, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Your site has the Jetpack plugin</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Moving to the Jetpack app in a few days.</string>
+
 
     <!-- Deep Linking Activity Aliases -->
     <string name="deep_linking_urilinks_alias_label">urilinks</string>

@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-01 11:54:10+0000
+Translation-Revision-Date: 2023-03-14 17:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: nl
 -->
 <resources>
+    <string name="blaze_promotional_subtitle_3">Volg prestaties, start en stop je Blaze op elk gewenst moment.</string>
+    <string name="blaze_promotional_subtitle_2">Je content zal op miljoenen WordPress en Tumblr sites verschijnen.</string>
+    <string name="blaze_promotional_subtitle_1">Promoot in een paar minuten elke post of pagina voor slechts enkele euro’s per dag.</string>
+    <string name="blaze_promotional_text">Zorg dat meer mensen je site bezoeken met Blaze</string>
+    <string name="site_creation_domain_tag_sale">Aanbieding!</string>
+    <string name="support_faq_caption">Bekijk onze pagina met veelgestelde vragen om mogelijke antwoorden te vinden op jouw vragen.</string>
+    <string name="support_faq_title">Bedankt voor het overschakelen naar de Jetpack-app!</string>
+    <string name="logs_button">Logbestanden</string>
     <string name="gutenberg_native_blocks_menu">Blokkenmenu</string>
     <string name="promote_blaze_card_menu_hide_this">Dit verbergen</string>
     <string name="promote_blaze_card_sub_title">Stel je werk tentoon op miljoenen sites.</string>

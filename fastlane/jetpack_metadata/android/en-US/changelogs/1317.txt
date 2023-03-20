@@ -1,1 +1,0 @@
-We’ve added a little extra support for sites with individual plugins. These plugins don’t support all app features yet, but you can always install the full Jetpack plugin instead. Ready to launch?

@@ -1,11 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-25 18:05:42+0000
+Translation-Revision-Date: 2023-03-14 10:15:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: en_GB
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">Blaze a Post now</string>
+    <string name="blaze_overlay_page_promotional_button">Blaze this Page</string>
+    <string name="blaze_overlay_post_promotional_button">Blaze this Post</string>
+    <string name="blaze_promotional_subtitle_3">Track performance, start, and stop your Blaze at any time.</string>
+    <string name="site_creation_domain_cost">%s/yr</string>
+    <string name="site_creation_domain_tag_best_alternative">Best Alternative</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="blaze_promotional_text">Drive more traffic to your site with Blaze</string>
+    <string name="free">Free</string>
+    <string name="help_buttons_screen_title">Help</string>
+    <string name="me_btn_help">Help</string>
+    <string name="logs_button">Logs</string>
+    <string name="blaze_promotional_subtitle_1">Promote any post or page in only a few minutes for just a few dollars a day.</string>
+    <string name="site_creation_domain_tag_recommended">Recommended</string>
+    <string name="site_creation_domain_tag_sale">Sale</string>
+    <string name="support_faq_caption">See our FAQ for answers to common questions you may have.</string>
+    <string name="support_faq_title">Thank you for switching to the Jetpack app!</string>
+    <string name="site_creation_domain_tag_unavailable">This domain is already registered</string>
+    <string name="tickets">Tickets</string>
+    <string name="blaze_promotional_subtitle_2">Your content will appear on millions of WordPress and Tumblr sites.</string>
+    <string name="gutenberg_native_blocks_menu">Blocks menu</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_text">By setting up Jetpack you agree to our </string>
+    <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Close</string>
+    <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contact support</string>
+    <string name="promote_blaze_card_sub_title">Display your work across millions of sites.</string>
+    <string name="promote_blaze_card_menu_hide_this">Hide this</string>
+    <string name="jetpack_full_plugin_install_onboarding_install_button">Install the full plugin</string>
+    <string name="promote_blaze_card_title">Promote your content with Blaze</string>
+    <string name="jetpack_full_plugin_install_onboarding_terms_and_conditions_button">Terms and conditions</string>
+    <string name="jetpack_full_plugin_install_onboarding_description">%1$s is using %2$s, which don’t support all features of the app yet.\n\nPlease install the %3$s to use the app with this site.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_full_jetpack_plugin">full Jetpack plugin</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_multiple_plugins">individual Jetpack plugins</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_single_plugin">the %1$s plugin</string>
+    <string name="jetpack_full_plugin_install_error_button_contact_support">Contact Support</string>
+    <string name="jetpack_full_plugin_install_error_image_content_description">Error icon</string>
+    <string name="jetpack_full_plugin_install_error_description">Jetpack could not be installed at this time.</string>
+    <string name="only_one_primary_site_message">Only one site is available, so you can\'t change your primary site.</string>
+    <string name="jetpack_individual_plugin_support_onboarding_title">Please install the full Jetpack plugin</string>
+    <string name="jetpack_full_plugin_install_error_button_retry">Retry</string>
+    <string name="jetpack_full_plugin_install_error_title">There was a problem</string>
+    <string name="my_site_jp_install_full_plugin_card_content">This site is using an individual plugin, which doesn\'t support all features of the app yet. Please install the full Jetpack plugin.</string>
+    <string name="jetpack_full_plugin_install_initial_button">Continue</string>
+    <string name="jetpack_full_plugin_install_done_button">Done</string>
+    <string name="jetpack_full_plugin_install_initial_title">Install Jetpack</string>
+    <string name="jetpack_full_plugin_install_installing_title">Installing Jetpack</string>
+    <string name="jetpack_full_plugin_install_installing_description">Installing Jetpack on your site. This can take up to a few minutes to complete.</string>
+    <string name="jetpack_full_plugin_install_jp_logo_content_description">Jetpack icon</string>
+    <string name="jetpack_full_plugin_install_done_title">Jetpack installed</string>
+    <string name="button_promote_with_blaze">Promote with Blaze</string>
+    <string name="jetpack_full_plugin_install_done_description">Ready to use this site with the app.</string>
+    <string name="jetpack_full_plugin_install_initial_description">Your website credentials will not be stored and are used only for the purpose of installing Jetpack.</string>
+    <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Unlock your site’s full potential. Get stats, notications and more with Jetpack.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Your site has the Jetpack plugin</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Get notifications for new comments, likes, views, and more.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Find and follow your favourite sites and communities, and share you content.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Watch your traffic grow with helpful insights and comprehensive stats.</string>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">The Jetpack mobile app is designed to work in companion with the Jetpack plugin. Switch now to get access to stats, notifications, reader, and more.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Stats &amp; Insights</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Blogging Prompts hidden</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Visit &lt;b&gt;Site Settings&lt;/b&gt; to turn back on</string>
+    <string name="blogging_reminders_prompt_subtitle">Notification will include a word or short phrase for inspiration</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Give WordPress a boost with Jetpack</string>
+    <string name="blogging_prompts_onboarding_content_note_content">You can control Blogging Prompts and Reminders at any time in My Site &gt; Settings &gt; Blogging</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack lets you do more with your WordPress site. Switching is free and only takes a minute.</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Turn off prompts</string>
+    <string name="support_forum_caption">Get help from our group of volunteers.</string>
+    <string name="support_forum_title">Community forums</string>
+    <string name="site_settings_blogging_reminders_notification_title">Blogging reminders</string>
+    <string name="site_settings_blogging_prompts_title">Show prompts</string>
+    <string name="site_settings_blogging">Blogging</string>
     <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s are moving in %2$s</string>
     <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s are moving soon</string>
     <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s is moving in %2$s</string>
@@ -35,6 +105,7 @@ Language: en_GB
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Stats, Reader, Notifications and other Jetpack-powered features will be removed from the WordPress app soon.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Switch to the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
+    <string name="jetpack_feature_card_content_phase_three">Stats, Reader, Notifications and other features will soon move to the Jetpack mobile app.</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d answers</string>
     <string name="blogging_prompts_list_number_of_answers_zero">0 answers</string>
     <string name="blogging_prompts_list_number_of_answers_one">1 answer</string>
@@ -311,6 +382,8 @@ Language: en_GB
     <string name="blogging_prompts_onboarding_content_top">The best way to become a better writer is to build a writing habit and share with others - that’s where Prompts come in!</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Posting regularly attracts new readers. Tell us when you want to write and we’ll send you a reminder!</string>
     <string name="blogging_prompt_set_reminders">Set reminders</string>
+    <string name="blogging_reminders_prompt_title">Include a Blogging Prompt</string>
+    <string name="blogging_prompts_onboarding_header_title">Introducing\nBlogging Prompts</string>
     <string name="set_your_blogging_prompts_title">Become a better writer by building a habit</string>
     <string name="site_creation_intent_writing_poetry">Writing &amp; Poetry</string>
     <string name="site_creation_intent_travel">Travel</string>
@@ -616,6 +689,7 @@ Language: en_GB
     <string name="site_settings_categories_hint">Manage your site\'s categories</string>
     <string name="page_is_posts_page_warning">The content of your latest posts page is automatically generated and cannot be edited.</string>
     <string name="site_settings_categories_title">Categories</string>
+    <string name="site_settings_blogging_reminders_title">Reminders</string>
     <string name="gutenberg_native_border_settings">Border settings</string>
     <string name="storage_utils_dialog_message">We need to save your content on the device before it can be published. Review your storage settings and remove files to free up space.</string>
     <string name="storage_utils_dialog_ok_button">View storage</string>

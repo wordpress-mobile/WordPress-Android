@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-01 16:57:55+0000
+Translation-Revision-Date: 2023-03-14 12:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: sv_SE
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">Marknadsför ett inlägg nu</string>
+    <string name="blaze_overlay_page_promotional_button">Marknadsför den här sidan</string>
+    <string name="blaze_overlay_post_promotional_button">Marknadsför det här inlägget</string>
+    <string name="blaze_promotional_subtitle_3">Håll koll på prestandan samt start och stoppa din marknadsföring när som helst.</string>
+    <string name="blaze_promotional_subtitle_2">Ditt innehåll kommer att visas på miljontals WordPress- och Tumblr-webbplatser.</string>
+    <string name="blaze_promotional_subtitle_1">Marknadsför valfritt inlägg eller valfri sida på bara några minuter, för endast några kronor om dagen.</string>
+    <string name="blaze_promotional_text">Få mer trafik till din webbplats med Blaze</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="site_creation_domain_tag_unavailable">Denna domän är redan registrerad</string>
+    <string name="site_creation_domain_tag_sale">Rea</string>
+    <string name="site_creation_domain_tag_recommended">Rekommenderat</string>
+    <string name="site_creation_domain_tag_best_alternative">Bästa alternativ</string>
+    <string name="site_creation_domain_cost">%s/år</string>
+    <string name="me_btn_help">Hjälp</string>
+    <string name="support_faq_caption">Se våra vanliga frågor för svar på vanliga frågor du kan ha.</string>
+    <string name="support_faq_title">Tack för att du byter till Jetpack-appen!</string>
+    <string name="logs_button">Loggar</string>
+    <string name="tickets">Biljetter</string>
+    <string name="free">Gratis</string>
+    <string name="help_buttons_screen_title">Hjälp</string>
     <string name="gutenberg_native_blocks_menu">Block-meny</string>
     <string name="promote_blaze_card_menu_hide_this">Dölj detta</string>
     <string name="promote_blaze_card_sub_title">Visa ditt arbete på miljontals webbplatser.</string>

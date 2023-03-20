@@ -8,7 +8,9 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
 import org.wordpress.android.databinding.DebugSettingsRemoteFieldBinding
 import org.wordpress.android.databinding.DebugSettingsRowBinding
@@ -40,6 +42,7 @@ sealed class DebugSettingsItemViewHolder(
         private val title = itemView.findViewById<TextView>(R.id.feature_title)
         private val enabled = itemView.findViewById<CheckBox>(R.id.feature_enabled)
         private val unknown = itemView.findViewById<ImageView>(R.id.unknown_icon)
+        private val preview = itemView.findViewById<MaterialButton>(R.id.preview_icon)
         fun bind(item: UiItem.Feature) {
             title.text = item.title
             enabled.visibility = View.GONE
@@ -60,6 +63,8 @@ sealed class DebugSettingsItemViewHolder(
             }
             enabled.setOnCheckedChangeListener { _, _ -> item.toggleAction.toggle() }
             itemView.setOnClickListener { item.toggleAction.toggle() }
+            preview.isVisible = item.preview != null
+            preview.setOnClickListener { item.preview?.invoke() }
         }
     }
 

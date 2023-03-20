@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-28 15:54:10+0000
+Translation-Revision-Date: 2023-03-14 15:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ko_KR
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">지금 글 Blaze</string>
+    <string name="blaze_overlay_page_promotional_button">이 페이지 Blaze</string>
+    <string name="blaze_overlay_post_promotional_button">이 글 Blaze</string>
+    <string name="blaze_promotional_subtitle_3">성과를 추적하며 언제든지 Blaze를 시작하고 중지하세요.</string>
+    <string name="blaze_promotional_subtitle_2">콘텐츠가 수백만 개의 워드프레스 및 Tumblr 사이트에 표시됩니다.</string>
+    <string name="blaze_promotional_subtitle_1">하루에 적은 금액으로 단 몇 분 만에 글 또는 페이지를 홍보하세요.</string>
+    <string name="blaze_promotional_text">Blaze를 통해 사이트에 더 많은 트래픽 유도</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="site_creation_domain_tag_unavailable">이 도메인은 이미 등록되었습니다.</string>
+    <string name="site_creation_domain_tag_sale">세일</string>
+    <string name="site_creation_domain_tag_recommended">권장</string>
+    <string name="site_creation_domain_tag_best_alternative">최선의 대안</string>
+    <string name="site_creation_domain_cost">%s/년</string>
+    <string name="me_btn_help">도움말</string>
+    <string name="support_faq_caption">궁금할 수도 있는 일반적인 질문에 대한 답변은 FAQ를 참조하세요.</string>
+    <string name="support_faq_title">젯팩 앱으로 전환해 주셔서 감사합니다!</string>
+    <string name="logs_button">로그</string>
+    <string name="tickets">티켓</string>
+    <string name="free">무료</string>
+    <string name="help_buttons_screen_title">도움말</string>
     <string name="gutenberg_native_blocks_menu">블록 메뉴</string>
     <string name="promote_blaze_card_menu_hide_this">숨기기</string>
     <string name="promote_blaze_card_sub_title">수백만 개 사이트에 작업을 표시하세요.</string>

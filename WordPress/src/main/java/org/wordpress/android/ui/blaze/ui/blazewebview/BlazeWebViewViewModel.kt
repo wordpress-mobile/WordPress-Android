@@ -218,6 +218,20 @@ class BlazeWebViewViewModel @Inject constructor(
         }?: return false
     }
 
+    fun handleOnBackPressed() {
+        val nonDismissableStep = nonDismissableHashConfig.getValue<String>()
+        val completedStep = completedStepHashConfig.getValue<String>()
+
+        if (blazeFlowStep.label == nonDismissableStep) return
+
+        if (blazeFlowStep.label == completedStep || blazeFlowStep == BlazeFlowStep.CAMPAIGNS_LIST) {
+            blazeFeatureUtils.trackBlazeFlowCompleted(blazeFlowSource)
+        } else {
+            blazeFeatureUtils.trackFlowCanceled(blazeFlowSource, blazeFlowStep)
+        }
+        postActionEvent(BlazeActionEvent.FinishActivity)
+    }
+
     companion object {
         const val WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php"
         const val WPCOM_DOMAIN = ".wordpress.com"
