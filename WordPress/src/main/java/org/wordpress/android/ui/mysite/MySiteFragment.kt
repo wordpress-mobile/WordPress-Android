@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -63,6 +64,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
             viewModel.onTabChanged(position)
         }
     }
@@ -83,6 +85,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
+    }
     private fun initSoftKeyboard() {
         // The following prevents the soft keyboard from leaving a white space when dismissed.
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
