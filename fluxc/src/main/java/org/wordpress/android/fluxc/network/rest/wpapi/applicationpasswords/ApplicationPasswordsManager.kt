@@ -34,6 +34,17 @@ internal class ApplicationPasswordsManager @Inject constructor(
     private val applicationName
         get() = configuration.applicationName
 
+    /**
+     * Checks whether the site supports creating new Application Passwords using the API, and the different cases are:
+     * 1. For Jetpack sites, we always can call the API using the WordPress.com token.
+     * 2. For self-hosted sites, we need to check if we have persisted credentials, otherwise we can't create it. This
+     *    case happens when a site's Application Password was saved directly to the [ApplicationPasswordsStore],
+     *    which happens during the Web Authorization.
+     */
+    private val SiteModel.supportsApplicationPasswordsGeneration
+        get() = origin == SiteModel.ORIGIN_WPCOM_REST ||
+            (origin == SiteModel.ORIGIN_XMLRPC && !username.isNullOrEmpty() && !password.isNullOrEmpty())
+
     @Suppress("ReturnCount")
     suspend fun getApplicationCredentials(
         site: SiteModel
@@ -78,18 +89,8 @@ internal class ApplicationPasswordsManager @Inject constructor(
         site: SiteModel,
         username: String
     ): ApplicationPasswordCreationResult {
-        val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
-            jetpackApplicationPasswordsRestClient.createApplicationPassword(
-                site = site,
-                applicationName = applicationName
-            )
-        } else if (site.password?.isNotEmpty() == true) {
-            wpApiApplicationPasswordsRestClient.createApplicationPassword(
-                site = site,
-                applicationName = applicationName
-            )
-        } else {
-            return ApplicationPasswordCreationResult.Failure(
+        if (!site.supportsApplicationPasswordsGeneration) {
+            ApplicationPasswordCreationResult.Failure(
                 WPAPINetworkError(
                     BaseNetworkError(
                         GenericErrorType.NOT_AUTHENTICATED,
@@ -102,6 +103,18 @@ internal class ApplicationPasswordsManager @Inject constructor(
                         )
                     )
                 )
+            )
+        }
+
+        val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
+            jetpackApplicationPasswordsRestClient.createApplicationPassword(
+                site = site,
+                applicationName = applicationName
+            )
+        } else {
+            wpApiApplicationPasswordsRestClient.createApplicationPassword(
+                site = site,
+                applicationName = applicationName
             )
         }
 
