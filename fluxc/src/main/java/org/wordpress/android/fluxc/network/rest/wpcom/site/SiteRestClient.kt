@@ -213,6 +213,7 @@ class SiteRestClient @Inject constructor(
         visibility: SiteVisibility,
         segmentId: Long?,
         siteDesign: String?,
+        findAvailableUrl: Boolean?,
         dryRun: Boolean,
         additionalOptions: Map<String, String>
     ): NewSiteResponsePayload {
@@ -225,6 +226,7 @@ class SiteRestClient @Inject constructor(
         body["validate"] = if (dryRun) "1" else "0"
         body["client_id"] = appSecrets.appId
         body["client_secret"] = appSecrets.appSecret
+        findAvailableUrl?.let { body["find_available_url"] = it.toString() }
 
         if (siteTitle != null) {
             body["blog_title"] = siteTitle

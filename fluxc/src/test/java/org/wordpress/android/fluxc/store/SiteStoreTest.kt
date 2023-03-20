@@ -46,6 +46,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteFilter.WPCOM
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
+import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteStoreTest {
@@ -180,20 +181,23 @@ class SiteStoreTest {
     @Test
     fun `creates a new site`() = test {
         val dryRun = false
-        val payload = NewSitePayload("New site", "CZ", "Europe/London", PUBLIC, dryRun)
+        val name = "New site"
+        val payload = NewSitePayload(name, null, "CZ", "Europe/London", PUBLIC, null, dryRun)
         val newSiteRemoteId: Long = 123
-        val response = NewSiteResponsePayload(newSiteRemoteId, dryRun = dryRun)
+        val url = "new.wp.com"
+        val response = NewSiteResponsePayload(newSiteRemoteId, siteUrl = url, dryRun)
         whenever(
                 siteRestClient.newSite(
-                        payload.siteName,
+                        name,
                         null,
                         payload.language,
                         payload.timeZoneId,
                         payload.visibility,
                         null,
                         null,
+                        null,
                         payload.dryRun,
-                        payload.additionalOptions
+                        emptyMap()
                 )
         ).thenReturn(response)
 
@@ -201,6 +205,7 @@ class SiteStoreTest {
 
         assertThat(result.dryRun).isEqualTo(dryRun)
         assertThat(result.newSiteRemoteId).isEqualTo(newSiteRemoteId)
+        assertEquals(url, result.url)
     }
 
     @Test
@@ -217,6 +222,7 @@ class SiteStoreTest {
                         payload.language,
                         payload.timeZoneId,
                         payload.visibility,
+                        null,
                         null,
                         null,
                         payload.dryRun,
