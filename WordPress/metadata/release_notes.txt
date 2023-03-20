@@ -1,4 +1,2 @@
-Good words are read
-The WordPress logo is blue
-There are no new updates
-Sorry to disappoint you
+* [*] Block editor: Allow new block transforms for most blocks. [https://github.com/WordPress/gutenberg/pull/48792]
+
