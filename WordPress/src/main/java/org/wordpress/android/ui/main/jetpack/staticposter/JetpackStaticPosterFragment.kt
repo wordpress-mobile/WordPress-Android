@@ -1,10 +1,13 @@
 package org.wordpress.android.ui.main.jetpack.staticposter
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -33,6 +36,7 @@ class JetpackStaticPosterFragment : Fragment() {
     ) = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
+                LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                 val uiState by viewModel.uiState.collectAsState()
                 when (val state = uiState) {
                     is UiState.Content -> JetpackStaticPoster(
@@ -43,6 +47,21 @@ class JetpackStaticPosterFragment : Fragment() {
                     )
                     is UiState.Loading -> CircularProgressIndicator()
                 }
+            }
+        }
+    }
+
+    @Composable
+    fun LockScreenOrientation(orientation: Int) {
+        DisposableEffect(orientation) {
+            requireActivity().requestedOrientation = orientation
+            onDispose {
+                // Although restore original orientation seems like the logical solution, it does not
+                // work in this case because dispose runs after the new fragment is created, which
+                // then just resets to the orientation that is started with. If we weren't using the
+                // same activity (like we are for tabs), this would work very nicely by setting orientation
+                // to user.
+                // no op
             }
         }
     }
