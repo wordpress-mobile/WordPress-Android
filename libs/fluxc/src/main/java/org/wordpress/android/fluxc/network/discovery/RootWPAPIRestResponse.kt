@@ -12,7 +12,7 @@ class RootWPAPIRestResponse(
     val authentication: Authentication? = null
 ) : Response {
     class Authentication(
-        @SerializedName("application-passwords") val applicationPasswords: ApplicationPasswords?
+        @SerializedName("application-passwords") val applicationPasswords: ApplicationPasswords? = null
     ) {
         class ApplicationPasswords(
             val endpoints: Endpoints?
