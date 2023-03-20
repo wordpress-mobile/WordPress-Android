@@ -40,7 +40,7 @@ fun SecondaryButton(
     ),
     textStyle: TextStyle = LocalTextStyle.current,
     buttonSize: ButtonSize = ButtonSize.NORMAL,
-    trailingContent: @Composable() (() -> Unit)? = null,
+    trailingContent: @Composable (() -> Unit)? = null,
 ) {
     Button(
         onClick,
