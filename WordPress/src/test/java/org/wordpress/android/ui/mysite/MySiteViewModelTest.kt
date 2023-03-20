@@ -57,12 +57,8 @@ import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-<<<<<<< HEAD
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
-import org.wordpress.android.ui.jpfullplugininstall.GetShowJetpackFullPluginInstallOnboardingUseCase
-=======
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFullPluginInstallOnboardingUseCase
->>>>>>> origin/trunk
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
