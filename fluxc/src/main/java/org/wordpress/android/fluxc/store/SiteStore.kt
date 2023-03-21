@@ -186,8 +186,7 @@ open class SiteStore @Inject constructor(
         @JvmField val segmentId: Long? = null,
         @JvmField val siteDesign: String? = null,
         @JvmField val dryRun: Boolean,
-        @JvmField val findAvailableUrl: Boolean? = null,
-        @JvmField val additionalOptions: Map<String, String> = emptyMap()
+        @JvmField val findAvailableUrl: Boolean? = null
     ) : Payload<BaseNetworkError>() {
         constructor(
             siteName: String?,
@@ -1054,7 +1053,10 @@ open class SiteStore @Inject constructor(
     }
 
     enum class SiteVisibility(private val mValue: Int) {
-        PRIVATE(-1), BLOCK_SEARCH_ENGINE(0), PUBLIC(1);
+        PRIVATE(-1),
+        BLOCK_SEARCH_ENGINE(0),
+        PUBLIC(1),
+        COMING_SOON(999);
 
         fun value(): Int {
             return mValue
@@ -1617,8 +1619,7 @@ open class SiteStore @Inject constructor(
                 payload.segmentId,
                 payload.siteDesign,
                 payload.findAvailableUrl,
-                payload.dryRun,
-                payload.additionalOptions
+                payload.dryRun
         )
         return handleCreateNewSiteCompleted(
                 payload = result

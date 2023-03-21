@@ -79,6 +79,10 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.UNAUTHORIZED
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.UNKNOWN_SITE
 import org.wordpress.android.fluxc.store.SiteStore.SiteFilter
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.BLOCK_SEARCH_ENGINE
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.COMING_SOON
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PRIVATE
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType.EMPTY_RESULTS
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload
@@ -215,14 +219,15 @@ class SiteRestClient @Inject constructor(
         siteDesign: String?,
         findAvailableUrl: Boolean?,
         dryRun: Boolean,
-        additionalOptions: Map<String, String>
     ): NewSiteResponsePayload {
         val url = WPCOMREST.sites.new_.urlV1_1
         val body = mutableMapOf<String, Any>()
         val options = mutableMapOf<String, Any>()
 
         body["lang_id"] = language
-        body["public"] = visibility.value().toString()
+
+        determineVisibility(visibility, body, options)
+
         body["validate"] = if (dryRun) "1" else "0"
         body["client_id"] = appSecrets.appId
         body["client_secret"] = appSecrets.appSecret
@@ -246,8 +251,6 @@ class SiteRestClient @Inject constructor(
         if (timeZoneId != null) {
             options["timezone_string"] = timeZoneId
         }
-
-        options += additionalOptions
 
         // Add site options if available
         if (options.isNotEmpty()) {
@@ -277,6 +280,23 @@ class SiteRestClient @Inject constructor(
             }
             is Error -> {
                 volleyErrorToAccountResponsePayload(response.error.volleyError, dryRun)
+            }
+        }
+    }
+
+    private fun determineVisibility(
+        visibility: SiteVisibility,
+        body: MutableMap<String, Any>,
+        options: MutableMap<String, Any>
+    ) {
+        when (visibility) {
+            PRIVATE, BLOCK_SEARCH_ENGINE, PUBLIC -> {
+                body["public"] = visibility.value().toString()
+            }
+
+            COMING_SOON -> {
+                body["public"] = BLOCK_SEARCH_ENGINE.value().toString()
+                options["wpcom_public_coming_soon"] = "1"
             }
         }
     }

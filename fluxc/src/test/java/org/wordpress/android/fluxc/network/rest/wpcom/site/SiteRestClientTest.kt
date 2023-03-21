@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType
 import org.wordpress.android.fluxc.store.SiteStore.SiteFilter.WPCOM
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.COMING_SOON
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.test
 import kotlin.test.assertNotNull
@@ -211,8 +212,7 @@ class SiteRestClientTest {
             segmentId,
             siteDesign,
             findAvailableUrl,
-            dryRun,
-            emptyMap()
+            dryRun
         )
 
         assertThat(result.newSiteRemoteId).isEqualTo(siteId)
@@ -270,8 +270,7 @@ class SiteRestClientTest {
             segmentId,
             siteDesign,
             null,
-            dryRun,
-            emptyMap()
+            dryRun
         )
 
         assertThat(result.newSiteRemoteId).isEqualTo(siteId)
@@ -330,8 +329,7 @@ class SiteRestClientTest {
             segmentId,
             siteDesign,
             null,
-            dryRun,
-            emptyMap()
+            dryRun
         )
 
         assertThat(result.newSiteRemoteId).isEqualTo(siteId)
@@ -387,8 +385,7 @@ class SiteRestClientTest {
             null,
             null,
             null,
-            dryRun,
-            emptyMap()
+            dryRun
         )
 
         assertThat(result.newSiteRemoteId).isEqualTo(siteId)
@@ -442,6 +439,25 @@ class SiteRestClientTest {
 
         assertNotNull(errorResponse.error)
         assertThat(errorResponse.error.type).isEqualTo(PostFormatsErrorType.GENERIC_ERROR)
+    }
+
+    @Test
+    fun `creates new site in coming soon state`() = test {
+        // given
+        whenever(appSecrets.appId).thenReturn("")
+        whenever(appSecrets.appSecret).thenReturn("")
+        initNewSiteResponse()
+
+        // when
+        restClient.newSite("", "", "", "", visibility = COMING_SOON, null, null, null, false)
+
+        // then
+        val body = bodyCaptor.lastValue
+        @Suppress("UNCHECKED_CAST")
+        val options = body["options"] as Map<String, String>
+
+        assertThat(body).containsEntry("public", "0")
+        assertThat(options).containsEntry("wpcom_public_coming_soon", "1")
     }
 
     private suspend fun initSiteResponse(
