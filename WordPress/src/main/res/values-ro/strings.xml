@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-08 04:52:20+0000
+Translation-Revision-Date: 2023-03-21 14:56:38+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ro
 -->
 <resources>
+    <string name="jetpack_full_plugin_install_onboarding_description_single">%1$s folosește %2$s care nu suportă încă toate funcționalitățile aplicației. \n\nPentru a folosi aplicația cu acest site, te rog să instalezi %3$s.</string>
+    <string name="jetpack_full_plugin_install_onboarding_description_this_site">Acest site</string>
+    <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s folosește %2$s, care încă nu suportă toate funcționalitățile aplicației. Te rog instalează %3$s.</string>
+    <string name="jetpack_full_plugin_install_concise_description_single">%1$s folosește %2$s, care încă nu suportă toate funcționalitățile aplicației. Te rog instalează %3$s.</string>
+    <string name="wp_jp_static_poster_message">Statistici, Cititor, Notificări și alte funcționalități propulsate de Jetpack au fost înlăturate din aplicația WordPress. Pot fi găsite acum doar în aplicația Jetpack.</string>
+    <string name="wp_jp_static_poster_footnote">Comutarea este gratuită și durează numai un minut.</string>
+    <string name="wp_jetpack_feature_removal_static_posters_phase">Mutăm funcționalitatea în aplicația Jetpack peste câteva zile.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Acum, după ce ai instalat Jetpack, trebuie doar să te pregătim pentru inițializare. Nu va dura decât un minut.</string>
+    <string name="jetpack_plugin_install_full_plugin_done_button">Gata</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Inițializează</string>
+    <string name="my_site_header_content">Conținut</string>
+    <string name="my_site_header_traffic">Trafic</string>
+    <string name="my_site_header_manage">Administrează</string>
+    <string name="my_site_btn_wp_admin">Administrare WP</string>
+    <string name="wp_jp_static_poster_title">%s s-a mutat în aplicația Jetpack.</string>
+    <string name="wp_jp_static_poster_title_plural">%s s-au mutat în aplicația Jetpack.</string>
+    <string name="wp_jp_static_poster_button_primary">Comută la aplicația Jetpack</string>
+    <string name="wp_jp_static_poster_button_secondary">Află mai multe la Jetpack.com</string>
     <string name="blaze_promotional_subtitle_3">Urmărești performanța, pornești și oprești Blaze în orice moment.</string>
     <string name="blaze_overlay_post_promotional_button">Promovează acest articol</string>
     <string name="blaze_overlay_page_promotional_button">Promovează această pagină</string>
@@ -44,19 +62,17 @@ Language: ro
     <string name="jetpack_plugin_install_error_description">Jetpack nu a putut fi instalat în acest moment.</string>
     <string name="jetpack_plugin_install_error_button_retry">Reîncearcă</string>
     <string name="jetpack_plugin_install_error_button_contact_support">Contactează suportul</string>
-    <string name="my_site_jp_install_full_plugin_card_content">Acest site folosește un modul individual, care încă nu suportă toate funcționalitățile aplicației. Te rog instalează modulul complet Jetpack.</string>
     <string name="only_one_primary_site_message">Este disponibil un singur site, așadar nu poți modifica site-ul principal.</string>
     <string name="jetpack_individual_plugin_support_onboarding_title">Te rog instalează modulul complet Jetpack</string>
     <string name="button_promote_with_blaze">Promovează cu Blaze</string>
     <string name="jetpack_plugin_install_jp_logo_content_description">Icon Jetpack</string>
     <string name="jetpack_plugin_install_initial_title">Instalează Jetpack</string>
-    <string name="jetpack_plugin_install_initial_description">Datele de conectare ale site-ului tău web nu vor fi stocate și sunt folosite numai în scopul de a instala Jetpack.</string>
     <string name="jetpack_plugin_install_initial_button">Continuă</string>
     <string name="jetpack_plugin_install_installing_title">Instalez Jetpack</string>
     <string name="jetpack_plugin_install_installing_description">Instalez Jetpack pe site-ul tău. Poate dura câteva minute până la finalizare.</string>
     <string name="jetpack_plugin_install_done_title">Jetpack a fost instalat</string>
     <string name="jetpack_plugin_install_full_plugin_done_description">Gata pentru a folosi acest site în aplicație.</string>
-    <string name="jetpack_plugin_install_full_plugin_done_button">Gata</string>
+    <string name="jetpack_plugin_install_initial_description">Datele de conectare ale site-ului tău web nu vor fi stocate și sunt folosite numai cu scopul de a instala Jetpack.</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Deblochează întregul potențial al site-ului tău. Cu Jetpack, ai statistici, notificări și multe altele.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Urmărești creșterea traficului cu informații generale utile și statistici comprehensive.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Găsește, urmărește site-urile și comunitățile preferate și partajează conținutul tău.</string>
@@ -529,7 +545,7 @@ Language: ro
     <string name="my_site_create_first_post_title">Scrie primul tău articol</string>
     <string name="my_site_untitled_post">Fără titlu</string>
     <string name="my_site_post_card_scheduled_title">Articole programate în viitor</string>
-    <string name="my_site_post_card_draft_title">Lucrează într-un articol ciornă</string>
+    <string name="my_site_post_card_draft_title">Lucrează la un articol ciornă</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratuit în primul an &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/an&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Domeniile tale vor fi redirecționate la site-ul tău %s</string>
     <string name="gutenberg_native_create_link">Creează o legătură</string>
@@ -1849,7 +1865,6 @@ Language: ro
     <string name="post_uploading_draft">Încarc ciorna</string>
     <string name="post_list_tab_drafts">Ciorne</string>
     <string name="error_restoring_post">A apărut o eroare la restaurarea articolului</string>
-    <string name="jetpack_plugin_install_remote_plugin_done_description">Acum, după ce ai instalat Jetpack, trebuie doar să te pregătim pentru inițializare. Nu va dura decât un minut.</string>
     <string name="register_domain">Înregistrează domeniul</string>
     <string name="domains_suggestions_empty_list">Nicio sugestie găsită</string>
     <string name="domain_suggestions_search_hint">Introdu un cuvânt cheie pentru mai multe idei</string>
@@ -2123,18 +2138,9 @@ Language: ro
     <string name="reader_empty_followed_tags_subtitle">Adaugă subiecte aici pentru a găsi articole cu subiectele tale preferate</string>
     <string name="reader_empty_followed_tags_title">Nu urmărești niciun subiect</string>
     <string name="my_site_create_new_site_title">Nu ai niciun site</string>
-    <string name="install_jetpack">Instalează Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Întrebări frecvente Jetpack</string>
-    <string name="jetpack_installed">Jetpack instalat</string>
-    <string name="installing_jetpack">Instalez Jetpack</string>
-    <string name="jetpack_installation_problem">A fost o problemă</string>
-    <string name="install_jetpack_retry">Reîncearcă</string>
     <string name="login_to_to_connect_jetpack">Autentifică-te în contul WordPress.com pe care l-ai folosit pentru a conecta Jetpack.</string>
-    <string name="jetpack_plugin_install_remote_plugin_done_button">Inițializează</string>
-    <string name="jetpack_installation_problem_message">Jetpack nu a putut fi instalat în acest moment.</string>
-    <string name="installing_jetpack_message">Instalez Jetpack pe site-ul tău. Poate dura câteva minute până la finalizare.</string>
-    <string name="install_jetpack_message">Datele de conectare ale site-ului tău web nu vor fi stocate și vor fi folosite numai pentru instalarea Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">Pentru a folosi Statisticile pe site-ul tău WordPress va trebui să instalezi modulul Jetpack.</string>
     <string name="themes_empty_list">Nu s-a potrivit nicio temă cu căutarea ta</string>
     <string name="reader_label_post_search_explainer">Ce vrei să găsești?</string>

@@ -126,11 +126,6 @@ Language: eu_ES
     <string name="pages_published">Argitaratuta</string>
     <string name="pages_drafts">Zirriborroak</string>
     <string name="page_moved_to_published">Orrialdea argitaratua izan da</string>
-    <string name="install_jetpack_retry">Saiatu berriro</string>
-    <string name="jetpack_installation_problem">Arazo bat egon da</string>
-    <string name="jetpack_installed">Jetpack instalatuta</string>
-    <string name="installing_jetpack">Jetpack instalatzen</string>
-    <string name="install_jetpack">Instalatu Jetpack</string>
     <string name="reader_gallery_images_desc">Irudi galeria</string>
     <string name="reader_save_for_later_title">Gordetako bidalketak</string>
     <string name="reader_followed_blog_notifications_action">Gaitu</string>
