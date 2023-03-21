@@ -202,7 +202,6 @@ class SiteRestClientTest {
         val siteDesign = "design"
         val timeZoneId = "Europe/London"
         val findAvailableUrl = true
-        val isComingSoon = false
 
         val result = restClient.newSite(
             siteName,
@@ -213,7 +212,6 @@ class SiteRestClientTest {
             segmentId,
             siteDesign,
             findAvailableUrl,
-            isComingSoon,
             dryRun
         )
 
@@ -236,7 +234,6 @@ class SiteRestClientTest {
                                 "site_segment" to segmentId,
                                 "template" to siteDesign,
                                 "timezone_string" to timeZoneId,
-                                "wpcom_public_coming_soon" to "0"
                         )
                 )
         )
@@ -263,8 +260,6 @@ class SiteRestClientTest {
         val segmentId = 123L
         val siteDesign = "design"
         val timeZoneId = "Europe/London"
-        val isComingSoon = false
-
 
         val result = restClient.newSite(
             siteName,
@@ -275,7 +270,6 @@ class SiteRestClientTest {
             segmentId,
             siteDesign,
             null,
-            isComingSoon,
             dryRun
         )
 
@@ -299,7 +293,6 @@ class SiteRestClientTest {
                     "template" to siteDesign,
                     "site_creation_flow" to "with-design-picker",
                     "timezone_string" to timeZoneId,
-                    "wpcom_public_coming_soon" to "0"
                 )
             )
         )
@@ -326,7 +319,6 @@ class SiteRestClientTest {
         val segmentId = 123L
         val siteDesign = "design"
         val timeZoneId = "Europe/London"
-        val isComingSoon = false
 
         val result = restClient.newSite(
             siteName,
@@ -337,7 +329,6 @@ class SiteRestClientTest {
             segmentId,
             siteDesign,
             null,
-            isComingSoon,
             dryRun
         )
 
@@ -360,7 +351,6 @@ class SiteRestClientTest {
                     "template" to siteDesign,
                     "site_creation_flow" to "with-design-picker",
                     "timezone_string" to timeZoneId,
-                    "wpcom_public_coming_soon" to "0"
                 )
             )
         )
@@ -385,7 +375,6 @@ class SiteRestClientTest {
         val language = "CZ"
         val visibility = SiteVisibility.PRIVATE
         val timeZoneId = "Europe/London"
-        val isComingSoon = false
 
         val result = restClient.newSite(
             siteName,
@@ -396,7 +385,6 @@ class SiteRestClientTest {
             null,
             null,
             null,
-            isComingSoon,
             dryRun
         )
 
@@ -415,7 +403,6 @@ class SiteRestClientTest {
                         "client_secret" to appSecret,
                         "options" to mapOf<String, Any>(
                             "timezone_string" to timeZoneId,
-                            "wpcom_public_coming_soon" to "0"
                         )
                 )
         )
