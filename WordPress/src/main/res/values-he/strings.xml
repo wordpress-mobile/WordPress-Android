@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-01 15:54:09+0000
+Translation-Revision-Date: 2023-03-14 16:54:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: he_IL
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">לקדם פוסט עם Blaze עכשיו</string>
+    <string name="blaze_overlay_page_promotional_button">להשתמש ב-Blaze בעמוד הזה</string>
+    <string name="blaze_overlay_post_promotional_button">להשתמש ב-Blaze בפוסט הזה</string>
+    <string name="blaze_promotional_subtitle_3">לעקוב אחר ביצועים, להתחיל קמפיין ב-Blaze ולהפסיק אותו בכל עת.</string>
+    <string name="blaze_promotional_subtitle_2">התוכן שלך יופיע במיליוני אתרים של WordPress ו-Tumblr.</string>
+    <string name="blaze_promotional_subtitle_1">לקדם כל פוסט או עמוד תוך דקות ספורות בעלות של כמה דולרים ביום.</string>
+    <string name="blaze_promotional_text">לקבל תעבודה גדולה יותר לאתר שלך בעזרת Blaze</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="site_creation_domain_tag_unavailable">הדומיין הזה כבר רשום.</string>
+    <string name="site_creation_domain_tag_sale">מבצע</string>
+    <string name="site_creation_domain_tag_recommended">מומלץ</string>
+    <string name="site_creation_domain_tag_best_alternative">החלופה הטובה ביותר</string>
+    <string name="site_creation_domain_cost">%s לשנה</string>
+    <string name="me_btn_help">עזרה</string>
+    <string name="support_faq_caption">כדאי לעיין בשאלות הנפוצות שלנו כדי למצוא מענה על כמה מהשאלות הרגילות שאולי יהיו לך.</string>
+    <string name="support_faq_title">תודה שהחלפת לאפליקציה של Jetpack!</string>
+    <string name="logs_button">קובצי יומן</string>
+    <string name="tickets">כרטיסים</string>
+    <string name="free">חינם</string>
+    <string name="help_buttons_screen_title">עזרה</string>
     <string name="gutenberg_native_blocks_menu">תפריט בלוקים</string>
     <string name="promote_blaze_card_menu_hide_this">להסתיר את המידע</string>
     <string name="promote_blaze_card_sub_title">להציג את העבודה שלך במיליוני אתרים.</string>
@@ -1837,7 +1857,7 @@ Language: he_IL
     <string name="domain_suggestions_search_hint">יש להקליד מילת מפתח לרעיונות נוספים</string>
     <string name="domains_suggestions_empty_list">לא נמצאו הצעות</string>
     <string name="register_domain">רישום דומיין</string>
-    <string name="jetpack_installed_message">כעת, לאחר ההתקנה של Jetpack, צריך להגדיר את החשבון. התהליך יארך כדקה.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">כעת, לאחר ההתקנה של Jetpack, צריך להגדיר את החשבון. התהליך יארך כדקה.</string>
     <string name="stats_menu_remove">הסרה מהתובנות</string>
     <string name="stats_menu_move_down">העברה למטה</string>
     <string name="stats_menu_move_up">העברה למעלה</string>
@@ -2104,7 +2124,7 @@ Language: he_IL
     <string name="reader_empty_followed_tags_subtitle">אפשר להוסיף כאן נושאים כדי למצוא פוסטים על הנושאים המועדפים עליך</string>
     <string name="login_to_to_connect_jetpack">יש להיכנס לחשבון WordPress.com שדרכו חיברת את Jetpack.</string>
     <string name="install_jetpack_retry">יש לנסות שנית</string>
-    <string name="install_jetpack_continue">הגדר</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">הגדר</string>
     <string name="jetpack_installation_problem_message">אין אפשרות להתקין את Jetpack כעת.</string>
     <string name="jetpack_installation_problem">הייתה בעיה</string>
     <string name="jetpack_installed">Jetpack מותקן</string>

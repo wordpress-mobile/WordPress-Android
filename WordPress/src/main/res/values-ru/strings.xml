@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-06 07:07:44+0000
+Translation-Revision-Date: 2023-03-15 09:54:07+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.4
 Language: ru
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">Выделить запись с помощью Blaze сейчас</string>
+    <string name="blaze_overlay_page_promotional_button">Выделить эту страницу с помощью Blaze</string>
+    <string name="blaze_overlay_post_promotional_button">Выделить эту запись с помощью Blaze</string>
+    <string name="blaze_promotional_subtitle_3">Отслеживайте производительность, запускайте и останавливайте Blaze в любое время.</string>
+    <string name="blaze_promotional_subtitle_2">Содержимое вашего сайта появится на огромном количестве сайтов WordPress и Tumblr.</string>
+    <string name="blaze_promotional_subtitle_1">Продвигайте любую запись или страницу за несколько минут всего за несколько долларов в день.</string>
+    <string name="blaze_promotional_text">Повысьте посещаемость своего сайта с помощью Blaze</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="site_creation_domain_tag_unavailable">Этот домен уже зарегистрирован</string>
+    <string name="site_creation_domain_tag_sale">Распродажа</string>
+    <string name="site_creation_domain_tag_recommended">Рекомендуемые</string>
+    <string name="site_creation_domain_tag_best_alternative">Лучшая альтернатива</string>
+    <string name="site_creation_domain_cost">%s/г.</string>
+    <string name="me_btn_help">Справка</string>
+    <string name="support_faq_caption">Ищите ответы на типовые вопросы в разделе \"Часто задаваемые вопросы\".</string>
+    <string name="support_faq_title">Благодарим за переход на приложение Jetpack!</string>
+    <string name="logs_button">Журналы</string>
+    <string name="tickets">Билеты</string>
+    <string name="free">Бесплатно</string>
+    <string name="help_buttons_screen_title">Справка</string>
     <string name="gutenberg_native_blocks_menu">Меню \"Блоки\"</string>
     <string name="promote_blaze_card_menu_hide_this">Свернуть</string>
     <string name="promote_blaze_card_sub_title">Демонстрируйте свою работу на миллионах сайтов.</string>
@@ -1838,7 +1858,7 @@ Language: ru
     <string name="domain_suggestions_search_hint">Напишите ключевое слово для получения предложений</string>
     <string name="domains_suggestions_empty_list">Нет предложений</string>
     <string name="register_domain">Зарегистрировать домен</string>
-    <string name="jetpack_installed_message">Теперь, когда Jetpack установлен, нам нужно настроить, это займет всего минуту.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Теперь, когда Jetpack установлен, нам нужно настроить, это займет всего минуту.</string>
     <string name="stats_menu_remove">Удалить с вкладки</string>
     <string name="stats_menu_move_down">Вниз</string>
     <string name="stats_menu_move_up">Вверх</string>
@@ -2105,7 +2125,7 @@ Language: ru
     <string name="reader_empty_followed_tags_subtitle">Добавьте любимые темы здесь, чтобы найти по ним записи</string>
     <string name="login_to_to_connect_jetpack">Войдите в учетную запись WordPress.com, с которой был подключен Jetpack.</string>
     <string name="install_jetpack_retry">Повторить</string>
-    <string name="install_jetpack_continue">Продолжить установку</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Продолжить установку</string>
     <string name="jetpack_installation_problem_message">Сейчас Jetpack не может быть установлен.</string>
     <string name="jetpack_installation_problem">Возникла проблема</string>
     <string name="jetpack_installed">Jetpack установлен</string>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/MainBottomSheetRowLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -11,18 +12,40 @@
         android:gravity="start"
         android:layout_width="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/feature_enabled"
+        app:layout_constraintEnd_toStartOf="@id/preview_icon"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Feature Title"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/preview_icon"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:background="?android:selectableItemBackgroundBorderless"
+        android:contentDescription="@string/preview"
+        android:visibility="gone"
+        app:cornerRadius="@dimen/margin_large"
+        app:icon="@drawable/ic_external_grey_min_24dp"
+        app:iconPadding="0dp"
+        app:iconSize="@dimen/settings_icon_size"
+        app:iconTint="@color/grey_dark"
+        app:background="@color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/feature_enabled"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <CheckBox
         android:id="@+id/feature_enabled"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/unknown_icon"
-        app:layout_constraintStart_toEndOf="@+id/feature_title"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible"/>
 
     <ImageView
         android:id="@+id/unknown_icon"
@@ -33,7 +56,7 @@
         android:contentDescription="@string/unknown"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/feature_enabled"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

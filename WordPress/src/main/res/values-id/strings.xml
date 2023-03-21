@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-28 09:54:09+0000
+Translation-Revision-Date: 2023-03-14 09:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.4
 Language: id
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">Promosikan pos dengan Blaze sekarang</string>
+    <string name="blaze_overlay_page_promotional_button">Promosikan halaman ini dengan Blaze</string>
+    <string name="blaze_overlay_post_promotional_button">Promosikan pos ini dengan Blaze</string>
+    <string name="blaze_promotional_subtitle_3">Lacak performa, mulai, dan hentikan Blaze Anda kapan saja.</string>
+    <string name="blaze_promotional_subtitle_2">Konten Anda akan muncul di jutaan situs WordPress dan Tumblr.</string>
+    <string name="blaze_promotional_subtitle_1">Promosikan pos atau halaman apa saja dalam hitungan menit dengan biaya harian sangat terjangkau.</string>
+    <string name="blaze_promotional_text">Tingkatkan jumlah pengunjung situs Anda dengan Blaze</string>
+    <string name="site_creation_domain_tag_unavailable">Domain ini sudah terdaftar</string>
+    <string name="site_creation_domain_tag_sale">Obral</string>
+    <string name="site_creation_domain_tag_recommended">Disarankan</string>
+    <string name="site_creation_domain_tag_best_alternative">Alternatif Terbaik</string>
+    <string name="site_creation_domain_cost">%s/th</string>
+    <string name="me_btn_help">Bantuan</string>
+    <string name="support_faq_caption">Tanya Jawab Umum akan menjawab berbagai pertanyaan yang umum diajukan.</string>
+    <string name="support_faq_title">Terima kasih sudah beralih ke aplikasi Jetpack.</string>
+    <string name="logs_button">Log</string>
+    <string name="tickets">Tiket</string>
+    <string name="free">Gratis</string>
+    <string name="help_buttons_screen_title">Bantuan</string>
     <string name="gutenberg_native_blocks_menu">Menu blok</string>
     <string name="promote_blaze_card_menu_hide_this">Sembunyikan</string>
     <string name="promote_blaze_card_sub_title">Tunjukkan karya Anda di jutaan situs.</string>
@@ -26,7 +45,7 @@ Language: id
     <string name="jetpack_full_plugin_install_error_button_retry">Coba lagi</string>
     <string name="jetpack_full_plugin_install_error_description">Jetpack tidak dapat diinstal untuk saat ini.</string>
     <string name="jetpack_full_plugin_install_error_title">Terjadi kendala</string>
-    <string name="jetpack_full_plugin_install_error_image_content_description">Ikon eror</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Ikon eror</string>
     <string name="jetpack_full_plugin_install_done_button">Selesai</string>
     <string name="jetpack_full_plugin_install_done_description">Situs ini siap digunakan dengan aplikasi.</string>
     <string name="jetpack_full_plugin_install_done_title">Jetpack sudah diinstal</string>
@@ -1838,7 +1857,7 @@ Language: id
     <string name="domain_suggestions_search_hint">Ketikkan kata kunci untuk mendapatkan lebih banyak ide</string>
     <string name="domains_suggestions_empty_list">Saran tidak ditemukan</string>
     <string name="register_domain">Daftarkan Domain</string>
-    <string name="jetpack_installed_message">Sekarang Jetpack telah terinstal, kami hanya perlu Anda menyiapkannya. Ini hanya memerlukan waktu satu menit.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Sekarang Jetpack telah terinstal, kami hanya perlu Anda menyiapkannya. Ini hanya memerlukan waktu satu menit.</string>
     <string name="stats_menu_remove">Hapus dari wawasan</string>
     <string name="stats_menu_move_down">Geser bawah</string>
     <string name="stats_menu_move_up">Geser atas</string>
@@ -2105,7 +2124,7 @@ Language: id
     <string name="reader_empty_followed_tags_subtitle">Tambahkan topik di sini untuk menemukan pos tentang topik favorit Anda.</string>
     <string name="login_to_to_connect_jetpack">Login ke akun WordPress.com yang Anda gunakan untuk menghubungkan Jetpack.</string>
     <string name="install_jetpack_retry">Coba lagi</string>
-    <string name="install_jetpack_continue">Siapkan</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Siapkan</string>
     <string name="jetpack_installation_problem_message">Jetpack tidak dapat diinstal untuk saat ini.</string>
     <string name="jetpack_installation_problem">Ada masalah</string>
     <string name="jetpack_installed">Jetpack sudah diinstal</string>

@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-02-28 15:54:11+0000
+Translation-Revision-Date: 2023-03-14 20:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.4
 Language: ar
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">إبراز تدوينة الآن</string>
+    <string name="blaze_overlay_page_promotional_button">إبراز هذه الصفحة</string>
+    <string name="blaze_overlay_post_promotional_button">إبراز هذه التدوينة</string>
+    <string name="blaze_promotional_subtitle_3">تعقّب الأداء، وابدأ Blaze الخاصة بك وأوقفها في أي وقت.</string>
+    <string name="blaze_promotional_subtitle_2">سيظهر محتواك على ملايين من مواقع ووردبريس وTumblr.</string>
+    <string name="blaze_promotional_subtitle_1">روّج لأي تدوينة أو صفحة في غضون دقائق قليلة فقط مقابل بضعة دولارات فقط في اليوم.</string>
+    <string name="blaze_promotional_text">جذب مزيد من حركة المرور إلى موقعك باستخدام Blaze</string>
+    <string name="blaze_activity_title">التوهج</string>
+    <string name="site_creation_domain_tag_unavailable">هذا النطاق مسجّل بالفعل</string>
+    <string name="site_creation_domain_tag_sale">تخفيض</string>
+    <string name="site_creation_domain_tag_recommended">موصى به</string>
+    <string name="site_creation_domain_tag_best_alternative">أفضل بديل</string>
+    <string name="site_creation_domain_cost">%s سنويًا</string>
+    <string name="me_btn_help">مساعدة</string>
+    <string name="support_faq_caption">ارجع إلى قسم الأسئلة المتداولة لدينا للحصول على إجابات عن الأسئلة الشائعة التي قد تطرحها.</string>
+    <string name="support_faq_title">شكرًا لك للتبديل إلى تطبيق Jetpack!</string>
+    <string name="logs_button">السجلات</string>
+    <string name="tickets">التذاكر</string>
+    <string name="free">مجانًا</string>
+    <string name="help_buttons_screen_title">مساعدة</string>
     <string name="gutenberg_native_blocks_menu">قائمة المكوّنات</string>
     <string name="promote_blaze_card_menu_hide_this">إخفاء هذا</string>
     <string name="promote_blaze_card_sub_title">اعرض عملك عبر ملايين المواقع.</string>
@@ -1831,7 +1851,7 @@ Language: ar
     <string name="stats_insights_social">اجتماعي</string>
     <string name="stats_insights_annual_site_stats">إحصاءات الموقع السنوية</string>
     <string name="register_domain">تسجيل نطاق</string>
-    <string name="jetpack_installed_message">والآن بعد تثبيت Jetpack، ما علينا سوى مساعدتك على الإعداد. لن يستغرق هذا إلا دقيقة.</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">والآن بعد تثبيت Jetpack، ما علينا سوى مساعدتك على الإعداد. لن يستغرق هذا إلا دقيقة.</string>
     <string name="domain_suggestions_fetch_error">تعذّر تحميل اقتراحات النطاق</string>
     <string name="domain_suggestions_search_hint">كتابة كلمة مفتاحية للحصول على مزيد من الأفكار</string>
     <string name="domains_suggestions_empty_list">لم يتم العثور على أي اقتراحات</string>
@@ -2111,7 +2131,7 @@ Language: ar
     <string name="jetpack_installation_problem_message">يتعذر تنصيب Jetpack في الوقت الحالي.</string>
     <string name="installing_jetpack_message">تنصيب Jetpack على موقعك. قد يستغرق هذا الأمر وقتًا يصل إلى بضع دقائق لاكتماله.</string>
     <string name="install_jetpack_message">لن يتم تخزين بيانات اعتمادك وستُستخدم فقط بغرض تنصيب Jetpack.</string>
-    <string name="install_jetpack_continue">الإعداد</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">الإعداد</string>
     <string name="stats_jetpack_connection_setup_info">لاستخدام الإحصاءات على موقع ووردبريس الخاص بك، سيتعين عليك تنصيب إضافة Jetpack.</string>
     <string name="themes_empty_list">لا توجد سمات مطابقة لبحثك</string>
     <string name="reader_label_post_search_explainer">ما الذي ترغب في إيجاده؟</string>

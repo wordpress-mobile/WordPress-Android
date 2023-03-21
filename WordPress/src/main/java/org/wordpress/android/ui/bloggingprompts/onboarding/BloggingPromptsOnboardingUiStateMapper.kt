@@ -10,11 +10,11 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
 import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
 import javax.inject.Inject
 
 class BloggingPromptsOnboardingUiStateMapper @Inject constructor(
-    private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig
+    private val bloggingPromptsSocialFeatureConfig: BloggingPromptsSocialFeatureConfig
 ) {
     @Suppress("MagicNumber")
     fun mapReady(
@@ -30,7 +30,7 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor(
             dummyRespondent
         )
 
-        val trailingLabel = if (bloggingPromptsEnhancementsFeatureConfig.isEnabled()) {
+        val trailingLabel = if (bloggingPromptsSocialFeatureConfig.isEnabled()) {
             UiStringRes(
                 R.string.my_site_blogging_prompt_card_view_answers
             )

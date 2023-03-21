@@ -243,6 +243,7 @@ class PostListItemUiStateHelperTest {
 
     @Test
     fun `verify published post actions`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton()).thenReturn(true)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_PUBLISH)
         )
@@ -282,8 +283,8 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `given published post with stats access when jetpack removal phase then stats is not in menu`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+    fun `given published post with stats access when jetpack removal phase then stats is in menu`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton()).thenReturn(true)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_PUBLISH)
         )
@@ -294,16 +295,17 @@ class PostListItemUiStateHelperTest {
         assertThat(state.actions).hasSize(3)
 
         val moreActions = (state.actions[2] as MoreItem).actions
-        assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
-        assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
-        assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
-        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
-        assertThat(moreActions).hasSize(4)
+        assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_STATS)
+        assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
+        assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
+        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(5)
     }
 
     @Test
-    fun `given published post with stats access when not jetpack removal phase then stats is in menu`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+    fun `given published post with stats access when not jetpack removal phase then stats is not in menu`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton()).thenReturn(false)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_PUBLISH)
         )

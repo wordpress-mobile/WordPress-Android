@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-01 11:54:09+0000
+Translation-Revision-Date: 2023-03-14 09:54:12+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: zh_TW
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">立即使用 Blaze 宣傳文章</string>
+    <string name="blaze_overlay_page_promotional_button">使用 Blaze 宣傳此頁面</string>
+    <string name="blaze_overlay_post_promotional_button">使用 Blaze 宣傳此文章</string>
+    <string name="blaze_promotional_subtitle_2">你的內容會出現在數百萬個 WordPress 和 Tumblr 網站上。</string>
+    <string name="blaze_promotional_subtitle_1">只要幾分鐘就能宣傳任何文章或頁面；每天只需支付幾美元。</string>
+    <string name="blaze_promotional_text">使用 Blaze 為你的網站吸引更多流量</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="site_creation_domain_tag_unavailable">此網域已被註冊</string>
+    <string name="site_creation_domain_tag_sale">特價</string>
+    <string name="site_creation_domain_tag_recommended">推薦</string>
+    <string name="site_creation_domain_tag_best_alternative">最佳替代選項</string>
+    <string name="site_creation_domain_cost">%s/年</string>
+    <string name="me_btn_help">說明</string>
+    <string name="support_faq_caption">請查看我們的常見問題集，瞭解你可能想知道的一般問題的解答。</string>
+    <string name="support_faq_title">感謝你改用 Jetpack 應用程式！</string>
+    <string name="logs_button">記錄</string>
+    <string name="tickets">支援票證</string>
+    <string name="free">免費</string>
+    <string name="help_buttons_screen_title">說明</string>
     <string name="gutenberg_native_blocks_menu">區塊選單</string>
     <string name="promote_blaze_card_sub_title">在數百萬個網站中展示你的作品。</string>
     <string name="promote_blaze_card_title">使用 Blaze 宣傳你的內容</string>
@@ -1832,7 +1851,7 @@ Language: zh_TW
     <string name="stats_insights_social">社交</string>
     <string name="stats_insights_annual_site_stats">年度網站統計</string>
     <string name="register_domain">註冊網域</string>
-    <string name="jetpack_installed_message">現在 Jetpack 已安裝完成，我們只需要協助你完成設定即可。這只需要一分鐘左右。</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">現在 Jetpack 已安裝完成，我們只需要協助你完成設定即可。這只需要一分鐘左右。</string>
     <string name="stats_view_follower_totals">追蹤者總數</string>
     <string name="domain_suggestions_search_hint">輸入關鍵字尋找更多想法</string>
     <string name="domain_suggestions_fetch_error">無法載入網域建議</string>
@@ -2109,7 +2128,7 @@ Language: zh_TW
     <string name="install_jetpack">安裝 Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack 常見問題</string>
-    <string name="install_jetpack_continue">設定</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">設定</string>
     <string name="jetpack_installation_problem_message">目前無法安裝 Jetpack。</string>
     <string name="installing_jetpack_message">正在你的網站上安裝 Jetpack。這可能需要幾分鐘才能完成。</string>
     <string name="install_jetpack_message">我們不會儲存你的網站憑證，而且只會將其用於安裝 Jetpack。</string>

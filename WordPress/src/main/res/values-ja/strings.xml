@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-03 10:54:08+0000
+Translation-Revision-Date: 2023-03-15 11:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.4
 Language: ja_JP
 -->
 <resources>
+    <string name="blaze_overlay_site_promotional_button">今すぐ投稿を目立たせる</string>
+    <string name="blaze_overlay_page_promotional_button">このページを目立たせる</string>
+    <string name="blaze_overlay_post_promotional_button">この投稿を目立たせる</string>
+    <string name="blaze_promotional_subtitle_3">パフォーマンスの追跡、Blaze の開始と停止をいつでも実行できます。</string>
+    <string name="blaze_promotional_subtitle_2">コンテンツは数百万もの WordPress と Tumblr のサイトに表示されます。</string>
+    <string name="blaze_promotional_subtitle_1">1日わずか数百円、たった数分で投稿やページを宣伝できます。</string>
+    <string name="blaze_promotional_text">Blaze でサイトのトラフィックを増やす</string>
+    <string name="site_creation_domain_tag_unavailable">このドメインはすでに登録されています</string>
+    <string name="site_creation_domain_tag_sale">セール</string>
+    <string name="site_creation_domain_tag_recommended">おすすめ</string>
+    <string name="site_creation_domain_tag_best_alternative">こちらもおすすめ</string>
+    <string name="site_creation_domain_cost">%s/ 年</string>
+    <string name="me_btn_help">ヘルプ</string>
+    <string name="support_faq_title">Jetpack アプリにお切り替えいただきありがとうございます !</string>
+    <string name="logs_button">ログ</string>
+    <string name="tickets">チケット</string>
+    <string name="free">無料</string>
+    <string name="help_buttons_screen_title">ヘルプ</string>
+    <string name="blaze_activity_title">Blaze</string>
+    <string name="support_faq_caption">FAQ でよくある質問に対する回答をご確認ください。</string>
     <string name="gutenberg_native_blocks_menu">ブロックのメニュー</string>
     <string name="promote_blaze_card_menu_hide_this">非表示</string>
     <string name="promote_blaze_card_sub_title">何百万ものサイトに作品を表示しましょう。</string>
@@ -1837,7 +1857,7 @@ Language: ja_JP
     <string name="domain_suggestions_search_hint">その他のアイデアについてはキーワードを入力します</string>
     <string name="domains_suggestions_empty_list">提案が見つかりません</string>
     <string name="register_domain">ドメインを登録</string>
-    <string name="jetpack_installed_message">Jetpack がインストールされたので、あとはセットアップするだけです。ほんの1分ほどで済みます。</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Jetpack がインストールされたので、あとはセットアップするだけです。ほんの1分ほどで済みます。</string>
     <string name="stats_menu_remove">統計概要から削除</string>
     <string name="stats_menu_move_down">下に移動</string>
     <string name="stats_menu_move_up">上に移動</string>
@@ -2110,7 +2130,7 @@ Language: ja_JP
     <string name="install_jetpack">Jetpack をインストール</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack よくある質問</string>
-    <string name="install_jetpack_continue">設定</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">設定</string>
     <string name="jetpack_installation_problem_message">Jetpack は現在インストールできません。</string>
     <string name="installing_jetpack_message">サイトに Jetpack をインストールしています。完了まで数分かかることがあります。</string>
     <string name="install_jetpack_message">サイトのログイン情報は保存されず、Jetpack インストールのためのみに使用されます。</string>

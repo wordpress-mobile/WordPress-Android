@@ -107,7 +107,8 @@ class PostListItemUiStateHelper @Inject constructor(
             uploadUiState = uploadUiState,
             siteHasCapabilitiesToPublish = capabilitiesToPublish,
             statsSupported = statsSupported,
-            shouldRemoveJetpackFeatures = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures(),
+            shouldShowStatsInJetpackRemovalPhase =
+            jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton(),
             shouldShowPromoteWithBlaze = isSiteBlazeEligible && blazeFeatureUtils.isPostBlazeEligible(
                 postStatus,
                 post
@@ -381,7 +382,7 @@ class PostListItemUiStateHelper @Inject constructor(
         uploadUiState: PostUploadUiState,
         siteHasCapabilitiesToPublish: Boolean,
         statsSupported: Boolean,
-        shouldRemoveJetpackFeatures: Boolean,
+        shouldShowStatsInJetpackRemovalPhase: Boolean,
         shouldShowPromoteWithBlaze: Boolean
     ): List<PostListButtonType> {
         val canRetryUpload = uploadUiState is UploadFailed
@@ -395,7 +396,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 postStatus == PUBLISHED &&
                 !isLocalDraft &&
                 !isLocallyChanged &&
-                !shouldRemoveJetpackFeatures
+                shouldShowStatsInJetpackRemovalPhase
         val canShowCopy = postStatus == PUBLISHED || postStatus == DRAFT
         val canShowCopyUrlButton = !isLocalDraft && postStatus != TRASHED
         val canShowViewButton = !canRetryUpload && postStatus != TRASHED

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.annotation.DimenRes
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo
 import javax.inject.Inject
 
@@ -26,5 +27,8 @@ class SiteUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun getHomeURLOrHostName(site: SiteModel): String = SiteUtils.getHomeURLOrHostName(site)
     fun getSiteIconUrlOfResourceSize(site: SiteModel, @DimenRes sizeRes: Int): String {
         return SiteUtils.getSiteIconUrl(site, appContext.resources.getDimensionPixelSize(sizeRes))
+    }
+    fun supportsStoriesFeature(site: SiteModel?, helper: JetpackFeatureRemovalPhaseHelper): Boolean {
+        return SiteUtils.supportsStoriesFeature(site, helper)
     }
 }

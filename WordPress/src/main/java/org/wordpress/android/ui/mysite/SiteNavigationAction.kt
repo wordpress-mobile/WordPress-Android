@@ -84,4 +84,5 @@ sealed class SiteNavigationAction {
     object OpenJetpackMigrationDeleteWP : SiteNavigationAction()
     data class OpenJetpackFeatureOverlay(val source: JetpackFeatureCollectionOverlaySource) : SiteNavigationAction()
     data class OpenPromoteWithBlazeOverlay(val source: BlazeFlowSource) : SiteNavigationAction()
+    object ShowJetpackRemovalStaticPostersView : SiteNavigationAction()
 }
