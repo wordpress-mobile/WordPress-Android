@@ -41,6 +41,7 @@ import org.wordpress.android.ui.compose.components.SecondaryButton
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.theme.JpColorPalette
+import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.staticposter.UiData
 import org.wordpress.android.ui.main.jetpack.staticposter.UiState
@@ -69,7 +70,7 @@ fun JetpackStaticPoster(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(horizontal = 30.dp)
+                .padding(Margin.ExtraLarge.value)
                 .verticalScroll(rememberScrollState())
                 .fillMaxSize()
         ) {
