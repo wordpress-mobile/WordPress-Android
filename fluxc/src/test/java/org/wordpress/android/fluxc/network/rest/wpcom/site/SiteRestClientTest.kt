@@ -460,6 +460,37 @@ class SiteRestClientTest {
         assertThat(options).containsEntry("wpcom_public_coming_soon", "1")
     }
 
+    @Test
+    fun `creates new site with override site creation flow if specified`() = test {
+        // given
+        whenever(appSecrets.appId).thenReturn("")
+        whenever(appSecrets.appSecret).thenReturn("")
+        initNewSiteResponse()
+
+        val siteCreationFlow = "sample_creation_flow"
+
+        // when
+        restClient.newSite(
+            null,
+            "",
+            "",
+            "",
+            visibility = COMING_SOON,
+            null,
+            null,
+            null,
+            false,
+            siteCreationFlow = siteCreationFlow
+        )
+
+        // then
+        val body = bodyCaptor.lastValue
+        @Suppress("UNCHECKED_CAST")
+        val options = body["options"] as Map<String, String>
+
+        assertThat(options).containsEntry("site_creation_flow", siteCreationFlow)
+    }
+
     private suspend fun initSiteResponse(
         data: SiteWPComRestResponse? = null,
         error: WPComGsonNetworkError? = null
