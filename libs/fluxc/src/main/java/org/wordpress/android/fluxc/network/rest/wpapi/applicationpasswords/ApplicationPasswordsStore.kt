@@ -38,7 +38,7 @@ class ApplicationPasswordsStore @Inject constructor(
 
         return when {
             !site.isUsingWpComRestApi && site.username != username -> null
-            username != null && password != null && uuid != null ->
+            username != null && password != null ->
                 ApplicationPasswordCredentials(
                     userName = username,
                     password = password,
