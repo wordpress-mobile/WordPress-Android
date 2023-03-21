@@ -103,9 +103,7 @@ class HelpActivity : LocaleAwareActivity() {
                 actionBar.elevation = 0f // remove shadow
             }
 
-            if (wpSupportForumFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP &&
-                !SiteUtils.hasSiteWithPaidPlan(siteStore)
-            ) {
+            if (wpSupportForumFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
                 showSupportForum()
             } else {
                 showContactUs()
@@ -198,7 +196,6 @@ class HelpActivity : LocaleAwareActivity() {
             AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_VIEWED)
             JpFaqContainer.setOnClickListener { showMigrationFaq() }
         }
-
         contactUsButton.setOnClickListener { createNewZendeskTicket() }
         ticketsButton.setOnClickListener { showZendeskTickets() }
 
@@ -365,7 +362,8 @@ class HelpActivity : LocaleAwareActivity() {
         SCAN_SCREEN_HELP("origin:scan-screen-help"),
         JETPACK_MIGRATION_HELP("origin:jetpack-migration-help"),
         JETPACK_INSTALL_FULL_PLUGIN_ONBOARDING("origin:jp-install-full-plugin-overlay"),
-        JETPACK_INSTALL_FULL_PLUGIN_ERROR("origin:jp-install-full-plugin-error");
+        JETPACK_INSTALL_FULL_PLUGIN_ERROR("origin:jp-install-full-plugin-error"),
+        JETPACK_REMOTE_INSTALL_PLUGIN_ERROR("origin:jp-remote-install-plugin-error");
 
         override fun toString(): String {
             return stringValue

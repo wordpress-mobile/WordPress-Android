@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ColumnWithTopGlassBorder
-import org.wordpress.android.ui.compose.components.PrimaryButton
-import org.wordpress.android.ui.compose.components.SecondaryButton
+import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
+import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton

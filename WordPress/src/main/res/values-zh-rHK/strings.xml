@@ -1851,7 +1851,7 @@ Language: zh_TW
     <string name="stats_insights_social">社交</string>
     <string name="stats_insights_annual_site_stats">年度網站統計</string>
     <string name="register_domain">註冊網域</string>
-    <string name="jetpack_installed_message">現在 Jetpack 已安裝完成，我們只需要協助你完成設定即可。這只需要一分鐘左右。</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">現在 Jetpack 已安裝完成，我們只需要協助你完成設定即可。這只需要一分鐘左右。</string>
     <string name="stats_view_follower_totals">追蹤者總數</string>
     <string name="domain_suggestions_search_hint">輸入關鍵字尋找更多想法</string>
     <string name="domain_suggestions_fetch_error">無法載入網域建議</string>
@@ -2128,7 +2128,7 @@ Language: zh_TW
     <string name="install_jetpack">安裝 Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack 常見問題</string>
-    <string name="install_jetpack_continue">設定</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">設定</string>
     <string name="jetpack_installation_problem_message">目前無法安裝 Jetpack。</string>
     <string name="installing_jetpack_message">正在你的網站上安裝 Jetpack。這可能需要幾分鐘才能完成。</string>
     <string name="install_jetpack_message">我們不會儲存你的網站憑證，而且只會將其用於安裝 Jetpack。</string>

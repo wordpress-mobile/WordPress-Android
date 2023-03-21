@@ -55,9 +55,9 @@ import org.wordpress.android.ui.blaze.BlazeUIModel
 import org.wordpress.android.ui.blaze.BlazeUiState
 import org.wordpress.android.ui.blaze.PageUIModel
 import org.wordpress.android.ui.blaze.PostUIModel
-import org.wordpress.android.ui.compose.components.Button
-import org.wordpress.android.ui.compose.components.Drawable
-import org.wordpress.android.ui.compose.components.ImageButton
+import org.wordpress.android.ui.compose.components.buttons.Button
+import org.wordpress.android.ui.compose.components.buttons.Drawable
+import org.wordpress.android.ui.compose.components.buttons.ImageButton
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppColor

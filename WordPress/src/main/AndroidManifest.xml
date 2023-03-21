@@ -319,7 +319,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.JetpackRemoteInstallActivity"
+            android:name=".ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallActivity"
             android:label="@string/jetpack"
             android:theme="@style/WordPress.NoActionBar"/>
 
@@ -773,7 +773,7 @@
 
         <!-- Jetpack full plugin install -->
         <activity
-            android:name=".ui.jpfullplugininstall.install.JetpackFullPluginInstallActivity"
+            android:name=".ui.jetpackplugininstall.fullplugin.install.JetpackFullPluginInstallActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Services -->

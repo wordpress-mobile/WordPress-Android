@@ -1504,7 +1504,7 @@ Language: pl
     <string name="stats_view_follower_totals">Suma obserwujących</string>
     <string name="backdated_for">Datowany wstecznie dla: %s</string>
     <string name="register_domain">Zarejestruj domenę</string>
-    <string name="jetpack_installed_message">Jetpack jest już zainstalowany, czas go skonfigurować. Zajmie to chwilę. </string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Jetpack jest już zainstalowany, czas go skonfigurować. Zajmie to chwilę. </string>
     <string name="domain_suggestions_fetch_error">Nie można było wczytać sugestii dla nazwy domeny</string>
     <string name="domain_suggestions_search_hint">Wpisz słowo kluczowe aby uzyskać więcej pomysłów</string>
     <string name="domains_suggestions_empty_list">Nie znaleziono sugestii</string>
@@ -1785,7 +1785,7 @@ Language: pl
     <string name="installing_jetpack_message">Instalowanie Jetpacka na twojej witrynie.  To może zająć do kilku minut.</string>
     <string name="install_jetpack_retry">Spróbuj ponownie</string>
     <string name="stats_jetpack_connection_faq">Najczęściej zadawane pytania Jetpacka</string>
-    <string name="install_jetpack_continue">Skonfiguruj</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">Skonfiguruj</string>
     <string name="stats_jetpack_connection_setup_info">Aby korzystać ze statystyk na swojej witrynie, musisz zainstalować wtyczkę Jetpack.</string>
     <string name="themes_empty_list">Brak motywów spełniających kryteria wyszukiwania</string>
     <string name="reader_label_post_search_explainer">Co chciał(a)byś wyszukać? </string>

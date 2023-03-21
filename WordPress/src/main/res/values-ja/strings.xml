@@ -1857,7 +1857,7 @@ Language: ja_JP
     <string name="domain_suggestions_search_hint">その他のアイデアについてはキーワードを入力します</string>
     <string name="domains_suggestions_empty_list">提案が見つかりません</string>
     <string name="register_domain">ドメインを登録</string>
-    <string name="jetpack_installed_message">Jetpack がインストールされたので、あとはセットアップするだけです。ほんの1分ほどで済みます。</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_description">Jetpack がインストールされたので、あとはセットアップするだけです。ほんの1分ほどで済みます。</string>
     <string name="stats_menu_remove">統計概要から削除</string>
     <string name="stats_menu_move_down">下に移動</string>
     <string name="stats_menu_move_up">上に移動</string>
@@ -2130,7 +2130,7 @@ Language: ja_JP
     <string name="install_jetpack">Jetpack をインストール</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack よくある質問</string>
-    <string name="install_jetpack_continue">設定</string>
+    <string name="jetpack_plugin_install_remote_plugin_done_button">設定</string>
     <string name="jetpack_installation_problem_message">Jetpack は現在インストールできません。</string>
     <string name="installing_jetpack_message">サイトに Jetpack をインストールしています。完了まで数分かかることがあります。</string>
     <string name="install_jetpack_message">サイトのログイン情報は保存されず、Jetpack インストールのためのみに使用されます。</string>
