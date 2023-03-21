@@ -3387,7 +3387,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsEnhancementsEnabled)
         whenever(bloggingPromptsSocialFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsSocialEnabled)
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsEnabled)
-        whenever(jetpackBrandingUtils.shouldShowJetpackBranding()).thenReturn(shouldShowJetpackBranding)
+        whenever(jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard()).thenReturn(shouldShowJetpackBranding)
         whenever(blazeFeatureUtils.shouldShowBlazeCardEntryPoint(any(), any())).thenReturn(isBlazeEnabled)
         if (isSiteUsingWpComRestApi) {
             site.setIsWPCom(true)
