@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.CookieNonceAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.AppLog
@@ -26,8 +27,7 @@ import kotlin.coroutines.resume
 @Singleton
 internal class WPApiApplicationPasswordsRestClient @Inject constructor(
     private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
-    private val wpApiAuthenticator: CookieNonceAuthenticator,
-    private val applicationPasswordsStore: ApplicationPasswordsStore,
+    private val cookieNonceAuthenticator: CookieNonceAuthenticator,
     @Named("no-cookies") private val noCookieRequestQueue: RequestQueue,
     @Named("regular") requestQueue: RequestQueue,
     dispatcher: Dispatcher,
@@ -40,7 +40,7 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
         AppLog.d(T.MAIN, "Create an application password using Cookie Authentication")
         val path = WPAPI.users.me.application_passwords.urlV2
 
-        val response = wpApiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+        val response = cookieNonceAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
             wpApiGsonRequestBuilder.syncPostRequest(
                 restClient = this,
                 url = site.buildUrl(path),
@@ -73,7 +73,7 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
     ): ApplicationPasswordUUIDFetchPayload {
         AppLog.d(T.MAIN, "Fetch application password UUID using Cookie authentication")
         val path = WPAPI.users.me.application_passwords.urlV2
-        val response = wpApiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+        val response = cookieNonceAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
             wpApiGsonRequestBuilder.syncGetRequest(
                 restClient = this,
                 url = site.buildUrl(path),
@@ -103,70 +103,122 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
         uuid: ApplicationPasswordUUID
     ): ApplicationPasswordDeletionPayload {
         AppLog.d(T.MAIN, "Delete application password")
-
-        val applicationPasswordCredentials = applicationPasswordsStore.getCredentials(site)
-        val response = if (applicationPasswordCredentials != null) {
-            // If we have the credentials, attempt deleting the password using them
-            // This will allow deleting the password for sites authorized using the web flow where we don't have
-            // the user's credentials
-            deleteApplicationPasswordUsingBasicAuth(site, applicationPasswordCredentials)
-        } else {
-            deleteApplicationPasswordUsingCookieAuth(site, uuid)
-        }
-
-        return when (response) {
-            is WPAPIResponse.Success<ApplicationPasswordDeleteResponse> -> {
-                response.data?.let {
-                    ApplicationPasswordDeletionPayload(it.deleted)
-                } ?: ApplicationPasswordDeletionPayload(
-                    BaseNetworkError(
-                        GenericErrorType.UNKNOWN,
-                        "Response is empty"
-                    )
-                )
-            }
-
-            is WPAPIResponse.Error<ApplicationPasswordDeleteResponse> -> {
-                ApplicationPasswordDeletionPayload(response.error)
-            }
-        }
-    }
-
-    private suspend fun deleteApplicationPasswordUsingBasicAuth(
-        site: SiteModel,
-        credentials: ApplicationPasswordCredentials
-    ) = suspendCancellableCoroutine<WPAPIResponse<ApplicationPasswordDeleteResponse>> { continuation ->
-        val path = WPAPI.users.me.application_passwords.uuid(credentials.uuid).urlV2
-
-        val request = WPAPIGsonRequest(
-            Request.Method.DELETE,
-            site.buildUrl(path),
-            emptyMap(),
-            emptyMap(),
-            ApplicationPasswordDeleteResponse::class.java,
-            /* listener = */ { continuation.resume(WPAPIResponse.Success(it)) },
-            /* errorListener = */ { continuation.resume(WPAPIResponse.Error(it)) }
-        )
-
-        request.addHeader("Authorization", Credentials.basic(credentials.userName, credentials.password))
-        request.setUserAgent(userAgent.userAgent)
-
-        noCookieRequestQueue.add(request)
-    }
-
-    private suspend fun deleteApplicationPasswordUsingCookieAuth(
-        site: SiteModel,
-        uuid: ApplicationPasswordUUID
-    ): WPAPIResponse<ApplicationPasswordDeleteResponse> {
         val path = WPAPI.users.me.application_passwords.uuid(uuid).urlV2
 
-        return wpApiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+        val response = cookieNonceAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
             wpApiGsonRequestBuilder.syncDeleteRequest(
                 restClient = this,
                 url = site.buildUrl(path),
                 clazz = ApplicationPasswordDeleteResponse::class.java,
                 nonce = nonce.value
             )
+        }
+
+        return response.toPayload()
+    }
+
+    suspend fun deleteApplicationPassword(
+        site: SiteModel,
+        credentials: ApplicationPasswordCredentials
+    ): ApplicationPasswordDeletionPayload {
+        AppLog.d(T.MAIN, "Delete application password using Basic Authentication")
+
+        val uuid = credentials.uuid ?: fetchApplicationPasswordUsingBasicAuth(site, credentials).let {
+            if (it is WPAPIResponse.Success && it.data != null) {
+                it.data
+            } else {
+                return ApplicationPasswordDeletionPayload((it as WPAPIResponse.Error).error)
+            }
+        }
+
+        return deleteApplicationPasswordUsingBasicAuth(site, credentials, uuid).toPayload()
+    }
+
+    private suspend fun fetchApplicationPasswordUsingBasicAuth(
+        site: SiteModel,
+        applicationPasswordCredentials: ApplicationPasswordCredentials
+    ): WPAPIResponse<ApplicationPasswordUUID> {
+        AppLog.d(T.MAIN, "Fetching application password UUID using the /introspect endpoint")
+
+        val path = WPAPI.users.me.application_passwords.introspect.urlV2
+
+        val response = invokeRequestUsingBasicAuth<ApplicationPasswordsFetchResponse>(
+            site = site,
+            path = path,
+            credentials = applicationPasswordCredentials,
+            method = Request.Method.GET,
+        )
+
+        @Suppress("UNCHECKED_CAST")
+        return when (response) {
+            is WPAPIResponse.Success -> response.data?.let {
+                WPAPIResponse.Success(it.uuid)
+            } ?: WPAPIResponse.Error(
+                WPAPINetworkError(
+                    BaseNetworkError(
+                        GenericErrorType.UNKNOWN,
+                        "Response is empty"
+                    )
+                )
+            )
+
+            is WPAPIResponse.Error -> response as WPAPIResponse.Error<ApplicationPasswordUUID>
+        }
+    }
+
+    private suspend fun deleteApplicationPasswordUsingBasicAuth(
+        site: SiteModel,
+        credentials: ApplicationPasswordCredentials,
+        uuid: ApplicationPasswordUUID
+    ): WPAPIResponse<ApplicationPasswordDeleteResponse> {
+        val path = WPAPI.users.me.application_passwords.uuid(uuid).urlV2
+
+        return invokeRequestUsingBasicAuth(
+            site = site,
+            credentials = credentials,
+            path = path,
+            method = Request.Method.DELETE
+        )
+    }
+
+    private fun WPAPIResponse<ApplicationPasswordDeleteResponse>.toPayload() = when (this) {
+        is WPAPIResponse.Success<ApplicationPasswordDeleteResponse> -> {
+            data?.let {
+                ApplicationPasswordDeletionPayload(it.deleted)
+            } ?: ApplicationPasswordDeletionPayload(
+                BaseNetworkError(
+                    GenericErrorType.UNKNOWN,
+                    "Response is empty"
+                )
+            )
+        }
+
+        is WPAPIResponse.Error<ApplicationPasswordDeleteResponse> -> {
+            ApplicationPasswordDeletionPayload(error)
+        }
+    }
+
+    private suspend inline fun <reified T> invokeRequestUsingBasicAuth(
+        site: SiteModel,
+        credentials: ApplicationPasswordCredentials,
+        path: String,
+        method: Int
+    ): WPAPIResponse<T> {
+        return suspendCancellableCoroutine { continuation ->
+            val request = WPAPIGsonRequest(
+                method,
+                site.buildUrl(path),
+                emptyMap(),
+                emptyMap(),
+                T::class.java,
+                /* listener = */ { continuation.resume(WPAPIResponse.Success(it)) },
+                /* errorListener = */ { continuation.resume(WPAPIResponse.Error(it)) }
+            )
+
+            request.addHeader("Authorization", Credentials.basic(credentials.userName, credentials.password))
+            request.setUserAgent(userAgent.userAgent)
+
+            noCookieRequestQueue.add(request)
         }
     }
 

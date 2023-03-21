@@ -174,21 +174,32 @@ internal class ApplicationPasswordsManager @Inject constructor(
     suspend fun deleteApplicationCredentials(
         site: SiteModel
     ): ApplicationPasswordDeletionResult {
-        val uuid = applicationPasswordsStore.getCredentials(site)?.uuid
-            ?: fetchApplicationPasswordUUID(site).let {
+        val credentials = applicationPasswordsStore.getCredentials(site)
+
+        val payload = if (credentials == null) {
+            // If we don't have any saved credentials, let's fetch the UUID then delete the password using
+            // either the WP.com token or the self-hosted credentials.
+            val uuid = fetchApplicationPasswordUUID(site).let {
                 if (it.isError) return ApplicationPasswordDeletionResult.Failure(it.error)
                 it.uuid
             }
 
-        val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
-            jetpackApplicationPasswordsRestClient.deleteApplicationPassword(
-                site = site,
-                uuid = uuid
-            )
+            if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
+                jetpackApplicationPasswordsRestClient.deleteApplicationPassword(
+                    site = site,
+                    uuid = uuid
+                )
+            } else {
+                wpApiApplicationPasswordsRestClient.deleteApplicationPassword(
+                    site = site,
+                    uuid = uuid
+                )
+            }
         } else {
+            // If we have an Application Password, we can use it itself for the delete request.
             wpApiApplicationPasswordsRestClient.deleteApplicationPassword(
                 site = site,
-                uuid = uuid
+                credentials = credentials
             )
         }
 
