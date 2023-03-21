@@ -8,34 +8,34 @@ import com.android.volley.VolleyError
 import junit.framework.TestCase
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.UserAgent
-import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
-import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
-import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Unknown
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import java.util.Date
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
-@RunWith(MockitoJUnitRunner::class)
 class NonceRestClientTest {
-    @Mock lateinit var wpApiEncodedRequestBuilder: WPAPIEncodedBodyRequestBuilder
-    @Mock lateinit var currentTimeProvider: CurrentTimeProvider
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var requestQueue: RequestQueue
-    @Mock lateinit var userAgent: UserAgent
+    private val wpApiEncodedRequestBuilder: WPAPIEncodedBodyRequestBuilder = mock()
+    private val currentTimeProvider: CurrentTimeProvider = mock()
+    private val dispatcher: Dispatcher = mock()
+    private val requestQueue: RequestQueue = mock()
+    private val userAgent: UserAgent = mock()
 
     private lateinit var subject: NonceRestClient
     private val time = 123456L
+
+    private val site = SiteModel().apply {
+        url = "asiteurl.com"
+        username = "a_username"
+        password = "a_password"
+    }
+    private val nonceRequestUrl = "${site.url}/wp-admin/admin-ajax.php?action=rest-nonce"
 
     @Before
     fun setUp() {
@@ -45,20 +45,7 @@ class NonceRestClientTest {
 
     @Test
     fun `successful nonce request`() = test {
-        val site = SiteModel().apply {
-            url = "asiteurl.com"
-            username = "a_username"
-            password = "a_password"
-        }
-        val redirectUrl = "${site.url}/wp-admin/admin-ajax.php?action=rest-nonce"
-
-        val body = mapOf(
-            "log" to site.username,
-            "pwd" to site.password,
-            "redirect_to" to redirectUrl
-        )
-
-        val redirectResponse = Error<String>(
+        val redirectResponse = WPAPIResponse.Error<String>(
             WPAPINetworkError(
                 BaseNetworkError(
                     VolleyError(
@@ -67,7 +54,7 @@ class NonceRestClientTest {
                             byteArrayOf(),
                             false,
                             System.currentTimeMillis(),
-                            listOf(Header("Location", redirectUrl))
+                            listOf(Header("Location", nonceRequestUrl))
                         )
                     )
                 ),
@@ -75,33 +62,42 @@ class NonceRestClientTest {
             )
         )
         val expectedNonce = "1expectedNONCE"
-        val successResponse = Success(expectedNonce)
-        whenever(wpApiEncodedRequestBuilder.syncPostRequest(subject, "${site.url}/wp-login.php", body = body))
-                .thenReturn(redirectResponse)
-        whenever(wpApiEncodedRequestBuilder.syncGetRequest(subject, redirectUrl))
-                .thenReturn(successResponse)
+        givenLoginResponse(redirectResponse)
+        givenNonceRequestResponse(WPAPIResponse.Success(expectedNonce))
 
         val actual = subject.requestNonce(site)
 
-        TestCase.assertEquals(Available(expectedNonce, site.username), actual)
+        TestCase.assertEquals(Nonce.Available(expectedNonce, site.username), actual)
+    }
+
+    @Test
+    fun `invalid credentials returns correct error message`() = test {
+        @Suppress("MaxLineLength")
+        val loginResponse = WPAPIResponse.Success(
+            """
+            <html>
+              <head>
+                    <div id="login_error">
+                        <strong>Error:</strong> The password you entered for the username <strong>demo</strong> is incorrect. <a href="link/">Lost your password?</a><br>
+                    </div>
+              </head>
+            </html>
+        """.trimIndent()
+        )
+        givenLoginResponse(loginResponse)
+
+        val actual = subject.requestNonce(site)
+
+        assertIs<Nonce.FailedRequest>(actual)
+        assertEquals(Nonce.CookieNonceErrorType.NOT_AUTHENTICATED, actual.type)
+        assertEquals("Error: The password you entered for the username demo is incorrect.", actual.errorMessage)
     }
 
     @Test
     fun `invalid nonce of '0' returns FailedRequest`() = test {
-        val site = SiteModel().apply {
-            url = "asiteurl.com"
-            username = "a_username"
-            password = "a_password"
-        }
         val redirectUrl = "${site.url}/wp-admin/admin-ajax.php?action=rest-nonce"
 
-        val body = mapOf(
-            "log" to site.username,
-            "pwd" to site.password,
-            "redirect_to" to redirectUrl
-        )
-
-        val redirectResponse = Error<String>(
+        val redirectResponse = WPAPIResponse.Error<String>(
             WPAPINetworkError(
                 BaseNetworkError(
                     VolleyError(
@@ -117,62 +113,116 @@ class NonceRestClientTest {
                 null
             )
         )
+
         val invalidNonce = "0"
-        val response = Success(invalidNonce)
-        whenever(wpApiEncodedRequestBuilder.syncPostRequest(subject, "${site.url}/wp-login.php", body = body))
-            .thenReturn(redirectResponse)
+        val response = WPAPIResponse.Success(invalidNonce)
+        givenLoginResponse(redirectResponse)
         whenever(wpApiEncodedRequestBuilder.syncGetRequest(subject, redirectUrl))
             .thenReturn(response)
 
         val actual = subject.requestNonce(site)
-        TestCase.assertEquals(FailedRequest(time, site.username), actual)
+        assertIs<Nonce.FailedRequest>(actual)
+        assertEquals(time, actual.timeOfResponse)
+        assertEquals(Nonce.CookieNonceErrorType.INVALID_NONCE, actual.type)
     }
 
     @Test
     fun `failed nonce request return FailedRequest`() = test {
-        val site = SiteModel().apply {
-            url = "asiteurl.com"
-            username = "a_username"
-            password = "a_password"
-        }
-
-        val body = mapOf(
-            "log" to site.username,
-            "pwd" to site.password,
-            "redirect_to" to "${site.url}/wp-admin/admin-ajax.php?action=rest-nonce"
+        val baseNetworkError = WPAPINetworkError(
+            BaseNetworkError(
+                VolleyError(
+                    NetworkResponse(400, byteArrayOf(), false, System.currentTimeMillis(), listOf())
+                )
+            )
         )
-
-        val baseNetworkError = mock<WPAPINetworkError>()
-        baseNetworkError.message = "an_error_message"
-        val response = Error<String>(baseNetworkError)
-        whenever(wpApiEncodedRequestBuilder.syncPostRequest(subject, "${site.url}/wp-login.php", body = body))
-                .thenReturn(response)
+        givenLoginResponse(WPAPIResponse.Error(baseNetworkError))
 
         val actual = subject.requestNonce(site)
-        TestCase.assertEquals(FailedRequest(time, site.username, baseNetworkError), actual)
+
+        assertIs<Nonce.FailedRequest>(actual)
+        assertEquals(time, actual.timeOfResponse)
+        assertEquals(Nonce.CookieNonceErrorType.GENERIC_ERROR, actual.type)
+        assertEquals(baseNetworkError, actual.networkError)
     }
 
     @Test
     fun `failed nonce request with connection error returns Unknown`() = test {
-        val site = SiteModel().apply {
-            url = "asiteurl.com"
-            username = "a_username"
-            password = "a_password"
-        }
-
-        val body = mapOf(
-                "log" to site.username,
-                "pwd" to site.password,
-                "redirect_to" to "${site.url}/wp-admin/admin-ajax.php?action=rest-nonce"
-        )
-
         val baseNetworkError = mock<WPAPINetworkError>()
         baseNetworkError.volleyError = NoConnectionError()
-        val response = Error<String>(baseNetworkError)
-        whenever(wpApiEncodedRequestBuilder.syncPostRequest(subject, "${site.url}/wp-login.php", body = body))
-                .thenReturn(response)
+        givenLoginResponse(WPAPIResponse.Error(baseNetworkError))
 
         val actual = subject.requestNonce(site)
-        TestCase.assertEquals(Unknown(site.username), actual)
+        TestCase.assertEquals(Nonce.Unknown(site.username), actual)
+    }
+
+    @Test
+    fun `custom login URL returns correct error type`() = test {
+        val error = WPAPINetworkError(
+            BaseNetworkError(
+                VolleyError(
+                    NetworkResponse(
+                        404,
+                        byteArrayOf(),
+                        false,
+                        System.currentTimeMillis(),
+                        listOf()
+                    )
+                )
+            )
+        )
+        givenLoginResponse(WPAPIResponse.Error(error))
+
+        val actual = subject.requestNonce(site)
+
+        assertIs<Nonce.FailedRequest>(actual)
+        assertEquals(Nonce.CookieNonceErrorType.CUSTOM_LOGIN_URL, actual.type)
+    }
+
+    @Test
+    fun `custom admin URL returns correct error type`() = test {
+        val redirectResponse = WPAPINetworkError(
+            BaseNetworkError(
+                VolleyError(
+                    NetworkResponse(
+                        301,
+                        byteArrayOf(),
+                        false,
+                        System.currentTimeMillis(),
+                        listOf(Header("Location", nonceRequestUrl))
+                    )
+                )
+            ),
+            null
+        )
+        val nonceError = WPAPINetworkError(
+            BaseNetworkError(
+                VolleyError(
+                    NetworkResponse(404, byteArrayOf(), false, System.currentTimeMillis(), listOf())
+                )
+            )
+        )
+        givenLoginResponse(WPAPIResponse.Error(redirectResponse))
+        givenNonceRequestResponse(WPAPIResponse.Error(nonceError))
+
+        val actual = subject.requestNonce(site)
+
+        assertIs<Nonce.FailedRequest>(actual)
+        assertEquals(Nonce.CookieNonceErrorType.CUSTOM_ADMIN_URL, actual.type)
+    }
+
+    private suspend fun givenLoginResponse(response: WPAPIResponse<String>) {
+        val body = mapOf(
+            "log" to site.username,
+            "pwd" to site.password,
+            "redirect_to" to nonceRequestUrl
+        )
+
+        whenever(wpApiEncodedRequestBuilder.syncPostRequest(subject, "${site.url}/wp-login.php", body = body))
+            .thenReturn(response)
+    }
+
+    private suspend fun givenNonceRequestResponse(response: WPAPIResponse<String>) {
+        whenever(wpApiEncodedRequestBuilder.syncGetRequest(subject, nonceRequestUrl))
+            .thenReturn(response)
     }
 }
