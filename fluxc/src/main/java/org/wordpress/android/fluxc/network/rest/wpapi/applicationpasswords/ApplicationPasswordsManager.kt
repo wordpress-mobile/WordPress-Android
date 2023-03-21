@@ -36,7 +36,7 @@ internal class ApplicationPasswordsManager @Inject constructor(
      */
     private val SiteModel.supportsApplicationPasswordsGeneration
         get() = origin == SiteModel.ORIGIN_WPCOM_REST ||
-            (origin == SiteModel.ORIGIN_XMLRPC && !username.isNullOrEmpty() && !password.isNullOrEmpty())
+            (!username.isNullOrEmpty() && !password.isNullOrEmpty())
 
     @Suppress("ReturnCount")
     suspend fun getApplicationCredentials(
