@@ -78,7 +78,7 @@ class ApplicationPasswordManagerTests {
                 .thenReturn(
                     ApplicationPasswordCreationPayload(
                         testCredentials.password,
-                        testCredentials.uuid
+                        testCredentials.uuid!!
                     )
                 )
 
@@ -109,7 +109,7 @@ class ApplicationPasswordManagerTests {
                 .thenReturn(
                     ApplicationPasswordCreationPayload(
                         testCredentials.password,
-                        testCredentials.uuid
+                        testCredentials.uuid!!
                     )
                 )
 
@@ -209,43 +209,6 @@ class ApplicationPasswordManagerTests {
         }
 
     @Test
-    fun `when password delete is requested for a jetpack site, then process it`() =
-        runBlockingTest {
-            val site = testSite.apply {
-                origin = SiteModel.ORIGIN_WPCOM_REST
-            }
-
-            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(testCredentials)
-            whenever(mJetpackApplicationPasswordsRestClient.deleteApplicationPassword(site, uuid))
-                .thenReturn(ApplicationPasswordDeletionPayload(isDeleted = true))
-
-            val result = mApplicationPasswordsManager.deleteApplicationCredentials(
-                testSite
-            )
-
-            assertEquals(ApplicationPasswordDeletionResult.Success, result)
-        }
-
-    @Test
-    fun `when password delete is requested for a non-jetpack site, then process it`() =
-        runBlockingTest {
-            val site = testSite.apply {
-                origin = SiteModel.ORIGIN_XMLRPC
-                username = testCredentials.userName
-            }
-
-            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(testCredentials)
-            whenever(mWpApiApplicationPasswordsRestClient.deleteApplicationPassword(site, uuid))
-                .thenReturn(ApplicationPasswordDeletionPayload(isDeleted = true))
-
-            val result = mApplicationPasswordsManager.deleteApplicationCredentials(
-                testSite
-            )
-
-            assertEquals(ApplicationPasswordDeletionResult.Success, result)
-        }
-
-    @Test
     fun `given a duplicate password already exists, when creating a new password, then delete the previous one`() =
         runBlockingTest {
             val site = testSite.apply {
@@ -257,7 +220,7 @@ class ApplicationPasswordManagerTests {
             whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(null)
             whenever(mWpApiApplicationPasswordsRestClient.createApplicationPassword(site, applicationName))
                 .thenReturn(ApplicationPasswordCreationPayload(creationNetworkError))
-                .thenReturn(ApplicationPasswordCreationPayload(testCredentials.password, testCredentials.uuid))
+                .thenReturn(ApplicationPasswordCreationPayload(testCredentials.password, testCredentials.uuid!!))
             whenever(mWpApiApplicationPasswordsRestClient.fetchApplicationPasswordUUID(site, applicationName))
                 .thenReturn(ApplicationPasswordUUIDFetchPayload(uuid))
             whenever(mWpApiApplicationPasswordsRestClient.deleteApplicationPassword(site, uuid))
@@ -271,7 +234,7 @@ class ApplicationPasswordManagerTests {
         }
 
     @Test
-    fun `given uuid doesn't exist locally, when deleting a password, then fetch it`() =
+    fun `given application password doesn't exist locally, when deleting a password, then fetch the UUID`() =
         runBlockingTest {
             val site = testSite.apply {
                 origin = SiteModel.ORIGIN_XMLRPC
@@ -288,5 +251,22 @@ class ApplicationPasswordManagerTests {
             assertEquals(ApplicationPasswordDeletionResult.Success, result)
             verify(mWpApiApplicationPasswordsRestClient).fetchApplicationPasswordUUID(site, applicationName)
             verify(mWpApiApplicationPasswordsRestClient).deleteApplicationPassword(site, uuid)
+        }
+
+    @Test
+    fun `given application password exists locally, when deleting a password, then delete it using it itself`() =
+        runBlockingTest {
+            val site = testSite.apply {
+                origin = SiteModel.ORIGIN_XMLRPC
+                username = testCredentials.userName
+            }
+            whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(testCredentials)
+            whenever(mWpApiApplicationPasswordsRestClient.deleteApplicationPassword(site, testCredentials))
+                .thenReturn(ApplicationPasswordDeletionPayload(isDeleted = true))
+
+            val result = mApplicationPasswordsManager.deleteApplicationCredentials(site)
+
+            assertEquals(ApplicationPasswordDeletionResult.Success, result)
+            verify(mWpApiApplicationPasswordsRestClient).deleteApplicationPassword(site, testCredentials)
         }
 }
