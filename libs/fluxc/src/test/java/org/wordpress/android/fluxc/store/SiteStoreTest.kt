@@ -196,8 +196,7 @@ class SiteStoreTest {
                         null,
                         null,
                         null,
-                        payload.dryRun,
-                        emptyMap()
+                        payload.dryRun
                 )
         ).thenReturn(response)
 
@@ -225,8 +224,7 @@ class SiteStoreTest {
                         null,
                         null,
                         null,
-                        payload.dryRun,
-                        payload.additionalOptions
+                        payload.dryRun
                 )
         ).thenReturn(response)
 
