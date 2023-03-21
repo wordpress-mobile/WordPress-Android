@@ -77,6 +77,6 @@ class DatabaseModule {
     fun provideJetpackConnectedSitesDao(
         wpAndroidDatabase: WPAndroidDatabase
     ): JetpackCPConnectedSitesDao {
-        return wpAndroidDatabase.jetpackConnectedSitesDao()
+        return wpAndroidDatabase.jetpackCPConnectedSitesDao()
     }
 }

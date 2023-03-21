@@ -67,7 +67,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
 
     abstract fun blazeStatusDao(): BlazeStatusDao
 
-    abstract fun jetpackConnectedSitesDao(): JetpackCPConnectedSitesDao
+    abstract fun jetpackCPConnectedSitesDao(): JetpackCPConnectedSitesDao
 
     @Suppress("MemberVisibilityCanBePrivate")
     companion object {
