@@ -124,7 +124,6 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
         }
     }
 
-    @Suppress("Unused")
     fun shouldShowStaticPage(): Boolean {
         val currentPhase = getCurrentPhase() ?: return false
         return when (currentPhase) {
