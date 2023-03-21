@@ -677,8 +677,7 @@ class MySiteViewModel @Inject constructor(
                 null
             }
         ).takeIf {
-            jetpackBrandingUtils.shouldShowJetpackBranding() &&
-                    !jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()
+            jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard()
         }
     }
 
