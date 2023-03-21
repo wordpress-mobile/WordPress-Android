@@ -1,25 +1,22 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 
+import com.android.volley.NetworkResponse
+import com.android.volley.VolleyError
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.module.ApplicationPasswordsClientId
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
-import java.util.Optional
+import org.wordpress.android.util.AppLog.T.MAIN
 import javax.inject.Inject
 
+private const val UNAUTHORIZED = 401
 private const val CONFLICT = 409
 private const val NOT_FOUND = 404
 private const val APPLICATION_PASSWORDS_DISABLED_ERROR_CODE = "application_passwords_disabled"
 
-/**
- * Note: the [ApplicationPasswordsClientId] is provided as [Optional] because we want to keep the feature optional and
- * to not force the client apps to provide it. With this change, we will keep Dagger happy, and we move from a compile
- * error to a runtime error if it's missing.
- */
 internal class ApplicationPasswordsManager @Inject constructor(
     private val applicationPasswordsStore: ApplicationPasswordsStore,
     private val jetpackApplicationPasswordsRestClient: JetpackApplicationPasswordsRestClient,
@@ -29,6 +26,17 @@ internal class ApplicationPasswordsManager @Inject constructor(
 ) {
     private val applicationName
         get() = configuration.applicationName
+
+    /**
+     * Checks whether the site supports creating new Application Passwords using the API, and the different cases are:
+     * 1. For Jetpack sites, we always can call the API using the WordPress.com token.
+     * 2. For self-hosted sites, we need to check if we have persisted credentials, otherwise we can't create it. This
+     *    case happens when a site's Application Password was saved directly to the [ApplicationPasswordsStore],
+     *    which happens during the Web Authorization.
+     */
+    private val SiteModel.supportsApplicationPasswordsGeneration
+        get() = origin == SiteModel.ORIGIN_WPCOM_REST ||
+            (!username.isNullOrEmpty() && !password.isNullOrEmpty())
 
     @Suppress("ReturnCount")
     suspend fun getApplicationCredentials(
@@ -74,6 +82,23 @@ internal class ApplicationPasswordsManager @Inject constructor(
         site: SiteModel,
         username: String
     ): ApplicationPasswordCreationResult {
+        if (!site.supportsApplicationPasswordsGeneration) {
+            ApplicationPasswordCreationResult.Failure(
+                WPAPINetworkError(
+                    BaseNetworkError(
+                        GenericErrorType.NOT_AUTHENTICATED,
+                        "Site password is missing. " +
+                            "The application password was probably authorized using the Web flow",
+                        VolleyError(
+                            NetworkResponse(
+                                UNAUTHORIZED, null, true, System.currentTimeMillis(), emptyList()
+                            )
+                        )
+                    )
+                )
+            )
+        }
+
         val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
             jetpackApplicationPasswordsRestClient.createApplicationPassword(
                 site = site,
@@ -86,6 +111,14 @@ internal class ApplicationPasswordsManager @Inject constructor(
             )
         }
 
+        return handleApplicationPasswordCreationResult(site, username, payload)
+    }
+
+    private suspend fun handleApplicationPasswordCreationResult(
+        site: SiteModel,
+        username: String,
+        payload: ApplicationPasswordCreationPayload,
+    ): ApplicationPasswordCreationResult {
         return when {
             !payload.isError -> ApplicationPasswordCreationResult.Created(
                 ApplicationPasswordCredentials(
@@ -106,7 +139,7 @@ internal class ApplicationPasswordsManager @Inject constructor(
                 }
                 when {
                     statusCode == CONFLICT -> {
-                        appLogWrapper.w(AppLog.T.MAIN, "Application Password already exists")
+                        appLogWrapper.w(MAIN, "Application Password already exists")
                         when (val deletionResult = deleteApplicationCredentials(site)) {
                             ApplicationPasswordDeletionResult.Success ->
                                 createApplicationPassword(site, username)
@@ -119,7 +152,7 @@ internal class ApplicationPasswordsManager @Inject constructor(
                     statusCode == NOT_FOUND ||
                         errorCode == APPLICATION_PASSWORDS_DISABLED_ERROR_CODE -> {
                         appLogWrapper.w(
-                            AppLog.T.MAIN,
+                            MAIN,
                             "Application Password feature not supported, " +
                                 "status code: $statusCode, errorCode: $errorCode"
                         )
@@ -128,7 +161,7 @@ internal class ApplicationPasswordsManager @Inject constructor(
 
                     else -> {
                         appLogWrapper.w(
-                            AppLog.T.MAIN,
+                            MAIN,
                             "Application Password creation failed ${payload.error.type}"
                         )
                         ApplicationPasswordCreationResult.Failure(payload.error)
@@ -141,21 +174,32 @@ internal class ApplicationPasswordsManager @Inject constructor(
     suspend fun deleteApplicationCredentials(
         site: SiteModel
     ): ApplicationPasswordDeletionResult {
-        val uuid = applicationPasswordsStore.getCredentials(site)?.uuid
-            ?: fetchApplicationPasswordUUID(site).let {
+        val credentials = applicationPasswordsStore.getCredentials(site)
+
+        val payload = if (credentials == null) {
+            // If we don't have any saved credentials, let's fetch the UUID then delete the password using
+            // either the WP.com token or the self-hosted credentials.
+            val uuid = fetchApplicationPasswordUUID(site).let {
                 if (it.isError) return ApplicationPasswordDeletionResult.Failure(it.error)
                 it.uuid
             }
 
-        val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
-            jetpackApplicationPasswordsRestClient.deleteApplicationPassword(
-                site = site,
-                uuid = uuid
-            )
+            if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
+                jetpackApplicationPasswordsRestClient.deleteApplicationPassword(
+                    site = site,
+                    uuid = uuid
+                )
+            } else {
+                wpApiApplicationPasswordsRestClient.deleteApplicationPassword(
+                    site = site,
+                    uuid = uuid
+                )
+            }
         } else {
+            // If we have an Application Password, we can use it itself for the delete request.
             wpApiApplicationPasswordsRestClient.deleteApplicationPassword(
                 site = site,
-                uuid = uuid
+                credentials = credentials
             )
         }
 
@@ -180,8 +224,8 @@ internal class ApplicationPasswordsManager @Inject constructor(
                 val error = payload.error
                 appLogWrapper.w(
                     AppLog.T.MAIN, "Application password deletion failed, error: " +
-                        "${error.type} ${error.message}\n" +
-                        "${error.volleyError?.toString()}"
+                    "${error.type} ${error.message}\n" +
+                    "${error.volleyError?.toString()}"
                 )
                 ApplicationPasswordDeletionResult.Failure(error)
             }
