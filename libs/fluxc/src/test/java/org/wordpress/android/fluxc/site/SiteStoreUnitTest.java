@@ -53,7 +53,6 @@ import static org.wordpress.android.fluxc.site.SiteUtils.generateSiteWithZendesk
 import static org.wordpress.android.fluxc.site.SiteUtils.generateTestSite;
 import static org.wordpress.android.fluxc.site.SiteUtils.generateWPComSite;
 
-// TODO hthomas create new tests for the jetpack CP connected sites interactions
 @RunWith(RobolectricTestRunner.class)
 public class SiteStoreUnitTest {
     private PostSqlUtils mPostSqlUtils = new PostSqlUtils();
