@@ -224,7 +224,6 @@ class SiteStoreTest {
                         null,
                         null,
                         null,
-                        null,
                         payload.dryRun
                 )
         ).thenReturn(response)
