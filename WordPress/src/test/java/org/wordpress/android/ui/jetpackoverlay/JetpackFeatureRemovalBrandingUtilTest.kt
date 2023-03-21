@@ -296,6 +296,17 @@ class JetpackFeatureRemovalBrandingUtilTest {
         verifyNoInteractions(dateTimeUtilsWrapper)
     }
 
+    @Test
+    fun `given static posters phase started, all banners and badges should be Jetpack powered`() {
+            givenPhase(JetpackFeatureRemovalPhase.PhaseStaticPosters)
+
+            val actual = allJpScreens.map(classToTest::getBrandingTextByPhase)
+
+            actual.assertAllMatch(R.string.wp_jetpack_powered)
+            verifyNoInteractions(dateTimeUtilsWrapper)
+        }
+
+
     // endregion
 
     // region Helpers
