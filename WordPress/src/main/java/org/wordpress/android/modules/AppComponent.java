@@ -3,7 +3,6 @@ package org.wordpress.android.modules;
 import com.automattic.android.tracks.crashlogging.CrashLogging;
 
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
-import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.JetpackConnectionResultActivity;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverFragment;
@@ -169,7 +168,6 @@ import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
-import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetBlockListProviderFactory;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListProvider;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget;
@@ -226,8 +224,6 @@ public interface AppComponent {
     void inject(AddQuickPressShortcutActivity object);
 
     void inject(CommentDetailFragment object);
-
-    void inject(CommentFullScreenDialogFragment object);
 
     void inject(EditCommentActivity object);
 
@@ -444,8 +440,6 @@ public interface AppComponent {
     void inject(TodayWidgetListProvider object);
 
     void inject(TodayWidgetBlockListProviderFactory object);
-
-    void inject(StatsListFragment object);
 
     void inject(DomainRegistrationActivity object);
 

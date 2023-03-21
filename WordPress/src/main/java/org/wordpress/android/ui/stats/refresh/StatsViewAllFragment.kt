@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,7 +13,7 @@ import com.google.android.material.appbar.AppBarLayout.LayoutParams
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsViewAllFragmentBinding
@@ -40,7 +41,8 @@ import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
-class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
+@AndroidEntryPoint
+class StatsViewAllFragment : Fragment(R.layout.stats_view_all_fragment) {
     @Inject
     lateinit var viewModelFactoryBuilder: StatsViewAllViewModelFactory.Builder
 
