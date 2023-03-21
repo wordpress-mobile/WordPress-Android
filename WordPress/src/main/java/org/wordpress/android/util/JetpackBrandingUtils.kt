@@ -29,6 +29,11 @@ class JetpackBrandingUtils @Inject constructor(
                 && !jetpackFeatureRemovalBrandingUtil.isInRemovalPhase()
     }
 
+    fun shouldShowJetpackBrandingInDashboard(): Boolean {
+        return isWpComSite() && jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
+                && jetpackFeatureRemovalBrandingUtil.shouldShowBrandingInDashboard()
+    }
+
     fun shouldShowJetpackBrandingForPhaseOne(): Boolean {
         return shouldShowJetpackBranding() && jetpackFeatureRemovalBrandingUtil.shouldShowPhaseOneBranding()
     }
