@@ -190,6 +190,7 @@ class SiteRestClient @Inject constructor(
      * @param visibility The visibility of the site (public or private)
      * @param segmentId The segment that the site belongs to
      * @param siteDesign The design template of the site
+     * @param isComingSoon The "coming soon" flag, which hides the site content from the public
      * @param dryRun If set to true the call only validates the parameters passed
      *
      * The domain of the site is generated with the following logic:
@@ -214,7 +215,8 @@ class SiteRestClient @Inject constructor(
         segmentId: Long?,
         siteDesign: String?,
         findAvailableUrl: Boolean?,
-        dryRun: Boolean,
+        isComingSoon: Boolean?,
+        dryRun: Boolean
     ): NewSiteResponsePayload {
         val url = WPCOMREST.sites.new_.urlV1_1
         val body = mutableMapOf<String, Any>()
@@ -244,6 +246,9 @@ class SiteRestClient @Inject constructor(
         }
         if (timeZoneId != null) {
             options["timezone_string"] = timeZoneId
+        }
+        if (isComingSoon != null) {
+            options["wpcom_public_coming_soon"] = if (isComingSoon) "1" else "0"
         }
 
         // Add site options if available
