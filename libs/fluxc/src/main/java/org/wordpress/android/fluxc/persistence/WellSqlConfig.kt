@@ -36,7 +36,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 180
+        return 181
     }
 
     override fun getDbName(): String {
@@ -1890,6 +1890,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 179 -> migrate(version) {
                     db.execSQL("ALTER TABLE AccountModel ADD TWO_STEP_ENABLED BOOLEAN")
+                }
+                180 -> migrate(version) {
+                    db.execSQL("ALTER TABLE WCProductVariationModel ADD METADATA TEXT")
                 }
             }
         }
