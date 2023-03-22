@@ -1,21 +1,19 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.site
 
 import com.android.volley.RequestQueue
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.discovery.DiscoveryUtils
+import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
 import org.wordpress.android.fluxc.network.discovery.RootWPAPIRestResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
-import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
-import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.store.SiteStore.FetchWPAPISitePayload
+import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 import javax.inject.Named
@@ -23,8 +21,8 @@ import javax.inject.Singleton
 
 @Singleton
 class SiteWPAPIRestClient @Inject constructor(
-    private val wpapiAuthenticator: WPAPIAuthenticator,
     private val wpapiGsonRequestBuilder: WPAPIGsonRequestBuilder,
+    private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
     dispatcher: Dispatcher,
     @Named("custom-ssl") requestQueue: RequestQueue,
     userAgent: UserAgent
@@ -33,6 +31,7 @@ class SiteWPAPIRestClient @Inject constructor(
         private const val WOO_API_NAMESPACE_PREFIX = "wc/"
         private const val FETCH_API_CALL_FIELDS =
             "name,description,gmt_offset,url,authentication,namespaces"
+        private const val APPLICATION_PASSWORDS_URL_SUFFIX = "authorize-application.php"
     }
 
     suspend fun fetchWPAPISite(
@@ -41,49 +40,47 @@ class SiteWPAPIRestClient @Inject constructor(
         val cleanedUrl = UrlUtils.addUrlSchemeIfNeeded(payload.url, false).let { urlWithScheme ->
             DiscoveryUtils.stripKnownPaths(urlWithScheme)
         }
-        return wpapiAuthenticator.makeAuthenticatedWPAPIRequest(
-            siteUrl = cleanedUrl,
-            username = payload.username,
-            password = payload.password
-        ) { wpApiUrl, nonce ->
-            if (nonce !is Available) {
-                val networkError = (nonce as? FailedRequest)?.networkError ?: BaseNetworkError(GenericErrorType.UNKNOWN)
 
-                return@makeAuthenticatedWPAPIRequest SiteModel().apply {
-                    error = networkError
+        val discoveredWpApiUrl = discoverApiEndpoint(cleanedUrl)
+        val urlScheme = discoveredWpApiUrl.toHttpUrl().scheme
+
+        val result = wpapiGsonRequestBuilder.syncGetRequest(
+            restClient = this,
+            url = discoveredWpApiUrl,
+            clazz = RootWPAPIRestResponse::class.java,
+            params = mapOf("_fields" to FETCH_API_CALL_FIELDS)
+        )
+
+        return when (result) {
+            is Success -> {
+                val response = result.data
+                SiteModel().apply {
+                    name = response?.name
+                    description = response?.description
+                    timezone = response?.gmtOffset
+                    origin = SiteModel.ORIGIN_WPAPI
+                    hasWooCommerce = response?.namespaces?.any {
+                        it.startsWith(WOO_API_NAMESPACE_PREFIX)
+                    } ?: false
+
+                    applicationPasswordsAuthorizeUrl = response?.authentication?.applicationPasswords
+                        ?.endpoints?.authorization
+                    if (!applicationPasswordsAuthorizeUrl.isNullOrEmpty() &&
+                        applicationPasswordsAuthorizeUrl.contains(APPLICATION_PASSWORDS_URL_SUFFIX)) {
+                        // Infer the admin URL from the application passwords authorization URL
+                        adminUrl = applicationPasswordsAuthorizeUrl.substringBefore(APPLICATION_PASSWORDS_URL_SUFFIX)
+                    }
+
+                    wpApiRestUrl = discoveredWpApiUrl
+                    this.url = response?.url ?: cleanedUrl.replaceBefore("://", urlScheme)
+                    this.username = payload.username
+                    this.password = payload.password
                 }
             }
 
-            val result = wpapiGsonRequestBuilder.syncGetRequest(
-                restClient = this,
-                url = wpApiUrl,
-                clazz = RootWPAPIRestResponse::class.java,
-                params = mapOf("_fields" to FETCH_API_CALL_FIELDS),
-                nonce = nonce.value
-            )
-
-            return@makeAuthenticatedWPAPIRequest when (result) {
-                is Success -> {
-                    val response = result.data
-                    SiteModel().apply {
-                        name = response?.name
-                        description = response?.description
-                        timezone = response?.gmtOffset
-                        origin = SiteModel.ORIGIN_WPAPI
-                        hasWooCommerce = response?.namespaces?.any {
-                            it.startsWith(WOO_API_NAMESPACE_PREFIX)
-                        } ?: false
-                        wpApiRestUrl = wpApiUrl
-                        this.url = response?.url ?: cleanedUrl
-                        this.username = payload.username
-                        this.password = payload.password
-                    }
-                }
-
-                is Error -> {
-                    SiteModel().apply {
-                        error = result.error
-                    }
+            is Error -> {
+                SiteModel().apply {
+                    error = result.error
                 }
             }
         }
@@ -94,10 +91,17 @@ class SiteWPAPIRestClient @Inject constructor(
     ): SiteModel {
         return fetchWPAPISite(
             payload = FetchWPAPISitePayload(
+                url = site.url,
                 username = site.username,
                 password = site.password,
-                url = site.url
             )
         )
+    }
+
+    private fun discoverApiEndpoint(
+        url: String
+    ): String {
+        return discoveryWPAPIRestClient.discoverWPAPIBaseURL(url) // discover rest api endpoint
+            ?: url.slashJoin("wp-json/") // fallback to ".../wp-json/" if discovery fails
     }
 }
