@@ -27,6 +27,9 @@ import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
@@ -68,8 +71,8 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        statsSection = arguments?.getSerializable(LIST_TYPE) as? StatsSection
-            ?: activity?.intent?.getSerializableExtra(LIST_TYPE) as? StatsSection
+        statsSection = arguments?.getSerializableCompat(LIST_TYPE)
+            ?: activity?.intent?.getSerializableExtraCompat(LIST_TYPE)
                     ?: StatsSection.INSIGHTS
 
         setHasOptionsMenu(statsSection == StatsSection.INSIGHTS)
@@ -80,7 +83,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         layoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
         }
-        (activity?.intent?.getSerializableExtra(LIST_TYPE) as? StatsSection)?.let { sectionFromIntent ->
+        (activity?.intent?.getSerializableExtraCompat<StatsSection>(LIST_TYPE))?.let { sectionFromIntent ->
             outState.putSerializable(LIST_TYPE, sectionFromIntent)
         }
         super.onSaveInstanceState(outState)
@@ -110,7 +113,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         } else {
             StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL)
         }
-        savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
+        savedInstanceState?.getParcelableCompat<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 

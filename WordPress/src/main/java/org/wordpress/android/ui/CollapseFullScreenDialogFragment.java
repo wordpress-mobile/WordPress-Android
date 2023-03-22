@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import androidx.activity.ComponentDialog;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -146,12 +148,14 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         initBuilderArguments();
 
-        Dialog dialog = new Dialog(requireContext(), getTheme()) {
+        ComponentDialog dialog = (ComponentDialog) super.onCreateDialog(savedInstanceState);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
-            public void onBackPressed() {
+            public void handleOnBackPressed() {
                 onCollapseClicked();
             }
         };
+        dialog.getOnBackPressedDispatcher().addCallback(this, callback);
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         return dialog;
@@ -297,7 +301,7 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
         }
     }
 
-    public void onBackPressed() {
+    public void collapse() {
         if (isAdded()) {
             onCollapseClicked();
         }

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -50,6 +51,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 
 import java.util.ArrayList;
@@ -97,6 +99,24 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.site_settings_tag_list_activity);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (getFragmentManager().getBackStackEntryCount() > 0) {
+                    SiteSettingsTagDetailFragment fragment = getDetailFragment();
+                    if (fragment != null && fragment.hasChanges()) {
+                        saveTag(fragment.getTerm(), fragment.isNewTerm());
+                    } else {
+                        hideDetailFragment();
+                        loadTags();
+                    }
+                } else {
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -217,25 +237,10 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            SiteSettingsTagDetailFragment fragment = getDetailFragment();
-            if (fragment != null && fragment.hasChanges()) {
-                saveTag(fragment.getTerm(), fragment.isNewTerm());
-            } else {
-                hideDetailFragment();
-                loadTags();
-            }
-        } else {
-            super.onBackPressed();
         }
     }
 

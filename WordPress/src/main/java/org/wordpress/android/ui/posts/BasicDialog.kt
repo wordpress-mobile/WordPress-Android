@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.android.support.AndroidSupportInjection
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
+import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 
 /**
@@ -34,7 +35,7 @@ class BasicDialog : AppCompatDialogFragment() {
         setStyle(STYLE_NORMAL, theme)
 
         if (savedInstanceState != null) {
-            model = requireNotNull(savedInstanceState.getParcelable(STATE_KEY_MODEL))
+            model = requireNotNull(savedInstanceState.getParcelableCompat(STATE_KEY_MODEL))
         }
     }
 
